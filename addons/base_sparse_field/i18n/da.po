@@ -3,25 +3,26 @@
 # 	* base_sparse_field
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Morten Schou <ms@msteknik.dk>, 2019
-# Jesper Carstensen <jc@danodoo.dk>, 2019
-# Ejner Sønniksen <ejner@vkdata.dk>, 2019
-# lhmflexerp <lhm@flexerp.dk>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2017-07-17 09:04+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: base_sparse_field
+#: model:ir.model,name:base_sparse_field.model_base
+msgid "Base"
+msgstr "Basis"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__boolean
@@ -86,6 +87,9 @@ msgid ""
 "serialization field, instead of having its own database column. This cannot "
 "be changed after creation."
 msgstr ""
+"Hvis angivet, vil dette felt blive lagret i den sparsomme struktur "
+"tilhørende det serialiseringsfelt, istedet for at have sin egen database "
+"kolonne. Dette kan ikke ændres efter oprettelse."
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__integer
@@ -136,14 +140,13 @@ msgstr "Serialiseringsfelt"
 #. module: base_sparse_field
 #: code:addons/base_sparse_field/models/models.py:0
 #, python-format
-msgid "Serialization field `%s` not found for sparse field `%s`!"
-msgstr ""
-"Serialisering felt `  %s` blev ikke fundet for sparsomme felt `  %s` !"
+msgid "Serialization field %r not found for sparse field %s!"
+msgstr "Serialiserings felt %r ikke fundet for sparsomt felt %s!"
 
 #. module: base_sparse_field
 #: model:ir.model,name:base_sparse_field.model_sparse_fields_test
 msgid "Sparse fields Test"
-msgstr ""
+msgstr "Sparsomme felter test"
 
 #. module: base_sparse_field
 #: model:ir.model.fields.selection,name:base_sparse_field.selection__sparse_fields_test__selection__two
@@ -153,4 +156,4 @@ msgstr "To"
 #. module: base_sparse_field
 #: model:ir.model.fields.selection,name:base_sparse_field.selection__ir_model_fields__ttype__serialized
 msgid "serialized"
-msgstr ""
+msgstr "serialiseret"

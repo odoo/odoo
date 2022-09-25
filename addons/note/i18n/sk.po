@@ -1,20 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * note
+# 	* note
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Matus Krnac <matus.krnac@gmail.com>, 2018
-# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
-# gebri <gebri@inmail.sk>, 2018
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2022
+# SAKodoo <sak@odoo.com>, 2022
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2022
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
+# Martin Trigaux, 2022
+# Damian Brencic <brencicdamian12313@gmail.com>, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: gebri <gebri@inmail.sk>, 2018\n"
+"POT-Creation-Date: 2022-04-19 13:57+0000\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
+"Last-Translator: Damian Brencic <brencicdamian12313@gmail.com>, 2022\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,9 +25,33 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Opened\"/>"
+msgstr ""
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed\"/>"
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
+msgid "Action"
+msgstr "Akcia"
+
+#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction
 msgid "Action Needed"
 msgstr "Potrebná akcia"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_mail_activity_type__category
+msgid ""
+"Actions may trigger specific behavior like opening calendar view or "
+"automatically mark as done when a document is uploaded"
+msgstr ""
+"Akcie môžu spustiť určité správanie, napríklad otvoriť zobrazenie kalendára "
+"alebo automaticky označiť ako vykonané pri odovzdávaní dokumentu"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__open
@@ -44,14 +70,24 @@ msgid "Activity"
 msgstr "Aktivita"
 
 #. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Označenie výnimky v aktivite"
+
+#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "Stav aktivity"
 
 #. module: note
 #: model:ir.model,name:note.model_mail_activity_type
 msgid "Activity Type"
-msgstr ""
+msgstr "Typ aktivity"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Ikona typ aktivity"
 
 #. module: note
 #: model_terms:ir.actions.act_window,help:note.action_note_note
@@ -61,18 +97,18 @@ msgstr ""
 #. module: note
 #: model_terms:ir.actions.act_window,help:note.note_tag_action
 msgid "Add a new tag"
-msgstr ""
+msgstr "Pridaj nový tag"
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:14
+#: code:addons/note/static/src/xml/systray.xml:0
 #, python-format
 msgid "Add a note"
-msgstr ""
+msgstr "Pridaj poznámku"
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:6
+#: code:addons/note/static/src/xml/systray.xml:0
 #, python-format
 msgid "Add new note"
 msgstr ""
@@ -80,31 +116,21 @@ msgstr ""
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Archive"
-msgstr "Archív"
+msgstr "Archivovať"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Počet príloh"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "By sticky note Category"
-msgstr "Podľa Sticky Note kategórie"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_mail_activity_type__category
-msgid "Categories may trigger specific behavior like opening calendar view"
-msgstr ""
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
-msgid "Category"
-msgstr "Kategória"
+msgstr "Podľa kategórie poznámok"
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:10
+#: code:addons/note/static/src/xml/systray.xml:0
 #, python-format
 msgid "Channel"
 msgstr "Kanál"
@@ -113,7 +139,12 @@ msgstr "Kanál"
 #: model:ir.model.fields,field_description:note.field_note_note__color
 #: model:ir.model.fields,field_description:note.field_note_tag__color
 msgid "Color Index"
-msgstr "Farebný index"
+msgstr "Index farieb"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__company_id
+msgid "Company"
+msgstr "Spoločnosť"
 
 #. module: note
 #: model:ir.ui.menu,name:note.menu_note_configuration
@@ -149,12 +180,12 @@ msgstr "Zmazať"
 #: model:ir.model.fields,field_description:note.field_note_stage__display_name
 #: model:ir.model.fields,field_description:note.field_note_tag__display_name
 msgid "Display Name"
-msgstr "Zobrazovaný Názov"
+msgstr "Zobrazovaný názov"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Dropdown menu"
-msgstr ""
+msgstr "Rozbaľovacie menu"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage__fold
@@ -172,24 +203,29 @@ msgid "Followers"
 msgstr "Odberatelia"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Odberatelia (Kanály)"
-
-#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Odberatelia (Partneri)"
+msgstr "Odberatelia (partneri)"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Úžasná ikona fronty napr. fa-tasks"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Future Activities"
-msgstr ""
+msgstr "Budúce aktivity"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Group By"
 msgstr "Zoskupiť podľa"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__has_message
+msgid "Has Message"
+msgstr "Má správu"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__id
@@ -199,31 +235,36 @@ msgid "ID"
 msgstr "ID"
 
 #. module: note
-#: model:ir.model.fields,help:note.field_note_note__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
+#: model:ir.model.fields,field_description:note.field_note_note__activity_exception_icon
+msgid "Icon"
+msgstr "Ikona"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Ikona indikujúca výnimočnú aktivitu."
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
+msgstr "Ak označené, potom nové správy vyžadujú vašu pozornosť."
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Ak označené, potom majú niektoré správy chybu dodania."
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_is_follower
 msgid "Is Follower"
-msgstr "Je odberateľ"
+msgstr "Odberateľ"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note____last_update
 #: model:ir.model.fields,field_description:note.field_note_stage____last_update
 #: model:ir.model.fields,field_description:note.field_note_tag____last_update
 msgid "Last Modified on"
-msgstr "Posledná modifikácia"
+msgstr "Posledná úprava"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__write_uid
@@ -242,17 +283,12 @@ msgstr "Naposledy upravované"
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Late Activities"
-msgstr ""
+msgstr "Omeškané aktivity"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
-
-#. module: note
-#: selection:mail.activity.type,category:0
-msgid "Meeting"
-msgstr "Stretnutie"
+msgstr "Hlavná príloha"
 
 #. module: note
 #: model:note.stage,name:note.note_stage_01
@@ -262,7 +298,7 @@ msgstr ""
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Chyba zobrazovania správ"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_ids
@@ -270,9 +306,9 @@ msgid "Messages"
 msgstr "Správy"
 
 #. module: note
-#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
-msgid "My Activities"
-msgstr ""
+#: model:ir.model.fields,field_description:note.field_note_note__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Termín mojej aktivity"
 
 #. module: note
 #: model:note.stage,name:note.note_stage_00
@@ -280,9 +316,14 @@ msgid "New"
 msgstr "Nové"
 
 #. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Kalendár ďalších aktivít eventu"
+
+#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Ďalší konečný termín aktivity"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_summary
@@ -292,7 +333,7 @@ msgstr "Zhrnutie ďalšej aktivity"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Typ ďalšej aktivity"
 
 #. module: note
 #: model:ir.model,name:note.model_note_note
@@ -309,7 +350,7 @@ msgstr "Obsah poznámky"
 #. module: note
 #: model:ir.model,name:note.model_note_stage
 msgid "Note Stage"
-msgstr "Etapa poznámky"
+msgstr "Štádium poznámky"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__name
@@ -319,14 +360,14 @@ msgstr "Zhrnutie poznámky"
 #. module: note
 #: model:ir.model,name:note.model_note_tag
 msgid "Note Tag"
-msgstr "Visačka poznámky"
+msgstr "Tag poznámky"
 
 #. module: note
-#: code:addons/note/models/res_users.py:61
+#: code:addons/note/models/res_users.py:0
 #: model:ir.actions.act_window,name:note.action_note_note
 #: model:ir.ui.menu,name:note.menu_note_notes
-#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 #: model:note.stage,name:note.note_stage_02
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 #, python-format
 msgid "Notes"
 msgstr "Poznámky"
@@ -345,48 +386,28 @@ msgstr "Počet akcií"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_has_error_counter
-msgid "Number of error"
-msgstr ""
+msgid "Number of errors"
+msgstr "Počet chýb"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "Počet správ ktoré vyžadujú akciu"
+msgstr "Počet správ, ktoré vyžadujú akciu"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note__message_unread_counter
-msgid "Number of unread messages"
-msgstr "Počet neprečítaných správ"
-
-#. module: note
-#: selection:mail.activity.type,category:0
-msgid "Other"
-msgstr "Iné"
-
-#. module: note
-#: selection:note.note,activity_state:0
-msgid "Overdue"
-msgstr "Oneskorené"
+msgstr "Počet doručených správ s chybou"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__user_id
 #: model:ir.model.fields,field_description:note.field_note_stage__user_id
 msgid "Owner"
-msgstr "Vlastník"
+msgstr "Majiteľ"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage__user_id
 msgid "Owner of the note stage"
-msgstr ""
-
-#. module: note
-#: selection:note.note,activity_state:0
-msgid "Planned"
 msgstr ""
 
 #. module: note
@@ -396,25 +417,25 @@ msgstr ""
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:23
+#: code:addons/note/static/src/xml/systray.xml:0
 #, python-format
 msgid "Remember..."
 msgstr ""
 
 #. module: note
-#: selection:mail.activity.type,category:0
+#: model:ir.model.fields.selection,name:note.selection__mail_activity_type__category__reminder
 #: model:mail.activity.type,name:note.mail_activity_data_reminder
 msgid "Reminder"
-msgstr ""
+msgstr "Pripomienka"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_user_id
 msgid "Responsible User"
-msgstr "Zodpovedný používateľ"
+msgstr "Zodpovedný užívateľ"
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:25
+#: code:addons/note/static/src/xml/systray.xml:0
 #, python-format
 msgid "SAVE"
 msgstr ""
@@ -427,7 +448,8 @@ msgstr "Postupnosť"
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:18
+#: code:addons/note/static/src/xml/systray.xml:0
+#: code:addons/note/static/src/xml/systray.xml:0
 #, python-format
 msgid "Set date and time"
 msgstr ""
@@ -435,18 +457,18 @@ msgstr ""
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Show all records which has next action date is before today"
-msgstr ""
+msgstr "Zobraz všetky záznamy, ktorých následná aktivita je pred dnešným dňom"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__stage_id
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Stage"
-msgstr "Etapa"
+msgstr "Štádium"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage__name
 msgid "Stage Name"
-msgstr "Názov etapy"
+msgstr "Názov štádia"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_stage_form
@@ -458,7 +480,7 @@ msgstr "Etapa poznámok"
 #: model:ir.ui.menu,name:note.menu_notes_stage
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_tree
 msgid "Stages"
-msgstr "Etapy"
+msgstr "Štádia"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_stage_tree
@@ -478,16 +500,20 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Status založený na aktivitách\n"
+"Zmeškané: dátum už vypršal\n"
+"Dnes: dátum aktivity je dnes\n"
+"Plán: budúce aktivity"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_tag__name
 msgid "Tag Name"
-msgstr "Názov visačky"
+msgstr "Názov tagu"
 
 #. module: note
-#: sql_constraint:note.tag:0
+#: model:ir.model.constraint,message:note.constraint_note_tag_name_uniq
 msgid "Tag name already exists !"
-msgstr "Názov visačky už existuje !"
+msgstr "Názov značky už existuje!"
 
 #. module: note
 #: model:ir.actions.act_window,name:note.note_tag_action
@@ -497,12 +523,11 @@ msgstr "Názov visačky už existuje !"
 #: model_terms:ir.ui.view,arch_db:note.note_tag_view_tree
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
-msgstr "Popisky"
+msgstr "Tagy"
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/js/systray_activity_menu.js:97
-#: selection:note.note,activity_state:0
+#: code:addons/note/static/src/js/systray_activity_menu.js:0
 #, python-format
 msgid "Today"
 msgstr "Dnes"
@@ -515,17 +540,12 @@ msgstr "Dnešné aktivity"
 #. module: note
 #: model:note.stage,name:note.note_stage_03
 msgid "Todo"
-msgstr "Zostáva"
+msgstr "Zoznam úloh"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__message_unread
-msgid "Unread Messages"
-msgstr "Neprečítané správy"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Počítadlo neprečítaných správ"
+#: model:ir.model.fields,help:note.field_note_note__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Typ výnimočnej aktivity v zázname."
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage__sequence
@@ -535,14 +555,4 @@ msgstr "Používa sa na zoradenie fáz poznámok."
 #. module: note
 #: model:ir.model,name:note.model_res_users
 msgid "Users"
-msgstr "Používatelia"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__website_message_ids
-msgid "Website Messages"
-msgstr "Správy Webových stránok"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note__website_message_ids
-msgid "Website communication history"
-msgstr "História komunikácie webových stránok"
+msgstr "Užívatelia"

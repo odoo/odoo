@@ -1,17 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * base_address_extended
+# 	* base_address_extended
 # 
 # Translators:
-# Martin Trigaux, 2018
-# gebri <gebri@inmail.sk>, 2018
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
-"Last-Translator: gebri <gebri@inmail.sk>, 2018\n"
+"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"PO-Revision-Date: 2017-02-15 10:48+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,16 +20,41 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: base_address_extended
-#: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_country_extended_form
-msgid ""
-"Change how the system computes the full street field based on the different "
-"street subfields"
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "<span> - </span>"
 msgstr ""
 
 #. module: base_address_extended
-#: model:ir.model,name:base_address_extended.model_res_company
-msgid "Companies"
-msgstr "Spoločnosti"
+#: model:ir.model.fields,help:base_address_extended.field_res_country__enforce_cities
+#: model:ir.model.fields,help:base_address_extended.field_res_partner__country_enforce_cities
+#: model:ir.model.fields,help:base_address_extended.field_res_users__country_enforce_cities
+msgid ""
+"Check this box to ensure every address created in that country has a 'City' "
+"chosen in the list of the country's cities."
+msgstr ""
+"Začiarknite toto políčko, aby ste sa ubezpečili, že každá adresa vytvorená v"
+" tejto krajine má v zozname miest v krajine vybrané „Mesto“."
+
+#. module: base_address_extended
+#: model:ir.actions.act_window,name:base_address_extended.action_res_city_tree
+#: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_country_city_extended_form
+msgid "Cities"
+msgstr "Mestá"
+
+#. module: base_address_extended
+#: model:ir.model,name:base_address_extended.model_res_city
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_city_form
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+#: model_terms:ir.ui.view,arch_db:base_address_extended.view_city_filter
+#: model_terms:ir.ui.view,arch_db:base_address_extended.view_city_tree
+msgid "City"
+msgstr "Mesto"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__city_id
+#: model:ir.model.fields,field_description:base_address_extended.field_res_users__city_id
+msgid "City ID"
+msgstr ""
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_partner
@@ -38,73 +63,129 @@ msgstr "Kontakt"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_country
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__country_id
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "Country"
 msgstr "Štát"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__create_uid
+msgid "Created by"
+msgstr "Vytvoril"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__create_date
+msgid "Created on"
+msgstr "Vytvorené"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__display_name
+msgid "Display Name"
+msgstr "Zobrazovaný názov"
+
+#. module: base_address_extended
+#: model_terms:ir.actions.act_window,help:base_address_extended.action_res_city_tree
+msgid ""
+"Display and manage the list of all cities that can be assigned to\n"
+"                your partner records. Note that an option can be set on each country separately\n"
+"                to enforce any address of it to have a city in this list."
+msgstr ""
+"Zobrazte a spravujte zoznam všetkých miest, ktoré môžu byť priradené\n"
+"záznamy vašich partnerov. Upozorňujeme, že možnosť sa nastavuje pre každú krajinu osobitne\n"
+"získať jeho adresu a mať mesto v tomto zozname."
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number2
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_number2
 msgid "Door"
+msgstr "Dvere"
+
+#. module: base_address_extended
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "Door #"
 msgstr ""
 
 #. module: base_address_extended
-#: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_number2
-#: model:ir.model.fields,help:base_address_extended.field_res_partner__street_number2
-#: model:ir.model.fields,help:base_address_extended.field_res_users__street_number2
-msgid "Door Number"
-msgstr ""
-
-#. module: base_address_extended
-#: model:ir.model.fields,help:base_address_extended.field_res_country__street_format
-msgid ""
-"Format to use for streets belonging to this country.\n"
-"\n"
-"You can use the python-style string pattern with all the fields of the street (for example, use '%(street_name)s, %(street_number)s' if you want to display the street name, followed by a comma and the house number)\n"
-"%(street_name)s: the name of the street\n"
-"%(street_number)s: the house number\n"
-"%(street_number2)s: the door number"
-msgstr ""
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__enforce_cities
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__country_enforce_cities
+#: model:ir.model.fields,field_description:base_address_extended.field_res_users__country_enforce_cities
+msgid "Enforce Cities"
+msgstr "Vyžadovať mesto"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_number
 msgid "House"
+msgstr "Dom"
+
+#. module: base_address_extended
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "House #"
 msgstr ""
 
 #. module: base_address_extended
-#: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_number
-#: model:ir.model.fields,help:base_address_extended.field_res_partner__street_number
-#: model:ir.model.fields,help:base_address_extended.field_res_users__street_number
-msgid "House Number"
-msgstr ""
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__id
+msgid "ID"
+msgstr "ID"
 
 #. module: base_address_extended
-#: model:ir.model.fields,field_description:base_address_extended.field_res_country__street_format
-msgid "Street Format"
-msgstr ""
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city____last_update
+msgid "Last Modified on"
+msgstr "Posledná úprava"
 
 #. module: base_address_extended
-#: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__write_uid
+msgid "Last Updated by"
+msgstr "Naposledy upravoval"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__write_date
+msgid "Last Updated on"
+msgstr "Naposledy upravované"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__name
+msgid "Name"
+msgstr "Meno"
+
+#. module: base_address_extended
+#: model_terms:ir.ui.view,arch_db:base_address_extended.view_city_filter
+msgid "Search City"
+msgstr "Vyhľadať mesto"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__state_id
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "State"
+msgstr "Štát"
+
+#. module: base_address_extended
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "Street"
+msgstr "Ulica"
+
+#. module: base_address_extended
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "Street 2..."
+msgstr "Ulica 2..."
+
+#. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_name
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_name
 msgid "Street Name"
-msgstr ""
+msgstr "Názov ulice"
 
 #. module: base_address_extended
-#: model_terms:ir.ui.view,arch_db:base_address_extended.view_partner_address_structured_form
-#: model_terms:ir.ui.view,arch_db:base_address_extended.view_partner_structured_form
-#: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_company_extended_form
-msgid "Street Name..."
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "Street..."
+msgstr "Ulica..."
 
 #. module: base_address_extended
-#: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_country_extended_form
-msgid "Street format..."
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "ZIP"
+msgstr "PSČ"
 
 #. module: base_address_extended
-#: code:addons/base_address_extended/models/base_address_extended.py:65
-#: code:addons/base_address_extended/models/base_address_extended.py:113
-#, python-format
-msgid "Unrecognized field %s in street format."
-msgstr ""
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__zipcode
+msgid "Zip"
+msgstr "PSČ"

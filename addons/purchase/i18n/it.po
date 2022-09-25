@@ -1672,6 +1672,7 @@ msgstr "Nessun ordine di acquisto trovato. Creane uno!"
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_history
 msgid "No purchase order were made for this product yet!"
 msgstr ""
+"Non sono ancora stati effettuati ordini di acquisto per questo prodotto!"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_rfq
@@ -2020,13 +2021,13 @@ msgstr "Voce griglia per acquisti"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Purchase History"
-msgstr ""
+msgstr "Cronologia acquisti"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Purchase History for %s"
-msgstr ""
+msgstr "Cronologia acquisti per %s"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_lead
@@ -2296,7 +2297,7 @@ msgstr "RdP inviata"
 #. module: purchase
 #: model:mail.template,report_name:purchase.email_template_edi_purchase
 msgid "RFQ_{{ (object.name or '').replace('/','_') }}"
-msgstr ""
+msgstr "RFQ_{{ (object.name or '').replace('/','_') }}"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -2702,7 +2703,7 @@ msgstr "Paese Imposte"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_totals_json
 msgid "Tax Totals Json"
-msgstr ""
+msgstr "Tax Totals Json"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_tax
@@ -3252,4 +3253,4 @@ msgstr "giorno/i prima"
 #: model:mail.template,subject:purchase.email_template_edi_purchase_done
 #: model:mail.template,subject:purchase.email_template_edi_purchase_reminder
 msgid "{{ object.company_id.name }} Order (Ref {{ object.name or 'n/a' }})"
-msgstr ""
+msgstr "{{ object.company_id.name }} Ordine (Ref {{ object.name or 'n/a' }})"

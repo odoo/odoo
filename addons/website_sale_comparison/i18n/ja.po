@@ -1,18 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_sale_comparison
+# 	* website_sale_comparison
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2018
-# Manami Hashi <manami@roomsfor.hk>, 2018
+# Noma Yuki, 2022
+# Ryoko Tsuda <ryoko@quartile.co>, 2022
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Manami Hashi <manami@roomsfor.hk>, 2018\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
+"PO-Revision-Date: 2017-07-17 09:13+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,23 +23,30 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_sale_comparison
-#: model:product.attribute.value,name:website_sale_comparison.product_attribute_value_8
-msgid "134.7 x 200 x 7.2 mm"
-msgstr ""
-
-#. module: website_sale_comparison
-#: model:product.attribute.value,name:website_sale_comparison.product_attribute_value_7
-msgid "308 g"
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
+msgid ""
+"<i class=\"fa fa-chevron-circle-down o_product_comparison_collpase\" "
+"role=\"img\" aria-label=\"Collapse\" title=\"Collapse\"/>"
 msgstr ""
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.recommended_product
 msgid "<i class=\"fa fa-exchange\"/> Compare"
-msgstr ""
+msgstr "<i class=\"fa fa-exchange\"/> 比較"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
-msgid "<i class=\"fa fa-shopping-cart\"/>&amp;nbsp;Add to Cart"
+msgid "<i class=\"fa fa-shopping-cart mr-2\"/>Add to Cart"
+msgstr "<i class=\"fa fa-shopping-cart mr-2\"/>カートに追加"
+
+#. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_product
+msgid "<i class=\"fa fa-trash\" role=\"img\" aria-label=\"Remove\"/>"
+msgstr ""
+
+#. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
+msgid "<span class=\"fa fa-exchange mr-2\"/>Compare"
 msgstr ""
 
 #. module: website_sale_comparison
@@ -48,23 +57,18 @@ msgstr ""
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "<strong>Price:</strong>"
-msgstr ""
+msgstr "<strong>価格:</strong>"
 
 #. module: website_sale_comparison
-#: model:product.attribute.value,name:website_sale_comparison.product_attribute_value_1
-msgid "Apple"
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
+msgid "<strong>x</strong>"
 msgstr ""
 
 #. module: website_sale_comparison
 #: model:ir.actions.act_window,name:website_sale_comparison.product_attribute_category_action
 #: model:ir.ui.menu,name:website_sale_comparison.menu_attribute_category_action
 msgid "Attribute Categories"
-msgstr ""
-
-#. module: website_sale_comparison
-#: model:product.attribute,name:website_sale_comparison.product_attribute_1
-msgid "Brand"
-msgstr ""
+msgstr "属性カテゴリ"
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute__category_id
@@ -78,21 +82,21 @@ msgstr "カテゴリ名"
 
 #. module: website_sale_comparison
 #. openerp-web
-#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:8
-#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:20
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.add_to_compare
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_add_to_compare
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
 #, python-format
 msgid "Compare"
-msgstr ""
+msgstr "比較"
 
 #. module: website_sale_comparison
 #. openerp-web
-#: code:addons/website_sale_comparison/static/src/js/website_sale_comparison.js:51
+#: code:addons/website_sale_comparison/static/src/js/website_sale_comparison.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 #, python-format
 msgid "Compare Products"
-msgstr ""
+msgstr "プロダクトを比較"
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__create_uid
@@ -105,14 +109,9 @@ msgid "Created on"
 msgstr "作成日"
 
 #. module: website_sale_comparison
-#: model:product.attribute,name:website_sale_comparison.product_attribute_8
-msgid "Dimensions"
-msgstr ""
-
-#. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__display_name
 msgid "Display Name"
-msgstr "表示名"
+msgstr "名前を表示"
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__id
@@ -136,7 +135,9 @@ msgstr "最終更新日"
 
 #. module: website_sale_comparison
 #. openerp-web
-#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:7
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
+#: model:ir.model,name:website_sale_comparison.model_product_product
 #, python-format
 msgid "Product"
 msgstr "プロダクト"
@@ -153,15 +154,20 @@ msgid "Product Attribute Category"
 msgstr "プロダクト属性カテゴリ"
 
 #. module: website_sale_comparison
-#: model:ir.model,name:website_sale_comparison.model_product_template
-msgid "Product Template"
-msgstr "プロダクトテンプレート"
+#: model:ir.model,name:website_sale_comparison.model_product_template_attribute_line
+msgid "Product Template Attribute Line"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_product
 msgid "Product image"
 msgstr ""
+
+#. module: website_sale_comparison
+#: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__attribute_ids
+msgid "Related Attributes"
+msgstr "関連属性"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_product
@@ -187,34 +193,29 @@ msgstr ""
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
-msgid "Specifications for"
-msgstr ""
+msgid "Specifications"
+msgstr "仕様設計"
 
 #. module: website_sale_comparison
-#: code:addons/website_sale_comparison/controllers/main.py:23
-#: code:addons/website_sale_comparison/models/website_sale_comparison.py:30
-#, python-format
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "Uncategorized"
 msgstr "未分類"
 
 #. module: website_sale_comparison
 #. openerp-web
-#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:15
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #, python-format
 msgid "Warning"
 msgstr "警告"
 
 #. module: website_sale_comparison
-#: model:product.attribute,name:website_sale_comparison.product_attribute_7
-msgid "Weight"
-msgstr "重量"
-
-#. module: website_sale_comparison
 #. openerp-web
-#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:15
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #, python-format
 msgid "You can compare max 4 products."
-msgstr ""
+msgstr "最大で4プロダクトを比較できます。"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body

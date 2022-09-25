@@ -3,20 +3,15 @@
 # 	* auth_oauth
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Morten Schou <ms@msteknik.dk>, 2019
-# Jesper Carstensen <jc@danodoo.dk>, 2019
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
-# Sanne Kristensen <sanne@vkdata.dk>, 2019
-# lhmflexerp <lhm@flexerp.dk>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
+"POT-Creation-Date: 2022-05-30 06:06+0000\n"
+"PO-Revision-Date: 2016-08-05 12:56+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,13 +52,8 @@ msgstr "Tilladt"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__auth_endpoint
-msgid "Authentication URL"
-msgstr "Godkendelses URL"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__body
-msgid "Body"
-msgstr "Brødtekst"
+msgid "Authorization URL"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__css_class
@@ -98,13 +88,18 @@ msgstr "Oprettet den"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__data_endpoint
-msgid "Data URL"
-msgstr "Data URL"
+msgid "Data Endpoint"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__display_name
 msgid "Display Name"
 msgstr "Vis navn"
+
+#. module: auth_oauth
+#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
+msgid "Documentation"
+msgstr "Dokumentation"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
@@ -130,6 +125,31 @@ msgstr "Sidst opdateret af"
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__write_date
 msgid "Last Updated on"
 msgstr "Sidst opdateret den"
+
+#. module: auth_oauth
+#: model:ir.model.fields,help:auth_oauth.field_auth_oauth_provider__body
+msgid "Link text in Login Dialog"
+msgstr "Tekst til login-dialogen"
+
+#. module: auth_oauth
+#: model:auth.oauth.provider,body:auth_oauth.provider_facebook
+msgid "Log in with Facebook"
+msgstr "Log ind med Facebook"
+
+#. module: auth_oauth
+#: model:auth.oauth.provider,body:auth_oauth.provider_google
+msgid "Log in with Google"
+msgstr "Log ind med Google"
+
+#. module: auth_oauth
+#: model:auth.oauth.provider,body:auth_oauth.provider_openerp
+msgid "Log in with Odoo.com"
+msgstr "Log ind med Odoo.com"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__body
+msgid "Login button label"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users__oauth_access_token
@@ -209,14 +229,14 @@ msgid "System Parameter"
 msgstr "Systemparameter"
 
 #. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__validation_endpoint
+msgid "UserInfo URL"
+msgstr ""
+
+#. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users
 msgid "Users"
 msgstr "Brugere"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__validation_endpoint
-msgid "Validation URL"
-msgstr "Godkendelses URL"
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:0

@@ -1,20 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * barcodes
+# 	* barcodes
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Matus Krnac <matus.krnac@gmail.com>, 2018
-# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
-# gebri <gebri@inmail.sk>, 2018
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: gebri <gebri@inmail.sk>, 2018\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2016-08-05 12:56+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,28 +20,10 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:204
+#: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"
 msgstr " '*' nie je platný vzor Regex čiarového kódu. Mysleli ste '.*' ?"
-
-#. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:202
-#, python-format
-msgid ": a rule can only contain one pair of braces."
-msgstr ": pravidlo môže obsahovať iba jeden pár zátvoriek."
-
-#. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:198
-#, python-format
-msgid ": braces can only contain N's followed by D's."
-msgstr ": zátvorky môžu obsahovať len N, po ktorom následuje D."
-
-#. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:200
-#, python-format
-msgid ": empty braces."
-msgstr ": prázdne zátvorky."
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -71,16 +50,16 @@ msgstr ""
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid "Add a new barcode nomenclature"
-msgstr ""
+msgstr "Pridaj nové názvoslovie čiarového kódu"
 
 #. module: barcodes
-#: selection:barcode.rule,type:0
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__alias
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__type__alias
 msgid "Alias"
 msgstr "Alias"
 
 #. module: barcodes
-#: selection:barcode.nomenclature,upc_ean_conv:0
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__always
 msgid "Always"
 msgstr "Vždy"
 
@@ -95,14 +74,14 @@ msgid "An internal identification of the barcode nomenclature"
 msgstr "Interná identifikácia názvoslovia čiarového kódu"
 
 #. module: barcodes
-#: selection:barcode.rule,encoding:0
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__any
 msgid "Any"
 msgstr "Ktorýkoľvek"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
 msgid "Barcode Event Mixin"
-msgstr ""
+msgstr "Udalosť čiarového kódu mixin"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_nomenclature
@@ -135,16 +114,6 @@ msgid "Barcode Scanned"
 msgstr "Čiarový kód naskenovaný"
 
 #. module: barcodes
-#: selection:barcode.rule,type:0
-msgid "Cashier"
-msgstr "Pokladník"
-
-#. module: barcodes
-#: selection:barcode.rule,type:0
-msgid "Client"
-msgstr "Klient"
-
-#. module: barcodes
 #: model:ir.model,name:barcodes.model_res_company
 msgid "Companies"
 msgstr "Spoločnosti"
@@ -162,42 +131,38 @@ msgid "Created on"
 msgstr "Vytvorené"
 
 #. module: barcodes
-#: selection:barcode.rule,type:0
-msgid "Credit Card"
-msgstr "Kreditná karta"
-
-#. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:390
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
 #, python-format
 msgid "Discard"
 msgstr "Zrušiť"
 
 #. module: barcodes
-#: selection:barcode.rule,type:0
-msgid "Discounted Product"
-msgstr "Zľavnený produkt"
-
-#. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__display_name
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__display_name
-#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__display_name
 msgid "Display Name"
-msgstr "Zobrazovaný Názov"
+msgstr "Zobrazovaný názov"
 
 #. module: barcodes
-#: selection:barcode.rule,encoding:0
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__ean13
 msgid "EAN-13"
-msgstr ""
+msgstr "EAN-13"
 
 #. module: barcodes
-#: selection:barcode.nomenclature,upc_ean_conv:0
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__ean2upc
 msgid "EAN-13 to UPC-A"
 msgstr "EAN-13 na UPC-A"
 
 #. module: barcodes
-#: selection:barcode.rule,encoding:0
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__ean8
 msgid "EAN-8"
+msgstr "EAN-8"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
+#, python-format
+msgid "Enable edit mode to modify this document"
 msgstr ""
 
 #. module: barcodes
@@ -206,54 +171,21 @@ msgid "Encoding"
 msgstr "Zakódovanie"
 
 #. module: barcodes
-#. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:326
-#, python-format
-msgid "Error: Barcode command is undefined"
-msgstr ""
-
-#. module: barcodes
-#. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:63
-#, python-format
-msgid "Error: Document not editable"
-msgstr ""
-
-#. module: barcodes
-#. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:362
-#, python-format
-msgid "Error: No last scanned barcode"
-msgstr ""
-
-#. module: barcodes
-#. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:95
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:110
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:126
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:139
-#, python-format
-msgid "Error: Pager not available"
-msgstr ""
-
-#. module: barcodes
 #: model:ir.model,name:barcodes.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP smerovanie"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__id
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__id
-#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__id
 msgid "ID"
 msgstr "ID"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature____last_update
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule____last_update
-#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin____last_update
 msgid "Last Modified on"
-msgstr "Posledná modifikácia"
+msgstr "Posledná úprava"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_uid
@@ -268,17 +200,7 @@ msgid "Last Updated on"
 msgstr "Naposledy upravované"
 
 #. module: barcodes
-#: selection:barcode.rule,type:0
-msgid "Location"
-msgstr "Umiestnenie"
-
-#. module: barcodes
-#: selection:barcode.rule,type:0
-msgid "Lot"
-msgstr "Šarža"
-
-#. module: barcodes
-#: selection:barcode.nomenclature,upc_ean_conv:0
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__none
 msgid "Never"
 msgstr "Nikdy"
 
@@ -286,11 +208,15 @@ msgstr "Nikdy"
 #: model:ir.model.fields,field_description:barcodes.field_res_company__nomenclature_id
 msgid "Nomenclature"
 msgstr ""
+"Nomenklatúra\n"
+" "
 
 #. module: barcodes
-#: selection:barcode.rule,type:0
-msgid "Package"
-msgstr "Balík"
+#. openerp-web
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
+#, python-format
+msgid "Pager unavailable"
+msgstr ""
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -310,11 +236,6 @@ msgstr ""
 "nuly."
 
 #. module: barcodes
-#: selection:barcode.rule,type:0
-msgid "Priced Product"
-msgstr "Ocenený produkt"
-
-#. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__name
 msgid "Rule Name"
 msgstr "Meno pravidla"
@@ -326,10 +247,17 @@ msgstr "Pravidlá"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:382
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
+#, python-format
+msgid "Scan a barcode to set the quantity"
+msgstr ""
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
 #, python-format
 msgid "Select"
-msgstr "Vybrať"
+msgstr "Potvrdiť "
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__sequence
@@ -338,7 +266,7 @@ msgstr "Postupnosť"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:381
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
 #, python-format
 msgid "Set quantity"
 msgstr "Nastaviť množstvo"
@@ -364,12 +292,27 @@ msgid "The matched pattern will alias to this barcode"
 msgstr "Zodpovedajúci vzor bude alias tohto čiarového kódu"
 
 #. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:198
-#: code:addons/barcodes/models/barcodes.py:200
-#: code:addons/barcodes/models/barcodes.py:202
+#: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
-msgid "There is a syntax error in the barcode pattern "
-msgstr "Vo vzore čiarového kódu je chyba syntaxu"
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
+"contain one pair of braces."
+msgstr ""
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcode_rule.py:0
+#, python-format
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: braces can only "
+"contain N's followed by D's."
+msgstr ""
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcode_rule.py:0
+#, python-format
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: empty braces."
+msgstr ""
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
@@ -379,20 +322,6 @@ msgid ""
 msgstr ""
 "Toto pravidlo bude platiť iba ak je čiarový kód zakódovaný so špecifickým "
 "zakódovaním"
-
-#. module: barcodes
-#. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:64
-#, python-format
-msgid "To modify this document, please first start edition."
-msgstr "Pre úpravu tohto dokumntu, prosím najskôr začnite edíciu."
-
-#. module: barcodes
-#. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:363
-#, python-format
-msgid "To set the quantity please scan a barcode first."
-msgstr "Pre nastavenie množstva najskôr prosím naskenujte čiarový kód."
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__type
@@ -411,12 +340,12 @@ msgstr ""
 "jedným či druhým spôsobom pri snahe o zhodu pravidla s iným kódovaním"
 
 #. module: barcodes
-#: selection:barcode.rule,encoding:0
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__upca
 msgid "UPC-A"
-msgstr ""
+msgstr "UPC-A"
 
 #. module: barcodes
-#: selection:barcode.nomenclature,upc_ean_conv:0
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__upc2ean
 msgid "UPC-A to EAN-13"
 msgstr "UPC-A na EAN-13"
 
@@ -426,7 +355,14 @@ msgid "UPC/EAN Conversion"
 msgstr "UPC/EAN konverzia"
 
 #. module: barcodes
-#: selection:barcode.rule,type:0
+#. openerp-web
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
+#, python-format
+msgid "Undefined barcode command"
+msgstr ""
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__type__product
 msgid "Unit Product"
 msgstr "Jednotka produktu"
 
@@ -442,8 +378,3 @@ msgstr ""
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
 msgid "Value of the last barcode scanned."
 msgstr "Hodnota posledného naskenovaného čiarového kódu."
-
-#. module: barcodes
-#: selection:barcode.rule,type:0
-msgid "Weighted Product"
-msgstr "Vážený produkt"

@@ -1,22 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * analytic
+# 	* analytic
 # 
 # Translators:
-# Martin Trigaux, 2018
-# 최재호 <hwangtog@gmail.com>, 2018
-# Link Up링크업 <linkup.way@gmail.com>, 2018
-# Linkup <link-up@naver.com>, 2018
-# Seongseok Shin <shinss61@hotmail.com>, 2018
-# Mark Lee <odoos@soti.33mail.com>, 2018
+# Link Up링크업 <linkup.way@gmail.com>, 2022
+# Martin Trigaux, 2022
+# JH CHOI <hwangtog@gmail.com>, 2022
+# Linkup <link-up@naver.com>, 2022
+# Heesoo Choi, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-08-24 09:15+0000\n"
-"Last-Translator: Mark Lee <odoos@soti.33mail.com>, 2018\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2016-08-05 12:56+0000\n"
+"Last-Translator: Heesoo Choi, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,9 +24,14 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+msgid "<span class=\"o_stat_text\">Gross Margin</span>"
+msgstr ""
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction
 msgid "Action Needed"
-msgstr "필요한 조치"
+msgstr "조치 필요"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__active
@@ -39,12 +43,12 @@ msgstr "활성"
 #: model_terms:ir.actions.act_window,help:analytic.action_account_analytic_account_form
 #: model_terms:ir.actions.act_window,help:analytic.action_analytic_account_form
 msgid "Add a new analytic account"
-msgstr ""
+msgstr "새 분석 계정 추가"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_tag_action
 msgid "Add a new tag"
-msgstr ""
+msgstr "새 태그 추가"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__amount
@@ -66,16 +70,17 @@ msgstr "분석 계정"
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_distribution
 msgid "Analytic Account Distribution"
-msgstr ""
+msgstr "분석 계정 분포"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_group_action
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_group_form_view
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_group_tree_view
 msgid "Analytic Account Groups"
-msgstr ""
+msgstr "분석 계정 그룹"
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_res_config_settings__group_analytic_accounting
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
 msgstr "분석 회계"
@@ -83,7 +88,7 @@ msgstr "분석 회계"
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_tags
 msgid "Analytic Accounting Tags"
-msgstr ""
+msgstr "분석 회계 태그"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_account_analytic_account_form
@@ -95,7 +100,7 @@ msgstr "분석 계정"
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_group
 msgid "Analytic Categories"
-msgstr ""
+msgstr "분석 범주"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__active_analytic_distribution
@@ -113,7 +118,7 @@ msgstr "분석 항목"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Analytic Entry"
-msgstr "분석항목"
+msgstr "분석 항목"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
@@ -133,7 +138,7 @@ msgstr "분석 라인"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__name
 msgid "Analytic Tag"
-msgstr "분석태그"
+msgstr "분석 태그"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_tag_action
@@ -144,19 +149,22 @@ msgid "Analytic Tags"
 msgstr "분석 태그"
 
 #. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_form_view
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_view_search
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Archived"
-msgstr "아카이브됨"
+msgstr "보관됨"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Associated Partner"
-msgstr "관련 파트너"
+msgstr "관련 협력사"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "첨부 파일 수"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__balance
@@ -167,22 +175,28 @@ msgstr "잔액"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_kanban
 msgid "Balance:"
-msgstr "잔고:"
+msgstr "잔고 :"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__category
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+msgid "Category"
+msgstr "카테고리"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_analytic_account_form
 msgid "Chart of Analytic Accounts"
-msgstr "계정과목차트"
+msgstr "분석 계정과목 일람표"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__children_ids
 msgid "Childrens"
-msgstr ""
+msgstr "하위 요소"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
 msgid "Click to add a new analytic account group."
-msgstr ""
+msgstr "분석 계정 그룹을 추가하려면 클릭하세요."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__color
@@ -200,17 +214,19 @@ msgstr "회사"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__complete_name
 msgid "Complete Name"
-msgstr "전체 명칭"
+msgstr "전체 이름"
 
 #. module: analytic
-#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
-msgid "Cost/Revenue"
-msgstr "비용/수익"
+#: model:ir.model,name:analytic.model_res_config_settings
+msgid "Config Settings"
+msgstr "설정 구성"
 
 #. module: analytic
-#: model:ir.actions.act_window,name:analytic.account_analytic_line_action
-msgid "Costs & Revenues"
-msgstr "비용/수익"
+#: model:ir.model.fields,help:analytic.field_account_analytic_line__product_uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr "단위 사이의 변환은 동일 카테고리에서만 가능합니다. 변환은 비율에 따라 이루어집니다."
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -218,7 +234,7 @@ msgstr "비용/수익"
 msgid ""
 "Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets."
-msgstr "비용은, 공급업체용 인보이스및 비용 또는 타임시트를 등록할때 자동적으로 생성됩니다."
+msgstr "공급 업체 송장, 비용 또는 작업 기록을 등록하면 비용이 자동으로 생성됩니다."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__create_uid
@@ -236,7 +252,7 @@ msgstr "작성자"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__create_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__create_date
 msgid "Created on"
-msgstr "작성일"
+msgstr "작성일자"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__credit
@@ -248,7 +264,7 @@ msgstr "대변"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__currency_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__currency_id
 msgid "Currency"
-msgstr "환율"
+msgstr "통화"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__partner_id
@@ -257,8 +273,9 @@ msgstr "고객"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__date
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Date"
-msgstr "날짜"
+msgstr "일자"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__debit
@@ -270,7 +287,7 @@ msgstr "차변"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__description
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__name
 msgid "Description"
-msgstr "내용"
+msgstr "설명"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__display_name
@@ -279,7 +296,7 @@ msgstr "내용"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__display_name
 msgid "Display Name"
-msgstr "이름 표시"
+msgstr "표시명"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_follower_ids
@@ -287,14 +304,14 @@ msgid "Followers"
 msgstr "팔로워"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "팔로워 (채널)"
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "팔로워 (파트너)"
+
+#. module: analytic
+#: model:ir.actions.act_window,name:analytic.account_analytic_line_action
+msgid "Gross Margin"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__group_id
@@ -309,6 +326,11 @@ msgid "Group By..."
 msgstr "그룹별..."
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__has_message
+msgid "Has Message"
+msgstr "메시지가 있습니다"
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__id
@@ -318,26 +340,22 @@ msgid "ID"
 msgstr "ID"
 
 #. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_unread
-msgid "If checked new messages require your attention."
-msgstr "만약 선택하였으면, 새 메시지에 주의를 기울여야 합니다."
-
-#. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "만약 선택하였으면, 새 메시지에 주의를 기울여야 합니다."
+msgstr "만약 선택하였으면, 신규 메시지에 주의를 기울여야 합니다."
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "이 옵션을 선택하면 일부 정보가 전달 오류를 생성합니다."
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__active
 msgid ""
 "If the active field is set to False, it will allow you to hide the account "
 "without removing it."
-msgstr "\"active\" 항목을 false로 설정하면, 제거하지 않고도 그 계정을 숨길 수 있습니다."
+msgstr "활성 필드를 거짓으로 설정하면 제거하지 않고도 그 계정을 숨길 수 있습니다."
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -346,12 +364,13 @@ msgid ""
 "In Odoo, sales orders and projects are implemented using\n"
 "                analytic accounts. You can track costs and revenues to analyse\n"
 "                your margins easily."
-msgstr "Odoo에서 판매주문및 프로젝트는 분석회계를 사용하여 구현됩니다. 쉽게 마진을 분석하기위해 비용/수익을 추적할 수 있습니다."
+msgstr ""
+"Odoo에서 판매 주문 및 프로젝트는 분석 회계를 사용하여 구현됩니다. 쉽게 이윤을 분석하기 위해 비용/수익을 추적할 수 있습니다."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_is_follower
 msgid "Is Follower"
-msgstr "팔로워입니다"
+msgstr "팔로워임"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account____last_update
@@ -360,7 +379,7 @@ msgstr "팔로워입니다"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line____last_update
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag____last_update
 msgid "Last Modified on"
-msgstr "최근 수정"
+msgstr "최근 수정일"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__write_uid
@@ -378,17 +397,17 @@ msgstr "최근 갱신한 사람"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__write_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__write_date
 msgid "Last Updated on"
-msgstr "최근 갱신 날짜"
+msgstr "최근 갱신 일자"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "주요 첨부 파일"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "메시지 전송 오류"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_ids
@@ -405,22 +424,22 @@ msgstr "이름"
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid "No activity yet"
-msgstr ""
+msgstr "아직 활동이 없습니다"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
 msgid "No activity yet on this account"
-msgstr ""
+msgstr "아직 이 계정에 활동이 없습니다"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "작업 수"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_error_counter
-msgid "Number of error"
-msgstr ""
+msgid "Number of errors"
+msgstr "오류 횟수"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction_counter
@@ -430,12 +449,17 @@ msgstr "조치가 필요한 메시지 수"
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "전송 오류 메시지 수"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_unread_counter
 msgid "Number of unread messages"
 msgstr "읽지 않은 메시지 수"
+
+#. module: analytic
+#: model:ir.model.fields.selection,name:analytic.selection__account_analytic_line__category__other
+msgid "Other"
+msgstr "기타"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__parent_id
@@ -445,22 +469,22 @@ msgstr "상위"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__parent_path
 msgid "Parent Path"
-msgstr ""
+msgstr "상위 경로"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__tag_id
 msgid "Parent tag"
-msgstr ""
+msgstr "상위 태그"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__partner_id
 msgid "Partner"
-msgstr "협력사"
+msgstr "파트너"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__percentage
 msgid "Percentage"
-msgstr "퍼센트"
+msgstr "비율"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__unit_amount
@@ -482,16 +506,25 @@ msgid ""
 "                (fixed price invoices), on timesheets (based on the work done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
+"고객 송장을 생성하면 수익이 자동으로 생성됩니다. \n"
+"                고객 송장은 판매 주문(고정 가격 송장), \n"
+"                작업 기록표(작업에 기반) 또는 \n"
+"                비용(예 : 출장 비용의 재청구)에 따라 작성될 수 있습니다."
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Search Analytic Lines"
-msgstr "분석적 명세 검색"
+msgstr "분석 명세 검색"
+
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_view_search
+msgid "Search Analytic Tags"
+msgstr "분석 태그 검색"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_tag__active
 msgid "Set active to false to hide the Analytic Tag without removing it."
-msgstr ""
+msgstr "분석 태그를 제거하지 않고 숨기려면 활성 상태를 false로 설정합니다."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__tag_ids
@@ -499,27 +532,22 @@ msgid "Tags"
 msgstr "태그"
 
 #. module: analytic
-#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
-msgid "Tasks Date"
-msgstr ""
-
-#. module: analytic
-#: sql_constraint:account.analytic.distribution:0
+#: model:ir.model.constraint,message:analytic.constraint_account_analytic_distribution_check_percentage
 msgid ""
 "The percentage of an analytic distribution should be between 0 and 100."
-msgstr ""
+msgstr "분석 분포의 백분율은 0과 100 사이입니다."
 
 #. module: analytic
-#: code:addons/analytic/models/analytic_account.py:195
+#: code:addons/analytic/models/analytic_account.py:0
 #, python-format
 msgid ""
-"The selected account belongs to another company that the one you're trying "
+"The selected account belongs to another company than the one you're trying "
 "to create an analytic item for"
 msgstr ""
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
-msgid "This allows to classify your analytic accounts."
+msgid "This allows you to classify your analytic accounts."
 msgstr ""
 
 #. module: analytic
@@ -543,6 +571,11 @@ msgid "Unread Messages Counter"
 msgstr "읽지 않은 메세지 수"
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_category_id
+msgid "UoM Category"
+msgstr ""
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id
 msgid "User"
 msgstr "사용자"
@@ -550,4 +583,4 @@ msgstr "사용자"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "e.g. Project XYZ"
-msgstr ""
+msgstr "예 : 프로젝트 XYZ"

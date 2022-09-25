@@ -1,21 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * portal
+# 	* portal
 # 
 # Translators:
-# SHIMIZU Taku <shimizu.taku@gmail.com>, 2018
-# Martin Trigaux, 2018
-# Manami Hashi <manami@roomsfor.hk>, 2018
-# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2018
+# Tim Siu Lai <tl@roomsfor.hk>, 2022
+# SHIMIZU Taku <shimizu.taku@gmail.com>, 2022
+# Shunho Kin <s-kin@shonan-innovation.co.jp>, 2022
+# Ryoko Tsuda <ryoko@quartile.co>, 2022
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
+# Martin Trigaux, 2022
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
+# Noma Yuki, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-08-24 09:22+0000\n"
-"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>, 2018\n"
+"POT-Creation-Date: 2022-05-30 06:07+0000\n"
+"PO-Revision-Date: 2016-08-05 13:07+0000\n"
+"Last-Translator: Noma Yuki, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,45 +28,78 @@ msgstr ""
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/js/portal_sidebar.js:43
+#: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
-msgid "%d days overdue"
+msgid "%1d days overdue"
 msgstr ""
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_show_sign_in
-msgid "<b>Sign in</b>"
-msgstr "<b>サインイン</b>"
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid "%s is not the reference of a report"
+msgstr "%s はレポートの参照ではありません"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
-msgid "<i class=\"fa fa-arrow-right\"/> Back to edit mode"
+msgid "<i class=\"fa fa-arrow-right mr-1\"/>Back to edit mode"
+msgstr "<i class=\"fa fa-arrow-right mr-1\"/>編集モードに戻る"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.record_pager
+msgid ""
+"<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
 msgstr ""
+"<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.record_pager
+msgid "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
+msgstr "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_layout
+msgid "<i class=\"fa fa-pencil mx-1\"/>Edit Security Settings"
+msgstr "<i class=\"fa fa-pencil mx-1\"/>セキュリティ設定の編集"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "<i class=\"fa fa-pencil\"/> Edit"
+msgstr "<i class=\"fa fa-pencil\"/> 編集"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid ""
+"<small class=\"form-text text-muted\">Changing company name or VAT number is"
+" not allowed once document(s) have been issued for your account. <br/>Please"
+" contact us directly for this operation.</small>"
 msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small mr-1 navbar-text\">Filter By:</span>"
-msgstr ""
+msgstr "<span class=\"small mr-1 navbar-text\">フィルター:</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small mr-1 navbar-text\">Group By:</span>"
-msgstr ""
+msgstr "<span class=\"small mr-1 navbar-text\">Group By:</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small mr-1 navbar-text\">Sort By:</span>"
-msgstr ""
+msgstr "<span class=\"small mr-1 navbar-text\">ソート:</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
 msgid "<strong>Open </strong>"
-msgstr ""
+msgstr "<strong> 開く</strong>"
 
 #. module: portal
 #: model:mail.template,body_html:portal.mail_template_data_portal_welcome
@@ -77,11 +113,9 @@ msgid ""
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
 "                    <span style=\"font-size: 10px;\">Your Account</span><br/>\n"
-"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
-"                        ${object.user_id.name}\n"
-"                    </span>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.user_id.name or ''\">Marc Demo</span>\n"
 "                </td><td valign=\"middle\" align=\"right\">\n"
-"                    <img src=\"/logo.png?company=${object.user_id.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${object.user_id.company_id.name}\"/>\n"
+"                    <img t-attf-src=\"/logo.png?company={{ object.user_id.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.user_id.company_id.name\"/>\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
 "                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
@@ -95,19 +129,19 @@ msgid ""
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
-"                        Dear ${object.user_id.name or ''},<br/> <br/>\n"
-"                        You have been given access to ${object.user_id.company_id.name}'s portal.<br/>\n"
-"                        Your login account data is:\n"
-"                        <ul>\n"
-"                            <li>Username: ${object.user_id.login or ''}</li>\n"
-"                            <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
-"                            <li>Database: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
-"                        </ul>\n"
-"                        You can set or change your password via the following url:\n"
-"                        <ul>\n"
-"                            <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
-"                        </ul>\n"
-"                        ${object.wizard_id.welcome_message or ''}\n"
+"                        Dear <t t-out=\"object.user_id.name or ''\">Marc Demo</t>,<br/> <br/>\n"
+"                        Welcome to <t t-out=\"object.user_id.company_id.name\">YourCompany</t>'s Portal!<br/><br/>\n"
+"                        An account has been created for you with the following login: <t t-out=\"object.user_id.login\">demo</t><br/><br/>\n"
+"                        Click on the button below to pick a password and activate your account.\n"
+"                        <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"                            <a t-att-href=\"object.user_id.signup_url\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
+"                                <strong>Activate Account</strong>\n"
+"                            </a>\n"
+"                            <a href=\"/web/login\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px;\">\n"
+"                                <strong>Log in</strong>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        <t t-out=\"object.wizard_id.welcome_message or ''\">Welcome to our company's portal.</t>\n"
 "                    </div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
@@ -121,18 +155,16 @@ msgid ""
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\" align=\"left\">\n"
-"                    ${object.user_id.company_id.name}\n"
+"                    <t t-out=\"object.user_id.company_id.name or ''\">YourCompany</t>\n"
 "                </td></tr>\n"
 "                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
-"                    ${object.user_id.company_id.phone}\n"
-"                    % if object.user_id.company_id.email\n"
-"                        | <a href=\"'mailto:%s' % ${object.user_id.company_id.email}\" style=\"text-decoration:none; color: #454748;\">${object.user_id.company_id.email}</a>\n"
-"                    % endif\n"
-"                    % if object.user_id.company_id.website\n"
-"                        | <a href=\"'%s' % ${object.user_id.company_id.website}\" style=\"text-decoration:none; color: #454748;\">\n"
-"                        ${object.user_id.company_id.website}\n"
-"                    </a>\n"
-"                    % endif\n"
+"                    <t t-out=\"object.user_id.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"object.user_id.company_id.email\">\n"
+"                        | <a t-attf-href=\"'mailto:%s' % {{ object.user_id.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.user_id.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.user_id.company_id.website\">\n"
+"                        | <a t-attf-href=\"'%s' % {{ object.user_id.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.user_id.company_id.website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -153,56 +185,105 @@ msgid ""
 msgstr ""
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal.js:0
+#, python-format
+msgid "API Key Ready"
+msgstr ""
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal_signature.js:0
+#, python-format
+msgid "Accept & Sign"
+msgstr "承諾 & 署名"
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_warning
 #: model:ir.model.fields,field_description:portal.field_portal_share__access_warning
 msgid "Access warning"
-msgstr ""
+msgstr "アクセス警告"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_layout
+msgid "Account Security"
+msgstr "アカウントセキュリティ"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Add a note"
-msgstr ""
+msgstr "メモ追加"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Add attachment"
+msgstr "添付を追加"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Add contacts to share the document..."
-msgstr ""
+msgstr "ドキュメントを共有する連絡先を追加..."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_share__note
 msgid "Add extra content to display in the email"
+msgstr "メールに表示するコンテンツを追加する"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Added On"
 msgstr ""
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.wizard_view
-msgid "Apply"
-msgstr "適用"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_archive_groups
-msgid "Archives"
-msgstr "アーカイブ"
+#: code:addons/portal/controllers/mail.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "添付ファイルごとにアクセストークンを提供する必要があります。"
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:26
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Avatar"
 msgstr "アバター"
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal.js:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
-#: model_terms:ir.ui.view,arch_db:portal.wizard_view
+#, python-format
 msgid "Cancel"
 msgstr "取消"
 
 #. module: portal
-#: code:addons/portal/controllers/portal.py:220
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Change Password"
+msgstr "パスワード変更"
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:0
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 #, python-format
 msgid ""
 "Changing VAT number is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
-msgstr ""
+msgstr "あなたのアカウントに請求書が発行された後は、VAT番号の変更は許可されません。 この操作については、直接お問い合わせください。"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid ""
+"Changing company name is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr "アカウントにドキュメントが発行された後は、会社名を変更することはできません。この操作については、直接お問い合わせください。"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal.js:0
+#, python-format
+msgid "Check failed"
+msgstr "チェック失敗"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -211,21 +292,17 @@ msgstr "市区町村"
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_signature.xml:12
+#: code:addons/portal/static/src/xml/portal_signature.xml:0
 #, python-format
-msgid "Clear"
-msgstr "クリア"
+msgid "Click here to see your document."
+msgstr "ドキュメントを表示するには、ここをクリックしてください。"
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_signature.xml:27
-#, python-format
-msgid "Click here to see your document."
-msgstr ""
-
-#. module: portal
+#: code:addons/portal/static/src/js/portal.js:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
-#: model_terms:ir.ui.view,arch_db:portal.portal_layout
+#: model_terms:ir.ui.view,arch_db:portal.wizard_view
+#, python-format
 msgid "Close"
 msgstr "閉じる"
 
@@ -235,11 +312,32 @@ msgid "Company Name"
 msgstr "会社名"
 
 #. module: portal
+#: model:ir.model,name:portal.model_res_config_settings
+msgid "Config Settings"
+msgstr "コンフィグ設定"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal.js:0
+#, python-format
+msgid "Confirm"
+msgstr "確認"
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid ""
 "Confirm\n"
 "                                <span class=\"fa fa-long-arrow-right\"/>"
 msgstr ""
+"確認\n"
+"                                <span class=\"fa fa-long-arrow-right\"/>"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal.js:0
+#, python-format
+msgid "Confirm Password"
+msgstr "パスワードを確認"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_partner
@@ -248,9 +346,21 @@ msgid "Contact"
 msgstr "連絡先"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid "Contact Details"
+msgstr "コンタクトの詳細"
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Contacts"
 msgstr "連絡先"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal_composer.js:0
+#, python-format
+msgid "Could not save file <strong>%s</strong>"
+msgstr " ファイル <strong>%s</strong>を保存できませんでした"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -277,43 +387,93 @@ msgid "Created on"
 msgstr "作成日"
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid ""
+"Currently available to everyone viewing this document, click to restrict to "
+"internal employees."
+msgstr "現在、このドキュメントを閲覧しているすべての人が利用できます。クリックすると、社内の従業員に限定できます。"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid ""
+"Currently restricted to internal employees, click to make it available to "
+"everyone viewing this document."
+msgstr "現在、社内の従業員に制限されています。クリックすると、このドキュメントを表示するすべての人が利用できます。"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_res_config_settings__portal_allow_api_keys
+msgid "Customer API Keys"
+msgstr ""
+
+#. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
 msgid "Customer Portal URL"
-msgstr ""
+msgstr "顧客ポータルURL"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
 msgid "Dear"
-msgstr "親愛なる"
+msgstr "Dear"
 
 #. module: portal
-#: model:ir.model.fields,field_description:portal.field_portal_mixin__display_name
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Delete"
+msgstr "削除"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Description"
+msgstr "説明"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
+#: model_terms:ir.ui.view,arch_db:portal.portal_layout
+msgid "Details"
+msgstr "詳細"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Developer API Keys"
+msgstr "開発者APIキー"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal.js:0
+#, python-format
+msgid "Discard"
+msgstr "破棄"
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__display_name
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__display_name
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__display_name
 msgid "Display Name"
-msgstr "表示名"
+msgstr "名前を表示"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
+msgid "Documents"
+msgstr "ドキュメント"
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_signature.xml:14
+#: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
-msgid "Draw your signature"
+msgid "Due in %1d days"
 msgstr ""
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/js/portal_sidebar.js:41
-#, python-format
-msgid "Due in %d days"
-msgstr ""
-
-#. module: portal
-#. openerp-web
-#: code:addons/portal/static/src/js/portal_sidebar.js:39
+#: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "Due today"
-msgstr ""
+msgstr "今日が期限"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__email
@@ -327,15 +487,54 @@ msgid "Email Thread"
 msgstr "Eメールスレッド"
 
 #. module: portal
-#: model:ir.actions.act_window,name:portal.partner_wizard_action
-#: model:ir.model,name:portal.model_portal_wizard
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Employees Only"
+msgstr "従業員のみ"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Enter a description of and purpose for the key."
+msgstr "キーの説明と目的を入力します。"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Forgot password?"
+msgstr "パスワードを忘れましたか？"
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
-msgid "Grant Portal Access"
+msgid "Grant Access"
 msgstr ""
+
+#. module: portal
+#: model:ir.model,name:portal.model_portal_wizard
+msgid "Grant Portal Access"
+msgstr "ポータルアクセスを付与"
+
+#. module: portal
+#: model:ir.actions.act_window,name:portal.partner_wizard_action
+#: model:ir.actions.server,name:portal.partner_wizard_action_create_and_open
+msgid "Grant portal access"
+msgstr "ポータルアクセスを付与"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_http
 msgid "HTTP Routing"
+msgstr "HTTPルーティング"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid ""
+"Here is your new API key, use it instead of a password for RPC access.\n"
+"                Your login is still necessary for interactive usage."
 msgstr ""
 
 #. module: portal
@@ -344,7 +543,6 @@ msgid "Home"
 msgstr "ホーム"
 
 #. module: portal
-#: model:ir.model.fields,field_description:portal.field_portal_mixin__id
 #: model:ir.model.fields,field_description:portal.field_portal_share__id
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__id
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__id
@@ -352,15 +550,42 @@ msgid "ID"
 msgstr "ID"
 
 #. module: portal
-#: model:ir.model.fields,field_description:portal.field_portal_wizard_user__in_portal
-msgid "In Portal"
-msgstr "ポータルで"
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Important:"
+msgstr ""
 
 #. module: portal
-#: code:addons/portal/controllers/portal.py:201
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Internal Note"
+msgstr "内部注釈"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.wizard_view
+msgid "Internal User"
+msgstr "内部ユーザ"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Internal notes are only displayed to internal users."
+msgstr ""
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr "無効なメール！ 有効なメールアドレスを入力してください。"
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid "Invalid report type: %s"
+msgstr "無効なレポートタイプ: %s"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__welcome_message
@@ -368,7 +593,25 @@ msgid "Invitation Message"
 msgstr "招待メッセージ"
 
 #. module: portal
-#: model:ir.model.fields,field_description:portal.field_portal_mixin____last_update
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_internal
+msgid "Is Internal"
+msgstr ""
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_portal
+msgid "Is Portal"
+msgstr ""
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid ""
+"It is very important that this description be clear\n"
+"                and complete,"
+msgstr ""
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share____last_update
 #: model:ir.model.fields,field_description:portal.field_portal_wizard____last_update
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user____last_update
@@ -390,11 +633,21 @@ msgid "Last Updated on"
 msgstr "最終更新日"
 
 #. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user__login_date
+msgid "Latest Authentication"
+msgstr ""
+
+#. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:21
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Leave a comment"
 msgstr "コメントを残す"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.res_config_settings_view_form
+msgid "Let your customers create developer API keys"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__share_link
@@ -402,12 +655,7 @@ msgid "Link"
 msgstr "リンク"
 
 #. module: portal
-#: model:ir.model.fields,field_description:portal.field_portal_wizard_user__user_id
-msgid "Login User"
-msgstr "ログインユーザ"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.frontend_layout
+#: model_terms:ir.ui.view,arch_db:portal.user_dropdown
 msgid "Logout"
 msgstr "ログアウト"
 
@@ -417,17 +665,57 @@ msgid "Message"
 msgstr "メッセージ"
 
 #. module: portal
+#: code:addons/portal/models/mail_thread.py:0
+#, python-format
+msgid ""
+"Model %(model_name)s does not support token signature, as it does not have "
+"%(field_name)s field."
+msgstr "モデル%(model_name)s は%(field_name)sフィールドが無いためトークン署名をサポートしていません。"
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid "Multi company reports are not supported."
+msgstr ""
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
 msgid "My Account"
 msgstr "マイアカウント"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid "Name"
+msgstr "氏名"
+
+#. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:92
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Name your key"
+msgstr "キーを指定してください"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal.js:0
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+#, python-format
+msgid "New API Key"
+msgstr "新しいAPIキー"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "New Password:"
+msgstr "新しいパスワード:"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: model_terms:ir.ui.view,arch_db:portal.pager
 #, python-format
 msgid "Next"
-msgstr "次へ"
+msgstr "次"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__note
@@ -435,21 +723,37 @@ msgid "Note"
 msgstr "ノート"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.frontend_layout
-msgid "Odoo"
-msgstr "Odoo"
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
 msgid "Odoo Logo"
+msgstr "Odooロゴ"
+
+#. module: portal
+#: code:addons/portal/models/res_users_apikeys_description.py:0
+#, python-format
+msgid "Only internal and portal users can create API keys"
 msgstr ""
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:39
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
-msgstr ""
+msgstr "おっと！何かがうまくいきませんでした。ページをリロードしてログインしてみてください。"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard__partner_ids
+msgid "Partners"
+msgstr "取引先"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Password Updated!"
+msgstr "パスワードが更新されました！"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Password:"
+msgstr "パスワード:"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -457,19 +761,33 @@ msgid "Phone"
 msgstr "電話"
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Please enter your password to confirm you own this account"
+msgstr "あなた自身のアカウントであることを確認するために、パスワードを入力してください"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:0
+#: model_terms:ir.ui.view,arch_db:portal.wizard_view
+#, python-format
+msgid "Portal Access Management"
+msgstr ""
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_url
 msgid "Portal Access URL"
-msgstr ""
+msgstr "ポータルアクセスURL"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_mixin
 msgid "Portal Mixin"
-msgstr ""
+msgstr "ポータル混合"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_share
 msgid "Portal Sharing"
-msgstr ""
+msgstr "ポータル共有"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
@@ -477,7 +795,11 @@ msgid "Portal User Config"
 msgstr "ポータルユーザ設定"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.frontend_layout
+#: model:mail.template,name:portal.mail_template_data_portal_welcome
+msgid "Portal: User Invite"
+msgstr ""
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
 msgid "Powered by"
 msgstr "Powered by"
@@ -489,22 +811,38 @@ msgstr "前へ"
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:84
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Previous"
 msgstr "前"
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/js/portal_chatter.js:109
+#: code:addons/portal/static/src/js/portal_chatter.js:0
 #, python-format
 msgid "Published on %s"
+msgstr " %sに公開済"
+
+#. module: portal
+#: model:ir.model,name:portal.model_ir_qweb
+msgid "Qweb"
+msgstr "Qweb"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.wizard_view
+msgid "Re-Invite"
 msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__partner_ids
 msgid "Recipients"
 msgstr "宛先"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_share__resource_ref
+msgid "Related Document"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__res_id
@@ -517,9 +855,31 @@ msgid "Related Document Model"
 msgstr "関連ドキュメントモデル"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.wizard_view
+msgid "Revoke Access"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Scope"
+msgstr "スコープ"
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "Search"
 msgstr "検索"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Security"
+msgstr "セキュリティ"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal.js:0
+#, python-format
+msgid "Security Control"
+msgstr "セキュリティ管理"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_token
@@ -534,46 +894,47 @@ msgid ""
 "                        If necessary, you can fix any contact's email address directly in the list."
 msgstr ""
 "以下のリストでポータルに所属する連絡先を選択します。\n"
-"                         選択した各連絡先の電子メールアドレスは、有効で一意でなければなりません。\n"
-"                         必要に応じて、連絡先の電子メールアドレスを直接リストで修正することができます。"
+"選択した各連絡先のEメールアドレスは、有効で一意でなければなりません。\n"
+"必要に応じて、連絡先のEメールアドレスを直接リストで修正することができます。"
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:42
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 #, python-format
 msgid "Send"
 msgstr "送信"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:100
-#, python-format
-msgid "Several contacts have the same email: "
-msgstr "いくつかの連絡先に同じ電子メールがあります："
-
-#. module: portal
 #: model:ir.actions.act_window,name:portal.portal_share_action
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Share Document"
+msgstr "ドキュメント共有"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_ir_ui_view__customize_show
+msgid "Show As Optional Inherit"
+msgstr "任意の継承として表示"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.user_sign_in
+msgid "Sign in"
+msgstr "サインイン"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal_composer.js:0
+#, python-format
+msgid ""
+"Some fields are required. Please make sure to write a message or attach a "
+"document"
 msgstr ""
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:97
-#, python-format
-msgid "Some contacts don't have a valid email: "
-msgstr "一部の連絡先に有効なメールアドレスがありません："
-
-#. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:103
-#, python-format
-msgid "Some contacts have the same email as an existing portal user:"
-msgstr "一部の連絡先に、既存のポータルユーザと同じ電子メールがあります:"
-
-#. module: portal
-#: code:addons/portal/controllers/portal.py:224
+#: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Some required fields are empty."
-msgstr "いくつかの必須フィールドが空です。"
+msgstr "埋められていない必須項目があります。"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -587,27 +948,127 @@ msgstr "町名番地"
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_signature.xml:25
+#: code:addons/portal/static/src/xml/portal_signature.xml:0
 #, python-format
-msgid "Thank You !"
+msgid "Thank You!"
+msgstr "ありがとう!"
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid "The attachment %s cannot be removed because it is linked to a message."
+msgstr "添付の %sはメッセージに紐づいているため削除できませんでした。"
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid ""
+"The attachment %s cannot be removed because it is not in a pending state."
+msgstr "添付の %s はペンディング状況に無いため削除できません。"
+
+#. module: portal
+#: code:addons/portal/controllers/mail.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr "添付の %s は存在しないか、アクセス権がありません。"
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid ""
+"The attachment does not exist or you do not have the rights to access it."
+msgstr "添付ファイルが存在しないか、添付ファイルにアクセスする権限がありません。"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:0
+#, python-format
+msgid "The contact \"%s\" does not have a valid email."
+msgstr ""
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:0
+#, python-format
+msgid "The contact \"%s\" has the same email has an existing user (%s)."
+msgstr ""
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid ""
+"The document does not exist or you do not have the rights to access it."
+msgstr "ドキュメントが存在しないか、ドキュメントにアクセスする権限がありません。"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "The key cannot be retrieved later and provides"
+msgstr ""
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid "The new password and its confirmation must be identical."
+msgstr "新しいパスワードとその確認は同一でなければなりません。"
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid ""
+"The old password you provided is incorrect, your password was not changed."
+msgstr "入力した古いパスワードが間違っています。パスワードは変更されていません。"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:0
+#, python-format
+msgid "The partner \"%s\" already has the portal access."
+msgstr ""
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:0
+#, python-format
+msgid "The partner \"%s\" has no portal access."
+msgstr ""
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:0
+#, python-format
+msgid ""
+"The template \"Portal: new user\" not found for sending email to the portal "
+"user."
 msgstr ""
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:12
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "There are no comments for now."
 msgstr "まだコメントがありません。"
 
 #. module: portal
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid "This document does not exist."
+msgstr "このドキュメントは存在しません。"
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 msgid "This is a preview of the customer portal."
+msgstr "こちらは顧客ポータルのプレビューです。"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.wizard_view
+msgid ""
+"This partner is linked to an internal User and already has access to the "
+"Portal."
 msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
-msgid "This text is included in the email sent to new portal users."
-msgstr "このテキストは、新しいポータルユーザーに送信される電子メールに含まれます。"
+msgid ""
+"This text is included at the end of the email sent to new portal users."
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
@@ -615,21 +1076,14 @@ msgid "This text is included in the email sent to new users of the portal."
 msgstr "このテキストは、ポータルの新しいユーザーに送信される電子メールに含まれます。"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:106
-#, python-format
-msgid ""
-"To resolve this error, you can: \n"
-"- Correct the emails of the relevant contacts\n"
-"- Grant access only to contacts with unique emails"
-msgstr ""
-"このエラーを解決するには、次の操作を行います。\n"
-"- 関連する連絡先のメールを修正する\n"
-"- 一意のメールを持つ連絡先にのみアクセスを許可する"
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "Toggle filters"
-msgstr ""
+msgstr "フィルターを切り替える"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user__user_id
+msgid "User"
+msgstr "ユーザ"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__user_ids
@@ -642,11 +1096,53 @@ msgid "VAT Number"
 msgstr "VAT番号"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Verify New Password:"
+msgstr "新しいパスワードの確認:"
+
+#. module: portal
+#: model:ir.model,name:portal.model_ir_ui_view
+msgid "View"
+msgstr "ビュー"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Visible"
+msgstr "表示"
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_account_analytic_account__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_calendar_event__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_crm_team__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_crm_team_member__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_fleet_vehicle__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_fleet_vehicle_log_contract__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_fleet_vehicle_log_services__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_gamification_badge__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_gamification_challenge__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_hr_contract__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_hr_department__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_hr_employee__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_hr_job__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_hr_leave__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_hr_leave_allocation__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_loyalty_card__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_lunch_supplier__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_blacklist__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_channel__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_mail_thread_blacklist__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_mail_thread_cc__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_mail_thread_phone__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_maintenance_equipment__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_maintenance_equipment_category__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_maintenance_request__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_note_note__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_phone_blacklist__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_product_product__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_product_template__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_users__website_message_ids
 msgid "Website Messages"
@@ -655,13 +1151,45 @@ msgstr "ウェブサイトメッセージ"
 #. module: portal
 #: model:ir.model.fields,help:portal.field_account_analytic_account__website_message_ids
 #: model:ir.model.fields,help:portal.field_calendar_event__website_message_ids
+#: model:ir.model.fields,help:portal.field_crm_team__website_message_ids
+#: model:ir.model.fields,help:portal.field_crm_team_member__website_message_ids
+#: model:ir.model.fields,help:portal.field_fleet_vehicle__website_message_ids
+#: model:ir.model.fields,help:portal.field_fleet_vehicle_log_contract__website_message_ids
+#: model:ir.model.fields,help:portal.field_fleet_vehicle_log_services__website_message_ids
+#: model:ir.model.fields,help:portal.field_gamification_badge__website_message_ids
+#: model:ir.model.fields,help:portal.field_gamification_challenge__website_message_ids
+#: model:ir.model.fields,help:portal.field_hr_contract__website_message_ids
+#: model:ir.model.fields,help:portal.field_hr_department__website_message_ids
+#: model:ir.model.fields,help:portal.field_hr_employee__website_message_ids
+#: model:ir.model.fields,help:portal.field_hr_job__website_message_ids
+#: model:ir.model.fields,help:portal.field_hr_leave__website_message_ids
+#: model:ir.model.fields,help:portal.field_hr_leave_allocation__website_message_ids
+#: model:ir.model.fields,help:portal.field_loyalty_card__website_message_ids
+#: model:ir.model.fields,help:portal.field_lunch_supplier__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_blacklist__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_channel__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread__website_message_ids
+#: model:ir.model.fields,help:portal.field_mail_thread_blacklist__website_message_ids
+#: model:ir.model.fields,help:portal.field_mail_thread_cc__website_message_ids
+#: model:ir.model.fields,help:portal.field_mail_thread_phone__website_message_ids
+#: model:ir.model.fields,help:portal.field_maintenance_equipment__website_message_ids
+#: model:ir.model.fields,help:portal.field_maintenance_equipment_category__website_message_ids
+#: model:ir.model.fields,help:portal.field_maintenance_request__website_message_ids
+#: model:ir.model.fields,help:portal.field_note_note__website_message_ids
+#: model:ir.model.fields,help:portal.field_phone_blacklist__website_message_ids
+#: model:ir.model.fields,help:portal.field_product_product__website_message_ids
+#: model:ir.model.fields,help:portal.field_product_template__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_users__website_message_ids
 msgid "Website communication history"
 msgstr "ウェブサイトコミュニケーション履歴"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "What's this key for?"
+msgstr "このキーは何のために利用しますか？"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__wizard_id
@@ -670,71 +1198,58 @@ msgstr "ウィザード"
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:31
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Write a message..."
 msgstr "メッセージを書く..."
 
 #. module: portal
-#: code:addons/portal/wizard/portal_share.py:59
-#: code:addons/portal/wizard/portal_share.py:71
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Write down your key"
+msgstr "キーを書き留めてください"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_share.py:0
+#: code:addons/portal/wizard/portal_share.py:0
 #, python-format
 msgid "You are invited to access %s"
-msgstr ""
+msgstr "あなたは %sへのアクセスの招待を受けています。"
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid "You cannot leave any password empty."
+msgstr "パスワードを空のままにすることはできません。"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
 msgid "You have been invited to access the following document:"
-msgstr ""
+msgstr "次のドキュメントにアクセスするように招待されました。"
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:22
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "You must be"
 msgstr "すべきです"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:175
+#: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
-msgid ""
-"You must have an email address in your User Preferences to send emails."
-msgstr "Eメール送信のためのユーザ設定の中にEメールアドレスを持つ必要があります。"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
-msgid "Your Contact Details"
+msgid "You should first grant the portal access to the partner \"%s\"."
 msgstr ""
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
-#: model_terms:ir.ui.view,arch_db:portal.portal_layout
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
-msgid "Your Details"
-msgstr "あなたの詳細"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "Your Documents"
-msgstr "あなたのドキュメント"
-
-#. module: portal
-#. openerp-web
-#: code:addons/portal/static/src/xml/portal_signature.xml:6
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
-#, python-format
-msgid "Your Name"
-msgstr "お名前"
-
-#. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
-msgid "Your Odoo account at ${object.user_id.company_id.name}"
+msgid "Your account at {{ object.user_id.company_id.name }}"
 msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_contact
 msgid "Your contact"
-msgstr ""
+msgstr "あなたの連絡先"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -743,28 +1258,44 @@ msgstr "郵便番号"
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:56
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "avatar"
-msgstr ""
+msgstr "アバター"
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:9
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "comment"
 msgstr "コメント"
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:10
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "comments"
 msgstr "コメント"
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:22
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "full access"
+msgstr ""
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid ""
+"it will be the only way to\n"
+"                identify the key once created"
+msgstr ""
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "logged in"
 msgstr "ログイン"
@@ -772,7 +1303,17 @@ msgstr "ログイン"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
 msgid "odoo"
-msgstr ""
+msgstr "odoo"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "password"
+msgstr "パスワード"
+
+#. module: portal
+#: model:ir.model,name:portal.model_res_users_apikeys_description
+msgid "res.users.apikeys.description"
+msgstr "res.users.apikeys.description"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -781,7 +1322,14 @@ msgstr "選択..."
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:22
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "to post a comment."
 msgstr "コメントを投稿"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "to your user account, it is very important to store it securely."
+msgstr ""

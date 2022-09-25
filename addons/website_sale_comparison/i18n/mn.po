@@ -3,17 +3,21 @@
 # 	* website_sale_comparison
 # 
 # Translators:
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
+# hish, 2018
+# Onii Onii <onii0223@yahoo.com>, 2018
 # Martin Trigaux, 2019
 # nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
+# baaska sh <sh.baaskash@gmail.com>, 2020
+# Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2021
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: nurbakhit nurka <nurbakhit@bumanit.mn>, 2019\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
+"PO-Revision-Date: 2017-07-17 09:13+0000\n"
+"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,25 +31,27 @@ msgid ""
 "<i class=\"fa fa-chevron-circle-down o_product_comparison_collpase\" "
 "role=\"img\" aria-label=\"Collapse\" title=\"Collapse\"/>"
 msgstr ""
+"<i class=\"fa fa-chevron-circle-down o_product_comparison_collpase\" "
+"role=\"img\" aria-label=\"Collapse\" title=\"Collapse\"/>"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.recommended_product
 msgid "<i class=\"fa fa-exchange\"/> Compare"
-msgstr ""
+msgstr "<i class=\"fa fa-exchange\"/> Харьцуулах"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
-msgid "<i class=\"fa fa-shopping-cart\"/>&amp;nbsp;Add to Cart"
+msgid "<i class=\"fa fa-shopping-cart mr-2\"/>Add to Cart"
 msgstr ""
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_product
 msgid "<i class=\"fa fa-trash\" role=\"img\" aria-label=\"Remove\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-trash\" role=\"img\" aria-label=\"Remove\"/>"
 
 #. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_add_to_compare
-msgid "<span class=\"fa fa-exchange\"/> Add to compare"
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
+msgid "<span class=\"fa fa-exchange mr-2\"/>Compare"
 msgstr ""
 
 #. module: website_sale_comparison
@@ -57,6 +63,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "<strong>Price:</strong>"
 msgstr "Үнэ"
+
+#. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
+msgid "<strong>x</strong>"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model:ir.actions.act_window,name:website_sale_comparison.product_attribute_category_action
@@ -79,10 +90,10 @@ msgstr "Ангиллын нэр"
 #: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.add_to_compare
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_add_to_compare
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
 #, python-format
 msgid "Compare"
-msgstr ""
+msgstr "Харьцуулах"
 
 #. module: website_sale_comparison
 #. openerp-web
@@ -90,22 +101,22 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 #, python-format
 msgid "Compare Products"
-msgstr ""
+msgstr "Бүтээгдэхүүнүүдийг харьцуулах"
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__create_uid
 msgid "Created by"
-msgstr "Үүсгэсэн этгээд"
+msgstr "Үүсгэгч"
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__create_date
 msgid "Created on"
-msgstr "Үүсгэсэн огноо"
+msgstr "Үүсгэсэн"
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__display_name
 msgid "Display Name"
-msgstr "Дэлгэрэнгүй нэр"
+msgstr "Дэлгэцийн Нэр"
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__id
@@ -115,20 +126,21 @@ msgstr "ID"
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category____last_update
 msgid "Last Modified on"
-msgstr "Сүүлд зассан огноо"
+msgstr "Сүүлийн засвар хийсэн огноо"
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__write_uid
 msgid "Last Updated by"
-msgstr "Сүүлд зассан этгээд"
+msgstr "Сүүлийн засвар хийсэн"
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__write_date
 msgid "Last Updated on"
-msgstr "Сүүлд зассан огноо"
+msgstr "Сүүлийн засвар хийсэн огноо"
 
 #. module: website_sale_comparison
 #. openerp-web
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #: model:ir.model,name:website_sale_comparison.model_product_product
 #, python-format
@@ -138,7 +150,7 @@ msgstr "Бараа"
 #. module: website_sale_comparison
 #: model:ir.model,name:website_sale_comparison.model_product_attribute
 msgid "Product Attribute"
-msgstr "Барааны шинж"
+msgstr "Барааны Шинж чанар"
 
 #. module: website_sale_comparison
 #: model:ir.model,name:website_sale_comparison.model_product_attribute_category
@@ -149,7 +161,7 @@ msgstr ""
 #. module: website_sale_comparison
 #: model:ir.model,name:website_sale_comparison.model_product_template_attribute_line
 msgid "Product Template Attribute Line"
-msgstr ""
+msgstr "Барааны загварын шинж чанарууд"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
@@ -170,7 +182,7 @@ msgstr "Хасах"
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__sequence
 msgid "Sequence"
-msgstr "Дугаарлалт"
+msgstr "Дараалал"
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,help:website_sale_comparison.field_product_attribute__category_id
@@ -186,8 +198,8 @@ msgstr ""
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
-msgid "Specifications for"
-msgstr ""
+msgid "Specifications"
+msgstr "Дэлгэрэнгүй тодорхойлолт"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
@@ -197,6 +209,7 @@ msgstr "Ангилагдаагүй"
 
 #. module: website_sale_comparison
 #. openerp-web
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #, python-format
 msgid "Warning"

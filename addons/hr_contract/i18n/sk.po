@@ -1,19 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * hr_contract
+# 	* hr_contract
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Matus Krnac <matus.krnac@gmail.com>, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
-# gebri <gebri@inmail.sk>, 2018
+# SAKodoo <sak@odoo.com>, 2022
+# Jan Prokop, 2022
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
+# Damian Brencic <brencicdamian12313@gmail.com>, 2022
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2022
+# Martin Trigaux, 2022
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: gebri <gebri@inmail.sk>, 2018\n"
+"POT-Creation-Date: 2021-12-07 10:46+0000\n"
+"PO-Revision-Date: 2016-08-05 12:58+0000\n"
+"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2022\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,14 +26,83 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: hr_contract
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
-msgid "<span class=\"text-muted\">(If fixed-term contract)</span>"
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_count
+msgid "# Contracts"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_resource_calendar__contracts_count
+msgid "# Contracts using it"
+msgstr ""
+
+#. module: hr_contract
+#: code:addons/hr_contract/report/hr_contract_history.py:0
+#, python-format
+msgid "%s's Contracts History"
 msgstr ""
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
-msgid "<span>/ month</span>"
+msgid ""
+"<span attrs=\"{'invisible': ['|', ('calendar_mismatch', '=', False), ('state', '!=', 'open')]}\" class=\"fa fa-exclamation-triangle text-danger o_calendar_warning pl-3\">\n"
+"                                    </span>\n"
+"                                    <span class=\"o_calendar_warning_tooltip text-danger\">\n"
+"                                        Calendar Mismatch : The employee's calendar does not match this contract's calendar. This could lead to unexpected behaviors.\n"
+"                                    </span>"
 msgstr ""
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
+msgid ""
+"<span attrs=\"{'invisible': [('calendar_mismatch', '=', False)]}\" class=\"fa fa-exclamation-triangle text-danger o_calendar_warning pl-3\">\n"
+"                            </span>\n"
+"                            <span class=\"o_calendar_warning_tooltip text-danger\">\n"
+"                                Calendar Mismatch : The employee's calendar does not match its current contract calendar. This could lead to unexpected behaviors.\n"
+"                            </span>"
+msgstr ""
+"<span attrs=\"{'invisible': [('calendar_mismatch', '=', False)]}\" class=\"fa fa-exclamation-triangle text-danger o_calendar_warning pl-3\">\n"
+"                            </span>\n"
+"                            <span class=\"o_calendar_warning_tooltip text-danger\">\n"
+"                                Nezhoda kalendára: Kalendár zamestnanca sa nezhoduje s jeho aktuálnym kalendárom zmlúv. To by mohlo viesť k neočakávanému správaniu.\n"
+"                            </span>"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
+msgid ""
+"<span class=\"o_stat_text text-danger\" attrs=\"{'invisible' : [('contract_warning', '=', False)]}\" title=\"In Contract Since\">\n"
+"                                    In Contract Since\n"
+"                                </span>"
+msgstr ""
+"<span class=\"o_stat_text text-danger\" attrs=\"{'invisible' : [('contract_warning', '=', False)]}\" title=\"In Contract Since\">\n"
+"                                    V zmluve od\n"
+"                                </span>"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
+msgid ""
+"<span class=\"o_stat_text text-danger\">\n"
+"                                    Contracts\n"
+"                                </span>"
+msgstr ""
+"<span class=\"o_stat_text text-danger\">\n"
+"                                    Zmluvy\n"
+"                                </span>"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
+msgid ""
+"<span class=\"o_stat_text text-success\" attrs=\"{'invisible' : "
+"[('contract_warning', '=', True)]}\" title=\"In Contract Since\"> In "
+"Contract Since</span>"
+msgstr ""
+"<span class=\"o_stat_text text-success\" attrs=\"{'invisible' : "
+"[('contract_warning', '=', True)]}\" title=\"In Contract Since\"> V zmluve "
+"od</span>"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "<span>/ month</span>"
+msgstr "<span>/ mesačne</span>"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_needaction
@@ -42,26 +115,52 @@ msgid "Active"
 msgstr "Aktívne"
 
 #. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__active_employee
+msgid "Active Employee"
+msgstr ""
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+msgid "Active Employees"
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_ids
 msgid "Activities"
 msgstr "Aktivity"
 
 #. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Označenie výnimky v aktivite"
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_state
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__activity_state
 msgid "Activity State"
+msgstr "Stav aktivity"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Ikona typ aktivity"
+
+#. module: hr_contract
+#: model:res.groups,name:hr_contract.group_hr_contract_manager
+msgid "Administrator"
+msgstr "Správca"
+
+#. module: hr_contract
+#: code:addons/hr_contract/models/hr_contract.py:0
+#, python-format
+msgid ""
+"An employee can only have one contract at the same time. (Excluding Draft and Cancelled contracts).\n"
+"\n"
+"Employee: %(employee_name)s"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__advantages
-msgid "Advantages"
-msgstr "Výhody"
-
-#. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
-msgid "Advantages..."
-msgstr "Výhody..."
-
-#. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Archived"
 msgstr "Archivovaný"
@@ -69,27 +168,62 @@ msgstr "Archivovaný"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Počet príloh"
 
 #. module: hr_contract
-#: selection:hr.contract,state:0
+#: model:ir.model.fields,field_description:hr_contract.field_res_users__bank_account_id
+msgid "Bank Account Number"
+msgstr "Číslo bankového účtu"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__calendar_mismatch
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__calendar_mismatch
+msgid "Calendar Mismatch"
+msgstr "Nezhoda kalendára"
+
+#. module: hr_contract
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__state__cancel
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__state__cancel
 msgid "Cancelled"
 msgstr "Zrušené"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__company_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__company_id
 msgid "Company"
-msgstr "Spoločnost"
+msgstr "Spoločnosť"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__vehicle
+#: model:ir.model.fields,field_description:hr_contract.field_res_users__vehicle
 msgid "Company Vehicle"
 msgstr "Služobné vozidlo"
 
 #. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__company_country_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__company_country_id
+msgid "Company country"
+msgstr "Krajina spoločnosti"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_id
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_departure_wizard_view_form
+msgid "Contract"
+msgstr "Kontakt"
+
+#. module: hr_contract
+#: code:addons/hr_contract/models/hr_contract.py:0
+#, python-format
+msgid ""
+"Contract %(contract)s: start date (%(start)s) must be earlier than contract "
+"end date (%(end)s)."
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contracts_count
 msgid "Contract Count"
-msgstr ""
+msgstr "Počet zmlúv"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -97,31 +231,52 @@ msgid "Contract Details"
 msgstr "Detaily zmluvy"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__name
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
-msgid "Contract Reference"
-msgstr "Odkaz zmluvy"
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_departure_wizard_view_form
+msgid "Contract End Date"
+msgstr "Dátum ukončenia zmluvy"
 
 #. module: hr_contract
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
-msgid "Contract Terms"
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
+msgid "Contract History"
 msgstr ""
 
 #. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__name
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
+msgid "Contract Name"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__name
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "Contract Reference"
+msgstr "Referencia zmluvy"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "Contract Start Date"
+msgstr "Dátum začiatku zmluvy"
+
+#. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract_type
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__name
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_form
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_tree
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+#: model:ir.model,name:hr_contract.model_hr_payroll_structure_type
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__contract_type_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_type_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__name
 msgid "Contract Type"
 msgstr "Druh zmluvy"
 
 #. module: hr_contract
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_type
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_type
-msgid "Contract Types"
-msgstr "Druhy zmlúv"
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__contract_wage
+msgid "Contract Wage"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_warning
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_employee_view_search
+msgid "Contract Warning"
+msgstr "Zmluvné upozornenie"
 
 #. module: hr_contract
 #: model:mail.message.subtype,description:hr_contract.mt_contract_pending
@@ -132,12 +287,11 @@ msgstr "Zmluva pred vypršaním"
 #. module: hr_contract
 #: model:mail.message.subtype,description:hr_contract.mt_contract_close
 msgid "Contract expired"
-msgstr "Zmluva vypršala"
+msgstr "Ukončená platnosť zmluvy"
 
 #. module: hr_contract
-#: code:addons/hr_contract/models/hr_contract.py:99
-#, python-format
-msgid "Contract start date must be earlier than contract end date."
+#: model:ir.model,name:hr_contract.model_hr_contract_history
+msgid "Contract history"
 msgstr ""
 
 #. module: hr_contract
@@ -146,48 +300,95 @@ msgid "Contract to Renew"
 msgstr "Zmluva na obnovenie"
 
 #. module: hr_contract
-#: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+#: model:ir.actions.act_window,name:hr_contract.hr_contract_history_view_form_action
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_ids
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_history
+#: model:ir.ui.menu,name:hr_contract.menu_human_resources_configuration_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_list
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_activity
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_tree
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
+#: model_terms:ir.ui.view,arch_db:hr_contract.resource_calendar_view_form
 msgid "Contracts"
 msgstr "Zmluvy"
 
 #. module: hr_contract
+#: model:ir.actions.act_window,name:hr_contract.hr_contract_history_to_review_view_list_action
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+msgid "Contracts to Review"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__under_contract_state
+msgid "Contractual Status"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__country_id
+msgid "Country"
+msgstr "Štát"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__country_code
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__country_code
+msgid "Country Code"
+msgstr "Kód štátu"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
+msgid "Create"
+msgstr "Vytvoriť"
+
+#. module: hr_contract
 #: model_terms:ir.actions.act_window,help:hr_contract.action_hr_contract
 msgid "Create a new contract"
-msgstr ""
+msgstr "Vytvoriť novú zmluvu"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__create_uid
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__create_uid
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__create_uid
 msgid "Created by"
 msgstr "Vytvoril"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__create_date
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__create_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__create_date
 msgid "Created on"
 msgstr "Vytvorené"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__currency_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__currency_id
 msgid "Currency"
 msgstr "Mena"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_id
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
 msgid "Current Contract"
 msgstr "Súčasná zmluva"
 
 #. module: hr_contract
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
-msgid "Current Employee"
-msgstr "Súčasný zamestnanec"
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
+msgid "Current Contracts"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_employee__contract_id
+msgid "Current contract of the employee"
+msgstr "Aktuálna zmluva zamestnanca"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+msgid "Currently Under Contract"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__default_resource_calendar_id
+msgid "Default Working Hours"
+msgstr "Predvolené pracovné hodiny"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
@@ -196,59 +397,87 @@ msgstr "Zmazať"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__department_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__department_id
 msgid "Department"
 msgstr "Oddelenie"
 
 #. module: hr_contract
+#: model:ir.model,name:hr_contract.model_hr_departure_wizard
+msgid "Departure Wizard"
+msgstr "Sprievodca odchodom"
+
+#. module: hr_contract
+#: code:addons/hr_contract/wizard/hr_departure_wizard.py:0
+#, python-format
+msgid ""
+"Departure date can't be earlier than the start date of current contract."
+msgstr "Dátum odchodu nemôže byť skôr ako dátum začatia platnej zmluvy."
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__display_name
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__display_name
 msgid "Display Name"
-msgstr "Zobrazovaný Názov"
+msgstr "Zobrazovaný názov"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
 msgid "Dropdown menu"
-msgstr ""
+msgstr "Rozbaľovacie menu"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
 msgid "Edit Contract"
-msgstr ""
+msgstr "Upraviť zmluvu"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Employed"
+msgstr "Zamestnaný"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_employee
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__employee_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__employee_id
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Employee"
 msgstr "Zamestnanec"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__type_id
-msgid "Employee Category"
-msgstr "Kategória zamestnanca"
-
-#. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract
 msgid "Employee Contract"
-msgstr "Zmluva zamestnanca"
+msgstr "Zamestnanecká zmluva"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_ids
 msgid "Employee Contracts"
-msgstr "Kontrakty Zamestnanca"
+msgstr "Zmluvy zamestnanca"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
+msgid "Employee Information"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_res_users__bank_account_id
+msgid "Employee bank salary account"
+msgstr "Platový účet zamestnanca v banke"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__wage
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_history__wage
 msgid "Employee's monthly gross wage."
-msgstr ""
+msgstr "Hrubý mesačný príjem zamestnanca"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract__resource_calendar_id
-msgid "Employee's working schedule."
-msgstr ""
+#: model:ir.actions.act_window,name:hr_contract.hr_contract_history_view_list_action
+msgid "Employees"
+msgstr "Zamestnanci"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__date_end
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__date_end
 msgid "End Date"
 msgstr "Dátum ukončenia"
 
@@ -256,22 +485,31 @@ msgstr "Dátum ukončenia"
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__date_end
 msgid "End date of the contract (if it's a fixed-term contract)."
 msgstr ""
+"Dátum ukončenia pracovnej zmluvy (ak sa jedná o zmluvu na dobu určitú)."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__trial_date_end
 msgid "End date of the trial period (if there is one)."
-msgstr ""
+msgstr "Koniec skúšobnej lehoty (ak je dohodnutá)."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__trial_date_end
 msgid "End of Trial Period"
-msgstr ""
+msgstr "Koniec skúšobnej lehoty"
 
 #. module: hr_contract
-#: selection:hr.contract,state:0
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__state__close
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__state__close
 #: model:mail.message.subtype,name:hr_contract.mt_contract_close
 msgid "Expired"
-msgstr "Vypršané"
+msgstr "Ukončená platnosť"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__first_contract_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__first_contract_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_public__first_contract_date
+msgid "First Contract Date"
+msgstr "Dátum prvej zmluvy"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_follower_ids
@@ -279,28 +517,32 @@ msgid "Followers"
 msgstr "Odberatelia"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Odberatelia (Kanály)"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Odberatelia (Partneri)"
+msgstr "Odberatelia (partneri)"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_type__sequence
-msgid "Gives the sequence when displaying a list of Contract."
-msgstr "Dáva sekvenciu pri zobrazovaní zoznamu zmlúv."
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Úžasná ikona fronty napr. fa-tasks"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract__reported_to_secretariat
-msgid ""
-"Green this button when the contract information has been transfered to the "
-"social secretariat."
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Future Activities"
+msgstr "Budúce aktivity"
 
 #. module: hr_contract
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__kanban_state__done
+msgid "Green"
+msgstr "Zelená"
+
+#. module: hr_contract
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__kanban_state__normal
+msgid "Grey"
+msgstr "Šedá"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Group By"
 msgstr "Zoskupiť podľa"
@@ -310,101 +552,112 @@ msgstr "Zoskupiť podľa"
 #: model:ir.cron,cron_name:hr_contract.ir_cron_data_contract_update_state
 #: model:ir.cron,name:hr_contract.ir_cron_data_contract_update_state
 msgid "HR Contract: update state"
+msgstr "Pracovná zmluva: zmena stavu"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__hr_responsible_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__hr_responsible_id
+msgid "HR Responsible"
+msgstr "Zodpovedný za HR"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__has_message
+msgid "Has Message"
+msgstr "Má správu"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__date_hired
+msgid "Hire Date"
 msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__id
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__id
 msgid "ID"
 msgstr "ID"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_exception_icon
+msgid "Icon"
+msgstr "Ikona"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Ikona indikujúca výnimočnú aktivitu."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_needaction
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
+msgstr "Ak označené, potom nové správy vyžadujú vašu pozornosť."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Ak označené, potom majú niektoré správy chybu dodania."
 
 #. module: hr_contract
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
-msgid "Important Messages"
-msgstr "Dôležité správy"
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__is_under_contract
+msgid "Is Currently Under Contract"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_is_follower
 msgid "Is Follower"
-msgstr "Je odberateľ"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__manager
-msgid "Is a Manager"
-msgstr "Je manažér"
-
-#. module: hr_contract
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
-msgid "Job"
-msgstr "Práca"
+msgstr "Odberateľ"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__job_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__job_id
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Job Position"
 msgstr "Pracovná pozícia"
 
 #. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__kanban_state
+msgid "Kanban State"
+msgstr "Kanban štádium"
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract____last_update
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history____last_update
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type____last_update
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type____last_update
 msgid "Last Modified on"
-msgstr "Posledná modifikácia"
+msgstr "Posledná úprava"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__write_uid
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__write_uid
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__write_uid
 msgid "Last Updated by"
 msgstr "Naposledy upravoval"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__write_date
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__write_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__write_date
 msgid "Last Updated on"
 msgstr "Naposledy upravované"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_employee__contract_id
-msgid "Latest contract of the employee"
-msgstr "Posledná zmluva zamestnanca"
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Late Activities"
+msgstr "Omeškané aktivity"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
-
-#. module: hr_contract
-#: model:res.groups,name:hr_contract.group_hr_contract_manager
-msgid "Manager"
-msgstr "Manažér"
-
-#. module: hr_contract
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
-msgid "Medical Exam"
-msgstr "Lekárska prehliadka"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__medic_exam
-msgid "Medical Examination Date"
-msgstr "Dátum lekárskej prehliadky"
+msgstr "Hlavná príloha"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Chyba zobrazovania správ"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_ids
@@ -412,19 +665,35 @@ msgid "Messages"
 msgstr "Správy"
 
 #. module: hr_contract
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
-msgid "Monthly Advantages in Cash"
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
+msgid "Monthly Wage"
 msgstr ""
 
 #. module: hr_contract
-#: selection:hr.contract,state:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Termín mojej aktivity"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__name
+msgid "Name"
+msgstr "Meno"
+
+#. module: hr_contract
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__state__draft
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__state__draft
 msgid "New"
 msgstr "Nové"
 
 #. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Kalendár ďalších aktivít eventu"
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Ďalší konečný termín aktivity"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_summary
@@ -434,6 +703,21 @@ msgstr "Zhrnutie ďalšej aktivity"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_type_id
 msgid "Next Activity Type"
+msgstr "Typ ďalšej aktivity"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+msgid "No Contracts"
+msgstr ""
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Not Running"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__under_contract_state__blocked
+msgid "Not Under Contract"
 msgstr ""
 
 #. module: hr_contract
@@ -449,18 +733,18 @@ msgstr "Počet akcií"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_error_counter
-msgid "Number of error"
-msgstr ""
+msgid "Number of errors"
+msgstr "Počet chýb"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "Počet správ ktoré vyžadujú akciu"
+msgstr "Počet správ, ktoré vyžadujú akciu"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Počet doručených správ s chybou"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_unread_counter
@@ -468,29 +752,75 @@ msgid "Number of unread messages"
 msgstr "Počet neprečítaných správ"
 
 #. module: hr_contract
-#: selection:hr.contract,activity_state:0
-msgid "Overdue"
-msgstr "Oneskorené"
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
+msgid "Open Contract"
+msgstr ""
 
 #. module: hr_contract
-#: selection:hr.contract,activity_state:0
-msgid "Planned"
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__hr_responsible_id
+msgid "Person responsible for validating the employee's contracts."
+msgstr "Osoba zodpovedná za validáciu zmlúv zamestnancov."
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_hr_employee_public
+msgid "Public Employee"
+msgstr "Verejný zamestnanec"
+
+#. module: hr_contract
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__kanban_state__blocked
+msgid "Red"
+msgstr "Červená"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_list
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+msgid "Reference Working Time"
 msgstr ""
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_employee_public_view_form
+msgid "Related User"
+msgstr "Súvisiaci používateľ"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_resource_calendar
+msgid "Resource Working Time"
+msgstr "Pracovný čas zdroja"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_resource_resource
+msgid "Resources"
+msgstr "Zdroje"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_user_id
 msgid "Responsible User"
-msgstr "Zodpovedný používateľ"
+msgstr "Zodpovedný užívateľ"
 
 #. module: hr_contract
-#: selection:hr.contract,state:0
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__state__open
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__state__open
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Running"
-msgstr "Spustené"
+msgstr "Aktuálne"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+msgid "Running Contracts"
+msgstr ""
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Salary Information"
-msgstr ""
+msgstr "Informácie o mzde"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__structure_type_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__structure_type_id
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Salary Structure Type"
+msgstr "Typ štruktúry platu"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -498,49 +828,59 @@ msgid "Search Contract"
 msgstr "Hľadať zmluvu"
 
 #. module: hr_contract
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
-msgid "Search Contract Type"
-msgstr "Hľadať druh zmluvy"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__sequence
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
-msgid "Sequence"
-msgstr "Postupnosť"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__reported_to_secretariat
-msgid "Social Secretariat"
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+msgid "Search Reference Contracts"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__date_start
-msgid "Start Date"
-msgstr "Počiatočný dátum"
+#: model:ir.model.fields,field_description:hr_contract.field_hr_departure_wizard__set_date_end
+msgid "Set Contract End Date"
+msgstr "Nastavte dátum ukončenia zmluvy"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract__date_start
-msgid "Start date of the contract."
+#: model:ir.model.fields,help:hr_contract.field_hr_departure_wizard__set_date_end
+msgid "Set the end date on the current contract."
 msgstr ""
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
-msgid "State"
-msgstr "Stav"
+msgid "Show all records which have a next action date before today"
+msgstr "Zobraziť všetky záznamy, ktoré majú ďalší dátum akcie skôr ako dnes"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__date_start
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__date_start
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Start Date"
+msgstr "Dátum začiatku"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__date_start
+msgid "Start date of the contract."
+msgstr "Dátum začiatku pracovnej zmluvy."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__state
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__state
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_employee_public_view_form
 msgid "Status"
 msgstr "Stav"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_state
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_history__activity_state
 msgid ""
 "Status based on activities\n"
 "Overdue: Due date is already passed\n"
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Status založený na aktivitách\n"
+"Zmeškané: dátum už vypršal\n"
+"Dnes: dátum aktivity je dnes\n"
+"Plán: budúce aktivity"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__state
@@ -548,21 +888,40 @@ msgid "Status of the contract"
 msgstr "Status zmluvy"
 
 #. module: hr_contract
-#: selection:hr.contract,state:0
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__country_code
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_history__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"ISO kód krajiny v dvoch znakoch.\n"
+"Môžete použiť toto pole pre rýchle vyhľadanie."
+
+#. module: hr_contract
+#: code:addons/hr_contract/models/hr_contract.py:0
+#, python-format
+msgid "The contract of %s is about to expire."
+msgstr "Zmluva z %s čoskoro vyprší."
+
+#. module: hr_contract
 #: model:mail.message.subtype,name:hr_contract.mt_contract_pending
 msgid "To Renew"
 msgstr "Na obnovenie"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
-msgid "To Report to Social Secretariat"
-msgstr ""
+msgid "Today Activities"
+msgstr "Dnešné aktivity"
 
 #. module: hr_contract
-#: selection:hr.contract,activity_state:0
-msgid "Today"
-msgstr "Dnes"
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Typ výnimočnej aktivity v zázname."
+
+#. module: hr_contract
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__under_contract_state__done
+msgid "Under Contract"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_unread
@@ -575,36 +934,34 @@ msgid "Unread Messages Counter"
 msgstr "Počítadlo neprečítaných správ"
 
 #. module: hr_contract
+#: model:ir.model,name:hr_contract.model_res_users
+msgid "Users"
+msgstr "Užívatelia"
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__visa_expire
 msgid "Visa Expire Date"
-msgstr "Dátum expirácie víza"
+msgstr "Dátum vypršania platnosti víz"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__visa_no
 msgid "Visa No"
-msgstr "Vízum číslo"
+msgstr "Víza č."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__wage
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__wage
 msgid "Wage"
 msgstr "Mzda"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__website_message_ids
-msgid "Website Messages"
-msgstr "Správy Webových stránok"
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract__website_message_ids
-msgid "Website communication history"
-msgstr "História komunikácie webových stránok"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__permit_no
 msgid "Work Permit No"
-msgstr "Pracovné povolenie číslo"
+msgstr "Pracovné povolenie č."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__resource_calendar_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__resource_calendar_id
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Working Schedule"
 msgstr "Pracovný rozvrh"

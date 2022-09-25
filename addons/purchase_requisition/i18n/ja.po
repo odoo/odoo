@@ -1,23 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * purchase_requisition
+# 	* purchase_requisition
 # 
 # Translators:
-# SHIMIZU Taku <shimizu.taku@gmail.com>, 2018
-# Martin Trigaux, 2018
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2018
-# Manami Hashi <manami@roomsfor.hk>, 2018
-# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2018
-# kent_ocean <ke.tanabe@gmail.com>, 2018
-# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018
-# Tim Siu Lai <tl@roomsfor.hk>, 2018
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
+# Shunho Kin <s-kin@shonan-innovation.co.jp>, 2022
+# Hau Dao <hau@quartile.co>, 2022
+# Tack Yabe <yabe@quartile.co>, 2022
+# Tim Siu Lai <tl@roomsfor.hk>, 2022
+# NANIWA Masahiro <naniwa.masahiro@gmail.com>, 2022
+# 江口和志 <sandwhale1010@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Noma Yuki, 2022
+# Ryoko Tsuda <ryoko@quartile.co>, 2022
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Tim Siu Lai <tl@roomsfor.hk>, 2018\n"
+"POT-Creation-Date: 2022-05-30 06:07+0000\n"
+"PO-Revision-Date: 2016-08-05 13:09+0000\n"
+"Last-Translator: Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,9 +30,14 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: purchase_requisition
+#: model:ir.actions.report,print_report_name:purchase_requisition.action_report_purchase_requisitions
+msgid "'Tender - %s' % (object.name)"
+msgstr "'入札 - %s' % (object.name)"
+
+#. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
-msgid "<strong>Call for Tender Reference:</strong><br/>"
-msgstr "<strong>入札参照:</strong><br/>"
+msgid "<strong>Agreement Deadline:</strong><br/>"
+msgstr ""
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -67,18 +76,13 @@ msgstr "<strong>発注予定日:</strong><br/>"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
-msgid "<strong>Selection Type:</strong><br/>"
-msgstr "<strong>選択タイプ:</strong><br/>"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Source:</strong><br/>"
-msgstr ""
+msgstr "<strong>参照元:</strong><br/>"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Vendor </strong>"
-msgstr ""
+msgstr "<strong>仕入先 </strong>"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction
@@ -86,31 +90,56 @@ msgid "Action Needed"
 msgstr "要アクション"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__date_end
-msgid "Agreement Deadline"
-msgstr ""
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__active
+msgid "Active"
+msgstr "有効"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__name
-msgid "Agreement Reference"
-msgstr ""
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_ids
+msgid "Activities"
+msgstr "活動"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "例外の活動を示す文字装飾"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_state
+msgid "Activity State"
+msgstr "活動状態"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "活動種別アイコン"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_id
+msgid "Agreement"
+msgstr "契約"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__date_end
+msgid "Agreement Deadline"
+msgstr "契約期限"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__exclusive
 msgid "Agreement Selection Type"
-msgstr ""
+msgstr "契約選択タイプ"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__type_id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__name
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Agreement Type"
-msgstr ""
+msgstr "契約タイプ"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.res_config_settings_view_form
 msgid "Agreement Types"
-msgstr ""
+msgstr "契約タイプ"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__account_analytic_id
@@ -123,25 +152,26 @@ msgid "Analytic Tags"
 msgstr "分析タグ"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_attachment_count
-msgid "Attachment Count"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_search
+msgid "Archived"
+msgstr "アーカイブ済"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition,state:0
-#: selection:purchase.requisition,state_blanket_order:0
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_attachment_count
+msgid "Attachment Count"
+msgstr "添付数"
+
+#. module: purchase_requisition
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__open
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__open
 msgid "Bid Selection"
 msgstr "応札選択"
 
 #. module: purchase_requisition
 #: model:purchase.requisition.type,name:purchase_requisition.type_single
 msgid "Blanket Order"
-msgstr ""
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_id
-msgid "Blanket order"
-msgstr ""
+msgstr "包括注文"
 
 #. module: purchase_requisition
 #: model:purchase.requisition.type,name:purchase_requisition.type_multi
@@ -150,7 +180,6 @@ msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.actions.report,name:purchase_requisition.action_report_purchase_requisitions
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Call for Tenders"
 msgstr "入札"
 
@@ -160,16 +189,21 @@ msgid "Cancel"
 msgstr "取消"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition,state:0
-#: selection:purchase.requisition,state_blanket_order:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__cancel
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__cancel
 msgid "Cancelled"
 msgstr "取消済"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:116
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "Cancelled by the agreement associated to this quotation."
 msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_uom_category_id
+msgid "Category"
+msgstr "カテゴリ"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -177,8 +211,8 @@ msgid "Close"
 msgstr "閉じる"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition,state:0
-#: selection:purchase.requisition,state_blanket_order:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__done
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__done
 msgid "Closed"
 msgstr "クローズ"
 
@@ -194,14 +228,21 @@ msgid "Confirm"
 msgstr "確認"
 
 #. module: purchase_requisition
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__in_progress
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__in_progress
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-#: selection:purchase.requisition,state:0
-#: selection:purchase.requisition,state_blanket_order:0
 msgid "Confirmed"
 msgstr "確認済"
 
 #. module: purchase_requisition
-#: selection:product.template,purchase_requisition:0
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_line__product_uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr "単位間の変換は同じカテゴリに属している場合のみ可能です。変換は比率に基づいて行われます。"
+
+#. module: purchase_requisition
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__product_template__purchase_requisition__rfq
 msgid "Create a draft purchase order"
 msgstr "ドラフト購買オーダ作成"
 
@@ -235,9 +276,14 @@ msgid "Currency"
 msgstr "通貨"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_description_variants
+msgid "Custom Description"
+msgstr "説明をカスタマイズする"
+
+#. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Data for new quotations"
-msgstr ""
+msgstr "新規見積のデータ"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__schedule_date
@@ -254,12 +300,12 @@ msgstr "説明"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__display_name
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__display_name
 msgid "Display Name"
-msgstr "表示名"
+msgstr "名前を表示"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition.type,line_copy:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__line_copy__none
 msgid "Do not create RfQ lines automatically"
-msgstr ""
+msgstr "見積依頼の明細行を自動生成しない"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -267,27 +313,17 @@ msgid "Done"
 msgstr "完了"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__move_dest_id
-msgid "Downstream Move"
-msgstr ""
-
-#. module: purchase_requisition
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__draft
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__draft
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-#: selection:purchase.requisition,state:0
-#: selection:purchase.requisition,state_blanket_order:0
 msgid "Draft"
 msgstr "ドラフト"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-msgid "End Date"
-msgstr "終了日"
 
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid ""
 "Example of purchase agreements include call for tenders and blanket orders."
-msgstr ""
+msgstr "購買契約の事例には入札募集や包括注文があります。"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_follower_ids
@@ -295,27 +331,37 @@ msgid "Followers"
 msgstr "フォロワー"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "フォロワー (チャネル)"
-
-#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "フォロワー (取引先)"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesomeのアイコン 例. fa-tasks"
 
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid ""
 "For a blanket order, you can record an agreement for a specifc period\n"
 "            (e.g. a year) and you order products within this agreement, benefiting\n"
-"            from the negociated prices."
-msgstr ""
+"            from the negotiated prices."
+msgstr "包括注文では、特定の期間（例：1年）の契約を記録でき、この契約で合意した価格でプロダクトを注文します。"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "Future Activities"
+msgstr "将来の活動"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Group By"
 msgstr "グループ化"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__has_message
+msgid "Has Message"
+msgstr "メッセージあり"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__id
@@ -325,9 +371,14 @@ msgid "ID"
 msgstr "ID"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_unread
-msgid "If checked new messages require your attention."
-msgstr "チェックされている場合は、新しいメッセージに注意が必要です。"
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_exception_icon
+msgid "Icon"
+msgstr "アイコン"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "例外的なアクティビティを示唆するアイコン"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_needaction
@@ -336,8 +387,9 @@ msgstr "チェックされている場合は、新しいメッセージに注意
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_error
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "チェックした場合、一部のメッセージで配信エラーが発生しています。"
 
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -380,6 +432,11 @@ msgid "Last Updated on"
 msgstr "最終更新日"
 
 #. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "Late Activities"
+msgstr "遅れた活動"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__line_copy
 msgid "Lines"
 msgstr "明細"
@@ -387,12 +444,12 @@ msgstr "明細"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "主な添付"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "メッセージ配信エラー"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_ids
@@ -400,14 +457,19 @@ msgid "Messages"
 msgstr "メッセージ"
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
-msgid "Multiple Requisitions"
-msgstr "複数見積依頼を選択"
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr ""
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "My Agreements"
 msgstr ""
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
+msgid "Name, TIN, Email, or Reference"
+msgstr "名称/納税者番号/Eメール/参照"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -418,6 +480,26 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "New Quotation"
 msgstr "新規見積"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "次の活動期限"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_summary
+msgid "Next Activity Summary"
+msgstr "次の活動サマリ"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_type_id
+msgid "Next Activity Type"
+msgstr "次の活動タイプ"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction_counter
@@ -431,8 +513,8 @@ msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error_counter
-msgid "Number of error"
-msgstr ""
+msgid "Number of errors"
+msgstr "エラー数"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_needaction_counter
@@ -442,28 +524,18 @@ msgstr "アクションを必要とするメッセージの数"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "配信エラーのメッセージ数"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_unread_counter
-msgid "Number of unread messages"
-msgstr "未読メッセージ件数"
-
-#. module: purchase_requisition
-#: selection:purchase.requisition,state:0
-#: selection:purchase.requisition,state_blanket_order:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__ongoing
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__ongoing
 msgid "Ongoing"
-msgstr ""
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__picking_type_id
-msgid "Operation Type"
-msgstr "オペレーションタイプ"
+msgstr "選考中"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__qty_ordered
 msgid "Ordered Quantities"
-msgstr ""
+msgstr "オーダ済数量"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__ordering_date
@@ -472,18 +544,19 @@ msgid "Ordering Date"
 msgstr "オーダ日"
 
 #. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "Price Unit"
+msgstr "価格単位"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_product__purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_template__purchase_requisition
 msgid "Procurement"
 msgstr "調達"
 
 #. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_procurement_group
-msgid "Procurement Group"
-msgstr "調達グループ"
-
-#. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_product
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__product_id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_id
 msgid "Product"
 msgstr "プロダクト"
@@ -510,7 +583,7 @@ msgid "Products to Purchase"
 msgstr "購買するプロダクト"
 
 #. module: purchase_requisition
-#: selection:product.template,purchase_requisition:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__product_template__purchase_requisition__tenders
 msgid "Propose a call for tenders"
 msgstr "入札提案"
 
@@ -518,7 +591,7 @@ msgstr "入札提案"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__requisition_id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__requisition_id
 msgid "Purchase Agreement"
-msgstr ""
+msgstr "購買契約"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.tender_type_action
@@ -526,12 +599,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_tree
 msgid "Purchase Agreement Types"
-msgstr ""
+msgstr "購買契約タイプ"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
 #: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_tree
 msgid "Purchase Agreements"
@@ -561,7 +633,7 @@ msgstr "購買オーダ"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__user_id
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Purchase Representative"
-msgstr ""
+msgstr "購買担当者"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition
@@ -580,11 +652,6 @@ msgid "Purchase Requisition Type"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
-msgid "Purchase orders"
-msgstr "購買オーダ"
-
-#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__is_quantity_copy
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__is_quantity_copy
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__quantity_copy
@@ -599,7 +666,18 @@ msgstr "数量"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "RFQs/Orders"
-msgstr ""
+msgstr "見積依頼/オーダ"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__name
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "Reference"
+msgstr "参照"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "Reference:"
+msgstr "参照:"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.product_template_form_view_inherit
@@ -614,7 +692,7 @@ msgstr "見積依頼"
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_list
 msgid "Request for Quotations"
-msgstr ""
+msgstr "見積依頼"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -627,24 +705,24 @@ msgid "Requisition"
 msgstr "要求書"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_stock_move__requisition_line_ids
-msgid "Requisition Line"
-msgstr ""
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_stock_move__requistion_line_ids
-msgid "Requistion Line"
-msgstr ""
-
-#. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Reset to Draft"
 msgstr "ドラフトに再設定"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_user_id
+msgid "Responsible User"
+msgstr "担当者"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS配信エラー"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__schedule_date
 msgid "Scheduled Date"
-msgstr "納期"
+msgstr "計画日"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -652,12 +730,12 @@ msgid "Search Purchase Agreements"
 msgstr ""
 
 #. module: purchase_requisition
-#: selection:purchase.requisition.type,exclusive:0
-msgid "Select multiple RFQ"
-msgstr ""
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__multiple
+msgid "Select multiple RFQ (non-exclusive)"
+msgstr "複数の見積依頼を選択(非排他)"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition.type,exclusive:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__exclusive
 msgid "Select only one RFQ (exclusive)"
 msgstr "見積要求を1件のみ選択（排他）"
 
@@ -666,7 +744,7 @@ msgstr "見積要求を1件のみ選択（排他）"
 msgid ""
 "Select only one RFQ (exclusive):  when a purchase order is confirmed, cancel the remaining purchase order.\n"
 "\n"
-"                    Select multiple RFQ: allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
+"                    Select multiple RFQ (non-exclusive): allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
 msgstr ""
 
 #. module: purchase_requisition
@@ -675,14 +753,21 @@ msgid "Sequence"
 msgstr "付番"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition.type,quantity_copy:0
-msgid "Set quantities manually"
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_type__active
+msgid ""
+"Set active to false to hide the Purchase Agreement Types without removing "
+"it."
 msgstr ""
 
 #. module: purchase_requisition
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__quantity_copy__none
+msgid "Set quantities manually"
+msgstr "数量をマニュアルで設定"
+
+#. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-msgid "Source"
-msgstr "要求元"
+msgid "Show all records which has next action date is before today"
+msgstr "次のアクションの日付が今日より前のすべてのレコードを表示する"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__origin
@@ -706,14 +791,17 @@ msgid "Status"
 msgstr "ステータス"
 
 #. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_stock_move
-msgid "Stock Move"
-msgstr "在庫移動"
-
-#. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_stock_rule
-msgid "Stock Rule"
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
 msgstr ""
+"活動に基づく状態\n"
+"延滞：期限は既に過ぎました\n"
+"当日：活動日は本日です\n"
+"予定：将来の活動。"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__supplier_info_ids
@@ -737,22 +825,22 @@ msgid ""
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:95
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid ""
-"There is already an open blanket order for this supplier. We suggest you to "
-"use to complete this open blanket order instead of creating a new one."
-msgstr ""
+"There is already an open blanket order for this supplier. We suggest you "
+"complete this open blanket order, instead of creating a new one."
+msgstr "この仕入先には既に包括注文があります。新しい契約を作成するのではなく、この未完了の包括注文を完了させることをお勧めします。"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-msgid "Unassigned"
-msgstr "未割当"
+msgid "Today Activities"
+msgstr "本日の活動"
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-msgid "Unassigned  Requisition"
-msgstr "未割当の要求書"
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "記録上の例外アクティビティのタイプ。"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__price_unit
@@ -760,24 +848,19 @@ msgid "Unit Price"
 msgstr "単価"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_unread
-msgid "Unread Messages"
-msgstr "未読メッセージ"
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "UoM"
+msgstr "単位"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "未読メッセージカウンター"
-
-#. module: purchase_requisition
-#: selection:purchase.requisition.type,line_copy:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__line_copy__copy
 msgid "Use lines of agreement"
-msgstr ""
+msgstr "契約の明細行を使用"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition.type,quantity_copy:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__quantity_copy__copy
 msgid "Use quantities of agreement"
-msgstr ""
+msgstr "契約の数量を使用"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -790,12 +873,7 @@ msgid "Vendor"
 msgstr "仕入先"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__warehouse_id
-msgid "Warehouse"
-msgstr "倉庫"
-
-#. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:94
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "Warning for %s"
 msgstr "%s の警告です。"
@@ -811,38 +889,38 @@ msgid "Website communication history"
 msgstr "ウェブサイトコミュニケーション履歴"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:178
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You can only delete draft requisitions."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:123
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm agreement '%s' because there is no product line."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:127
-#: code:addons/purchase_requisition/models/purchase_requisition.py:220
-#: code:addons/purchase_requisition/models/purchase_requisition.py:228
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm the blanket order without price."
-msgstr ""
+msgstr "価格のない包括注文を確認することはできません。"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:129
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm the blanket order without quantity."
-msgstr ""
+msgstr "数量のない包括注文を確認することはできません。"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:156
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid ""
 "You have to cancel or validate every RfQ before closing the purchase "
 "requisition."
-msgstr ""
+msgstr "購買要求をクローズする前に、見積依頼を取消または検証してください。"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form

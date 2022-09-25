@@ -3,23 +3,16 @@
 # 	* website_crm_partner_assign
 # 
 # Translators:
-# Joe Hansen <joedalton2@yahoo.dk>, 2019
-# Martin Trigaux, 2019
-# jonas jensen <j.jensen@tcomp.dk>, 2019
-# Morten Schou <ms@msteknik.dk>, 2019
-# Jesper Carstensen <jc@danodoo.dk>, 2019
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
-# Sanne Kristensen <sanne@vkdata.dk>, 2019
-# Ejner Sønniksen <ejner@vkdata.dk>, 2019
-# lhmflexerp <lhm@flexerp.dk>, 2019
+# Sanne Kristensen <sanne@vkdata.dk>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
+"POT-Creation-Date: 2022-04-19 13:58+0000\n"
+"PO-Revision-Date: 2016-08-05 13:12+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,11 +26,18 @@ msgid "# of Opportunity"
 msgstr "# Salgsmuligheder"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
-msgid "&amp;times;"
-msgstr "&amp;times;"
+#. openerp-web
+#: code:addons/website_crm_partner_assign/static/src/js/crm_partner_assign.js:0
+#, python-format
+msgid "%s's Opportunity"
+msgstr ""
+
+#. module: website_crm_partner_assign
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_view_kanban
+msgid ""
+"<i class=\"fa fa-arrow-circle-right\" aria-label=\"Assigned Partner\" "
+"title=\"Assigned Partner\"/>"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -55,11 +55,6 @@ msgid "<i class=\"fa fa-pencil mr-1\"/>Edit"
 msgstr "<i class=\"fa fa-pencil mr-1\"/>Redigér"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
-msgid "<i class=\"fa fa-plus\"/> Create New"
-msgstr "<i class=\"fa fa-plus\"/> Opret ny"
-
-#. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
 #, python-format
 msgid "<p>I am interested by this lead.</p>"
@@ -68,7 +63,7 @@ msgstr "<p>Dette kundeemne interesserer mig.</p>"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "<small class=\"mr-2 mt-1 float-left\"><b>Stage:</b></small>"
-msgstr ""
+msgstr "<small class=\"mr-2 mt-1 float-left\"><b>Stadie:</b></small>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -81,11 +76,13 @@ msgid ""
 "<span class=\"fa fa-envelope fa-fw\" role=\"img\" aria-label=\"Email\" "
 "title=\"Email\"/>"
 msgstr ""
+"<span class=\"fa fa-envelope fa-fw\" role=\"img\" aria-label=\"Email\" "
+"title=\"Email\"/>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "<span class=\"fa fa-envelope\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-envelope\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.ref_country
@@ -102,6 +99,8 @@ msgid ""
 "<span class=\"fa fa-map-marker fa-fw\" role=\"img\" aria-label=\"Address\" "
 "title=\"Address\"/>"
 msgstr ""
+"<span class=\"fa fa-map-marker fa-fw\" role=\"img\" aria-label=\"Adresse\" "
+"title=\"Adresse\"/> "
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -109,25 +108,39 @@ msgid ""
 "<span class=\"fa fa-mobile fa-fw\" role=\"img\" aria-label=\"Mobile\" "
 "title=\"Mobile\"/>"
 msgstr ""
+"<span class=\"fa fa-mobile fa-fw\" role=\"img\" aria-label=\"Mobil\" "
+"title=\"Mobil\"/> "
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "<span class=\"fa fa-mobile\" role=\"img\" aria-label=\"Mobile\" title=\"Mobile\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-mobile\" role=\"img\" aria-label=\"Mobil\" title=\"Mobil\"/> "
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "<span class=\"fa fa-phone fa-fw\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
 msgstr ""
+"<span class=\"fa fa-phone fa-fw\" role=\"img\" aria-label=\"Telefon\" "
+"title=\"Telefon\"/> "
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "<span class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-phone\" role=\"img\" aria-label=\"Telefon\" title=\"Telefon\"/> "
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "<span class=\"fa fa-user fa-fw\" role=\"img\" aria-label=\"User\" title=\"User\"/>"
+msgstr ""
+"<span class=\"fa fa-user fa-fw\" role=\"img\" aria-label=\"Bruger\" "
+"title=\"Bruger\"/> "
+
+#. module: website_crm_partner_assign
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
+msgid ""
+"<span class=\"input-group-text\">\n"
+"                                                                    <span class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>\n"
+"                                                                </span>"
 msgstr ""
 
 #. module: website_crm_partner_assign
@@ -137,36 +150,66 @@ msgid ""
 "                                                                    <span class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\"/>\n"
 "                                                                </span>"
 msgstr ""
+"<span class=\"input-group-text\"> <span class=\"fa fa-calendar\" "
+"role=\"img\" aria-label=\"Kalender\"/> </span> "
+
+#. module: website_crm_partner_assign
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_opportunity_geo_assign_form
+msgid ""
+"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;=',0)]}\">N </span>\n"
+"                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&gt;=',0)]}\">S </span>"
+msgstr ""
+"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;=',0)]}\">N </span>\n"
+"                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&gt;=',0)]}\">S </span>"
+
+#. module: website_crm_partner_assign
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_opportunity_geo_assign_form
+msgid ""
+"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&lt;=',0)]}\">E </span>\n"
+"                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&gt;=',0)]}\">W </span>\n"
+"                                <span class=\"oe_grey\">) </span>"
+msgstr ""
+"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&lt;=',0)]}\">E </span>\n"
+"                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&gt;=',0)]}\">W </span>\n"
+"                                <span class=\"oe_grey\">) </span>"
+
+#. module: website_crm_partner_assign
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_opportunity_geo_assign_form
+msgid "<span class=\"oe_grey\">( </span>"
+msgstr ""
+
+#. module: website_crm_partner_assign
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
+msgid ""
+"<span class=\"text-danger error_partner_assign_desinterested\" "
+"style=\"display:none;\">You need to fill up the next action and contact the "
+"customer before accepting the lead</span>"
+msgstr ""
+"<span class=\"text-danger error_partner_assign_desinterested\" "
+"style=\"display:none;\">Du skal udfylde næste aktivitet og kontakte kunder "
+"før du accepterer kundeemnet</span>"
+
+#. module: website_crm_partner_assign
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
+msgid ""
+"<span class=\"text-danger error_partner_assign_interested\" "
+"style=\"display:none;\">You need to fill up the next action and contact the "
+"customer before accepting the lead</span>"
+msgstr ""
+"<span class=\"text-danger error_partner_assign_interested\" "
+"style=\"display:none;\">Du skal udfylde næste aktivitet og kontakte kunder "
+"før du accepterer kundeemnet</span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
-msgid ""
-"<span class=\"input-group-text\">\n"
-"                                                            <span class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>\n"
-"                                                        </span>"
+msgid "<span class=\"text-muted\"> - </span>"
 msgstr ""
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
-msgid ""
-"<span class=\"text-danger error_partner_assign_desinterested\" "
-"style=\"display:none;\">You need to fill up the next action and contact the "
-"customer before accepting the lead</span>"
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
+msgid "<span> at </span>"
 msgstr ""
-"<span class=\"text-danger error_partner_assign_desinterested\" "
-"style=\"display:none;\">Du skal udfylde næste aktivitet og kontakte kunder "
-"før du accepterer kundeemnet</span>"
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
-msgid ""
-"<span class=\"text-danger error_partner_assign_interested\" "
-"style=\"display:none;\">You need to fill up the next action and contact the "
-"customer before accepting the lead</span>"
-msgstr ""
-"<span class=\"text-danger error_partner_assign_interested\" "
-"style=\"display:none;\">Du skal udfylde næste aktivitet og kontakte kunder "
-"før du accepterer kundeemnet</span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -181,7 +224,7 @@ msgstr "<strong class=\"col-12 col-sm-3\">Kunde</strong>"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "<strong class=\"col-12 col-sm-4\">Expected Closing</strong>"
-msgstr ""
+msgstr "<strong class=\"col-12 col-sm-4\">Forventet afslutning</strong>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -212,7 +255,7 @@ msgid ""
 "                <tr><td valign=\"middle\">\n"
 "                    <span style=\"font-size: 10px;\">Your leads</span><br/>\n"
 "                </td><td valign=\"middle\" align=\"right\">\n"
-"                    <img src=\"/logo.png?company=${user.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"'%s' % company.name\"/>\n"
+"                    <img t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\"/>\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
 "                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
@@ -228,25 +271,24 @@ msgid ""
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <div>\n"
 "                            Hello,<br/>\n"
-"                            We have been contacted by those prospects that are in your region. Thus, the following leads have been assigned to ${ctx['partner_id'].name}:<br/>\n"
+"                            We have been contacted by those prospects that are in your region. Thus, the following leads have been assigned to <t t-out=\"ctx['partner_id'].name or ''\"/>:<br/>\n"
 "                            <ol>\n"
-"                                % for lead in ctx['partner_leads']:\n"
-"                                    <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or 'Email Undefined'}, ${lead.lead_id.phone or ''} </li><br/>\n"
-"                                % endfor\n"
+"                                <li t-foreach=\"ctx['partner_leads']\" t-as=\"lead\"><a t-att-href=\"lead['lead_link']\" t-out=\"lead['lead_id'].name or 'Subject Undefined'\">Subject Undefined</a>, <t t-out=\"lead['lead_id'].partner_name or lead['lead_id'].contact_name or 'Contact Name Undefined'\">Contact Name Undefined</t>, <t t-out=\"lead['lead_id'].country_id and lead['lead_id'].country_id.name or 'Country Undefined'\">Country Undefined</t>, <t t-out=\"lead['lead_id'].email_from or 'Email Undefined' or ''\">Email Undefined</t>, <t t-out=\"lead['lead_id'].phone or ''\">+1 650-123-4567</t> </li><br/>\n"
 "                            </ol>\n"
-"                            % if ctx.get('partner_in_portal'):\n"
-"                                Please connect to your <a href=\"${object.get_portal_url()}\">Partner Portal</a> to get details. On each lead are two buttons on the top left corner that you should press after having contacted the lead: \"I'm interested\" &amp; \"I'm not interested\".<br/>\n"
-"                            % else:\n"
+"                            <t t-if=\"ctx.get('partner_in_portal')\">\n"
+"                                Please connect to your <a href=\"{{ '%s?db=%s' % (record.get_base_url(), record.env.cr.dbname) }}\">Partner Portal</a> to get details. On each lead are two buttons on the top left corner that you should press after having contacted the lead: \"I'm interested\" &amp; \"I'm not interested\".<br/>\n"
+"                            </t>\n"
+"                            <t t-else=\"\">\n"
 "                                You do not have yet a portal access to our database. Please contact\n"
-"                                ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'}.<br/>\n"
-"                            % endif\n"
+"                                <t t-out=\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'\">us</t>.<br/>\n"
+"                            </t>\n"
 "                            The lead will be sent to another partner if you do not contact the lead before 20 days.<br/><br/>\n"
 "                            Thank you,<br/>\n"
-"                            ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n"
+"                            <t t-out=\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature or ''\"/>\n"
 "                            <br/>\n"
-"                            % if not ctx['partner_id'].user_id:\n"
+"                            <t t-if=\"not ctx['partner_id'].user_id\">\n"
 "                                PS: It looks like you do not have an account manager assigned to you, please contact us.\n"
-"                            % endif\n"
+"                            </t>\n"
 "                        </div>\n"
 "                    </td>\n"
 "                </tr>\n"
@@ -263,24 +305,14 @@ msgid ""
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\" align=\"left\">\n"
-"                    ${user.company_id.name}\n"
+"                    <t t-out=\"user.company_id.name or ''\">YourCompany</t>\n"
 "                </td></tr>\n"
 "                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
-"                    ${user.company_id.phone}\n"
-"                    % if user.company_id.phone and (user.company_id.email or user.company_id.website)\n"
-"                    |\n"
-"                    % endif\n"
-"                    % if user.company_id.email\n"
-"                    <a href=\"'mailto:%s' % ${user.company_id.email}\" style=\"text-decoration:none; color: #454748;\">${user.company_id.email}</a>\n"
-"                    % endif\n"
-"                    % if user.company_id.email and user.company_id.website\n"
-"                    |\n"
-"                    % endif\n"
-"                    % if user.company_id.website\n"
-"                    <a href=\"'%s' % ${user.company_id.website}\" style=\"text-decoration:none; color: #454748;\">\n"
-"                    ${user.company_id.website}\n"
-"                    </a>\n"
-"                    % endif\n"
+"                    <t t-out=\"user.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"user.company_id.phone and (user.company_id.email or user.company_id.website)\">|</t>\n"
+"                    <a t-if=\"user.company_id.email\" t-attf-href=\"'mailto:%s' % {{ user.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                    <t t-if=\"user.company_id.email and user.company_id.website\">|</t>\n"
+"                    <a t-if=\"user.company_id.website\" t-attf-href=\"'%s' % {{ user.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.website or ''\">http://www.example.com</a>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -299,102 +331,6 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
-"<tbody>\n"
-"    <!-- HEADER -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">Dine kundeemner</span><br/>\n"
-"                </td><td valign=\"middle\" align=\"right\">\n"
-"                    <img src=\"/logo.png?company=${user.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"'%s' % company.name\"/>\n"
-"                </td></tr>\n"
-"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
-"                </td></tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"    <!-- CONTENT -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <tr>\n"
-"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
-"                        <div>\n"
-"                            Hej,<br/>\n"
-"                           Vi har været kontaktet af de nye kundeemner, der er i din region. Følgende er således blevet tildelt ${ctx['partner_id'].name}:<br/>\n"
-"                            <ol>\n"
-"                                % for lead in ctx['partner_leads']:\n"
-"                                    <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or 'Email Undefined'}, ${lead.lead_id.phone or ''} </li><br/>\n"
-"                                % endfor\n"
-"                            </ol>\n"
-"                            % if ctx.get('partner_in_portal'):\n"
-"                                Venligst opret forbindelse til din <a href=\"${object.get_portal_url()}\">Partnerportal</a> for at få flere detaljer. På hver kundeemne er der to knapper øverst i venstre hjørne, som du skal trykke på, efter at du har kontaktet kundeemnet: \"Jeg er interesseret\" &amp; \"Jeg er ikke interesseret\".<br/>\n"
-"                            % else:\n"
-"                                Du har endnu ikke adgang til vores portal. Venligst kontakt\n"
-"                                ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'}.<br/>\n"
-"                            % endif\n"
-"                           Kundeemnet vil blive sendt til en anden partner, hvis du ikke kontakter kundeemnet inden 20 dage.<br/><br/>\n"
-"                            mange tak,<br/>\n"
-"                            ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n"
-"                            <br/>\n"
-"                            % if not ctx['partner_id'].user_id:\n"
-"                                PS: Det ser ud til, at du ikke har en kontoansvarlig tildelt dig, kontakt os venligst.\n"
-"                            % endif\n"
-"                        </div>\n"
-"                    </td>\n"
-"                </tr>\n"
-"                <tr>\n"
-"                    <td style=\"text-align:center;\">\n"
-"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
-"                    </td>\n"
-"                </tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"    <!-- FOOTER -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <tr><td valign=\"middle\" align=\"left\">\n"
-"                    ${user.company_id.name}\n"
-"                </td></tr>\n"
-"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
-"                    ${user.company_id.phone}\n"
-"                    % if user.company_id.phone and (user.company_id.email or user.company_id.website)\n"
-"                    |\n"
-"                    % endif\n"
-"                    % if user.company_id.email\n"
-"                    <a href=\"'mailto:%s' % ${user.company_id.email}\" style=\"text-decoration:none; color: #454748;\">${user.company_id.email}</a>\n"
-"                    % endif\n"
-"                    % if user.company_id.email and user.company_id.website\n"
-"                    |\n"
-"                    % endif\n"
-"                    % if user.company_id.website\n"
-"                    <a href=\"'%s' % ${user.company_id.website}\" style=\"text-decoration:none; color: #454748;\">\n"
-"                    ${user.company_id.website}\n"
-"                    </a>\n"
-"                    % endif\n"
-"                </td></tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"</tbody>\n"
-"</table>\n"
-"</td></tr>\n"
-"<!-- POWERED BY -->\n"
-"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
-"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
-"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
-"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=website\" style=\"color: #875A7B;\">Odoo</a>\n"
-"      </td></tr>\n"
-"    </table>\n"
-"</td></tr>\n"
-"</table>\n"
-"            "
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__activation
@@ -402,11 +338,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__activation
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.res_partner_activation_form
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.res_partner_activation_tree
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.res_partner_activation_view_search
 msgid "Activation"
 msgstr "Aktivering"
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation__active
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__active
 #, python-format
 msgid "Active"
@@ -442,6 +380,7 @@ msgid "All fields are required !"
 msgstr "Alle felter er påkrævet!"
 
 #. module: website_crm_partner_assign
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.res_partner_activation_view_search
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.res_partner_grade_view_search
 msgid "Archived"
 msgstr "Arkiveret"
@@ -457,19 +396,29 @@ msgid "Assigned Partner"
 msgstr "Tildelt partner"
 
 #. module: website_crm_partner_assign
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_merge_summary_inherit_partner_assign
+msgid "Assigned Partner:"
+msgstr ""
+
+#. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_opportunity_geo_assign_form
-msgid "Automatic Assignation"
-msgstr "Automatisk tildeling"
+msgid "Automatic Assignment"
+msgstr "Automatisk Tildeling"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_forward_to_partner__body
 msgid "Automatically sanitized HTML contents"
-msgstr ""
+msgstr "Automatisk renset HTML indhold"
+
+#. module: website_crm_partner_assign
+#: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_data_bronze
+msgid "Bronze"
+msgstr "Bronze"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_partner_report_assign
 msgid "CRM Partnership Analysis"
-msgstr ""
+msgstr "CRM Partnerskab analyse"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -479,7 +428,7 @@ msgstr "Kampagne"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__can_publish
 msgid "Can Publish"
-msgstr ""
+msgstr "Kan udgives "
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_forward_to_partner_form
@@ -550,6 +499,21 @@ msgid "Country"
 msgstr "Land"
 
 #. module: website_crm_partner_assign
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
+msgid "Create Opportunity"
+msgstr "Opret salgsmulighed"
+
+#. module: website_crm_partner_assign
+#: model_terms:ir.actions.act_window,help:website_crm_partner_assign.res_partner_activation_act
+msgid "Create a Partner Activation"
+msgstr ""
+
+#. module: website_crm_partner_assign
+#: model_terms:ir.actions.act_window,help:website_crm_partner_assign.res_partner_grade_action
+msgid "Create a Partner Level"
+msgstr ""
+
+#. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__create_uid
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__create_uid
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation__create_uid
@@ -558,7 +522,7 @@ msgid "Created by"
 msgstr "Oprettet af"
 
 #. module: website_crm_partner_assign
-#: model:crm.lead.tag,name:website_crm_partner_assign.tag_portal_lead_own_opp
+#: model:crm.tag,name:website_crm_partner_assign.tag_portal_lead_own_opp
 msgid "Created by Partner"
 msgstr "Oprettet af partner"
 
@@ -594,7 +558,7 @@ msgstr "Dato"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Date Partnership"
-msgstr ""
+msgstr "Dato partnerskab"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_filter
@@ -619,11 +583,6 @@ msgstr "Detaljer for næste aktivitet"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__display_name
 msgid "Display Name"
 msgstr "Vis navn"
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
-msgid "Do you have contacted the customer?"
-msgstr "Har du kontaktet kunden?"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -694,12 +653,12 @@ msgstr "Videresend til partner"
 #. module: website_crm_partner_assign
 #: model:ir.actions.act_window,name:website_crm_partner_assign.action_crm_send_mass_forward
 msgid "Forward to partner"
-msgstr ""
+msgstr "Videresend til partner"
 
 #. module: website_crm_partner_assign
 #: model:mail.template,subject:website_crm_partner_assign.email_template_lead_forward_mail
-msgid "Fwd: Lead: ${ctx['partner_id'].name}"
-msgstr "Fwd: Kundeemne: ${ctx['partner_id'].name}"
+msgid "Fwd: Lead: {{ ctx['partner_id'].name }}"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__partner_latitude
@@ -717,11 +676,23 @@ msgid "Geolocation"
 msgstr "Geolokation"
 
 #. module: website_crm_partner_assign
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_merge_summary_inherit_partner_assign
+msgid "Geolocation:"
+msgstr ""
+
+#. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade__partner_weight
 msgid ""
 "Gives the probability to assign a lead to this partner. (0 means no "
-"assignation.)"
+"assignment.)"
 msgstr ""
+"Angiver sandsynligheden for at tildele et kundeemne til denne partner. (0 "
+"betyder ingen tildeling.)"
+
+#. module: website_crm_partner_assign
+#: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_data_gold
+msgid "Gold"
+msgstr "Guld"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__grade_id
@@ -749,6 +720,11 @@ msgstr ""
 "kundeemnet."
 
 #. module: website_crm_partner_assign
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
+msgid "I have contacted the customer"
+msgstr "Jeg har kontaktet kunden"
+
+#. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__id
@@ -761,12 +737,12 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__implemented_partner_ids
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__implemented_partner_ids
 msgid "Implementation References"
-msgstr ""
+msgstr "Implementerings referencer"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__implemented_count
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__implemented_count
-msgid "Implemented Count"
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__implemented_partner_count
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__implemented_partner_count
+msgid "Implemented Partner Count"
 msgstr ""
 
 #. module: website_crm_partner_assign
@@ -778,12 +754,12 @@ msgstr "Implementeret af"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__date
 msgid "Invoice Account Date"
-msgstr ""
+msgstr "Faktura konto dato"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__is_published
 msgid "Is Published"
-msgstr ""
+msgstr "Er udgivet"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation____last_update
@@ -811,9 +787,9 @@ msgid "Last Updated on"
 msgstr "Sidst opdateret den"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead__date_assign
+#: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead__date_partner_assign
 msgid "Last date this case was forwarded/assigned to a partner"
-msgstr ""
+msgstr "Sidste dato hvor denne sag blev videresendt/tildelt en partner"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__date_review
@@ -835,22 +811,27 @@ msgstr "Kundeemne -"
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead_assignation
 msgid "Lead Assignation"
-msgstr ""
+msgstr "Kundeemne tildeling"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Lead Feedback"
+msgstr "Kundeemne tilbagemelding"
+
+#. module: website_crm_partner_assign
+#: model:mail.template,name:website_crm_partner_assign.email_template_lead_forward_mail
+msgid "Lead Forward: Send to partner"
 msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__lead_location
 msgid "Lead Location"
-msgstr ""
+msgstr "Kundeemne lokation"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead_forward_to_partner
 msgid "Lead forward to partner"
-msgstr ""
+msgstr "Kundeemne videresend til partner"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead
@@ -872,24 +853,24 @@ msgstr "Niveau"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__name
 msgid "Level Name"
-msgstr ""
+msgstr "Niveau navn"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__partner_weight
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__partner_weight
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__partner_weight
 msgid "Level Weight"
-msgstr ""
+msgstr "Niveau vægt"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__lead_link
 msgid "Link to Lead"
-msgstr ""
+msgstr "Link til kundeemne"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Looking For a Local Store?"
-msgstr ""
+msgstr "Leder du efter en lokal butik?"
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
@@ -911,7 +892,7 @@ msgstr "Mobil"
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_partner_filter
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_opportunity_partner_filter
 msgid "My Assigned Partners"
-msgstr ""
+msgstr "Mine tildelte partnere"
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
@@ -949,17 +930,28 @@ msgstr "Dato for næste aktivitet"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__date_review_next
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__date_review_next
 msgid "Next Partner Review"
-msgstr ""
+msgstr "Næste partner anmeldelse"
 
 #. module: website_crm_partner_assign
-#: model:crm.lead.tag,name:website_crm_partner_assign.tag_portal_lead_partner_unavailable
+#: model_terms:ir.actions.act_window,help:website_crm_partner_assign.action_report_crm_partner_assign
+msgid "No data yet!"
+msgstr "Ingen data endnu!"
+
+#. module: website_crm_partner_assign
+#: model:crm.tag,name:website_crm_partner_assign.tag_portal_lead_partner_unavailable
 msgid "No more partner available"
-msgstr ""
+msgstr "Ikke flere partnere tilgængelige"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "No result found"
 msgstr "Ingen resultater fundet"
+
+#. module: website_crm_partner_assign
+#: code:addons/website_crm_partner_assign/models/crm_lead.py:0
+#, python-format
+msgid "Not allowed to update the following field(s) : %s."
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
@@ -971,7 +963,12 @@ msgstr "Salgsmuligheder"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_graph
 msgid "Opportunities Assignment Analysis"
-msgstr ""
+msgstr "Muligheder tildelings analyse"
+
+#. module: website_crm_partner_assign
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
+msgid "Opportunity"
+msgstr "Salgsmuligheder"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.partner
@@ -993,6 +990,7 @@ msgstr "Kontakt"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_res_partner_activation
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.res_partner_activation_view_search
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_partner_assign_form
 msgid "Partner Activation"
 msgstr "Partneraktivering"
@@ -1001,48 +999,63 @@ msgstr "Partneraktivering"
 #: model:ir.actions.act_window,name:website_crm_partner_assign.res_partner_activation_act
 #: model:ir.ui.menu,name:website_crm_partner_assign.res_partner_activation_config_mi
 msgid "Partner Activations"
-msgstr ""
+msgstr "Partner aktiveringer"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__forward_id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__assignation_lines
-msgid "Partner Assignation"
-msgstr ""
+msgid "Partner Assignment"
+msgstr "Partner Tildeling"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__date_assign
-msgid "Partner Assignation Date"
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__date_partner_assign
+msgid "Partner Assignment Date"
+msgstr "Partner Tildelingsdato"
+
+#. module: website_crm_partner_assign
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_merge_summary_inherit_partner_assign
+msgid "Partner Assignment Date:"
 msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_res_partner_grade
 msgid "Partner Grade"
-msgstr ""
+msgstr "Partner grad"
 
 #. module: website_crm_partner_assign
-#: model:ir.actions.act_window,name:website_crm_partner_assign.res_partner_grade_action
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__grade_id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__grade_id
-#: model:ir.ui.menu,name:website_crm_partner_assign.menu_res_partner_grade_action
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_partner_grade_form
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_partner_grade_tree
 msgid "Partner Level"
+msgstr "Partner niveau"
+
+#. module: website_crm_partner_assign
+#: model:ir.actions.act_window,name:website_crm_partner_assign.res_partner_grade_action
+#: model:ir.ui.menu,name:website_crm_partner_assign.menu_res_partner_grade_action
+msgid "Partner Levels"
+msgstr ""
+
+#. module: website_crm_partner_assign
+#: model_terms:ir.actions.act_window,help:website_crm_partner_assign.res_partner_grade_action
+msgid ""
+"Partner Levels allow you to rank your Partners based on their performances."
 msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__partner_location
 msgid "Partner Location"
-msgstr ""
+msgstr "Partner lokation"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_partner_assign_form
 msgid "Partner Review"
-msgstr ""
+msgstr "Partner tilbagemelding"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Partner assigned Analysis"
-msgstr ""
+msgstr "Partner tildelte analyse"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__partner_declined_ids
@@ -1052,7 +1065,7 @@ msgstr "Partner ikke interesseret"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead__partner_assigned_id
 msgid "Partner this case has been forwarded/assigned to."
-msgstr ""
+msgstr "Partner som denne sag er blevet videresendt/tildelt til."
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
@@ -1069,7 +1082,7 @@ msgstr "Partnerskabsanalyse"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__date_partnership
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__date_partnership
 msgid "Partnership Date"
-msgstr ""
+msgstr "Partnerskab dato"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.menu,name:website_crm_partner_assign.menu_report_crm_partner_assign_tree
@@ -1107,32 +1120,32 @@ msgstr "Bedømmelse"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Rating: #{lead.priority} on 3"
-msgstr ""
+msgstr "Bedømmelse: #{lead.priority} af 3"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Rating: #{opportunity.priority} on 4"
-msgstr ""
+msgstr "Bedømmelse: #{opportunity.priority} af 4"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Rating: 0 on 3"
-msgstr ""
+msgstr "Bedømmelse: 0 af 3"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Rating: 1 on 3"
-msgstr ""
+msgstr "Bedømmelse: 1 af 3"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Rating: 2 on 3"
-msgstr ""
+msgstr "Bedømmelse: 2 af 3"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Rating: 3 on 3"
-msgstr ""
+msgstr "Bedømmelse: 3 af 3"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.references_block
@@ -1140,9 +1153,10 @@ msgid "References"
 msgstr "Reference"
 
 #. module: website_crm_partner_assign
+#: code:addons/website_crm_partner_assign/models/website.py:0
 #: model:ir.ui.menu,name:website_crm_partner_assign.crm_menu_resellers
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.layout
-#: model:website.menu,name:website_crm_partner_assign.menu_resellers
+#, python-format
 msgid "Resellers"
 msgstr "Forhandlere"
 
@@ -1167,7 +1181,7 @@ msgstr "Søg"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.res_partner_grade_view_search
 msgid "Search Partner Grade"
-msgstr ""
+msgstr "Søg partner grad"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_forward_to_partner_form
@@ -1205,7 +1219,12 @@ msgid "Set an email address for the partner(s): %s"
 msgstr "Angiv en emailadresse for partner(ne): %s"
 
 #. module: website_crm_partner_assign
-#: model:crm.lead.tag,name:website_crm_partner_assign.tag_portal_lead_is_spam
+#: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_data_silver
+msgid "Silver"
+msgstr "Sølv"
+
+#. module: website_crm_partner_assign
+#: model:crm.tag,name:website_crm_partner_assign.tag_portal_lead_is_spam
 msgid "Spam"
 msgstr "Spam"
 
@@ -1240,7 +1259,7 @@ msgstr "Tags"
 #: code:addons/website_crm_partner_assign/wizard/crm_forward_to_partner.py:0
 #, python-format
 msgid "The Forward Email Template is not in the database"
-msgstr ""
+msgstr "Email videresendings skabelon ikke i databasen"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade__website_url
@@ -1256,6 +1275,12 @@ msgstr "Der er ingen kundeemner."
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 msgid "There are no opportunities."
 msgstr "Der er ingen salgsmuligheder."
+
+#. module: website_crm_partner_assign
+#: code:addons/website_crm_partner_assign/models/crm_lead.py:0
+#, python-format
+msgid "There is no country set in addresses for %(lead_names)s."
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
@@ -1275,11 +1300,14 @@ msgid ""
 "This should be a numerical value greater than 0 which will decide the "
 "contention for this partner to take this lead/opportunity."
 msgstr ""
+"Dette bør være en numerisk værdi som er større end 0, som vil afgøre om "
+"denne partner tager dette kundeemne/mulighed."
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
-msgid "Title"
-msgstr "Overskrift"
+#: model_terms:ir.actions.act_window,help:website_crm_partner_assign.res_partner_activation_act
+msgid ""
+"Those are used to know where your Partners stand in your onboarding process."
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
@@ -1303,6 +1331,17 @@ msgid "Visible on current website"
 msgstr "Synlig på denne hjemmeside"
 
 #. module: website_crm_partner_assign
+#: code:addons/website_crm_partner_assign/models/crm_lead.py:0
+#, python-format
+msgid "Warning"
+msgstr "Advarsel"
+
+#. module: website_crm_partner_assign
+#: model:ir.model,name:website_crm_partner_assign.model_website
+msgid "Website"
+msgstr "Hjemmeside"
+
+#. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__website_url
 msgid "Website URL"
 msgstr "Hjemmeside URL"
@@ -1314,7 +1353,7 @@ msgstr "Hvad er den næste handling? Hvornår? Hvad er den forventede indtægt?"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
-msgid "Why aren't you interested by this lead?"
+msgid "Why aren't you interested in this lead?"
 msgstr "Hvorfor er du ikke interesseret i dette kundeemne?"
 
 #. module: website_crm_partner_assign
@@ -1330,21 +1369,15 @@ msgstr "Verdenskort"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
-msgid "YYYY-MM-DD"
-msgstr "ÅÅÅÅ-MM-DD"
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "ZIP"
 msgstr "Post nr."
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields.selection,name:website_crm_partner_assign.selection__crm_lead_forward_to_partner__forward_type__single
 msgid "a single partner: manual selection of partner"
-msgstr ""
+msgstr "en enkelt partner: manuel valg af partner"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "at"
 msgstr "på"
@@ -1352,11 +1385,16 @@ msgstr "på"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_partner_grade_form
 msgid "e.g. Gold Partner"
+msgstr "f.eks. Guld Partner"
+
+#. module: website_crm_partner_assign
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_merge_summary_inherit_partner_assign
+msgid "latitude,"
 msgstr ""
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-msgid "float-left"
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_merge_summary_inherit_partner_assign
+msgid "longitude"
 msgstr ""
 
 #. module: website_crm_partner_assign
@@ -1372,6 +1410,8 @@ msgstr "reference(r)"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields.selection,name:website_crm_partner_assign.selection__crm_lead_forward_to_partner__forward_type__assigned
 msgid ""
-"several partners: automatic assignation, using GPS coordinates and partner's"
-" grades"
+"several partners: automatic assignment, using GPS coordinates and partner's "
+"grades"
 msgstr ""
+"flere partnere: automatisk tildeling, via brug af GPS koordinater, samt "
+"partners grad"

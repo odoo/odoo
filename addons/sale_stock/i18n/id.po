@@ -1,20 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * sale_stock
+# 	* sale_stock
 # 
 # Translators:
-# Ryanto The <ry.the77@gmail.com>, 2017
-# Bonny Useful <bonny.useful@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
-# William Surya Permana <zarambie_game@yahoo.com>, 2017
+# William Surya Permana <zarambie_game@yahoo.com>, 2022
+# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2022
+# Bonny Useful <bonny.useful@gmail.com>, 2022
+# Andi Fadhel <cliffryu@gmail.com>, 2022
+# Ikhsanul Wirsa <iwirsa02@outlook.co.id>, 2022
+# pnyet <david@zeromail.us>, 2022
+# Martin Trigaux, 2022
+# whenwesober, 2022
+# Abdul Munif Hanafi <amunifhanafi@gmail.com>, 2022
+# Ryanto The <ry.the77@gmail.com>, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: William Surya Permana <zarambie_game@yahoo.com>, 2017\n"
+"POT-Creation-Date: 2022-04-19 13:58+0000\n"
+"PO-Revision-Date: 2016-08-05 13:10+0000\n"
+"Last-Translator: Ryanto The <ry.the77@gmail.com>, 2022\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,14 +29,47 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:170
-#, python-format
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid ""
-"\n"
-"There are %s %s available accross all warehouses."
+".\n"
+"                Manual actions may be needed."
 msgstr ""
-"\n"
-"Tersedia %s %s di seluruh gudang."
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Preparation</b>"
+msgstr ""
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "<i class=\"fa fa-fw fa-times\"/> <b>Cancelled</b>"
+msgstr ""
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "<i class=\"fa fa-fw fa-truck\"/> <b>Shipped</b>"
+msgstr ""
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
+msgid "<span class=\"o_stat_text\">Sales</span>"
+msgstr ""
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
+msgid "<span class=\"o_stat_text\">Sold</span>"
+msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -38,10 +77,38 @@ msgid "<strong>Customer Reference:</strong>"
 msgstr "<strong>Referensi Pelanggan:</strong>"
 
 #. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "<strong>Delivery Orders</strong>"
+msgstr "<strong>Pengiriman Pesanan</strong>"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "<strong>Incoterm: </strong>"
+msgstr ""
+
+#. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
-msgid "<strong>Incoterms:</strong>"
-msgstr "<strong>Incoterms:</strong>"
+msgid "<strong>Incoterm:</strong>"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_sale_order_line__product_type
+msgid ""
+"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A consumable product is a product for which stock is not managed.\n"
+"A service is a non-material product you provide."
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
+msgid ""
+"According to product configuration, the delivered quantity can be automatically computed by mechanism :\n"
+"  - Manual: the quantity is set manually on the line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Stock Moves: the quantity comes from confirmed pickings\n"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
@@ -49,21 +116,47 @@ msgid "After-Sale"
 msgstr "Layanan Purna Jual"
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
-msgid "Apply special routes from orders (e.g. dropshipping, MTO)"
-msgstr "Gunakan rute khusus dari order penjualan (mis: dropship, MTO)"
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#, python-format
+msgid "All planned operations included"
+msgstr ""
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
-msgid ""
-"By default Odoo computes the expected delivery date this way: order date + "
-"highest customer lead time of products. With this option, you can set a "
-"specific delivery date on orders rather than setting lead times on products."
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
+msgid "Apply specific routes"
 msgstr ""
-"Odoo menghitung tanggal pengiriman standar seperti berikut: tanggal order + "
-"lead time tertinggi dari produk yang dipesan pelanggan. Dengan memilih opsi "
-"ini, Anda dapat menyetel tanggal pengiriman spesifik pada order penjualan "
-"dan tidak menggunakan lead time pada produk."
+
+#. module: sale_stock
+#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__picking_policy__direct
+msgid "As soon as possible"
+msgstr "Sesegera mungkin"
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/js/qty_at_date_widget.js:0
+#, python-format
+msgid "Availability"
+msgstr "Ketersediaan"
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#, python-format
+msgid "Available"
+msgstr "Tersedia"
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#, python-format
+msgid "Available in stock"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
+msgid "Choose to apply SO lines specific routes."
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -71,14 +164,24 @@ msgid "Companies"
 msgstr "Perusahaan"
 
 #. module: sale_stock
-#: selection:sale.order,picking_policy:0
-msgid "Deliver all products at once"
-msgstr "Mengirim semua produk sekaligus"
+#: model:ir.model.fields,help:sale_stock.field_sale_order__effective_date
+msgid "Completion date of the first delivery order."
+msgstr ""
 
 #. module: sale_stock
-#: selection:sale.order,picking_policy:0
-msgid "Deliver each product when available"
-msgstr "Mengirim setiap produk ketika tersedia"
+#: model:ir.model,name:sale_stock.model_res_config_settings
+msgid "Config Settings"
+msgstr "Pengaturan Konfigurasi"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "Date:"
+msgstr "Tanggal:"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_res_users__property_warehouse_id
+msgid "Default Warehouse"
+msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
@@ -86,14 +189,33 @@ msgid "Delivery"
 msgstr "Pengiriman"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_module_sale_order_dates
-msgid "Delivery Date"
-msgstr "Tanggal Pengiriman"
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel__display_delivery_alert
+msgid "Delivery Alert"
+msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_delivery_count
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
 msgid "Delivery Orders"
 msgstr "Order Pengiriman"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_status
+msgid "Delivery Status"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_sale_order__expected_date
+msgid ""
+"Delivery date you can promise to the customer, computed from the minimum "
+"lead time of the order lines in case of Service products. In case of "
+"shipping, the shipping policy of the order will be taken into account to "
+"either use the minimum or maximum lead time of the order lines."
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
+msgid "Display Qty Widget"
+msgstr ""
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_display_incoterm
@@ -106,31 +228,108 @@ msgid "Display incoterms on orders &amp; invoices"
 msgstr "Tampilkan incoterm pada order &amp; faktur"
 
 #. module: sale_stock
-#: model:res.groups,name:sale_stock.group_route_so_lines
-msgid "Enable Route on Sales Order Line"
-msgstr "Aktifkan Rute pada Detail Order Penjualan"
+#: code:addons/sale_stock/models/sale_order.py:0
+#, python-format
+msgid ""
+"Do not forget to change the partner on the following delivery orders: %s"
+msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_account_invoice_incoterms_id
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_group_display_incoterm
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_incoterm
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid "Documentation"
+msgstr "Dokumentasi"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
+msgid "Effective Date"
+msgstr "Tanggal Efektif"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
+msgid "Exception(s) occurred on the picking:"
+msgstr ""
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "Exception(s) occurred on the sale order(s):"
+msgstr ""
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "Exception(s):"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__expected_date
+msgid "Expected Date"
+msgstr "Tanggal Perkiraan"
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#, python-format
+msgid "Expected Delivery"
+msgstr ""
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
+msgid "Expected:"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__forecast_expected_date
+msgid "Forecast Expected Date"
+msgstr ""
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#, python-format
+msgid "Forecasted Stock"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__free_qty_today
+msgid "Free Qty Today"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__full
+msgid "Fully Delivered"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
+msgid "Has late picking"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_sale_order__picking_policy
+msgid ""
+"If you deliver all products at once, the delivery order will be scheduled "
+"based on the greatest product lead time. Otherwise, it will be based on the "
+"shortest."
+msgstr ""
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "Impacted Transfer(s):"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm
+msgid "Incoterm"
+msgstr "Incoterm"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_display_incoterm
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Incoterms"
 msgstr "Incoterm"
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_account_invoice_incoterms_id
-msgid ""
-"Incoterms are series of sales terms. They are used to divide transaction "
-"costs and responsibilities between buyer and seller and reflect state-of-"
-"the-art transportation practices."
-msgstr ""
-"Incoterms adalah rangkaian syarat-syarat penjualan. Mereka digunakan untuk "
-"membagi biaya transaksi dan tanggung jawab antara pembeli dan penjual dan "
-"mencerminkan praktek-praktek transportasi terbaik."
-
-#. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_sale_order_incoterm
+#: model:ir.model.fields,help:sale_stock.field_sale_order__incoterm
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
@@ -139,19 +338,14 @@ msgstr ""
 "yang digunakan dalam transaksi internasional."
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_stock_location_route
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_users_view_form
+msgid "Inventory"
+msgstr "Stok Persediaan"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_route
 msgid "Inventory Routes"
-msgstr "Rute persediaan"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_account_invoice
-msgid "Invoice"
-msgstr "Faktur"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_account_invoice_line
-msgid "Invoice Line"
-msgstr "Baris Faktur"
+msgstr "Rute Stok Persediaan"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_invoiced
@@ -159,7 +353,48 @@ msgid "Invoicing"
 msgstr "Penagihan"
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_res_config_settings_use_security_lead
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__is_mto
+msgid "Is Mto"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__json_popover
+msgid "JSON data for the popover widget"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_account_move
+msgid "Journal Entry"
+msgstr "Entri Jurnal"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_account_move_line
+msgid "Journal Item"
+msgstr "Item Jurnal"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__customer_lead
+msgid "Lead Time"
+msgstr "Lama Waktu"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_lot
+msgid "Lot/Serial"
+msgstr "Seri/Lot"
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order_line.py:0
+#, python-format
+msgid "Make To Order"
+msgstr "Make To Order"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "Manual actions may be needed."
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_res_config_settings__use_security_lead
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
 "for delivery that many days earlier than the actual promised date, to cope "
@@ -171,8 +406,8 @@ msgstr ""
 " pada rantai pemasokan."
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
-#: model:ir.model.fields,help:sale_stock.field_res_config_settings_security_lead
+#: model:ir.model.fields,help:sale_stock.field_res_company__security_lead
+#: model:ir.model.fields,help:sale_stock.field_res_config_settings__security_lead
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
@@ -185,99 +420,144 @@ msgstr ""
 " pada rantai pemasokan."
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
+msgid "Method to update delivered qty"
+msgstr ""
+
+#. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by"
 msgstr "Majukan jadwal pengiriman sebanyak"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:174
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
-msgid "Not enough inventory!"
-msgstr "Persediaan tidak cukup!"
+msgid "No enough future availaibility"
+msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_group_route_so_lines
-msgid "Order-Specific Routes"
-msgstr "Rute Order Spesifik"
-
-#. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:188
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
-msgid "Ordered quantity decreased!"
-msgstr "Jumlah yang dipesan dikurangi!"
+msgid "No future availaibility"
+msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_packaging
-msgid "Package"
-msgstr "Kemasan"
+#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__pending
+msgid "Not Delivered"
+msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_ids
-msgid "Pickings"
-msgstr "Pengambilan"
+#: model:ir.model.fields,help:sale_stock.field_sale_order_line__customer_lead
+msgid ""
+"Number of days between the order confirmation and the shipping of the "
+"products to the customer"
+msgstr ""
+"Jumlah hari antara konfirmasi order dan pengiriman produk ke pelanggan"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_procurement_group_id
-msgid "Procurement Group"
-msgstr "Kelompok Pengadaan"
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#, python-format
+msgid "On"
+msgstr "Hidup"
+
+#. module: sale_stock
+#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__partial
+msgid "Partially Delivered"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__default_picking_policy
+msgid "Picking Policy"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_procurement_group
-msgid "Procurement Requisition"
-msgstr "Permintaan Pengadaan"
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__procurement_group_id
+msgid "Procurement Group"
+msgstr "Grup Pengadaan"
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_procurement_rule
-msgid "Procurement Rule"
-msgstr "Aturan Pengadaan"
+#: model:ir.model,name:sale_stock.model_product_template
+msgid "Product Template"
+msgstr "Templete Produk"
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_order
-msgid "Quotation"
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__product_type
+msgid "Product Type"
+msgstr "Tipe Produk"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_available_today
+msgid "Qty Available Today"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
+msgid "Qty To Deliver"
+msgstr ""
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_report_product_product_replenishment
+msgid "Quotations"
 msgstr "Penawaran"
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
-msgid ""
-"Reserving products manually in delivery orders or by running the scheduler "
-"is advised to better manage priorities in case of long customer lead times "
-"or/and frequent stock-outs. By default, the scheduler runs automatically "
-"every 24 hours."
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#, python-format
+msgid "Remaining demand available at"
 msgstr ""
-"Disarankan untuk reservasi produk secara manual pada order pengirimin atau "
-"dengan menjalankan penjadwal, agar dapat mengelola prioritas ketika lama "
-"waktu pengiriman panjang atau sering habis stok. Secara standar, penjadwal "
-"jalan secara otomatis tiap 24 jam."
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_route_id
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#, python-format
+msgid "Reserved"
+msgstr "Reservasi"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__route_id
 msgid "Route"
 msgstr "Rute"
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
-msgid "Routes for Sales Order Lines"
-msgstr "Rute untuk Detail Order Penjualan"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_stock_move_sale_line_id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move__sale_line_id
 msgid "Sale Line"
 msgstr "Baris Penjualan"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_procurement_group_sale_id
+#: model:ir.model.fields,field_description:sale_stock.field_procurement_group__sale_id
 msgid "Sale Order"
 msgstr "Order Penjualan"
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
-msgid "Sales"
-msgstr "Penjualan"
+#: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
+msgid "Sale Orders"
+msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_stock_picking_sale_id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_lot__sale_order_count
+msgid "Sale order count"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_report
+msgid "Sales Analysis Report"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_order
+#: model:ir.model.fields,field_description:sale_stock.field_stock_picking__sale_id
 msgid "Sales Order"
 msgstr "Order Penjualan"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_order_cancel
+msgid "Sales Order Cancel"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
@@ -290,12 +570,12 @@ msgid "Sales Order Lines"
 msgstr "Detail Order Penjualan"
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_report
-msgid "Sales Orders Statistics"
-msgstr "Statistik Order Penjualan"
+#: model:ir.model.fields,field_description:sale_stock.field_stock_lot__sale_order_ids
+msgid "Sales Orders"
+msgstr "Order Penjualan"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_res_company_security_lead
+#: model:ir.model.fields,field_description:sale_stock.field_res_company__security_lead
 msgid "Sales Safety Days"
 msgstr "Jangka Waktu Aman Penjualan"
 
@@ -305,49 +585,51 @@ msgid "Schedule deliveries earlier to avoid delays"
 msgstr "Jadwalkan pengiriman lebih awal untuk menghindari penundaan"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_security_lead
-msgid "Security Lead Time"
-msgstr "Lama Waktu Pengamanan"
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__scheduled_date
+msgid "Scheduled Date"
+msgstr "Tanggal Terjadwal"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_use_security_lead
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__security_lead
+msgid "Security Lead Time"
+msgstr "Lead Time Pengamanan"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__use_security_lead
 msgid "Security Lead Time for Sales"
 msgstr "Lama Waktu Pengamanan untuk Penjualan"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_stock_location_route_sale_selectable
+#: model:ir.model.fields,field_description:sale_stock.field_stock_route__sale_selectable
 msgid "Selectable on Sales Order Line"
 msgstr "Dapat Dipilih pada Detail Order Penjualan"
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
-msgid "Set a delivery date on orders"
-msgstr "Set tanggal pengiriman pada order"
-
-#. module: sale_stock
-#: selection:res.config.settings,default_picking_policy:0
+#: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__one
 msgid "Ship all products at once"
 msgstr "Kirim semua produk sekaligus"
 
 #. module: sale_stock
-#: selection:res.config.settings,default_picking_policy:0
+#: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__direct
 msgid "Ship products as soon as available, with back orders"
 msgstr "Kirim produk sesegera mungkin, dengan backorder"
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
-msgid "Shipping Information"
-msgstr "Informasi Pengiriman"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_default_picking_policy
-msgid "Shipping Management"
-msgstr "Manajemen Pengiriman"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_policy
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
 msgid "Shipping Policy"
 msgstr "Kebijakan Pengiriman"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
+msgid "Sold in the last 365 days"
+msgstr ""
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
+msgid ""
+"Some products have already been delivered. Returns can be created from the "
+"Delivery Orders."
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -355,28 +637,61 @@ msgid "Stock Move"
 msgstr "Pergerakan Stok"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_move_ids
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__move_ids
+#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order_line__qty_delivered_method__stock_move
 msgid "Stock Moves"
-msgstr "Pergerakan Stok"
+msgstr "Pergerakan Stock"
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
-msgid ""
-"This allows to apply a special route on sales order lines (e.g. "
-"dropshipping, make-to-order) in case of unusual order scenario. To be "
-"available in sales orders, routes must have 'Sales Order Line' option "
-"checked in their setup form."
+#: model:ir.model,name:sale_stock.model_report_stock_report_product_product_replenishment
+msgid "Stock Replenishment Report"
 msgstr ""
-"Memungkinkan Anda untuk menerapkan rute spesial pada detail order penjualan "
-"(mis. dropship, MTO) untuk skenario order yang tidak biasa. Agar tersedia di"
-" order penjualan, opsi 'Detail Order Penjualan' harus dicentang di "
-"pengaturan detail rute."
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:273
+#: model:ir.model,name:sale_stock.model_stock_rule
+msgid "Stock Rule"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_rules_report
+msgid "Stock Rules report"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
+msgid "Stock rule report"
+msgstr ""
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
-msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
-msgstr "Produk ini dikemas oleh %.2f %s. Anda harus menjual %.2f %s."
+msgid "The delivery"
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:0
+#, python-format
+msgid ""
+"The delivery address has been changed on the Sales Order<br/>\n"
+"                        From <strong>\"%s\"</strong> To <strong>\"%s\"</strong>,\n"
+"                        You should probably update the partner on this document."
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order_line.py:0
+#, python-format
+msgid ""
+"The ordered quantity cannot be decreased below the amount already delivered."
+" Instead, create a return in your inventory."
+msgstr ""
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#, python-format
+msgid "This product is replenished on demand."
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -384,21 +699,44 @@ msgid "Transfer"
 msgstr "Transfer"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_warehouse_id
-#: model:ir.model.fields,field_description:sale_stock.field_sale_report_warehouse_id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_ids
+msgid "Transfers"
+msgstr "Transfer"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_res_users
+msgid "Users"
+msgstr "Pengguna"
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#, python-format
+msgid "View Forecast"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__virtual_available_at_date
+msgid "Virtual Available At Date"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__warehouse_id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__warehouse_id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_report__warehouse_id
 msgid "Warehouse"
 msgstr "Gudang"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:272
+#: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
-msgid "Warning"
-msgstr "Peringatan"
+msgid "Warning!"
+msgstr "Peringatan!"
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
-msgid "When to reserve sold products"
-msgstr "Kapan mereservasi produk yang terjual"
+#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__picking_policy__one
+msgid "When all products are ready"
+msgstr "Ketika semua produk siap"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -406,23 +744,9 @@ msgid "When to start shipping"
 msgstr "Kapan memulai pengiriman"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:189
-#, python-format
-msgid ""
-"You are decreasing the ordered quantity! Do not forget to manually update "
-"the delivery order if needed."
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "cancelled"
 msgstr ""
-"Anda mengurasi jumlah dipesan! Jangan lupa untuk memperbarui order "
-"pengiriman secara manual jika diperlukan."
-
-#. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:166
-#, python-format
-msgid ""
-"You plan to sell %s %s but you only have %s %s available in %s warehouse."
-msgstr ""
-"Anda ingin menjual %s %s tetapi Anda hanya mempunyai %s %s yang tersedia di "
-"gudang %s."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -430,6 +754,24 @@ msgid "days"
 msgstr "hari"
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "of"
+msgstr "dari"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "ordered instead of"
+msgstr ""
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
+msgid "processed instead of"
+msgstr ""
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#, python-format
+msgid "will be late."
+msgstr ""

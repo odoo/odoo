@@ -1,0 +1,275 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_work_entry_contract
+# 
+# Translators:
+# Ryoko Tsuda <ryoko@quartile.co>, 2022
+# Martin Trigaux, 2022
+# Noma Yuki, 2022
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~15.2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"PO-Revision-Date: 2019-12-16 11:03+0000\n"
+"Last-Translator: Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022\n"
+"Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_work_entry_contract
+#: code:addons/hr_work_entry_contract/models/hr_work_entry.py:0
+#, python-format
+msgid "%s does not have a contract from %s to %s."
+msgstr ""
+
+#. module: hr_work_entry_contract
+#: code:addons/hr_work_entry_contract/models/hr_work_entry.py:0
+#, python-format
+msgid ""
+"%s has multiple contracts from %s to %s. A work entry cannot overlap "
+"multiple contracts."
+msgstr ""
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid ""
+"<i class=\"fa fa-exclamation-triangle mr-1\" title=\"Warning\"/>You are not "
+"allowed to regenerate validated work entries"
+msgstr ""
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid "<i class=\"fa fa-info-circle mr-1\" title=\"Hint\"/>"
+msgstr ""
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,help:hr_work_entry_contract.field_hr_work_entry_type__is_leave
+msgid "Allow the work entry type to be linked with time off types."
+msgstr ""
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_compensatory
+msgid "Compensatory Time Off"
+msgstr "代休"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry__contract_id
+msgid "Contract"
+msgstr "契約"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__create_uid
+msgid "Created by"
+msgstr "作成者"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__create_date
+msgid "Created on"
+msgstr "作成日"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__display_name
+msgid "Display Name"
+msgstr "名前を表示"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__earliest_available_date_message
+msgid "Earliest Available Date Message"
+msgstr ""
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__earliest_available_date
+msgid "Earliest date"
+msgstr ""
+
+#. module: hr_work_entry_contract
+#: model:ir.model,name:hr_work_entry_contract.model_hr_employee
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry__employee_id
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__employee_id
+msgid "Employee"
+msgstr "従業員"
+
+#. module: hr_work_entry_contract
+#: model:ir.model,name:hr_work_entry_contract.model_hr_contract
+msgid "Employee Contract"
+msgstr "従業員契約"
+
+#. module: hr_work_entry_contract
+#. openerp-web
+#: code:addons/hr_work_entry_contract/static/src/js/work_entries_calendar.js:0
+#, python-format
+msgid "Everybody's work entries"
+msgstr "全員の作業エントリ"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__date_from
+msgid "From"
+msgstr "from"
+
+#. module: hr_work_entry_contract
+#: model:ir.actions.server,name:hr_work_entry_contract.ir_cron_generate_missing_work_entries_ir_actions_server
+#: model:ir.cron,cron_name:hr_work_entry_contract.ir_cron_generate_missing_work_entries
+#: model:ir.cron,name:hr_work_entry_contract.ir_cron_generate_missing_work_entries
+msgid "Generate Missing Work Entries"
+msgstr ""
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__date_generated_from
+msgid "Generated From"
+msgstr ""
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__date_generated_to
+msgid "Generated To"
+msgstr ""
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_leave
+msgid "Generic Time Off"
+msgstr ""
+
+#. module: hr_work_entry_contract
+#: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry
+msgid "HR Work Entry"
+msgstr ""
+
+#. module: hr_work_entry_contract
+#: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry_type
+msgid "HR Work Entry Type"
+msgstr ""
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_home_working
+msgid "Home Working"
+msgstr "自宅勤務"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_work_entry_contract
+#: code:addons/hr_work_entry_contract/wizard/hr_work_entry_regeneration_wizard.py:0
+#, python-format
+msgid ""
+"In order to regenerate the work entries, you need to provide the wizard with"
+" an employee_id, a date_from and a date_to. In addition to that, the time "
+"interval defined by date_from and date_to must not contain any validated "
+"work entries."
+msgstr ""
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard____last_update
+msgid "Last Modified on"
+msgstr "最終更新日"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__write_uid
+msgid "Last Updated by"
+msgstr "最終更新者"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__write_date
+msgid "Last Updated on"
+msgstr "最終更新日"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__latest_available_date_message
+msgid "Latest Available Date Message"
+msgstr ""
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__latest_available_date
+msgid "Latest date"
+msgstr ""
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_legal_leave
+msgid "Legal Leaves 2022"
+msgstr "法定休暇 2022"
+
+#. module: hr_work_entry_contract
+#: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry_regeneration_wizard
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid "Regenerate Employee Work Entries"
+msgstr ""
+
+#. module: hr_work_entry_contract
+#. openerp-web
+#: code:addons/hr_work_entry_contract/static/src/js/work_entries_controller_mixin.js:0
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+#, python-format
+msgid "Regenerate Work Entries"
+msgstr "作業エントリの再生成"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__search_criteria_completed
+msgid "Search Criteria Completed"
+msgstr ""
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_sick_leave
+msgid "Sick Time Off"
+msgstr "病気休暇"
+
+#. module: hr_work_entry_contract
+#: code:addons/hr_work_entry_contract/models/hr_contract.py:0
+#, python-format
+msgid ""
+"Sorry, generating work entries from cancelled contracts is not allowed."
+msgstr ""
+
+#. module: hr_work_entry_contract
+#: code:addons/hr_work_entry_contract/wizard/hr_work_entry_regeneration_wizard.py:0
+#, python-format
+msgid ""
+"The from date must be >= '%(earliest_available_date)s' and the to date must "
+"be <= '%(latest_available_date)s', which correspond to the generated work "
+"entries time interval."
+msgstr ""
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_contract_view_form_inherit
+msgid "This work entry cannot be validated. The work entry type is undefined."
+msgstr ""
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_type__is_leave
+msgid "Time Off"
+msgstr "休暇"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__date_to
+msgid "To"
+msgstr "宛先"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_unpaid_leave
+msgid "Unpaid"
+msgstr "未払"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__valid
+msgid "Valid"
+msgstr "有効"
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid "Work Entries"
+msgstr "作業エントリ"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__validated_work_entry_ids
+msgid "Work Entries Within Interval"
+msgstr ""
+
+#. module: hr_work_entry_contract
+#: model:ir.actions.act_window,name:hr_work_entry_contract.hr_work_entry_regeneration_wizard_action
+msgid "Work Entry Regeneration"
+msgstr "作業エントリ再生成"

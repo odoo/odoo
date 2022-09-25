@@ -3,18 +3,16 @@
 # 	* hr_org_chart
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2019
-# Sanne Kristensen <sanne@vkdata.dk>, 2019
-# lhmflexerp <lhm@flexerp.dk>, 2019
+# Mads Søndergaard, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2017-12-13 14:53+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,17 +23,17 @@ msgstr ""
 #. module: hr_org_chart
 #: model:ir.model,name:hr_org_chart.model_hr_employee_base
 msgid "Basic Employee"
-msgstr ""
+msgstr "Standard ansat"
 
 #. module: hr_org_chart
 #: model:ir.model.fields,help:hr_org_chart.field_hr_employee__subordinate_ids
 #: model:ir.model.fields,help:hr_org_chart.field_hr_employee_public__subordinate_ids
 msgid "Direct and indirect subordinates"
-msgstr ""
+msgstr "Direkte og indirekte underordnede"
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:126
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
 #, python-format
 msgid "Direct subordinates"
 msgstr "Direkte underordnede"
@@ -47,7 +45,7 @@ msgstr "Medarbejder"
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:88
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
 #, python-format
 msgid "In order to get an organigram, set a manager and save the record."
 msgstr ""
@@ -57,26 +55,27 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__child_all_count
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__child_all_count
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_all_count
-msgid "Indirect Surbordinates Count"
-msgstr "Indirekte underordnede"
+msgid "Indirect Subordinates Count"
+msgstr "Antal Indirekte Underordnede"
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:136
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
 #, python-format
 msgid "Indirect subordinates"
 msgstr "Indirekte underordnede"
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:65
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
 #, python-format
 msgid "More managers"
 msgstr "Flere ledere"
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:86
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
 #, python-format
 msgid "No hierarchy position."
 msgstr "Ingen hierarki."
@@ -91,14 +90,22 @@ msgstr "Organisationsdiagram"
 #. module: hr_org_chart
 #: model:ir.model,name:hr_org_chart.model_hr_employee_public
 msgid "Public Employee"
-msgstr ""
+msgstr "Offentlig ansat"
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:155
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
 #, python-format
 msgid "Redirect"
 msgstr "Redirect"
+
+#. module: hr_org_chart
+#. openerp-web
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:108
+#, python-format
+msgid "See All"
+msgstr "Vis Alle"
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__subordinate_ids
@@ -108,14 +115,21 @@ msgstr "Underordnede"
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:87
+#: code:addons/hr_org_chart/static/src/js/hr_org_chart.js:181
+#, python-format
+msgid "Team"
+msgstr "Team"
+
+#. module: hr_org_chart
+#. openerp-web
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
 #, python-format
 msgid "This employee has no manager or subordinate."
 msgstr "Denne medarbejder har ingen leder eller underordnet."
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:144
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
 #, python-format
 msgid "Total"
 msgstr "I alt"

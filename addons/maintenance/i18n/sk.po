@@ -1,20 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * maintenance
+# 	* maintenance
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Matus Krnac <matus.krnac@gmail.com>, 2018
-# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
-# gebri <gebri@inmail.sk>, 2018
+# Jan Prokop, 2022
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
+# Damian Brencic <brencicdamian12313@gmail.com>, 2022
+# SAKodoo <sak@odoo.com>, 2022
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2022
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: gebri <gebri@inmail.sk>, 2018\n"
+"POT-Creation-Date: 2022-04-19 13:57+0000\n"
+"PO-Revision-Date: 2016-08-05 13:05+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,6 +45,11 @@ msgid "<b>Serial Number:</b>"
 msgstr "<b>Sériové číslo:</b>"
 
 #. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
+msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+
+#. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "<span class=\"badge badge-warning float-right\">Canceled</span>"
 msgstr ""
@@ -50,17 +57,17 @@ msgstr ""
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "<span class=\"ml8\">hours</span>"
-msgstr ""
+msgstr "<span class=\"ml8\">hodiny</span>"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "<span>Reporting</span>"
-msgstr ""
+msgstr "<span>Prehľady</span>"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
-msgid "<span>View</span>"
-msgstr "<span>Zobraziť</span>"
+msgid "<span>Requests</span>"
+msgstr ""
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.view_maintenance_equipment_category_kanban
@@ -78,14 +85,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Slovník jazyka Python ktorý bude vyhodnotený na  poskytnutie predvolených "
-"hodnôt pri vytváraní nových záznamov pre tento alias."
-
-#. module: maintenance
-#: model:maintenance.equipment,name:maintenance.equipment_computer3
-#: model:maintenance.equipment,name:maintenance.equipment_computer5
-msgid "Acer Laptop"
-msgstr "Acer laptop"
+"Python slovník, bude použitý na poskytnutie predvolených hodnôt pri "
+"vytváraní nových záznamov pre tento alias."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_needaction
@@ -107,16 +108,28 @@ msgid "Activities"
 msgstr "Aktivity"
 
 #. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_exception_decoration
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Označenie výnimky v aktivite"
+
+#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_state
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "Stav aktivity"
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_type_icon
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Ikona typ aktivity"
 
 #. module: maintenance
 #: model:ir.actions.act_window,name:maintenance.mail_activity_type_action_config_maintenance
 #: model:ir.ui.menu,name:maintenance.maintenance_menu_config_activity_type
 msgid "Activity Types"
-msgstr ""
+msgstr "Typy aktivít"
 
 #. module: maintenance
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_action
@@ -158,7 +171,7 @@ msgstr "Alias"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_contact
 msgid "Alias Contact Security"
-msgstr "Alias kontakt bezpečnosti"
+msgstr "Alias ​​kontakt bezpečnosť"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_name
@@ -181,18 +194,20 @@ msgid "All"
 msgstr "Všetko"
 
 #. module: maintenance
-#: sql_constraint:maintenance.equipment:0
+#: model:ir.model.constraint,message:maintenance.constraint_maintenance_equipment_serial_no
 msgid "Another asset already exists with this serial number!"
 msgstr "Iné aktívum s týmto sériovým číslom už existuje!"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__archive
 msgid "Archive"
-msgstr "Archív"
+msgstr "Archivovať"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_search
 msgid "Archived"
 msgstr "Archivovaný"
@@ -204,7 +219,6 @@ msgid "Assign To User"
 msgstr ""
 
 #. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Assigned"
 msgstr "Pridelené"
@@ -215,28 +229,28 @@ msgid "Assigned Date"
 msgstr "Dátum pridelienia"
 
 #. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+msgid "Assigned to"
+msgstr "Priradený"
+
+#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_attachment_count
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_attachment_count
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Počet príloh"
 
 #. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
-msgid "Available"
-msgstr "Dostupné"
-
-#. module: maintenance
+#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__kanban_state__blocked
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
-#: selection:maintenance.request,kanban_state:0
 msgid "Blocked"
 msgstr "Blokované"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Cancel"
-msgstr "Zrušiť"
+msgstr "Zrušené"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__category_id
@@ -263,7 +277,7 @@ msgstr "Dátum uzavretia"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__color
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__color
 msgid "Color Index"
-msgstr "Farebný index"
+msgstr "Index farieb"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__note
@@ -276,20 +290,16 @@ msgstr "Komentáre"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__company_id
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__company_id
 msgid "Company"
-msgstr "Spoločnost"
-
-#. module: maintenance
-#: model:maintenance.equipment.category,name:maintenance.equipment_computer
-msgid "Computers"
-msgstr "Počítače"
+msgstr "Spoločnosť"
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_maintenance_configuration
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Configuration"
 msgstr "Konfigurácia"
 
 #. module: maintenance
-#: selection:maintenance.request,maintenance_type:0
+#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__maintenance_type__corrective
 msgid "Corrective"
 msgstr "Opravné"
 
@@ -301,7 +311,7 @@ msgstr "Náklady"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "Created By"
-msgstr ""
+msgstr "Vytvoril"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__create_uid
@@ -315,7 +325,7 @@ msgstr "Vytvoril"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__owner_user_id
 msgid "Created by User"
-msgstr ""
+msgstr "Vytvoril užívateľ"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__create_date
@@ -332,9 +342,14 @@ msgid "Current Maintenance"
 msgstr "Súčasná údržba"
 
 #. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_bounced_content
+msgid "Custom Bounced Message"
+msgstr "Vlastná vrátená správa"
+
+#. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_dashboard
 msgid "Dashboard"
-msgstr "Nástenka"
+msgstr "Riadiaci panel"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__effective_date
@@ -394,29 +409,28 @@ msgstr "Popis"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_stage__display_name
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__display_name
 msgid "Display Name"
-msgstr "Zobrazovaný Názov"
+msgstr "Zobrazovaný názov"
 
 #. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Done"
-msgstr "Hotovo"
+msgstr "Hotové"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "Dropdown menu"
-msgstr ""
+msgstr "Rozbaľovacie menu"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__duration
 msgid "Duration"
-msgstr "Trvanie"
+msgstr "Obdobie"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__duration
-msgid "Duration in minutes and seconds."
-msgstr "Trvanie v minútach a sekundách."
+msgid "Duration in hours."
+msgstr ""
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
@@ -432,21 +446,27 @@ msgstr "Dátum účinnosti"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
 msgid "Email Alias"
-msgstr "Alias Email"
+msgstr "Emailový alias"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_id
 msgid ""
 "Email alias for this equipment category. New emails will automatically "
-"create new maintenance request for this equipment category."
+"create a new equipment under this category."
 msgstr ""
-"Emailový alias pre túto kategóriu vybavenia. Nové emaily automaticky "
-"vytvoria novú požiadavku na údržbu pre túto kategóriu vybavenia."
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__email_cc
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
+msgid "Email cc"
+msgstr "E-mailová kópia"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__equipment_count
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__equipment_id
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__equipment_ids
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Equipment"
 msgstr "Vybavenie"
 
@@ -476,7 +496,6 @@ msgstr "Správca zariadení"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__name
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Equipment Name"
 msgstr "Názov vybavenia"
 
@@ -485,7 +504,6 @@ msgstr "Názov vybavenia"
 #: model:ir.actions.act_window,name:maintenance.hr_equipment_action_from_category_form
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__equipment_ids
 #: model:ir.ui.menu,name:maintenance.menu_equipment_form
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Equipments"
 msgstr "Vybavenia"
@@ -515,24 +533,23 @@ msgid "Followers"
 msgstr "Odberatelia"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_channel_ids
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_channel_ids
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Odberatelia (Kanály)"
-
-#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_partner_ids
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_partner_ids
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Odberatelia (Partneri)"
+msgstr "Odberatelia (partneri)"
+
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__activity_type_icon
+#: model:ir.model.fields,help:maintenance.field_maintenance_request__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Úžasná ikona fronty napr. fa-tasks"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Future Activities"
-msgstr ""
+msgstr "Budúce aktivity"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_search
@@ -542,20 +559,21 @@ msgid "Group by..."
 msgstr "Zoskupiť podľa..."
 
 #. module: maintenance
-#: model:maintenance.equipment,name:maintenance.equipment_printer1
-msgid "HP Inkjet printer"
-msgstr "HP atramentová tlačiareň"
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__has_message
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__has_message
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__has_message
+msgid "Has Message"
+msgstr "Má správu"
 
 #. module: maintenance
-#: model:maintenance.equipment,name:maintenance.equipment_computer11
-#: model:maintenance.equipment,name:maintenance.equipment_computer9
-msgid "HP Laptop"
-msgstr "HP laptop"
-
-#. module: maintenance
-#: selection:maintenance.request,priority:0
+#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__priority__3
 msgid "High"
 msgstr "Vysoká"
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+msgid "High-priority"
+msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__id
@@ -572,35 +590,48 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
-"ID nadradeného záznamu obsahujúceho alias (príklad: projekt držiaci alias "
-"vytvorenia úlohy)"
+"ID nadradeného záznamu obsahujúceho alias (príklad: projekt obsahujúci alias"
+" vytvorenia úlohy)"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_unread
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_unread
-#: model:ir.model.fields,help:maintenance.field_maintenance_request__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_exception_icon
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_exception_icon
+msgid "Icon"
+msgstr "Ikona"
+
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__activity_exception_icon
+#: model:ir.model.fields,help:maintenance.field_maintenance_request__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Ikona indikujúca výnimočnú aktivitu."
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_needaction
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_needaction
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
+msgstr "Ak označené, potom nové správy vyžadujú vašu pozornosť."
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_has_error
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_has_error
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Ak označené, potom majú niektoré správy chybu dodania."
 
 #. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
-#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
-#: selection:maintenance.request,kanban_state:0
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_bounced_content
+msgid ""
+"If set, this content will automatically be sent out to unauthorized users "
+"instead of the default message."
+msgstr ""
+"Ak je nastavený, namiesto predvolenej správy sa tento obsah automaticky "
+"odošle neoprávneným užívateľom."
+
+#. module: maintenance
+#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__kanban_state__normal
 #: model:maintenance.stage,name:maintenance.stage_1
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "In Progress"
 msgstr "Spracováva sa"
 
@@ -611,20 +642,20 @@ msgstr ""
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
-msgid "Internal Note ......."
-msgstr "Interná poznámka ......."
+msgid "Internal Notes"
+msgstr "Interné poznámky"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_is_follower
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_is_follower
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_is_follower
 msgid "Is Follower"
-msgstr "Je odberateľ"
+msgstr "Odberateľ"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__kanban_state
 msgid "Kanban State"
-msgstr "Kanban stav"
+msgstr "Kanban štádium"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment____last_update
@@ -633,7 +664,7 @@ msgstr "Kanban stav"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_stage____last_update
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team____last_update
 msgid "Last Modified on"
-msgstr "Posledná modifikácia"
+msgstr "Posledná úprava"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__write_uid
@@ -657,12 +688,17 @@ msgstr "Naposledy upravované"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Late Activities"
-msgstr ""
+msgstr "Omeškané aktivity"
+
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_request__email_cc
+msgid "List of cc from incoming emails."
+msgstr "Zoznam kópií z prichádzajúcich e-mailov."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__location
 msgid "Location"
-msgstr "Umiestnenie"
+msgstr "Miesto"
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_reports_losses
@@ -670,16 +706,16 @@ msgid "Losses Analysis"
 msgstr ""
 
 #. module: maintenance
-#: selection:maintenance.request,priority:0
+#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__priority__1
 msgid "Low"
-msgstr "Nízka"
+msgstr "Nízky"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_main_attachment_id
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_main_attachment_id
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Hlavná príloha"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__maintenance_ids
@@ -716,7 +752,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_equipment
 msgid "Maintenance Equipment"
-msgstr ""
+msgstr "Vybavenie na údržbu"
 
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_equipment_category
@@ -725,8 +761,8 @@ msgstr ""
 
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_request
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 #: model:mail.activity.type,name:maintenance.mail_act_maintenance_request
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Maintenance Request"
 msgstr "Požiadavka na údržbu"
 
@@ -734,6 +770,11 @@ msgstr "Požiadavka na údržbu"
 #: model:mail.message.subtype,name:maintenance.mt_cat_req_created
 msgid "Maintenance Request Created"
 msgstr "Požiadavka na údržbu vytvorená"
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+msgid "Maintenance Request Search"
+msgstr ""
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_stage_view_tree
@@ -804,7 +845,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_has_error
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Chyba zobrazovania správ"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_ids
@@ -814,25 +855,15 @@ msgid "Messages"
 msgstr "Správy"
 
 #. module: maintenance
-#: model:maintenance.team,name:maintenance.equipment_team_metrology
-msgid "Metrology"
-msgstr ""
-
-#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__model
 msgid "Model"
 msgstr "Model"
 
 #. module: maintenance
-#: model:maintenance.equipment.category,name:maintenance.equipment_monitor
-msgid "Monitors"
-msgstr "Monitory"
-
-#. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
-msgid "My Activities"
-msgstr ""
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__my_activity_date_deadline
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Termín mojej aktivity"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
@@ -841,14 +872,12 @@ msgstr "Moje vybavenie"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
-msgid "My Requests"
-msgstr "Moje požiadavky"
+msgid "My Maintenances"
+msgstr "Moja údržba"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_stage__name
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__name
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_tree
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Name"
 msgstr "Meno"
@@ -859,10 +888,16 @@ msgid "New Request"
 msgstr "Nová požiadavka"
 
 #. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_calendar_event_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Kalendár ďalších aktivít eventu"
+
+#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_date_deadline
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Ďalší konečný termín aktivity"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_summary
@@ -874,7 +909,7 @@ msgstr "Zhrnutie ďalšej aktivity"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_type_id
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Typ ďalšej aktivity"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
@@ -882,7 +917,7 @@ msgid "Next Preventive Maintenance"
 msgstr ""
 
 #. module: maintenance
-#: selection:maintenance.request,priority:0
+#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__priority__2
 msgid "Normal"
 msgstr "Normálna"
 
@@ -927,29 +962,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_has_error_counter
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_has_error_counter
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_has_error_counter
-msgid "Number of error"
-msgstr ""
+msgid "Number of errors"
+msgstr "Počet chýb"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_needaction_counter
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_needaction_counter
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "Počet správ ktoré vyžadujú akciu"
+msgstr "Počet správ, ktoré vyžadujú akciu"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_has_error_counter
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_has_error_counter
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
-
-#. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_unread_counter
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_unread_counter
-#: model:ir.model.fields,help:maintenance.field_maintenance_request__message_unread_counter
-msgid "Number of unread messages"
-msgstr "Počet neprečítaných správ"
+msgstr "Počet doručených správ s chybou"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_force_thread_id
@@ -958,20 +986,14 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Voliteľné ID vlákna (záznam), na ktoré budú pripojené všetky prichádzajúce "
-"správy, aj keď na to neodpovedali. Ak je nastavené, úplne to zakáže "
-"vytváranie nových záznamov."
+"Voliteľné ID záznamy, na ktoré budú pripojené všetky prichádzajúce správy, "
+"aj keď na to neodpovedali. Ak je nastavené, úplne to zakáže vytváranie "
+"nových záznamov."
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_reports_oee
 msgid "Overall Equipment Effectiveness (OEE)"
 msgstr ""
-
-#. module: maintenance
-#: selection:maintenance.equipment,activity_state:0
-#: selection:maintenance.request,activity_state:0
-msgid "Overdue"
-msgstr "Oneskorené"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__owner_user_id
@@ -980,7 +1002,7 @@ msgstr "Oneskorené"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_tree
 msgid "Owner"
-msgstr "Vlastník"
+msgstr "Majiteľ"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_parent_model_id
@@ -990,7 +1012,7 @@ msgstr "Nadradený model"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "ID nadradeného vlákna záznamu"
+msgstr "ID vlákna nadradeného záznamu"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_parent_model_id
@@ -1000,19 +1022,8 @@ msgid ""
 "(parent_model) and task (model))"
 msgstr ""
 "Nadradený model drží alias. Model drží referenciu aliasu nie je nevyhnutne "
-"model ktorý zadal alias_model_id (príklad: projekt (parent_model) a úlohy "
-"(model))"
-
-#. module: maintenance
-#: model:maintenance.equipment.category,name:maintenance.equipment_phone
-msgid "Phones"
-msgstr "Telefóny"
-
-#. module: maintenance
-#: selection:maintenance.equipment,activity_state:0
-#: selection:maintenance.request,activity_state:0
-msgid "Planned"
-msgstr ""
+"model ktorý zadal alias_model_id (príklad: projekt (parent_model) a "
+"požiadavky (model))"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_contact
@@ -1022,19 +1033,19 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
-"Metóda pre zverejnenie správy na dokumente za použitia mailovj brány.\n"
+"Metóda pre zverejnenie správy na dokumente pri použití mailovej brány.\n"
 "- všeci: všetci môžu zverejňovať\n"
 "- partneri: iba overený partneri\n"
 "- odberatelia: iba odberatelia pridruženého dokumentu alebo členovia príslušných kanálov\n"
 "\n"
 
 #. module: maintenance
-#: selection:maintenance.request,maintenance_type:0
+#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__maintenance_type__preventive
 msgid "Preventive"
 msgstr "Preventívne"
 
 #. module: maintenance
-#: code:addons/maintenance/models/maintenance.py:231
+#: code:addons/maintenance/models/maintenance.py:0
 #, python-format
 msgid "Preventive Maintenance - %s"
 msgstr ""
@@ -1045,14 +1056,9 @@ msgid "Preventive Maintenance Frequency"
 msgstr ""
 
 #. module: maintenance
-#: model:maintenance.equipment.category,name:maintenance.equipment_printer
-msgid "Printers"
-msgstr "Tlačiarne"
-
-#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__priority
 msgid "Priority"
-msgstr "Priorita"
+msgstr "Priority"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
@@ -1060,9 +1066,14 @@ msgid "Product Information"
 msgstr "Informácie o produkte"
 
 #. module: maintenance
-#: selection:maintenance.request,kanban_state:0
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+msgid "Ready"
+msgstr "Pripravené"
+
+#. module: maintenance
+#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__kanban_state__done
 msgid "Ready for next stage"
-msgstr "Pripravené pre ďalšiu fázu"
+msgstr "Pripravené pre ďalšie štádium "
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
@@ -1072,7 +1083,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_force_thread_id
 msgid "Record Thread ID"
-msgstr "ID vlákna záznamu"
+msgstr "Zaznamenať ID vlákna"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -1082,16 +1093,18 @@ msgstr ""
 #. module: maintenance
 #: model:maintenance.stage,name:maintenance.stage_3
 msgid "Repaired"
-msgstr "Opravné"
+msgstr "Opravené"
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.maintenance_reporting
 #: model:ir.ui.menu,name:maintenance.menu_m_reports
 msgid "Reporting"
-msgstr "Výkazy"
+msgstr "Prehľady"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__request_ids
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "Request"
 msgstr "Požiadavka"
@@ -1107,14 +1120,15 @@ msgid "Request Date"
 msgstr "Dátum požiadavky"
 
 #. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__done
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_stage__done
 msgid "Request Done"
 msgstr "Požiadavka urobená"
 
 #. module: maintenance
-#: code:addons/maintenance/models/maintenance.py:375
+#: code:addons/maintenance/models/maintenance.py:0
 #, python-format
-msgid "Request planned for <a href=\"#\" data-oe-model=\"%s\" data-oe-id=\"%s\">%s</a>"
+msgid "Request planned for %s"
 msgstr ""
 
 #. module: maintenance
@@ -1143,14 +1157,7 @@ msgstr "Zodpovedný"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_user_id
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_user_id
 msgid "Responsible User"
-msgstr "Zodpovedný používateľ"
-
-#. module: maintenance
-#: model:maintenance.equipment,name:maintenance.equipment_monitor1
-#: model:maintenance.equipment,name:maintenance.equipment_monitor4
-#: model:maintenance.equipment,name:maintenance.equipment_monitor6
-msgid "Samsung Monitor 15\""
-msgstr "Samsung monitor 15\""
+msgstr "Zodpovedný užívateľ"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -1177,7 +1184,7 @@ msgstr "Dátum vyradenia"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_search
 msgid "Search"
-msgstr "Hľadať"
+msgstr "Vyhľadávanie"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_stage__sequence
@@ -1194,33 +1201,25 @@ msgstr "Sériové číslo"
 msgid ""
 "Set archive to true to hide the maintenance request without deleting it."
 msgstr ""
-
-#. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
-msgid "Settings"
-msgstr "Nastavenia"
+"Nastavením archívu na hodnotu true skryjete požiadavku na údržbu bez toho, "
+"aby ste ju odstránili."
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Show all records which has next action date is before today"
-msgstr ""
-
-#. module: maintenance
-#: model:maintenance.equipment.category,name:maintenance.equipment_software
-msgid "Software"
-msgstr "Softvér"
+msgstr "Zobraz všetky záznamy, ktorých následná aktivita je pred dnešným dňom"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__stage_id
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "Stage"
-msgstr "Etapa"
+msgstr "Štádium"
 
 #. module: maintenance
 #: model:ir.actions.act_window,name:maintenance.hr_equipment_stage_action
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "Stages"
-msgstr "Etapy"
+msgstr "Štádia"
 
 #. module: maintenance
 #: model:mail.message.subtype,name:maintenance.mt_req_status
@@ -1236,16 +1235,15 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Status založený na aktivitách\n"
+"Zmeškané: dátum už vypršal\n"
+"Dnes: dátum aktivity je dnes\n"
+"Plán: budúce aktivity"
 
 #. module: maintenance
 #: model:mail.message.subtype,description:maintenance.mt_req_status
 msgid "Status changed"
 msgstr "Zmena statusu"
-
-#. module: maintenance
-#: model:maintenance.team,name:maintenance.equipment_team_subcontractor
-msgid "Subcontractor"
-msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__name
@@ -1254,6 +1252,7 @@ msgstr "Predmety"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__maintenance_team_id
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_search
 msgid "Team"
 msgstr "Tím"
 
@@ -1263,6 +1262,7 @@ msgid "Team Members"
 msgstr "Členovia tímu"
 
 #. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__name
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 msgid "Team Name"
 msgstr ""
@@ -1275,13 +1275,9 @@ msgstr "Tímy"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__technician_user_id
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__user_id
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Technician"
 msgstr "Technik"
-
-#. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
-msgid "Technicians"
-msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_model_id
@@ -1290,9 +1286,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"Model (Odoo druh dokumentu), ktorému odpovedá toto alias. Každý "
-"prichádzajúci email ktorý neodpovie na existujúci záznam spôsobí vytvorenie "
-"nového záznamu tohto modelu (napr úlohy projektu)"
+"Model (Odoo druh dokumentu), ktorému odpovedá tento alias. Každý "
+"prichádzajúci email ktorý neodpovie na existujúci záznam, spôsobí vytvorenie"
+" nového záznamu tohto modelu (napr požiadavku projektu)"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_name
@@ -1301,7 +1297,7 @@ msgid ""
 "<jobs@example.odoo.com>"
 msgstr ""
 "Meno emailového alias, napr. \"práce\", ak chcete zachytiť emaily pre "
-"<prace@priklad.odoo.com>"
+"<praca@priklad.odoo.com>"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_user_id
@@ -1313,7 +1309,7 @@ msgid ""
 msgstr ""
 "Majiteľ záznamov vytvorených pri prijímaní emailov na tento alias. Ak toto "
 "pole nie je nastavené, systém sa pokúsi nájsť správneho vlastníka na základe"
-" adresy odosielateľa (Od), alebo bude používať účet správcu ak nie je "
+" adresy odosielateľa (Od), alebo bude používať účet správcu, ak nie je "
 "užívateľ systému nájdený pre danú adresu."
 
 #. module: maintenance
@@ -1322,20 +1318,10 @@ msgid "The user will be able to manage equipments."
 msgstr "Užívateľ bude môcť spravovať zariadenie."
 
 #. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "To Do"
-msgstr "Na spravenie"
-
-#. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
-msgid "To do"
-msgstr "Na urobenie"
-
-#. module: maintenance
-#: selection:maintenance.equipment,activity_state:0
-#: selection:maintenance.request,activity_state:0
-msgid "Today"
-msgstr "Dnes"
+msgstr "Úlohy"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -1344,7 +1330,6 @@ msgid "Today Activities"
 msgstr "Dnešné aktivity"
 
 #. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Top Priorities"
 msgstr ""
@@ -1358,35 +1343,31 @@ msgid ""
 msgstr ""
 
 #. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__activity_exception_decoration
+#: model:ir.model.fields,help:maintenance.field_maintenance_request__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Typ výnimočnej aktivity v zázname."
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+msgid "Unassigned"
+msgstr "Nepriradený"
+
+#. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Under Maintenance"
 msgstr "V údržbe"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_unread
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_unread
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_unread
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Unread Messages"
 msgstr "Neprečítané správy"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_unread_counter
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_unread_counter
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Počítadlo neprečítaných správ"
-
-#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Unscheduled"
-msgstr ""
-
-#. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
-msgid "Unscheduled Maintenance"
 msgstr ""
 
 #. module: maintenance
@@ -1398,15 +1379,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__partner_id
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Vendor"
-msgstr "Predajca"
+msgstr "Výrobca"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__partner_ref
 msgid "Vendor Reference"
-msgstr "Referencia predajcu"
+msgstr "Referencia dodávateľa"
 
 #. module: maintenance
-#: selection:maintenance.request,priority:0
+#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__priority__0
 msgid "Very Low"
 msgstr "Veľmi nízke"
 
@@ -1416,7 +1397,7 @@ msgid "Warranty Expiration Date"
 msgstr ""
 
 #. module: maintenance
-#: code:addons/maintenance/models/maintenance.py:77
+#: code:addons/maintenance/models/maintenance.py:0
 #, python-format
 msgid ""
 "You cannot delete an equipment category containing equipments or maintenance"
@@ -1431,6 +1412,26 @@ msgid "days"
 msgstr "dni"
 
 #. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
+msgid "e.g. Internal Maintenance"
+msgstr ""
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
+msgid "e.g. LED Monitor"
+msgstr ""
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
+msgid "e.g. Monitors"
+msgstr ""
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
+msgid "e.g. Screen not working"
+msgstr ""
+
+#. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "hours"
 msgstr "hodiny"
@@ -1441,8 +1442,3 @@ msgstr "hodiny"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_tree
 msgid "maintenance Request"
 msgstr "údržbová požiadavka"
-
-#. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
-msgid "maintenance Request Search"
-msgstr "hľadanie údržbovej požiadavky"

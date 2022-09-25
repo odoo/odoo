@@ -3,29 +3,37 @@
 # 	* website_slides
 # 
 # Translators:
-# Rolandas <panauto1@gmail.com>, 2019
-# Arminas Grigonis <arminas@versada.lt>, 2019
-# Anatolij, 2019
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2019
-# Rolandas <info@paninfo.lt>, 2019
-# Edgaras Kriukonis <edgaras@focusate.eu>, 2019
-# Naglis Jonaitis, 2019
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2019
-# Silvija Butko <silvija.butko@gmail.com>, 2019
-# Šarūnas Ažna <sarunas.azna@gmail.com>, 2019
-# Antanas Muliuolis <an.muliuolis@gmail.com>, 2019
-# Monika Raciunaite <monika.raciunaite@gmail.com>, 2019
-# Martin Trigaux, 2019
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2019
-# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# Rolandas <panauto1@gmail.com>, 2022
+# Edgaras Kriukonis <edgaras@focusate.eu>, 2022
+# Arunas Vaitekunas <vaitekunas@gmail.com>, 2022
+# Šarūnas Ažna <sarunas.azna@gmail.com>, 2022
+# Tomas Darius Davainis <tomas@davainis.lt>, 2022
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2022
+# Aleksandr Jadov <a.jadov@tata.lt>, 2022
+# Silvija Butko <silvija.butko@gmail.com>, 2022
+# Rolandas <info@paninfo.lt>, 2022
+# Naglis Jonaitis, 2022
+# Antanas Muliuolis <an.muliuolis@gmail.com>, 2022
+# Arunas V. <arunas@devoro.com>, 2022
+# Anatolij, 2022
+# Paulius Briedis <info@robotikosmokykla.lt>, 2022
+# Jonas Zinkevicius <jozi@odoo.com>, 2022
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2022
+# grupoda2 <dmitrijus.ivanovas@gmail.com>, 2022
+# Monika Raciunaite <monika.raciunaite@gmail.com>, 2022
+# Arminas Grigonis <arminas@versada.lt>, 2022
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Linas Versada <linaskrisiukenas@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:12+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
+"POT-Creation-Date: 2022-05-30 06:06+0000\n"
+"PO-Revision-Date: 2016-08-05 13:14+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2022\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,14 +42,56 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__completion
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree_report
+msgid "# Attendees"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree_report
+msgid "# Completed"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__completed_slides_count
 msgid "# Completed Slides"
 msgstr ""
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_partner_view_tree
+msgid "# Likes"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_tree_report
+msgid "# Questions"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_partner_view_tree
+msgid "# Quizz Attempts"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_partner_view_tree
+msgid "# Total Attempts"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__total_views
+msgid "# Total Views"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed__count_views
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree_report
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_tree_report
 msgid "# Views"
 msgstr "# peržiūrų"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__embed_count
+msgid "# of Embeds"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__public_views
@@ -54,21 +104,41 @@ msgid "# of Website Views"
 msgstr "# svetainės peržiūrų"
 
 #. module: website_slides
-#: model:mail.template,subject:website_slides.slide_template_shared
-msgid "${user.name} shared a ${object.slide_type} with you!"
-msgstr "${user.name} pasidalino ${object.slide_type} su Jumis!"
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__completion
+msgid "% Completed Slides"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
+msgid "&amp;nbsp;"
+msgstr "&amp;nbsp;"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_all
+msgid "'. Showing results for '"
+msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#: code:addons/website_slides/static/src/js/slides_course_slides_list.js:0
+#: code:addons/website_slides/static/src/js/slides_slide_archive.js:0
 #, python-format
-msgid "&times;"
-msgstr "&times;"
+msgid "(empty)"
+msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_profile_small
-msgid "50%"
-msgstr "50%"
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid ". This way, they will be secured."
+msgstr ""
+
+#. module: website_slides
+#: code:addons/website_slides/models/slide_channel.py:0
+#, python-format
+msgid "<b>%s</b> is requesting access to this course."
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
@@ -81,6 +151,21 @@ msgid "<b>Order by</b>"
 msgstr ""
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid ""
+"<b>Save & Publish</b> your lesson to make it available to your attendees."
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid "<b>Save</b> your question."
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training_category
 msgid "<b>Uncategorized</b>"
 msgstr ""
@@ -90,16 +175,35 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear ${object.partner_id.name or 'participant'}<br/><br/>\n"
-"        You have been invited to join a new course: ${object.channel_id.name}.\n"
-"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a href=\"${(object.channel_id.website_url) | safe}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
-"                Click here to start the course.\n"
-"            </a>\n"
-"        </div>\n"
-"        Enjoy this exclusive content !\n"
+"        Hello<br/><br/>\n"
+"        You have been invited to join a new course: <t t-out=\"object.channel_id.name or ''\">Basics of Gardening</t>.\n"
 "    </p>\n"
 "</div>\n"
+"            "
+msgstr ""
+
+#. module: website_slides
+#: model:mail.template,body_html:website_slides.mail_template_channel_completed
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        <p style=\"margin: 0px;\">Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,</p><br/>\n"
+"                        <p><b>Congratulations!</b></p>\n"
+"                        <p>You've completed the course <b t-out=\"object.channel_id.name or ''\">Basics of Gardening</b></p>\n"
+"                        <p>Check out the other available courses.</p><br/>\n"
+"\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a href=\"/slides/all\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                                Explore courses\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        Enjoy this exclusive content!\n"
+"                        <t t-if=\"object.channel_id.user_id.signature\">\n"
+"                            <br/>\n"
+"                            <t t-out=\"object.channel_id.user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"                        </t>\n"
+"                    </div>\n"
+"                </div>\n"
 "            "
 msgstr ""
 
@@ -109,15 +213,19 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "                        Hello<br/><br/>\n"
-"                        ${user.name} shared the ${object.slide_type} <strong>${object.name}</strong> with you!\n"
+"                        <t t-out=\"user.name or ''\">Mitchell Admin</t> shared the <t t-out=\"object.slide_category or ''\">document</t> <strong t-out=\"object.name or ''\">Trees</strong> with you!\n"
 "                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
-"                            <a href=\"${(object.website_url + '?fullscreen=1') if ctx['fullscreen'] else object.website_url | safe}\">\n"
-"                                <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            <a t-att-href=\"(object.website_share_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_share_url\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
 "                            </a>\n"
 "                        </div>\n"
-"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
-"                            <a href=\"${(object.website_url + '?fullscreen=1') if ctx['fullscreen'] else object.website_url | safe}\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">View <strong>${object.name}</strong></a>\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"(object.website_share_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_share_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">View <strong t-out=\"object.name or ''\">Trees</strong></a>\n"
 "                        </div>\n"
+"                        <t t-if=\"user.signature\">\n"
+"                            <br/>\n"
+"                            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"                        </t>\n"
 "                    </p>\n"
 "                </div>\n"
 "            "
@@ -129,22 +237,31 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "                        Hello<br/><br/>\n"
-"                        There is something new in the course <strong>${object.channel_id.name}</strong> you are following:<br/><br/>\n"
-"                        <center><strong>${object.name}</strong></center>\n"
-"                        % if object.image_1024\n"
-"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
-"                            <a href=\"${object.website_url}\">\n"
-"                                <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                        There is something new in the course <strong t-out=\"object.channel_id.name or ''\">Trees, Wood and Gardens</strong> you are following:<br/><br/>\n"
+"                        <center><strong t-out=\"object.name or ''\">Trees</strong></center>\n"
+"                        <t t-if=\"object.image_1024\">\n"
+"                            <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                                <a t-att-href=\"object.website_share_url\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
 "                            </a>\n"
 "                        </div>\n"
-"                        % endif\n"
-"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
-"                            <a href=\"${object.website_url}\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">View content</a>\n"
+"                        </t>\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"object.website_share_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">View content</a>\n"
 "                        </div>\n"
 "                        Enjoy this exclusive content!\n"
+"                        <t t-if=\"user.signature\">\n"
+"                            <br/>\n"
+"                            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"                        </t>\n"
 "                    </p>\n"
 "                </div>\n"
 "            "
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
+msgid "<i class=\"fa fa-arrow-right mr-1\"/>All Courses"
 msgstr ""
 
 #. module: website_slides
@@ -180,17 +297,12 @@ msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
-msgid "<i class=\"fa fa-cloud-upload mr-1\"/>Upload new content"
-msgstr ""
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
-msgid "<i class=\"fa fa-code\"/> Embed"
+msgid "<i class=\"fa fa-cloud-upload mr-1\"/>Add Content"
 msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
-msgid "<i class=\"fa fa-comments-o\"/> Comments ("
+msgid "<i class=\"fa fa-comments\"/> Comments ("
 msgstr ""
 
 #. module: website_slides
@@ -201,24 +313,19 @@ msgid ""
 msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
-msgid "<i class=\"fa fa-envelope\"/> Email"
-msgstr ""
-
-#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
-msgid "<i class=\"fa fa-envelope-o\"/> Send Email"
-msgstr "<i class=\"fa fa-envelope-o\"/>Siųsti laišką"
+msgid "<i class=\"fa fa-envelope\"/> Send Email"
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "<i class=\"fa fa-eraser mr-1\"/>Clear filters"
-msgstr ""
+msgstr "<i class=\"fa fa-eraser mr-1\"/>Valyti filtrus"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "<i class=\"fa fa-eraser\"/> Clear filters"
-msgstr ""
+msgstr "<i class=\"fa fa-eraser\"/>Valyti filtrus"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide_forbidden
@@ -235,8 +342,8 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
 msgid ""
-"<i class=\"fa fa-file-code-o mr-2\" aria-label=\"Webpage\" role=\"img\" "
-"title=\"Webpage\"/>"
+"<i class=\"fa fa-file-code-o mr-2\" aria-label=\"article\" role=\"img\" "
+"title=\"Article\"/>"
 msgstr ""
 
 #. module: website_slides
@@ -281,22 +388,13 @@ msgid "<i class=\"fa fa-folder-o mr-1\"/><span>Add Section</span>"
 msgstr ""
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
+msgid "<i class=\"fa fa-folder-o mr-1\"/>Add a section"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "<i class=\"fa fa-graduation-cap mr-1\"/>All courses"
-msgstr ""
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
-msgid ""
-"<i class=\"fa fa-home d-md-none\"/><span class=\"d-none d-md-inline-block "
-"ml-1\">Back to course</span>"
-msgstr ""
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_main
-msgid ""
-"<i class=\"fa fa-home\"/>\n"
-"                                            Course"
 msgstr ""
 
 #. module: website_slides
@@ -310,17 +408,17 @@ msgid "<i class=\"fa fa-home\"/> Course"
 msgstr ""
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
+msgid ""
+"<i class=\"fa fa-home\"/><span class=\"d-none d-md-inline-block ml-1\">Back "
+"to course</span>"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid ""
 "<i class=\"fa fa-info-circle\"/>\n"
 "                    The social sharing module will be unlocked when a moderator will allow your publication."
-msgstr ""
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
-msgid ""
-"<i class=\"fa fa-pencil\"/><span class=\"d-none d-md-inline-block "
-"ml-1\">Write a review</span>"
 msgstr ""
 
 #. module: website_slides
@@ -336,6 +434,20 @@ msgid "<i class=\"fa fa-plus mr-1\"/><span>Add Content</span>"
 msgstr ""
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.lesson_content_quiz_add_buttons
+msgid ""
+"<i class=\"fa fa-plus mr-2\"/>\n"
+"            <span>Add Question</span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.lesson_content_quiz_add_buttons
+msgid ""
+"<i class=\"fa fa-plus mr-2\"/>\n"
+"            <span>Add Quiz</span>"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
 msgid ""
 "<i class=\"fa fa-question mr-2\" aria-label=\"Number of Questions\" "
@@ -344,6 +456,12 @@ msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<i class=\"fa fa-share-alt\" aria-label=\"Share\" title=\"Share\"/>\n"
+"                                            Share"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "<i class=\"fa fa-share-alt\"/> Share"
 msgstr "<i class=\"fa fa-share-alt\"/> Dalintis"
@@ -368,41 +486,54 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
 msgid ""
-"<i class=\"fa fa-sign-out d-md-none\"/><span class=\"d-none d-md-inline-"
-"block ml-1\">Exit Fullscreen</span>"
+"<i class=\"fa fa-sign-out\"/><span class=\"d-none d-md-inline-block "
+"ml-1\">Exit Fullscreen</span>"
 msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid ""
-"<i class=\"fa fa-thumbs-down fa-1x\" role=\"img\" aria-label=\"Dislikes\" "
-"title=\"Dislikes\"/>"
+"<i class=\"fa fa-tag mr-2 text-muted\"/>\n"
+"                      My Courses"
 msgstr ""
-"<i class=\"fa fa-thumbs-down fa-1x\" role=\"img\" aria-label=\"Dislikes\" "
-"title=\"Dislikes\"/>"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
-msgid "<i class=\"fa fa-thumbs-up fa-1x\" role=\"img\" aria-label=\"Likes\" title=\"Likes\"/>"
+#: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
+msgid ""
+"<small class=\"text-success\">\n"
+"                                Request already sent\n"
+"                            </small>"
 msgstr ""
-"<i class=\"fa fa-thumbs-up fa-1x\" role=\"img\" aria-label=\"Likes\" "
-"title=\"Likes\"/>"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.lesson_content_quiz
-msgid "<span aria-hidden=\"true\">&amp;times;</span>"
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_main
+msgid ""
+"<small><span class=\"badge badge-pill badge-success font-weight-normal\"><i "
+"class=\"fa fa-check\"/> Completed</span></small>"
 msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
 msgid "<span class=\"badge badge-danger\">Unpublished</span>"
+msgstr "<span class=\"badge badge-danger\">Nepaskelbtas</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
+msgid ""
+"<span class=\"badge badge-info badge-arrow-right font-weight-normal px-2 "
+"py-1 m-1\">New</span>"
 msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
-msgid "<span class=\"badge badge-info\">Free preview</span>"
+msgid "<span class=\"badge badge-info\">Preview</span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
+msgid ""
+"<span class=\"badge badge-light badge-hide border font-weight-normal px-2 "
+"py-1 m-1\">Add Quiz</span>"
 msgstr ""
 
 #. module: website_slides
@@ -413,10 +544,46 @@ msgid ""
 msgstr ""
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
+msgid ""
+"<span class=\"badge badge-pill badge-success py-1 px-2 mx-auto\" "
+"style=\"font-size: 1em\"><i class=\"fa fa-check\"/> Completed</span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
+msgid ""
+"<span class=\"badge badge-pill badge-success py-1 px-2\" style=\"font-size: "
+"1em\"><i class=\"fa fa-check\"/> Completed</span>"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
 msgid ""
 "<span class=\"badge badge-pill badge-success\"><i class=\"fa fa-check\"/> "
 "Completed</span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
+msgid ""
+"<span class=\"badge badge-success font-weight-normal px-2 py-1 "
+"m-1\"><span>Preview</span></span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
+msgid ""
+"<span class=\"badge badge-success font-weight-normal px-2 py-1 "
+"m-1\">Preview</span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
+msgid ""
+"<span class=\"badge font-weight-bold px-2 py-1 m-1 badge-warning\">\n"
+"                            <i class=\"fa fa-fw fa-flag\"/> 10 xp\n"
+"                        </span>"
 msgstr ""
 
 #. module: website_slides
@@ -436,8 +603,7 @@ msgstr ""
 "                                    Sukurkite \"Google\" projektą ir gaukite raktą"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_main
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_media
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_share_link
 msgid "<span class=\"fa fa-clipboard\"> Copy Text</span>"
 msgstr ""
 
@@ -459,18 +625,6 @@ msgid ""
 msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_media
-msgid ""
-"<span class=\"form-text text-muted\">Use permanent link to share in social "
-"media</span>"
-msgstr ""
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
-msgid "<span class=\"ml-2\">Hours</span>"
-msgstr ""
-
-#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid ""
 "<span class=\"o_form_label\">Slides</span>\n"
@@ -485,8 +639,36 @@ msgid "<span class=\"o_stat_text\">Courses</span>"
 msgstr ""
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "<span class=\"o_stat_text\">Embed Views</span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_card_information_arrow
+msgid "<span class=\"o_wslides_arrow\">New Content</span>"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training
 msgid "<span class=\"p-2\">Course content</span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.user_quickkarma_card
+msgid "<span class=\"text-500 mx-2\">•</span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid ""
+"<span class=\"text-muted font-weight-bold mr-3\">\n"
+"                            Additional Resources\n"
+"                        </span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "<span class=\"text-muted font-weight-bold mr-3\">External sources</span>"
 msgstr ""
 
 #. module: website_slides
@@ -500,9 +682,53 @@ msgid "<span class=\"text-muted\">Attendees</span>"
 msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
-msgid "<span class=\"text-muted\">Contents</span>"
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
+msgid "<span class=\"text-muted\">Common tasks for a computer scientist</span>"
 msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
+msgid "<span class=\"text-muted\">Parts of computer science</span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
+msgid "<span class=\"text-muted\">Published Contents</span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<span id=\"first\" class=\"mr-1 mr-sm-2\" title=\"First slide\" aria-label=\"First slide\" role=\"button\"><i class=\"fa fa-step-backward\"/></span>\n"
+"                                        <span id=\"previous\" class=\"mx-1 mx-sm-2\" title=\"Previous slide\" aria-label=\"Previous slide\" role=\"button\"><i class=\"fa fa-arrow-circle-left\"/></span>\n"
+"                                        <span id=\"next\" class=\"mx-1 mx-sm-2\" title=\"Next slide\" aria-label=\"Next slide\" role=\"button\"><i class=\"fa fa-arrow-circle-right\"/></span>\n"
+"                                        <span id=\"last\" class=\"mx-1 mx-sm-2\" title=\"Last slide\" aria-label=\"Last slide\" role=\"button\"><i class=\"fa fa-step-forward\"/></span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<span id=\"fullscreen\" class=\"ml-1 ml-sm-2\" title=\"View fullscreen\" aria-label=\"Fullscreen\" role=\"button\">\n"
+"                                            <i class=\"fa fa-arrows-alt\"/>\n"
+"                                        </span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<span id=\"zoomout\" class=\"d-none d-sm-inline ml-2 mr-2\" title=\"Zoom out\" aria-label=\"Zoom out\" role=\"button\">\n"
+"                                            <i class=\"fa fa-search-minus\"/>\n"
+"                                        </span>\n"
+"                                        <span id=\"zoomin\" class=\"d-none d-sm-inline\" title=\"Zoom in\" aria-label=\"Zoom in\" role=\"button\">\n"
+"                                            <i class=\"fa fa-search-plus\"/>\n"
+"                                        </span>"
+msgstr ""
+"<span id=\"zoomout\" class=\"d-none d-sm-inline ml-2 mr-2\" title=\"Zoom out\" aria-label=\"Zoom out\" role=\"button\">\n"
+"                                            <i class=\"fa fa-search-minus\"/>\n"
+"                                        </span>\n"
+"                                        <span id=\"zoomin\" class=\"d-none d-sm-inline\" title=\"Zoom in\" aria-label=\"Zoom in\" role=\"button\">\n"
+"                                            <i class=\"fa fa-search-plus\"/>\n"
+"                                        </span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
@@ -515,18 +741,49 @@ msgid "<span name=\"members_done_count_label\" class=\"o_stat_text\">Finished</s
 msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
-msgid "<span name=\"total_slides_label\" class=\"o_stat_text\">Contents</span>"
-msgstr ""
-
-#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "<span> hours</span>"
 msgstr "<span> valandos</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_main
-msgid "<span>&amp;times;</span>"
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
+msgid "<span>Add Tag</span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
+msgid "<span>Answering Questions</span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
+msgid "<span>Asking Question</span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
+msgid "<span>Asking the right question</span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
+msgid "<span>Logic</span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
+msgid "<span>Mathematics</span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
+msgid "<span>Preview</span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
+msgid "<span>Science</span>"
 msgstr ""
 
 #. module: website_slides
@@ -535,16 +792,67 @@ msgid "<span>XP</span>"
 msgstr ""
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_share_modal_header
+msgid "<span>×</span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.actions.act_window,help:website_slides.slide_channel_action_overview
+#: model_terms:ir.actions.act_window,help:website_slides.slide_channel_action_report
+msgid "<strong>Create a course</strong>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.actions.act_window,help:website_slides.slide_slide_partner_action_from_slide
+msgid "<strong>No Attendee Yet!</strong>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.actions.act_window,help:website_slides.slide_channel_partner_action
+#: model_terms:ir.actions.act_window,help:website_slides.slide_channel_partner_action_report
+msgid "<strong>No Attendees Yet!</strong>"
+msgstr ""
+
+#. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_fullscreen_player.js:0
+#: code:addons/website_slides/static/src/js/slides_share.js:0
 #, python-format
 msgid "<strong>Thank you!</strong> Mail has been sent."
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.constraint,message:website_slides.constraint_slide_slide_exclusion_html_content_and_url
+#. openerp-web
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
 msgid ""
-"A slide is either filled with a document url or HTML content. Not both."
+"A good course has a structure. Pick a name for your first section and click "
+"<b>Save</b> to create it."
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.constraint,message:website_slides.constraint_slide_channel_partner_channel_partner_uniq
+msgid "A partner membership to a channel must be unique!"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.constraint,message:website_slides.constraint_slide_slide_partner_slide_partner_uniq
+msgid "A partner membership to a slide must be unique!"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.constraint,message:website_slides.constraint_slide_slide_resource_check_file_type
+msgid "A resource of type file cannot contain a link."
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.constraint,message:website_slides.constraint_slide_slide_resource_check_url
+msgid "A resource of type url must contain a link."
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.constraint,message:website_slides.constraint_slide_slide_exclusion_html_content_and_url
+msgid "A slide is either filled with a url or HTML content. Not both."
 msgstr ""
 
 #. module: website_slides
@@ -558,9 +866,31 @@ msgid "API Key"
 msgstr "API raktas"
 
 #. module: website_slides
+#: code:addons/website_slides/models/slide_channel.py:0
+#, python-format
+msgid "Access Granted"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model,name:website_slides.model_res_groups
 msgid "Access Groups"
 msgstr "Prieigos grupės"
+
+#. module: website_slides
+#: code:addons/website_slides/models/slide_channel.py:0
+#, python-format
+msgid "Access Refused"
+msgstr ""
+
+#. module: website_slides
+#: model:mail.activity.type,name:website_slides.mail_activity_data_access_request
+msgid "Access Request"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__has_requested_access
+msgid "Access Requested"
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -568,15 +898,15 @@ msgid "Access Rights"
 msgstr "Prieigos teisės "
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_partner_view_tree
+msgid "Accessed on"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_needaction
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_needaction
 msgid "Action Needed"
-msgstr "Reikia veiksmo"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
-msgid "Actions"
-msgstr "Veiksmai"
+msgstr "Reikalingas veiksmas"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__active
@@ -585,12 +915,44 @@ msgid "Active"
 msgstr "Aktyvus"
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_ids
+msgid "Activities"
+msgstr "Veiklos"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Veiklos Išimties Dekoravimas"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_state
+msgid "Activity State"
+msgstr "Veiklos būsena"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Veiklos tipo ikona"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_course_tag_add.js:0
+#, python-format
+msgid "Add"
+msgstr "Pridėti"
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__karma_slide_comment
 msgid "Add Comment"
 msgstr ""
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: model_terms:ir.actions.act_window,help:website_slides.slide_slide_action
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+#, python-format
 msgid "Add Content"
 msgstr "Pridėti turinį"
 
@@ -600,13 +962,15 @@ msgid "Add Review"
 msgstr ""
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Add Section"
 msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.actions.act_window,help:website_slides.slide_slide_action
-msgid "Add a new lesson"
+#: model_terms:ir.ui.view,arch_db:website_slides.course_main
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
+msgid "Add Tag"
 msgstr ""
 
 #. module: website_slides
@@ -617,20 +981,64 @@ msgid "Add a section"
 msgstr "Pridėti sekciją"
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_course_tag_add.js:0
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
+#, python-format
+msgid "Add a tag"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
+#, python-format
+msgid "Add an answer below this one"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
+#, python-format
+msgid "Add comment on this answer"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
 msgid "Add existing contacts..."
 msgstr "Pridėti egzistuojančias sutartis..."
 
 #. module: website_slides
-#: model_terms:ir.actions.act_window,help:website_slides.slide_question_action_report
-msgid ""
-"Add quizzes at the end of your lessons to evaluate what your students "
-"understood."
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_resource_ids
+msgid "Additional Resource for this slide"
 msgstr ""
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "Additional Resources"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_slide_slide_resource
+msgid "Additional resource for a particular slide"
+msgstr ""
+
+#. module: website_slides
+#: model:slide.channel.tag,name:website_slides.slide_channel_tag_level_advanced
+msgid "Advanced"
+msgstr "Išplėstinis"
+
+#. module: website_slides
+#: model:ir.actions.act_window,name:website_slides.slide_channel_action_overview
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "All Courses"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_unsubscribe.xml:0
+#, python-format
+msgid "All completed classes and earned karma will be lost."
 msgstr ""
 
 #. module: website_slides
@@ -646,13 +1054,26 @@ msgid "All questions must be answered !"
 msgstr ""
 
 #. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__allow_comment
+#: model:ir.model.fields,help:website_slides.field_slide_slide__channel_allow_comment
+msgid ""
+"Allow Attendees to like and comment your content and to submit reviews on "
+"your course."
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_resource_downloadable
+msgid "Allow Download"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__is_preview
 msgid "Allow Preview"
 msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
-msgid "Allow Rating"
+msgid "Allow Reviews"
 msgstr ""
 
 #. module: website_slides
@@ -664,7 +1085,12 @@ msgstr ""
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
 #, python-format
-msgid "Allow review on Course"
+msgid "Allow students to review your course"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_slide__slide_resource_downloadable
+msgid "Allow the user to download the content of the slide."
 msgstr ""
 
 #. module: website_slides
@@ -673,10 +1099,22 @@ msgid "Allows comment"
 msgstr ""
 
 #. module: website_slides
+#: code:addons/website_slides/models/slide_channel.py:0
+#, python-format
+msgid "Already Requested"
+msgstr ""
+
+#. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
 msgid "Already installing \"%s\"."
+msgstr ""
+
+#. module: website_slides
+#: code:addons/website_slides/models/slide_channel.py:0
+#, python-format
+msgid "Already member"
 msgstr ""
 
 #. module: website_slides
@@ -693,21 +1131,14 @@ msgid "Answer"
 msgstr "Atsakymas"
 
 #. module: website_slides
-#: model:ir.model,name:website_slides.model_slide_answer
-msgid "Answer for a slide question"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "Answers"
+msgstr "Atsakymai"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_gamification_challenge__category
+#: model:ir.model.fields,field_description:website_slides.field_gamification_challenge__challenge_category
 msgid "Appears in"
 msgstr "Rodoma"
-
-#. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel__visibility
-msgid ""
-"Applied directly as ACLs. Allow to hide channels and their content for non "
-"members."
-msgstr ""
 
 #. module: website_slides
 #. openerp-web
@@ -725,6 +1156,8 @@ msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_search
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Archived"
 msgstr "Archyvuotas"
@@ -737,9 +1170,32 @@ msgid "Are you sure you want to archive this slide ?"
 msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
-msgid "Attachment"
-msgstr "Prisegtukas"
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_management.xml:0
+#, python-format
+msgid "Are you sure you want to delete this category ?"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
+#, python-format
+msgid "Are you sure you want to delete this question :"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_category__article
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__article
+#, python-format
+msgid "Article"
+msgstr "Straipsnis"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_article
+msgid "Articles"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_attachment_count
@@ -763,9 +1219,20 @@ msgid "Attempts Count"
 msgstr ""
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_partner_view_form
+msgid "Attendee"
+msgstr "Dalyvis"
+
+#. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.slide_channel_partner_action
+#: model:ir.actions.act_window,name:website_slides.slide_channel_partner_action_report
+#: model:ir.actions.act_window,name:website_slides.slide_slide_partner_action_from_slide
+#: model:ir.ui.menu,name:website_slides.website_slides_menu_report_attendees
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_partner_view_search
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_partner_view_tree
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Attendees"
 msgstr "Dalyviai"
 
@@ -786,13 +1253,45 @@ msgid "Attendees of %s"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__author_id
-msgid "Author"
-msgstr "Autorius"
-
-#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__enroll_group_ids
 msgid "Auto Enroll Groups"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_avg
+msgid "Average Rating"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree_report
+msgid "Average Review"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_category_add.js:0
+#: code:addons/website_slides/static/src/js/slides_course_tag_add.js:0
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#, python-format
+msgid "Back"
+msgstr "Grįžti"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_achievements_small
+msgid "Badges"
+msgstr "Ženkleliai"
+
+#. module: website_slides
+#: model:slide.channel.tag,name:website_slides.slide_channel_tag_level_basic
+msgid "Basic"
+msgstr "Bazinis"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_unsubscribe.xml:0
+#, python-format
+msgid "Be notified when a new content is added."
 msgstr ""
 
 #. module: website_slides
@@ -801,11 +1300,16 @@ msgid "Can Comment"
 msgstr "Gali komentuoti"
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__can_edit_body
+msgid "Can Edit Body"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_publish
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__can_publish
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__can_publish
 msgid "Can Publish"
-msgstr ""
+msgstr "Gali publikuoti"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_review
@@ -824,8 +1328,12 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
+#: code:addons/website_slides/static/src/js/slides_category_delete.js:0
+#: code:addons/website_slides/static/src/js/slides_course_enroll_email.js:0
 #: code:addons/website_slides/static/src/js/slides_slide_archive.js:0
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
+#: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
 #, python-format
 msgid "Cancel"
@@ -837,12 +1345,15 @@ msgid "Categories"
 msgstr "Kategorijos"
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_category
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__slide_category
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Category"
 msgstr "Kategorija"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__module_website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "Certifications"
 msgstr ""
 
@@ -854,9 +1365,17 @@ msgid "Certified Knowledge"
 msgstr ""
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "Change video privacy settings"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__channel_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__channel_id
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_search
 msgid "Channel"
 msgstr "Kanalas"
 
@@ -886,9 +1405,18 @@ msgid "Channel validated, even if slides / lessons are added once done."
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model,name:website_slides.model_slide_channel_tag
 #: model:ir.model,name:website_slides.model_slide_channel_tag_group
-msgid "Channel/Course tags"
+msgid "Channel/Course Groups"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_slide_channel_tag
+msgid "Channel/Course Tag"
+msgstr ""
+
+#. module: website_slides
+#: model:mail.template,name:website_slides.mail_template_slide_channel_invite
+msgid "Channel: Invite by email"
 msgstr ""
 
 #. module: website_slides
@@ -899,6 +1427,14 @@ msgstr "Kanalai"
 
 #. module: website_slides
 #. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#, python-format
+msgid "Check Profile"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "Check answers"
@@ -913,21 +1449,40 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid "Choose a <b>File</b> on your computer."
+msgstr "Pasirinkti <b>failą</b> iš Jūsų kompiuterio."
+
+#. module: website_slides
+#. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
-msgid "Choose a Cover Image"
+msgid "Choose a PDF"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
+#, python-format
+msgid "Choose a layout"
 msgstr ""
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
-msgid "Choose a PDF or an Image"
+msgid "Choose an Image"
 msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "Clear filters"
+msgstr "Valyti filtrus"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
+msgid "Click here to start the course"
 msgstr ""
 
 #. module: website_slides
@@ -937,21 +1492,73 @@ msgid "Click on \"New\" in the top-right corner to write your first course."
 msgstr ""
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid ""
+"Click on the \"Edit\" button on the top-right of the screen to edit your "
+"slide content."
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid "Click on the <b>Create</b> button to create your first course."
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid "Click on your <b>Course</b> to go back to the table of content."
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.course_main
-#: model_terms:ir.ui.view,arch_db:website_slides.lesson_content_quiz
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_share_modal_header
+#, python-format
 msgid "Close"
 msgstr "Uždaryti"
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
+msgid "Color"
+msgstr "Spalva"
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__color
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag__color
 msgid "Color Index"
 msgstr "Spalvos indeksas"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+#: model_terms:ir.actions.act_window,help:website_slides.rating_rating_action_slide_channel
+msgid "Come back later to check the feedbacks given by your Attendees."
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.actions.act_window,help:website_slides.slide_question_action_report
+msgid "Come back later to oversee how well your Attendees are doing."
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_answer__comment
+msgid "Comment"
+msgstr "Komentaras"
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Comments"
 msgstr "Komentarai"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid ""
+"Common tasks for a computer scientist is asking the right questions and "
+"answering questions. In this course, you'll study those topics with "
+"activities about mathematics, science and logic."
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -972,23 +1579,34 @@ msgid "Company Course Count"
 msgstr ""
 
 #. module: website_slides
-#: model:gamification.badge,description:website_slides.badge_data_course
 #: model:gamification.challenge,name:website_slides.badge_data_course_challenge
+#: model_terms:gamification.badge,description:website_slides.badge_data_course
 msgid "Complete a course"
 msgstr ""
 
 #. module: website_slides
-#: model:gamification.badge,description:website_slides.badge_data_profile
 #: model:gamification.challenge,name:website_slides.badge_data_profile_challenge
+#: model_terms:gamification.badge,description:website_slides.badge_data_profile
 msgid "Complete your profile"
 msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__completed
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_search
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_partner_view_search
 msgid "Completed"
 msgstr "Atlikta"
 
 #. module: website_slides
+#: code:addons/website_slides/models/slide_channel.py:0
+#: model:mail.template,name:website_slides.mail_template_channel_completed
+#, python-format
+msgid "Completed Course"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_res_partner__slide_channel_completed_ids
+#: model:ir.model.fields,field_description:website_slides.field_res_users__slide_channel_completed_ids
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
 msgid "Completed Courses"
 msgstr ""
@@ -996,6 +1614,11 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__completion
 msgid "Completion"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__completed_template_id
+msgid "Completion Notification"
 msgstr ""
 
 #. module: website_slides
@@ -1009,11 +1632,6 @@ msgid "Compose Email"
 msgstr "Rašyti el. laišką"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel__enroll
-msgid "Condition to enroll: everyone, on invite, on payment (sale bridge)."
-msgstr ""
-
-#. module: website_slides
 #: model:ir.model,name:website_slides.model_res_config_settings
 msgid "Config Settings"
 msgstr "Konfigūracijos nustatymai"
@@ -1024,43 +1642,77 @@ msgid "Configuration"
 msgstr "Konfigūracija"
 
 #. module: website_slides
+#: model:mail.template,subject:website_slides.mail_template_channel_completed
+msgid "Congratulation! You completed {{ object.channel_id.name }}"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid ""
+"Congratulations! Your first lesson is available. Let's see the options "
+"available here. The tag \"<b>New</b>\" indicates that this lesson was "
+"created less than 7 days ago."
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_profile_small
 msgid "Congratulations, you have reached the last rank!"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model,name:website_slides.model_res_partner
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
-msgid "Contact"
-msgstr "Kontaktai"
+#. openerp-web
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid ""
+"Congratulations, you've created your first course.<br/>Click on the title of"
+" this content to see it in fullscreen mode."
+msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
-msgid "Contact all the members of a course via mass mailing"
+#. openerp-web
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid ""
+"Congratulations, your course has been created, but there isn't any content "
+"yet. First, let's add a <b>Section</b> to give your course a structure."
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_res_partner
+msgid "Contact"
+msgstr "Kontaktas"
+
+#. module: website_slides
+#: code:addons/website_slides/models/slide_channel.py:0
+#, python-format
+msgid "Contact Responsible"
 msgstr ""
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
-msgid "Contact the website administrator"
+msgid "Contact the responsible to enroll."
 msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
-msgid "Contact website administrator."
-msgstr ""
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel__total_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__slide_content_ids
 #: model:ir.model.fields,field_description:website_slides.field_slide_question__slide_id
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide__datas
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__slide_id
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_embed_view_search
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_embed_view_tree
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_partner_view_search
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Content"
 msgstr "Turinys"
 
 #. module: website_slides
 #. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
@@ -1086,11 +1738,24 @@ msgid "Content Title"
 msgstr ""
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "Content Type"
+msgstr "Turinio tipas"
+
+#. module: website_slides
+#: model_terms:ir.actions.act_window,help:website_slides.slide_slide_action
+msgid ""
+"Content are the lessons that compose a course\n"
+"                    <br>and can be of different types (presentations, documents, videos, ...)."
+msgstr ""
+
+#. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.slide_slide_action
 #: model:ir.actions.act_window,name:website_slides.slide_slide_action_report
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__body
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_courses_content
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_report_contents
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_tree_report
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_tree
 msgid "Contents"
 msgstr "Turinys"
@@ -1113,35 +1778,43 @@ msgstr ""
 #: code:addons/website_slides/controllers/main.py:0
 #, python-format
 msgid ""
-"Could not fetch data from url. Document or access right not available.\n"
-"Here is the received response: %s"
+"Could not find your video. Please check if your link is correct and if the "
+"video can be accessed."
 msgstr ""
-"Iš nuorodos nepavyko gauti duomenų. Nepasiekiamas dokumentas arba netinkamos prieigos teisės.\n"
-"Gautas atsakymas: %s"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slide_slide.py:0
-#, python-format
-msgid ""
-"Could not fetch data from url. Document or access right not available:\n"
-"%s"
-msgstr ""
-"Iš nuorodos nepavyko gauti duomenų. Nepasiekiamas dokumentas arba netinkamos prieigos teisės:\n"
-"%s"
-
-#. module: website_slides
+#: model:ir.model,name:website_slides.model_slide_channel
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__channel_id
+#: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_form_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_search_slide_channel
+#: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_tree_slide_channel
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_search
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_search
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Course"
-msgstr ""
+msgstr "Kursas"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_partner__slide_channel_count
 #: model:ir.model.fields,field_description:website_slides.field_res_users__slide_channel_count
 msgid "Course Count"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
+msgid "Course Group Name"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.actions.act_window,name:website_slides.slide_channel_tag_group_action
+#: model:ir.ui.menu,name:website_slides.website_slides_menu_config_course_groups
+msgid "Course Groups"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
+msgid "Course Name"
 msgstr ""
 
 #. module: website_slides
@@ -1162,19 +1835,19 @@ msgstr ""
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.slide_channel_tag_action
-#: model:ir.actions.act_window,name:website_slides.slide_channel_tag_group_action
-#: model:ir.ui.menu,name:website_slides.website_slides_menu_config_course_tags
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_view_search
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_view_tree
 msgid "Course Tags"
 msgstr ""
 
 #. module: website_slides
-#. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
-#, python-format
 msgid "Course Title"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree
+msgid "Course Type"
 msgstr ""
 
 #. module: website_slides
@@ -1183,28 +1856,49 @@ msgid "Course finished"
 msgstr ""
 
 #. module: website_slides
+#: code:addons/website_slides/models/slide_channel.py:0
+#, python-format
+msgid "Course not published yet"
+msgstr "Mokymosi programa nepaskelbta"
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__karma_gen_channel_rank
 msgid "Course ranked"
 msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__channel_type
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__channel_type
 msgid "Course type"
 msgstr ""
 
 #. module: website_slides
+#: code:addons/website_slides/models/slide_slide.py:0
+#, python-format
+msgid "Course: %s"
+msgstr ""
+
+#. module: website_slides
+#: code:addons/website_slides/models/website.py:0
 #: model:ir.actions.act_window,name:website_slides.slide_channel_action_report
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_courses
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_courses_courses
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_report_courses
+#: model:website.menu,name:website_slides.website_menu_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_graph
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_search
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree_report
-#: model:website.menu,name:website_slides.website_menu_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_searchbar_input_snippet_options
+#, python-format
 msgid "Courses"
-msgstr ""
+msgstr "Kursai"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__cover_properties
+msgid "Cover Properties"
+msgstr "Viršelio savybės"
 
 #. module: website_slides
 #. openerp-web
@@ -1214,21 +1908,38 @@ msgid "Create"
 msgstr "Sukurti"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
-msgid "Create a community and let the members help each others"
+#: model_terms:ir.actions.act_window,help:website_slides.action_slide_tag
+msgid "Create a Content Tag"
 msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.actions.act_window,help:website_slides.slide_channel_action_overview
-#: model_terms:ir.actions.act_window,help:website_slides.slide_channel_action_report
-msgid "Create a course"
+#: model_terms:ir.actions.act_window,help:website_slides.slide_channel_tag_group_action
+msgid "Create a Course Group"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
+msgid "Create a community and let Attendees answer each others' questions."
 msgstr ""
 
 #. module: website_slides
 #. openerp-web
+#: code:addons/website_slides/static/src/js/slides_course_tag_add.js:0
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
 msgid "Create new %s '%s'"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/website_slides.editor.js:0
+#, python-format
+msgid "Create new Tag '%s'"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.actions.act_window,help:website_slides.slide_slide_action_report
+msgid "Create new content for your eLearning"
 msgstr ""
 
 #. module: website_slides
@@ -1241,8 +1952,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed__create_uid
 #: model:ir.model.fields,field_description:website_slides.field_slide_question__create_uid
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__create_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_link__create_uid
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_resource__create_uid
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag__create_uid
 msgid "Created by"
 msgstr "Sukūrė"
@@ -1257,8 +1968,8 @@ msgstr "Sukūrė"
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed__create_date
 #: model:ir.model.fields,field_description:website_slides.field_slide_question__create_date
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__create_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_link__create_date
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_resource__create_date
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag__create_date
 msgid "Created on"
 msgstr "Sukurta"
@@ -1270,24 +1981,89 @@ msgstr "Sukūrimo data"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__html_content
-msgid "Custom HTML content for slides of type 'Web Page'."
+msgid "Custom HTML content for slides of category 'Article'."
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_gamification_challenge__category
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_searchbar_input_snippet_options
+msgid "Date (new to old)"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_searchbar_input_snippet_options
+msgid "Date (old to new)"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__null_value
+msgid "Default Value"
+msgstr "Numatytoji reikšmė"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_gamification_challenge__challenge_category
 msgid "Define the visibility of the challenge through menus"
 msgstr "Nustatykite iššūkio matomumą per meniu"
 
 #. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__enroll
+#: model:ir.model.fields,help:website_slides.field_slide_channel_partner__channel_enroll
+msgid "Defines how people can enroll to your Course."
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__promote_strategy
+msgid "Defines the content that will be promoted on the course home page"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__publish_template_id
+msgid ""
+"Defines the email your Attendees will receive each time you upload new "
+"content."
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__completed_template_id
+msgid ""
+"Defines the email your Attendees will receive once they reach the end of "
+"your course."
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__visibility
+#: model:ir.model.fields,help:website_slides.field_slide_channel_partner__channel_visibility
+msgid "Defines who can access your courses and their content."
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_category_delete.js:0
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
+#, python-format
 msgid "Delete"
 msgstr "Trinti"
 
 #. module: website_slides
 #. openerp-web
+#: code:addons/website_slides/static/src/js/slides_category_delete.js:0
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
+#, python-format
+msgid "Delete Category"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
+#, python-format
+msgid "Delete Question"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel__description_html
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__description
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__description
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_searchbar_input_snippet_options
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 #, python-format
@@ -1295,19 +2071,30 @@ msgid "Description"
 msgstr "Aprašymas"
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__description_html
+msgid "Detailed Description"
+msgstr ""
+
+#. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_category_add.js:0
 #: code:addons/website_slides/static/src/js/slides_course_unsubscribe.js:0
 #: code:addons/website_slides/static/src/js/slides_course_unsubscribe.js:0
 #: code:addons/website_slides/static/src/js/website_slides.editor.js:0
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Discard"
 msgstr "Atmesti"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide__dislikes
+#: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "Dislike"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__dislikes
+#: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Dislikes"
 msgstr "Neigiami įvertinimai"
 
@@ -1326,8 +2113,8 @@ msgstr "Vaizdavimas"
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed__display_name
 #: model:ir.model.fields,field_description:website_slides.field_slide_question__display_name
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__display_name
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_link__display_name
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_resource__display_name
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag__display_name
 msgid "Display Name"
 msgstr "Rodomas pavadinimas"
@@ -1352,28 +2139,52 @@ msgid "Do you want to install the \"%s\" app?"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__document
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
+#, python-format
+msgid "Do you want to request access to this course ?"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_category__document
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+#, python-format
 msgid "Document"
 msgstr "Dokumentas"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide__document_id
-msgid "Document ID"
-msgstr "Dokumento ID"
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__doc
+msgid "Document (Word, Google Doc, ...)"
+msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide__url
-msgid "Document URL"
-msgstr "Dokumento nuoroda"
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__document_google_url
+#, python-format
+msgid "Document Link"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "Document Source"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__channel_type__documentation
+msgid "Documentation"
+msgstr "Dokumentacija"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
-#: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__channel_type__documentation
 #, python-format
-msgid "Documentation"
-msgstr "Dokumentacija"
+msgid "Documentation Layout"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_document
@@ -1406,18 +2217,25 @@ msgid "Done Count"
 msgstr ""
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+msgid "Download"
+msgstr "Atsisiųsti"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+msgid "Download Content"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
 msgid "Dropdown menu"
 msgstr "Išsiskleidžiantis meniu"
 
 #. module: website_slides
-#. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__total_time
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__completion_time
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
-#, python-format
 msgid "Duration"
 msgstr "Trukmė"
 
@@ -1427,14 +2245,15 @@ msgid "Edit"
 msgstr "Redaguoti"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__partner_email
-msgid "Email"
-msgstr "El. paštas"
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
+msgid "Edit in backend"
+msgstr "Redaguoti programinį kodą"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel__publish_template_id
-msgid "Email template to send slide publication through email"
-msgstr "Laiško šablonas siunčiant skaidrės publikaciją el. paštu"
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__partner_email
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
+msgid "Email"
+msgstr "El. paštas"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__share_template_id
@@ -1447,9 +2266,10 @@ msgid "Embed Code"
 msgstr "Įterptas kodas"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide__embedcount_ids
-msgid "Embed Count"
-msgstr "Įterpinių skaičius"
+#: model:ir.actions.act_window,name:website_slides.slide_embed_action
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_embed_view_tree
+msgid "Embed Views"
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_embed
@@ -1469,51 +2289,76 @@ msgid "End course"
 msgstr ""
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
+msgid "Enjoy this exclusive content !"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__enroll_msg
 msgid "Enroll Message"
 msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__enroll
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__channel_enroll
 msgid "Enroll Policy"
+msgstr "Prisijungimo prie kurso politika"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
+msgid "Enrolled On"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid "Enter at least two possible <b>Answers</b>."
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid "Enter your <b>Question</b>. Be clear and concise."
 msgstr ""
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
-msgid "Estimated slide completion time"
+msgid "Estimated Completion Time"
 msgstr ""
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:0
 #, python-format
-msgid "Evaluate and certificate your students."
+msgid "Evaluate and certify your students."
 msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
-msgid "Evaluate your students and certify them"
+msgid "Evaluate the knowledge of your Attendees and certify their skills."
 msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
-msgid "External Links"
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__embed_code_external
+msgid "External Embed Code"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model,name:website_slides.model_slide_slide_link
-msgid "External URL for a particular slide"
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__embed_ids
+msgid "External Slide Embeds"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide__link_ids
-msgid "External URL for this slide"
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__url
+msgid "External URL"
 msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
-msgid "External sources"
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_embed_view_tree
+msgid "External Website"
 msgstr ""
 
 #. module: website_slides
@@ -1530,6 +2375,22 @@ msgid "Featured Content"
 msgstr ""
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__model_object_field
+msgid "Field"
+msgstr "Laukas"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__binary_content
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_slide_resource__resource_type__file
+msgid "File"
+msgstr "Failas"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_resource__file_name
+msgid "File Name"
+msgstr "Failo pavadinimas"
+
+#. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/controllers/main.py:0
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
@@ -1543,27 +2404,69 @@ msgid "Filter &amp; order"
 msgstr ""
 
 #. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_invite__copyvalue
+msgid ""
+"Final placeholder expression, to be copy-pasted in the desired template "
+"field."
+msgstr "Galutinė vietos ženklo išraiška, kopijuojama į norimą šablono lauką."
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid "Finally you can click here to enjoy your content in fullscreen"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Finish Course"
 msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
-msgid "First attempt"
+msgid "First Try"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide__quiz_first_attempt_reward
-msgid "First attempt reward"
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid ""
+"First, create your lesson, then edit it with the website builder. You'll be "
+"able to drop building blocks on your page and edit them."
 msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
-msgid "First slide"
+#. openerp-web
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid "First, let's add a <b>Document</b>. It has to be a .pdf file."
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "First, upload the file on your Google Drive account."
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "First, upload your videos on Vimeo and mark them as"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "First, upload your videos on YouTube and mark them as"
 msgstr ""
 
 #. module: website_slides
 #: code:addons/website_slides/models/res_partner.py:0
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_kanban
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
 #, python-format
 msgid "Followed Courses"
@@ -1576,16 +2479,15 @@ msgid "Followers"
 msgstr "Sekėjai"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_channel_ids
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Sekėjai (kanalai)"
-
-#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_partner_ids
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Sekėjai (partneriai)"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesome piktograma, pvz., fa-tasks"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__module_website_slides_forum
@@ -1594,23 +2496,18 @@ msgstr "Forumas"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
-msgid "Fourth and more attempt"
+msgid "Fourth Try & More"
 msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
-msgid "Free preview"
+#: code:addons/website_slides/models/slide_channel.py:0
+#: model_terms:ir.actions.act_window,help:website_slides.slide_channel_partner_action
+#: model_terms:ir.actions.act_window,help:website_slides.slide_channel_partner_action_report
+#: model_terms:ir.actions.act_window,help:website_slides.slide_slide_partner_action_from_slide
+#, python-format
+msgid ""
+"From here you'll be able to monitor attendees and to track their progress."
 msgstr ""
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__email_from
-msgid "From"
-msgstr "Nuo"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
-msgid "Fullscreen"
-msgstr "Visas ekranas"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_gamification_challenge
@@ -1618,13 +2515,8 @@ msgid "Gamification Challenge"
 msgstr "Sužaidybinimo iššūkis"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
-msgid "Generate revenues thanks to your courses"
-msgstr ""
-
-#. module: website_slides
-#: model:gamification.badge,description:website_slides.badge_data_certification
 #: model:gamification.challenge,name:website_slides.badge_data_certification_challenge
+#: model_terms:gamification.badge,description:website_slides.badge_data_certification
 msgid "Get a certification"
 msgstr ""
 
@@ -1637,15 +2529,16 @@ msgstr "Pradėkite"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
-msgid "Go Back"
+msgid "Give your course a helpful <b>Description</b>."
 msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.courses_footer
-msgid "Go meet them"
+#. openerp-web
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid "Give your course an engaging <b>Title</b>."
 msgstr ""
 
 #. module: website_slides
@@ -1655,9 +2548,31 @@ msgid "Google Doc Key"
 msgstr "Google Doc raktas"
 
 #. module: website_slides
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__video_source_type__google_drive
+msgid "Google Drive"
+msgstr "Google Drive"
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Google Drive API Key"
 msgstr "Google Drive API raktas"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__google_drive_id
+msgid "Google Drive ID of the external URL"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__google_drive_video
+msgid "Google Drive Video"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/components/activity/activity.xml:0
+#, python-format
+msgid "Grant Access"
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_graph
@@ -1670,9 +2585,16 @@ msgid "Group"
 msgstr "Grupė"
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_search
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_partner_view_search
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Group By"
 msgstr "Grupuoti pagal"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__name
+msgid "Group Name"
+msgstr "Grupės pavadinimas"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__upload_group_ids
@@ -1690,9 +2612,61 @@ msgid "HTML Content"
 msgstr ""
 
 #. module: website_slides
+#: model:ir.model,name:website_slides.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP nukreipimas"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_search
+msgid "Has Menu Entry"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__has_message
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__has_message
+msgid "Has Message"
+msgstr "Turi žinutę"
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 msgid "Home"
 msgstr "Pradžia"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "How do I add new content?"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "How to create a Lesson as an Article?"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "How to upload your PowerPoint Presentations or Word Documents?"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "How to upload your videos ?"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "How to use Google Drive?"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__id
@@ -1704,26 +2678,25 @@ msgstr "Pradžia"
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed__id
 #: model:ir.model.fields,field_description:website_slides.field_slide_question__id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__id
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_link__id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__id
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_resource__id
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag__id
 msgid "ID"
 msgstr "ID"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel__allow_comment
-#: model:ir.model.fields,help:website_slides.field_slide_slide__channel_allow_comment
-msgid ""
-"If checked it allows members to either:\n"
-" * like content and post comments on documentation course;\n"
-" * post comment and review on training course;"
-msgstr ""
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_exception_icon
+msgid "Icon"
+msgstr "Piktograma"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Išimties veiklą žyminti piktograma."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_needaction
-#: model:ir.model.fields,help:website_slides.field_slide_channel__message_unread
 #: model:ir.model.fields,help:website_slides.field_slide_slide__message_needaction
-#: model:ir.model.fields,help:website_slides.field_slide_slide__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Jeigu pažymėta, naujiems pranešimams reikės jūsų dėmesio."
 
@@ -1736,8 +2709,31 @@ msgid "If checked, some messages have a delivery error."
 msgstr "Jei pažymėta, yra žinučių, turinčių pristatymo klaidų."
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid ""
+"If you want to be sure that attendees have understood and memorized the "
+"content, you can add a Quiz on the lesson. Click on <b>Add Quiz</b>."
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid ""
+"If you want to use other types of files, you may want to use an external "
+"source (Google Drive) instead."
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__image_1920
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_1920
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_category__infographic
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__image
+#, python-format
 msgid "Image"
 msgstr "Paveikslėlis"
 
@@ -1745,37 +2741,45 @@ msgstr "Paveikslėlis"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__image_1024
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_1024
 msgid "Image 1024"
-msgstr ""
+msgstr "Paveikslėlis 1024"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__image_128
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_128
 msgid "Image 128"
-msgstr ""
+msgstr "Paveikslėlis 128"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__image_256
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_256
 msgid "Image 256"
-msgstr ""
+msgstr "Paveikslėlis 256"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__image_512
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_512
 msgid "Image 512"
+msgstr "Paveikslėlis 512"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_binary_content
+msgid "Image Content"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_google_url
+#, python-format
+msgid "Image Link"
 msgstr ""
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
-msgid "Image File"
+msgid "Image Source"
 msgstr ""
-
-#. module: website_slides
-#: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__infographic
-msgid "Infographic"
-msgstr "Infografikas"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_infographic
@@ -1794,6 +2798,11 @@ msgstr "Diegti"
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
 msgid "Installing \"%s\"."
+msgstr ""
+
+#. module: website_slides
+#: model:slide.channel.tag,name:website_slides.slide_channel_tag_level_intermediate
+msgid "Intermediate"
 msgstr ""
 
 #. module: website_slides
@@ -1825,6 +2834,11 @@ msgid "Is Completed"
 msgstr ""
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__is_mail_template_editor
+msgid "Is Editor"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_is_follower
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_is_follower
 msgid "Is Follower"
@@ -1832,7 +2846,13 @@ msgstr "Yra sekėjas"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__is_member
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__user_has_completed
 msgid "Is Member"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__is_new_slide
+msgid "Is New Slide"
 msgstr ""
 
 #. module: website_slides
@@ -1840,7 +2860,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__is_published
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__is_published
 msgid "Is Published"
-msgstr ""
+msgstr "Paskelbta"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__is_category
@@ -1854,16 +2874,49 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/xml/channel_management.xml:0
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "It should look similar to"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
+#, python-format
+msgid "Join & Submit"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_course_join.js:0
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
+#: model_terms:ir.ui.view,arch_db:website_slides.join_course_link
 #, python-format
 msgid "Join Course"
 msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
-msgid "Karma Rules"
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
+#: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
+#, python-format
+msgid "Join the Course"
 msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#, python-format
+msgid "Join the course to take the quiz and verify your answers!"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Karma"
+msgstr "Karma"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__karma_slide_comment
@@ -1888,6 +2941,16 @@ msgid "Know yourself"
 msgstr ""
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__lang
+msgid "Language"
+msgstr "Kalba"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
+msgid "Last Action On"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer____last_update
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel____last_update
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite____last_update
@@ -1897,8 +2960,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed____last_update
 #: model:ir.model.fields,field_description:website_slides.field_slide_question____last_update
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide____last_update
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_link____last_update
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner____last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_resource____last_update
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag____last_update
 msgid "Last Modified on"
 msgstr "Paskutinį kartą keista"
@@ -1919,8 +2982,8 @@ msgstr "Paskutinis atnaujinimas"
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed__write_uid
 #: model:ir.model.fields,field_description:website_slides.field_slide_question__write_uid
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__write_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_link__write_uid
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_resource__write_uid
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag__write_uid
 msgid "Last Updated by"
 msgstr "Paskutinį kartą atnaujino"
@@ -1935,21 +2998,16 @@ msgstr "Paskutinį kartą atnaujino"
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed__write_date
 #: model:ir.model.fields,field_description:website_slides.field_slide_question__write_date
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__write_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_link__write_date
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_resource__write_date
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag__write_date
 msgid "Last Updated on"
 msgstr "Paskutinį kartą atnaujinta"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
-msgid "Last slide"
-msgstr "Paskutinė skaidrė"
-
-#. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__promote_strategy__latest
-msgid "Latest Published"
-msgstr "Paskutinis paskelbtas"
+msgid "Latest Created"
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.toggle_latest_achievements
@@ -1963,7 +3021,6 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_course_unsubscribe.js:0
 #: code:addons/website_slides/static/src/js/slides_course_unsubscribe.js:0
 #: code:addons/website_slides/static/src/js/slides_course_unsubscribe.js:0
 #, python-format
@@ -1986,21 +3043,66 @@ msgid "Lesson voted"
 msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
 msgid "Lessons"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide__likes
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_course_quiz_finish.js:0
+#, python-format
+msgid "Level up!"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "Like"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__likes
+#: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Likes"
 msgstr "Teigiami vertinimai"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_link__link
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_resource__link
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_slide_resource__resource_type__url
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Link"
 msgstr "Nuoroda"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_slide__document_google_url
+msgid ""
+"Link of the document (we currently only support Google Drive as source)"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_slide__image_google_url
+msgid "Link of the image (we currently only support Google Drive as source)"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_slide__video_url
+msgid ""
+"Link of the video (we support YouTube, Google Drive and Vimeo as sources)"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "Loading content..."
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__template_id
+msgid "Mail Template"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__module_mass_mailing_slides
@@ -2014,14 +3116,16 @@ msgid "Main Attachment"
 msgstr "Pagrindinis prisegtukas"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.courses_footer
-msgid "Meet The Heros Who Transformed Their Company!"
-msgstr ""
+#: model:res.groups,name:website_slides.group_website_slides_manager
+msgid "Manager"
+msgstr "Vadovas"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
-msgid "Member"
-msgstr "Narys"
+#. openerp-web
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid "Mark the correct answer by checking the <b>correct</b> mark."
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__partner_ids
@@ -2051,13 +3155,9 @@ msgid ""
 msgstr ""
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_tree
 msgid "Menu Entry"
-msgstr ""
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
-msgid "Menu entry"
 msgstr ""
 
 #. module: website_slides
@@ -2078,16 +3178,17 @@ msgid "Messages"
 msgstr "Žinutės"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide__mime_type
-msgid "Mime-type"
-msgstr "MIME tipas"
-
-#. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Minutes"
 msgstr "Minutės"
+
+#. module: website_slides
+#: code:addons/website_slides/controllers/main.py:0
+#, python-format
+msgid "Missing \"Tag Group\" for creating a new \"Tag\"."
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
@@ -2119,6 +3220,16 @@ msgid "Most popular courses"
 msgstr ""
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Veiklos paskutinis terminas"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+msgid "My Content"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "My Courses"
 msgstr ""
@@ -2131,11 +3242,10 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__name
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag__name
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__name
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_resource__name
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag__name
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_question_view_form
 msgid "Name"
-msgstr "Vardas"
+msgstr "Pavadinimas"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
@@ -2143,9 +3253,9 @@ msgid "Nav"
 msgstr ""
 
 #. module: website_slides
-#: model:mail.template,subject:website_slides.slide_template_published
-msgid "New ${object.slide_type} published on ${object.channel_id.name}"
-msgstr "Naujas ${object.slide_type} publikuotas ${object.channel_id.name}"
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
+msgid "New"
+msgstr "Naujas"
 
 #. module: website_slides
 #. openerp-web
@@ -2156,7 +3266,7 @@ msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__publish_template_id
-msgid "New Content Email"
+msgid "New Content Notification"
 msgstr ""
 
 #. module: website_slides
@@ -2164,6 +3274,12 @@ msgstr ""
 #: code:addons/website_slides/static/src/js/website_slides.editor.js:0
 #, python-format
 msgid "New Course"
+msgstr ""
+
+#. module: website_slides
+#: model:mail.template,subject:website_slides.slide_template_published
+msgid ""
+"New {{ object.slide_category }} published on {{ object.channel_id.name }}"
 msgstr ""
 
 #. module: website_slides
@@ -2184,14 +3300,48 @@ msgid "Next"
 msgstr "Kitas"
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Kito veiksmo terminas"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_summary
+msgid "Next Activity Summary"
+msgstr "Kito veiksmo santrauka"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_type_id
+msgid "Next Activity Type"
+msgstr "Kito veiksmo tipas"
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_profile_small
 msgid "Next rank:"
 msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
-msgid "Next slide"
-msgstr "Kitas skaidrė"
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
+#, python-format
+msgid "No"
+msgstr "Ne"
+
+#. module: website_slides
+#: code:addons/website_slides/models/slide_channel.py:0
+#, python-format
+msgid "No Attendee has completed this course yet!"
+msgstr ""
+
+#. module: website_slides
+#: code:addons/website_slides/models/slide_channel.py:0
+#, python-format
+msgid "No Attendees Yet!"
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
@@ -2200,13 +3350,23 @@ msgid "No Course created yet."
 msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.toggle_latest_achievements
-msgid "No achievements currently :("
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "No Notification"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.actions.act_window,help:website_slides.slide_question_action_report
+msgid "No Quiz data yet!"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.actions.act_window,help:website_slides.rating_rating_action_slide_channel
+msgid "No Reviews yet!"
 msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
-msgid "No completed course yet"
+msgid "No completed courses yet!"
 msgstr ""
 
 #. module: website_slides
@@ -2225,8 +3385,13 @@ msgid "No course was found matching your search."
 msgstr ""
 
 #. module: website_slides
+#: model_terms:ir.actions.act_window,help:website_slides.slide_slide_action_report
+msgid "No data yet!"
+msgstr "Jokių duomenų!"
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
-msgid "No followed course yet"
+msgid "No followed courses yet!"
 msgstr ""
 
 #. module: website_slides
@@ -2238,6 +3403,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_documentation
 msgid "No presentation available."
 msgstr "Nėra pasiekiamų prezentacijų."
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_all
+msgid "No results found for '"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__promote_strategy__none
+msgid "None"
+msgstr "Nieko"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
@@ -2252,10 +3427,27 @@ msgid "Not enough karma to review"
 msgstr ""
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_course_unsubscribe.js:0
+#, python-format
+msgid "Notifications"
+msgstr "Pranešimai"
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_needaction_counter
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_needaction_counter
 msgid "Number of Actions"
 msgstr "Veiksmų skaičius"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__nbr_article
+msgid "Number of Articles"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__total_slides
+msgid "Number of Contents"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__nbr_document
@@ -2264,13 +3456,8 @@ msgstr "Dokumentų skaičius"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__nbr_infographic
-msgid "Number of Infographics"
-msgstr "Infografikų skaičius"
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide__nbr_presentation
-msgid "Number of Presentations"
-msgstr "Prezentacijų skaičius"
+msgid "Number of Images"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_quiz
@@ -2284,11 +3471,6 @@ msgid "Number of Videos"
 msgstr "VIdeo skaičius"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide__nbr_webpage
-msgid "Number of Webpages"
-msgstr ""
-
-#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__comments_count
 msgid "Number of comments"
 msgstr ""
@@ -2297,7 +3479,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_error_counter
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Klaidų kiekis"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_needaction_counter
@@ -2312,14 +3494,25 @@ msgid "Number of messages with delivery error"
 msgstr "Žinučių su pristatymo klaida skaičius"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel__message_unread_counter
-#: model:ir.model.fields,help:website_slides.field_slide_slide__message_unread_counter
-msgid "Number of unread messages"
-msgstr "Neperskaitytų žinučių skaičius"
-
-#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__questions_count
 msgid "Numbers of Questions"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
+msgid "Odoo"
+msgstr "Odoo"
+
+#. module: website_slides
+#: model:res.groups,name:website_slides.group_website_slides_officer
+msgid "Officer"
+msgstr "Vadovas"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "On Google Drive"
 msgstr ""
 
 #. module: website_slides
@@ -2328,9 +3521,64 @@ msgid "On Invitation"
 msgstr ""
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "On Vimeo"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "On YouTube"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid "Once you're done, don't forget to <b>Publish</b> your course."
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__visibility__public
+msgid "Open To All"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_invite__lang
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. {{ "
+"object.partner_id.lang }}."
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_invite__null_value
+msgid "Optional value to use if the target field is empty"
+msgstr "Papildoma reikšmė nustatymui, jei nurodytas laukas yra tuščias"
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Options"
 msgstr "Pasirinkimai"
+
+#. module: website_slides
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__pdf
+msgid "PDF"
+msgstr "PDF"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__document_binary_content
+msgid "PDF Content"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
+msgid "Paid Courses"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__partner_id
@@ -2339,13 +3587,33 @@ msgid "Partner"
 msgstr "Partneris"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.courses_home
-msgid "Pick a course"
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__partner_has_new_content
+msgid "Partner Has New Content"
 msgstr ""
 
 #. module: website_slides
+#: code:addons/website_slides/models/slide_slide.py:0
+#, python-format
+msgid ""
+"People already took this quiz. To keep course progression it should not be "
+"deleted."
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_pivot
+msgid "Pivot"
+msgstr "Suvestinis"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__copyvalue
+msgid "Placeholder Expression"
+msgstr "Vietaženklio išraiška"
+
+#. module: website_slides
 #. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 #, python-format
 msgid "Please"
@@ -2385,22 +3653,39 @@ msgstr ""
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
-#: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
-msgid "Please enter valid Youtube or Google Doc URL"
-msgstr "Prašome įvesti galiojančią Youtube ar Google Doc nuorodą"
+msgid "Please enter a valid Vimeo video link"
+msgstr ""
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:0
 #, python-format
-msgid "Please enter valid youtube or google doc url"
-msgstr "Prašome įvesti galiojančią Youtube ar Google Doc nuorodą"
+msgid "Please enter valid Google Drive Link"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_course_quiz_question_form.js:0
+#, python-format
+msgid "Please fill in the question"
+msgstr "Prašome atsakyti į klausimą"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
 #, python-format
 msgid "Please fill in this field"
+msgstr "Prašome užpildyti šį lauką"
+
+#. module: website_slides
+#: code:addons/website_slides/wizard/slide_channel_invite.py:0
+#, python-format
+msgid "Please select at least one recipient."
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "Points Rewards"
 msgstr ""
 
 #. module: website_slides
@@ -2411,11 +3696,12 @@ msgid "Power User"
 msgstr ""
 
 #. module: website_slides
-#. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
+msgid "Powered by"
+msgstr "Technologija"
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed__slide_id
-#: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__presentation
-#, python-format
 msgid "Presentation"
 msgstr "Prezentacija"
 
@@ -2426,14 +3712,17 @@ msgid "Presentation Published"
 msgstr "Prezentacija publikuota"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_presentation
-msgid "Presentations"
-msgstr "Prezentacijos"
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Preview"
+msgstr "Peržiūra"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
-msgid "Previous slide"
-msgstr "Ankstesnė skaidrė"
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "Private"
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
@@ -2441,9 +3730,17 @@ msgid "Private Course"
 msgstr ""
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
+msgid "Progress"
+msgstr "Eiga"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__promoted_slide_id
+msgid "Promoted Slide"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__enroll__public
-#: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__visibility__public
-#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Public"
 msgstr "Viešas"
 
@@ -2453,11 +3750,9 @@ msgid "Public Views"
 msgstr ""
 
 #. module: website_slides
-#. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
-#, python-format
-msgid "Publish"
-msgstr "Skelbti"
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_searchbar_input_snippet_options
+msgid "Publication Date"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__date_published
@@ -2465,9 +3760,16 @@ msgid "Publish Date"
 msgstr "Publikavimo data"
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_search
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Published"
 msgstr "Paskelbtas"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Published Contents"
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -2485,25 +3787,20 @@ msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__question_id
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Question"
 msgstr "Klausimas"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_question.py:0
 #, python-format
-msgid "Question \"%s\" can only have one good answer"
+msgid "Question \"%s\" must have 1 correct answer"
 msgstr ""
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_question.py:0
 #, python-format
-msgid "Question \"%s\" has no valid answer, please set one"
-msgstr ""
-
-#. module: website_slides
-#: code:addons/website_slides/models/slide_question.py:0
-#, python-format
-msgid "Question \"%s\" must at least have one good answer"
+msgid "Question \"%s\" must have 1 correct answer and at least 1 incorrect answer"
 msgstr ""
 
 #. module: website_slides
@@ -2514,18 +3811,25 @@ msgstr "Klausimo pavadinimas"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__question_ids
-#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Questions"
 msgstr "Klausimai"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_category__quiz
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__quiz
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_question_view_form
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 #, python-format
 msgid "Quiz"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "Quiz Demo Data"
 msgstr ""
 
 #. module: website_slides
@@ -2539,32 +3843,22 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_question_view_search
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_question_view_tree
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_question_view_tree_report
-#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Quizzes"
 msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
-msgid "Rank Course"
-msgstr ""
-
-#. module: website_slides
-#: model:ir.actions.act_window,name:website_slides.rating_rating_action_slide_channel
-#: model:ir.actions.act_window,name:website_slides.rating_rating_action_slide_channel_report
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_ids
-#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Rating"
 msgstr "Įvertinimas"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_avg
-#: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_graph_slide_channel
-msgid "Rating Average"
-msgstr "Įvertinimo vidurkis"
-
-#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_avg_stars
 msgid "Rating Average (Stars)"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_avg_text
+msgid "Rating Avg Text"
 msgstr ""
 
 #. module: website_slides
@@ -2583,6 +3877,16 @@ msgid "Rating Last Value"
 msgstr "Paskutinio įvertinimo reikšmė"
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_percentage_satisfaction
+msgid "Rating Satisfaction"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_last_text
+msgid "Rating Text"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_count
 msgid "Rating count"
 msgstr "Įvertinimų kiekis"
@@ -2594,18 +3898,19 @@ msgid "Rating of %s"
 msgstr ""
 
 #. module: website_slides
-#: model:gamification.badge,description:website_slides.badge_data_karma
+#: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_form_slides
+msgid "Ratings"
+msgstr "Įvertinimai"
+
+#. module: website_slides
+#: model:gamification.challenge,name:website_slides.badge_data_karma_challenge
+#: model_terms:gamification.badge,description:website_slides.badge_data_karma
 msgid "Reach 2000 XP"
 msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "Reach new heights"
-msgstr ""
-
-#. module: website_slides
-#: model:gamification.challenge,name:website_slides.badge_data_karma_challenge
-msgid "Read 2000 XP"
 msgstr ""
 
 #. module: website_slides
@@ -2619,8 +3924,15 @@ msgid "Recipients"
 msgstr "Gavėjai"
 
 #. module: website_slides
-#: model:gamification.badge,description:website_slides.badge_data_register
+#. openerp-web
+#: code:addons/website_slides/static/src/components/activity/activity.xml:0
+#, python-format
+msgid "Refuse Access"
+msgstr ""
+
+#. module: website_slides
 #: model:gamification.challenge,name:website_slides.badge_data_register_challenge
+#: model_terms:gamification.badge,description:website_slides.badge_data_register
 msgid "Register to the platform"
 msgstr ""
 
@@ -2635,20 +3947,105 @@ msgid "Remove"
 msgstr "Pašalinti"
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
+#, python-format
+msgid "Remove the answer comment"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
+#, python-format
+msgid "Remove this answer"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__render_model
+msgid "Rendering Model"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_report
 msgid "Reporting"
 msgstr "Ataskaitos"
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_course_enroll_email.js:0
+#, python-format
+msgid "Request Access."
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_course_enroll_email.js:0
+#, python-format
+msgid "Request sent !"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#, python-format
+msgid "Reset"
+msgstr "Atstatyti"
+
+#. module: website_slides
+#: code:addons/website_slides/models/slide_slide_resource.py:0
+#: code:addons/website_slides/models/slide_slide_resource.py:0
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_resource__data
+#, python-format
+msgid "Resource"
+msgstr "Išteklius"
+
+#. module: website_slides
+#: code:addons/website_slides/models/slide_slide_resource.py:0
+#, python-format
+msgid ""
+"Resource %(resource_name)s is a link and should not contain a data file"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_resource__resource_type
+msgid "Resource Type"
+msgstr "Ištekliaus tipas"
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__user_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__channel_user_id
+#: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Responsible"
 msgstr "Atsakingas"
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_user_id
+msgid "Responsible User"
+msgstr "Atsakingas vartotojas"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#, python-format
+msgid "Responsible already contacted."
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__website_id
+#: model:ir.model.fields,help:website_slides.field_slide_channel_partner__channel_website_id
 #: model:ir.model.fields,help:website_slides.field_slide_slide__website_id
 msgid "Restrict publishing to this website."
 msgstr "Apriboti skelbimą šioje svetainėje."
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__source_type__external
+#, python-format
+msgid "Retrieve from Google Drive"
+msgstr ""
 
 #. module: website_slides
 #. openerp-web
@@ -2665,28 +4062,62 @@ msgstr ""
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
-#: model_terms:ir.ui.view,arch_db:website_slides.course_main
 #, python-format
 msgid "Review"
 msgstr "Peržiūrėti"
 
 #. module: website_slides
-#: model:ir.ui.menu,name:website_slides.website_slides_menu_courses_reviews
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Review Course"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_tree_slide_channel
+msgid "Review Date"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.actions.act_window,name:website_slides.rating_rating_action_slide_channel
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_report_reviews
+#: model_terms:ir.ui.view,arch_db:website_slides.course_main
+#: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_graph_slide_channel
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Reviews"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide__quiz_fourth_attempt_reward
-msgid "Reward for every attempt after the third try"
+#. openerp-web
+#: code:addons/website_slides/static/src/js/portal_chatter.js:0
+#, python-format
+msgid "Reviews (%d)"
 msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
-msgid "Rewards"
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__quiz_fourth_attempt_reward
+msgid "Reward: every attempt after the third try"
 msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__quiz_first_attempt_reward
+msgid "Reward: first attempt"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__quiz_second_attempt_reward
+msgid "Reward: second attempt"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__quiz_third_attempt_reward
+msgid "Reward: third attempt"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Rewards"
+msgstr "Atlygis"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__is_seo_optimized
@@ -2698,12 +4129,26 @@ msgstr "SEO optimizuotas"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_sms_error
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_has_sms_error
 msgid "SMS Delivery error"
+msgstr "SMS pristatymo klaida"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_slide__embed_code_external
+msgid ""
+"Same as 'Embed Code' but used to embed the content on an external website."
 msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
+msgid "Sample"
+msgstr "Pavyzdis"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_category_add.js:0
 #: code:addons/website_slides/static/src/js/slides_course_unsubscribe.js:0
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
 msgid "Save"
 msgstr "Išsaugoti"
@@ -2711,16 +4156,24 @@ msgstr "Išsaugoti"
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
-msgid "Save as Draft"
-msgstr "Išsaugoti kaip juodraštį"
+msgid "Save & Publish"
+msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_nav
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "Save your presentations or documents as PDF files and upload them."
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_tree_slide_channel
+msgid "Score"
+msgstr "Taškai"
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
-#: model_terms:ir.ui.view,arch_db:website_slides.courses_all
-#: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "Search"
 msgstr "Paieška"
 
@@ -2739,16 +4192,11 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "Search in content"
-msgstr ""
+msgstr "Ieškoti pagal turinį"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
-msgid "Second attempt"
-msgstr ""
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide__quiz_second_attempt_reward
-msgid "Second attempt reward"
+msgid "Second Try"
 msgstr ""
 
 #. module: website_slides
@@ -2773,9 +4221,48 @@ msgid "Security Token"
 msgstr "Apsaugos prieigos raktas"
 
 #. module: website_slides
+#: code:addons/website_slides/models/res_users.py:0
+#, python-format
+msgid "See our eLearning"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid "Select <b>Course</b> to create it and manage it."
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__promote_strategy__specific
+msgid "Select Manually"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_embed
 msgid "Select page to start with"
 msgstr "Pasirinkite puslapį, nuo kurio pradėsite"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_invite__model_object_field
+msgid ""
+"Select target field from the related document model.\n"
+"If it is a relationship field you will be able to select a target field at the destination of the relationship."
+msgstr ""
+"Pasirinkite tikslinį lauką iš susijusio dokumento modelio.\n"
+"Jei tai yra santykio laukas, galėsite pasirinkti tikslinį lauką santykio tiksle."
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
+#, python-format
+msgid "Select the correct answer below :"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
+msgid "Sell access to your courses on your website and track revenues."
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__module_website_sale_slides
@@ -2795,6 +4282,13 @@ msgid "Send Email"
 msgstr "Siųsti el. laišką"
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__seo_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__seo_name
+msgid "Seo name"
+msgstr "SEO pavadinimas"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_answer__sequence
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__sequence
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag__sequence
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__sequence
@@ -2815,8 +4309,8 @@ msgid "Settings"
 msgstr "Nustatymai"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_main
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_share_modal_header
 msgid "Share"
 msgstr "Dalintis"
 
@@ -2829,8 +4323,7 @@ msgstr ""
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
-#: model_terms:ir.ui.view,arch_db:website_slides.course_main
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_media
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_share_link
 #, python-format
 msgid "Share Link"
 msgstr "Dalintis nuoroda"
@@ -2838,6 +4331,11 @@ msgstr "Dalintis nuoroda"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__share_template_id
 msgid "Share Template"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_share_url
+msgid "Share URL"
 msgstr ""
 
 #. module: website_slides
@@ -2851,7 +4349,8 @@ msgstr ""
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
-#: model_terms:ir.ui.view,arch_db:website_slides.slides_share
+#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_share_social
 #, python-format
 msgid "Share on Facebook"
 msgstr "Pasidalinti \"Facebook\""
@@ -2859,7 +4358,8 @@ msgstr "Pasidalinti \"Facebook\""
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
-#: model_terms:ir.ui.view,arch_db:website_slides.slides_share
+#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_share_social
 #, python-format
 msgid "Share on LinkedIn"
 msgstr "Pasidalinti \"LinkedIn\""
@@ -2867,8 +4367,8 @@ msgstr "Pasidalinti \"LinkedIn\""
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
-#: model_terms:ir.ui.view,arch_db:website_slides.course_main
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_media
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_share_modal_body
 #, python-format
 msgid "Share on Social Networks"
 msgstr "Dalintis socialiniuose tinkluose"
@@ -2876,13 +4376,19 @@ msgstr "Dalintis socialiniuose tinkluose"
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
-#: model_terms:ir.ui.view,arch_db:website_slides.slides_share
+#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_share_social
 #, python-format
 msgid "Share on Twitter"
 msgstr "Pasidalinti \"Twitter\""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel__description
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__sheet
+msgid "Sheet (Excel, Google Sheet, ...)"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__description_short
 msgid "Short Description"
 msgstr ""
 
@@ -2897,26 +4403,18 @@ msgstr ""
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
-msgid "Sign in"
-msgstr "Prisijungti"
-
-#. module: website_slides
-#. openerp-web
-#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
-#, python-format
-msgid "Sign in and join the course to take the quiz!"
+msgid "Sign in and join the course to verify your answers!"
 msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid ""
-"Skill up and have an impact! Your business career starts here. Time to start"
-" a course."
+"Skill up and have an impact! Your business career starts here.<br/>Time to "
+"start a course."
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_link__slide_id
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__slide_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_resource__slide_id
 msgid "Slide"
 msgstr "Skaidrė"
 
@@ -2926,14 +4424,29 @@ msgid "Slide / Partner decorated m2m"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model,name:website_slides.model_slide_channel
-msgid "Slide Channel"
-msgstr "Skaidrės kanalas"
+#: model:mail.template,name:website_slides.slide_template_published
+msgid "Slide Published"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_slide_answer
+msgid "Slide Question's Answer"
+msgstr ""
+
+#. module: website_slides
+#: model:mail.template,name:website_slides.slide_template_shared
+msgid "Slide Shared"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_tag
 msgid "Slide Tag"
 msgstr "Skaidrės žyma"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_type
+msgid "Slide Type"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__slide_partner_ids
@@ -2963,10 +4476,13 @@ msgstr ""
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_slide
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel__slide_content_ids
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_ids
 msgid "Slides"
 msgstr "Skaidrės"
+
+#. module: website_slides
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__slides
+msgid "Slides (PowerPoint, Google Slides, ...)"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__slide_ids
@@ -2979,10 +4495,12 @@ msgid "Sort by"
 msgstr "Rūšiuoti pagal"
 
 #. module: website_slides
-#. openerp-web
-#: code:addons/website_slides/static/src/xml/channel_management.xml:0
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__source_type
+msgid "Source Type"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
-#, python-format
 msgid "Start Course"
 msgstr ""
 
@@ -2993,14 +4511,31 @@ msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
-msgid "Start your online course today !"
+msgid "Start your online course today!"
 msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
-#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
-msgid "Statistics"
-msgstr "Statistika"
+#: model:ir.model.fields,help:website_slides.field_slide_channel__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Būsena, paremta veiklomis\n"
+"Vėluojantis: Termino data jau praėjo\n"
+"Šiandien: Veikla turi būti baigta šiandien\n"
+"Suplanuotas: Ateities veiklos."
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__sub_model_object_field
+msgid "Sub-field"
+msgstr "Polaukis"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__sub_object
+msgid "Sub-model"
+msgstr "Submodelis"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__subject
@@ -3018,13 +4553,6 @@ msgstr "Tema..."
 #, python-format
 msgid "Subscribe"
 msgstr "Prenumeruoti"
-
-#. module: website_slides
-#. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides_unsubscribe.xml:0
-#, python-format
-msgid "Subscribe to get notified when a new content is added."
-msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__user_membership_id
@@ -3047,7 +4575,18 @@ msgid "Subscribers information"
 msgstr ""
 
 #. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_slide__slide_type
+msgid ""
+"Subtype of the slide category, allows more precision on the actual file type"
+" / source type."
+msgstr ""
+
+#. module: website_slides
 #. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
@@ -3055,9 +4594,40 @@ msgid "Succeed and gain karma"
 msgstr ""
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_course_tag_add.js:0
+#: code:addons/website_slides/static/src/xml/website_slides_channel_tag.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_tag_form
+#, python-format
 msgid "Tag"
 msgstr "Žyma"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_channel_tag.xml:0
+#, python-format
+msgid "Tag Group"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_course_tag_add.js:0
+#, python-format
+msgid "Tag Group (required for new tags)"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
+msgid "Tag Name"
+msgstr "Žymos pavadinimas"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_tag__color
+msgid ""
+"Tag color used in both backend and website. No color means no display in "
+"kanban or front-end, to distinguish internal tags from public categorization"
+" tags"
+msgstr ""
 
 #. module: website_slides
 #. openerp-web
@@ -3068,9 +4638,9 @@ msgstr "Žyma"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__tag_ids
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__tag_ids
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__tag_ids
+#: model:slide.channel.tag.group,name:website_slides.slide_channel_tag_group_data_other
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_tag_tree
-#: model:slide.channel.tag.group,name:website_slides.slide_channel_tag_group_data_other
 #, python-format
 msgid "Tags"
 msgstr "Žymos"
@@ -3081,6 +4651,59 @@ msgid "Tags..."
 msgstr "Žymos..."
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "Test your students with small Quizzes"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid ""
+"The <b>Duration</b> of the lesson is based on the number of pages of your "
+"document. You can change this number if your attendees will need more time "
+"to assimilate the content."
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid ""
+"The <b>Title</b> of your lesson is autocompleted but you can change it if "
+"you want.</br>A <b>Preview</b> of your file is available on the right side "
+"of the screen."
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid ""
+"The Google Drive link can be obtained by using the 'share' button in the "
+"Google interface."
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid ""
+"The Google Drive link to use here can be obtained by clicking the \"Share\" "
+"button in the Google interface."
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.constraint,message:website_slides.constraint_slide_channel_partner_check_completion
+msgid ""
+"The completion of a channel is a percentage and should be between 0% and "
+"100."
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__is_preview
 msgid ""
 "The course is accessible by anyone : the users don't need to join the "
@@ -3088,13 +4711,16 @@ msgid ""
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_slide__slide_type
-msgid ""
-"The document type will be set automatically based on the document URL and "
-"properties (e.g. height and width for presentation and document)."
+#: model:ir.model.fields,help:website_slides.field_slide_channel__description_short
+msgid "The description that is displayed on the course card"
 msgstr ""
-"Dokumento tipas bus nustatytas automatiškai, remiantis jo nuoroda ir "
-"savybėms (pvz., aukštis ir plotis prezentacijoms ar dokumentams)."
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__description
+msgid ""
+"The description that is displayed on top of the course page, just below the "
+"title"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__completion_time
@@ -3111,21 +4737,30 @@ msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__website_url
-#: model:ir.model.fields,help:website_slides.field_slide_channel_invite__channel_url
 #: model:ir.model.fields,help:website_slides.field_slide_channel_tag_group__website_url
 #: model:ir.model.fields,help:website_slides.field_slide_slide__website_url
 msgid "The full URL to access the document through the website."
 msgstr "Pilna nuoroda dokumento pasiekimui per svetainę."
 
 #. module: website_slides
-#: model_terms:ir.actions.act_window,help:website_slides.slide_question_action_report
-msgid "There is no quiz"
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid ""
+"The video link to input here can be obtained by using the 'share' button in "
+"the Vimeo interface."
 msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.actions.act_window,help:website_slides.rating_rating_action_slide_channel
-#: model_terms:ir.actions.act_window,help:website_slides.rating_rating_action_slide_channel_report
-msgid "There is no rating for these courses at the moment"
+#: model:ir.model.constraint,message:website_slides.constraint_slide_slide_partner_check_vote
+msgid "The vote must be 1, 0 or -1."
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "Then, go into the file permissions and set it as \"Anyone with the link\"."
 msgstr ""
 
 #. module: website_slides
@@ -3142,12 +4777,12 @@ msgstr "Trečiųjų šalių svetainės nuoroda"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
-msgid "Third attempt"
+msgid "Third Try"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide__quiz_third_attempt_reward
-msgid "Third attempt reward"
+#: model:ir.model.fields,help:website_slides.field_slide_answer__comment
+msgid "This comment will be displayed to the user if he selects this answer"
 msgstr ""
 
 #. module: website_slides
@@ -3155,6 +4790,20 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "This course is private."
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
+#, python-format
+msgid "This is the correct answer"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
+#, python-format
+msgid "This is the correct answer, congratulations"
 msgstr ""
 
 #. module: website_slides
@@ -3167,7 +4816,16 @@ msgstr ""
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:0
 #, python-format
-msgid "This video already exists in this channel on the following slide: %s"
+msgid "This video already exists in this channel on the following content: %s"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid ""
+"Through Google Drive, we support most common types of documents.\n"
+"                                        Including regular documents (Google Doc, .docx), Sheets (Google Sheet, .xlsx), PowerPoints, ..."
 msgstr ""
 
 #. module: website_slides
@@ -3176,7 +4834,6 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__name
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_link__name
 #, python-format
 msgid "Title"
 msgstr "Pavadinimas"
@@ -3189,9 +4846,30 @@ msgid "Toggle navigation"
 msgstr "Perjungti navigaciją"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_tree
 msgid "Total"
 msgstr "Suma"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree_report
+msgid "Total Attendees"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree_report
+msgid "Total Completed"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree_report
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_tree_report
+msgid "Total Duration"
+msgstr "Visa trukmė"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_tree_report
+msgid "Total Questions"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__total_slides
@@ -3200,6 +4878,7 @@ msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_tree_report
 msgid "Total Views"
 msgstr ""
 
@@ -3212,18 +4891,24 @@ msgstr "Mokymai"
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
 #, python-format
-msgid "Training (with progress)"
+msgid "Training Layout"
 msgstr ""
 
 #. module: website_slides
-#. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_type
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
-#, python-format
 msgid "Type"
 msgstr "Tipas"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Įrašytos išimties veiklos tipas."
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_slide__url
+msgid "URL of the Google Drive file or URL of the YouTube video"
+msgstr ""
 
 #. module: website_slides
 #: code:addons/website_slides/wizard/slide_channel_invite.py:0
@@ -3233,16 +4918,17 @@ msgstr "Nepavyko paskelbti žinutės, nustatykite siuntėjo pašto adresą."
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:0
+#: code:addons/website_slides/models/slide_channel.py:0
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 #, python-format
 msgid "Uncategorized"
 msgstr "Nekategorizuotas"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slide_slide.py:0
+#: code:addons/website_slides/models/slide_embed.py:0
 #, python-format
-msgid "Unknown document"
-msgstr "Nežinomas dokumentas"
+msgid "Unknown Website"
+msgstr ""
 
 #. module: website_slides
 #. openerp-web
@@ -3253,36 +4939,35 @@ msgid "Unknown error"
 msgstr "Nežinoma klaida"
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_course_enroll_email.js:0
+#, python-format
+msgid "Unknown error, try again."
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_card
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
 msgid "Unpublished"
 msgstr "Nepaskelbtas"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_unread
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_unread
-msgid "Unread Messages"
-msgstr "Neperskaitytos žinutės"
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_unread_counter
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Neperskaitytų žinučių skaičiavimas"
-
-#. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_course_unsubscribe.js:0
+#: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
-msgid "Unsubscribe"
-msgstr "Nebeprenumeruoti"
+msgid "Update"
+msgstr "Atnaujinti"
 
 #. module: website_slides
-#. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#, python-format
-msgid "Upload"
-msgstr "Įkelti"
+#: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
+msgid "Update all your Attendees at once through mass mailings."
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
+msgid "Upload Document"
+msgstr "Įkelti dokumentą"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__upload_group_ids
@@ -3292,35 +4977,16 @@ msgstr "Įkelti grupes"
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__source_type__local_file
 #, python-format
-msgid "Upload Image"
-msgstr ""
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
-#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
-msgid "Upload Presentation"
-msgstr "Įkelti prezentaciją"
-
-#. module: website_slides
-#. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
-#, python-format
-msgid "Upload a document"
+msgid "Upload from Device"
 msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__user_id
 msgid "Uploaded by"
-msgstr ""
-
-#. module: website_slides
-#. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#, python-format
-msgid "Uploading Image..."
-msgstr ""
+msgstr "Įkėlė"
 
 #. module: website_slides
 #. openerp-web
@@ -3330,9 +4996,14 @@ msgid "Uploading document ..."
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__template_id
-msgid "Use template"
-msgstr "Naudoti šabloną"
+#: model_terms:ir.actions.act_window,help:website_slides.action_slide_tag
+msgid "Use Content Tags to classify your Content."
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.actions.act_window,help:website_slides.slide_channel_tag_group_action
+msgid "Use Course Groups to classify and organize your Courses."
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__tag_ids
@@ -3342,6 +5013,16 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__color
 msgid "Used to decorate kanban view"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_slide__document_binary_content
+msgid "Used to filter file input to PDF only"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_slide__image_binary_content
+msgid "Used to filter file input to images only"
 msgstr ""
 
 #. module: website_slides
@@ -3357,10 +5038,33 @@ msgstr "Vartotojai"
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
-#: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__video
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_category__video
 #, python-format
 msgid "Video"
 msgstr "Video"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__video_url
+#, python-format
+msgid "Video Link"
+msgstr "Vaizdo įrašo nuoroda"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__video_source_type
+msgid "Video Source"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__vimeo_id
+msgid "Video Vimeo ID"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__youtube_id
+msgid "Video YouTube ID"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_video
@@ -3370,11 +5074,12 @@ msgstr "Video"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "View"
-msgstr "Rodinys"
+msgstr "Peržiūrėti"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
+#: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_achievements_small
 #: model_terms:ir.ui.view,arch_db:website_slides.toggle_leaderboard
 msgid "View all"
 msgstr ""
@@ -3385,15 +5090,8 @@ msgid "View course"
 msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
-msgid "View fullscreen"
-msgstr ""
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide__total_views
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
-#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Views"
 msgstr "Peržiūros"
 
@@ -3403,7 +5101,18 @@ msgid "Views •"
 msgstr ""
 
 #. module: website_slides
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__video_source_type__vimeo
+msgid "Vimeo"
+msgstr "Vimeo"
+
+#. module: website_slides
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__vimeo_video
+msgid "Vimeo Video"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__visibility
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__channel_visibility
 msgid "Visibility"
 msgstr "Matomumas"
 
@@ -3444,32 +5153,16 @@ msgid "Waiting for validation"
 msgstr "Laukia patvirtinimo"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
-msgid "Watch Time"
-msgstr ""
-
-#. module: website_slides
-#. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
-#: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__webpage
-#, python-format
-msgid "Web Page"
-msgstr "Svetainės puslapis"
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_webpage
-msgid "Webpages"
-msgstr ""
-
-#. module: website_slides
 #: model:ir.model,name:website_slides.model_website
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__channel_website_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__website_name
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_id
 msgid "Website"
 msgstr "Svetainė"
 
 #. module: website_slides
-#: model:ir.model.fields.selection,name:website_slides.selection__gamification_challenge__category__slides
+#: model:ir.model.fields.selection,name:website_slides.selection__gamification_challenge__challenge_category__slides
 msgid "Website / Slides"
 msgstr ""
 
@@ -3481,7 +5174,6 @@ msgstr "Interneto svetainės žinutės"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_url
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__channel_url
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__website_url
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_url
 msgid "Website URL"
@@ -3519,13 +5211,67 @@ msgstr "Svetainės Opengraph paveikslėlis"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
-msgid "Write here a short description of your first course"
+msgid ""
+"Welcome on your course's home page. It's still empty for now. Click on "
+"\"<b>New</b>\" to write your first course."
 msgstr ""
 
 #. module: website_slides
 #. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "What does"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "What types of documents do we support?"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_invite__sub_model_object_field
+msgid ""
+"When a relationship field is selected as first field, this field lets you "
+"select the target field within the destination document model (sub-model)."
+msgstr ""
+"Kai santykio laukas yra  pasirinktas kaip pirmasis laukas, šis laukas "
+"leidžia jums pasirinkti tikslinį lauką tikslo dokumento modelyje ar "
+"submodelyje."
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_invite__sub_object
+msgid ""
+"When a relationship field is selected as first field, this field shows the "
+"document model the relationship goes to."
+msgstr ""
+"Kai sąryšio laukas yra pasirinktas kaip pirmas laukas, šis laukas nurodo to "
+"sąryšio dokumento modelį."
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "When using local files, we only support PDF files."
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid ""
+"With Quizzes you can keep your students focused and motivated by answering "
+"some questions and gaining some karma points"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
@@ -3535,10 +5281,48 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
+#: code:addons/website_slides/static/src/js/slides_course_enroll_email.js:0
+#: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
+#, python-format
+msgid "Yes"
+msgstr "Taip"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid ""
+"You can add <b>comments</b> on answers. This will be visible with the "
+"results if the user select this answer."
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "You can add questions to this quiz in the 'Quiz' tab."
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid ""
+"You can either upload a file from your computer or insert a Google Drive "
+"link."
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
 msgid "You can not upload password protected file."
 msgstr "Negalite įkelti failo, kuris yra apsaugotas slaptažodžiu."
+
+#. module: website_slides
+#: code:addons/website_slides/controllers/main.py:0
+#, python-format
+msgid "You cannot add tags to this course."
+msgstr ""
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
@@ -3594,15 +5378,20 @@ msgid "You have already joined this channel"
 msgstr ""
 
 #. module: website_slides
-#. openerp-web
-#: code:addons/website_slides/static/src/js/slides_slide_like.js:0
-#, python-format
-msgid "You have already voted for this lesson"
+#: model:mail.template,subject:website_slides.mail_template_slide_channel_invite
+msgid "You have been invited to join {{ object.channel_id.name }}"
 msgstr ""
 
 #. module: website_slides
-#: model:mail.template,subject:website_slides.mail_template_slide_channel_invite
-msgid "You have been invited to join ${object.channel_id.name}"
+#: code:addons/website_slides/models/slide_channel.py:0
+#, python-format
+msgid "You have to sign in before"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_all
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_home
+msgid "You may now participate in our eLearning."
 msgstr ""
 
 #. module: website_slides
@@ -3620,33 +5409,77 @@ msgid "You must be member of this course to vote"
 msgstr ""
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_main
+msgid "You need to join this course to access \""
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
 msgid "You're enrolled"
 msgstr ""
 
 #. module: website_slides
-#. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__video_source_type__youtube
+msgid "YouTube"
+msgstr "YouTube"
+
+#. module: website_slides
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__youtube_video
+msgid "YouTube Video"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
+msgid "Your"
+msgstr "Jūsų"
+
+#. module: website_slides
+#: model:slide.channel.tag.group,name:website_slides.slide_channel_tag_group_level
+msgid "Your Level"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.actions.act_window,help:website_slides.slide_channel_action_overview
+#: model_terms:ir.actions.act_window,help:website_slides.slide_channel_action_report
+msgid ""
+"Your eLearning platform starts here!<br>\n"
+"                    Upload content, set up rewards, manage attendees..."
+msgstr ""
+
+#. module: website_slides
+#: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
-msgid "Youtube Link"
+msgid ""
+"Your file could not be found on Google Drive, please check the link and/or "
+"privacy settings"
 msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
-msgid "Youtube Video URL"
-msgstr "Youtube video nuoroda"
+msgid ""
+"Your first section is created, now it's time to add lessons to your course. "
+"Click on <b>Add Content</b> to upload a document, create an article or link "
+"a video."
+msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_slide__document_id
-msgid "Youtube or Google Document ID"
-msgstr "Youtube arba Google Document ID"
+#: code:addons/website_slides/models/slide_slide.py:0
+#, python-format
+msgid ""
+"Your video could not be found on Vimeo, please check the link and/or privacy"
+" settings"
+msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_slide__url
-msgid "Youtube or Google Document URL"
-msgstr "Youtube arba Google Document nuoroda"
+#: code:addons/website_slides/models/slide_slide.py:0
+#: code:addons/website_slides/models/slide_slide.py:0
+#, python-format
+msgid ""
+"Your video could not be found on YouTube, please check the link and/or "
+"privacy settings"
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.achievement_card
@@ -3654,8 +5487,9 @@ msgid "achieved"
 msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_profile_small
-msgid "bg-200"
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_all
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_home
+msgid "and join this Community"
 msgstr ""
 
 #. module: website_slides
@@ -3672,8 +5506,68 @@ msgid "by email."
 msgstr ""
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
-msgid "e.g. How to grow your business with Odoo?"
+#, python-format
+msgid "e.g \"https://drive.google.com/file/...\""
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "e.g \"https://www.youtube.com/watch?v=ebBez6bcSEc\""
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "e.g \"www.youtube.com/watch?v=ebBez6bcSEc\""
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_tag_tree
+msgid "e.g 'HowTo'"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "e.g. \"15\""
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+#, python-format
+msgid "e.g. \"Computer Science for kids\""
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_management.xml:0
+#, python-format
+msgid "e.g. \"Introduction\""
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
+#, python-format
+msgid "e.g. \"Which animal cannot fly?\""
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
+#, python-format
+msgid ""
+"e.g. Common tasks for a computer scientist is asking the right questions. In"
+" this course, you will study those topics with activities about mathematics,"
+" science and logic."
 msgstr ""
 
 #. module: website_slides
@@ -3685,8 +5579,18 @@ msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
-msgid "e.g. https://www.odoo.com"
-msgstr "pvz. https://www.odoo.com"
+msgid "e.g. Setting up your computer"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_question_view_form
+msgid "e.g. What powers a computer ?"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
+msgid "e.g. Your Level"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_root
@@ -3701,9 +5605,45 @@ msgid "eLearning Courses"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.actions.act_window,name:website_slides.slide_channel_action_overview
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
 msgid "eLearning Overview"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "for 'Private' videos and similar to"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "for public ones."
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "https://drive.google.com/file/d/ABC/view?usp=sharing"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "https://vimeo.com/558907333/30da9ff3d8"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "https://vimeo.com/558907555"
 msgstr ""
 
 #. module: website_slides
@@ -3715,18 +5655,52 @@ msgid "login"
 msgstr "prisijungimas"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
-msgid "mr-1"
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid ""
+"mean? The Vimeo \"Private\" privacy setting means it is a video which can be viewed only by the users with the link to it.\n"
+"                                    Your video will never come up in the search results nor on your channel."
 msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
-msgid "reviews"
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid ""
+"means? The YouTube \"unlisted\" means it is a video which can be viewed only"
+" by the users with the link to it. Your video will never come up in the "
+"search results nor on your channel."
 msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_course_unsubscribe.js:0
+#, python-format
+msgid "or Leave the course"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
+#, python-format
+msgid "sign in"
+msgstr "prisijungti"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_card
 msgid "steps"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.join_course_link
+msgid "to access resources"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
+msgid "to contact responsible."
 msgstr ""
 
 #. module: website_slides
@@ -3745,6 +5719,14 @@ msgid "to share this"
 msgstr ""
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "unlisted"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training_category
 #: model_terms:ir.ui.view,arch_db:website_slides.user_quickkarma_card
@@ -3758,6 +5740,11 @@ msgstr ""
 #, python-format
 msgid "your-friend@domain.com"
 msgstr "your-friend@domain.com"
+
+#. module: website_slides
+#: model:mail.template,subject:website_slides.slide_template_shared
+msgid "{{ user.name }} shared a {{ object.slide_category }} with you!"
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav

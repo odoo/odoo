@@ -1,19 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * base_sparse_field
+# 	* base_sparse_field
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2018
-# Manami Hashi <manami@roomsfor.hk>, 2018
-# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
+# Noma Yuki, 2022
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2017-07-17 09:04+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,12 +22,17 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_sparse_field
+#: model:ir.model,name:base_sparse_field.model_base
+msgid "Base"
+msgstr "ベース"
+
+#. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__boolean
 msgid "Boolean"
 msgstr "ブール値"
 
 #. module: base_sparse_field
-#: code:addons/base_sparse_field/models/models.py:25
+#: code:addons/base_sparse_field/models/models.py:0
 #, python-format
 msgid "Changing the storing system for field \"%s\" is not allowed."
 msgstr "システムに保存されている項目%s は変更が許されていません。"
@@ -55,7 +60,7 @@ msgstr "データ"
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__display_name
 msgid "Display Name"
-msgstr "表示名"
+msgstr "名前を表示"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_ir_model_fields__ttype
@@ -107,9 +112,9 @@ msgid "Last Updated on"
 msgstr "最終更新日"
 
 #. module: base_sparse_field
-#: selection:sparse_fields.test,selection:0
+#: model:ir.model.fields.selection,name:base_sparse_field.selection__sparse_fields_test__selection__one
 msgid "One"
-msgstr ""
+msgstr "1"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__partner
@@ -117,7 +122,7 @@ msgid "Partner"
 msgstr "取引先"
 
 #. module: base_sparse_field
-#: code:addons/base_sparse_field/models/models.py:27
+#: code:addons/base_sparse_field/models/models.py:0
 #, python-format
 msgid "Renaming sparse field \"%s\" is not allowed"
 msgstr "スパース項目 %s のりネームは許されていません。"
@@ -133,97 +138,22 @@ msgid "Serialization Field"
 msgstr "シリアライズ項目"
 
 #. module: base_sparse_field
-#: code:addons/base_sparse_field/models/models.py:39
+#: code:addons/base_sparse_field/models/models.py:0
 #, python-format
-msgid "Serialization field `%s` not found for sparse field `%s`!"
-msgstr "シリアル化フィールド`%s`  はスパースフィールド`%s`にありません!"
+msgid "Serialization field %r not found for sparse field %s!"
+msgstr "散在する領域%sのシリアル化フィールド%rが見つかりません！"
 
 #. module: base_sparse_field
 #: model:ir.model,name:base_sparse_field.model_sparse_fields_test
 msgid "Sparse fields Test"
-msgstr ""
+msgstr "散在する領域のテスト"
 
 #. module: base_sparse_field
-#: selection:sparse_fields.test,selection:0
+#: model:ir.model.fields.selection,name:base_sparse_field.selection__sparse_fields_test__selection__two
 msgid "Two"
-msgstr ""
+msgstr "2"
 
 #. module: base_sparse_field
-#: selection:ir.model.fields,ttype:0
-msgid "binary"
-msgstr ""
-
-#. module: base_sparse_field
-#: selection:ir.model.fields,ttype:0
-msgid "boolean"
-msgstr ""
-
-#. module: base_sparse_field
-#: selection:ir.model.fields,ttype:0
-msgid "char"
-msgstr ""
-
-#. module: base_sparse_field
-#: selection:ir.model.fields,ttype:0
-msgid "date"
-msgstr ""
-
-#. module: base_sparse_field
-#: selection:ir.model.fields,ttype:0
-msgid "datetime"
-msgstr ""
-
-#. module: base_sparse_field
-#: selection:ir.model.fields,ttype:0
-msgid "float"
-msgstr ""
-
-#. module: base_sparse_field
-#: selection:ir.model.fields,ttype:0
-msgid "html"
-msgstr ""
-
-#. module: base_sparse_field
-#: selection:ir.model.fields,ttype:0
-msgid "integer"
-msgstr ""
-
-#. module: base_sparse_field
-#: selection:ir.model.fields,ttype:0
-msgid "many2many"
-msgstr ""
-
-#. module: base_sparse_field
-#: selection:ir.model.fields,ttype:0
-msgid "many2one"
-msgstr ""
-
-#. module: base_sparse_field
-#: selection:ir.model.fields,ttype:0
-msgid "monetary"
-msgstr ""
-
-#. module: base_sparse_field
-#: selection:ir.model.fields,ttype:0
-msgid "one2many"
-msgstr ""
-
-#. module: base_sparse_field
-#: selection:ir.model.fields,ttype:0
-msgid "reference"
-msgstr ""
-
-#. module: base_sparse_field
-#: selection:ir.model.fields,ttype:0
-msgid "selection"
-msgstr ""
-
-#. module: base_sparse_field
-#: selection:ir.model.fields,ttype:0
+#: model:ir.model.fields.selection,name:base_sparse_field.selection__ir_model_fields__ttype__serialized
 msgid "serialized"
-msgstr ""
-
-#. module: base_sparse_field
-#: selection:ir.model.fields,ttype:0
-msgid "text"
-msgstr ""
+msgstr "シリアル化された"

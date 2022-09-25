@@ -3,20 +3,22 @@
 # 	* website_sale_comparison
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Arminas Grigonis <arminas@versada.lt>, 2019
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2019
-# Silvija Butko <silvija.butko@gmail.com>, 2019
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2019
-# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2022
+# Silvija Butko <silvija.butko@gmail.com>, 2022
+# Arminas Grigonis <arminas@versada.lt>, 2022
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2022
+# Linas Versada <linaskrisiukenas@gmail.com>, 2022
+# Arunas V. <arunas@devoro.com>, 2022
+# Jonas Zinkevicius <jozi@odoo.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
+"PO-Revision-Date: 2017-07-17 09:13+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,6 +32,8 @@ msgid ""
 "<i class=\"fa fa-chevron-circle-down o_product_comparison_collpase\" "
 "role=\"img\" aria-label=\"Collapse\" title=\"Collapse\"/>"
 msgstr ""
+"<i class=\"fa fa-chevron-circle-down o_product_comparison_collpase\" "
+"role=\"img\" aria-label=\"Collapse\" title=\"Collapse\"/>"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.recommended_product
@@ -38,17 +42,17 @@ msgstr "<i class=\"fa fa-exchange\"/>Palyginti"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
-msgid "<i class=\"fa fa-shopping-cart\"/>&amp;nbsp;Add to Cart"
-msgstr "<i class=\"fa fa-shopping-cart\"/>&amp;nbsp;Pridėti į krepšelį"
+msgid "<i class=\"fa fa-shopping-cart mr-2\"/>Add to Cart"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_product
 msgid "<i class=\"fa fa-trash\" role=\"img\" aria-label=\"Remove\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-trash\" role=\"img\" aria-label=\"Remove\"/>"
 
 #. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_add_to_compare
-msgid "<span class=\"fa fa-exchange\"/> Add to compare"
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
+msgid "<span class=\"fa fa-exchange mr-2\"/>Compare"
 msgstr ""
 
 #. module: website_sale_comparison
@@ -60,6 +64,11 @@ msgstr "<span class=\"h3\">Siūlomos alternatyvos:</span>"
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "<strong>Price:</strong>"
 msgstr "<strong>Kaina:</strong>"
+
+#. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
+msgid "<strong>x</strong>"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model:ir.actions.act_window,name:website_sale_comparison.product_attribute_category_action
@@ -82,7 +91,7 @@ msgstr "Kategorijos pavadinimas"
 #: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.add_to_compare
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_add_to_compare
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
 #, python-format
 msgid "Compare"
 msgstr "Palyginti"
@@ -133,6 +142,7 @@ msgstr "Paskutinį kartą atnaujinta"
 #. module: website_sale_comparison
 #. openerp-web
 #: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #: model:ir.model,name:website_sale_comparison.model_product_product
 #, python-format
 msgid "Product"
@@ -163,7 +173,7 @@ msgstr "Produkto paveikslėlis"
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__attribute_ids
 msgid "Related Attributes"
-msgstr ""
+msgstr "Susiję atributai"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_product
@@ -191,7 +201,7 @@ msgstr "Parduotuvės palyginimas"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
-msgid "Specifications for"
+msgid "Specifications"
 msgstr "Specifikacijos"
 
 #. module: website_sale_comparison
@@ -202,6 +212,7 @@ msgstr "Nekategorizuotas"
 
 #. module: website_sale_comparison
 #. openerp-web
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #, python-format
 msgid "Warning"

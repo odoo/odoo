@@ -1,19 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * bus
+# 	* bus
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Matus Krnac <matus.krnac@gmail.com>, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
-# gebri <gebri@inmail.sk>, 2018
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: gebri <gebri@inmail.sk>, 2018\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2016-08-05 12:57+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,14 +20,14 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: bus
-#: sql_constraint:bus.presence:0
+#: model:ir.model.constraint,message:bus.constraint_bus_presence_bus_user_presence_unique
 msgid "A user can only have one IM status."
 msgstr "Užívateľ môže mať iba jeden IM status."
 
 #. module: bus
-#: selection:bus.presence,status:0
+#: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__away
 msgid "Away"
-msgstr "Preč"
+msgstr "Neprítomný"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__channel
@@ -39,7 +37,7 @@ msgstr "Kanál"
 #. module: bus
 #: model:ir.model,name:bus.model_bus_bus
 msgid "Communication Bus"
-msgstr ""
+msgstr "Komunikačná zbernica"
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_partner
@@ -60,7 +58,7 @@ msgstr "Vytvorené"
 #: model:ir.model.fields,field_description:bus.field_bus_bus__display_name
 #: model:ir.model.fields,field_description:bus.field_bus_presence__display_name
 msgid "Display Name"
-msgstr "Zobrazovaný Názov"
+msgstr "Zobrazovaný názov"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__id
@@ -79,7 +77,7 @@ msgstr "IM status"
 #: model:ir.model.fields,field_description:bus.field_bus_bus____last_update
 #: model:ir.model.fields,field_description:bus.field_bus_presence____last_update
 msgid "Last Modified on"
-msgstr "Posledná modifikácia"
+msgstr "Posledná úprava"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence__last_poll
@@ -107,14 +105,29 @@ msgid "Message"
 msgstr "Správa"
 
 #. module: bus
-#: selection:bus.presence,status:0
+#: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__offline
 msgid "Offline"
 msgstr "Offline"
 
 #. module: bus
-#: selection:bus.presence,status:0
+#: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__online
 msgid "Online"
 msgstr "Online"
+
+#. module: bus
+#. openerp-web
+#: code:addons/bus/static/src/js/web_client_bus.js:0
+#: code:addons/bus/static/src/js/web_client_bus.js:0
+#, python-format
+msgid "Refresh"
+msgstr "Obnoviť"
+
+#. module: bus
+#. openerp-web
+#: code:addons/bus/static/src/js/web_client_bus.js:0
+#, python-format
+msgid "The page appears to be out of date."
+msgstr "Zdá sa, že stránka je zastaraná."
 
 #. module: bus
 #: model:ir.model,name:bus.model_bus_presence
@@ -125,10 +138,10 @@ msgstr "Užívateľova prítomnosť"
 #: model:ir.model,name:bus.model_res_users
 #: model:ir.model.fields,field_description:bus.field_bus_presence__user_id
 msgid "Users"
-msgstr "Používatelia"
+msgstr "Užívatelia"
 
 #. module: bus
-#: code:addons/bus/controllers/main.py:41
+#: code:addons/bus/controllers/main.py:0
 #, python-format
 msgid "bus.Bus not available in test mode"
-msgstr ""
+msgstr "bus.Bus nie je dostupný v testovacom móde"

@@ -1,24 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_event_track
+# 	* website_event_track
 # 
 # Translators:
-# SHIMIZU Taku <shimizu.taku@gmail.com>, 2018
-# Martin Trigaux, 2018
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2018
-# Manami Hashi <manami@roomsfor.hk>, 2018
-# NOKA Shigekazu <shigekazu.noka@gmail.com>, 2018
-# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2018
-# kent_ocean <ke.tanabe@gmail.com>, 2018
-# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018
-# 城谷 龍弥 <tatsuya.shirotani@pro-spire.co.jp>, 2018
+# 江口和志 <sandwhale1010@gmail.com>, 2022
+# ook rio <riokoko5@gmail.com>, 2022
+# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2022
+# Hau Dao <hau@quartile.co>, 2022
+# NANIWA Masahiro <naniwa.masahiro@gmail.com>, 2022
+# 江口和志 <k_eguchi@enzantrades.co.jp>, 2022
+# Manami Hashi <manami@roomsfor.hk>, 2022
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
+# Ryoko Tsuda <ryoko@quartile.co>, 2022
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
+# Martin Trigaux, 2022
+# Noma Yuki, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: 城谷 龍弥 <tatsuya.shirotani@pro-spire.co.jp>, 2018\n"
+"POT-Creation-Date: 2022-02-11 14:35+0000\n"
+"PO-Revision-Date: 2016-08-05 13:12+0000\n"
+"Last-Translator: Noma Yuki, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,73 +31,191 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_event_track
-#: model:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
-msgid ""
-"<?xml version=\"1.0\"?>\n"
-"<div>\n"
-"    Dear ${object.partner_name or ''}<br/>\n"
-"    We are pleased to inform you that your proposal ${object.name} has been accepted and confirmed for the event ${object.event_id.name}.\n"
-"    <br/>\n"
-"    You will find more details here:\n"
-"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"        <a href=\"/event/${object.event_id.id}/\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
-"            View Event\n"
-"        </a>\n"
-"    </div>\n"
-"    <br/><br/>\n"
-"    Thank you,\n"
-"</div>\n"
-"            "
+#: code:addons/website_event_track/models/website.py:0
+#, python-format
+msgid "\"Events App Name\" field is required."
+msgstr "イベントアプリ名'フィールドは必須です。"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlist_visitor_count
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__event_track_wishlisted_count
+msgid "# Wishlisted"
+msgstr "＃ウィッシュリスト"
+
+#. module: website_event_track
+#: code:addons/website_event_track/models/event_track.py:0
+#, python-format
+msgid "%(name)s from %(company)s"
 msgstr ""
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.track_view
-msgid "<b>Date</b><br/>"
+#: code:addons/website_event_track/models/event_track.py:0
+#, python-format
+msgid "%(name)s, %(function)s at %(company)s"
+msgstr ""
+
+#. module: website_event_track
+#: code:addons/website_event_track/models/website.py:0
+#, python-format
+msgid "%s Events"
+msgstr "%sイベント"
+
+#. module: website_event_track
+#: code:addons/website_event_track/controllers/webmanifest.py:0
+#, python-format
+msgid "%s Online Events Application"
+msgstr "%sオンラインイベントアプリケーション"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "&amp;bull;"
+msgstr "&amp;bull;"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+msgid "<b>Contact Information</b>"
 msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Mail</b>:"
-msgstr ""
+msgstr "<b>メール</b>:"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Phone</b>:"
-msgstr ""
+msgstr "<b>電話</b>:"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Proposed By</b>:"
-msgstr ""
+msgstr "<b>提案者</b>:"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
-msgid "<b>Speakers Biography</b>:"
+msgid "<b>Speaker Biography</b>:"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "<b>Speaker Profile</b>"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "<b>Talk Intro</b>"
 msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Talk Introduction</b>:"
-msgstr ""
+msgstr "<b>トーク紹介</b>:"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.track_view
+#: model:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
 msgid ""
-"<br/>\n"
-"                            <b>Duration</b><br/>"
+"<div>\n"
+"    Dear <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br/>\n"
+"    We are pleased to inform you that your proposal <t t-out=\"object.name or ''\">What This Event Is All About</t> has been accepted and confirmed for the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>.\n"
+"    <br/>\n"
+"    You will find more details here:\n"
+"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"            View Talk\n"
+"        </a>\n"
+"    </div>\n"
+"    <br/><br/>\n"
+"    Thank you,\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br/>\n"
+"        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>"
 msgstr ""
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.track_view
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_card
+msgid "<i class=\"fa fa-ban mr-2\"/>Unpublished"
+msgstr "<i class=\"fa fa-ban mr-2\"/>未公開"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_search
+msgid "<i class=\"fa fa-bell mr-2 text-muted\"/> Favorite Talks"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "<i class=\"fa fa-folder-open\"/> Favorites"
+msgstr "<i class=\"fa fa-folder-open\"/>お気に入り</i>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "<span class=\"d-none d-md-block ml-2\">&amp;bull;</span>"
+msgstr "<span class=\"d-none d-md-block ml-2\">&amp;bull;</span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
 msgid ""
-"<br/>\n"
-"                            <b>Location</b><br/>"
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
+"                                        <i class=\"fa fa-close mr4\" role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
+"                                        <span class=\"o_wetrack_proposal_error_message\"/>\n"
+"                                    </span>"
 msgstr ""
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.agenda
-msgid "<span id=\"search_number\">0</span> Found"
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"<span class=\"o_wetrack_proposal_label_content\">Talk Introduction</span>\n"
+"                                            <span>*</span>"
 msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"<span class=\"o_wetrack_proposal_label_content\">Talk Title</span>\n"
+"                                            <span>*</span>"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+msgid ""
+"<span for=\"contact_name\">Name</span>\n"
+"                    <span>*</span>"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
+msgid "<span id=\"search_number\" class=\"mr-1\">0</span>Results"
+msgstr "<span id=\"search_number\" class=\"mr-1\">0</span>結果"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "<span> - </span>"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "<span>&amp;nbsp;at&amp;nbsp;</span>"
+msgstr "<span>＆nbsp; at＆nbsp;</span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
+msgid "<span>New track proposal</span>"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "<span>hours</span>"
+msgstr "<span>時間</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -101,23 +223,19 @@ msgid ""
 "<strong>Lightning Talks</strong>. These are 30 minutes talks on many\n"
 "                                    different topics. Most topics are accepted in lightning talks."
 msgstr ""
+"<strong>ライトニングトーク</strong>。これらは、さまざまなトピックに関する30分の講演です。ほとんどのトピックはライトニングトークで受け入れられます。"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_social
-msgid "<strong>Participate on Twitter</strong>"
-msgstr "<strong>Twitterで参加</strong>"
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "<strong>Location:</strong>"
+msgstr "<strong>ロケーション:</strong>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "<strong>Regular Talks</strong>. These are standard talks with slides,\n"
 "                                    alocated in slots of 60 minutes."
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track7
-msgid "A technical explanation of how to use computer design apps"
-msgstr ""
+msgstr "<strong>定期的な話し合い</strong>。これらは、60分のスロットに配置されたスライド付きの標準的なトークです。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__kanban_state
@@ -127,16 +245,10 @@ msgid ""
 " * Red indicates something is preventing the progress of this track\n"
 " * Green indicates the track is ready to be pulled to the next stage"
 msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.track_view
-msgid "About The Author"
-msgstr ""
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_done
-msgid "Accepted Stage"
-msgstr ""
+"トラックのカンバンステータスは、トラックに影響を与える特別な状況を示します。\n"
+"*灰色はデフォルトの状況です\n"
+"*赤は何かがこのトラックの進行を妨げていることを示します\n"
+"*緑はトラックを次のステージにプルする準備ができていることを示します"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_needaction
@@ -154,40 +266,64 @@ msgid "Activities"
 msgstr "活動"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "例外の活動を示す文字装飾"
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_state
 msgid "Activity State"
 msgstr "活動状態"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "活動種別アイコン"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+msgid ""
+"Add a description to help your coworkers understand the meaning and purpose "
+"of the stage."
+msgstr "同僚が理解できるようステージの意味と目的を説明してください。"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+msgid "Add a description..."
+msgstr "説明を追加..."
+
+#. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_stage_action
 msgid "Add a new stage in the task pipeline"
+msgstr "タスクパイプラインに新しいステージを追加します"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_tag
+msgid ""
+"Add tags to your tracks to help your attendees browse your event web pages."
 msgstr ""
 
 #. module: website_event_track
-#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track
-#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_from_event
-msgid "Add a new track"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track19
-msgid "Advanced lead management : tips and tricks from the fields"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track13
-msgid "Advanced reporting"
-msgstr ""
-
-#. module: website_event_track
-#: code:addons/website_event_track/models/event.py:97
+#: code:addons/website_event_track/models/event_event.py:0
 #, python-format
 msgid "Agenda"
 msgstr "議事"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_filter
-msgid "All Tags"
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "All Talks"
+msgstr "すべての講演"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
+msgid "Allow Track Proposals"
+msgstr "トラック提案を許可する"
+
+#. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid "Allow push notifications?"
 msgstr ""
 
 #. module: website_event_track
@@ -195,15 +331,23 @@ msgstr ""
 msgid ""
 "Allow video and audio recording of their\n"
 "                                    presentation, for publishing on our website."
-msgstr ""
+msgstr "当社のウェブサイトで公開するために、プレゼンテーションのビデオとオーディオの録音を許可します。"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlisted_by_default
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Always Wishlisted"
+msgstr "常にウィッシュリストに掲載"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage2
 msgid "Announced"
-msgstr ""
+msgstr "告知"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#. openerp-web
+#: code:addons/website_event_track/static/src/xml/event_track_proposal_templates.xml:0
+#, python-format
 msgid "Application"
 msgstr "アプリケーション"
 
@@ -213,29 +357,85 @@ msgid "Archived"
 msgstr "アーカイブ済"
 
 #. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_visitor__is_blacklisted
+msgid ""
+"As key track cannot be un-favorited, this field store the partner choice to "
+"remove the reminder for key tracks."
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "添付数"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__allowed_track_tag_ids
 msgid "Available Track Tags"
-msgstr ""
+msgstr "利用可能なトラックタグ"
 
 #. module: website_event_track
-#: model:event.sponsor.type,name:website_event_track.event_sponsor_type1
-msgid "Bronze"
-msgstr "ブロンズ"
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_biography
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Biography"
+msgstr "略歴"
+
+#. module: website_event_track
+#: code:addons/website_event_track/models/event_track_stage.py:0
+#: model:event.track.stage,legend_blocked:website_event_track.event_track_stage0
+#: model:event.track.stage,legend_blocked:website_event_track.event_track_stage1
+#: model:event.track.stage,legend_blocked:website_event_track.event_track_stage2
+#: model:event.track.stage,legend_blocked:website_event_track.event_track_stage3
+#: model:event.track.stage,legend_blocked:website_event_track.event_track_stage4
+#: model:event.track.stage,legend_blocked:website_event_track.event_track_stage5
+#, python-format
+msgid "Blocked"
+msgstr "ブロック済"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "Book your seats to the best talks"
+msgstr "最高の講演の席を予約する"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Book your talks"
+msgstr "あなたの話を予約する"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_url
+msgid "Button Target URL"
+msgstr "ボタンのターゲットURL"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_title
+msgid "Button Title"
+msgstr "ボタンのタイトル"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_delay
+msgid "Button appears"
+msgstr "ボタンが表示されます"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__is_website_cta_live
+msgid "CTA button is available"
+msgstr "CTAボタンが利用可能です"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Call for Proposals"
-msgstr ""
+msgstr "提案を求めます"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__can_publish
+msgid "Can Publish"
+msgstr "公開可能"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_cancel
 msgid "Canceled Stage"
-msgstr ""
+msgstr "取消済ステージ"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage5
@@ -243,19 +443,55 @@ msgid "Cancelled"
 msgstr "取消済"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Categories"
+msgstr "カテゴリ"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__category_id
+msgid "Category"
+msgstr "カテゴリ"
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__color
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__color
+msgid "Color"
+msgstr "色"
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__color
 msgid "Color Index"
 msgstr "カラーインデクス"
 
 #. module: website_event_track
-#: model:event.type,name:website_event_track.event_type_data_tracks
-msgid "Conference"
-msgstr "会議"
+#: code:addons/website_event_track/controllers/event_track.py:0
+#, python-format
+msgid "Coming soon"
+msgstr "近日公開"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_cards
+msgid "Coming soon ..."
+msgstr "近日公開 ..."
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__company_id
+msgid "Company"
+msgstr "会社"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_company_name
+msgid "Company Name"
+msgstr "会社名"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_res_config_settings
+msgid "Config Settings"
+msgstr "コンフィグ設定"
 
 #. module: website_event_track
 #: model:mail.template,subject:website_event_track.mail_template_data_track_confirmation
-msgid "Confirmation of ${object.name}"
+msgid "Confirmation of {{ object.name }}"
 msgstr ""
 
 #. module: website_event_track
@@ -264,26 +500,89 @@ msgid "Confirmed"
 msgstr "確認済"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__create_uid
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__create_uid
+#: code:addons/website_event_track/models/event_track.py:0
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_id
+#, python-format
+msgid "Contact"
+msgstr "連絡先"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Contact Details"
+msgstr "コンタクトの詳細"
+
+#. module: website_event_track
+#: code:addons/website_event_track/models/event_track.py:0
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__contact_email
+#, python-format
+msgid "Contact Email"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__contact_phone
+msgid "Contact Phone"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__contact_email
+msgid "Contact email is private and used internally"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+msgid "Contact me through a different email/phone"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__partner_id
+msgid "Contact of the track, may be different from speaker."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__contact_phone
+msgid "Contact phone is private and used internally"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_from_event
+msgid "Create a Track"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_location
+msgid "Create a Track Location"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_tag
+msgid "Create a Track Tag"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__create_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location__create_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__create_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__create_uid
-#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__create_uid
 msgid "Created by"
 msgstr "作成者"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__create_date
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__create_date
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__create_date
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location__create_date
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__create_date
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__create_date
-#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__create_date
 msgid "Created on"
 msgstr "作成日"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+msgid "Customer"
+msgstr "顧客"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -291,13 +590,20 @@ msgid "Date"
 msgstr "日付"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+msgid "Define labels explaining kanban state management."
+msgstr ""
+
+#. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_stage_action
 msgid ""
 "Define the steps that will be used in the event from the\n"
-"                creation of the track, up to the closing of the track.\n"
-"                You will use these stages in order to track the progress in\n"
-"                solving an event track."
+"            creation of the track, up to the closing of the track.\n"
+"            You will use these stages in order to track the progress in\n"
+"            solving an event track."
 msgstr ""
+"トラックの作成からトラックの終了まで、イベントで使用されるステップを定義します。\n"
+"これらのステージを使用して、イベントトラックの解決の進捗状況を追跡します。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -305,55 +611,60 @@ msgid "Delete"
 msgstr "削除"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track25
-msgid "Design contest (entire afternoon)"
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__description
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__description
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Description"
+msgstr "説明"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__partner_tag_line
+msgid "Description of the partner (name, function and company name)"
 msgstr ""
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track24
-msgid "Design contest (entire day)"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track6
-msgid "Detailed roadmap of our new products"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track11
-msgid "Discover our new design team"
-msgstr ""
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__display_name
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__display_name
-#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__display_name
 msgid "Display Name"
-msgstr "表示名"
+msgstr "名前を表示"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.track_view
-msgid "Documents"
-msgstr "ドキュメント"
+#: model:ir.model.fields,help:website_event_track.field_event_track__website_cta
+msgid ""
+"Display a Call to Action button to your Attendees while they watch your "
+"Track."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
+msgid "Done"
+msgstr "完了"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "Dropdown menu"
-msgstr ""
+msgstr "ドロップダウンメニュー"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__duration
 msgid "Duration"
-msgstr "日数"
+msgstr "期間"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "Edit Track"
-msgstr ""
+msgstr "トラックの編集"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_email
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+msgid "Email"
+msgstr "Eメール"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__mail_template_id
@@ -361,86 +672,74 @@ msgid "Email Template"
 msgstr "Eメールテンプレート"
 
 #. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid "Error"
+msgstr "エラー"
+
+#. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_event
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__event_id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__event_id
-#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__event_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Event"
 msgstr "イベント"
 
 #. module: website_event_track
-#: model:ir.model,name:website_event_track.model_event_type
-msgid "Event Category"
-msgstr "イベントカテゴリ"
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_form
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_tree
 msgid "Event Location"
-msgstr ""
+msgstr "イベントの場所"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.action_event_track_location
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_form
 msgid "Event Locations"
-msgstr ""
+msgstr "イベントの場所"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_proposal_menu_ids
-#: selection:website.event.menu,menu_type:0
+#: model:ir.model.fields.selection,name:website_event_track.selection__website_event_menu__menu_type__track_proposal
 msgid "Event Proposals Menus"
-msgstr ""
+msgstr "イベント提案メニュー"
 
 #. module: website_event_track
-#: model:ir.model,name:website_event_track.model_event_sponsor
-msgid "Event Sponsor"
-msgstr ""
-
-#. module: website_event_track
-#: model:ir.model,name:website_event_track.model_event_sponsor_type
-#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_sponsor_type_tree
-msgid "Event Sponsor Type"
-msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_sponsor_type_form
-msgid "Event Sponsor Types"
-msgstr "イベントスポンサータイプ"
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_sponsor_search
-msgid "Event Sponsors"
-msgstr "イベントスポンサー"
+#: model:ir.model,name:website_event_track.model_event_type
+msgid "Event Template"
+msgstr "イベントテンプレート"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tree
 msgid "Event Track"
-msgstr ""
+msgstr "イベントトラック"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_location
 msgid "Event Track Location"
-msgstr ""
+msgstr "イベントトラックの場所"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_stage
 msgid "Event Track Stage"
-msgstr ""
+msgstr "イベントトラックステージ"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_tag
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tag_form
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tag_tree
 msgid "Event Track Tag"
-msgstr ""
+msgstr "イベントトラックタグ"
 
 #. module: website_event_track
-#: model:ir.actions.act_window,name:website_event_track.action_event_sponsor_from_event
+#: model:ir.model,name:website_event_track.model_event_track_tag_category
+msgid "Event Track Tag Category"
+msgstr "イベントトラックタグカテゴリ"
+
+#. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.action_event_track
 #: model:ir.actions.act_window,name:website_event_track.action_event_track_from_event
-#: model:ir.ui.menu,name:website_event_track.menu_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_calendar
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Event Tracks"
@@ -448,31 +747,49 @@ msgstr "イベントトラック"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_menu_ids
-#: selection:website.event.menu,menu_type:0
+#: model:ir.model.fields.selection,name:website_event_track.selection__website_event_menu__menu_type__track
 msgid "Event Tracks Menus"
-msgstr ""
+msgstr "イベントトラックメニュー"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid "Fill this form to propose your talk."
-msgstr ""
+#: model:ir.model.fields,field_description:website_event_track.field_res_config_settings__events_app_name
+#: model:ir.model.fields,field_description:website_event_track.field_website__events_app_name
+msgid "Events App Name"
+msgstr "イベントアプリ名"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.agenda
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
+msgid "Events PWA"
+msgstr "イベントPWA"
+
+#. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
+#, python-format
+msgid "Favorite On"
+msgstr "お気に入りに"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "Favorites"
+msgstr "お気に入り"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
 msgid "Filter Tracks..."
-msgstr ""
+msgstr "フィルタートラック..."
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_social
-msgid ""
-"Find out what people see and say about this event,\n"
-"                        and join the conversation."
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Finished"
+msgstr "完了"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__fold
 msgid "Folded in Kanban"
-msgstr "かんばんで畳みこむ"
+msgstr "かんばんで折り込む"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_follower_ids
@@ -480,14 +797,19 @@ msgid "Followers"
 msgstr "フォロワー"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "フォロワー (チャネル)"
-
-#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "フォロワー (取引先)"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesomeのアイコン 例. fa-tasks"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_fully_accessible
+msgid "Fully accessible"
+msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -495,104 +817,103 @@ msgid "Future Activities"
 msgstr "将来の活動"
 
 #. module: website_event_track
-#: model:event.sponsor.type,name:website_event_track.event_sponsor_type3
-msgid "Gold"
-msgstr "ゴールド"
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "Get prepared and"
+msgstr "準備して"
 
 #. module: website_event_track
-#: selection:event.track,kanban_state:0
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__done
 msgid "Green"
 msgstr "緑"
 
 #. module: website_event_track
-#: selection:event.track,kanban_state:0
-msgid "Grey"
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__legend_done
+msgid "Green Kanban Label"
 msgstr ""
 
 #. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__normal
+msgid "Grey"
+msgstr "グレー"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__legend_normal
+msgid "Grey Kanban Label"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Group By"
 msgstr "グループ化"
 
 #. module: website_event_track
-#: selection:event.track,priority:0
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__has_message
+msgid "Has Message"
+msgstr "メッセージあり"
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__2
 msgid "High"
 msgstr "高"
 
 #. module: website_event_track
-#: selection:event.track,priority:0
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__3
 msgid "Highest"
 msgstr "最高"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track21
-msgid "House of World Cultures"
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid "Home page"
+msgstr "ホームページ"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+msgid "How can our team get in touch with you?"
 msgstr ""
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track18
-msgid "How to build your marketing strategy within a competitive environment"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track15
-msgid "How to communicate with your community"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track1
-msgid "How to design a new piece of furniture"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track4
-msgid "How to develop automated processes"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track16
-msgid "How to follow us on the social media"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track9
-msgid "How to improve your quality processes"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track2
-msgid "How to integrate hardware materials in your pieces of furniture"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track8
-msgid "How to optimize your sales, from leads to sales orders"
-msgstr ""
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__id
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location__id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__id
-#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__id
 msgid "ID"
 msgstr "ID"
 
 #. module: website_event_track
-#: model:ir.model.fields,help:website_event_track.field_event_track__message_unread
-msgid "If checked new messages require your attention."
-msgstr "チェックされている場合は、新しいメッセージに注意が必要です。"
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_exception_icon
+msgid "Icon"
+msgstr "アイコン"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "例外的なアクティビティを示唆するアイコン"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_stage__is_fully_accessible
+msgid ""
+"If checked, automatically publish tracks so that access links to customers "
+"are provided."
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "チェックされている場合は、新しいメッセージに注意が必要です。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_has_error
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
+msgstr "チェックした場合、一部のメッセージで配信エラーが発生しています。"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_stage__is_visible_in_agenda
+msgid "If checked, the related tracks will be visible in the frontend."
 msgstr ""
 
 #. module: website_event_track
@@ -600,17 +921,65 @@ msgstr ""
 msgid ""
 "If set an email will be sent to the customer when the track reaches this "
 "step."
+msgstr "設定すると、トラックがこのステップに到達したときにメールが顧客に送信されます。"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__wishlisted_by_default
+msgid ""
+"If set, the talk will be set as favorite for each attendee registered to the"
+" event."
 msgstr ""
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track__image
-msgid "Image"
-msgstr "画像"
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_image_url
+msgid "Image URL"
+msgstr "画像URL"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_card
+msgid "In"
+msgstr "に"
+
+#. module: website_event_track
+#: code:addons/website_event_track/models/event_track_stage.py:0
+#: model:event.track.stage,legend_normal:website_event_track.event_track_stage0
+#: model:event.track.stage,legend_normal:website_event_track.event_track_stage1
+#: model:event.track.stage,legend_normal:website_event_track.event_track_stage2
+#: model:event.track.stage,legend_normal:website_event_track.event_track_stage3
+#: model:event.track.stage,legend_normal:website_event_track.event_track_stage4
+#: model:event.track.stage,legend_normal:website_event_track.event_track_stage5
+#, python-format
+msgid "In Progress"
+msgstr "進行中"
+
+#. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
+#, python-format
+msgid "Install"
+msgstr "インストール"
+
+#. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
+#, python-format
+msgid "Install Application"
+msgstr "アプリケーションをインストールする"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Interactivity"
+msgstr "交流"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Introduction"
 msgstr "入門"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_website_cta_live
+msgid "Is CTA Live"
+msgstr "CTAライブですか"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_is_follower
@@ -619,8 +988,68 @@ msgstr "フォロー中　"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_published
-msgid "Is published"
-msgstr ""
+msgid "Is Published"
+msgstr "公開済"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_reminder_on
+msgid "Is Reminder On"
+msgstr "リマインダーはオンになっています"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_done
+msgid "Is Track Done"
+msgstr "トラックは完了しました"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_live
+msgid "Is Track Live"
+msgstr "トラックライブですか"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_soon
+msgid "Is Track Soon"
+msgstr "トラックはもうすぐです"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_today
+msgid "Is Track Today"
+msgstr "今日はトラックです"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_upcoming
+msgid "Is Track Upcoming"
+msgstr "トラックは今後"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__is_wishlisted
+msgid "Is Wishlisted"
+msgstr "ウィッシュリスト登録済"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__is_blacklisted
+msgid "Is reminder off"
+msgstr "リマインダーはオフです"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_function
+msgid "Job Position"
+msgstr "職位"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Job Title"
+msgstr "役職"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__legend_blocked
+msgid "Kanban Blocked Explanation"
+msgstr "かんばん ブロック説明"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__legend_normal
+msgid "Kanban Ongoing Explanation"
+msgstr "かんばん 進行中の説明"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__kanban_state
@@ -628,40 +1057,42 @@ msgid "Kanban State"
 msgstr "かんばん状態"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track23
-msgid "Key Success factors selling our furniture"
-msgstr ""
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__kanban_state_label
+msgid "Kanban State Label"
+msgstr "かんばんステータスラベル"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor____last_update
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__legend_done
+msgid "Kanban Valid Explanation"
+msgstr "かんばん 有効な説明"
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track____last_update
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location____last_update
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage____last_update
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag____last_update
-#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor____last_update
 msgid "Last Modified on"
 msgstr "最終更新日"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__write_uid
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__write_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__write_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location__write_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__write_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__write_uid
-#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__write_uid
 msgid "Last Updated by"
 msgstr "最終更新者"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__write_date
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__write_date
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__write_date
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location__write_date
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__write_date
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__write_date
-#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__write_date
 msgid "Last Updated on"
 msgstr "最終更新日"
 
@@ -671,65 +1102,60 @@ msgid "Late Activities"
 msgstr "遅れた活動"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track12
-msgid "Latest trends"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Live"
+msgstr "有効"
 
 #. module: website_event_track
-#: model:ir.ui.menu,name:website_event_track.menu_event_track_location
-msgid "Locations"
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_cards
+msgid "Live Now"
+msgstr "今を生きる"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__location_id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__name
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Location"
 msgstr "ロケーション"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__image_medium
-msgid "Logo"
-msgstr "ロゴ"
-
-#. module: website_event_track
-#: selection:event.track,priority:0
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__0
 msgid "Low"
 msgstr "低"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track31
-msgid "Lunch"
-msgstr "ランチ"
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta
+msgid "Magic Button"
+msgstr "マジックボタン"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "主な添付"
 
 #. module: website_event_track
-#: selection:event.track,priority:0
-msgid "Medium"
-msgstr "中"
-
-#. module: website_event_track
-#: model:ir.model.fields,help:website_event_track.field_event_sponsor__image_medium
-#: model:ir.model.fields,help:website_event_track.field_event_track__image
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_location
 msgid ""
-"Medium-sized image of this contact. It is automatically resized as a "
-"128x128px image, with aspect ratio preserved. Use this field in form views "
-"or some kanban views."
+"Manage from here the places where you organize your tracks (e.g. Rooms, "
+"Channels, ...)."
 msgstr ""
-"連絡先用の中間サイズのイメージ。それは自動的に保存され、アスペクト比は保存され、128x128pxのイメージにリサイズされます "
-"。フォームビューやかんばんビューのいくつかでこのフィールドを使用しています。"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__menu_id
-msgid "Menu"
-msgstr "メニュー"
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__1
+msgid "Medium"
+msgstr "媒体"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__menu_type
 msgid "Menu Type"
-msgstr ""
+msgstr "メニュータイプ"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "メッセージ配信エラー"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_ids
@@ -737,43 +1163,51 @@ msgid "Messages"
 msgstr "メッセージ"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track22
-msgid "Minimal but efficient design"
-msgstr ""
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_start_remaining
+msgid "Minutes before CTA starts"
+msgstr "CTA開始の数分前"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track30
-msgid "Morning break"
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__track_start_remaining
+msgid "Minutes before track starts"
+msgstr "トラック開始の数分前"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__track_start_relative
+msgid "Minutes compare to track start"
+msgstr "分はトラック開始と比較します"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__my_activity_date_deadline
+msgid "My Activity Deadline"
 msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
-msgid "My Activities"
-msgstr "自分の活動"
+msgid "My Tracks"
+msgstr "マイトラック"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track27
-msgid "My Company global presentation"
-msgstr ""
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__name
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
+msgid "Name"
+msgstr "氏名"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track20
-msgid "New Certification Program"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
+msgid "Name of your website's Events Progressive Web Application"
+msgstr "Webサイトのイベントの名前プログレッシブWebアプリケーション"
 
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_event_track
 msgid "New Track"
-msgstr ""
+msgstr "新しいトラック"
 
 #. module: website_event_track
-#: model:mail.message.subtype,description:website_event_track.mt_event_track
-msgid "New Track Created"
-msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
-msgid "New track proposal"
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
 msgstr ""
 
 #. module: website_event_track
@@ -792,9 +1226,32 @@ msgid "Next Activity Type"
 msgstr "次の活動タイプ"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.tracks
-msgid "No tracks found!"
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
+msgid "No Track Visitors yet!"
 msgstr ""
+
+#. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/js/website_event_track_proposal_form_tags.js:0
+#, python-format
+msgid "No results found"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_action_from_visitor
+msgid "No track favorited by this visitor"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "No track found."
+msgstr "トラックが見つかりません。"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_tag__color
+msgid "Note that colorless tags won't be available on the website."
+msgstr "無色のタグはウェブサイトでは利用できないことに注意してください。"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_needaction_counter
@@ -803,8 +1260,8 @@ msgstr "アクションの数"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_error_counter
-msgid "Number of error"
-msgstr ""
+msgid "Number of errors"
+msgstr "エラー数"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction_counter
@@ -814,7 +1271,7 @@ msgstr "アクションを必要とするメッセージの数"
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "配信エラーのメッセージ数"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_unread_counter
@@ -822,34 +1279,45 @@ msgid "Number of unread messages"
 msgstr "未読メッセージ件数"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor
-msgid "Our Sponsors"
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__partner_id
+msgid "Partner"
+msgstr "取引先"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_phone
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+msgid "Phone"
+msgstr "電話"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Picture"
+msgstr "画像"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Plan your experience by adding your favorites talks to your wishlist"
+msgstr "お気に入りのトークをウィッシュリストに追加して、体験を計画します"
+
+#. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
+#, python-format
+msgid "Please enter either a contact email address or a contact phone number."
 msgstr ""
 
 #. module: website_event_track
-#: selection:event.track,activity_state:0
-msgid "Overdue"
-msgstr "滞納"
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track14
-msgid "Partnership programs"
+#. openerp-web
+#: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
+#, python-format
+msgid "Please fill out the form correctly."
 msgstr ""
 
 #. module: website_event_track
-#: selection:event.track,activity_state:0
-msgid "Planned"
-msgstr "予定済"
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track3
-msgid "Portfolio presentation"
-msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.track_view
-msgid "Practical Info"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid "Previous page"
+msgstr "前のページ"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__priority
@@ -864,45 +1332,60 @@ msgstr "提案"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Proposals are closed!"
-msgstr ""
+msgstr "提案は締め切らせていただきました'"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__website_track_proposal
 msgid "Proposals on Website"
-msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.track_view
-msgid "Proposed by"
-msgstr ""
+msgstr "ウェブサイトでの提案"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage3
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Published"
 msgstr "公開済"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.track_view
-msgid ""
-"Put here the list of documents, like slides of\n"
-"                            the presentations. Remove the above t-if when\n"
-"                            it's implemented."
-msgstr ""
+#: code:addons/website_event_track/models/event_track_stage.py:0
+#: model:event.track.stage,legend_done:website_event_track.event_track_stage0
+#: model:event.track.stage,legend_done:website_event_track.event_track_stage1
+#: model:event.track.stage,legend_done:website_event_track.event_track_stage2
+#: model:event.track.stage,legend_done:website_event_track.event_track_stage3
+#: model:event.track.stage,legend_done:website_event_track.event_track_stage4
+#: model:event.track.stage,legend_done:website_event_track.event_track_stage5
+#, python-format
+msgid "Ready for Next Stage"
+msgstr "次ステージへの準備済"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track10
-msgid "Raising qualitive insights from your customers"
-msgstr ""
-
-#. module: website_event_track
-#: selection:event.track,kanban_state:0
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__blocked
 msgid "Red"
 msgstr "赤"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__legend_blocked
+msgid "Red Kanban Label"
+msgstr ""
+
+#. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage4
 msgid "Refused"
-msgstr "却下済"
+msgstr "否認"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__track_start_relative
+msgid "Relative time compared to track start (seconds)"
+msgstr "トラック開始と比較した相対時間(秒)"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__website_cta_start_remaining
+msgid "Remaining time before CTA starts (seconds)"
+msgstr "CTAが開始するまでの残り時間(秒)"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__track_start_remaining
+msgid "Remaining time before track starts (seconds)"
+msgstr "トラック開始までの残り時間(秒)"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__user_id
@@ -916,22 +1399,48 @@ msgid "Responsible User"
 msgstr "担当者"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track__location_id
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__name
-msgid "Room"
-msgstr "部屋"
-
-#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_seo_optimized
 msgid "SEO optimized"
+msgstr "SEO最適化"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS配信エラー"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "Schedule some tracks to get started"
 msgstr ""
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__sequence
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__sequence
+#. openerp-web
+#: code:addons/website_event_track/static/src/js/website_event_track_proposal_form_tags.js:0
+#, python-format
+msgid "Select categories"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__seo_name
+msgid "Seo name"
+msgstr "ソ名"
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__sequence
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__sequence
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__sequence
 msgid "Sequence"
 msgstr "付番"
+
+#. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
+#, python-format
+msgid "Set Favorite"
+msgstr "お気に入りを設定"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -939,85 +1448,53 @@ msgid "Show all records which has next action date is before today"
 msgstr "次のアクションの日付が今日より前のすべてのレコードを表示する"
 
 #. module: website_event_track
-#: model:event.sponsor.type,name:website_event_track.event_sponsor_type2
-msgid "Silver"
-msgstr "シルバー"
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
+msgid "Showcase Tracks"
+msgstr "トラック紹介"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_social
-msgid "Social Stream"
-msgstr "ソーシャルストリーム"
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "Speaker"
+msgstr "スピーカー"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Speaker Bio"
 msgstr ""
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_biography
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid "Speaker Biography"
-msgstr ""
-
-#. module: website_event_track
-#: code:addons/website_event_track/models/event_track.py:164
-#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_email
+#: code:addons/website_event_track/models/event_track.py:0
 #, python-format
 msgid "Speaker Email"
 msgstr "スピーカーEメール"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_name
-msgid "Speaker Name"
-msgstr "スピーカー名"
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__image
+msgid "Speaker Photo"
+msgstr "スピーカー写真"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_phone
-msgid "Speaker Phone"
-msgstr "スピーカー電話"
+#: model:ir.model.fields,help:website_event_track.field_event_track__partner_email
+msgid ""
+"Speaker email is used for public display and may vary from contact email"
+msgstr ""
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event_track.py:184
+#: model:ir.model.fields,help:website_event_track.field_event_track__partner_name
+msgid "Speaker name is used for public display and may vary from contact name"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__partner_phone
+msgid ""
+"Speaker phone is used for public display and may vary from contact phone"
+msgstr ""
+
+#. module: website_event_track
+#: code:addons/website_event_track/models/event_track.py:0
 #, python-format
 msgid "Speakers"
 msgstr "スピーカー"
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_event__sponsor_count
-msgid "Sponsor Count"
-msgstr ""
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__name
-msgid "Sponsor Type"
-msgstr ""
-
-#. module: website_event_track
-#: model:ir.actions.act_window,name:website_event_track.action_event_sponsor_type
-#: model:ir.ui.menu,name:website_event_track.menu_event_sponsor_type
-msgid "Sponsor Types"
-msgstr "スポンサータイプ"
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__url
-msgid "Sponsor Website"
-msgstr ""
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__partner_id
-msgid "Sponsor/Customer"
-msgstr ""
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__sponsor_type_id
-msgid "Sponsoring Type"
-msgstr ""
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_event__sponsor_ids
-#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_form
-msgid "Sponsors"
-msgstr "スポンサー"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__stage_id
@@ -1026,13 +1503,18 @@ msgid "Stage"
 msgstr "ステージ"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+msgid "Stage Description and Tooltips"
+msgstr "ステージ説明およびステータス定義"
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__name
 msgid "Stage Name"
 msgstr "ステージ名"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track28
-msgid "Status & Strategy"
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_card
+msgid "Starting now!"
 msgstr ""
 
 #. module: website_event_track
@@ -1043,64 +1525,98 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"活動に基づく状態\n"
+"延滞：期限は既に過ぎました\n"
+"当日：活動日は本日です\n"
+"予定：将来の活動。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Submission Agreement"
-msgstr ""
+msgstr "提出契約"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Submit Proposal"
+msgstr "提案を提出する"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_tag_line
+msgid "Tag Line"
 msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__name
-msgid "Tag"
-msgstr "タグ"
+msgid "Tag Name"
+msgstr "タグ名"
 
 #. module: website_event_track
-#: sql_constraint:event.track.tag:0
+#: model:ir.model.constraint,message:website_event_track.constraint_event_track_tag_name_uniq
 msgid "Tag name already exists !"
 msgstr "そのタグ名は既に使われています！"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__tag_ids
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__tag_ids
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_form
 msgid "Tags"
 msgstr "タグ"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid "Talk Introduction"
-msgstr ""
-
-#. module: website_event_track
-#: code:addons/website_event_track/models/event.py:102
+#: code:addons/website_event_track/models/event_event.py:0
 #, python-format
 msgid "Talk Proposals"
-msgstr ""
+msgstr "トークプロポーザル"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid "Talk Title"
-msgstr ""
+#. openerp-web
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid "Talk added to your Favorites"
+msgstr "お気に入りにトークを追加"
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:96
+#. openerp-web
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid "Talk already in your Favorites"
+msgstr "あなたのお気に入りですでに話してください"
+
+#. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid "Talk removed from your Favorites"
+msgstr "お気に入りから削除されたトーク"
+
+#. module: website_event_track
+#: code:addons/website_event_track/models/event_event.py:0
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside
 #, python-format
 msgid "Talks"
-msgstr ""
+msgstr "会談"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Talks Types"
+msgstr "トークタイプ"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+msgid "Task in progress. Click to block or set as done."
 msgstr ""
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_success
-msgid "Thank you for your proposal."
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+msgid "Task is blocked. Click to unblock or set as done."
 msgstr ""
+
+#. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/xml/event_track_proposal_templates.xml:0
+#, python-format
+msgid "Thank you for your proposal."
+msgstr "ご提案ありがとうございます。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_url
@@ -1108,27 +1624,48 @@ msgid "The full URL to access the document through the website."
 msgstr "ウェブサイトを介してドキュメントにアクセスするために完全なURLです。"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track17
-#: model:event.track,name:website_event_track.event_track29
-msgid "The new marketing strategy"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track5
-msgid "The new way to promote your creations"
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
+msgid ""
+"They will be created automatically once attendees start browsing your "
+"events."
 msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "This event does not accept proposals."
-msgstr ""
+msgstr "このイベントは提案を受け付けません。"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_website__app_icon
+msgid ""
+"This field holds the image used as mobile app icon on the website (PNG "
+"format)."
+msgstr "このフィールドには、Webサイトでモバイルアプリアイコンとして使用される画像(PNG形式)が保持されます。"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_res_config_settings__events_app_name
+#: model:ir.model.fields,help:website_event_track.field_website__events_app_name
+msgid "This fields holds the Event's Progressive Web App name."
+msgstr "このフィールドは、イベントのプログレッシブWebアプリ名を保持します。"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid ""
+"This page hasn't been saved for offline reading yet.<br/>Please check your "
+"network connection."
+msgstr "このページはまだオフラインで読むために保存されていません。<br/>ネットワーク接続を確認してください。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_stage__fold
 msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
-msgstr "このステージは、そのステージにレコードが表示されていないときに、かんばんのビューで折り畳まれます。"
+msgstr "このステージは、そのステージにレコードが表示されていないときに、かんばんのビューで折り込まれます。"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+msgid "This step is done. Click to block or set in progress."
+msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1136,6 +1673,8 @@ msgid ""
 "Timely release of presentation material (slides),\n"
 "                                    for publishing on our website."
 msgstr ""
+"当社のウェブサイトで公開するためのプレゼンテーション\n"
+"資料(スライド)のタイムリーなリリース。"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__name
@@ -1143,29 +1682,31 @@ msgid "Title"
 msgstr "タイトル"
 
 #. module: website_event_track
-#: selection:event.track,activity_state:0
-msgid "Today"
-msgstr "本日"
-
-#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Today Activities"
 msgstr "本日の活動"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__track_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "Track"
-msgstr ""
+msgstr "追跡"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track_visitor
+msgid "Track / Visitor Link"
+msgstr "トラック/ビジターリンク"
 
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_track_blocked
 msgid "Track Blocked"
-msgstr ""
+msgstr "トラックがブロックされました"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_count
 msgid "Track Count"
-msgstr ""
+msgstr "トラック数"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__date
@@ -1173,78 +1714,174 @@ msgid "Track Date"
 msgstr "トラック日"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track__description
-msgid "Track Description"
-msgstr ""
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__date_end
+msgid "Track End Date"
+msgstr "終了日を追跡する"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_form
-msgid "Track Proposals on Website"
+#: model:ir.ui.menu,name:website_event_track.menu_event_track_location
+msgid "Track Locations"
+msgstr "場所を追跡する"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_type_view_form_inherit_track
+msgid "Track Proposals Menu Item"
 msgstr ""
 
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_track_ready
 msgid "Track Ready"
-msgstr ""
+msgstr "トラックレディ"
 
 #. module: website_event_track
 #: model:mail.message.subtype,description:website_event_track.mt_track_ready
 msgid "Track Ready for Next Stage"
-msgstr ""
+msgstr "次のステージに向けてトラックの準備ができました"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_tree
 msgid "Track Stage"
-msgstr ""
+msgstr "トラックステージ"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.event_track_stage_action
 #: model:ir.ui.menu,name:website_event_track.event_track_stage_menu
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_search
 msgid "Track Stages"
-msgstr ""
+msgstr "トラックステージ"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.event_track_tag_category_action
+#: model:ir.ui.menu,name:website_event_track.event_track_tag_category_menu
+msgid "Track Tag Categories"
+msgstr "タグカテゴリを追跡する"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_form
+msgid "Track Tag Category"
+msgstr "トラックタグカテゴリ"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.action_event_track_tag
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__tracks_tag_ids
 #: model:ir.ui.menu,name:website_event_track.menu_event_track_tag
 msgid "Track Tags"
+msgstr "トラックタグ"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_list
+msgid "Track Tags Category"
+msgstr "トラックタグカテゴリ"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_form
+msgid "Track Visitor"
+msgstr "訪問者を追跡する"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.event_track_visitor_action
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__event_track_visitor_ids
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__event_track_visitor_ids
+#: model:ir.ui.menu,name:website_event_track.event_track_visitor_menu
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_list
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+msgid "Track Visitors"
+msgstr "トラック訪問者"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
+msgid ""
+"Track Visitors store statistics on your events, including how many times "
+"tracks have been wishlisted."
 msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__is_track_soon
+msgid "Track begins soon"
+msgstr "トラックはまもなく始まります"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__is_track_today
+msgid "Track begins today"
+msgstr "トラックは今日始まります"
 
 #. module: website_event_track
 #: model:mail.message.subtype,description:website_event_track.mt_track_blocked
 msgid "Track blocked"
+msgstr "トラックがブロックされました"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__duration
+msgid "Track duration in hours."
+msgstr "時間単位で期間を追跡します。"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__is_track_live
+msgid "Track has started and is ongoing"
+msgstr "トラックが開始され、進行中です"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__is_track_done
+msgid "Track is finished"
+msgstr "トラックが終了しました"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__is_track_upcoming
+msgid "Track is not yet started"
+msgstr "トラックはまだ開始されていません"
+
+#. module: website_event_track
+#: model:mail.template,name:website_event_track.mail_template_data_track_confirmation
+msgid "Track: Confirmation"
 msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_ids
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__track_ids
-#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_form
+#: model:ir.ui.menu,name:website_event_track.menu_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_graph
+#: model_terms:ir.ui.view,arch_db:website_event_track.website_visitor_view_form
 msgid "Tracks"
 msgstr "トラック"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_type_view_form_inherit_track
+msgid "Tracks Menu Item"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_type__website_track_proposal
 msgid "Tracks Proposals on Website"
-msgstr ""
+msgstr "ウェブサイトで提案を追跡する"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_from_event
 msgid ""
-"Tracks define the schedule of your event. These can be a talk, a round "
-"table, a meeting, etc."
+"Tracks define your event schedule. They can be talks, workshops or any "
+"similar activity."
 msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__website_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_type__website_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_form
 msgid "Tracks on Website"
-msgstr ""
+msgstr "ウェブサイト上のトラック"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "記録上の例外アクティビティのタイプ。"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Unpublished"
+msgstr "未公開"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_unread
@@ -1258,46 +1895,95 @@ msgid "Unread Messages Counter"
 msgstr "未読メッセージカウンター"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_social
-msgid "Use this tag:"
-msgstr ""
-
-#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "View Track"
+msgstr "トラックを見る"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_visible_in_agenda
+msgid "Visible in agenda"
 msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_published
 msgid "Visible on current website"
+msgstr "現在のウェブサイトで見える状態"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__visitor_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+msgid "Visitor"
+msgstr "訪問者"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlist_visitor_ids
+msgid "Visitor Wishlist"
+msgstr "ビジターウィッシュリスト"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.website_visitor_action_from_track
+msgid "Visitors Wishlist"
+msgstr "訪問者のウィッシュリスト"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.website_visitor_action_from_track
+msgid "Wait for visitors to add this track to their list of favorites"
 msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "We did not find any track matching your"
+msgstr "あなたに一致するトラックは見つかりませんでした"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "We require speakers to accept an agreement in which they commit to:"
-msgstr ""
+msgstr "講演者は、次のことを約束する合意に同意する必要があります。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "We will accept a broad range of\n"
-"                                presentations, from reports on academic and\n"
-"                                commercial projects to tutorials and case\n"
-"                                studies. As long as the presentation is\n"
-"                                interesting and potentially useful to the\n"
-"                                audience, it will be considered for\n"
-"                                inclusion in the programme."
+"                            presentations, from reports on academic and\n"
+"                            commercial projects to tutorials and case\n"
+"                            studies. As long as the presentation is\n"
+"                            interesting and potentially useful to the\n"
+"                            audience, it will be considered for\n"
+"                            inclusion in the programme."
 msgstr ""
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_success
+#. openerp-web
+#: code:addons/website_event_track/static/src/xml/event_track_proposal_templates.xml:0
+#, python-format
 msgid "We will evaluate your proposition and get back to you shortly."
-msgstr ""
+msgstr "私たちはあなたの提案を評価し、すぐにあなたに連絡します。"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website
+msgid "Website"
+msgstr "ウェブサイト"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_website__app_icon
+msgid "Website App Icon"
+msgstr "ウェブサイトアプリアイコン"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_website_event_menu
 msgid "Website Event Menu"
-msgstr ""
+msgstr "ウェブサイトイベントメニュー"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_image
+msgid "Website Image"
+msgstr "ウェブサイトの画像"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website_menu
+msgid "Website Menu"
+msgstr "ウェブサイトメニュー"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_message_ids
@@ -1308,6 +1994,11 @@ msgstr "ウェブサイトメッセージ"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_url
 msgid "Website URL"
 msgstr "ウェブサイトURL"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website_visitor
+msgid "Website Visitor"
+msgstr "ウェブサイト訪問者"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_message_ids
@@ -1332,41 +2023,120 @@ msgstr "ウェブサイトメタタイトル"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_og_img
 msgid "Website opengraph image"
+msgstr "ウェブサイトopengraph画像"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "What is your talk about?"
 msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid "Your Email"
-msgstr "Eメール"
+msgid ""
+"Who will give this talk? We will show this to attendees to showcase your "
+"talk."
+msgstr ""
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid "Your Name"
-msgstr "お名前"
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Wishlisted By"
+msgstr "ウィッシュリスト登録者"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid "Your Phone"
-msgstr "電話番号"
+#: model:ir.actions.act_window,name:website_event_track.event_track_action_from_visitor
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__event_track_wishlisted_ids
+msgid "Wishlisted Tracks"
+msgstr "ウィッシュリストにあるトラック"
 
 #. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
+#, python-format
+msgid "You cannot access this page."
+msgstr ""
+
+#. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid ""
+"You have to enable push notifications to get reminders for your favorite "
+"tracks."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid "You're offline!"
+msgstr "あなたはオフラインです'"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "a few seconds"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_card
+msgid "ago"
+msgstr "前"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "e.g. \"John Doe was born in...\""
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "e.g. \"This talk will be about...\""
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "e.g. Get Yours Now !"
+msgstr "例:今すぐ入手'"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_view_form_quick_create
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. Inspiring Business Talk"
-msgstr ""
+msgstr "例:刺激的なビジネストーク"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "e.g. http://www.example.com"
+msgstr "例:http://www.example.com"
+
+#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "hours"
 msgstr "時間"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.agenda
-msgid "talks"
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "minutes after track starts"
 msgstr ""
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.agenda
-#: model_terms:ir.ui.view,arch_db:website_event_track.tracks
-msgid "unpublished"
-msgstr "未公開"
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "register to your favorites talks now."
+msgstr "今すぐお気に入りのトークに登録してください。"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "search."
+msgstr "探す。"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "starts in"
+msgstr "で始まる"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "starts on"
+msgstr "に始まります"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
+msgid "tracks"
+msgstr "トラック"

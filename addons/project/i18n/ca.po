@@ -15,21 +15,21 @@
 # Arnau Ros, 2022
 # marcescu, 2022
 # Martin Trigaux, 2022
-# jabelchi, 2022
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
 # Quim - eccit <quim@eccit.com>, 2022
 # RGB Consulting <odoo@rgbconsulting.com>, 2022
 # Harcogourmet, 2022
 # oscaryuu, 2022
 # CristianCruzParra, 2022
+# jabelchi, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-30 06:06+0000\n"
+"POT-Creation-Date: 2022-09-02 08:11+0000\n"
 "PO-Revision-Date: 2016-08-05 13:08+0000\n"
-"Last-Translator: CristianCruzParra, 2022\n"
+"Last-Translator: jabelchi, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -661,6 +661,16 @@ msgstr ""
 "No es pot seleccionar un col·laborador més d'una vegada a l'accés al "
 "projecte de compartició. Si us plau suprimiu els duplicat(s) i torneu-ho a "
 "provar."
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"A personal stage cannot be linked to a project because it is only visible to"
+" its corresponding user."
+msgstr ""
+"Una etapa personal no pot enllaçar-se a un projecte perquè només és visible "
+"al seu usuari corresponent."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
@@ -1710,39 +1720,6 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 msgid "Define the steps your tasks move through from creation to completion."
 msgstr ""
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_project__privacy_visibility
-#: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
-msgid ""
-"People to whom this project and its tasks will be visible.\n"
-"\n"
-"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
-" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
-"\n"
-"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
-"\n"
-"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
-"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
-"\n"
-"When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks, but not edit them.\n"
-"When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n"
-"\n"
-"In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
-msgstr ""
-"Persones a les quals serà visible aquest projecte i les seves tasques.\n"
-"- Usuaris interns convidats: quan segueixen un projecte, els usuaris interns tindran accés a totes les seves tasques sense distinció. En cas contrari, només tindran accés a les tasques específiques que estan seguint.\n"
-" Un usuari amb el nivell de dret d'accés de projecte > administrador encara pot accedir a aquest projecte i a les seves tasques, fins i tot si no formen part explícitament dels seguidors.\n"
-"\n"
-"- Tots els usuaris interns: tots els usuaris interns poden accedir al projecte i a totes les seves tasques sense distinció.\n"
-"- Usuaris del portal convidats i tots els usuaris interns: tots els usuaris interns poden accedir al projecte i a totes les seves tasques sense distinció.\n"
-"\n"
-"Quan segueixen un projecte, els usuaris del portal tindran accés a totes les seves tasques sense distinció. En cas contrari, només tindran accés a les tasques específiques que estan seguint.\n"
-"\n"
-"Quan un projecte es comparteix en només lectura, l'usuari del portal es redirigeix ​​al seu portal. Poden veure les tasques, però no editar-les.\n"
-"Quan un projecte es comparteix en edició, l'usuari del portal es redirigeix ​​a les vistes de kanban i de llista de les tasques. Poden modificar un nombre seleccionat de camps de les tasques.\n"
-"\n"
-"En qualsevol cas, un usuari intern sense drets d'accés al projecte encara pot accedir a una tasca, sempre que se li indiqui l'URL corresponent (i que formi part dels seguidors si el projecte és privat)."
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
@@ -3457,6 +3434,39 @@ msgstr ""
 "El model pare conte el pseudònim. El model que conte la referència del "
 "pseudònim no és necessàriament el model que es dóna a través del camp "
 "alias_model_id (exemple: projecto (parent_model) i tasca (model))"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project__privacy_visibility
+#: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
+msgid ""
+"People to whom this project and its tasks will be visible.\n"
+"\n"
+"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
+"\n"
+"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"\n"
+"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+"\n"
+"When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks, but not edit them.\n"
+"When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n"
+"\n"
+"In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
+msgstr ""
+"Persones a les quals serà visible aquest projecte i les seves tasques.\n"
+"- Usuaris interns convidats: quan segueixen un projecte, els usuaris interns tindran accés a totes les seves tasques sense distinció. En cas contrari, només tindran accés a les tasques específiques que estan seguint.\n"
+" Un usuari amb el nivell de dret d'accés de projecte > administrador encara pot accedir a aquest projecte i a les seves tasques, fins i tot si no formen part explícitament dels seguidors.\n"
+"\n"
+"- Tots els usuaris interns: tots els usuaris interns poden accedir al projecte i a totes les seves tasques sense distinció.\n"
+"- Usuaris del portal convidats i tots els usuaris interns: tots els usuaris interns poden accedir al projecte i a totes les seves tasques sense distinció.\n"
+"\n"
+"Quan segueixen un projecte, els usuaris del portal tindran accés a totes les seves tasques sense distinció. En cas contrari, només tindran accés a les tasques específiques que estan seguint.\n"
+"\n"
+"Quan un projecte es comparteix en només lectura, l'usuari del portal es redirigeix ​​al seu portal. Poden veure les tasques, però no editar-les.\n"
+"Quan un projecte es comparteix en edició, l'usuari del portal es redirigeix ​​a les vistes de kanban i de llista de les tasques. Poden modificar un nombre seleccionat de camps de les tasques.\n"
+"\n"
+"En qualsevol cas, un usuari intern sense drets d'accés al projecte encara pot accedir a una tasca, sempre que se li indiqui l'URL corresponent (i que formi part dels seguidors si el projecte és privat)."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction

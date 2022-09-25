@@ -54,11 +54,13 @@ msgid ""
 "Ready for \"{{ object.event_id.name }}\" {{ object.get_date_range_str(object.partner_id.lang) }}?\n"
 "{{ 'It starts at %s' % format_time(time=object.event_begin_date, tz=object.event_id.date_tz, time_format='short', lang_code=object.partner_id.lang) + (', at %s' % object.event_id.address_inline if object.event_id.address_inline else '') + '.\\nSee you there!' if object.event_id.address_inline or 'website_published' not in object.event_id._fields else 'Join us on %s/event/%i !' % (object.get_base_url(), object.event_id.id) }}"
 msgstr ""
+"Bereit für \"{{ object.event_id.name }}\" {{ object.get_date_range_str(object.partner_id.lang) }}?\n"
+"{{ 'Beginn ist um %s' % format_time(time=object.event_begin_date, tz=object.event_id.date_tz, time_format='short', lang_code=object.partner_id.lang) + (', %s' % object.event_id.address_inline if object.event_id.address_inline else '') + '.\\nBis dann!' if object.event_id.address_inline or 'website_published' not in object.event_id._fields else 'Wir sehen uns am %s/event/%i !' % (object.get_base_url(), object.event_id.id) }}"
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_mail_registration
 msgid "Registration Mail Scheduler"
-msgstr "Anmeldungs-Mailplaner"
+msgstr "Planer Registrierungsmails"
 
 #. module: event_sms
 #: model:ir.model.fields.selection,name:event_sms.selection__event_mail__notification_type__sms

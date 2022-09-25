@@ -1,20 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_sale_wishlist
+# 	* website_sale_wishlist
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Link Up링크업 <linkup.way@gmail.com>, 2018
-# Linkup <link-up@naver.com>, 2018
-# Seongseok Shin <shinss61@hotmail.com>, 2018
+# Linkup <link-up@naver.com>, 2022
+# Martin Trigaux, 2022
+# JH CHOI <hwangtog@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-08-24 09:35+0000\n"
-"Last-Translator: Seongseok Shin <shinss61@hotmail.com>, 2018\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
+"PO-Revision-Date: 2017-07-17 09:13+0000\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,16 +22,21 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_sale_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.header
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
 msgid ""
-"<i class=\"fa fa-heart\"/>\n"
-"                        Wishlist"
+"<i class=\"fa fa-heart-o mr-2\" role=\"img\" aria-label=\"Add to "
+"wishlist\"/>Add to wishlist"
 msgstr ""
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "<small><i class=\"fa fa-trash-o\"/> Remove</small>"
-msgstr ""
+msgstr "<small><i class=\"fa fa-trash-o\"/> 제거</small>"
+
+#. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
+msgid "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
+msgstr "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__active
@@ -42,22 +46,21 @@ msgstr "활성"
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Add <span class=\"d-none d-md-inline\">to Cart</span>"
-msgstr ""
+msgstr "<span class=\"d-none d-md-inline\">장바구니</span>에 추가"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Add product to my cart but keep it in my wishlist"
-msgstr ""
+msgstr "장바구니에 제품을 추가하지만 관심 목록에도 보관합니다."
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
 msgid "Add to Wishlist"
-msgstr ""
+msgstr "관심 목록에 추가"
 
 #. module: website_sale_wishlist
-#: model:ir.model,name:website_sale_wishlist.model_ir_autovacuum
-msgid "Automatic Vacuum"
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
+msgid "Add to wishlist"
 msgstr ""
 
 #. module: website_sale_wishlist
@@ -73,17 +76,22 @@ msgstr "작성자"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__create_date
 msgid "Created on"
-msgstr "작성일"
+msgstr "작성일자"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__currency_id
 msgid "Currency"
-msgstr "환율"
+msgstr "통화"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__display_name
 msgid "Display Name"
-msgstr "이름 표시"
+msgstr "표시명"
+
+#. module: website_sale_wishlist
+#: model:ir.model.constraint,message:website_sale_wishlist.constraint_product_wishlist_product_unique_partner_id
+msgid "Duplicated wishlisted product for this partner."
+msgstr "이 협력사의 관심 목록에 있는 상품을 복제했습니다."
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__id
@@ -93,7 +101,7 @@ msgstr "ID"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist____last_update
 msgid "Last Modified on"
-msgstr "최근 수정"
+msgstr "최근 수정일"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__write_uid
@@ -103,17 +111,17 @@ msgstr "최근 갱신한 사람"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__write_date
 msgid "Last Updated on"
-msgstr "최근 갱신 날짜"
+msgstr "최근 갱신 일자"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "My Wishlist"
-msgstr ""
+msgstr "나의 관심 목록"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__partner_id
 msgid "Owner"
-msgstr "담당자(파트너)"
+msgstr "소유자"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__price
@@ -123,7 +131,7 @@ msgstr "가격"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,help:website_sale_wishlist.field_product_wishlist__price
 msgid "Price of the product when it has been added in the wishlist"
-msgstr ""
+msgstr "관심 목록에 추가된 상품의 가격입니다."
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__pricelist_id
@@ -133,26 +141,37 @@ msgstr "가격표"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,help:website_sale_wishlist.field_product_wishlist__pricelist_id
 msgid "Pricelist when added"
-msgstr ""
+msgstr "추가할 당시의 가격표"
 
 #. module: website_sale_wishlist
+#: model:ir.model,name:website_sale_wishlist.model_product_product
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__product_id
 msgid "Product"
-msgstr "상품"
+msgstr "품목"
+
+#. module: website_sale_wishlist
+#: model:ir.model,name:website_sale_wishlist.model_product_template
+msgid "Product Template"
+msgstr "품목 양식"
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_product_wishlist
 msgid "Product Wishlist"
-msgstr ""
+msgstr "찜한 상품"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Product image"
-msgstr ""
+msgstr "상품 이미지"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Shop Wishlist"
+msgstr "찜한 상점"
+
+#. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.snippet_options
+msgid "Show Empty Wishlist"
 msgstr ""
 
 #. module: website_sale_wishlist
@@ -168,5 +187,6 @@ msgstr "웹사이트"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner__wishlist_ids
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users__wishlist_ids
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.header_wishlist_link
 msgid "Wishlist"
-msgstr ""
+msgstr "관심 목록"

@@ -66,7 +66,7 @@ msgstr " (copie)"
 #: code:addons/im_livechat/models/chatbot_script_step.py:0
 #, python-format
 msgid "\"%s\" is not a valid email."
-msgstr ""
+msgstr "\"%s\" n'est pas un email valide."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
@@ -109,7 +109,7 @@ msgstr "%s et %s écrivent..."
 #: code:addons/im_livechat/models/chatbot_script_step.py:0
 #, python-format
 msgid "%s has joined"
-msgstr ""
+msgstr "%sa rejoint "
 
 #. module: im_livechat
 #. openerp-web
@@ -133,6 +133,8 @@ msgid ""
 "'%(input_email)s' does not look like a valid email. Can you please try "
 "again?"
 msgstr ""
+"'%(input_email)s' ne ressemble pas à un e-mail valide. Pouvez-vous s'il vous"
+" plaît réessayer ?"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__action
@@ -141,6 +143,9 @@ msgid ""
 "* 'Auto popup' displays the button and automatically open the conversation pane.\n"
 "* 'Hide the button' hides the chat button on the pages.\n"
 msgstr ""
+"* \"Afficher le bouton\" affiche le bouton de chat sur les pages.\n"
+"* 'Auto popup' affiche le bouton et ouvre automatiquement le volet de conversation.\n"
+"* \"Masquer le bouton\" masque le bouton de chat sur les pages.\n"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
@@ -157,7 +162,7 @@ msgstr "-------- Montrer les anciens messages --------"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Back to edit mode"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Retour au mode édition"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
@@ -210,6 +215,8 @@ msgid ""
 "<span>Reminder: This step will only be played if no operator is "
 "available.</span>"
 msgstr ""
+"<span>Rappel : Cette étape ne sera jouée que si aucun opérateur n'est "
+"disponible</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_form
@@ -217,6 +224,8 @@ msgid ""
 "<span>Tip: At least one interaction (Question, Email, ...) is needed before the Bot can perform more complex actions (Forward to an Operator, ...). </span>\n"
 "                    <span>Use Channel Rules if you want the Bot to interact with visitors only when no operator is available.</span>"
 msgstr ""
+"<span>Astuce : Au moins une interaction (Question, Email, ...) est nécessaire avant que le Bot puisse effectuer des actions plus complexes (Transférer à un Opérateur, ...).</span>\n"
+"<span>Utilisez les règles de canal si vous souhaitez que le bot n'interagisse avec les visiteurs que lorsqu'aucun opérateur n'est disponible.</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_form
@@ -225,6 +234,9 @@ msgid ""
 "the Bot can perform more complex actions (Forward to an Operator, "
 "...).</span>"
 msgstr ""
+"<span>Astuce : Au moins une interaction (Question, Email, ...) est "
+"nécessaire avant que le Bot puisse effectuer des actions plus complexes "
+"(Transférer à un Opérateur, ...).</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_step_view_form
@@ -232,16 +244,18 @@ msgid ""
 "<span>Tip: Plan further steps for the Bot in case no operator is "
 "available.</span>"
 msgstr ""
+"<span>Astuce : Planifiez d'autres étapes pour le Bot au cas où aucun "
+"opérateur n'est disponible.</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
 msgid "<span>You are currently testing</span>"
-msgstr ""
+msgstr "<span>Vous êtes actuellement en train de tester</span>"
 
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_chatbot_message__unique_mail_message_id
 msgid "A mail.message can only be linked to a single chatbot message"
-msgstr ""
+msgstr "Un mail.message ne peut être lié qu'à un seul message de chatbot"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__is_without_answer
@@ -270,7 +284,7 @@ msgstr "Administrateur"
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_documentation_redirect
 msgid "And tadaaaa here you go! 🌟"
-msgstr ""
+msgstr "Et tadaaaa voiciiiiii ! 🌟"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
@@ -319,7 +333,7 @@ msgstr "Auto popup timer"
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__auto_popup
 msgid "Autopop LiveChat"
-msgstr ""
+msgstr "LiveChat Autopop"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
@@ -368,7 +382,7 @@ msgstr "Mauvais"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__operator_partner_id
 msgid "Bot Operator"
-msgstr ""
+msgstr "Opérateur Bot"
 
 #. module: im_livechat
 #. openerp-web
@@ -492,7 +506,7 @@ msgstr "Discutez en ligne avec un de nos collaborateurs"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__chatbot_script_id
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
 msgid "Chatbot"
-msgstr ""
+msgstr "Chatbot"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__chatbot_current_step_id
@@ -502,17 +516,17 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_chatbot_message
 msgid "Chatbot Message"
-msgstr ""
+msgstr "Message du Chatbot"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__chatbot_message_ids
 msgid "Chatbot Messages"
-msgstr ""
+msgstr "Messages du Chatbot"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_form
 msgid "Chatbot Name"
-msgstr ""
+msgstr "Nom du ChatBot"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_chatbot_script
@@ -522,7 +536,7 @@ msgstr "Script du chatbot"
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_chatbot_script_answer
 msgid "Chatbot Script Answer"
-msgstr ""
+msgstr "Script de réponse du ChatBot"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_chatbot_script_step
@@ -532,13 +546,13 @@ msgstr "Étape de script du chatbot"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__script_step_id
 msgid "Chatbot Step"
-msgstr ""
+msgstr "Etape du ChatBot"
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.chatbot_config
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Chatbots"
-msgstr ""
+msgstr "Chatbots"
 
 #. module: im_livechat
 #. openerp-web
@@ -600,7 +614,7 @@ msgstr "Conversation envoyée"
 #: code:addons/im_livechat/static/src/legacy/public_livechat_chatbot.xml:0
 #, python-format
 msgid "Conversation ended..."
-msgstr ""
+msgstr "La conversation a pris fin ..."
 
 #. module: im_livechat
 #: code:addons/im_livechat/models/mail_channel.py:0
@@ -647,7 +661,7 @@ msgstr "Créer "
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.chatbot_script_action
 msgid "Create a Chatbot"
-msgstr ""
+msgstr "Créer un ChatBot"
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.mail_channel_action
@@ -808,7 +822,7 @@ msgstr "Afficher Nom"
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__display_button
 msgid "Display the LiveChat Button"
-msgstr ""
+msgstr "Afficher le bouton de LiveChat"
 
 #. module: im_livechat
 #. openerp-web
@@ -844,13 +858,13 @@ msgstr "Email"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__chatbot_only_if_no_operator
 msgid "Enable the bot only if there is no operator available"
-msgstr ""
+msgstr "Activer le bot uniquement s'il n'y a pas d'opérateur disponible"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__chatbot_only_if_no_operator
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
 msgid "Enabled only if no operator"
-msgstr ""
+msgstr "Activé uniquement si aucun opérateur"
 
 #. module: im_livechat
 #. openerp-web
@@ -870,7 +884,7 @@ msgstr "Expliquez votre note"
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script__first_step_warning__first_step_invalid
 msgid "First Step Invalid"
-msgstr ""
+msgstr "Premier étape non valide"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script__first_step_warning__first_step_operator
@@ -889,21 +903,24 @@ msgid ""
 "Settings and select the Website Live Chat Channel you want to add to your "
 "website."
 msgstr ""
+"Pour les sites web créés avec le CMS Odoo, accédez au Site Web &gt; "
+"Paramétrage &gt; Paramètres et sélectionnez le canal de LiveChat du site web"
+" que vous souhaitez ajouter."
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__forward_operator
 msgid "Forward to Operator"
-msgstr ""
+msgstr "Transférer à un opérateur"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__free_input_single
 msgid "Free Input"
-msgstr ""
+msgstr "Saisie Libre"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__free_input_multi
 msgid "Free Input (Multi-Line)"
-msgstr ""
+msgstr "Saisie libre (multi-lignes)"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__sequence
@@ -949,7 +966,7 @@ msgstr "Bonjour, comment puis-je vous aider ?"
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__hide_button
 msgid "Hide all buttons"
-msgstr ""
+msgstr "Masquer tous les boutons"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.mail_channel_action
@@ -963,6 +980,8 @@ msgstr "Historique"
 msgid ""
 "Hmmm, let me check if I can find someone that could help you with that..."
 msgstr ""
+"Hmmm, laissez-moi vérifier si je peux trouver quelqu'un qui pourrait vous "
+"aider ..."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__start_date_hour
@@ -989,17 +1008,17 @@ msgstr "Ho-ho, il semble qu'aucun de nos opérateurs ne soit disponible 🙁."
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_welcome_step_dispatch_answer_just_looking
 msgid "I am just looking around"
-msgstr ""
+msgstr "Je suis juste en train de regarder"
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_welcome_step_dispatch_answer_documentation
 msgid "I am looking for your documentation"
-msgstr ""
+msgstr "Je recherche votre documentation"
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_welcome_step_dispatch_answer_pricing
 msgid "I have a pricing question"
-msgstr ""
+msgstr "J'ai une question sur les tarifs"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__id
@@ -1023,7 +1042,7 @@ msgstr "Inactif"
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_documentation_exit
 msgid "If you need anything else, feel free to get back in touch"
-msgstr ""
+msgstr "Si vous avez besoin d'autre chose, n'hésitez pas à reprendre contact"
 
 #. module: im_livechat
 #. openerp-web
@@ -1378,7 +1397,7 @@ msgstr "Note écrite par"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__chatbot_script_count
 msgid "Number of Chatbot"
-msgstr ""
+msgstr "Nombre de ChatBot"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__nbr_channel
@@ -1435,7 +1454,7 @@ msgstr "Nom du chat en ligne"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__triggering_answer_ids
 msgid "Only If"
-msgstr ""
+msgstr "Seulement si"
 
 #. module: im_livechat
 #. openerp-web
@@ -1530,7 +1549,7 @@ msgstr "Téléphone"
 #: code:addons/im_livechat/models/chatbot_script_step.py:0
 #, python-format
 msgid "Please call me on: "
-msgstr ""
+msgstr "Veuillez m'appeler au :"
 
 #. module: im_livechat
 #. openerp-web
@@ -1543,12 +1562,12 @@ msgstr "Merci de vérifier votre connexion Internet."
 #: code:addons/im_livechat/models/chatbot_script_step.py:0
 #, python-format
 msgid "Please contact me on: "
-msgstr ""
+msgstr "Merci de me contacter sur :"
 
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_just_looking
 msgid "Please do! If there is anything we can help with, let us know"
-msgstr ""
+msgstr "Si nous pouvons vous aider en quoi que ce soit, faites-le nous savoir"
 
 #. module: im_livechat
 #. openerp-web
@@ -1735,7 +1754,7 @@ msgstr "Réinitialiser les couleurs par défaut"
 #: code:addons/im_livechat/static/src/legacy/public_livechat_chatbot.xml:0
 #, python-format
 msgid "Restart"
-msgstr ""
+msgstr "Redémarrer"
 
 #. module: im_livechat
 #. openerp-web
@@ -1743,13 +1762,13 @@ msgstr ""
 #: code:addons/im_livechat/static/src/legacy/public_livechat_chatbot.xml:0
 #, python-format
 msgid "Restart Conversation"
-msgstr ""
+msgstr "Redémarrer la conversation"
 
 #. module: im_livechat
 #: code:addons/im_livechat/models/mail_channel.py:0
 #, python-format
 msgid "Restarting conversation..."
-msgstr ""
+msgstr "Reprise de la conversation..."
 
 #. module: im_livechat
 #. openerp-web
@@ -1809,12 +1828,12 @@ msgstr "Script (externe)"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__script_step_id
 msgid "Script Step"
-msgstr ""
+msgstr "Etape du script"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__script_step_ids
 msgid "Script Steps"
-msgstr ""
+msgstr "Etapes du script"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
@@ -1853,7 +1872,7 @@ msgstr "Vu par:"
 #: code:addons/im_livechat/static/src/legacy/public_livechat_chatbot.js:0
 #, python-format
 msgid "Select an option above"
-msgstr ""
+msgstr "Sélectionnez une option ci-dessus"
 
 #. module: im_livechat
 #. openerp-web
@@ -1922,6 +1941,7 @@ msgstr "Historique des sessions"
 #: model:ir.model.fields,help:im_livechat.field_chatbot_script_step__triggering_answer_ids
 msgid "Show this step only if all of these answers have been selected."
 msgstr ""
+"N'affichez cette étape que si toutes ces réponses ont été sélectionnées."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__source_id
@@ -2018,6 +2038,8 @@ msgid ""
 "The visitor will be redirected to this link upon clicking the option (note "
 "that the script will end if the link is external to the livechat website)."
 msgstr ""
+"Le visiteur sera redirigé vers ce lien en cliquant sur l'option (notez que "
+"le script se terminera si le lien est externe au site de chat en direct)."
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.rating_rating_action_livechat
@@ -2102,6 +2124,8 @@ msgstr "Réessayer"
 #, python-format
 msgid "Type <b>:shortcut</b> to insert a canned response in your message.<br>"
 msgstr ""
+"Tapez <b>:shortcut</b> pour insérer une réponse standardisée dans votre "
+"message.<br>"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__regex_url
@@ -2151,6 +2175,9 @@ msgid ""
 " load a canned response, start your sentence with ':' and select the "
 "template."
 msgstr ""
+"Utilisez des réponses prédéfinies pour définir des modèles de messages dans "
+"l'application de LiveChat. Pour charger une réponse prédéfinies, commencez "
+"votre phrase par ':' et sélectionnez le modèle."
 
 #. module: im_livechat
 #: model:res.groups,name:im_livechat.im_livechat_group_user
@@ -2193,12 +2220,12 @@ msgstr "L'utilisateur est en ligne"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__user_script_answer_id
 msgid "User's answer"
-msgstr ""
+msgstr "Réponse de l'utilisateur"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__user_raw_answer
 msgid "User's raw answer"
-msgstr ""
+msgstr "Réponse brute de l'utilisateur"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_users
@@ -2254,7 +2281,7 @@ msgstr "Canaux de messagerie instantanée du site web"
 #. module: im_livechat
 #: model:chatbot.script,title:im_livechat.chatbot_script_welcome_bot
 msgid "Welcome Bot"
-msgstr ""
+msgstr "Bot de bienvenue"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__default_message
@@ -2264,12 +2291,12 @@ msgstr "Message d'accueil"
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_welcome
 msgid "Welcome to CompanyName ! 👋"
-msgstr ""
+msgstr "Bienvenue chez CompanyName ! 👋"
 
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_dispatch
 msgid "What are you looking for?"
-msgstr ""
+msgstr "Que cherchez-vous?"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -2297,6 +2324,8 @@ msgid ""
 "You can create a new Chatbot with a defined script to speak to your website "
 "visitors."
 msgstr ""
+"Vous pouvez créer un nouveau ChatBot avec un script défini pour parler aux "
+"visiteurs de votre site web."
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
@@ -2335,17 +2364,17 @@ msgstr "Réduire"
 #: code:addons/im_livechat/static/src/legacy/public_livechat_chatbot.xml:0
 #, python-format
 msgid "chatbot_image"
-msgstr ""
+msgstr "chatbot_image"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_form
 msgid "e.g. \"Meeting Scheduler Bot\""
-msgstr ""
+msgstr "par ex. \"Bot planificateur de réunion\""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_step_view_form
 msgid "e.g. 'How can I help you?'"
-msgstr ""
+msgstr "par ex. 'Comment puis-je vous aider?'"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
@@ -2374,7 +2403,7 @@ msgstr "de"
 #: code:addons/im_livechat/static/src/legacy/public_livechat_chatbot.xml:0
 #, python-format
 msgid "is typing"
-msgstr ""
+msgstr "est en train d'écrire"
 
 #. module: im_livechat
 #. openerp-web

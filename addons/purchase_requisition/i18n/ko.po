@@ -1,22 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * purchase_requisition
+# 	* purchase_requisition
 # 
 # Translators:
-# Martin Trigaux, 2018
-# 최재호 <hwangtog@gmail.com>, 2018
-# Link Up링크업 <linkup.way@gmail.com>, 2018
-# Linkup <link-up@naver.com>, 2018
-# Seongseok Shin <shinss61@hotmail.com>, 2018
-# Mark Lee <odoos@soti.33mail.com>, 2018
+# Link Up링크업 <linkup.way@gmail.com>, 2022
+# Heesoo Choi, 2022
+# Martin Trigaux, 2022
+# JH CHOI <hwangtog@gmail.com>, 2022
+# Linkup <link-up@naver.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Mark Lee <odoos@soti.33mail.com>, 2018\n"
+"POT-Creation-Date: 2022-05-30 06:07+0000\n"
+"PO-Revision-Date: 2016-08-05 13:09+0000\n"
+"Last-Translator: Linkup <link-up@naver.com>, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,9 +24,14 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: purchase_requisition
+#: model:ir.actions.report,print_report_name:purchase_requisition.action_report_purchase_requisitions
+msgid "'Tender - %s' % (object.name)"
+msgstr "'입찰 - %s' % (object.name)"
+
+#. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
-msgid "<strong>Call for Tender Reference:</strong><br/>"
-msgstr "<strong>입찰 모집 레퍼런스:</strong><br/>"
+msgid "<strong>Agreement Deadline:</strong><br/>"
+msgstr ""
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -42,7 +46,7 @@ msgstr "<strong>설명</strong>"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Product UoM</strong>"
-msgstr "<strong>제품 UoM</strong>"
+msgstr "<strong>상품 UoM</strong>"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -62,37 +66,57 @@ msgstr "<strong>예정 날짜</strong>"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Scheduled Ordering Date:</strong><br/>"
-msgstr "<strong>예정된 주문 날짜:</strong><br/>"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
-msgid "<strong>Selection Type:</strong><br/>"
-msgstr "<strong>선택 유형:</strong><br/>"
+msgstr "<strong>예정된 주문 날짜 :</strong><br/>"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Source:</strong><br/>"
-msgstr "<strong>출처:</strong><br/>"
+msgstr "<strong>소스 :</strong><br/>"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Vendor </strong>"
-msgstr "<strong>공급 업체</strong>"
+msgstr "<strong>공급업체</strong>"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction
 msgid "Action Needed"
-msgstr "필요한 조치"
+msgstr "조치 필요"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__active
+msgid "Active"
+msgstr "활성"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_ids
+msgid "Activities"
+msgstr "활동"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "활동 예외 장식"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_state
+msgid "Activity State"
+msgstr "활동 상태"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "활동 유형 아이콘"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_id
+msgid "Agreement"
+msgstr "계약"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__date_end
 msgid "Agreement Deadline"
 msgstr "계약 마감일"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__name
-msgid "Agreement Reference"
-msgstr "계약 참조"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__exclusive
@@ -109,7 +133,7 @@ msgstr "계약 유형"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.res_config_settings_view_form
 msgid "Agreement Types"
-msgstr ""
+msgstr "계약 유형"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__account_analytic_id
@@ -122,36 +146,36 @@ msgid "Analytic Tags"
 msgstr "분석 태그"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_attachment_count
-msgid "Attachment Count"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_search
+msgid "Archived"
+msgstr "보관됨"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition,state:0
-#: selection:purchase.requisition,state_blanket_order:0
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_attachment_count
+msgid "Attachment Count"
+msgstr "첨부 파일 수"
+
+#. module: purchase_requisition
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__open
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__open
 msgid "Bid Selection"
 msgstr "입찰가 선택"
 
 #. module: purchase_requisition
 #: model:purchase.requisition.type,name:purchase_requisition.type_single
 msgid "Blanket Order"
-msgstr "포괄주문계약"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_id
-msgid "Blanket order"
-msgstr ""
+msgstr "포괄 주문 계약"
 
 #. module: purchase_requisition
 #: model:purchase.requisition.type,name:purchase_requisition.type_multi
 msgid "Call for Tender"
-msgstr ""
+msgstr "입찰 요청"
 
 #. module: purchase_requisition
 #: model:ir.actions.report,name:purchase_requisition.action_report_purchase_requisitions
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Call for Tenders"
-msgstr "입찰자 요청"
+msgstr "입찰 요청"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -159,25 +183,30 @@ msgid "Cancel"
 msgstr "취소"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition,state:0
-#: selection:purchase.requisition,state_blanket_order:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__cancel
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__cancel
 msgid "Cancelled"
 msgstr "취소 됨"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:116
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "Cancelled by the agreement associated to this quotation."
 msgstr "이 견적과 관련된 계약에 의해 취소됨."
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
-msgid "Close"
-msgstr "마감"
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_uom_category_id
+msgid "Category"
+msgstr "카테고리"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition,state:0
-#: selection:purchase.requisition,state_blanket_order:0
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "Close"
+msgstr "닫기"
+
+#. module: purchase_requisition
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__done
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__done
 msgid "Closed"
 msgstr "마감됨"
 
@@ -190,19 +219,26 @@ msgstr "회사"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Confirm"
-msgstr "확인"
+msgstr "승인"
 
 #. module: purchase_requisition
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__in_progress
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__in_progress
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-#: selection:purchase.requisition,state:0
-#: selection:purchase.requisition,state_blanket_order:0
 msgid "Confirmed"
 msgstr "확인됨"
 
 #. module: purchase_requisition
-#: selection:product.template,purchase_requisition:0
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_line__product_uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr "단위 사이의 변환은 동일 카테고리에서만 가능합니다. 변환은 비율에 따라 이루어집니다."
+
+#. module: purchase_requisition
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__product_template__purchase_requisition__rfq
 msgid "Create a draft purchase order"
-msgstr "초안 구매주문 생성"
+msgstr "구매 주문 초안 만들기"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_product_product__purchase_requisition
@@ -213,6 +249,8 @@ msgid ""
 " 'purchase_requisition' module is installed and this option is selected, the"
 " system will create a draft call for tender."
 msgstr ""
+"구매 주문 초안 생성 : 상품 환경 설정에 따라 시스템에서 구매 주문 초안을 생성합니다. 입찰 요청 제안 : "
+"'purchase_requisition' 모듈이 설치되어 있고 이 옵션을 선택하면 시스템이 입찰에 대한 임시 호출을 생성합니다."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__create_uid
@@ -226,12 +264,17 @@ msgstr "작성자"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__create_date
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__create_date
 msgid "Created on"
-msgstr "작성일"
+msgstr "작성일자"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__currency_id
 msgid "Currency"
-msgstr "환율"
+msgstr "통화"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_description_variants
+msgid "Custom Description"
+msgstr ""
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
@@ -246,19 +289,19 @@ msgstr "배송일"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__description
 msgid "Description"
-msgstr "내용"
+msgstr "설명"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__display_name
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__display_name
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__display_name
 msgid "Display Name"
-msgstr "이름 표시"
+msgstr "표시명"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition.type,line_copy:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__line_copy__none
 msgid "Do not create RfQ lines automatically"
-msgstr "자동으로 RfQ line을 만들지 마십시오."
+msgstr "자동으로 견적 요청 명세를 만들지 마십시오."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -266,27 +309,17 @@ msgid "Done"
 msgstr "완료"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__move_dest_id
-msgid "Downstream Move"
-msgstr ""
-
-#. module: purchase_requisition
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__draft
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__draft
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-#: selection:purchase.requisition,state:0
-#: selection:purchase.requisition,state_blanket_order:0
 msgid "Draft"
 msgstr "임시"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-msgid "End Date"
-msgstr "종료일"
 
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid ""
 "Example of purchase agreements include call for tenders and blanket orders."
-msgstr "구매 계약의 예에는 입찰자 및 포괄주문계약 요청이 포함됩니다."
+msgstr "구매 계약의 예에는 입찰자 및 포괄 주문 계약 요청이 포함됩니다."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_follower_ids
@@ -294,29 +327,37 @@ msgid "Followers"
 msgstr "팔로워"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "팔로워 (채널)"
-
-#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "팔로워 (파트너)"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "멋진 아이콘 폰트 예 : fa-tasks"
 
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid ""
 "For a blanket order, you can record an agreement for a specifc period\n"
 "            (e.g. a year) and you order products within this agreement, benefiting\n"
-"            from the negociated prices."
+"            from the negotiated prices."
 msgstr ""
-"포괄주문계약의 경우, 특정 기간 (예 : 1 년) 동안 계약을 유지 할 수 있으며, 본 계약 통해 미리 설정된 기간동안 정해진 가격으로 "
-"제품을 주문할 수 있습니다."
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "Future Activities"
+msgstr "향후 활동"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Group By"
 msgstr "그룹별"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__has_message
+msgid "Has Message"
+msgstr "메시지가 있습니다"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__id
@@ -326,19 +367,25 @@ msgid "ID"
 msgstr "ID"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_unread
-msgid "If checked new messages require your attention."
-msgstr "만약 선택하였으면, 새 메시지에 주의를 기울여야 합니다."
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_exception_icon
+msgid "Icon"
+msgstr "아이콘"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "예외 활동을 표시하기 위한 아이콘"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "만약 선택하였으면, 새 메시지에 주의를 기울여야 합니다."
+msgstr "만약 선택하였으면, 신규 메시지에 주의를 기울여야 합니다."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_error
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "이 옵션을 선택하면 일부 정보가 전달 오류를 생성합니다."
 
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -348,8 +395,8 @@ msgid ""
 "            been registered, you can review and compare them and you can\n"
 "            validate some and cancel others."
 msgstr ""
-"입찰을 모집할 때, 구매해야하는 제품을 기록하고 공급업체에게 견적요청서를 생성 할 수 있습니다.  입찰서가 등록되면 검토 비교할 수 "
-"있으며 일부는 유효되고 다른 것은 무효할수 있습니다."
+"입찰을 모집할 때, 구매해야 하는 제품을 기록하고 공급업체에게 견적 요청서를 생성할 수 있습니다.  입찰서가 등록되면 검토 비교할 수 "
+"있으며 일부는 승인하고 다른 것은 취소할 수 있습니다."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -359,14 +406,14 @@ msgstr "협상 중"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_is_follower
 msgid "Is Follower"
-msgstr "팔로워입니다"
+msgstr "팔로워임"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition____last_update
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line____last_update
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type____last_update
 msgid "Last Modified on"
-msgstr "최근 수정"
+msgstr "최근 수정일"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__write_uid
@@ -380,22 +427,27 @@ msgstr "최근 갱신한 사람"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__write_date
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__write_date
 msgid "Last Updated on"
-msgstr "최근 갱신 날짜"
+msgstr "최근 갱신 일자"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "Late Activities"
+msgstr "지연된 활동"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__line_copy
 msgid "Lines"
-msgstr "라인"
+msgstr "명세"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "주요 첨부 파일"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "메시지 전송 오류"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_ids
@@ -403,14 +455,19 @@ msgid "Messages"
 msgstr "메시지"
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
-msgid "Multiple Requisitions"
-msgstr "복수 요청"
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "내 활동 마감일"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "My Agreements"
-msgstr ""
+msgstr "내 계약"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
+msgid "Name, TIN, Email, or Reference"
+msgstr "이름, TIN, 이메일, 또는 참조"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -420,12 +477,32 @@ msgstr "새로운 계약"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "New Quotation"
-msgstr "새로운 견적서"
+msgstr "신규 견적서"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "다음 활동 마감일"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_summary
+msgid "Next Activity Summary"
+msgstr "다음 활동 요약"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_type_id
+msgid "Next Activity Type"
+msgstr "다음 활동 유형"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "작업 수"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__order_count
@@ -434,8 +511,8 @@ msgstr "주문 수"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error_counter
-msgid "Number of error"
-msgstr ""
+msgid "Number of errors"
+msgstr "오류 횟수"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_needaction_counter
@@ -445,23 +522,13 @@ msgstr "조치가 필요한 메시지 수"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "전송 오류 메시지 수"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_unread_counter
-msgid "Number of unread messages"
-msgstr "읽지 않은 메시지 수"
-
-#. module: purchase_requisition
-#: selection:purchase.requisition,state:0
-#: selection:purchase.requisition,state_blanket_order:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__ongoing
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__ongoing
 msgid "Ongoing"
-msgstr ""
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__picking_type_id
-msgid "Operation Type"
-msgstr "작업 유형"
+msgstr "진행중"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__qty_ordered
@@ -475,37 +542,38 @@ msgid "Ordering Date"
 msgstr "주문 날짜"
 
 #. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "Price Unit"
+msgstr "가격 단위"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_product__purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_template__purchase_requisition
 msgid "Procurement"
 msgstr "조달"
 
 #. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_procurement_group
-msgid "Procurement Group"
-msgstr "조달 그룹"
-
-#. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_product
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__product_id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_id
 msgid "Product"
-msgstr "상품"
+msgstr "품목"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_template
 msgid "Product Template"
-msgstr "상품 양식"
+msgstr "품목 양식"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_uom_id
 msgid "Product Unit of Measure"
-msgstr "상품 단위"
+msgstr "품목 단위"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Products"
-msgstr "상품"
+msgstr "품목"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__line_ids
@@ -513,7 +581,7 @@ msgid "Products to Purchase"
 msgstr "구입할 제품"
 
 #. module: purchase_requisition
-#: selection:product.template,purchase_requisition:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__product_template__purchase_requisition__tenders
 msgid "Propose a call for tenders"
 msgstr "입찰 제안 요청"
 
@@ -534,37 +602,36 @@ msgstr "구매 계약 유형"
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
 #: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_tree
 msgid "Purchase Agreements"
-msgstr "구매 동의"
+msgstr "구매 계약"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order
 msgid "Purchase Order"
-msgstr "구매 주문"
+msgstr "발주서"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order_line
 msgid "Purchase Order Line"
-msgstr "구매 주문 명세"
+msgstr "발주서 내역"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__purchase_ids
 msgid "Purchase Orders"
-msgstr "구매주문"
+msgstr "발주서"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_search_inherit
 msgid "Purchase Orders with requisition"
-msgstr "요구사항 구매 주문"
+msgstr "구매 주문 요구사항"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__user_id
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Purchase Representative"
-msgstr ""
+msgstr "구매 담당자"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition
@@ -575,17 +642,12 @@ msgstr "구매 요청"
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_line
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_line_id
 msgid "Purchase Requisition Line"
-msgstr ""
+msgstr "구매 요청 명세"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_type
 msgid "Purchase Requisition Type"
-msgstr ""
-
-#. module: purchase_requisition
-#: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
-msgid "Purchase orders"
-msgstr "구매 주문"
+msgstr "구매 요청 유형"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__is_quantity_copy
@@ -602,17 +664,28 @@ msgstr "수량"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "RFQs/Orders"
-msgstr "견적 / 주문"
+msgstr "견적 요청/주문"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__name
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "Reference"
+msgstr "참조"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "Reference:"
+msgstr "참조 :"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.product_template_form_view_inherit
 msgid "Reordering"
-msgstr ""
+msgstr "재주문"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_to_so
 msgid "Request for Quotation"
-msgstr "견적요청"
+msgstr "견적 요청"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_list
@@ -630,24 +703,24 @@ msgid "Requisition"
 msgstr "요청"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_stock_move__requisition_line_ids
-msgid "Requisition Line"
-msgstr ""
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_stock_move__requistion_line_ids
-msgid "Requistion Line"
-msgstr ""
-
-#. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Reset to Draft"
 msgstr "초안으로 재설정"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_user_id
+msgid "Responsible User"
+msgstr "담당 사용자"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS 전송 에러"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__schedule_date
 msgid "Scheduled Date"
-msgstr "예약된 날짜"
+msgstr "계획된 날짜"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -655,40 +728,44 @@ msgid "Search Purchase Agreements"
 msgstr "구매 계약 검색"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition.type,exclusive:0
-msgid "Select multiple RFQ"
-msgstr "복수 견적 선택"
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__multiple
+msgid "Select multiple RFQ (non-exclusive)"
+msgstr ""
 
 #. module: purchase_requisition
-#: selection:purchase.requisition.type,exclusive:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__exclusive
 msgid "Select only one RFQ (exclusive)"
-msgstr "하나의 견적 만 선택하십시오 (독점적)"
+msgstr "하나의 견적만 선택하십시오 (독점적)"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_type__exclusive
 msgid ""
 "Select only one RFQ (exclusive):  when a purchase order is confirmed, cancel the remaining purchase order.\n"
 "\n"
-"                    Select multiple RFQ: allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
+"                    Select multiple RFQ (non-exclusive): allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
 msgstr ""
-"하나의 견적요청만 선택하십시오 (독점) : 구매 주문서가 승인되면 나머지 구매 주문서를 취소하십시오.\n"
-"\n"
-"                       복수 견적요청 선택: 복수 구매 주문을 허용합니다. 구매 주문이 승인되면 나머지 주문은 취소되지 않습니다."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__sequence
 msgid "Sequence"
-msgstr "순차적"
+msgstr "순서"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition.type,quantity_copy:0
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_type__active
+msgid ""
+"Set active to false to hide the Purchase Agreement Types without removing "
+"it."
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__quantity_copy__none
 msgid "Set quantities manually"
 msgstr "수동으로 수량 설정"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-msgid "Source"
-msgstr "소스"
+msgid "Show all records which has next action date is before today"
+msgstr "다음 행동 날짜가 오늘 이전 인 모든 기록보기"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__origin
@@ -698,12 +775,12 @@ msgstr "원본 문서"
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid "Start a new purchase agreement"
-msgstr ""
+msgstr "새로운 구매 계약을 시작하십시오"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__state_blanket_order
 msgid "State Blanket Order"
-msgstr ""
+msgstr "포괄 주문 계약 상태"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__state
@@ -712,24 +789,27 @@ msgid "Status"
 msgstr "상태"
 
 #. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_stock_move
-msgid "Stock Move"
-msgstr "재고 이동"
-
-#. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_stock_rule
-msgid "Stock Rule"
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
 msgstr ""
+"활동에 기조한 상태입니다\n"
+"기한초과: 이미 기한이 지났습니다\n"
+"오늘: 활동 날짜가 오늘입니다\n"
+"계획: 향후 활동입니다."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__supplier_info_ids
 msgid "Supplier Info"
-msgstr ""
+msgstr "공급업체 정보"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_supplierinfo
 msgid "Supplier Pricelist"
-msgstr "공급자 가격리스트"
+msgstr "공급업체 가격표"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -740,25 +820,25 @@ msgstr "이용 약관"
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__schedule_date
 msgid ""
 "The expected and scheduled delivery date where all the products are received"
-msgstr "모든 제품을 수령 할 수 있는 예상되는 배송 예정일"
+msgstr "모든 제품을 수령할 수 있는 예상되는 배송 예정일"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:95
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid ""
-"There is already an open blanket order for this supplier. We suggest you to "
-"use to complete this open blanket order instead of creating a new one."
+"There is already an open blanket order for this supplier. We suggest you "
+"complete this open blanket order, instead of creating a new one."
 msgstr ""
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-msgid "Unassigned"
-msgstr "미배정(할당)"
+msgid "Today Activities"
+msgstr "오늘 활동"
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-msgid "Unassigned  Requisition"
-msgstr "할당되지 않은 요청"
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "레코드에 있는 예외 활동의 유형입니다."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__price_unit
@@ -766,29 +846,24 @@ msgid "Unit Price"
 msgstr "단가"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_unread
-msgid "Unread Messages"
-msgstr "읽지 않은 메세지"
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "UoM"
+msgstr "단위"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "읽지 않은 메세지 수"
-
-#. module: purchase_requisition
-#: selection:purchase.requisition.type,line_copy:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__line_copy__copy
 msgid "Use lines of agreement"
-msgstr "합의 선 사용"
+msgstr "계약 내역 사용"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition.type,quantity_copy:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__quantity_copy__copy
 msgid "Use quantities of agreement"
 msgstr "계약 수량 사용"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Validate"
-msgstr "유효성 검사"
+msgstr "승인"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__vendor_id
@@ -796,12 +871,7 @@ msgid "Vendor"
 msgstr "공급업체"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__warehouse_id
-msgid "Warehouse"
-msgstr "창고"
-
-#. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:94
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "Warning for %s"
 msgstr "%s에 대한 경고"
@@ -817,38 +887,38 @@ msgid "Website communication history"
 msgstr "웹사이트 대화 이력"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:178
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You can only delete draft requisitions."
-msgstr ""
+msgstr "초안 요청만 삭제할 수 있습니다."
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:123
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm agreement '%s' because there is no product line."
-msgstr ""
+msgstr "상품 내역이 없기 때문에 '%s' 계약을 승인할 수 없습니다."
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:127
-#: code:addons/purchase_requisition/models/purchase_requisition.py:220
-#: code:addons/purchase_requisition/models/purchase_requisition.py:228
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm the blanket order without price."
-msgstr ""
+msgstr "가격이 없는 포괄 주문  계약은 승인할 수 없습니다."
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:129
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm the blanket order without quantity."
-msgstr ""
+msgstr "수량이 없는 포괄 주문  계약은 승인할 수 없습니다."
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:156
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid ""
 "You have to cancel or validate every RfQ before closing the purchase "
 "requisition."
-msgstr "구매 요청을 닫기 전에 모든 견적 요청을 취소하거나 검증해야합니다."
+msgstr "구매 요청을 닫기 전에 모든 견적 요청을 취소하거나 검증해야 합니다."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form

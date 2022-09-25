@@ -1,23 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_customer
+# 	* website_customer
 # 
 # Translators:
-# Bonny Useful <bonny.useful@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Muhammad Herdiansyah <herdiansyah@openmailbox.org>, 2017
-# Edy Kend <edy@azmall.co.id>, 2017
-# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
-# William Surya Permana <zarambie_game@yahoo.com>, 2017
-# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2017
-# Ryanto The <ry.the77@gmail.com>, 2017
+# Muhammad Herdiansyah <herdiansyah@openmailbox.org>, 2022
+# oon arfiandwi <oon.arfiandwi@gmail.com>, 2022
+# Ryanto The <ry.the77@gmail.com>, 2022
+# Abdul Munif Hanafi <amunifhanafi@gmail.com>, 2022
+# whenwesober, 2022
+# Bonny Useful <bonny.useful@gmail.com>, 2022
+# Abe Manyo, 2022
+# Edy Kend <edy@azmall.co.id>, 2022
+# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2022
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: Ryanto The <ry.the77@gmail.com>, 2017\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2016-08-05 13:12+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,41 +34,58 @@ msgid "<span class=\"fa fa-1x fa-tags\"/> All"
 msgstr "<span class=\"fa fa-1x fa-tags\"/> Semua"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_active
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_country
+msgid ""
+"<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External "
+"link\" title=\"External link\"/>"
+msgstr ""
+
+#. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__active
 msgid "Active"
 msgstr "Aktif"
 
 #. module: website_customer
-#: code:addons/website_customer/controllers/main.py:80
+#: code:addons/website_customer/controllers/main.py:0
 #, python-format
 msgid "All Countries"
 msgstr "Semua Negara"
 
 #. module: website_customer
-#: code:addons/website_customer/controllers/main.py:61
+#: code:addons/website_customer/controllers/main.py:0
 #, python-format
-msgid "All Sectors of Activity"
+msgid "All Industries"
 msgstr ""
 
 #. module: website_customer
-#: model:ir.model.fields,help:website_customer.field_res_partner_tag_classname
+#: model_terms:ir.ui.view,arch_db:website_customer.res_partner_tag_view_search
+msgid "Archived"
+msgstr "Diarsipkan"
+
+#. module: website_customer
+#: model:ir.model.fields,help:website_customer.field_res_partner_tag__classname
 msgid "Bootstrap class to customize the color"
 msgstr ""
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_name
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__can_publish
+msgid "Can Publish"
+msgstr ""
+
+#. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__name
 msgid "Category Name"
 msgstr "Nama Kategori"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_classname
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__classname
 msgid "Class"
 msgstr ""
 
 #. module: website_customer
-#: model_terms:ir.actions.act_window,help:website_customer.action_partner_tag_form
-msgid "Click to create a new partner tag."
-msgstr "Klik untuk membuat tag rekanan."
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_country
+msgid "Close"
+msgstr "Tutup"
 
 #. module: website_customer
 #: model:ir.model,name:website_customer.model_res_partner
@@ -73,22 +93,27 @@ msgid "Contact"
 msgstr "Kontak"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_create_uid
+#: model_terms:ir.actions.act_window,help:website_customer.action_partner_tag_form
+msgid "Create a new contact tag"
+msgstr "Buat sebuah tag kontrak baru"
+
+#. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__create_uid
 msgid "Created by"
 msgstr "Dibuat oleh"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_create_date
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__create_date
 msgid "Created on"
 msgstr "Dibuat pada"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_display_name
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__display_name
 msgid "Display Name"
 msgstr "Nama Tampilan"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_id
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__id
 msgid "ID"
 msgstr "ID"
 
@@ -98,25 +123,30 @@ msgid "Implemented By"
 msgstr "Diimplementasikan oleh"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag___last_update
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__is_published
+msgid "Is Published"
+msgstr ""
+
+#. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag____last_update
 msgid "Last Modified on"
 msgstr "Terakhir diubah pada"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_write_uid
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__write_uid
 msgid "Last Updated by"
 msgstr "Terakhir diperbarui oleh"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_write_date
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__write_date
 msgid "Last Updated on"
 msgstr "Terakhir diperbarui pada"
 
 #. module: website_customer
 #: model_terms:ir.actions.act_window,help:website_customer.action_partner_tag_form
 msgid ""
-"Manage the partner tags to better classify them on your website.\n"
-"                    You can add the filter by tag on your website in the \"Customize\" menu."
+"Manage contact tags to better classify them for tracking and analysis "
+"purposes."
 msgstr ""
 
 #. module: website_customer
@@ -126,7 +156,6 @@ msgstr "Tidak ada hasil yang ditemukan"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.details
-#: model_terms:ir.ui.view,arch_db:website_customer.footer_custom
 #: model_terms:ir.ui.view,arch_db:website_customer.index
 msgid "Our References"
 msgstr "Referensi kami"
@@ -140,16 +169,18 @@ msgstr "Tagar Rekanan"
 #: model:ir.model,name:website_customer.model_res_partner_tag
 msgid ""
 "Partner Tags - These tags can be used on website to find customers by "
-"sector, or ... "
+"sector, or ..."
 msgstr ""
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_partner_ids
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__partner_ids
 msgid "Partners"
 msgstr "Rekanan"
 
 #. module: website_customer
+#: code:addons/website_customer/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website_customer.references_block
+#, python-format
 msgid "References"
 msgstr "Referensi"
 
@@ -160,7 +191,7 @@ msgstr "Rujukan-rujukan oleh negara"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_industry_list
-msgid "References by Sectors of Activity"
+msgid "References by Industries"
 msgstr ""
 
 #. module: website_customer
@@ -171,7 +202,17 @@ msgstr ""
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.index
 msgid "Search"
-msgstr "Penelusuran"
+msgstr "Pencarian"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.res_partner_tag_view_search
+msgid "Search Partner Tag"
+msgstr ""
+
+#. module: website_customer
+#: model:ir.model.fields,help:website_customer.field_res_partner_tag__website_url
+msgid "The full URL to access the document through the website."
+msgstr "URL lengkap untuk mengakses dokumen melalui website."
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.index
@@ -179,9 +220,14 @@ msgid "Trusted by millions worldwide"
 msgstr "Dipercaya oleh jutaan di seluruh dunia"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_website_published
-msgid "Visible in Website"
-msgstr "Terlihat di Situs"
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__website_published
+msgid "Visible on current website"
+msgstr ""
+
+#. module: website_customer
+#: model:ir.model,name:website_customer.model_website
+msgid "Website"
+msgstr "Website"
 
 #. module: website_customer
 #: model:ir.actions.act_window,name:website_customer.action_partner_tag_form
@@ -192,8 +238,13 @@ msgid "Website Tags"
 msgstr ""
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_website_tag_ids
-#: model:ir.model.fields,field_description:website_customer.field_res_users_website_tag_ids
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__website_url
+msgid "Website URL"
+msgstr "URL Website"
+
+#. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner__website_tag_ids
+#: model:ir.model.fields,field_description:website_customer.field_res_users__website_tag_ids
 msgid "Website tags"
 msgstr ""
 

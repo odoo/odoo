@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * hr_expense
+# 	* hr_expense
 # 
 # Translators:
-# Spike Lee <rurouni24@gmail.com>, 2018
-# Martin Trigaux, 2018
-# Goh Gangtai <gangtai.goh@gmail.com>, 2018
-# 최재호 <hwangtog@gmail.com>, 2018
-# Link Up링크업 <linkup.way@gmail.com>, 2018
-# Linkup <link-up@naver.com>, 2018
-# Seongseok Shin <shinss61@hotmail.com>, 2018
+# Link Up링크업 <linkup.way@gmail.com>, 2022
+# Mark Lee <odoos@soti.33mail.com>, 2022
+# Heesoo Choi, 2022
+# Martin Trigaux, 2022
+# Linkup <link-up@naver.com>, 2022
+# JH CHOI <hwangtog@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:48+0000\n"
-"PO-Revision-Date: 2018-08-24 09:18+0000\n"
-"Last-Translator: Seongseok Shin <shinss61@hotmail.com>, 2018\n"
+"POT-Creation-Date: 2022-04-19 13:57+0000\n"
+"PO-Revision-Date: 2016-08-05 12:58+0000\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,79 +25,138 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
 msgid ""
-"<i class=\"text-muted oe_edit_only\">Use [Reference] as a subject prefix for"
-" incoming receipts</i>"
+"%(user)s confirms this expense is not a duplicate with similar expense."
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.actions.report,print_report_name:hr_expense.action_report_hr_expense_sheet
+msgid ""
+"'Expenses - %s - %s' % (object.employee_id.name, (object.name).replace('/', "
+"''))"
+msgstr ""
+"'비용 - %s - %s' % (object.employee_id.name, (object.name).replace('/', ''))"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "1 %(exp_cur)s = %(rate)s %(comp_cur)s"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
+msgid ""
+"<i class=\"text-muted oe_edit_only\">Use this reference as a subject prefix "
+"when submitting by email.</i>"
+msgstr "<i class=\"text-muted oe_edit_only\">이메일로 제출할 때 이 참조를 제목 접두어로 사용하십시오.</i>"
+
+#. module: hr_expense
 #. openerp-web
-#: code:addons/hr_expense/static/src/js/tour.js:49
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid ""
 "<p>Approve the report here.</p><p>Tip: if you refuse, don’t forget to give "
 "the reason thanks to the hereunder message tool</p>"
 msgstr ""
+"<p>여기에서 지출 결의서를 승인합니다.</p><p>팁 : 반려할 경우, 다음에 나오는 메시지 창에 이유를 입력하면 도움이 됩니다</p>"
 
 #. module: hr_expense
 #. openerp-web
-#: code:addons/hr_expense/static/src/js/tour.js:41
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid ""
 "<p>Click on <b> Action Create Report </b> to submit selected expenses to "
 "your manager</p>"
-msgstr ""
+msgstr "<p><b>지출 결의서 만들기</b>를 클릭해서 선택한 경비를 관리자에게 제출합니다</p>"
 
 #. module: hr_expense
 #. openerp-web
-#: code:addons/hr_expense/static/src/js/tour.js:32
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "<p>Click on <b> Create Report </b> to create the report.</p>"
-msgstr ""
+msgstr "<p><b>지출결의서 만들기</b>를 클릭하여 새로운 지출결의서를 생성합니다.</p>"
 
 #. module: hr_expense
 #. openerp-web
-#: code:addons/hr_expense/static/src/js/tour.js:23
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "<p>Once your <b> Expense </b> is ready, you can save it.</p>"
-msgstr ""
+msgstr "<p><b>경비</b>가 준비되면, 저장할 수 있습니다.</p>"
 
 #. module: hr_expense
 #. openerp-web
-#: code:addons/hr_expense/static/src/js/tour.js:36
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "<p>Select expenses to submit them to your manager</p>"
-msgstr ""
+msgstr "<p>관리자에게 제출할 경비 내역을 선택하세요</p>"
 
 #. module: hr_expense
 #. openerp-web
-#: code:addons/hr_expense/static/src/js/tour.js:53
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid ""
 "<p>The accountant receive approved expense reports.</p><p>He can post "
 "journal entries in one click if taxes and accounts are right.</p>"
 msgstr ""
+"<p>회계관리자가 승인된 지출 결의서를 받습니다.</p><p>회계관리자는 세금과 계정이 일치하는 경우 한번의 클릭만으로 분개장 기입 "
+"항목을 전기할 수 있습니다.</p>"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+msgid ""
+"<span attrs=\"{'invisible': [('product_has_tax', '=', False)]}\" "
+"class=\"oe_inline o_form_label ml-1 mr-1\"> ( </span>"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+msgid ""
+"<span attrs=\"{'invisible': [('product_has_tax', '=', False)]}\" "
+"class=\"oe_inline o_form_label ml-1 mr-3\"> ) </span>"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\"/>"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">Expense Journal</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" role=\"img\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid "<span>@</span>"
+msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Date:</strong>"
-msgstr "<strong>일자:</strong>"
+msgstr "<strong>일자 : </strong>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Description:</strong>"
-msgstr "<strong>설명:</strong>"
+msgstr "<strong>설명 : </strong>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Employee:</strong>"
-msgstr ""
+msgstr "<strong>직원 : </strong>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Payment By:</strong>"
-msgstr ""
+msgstr "<strong>결제자 :</strong>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -108,15 +166,7 @@ msgstr "<strong>합계</strong>"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Validated By:</strong>"
-msgstr ""
-
-#. module: hr_expense
-#: code:addons/hr_expense/wizard/hr_expense_sheet_register_payment.py:104
-#, python-format
-msgid ""
-"A payment of %s %s with the reference <a href='/mail/view?%s'>%s</a> related"
-" to your expense %s has been made."
-msgstr ""
+msgstr "<strong>승인자 :</strong>"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__account_id
@@ -129,10 +179,16 @@ msgid "Accounting"
 msgstr "회계"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__accounting_date
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__accounting_date
+msgid "Accounting Date"
+msgstr "회계 날짜"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_needaction
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_needaction
 msgid "Action Needed"
-msgstr "필요한 조치"
+msgstr "조치 필요"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_ids
@@ -141,52 +197,95 @@ msgid "Activities"
 msgstr "활동"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_exception_decoration
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "활동 예외 장식"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_state
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_state
 msgid "Activity State"
 msgstr "활동 상태"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_type_icon
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "활동 유형 아이콘"
+
+#. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.mail_activity_type_action_config_hr_expense
 #: model:ir.ui.menu,name:hr_expense.hr_expense_menu_config_activity_type
 msgid "Activity Types"
-msgstr "활동 종류"
+msgstr "활동 유형"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
-msgid "Actual expense sheets, not the refused ones"
-msgstr ""
+#: model:res.groups,name:hr_expense.group_hr_expense_manager
+msgid "Administrator"
+msgstr "관리자"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:158
-#, python-format
-msgid "Add a new expense,"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid "Alias"
+msgstr "별칭"
 
 #. module: hr_expense
-#: model:product.product,name:hr_expense.air_ticket
-#: model:product.template,name:hr_expense.air_ticket_product_template
-msgid "Air Flight"
-msgstr ""
+#: model:res.groups,name:hr_expense.group_hr_expense_user
+msgid "All Approver"
+msgstr "전체 승인하기"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_all
 msgid "All Expense Reports"
+msgstr "모든 지출 결의서"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_my_all
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_my_expenses_all
+msgid "All My Expenses"
 msgstr ""
 
 #. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_all
-msgid "All Expenses"
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all
+msgid "All Reports"
 msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__amount_residual
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__amount_residual
+msgid "Amount Due"
+msgstr "지불해야 할 금액"
+
+#. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/upload_mixin.js:0
+#, python-format
+msgid "An error occurred during the upload"
+msgstr "업로드하는 동안 오류가 발생했습니다"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__account_id
 msgid "An expense account is expected"
+msgstr "비용 계정과목이 필요합니다"
+
+#. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/expense_form_view.js:0
+#, python-format
+msgid "An expense of same category, amount and date already exists."
 msgstr ""
 
 #. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "An expense report must contain only lines from the same company."
+msgstr "비용 보고서에는 동일한 회사의 내역만 포함되어야 합니다."
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__analytic_account_id
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Analytic Account"
 msgstr "분석 계정"
 
@@ -196,39 +295,76 @@ msgid "Analytic Tags"
 msgstr "분석 태그"
 
 #. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
+#: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
+msgid "Apple App Store"
+msgstr "애플 앱스토어"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__approval_date
+msgid "Approval Date"
+msgstr "승인일"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Approve"
-msgstr "승인"
+msgstr "결재하기"
 
 #. module: hr_expense
-#: selection:hr.expense,state:0 selection:hr.expense.sheet,state:0
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
+msgid "Approve Report"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_approve
+msgid "Approve the new expense reports submitted by the employees you manage."
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__approved
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__state__approve
 #: model:mail.message.subtype,name:hr_expense.mt_expense_approved
 msgid "Approved"
-msgstr "승인됨"
+msgstr "결재 완료"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__approved_by
+msgid "Approved By"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 msgid "Approved Expenses"
 msgstr "승인된 경비"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__approved_on
+msgid "Approved On"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
+msgid "Archived"
+msgstr "보관됨"
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
-msgid "Attach Document"
+msgid "Attach Receipt"
 msgstr ""
 
 #. module: hr_expense
 #. openerp-web
-#: code:addons/hr_expense/static/src/js/tour.js:27
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "Attach your receipt here."
-msgstr ""
+msgstr "영수증을 여기에 첨부하세요."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_attachment_count
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "첨부 파일 수"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__bank_journal_id
@@ -238,54 +374,73 @@ msgstr "은행 분개장"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__reference
 msgid "Bill Reference"
-msgstr "청구 참조"
+msgstr "계산서 참조"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__can_approve
+msgid "Can Approve"
+msgstr "승인 가능"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__can_reset
 msgid "Can Reset"
-msgstr ""
+msgstr "초기화 가능"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_product_product__can_be_expensed
 #: model:ir.model.fields,field_description:hr_expense.field_product_template__can_be_expensed
+#: model_terms:ir.ui.view,arch_db:hr_expense.product_template_search_view_inherit_hr_expense
 msgid "Can be Expensed"
-msgstr "경비로 처리될 수 있음"
+msgstr "경비 처리 가능"
 
 #. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/expense_form_view.js:0
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_register_payment_view_form
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+#, python-format
 msgid "Cancel"
 msgstr "취소"
 
 #. module: hr_expense
-#: model:product.product,name:hr_expense.car_travel
-#: model:product.template,name:hr_expense.car_travel_product_template
-msgid "Car Travel Expenses"
-msgstr "자동차 여행 경비"
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
+msgid "Category"
+msgstr "카테고리"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
+msgid "Category:"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
+msgid "Category: not found"
+msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Certified honest and conform,<br/>(Date and signature).<br/><br/>"
-msgstr ""
+msgstr "검토하고 확인함. <br/>(날짜 및 서명)<br/><br/>"
 
 #. module: hr_expense
-#: selection:hr.expense,payment_mode:0
+#: model:ir.model,name:hr_expense.model_res_company
+msgid "Companies"
+msgstr "회사"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__company_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__company_id
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__company_id
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__payment_mode__company_account
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Company"
 msgstr "회사"
 
 #. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_register_payment_wizard__company_id
-msgid "Company related to this journal"
-msgstr "이 분개장과 관련된 회사"
-
-#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "설정 구성"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_configuration
@@ -293,150 +448,209 @@ msgid "Configuration"
 msgstr "구성"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 msgid "Confirmed Expenses"
-msgstr "확정된 경비"
+msgstr "확인된 경비"
 
 #. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense__product_uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr "단위 사이의 변환은 동일 카테고리에서만 가능합니다. 변환은 비율에 따라 이루어집니다."
+
+#. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/xml/documents_upload_views.xml:0
+#, python-format
+msgid "Create"
+msgstr "작성"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Create Report"
-msgstr ""
+msgstr "지출 결의서로 만들기"
 
 #. module: hr_expense
-#: model_terms:ir.actions.act_window,help:hr_expense.action_request_approve_expense_sheet
-#: model_terms:ir.actions.act_window,help:hr_expense.action_request_to_pay_expense_sheet
-#: model_terms:ir.actions.act_window,help:hr_expense.action_request_to_post_expense_sheet
-#: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
-#: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
-msgid "Create a new expense"
-msgstr ""
-
-#. module: hr_expense
-#: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
-msgid "Create a new expense category"
-msgstr ""
-
-#. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_account
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_all
-#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_pay
-#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_post
-#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_all
 msgid "Create a new expense report"
+msgstr "새 지출 결의서 만들기"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid "Create expenses from incoming emails"
+msgstr "수신 메일에서 비용 만들기"
+
+#. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
+msgid "Create new expenses to get statistics."
+msgstr ""
+
+#. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/xml/documents_upload_views.xml:0
+#, python-format
+msgid "Create record"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_submit
+msgid ""
+"Create the new expense reports from the expenses submitted by the employees "
+"you manage."
 msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__create_uid
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_approve_duplicate__create_uid
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__create_uid
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__create_uid
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__create_uid
 msgid "Created by"
 msgstr "작성자"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__create_date
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_approve_duplicate__create_date
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__create_date
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__create_date
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__create_date
 msgid "Created on"
-msgstr "작성일"
+msgstr "작성일자"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__currency_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__currency_id
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__currency_id
 msgid "Currency"
+msgstr "통화"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__currency_rate
+msgid "Currency Rate"
 msgstr "환율"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__date
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__accounting_date
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Date"
-msgstr "날짜"
+msgstr "일자"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
+msgid "Dear"
+msgstr "친애하는"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__expense_alias_prefix
 msgid "Default Alias Name for Expenses"
+msgstr "경비에 대한 기본 별칭 이름"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_res_company__expense_journal_id
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__expense_journal_id
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid "Default Expense Journal"
 msgstr ""
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid "Default accounting journal for expenses paid by employees."
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_department
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__department_id
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 msgid "Department"
 msgstr "부서"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__name
 msgid "Description"
-msgstr "내용"
+msgstr "설명"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__display_name
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__display_name
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__display_name
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__display_name
-msgid "Display Name"
-msgstr "이름 표시"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
-msgid "Documents"
-msgstr "문서"
-
-#. module: hr_expense
-#: selection:hr.expense.sheet,state:0
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
-msgid "Draft"
-msgstr "임시"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_register_payment_view_form
-msgid "Draft Payment"
+#: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
+#: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
+msgid "Did you try the mobile app?"
 msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
-msgid "Email Alias"
-msgstr "이메일 별칭"
+msgid "Digitalize your receipts with OCR and Artificial Intelligence"
+msgstr ""
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
-msgid "Emails"
-msgstr "이메일"
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__display_name
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_approve_duplicate__display_name
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__display_name
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: hr_expense
+#: model_terms:digest.tip,tip_description:hr_expense.digest_tip_hr_expense_0
+msgid ""
+"Do not keep your expense tickets in your pockets any longer. Just snap a "
+"picture of your receipt and let Odoo digitalizes it for you. The OCR and "
+"Artificial Intelligence will fill the data automatically."
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__state__done
+msgid "Done"
+msgstr "완료"
+
+#. module: hr_expense
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__state__draft
+msgid "Draft"
+msgstr "임시"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+msgid "Draft Expenses"
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/wizard/hr_expense_approve_duplicate.py:0
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__duplicate_expense_ids
+#, python-format
+msgid "Duplicate Expense"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_employee
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__employee_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__employee_id
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Employee"
 msgstr "임직원"
 
 #. module: hr_expense
-#: selection:hr.expense,payment_mode:0
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__payment_mode__own_account
 msgid "Employee (to reimburse)"
-msgstr ""
+msgstr "직원 (환불 목적)"
 
 #. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.action_approved_expense
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_account
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_account_employee_expenses
 msgid "Employee Expenses"
-msgstr ""
+msgstr "직원 경비"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__address_id
 msgid "Employee Home Address"
-msgstr ""
+msgstr "직원 집 주소"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_move_line__expense_id
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+#: model:ir.model.fields,field_description:hr_expense.field_hr_employee__expense_manager_id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_approve_duplicate__expense_ids
+#: model:ir.model.fields,field_description:hr_expense.field_res_users__expense_manager_id
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Expense"
 msgstr "경비"
@@ -444,56 +658,79 @@ msgstr "경비"
 #. module: hr_expense
 #: model:mail.activity.type,name:hr_expense.mail_act_expense_approval
 msgid "Expense Approval"
+msgstr "경비 승인"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_expense_approve_duplicate
+msgid "Expense Approve Duplicate"
 msgstr ""
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_employee_tree_inherit_expense
+msgid "Expense Approver"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__date
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Expense Date"
-msgstr "경비 지출일"
+msgstr "비용 지출일"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid "Expense Digitalization (OCR)"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__journal_id
 msgid "Expense Journal"
-msgstr ""
+msgstr "경비 분개"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__expense_line_ids
 msgid "Expense Lines"
-msgstr "경비 명세"
+msgstr "비용 명세"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__is_editable
+msgid "Expense Lines Are Editable By Current User"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__expense_manager_id
+msgid "Expense Manager"
+msgstr "경비 관리"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_product
 #: model:ir.ui.menu,name:hr_expense.menu_hr_product
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Expense Products"
-msgstr ""
+msgstr "경비 품목"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
 msgid "Expense Refuse Reason Wizard"
-msgstr ""
-
-#. module: hr_expense
-#: model:ir.model,name:hr_expense.model_hr_expense_sheet_register_payment_wizard
-msgid "Expense Register Payment Wizard"
-msgstr ""
+msgstr "경비 반려 사유 마법사"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_sheet
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__sheet_id
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_move_form_inherit_expense
 msgid "Expense Report"
-msgstr ""
+msgstr "지출 결의서"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__state
 msgid "Expense Report State"
-msgstr ""
+msgstr "지출 결의서 상태"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__name
 msgid "Expense Report Summary"
-msgstr ""
+msgstr "지출 결의서 요약"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_report
@@ -501,74 +738,102 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Expense Reports"
-msgstr ""
+msgstr "지출 결의서"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_department_filtered
 msgid "Expense Reports Analysis"
-msgstr ""
+msgstr "지출 결의서 분석"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_pay
 msgid "Expense Reports To Pay"
-msgstr ""
+msgstr "결제할 지출 결의서"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_post
 msgid "Expense Reports To Post"
-msgstr ""
+msgstr "분개 처리할 지출 결의서"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_approve
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_department_to_approve
 msgid "Expense Reports to Approve"
+msgstr "승인할 지출 결의서"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_submit
+msgid "Expense Reports to Submit"
 msgstr ""
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_employee__expense_manager_id
-msgid "Expense Responsible"
+#: model:ir.model.fields,field_description:hr_expense.field_account_bank_statement_line__expense_sheet_id
+#: model:ir.model.fields,field_description:hr_expense.field_account_move__expense_sheet_id
+#: model:ir.model.fields,field_description:hr_expense.field_account_payment__expense_sheet_id
+msgid "Expense Sheet"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
+msgid "Expense Validate Duplicate"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
+msgid "Expense products can be reinvoiced to your customers."
 msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "Expense refuse reason"
-msgstr ""
+msgstr "경비 반려 사유"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_approved
 msgid "Expense report approved"
-msgstr ""
+msgstr "지출 결의서 승인 완료"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_paid
 msgid "Expense report paid"
-msgstr ""
+msgstr "지출 결의서 결제 완료"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_refused
 msgid "Expense report refused"
+msgstr "지출 결의서 반려됨"
+
+#. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all
+msgid ""
+"Expense reports regroup all the expenses incurred during a specific event."
 msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_account_move_line__expense_id
 msgid "Expense where the move line come from"
-msgstr ""
+msgstr "이동 명세 출처 경비"
 
 #. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_root
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_employee_view_form_inherit_expense
+#: model:product.product,name:hr_expense.product_product_fixed_cost
+#: model:product.product,name:hr_expense.product_product_zero_cost
+#: model:product.template,name:hr_expense.product_product_fixed_cost_product_template
+#: model:product.template,name:hr_expense.product_product_zero_cost_product_template
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_activity
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_activity
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_expenses_tree
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
-#: model:product.product,name:hr_expense.product_product_fixed_cost
-#: model:product.template,name:hr_expense.product_product_fixed_cost_product_template
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+#, python-format
 msgid "Expenses"
 msgstr "경비"
 
 #. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.hr_expense_action
+#: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_all
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_all_expenses
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_graph
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_pivot
@@ -581,56 +846,43 @@ msgstr "경비 분석"
 #: model:ir.actions.report,name:hr_expense.action_report_hr_expense_sheet
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Expenses Report"
-msgstr ""
+msgstr "지출 결의서"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department__expense_sheets_to_approve_count
 msgid "Expenses Reports to Approve"
-msgstr ""
+msgstr "승인할 지출 결의서"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 msgid "Expenses by Date"
-msgstr ""
+msgstr "일별 경비 현황"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
-msgid "Expenses in Draft"
-msgstr ""
-
-#. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:568
+#: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
-msgid "Expenses must be paid by the same entity (Company or employee)."
+msgid "Expenses must have the same To Reimburse status."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:623
-#, python-format
-msgid ""
-"Expenses must have an expense journal specified to generate accounting "
-"entries."
-msgstr ""
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Expenses of Your Team Member"
-msgstr ""
+msgstr "팀원 경비"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 msgid "Expenses to Invoice"
-msgstr "송장 경비"
+msgstr "청구할 경비"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.account_journal_dashboard_kanban_view_inherit_hr_expense
 msgid "Expenses to Process"
-msgstr ""
+msgstr "처리할 경비"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_refused
-msgid "Explicitely Refused by manager or acccountant"
+msgid "Explicitly Refused by manager or accountant"
 msgstr ""
 
 #. module: hr_expense
@@ -640,34 +892,26 @@ msgid "Followers"
 msgstr "팔로워"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_channel_ids
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "팔로워 (채널)"
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_partner_ids
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "팔로워 (파트너)"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+#: model:ir.model.fields,help:hr_expense.field_hr_expense__activity_type_icon
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "멋진 아이콘 폰트 예 : fa-tasks"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Former Employees"
-msgstr ""
+msgstr "전직 직원"
 
 #. module: hr_expense
-#: model_terms:ir.actions.act_window,help:hr_expense.action_approved_expense
-#: model_terms:ir.actions.act_window,help:hr_expense.action_unsubmitted_expense
-msgid ""
-"From here the accountant will be able to approve as well as refuse the "
-"expenses which are verified by the HR Manager."
-msgstr ""
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Future Activities"
 msgstr "향후 활동"
 
@@ -677,75 +921,142 @@ msgid "General Information"
 msgstr "일반 정보"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "Generate Expenses"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
+#: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
+msgid "Google Play Store"
+msgstr "구글 플레이스토어"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Group By"
 msgstr "그룹별"
 
 #. module: hr_expense
-#: model:ir.model,name:hr_expense.model_hr_department
-msgid "HR Department"
-msgstr ""
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__is_multiple_currency
 msgid "Handle lines with different currencies"
-msgstr ""
+msgstr "서로 다른 통화로 명세 항목 처리"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__hide_payment_method
-msgid "Hide Payment Method"
-msgstr "결제 방법 숨기기"
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__has_message
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__has_message
+msgid "Has Message"
+msgstr "메시지가 있습니다"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__hr_expense_ids
 msgid "Hr Expense"
-msgstr ""
+msgstr "시간당 경비"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__hr_expense_sheet_id
 msgid "Hr Expense Sheet"
-msgstr ""
+msgstr "시간당 경비 명세서"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_approve_duplicate__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__id
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__id
 msgid "ID"
 msgstr "ID"
 
 #. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense__message_unread
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_unread
-msgid "If checked new messages require your attention."
-msgstr "만약 선택하였으면, 새 메시지에 주의를 기울여야 합니다."
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_exception_icon
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_exception_icon
+msgid "Icon"
+msgstr "아이콘"
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense__activity_exception_icon
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "예외 활동을 표시하기 위한 아이콘"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_needaction
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "만약 선택하였으면, 새 메시지에 주의를 기울여야 합니다."
+msgstr "만약 선택하였으면, 신규 메시지에 주의를 기울여야 합니다."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_has_error
+#: model:ir.model.fields,help:hr_expense.field_hr_expense__message_has_sms_error
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_has_error
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
+msgstr "이 옵션을 선택하면 일부 정보가 전달 오류를 생성합니다."
+
+#. module: hr_expense
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__payment_state__in_payment
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+msgid "In Payment"
+msgstr "지불 중"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__tax_ids
+msgid "Included taxes"
 msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid "Incoming Emails"
+msgstr "수신 이메일"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
+msgid "Internal Note"
+msgstr "내부 노트"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "Invalid attachments!"
+msgstr "잘못된 첨부 파일!"
+
+#. module: hr_expense
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__payment_state__invoicing_legacy
+msgid "Invoicing App Legacy"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_editable
+msgid "Is Editable By Current User"
+msgstr "현재 사용자가 편집 가능한지 여부"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_is_follower
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_is_follower
 msgid "Is Follower"
-msgstr "팔로워입니다"
+msgstr "팔로워임"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__same_currency
+msgid "Is currency_id different from the company_currency_id"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_cost
+msgid "Is product with non zero cost selected"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_journal
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Journal"
 msgstr "분개장"
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_account_move
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__account_move_id
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Journal Entry"
 msgstr "분개"
 
@@ -755,70 +1066,68 @@ msgid "Journal Item"
 msgstr "분개 항목"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__label_convert_rate
+msgid "Label Convert Rate"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense____last_update
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_approve_duplicate____last_update
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard____last_update
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet____last_update
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard____last_update
 msgid "Last Modified on"
-msgstr "최근 수정"
+msgstr "최근 수정일"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__write_uid
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_approve_duplicate__write_uid
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__write_uid
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__write_uid
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__write_uid
 msgid "Last Updated by"
 msgstr "최근 갱신한 사람"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__write_date
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_approve_duplicate__write_date
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__write_date
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__write_date
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__write_date
 msgid "Last Updated on"
-msgstr "최근 갱신 날짜"
+msgstr "최근 갱신 일자"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Late Activities"
 msgstr "지연된 활동"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__use_mailgateway
-#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Let your employees record expenses by email"
-msgstr ""
+msgstr "직원들이 이메일로 비용을 기록하게 하십시오."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_main_attachment_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "주요 첨부 파일"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__user_id
-#: model:res.groups,name:hr_expense.group_hr_expense_manager
 msgid "Manager"
 msgstr "관리자"
 
 #. module: hr_expense
 #. openerp-web
-#: code:addons/hr_expense/static/src/js/tour.js:61
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "Managers can get all reports to approve from this menu."
-msgstr ""
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__communication
-msgid "Memo"
-msgstr "메모"
+msgstr "관리자는 이 메뉴에서 모든 보고서를 승인할 수 있습니다."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_error
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "메시지 전송 오류"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_ids
@@ -827,33 +1136,35 @@ msgid "Messages"
 msgstr "메시지"
 
 #. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_my_all
-#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_my_reports
-msgid "My Expense Reports"
-msgstr ""
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__my_activity_date_deadline
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "내 활동 마감일"
+
+#. module: hr_expense
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_my_expenses
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
+msgid "My Expenses"
+msgstr "내 경비"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_my_unsubmitted
-#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_my_expenses
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_my_expenses_to_submit
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
-msgid "My Expenses"
-msgstr "내 비용"
+msgid "My Expenses to Report"
+msgstr ""
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_my_all
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_my_reports
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 msgid "My Reports"
-msgstr ""
+msgstr "내 지출 결의서"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
-msgid "My Team Expenses"
-msgstr ""
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
-msgid "My Team Reports"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
+msgid "My Team"
+msgstr "나의 팀"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -861,9 +1172,21 @@ msgid "Name"
 msgstr "이름"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:186
+#: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "New Expense Report"
+msgstr "신규 지출 결의서"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "New Expense Reports"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_calendar_event_id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
 msgstr ""
 
 #. module: hr_expense
@@ -885,64 +1208,87 @@ msgid "Next Activity Type"
 msgstr "다음 활동 유형"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:244
+#: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid ""
 "No Expense account found for the product %s (or for its category), please "
 "configure one."
-msgstr ""
+msgstr "%s 제품 (또는 해당 범주)에 대한 비용 계정과목이 없습니다. 구성하십시오."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:261
+#: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "No Home Address found for the employee %s, please configure one."
-msgstr ""
+msgstr "%s 직원에 대한 집 주소가 없습니다. 주소를 구성하십시오."
 
 #. module: hr_expense
-#: model_terms:ir.actions.act_window,help:hr_expense.action_approved_expense
-msgid "No approved employee expenses"
-msgstr ""
-
-#. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:257
-#: code:addons/hr_expense/models/hr_expense.py:368
+#: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
-msgid "No credit account found for the %s journal, please configure one."
+msgid "No attachment was provided"
+msgstr "첨부 파일이 제공되지 않았습니다"
+
+#. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_department_filtered
+#: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
+msgid "No data yet!"
+msgstr "아직 정보가 없습니다!"
+
+#. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
+msgid "No expense products found. Let's create one!"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_all
+msgid "No expense report found. Let's create one!"
 msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_approve
-msgid "No expense reports to approve"
+#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_pay
+#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_post
+#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_submit
+msgid "No expense reports found"
 msgstr ""
 
 #. module: hr_expense
-#: model_terms:ir.actions.act_window,help:hr_expense.action_unsubmitted_expense
-msgid "No unreported employee expenses"
+#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all
+msgid "No expense reports found. Let's create one!"
 msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__payment_state__not_paid
+msgid "Not Paid"
+msgstr "지불 안됨"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__description
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Notes..."
-msgstr ""
+msgstr "노트..."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_needaction_counter
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "작업 수"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__attachment_number
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__attachment_number
 msgid "Number of Attachments"
+msgstr "첨부파일 수"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__expense_number
+msgid "Number of Expenses"
 msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_error_counter
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_has_error_counter
-msgid "Number of error"
-msgstr ""
+msgid "Number of errors"
+msgstr "오류 횟수"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_needaction_counter
@@ -954,68 +1300,49 @@ msgstr "조치가 필요한 메시지 수"
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_has_error_counter
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "전송 오류 메시지 수"
 
 #. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense__message_unread_counter
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_unread_counter
-msgid "Number of unread messages"
-msgstr "읽지 않은 메시지 수"
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
+msgid "Odoo"
+msgstr "Odoo"
 
 #. module: hr_expense
-#: model:res.groups,name:hr_expense.group_hr_expense_user
-msgid "Officer"
-msgstr ""
-
-#. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_account
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_all
-#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_pay
-#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_post
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_all
-#: model_terms:ir.actions.act_window,help:hr_expense.action_request_approve_expense_sheet
-#: model_terms:ir.actions.act_window,help:hr_expense.action_request_to_pay_expense_sheet
-#: model_terms:ir.actions.act_window,help:hr_expense.action_request_to_post_expense_sheet
 msgid ""
 "Once you have created your expense, submit it to your manager who will "
 "validate it."
-msgstr ""
+msgstr "지출결의서를 생성하고 난 후 관리자에게 승인을 요청하십시오."
 
 #. module: hr_expense
 #. openerp-web
-#: code:addons/hr_expense/static/src/js/tour.js:45
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid ""
 "Once your <b>Expense report</b> is ready, you can submit it to your manager "
 "and wait for the approval from your manager."
-msgstr ""
+msgstr "<b>지출 결의서</b>가 완료되면, 관리자에게 상신하여 승인을 기다릴 수 있습니다."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:706
+#: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Only HR Officers or the concerned employee can reset to draft."
-msgstr ""
+msgstr "인사 담당자 또는 관계된 직원이 초안으로 되돌릴 수 있습니다."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:667
-#: code:addons/hr_expense/models/hr_expense.py:688
+#: code:addons/hr_expense/models/hr_expense.py:0
+#: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Only Managers and HR Officers can approve expenses"
-msgstr ""
+msgstr "관리자와 인사 담당자만 지출 결의서를 승인할 수 있습니다."
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
-msgid "Other Info"
-msgstr "기타 정보"
-
-#. module: hr_expense
-#: selection:hr.expense,activity_state:0
-#: selection:hr.expense.sheet,activity_state:0
-msgid "Overdue"
-msgstr "기한이 지난"
-
-#. module: hr_expense
-#: selection:hr.expense,state:0 selection:hr.expense.sheet,state:0
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__done
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__payment_state__paid
 #: model:mail.message.subtype,name:hr_expense.mt_expense_paid
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Paid"
 msgstr "지불됨"
 
@@ -1023,45 +1350,34 @@ msgstr "지불됨"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__payment_mode
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__payment_mode
 msgid "Paid By"
+msgstr "결제자"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+msgid "Partial"
+msgstr "부분"
+
+#. module: hr_expense
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__payment_state__partial
+msgid "Partially Paid"
+msgstr "일부 지불됨"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__payment_state
+msgid "Payment Status"
+msgstr "결제 상태"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"Please configure Default Expense account for Category expense: "
+"`property_account_expense_categ_id`."
 msgstr ""
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__partner_id
-msgid "Partner"
-msgstr "협력사"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__amount
-msgid "Payment Amount"
-msgstr "지불 금액"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__payment_date
-msgid "Payment Date"
-msgstr "지불일"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__journal_id
-msgid "Payment Method"
-msgstr "지급 방법"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__payment_method_id
-msgid "Payment Type"
-msgstr "지불 유형"
-
-#. module: hr_expense
-#: selection:hr.expense,activity_state:0
-#: selection:hr.expense.sheet,activity_state:0
-msgid "Planned"
-msgstr "계획됨"
-
-#. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:248
-#, python-format
-msgid ""
-"Please configure Default Expense account for Product expense: "
-"`property_account_expense_categ_id`."
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
+msgid "Post Entries"
 msgstr ""
 
 #. module: hr_expense
@@ -1070,9 +1386,22 @@ msgid "Post Journal Entries"
 msgstr "분개 전기"
 
 #. module: hr_expense
-#: selection:hr.expense.sheet,state:0
+#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_post
+msgid ""
+"Post the journal entries of the new expense reports approved by the "
+"employees' manager."
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__state__post
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Posted"
 msgstr "전기됨"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
+msgid "Powered by"
+msgstr "저작권자"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -1082,23 +1411,42 @@ msgstr "가격"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Price in Company Currency"
-msgstr ""
+msgstr "회사 통화 기준 가격"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
+msgid "Price:"
+msgstr "가격 :"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_id
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Product"
-msgstr "상품"
+msgstr "품목"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_description
+msgid "Product Description"
+msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Product Name"
-msgstr "상품명"
+msgstr "품목 명"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_product_template
 msgid "Product Template"
-msgstr "상품 양식"
+msgstr "품목 양식"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_tree_view
+msgid "Product Variants"
+msgstr "파생 품목"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_employee_public
+msgid "Public Employee"
+msgstr "일반 직원"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -1118,22 +1466,12 @@ msgstr "사유"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "Reason :"
-msgstr ""
+msgstr "사유 :"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "Reason to refuse Expense"
-msgstr ""
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__partner_bank_account_id
-msgid "Recipient Bank Account"
-msgstr ""
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
-msgid "Recording"
-msgstr ""
+msgstr "반려 사유"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -1141,6 +1479,12 @@ msgid "Ref."
 msgstr "참조"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_ref_editable
+msgid "Reference Is Editable By Current User"
+msgstr "현재 사용자가 참조를 편집 할 수 있음"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Refuse"
@@ -1149,43 +1493,62 @@ msgstr "반려"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_refuse_wizard_action
 msgid "Refuse Expense"
-msgstr ""
+msgstr "지출 결의서 반려"
 
 #. module: hr_expense
-#: selection:hr.expense,state:0 selection:hr.expense.sheet,state:0
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__refused
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__state__cancel
 #: model:mail.message.subtype,name:hr_expense.mt_expense_refused
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Refused"
 msgstr "반려됨"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Refused Expenses"
-msgstr ""
+msgstr "반려된 지출 결의서"
 
 #. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.hr_expense_sheet_register_payment_wizard_action
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_register_payment_view_form
+#: code:addons/hr_expense/models/hr_expense.py:0
+#: model:ir.model,name:hr_expense.model_account_payment_register
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
+#, python-format
 msgid "Register Payment"
 msgstr "결제 등록"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_payroll_expense
+msgid "Reimburse Expenses in Payslip"
+msgstr "급여 명세서 상의 상환 비용"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid "Reimburse expenses in payslips"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid "Reimburse in Payslip"
+msgstr "급여 명세서 상의 상환"
+
+#. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_pay
+msgid ""
+"Reimburse the employees who incurred these costs or simply register the "
+"corresponding payments."
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Report"
 msgstr "보고서"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__company_currency_id
 msgid "Report Company Currency"
-msgstr ""
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
-msgid "Reported"
-msgstr ""
+msgstr "회사 통화기준 보고서"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_reports
@@ -1193,18 +1556,23 @@ msgid "Reporting"
 msgstr "보고"
 
 #. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.action_request_approve_expense_sheet
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_approve
 msgid "Reports to Approve"
-msgstr ""
+msgstr "승인할 지출 결의서"
 
 #. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.action_request_to_pay_expense_sheet
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_pay
 msgid "Reports to Pay"
-msgstr ""
+msgstr "지불할 지출 결의서"
 
 #. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.action_request_to_post_expense_sheet
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_post
 msgid "Reports to Post"
+msgstr "전기할 지출 결의서"
+
+#. module: hr_expense
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_submit
+msgid "Reports to Submit"
 msgstr ""
 
 #. module: hr_expense
@@ -1219,12 +1587,74 @@ msgid "Responsible User"
 msgstr "담당 사용자"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:135
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__payment_state__reversed
+msgid "Reversed"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_sms_error
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS 전송 에러"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__sample
+msgid "Sample"
+msgstr "견본"
+
+#. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/expense_form_view.js:0
+#, python-format
+msgid "Save Anyways"
+msgstr ""
+
+#. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/xml/documents_upload_views.xml:0
+#: code:addons/hr_expense/static/src/xml/documents_upload_views.xml:0
+#: code:addons/hr_expense/static/src/xml/documents_upload_views.xml:0
+#, python-format
+msgid "Scan"
+msgstr "스캔"
+
+#. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/xml/expense_qr_modal_template.xml:0
+#, python-format
+msgid "Scan this QR code to get the Odoo app:"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
+#: model:ir.model.fields,help:hr_expense.field_res_users__expense_manager_id
+msgid ""
+"Select the user responsible for approving \"Expenses\" of this employee.\n"
+"If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid ""
-"Selected Unit of Measure does not belong to the same category as the product"
-" Unit of Measure."
-msgstr "상품 측정 단위에서 같은 분류에 속하지 않은 측정 단위를 선택하세요."
+"Selected Unit of Measure for expense %(expense)s does not belong to the same"
+" category as the Unit of Measure of product %(product)s."
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid ""
+"Send an email to this email alias with the receipt in attachment to create "
+"an expense in one click. If the first word of the mail subject contains the "
+"category's internal reference or the category name, the corresponding "
+"category will automatically be set. Type the expense amount in the mail "
+"subject to set it on the expense too."
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
+msgid "Send bills to OCR to generate expenses"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_configuration
@@ -1235,33 +1665,49 @@ msgstr "설정"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Setup your domain alias"
+msgstr "도메인 별칭 설정"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_approve_duplicate__sheet_ids
+msgid "Sheet"
+msgstr "표"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__sheet_is_editable
+msgid "Sheet Is Editable"
 msgstr ""
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__show_partner_bank_account
-msgid "Show Partner Bank Account"
-msgstr ""
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Show all records which has next action date is before today"
 msgstr "다음 행동 날짜가 오늘 이전 인 모든 기록보기"
 
 #. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_product_template__can_be_expensed
-msgid "Specify whether the product can be selected in an expense."
+#: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
+#: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
+msgid ""
+"Snap pictures of your receipts and let Odoo<br> automatically create "
+"expenses for you."
 msgstr ""
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
-msgid "State"
-msgstr "상태"
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "Specify expense journal to generate accounting entries."
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_product_product__can_be_expensed
+#: model:ir.model.fields,help:hr_expense.field_product_template__can_be_expensed
+msgid "Specify whether the product can be selected in an expense."
+msgstr "경비에서 상품이 선택되었는지 확인하세요."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__state
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__state
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Status"
 msgstr "상태"
 
@@ -1282,12 +1728,12 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__state
 msgid "Status of the expense."
-msgstr ""
+msgstr "경비의 상태."
 
 #. module: hr_expense
-#: model:ir.actions.server,name:hr_expense.hr_expense_submit_action_server
-msgid "Submit Report"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
+msgid "Submit"
+msgstr "제출"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -1295,42 +1741,88 @@ msgid "Submit to Manager"
 msgstr "관리자에게 제출"
 
 #. module: hr_expense
-#: selection:hr.expense,state:0 selection:hr.expense.sheet,state:0
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__reported
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__state__submit
 msgid "Submitted"
+msgstr "제출 완료"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__amount_tax_company
+msgid "Tax amount"
 msgstr ""
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__untaxed_amount
-msgid "Subtotal"
-msgstr "소계"
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__amount_tax
+msgid "Tax amount in Currency"
+msgstr ""
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__tax_ids
+#: model:ir.model.fields,help:hr_expense.field_hr_expense__amount_tax_company
+msgid "Tax amount in company currency"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense__amount_tax
+msgid "Tax amount in currency"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__total_amount_taxes
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Taxes"
 msgstr "세금"
 
 #. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_register_payment_wizard__hide_payment_method
-msgid ""
-"Technical field used to hide the payment method if the selected journal has "
-"only one available which is 'manual'"
-msgstr "선택한 분개가 ‘수동’만 이용 가능할 경우 지급 방법을 숨기는 기술 필드입니다."
+#: model:res.groups,name:hr_expense.group_hr_expense_team_approver
+msgid "Team Approver"
+msgstr "팀 승인자"
 
 #. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_register_payment_wizard__show_partner_bank_account
-msgid ""
-"Technical field used to know whether the field `partner_bank_account_id` "
-"needs to be displayed or not in the payments form views"
+#: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
+#: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
+msgid "The Default journal for the company used when the expense is done."
 msgstr ""
 
 #. module: hr_expense
 #. openerp-web
-#: code:addons/hr_expense/static/src/js/tour.js:57
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid ""
 "The accountant can register a payment to reimburse the employee directly."
+msgstr "회계 관리자는 직원이 직접 지불한 금액에 대해 상환금을 등록할 수 있습니다."
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "The current user has no related employee. Please, create one."
 msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "The expense reports were successfully approved."
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
+msgid ""
+"The first word of the email subject did not correspond to any category code."
+" You'll have to set the category manually on the expense."
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
+msgid ""
+"The following approved expenses have similar employee, amount and category "
+"than some expenses of this report. Please verify this report does not "
+"contain duplicates."
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.constraint,message:hr_expense.constraint_hr_expense_sheet_journal_id_required_posted
+msgid "The journal must be set on posted expense"
+msgstr "전기된 비용으로 분개를 설정해야 합니다."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__journal_id
@@ -1338,78 +1830,98 @@ msgid "The journal used when the expense is done."
 msgstr "경비를 사용할 때 사용하는 분개 항목"
 
 #. module: hr_expense
-#: code:addons/hr_expense/wizard/hr_expense_sheet_register_payment.py:48
-#, python-format
-msgid "The payment amount must be strictly positive."
-msgstr ""
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__bank_journal_id
 msgid "The payment method used when the expense is paid by the company."
+msgstr "회사에서 비용을 지불할 때 사용되는 결제 방법."
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "There are no expense reports to approve."
 msgstr ""
 
 #. module: hr_expense
-#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_approve
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
-msgid "To Approve"
-msgstr "승인"
+#: model:digest.tip,name:hr_expense.digest_tip_hr_expense_0
+#: model_terms:digest.tip,tip_description:hr_expense.digest_tip_hr_expense_0
+msgid "Tip: Snap pictures of your receipts with the remote app"
+msgstr ""
 
 #. module: hr_expense
-#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_pay
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+msgid "To Approve"
+msgstr "결재 대기"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 msgid "To Pay"
 msgstr "지불하기"
 
 #. module: hr_expense
-#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_post
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 msgid "To Post"
-msgstr ""
+msgstr "회계처리하기"
 
 #. module: hr_expense
-#: selection:hr.expense,state:0
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
+msgid "To Report"
+msgstr "보고하기"
+
+#. module: hr_expense
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__draft
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 msgid "To Submit"
 msgstr "제출하기"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
-msgid "To report"
-msgstr ""
-
-#. module: hr_expense
-#: selection:hr.expense,activity_state:0
-#: selection:hr.expense.sheet,activity_state:0
-msgid "Today"
-msgstr "오늘"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Today Activities"
 msgstr "오늘 활동"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount_company
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Total"
 msgstr "합계"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount_company
-msgid "Total (Company Currency)"
-msgstr ""
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__total_amount
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_expenses_tree
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Total Amount"
 msgstr "합계 금액"
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
+msgid "Total Company Currency"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount
+msgid "Total In Currency"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__untaxed_amount
+msgid "Total Untaxed Amount In Currency"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense__activity_exception_decoration
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "레코드에 있는 예외 활동의 유형입니다."
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__unit_amount
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Unit Price"
 msgstr "단가"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__unit_amount_display
+msgid "Unit Price Display"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_uom_id
@@ -1417,62 +1929,62 @@ msgid "Unit of Measure"
 msgstr "단위"
 
 #. module: hr_expense
-#: model:product.product,uom_name:hr_expense.air_ticket
 #: model:product.product,uom_name:hr_expense.product_product_fixed_cost
-#: model:product.template,uom_name:hr_expense.air_ticket_product_template
+#: model:product.product,uom_name:hr_expense.product_product_zero_cost
 #: model:product.template,uom_name:hr_expense.product_product_fixed_cost_product_template
-msgid "Unit(s)"
+#: model:product.template,uom_name:hr_expense.product_product_zero_cost_product_template
+msgid "Units"
 msgstr "단위"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_unread
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_unread
-msgid "Unread Messages"
-msgstr "읽지 않은 메세지"
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__untaxed_amount
+msgid "Untaxed Amount"
+msgstr "공급가액"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_unread_counter
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "읽지 않은 메세지 수"
-
-#. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.action_unsubmitted_expense
-msgid "Unreported Expenses"
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_uom_category_id
+msgid "UoM Category"
 msgstr ""
 
 #. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
-msgid "User responsible of expense approval. Should be Expense Manager."
-msgstr ""
+#. openerp-web
+#: code:addons/hr_expense/static/src/xml/documents_upload_views.xml:0
+#, python-format
+msgid "Upload"
+msgstr "올리기"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_register_payment_view_form
-msgid "Validate"
-msgstr "유효성 검사"
+#: model:ir.model,name:hr_expense.model_res_users
+msgid "Users"
+msgstr "사용자"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_expenses_tree
-msgid "View Attached Documents"
+#: model:ir.actions.act_window,name:hr_expense.hr_expense_approve_duplicate_action
+msgid "Validate Duplicate Expenses"
 msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "View Attachments"
-msgstr ""
+msgstr "첨부문서 보기"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
+msgid "View Expense"
+msgstr "비용 보기"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "View Report"
-msgstr ""
+msgstr "지출 결의서 보기"
 
 #. module: hr_expense
 #. openerp-web
-#: code:addons/hr_expense/static/src/js/tour.js:13
-#: code:addons/hr_expense/static/src/js/tour.js:18
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "Want to manage your expenses? It starts here."
-msgstr ""
+msgstr "경비를 관리하고 싶으시다면 여기에서 시작하십시오."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__website_message_ids
@@ -1487,118 +1999,172 @@ msgid "Website communication history"
 msgstr "웹사이트 대화 이력"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:675
+#: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
+msgid ""
+"When the cost of an expense product is different than 0, then the user using"
+" this product won't be able to change the amount of the expense, only the "
+"quantity. Use a cost different than 0 for expense categories funded by the "
+"company at fixed cost like allowances for mileage, per diem, accomodation or"
+" meal."
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
+msgid "Whether tax is defined on a selected product"
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You are not authorized to edit the reference of this expense report."
+msgstr "귀하는 이 비용 보고서의 참조를 편집할 권한이 없습니다."
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You are not authorized to edit this expense report."
+msgstr "이 비용 보고서를 편집할 권한이 없습니다."
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You can not create report without category."
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
+msgid "You can now submit it to the manager from the following link."
+msgstr "이제 다음 링크에서 관리자에게 제출할 수 있습니다."
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You can only approve your department expenses"
-msgstr ""
+msgstr "소속 부서의 지출 결의서만 승인가능합니다."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:620
+#: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
-msgstr ""
+msgstr "승인된 비용에 대해서만 회계 항목을 생성할 수 있습니다."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:696
+#: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You can only refuse your department expenses"
+msgstr "소속 부서의 지출 결의서만 반려 가능합니다."
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You can't mix sample expenses and regular ones"
 msgstr ""
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
-msgid ""
-"You can setup a generic email alias to create incoming expenses easily. "
-"Write an email with the receipt in attachment to create an expense line in "
-"one click. If the mail subject contains the product's internal reference "
-"between brackets, the product will be set automatically. Type the expense "
-"amount in the mail subject to set it on the expense too."
-msgstr ""
-
-#. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:575
+#: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot add expenses of another employee."
-msgstr ""
+msgstr "다른 직원의 경비는 추가할 수 없습니다."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:672
+#: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot approve your own expenses"
-msgstr ""
+msgstr "자신의 경비는 승인할 수 없습니다"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:145
+#: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot delete a posted or approved expense."
-msgstr ""
+msgstr "회계 처리가 끝났거나 승인된 지출 결의서는 삭제할 수 없습니다."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:587
+#: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot delete a posted or paid expense."
-msgstr ""
+msgstr "회계 처리가 끝났거나 결제된 지출 결의서는 삭제할 수 없습니다."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:693
+#: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot refuse your own expenses"
-msgstr ""
+msgstr "자신의 지출 결의서는 반려할 수 없습니다"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:182
+#: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot report expenses for different employees in the same report."
+msgstr "같은 지출 결의서 내에 다른 직원에 대한 비용을 보고할 순 없습니다."
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You cannot report the expenses without amount!"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:180
+#: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot report twice the same line!"
+msgstr "같은 명세를 두 번 보고할 수 없습니다!"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"You need to have at least one category that can be expensed in your database"
+" to proceed!"
 msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "Your Expense"
-msgstr ""
+msgstr "귀하의 경비"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
+msgid "Your expense has been successfully registered."
+msgstr "비용이 성공적으로 등록되었습니다."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "e.g. Lunch"
-msgstr ""
+msgstr "예. 점심식사"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "e.g. Lunch with Customer"
-msgstr ""
+msgstr "예. 고객과 점심"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "e.g. Trip to NY"
-msgstr ""
+msgstr "예. 뉴욕 출장"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "has been refused"
+msgstr "반려됨"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "to be reimbursed"
 msgstr ""
 
 #. module: hr_expense
-#: model:product.product,weight_uom_name:hr_expense.air_ticket
-#: model:product.product,weight_uom_name:hr_expense.car_travel
-#: model:product.product,weight_uom_name:hr_expense.product_product_fixed_cost
-#: model:product.template,weight_uom_name:hr_expense.air_ticket_product_template
-#: model:product.template,weight_uom_name:hr_expense.car_travel_product_template
-#: model:product.template,weight_uom_name:hr_expense.product_product_fixed_cost_product_template
-msgid "kg"
-msgstr "kg"
-
-#. module: hr_expense
-#: model:product.product,uom_name:hr_expense.car_travel
-#: model:product.template,uom_name:hr_expense.car_travel_product_template
-msgid "km"
-msgstr "km"
-
-#. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:159
+#: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
-msgid "or send receipts by email to %s."
+msgid "to report"
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "under validation"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid "use OCR to fill data from a picture of the bill"
 msgstr ""

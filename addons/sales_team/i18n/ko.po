@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * sales_team
+# 	* sales_team
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Goh Gangtai <gangtai.goh@gmail.com>, 2018
-# 최재호 <hwangtog@gmail.com>, 2018
-# Linda Stockelova <stockeloval@btlnet.com>, 2018
-# Link Up링크업 <linkup.way@gmail.com>, 2018
-# Linkup <link-up@naver.com>, 2018
-# Seongseok Shin <shinss61@hotmail.com>, 2018
+# Link Up링크업 <linkup.way@gmail.com>, 2022
+# Goh Gangtai <gangtai.goh@gmail.com>, 2022
+# Linkup <link-up@naver.com>, 2022
+# JH CHOI <hwangtog@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Heesoo Choi, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Seongseok Shin <shinss61@hotmail.com>, 2018\n"
+"POT-Creation-Date: 2021-09-14 10:29+0000\n"
+"PO-Revision-Date: 2016-08-05 13:10+0000\n"
+"Last-Translator: Heesoo Choi, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,70 +25,129 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
+msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "<i class=\"fa fa-envelope mr-1\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
+msgstr ""
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
+msgid "<span class=\"bg-error\">Archived</span>"
+msgstr ""
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
 msgid "<span>New</span>"
 msgstr "<span>신규</span>"
 
 #. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
 msgid "<span>Reporting</span>"
 msgstr "<span>보고</span>"
 
 #. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
 msgid "<span>View</span>"
 msgstr "<span>보기</span>"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_needaction
 msgid "Action Needed"
-msgstr "필요한 조치"
+msgstr "조치 필요"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__active
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__active
 msgid "Active"
 msgstr "활성"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.mail_activity_type_action_config_sales
 msgid "Activity Types"
-msgstr "활동 종류"
+msgstr "활동 유형"
 
 #. module: sales_team
-#: model:crm.team,name:sales_team.crm_team_1
-msgid "America"
+#: model:ir.model.fields,help:sales_team.field_crm_team__crm_team_member_ids
+msgid ""
+"Add members to automatically assign their documents to this sales team."
 msgstr ""
 
 #. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+#: code:addons/sales_team/models/crm_team.py:0
+#, python-format
+msgid ""
+"Adding %(user_name)s in this team would remove him/her from its current team"
+" %(team_name)s."
+msgstr ""
+
+#. module: sales_team
+#: code:addons/sales_team/models/crm_team_member.py:0
+#, python-format
+msgid ""
+"Adding %(user_name)s in this team would remove him/her from its current "
+"teams %(team_names)s."
+msgstr ""
+
+#. module: sales_team
+#: code:addons/sales_team/models/crm_team.py:0
+#, python-format
+msgid ""
+"Adding %(user_names)s in this team would remove them from their current "
+"teams (%(team_names)s)."
+msgstr ""
+
+#. module: sales_team
+#: model:res.groups,name:sales_team.group_sale_manager
+msgid "Administrator"
+msgstr "관리자"
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_search
 msgid "Archived"
-msgstr "아카이브됨"
+msgstr "보관됨"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_attachment_count
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "첨부 파일 수"
 
 #. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Avatar"
-msgstr ""
+msgstr "아바타"
 
 #. module: sales_team
-#: selection:crm.team,dashboard_graph_type:0
-msgid "Bar"
-msgstr ""
-
-#. module: sales_team
-#: code:addons/sales_team/models/crm_team.py:274
+#: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Big Pretty Button :)"
+msgstr "크고 아름다운 버튼 :)"
+
+#. module: sales_team
+#: model:ir.model,name:sales_team.model_crm_tag
+msgid "CRM Tag"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__member_ids
-msgid "Channel Members"
-msgstr ""
+#: code:addons/sales_team/models/crm_team.py:0
+#, python-format
+msgid "Cannot delete default team \"%s\""
+msgstr "\"%s\" 기본 팀을 삭제할 수 없습니다"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_tag__color
+msgid "Color"
+msgstr "색상"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__color
@@ -98,13 +156,20 @@ msgstr "색상표"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__company_id
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__company_id
 msgid "Company"
 msgstr "회사"
 
 #. module: sales_team
 #: model:ir.ui.menu,name:sales_team.menu_sale_config
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
 msgid "Configuration"
 msgstr "구성"
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor7
+msgid "Consulting"
+msgstr "컨설팅"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_partner
@@ -112,71 +177,87 @@ msgid "Contact"
 msgstr "연락처"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_model
-msgid "Content"
-msgstr "컨텐츠"
+#: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
+msgid "Create CRM Tags"
+msgstr "CRM 태그 만들기"
 
 #. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
+msgid "Create a Sales Team"
+msgstr "영업부 추가"
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.crm_team_member_action
+msgid "Create a new salesman"
+msgstr "영업담당자 만들기"
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
+msgid "Create an Activity Type"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_tag__create_uid
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__create_uid
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__create_uid
 msgid "Created by"
 msgstr "작성자"
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_tag__create_date
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__create_date
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__create_date
 msgid "Created on"
-msgstr "작성일"
+msgstr "작성일자"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__currency_id
 msgid "Currency"
-msgstr "환율"
-
-#. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
-msgid "Dashboard"
-msgstr "알림판"
+msgstr "통화"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_button_name
 msgid "Dashboard Button"
-msgstr ""
+msgstr "현황판 버튼"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_data
 msgid "Dashboard Graph Data"
-msgstr ""
+msgstr "현황판 그래프 데이터"
 
 #. module: sales_team
-#: selection:crm.team,dashboard_graph_group:0
-msgid "Day"
-msgstr "일"
+#: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
+#: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_sales
+msgid "Define a new sales team"
+msgstr "새로운 영업팀 정의"
 
 #. module: sales_team
-#: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
-#: model_terms:ir.actions.act_window,help:sales_team.sales_team_config_action
-msgid "Define a new Sales Team"
-msgstr ""
+#: model:crm.tag,name:sales_team.categ_oppor5
+msgid "Design"
+msgstr "디자인"
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_tag__display_name
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__display_name
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__display_name
 msgid "Display Name"
-msgstr "이름 표시"
+msgstr "표시명"
 
 #. module: sales_team
-#: model:crm.team,name:sales_team.team_sales_department
-msgid "Europe"
-msgstr ""
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__email
+msgid "Email"
+msgstr "이메일"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__favorite_user_ids
 msgid "Favorite Members"
-msgstr ""
+msgstr "즐겨찾는 회원"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__is_favorite
 msgid ""
 "Favorite teams to display them in the dashboard and access them easily."
-msgstr ""
+msgstr "즐겨찾는 팀이 현황판에 표시되고 쉽게 접근할 수 있습니다."
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -187,63 +268,66 @@ msgstr "이 팀의 사용자와 관련된 행사를 자동으로 추적하기 �
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_follower_ids
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_follower_ids
 msgid "Followers"
 msgstr "팔로워"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "팔로워 (채널)"
-
-#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_partner_ids
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "팔로워 (파트너)"
 
 #. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
-msgid "Graph"
-msgstr "그래프"
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
+msgid "Group By"
+msgstr "그룹별"
 
 #. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_search
 msgid "Group By..."
 msgstr "그룹별..."
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_group
-msgid "Group by"
-msgstr "그룹화"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__has_message
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__has_message
+msgid "Has Message"
+msgstr "메시지가 있습니다"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_group
-msgid "How this channel's dashboard graph will group the results."
-msgstr "이 채널의 대시 보드 그래프가 결과를 그룹화하는 방법입니다."
-
-#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_tag__id
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__id
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__id
 msgid "ID"
 msgstr "ID"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team__message_unread
-msgid "If checked new messages require your attention."
-msgstr "만약 선택하였으면, 새 메시지에 주의를 기울여야 합니다."
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "만약 선택하였으면, 새 메시지에 주의를 기울여야 합니다."
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error
-msgid "If checked, some messages have a delivery error."
+#: model:ir.model.fields,help:sales_team.field_crm_team__is_membership_multi
+#: model:ir.model.fields,help:sales_team.field_crm_team_member__is_membership_multi
+msgid ""
+"If True, users may belong to several sales teams. Otherwise membership is "
+"limited to a single sales team."
 msgstr ""
 
 #. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_unread
+#: model:ir.model.fields,help:sales_team.field_crm_team_member__message_needaction
+#: model:ir.model.fields,help:sales_team.field_crm_team_member__message_unread
+msgid "If checked, new messages require your attention."
+msgstr "만약 선택하였으면, 신규 메시지에 주의를 기울여야 합니다."
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error
+#: model:ir.model.fields,help:sales_team.field_crm_team_member__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "이 옵션을 선택하면 일부 정보가 전달 오류를 생성합니다."
+
+#. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_partner__team_id
+#: model:ir.model.fields,help:sales_team.field_res_users__team_id
 msgid ""
-"If set, this Sales Team will be used for sales and assignations related to "
+"If set, this Sales Team will be used for sales and assignments related to "
 "this partner"
 msgstr ""
 
@@ -252,287 +336,409 @@ msgstr ""
 msgid ""
 "If the active field is set to false, it will allow you to hide the Sales "
 "Team without removing it."
+msgstr "활성 필드가 false로 설정되면 영업 팀을 제거하지 않고 숨길 수 있습니다."
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_1920
+msgid "Image"
+msgstr "이미지"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_128
+msgid "Image (128)"
 msgstr ""
 
 #. module: sales_team
-#: selection:crm.team,dashboard_graph_model:0
-msgid "Invoices"
-msgstr "청구서"
+#: model:crm.tag,name:sales_team.categ_oppor4
+msgid "Information"
+msgstr "정보"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_is_follower
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_is_follower
 msgid "Is Follower"
-msgstr "팔로워입니다"
+msgstr "팔로워임"
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_tag____last_update
 #: model:ir.model.fields,field_description:sales_team.field_crm_team____last_update
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member____last_update
 msgid "Last Modified on"
-msgstr "최근 수정"
+msgstr "최근 수정일"
 
 #. module: sales_team
-#: selection:crm.team,dashboard_graph_period:0
-msgid "Last Month"
-msgstr "전 월"
-
-#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_tag__write_uid
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__write_uid
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__write_uid
 msgid "Last Updated by"
 msgstr "최근 갱신한 사람"
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_tag__write_date
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__write_date
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__write_date
 msgid "Last Updated on"
-msgstr "최근 갱신 날짜"
+msgstr "최근 갱신 일자"
 
 #. module: sales_team
-#: selection:crm.team,dashboard_graph_period:0
-msgid "Last Week"
-msgstr "지난 주"
-
-#. module: sales_team
-#: selection:crm.team,dashboard_graph_period:0
-msgid "Last Year"
-msgstr "지난 해"
-
-#. module: sales_team
-#: selection:crm.team,dashboard_graph_type:0
-msgid "Line"
-msgstr "라인"
+#: model_terms:ir.actions.act_window,help:sales_team.crm_team_member_action
+msgid ""
+"Link salespersons to sales teams. Set their monthly lead capacity\n"
+"                and configure automatic lead assignment."
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_main_attachment_id
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_main_attachment_id
 msgid "Main Attachment"
+msgstr "주요 첨부 파일"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_res_users__sale_team_id
+msgid ""
+"Main user sales team. Used notably for pipeline, or to set sales team in "
+"invoicing or subscription."
 msgstr ""
 
 #. module: sales_team
-#: model:res.groups,name:sales_team.group_sale_manager
-msgid "Manager"
-msgstr "관리자"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__member_company_ids
+msgid "Member Company"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__member_warning
+msgid "Member Warning"
+msgstr ""
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "Members"
+msgstr "회원"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__member_warning
+msgid "Membership Issue Warning"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "메시지 전송 오류"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_ids
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_ids
 msgid "Messages"
 msgstr "메시지"
 
 #. module: sales_team
-#: selection:crm.team,dashboard_graph_group:0
-msgid "Month"
-msgstr "월"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__mobile
+msgid "Mobile"
+msgstr "모바일"
 
 #. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
-msgid "My Favorites"
-msgstr "내 즐겨찾기"
-
-#. module: sales_team
-#: code:addons/sales_team/models/crm_team.py:260
-#, python-format
-msgid "Not Defined"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__is_membership_multi
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__is_membership_multi
+msgid "Multiple Memberships Allowed"
 msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__name
+msgid "Name"
+msgstr "이름"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction_counter
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "작업 수"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error_counter
-msgid "Number of error"
-msgstr ""
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_has_error_counter
+msgid "Number of errors"
+msgstr "오류 횟수"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction_counter
+#: model:ir.model.fields,help:sales_team.field_crm_team_member__message_needaction_counter
 msgid "Number of messages which requires an action"
 msgstr "조치가 필요한 메시지 수"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error_counter
+#: model:ir.model.fields,help:sales_team.field_crm_team_member__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "전송 오류 메시지 수"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_unread_counter
+#: model:ir.model.fields,help:sales_team.field_crm_team_member__message_unread_counter
 msgid "Number of unread messages"
 msgstr "읽지 않은 메시지 수"
 
 #. module: sales_team
-#: selection:crm.team,dashboard_graph_model:0
-msgid "Pipeline"
-msgstr "파이프라인"
+#: model:crm.tag,name:sales_team.categ_oppor8
+msgid "Other"
+msgstr "기타"
 
 #. module: sales_team
-#: selection:crm.team,team_type:0
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__phone
+msgid "Phone"
+msgstr "전화번호"
+
+#. module: sales_team
+#: model:crm.team,name:sales_team.pos_sales_team
 msgid "Point of Sale"
 msgstr "점포판매시스템"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__reply_to
-msgid "Reply-To"
-msgstr "답장하다"
+#: model:crm.team,name:sales_team.crm_team_1
+msgid "Pre-Sales"
+msgstr "사전 영업"
 
 #. module: sales_team
-#: selection:crm.team,dashboard_graph_model:0 selection:crm.team,team_type:0
+#: model:crm.tag,name:sales_team.categ_oppor1
+msgid "Product"
+msgstr "품목"
+
+#. module: sales_team
+#: model:crm.team,name:sales_team.team_sales_department
 msgid "Sales"
-msgstr "매출"
+msgstr "판매"
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_tree
+msgid "Sales Men"
+msgstr "영업 담당자"
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
+msgid "Sales Person"
+msgstr "영업 담당자"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team
-msgid "Sales Channels"
-msgstr "판매 채널"
-
-#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__name
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__crm_team_id
 #: model:ir.model.fields,field_description:sales_team.field_res_partner__team_id
+#: model:ir.model.fields,field_description:sales_team.field_res_users__team_id
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_tree
 msgid "Sales Team"
 msgstr "영업팀"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_res_users__sale_team_id
-msgid ""
-"Sales Team the user is member of. Used to compute the members of a Sales "
-"Team through the inverse one2many"
+#: model:ir.model,name:sales_team.model_crm_team_member
+msgid "Sales Team Member"
+msgstr "영업 팀 구성원"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__crm_team_member_ids
+#: model:ir.model.fields,field_description:sales_team.field_res_users__crm_team_member_ids
+msgid "Sales Team Members"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.actions.act_window,name:sales_team.sales_team_config_action
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__crm_team_member_all_ids
+msgid "Sales Team Members (incl. inactive)"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.crm_team_action_config
+#: model:ir.actions.act_window,name:sales_team.crm_team_action_sales
+#: model:ir.model.fields,field_description:sales_team.field_res_users__crm_team_ids
 msgid "Sales Teams"
 msgstr "영업팀"
 
 #. module: sales_team
-#: selection:crm.team,dashboard_graph_group:0
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_id
 msgid "Salesperson"
 msgstr "영업사원"
 
 #. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
-msgid "Salesteam name..."
-msgstr ""
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__member_ids
+msgid "Salespersons"
+msgstr "영업담당자"
 
 #. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_search
 msgid "Salesteams Search"
 msgstr "영업팀 검색"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_period
-msgid "Scale"
-msgstr "크기"
+#: code:addons/sales_team/models/crm_team.py:0
+#, python-format
+msgid "Sample data"
+msgstr "예제 데이터"
 
 #. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
-msgid "Settings"
-msgstr "설정"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__sequence
+msgid "Sequence"
+msgstr "순서"
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor3
+msgid "Services"
+msgstr "서비스"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_favorite
 msgid "Show on dashboard"
-msgstr ""
+msgstr "현황판에 표시"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__user_id
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
-msgid "Team Leader"
-msgstr "팀 리더"
+#: model:crm.tag,name:sales_team.categ_oppor2
+msgid "Software"
+msgstr "소프트웨어"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_tag__name
+msgid "Tag Name"
+msgstr "태그 이름"
+
+#. module: sales_team
+#: model:ir.model.constraint,message:sales_team.constraint_crm_tag_name_uniq
+msgid "Tag name already exists !"
+msgstr "동일한 태그명이 존재합니다!"
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.sales_team_crm_tag_action
+#: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_form
+#: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_tree
+msgid "Tags"
+msgstr "태그"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "Team Details"
+msgstr "팀 정보"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__user_id
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_search
+msgid "Team Leader"
+msgstr "팀장"
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.crm_team_member_action
 msgid "Team Members"
 msgstr "팀 구성원"
 
 #. module: sales_team
-#: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_act
-msgid "Team Pipelines"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__team_type
-msgid "Team Type"
-msgstr ""
+#: model:ir.actions.act_window,name:sales_team.crm_team_action_pipeline
+msgid "Teams"
+msgstr "팀"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__color
 msgid "The color of the channel"
-msgstr ""
+msgstr "채널의 색상"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team__reply_to
+#: model:ir.model.fields,help:sales_team.field_crm_team_member__company_id
+msgid "The default company for this user."
+msgstr "해당 사용자의 기준 회사"
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
 msgid ""
-"The email address put in the 'Reply-To' of all emails sent by Odoo about "
-"cases in this Sales Team"
+"Those represent the different categories of things you have to do (e.g. "
+"\"Call\" or \"Prepare meeting\")."
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_model
-msgid "The graph this channel will display in the Dashboard.\n"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_period
-msgid "The time period this channel's dashboard graph will consider."
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_type
-msgid "The type of graph this channel will display in the dashboard."
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team__team_type
+#: code:addons/sales_team/models/crm_team.py:0
+#, python-format
 msgid ""
-"The type of this channel, it will define the resources this channel uses."
+"To add a Salesperson into multiple Teams, activate the Multi-Team option in "
+"settings."
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_type
-msgid "Type"
-msgstr "유형"
+#: model:crm.tag,name:sales_team.categ_oppor6
+msgid "Training"
+msgstr "훈련"
 
 #. module: sales_team
-#: code:addons/sales_team/models/crm_team.py:151
-#: code:addons/sales_team/models/crm_team.py:178
+#: model:ir.model.fields,help:sales_team.field_crm_team_member__user_in_teams_ids
+msgid ""
+"UX: Give users not to add in the currently chosen team to avoid duplicates"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__member_company_ids
+#: model:ir.model.fields,help:sales_team.field_crm_team_member__user_company_ids
+msgid "UX: Limit to team company or all if no company"
+msgstr ""
+
+#. module: sales_team
+#: code:addons/sales_team/models/crm_team.py:0
+#: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Undefined graph model for Sales Team: %s"
-msgstr ""
+msgstr "영업팀에 대한 정의되지 않은 그래프 모델 : %s"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_unread
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_unread
 msgid "Unread Messages"
 msgstr "읽지 않은 메세지"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_unread_counter
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "읽지 않은 메세지 수"
 
 #. module: sales_team
-#: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
-#: model_terms:ir.actions.act_window,help:sales_team.sales_team_config_action
+#: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
 msgid ""
-"Use Sales Teams to organize your sales departments.\n"
-"                    Each channel will work with a separate pipeline."
+"Use Sales Teams to organize your sales departments and draw up reports."
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
-msgid "User's Sales Team"
+#: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
+#: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_sales
+msgid ""
+"Use Sales Teams to organize your sales departments.\n"
+"                Each team will work with a separate pipeline."
 msgstr ""
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
+msgid ""
+"Use Tags to manage and track your Opportunities (product structure, sales "
+"type, ...)"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_company_ids
+msgid "User Company"
+msgstr "사용자 회사"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_in_teams_ids
+msgid "User In Teams"
+msgstr "팀내 사용자"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
+msgid "User Sales Team"
+msgstr "사용자 영업팀 "
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman_all_leads
 msgid "User: All Documents"
-msgstr ""
+msgstr "사용자 : 모든 문서"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman
 msgid "User: Own Documents Only"
-msgstr ""
+msgstr "사용자 : 자신의 문서만"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
@@ -540,41 +746,53 @@ msgid "Users"
 msgstr "사용자"
 
 #. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__member_ids
+msgid "Users assigned to this team."
+msgstr ""
+
+#. module: sales_team
 #: model:crm.team,name:sales_team.salesteam_website_sales
-#: selection:crm.team,team_type:0
 msgid "Website"
 msgstr "웹사이트"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__website_message_ids
-msgid "Website Messages"
-msgstr "웹사이트 메시지"
+#: code:addons/sales_team/models/crm_team_member.py:0
+#, python-format
+msgid ""
+"You are trying to create duplicate membership(s). We found that "
+"%(duplicates)s already exist(s)."
+msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team__website_message_ids
-msgid "Website communication history"
-msgstr "웹사이트 대화 이력"
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "e.g. North America"
+msgstr "예. 북미"
 
 #. module: sales_team
-#: selection:crm.team,dashboard_graph_group:0
-msgid "Week"
-msgstr "주"
+#: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_form
+msgid "e.g. Services"
+msgstr "예. 서비스"
+
+#. module: sales_team
+#: model:crm.team,name:sales_team.ebay_sales_team
+msgid "eBay"
+msgstr "eBay"
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman_all_leads
 msgid ""
 "the user will have access to all records of everyone in the sales "
 "application."
-msgstr ""
+msgstr "사용자는 영업 응용 프로그램의 모든 사람의 모든 레코드에 접근할 수 있습니다."
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman
 msgid "the user will have access to his own data in the sales application."
-msgstr ""
+msgstr "사용자는 영업 응용 프로그램에서 자신의 데이터에 접근할 수 있습니다."
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_manager
 msgid ""
 "the user will have an access to the sales configuration as well as statistic"
 " reports."
-msgstr ""
+msgstr "사용자는 통계 보고서뿐만 아니라 판매 환경 설정에 접근할 수 있습니다."

@@ -3,19 +3,21 @@
 # 	* website_mass_mailing
 # 
 # Translators:
-# Martin Trigaux, 2019
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2019
-# Antanas Muliuolis <an.muliuolis@gmail.com>, 2019
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2019
-# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# Martin Trigaux, 2022
+# Arminas Grigonis <arminas@versada.lt>, 2022
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2022
+# grupoda2 <dmitrijus.ivanovas@gmail.com>, 2022
+# Linas Versada <linaskrisiukenas@gmail.com>, 2022
+# Antanas Muliuolis <an.muliuolis@gmail.com>, 2022
+# Jonas Zinkevicius <jozi@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
+"POT-Creation-Date: 2021-09-14 10:29+0000\n"
+"PO-Revision-Date: 2016-08-05 13:13+0000\n"
+"Last-Translator: Jonas Zinkevicius <jozi@odoo.com>, 2022\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,25 +26,14 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
-msgid ""
-"<strong>Newsletter Popup!</strong> The newsletter popup is active on this "
-"page."
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
+msgid ", .o_newsletter_popup"
 msgstr ""
 
 #. module: website_mass_mailing
-#. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:0
-#, python-format
-msgid "Add a Newsletter Subscribe Button"
-msgstr "Pridėti naujienlaiškio prenumeratos mygtuką"
-
-#. module: website_mass_mailing
-#. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:0
-#, python-format
-msgid "Add a Newsletter Subscribe Popup"
-msgstr "Pridėti iššokantį naujienlaiškio prenumeratos langą"
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
+msgid "Always <b>First</b>."
+msgstr ""
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block
@@ -51,104 +42,67 @@ msgstr ""
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block
-msgid "Be the first to find out all the latest news, products and trends."
+msgid "Be the first to find out all the latest news, products, and trends."
 msgstr ""
 
 #. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
-msgid "Change Newsletter"
-msgstr "Keisti naujienlaiškį"
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
+msgid ""
+"Be the first to find out all the latest news,<br/> products, and trends."
+msgstr ""
+
+#. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/xml/website_mass_mailing.xml:0
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
+#, python-format
+msgid "Close"
+msgstr "Uždaryti"
+
+#. module: website_mass_mailing
+#: model:ir.model,name:website_mass_mailing.model_res_company
+msgid "Companies"
+msgstr "Įmonės"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social_left
 msgid "Contact"
-msgstr "Kontaktai"
-
-#. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__create_uid
-msgid "Created by"
-msgstr "Sukūrė"
-
-#. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__create_date
-msgid "Created on"
-msgstr "Sukurta"
-
-#. module: website_mass_mailing
-#. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
-#, python-format
-msgid "DRAG BUILDING BLOCKS HERE"
-msgstr "TEMPKITE BLOKUS ČIA"
-
-#. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__display_name
-msgid "Display Name"
-msgstr "Rodomas pavadinimas"
-
-#. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
-msgid "Edit Popup"
-msgstr ""
-
-#. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.social_links
-msgid "Facebook"
-msgstr "Facebook"
-
-#. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.social_links
-msgid "Google Plus"
-msgstr "Google Plus"
-
-#. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__id
-msgid "ID"
-msgstr "ID"
-
-#. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.social_links
-msgid "Instagram"
-msgstr "Instagram"
-
-#. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup____last_update
-msgid "Last Modified on"
-msgstr "Paskutinį kartą keista"
-
-#. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__write_uid
-msgid "Last Updated by"
-msgstr "Paskutinį kartą atnaujino"
-
-#. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__write_date
-msgid "Last Updated on"
-msgstr "Paskutinį kartą atnaujinta"
-
-#. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.social_links
-msgid "LinkedIn"
-msgstr "LinkedIn"
-
-#. module: website_mass_mailing
-#: model:ir.model,name:website_mass_mailing.model_mailing_list
-#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__mailing_list_id
-msgid "Mailing List"
-msgstr "Adresatų sąrašas"
-
-#. module: website_mass_mailing
-#: model:ir.model,name:website_mass_mailing.model_website_mass_mailing_popup
-msgid "Mailing list popup"
-msgstr ""
+msgstr "Kontaktas"
 
 #. module: website_mass_mailing
 #. openerp-web
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:0
 #, python-format
+msgid "Display Thanks Button"
+msgstr ""
+
+#. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
+#, python-format
+msgid "Error"
+msgstr "Klaida"
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
 msgid "Newsletter"
 msgstr "Naujienlaiškis"
+
+#. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:0
+#, python-format
+msgid ""
+"No mailing list found, do you want to create a new one? This will save all "
+"your changes, are you sure you want to proceed?"
+msgstr ""
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
+msgid "Show reCaptcha Policy"
+msgstr "Rodyti \"reCaptcha\" politiką"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
@@ -163,38 +117,20 @@ msgid "Success"
 msgstr "Pavyko"
 
 #. module: website_mass_mailing
+#: code:addons/website_mass_mailing/controllers/main.py:0
+#, python-format
+msgid "Suspicious activity detected by Google reCaptcha."
+msgstr "\"Google reCaptcha\" aptiko įtartina veikla."
+
+#. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
 msgid "Thanks"
 msgstr "Ačiū"
 
 #. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_mailing_list__toast_content
-msgid "Toast Content"
-msgstr ""
-
-#. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.social_links
-msgid "Twitter"
-msgstr "Twitter"
-
-#. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__website_id
-msgid "Website"
-msgstr "Svetainė"
-
-#. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__popup_content
-msgid "Website Popup Content"
-msgstr "Iššokančio lango turinys"
-
-#. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_mailing_list__website_popup_ids
-msgid "Website Popups"
-msgstr ""
-
-#. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.mailing_list_view_form
-msgid "Website popups"
+#: code:addons/website_mass_mailing/controllers/main.py:0
+#, python-format
+msgid "Thanks for subscribing!"
 msgstr ""
 
 #. module: website_mass_mailing

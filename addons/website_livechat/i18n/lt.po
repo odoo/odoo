@@ -3,18 +3,20 @@
 # 	* website_livechat
 # 
 # Translators:
-# Martin Trigaux, 2019
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2019
-# Linas Versada <linaskrisiukenas@gmail.com>, 2019
-# Šarūnas Ažna <sarunas.azna@gmail.com>, 2019
+# Arunas V. <arunas@devoro.com>, 2022
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Linas Versada <linaskrisiukenas@gmail.com>, 2022
+# Jonas Zinkevicius <jozi@odoo.com>, 2022
+# Šarūnas Ažna <sarunas.azna@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 11:33+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Šarūnas Ažna <sarunas.azna@gmail.com>, 2019\n"
+"POT-Creation-Date: 2022-04-19 13:58+0000\n"
+"PO-Revision-Date: 2016-08-05 13:13+0000\n"
+"Last-Translator: Šarūnas Ažna <sarunas.azna@gmail.com>, 2022\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,21 +27,26 @@ msgstr ""
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_website_visitor__session_count
 msgid "# Sessions"
+msgstr "Sesijos nr."
+
+#. module: website_livechat
+#: code:addons/website_livechat/models/mail_channel.py:0
+#, python-format
+msgid "%s has left the conversation."
 msgstr ""
 
 #. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
-msgid "<span class=\"fa fa-comments mr-2\"/>Speaking With"
-msgstr ""
-
-#. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
+#: code:addons/website_livechat/models/mail_channel.py:0
+#, python-format
 msgid ""
-"<span class=\"o_form_label\">Live Chat</span>\n"
-"                        <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
+"%s has started a conversation with %s. \n"
+"                        The chat request has been canceled."
 msgstr ""
-"<span class=\"o_form_label\">Gyvas susirašinėjimas</span>\n"
-"                        <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
+msgid "<small>%</small>"
+msgstr ""
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
@@ -52,14 +59,21 @@ msgid "Available"
 msgstr "Pasiekiamas"
 
 #. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "Avatar"
+msgstr "Portretas"
+
+#. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "Bad"
 msgstr "Blogas"
 
 #. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_search
-msgid "Busy"
-msgstr "Užimtas"
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__can_publish
+msgid "Can Publish"
+msgstr "Gali publikuoti"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
@@ -68,8 +82,25 @@ msgstr "Kanalas"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
+#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_tree
 msgid "Chat"
 msgstr "Pokalbis"
+
+#. module: website_livechat
+#: model:ir.model,name:website_livechat.model_chatbot_script
+msgid "Chatbot Script"
+msgstr ""
+
+#. module: website_livechat
+#: model:ir.model,name:website_livechat.model_chatbot_script_step
+msgid "Chatbot Script Step"
+msgstr ""
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_form
+#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
+msgid "Chats"
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_res_config_settings
@@ -84,7 +115,7 @@ msgstr "Kanalo aprašymas, rodomas svetainėje"
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_mail_channel
 msgid "Discussion Channel"
-msgstr ""
+msgstr "Diskusijų kanalas"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
@@ -102,19 +133,34 @@ msgid "Happy face"
 msgstr "Laimingas veidas"
 
 #. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_mail_channel__livechat_active
-msgid "Is livechat ongoing?"
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "History"
+msgstr "Istorija"
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_search
+msgid "In Conversation"
 msgstr ""
 
 #. module: website_livechat
-#: model:website.menu,name:website_livechat.menu_livechat
-msgid "Live Support"
-msgstr "Gyvas palaikymas"
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__is_published
+msgid "Is Published"
+msgstr "Paskelbta"
 
 #. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
-msgid "Live chat channel of your website"
-msgstr "Jūsų svetainės gyvas susirašinėjimas"
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "Lang"
+msgstr ""
+
+#. module: website_livechat
+#: code:addons/website_livechat/models/website.py:0
+#, python-format
+msgid "Live Support"
+msgstr "Gyvas palaikymas"
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_im_livechat_channel
@@ -127,18 +173,11 @@ msgid "Livechat Support Channels"
 msgstr "Gyvo susirašinėjimo palaikymo kanalai"
 
 #. module: website_livechat
-#: model:ir.model.fields,help:website_livechat.field_mail_channel__livechat_active
-msgid ""
-"Livechat session is not considered as active if the visitor left the "
-"conversation."
-msgstr ""
-
-#. module: website_livechat
 #. openerp-web
 #: code:addons/website_livechat/static/src/js/website_livechat.editor.js:0
 #, python-format
 msgid "Name"
-msgstr "Vardas"
+msgstr "Pavadinimas"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
@@ -164,23 +203,21 @@ msgid "Not rated yet"
 msgstr ""
 
 #. module: website_livechat
-#. openerp-web
-#: code:addons/website_livechat/static/src/xml/thread.xml:0
-#, python-format
-msgid "Offline"
-msgstr "Atsijungęs"
-
-#. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "Okay"
-msgstr ""
+msgstr "Gerai"
 
 #. module: website_livechat
 #. openerp-web
-#: code:addons/website_livechat/static/src/xml/thread.xml:0
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
 #, python-format
 msgid "Online"
 msgstr "Prisijungęs"
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
+msgid "Operator Avatar"
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_website_visitor__livechat_operator_name
@@ -207,14 +244,8 @@ msgstr ""
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_form
-#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_tree
 msgid "Send chat request"
 msgstr ""
-
-#. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_form
-msgid "Sessions"
-msgstr "Sesijos"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
@@ -232,6 +263,11 @@ msgid "Statistics"
 msgstr "Statistika"
 
 #. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.chatbot_script_view_form
+msgid "Test"
+msgstr "Testas"
+
+#. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "The"
 msgstr " "
@@ -242,6 +278,11 @@ msgid "The Team"
 msgstr "Komanda"
 
 #. module: website_livechat
+#: model:ir.model.fields,help:website_livechat.field_im_livechat_channel__website_url
+msgid "The full URL to access the document through the website."
+msgstr "Pilna nuoroda dokumento pasiekimui per svetainę."
+
+#. module: website_livechat
 #: code:addons/website_livechat/models/mail_channel.py:0
 #, python-format
 msgid "The visitor"
@@ -249,18 +290,30 @@ msgstr ""
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_list_page
-msgid "There is no public livechat channel to show."
-msgstr "Nėra viešų gyvo susirašinėjimo kanalų."
+msgid "There are no public livechat channels to show."
+msgstr ""
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "There is no rating for this channel for now."
-msgstr "Šis kanalas dar neturi įvertinimo."
+msgid "There are no ratings for this channel for now."
+msgstr ""
+
+#. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_published
+msgid "Visible on current website"
+msgstr "Matomas dabartinėje svetainėje"
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_mail_channel__livechat_visitor_id
 msgid "Visitor"
 msgstr "Lankytojas"
+
+#. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "Visitor is online"
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.actions.act_window,name:website_livechat.website_visitor_livechat_session_action
@@ -275,10 +328,13 @@ msgstr ""
 #. module: website_livechat
 #: model:ir.ui.menu,name:website_livechat.website_livechat_visitor_menu
 msgid "Visitors"
-msgstr ""
+msgstr "Lankytojai"
 
 #. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
 #: model:ir.model,name:website_livechat.model_website
+#, python-format
 msgid "Website"
 msgstr "Svetainė"
 
@@ -293,9 +349,16 @@ msgid "Website Live Chat Channel"
 msgstr "Svetainės gyvojo susirašinėjimo kanalas"
 
 #. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_url
+msgid "Website URL"
+msgstr "Svetainės nuoroda"
+
+#. module: website_livechat
+#: code:addons/website_livechat/tests/test_livechat_basic_flow.py:0
 #: model:ir.model,name:website_livechat.model_website_visitor
+#, python-format
 msgid "Website Visitor"
-msgstr ""
+msgstr "Svetainės lankytojas"
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_description
@@ -305,14 +368,7 @@ msgstr "Tinklalapio aprašymas"
 #. module: website_livechat
 #: code:addons/website_livechat/models/mail_channel.py:0
 #, python-format
-msgid "has left the conversation."
-msgstr ""
-
-#. module: website_livechat
-#: code:addons/website_livechat/models/mail_channel.py:0
-#, python-format
-msgid ""
-"has started a conversation with %s. The chat request has been canceled."
+msgid "an operator"
 msgstr ""
 
 #. module: website_livechat

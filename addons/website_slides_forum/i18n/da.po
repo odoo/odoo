@@ -3,18 +3,15 @@
 # 	* website_slides_forum
 # 
 # Translators:
-# Joe Hansen <joedalton2@yahoo.dk>, 2019
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
-# Sanne Kristensen <sanne@vkdata.dk>, 2019
-# lhmflexerp <lhm@flexerp.dk>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
+"PO-Revision-Date: 2019-03-20 15:01+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,12 +23,24 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides_forum.slide_fullscreen
 msgid ""
 "<i class=\"fa fa-comments\"/><span class=\"ml-1 d-none d-md-inline-"
-"block\">Ask a question</span>"
+"block\">New Post</span>"
 msgstr ""
+"<i class=\"fa fa-comments\"/><span class=\"ml-1 d-none d-md-inline-"
+"block\">Nyt Indlæg</span>"
 
 #. module: website_slides_forum
 #: model_terms:ir.ui.view,arch_db:website_slides_forum.website_slides_forum_header
 msgid "<i class=\"fa fa-home\"/> Course"
+msgstr "<i class=\"fa fa-home\"/> Kursus"
+
+#. module: website_slides_forum
+#: model_terms:ir.ui.view,arch_db:website_slides_forum.website_slides_forum_index
+msgid "Check our Courses <i class=\"fa fa-chevron-right\"/>"
+msgstr "Tjek vores kurser <i class=\"fa fa-chevron-right\"/>"
+
+#. module: website_slides_forum
+#: model_terms:ir.actions.act_window,help:website_slides_forum.forum_post_action_channel
+msgid "Come back later to monitor and moderate what is posted on your Forums."
 msgstr ""
 
 #. module: website_slides_forum
@@ -42,36 +51,47 @@ msgid "Communication"
 msgstr "Kommunikation"
 
 #. module: website_slides_forum
+#: model:ir.model,name:website_slides_forum.model_slide_channel
 #: model:ir.model.fields,field_description:website_slides_forum.field_forum_forum__slide_channel_id
 msgid "Course"
-msgstr ""
+msgstr "Kursus"
 
 #. module: website_slides_forum
 #: model:ir.model.fields,field_description:website_slides_forum.field_slide_channel__forum_id
 msgid "Course Forum"
-msgstr ""
+msgstr "Kursus forum"
 
 #. module: website_slides_forum
 #: model:ir.model.fields,field_description:website_slides_forum.field_forum_forum__slide_channel_ids
 msgid "Courses"
-msgstr ""
+msgstr "Kurser"
+
+#. module: website_slides_forum
+#: model_terms:ir.ui.view,arch_db:website_slides_forum.website_slides_forum_index
+msgid "Courses Discussions"
+msgstr "Kurser diskussioner"
 
 #. module: website_slides_forum
 #. openerp-web
 #: code:addons/website_slides_forum/static/src/xml/website_slides_forum_channel.xml:0
+#: model_terms:ir.actions.act_window,help:website_slides_forum.forum_forum_action_channel
 #, python-format
 msgid "Create a Forum"
-msgstr ""
+msgstr "Opret et forum"
 
 #. module: website_slides_forum
-#: model_terms:ir.actions.act_window,help:website_slides_forum.forum_post_action_channel
-msgid "Create a new forum post"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_slides_forum.website_slides_forum_index
+msgid "Description"
+msgstr "Beskrivelse"
+
+#. module: website_slides_forum
+#: model:ir.model.fields,help:website_slides_forum.field_forum_forum__slide_channel_ids
+msgid "Edit the course linked to this forum on the course form."
+msgstr "Rediger kurset forbundet til dette forum i kursus formularen."
 
 #. module: website_slides_forum
 #: model:ir.model,name:website_slides_forum.model_forum_forum
 #: model:ir.ui.menu,name:website_slides_forum.website_slides_menu_forum
-#: model:ir.ui.menu,name:website_slides_forum.website_slides_menu_report_forum
 #: model_terms:ir.ui.view,arch_db:website_slides_forum.course_main
 #: model_terms:ir.ui.view,arch_db:website_slides_forum.website_slides_forum_channel_inherit_view_form
 #: model_terms:ir.ui.view,arch_db:website_slides_forum.website_slides_forum_header
@@ -79,24 +99,47 @@ msgid "Forum"
 msgstr "Forum"
 
 #. module: website_slides_forum
+#: model:ir.actions.act_window,name:website_slides_forum.forum_post_action_channel
 #: model_terms:ir.ui.view,arch_db:website_slides_forum.website_slides_forum_channel_inherit_view_form
 msgid "Forum Posts"
 msgstr "Forum indlæg"
 
 #. module: website_slides_forum
+#: model:ir.model.fields,help:website_slides_forum.field_forum_forum__visibility
+msgid ""
+"Forum linked to a Course, the visibility is the one applied on the course."
+msgstr "Forum forbundet til et Kursus; synligheden er den anvendt på kurset."
+
+#. module: website_slides_forum
+#: model:ir.actions.act_window,name:website_slides_forum.forum_forum_action_channel
 #: model:ir.ui.menu,name:website_slides_forum.website_slides_menu_forum_forum
 msgid "Forums"
+msgstr "Fora"
+
+#. module: website_slides_forum
+#: model_terms:ir.actions.act_window,help:website_slides_forum.forum_forum_action_channel
+msgid "Forums allow your attendees to ask questions to your community."
+msgstr ""
+
+#. module: website_slides_forum
+#: model_terms:ir.ui.view,arch_db:website_slides_forum.res_config_settings_view_form
+msgid "Manage Forums"
+msgstr ""
+
+#. module: website_slides_forum
+#: model_terms:ir.actions.act_window,help:website_slides_forum.forum_post_action_channel
+msgid "No Forum Post yet!"
 msgstr ""
 
 #. module: website_slides_forum
 #: model:ir.model.fields,field_description:website_slides_forum.field_slide_channel__forum_total_posts
 msgid "Number of active forum posts"
-msgstr ""
+msgstr "Antal aktive forum indlæg"
 
 #. module: website_slides_forum
 #: model:ir.model.constraint,message:website_slides_forum.constraint_slide_channel_forum_uniq
-msgid "Only one forum per slide channel!"
-msgstr ""
+msgid "Only one course per forum!"
+msgstr "Kun et kursus per forum!"
 
 #. module: website_slides_forum
 #: model:ir.ui.menu,name:website_slides_forum.website_slides_menu_forum_post
@@ -105,13 +148,18 @@ msgstr "Indlæg"
 
 #. module: website_slides_forum
 #: model_terms:ir.ui.view,arch_db:website_slides_forum.website_slides_forum_header
-msgid "Review"
-msgstr "Gennemse"
+msgid "Reviews"
+msgstr "Anmeldelser"
 
 #. module: website_slides_forum
-#: model:ir.model,name:website_slides_forum.model_slide_channel
-msgid "Slide Channel"
-msgstr "Diaskanal"
+#: model_terms:ir.ui.view,arch_db:website_slides_forum.website_slides_forum_index
+msgid "See all Courses"
+msgstr "Se alle kurser"
+
+#. module: website_slides_forum
+#: model:ir.model.fields,field_description:website_slides_forum.field_forum_forum__visibility
+msgid "Visibility"
+msgstr "Synlighed"
 
 #. module: website_slides_forum
 #: model_terms:ir.ui.view,arch_db:website_slides_forum.forum_forum_view_form
@@ -119,13 +167,6 @@ msgid "eLearning"
 msgstr "eLearning"
 
 #. module: website_slides_forum
-#: model:ir.actions.act_window,name:website_slides_forum.forum_post_action_channel
-#: model:ir.actions.act_window,name:website_slides_forum.forum_post_action_report
 #: model_terms:ir.ui.view,arch_db:website_slides_forum.forum_post_view_graph_slides
 msgid "eLearning Forum Posts"
-msgstr ""
-
-#. module: website_slides_forum
-#: model:ir.actions.act_window,name:website_slides_forum.forum_forum_action_channel
-msgid "eLearning Forums"
-msgstr ""
+msgstr "eLæring forum indlæg"

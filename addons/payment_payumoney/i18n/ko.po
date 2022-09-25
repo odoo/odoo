@@ -1,18 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_payumoney
+# 	* payment_payumoney
 # 
 # Translators:
-# 최재호 <hwangtog@gmail.com>, 2018
-# Linkup <link-up@naver.com>, 2018
+# Martin Trigaux, 2022
+# Linkup <link-up@naver.com>, 2022
+# JH CHOI <hwangtog@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:22+0000\n"
-"Last-Translator: Linkup <link-up@naver.com>, 2018\n"
+"POT-Creation-Date: 2022-02-11 14:33+0000\n"
+"PO-Revision-Date: 2016-08-05 13:07+0000\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,102 +22,65 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment_payumoney
-#: selection:payment.acquirer,provider:0
-msgid "Adyen"
-msgstr ""
-
-#. module: payment_payumoney
-#: selection:payment.acquirer,provider:0
-msgid "Authorize.Net"
-msgstr ""
-
-#. module: payment_payumoney
-#: selection:payment.acquirer,provider:0
-msgid "Buckaroo"
-msgstr ""
-
-#. module: payment_payumoney
-#: selection:payment.acquirer,provider:0
-msgid "Manual Configuration"
-msgstr ""
-
-#. module: payment_payumoney
 #: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__payumoney_merchant_key
 msgid "Merchant Key"
-msgstr ""
+msgstr "판매자 키"
 
 #. module: payment_payumoney
 #: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__payumoney_merchant_salt
 msgid "Merchant Salt"
+msgstr "판매자 Salt"
+
+#. module: payment_payumoney
+#: code:addons/payment_payumoney/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
 msgstr ""
 
 #. module: payment_payumoney
-#: selection:payment.acquirer,provider:0
-msgid "Ogone"
-msgstr ""
-
-#. module: payment_payumoney
-#: selection:payment.acquirer,provider:0
+#: model:account.payment.method,name:payment_payumoney.payment_method_payumoney
+#: model:ir.model.fields.selection,name:payment_payumoney.selection__payment_acquirer__provider__payumoney
 msgid "PayUmoney"
-msgstr ""
-
-#. module: payment_payumoney
-#: code:addons/payment_payumoney/models/payment.py:108
-#, python-format
-msgid "PayUmoney: invalid shasign, received %s, computed %s, for data %s"
-msgstr ""
-
-#. module: payment_payumoney
-#: code:addons/payment_payumoney/models/payment.py:102
-#, python-format
-msgid "PayUmoney: received data for reference %s; multiple orders found"
-msgstr ""
-
-#. module: payment_payumoney
-#: code:addons/payment_payumoney/models/payment.py:99
-#, python-format
-msgid "PayUmoney: received data for reference %s; no order found"
-msgstr ""
-
-#. module: payment_payumoney
-#: code:addons/payment_payumoney/models/payment.py:94
-#, python-format
-msgid ""
-"PayUmoney: received data with missing reference (%s) or pay_id (%s) or "
-"shashign (%s)"
-msgstr ""
+msgstr "PayUmoney"
 
 #. module: payment_payumoney
 #: model:ir.model,name:payment_payumoney.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "지불 취득자"
+msgstr "결제 매입사"
+
+#. module: payment_payumoney
+#: model:ir.model,name:payment_payumoney.model_account_payment_method
+msgid "Payment Methods"
+msgstr "지급 방법"
 
 #. module: payment_payumoney
 #: model:ir.model,name:payment_payumoney.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "지불 거래"
-
-#. module: payment_payumoney
-#: selection:payment.acquirer,provider:0
-msgid "Paypal"
-msgstr ""
+msgstr "결제 내역"
 
 #. module: payment_payumoney
 #: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__provider
 msgid "Provider"
-msgstr "공급자"
+msgstr "공급업체"
 
 #. module: payment_payumoney
-#: selection:payment.acquirer,provider:0
-msgid "Sips"
+#: code:addons/payment_payumoney/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing reference (%s)"
 msgstr ""
 
 #. module: payment_payumoney
-#: selection:payment.acquirer,provider:0
-msgid "Stripe"
+#: model:ir.model.fields,help:payment_payumoney.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
 msgstr ""
 
 #. module: payment_payumoney
-#: selection:payment.acquirer,provider:0
-msgid "Wire Transfer"
+#: model:ir.model.fields,help:payment_payumoney.field_payment_acquirer__payumoney_merchant_key
+msgid "The key solely used to identify the account with PayU money"
+msgstr ""
+
+#. module: payment_payumoney
+#: code:addons/payment_payumoney/models/payment_transaction.py:0
+#, python-format
+msgid "The payment encountered an error with code %s"
 msgstr ""

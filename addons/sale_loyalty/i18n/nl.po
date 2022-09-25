@@ -3,8 +3,8 @@
 # 	* sale_loyalty
 # 
 # Translators:
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # Martin Trigaux, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-19 13:58+0000\n"
 "PO-Revision-Date: 2022-05-30 13:01+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,12 +27,15 @@ msgid ""
 "        Technical field used to link multiple reward lines from the same reward together.\n"
 "    "
 msgstr ""
+"\n"
+"        Technisch veld dat wordt gebruikt om meerdere beloningslijnen van dezelfde beloning aan elkaar te koppelen.\n"
+"    "
 
 #. module: sale_loyalty
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid " - On product with the following taxes: %(taxes)s"
-msgstr ""
+msgstr " - Op product met de volgende belastingen: %(taxes)s"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
@@ -43,7 +46,7 @@ msgstr "<span class=\"fa fa-clipboard\"/> Kopiëren"
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "A better global discount is already applied."
-msgstr ""
+msgstr "Er wordt al een betere globale korting toegepast."
 
 #. module: sale_loyalty
 #: code:addons/sale_loyalty/models/sale_order.py:0
@@ -63,17 +66,17 @@ msgstr "Toepassen"
 #. module: sale_loyalty
 #: model:ir.actions.act_window,name:sale_loyalty.sale_loyalty_reward_wizard_action
 msgid "Available Rewards"
-msgstr ""
+msgstr "Beschikbare beloningen"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
 msgid "Choose a product:"
-msgstr ""
+msgstr "Kies een product:"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
 msgid "Choose your reward:"
-msgstr ""
+msgstr "Kies je beloning:"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.used_gift_card
@@ -95,19 +98,20 @@ msgstr "Coupon code"
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__coupon_point_ids
 msgid "Coupon Point"
-msgstr ""
+msgstr "Coupon Punt"
 
 #. module: sale_loyalty
 #: code:addons/sale_loyalty/wizard/sale_loyalty_reward_wizard.py:0
 #, python-format
 msgid "Coupon not found while trying to add the following reward: %s"
 msgstr ""
+"Coupon niet gevonden tijdens het toevoegen van de volgende beloning: %s"
 
 #. module: sale_loyalty
 #: model:ir.ui.menu,name:sale_loyalty.menu_loyalty_config
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
 msgid "Coupons & Loyalty"
-msgstr ""
+msgstr "Coupons & Loyaliteit"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__create_uid
@@ -133,7 +137,7 @@ msgstr "Negeren"
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "Discount: %(desc)s%(tax_str)s"
-msgstr ""
+msgstr "Korting: %(desc)s%(tax_str)s"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__display_name
@@ -156,7 +160,7 @@ msgstr "Vervaldatum:"
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "Free Product - %(product)s"
-msgstr ""
+msgstr "Gratis product - %(product)s"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
@@ -171,7 +175,7 @@ msgstr "Cadeaukaartcode"
 #. module: sale_loyalty
 #: model:ir.model.fields,help:sale_loyalty.field_sale_order_line__points_cost
 msgid "How much point this reward cost on the loyalty card."
-msgstr ""
+msgstr "Hoeveel punt deze beloning kost op de klantenkaart."
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__id
@@ -184,13 +188,13 @@ msgstr "ID"
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "Invalid product to claim."
-msgstr ""
+msgstr "Ongeldig product om te claimen."
 
 #. module: sale_loyalty
 #: code:addons/sale_loyalty/wizard/sale_loyalty_coupon_wizard.py:0
 #, python-format
 msgid "Invalid sales order."
-msgstr ""
+msgstr "Ongeldige verkooporder."
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__is_reward_line
@@ -221,7 +225,7 @@ msgstr "Laatst bijgewerkt op"
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_card
 msgid "Loyalty Coupon"
-msgstr ""
+msgstr "Loyaliteitsbon"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_program
@@ -236,17 +240,17 @@ msgstr "Loyaliteitbeloning"
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__applied_coupon_ids
 msgid "Manually Applied Coupons"
-msgstr ""
+msgstr "Handmatig toegepaste coupons"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__code_enabled_rule_ids
 msgid "Manually Triggered Rules"
-msgstr ""
+msgstr "Handmatig geactiveerde regels"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__multi_product_reward
 msgid "Multi Product"
-msgstr ""
+msgstr "Meerdere producten"
 
 #. module: sale_loyalty
 #: code:addons/sale_loyalty/models/sale_order.py:0
@@ -255,23 +259,27 @@ msgid ""
 "No card found for this loyalty program and no points will be given with this"
 " order."
 msgstr ""
+"Er is geen kaart gevonden voor dit loyaliteitsprogramma en er worden geen "
+"punten gegeven bij deze bestelling."
 
 #. module: sale_loyalty
 #: code:addons/sale_loyalty/wizard/sale_loyalty_reward_wizard.py:0
 #, python-format
 msgid "No reward selected."
-msgstr ""
+msgstr "Geen beloning geselecteerd."
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
 msgid "No rewards available for this customer!"
-msgstr ""
+msgstr "Geen beloningen beschikbaar voor deze klant!"
 
 #. module: sale_loyalty
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "One or more rewards on the sale order is invalid. Please check them."
 msgstr ""
+"Een of meer beloningen op de verkooporder zijn ongeldig. Controleer ze "
+"alstublieft."
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__order_id
@@ -298,7 +306,7 @@ msgstr "Punten"
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__points_cost
 msgid "Points Cost"
-msgstr ""
+msgstr "Punten kosten"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
@@ -319,28 +327,30 @@ msgstr "Beloning hoeveelheid"
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__reward_identifier_code
 msgid "Reward Identifier Code"
-msgstr ""
+msgstr "Identificatiecode beloning"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__reward_product_ids
 msgid "Reward Products"
-msgstr ""
+msgstr "Beloningsproducten"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_loyalty_coupon_wizard
 msgid "Sale Loyalty - Apply Coupon Wizard"
-msgstr ""
+msgstr "Verkooployaliteit - Couponwizard toepassen"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_loyalty_reward_wizard
 msgid "Sale Loyalty - Reward Selection Wizard"
-msgstr ""
+msgstr "Verkooployaliteit - Wizard voor het selecteren van beloningen"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_order_coupon_points
 msgid ""
 "Sale Order Coupon Points - Keeps track of how a sale order impacts a coupon"
 msgstr ""
+"Couponpunten voor verkooporders - Houdt bij hoe een verkooporder een coupon "
+"beïnvloedt"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_order
@@ -355,35 +365,35 @@ msgstr "Verkooporderregel"
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__selected_product_id
 msgid "Selected Product"
-msgstr ""
+msgstr "Geselecteerd product"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__selected_reward_id
 msgid "Selected Reward"
-msgstr ""
+msgstr "Geselecteerde beloning"
 
 #. module: sale_loyalty
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "The coupon can only be claimed on future orders."
-msgstr ""
+msgstr "De coupon kan alleen worden geclaimd bij toekomstige bestellingen."
 
 #. module: sale_loyalty
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "The coupon does not have enough points for the selected reward."
-msgstr ""
+msgstr "De coupon heeft niet genoeg punten voor de geselecteerde beloning."
 
 #. module: sale_loyalty
 #: model:ir.model.constraint,message:sale_loyalty.constraint_sale_order_coupon_points_order_coupon_unique
 msgid "The coupon points entry already exists."
-msgstr ""
+msgstr "De invoer van couponpunten bestaat al."
 
 #. module: sale_loyalty
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "The program is not available for this order."
-msgstr ""
+msgstr "Het programma is niet beschikbaar voor deze bestelling."
 
 #. module: sale_loyalty
 #: model:ir.model.fields,help:sale_loyalty.field_loyalty_card__order_id
@@ -394,72 +404,74 @@ msgstr "De verkooporder van waaruit de kortingscode wordt gegenereerd"
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "There is nothing to discount"
-msgstr ""
+msgstr "Er valt niets te korting"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,help:sale_loyalty.field_sale_loyalty_reward_wizard__reward_product_ids
 msgid "These are the products that can be claimed with this rule."
-msgstr ""
+msgstr "Dit zijn de producten die met deze regel geclaimd kunnen worden."
 
 #. module: sale_loyalty
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This code is expired (%s)."
-msgstr ""
+msgstr "Deze code is verlopen (%s)."
 
 #. module: sale_loyalty
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This code is invalid (%s)."
-msgstr ""
+msgstr "Deze code is ongeldig (%s)."
 
 #. module: sale_loyalty
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This coupon has already been used."
-msgstr ""
+msgstr "Deze coupon is al gebruikt."
 
 #. module: sale_loyalty
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This coupon is expired."
-msgstr ""
+msgstr "Deze bon is verlopen."
 
 #. module: sale_loyalty
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This program is already applied to this order."
-msgstr ""
+msgstr "Dit programma is al toegepast op deze bestelling."
 
 #. module: sale_loyalty
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This program is not available for public users."
-msgstr ""
+msgstr "Dit programma is niet beschikbaar voor openbare gebruikers."
 
 #. module: sale_loyalty
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This program requires a code to be applied."
-msgstr ""
+msgstr "Voor dit programma moet een code worden toegepast."
 
 #. module: sale_loyalty
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This promo code is already applied."
-msgstr ""
+msgstr "Deze promotiecode is al toegepast."
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
 msgid "Update current promotional lines and select new rewards if applicable."
 msgstr ""
+"Werk huidige promotieregels bij en selecteer indien van toepassing nieuwe "
+"beloningen."
 
 #. module: sale_loyalty
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "You don't have the required product quantities on your sales order."
-msgstr ""
+msgstr "Je hebt niet de vereiste producthoeveelheden op je verkooporder."
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card

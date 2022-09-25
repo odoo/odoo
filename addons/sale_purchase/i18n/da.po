@@ -3,19 +3,15 @@
 # 	* sale_purchase
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
-# Sanne Kristensen <sanne@vkdata.dk>, 2019
-# Ejner Sønniksen <ejner@vkdata.dk>, 2019
-# lhmflexerp <lhm@flexerp.dk>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
+"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"PO-Revision-Date: 2019-03-20 14:59+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,29 +26,41 @@ msgid ""
 ".\n"
 "            Manual actions may be needed."
 msgstr ""
+".\n"
+"             Manuelle handlinger kan være nødvendige."
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_inherited_form_purchase
+msgid "<span class=\"o_stat_text\">Purchase</span>"
+msgstr "<span class=\"o_stat_text\">Indkøb</span>"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.purchase_order_inherited_form_sale
+msgid "<span class=\"o_stat_text\">Sale</span>"
+msgstr "<span class=\"o_stat_text\">Salg</span>"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
 msgid "Exception(s) occurred on the purchase order(s):"
-msgstr ""
+msgstr "Undtagelse(r) forekom på købs ordre(ne):"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 msgid "Exception(s) occurred on the sale order(s):"
-msgstr ""
+msgstr "Undtagelse(r) forekom på salgs ordre(ne):"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
 msgid "Exception(s):"
-msgstr ""
+msgstr "Undtagelse(r):"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__purchase_line_ids
 msgid "Generated Purchase Lines"
-msgstr ""
+msgstr "Generer købs linjer"
 
 #. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_product_product__service_to_purchase
@@ -62,21 +70,29 @@ msgid ""
 "automatically created to buy the product. Tip: don't forget to set a vendor "
 "on the product."
 msgstr ""
+"Hvis markeret, vil en RfQ automatisk blive oprettet til køb af produktet, "
+"hver gang du sælger dette produkt gennem en SO. Råd: Glem ikke at angive "
+"forhandler på produktet."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 msgid "Manual actions may be needed."
-msgstr ""
+msgstr "Manuel handling kan være nødvendig."
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order__purchase_order_count
-msgid "Number of Purchase Order"
-msgstr ""
+msgid "Number of Purchase Order Generated"
+msgstr "Antal Genereret Købsordre"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__sale_order_count
+msgid "Number of Source Sale"
+msgstr "Antal Kilde Salg"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__purchase_line_count
 msgid "Number of generated purchase items"
-msgstr ""
+msgstr "Antal genererede købs genstande"
 
 #. module: sale_purchase
 #: code:addons/sale_purchase/models/sale_order.py:0
@@ -87,6 +103,14 @@ msgstr "Bestilt antal er reduceret!"
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_line_id
 msgid "Origin Sale Item"
+msgstr "Oprindelig salg genstand"
+
+#. module: sale_purchase
+#: code:addons/sale_purchase/models/product_template.py:0
+#, python-format
+msgid ""
+"Please define the vendor from whom you would like to purchase this service "
+"automatically."
 msgstr ""
 
 #. module: sale_purchase
@@ -97,13 +121,7 @@ msgstr "Produktskabelon"
 #. module: sale_purchase
 #: model:ir.model.constraint,message:sale_purchase.constraint_product_template_service_to_purchase
 msgid "Product that is not a service can not create RFQ."
-msgstr ""
-
-#. module: sale_purchase
-#: model:ir.model.fields,field_description:sale_purchase.field_product_product__service_to_purchase
-#: model:ir.model.fields,field_description:sale_purchase.field_product_template__service_to_purchase
-msgid "Purchase Automatically"
-msgstr ""
+msgstr "Produkt der ikke er en tjeneste kan ikke oprette en RFQ."
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order
@@ -116,9 +134,10 @@ msgid "Purchase Order Line"
 msgstr "Indkøbsordrelinie"
 
 #. module: sale_purchase
-#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_form_view_inherit
-msgid "Purchase Orders"
-msgstr "Indkøbsordrer"
+#: code:addons/sale_purchase/models/sale_order.py:0
+#, python-format
+msgid "Purchase Order generated from %s"
+msgstr "Købsordre genereret fra %s"
 
 #. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_sale_order_line__purchase_line_ids
@@ -126,6 +145,8 @@ msgid ""
 "Purchase line generated by this Sales item on order confirmation, or when "
 "the quantity was increased."
 msgstr ""
+"Købslinje genereret af denne salgs genstand ved ordrebekræftelse, eller når "
+"kvantiteten forøges."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
@@ -148,6 +169,18 @@ msgid "Sales Order Line"
 msgstr "Salgsordrelinje"
 
 #. module: sale_purchase
+#: code:addons/sale_purchase/models/purchase_order.py:0
+#, python-format
+msgid "Sources Sale Orders %s"
+msgstr "Kilder Salgsordre %s"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_product_product__service_to_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_product_template__service_to_purchase
+msgid "Subcontract Service"
+msgstr ""
+
+#. module: sale_purchase
 #: code:addons/sale_purchase/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -164,12 +197,14 @@ msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the purchase order if needed."
 msgstr ""
+"Du sænker den bestilte kvantitet! Glem ikke at opdatere købsordren manuelt, "
+"om nødvendigt."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
 msgid "cancelled"
-msgstr ""
+msgstr "annulleret"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
@@ -181,4 +216,4 @@ msgstr "af"
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 msgid "ordered instead of"
-msgstr ""
+msgstr "bestilt i stedet for"

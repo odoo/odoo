@@ -1,18 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * base_geolocalize
+# 	* base_geolocalize
 # 
 # Translators:
-# 최재호 <hwangtog@gmail.com>, 2018
-# Link Up링크업 <linkup.way@gmail.com>, 2018
+# Heesoo Choi, 2022
+# Linkup <link-up@naver.com>, 2022
+# Martin Trigaux, 2022
+# JH CHOI <hwangtog@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:16+0000\n"
-"Last-Translator: Link Up링크업 <linkup.way@gmail.com>, 2018\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
+"PO-Revision-Date: 2016-08-05 12:56+0000\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,37 +24,51 @@ msgstr ""
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
-msgid "<span class=\"oe_inline\"> ( On  </span>"
+msgid "(refresh)"
 msgstr ""
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
-msgid "<span> : Lat : </span>"
+msgid ""
+"<br/>\n"
+"                                    <span attrs=\"{'invisible': [('date_localization', '=', False)]}\">Updated on: </span>"
 msgstr ""
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
-msgid "<span> ;  Long:  </span>"
+msgid "<span>, Long: </span>"
 msgstr ""
 
 #. module: base_geolocalize
-#: code:addons/base_geolocalize/models/res_partner.py:19
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "<span>Lat : </span>"
+msgstr ""
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_id
+msgid "API"
+msgstr "API"
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/base_geocoder.py:0
 #, python-format
 msgid ""
 "API key for GeoCoding (Places) required.\n"
-"\n"
-"                          Save this key in System Parameters with key: google.api_key_geocode, value: <your api key>\n"
-"                          Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information.\n"
-"                          "
+"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
 msgstr ""
+"지오코딩(장소)용 API 키가 필요합니다. 자세한 내용은 "
+"https://developers.google.com/maps/documentation/geocoding/get-api-key 를 "
+"방문하십시오."
 
 #. module: base_geolocalize
-#: code:addons/base_geolocalize/models/res_partner.py:28
-#, python-format
-msgid ""
-"Cannot contact geolocation servers. Please make sure that your Internet "
-"connection is up and running (%s)."
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
+msgid "API:"
+msgstr "API :"
+
+#. module: base_geolocalize
+#: model:ir.model,name:base_geolocalize.model_res_config_settings
+msgid "Config Settings"
+msgstr "설정 구성"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_partner
@@ -60,34 +76,141 @@ msgid "Contact"
 msgstr "연락처"
 
 #. module: base_geolocalize
-#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner__partner_latitude
-#: model:ir.model.fields,field_description:base_geolocalize.field_res_users__partner_latitude
-msgid "Geo Latitude"
-msgstr "위도"
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__create_uid
+msgid "Created by"
+msgstr "작성자"
 
 #. module: base_geolocalize
-#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner__partner_longitude
-#: model:ir.model.fields,field_description:base_geolocalize.field_res_users__partner_longitude
-msgid "Geo Longitude"
-msgstr "경도"
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__create_date
+msgid "Created on"
+msgstr "작성일자"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/base_geocoder.py:0
+#, python-format
+msgid "Error with geolocation server:"
+msgstr "위치 정보 서버 오류 :"
+
+#. module: base_geolocalize
+#: model:ir.model,name:base_geolocalize.model_base_geocoder
+msgid "Geo Coder"
+msgstr "위치 정보 코더"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
-msgid "Geolocate"
-msgstr ""
+msgid "Geo Location"
+msgstr "지역 위치"
+
+#. module: base_geolocalize
+#: model:ir.model,name:base_geolocalize.model_base_geo_provider
+msgid "Geo Provider"
+msgstr "위치 정보 공급자"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Geolocation"
-msgstr ""
+msgstr "위치정보"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_partner__date_localization
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_users__date_localization
 msgid "Geolocation Date"
+msgstr "위치 정보 날짜"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
+msgid "Google Map API Key"
+msgstr "구글 지도 API 키"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__id
+msgid "ID"
+msgstr "ID"
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
+msgid "Key:"
+msgstr "키 :"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider____last_update
+msgid "Last Modified on"
+msgstr "최근 수정일"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__write_uid
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__write_date
+msgid "Last Updated on"
+msgstr "최근 갱신 일자"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__name
+msgid "Name"
+msgstr "이름"
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/res_partner.py:0
+#, python-format
+msgid "No address found for %(partner_names)s."
 msgstr ""
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
-msgid "Partner Assignation"
-msgstr "파트너 할당"
+msgid "Partner Assignment"
+msgstr "협력사 지정"
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/base_geocoder.py:0
+#, python-format
+msgid "Provider %s is not implemented for geolocation service."
+msgstr "%s 제공자는 위치 정보 서비스가 구현되지 않았습니다."
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__tech_name
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_techname
+msgid "Tech Name"
+msgstr "기술명"
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/base_geocoder.py:0
+#, python-format
+msgid ""
+"Unable to geolocate, received the error:\n"
+"%s\n"
+"\n"
+"Google made this a paid feature.\n"
+"You should first enable billing on your Google account.\n"
+"Then, go to Developer Console, and enable the APIs:\n"
+"Geocoding, Maps Static, Maps Javascript.\n"
+msgstr ""
+"위치 정보를 찾을 수 없습니다. 오류가 발생했습니다 :\n"
+"%s\n"
+"\n"
+"구글 유료 기능입니다.\n"
+"먼저 구글 계정에서 결제해야 합니다.\n"
+"그런 다음 개발자 콘솔로 이동하여 API를 활성화하십시오.\n"
+"지오 코딩, 정적 지도, 지도용 자바스크립트.\n"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,help:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
+msgid ""
+"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key"
+" for more information."
+msgstr ""
+"추가적인 정보는 다음 사이트를 방문하세요.  "
+"https://developers.google.com/maps/documentation/geocoding/get-api-key"
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/res_partner.py:0
+#, python-format
+msgid "Warning"
+msgstr "경고"

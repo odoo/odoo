@@ -3,22 +3,17 @@
 # 	* rating
 # 
 # Translators:
-# Martin Trigaux, 2019
-# jonas jensen <j.jensen@tcomp.dk>, 2019
-# Morten Schou <ms@msteknik.dk>, 2019
-# Jesper Carstensen <jc@danodoo.dk>, 2019
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
-# Sanne Kristensen <sanne@vkdata.dk>, 2019
-# Ejner Sønniksen <ejner@vkdata.dk>, 2019
-# lhmflexerp <lhm@flexerp.dk>, 2019
+# lhmflexerp <lhm@flexerp.dk>, 2022
+# Sanne Kristensen <sanne@vkdata.dk>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
+"POT-Creation-Date: 2022-04-19 13:58+0000\n"
+"PO-Revision-Date: 2016-08-05 13:09+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,39 +22,53 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
-msgid ""
-"<br/>\n"
-"                            on our services on \""
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_count
+msgid "# Ratings"
 msgstr ""
 
 #. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
-msgid ""
-"<i class=\"fa fa-check-circle fa-5x text-success\" role=\"img\" aria-"
-"label=\"Thank you!\" title=\"Thank you!\"/>"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
+msgid "<i class=\"fa fa-clock-o mr-2\" aria-label=\"Create date\"/>"
+msgstr "<i class=\"fa fa-clock-o mr-2\" aria-label=\"Create date\"/>"
 
 #. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
-msgid "<span class=\"o_stat_text\">Resource</span>"
-msgstr "<span class=\"o_stat_text\">Resource</span>"
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
+msgid "<i class=\"fa fa-folder mr-2\" aria-label=\"Open folder\"/>"
+msgstr "<i class=\"fa fa-folder mr-2\" aria-label=\"Open folder\"/>"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
+msgid "A star"
+msgstr ""
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__access_token
 msgid "Access token to set the rating of the value"
-msgstr ""
+msgstr "Adgangs token til angivelse af bedømmelse af værdien"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__message_id
 msgid ""
 "Associated message when posting a review. Mainly used in website addons."
 msgstr ""
+"Associeret besked ved postering af en anmeldelse. Anvendes primært i website"
+" add-ons."
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__partner_id
 msgid "Author of the rating"
 msgstr "Forfatter af ratingen"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_avg
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_avg
+msgid "Average Rating"
+msgstr ""
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_avg_percentage
+msgid "Average Rating (%)"
+msgstr ""
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__feedback
@@ -70,11 +79,6 @@ msgstr "Kommentar"
 #: model:ir.model.fields,field_description:rating.field_rating_rating__create_uid
 msgid "Created by"
 msgstr "Oprettet af"
-
-#. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating__create_date
-msgid "Created on"
-msgstr "Oprettet den"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__partner_id
@@ -88,14 +92,22 @@ msgid "Date"
 msgstr "Dato"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_mixin__display_name
-#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__display_name
 #: model:ir.model.fields,field_description:rating.field_rating_rating__display_name
 msgid "Display Name"
 msgstr "Vis navn"
 
 #. module: rating
+#: code:addons/rating/controllers/main.py:0
+#: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__ko
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__ko
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+#, python-format
+msgid "Dissatisfied"
+msgstr "Utilfreds"
+
+#. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_id
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
 msgid "Document"
 msgstr "Dokument"
 
@@ -115,14 +127,19 @@ msgid "Enabled if the rating has been filled."
 msgstr "Aktiveret, hvis bedømmelsen er blevet udfyldt."
 
 #. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
+msgid "Feel free to write a feedback on your experience:"
+msgstr "Du er velkommen til at skrive en tilbagemelding om din oplevelse:"
+
+#. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__consumed
 msgid "Filled Rating"
 msgstr "Udfyldt bedømmelse"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
-msgid "Go to our website"
-msgstr "Gå til vores hjemmeside"
+msgid "Go back to the Homepage"
+msgstr "Gå tilbage til Hjemmesiden"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -130,14 +147,18 @@ msgid "Group By"
 msgstr "Sortér efter"
 
 #. module: rating
-#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__highly_dissatisfied
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-msgid "Highly dissatisfied"
-msgstr "Meget utilfreds"
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
+msgid "Half a star"
+msgstr "Halv stjerne"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_mixin__id
-#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__id
+#: model:ir.model.fields,help:rating.field_rating_rating__is_internal
+msgid ""
+"Hide to public / portal users, independently from subtype configuration."
+msgstr ""
+"Gem for offentlige / portal brugere, uafhængigt af undertype konfiguration."
+
+#. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__id
 msgid "ID"
 msgstr "ID"
@@ -153,8 +174,28 @@ msgid "Image"
 msgstr "Billede"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_mixin____last_update
-#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin____last_update
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rating_image_url
+msgid "Image URL"
+msgstr "Billede URL"
+
+#. module: rating
+#: code:addons/rating/controllers/main.py:0
+#: code:addons/rating/controllers/main.py:0
+#, python-format
+msgid "Incorrect rating: should be 1, 3 or 5 (received %d)"
+msgstr ""
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Last 30 days"
+msgstr "Seneste 30 dage"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Last 7 days"
+msgstr "Seneste 7 dage"
+
+#. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating____last_update
 msgid "Last Modified on"
 msgstr "Sidst ændret den"
@@ -170,19 +211,15 @@ msgid "Last Updated on"
 msgstr "Sidst opdateret den"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating__message_id
-msgid "Linked message"
-msgstr "Vedhæftet besked"
-
-#. module: rating
 #: model:ir.model,name:rating.model_mail_message
+#: model:ir.model.fields,field_description:rating.field_rating_rating__message_id
 msgid "Message"
 msgstr "Besked"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__res_model_id
 msgid "Model of the followed resource"
-msgstr ""
+msgstr "Model for den følgende ressource"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -190,20 +227,29 @@ msgid "My Ratings"
 msgstr "Mine bedømmelser"
 
 #. module: rating
-#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__no_rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rated_partner_name
+msgid "Name"
+msgstr "Navn"
+
+#. module: rating
+#: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__none
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__none
 msgid "No Rating yet"
 msgstr "Ingen bedømmelse endnu"
 
 #. module: rating
-#: model_terms:ir.actions.act_window,help:rating.action_view_rating
+#: model_terms:ir.actions.act_window,help:rating.rating_rating_action
 msgid "No rating yet"
 msgstr "Endnu ikke bedømt"
 
 #. module: rating
-#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__not_satisfied
+#: code:addons/rating/controllers/main.py:0
+#: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__ok
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__ok
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-msgid "Not satisfied"
-msgstr "Ikke tilfreds"
+#, python-format
+msgid "Okay"
+msgstr "Okay"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__rated_partner_id
@@ -226,42 +272,50 @@ msgid "Parent Document Name"
 msgstr "Navn på overordnet dokument"
 
 #. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
+msgid "Parent Holder"
+msgstr "Nedarvende Holder"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__parent_ref
+msgid "Parent Ref"
+msgstr "Nedarvende Ref"
+
+#. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_model_id
 msgid "Parent Related Document Model"
-msgstr ""
+msgstr "Ophavene relateret dokument model"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_parent_mixin__rating_percentage_satisfaction
 msgid "Percentage of happy ratings"
-msgstr ""
+msgstr "Procentdel af tilfredse bedømmelser"
 
 #. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-msgid "Rated User"
-msgstr "Rated bruger"
+#: code:addons/rating/models/mail_thread.py:0
+#, python-format
+msgid "Posting a rating should be done using message post API."
+msgstr ""
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rated_partner_id
-msgid "Rated person"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Rated Operator"
+msgstr "Bedømt Operatør"
 
 #. module: rating
-#: model:ir.actions.act_window,name:rating.action_view_rating
 #: model:ir.model,name:rating.model_rating_rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_ids
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rating_text
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form_text
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_tree
 msgid "Rating"
 msgstr "Bedømmelse"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_avg
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_graph
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_pivot
-msgid "Rating Average"
-msgstr "Gennemsnitlig bedømmelse"
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_avg_text
+msgid "Rating Avg Text"
+msgstr ""
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_feedback
@@ -281,28 +335,36 @@ msgstr "Sidste bedømmelse"
 #. module: rating
 #: model:ir.model,name:rating.model_rating_mixin
 msgid "Rating Mixin"
-msgstr ""
-
-#. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating__rating
-msgid "Rating Number"
-msgstr ""
+msgstr "Bedømmelse mixin"
 
 #. module: rating
 #: model:ir.model,name:rating.model_rating_parent_mixin
 msgid "Rating Parent Mixin"
-msgstr ""
+msgstr "Bedømmelse ophavene mixin"
 
 #. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_percentage_satisfaction
 #: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_percentage_satisfaction
 msgid "Rating Satisfaction"
+msgstr "Tilfredshedsbedømmelse"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_text
+msgid "Rating Text"
 msgstr ""
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_mail_mail__rating_value
 #: model:ir.model.fields,field_description:rating.field_mail_message__rating_value
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rating
 msgid "Rating Value"
-msgstr ""
+msgstr "Bedømmelse værdi"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_graph
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_pivot
+msgid "Rating Value (/5)"
+msgstr "Bedømmelses Værdi (/5)"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_count
@@ -311,17 +373,24 @@ msgstr "Antal bedømmelser"
 
 #. module: rating
 #: model:ir.model.constraint,message:rating.constraint_rating_rating_rating_range
-msgid "Rating should be between 0 to 10"
-msgstr "Rating skal være fra 0 til 10"
+msgid "Rating should be between 0 and 5"
+msgstr "Bedømmelse bør være mellem 0 og 5"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__rating
-msgid "Rating value: 0=Unhappy, 10=Happy"
-msgstr "Bedømmelsesværdi: 0=ikke tilfreds, 10=tilfreds"
+msgid "Rating value: 0=Unhappy, 5=Happy"
+msgstr "Bedømmelses værdi: 0=Utilfreds, 5=Tilfreds"
 
 #. module: rating
+#: model:ir.actions.act_window,name:rating.rating_rating_action
 #: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_ids
+#: model:ir.ui.menu,name:rating.rating_rating_menu_technical
+#: model_terms:ir.ui.view,arch_db:rating.mail_message_view_form
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_graph
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_pivot
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_tree
 msgid "Ratings"
 msgstr "Bedømmelser"
 
@@ -340,7 +409,7 @@ msgstr "Relateret dokument model"
 #: model:ir.model.fields,field_description:rating.field_mail_mail__rating_ids
 #: model:ir.model.fields,field_description:rating.field_mail_message__rating_ids
 msgid "Related ratings"
-msgstr ""
+msgstr "Relaterede bedømmelser"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -348,13 +417,21 @@ msgid "Resource"
 msgstr "Ressource"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating__res_name
-msgid "Resource name"
-msgstr ""
+#: model:ir.model.fields,field_description:rating.field_rating_rating__resource_ref
+msgid "Resource Ref"
+msgstr "Ressource Ref"
 
 #. module: rating
-#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__satisfied
+#: model:ir.model.fields,field_description:rating.field_rating_rating__res_name
+msgid "Resource name"
+msgstr "Kilde navn"
+
+#. module: rating
+#: code:addons/rating/controllers/main.py:0
+#: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__top
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__top
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+#, python-format
 msgid "Satisfied"
 msgstr "Tilfreds"
 
@@ -369,15 +446,19 @@ msgid "Send Feedback"
 msgstr "Send feedback"
 
 #. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_tree
+#: model:ir.model.fields,field_description:rating.field_rating_rating__create_date
 msgid "Submitted on"
 msgstr "Indsendt den"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
-msgid "Thanks! We appreciate your feedback."
-msgstr "Tak! Vi sætter pris på din feedback."
+msgid "Thank you for rating our services!"
+msgstr "Tak for, at du bedømte vores ydelser!"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
+msgid "Thank you, we appreciate your feedback!"
+msgstr "Tak, vi værdsætter din tilbagemelding!"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__res_name
@@ -385,27 +466,21 @@ msgid "The name of the rated resource."
 msgstr "Navn på den bedømte resource."
 
 #. module: rating
-#: model_terms:ir.actions.act_window,help:rating.action_view_rating
+#: model_terms:ir.actions.act_window,help:rating.rating_rating_action
 msgid "There is no rating for this object at the moment."
 msgstr "Der er ingen bedømmelse på dette objekt på nuværende tidspunkt."
 
 #. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
-msgid "We appreciate your feedback!"
-msgstr "Vi sætter pris på din feedback!"
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Today"
+msgstr "I dag"
 
 #. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
-msgid "Would be great if you can provide more information:"
-msgstr "Det ville være til stor hjælp hvis du kunne give os mere information:"
+#: model:ir.model.fields,field_description:rating.field_rating_rating__is_internal
+msgid "Visible Internally Only"
+msgstr "Kun Synligt Internt"
 
 #. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
-msgid "Your rating has been submitted."
-msgstr "Din bedømmelse er blevet indsendt."
-
-#. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
 msgid "by"
 msgstr "af"
@@ -413,32 +488,9 @@ msgstr "af"
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
 msgid "for"
-msgstr ""
-
-#. module: rating
-#: code:addons/rating/controllers/main.py:0
-#, python-format
-msgid "highly dissatisfied"
-msgstr "Meget utilfreds"
-
-#. module: rating
-#: code:addons/rating/controllers/main.py:0
-#, python-format
-msgid "not satisfied"
-msgstr "Ikke tilfreds"
+msgstr "for"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
 msgid "on"
 msgstr "på"
-
-#. module: rating
-#: code:addons/rating/controllers/main.py:0
-#, python-format
-msgid "satisfied"
-msgstr "Tilfreds"
-
-#. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
-msgid "you are"
-msgstr "du er"

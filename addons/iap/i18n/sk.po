@@ -1,17 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * iap
+# 	* iap
 # 
 # Translators:
-# Martin Trigaux, 2018
-# gebri <gebri@inmail.sk>, 2018
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:05+0000\n"
-"PO-Revision-Date: 2018-10-02 10:05+0000\n"
-"Last-Translator: gebri <gebri@inmail.sk>, 2018\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2017-12-13 14:54+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,36 +32,28 @@ msgstr ""
 
 #. module: iap
 #. openerp-web
-#: code:addons/iap/static/src/js/crash_manager.js:23
+#: code:addons/iap/static/src/js/crash_manager.js:0
+#: code:addons/iap/static/src/xml/iap_templates.xml:0
 #, python-format
-msgid "Buy credits at Odoo"
-msgstr ""
+msgid "Buy credits"
+msgstr "Kúpiť kredity"
 
 #. module: iap
 #. openerp-web
-#: code:addons/iap/static/src/xml/iap_templates.xml:41
-#, python-format
-msgid "Buy more credits"
-msgstr ""
-
-#. module: iap
-#. openerp-web
-#: code:addons/iap/static/src/js/crash_manager.js:61
+#: code:addons/iap/static/src/js/crash_manager.js:0
 #, python-format
 msgid "Cancel"
-msgstr "Zrušiť"
+msgstr "Zrušené"
 
 #. module: iap
-#. openerp-web
-#: code:addons/iap/static/src/xml/iap_templates.xml:28
-#, python-format
-msgid "Checking remaining credit ..."
-msgstr ""
-
-#. module: iap
-#: model:ir.model.fields,field_description:iap.field_iap_account__company_id
+#: model:ir.model.fields,field_description:iap.field_iap_account__company_ids
 msgid "Company"
-msgstr "Spoločnost"
+msgstr "Spoločnosť"
+
+#. module: iap
+#: model:ir.model,name:iap.model_res_config_settings
+msgid "Config Settings"
+msgstr "Nastavenia konfigurácie"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__create_uid
@@ -75,7 +68,12 @@ msgstr "Vytvorené"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__display_name
 msgid "Display Name"
-msgstr "Zobrazovaný Názov"
+msgstr "Zobrazovaný názov"
+
+#. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
+msgid "Documentation"
+msgstr "Dokumentácia"
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_root_menu
@@ -93,7 +91,12 @@ msgstr ""
 #: model:ir.ui.menu,name:iap.iap_account_menu
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
 msgid "IAP Accounts"
-msgstr ""
+msgstr "IAP účty"
+
+#. module: iap
+#: model:ir.model,name:iap.model_iap_enrich_api
+msgid "IAP Lead Enrichment API"
+msgstr "IAP rozšírenie Potenciálnych príležitostí API"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__id
@@ -102,28 +105,14 @@ msgstr "ID"
 
 #. module: iap
 #. openerp-web
-#: code:addons/iap/static/src/xml/iap_templates.xml:21
-#, python-format
-msgid "In-App Purchases"
-msgstr "Nákupy v Aplikácii"
-
-#. module: iap
-#. openerp-web
-#: code:addons/iap/static/src/js/crash_manager.js:51
+#: code:addons/iap/static/src/js/crash_manager.js:0
 #, python-format
 msgid "Insufficient Balance"
 msgstr ""
 
 #. module: iap
 #. openerp-web
-#: code:addons/iap/static/src/xml/iap_templates.xml:31
-#, python-format
-msgid "Insufficient credit"
-msgstr ""
-
-#. module: iap
-#. openerp-web
-#: code:addons/iap/static/src/xml/iap_templates.xml:14
+#: code:addons/iap/static/src/xml/iap_templates.xml:0
 #, python-format
 msgid "Insufficient credit to perform this service."
 msgstr ""
@@ -131,7 +120,7 @@ msgstr ""
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account____last_update
 msgid "Last Modified on"
-msgstr "Posledná modifikácia"
+msgstr "Posledná úprava"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__write_uid
@@ -144,10 +133,13 @@ msgid "Last Updated on"
 msgstr "Naposledy upravované"
 
 #. module: iap
-#. openerp-web
-#: code:addons/iap/static/src/xml/iap_templates.xml:34
-#, python-format
-msgid "Remaining :"
+#: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
+msgid "Odoo IAP"
+msgstr ""
+
+#. module: iap
+#: model:ir.actions.server,name:iap.open_iap_account
+msgid "Open IAP Account"
 msgstr ""
 
 #. module: iap
@@ -157,21 +149,28 @@ msgstr ""
 
 #. module: iap
 #. openerp-web
-#: code:addons/iap/static/src/js/crash_manager.js:23
+#: code:addons/iap/static/src/js/crash_manager.js:0
 #, python-format
 msgid "Start a Trial at Odoo"
 msgstr ""
 
 #. module: iap
-#. openerp-web
-#: code:addons/iap/static/src/xml/iap_templates.xml:37
+#: code:addons/iap/tools/iap_tools.py:0
 #, python-format
-msgid "Temporarily unavailable"
+msgid ""
+"The url that this service requested returned an error. Please contact the "
+"author of the app. The url it tried to contact was %s"
 msgstr ""
 
 #. module: iap
 #. openerp-web
-#: code:addons/iap/static/src/xml/iap_templates.xml:34
+#: code:addons/iap/static/src/xml/iap_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
 #, python-format
-msgid "credits"
+msgid "View My Services"
+msgstr "Zobraziť moje služby"
+
+#. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
+msgid "View your IAP Services and recharge your credits"
 msgstr ""

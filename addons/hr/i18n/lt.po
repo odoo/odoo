@@ -3,26 +3,32 @@
 # 	* hr
 # 
 # Translators:
-# Rolandas <info@paninfo.lt>, 2019
-# Antanas Muliuolis <an.muliuolis@gmail.com>, 2019
-# Monika Raciunaite <monika.raciunaite@gmail.com>, 2019
-# Edgaras Kriukonis <edgaras@focusate.eu>, 2019
-# Martin Trigaux, 2019
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2019
-# Silvija Butko <silvija.butko@gmail.com>, 2019
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2019
-# Šarūnas Ažna <sarunas.azna@gmail.com>, 2019
-# Eimantas <eimantas@focusate.eu>, 2019
-# Linas Versada <linaskrisiukenas@gmail.com>, 2019
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2019
+# Arunas Vaitekunas <vaitekunas@gmail.com>, 2022
+# Jonas Zinkevicius <jozi@odoo.com>, 2022
+# Anatolij, 2022
+# Monika Raciunaite <monika.raciunaite@gmail.com>, 2022
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2022
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2022
+# Eimantas <eimantas@focusate.eu>, 2022
+# Rolandas <info@paninfo.lt>, 2022
+# Arunas V. <arunas@devoro.com>, 2022
+# grupoda2 <dmitrijus.ivanovas@gmail.com>, 2022
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022
+# Edgaras Kriukonis <edgaras@focusate.eu>, 2022
+# Silvija Butko <silvija.butko@gmail.com>, 2022
+# Linas Versada <linaskrisiukenas@gmail.com>, 2022
+# Šarūnas Ažna <sarunas.azna@gmail.com>, 2022
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2022
+# Antanas Muliuolis <an.muliuolis@gmail.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:10+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: digitouch UAB <digitouchagencyeur@gmail.com>, 2019\n"
+"POT-Creation-Date: 2022-04-19 13:57+0000\n"
+"PO-Revision-Date: 2016-08-05 12:58+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,24 +75,32 @@ msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid ""
-"<span class=\"fa fa-circle text-danger\" role=\"img\" aria-label=\"Absent\" "
-"title=\"Absent\" name=\"presence_absent\"/>"
+"<span class=\"fa fa-circle text-success\" role=\"img\" aria-label=\"Present\" title=\"Present\" name=\"presence_present\">\n"
+"                                                </span>"
 msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid ""
-"<span class=\"fa fa-circle text-success\" role=\"img\" aria-"
-"label=\"Present\" title=\"Present\" name=\"presence_present\"/>"
+"<span class=\"fa fa-circle text-warning\" role=\"img\" aria-label=\"To define\" title=\"To define\" name=\"presence_to_define\">\n"
+"                                                </span>"
 msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid ""
-"<span class=\"fa fa-circle text-warning\" role=\"img\" aria-label=\"To "
-"define\" title=\"To define\" name=\"presence_to_define\"/>"
+"<span class=\"fa fa-circle-o text-muted\" role=\"img\" aria-label=\"Absent\" title=\"Absent\" name=\"presence_absent\">\n"
+"                                                </span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+msgid ""
+"<span class=\"fa fa-circle-o text-success\" role=\"img\" aria-label=\"Present but not active\" title=\"Present but not active\" name=\"presence_absent_active\">\n"
+"                                                </span>"
 msgstr ""
 
 #. module: hr
@@ -111,17 +125,36 @@ msgid "<span class=\"ml8 mr-2\">Minimum number of emails to sent </span>"
 msgstr ""
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
+msgid ""
+"<span class=\"o_form_label o_hr_form_label o_cursor_default\">Close "
+"Activities</span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
+msgid ""
+"<span class=\"o_form_label o_hr_form_label o_cursor_default\">Detailed "
+"Reason</span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
+msgid ""
+"<span class=\"o_form_label o_hr_form_label o_cursor_default\">HR Info</span>"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Presence Control</span>"
 msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid ""
 "<span class=\"o_stat_text\">\n"
-"                                        Not Connected\n"
-"                                    </span>"
+"                                    Not Connected\n"
+"                                </span>"
 msgstr ""
 
 #. module: hr
@@ -130,83 +163,24 @@ msgid "<span class=\"o_stat_text\">Connected Since</span>"
 msgstr ""
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_partner_view_form
+msgid "<span class=\"o_stat_text\">Employee(s)</span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "<span class=\"pl-1\">new Employees</span>"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "<span class=\"o_stat_text\">Present Since</span>"
+msgid "<span>Km</span>"
 msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
-msgid "<span>Reporting</span>"
-msgstr "<span>Ataskaitos</span>"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
-msgid "<span>To Approve</span>"
-msgstr "<span>Laukia patvirtinimo</span>"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
-msgid "<span>To Do</span>"
-msgstr "<span>Reikia atlikti</span>"
-
-#. module: hr
-#: model:mail.template,body_html:hr.mail_template_data_unknown_employee_email_address
-msgid ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
-"<tbody>\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"                    <div>\n"
-"                        Hi,<br/>\n"
-"                        Your document has not been created because your email address is not recognized. Please send emails with the email address recorded on your employee information, or contact your HR manager.\n"
-"                    </div>\n"
-"                </td></tr>\n"
-"            </table>\n"
-"    </td></tr>\n"
-"</tbody>\n"
-"</table>\n"
-"</td></tr>\n"
-"<!-- POWERED BY -->\n"
-"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
-"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
-"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
-"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=hr\" style=\"color: #875A7B;\">Odoo</a>\n"
-"      </td></tr>\n"
-"    </table>\n"
-"</td></tr>\n"
-"</table>\n"
-"            "
+msgid "<strong><span>Reporting</span></strong>"
 msgstr ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
-"<tbody>\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"                    <div>\n"
-"                        Labas,<br/>\n"
-"                        Jūsų dokumentas nebuvo sukurtas, nes jūsų el. paštas neatpažintas. Siųskite laiškus iš jūsų darbuotojo informacijoje įrašyto pašto arba susisiekite su personalo skyriumi.\n"
-"                    </div>\n"
-"                </td></tr>\n"
-"            </table>\n"
-"    </td></tr>\n"
-"</tbody>\n"
-"</table>\n"
-"</td></tr>\n"
-"<!-- POWERED BY -->\n"
-"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
-"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
-"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
-"        Technologija <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=hr\" style=\"color: #875A7B;\">\"Odoo\"</a>\n"
-"      </td></tr>\n"
-"    </table>\n"
-"</td></tr>\n"
-"</table>\n"
-"            "
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_user_uniq
@@ -214,8 +188,11 @@ msgid "A user cannot be linked to multiple employees in the same company."
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_absent
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__absent
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_absent
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_presence_state__absent
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_absent
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__absent
 msgid "Absent"
 msgstr "Nėra darbo vietoje"
@@ -225,14 +202,16 @@ msgstr "Nėra darbo vietoje"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_needaction
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_needaction
 msgid "Action Needed"
-msgstr "Reikia veiksmo"
+msgstr "Reikalingas veiksmas"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__active
 #: model:ir.model.fields,field_description:hr.field_hr_employee__active
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__active
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__active
+#: model:ir.model.fields,field_description:hr.field_hr_job__active
 #: model:ir.model.fields,field_description:hr.field_hr_plan__active
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__active
 msgid "Active"
 msgstr "Aktyvus"
 
@@ -240,9 +219,13 @@ msgstr "Aktyvus"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_ids
 #: model:ir.model.fields,field_description:hr.field_hr_plan__plan_activity_type_ids
 #: model_terms:ir.ui.view,arch_db:hr.hr_plan_activity_type_view_tree
-#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
 msgid "Activities"
 msgstr "Veiklos"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
+msgid "Activities To Generate"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_plan_activity_type_view_form
@@ -252,7 +235,7 @@ msgstr "Veikla"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Veiklos Išimties Dekoravimas"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_config_plan
@@ -270,11 +253,31 @@ msgid "Activity Type"
 msgstr "Veiklos tipas"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Veiklos tipo ikona"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
+msgid "Activity by"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Add a new employee"
 msgstr "Pridėti naują darbuotoją"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_plan_action
+msgid "Add a new plan"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_plan_activity_type_action
+msgid "Add a new plan activity"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_description
@@ -297,7 +300,7 @@ msgstr "Adresas"
 #. module: hr
 #: model:res.groups,name:hr.group_hr_manager
 msgid "Administrator"
-msgstr ""
+msgstr "Administratorius"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_presence
@@ -311,11 +314,17 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_alias__alias_contact
-#: model:ir.model.fields,field_description:hr.field_mail_alias_mixin__alias_contact
 #: model:ir.model.fields,field_description:hr.field_mail_channel__alias_contact
-#: model:ir.model.fields,field_description:hr.field_maintenance_equipment_category__alias_contact
 msgid "Alias Contact Security"
 msgstr "Pseudonimo kontakto apsauga"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__lang
+#: model:ir.model.fields,help:hr.field_res_users__private_lang
+msgid ""
+"All the emails and documents sent to this contact will be translated in this"
+" language."
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -328,10 +337,40 @@ msgid "Allow employees to update their own data."
 msgstr ""
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
+msgid "Apply"
+msgstr "Taikyti"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Approvers"
+msgstr ""
+
+#. module: hr
+#. openerp-web
+#: code:addons/hr/static/src/js/hr_employee.js:0
+#: code:addons/hr/static/src/js/hr_employee.js:0
+#, python-format
+msgid "Archive"
+msgstr "Archyvuoti"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__archive_private_address
+msgid "Archive Private Address"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
 #: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_department_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Archived"
 msgstr "Archyvuotas"
 
@@ -344,9 +383,13 @@ msgstr "Prisegtukų skaičius"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Attendance"
 msgstr "Lankomumas"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Attendance/Point of Sale"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__mail_alias__alias_contact__employees
@@ -370,6 +413,36 @@ msgid "Available"
 msgstr "Pasiekiamas"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_1920
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_1920
+msgid "Avatar"
+msgstr "Portretas"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_1024
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_1024
+msgid "Avatar 1024"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_128
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_128
+msgid "Avatar 128"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_256
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_256
+msgid "Avatar 256"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_512
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_512
+msgid "Avatar 512"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Away"
@@ -390,6 +463,11 @@ msgstr "Pažymėjimo ID"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_id
 msgid "Bank Account Number"
 msgstr "Banko sąskaitos numeris"
+
+#. module: hr
+#: model:ir.model,name:hr.model_base
+msgid "Base"
+msgstr "Bazė"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_ip
@@ -422,7 +500,6 @@ msgid "Can Edit"
 msgstr "Gali redaguoti"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:hr.plan_wizard
 msgid "Cancel"
 msgstr "Atšaukti"
@@ -439,11 +516,9 @@ msgid "Change my Preferences"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
-msgid "Change password"
-msgstr "Keisti slaptažodį"
-
-#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Chat"
 msgstr "Pokalbis"
@@ -460,6 +535,11 @@ msgid "Citizenship"
 msgstr ""
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "City"
+msgstr "Miestas"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__coach_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__coach_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__coach_id
@@ -469,7 +549,7 @@ msgid "Coach"
 msgstr "Mentorius"
 
 #. module: hr
-#: code:addons/hr/models/hr_plan.py:0
+#: code:addons/hr/models/hr_plan_activity_type.py:0
 #, python-format
 msgid "Coach of employee %s is not set."
 msgstr ""
@@ -495,10 +575,19 @@ msgstr "Įmonės"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__company_id
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Company"
 msgstr "Įmonė"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__company_country_id
+msgid "Company Country"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
@@ -527,18 +616,48 @@ msgstr "Konfigūracijos nustatymai"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_human_resources_configuration
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "Configuration"
 msgstr "Konfigūracija"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_partner
 msgid "Contact"
-msgstr "Kontaktai"
+msgstr "Kontaktas"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 msgid "Contact Information"
 msgstr "Kontaktinė informacija"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_contact
+#: model:ir.model.fields,field_description:hr.field_res_users__emergency_contact
+msgid "Contact Name"
+msgstr "Kontakto vardas"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_phone
+#: model:ir.model.fields,field_description:hr.field_res_users__emergency_phone
+msgid "Contact Phone"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__contractor
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__employee_type__contractor
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__employee_type__contractor
+msgid "Contractor"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "Country"
+msgstr "Valstybė"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__company_country_code
+msgid "Country Code"
+msgstr "Valstybės kodas"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__country_of_birth
@@ -552,7 +671,20 @@ msgid "Create Date"
 msgstr "Sukūrimo data"
 
 #. module: hr
-#: model_terms:ir.actions.act_window,help:hr.open_module_tree_department
+#: model_terms:ir.ui.view,arch_db:hr.view_users_simple_form_inherit_hr
+msgid "Create Employee"
+msgstr "Sukurti darbuotoją"
+
+#. module: hr
+#: code:addons/hr/models/hr_employee.py:0
+#: model:ir.actions.server,name:hr.action_hr_employee_create_user
+#, python-format
+msgid "Create User"
+msgstr "Sukurti vartotoją"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_department_kanban_action
+#: model_terms:ir.actions.act_window,help:hr.hr_department_tree_action
 msgid "Create a new department"
 msgstr "Kurti naują skyrių"
 
@@ -563,6 +695,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_departure_reason__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__create_uid
@@ -571,11 +704,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_plan__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__create_uid
 msgid "Created by"
 msgstr "Sukūrė"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_departure_reason__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__create_date
@@ -583,6 +718,7 @@ msgstr "Sukūrė"
 #: model:ir.model.fields,field_description:hr.field_hr_plan__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__create_date
 msgid "Created on"
 msgstr "Sukurta"
 
@@ -598,11 +734,19 @@ msgid "Date of Birth"
 msgstr "Gimimo data"
 
 #. module: hr
+#: code:addons/hr/models/hr_departure_reason.py:0
+#, python-format
+msgid "Default departure reasons cannot be deleted."
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__resource_calendar_id
+#: model:ir.model.fields,help:hr.field_res_users__employee_resource_calendar_id
 msgid "Define the schedule of resource"
 msgstr "Nurodykite ištekliaus grafiką"
 
 #. module: hr
+#: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__department_id
@@ -621,7 +765,9 @@ msgid "Department Name"
 msgstr "Padalinio pavadinimas"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_module_tree_department
+#: model:ir.actions.act_window,name:hr.hr_department_kanban_action
+#: model:ir.actions.act_window,name:hr.hr_department_tree_action
+#: model:ir.ui.menu,name:hr.menu_hr_department_kanban
 #: model:ir.ui.menu,name:hr.menu_hr_department_tree
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 msgid "Departments"
@@ -633,9 +779,22 @@ msgid "Departure"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_reason
-#: model:ir.model.fields,field_description:hr.field_hr_employee__departure_reason
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee__departure_date
+msgid "Departure Date"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_departure_reason
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_reason_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee__departure_reason_id
 msgid "Departure Reason"
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.hr_departure_reason_action
+#: model:ir.ui.menu,name:hr.menu_hr_departure_reason_tree
+msgid "Departure Reasons"
 msgstr ""
 
 #. module: hr
@@ -645,7 +804,6 @@ msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Dependant"
 msgstr ""
 
@@ -656,21 +814,32 @@ msgid "Direct subordinates"
 msgstr "Tiesioginiai pavaldiniai"
 
 #. module: hr
-#: model:ir.model,name:hr.model_mail_channel
-msgid "Discussion Channel"
+#: model:ir.ui.menu,name:hr.menu_hr_employee
+msgid "Directory"
 msgstr ""
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
+msgid "Discard"
+msgstr "Atmesti"
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_channel
+msgid "Discussion Channel"
+msgstr "Diskusijų kanalas"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_departure_reason__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee__display_name
-#: model:ir.model.fields,field_description:hr.field_hr_employee_base__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_job__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_plan__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__display_name
 msgid "Display Name"
 msgstr "Rodomas pavadinimas"
 
@@ -678,6 +847,16 @@ msgstr "Rodomas pavadinimas"
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__divorced
 msgid "Divorced"
 msgstr "Išsiskyręs/-usi"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__doctor
+msgid "Doctor"
+msgstr "Daktaras"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__driving_license
+msgid "Driving License"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -697,34 +876,22 @@ msgid "Email Aliases"
 msgstr "El. pašto pseudonimai"
 
 #. module: hr
-#: model:ir.model,name:hr.model_mail_alias_mixin
-msgid "Email Aliases Mixin"
-msgstr "El. pašto pseudonimų Mixin"
-
-#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Emergency"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_contact
-#: model:ir.model.fields,field_description:hr.field_res_users__emergency_contact
-msgid "Emergency Contact"
-msgstr "Nelaimės kontaktas"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_phone
-#: model:ir.model.fields,field_description:hr.field_res_users__emergency_phone
-msgid "Emergency Phone"
-msgstr "Nelaimės telefonas"
-
-#. module: hr
 #: model:ir.model,name:hr.model_hr_employee
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__employee_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__employee_id
+#: model:ir.model.fields,field_description:hr.field_resource_resource__employee_id
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__employee
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__employee_type__employee
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__employee_type__employee
 #: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__responsible__employee
-#: model:ir.ui.menu,name:hr.menu_human_resources_configuration_employee
+#: model:ir.ui.menu,name:hr.menu_config_employee
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -742,13 +909,8 @@ msgid "Employee Count"
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.menu,name:hr.menu_hr_employee
-msgid "Employee Directory"
-msgstr "Darbuotojų katalogas"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_employee_self_edit
-msgid "Employee Edition"
+msgid "Employee Editing"
 msgstr ""
 
 #. module: hr
@@ -757,7 +919,13 @@ msgid "Employee Image"
 msgstr "Darbuotojo nuotrauka"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__private_lang
+msgid "Employee Lang"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__name
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 msgid "Employee Name"
 msgstr "Darbuotojo vardas"
 
@@ -767,6 +935,21 @@ msgstr "Darbuotojo vardas"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_category_form
 msgid "Employee Tags"
 msgstr "Darbuotojo žymos"
+
+#. module: hr
+#. openerp-web
+#: code:addons/hr/static/src/js/hr_employee.js:0
+#, python-format
+msgid "Employee Termination"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__employee_type
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__employee_type
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__employee_type
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_type
+msgid "Employee Type"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -790,12 +973,16 @@ msgid "Employee's Country"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee's Name"
 msgstr "Darbuotojo vardas"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_resource_calendar_id
+msgid "Employee's Working Hours"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
@@ -810,6 +997,7 @@ msgstr "Darbuotojas(-ai)"
 #: model:ir.actions.act_window,name:hr.open_view_employee_list_my
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__employee_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__employee_ids
+#: model:ir.model.fields,field_description:hr.field_res_partner__employee_ids
 #: model:ir.ui.menu,name:hr.menu_hr_employee_payroll
 #: model:ir.ui.menu,name:hr.menu_hr_employee_user
 #: model:ir.ui.menu,name:hr.menu_hr_root
@@ -818,11 +1006,19 @@ msgstr "Darbuotojas(-ai)"
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_tree
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_view_activity
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr.view_department_form
+#: model_terms:ir.ui.view,arch_db:hr.view_department_tree
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_tree2
 msgid "Employees"
 msgstr "Darbuotojai"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_partner__employees_count
+#: model:ir.model.fields,field_description:hr.field_res_users__employees_count
+msgid "Employees Count"
+msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
@@ -837,7 +1033,7 @@ msgstr "Darbuotojų žymos"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Enrich employee profiles with skills and resumes"
-msgstr ""
+msgstr "Praturtinkite darbuotojų profilius naudodami Įgudžių ir CV duomenis"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__address_home_id
@@ -848,15 +1044,15 @@ msgid ""
 msgstr "Įveskite darbuotojo asmeninį adresą, nesusietą su įmone."
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_job__no_of_recruitment
-msgid "Expected New Employees"
-msgstr "Planuojami nauji darbuotojai"
-
-#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__expected_employees
 msgid ""
 "Expected number of employees for this job position after new recruitment."
 msgstr "Numatomas darbuotojų skaičius šiose pareigose po naujo įdarbinimo."
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Family Status"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__gender__female
@@ -870,8 +1066,7 @@ msgid "Field of Study"
 msgstr "Studijų sritis"
 
 #. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_departure_wizard__departure_reason__fired
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee__departure_reason__fired
+#: model:hr.departure.reason,name:hr.departure_fired
 msgid "Fired"
 msgstr ""
 
@@ -883,18 +1078,31 @@ msgid "Followers"
 msgstr "Sekėjai"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department__message_channel_ids
-#: model:ir.model.fields,field_description:hr.field_hr_employee__message_channel_ids
-#: model:ir.model.fields,field_description:hr.field_hr_job__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Sekėjai (kanalai)"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_partner_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_partner_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Sekėjai (partneriai)"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesome piktograma, pvz., fa-tasks"
+
+#. module: hr
+#: code:addons/hr/models/mail_channel.py:0
+#, python-format
+msgid ""
+"For %(channels)s, channel_type should be 'channel' to have the department "
+"auto-subscription."
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__freelance
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__employee_type__freelance
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__employee_type__freelance
+msgid "Freelancer"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -913,6 +1121,11 @@ msgid "Generate"
 msgstr "Generuoti"
 
 #. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__graduate
+msgid "Graduate"
+msgstr "Absolventas"
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
@@ -920,14 +1133,16 @@ msgid "Group By"
 msgstr "Grupuoti pagal"
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_department
-msgid "HR Department"
-msgstr "Personalo skyrius"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_channel__subscription_department_ids
 msgid "HR Departments"
 msgstr "Personalo skyriai"
+
+#. module: hr
+#: model:ir.actions.server,name:hr.ir_cron_data_check_work_permit_validity_ir_actions_server
+#: model:ir.cron,cron_name:hr.ir_cron_data_check_work_permit_validity
+#: model:ir.cron,name:hr.ir_cron_data_check_work_permit_validity
+msgid "HR Employee: check work permit validity"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -936,9 +1151,29 @@ msgid "HR Settings"
 msgstr "Personalo nustatymai"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__has_message
+#: model:ir.model.fields,field_description:hr.field_hr_employee__has_message
+#: model:ir.model.fields,field_description:hr.field_hr_job__has_message
+msgid "Has Message"
+msgstr "Turi žinutę"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_hired_employee
 msgid "Hired Employees"
 msgstr "Įdarbinti darbuotojai"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
+#: model:ir.model.fields,field_description:hr.field_res_users__km_home_work
+msgid "Home-Work Distance"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__hr_icon_display
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__hr_icon_display
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__hr_icon_display
+msgid "Hr Icon Display"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_presence_state
@@ -955,17 +1190,23 @@ msgstr "Personalas"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__id
+#: model:ir.model.fields,field_description:hr.field_hr_departure_reason__id
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__id
-#: model:ir.model.fields,field_description:hr.field_hr_employee_base__id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__id
 #: model:ir.model.fields,field_description:hr.field_hr_job__id
 #: model:ir.model.fields,field_description:hr.field_hr_plan__id
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__id
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__id
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__id
 msgid "ID"
 msgstr "ID"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__id_card
+msgid "ID Card Copy"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__barcode
@@ -981,7 +1222,7 @@ msgstr "Piktograma"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Išimties veiklą žyminti piktograma."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__identification_id
@@ -991,11 +1232,8 @@ msgstr "Asmens kodas"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_needaction
-#: model:ir.model.fields,help:hr.field_hr_department__message_unread
 #: model:ir.model.fields,help:hr.field_hr_employee__message_needaction
-#: model:ir.model.fields,help:hr.field_hr_employee__message_unread
 #: model:ir.model.fields,help:hr.field_hr_job__message_needaction
-#: model:ir.model.fields,help:hr.field_hr_job__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Jeigu pažymėta, naujiems pranešimams reikės jūsų dėmesio."
 
@@ -1017,6 +1255,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_1920
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_1920
 msgid "Image"
 msgstr "Paveikslėlis"
 
@@ -1024,25 +1263,25 @@ msgstr "Paveikslėlis"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_1024
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_1024
 msgid "Image 1024"
-msgstr ""
+msgstr "Paveikslėlis 1024"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_128
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_128
 msgid "Image 128"
-msgstr ""
+msgstr "Paveikslėlis 128"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_256
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_256
 msgid "Image 256"
-msgstr ""
+msgstr "Paveikslėlis 256"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_512
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_512
 msgid "Image 512"
-msgstr ""
+msgstr "Paveikslėlis 512"
 
 #. module: hr
 #: code:addons/hr/models/hr_employee.py:0
@@ -1051,21 +1290,16 @@ msgid "Import Template for Employees"
 msgstr "Importuoti šabloną darbuotojams"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
-msgid "In Position"
-msgstr "Pozicijoje"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
-msgid "In Recruitment"
-msgstr "Įdarbinama"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_is_follower
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_is_follower
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_is_follower
 msgid "Is Follower"
 msgstr "Yra sekėjas"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__is_system
+msgid "Is System"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -1093,8 +1327,14 @@ msgstr "Pareigos"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
+#: model:ir.ui.menu,name:hr.menu_view_hr_job
 msgid "Job Positions"
 msgstr "Darbo pozicijos"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "Job Summary"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__job_title
@@ -1113,10 +1353,15 @@ msgid "Jobs"
 msgstr "Darbai"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
-#: model:ir.model.fields,field_description:hr.field_res_users__km_home_work
-msgid "Km Home-Work"
+#: model:ir.model.fields,field_description:hr.field_hr_employee__lang
+msgid "Lang"
 msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Language"
+msgstr "Kalba"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__last_activity
@@ -1136,20 +1381,22 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department____last_update
+#: model:ir.model.fields,field_description:hr.field_hr_departure_reason____last_update
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard____last_update
 #: model:ir.model.fields,field_description:hr.field_hr_employee____last_update
-#: model:ir.model.fields,field_description:hr.field_hr_employee_base____last_update
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category____last_update
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public____last_update
 #: model:ir.model.fields,field_description:hr.field_hr_job____last_update
 #: model:ir.model.fields,field_description:hr.field_hr_plan____last_update
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type____last_update
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard____last_update
+#: model:ir.model.fields,field_description:hr.field_hr_work_location____last_update
 msgid "Last Modified on"
 msgstr "Paskutinį kartą keista"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_departure_reason__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__write_uid
@@ -1158,11 +1405,13 @@ msgstr "Paskutinį kartą keista"
 #: model:ir.model.fields,field_description:hr.field_hr_plan__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__write_uid
 msgid "Last Updated by"
 msgstr "Paskutinį kartą atnaujino"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_departure_reason__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__write_date
@@ -1171,6 +1420,7 @@ msgstr "Paskutinį kartą atnaujino"
 #: model:ir.model.fields,field_description:hr.field_hr_plan__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__write_date
 msgid "Last Updated on"
 msgstr "Paskutinį kartą atnaujinta"
 
@@ -1204,6 +1454,11 @@ msgid "Location"
 msgstr "Vieta"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__location_number
+msgid "Location Number"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_main_attachment_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_main_attachment_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_main_attachment_id
@@ -1228,7 +1483,7 @@ msgid "Manager"
 msgstr "Vadovas"
 
 #. module: hr
-#: code:addons/hr/models/hr_plan.py:0
+#: code:addons/hr/models/hr_plan_activity_type.py:0
 #, python-format
 msgid "Manager of employee %s is not set."
 msgstr ""
@@ -1237,7 +1492,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
 #: model:ir.model.fields,field_description:hr.field_res_users__marital
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Marital Status"
 msgstr "Šeimyninė padėtis"
 
@@ -1252,9 +1506,26 @@ msgid "Master"
 msgstr "Magistras"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__master_department_id
+msgid "Master Department"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__member_of_department
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__member_of_department
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__member_of_department
+msgid "Member of department"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__member_ids
 msgid "Members"
 msgstr "Nariai"
+
+#. module: hr
+#: model:ir.model,name:hr.model_ir_ui_menu
+msgid "Menu"
+msgstr "Meniu"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_has_error
@@ -1271,23 +1542,45 @@ msgid "Messages"
 msgstr "Žinutės"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Veiklos paskutinis terminas"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "My Department"
+msgstr ""
+
+#. module: hr
 #. openerp-web
-#: code:addons/hr/static/src/xml/hr_templates.xml:0
+#: code:addons/hr/static/src/js/user_menu.js:0
 #, python-format
 msgid "My Profile"
-msgstr ""
+msgstr "Mano paskyra"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "My Team"
+msgstr "Mano komanda"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__name
 #: model:ir.model.fields,field_description:hr.field_hr_plan__name
 msgid "Name"
-msgstr "Vardas"
+msgstr "Pavadinimas"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__country_id
 msgid "Nationality (Country)"
 msgstr "Tautybė (šalis)"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_date_deadline
@@ -1305,15 +1598,10 @@ msgid "Next Activity Type"
 msgstr "Kito veiksmo tipas"
 
 #. module: hr
-#: code:addons/hr/models/hr_plan.py:0
+#: code:addons/hr/models/hr_plan_activity_type.py:0
 #, python-format
-msgid "No specific user given on activity."
+msgid "No specific user given on activity %s."
 msgstr ""
-
-#. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_job__state__open
-msgid "Not Recruiting"
-msgstr "Nedarbinama"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1342,8 +1630,8 @@ msgstr "Veiksmų skaičius"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__children
 #: model:ir.model.fields,field_description:hr.field_res_users__children
-msgid "Number of Children"
-msgstr "Vaikų skaičius"
+msgid "Number of Dependent Children"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_employee
@@ -1355,7 +1643,7 @@ msgstr "Darbuotojų, dirbančių šiose pareigose, skaičius."
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_error_counter
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Klaidų kiekis"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_hired_employee
@@ -1384,22 +1672,20 @@ msgid "Number of new employees you expect to recruit."
 msgstr "Darbuotojų, kuriuos planuojama įdarbinti, skaičius."
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_department__message_unread_counter
-#: model:ir.model.fields,help:hr.field_hr_employee__message_unread_counter
-#: model:ir.model.fields,help:hr.field_hr_job__message_unread_counter
-msgid "Number of unread messages"
-msgstr "Neperskaitytų žinučių skaičius"
+#: model_terms:ir.actions.act_window,help:hr.hr_department_tree_action
+msgid ""
+"Odoo's department structure is used to manage all documents\n"
+"                    related to employees by departments: expenses, timesheets,\n"
+"                    leaves, recruitments, etc."
+msgstr ""
 
 #. module: hr
-#: model_terms:ir.actions.act_window,help:hr.open_module_tree_department
+#: model_terms:ir.actions.act_window,help:hr.hr_department_kanban_action
 msgid ""
 "Odoo's department structure is used to manage all documents\n"
 "                related to employees by departments: expenses, timesheets,\n"
-"                leaves, recruitments, etc."
+"                time off, recruitments, etc."
 msgstr ""
-"\"Odoo\" skyrių struktūra naudojama tvarkymui dokumentų,\n"
-"susijusių su darbuotojais pagal skyrius: išlaidos, laiko apskaita,\n"
-"išėjimai, įdarbinimai ir kt."
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
@@ -1407,13 +1693,14 @@ msgid "Officer"
 msgstr "Vadovas"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_org_chart
-msgid "Organizational Chart"
+#: model:ir.ui.menu,name:hr.menu_config_plan_plan
+msgid "On/Offboarding Plans"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_1920
-msgid "Original Image"
+#: code:addons/hr/models/hr_employee_base.py:0
+#, python-format
+msgid "Operation not supported"
 msgstr ""
 
 #. module: hr
@@ -1422,6 +1709,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__responsible__other
 msgid "Other"
 msgstr "Kita"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__responsible_id
+msgid "Other Responsible"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__pin
@@ -1437,10 +1729,11 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__pin
 #: model:ir.model.fields,help:hr.field_res_users__pin
-msgid "PIN used to Check In/Out in Kiosk Mode (if enabled in Configuration)."
+msgid ""
+"PIN used to Check In/Out in the Kiosk Mode of the Attendance application (if"
+" enabled in Configuration) and to change the cashier in the Point of Sale "
+"application."
 msgstr ""
-"PIN yra naudojamas įsiregistravimui/išsiregistravimui kortelių skaitytuvo "
-"režime (jei įjungta nustatymuose)."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__parent_id
@@ -1448,7 +1741,13 @@ msgid "Parent Department"
 msgstr "Aukštesnysis padalinys"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__parent_path
+msgid "Parent Path"
+msgstr "Tėvinis kelias"
+
+#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__user_partner_id
+#: model:ir.model.fields,help:hr.field_hr_employee_public__user_partner_id
 msgid "Partner-related data of the user"
 msgstr "Su partneriu susiję vartotojo duomenys"
 
@@ -1457,6 +1756,11 @@ msgstr "Su partneriu susiję vartotojo duomenys"
 #: model:ir.model.fields,field_description:hr.field_res_users__passport_id
 msgid "Passport No"
 msgstr "Paso Nr"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Payroll"
+msgstr "Algalapis"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1471,11 +1775,21 @@ msgid "Place of Birth"
 msgstr "Gimimo vieta"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__plan_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__plan_id
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__plan_id
 #: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_search
 msgid "Plan"
 msgstr "Suplanuoti"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.hr_plan_activity_type_action
+msgid "Plan Activities"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
+msgid "Plan Name"
+msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_plan_wizard
@@ -1488,28 +1802,19 @@ msgid "Plan activity type"
 msgstr ""
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.hr_plan_action
 #: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
 #: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_tree
 msgid "Planning"
 msgstr "Planavimas"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.hr_plan_activity_type_action
-#: model:ir.ui.menu,name:hr.menu_config_plan_types
-msgid "Planning Types"
-msgstr ""
-
-#. module: hr
-#: model:ir.ui.menu,name:hr.menu_config_plan_plan
+#: model:ir.actions.act_window,name:hr.hr_plan_action
 msgid "Plans"
-msgstr ""
+msgstr "Planai"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_mail_alias__alias_contact
-#: model:ir.model.fields,help:hr.field_mail_alias_mixin__alias_contact
 #: model:ir.model.fields,help:hr.field_mail_channel__alias_contact
-#: model:ir.model.fields,help:hr.field_maintenance_equipment_category__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -1522,11 +1827,6 @@ msgstr ""
 "- sekėjai: tik susijusio dokumento sekėjai arba sekančių kanalų nariai\n"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
-msgid "Preferences"
-msgstr "Nustatymai"
-
-#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence of employees"
 msgstr ""
@@ -1537,11 +1837,21 @@ msgid "Presence reporting screen, email and IP address control."
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_present
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__present
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_present
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_presence_state__present
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_present
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__present
 msgid "Present"
 msgstr "Yra darbo vietoje"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_absent_active
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_absent_active
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_absent_active
+msgid "Present but not active"
+msgstr ""
 
 #. module: hr
 #: model:ir.actions.report,name:hr.hr_employee_print_badge
@@ -1550,8 +1860,23 @@ msgid "Print Badge"
 msgstr "Atsispausdinti pažymėjimą"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "Private Address"
+msgstr "Privatus adresas"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__private_city
+msgid "Private City"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Private Contact"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__private_country_id
+msgid "Private Country"
 msgstr ""
 
 #. module: hr
@@ -1573,6 +1898,26 @@ msgid "Private Phone"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__private_state_id
+msgid "Private State"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__private_street
+msgid "Private Street"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__private_street2
+msgid "Private Street2"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__private_zip
+msgid "Private Zip"
+msgstr ""
+
+#. module: hr
 #: model:ir.model,name:hr.model_hr_employee_public
 msgid "Public Employee"
 msgstr ""
@@ -1583,15 +1928,27 @@ msgid "Ready to recruit more efficiently?"
 msgstr "Esate pasiruošę įdarbinti efektyviau?"
 
 #. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_job__state__recruit
-msgid "Recruitment in Progress"
-msgstr "Įdarbinimas vyksta"
+#: model:ir.model.fields,field_description:hr.field_hr_departure_reason__name
+msgid "Reason"
+msgstr "Priežastis"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_config_recruitment
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "Recruitment"
+msgstr "Įdarbinimas"
 
 #. module: hr
 #: code:addons/hr/models/hr_employee.py:0
 #: model:ir.actions.act_window,name:hr.hr_departure_wizard_action
 #, python-format
 msgid "Register Departure"
+msgstr ""
+
+#. module: hr
+#: code:addons/hr/models/res_partner.py:0
+#, python-format
+msgid "Related Employees"
 msgstr ""
 
 #. module: hr
@@ -1605,7 +1962,13 @@ msgid "Related employee"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_res_partner__employee_ids
+msgid "Related employees based on their private address"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__user_id
+#: model:ir.model.fields,help:hr.field_resource_resource__user_id
 msgid "Related user name for the resource to manage its access."
 msgstr "Susijusio vartotojo vardas ištekliaus prieigai valdyti"
 
@@ -1621,8 +1984,7 @@ msgid "Requirements"
 msgstr "Reikalavimai"
 
 #. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_departure_wizard__departure_reason__resigned
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee__departure_reason__resigned
+#: model:hr.departure.reason,name:hr.departure_resigned
 msgid "Resigned"
 msgstr ""
 
@@ -1640,14 +2002,14 @@ msgid "Resource Calendar"
 msgstr "Išteklių kalendorius"
 
 #. module: hr
+#: model:ir.model,name:hr.model_resource_resource
+msgid "Resources"
+msgstr "Ištekliai"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__responsible
 msgid "Responsible"
 msgstr "Atsakingas"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__responsible_id
-msgid "Responsible Person"
-msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_user_id
@@ -1655,15 +2017,7 @@ msgid "Responsible User"
 msgstr "Atsakingas vartotojas"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Responsibles"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_departure_wizard__departure_reason__retired
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee__departure_reason__retired
+#: model:hr.departure.reason,name:hr.departure_retired
 msgid "Retired"
 msgstr ""
 
@@ -1678,11 +2032,6 @@ msgid "SSN No"
 msgstr "Socialinio draudimo nr."
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
-msgid "Save"
-msgstr "Išsaugoti"
-
-#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Schedule"
@@ -1695,27 +2044,31 @@ msgid "School"
 msgstr "Mokykla"
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__coach_id
+#: model:ir.model.fields,help:hr.field_hr_employee_base__coach_id
+#: model:ir.model.fields,help:hr.field_hr_employee_public__coach_id
+#: model:ir.model.fields,help:hr.field_res_users__coach_id
+msgid ""
+"Select the \"Employee\" who is the coach of this employee.\n"
+"The \"Coach\" has no specific rights or responsibilities by default."
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_departure_reason__sequence
+#: model:ir.model.fields,field_description:hr.field_hr_job__sequence
+msgid "Sequence"
+msgstr "Seka"
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Set default company schedule to manage your employees working time"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_job__state
-msgid ""
-"Set whether the recruitment process is open or closed for this job position."
-msgstr "Nustatykite, ar įdarbinimo procesas šiai pozicijai vyksta, ar ne."
-
-#. module: hr
 #: model:ir.actions.act_window,name:hr.hr_config_settings_action
 #: model:ir.ui.menu,name:hr.hr_menu_configuration
-#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "Settings"
 msgstr "Nustatymai"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
-msgid "Show organizational chart on employee form"
-msgstr "Rodyti organizacinę lentelę darbuotojo formoje"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__single
@@ -1755,15 +2108,13 @@ msgid "Spouse Complete Name"
 msgstr "Antrosios pusės pilnas vardas"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
-msgid "Start Recruitment"
-msgstr "Pradėti įdarbinimą"
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "State"
+msgstr "Būsena"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_job__state
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Status"
 msgstr "Būsena"
 
@@ -1781,9 +2132,26 @@ msgstr ""
 "Suplanuotas: Ateities veiklos."
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
-msgid "Stop Recruitment"
-msgstr "Stabdyti įdarbinimą"
+#: model:ir.model.fields,field_description:hr.field_hr_plan__steps_count
+msgid "Steps Count"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "Street 2..."
+msgstr "Gatvė 2..."
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "Street..."
+msgstr "Gatvė..."
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__student
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__employee_type__student
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__employee_type__student
+msgid "Student"
+msgstr "Mokinys"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__summary
@@ -1808,6 +2176,21 @@ msgid "Tags"
 msgstr "Žymos"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_job__no_of_recruitment
+msgid "Target"
+msgstr "Tikslas"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__create_employee_id
+msgid "Technical field, bind user to this employee on create"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__create_employee
+msgid "Technical field, whether to create an employee"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
 msgid ""
 "The Badge ID must be unique, this one is already assigned to another "
@@ -1816,15 +2199,47 @@ msgstr ""
 "Pažymėjimo ID turi būti unikalus, šis jau yra priskirtas kitam darbuotojui."
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__company_country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"ISO šalies kodas dviem simboliais. \n"
+"Galite naudoti šį lauką greitai paieškai."
+
+#. module: hr
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid "The PIN must be a sequence of digits."
 msgstr "PIN kodas turi būti sudarytas iš skaitmenų sekos."
 
 #. module: hr
+#: code:addons/hr/models/hr_plan_activity_type.py:0
+#, python-format
+msgid "The employee %s should be linked to a user."
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_address_home_a_company
 #: model:ir.model.fields,field_description:hr.field_res_users__is_address_home_a_company
 msgid "The employee address has a company linked"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__employee_type
+#: model:ir.model.fields,help:hr.field_hr_employee_base__employee_type
+#: model:ir.model.fields,help:hr.field_hr_employee_public__employee_type
+#: model:ir.model.fields,help:hr.field_res_users__employee_type
+msgid ""
+"The employee type. Although the primary purpose may seem to categorize "
+"employees, this field has also an impact in the Contract History. Only "
+"Employee type is supposed to be under contract and will have a Contract "
+"History."
+msgstr ""
+
+#. module: hr
+#: model:ir.model.constraint,message:hr.constraint_hr_job_no_of_recruitment_positive
+msgid "The expected number of new employees must be positive."
 msgstr ""
 
 #. module: hr
@@ -1836,9 +2251,21 @@ msgid ""
 msgstr ""
 
 #. module: hr
+#: code:addons/hr/models/hr_plan_activity_type.py:0
+#, python-format
+msgid "The manager of %s should be linked to a user."
+msgstr ""
+
+#. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_job_name_company_uniq
 msgid "The name of the job position must be unique per department in company!"
 msgstr "Darbo pozicijos pavadinimas įmonės skyriuje turi būti unikalus!"
+
+#. module: hr
+#: code:addons/hr/wizard/hr_plan_wizard.py:0
+#, python-format
+msgid "The plan %s has been started"
+msgstr ""
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_user
@@ -1853,6 +2280,18 @@ msgid ""
 msgstr ""
 "Vartotojas turės prieigą prie žmogiškųjų išteklių konfigūracijos ir "
 "statistikos ataskaitų."
+
+#. module: hr
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid "The work permit of %(employee)s expires at %(date)s."
+msgstr ""
+
+#. module: hr
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid "This employee already has an user."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__tz
@@ -1878,9 +2317,30 @@ msgid "To Define"
 msgstr ""
 
 #. module: hr
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid ""
+"To avoid multi company issues (loosing the access to your previous "
+"contracts, leaves, ...), you should create another employee in the new "
+"company instead."
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_to_define
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_to_define
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_to_define
+msgid "To define"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Today Activities"
 msgstr "Šiandienos veiklos"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__total_employee
+msgid "Total Employee"
+msgstr "Viso darbuotojų"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__expected_employees
@@ -1888,14 +2348,25 @@ msgid "Total Forecasted Employees"
 msgstr "Bendras prognozuojamas darbuotojų skaičius"
 
 #. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__trainee
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__employee_type__trainee
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__employee_type__trainee
+msgid "Trainee"
+msgstr "Mokinys"
+
+#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_exception_decoration
 msgid "Type of the exception activity on record."
+msgstr "Įrašytos išimties veiklos tipas."
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_undetermined
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_undetermined
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_undetermined
+msgid "Undetermined"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department__message_unread
-#: model:ir.model.fields,field_description:hr.field_hr_employee__message_unread
-#: model:ir.model.fields,field_description:hr.field_hr_job__message_unread
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
@@ -1903,39 +2374,22 @@ msgid "Unread Messages"
 msgstr "Neperskaitytos žinutės"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department__message_unread_counter
-#: model:ir.model.fields,field_description:hr.field_hr_employee__message_unread_counter
-#: model:ir.model.fields,field_description:hr.field_hr_job__message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Neperskaitytų žinučių skaičiavimas"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__user_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__user_id
+#: model:ir.model.fields,field_description:hr.field_resource_resource__user_id
 msgid "User"
 msgstr "Vartotojas"
 
 #. module: hr
-#: code:addons/hr/models/hr_plan.py:0
-#, python-format
-msgid "User linked to employee %s is required."
-msgstr ""
-
-#. module: hr
-#: code:addons/hr/models/hr_plan.py:0
+#: code:addons/hr/models/hr_plan_activity_type.py:0
 #, python-format
 msgid "User of coach of employee %s is not set."
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/models/hr_plan.py:0
-#, python-format
-msgid "User of manager of employee %s is not set."
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_partner_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__user_partner_id
 msgid "User's partner"
 msgstr ""
 
@@ -1968,6 +2422,21 @@ msgid "Visa No"
 msgstr "Vizos Nr"
 
 #. module: hr
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid "Warning"
+msgstr "Įspėjimas"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__member_of_department
+#: model:ir.model.fields,help:hr.field_hr_employee_base__member_of_department
+#: model:ir.model.fields,help:hr.field_hr_employee_public__member_of_department
+msgid ""
+"Whether the employee is a member of the active user's department or one of "
+"it's child department."
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__widower
 msgid "Widower"
 msgstr "Našlys (-ė)"
@@ -1996,6 +2465,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__address_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__address_id
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__address_id
 #: model:ir.model.fields,field_description:hr.field_res_users__address_id
 msgid "Work Address"
 msgstr "Darbo adresas"
@@ -2016,12 +2486,22 @@ msgid "Work Information"
 msgstr "Darbo informacija"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__work_location
-#: model:ir.model.fields,field_description:hr.field_hr_employee_base__work_location
-#: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_location
-#: model:ir.model.fields,field_description:hr.field_res_users__work_location
+#: model:ir.model,name:hr.model_hr_work_location
+#: model:ir.model.fields,field_description:hr.field_hr_employee__work_location_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__work_location_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_location_id
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__name
+#: model:ir.model.fields,field_description:hr.field_res_users__work_location_id
+#: model_terms:ir.ui.view,arch_db:hr.hr_work_location_form_view
+#: model_terms:ir.ui.view,arch_db:hr.hr_work_location_tree_view
 msgid "Work Location"
 msgstr "Darbo vieta"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.hr_work_location_action
+#: model:ir.ui.menu,name:hr.menu_hr_work_location_tree
+msgid "Work Locations"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__mobile_phone
@@ -2037,16 +2517,27 @@ msgid "Work Organization"
 msgstr "Darbo organizacija"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__has_work_permit
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Work Permit"
 msgstr "Leidimas dirbti"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_expiration_date
+msgid "Work Permit Expiration Date"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__permit_no
 #: model:ir.model.fields,field_description:hr.field_res_users__permit_no
 msgid "Work Permit No"
 msgstr "Leidimo dirbti nr."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_scheduled_activity
+msgid "Work Permit Scheduled Activity"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_phone
@@ -2066,7 +2557,14 @@ msgstr "Darbo valandos"
 #, python-format
 msgid ""
 "You are only allowed to update your preferences. Please contact a HR officer"
-" to update other informations."
+" to update other information."
+msgstr ""
+
+#. module: hr
+#. openerp-web
+#: code:addons/hr/static/src/models/employee.js:0
+#, python-format
+msgid "You can only chat with employees that have a dedicated user."
 msgstr ""
 
 #. module: hr
@@ -2076,19 +2574,42 @@ msgid "You cannot create recursive departments."
 msgstr "Negalite kurti pasikartojančių skyrių."
 
 #. module: hr
-#: model:mail.template,subject:hr.mail_template_data_unknown_employee_email_address
-msgid "Your document has not been created"
-msgstr "Jūsų dokumentas nebuvo sukurtas"
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid "You do not have access to this document."
+msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "barcode"
-msgstr "brūkšninis kodas"
+#: code:addons/hr/models/res_config_settings.py:0
+#, python-format
+msgid "You should select at least one Advanced Presence Control option."
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "ZIP"
+msgstr "Pašto kodas"
+
+#. module: hr
+#: code:addons/hr/models/mail_alias.py:0
+#, python-format
+msgid "addresses linked to registered employees"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "skyrius"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+msgid "e.g. John Doe"
+msgstr "pvz.: Jonas Jonaitis"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
+msgid "e.g. Onboarding"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -2098,4 +2619,10 @@ msgstr "pvz., pardavimų vadybininkas"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_plan
 msgid "plan"
+msgstr ""
+
+#. module: hr
+#: code:addons/hr/models/models.py:0
+#, python-format
+msgid "restricted to employees"
 msgstr ""

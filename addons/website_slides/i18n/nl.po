@@ -12,9 +12,9 @@
 # Antoine Gilard <ang@odoo.com>, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2022
 # Martin Trigaux, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-30 06:06+0000\n"
 "PO-Revision-Date: 2016-08-05 13:14+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,7 +48,7 @@ msgstr "# Voltooide slides"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_partner_view_tree
 msgid "# Likes"
-msgstr ""
+msgstr "# Vind ik leuk"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_tree_report
@@ -58,12 +58,12 @@ msgstr "# Vragen"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_partner_view_tree
 msgid "# Quizz Attempts"
-msgstr ""
+msgstr "# Quizz Pogingen"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_partner_view_tree
 msgid "# Total Attempts"
-msgstr ""
+msgstr "# Totale pogingen"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__total_views
@@ -248,6 +248,25 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"marge: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Hallo<br/><br/>\n"
+"                        <t t-out=\"user.name of ''\">Mitchell Admin</t> heeft het <t t-out=\"object.slide_category of ''\">document</t> <strong t-out=\" gedeeld object.name of ''\">Bomen</strong> met jou!\n"
+"                        <div style=\"marge: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"(object.website_share_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_share_url\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024 \" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"(object.website_share_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_share_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">Bekijk <strong t-out=\"object.name of ''\">Bomen</strong></a>\n"
+"                        </div>\n"
+"                        <t t-if=\"gebruiker.handtekening\">\n"
+"                            <br/>\n"
+"                            <t t-out=\"user.signature of ''\">--<br/>Mitchell-beheerder</t>\n"
+"                        </t>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -276,6 +295,29 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"marge: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Hallo<br/><br/>\n"
+"                        Er is iets nieuws in de cursus <strong t-out=\"object.channel_id.name of ''\">Bomen, hout en tuinen</strong> die je volgt:<br/><br/>\n"
+"                        <center><strong t-out=\"object.name of ''\">Bomen</strong></center>\n"
+"                        <t t-if=\"object.image_1024\">\n"
+"                            <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                                <a t-att-href=\"object.website_share_url\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024 \" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        </t>\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"object.website_share_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">Bekijken inhoud</a>\n"
+"                        </div>\n"
+"                        Geniet van deze exclusieve inhoud!\n"
+"                        <t t-if=\"gebruiker.handtekening\">\n"
+"                            <br/>\n"
+"                            <t t-out=\"user.signature of ''\">--<br/>Mitchell-beheerder</t>\n"
+"                        </t>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
@@ -894,7 +936,7 @@ msgstr "<strong>Maak een Cursus</strong>"
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_slide_partner_action_from_slide
 msgid "<strong>No Attendee Yet!</strong>"
-msgstr ""
+msgstr "<strong>Nog geen deelnemer!</strong>"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_channel_partner_action
@@ -924,12 +966,12 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_channel_partner_channel_partner_uniq
 msgid "A partner membership to a channel must be unique!"
-msgstr ""
+msgstr "Een partnerlidmaatschap van een kanaal moet uniek zijn!"
 
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_slide_partner_slide_partner_uniq
 msgid "A partner membership to a slide must be unique!"
-msgstr ""
+msgstr "Een partnerlidmaatschap van een dia moet uniek zijn!"
 
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_slide_resource_check_file_type
@@ -991,7 +1033,7 @@ msgstr "Toegangsrechten"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_partner_view_tree
 msgid "Accessed on"
-msgstr ""
+msgstr "Toegankelijk op"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_needaction
@@ -2206,7 +2248,7 @@ msgstr "Negeren"
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "Dislike"
-msgstr ""
+msgstr "Afkeer"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__dislikes
@@ -2748,7 +2790,7 @@ msgstr "HTTP routing"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_search
 msgid "Has Menu Entry"
-msgstr ""
+msgstr "Heeft menu-invoer"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__has_message
@@ -4503,7 +4545,7 @@ msgstr "Deel sjabloon"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_share_url
 msgid "Share URL"
-msgstr ""
+msgstr "URL delen"
 
 #. module: website_slides
 #. openerp-web
@@ -4888,6 +4930,8 @@ msgid ""
 "The completion of a channel is a percentage and should be between 0% and "
 "100."
 msgstr ""
+"De voltooiing van een kanaal is een percentage en moet tussen 0% en 100 "
+"liggen."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__is_preview
@@ -4950,7 +4994,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_slide_partner_check_vote
 msgid "The vote must be 1, 0 or -1."
-msgstr ""
+msgstr "De stem moet 1, 0 of -1 zijn."
 
 #. module: website_slides
 #. openerp-web
@@ -5202,12 +5246,12 @@ msgstr "Document aan het uploaden..."
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.action_slide_tag
 msgid "Use Content Tags to classify your Content."
-msgstr ""
+msgstr "Gebruik inhoudstags om uw inhoud te classificeren."
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_channel_tag_group_action
 msgid "Use Course Groups to classify and organize your Courses."
-msgstr ""
+msgstr "Gebruik Cursusgroepen om uw cursussen te classificeren en te ordenen."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__tag_ids
@@ -5222,12 +5266,12 @@ msgstr "Gebruikt om kanban view in te richten"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__document_binary_content
 msgid "Used to filter file input to PDF only"
-msgstr ""
+msgstr "Wordt alleen gebruikt om bestandsinvoer naar PDF te filteren"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__image_binary_content
 msgid "Used to filter file input to images only"
-msgstr ""
+msgstr "Wordt gebruikt om bestandsinvoer alleen naar afbeeldingen te filteren"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__user_vote
@@ -5258,17 +5302,17 @@ msgstr "Video link"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__video_source_type
 msgid "Video Source"
-msgstr ""
+msgstr "Video bron"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__vimeo_id
 msgid "Video Vimeo ID"
-msgstr ""
+msgstr "Video Vimeo-ID"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__youtube_id
 msgid "Video YouTube ID"
-msgstr ""
+msgstr "Video YouTube-ID"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_video
@@ -5312,7 +5356,7 @@ msgstr "Vimeo"
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__vimeo_video
 msgid "Vimeo Video"
-msgstr ""
+msgstr "Vimeo-video"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__visibility
@@ -5438,7 +5482,7 @@ msgstr "Wat doet"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "What types of documents do we support?"
-msgstr ""
+msgstr "Welke soorten documenten ondersteunen we?"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_invite__sub_model_object_field
@@ -5464,6 +5508,7 @@ msgstr ""
 #, python-format
 msgid "When using local files, we only support PDF files."
 msgstr ""
+"Bij gebruik van lokale bestanden ondersteunen we alleen PDF-bestanden."
 
 #. module: website_slides
 #. openerp-web
@@ -5508,7 +5553,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "You can add questions to this quiz in the 'Quiz' tab."
-msgstr ""
+msgstr "Je kunt vragen aan deze quiz toevoegen in het tabblad 'Quiz'."
 
 #. module: website_slides
 #. openerp-web
@@ -5519,6 +5564,8 @@ msgid ""
 "You can either upload a file from your computer or insert a Google Drive "
 "link."
 msgstr ""
+"Je kunt een bestand uploaden vanaf uw computer of een Google Drive-link "
+"invoegen."
 
 #. module: website_slides
 #. openerp-web
@@ -5621,7 +5668,7 @@ msgstr "Je moet lid zijn van deze cursus om te stemmen"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_main
 msgid "You need to join this course to access \""
-msgstr ""
+msgstr "Je moet deelnemen aan deze cursus om toegang te krijgen tot \""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
@@ -5655,6 +5702,8 @@ msgid ""
 "Your eLearning platform starts here!<br>\n"
 "                    Upload content, set up rewards, manage attendees..."
 msgstr ""
+"Uw eLearning-platform begint hier!<br>\n"
+"                    Content uploaden, beloningen instellen, deelnemers beheren..."
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
@@ -5663,6 +5712,8 @@ msgid ""
 "Your file could not be found on Google Drive, please check the link and/or "
 "privacy settings"
 msgstr ""
+"Uw bestand kon niet worden gevonden op Google Drive, controleer de link "
+"en/of privacy-instellingen"
 
 #. module: website_slides
 #. openerp-web
@@ -5673,6 +5724,9 @@ msgid ""
 "Click on <b>Add Content</b> to upload a document, create an article or link "
 "a video."
 msgstr ""
+"Je eerste sectie is gemaakt, nu is het tijd om lessen aan je cursus toe te "
+"voegen. Klik op <b>Inhoud toevoegen</b> om een document te uploaden, een "
+"artikel te maken of een video te linken."
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
@@ -5681,6 +5735,8 @@ msgid ""
 "Your video could not be found on Vimeo, please check the link and/or privacy"
 " settings"
 msgstr ""
+"Je video kon niet worden gevonden op Vimeo, controleer de link en/of "
+"privacy-instellingen"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
@@ -5690,6 +5746,8 @@ msgid ""
 "Your video could not be found on YouTube, please check the link and/or "
 "privacy settings"
 msgstr ""
+"Je video is niet gevonden op YouTube, controleer de link en/of privacy-"
+"instellingen"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.achievement_card
@@ -5700,7 +5758,7 @@ msgstr "behaald"
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "and join this Community"
-msgstr ""
+msgstr "en word lid van deze community"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
@@ -5722,31 +5780,31 @@ msgstr "via e-mail."
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 #, python-format
 msgid "e.g \"https://drive.google.com/file/...\""
-msgstr ""
+msgstr "bijv. \"https://drive.google.com/file/...\""
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "e.g \"https://www.youtube.com/watch?v=ebBez6bcSEc\""
-msgstr ""
+msgstr "bijv. \"https://www.youtube.com/watch?v=ebBez6bcSEc\""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "e.g \"www.youtube.com/watch?v=ebBez6bcSEc\""
-msgstr ""
+msgstr "bijv. \"www.youtube.com/watch?v=ebBez6bcSEc\""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_tag_tree
 msgid "e.g 'HowTo'"
-msgstr ""
+msgstr "bijv. 'HowTo'"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "e.g. \"15\""
-msgstr ""
+msgstr "bijv. \"15\""
 
 #. module: website_slides
 #. openerp-web
@@ -5754,21 +5812,21 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 #, python-format
 msgid "e.g. \"Computer Science for kids\""
-msgstr ""
+msgstr "bijv. \"Informatica voor kinderen\""
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_management.xml:0
 #, python-format
 msgid "e.g. \"Introduction\""
-msgstr ""
+msgstr "bijv. \"Invoering\""
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
 msgid "e.g. \"Which animal cannot fly?\""
-msgstr ""
+msgstr "bijv. \"Welk dier kan niet vliegen?\""
 
 #. module: website_slides
 #. openerp-web
@@ -5792,12 +5850,12 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "e.g. Setting up your computer"
-msgstr ""
+msgstr "bijv. Uw computer instellen"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_question_view_form
 msgid "e.g. What powers a computer ?"
-msgstr ""
+msgstr "bijv. Wat drijft een computer aan?"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
@@ -5826,14 +5884,14 @@ msgstr "eLearning overzicht"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "for 'Private' videos and similar to"
-msgstr ""
+msgstr "voor 'Privé'-video's en vergelijkbaar met"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "for public ones."
-msgstr ""
+msgstr "voor openbare."
 
 #. module: website_slides
 #. openerp-web
@@ -5842,21 +5900,21 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "https://drive.google.com/file/d/ABC/view?usp=sharing"
-msgstr ""
+msgstr "https://drive.google.com/file/d/ABC/view?usp=sharing"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "https://vimeo.com/558907333/30da9ff3d8"
-msgstr ""
+msgstr "https://vimeo.com/558907333/30da9ff3d8"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "https://vimeo.com/558907555"
-msgstr ""
+msgstr "https://vimeo.com/558907555"
 
 #. module: website_slides
 #. openerp-web
@@ -5874,6 +5932,8 @@ msgid ""
 "mean? The Vimeo \"Private\" privacy setting means it is a video which can be viewed only by the users with the link to it.\n"
 "                                    Your video will never come up in the search results nor on your channel."
 msgstr ""
+"gemeen? De privacy-instelling van Vimeo \"Privé\" betekent dat het een video is die alleen kan worden bekeken door de gebruikers met de link ernaartoe.\n"
+"                                    Je video zal nooit verschijnen in de zoekresultaten en ook niet op je kanaal."
 
 #. module: website_slides
 #. openerp-web
@@ -5911,7 +5971,7 @@ msgstr "stappen"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.join_course_link
 msgid "to access resources"
-msgstr ""
+msgstr "om toegang te krijgen tot bronnen"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
@@ -5959,7 +6019,7 @@ msgstr "je-vriend@domein.com"
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_shared
 msgid "{{ user.name }} shared a {{ object.slide_category }} with you!"
-msgstr ""
+msgstr "{{ user.name }} heeft een {{ object.slide_category }} met je gedeeld!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav

@@ -1,22 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * note
+# 	* note
 # 
 # Translators:
-# Martin Trigaux, 2018
-# 최재호 <hwangtog@gmail.com>, 2018
-# Link Up링크업 <linkup.way@gmail.com>, 2018
-# Linkup <link-up@naver.com>, 2018
-# Seongseok Shin <shinss61@hotmail.com>, 2018
-# Mark Lee <odoos@soti.33mail.com>, 2018
+# Seongseok Shin <shinss61@hotmail.com>, 2022
+# Link Up링크업 <linkup.way@gmail.com>, 2022
+# Heesoo Choi, 2022
+# Martin Trigaux, 2022
+# JH CHOI <hwangtog@gmail.com>, 2022
+# Linkup <link-up@naver.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Mark Lee <odoos@soti.33mail.com>, 2018\n"
+"POT-Creation-Date: 2022-04-19 13:57+0000\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
+"Last-Translator: Linkup <link-up@naver.com>, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,9 +25,31 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Opened\"/>"
+msgstr "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Opened\"/>"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed\"/>"
+msgstr "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed\"/>"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
+msgid "Action"
+msgstr "추가 작업"
+
+#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction
 msgid "Action Needed"
-msgstr "필요한 조치"
+msgstr "조치 필요"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_mail_activity_type__category
+msgid ""
+"Actions may trigger specific behavior like opening calendar view or "
+"automatically mark as done when a document is uploaded"
+msgstr "작업은 일정 관리보기 열기와 같은 특정 동작을 트리거하거나 문서가 업로드될 때 자동으로 완료로 표시할 수 있습니다."
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__open
@@ -46,6 +68,11 @@ msgid "Activity"
 msgstr "활동"
 
 #. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "활동 예외 장식"
+
+#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_state
 msgid "Activity State"
 msgstr "활동 상태"
@@ -56,28 +83,33 @@ msgid "Activity Type"
 msgstr "활동 유형"
 
 #. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "활동 유형 아이콘"
+
+#. module: note
 #: model_terms:ir.actions.act_window,help:note.action_note_note
 msgid "Add a new personal note"
-msgstr ""
+msgstr "새 개인 노트 추가"
 
 #. module: note
 #: model_terms:ir.actions.act_window,help:note.note_tag_action
 msgid "Add a new tag"
-msgstr ""
+msgstr "새 태그 추가"
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:14
+#: code:addons/note/static/src/xml/systray.xml:0
 #, python-format
 msgid "Add a note"
-msgstr ""
+msgstr "노트 추가하기"
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:6
+#: code:addons/note/static/src/xml/systray.xml:0
 #, python-format
 msgid "Add new note"
-msgstr ""
+msgstr "새 노트 추가"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -87,7 +119,7 @@ msgstr "보관"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "첨부 파일 수"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -95,18 +127,8 @@ msgid "By sticky note Category"
 msgstr "스티커 노트 분류별로"
 
 #. module: note
-#: model:ir.model.fields,help:note.field_mail_activity_type__category
-msgid "Categories may trigger specific behavior like opening calendar view"
-msgstr "카테고리가 일정보기를 여는 것과 같은 특정 동작을 trigger(트리거)할 수 있습니다."
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
-msgid "Category"
-msgstr "분류"
-
-#. module: note
 #. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:10
+#: code:addons/note/static/src/xml/systray.xml:0
 #, python-format
 msgid "Channel"
 msgstr "채널"
@@ -116,6 +138,11 @@ msgstr "채널"
 #: model:ir.model.fields,field_description:note.field_note_tag__color
 msgid "Color Index"
 msgstr "색상표"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__company_id
+msgid "Company"
+msgstr "회사"
 
 #. module: note
 #: model:ir.ui.menu,name:note.menu_note_configuration
@@ -134,7 +161,7 @@ msgstr "작성자"
 #: model:ir.model.fields,field_description:note.field_note_stage__create_date
 #: model:ir.model.fields,field_description:note.field_note_tag__create_date
 msgid "Created on"
-msgstr "작성일"
+msgstr "작성일자"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__date_done
@@ -151,12 +178,12 @@ msgstr "삭제"
 #: model:ir.model.fields,field_description:note.field_note_stage__display_name
 #: model:ir.model.fields,field_description:note.field_note_tag__display_name
 msgid "Display Name"
-msgstr "이름 표시"
+msgstr "표시명"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Dropdown menu"
-msgstr ""
+msgstr "드롭다운 메뉴"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage__fold
@@ -166,7 +193,7 @@ msgstr "기본적으로 접기"
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Follower"
-msgstr ""
+msgstr "팔로워"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_follower_ids
@@ -174,14 +201,14 @@ msgid "Followers"
 msgstr "팔로워"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "팔로워 (채널)"
-
-#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "팔로워 (파트너)"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "멋진 아이콘 폰트 예 : fa-tasks"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -194,6 +221,11 @@ msgid "Group By"
 msgstr "그룹별"
 
 #. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__has_message
+msgid "Has Message"
+msgstr "메시지가 있습니다"
+
+#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__id
 #: model:ir.model.fields,field_description:note.field_note_stage__id
 #: model:ir.model.fields,field_description:note.field_note_tag__id
@@ -201,31 +233,36 @@ msgid "ID"
 msgstr "ID"
 
 #. module: note
-#: model:ir.model.fields,help:note.field_note_note__message_unread
-msgid "If checked new messages require your attention."
-msgstr "만약 선택하였으면, 새 메시지에 주의를 기울여야 합니다."
+#: model:ir.model.fields,field_description:note.field_note_note__activity_exception_icon
+msgid "Icon"
+msgstr "아이콘"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "예외 활동을 표시하기 위한 아이콘"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "만약 선택하였으면, 새 메시지에 주의를 기울여야 합니다."
+msgstr "만약 선택하였으면, 신규 메시지에 주의를 기울여야 합니다."
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "이 옵션을 선택하면 일부 정보가 전달 오류를 생성합니다."
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_is_follower
 msgid "Is Follower"
-msgstr "팔로워입니다"
+msgstr "팔로워임"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note____last_update
 #: model:ir.model.fields,field_description:note.field_note_stage____last_update
 #: model:ir.model.fields,field_description:note.field_note_tag____last_update
 msgid "Last Modified on"
-msgstr "최근 수정"
+msgstr "최근 수정일"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__write_uid
@@ -239,7 +276,7 @@ msgstr "최근 갱신한 사람"
 #: model:ir.model.fields,field_description:note.field_note_stage__write_date
 #: model:ir.model.fields,field_description:note.field_note_tag__write_date
 msgid "Last Updated on"
-msgstr "최근 갱신 날짜"
+msgstr "최근 갱신 일자"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -249,22 +286,17 @@ msgstr "지연된 활동"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
-
-#. module: note
-#: selection:mail.activity.type,category:0
-msgid "Meeting"
-msgstr "미팅"
+msgstr "주요 첨부 파일"
 
 #. module: note
 #: model:note.stage,name:note.note_stage_01
 msgid "Meeting Minutes"
-msgstr ""
+msgstr "회의록"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "메시지 전송 오류"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_ids
@@ -272,14 +304,19 @@ msgid "Messages"
 msgstr "메시지"
 
 #. module: note
-#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
-msgid "My Activities"
-msgstr "내 활동"
+#: model:ir.model.fields,field_description:note.field_note_note__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "내 활동 마감일"
 
 #. module: note
 #: model:note.stage,name:note.note_stage_00
 msgid "New"
-msgstr "새로운"
+msgstr "신규"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_date_deadline
@@ -301,7 +338,7 @@ msgstr "다음 활동 유형"
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Note"
-msgstr "메모"
+msgstr "노트"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__memo
@@ -324,11 +361,11 @@ msgid "Note Tag"
 msgstr "노트 태그"
 
 #. module: note
-#: code:addons/note/models/res_users.py:61
+#: code:addons/note/models/res_users.py:0
 #: model:ir.actions.act_window,name:note.action_note_note
 #: model:ir.ui.menu,name:note.menu_note_notes
-#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 #: model:note.stage,name:note.note_stage_02
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 #, python-format
 msgid "Notes"
 msgstr "메모"
@@ -339,16 +376,18 @@ msgid ""
 "Notes are private, unless you share them by inviting follower on a note.\n"
 "            (Useful for meeting minutes)."
 msgstr ""
+"노트에 팔로어를 초대하여 공유하지 않는 한 노트는 비공개입니다.\n"
+"             (회의록에 유용합니다.)"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "작업 수"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_has_error_counter
-msgid "Number of error"
-msgstr ""
+msgid "Number of errors"
+msgstr "오류 횟수"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_needaction_counter
@@ -358,56 +397,36 @@ msgstr "조치가 필요한 메시지 수"
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note__message_unread_counter
-msgid "Number of unread messages"
-msgstr "읽지 않은 메시지 수"
-
-#. module: note
-#: selection:mail.activity.type,category:0
-msgid "Other"
-msgstr "기타"
-
-#. module: note
-#: selection:note.note,activity_state:0
-msgid "Overdue"
-msgstr "기한이 지난"
+msgstr "전송 오류 메시지 수"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__user_id
 #: model:ir.model.fields,field_description:note.field_note_stage__user_id
 msgid "Owner"
-msgstr "담당자(파트너)"
+msgstr "소유자"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage__user_id
 msgid "Owner of the note stage"
-msgstr ""
-
-#. module: note
-#: selection:note.note,activity_state:0
-msgid "Planned"
-msgstr "계획됨"
+msgstr "노트 단계 소유자"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_mail_activity__note_id
 msgid "Related Note"
-msgstr ""
+msgstr "관련 노트"
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:23
+#: code:addons/note/static/src/xml/systray.xml:0
 #, python-format
 msgid "Remember..."
-msgstr ""
+msgstr "기억하기..."
 
 #. module: note
-#: selection:mail.activity.type,category:0
+#: model:ir.model.fields.selection,name:note.selection__mail_activity_type__category__reminder
 #: model:mail.activity.type,name:note.mail_activity_data_reminder
 msgid "Reminder"
-msgstr ""
+msgstr "미리 알림"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_user_id
@@ -416,23 +435,24 @@ msgstr "담당 사용자"
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:25
+#: code:addons/note/static/src/xml/systray.xml:0
 #, python-format
 msgid "SAVE"
-msgstr ""
+msgstr "저장"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__sequence
 #: model:ir.model.fields,field_description:note.field_note_stage__sequence
 msgid "Sequence"
-msgstr "순차적"
+msgstr "순서"
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:18
+#: code:addons/note/static/src/xml/systray.xml:0
+#: code:addons/note/static/src/xml/systray.xml:0
 #, python-format
 msgid "Set date and time"
-msgstr ""
+msgstr "날짜 및 시간 설정"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -448,7 +468,7 @@ msgstr "단계"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage__name
 msgid "Stage Name"
-msgstr "단계 이름"
+msgstr "단계명"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_stage_form
@@ -491,9 +511,9 @@ msgid "Tag Name"
 msgstr "태그 이름"
 
 #. module: note
-#: sql_constraint:note.tag:0
+#: model:ir.model.constraint,message:note.constraint_note_tag_name_uniq
 msgid "Tag name already exists !"
-msgstr "태그명이 이미 존재합니다!"
+msgstr "동일한 태그명이 존재합니다!"
 
 #. module: note
 #: model:ir.actions.act_window,name:note.note_tag_action
@@ -507,8 +527,7 @@ msgstr "태그"
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/js/systray_activity_menu.js:97
-#: selection:note.note,activity_state:0
+#: code:addons/note/static/src/js/systray_activity_menu.js:0
 #, python-format
 msgid "Today"
 msgstr "오늘"
@@ -521,34 +540,19 @@ msgstr "오늘 활동"
 #. module: note
 #: model:note.stage,name:note.note_stage_03
 msgid "Todo"
-msgstr "할 일 목록"
+msgstr "할 일"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__message_unread
-msgid "Unread Messages"
-msgstr "읽지 않은 메세지"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "읽지 않은 메세지 수"
+#: model:ir.model.fields,help:note.field_note_note__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "레코드에 있는 예외 활동의 유형입니다."
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage__sequence
 msgid "Used to order the note stages"
-msgstr "노트 단계에 순서 사용"
+msgstr "노트 단계를 주문서로 사용"
 
 #. module: note
 #: model:ir.model,name:note.model_res_users
 msgid "Users"
 msgstr "사용자"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__website_message_ids
-msgid "Website Messages"
-msgstr "웹사이트 메시지"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note__website_message_ids
-msgid "Website communication history"
-msgstr "웹사이트 대화 이력"

@@ -3,23 +3,16 @@
 # 	* note
 # 
 # Translators:
-# Martin Trigaux, 2019
-# jonas jensen <j.jensen@tcomp.dk>, 2019
-# Visti Kristensen <visti@vkdata.dk>, 2019
-# Morten Schou <ms@msteknik.dk>, 2019
-# Jesper Carstensen <jc@danodoo.dk>, 2019
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
-# Sanne Kristensen <sanne@vkdata.dk>, 2019
-# Ejner Sønniksen <ejner@vkdata.dk>, 2019
-# lhmflexerp <lhm@flexerp.dk>, 2019
+# Mads Søndergaard, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
+"POT-Creation-Date: 2022-04-19 13:57+0000\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,12 +23,17 @@ msgstr ""
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Opened\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Opened\"/>"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed\"/>"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
+msgid "Action"
+msgstr "Handling"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction
@@ -43,16 +41,13 @@ msgid "Action Needed"
 msgstr "Handling påkrævet"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
-msgid "Action to Perform"
-msgstr ""
-
-#. module: note
 #: model:ir.model.fields,help:note.field_mail_activity_type__category
 msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
+"Handlinger kan afvikle bestemte opførelser så som åbning af kalender visning"
+" eller automatisk markering som når et dokument uploades"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__open
@@ -73,7 +68,7 @@ msgstr "Aktivitet"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Aktivitet undtagelse markering"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_state
@@ -86,9 +81,14 @@ msgid "Activity Type"
 msgstr "Aktivitetstype"
 
 #. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Aktivitets Type Ikon"
+
+#. module: note
 #: model_terms:ir.actions.act_window,help:note.action_note_note
 msgid "Add a new personal note"
-msgstr ""
+msgstr "Tilføj et nyt personligt notat"
 
 #. module: note
 #: model_terms:ir.actions.act_window,help:note.note_tag_action
@@ -107,7 +107,7 @@ msgstr "Tilføj et notat"
 #: code:addons/note/static/src/xml/systray.xml:0
 #, python-format
 msgid "Add new note"
-msgstr ""
+msgstr "Tilføj nyt notat"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -136,6 +136,11 @@ msgstr "Kanal"
 #: model:ir.model.fields,field_description:note.field_note_tag__color
 msgid "Color Index"
 msgstr "Farve index"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__company_id
+msgid "Company"
+msgstr "Virksomhed"
 
 #. module: note
 #: model:ir.ui.menu,name:note.menu_note_configuration
@@ -179,11 +184,6 @@ msgid "Dropdown menu"
 msgstr "Dropdown menu"
 
 #. module: note
-#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
-msgid "Exception Activities"
-msgstr ""
-
-#. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage__fold
 msgid "Folded by Default"
 msgstr "Standard folder"
@@ -191,7 +191,7 @@ msgstr "Standard folder"
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Follower"
-msgstr ""
+msgstr "Følger"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_follower_ids
@@ -199,14 +199,14 @@ msgid "Followers"
 msgstr "Følgere"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Følgere (kanaler)"
-
-#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Følgere (partnere)"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Skrifttype awesome icon f.eks. fa-opgaver"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -217,6 +217,11 @@ msgstr "Fremtidige aktiviteter"
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Group By"
 msgstr "Sortér efter"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__has_message
+msgid "Has Message"
+msgstr "Har besked"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__id
@@ -233,11 +238,10 @@ msgstr "Ikon"
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ikon for uventet aktivitet."
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_needaction
-#: model:ir.model.fields,help:note.field_note_note__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Hvis afkrydset, kræver nye beskeder din opmærksomhed "
 
@@ -275,7 +279,7 @@ msgstr "Sidst opdateret den"
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Late Activities"
-msgstr "Overskredede aktiviteter"
+msgstr "Overskredet aktiviteter"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_main_attachment_id
@@ -285,7 +289,7 @@ msgstr "Vedhæftning"
 #. module: note
 #: model:note.stage,name:note.note_stage_01
 msgid "Meeting Minutes"
-msgstr ""
+msgstr "Mødereferater"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_has_error
@@ -298,9 +302,19 @@ msgid "Messages"
 msgstr "Beskeder"
 
 #. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Mine Aktiviteter Deadline"
+
+#. module: note
 #: model:note.stage,name:note.note_stage_00
 msgid "New"
 msgstr "Ny"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Næste Aktivitet Kalender Arrangement"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_date_deadline
@@ -348,8 +362,8 @@ msgstr "Notat tag"
 #: code:addons/note/models/res_users.py:0
 #: model:ir.actions.act_window,name:note.action_note_note
 #: model:ir.ui.menu,name:note.menu_note_notes
-#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 #: model:note.stage,name:note.note_stage_02
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 #, python-format
 msgid "Notes"
 msgstr "Notater"
@@ -360,6 +374,8 @@ msgid ""
 "Notes are private, unless you share them by inviting follower on a note.\n"
 "            (Useful for meeting minutes)."
 msgstr ""
+"Notater er private, medmindre du deler dem ved at inviterer en til at følge notatet.\n"
+"              (Nyttig til mødereferat)."
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction_counter
@@ -369,7 +385,7 @@ msgstr "Antal handlinger"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Antal fejl"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_needaction_counter
@@ -382,11 +398,6 @@ msgid "Number of messages with delivery error"
 msgstr "Antal beskeder med leveringsfejl"
 
 #. module: note
-#: model:ir.model.fields,help:note.field_note_note__message_unread_counter
-msgid "Number of unread messages"
-msgstr "Antal ulæste beskeder"
-
-#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__user_id
 #: model:ir.model.fields,field_description:note.field_note_stage__user_id
 msgid "Owner"
@@ -395,19 +406,19 @@ msgstr "Ejer"
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage__user_id
 msgid "Owner of the note stage"
-msgstr ""
+msgstr "Ejer af notat stadiet"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_mail_activity__note_id
 msgid "Related Note"
-msgstr ""
+msgstr "Relateret notat"
 
 #. module: note
 #. openerp-web
 #: code:addons/note/static/src/xml/systray.xml:0
 #, python-format
 msgid "Remember..."
-msgstr ""
+msgstr "Husk..."
 
 #. module: note
 #: model:ir.model.fields.selection,name:note.selection__mail_activity_type__category__reminder
@@ -425,7 +436,7 @@ msgstr "Ansvarlig bruger"
 #: code:addons/note/static/src/xml/systray.xml:0
 #, python-format
 msgid "SAVE"
-msgstr ""
+msgstr "Gem"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__sequence
@@ -436,9 +447,10 @@ msgstr "Sekvens"
 #. module: note
 #. openerp-web
 #: code:addons/note/static/src/xml/systray.xml:0
+#: code:addons/note/static/src/xml/systray.xml:0
 #, python-format
 msgid "Set date and time"
-msgstr ""
+msgstr "Indstil dato og tid"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -459,7 +471,7 @@ msgstr "Fase navn"
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_stage_form
 msgid "Stage of Notes"
-msgstr ""
+msgstr "Stadie for notater"
 
 #. module: note
 #: model:ir.actions.act_window,name:note.action_note_stage
@@ -476,7 +488,7 @@ msgstr "Faser i notater"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__stage_ids
 msgid "Stages of Users"
-msgstr ""
+msgstr "Stadier for brugere"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__activity_state
@@ -531,22 +543,12 @@ msgstr "To Do"
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__message_unread
-msgid "Unread Messages"
-msgstr "Ulæste beskeder"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Ulæste beskedtæller"
+msgstr "Type af undtagelsesaktivitet registreret "
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage__sequence
 msgid "Used to order the note stages"
-msgstr ""
+msgstr "Brugt til at rangere notat stadierne"
 
 #. module: note
 #: model:ir.model,name:note.model_res_users

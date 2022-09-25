@@ -1,18 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * hr_attendance
+# 	* hr_attendance
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
-# gebri <gebri@inmail.sk>, 2018
+# Damian Brencic <brencicdamian12313@gmail.com>, 2022
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2022
+# Jan Prokop, 2022
+# SAKodoo <sak@odoo.com>, 2022
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2022
+# Martin Trigaux, 2022
+# gebri <gebri@inmail.sk>, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: gebri <gebri@inmail.sk>, 2018\n"
+"POT-Creation-Date: 2021-12-07 10:46+0000\n"
+"PO-Revision-Date: 2016-08-05 12:58+0000\n"
+"Last-Translator: gebri <gebri@inmail.sk>, 2022\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,40 +27,132 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_attendance.py:52
+#: code:addons/hr_attendance/models/hr_attendance.py:0
 #, python-format
 msgid "\"Check Out\" time cannot be earlier than \"Check In\" time."
-msgstr ""
+msgstr "Čas odchodu nesmie by skôr ako čas príchodu."
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_attendance.py:27
+#: code:addons/hr_attendance/models/hr_attendance.py:0
 #, python-format
 msgid "%(empl_name)s from %(check_in)s"
-msgstr ""
+msgstr "%(empl_name)s od %(check_in)s"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_attendance.py:32
+#: code:addons/hr_attendance/models/hr_attendance.py:0
 #, python-format
 msgid "%(empl_name)s from %(check_in)s to %(check_out)s"
-msgstr ""
+msgstr "%(empl_name)s od %(check_in)s do %(check_out)s"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:125
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid ""
 "<b>Warning! Last check in was over 12 hours ago.</b><br/>If this isn't "
 "right, please contact Human Resource staff"
 msgstr ""
+"<b>Pozor! Posledný príchod bol pred viac ako 12 hodinami.</b><br/>Ak to "
+"neplatí, kontaktujte pracovníkov HR"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_kanban
+msgid "<i class=\"fa fa-calendar\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
+msgstr "<i class=\"fa fa-calendar\" aria-label=\"Period\" role=\"img\" title=\"Perióda\"/>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Employee PIN</span>"
+msgstr "<span class=\"o_form_label\">PIN zamestnanca</span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                            Last Month\n"
+"                        </span>"
+msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            Minulý mesiac\n"
+"                        </span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
+msgid "<span class=\"o_stat_text\">Attendance</span>"
+msgstr "<span class=\"o_stat_text\">Prítomnosť</span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
+msgid "<span class=\"o_stat_text\">Attended Since</span>"
+msgstr "<span class=\"o_stat_text\">Zúčastnil sa od</span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
+msgid "<span class=\"o_stat_text\">Extra Hours</span>"
 msgstr ""
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
-msgid "<span class=\"o_stat_text\">Attendance</span>"
+msgid "<span class=\"o_stat_text\">Not Attended Since</span>"
+msgstr "<span class=\"o_stat_text\">Neúčastnil sa od</span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
+msgid ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle "
+"oe_hr_attendance_status_green\" role=\"img\" aria-label=\"Available\" "
+"title=\"Available\"/>"
+msgstr ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle "
+"oe_hr_attendance_status_green\" role=\"img\" aria-label=\"Dostupný\" "
+"title=\"Dostupný\"/>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
+msgid ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle oe_hr_attendance_status_orange\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
+"                                    </span>"
+msgstr ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle oe_hr_attendance_status_orange\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
+"                                    </span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "<span> Minutes</span>"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"<span> Minutes</span>\n"
+"                                    <br/>\n"
+"                                    <br/>"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "<span>Time Period </span>"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Activate the count of employees' extra hours."
 msgstr ""
 
 #. module: hr_attendance
@@ -63,46 +161,90 @@ msgid ""
 "Add a few employees to be able to select an employee here and perform his check in / check out.\n"
 "                To create employees go to the Employees menu."
 msgstr ""
+"Pridaj zopár zamestnancov, aby bolo možné z nich vybrať a vykonať kontrolu príchodu/odchodu.\n"
+" Pre vytvorenie zamestnanca choď od menu Zamestnanci."
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__adjustment
+msgid "Adjustment"
+msgstr "Úprava"
+
+#. module: hr_attendance
+#: model:res.groups,name:hr_attendance.group_hr_attendance_manager
+msgid "Administrator"
+msgstr "Správca"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"Allow a period of time (around working hours) where extra time will not be "
+"counted, in benefit of the company"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"Allow a period of time (around working hours) where extra time will not be "
+"deducted, in benefit of the employee"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
+msgid "Amount of extra hours"
+msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:140
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "An apple a day keeps the doctor away"
-msgstr ""
+msgstr "Jablko denne odplaší lekára"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:129
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Another good day's work! See you soon!"
-msgstr ""
+msgstr "Ďalšia dobrá práca! Uvidíme sa čoskoro!"
 
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_my_attendances
 #: model:ir.model,name:hr_attendance.model_hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_ids
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_graph
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
-#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_pivot
 msgid "Attendance"
 msgstr "Dochádzka"
 
 #. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_graph
-#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_graph_filtered
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_report_action
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_report_action_filtered
 msgid "Attendance Analysis"
 msgstr "Analýza dochádzky"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_state
-msgid "Attendance Status"
+#: model:ir.model,name:hr_attendance.model_hr_attendance_overtime
+msgid "Attendance Overtime"
 msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_attendance_report
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_graph
+msgid "Attendance Statistics"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_state
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__attendance_state
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__attendance_state
+msgid "Attendance Status"
+msgstr "Stav prítomnosti"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_employee
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_overview
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_kiosk_mode
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_attendances_overview
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_root
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_view_attendances
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_department_view_kanban
@@ -112,123 +254,132 @@ msgstr "Dochádzky"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:4
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 #, python-format
 msgid "Available"
 msgstr "Dostupné"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__barcode
-msgid "Badge ID"
-msgstr ""
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_attendance.py:82
+#: code:addons/hr_attendance/models/hr_attendance.py:0
 #, python-format
 msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee hasn't "
 "checked out since %(datetime)s"
 msgstr ""
+"Nemožno vytvoriť nový záznam dochádzky pre %(empl_name)s, zamestnanec sa "
+"ešte neodhlásil od %(datetime)s"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_attendance.py:69
-#: code:addons/hr_attendance/models/hr_attendance.py:95
+#: code:addons/hr_attendance/models/hr_attendance.py:0
+#: code:addons/hr_attendance/models/hr_attendance.py:0
 #, python-format
 msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee was "
 "already checked in on %(datetime)s"
 msgstr ""
+"Nemožno vytvoriť nový záznam dochádzky pre %(empl_name)s, zamestnanec je už "
+"prihlásený %(datetime)s"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:109
-#, python-format
-msgid "Cannot perform check in or check out on multiple employees."
-msgstr ""
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:123
+#: code:addons/hr_attendance/models/hr_employee.py:0
 #, python-format
 msgid ""
 "Cannot perform check out on %(empl_name)s, could not find corresponding "
 "check in. Your attendances have probably been modified manually by human "
 "resources."
 msgstr ""
+"Nemožno zadať odchod pre %(empl_name)s, nedá sa nájsť príslušný príchod. "
+"Vaša prítomnosť bola pravdepodobne modifikovaná ručne HR."
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_in
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__check_in
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_check_in
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__last_check_in
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Check In"
-msgstr ""
+msgstr "Príchod"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_my_attendances
 msgid "Check In / Check Out"
-msgstr ""
-
-#. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
-msgid "Check In Date"
-msgstr ""
+msgstr "Príchod / Odchod"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_out
-msgid "Check Out"
-msgstr ""
-
-#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_check_out
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__last_check_out
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
-msgid "Check Out Date"
-msgstr ""
+msgid "Check Out"
+msgstr "Odchod"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Check-In/Out"
-msgstr ""
+msgstr "Príchod / Odchod"
 
 #. module: hr_attendance
-#: selection:hr.employee,attendance_state:0
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee__attendance_state__checked_in
 msgid "Checked in"
-msgstr ""
+msgstr "Prítomný"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:124
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Checked in at"
-msgstr ""
+msgstr "Prítomný od"
 
 #. module: hr_attendance
-#: selection:hr.employee,attendance_state:0
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee__attendance_state__checked_out
 msgid "Checked out"
-msgstr ""
+msgstr "Odhlásený"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:115
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Checked out at"
-msgstr ""
+msgstr "Odhlásený od"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:47
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:75
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Click to"
-msgstr ""
+msgstr "Klikni"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_res_company
+msgid "Companies"
+msgstr "Spoločnosti"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__company_id
+msgid "Company"
+msgstr "Spoločnosť"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:14
-#: model_terms:ir.ui.view,arch_db:hr_attendance.print_employee_badge
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Company Logo"
-msgstr "Logo Spoločnosti"
+msgstr "Logo spoločnosti"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Compare attendance with working hours set on employee."
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Nastavenia konfigurácie"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_settings
@@ -236,61 +387,88 @@ msgid "Configuration"
 msgstr "Konfigurácia"
 
 #. module: hr_attendance
-#: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
-msgid "Create a new employee"
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__hr_attendance_overtime
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__hr_attendance_overtime
+msgid "Count Extra Hours"
 msgstr ""
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Count of Extra Hours"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"Count of extra hours is considered from this date. Potential extra hours "
+"prior to this date are not considered."
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
+msgid "Create a new employee"
+msgstr "Vytvoriť nového zamestnanca"
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__create_uid
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__create_uid
 msgid "Created by"
 msgstr "Vytvoril"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__create_date
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__create_date
 msgid "Created on"
 msgstr "Vytvorené"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__date
+msgid "Day"
+msgstr "Deň"
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__department_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__department_id
 msgid "Department"
 msgstr "Oddelenie"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__display_name
 msgid "Display Name"
-msgstr "Zobrazovaný Názov"
+msgstr "Zobrazovaný názov"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:146
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Early to bed and early to rise, makes a man healthy, wealthy and wise"
 msgstr ""
+"Ísť skoro do postele a skoro vstávať, robí človeka zdravým, bohatým a múdrym"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:138
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Eat breakfast as a king, lunch as a merchant and supper as a beggar"
-msgstr ""
+msgstr "Raňajkujte ako kráľ, obedujte ako obchodník a večerajte ako žobrák"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_employee
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__employee_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__employee_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__employee_id
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
 msgid "Employee"
 msgstr "Zamestnanec"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.print_employee_badge
-msgid "Employee Image"
-msgstr ""
-
-#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__group_attendance_use_pin
 msgid "Employee PIN"
-msgstr ""
+msgstr "PIN zamestnanca"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
@@ -299,190 +477,259 @@ msgid "Employee attendances"
 msgstr "Dochádzky zamestnanca"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_kanban_inherit_hr_attendance
-msgid "Employee's Name"
-msgstr "Meno zamestnanca"
-
-#. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_employee_attendance_action_kanban
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_view_employees_kanban
 msgid "Employees"
 msgstr "Zamestnanci"
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_use_pin
 msgid "Enable PIN use"
-msgstr ""
+msgstr "Povoliť použitie PIN"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:96
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Error: could not find corresponding employee."
+msgstr "Chyba: príslušný zamestnanec nenájdený."
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_overtime_action
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__duration
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__overtime_hours
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Extra Hours"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__duration_real
+msgid "Extra Hours (Real)"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_start_date
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_start_date
+msgid "Extra Hours Starting Date"
 msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:93
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Extra hours today:"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.fields,help:hr_attendance.field_hr_attendance_overtime__duration_real
+msgid "Extra-hours including the threshold duration"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "First come, first served"
-msgstr ""
+msgstr "Kto skôr príde, bude skôr obslúžený"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:108
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Glad to have you back, it's been a while!"
-msgstr ""
+msgstr "Radi vás vidíme naspäť!"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:63
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:64
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:137
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Go back"
-msgstr ""
+msgstr "Návrat"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:99
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Good afternoon"
-msgstr ""
+msgstr "Dobré popoludnie"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:101
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Good evening"
-msgstr ""
+msgstr "Dobrý večer"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:96
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Good morning"
-msgstr ""
+msgstr "Dobré ráno"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:87
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:103
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Good night"
-msgstr ""
+msgstr "Dobrú noc"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:113
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:131
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Goodbye"
-msgstr ""
+msgstr "Dovidenia"
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Group By"
 msgstr "Zoskupiť podľa"
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
+msgid "HR Attendance Search"
+msgstr ""
+
+#. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:143
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Have a good afternoon"
-msgstr ""
+msgstr "Prajeme príjemné popoludnie"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:134
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Have a good day!"
-msgstr ""
+msgstr "Prajeme dobrý deň!"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:148
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Have a good evening"
-msgstr ""
+msgstr "Prajeme dobrý večer"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:136
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Have a nice lunch!"
+msgstr "Prajeme dobrú chuť!"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
+msgid "Hours"
+msgstr "Hodiny"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_last_month
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__hours_last_month
+msgid "Hours Last Month"
+msgstr "Hodiny za minulý mesiac"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_last_month_display
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__hours_last_month_display
+msgid "Hours Last Month Display"
+msgstr "Zobrazenie hodín za minulý mesiac"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_today
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__hours_today
+msgid "Hours Today"
+msgstr "Hodiny dnes"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__worked_hours
+msgid "Hours Worked"
 msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Hr Attendance Search"
-msgstr "HR hľadanie dochádzky"
+msgstr "Hľadať HR dochádzku"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__id
 msgid "ID"
 msgstr "ID"
 
 #. module: hr_attendance
-#: model:ir.model.fields,help:hr_attendance.field_hr_employee__barcode
-msgid "ID used for employee identification."
-msgstr ""
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Identify Manually"
+msgstr "Identifikujte manuálne"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:111
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "If a job is worth doing, it is worth doing well!"
-msgstr ""
+msgstr "Ak sa prácu oplatí robiť, oplatí sa ju robiť dobre!"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:136
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Invalid request, please return to the main menu."
-msgstr ""
+msgstr "Neplatný dotaz, vráťte sa do hlavného menu"
 
 #. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_kiosk_mode
+#: model:res.groups,name:hr_attendance.group_hr_attendance_kiosk
+msgid "Kiosk Attendance"
+msgstr "Kiosková dochádzka"
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_kiosk_no_user_mode
 msgid "Kiosk Mode"
-msgstr ""
+msgstr "Mód Kiosk"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_attendance_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__last_attendance_id
 msgid "Last Attendance"
-msgstr ""
+msgstr "Posledná prítomnosť"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance____last_update
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime____last_update
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report____last_update
 msgid "Last Modified on"
-msgstr "Posledná modifikácia"
+msgstr "Posledná úprava"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__write_uid
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__write_uid
 msgid "Last Updated by"
 msgstr "Naposledy upravoval"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__write_date
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__write_date
 msgid "Last Updated on"
 msgstr "Naposledy upravované"
 
 #. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_manage_attendances
-msgid "Manage Attendances"
-msgstr ""
-
-#. module: hr_attendance
-#: model:res.groups,name:hr_attendance.group_hr_attendance_manager
-msgid "Manager"
-msgstr "Manažér"
-
-#. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__manual_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance
 msgid "Manual Attendance"
-msgstr ""
+msgstr "Manuálna prítomnosť"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_ir_ui_menu
+msgid "Menu"
+msgstr "Menu"
 
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_greeting_message
@@ -492,37 +739,39 @@ msgstr "Správa"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "My Attendances"
-msgstr ""
+msgstr "Moja dochádzka"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "No Check Out"
-msgstr ""
+msgstr "Žiadne odhlásenie"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action
 msgid "No attendance records found"
-msgstr ""
+msgstr "Nenašiel sa žiadny záznam o dochádzke"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_overview
 msgid "No attendance records to display"
-msgstr ""
+msgstr "Žiadny záznam o dochádzke na zobrazenie"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:73
+#: code:addons/hr_attendance/models/hr_employee.py:0
 #, python-format
-msgid "No employee corresponding to barcode %(barcode)s"
-msgstr ""
+msgid "No employee corresponding to Badge ID '%(barcode)s.'"
+msgstr "Žiadny zamestnanec nezodpovedá ID vysačky'%(barcode)s.'"
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "Not available"
-msgstr ""
+msgstr "Nedostupné"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:132
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "OK"
 msgstr "OK"
@@ -530,60 +779,48 @@ msgstr "OK"
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_user
 msgid "Officer"
-msgstr "Úradník"
+msgstr "Dôstojník"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__pin
-msgid "PIN"
-msgstr ""
-
-#. module: hr_attendance
-#: model:ir.model.fields,help:hr_attendance.field_hr_employee__pin
-msgid "PIN used to Check In/Out in Kiosk Mode (if enabled in Configuration)."
-msgstr ""
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__overtime_ids
+msgid "Overtime"
+msgstr "Nadčasy"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:78
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Please enter your PIN to"
-msgstr ""
+msgstr "Zadaj prosím PIN"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:96
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Please return to the main menu."
-msgstr ""
+msgstr "Vráť sa prosím na hlavné menu"
 
 #. module: hr_attendance
-#: model:ir.actions.report,name:hr_attendance.hr_employee_print_badge
-msgid "Print Badge"
-msgstr ""
+#: model:ir.model,name:hr_attendance.model_hr_employee_public
+msgid "Public Employee"
+msgstr "Verejný zamestnanec"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_report
 msgid "Reporting"
-msgstr "Výkazy"
+msgstr "Prehľady"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:18
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Scan your badge"
-msgstr ""
-
-#. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:25
-#, python-format
-msgid "Select Employee"
-msgstr ""
+msgstr "Zosnímaj kartu"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Set PIN codes in the employee detail form (in HR Settings tab)."
-msgstr ""
+msgstr "Nastaviť PIN kód v detaile zamestanca (v záložke HR nastavení)"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
@@ -592,63 +829,55 @@ msgstr "Nastavenia"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:46
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:74
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Sign in"
 msgstr "Prihlásiť sa"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:45
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:73
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:98
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Sign out"
 msgstr "Odhlásiť sa"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_filter_inherit_hr_attendance
-msgid "Signed In"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Start from"
+msgstr "Začať od"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_filter_inherit_hr_attendance
-msgid "Signed Out"
-msgstr ""
-
-#. module: hr_attendance
-#: sql_constraint:hr.employee:0
-msgid ""
-"The Badge ID must be unique, this one is already assigned to another "
-"employee."
-msgstr ""
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:64
+#: code:addons/hr_attendance/models/hr_employee.py:0
 #, python-format
-msgid "The PIN must be a sequence of digits."
-msgstr ""
+msgid "Such grouping is not allowed."
+msgstr "Takéto zoskupenie nie je povolené."
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
 msgid "The attendance records of your employees will be displayed here."
-msgstr ""
+msgstr "Tu budú zobrazené záznamy o dochádzke vašich zamestnancov."
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:91
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "The early bird catches the worm"
-msgstr ""
+msgstr "Ranné vtáča ďalej doskáče"
 
 #. module: hr_attendance
-#: model:ir.model.fields,help:hr_attendance.field_hr_employee__manual_attendance
+#: model:res.groups,comment:hr_attendance.group_hr_attendance_kiosk
 msgid ""
-"The employee will have access to the \"My Attendances\" menu to check in and"
-" out from his session"
-msgstr ""
+"The user will be able to open the kiosk mode and validate the employee PIN."
+msgstr "Používateľ bude môcť otvoriť kioskový režim a overiť PIN zamestnanca."
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance
@@ -656,57 +885,115 @@ msgid ""
 "The user will gain access to the human resources attendance menu, enabling "
 "him to manage his own attendance."
 msgstr ""
+"Užívateľ dostane prístup k bodu menu \"Dochádzka\", aby si mohol spravovať "
+"vlastnú dochádzku"
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_use_pin
 msgid ""
 "The user will have to enter his PIN to check in and out manually at the "
 "company screen."
+msgstr "Užívateľ musí zadať svoj PIN pre zaznačenie príchodu a odchodu"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/models/hr_employee.py:0
+#, python-format
+msgid ""
+"To activate Kiosk mode without pin code, you must have access right as an "
+"Officer or above in the Attendance app. Please contact your administrator."
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Today's work hours:"
+msgstr "Dnešná pracovná doba:"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_company_threshold
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_company_threshold
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Tolerance Time In Favor Of Company"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_employee_threshold
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_employee_threshold
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Tolerance Time In Favor Of Employee"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__total_overtime
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__total_overtime
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__total_overtime
+msgid "Total Overtime"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Total extra hours:"
 msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Use PIN codes to check in in Kiosk Mode"
-msgstr ""
+msgstr "Na prihlásenie v kioskom režime použite PIN kódy "
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_res_users
+msgid "Users"
+msgstr "Užívatelia"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:44
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:71
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Want to check out?"
-msgstr ""
+msgstr "Chcete sa odhlásiť?"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:49
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid ""
 "Warning : Your user should be linked to an employee to use attendance. "
 "Please contact your administrator."
 msgstr ""
+"Upozornenie: Užívateľ by mal byť prepojený so zamestnancom, aby sa dala "
+"určiť prítomnosť. Kontaktujte správcu."
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:122
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Welcome"
 msgstr "Vitajte"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:13
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Welcome to"
-msgstr ""
+msgstr "Vitajte v"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:44
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:71
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Welcome!"
-msgstr ""
+msgstr "Vitajte!"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+msgid "Work Hours"
+msgstr "Odpracovaný čas"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__worked_hours
@@ -714,48 +1001,54 @@ msgid "Worked Hours"
 msgstr "Odpracované hodiny"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:80
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
+msgid "Worked hours last month"
+msgstr "Odpracované hodiny za minulý mesiac"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/models/hr_employee.py:0
 #, python-format
 msgid "Wrong PIN"
-msgstr ""
+msgstr "Nesprávny PIN kód"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_attendance.py:103
+#: code:addons/hr_attendance/models/hr_attendance.py:0
 #, python-format
 msgid "You cannot duplicate an attendance."
-msgstr ""
+msgstr "Prítomnosť nemožno duplikovať."
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.print_employee_badge
-msgid "barcode"
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_overview
+msgid "Your attendance records will be displayed here."
 msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:47
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:75
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:78
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "check in"
-msgstr ""
+msgstr "príchod"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:47
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:75
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:78
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "check out"
-msgstr ""
+msgstr "odchod"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee__attendance_ids
 msgid "list of attendances for the employee"
-msgstr ""
+msgstr "zoznam pdochádzky zamestnanca"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:21
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "or"
 msgstr "alebo"

@@ -3,28 +3,27 @@
 # 	* analytic
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2019
-# Morten Schou <ms@msteknik.dk>, 2019
-# Jesper Carstensen <jc@danodoo.dk>, 2019
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
-# Sanne Kristensen <sanne@vkdata.dk>, 2019
-# Ejner Sønniksen <ejner@vkdata.dk>, 2019
-# lhmflexerp <lhm@flexerp.dk>, 2019
+# Martin Trigaux, 2022
+# Mads Søndergaard, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:08+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2016-08-05 12:56+0000\n"
+"Last-Translator: Mads Søndergaard, 2022\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+msgid "<span class=\"o_stat_text\">Gross Margin</span>"
+msgstr "<span class=\"o_stat_text\">Bruttoavance</span>"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction
@@ -41,7 +40,7 @@ msgstr "Aktiv"
 #: model_terms:ir.actions.act_window,help:analytic.action_account_analytic_account_form
 #: model_terms:ir.actions.act_window,help:analytic.action_analytic_account_form
 msgid "Add a new analytic account"
-msgstr ""
+msgstr "Tilføj en ny analytisk konto"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_tag_action
@@ -68,16 +67,17 @@ msgstr "Analysekonto"
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_distribution
 msgid "Analytic Account Distribution"
-msgstr ""
+msgstr "Analytisk konto distribuering"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_group_action
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_group_form_view
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_group_tree_view
 msgid "Analytic Account Groups"
-msgstr ""
+msgstr "Analysekontigrupper"
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_res_config_settings__group_analytic_accounting
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
 msgstr "Analytisk regnskab"
@@ -85,7 +85,7 @@ msgstr "Analytisk regnskab"
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_tags
 msgid "Analytic Accounting Tags"
-msgstr ""
+msgstr "Analytisk regnskab tags"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_account_analytic_account_form
@@ -97,7 +97,7 @@ msgstr "Analysekonto"
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_group
 msgid "Analytic Categories"
-msgstr ""
+msgstr "Analytisk kategorier"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__active_analytic_distribution
@@ -146,7 +146,9 @@ msgid "Analytic Tags"
 msgstr "Analytiske tags"
 
 #. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_form_view
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_view_search
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Archived"
 msgstr "Arkiveret"
@@ -173,7 +175,8 @@ msgid "Balance:"
 msgstr "Balance:"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_category_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__category
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Category"
 msgstr "Kategori"
 
@@ -185,12 +188,12 @@ msgstr "Analytisk konto oversigt"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__children_ids
 msgid "Childrens"
-msgstr ""
+msgstr "Underordnede"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
 msgid "Click to add a new analytic account group."
-msgstr ""
+msgstr "Klik for at tilføje en ny analysekontogruppe."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__color
@@ -211,6 +214,11 @@ msgid "Complete Name"
 msgstr "Fuldt navn"
 
 #. module: analytic
+#: model:ir.model,name:analytic.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigurer opsætning"
+
+#. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_line__product_uom_category_id
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
@@ -218,16 +226,6 @@ msgid ""
 msgstr ""
 "Konvertering mellem enheder kan kun ske, hvis de tilhører samme kategori. "
 "Konvertering vil ske ud fra forholdstallene."
-
-#. module: analytic
-#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
-msgid "Cost/Revenue"
-msgstr "Omkostning/omsætning"
-
-#. module: analytic
-#: model:ir.actions.act_window,name:analytic.account_analytic_line_action
-msgid "Costs & Revenues"
-msgstr "Omkostninger og indtægter"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -307,14 +305,14 @@ msgid "Followers"
 msgstr "Følgere"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Følgere (kanaler)"
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Følgere (partnere)"
+
+#. module: analytic
+#: model:ir.actions.act_window,name:analytic.account_analytic_line_action
+msgid "Gross Margin"
+msgstr "Bruttoavance"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__group_id
@@ -327,6 +325,11 @@ msgstr "Gruppe"
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Group By..."
 msgstr "Gruppér efter..."
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__has_message
+msgid "Has Message"
+msgstr "Har besked"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__id
@@ -426,12 +429,12 @@ msgstr "Navn"
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid "No activity yet"
-msgstr ""
+msgstr "Ingen aktivitet endnu"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
 msgid "No activity yet on this account"
-msgstr ""
+msgstr "Ingen aktivitet endnu på denne konto"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction_counter
@@ -441,7 +444,7 @@ msgstr "Antal handlinger"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Antal fejl"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction_counter
@@ -459,6 +462,11 @@ msgid "Number of unread messages"
 msgstr "Antal ulæste beskeder"
 
 #. module: analytic
+#: model:ir.model.fields.selection,name:analytic.selection__account_analytic_line__category__other
+msgid "Other"
+msgstr "Andet"
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__parent_id
 msgid "Parent"
 msgstr "Overordnet"
@@ -466,12 +474,12 @@ msgstr "Overordnet"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__parent_path
 msgid "Parent Path"
-msgstr ""
+msgstr "Overordnet sti"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__tag_id
 msgid "Parent tag"
-msgstr ""
+msgstr "Overordnet tag"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__partner_id
@@ -516,7 +524,7 @@ msgstr "Søg i analyseposter"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_view_search
 msgid "Search Analytic Tags"
-msgstr ""
+msgstr "Søg analytiske tags"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_tag__active
@@ -533,20 +541,22 @@ msgstr "Tags"
 #: model:ir.model.constraint,message:analytic.constraint_account_analytic_distribution_check_percentage
 msgid ""
 "The percentage of an analytic distribution should be between 0 and 100."
-msgstr ""
+msgstr "Procentdelen af en analytisk distribuering bør være mellem 0 og 100."
 
 #. module: analytic
 #: code:addons/analytic/models/analytic_account.py:0
 #, python-format
 msgid ""
-"The selected account belongs to another company that the one you're trying "
+"The selected account belongs to another company than the one you're trying "
 "to create an analytic item for"
 msgstr ""
+"Den valgte konto tilhører en anden virksomhed end den, du prøver at oprette "
+"en analytisk genstand for"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
-msgid "This allows to classify your analytic accounts."
-msgstr ""
+msgid "This allows you to classify your analytic accounts."
+msgstr "Dette gør dig i stand til at klassificere dine analytiske konti."
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
@@ -567,6 +577,11 @@ msgstr "Ulæste beskeder"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "Ulæste beskedtæller"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_category_id
+msgid "UoM Category"
+msgstr "Enhedskategori"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id

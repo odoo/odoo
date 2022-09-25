@@ -1,20 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * survey
+# 	* survey
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Matus Krnac <matus.krnac@gmail.com>, 2018
-# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
-# gebri <gebri@inmail.sk>, 2018
+# Filip Matúšek <filip.matusek@26house.com>, 2022
+# Alexandra Brencicova <alexandra.brencicova@gmail.com>, 2022
+# Filip Hanes <filip.hanes@protonmail.com>, 2022
+# SAKodoo <sak@odoo.com>, 2022
+# rastislav Brencic <rastislav.brencic99@gmail.com>, 2022
+# Matus Krnac <matus.krnac@gmail.com>, 2022
+# Jan Prokop, 2022
+# Michal Matus <misko.matus@gmail.com>, 2022
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2022
+# Damian Brencic <brencicdamian12313@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: gebri <gebri@inmail.sk>, 2018\n"
+"POT-Creation-Date: 2022-04-19 13:57+0000\n"
+"PO-Revision-Date: 2016-08-05 13:10+0000\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2022\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,203 +31,511 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_page_tree
-msgid "#Questions"
-msgstr "#Otázky"
-
-#. module: survey
-#: model:mail.template,subject:survey.email_template_survey
-msgid "${object.title}: Survey"
+#: model:ir.model.fields,field_description:survey.field_survey_survey__question_count
+msgid "# Questions"
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/models/survey.py:122
+#: model:ir.model.fields,field_description:survey.field_survey_question__random_questions_count
+msgid "# Questions Randomly Picked"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_progression
+msgid "% completed"
+msgstr "% dokončených"
+
+#. module: survey
+#: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kópia)"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.page
-msgid "&amp;times;"
-msgstr "&amp;times;"
+#: code:addons/survey/models/survey_survey.py:0
+#, python-format
+msgid "%s certification passed"
+msgstr "%s certifikácia prešla"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.403
+#: code:addons/survey/models/survey_survey.py:0
+#, python-format
+msgid "%s challenge certification"
+msgstr "%s certifikácia výzvy"
+
+#. module: survey
+#: model:ir.actions.report,print_report_name:survey.certification_report
+msgid "'Certification - %s' % (object.survey_id.display_name)"
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "100 years"
+msgstr "100 rokov"
+
+#. module: survey
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "1055"
+msgstr "1055"
+
+#. module: survey
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "116 years"
+msgstr "116 rokov"
+
+#. module: survey
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "1227"
+msgstr "1227"
+
+#. module: survey
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "127 years"
+msgstr "127 rokov"
+
+#. module: survey
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "1324"
+msgstr "1324"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_403_page
 msgid "403: Forbidden"
 msgstr "403: Zakázané"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result
-msgid "<b>Question </b>"
-msgstr "<b>Otázka </b>"
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "99 years"
+msgstr "99 rokov"
 
 #. module: survey
-#: model:mail.template,body_html:survey.email_template_survey
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_modern
+msgid ""
+"<b>Certificate</b>\n"
+"                            <br/>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid ""
+"<br/>\n"
+"                                    <span class=\"text-muted\">Completed</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid ""
+"<br/>\n"
+"                                    <span class=\"text-muted\">Registered</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid ""
+"<br/>\n"
+"                                <span class=\"text-muted\">Average Duration</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_modern
+msgid "<br/>by"
+msgstr ""
+
+#. module: survey
+#: model:mail.template,body_html:survey.mail_template_certification
+msgid ""
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"    <table style=\"width:600px;margin:5px auto;\">\n"
+"        <tbody>\n"
+"            <tr><td>\n"
+"                <!-- We use the logo of the company that created the survey (to handle multi company cases) -->\n"
+"                <a href=\"/\"><img t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
+"                    Certification: <t t-out=\"object.survey_id.display_name or ''\">Feedback Form</t>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"        <tbody>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
+"                <p>Dear <span t-out=\"object.partner_id.name or 'participant'\">participant</span></p>\n"
+"                <p>\n"
+"                    Please find attached your\n"
+"                        <strong t-out=\"object.survey_id.display_name or ''\">Furniture Creation</strong>\n"
+"                    certification\n"
+"                </p>\n"
+"                <p>Congratulations for passing the test!</p>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
+msgstr ""
+
+#. module: survey
+#: model:mail.template,body_html:survey.mail_template_user_input_invite
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hello<br/><br/>\n"
-"        We are conducting a survey, and your response would be appreciated.\n"
+"        Dear <t t-out=\"object.partner_id.name or 'participant'\">participant</t><br/><br/>\n"
+"        <t t-if=\"object.survey_id.certification\">\n"
+"            You have been invited to take a new certification.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            We are conducting a survey and your response would be appreciated.\n"
+"        </t>\n"
 "        <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a href=\"__URL__\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
-"                Start Survey\n"
+"            <a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                <t t-if=\"object.survey_id.certification\">\n"
+"                    Start Certification\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    Start Survey\n"
+"                </t>\n"
 "            </a>\n"
 "        </div>\n"
-"        Thanks for your participation!\n"
+"        <t t-if=\"object.deadline\">\n"
+"            Please answer the survey for <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
+"        </t>\n"
+"        <t t-if=\"object.survey_id.certification\">\n"
+"            We wish you good luck!\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Thank you in advance for your participation.\n"
+"        </t>\n"
 "    </p>\n"
 "</div>\n"
 "            "
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
-msgid "<i class=\"fa fa-2x\" role=\"img\" aria-label=\"Numeric\" title=\"Numeric\">123..</i>"
+#: model_terms:ir.ui.view,arch_db:survey.question_result_matrix
+msgid "<i class=\"fa fa-bar-chart mr-1\"/>Graph"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_matrix
-msgid ""
-"<i class=\"fa fa-bar-chart\"/>\n"
-"                    Graph"
-msgstr ""
-"<i class=\"fa fa-bar-chart\"/>\n"
-"Graf"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_choice
-msgid "<i class=\"fa fa-bar-chart-o\"/> Graph"
-msgstr "<i class=\"fa fa-bar-chart-o\"/> Graf"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_choice
-msgid "<i class=\"fa fa-bar-chart-o\"/> Pie Chart"
-msgstr "<i class=\"fa fa-bar-chart-o\"/> Koláčový diagram"
+#: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
+msgid "<i class=\"fa fa-bar-chart\"/> Results"
+msgstr "<i class=\"fa fa-bar-chart\"/> Výsledky"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
-msgid "<i class=\"fa fa-check-square-o fa-lg\"/> answer"
-msgstr "<i class=\"fa fa-check-square-o fa-lg\"/> odpoveď"
+msgid "<i class=\"fa fa-check-square-o fa-lg mr-2\"/>answer"
+msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
-msgid "<i class=\"fa fa-circle-o  fa-lg\"/> answer"
-msgstr "<i class=\"fa fa-circle-o fa-lg\"/> odpoveď"
+msgid "<i class=\"fa fa-circle-o  fa-lg mr-2\"/>answer"
+msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
-msgid "<i class=\"fa fa-dot-circle-o fa-lg\"/> answer"
-msgstr "<i class=\"fa fa-dot-circle-o fa-lg\"/> odpoveď"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_number
 msgid ""
-"<i class=\"fa fa-list-alt\"/>\n"
-"                    All Data"
+"<i class=\"fa fa-circle-o fa-lg\" role=\"img\" aria-label=\"Not checked\" "
+"title=\"Not checked\"/>"
 msgstr ""
-"<i class=\"fa fa-list-alt\"/>\n"
-"Všetky dáta"
+"<i class=\"fa fa-circle-o fa-lg\" role=\"img\" aria-label=\"Not checked\" "
+"title=\"Not checked\"/>"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_matrix
-msgid ""
-"<i class=\"fa fa-list-alt\"/>\n"
-"                    Data"
-msgstr ""
-"<i class=\"fa fa-list-alt\"/>\n"
-"Dáta"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_choice
-msgid "<i class=\"fa fa-list-alt\"/> Data"
-msgstr "<i class=\"fa fa-list-alt\"/> Dáta"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_number
-msgid ""
-"<i class=\"fa fa-list-ol\"/>\n"
-"                    Most Common"
-msgstr ""
-"<i class=\"fa fa-list-ol\"/>\n"
-"Najčastejšie"
+#: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
+msgid "<i class=\"fa fa-close\"/> Close"
+msgstr "<i class=\"fa fa-close\"/> Zavrieť"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
-msgid "<i class=\"fa fa-square-o fa-lg\"/> answer"
-msgstr "<i class=\"fa fa-square-o fa-lg\"/> odpoveď"
+msgid "<i class=\"fa fa-dot-circle-o fa-lg mr-2\"/>answer"
+msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result
-msgid "<i class=\"fa fa-times\"/> Clear All Filters"
-msgstr "<i class=\"fa fa-times\"/> Zrušiť všetky filtre"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid ""
-"<span class=\"badge badge-primary only_left_radius filter-all\">All "
-"surveys</span><span class=\"badge badge-secondary only_right_radius filter-"
-"finished\">Finished surveys</span>"
+"<i class=\"fa fa-dot-circle-o fa-lg\" role=\"img\" aria-label=\"Checked\" "
+"title=\"Checked\"/>"
+msgstr ""
+"<i class=\"fa fa-dot-circle-o fa-lg\" role=\"img\" aria-label=\"Checked\" "
+"title=\"Checked\"/>"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
+msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Back to edit mode"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
 msgid ""
-"<span class=\"badge badge-secondary only_left_radius filter-all\">All "
-"surveys</span><span class=\"badge badge-primary only_right_radius filter-"
-"finished\">Finished surveys</span>"
+"<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Download certification\" title=\"Download certification\"/>\n"
+"                                        Download certification"
+msgstr ""
+"<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Download certification\" title=\"Download certification\"/>\n"
+"                                        Stiahnite si certifikáciu"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
+msgid "<i class=\"fa fa-list-alt mr-1\"/>All Data"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_number
-msgid "<span class=\"badge badge-secondary only_left_radius\">Average </span>"
+#: model_terms:ir.ui.view,arch_db:survey.question_result_choice
+#: model_terms:ir.ui.view,arch_db:survey.question_result_matrix
+msgid "<i class=\"fa fa-list-alt mr-1\"/>Data"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_number
-msgid "<span class=\"badge badge-secondary only_left_radius\">Maximum </span>"
+#: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
+msgid "<i class=\"fa fa-list-ol mr-1\"/>Most Common"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_number
-msgid "<span class=\"badge badge-secondary only_left_radius\">Minimum </span>"
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+msgid "<i class=\"fa fa-square-o fa-lg mr-2\"/>answer"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_number
-msgid "<span class=\"badge badge-secondary only_left_radius\">Sum </span>"
+#: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
+msgid "<i class=\"fa fa-trash mr-1\"/>Remove all filters"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result
-msgid "<span class=\"fa fa-filter\"/>  Filters"
-msgstr "<span class=\"fa fa-filter\"/> Filtre"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.no_result
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid ""
-"<span>\n"
-"                            <i style=\"font-size:1.8em\" class=\"fa fa-users float-right\" role=\"img\" aria-label=\"No answer\" title=\"No answer\"/>\n"
-"                        </span>\n"
-"                        Sorry, No one answered this survey yet"
+"<span attrs=\"{'invisible': [('is_scored_question', '!=', "
+"True)]}\">Points</span>"
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/models/survey.py:688
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+msgid ""
+"<span attrs=\"{'invisible': [('is_time_limited', '=', False)]}\"> "
+"seconds</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
+msgid ""
+"<span class=\"badge badge-secondary only_left_radius px-2 pt-1\">Average "
+"</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
+msgid ""
+"<span class=\"badge badge-secondary only_left_radius px-2 pt-1\">Maximum "
+"</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
+msgid ""
+"<span class=\"badge badge-secondary only_left_radius px-2 pt-1\">Minimum "
+"</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
+msgid "<span class=\"fa fa-filter mr-1\"/>Filters"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
+msgid ""
+"<span class=\"font-weight-bold text-muted ml-2 d-none d-md-inline\" "
+"id=\"enter-tooltip\"> or press Enter</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
+msgid ""
+"<span class=\"font-weight-bold text-muted ml-2 d-none d-md-inline\">\n"
+"                            <span id=\"enter-tooltip\">or press Enter</span>\n"
+"                        </span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
+msgid ""
+"<span class=\"font-weight-bold text-muted ml-2 d-none d-md-inline\">\n"
+"                        <span id=\"enter-tooltip\">or press Enter</span>\n"
+"                    </span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.res_partner_view_form
+msgid ""
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_company_count', '&lt;', 2)]}\">Certifications</span>\n"
+"                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_company_count', '&gt;', 1)]}\">Certification</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.res_partner_view_form
+msgid ""
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_count', '&lt;', 2)]}\">Certifications</span>\n"
+"                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_count', '&gt;', 1)]}\">Certification</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
+msgid ""
+"<span class=\"o_survey_enter font-weight-bold text-muted ml-2 d-none d-md-"
+"inline\">or press Enter</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_selection_key
+msgid ""
+"<span class=\"o_survey_key text-center position-absolute bg-white rounded-"
+"left py-0 pl-2\"><span class=\"text-primary text-center text-center w-100 "
+"position-relative\">Key</span></span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
+msgid ""
+"<span class=\"o_survey_session_answer_count\">0</span>\n"
+"                                     /"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_session_code
+msgid ""
+"<span class=\"o_survey_session_error_invalid_code d-none\">Code is incorrect.</span>\n"
+"                                    <span class=\"o_survey_session_error_closed d-none\">Session is finished.</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid "<span class=\"text-muted\">Completed</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid "<span class=\"text-muted\">Questions</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid "<span class=\"text-muted\">Registered</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid "<span class=\"text-muted\">Success</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
+msgid "<span>All surveys</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
+msgid ""
+"<span>Click on the filter icon (<span class=\"fa fa-filter text-primary\"/>)\n"
+"                                    next to an answer to filter surveys on similar answers only.</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
+msgid "<span>Completed surveys</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_modern
+msgid "<span>Date</span>"
+msgstr "<span>Dátum</span>"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
+msgid "<span>Failed only</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+msgid ""
+"<span>How many ...?</span><br/>\n"
+"                                    <i class=\"fa fa-2x\" role=\"img\" aria-label=\"Numeric\" title=\"Numeric\">123 </i>\n"
+"                                    <i class=\"fa fa-2x fa-sort\" role=\"img\" aria-label=\"Numeric\"/>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+msgid ""
+"<span>Name all the animals</span><br/>\n"
+"                                    <i class=\"fa fa-align-justify fa-4x\" role=\"img\" aria-label=\"Multiple lines\" title=\"Multiple Lines\"/>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+msgid ""
+"<span>Name one animal</span><br/>\n"
+"                                    <i class=\"fa fa-minus fa-4x\" role=\"img\" aria-label=\"Single Line\" title=\"Single Line\"/>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_button_retake
+msgid "<span>Number of attemps left</span>:"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
+msgid "<span>Passed and Failed</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
+msgid "<span>Passed only</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
+#: model_terms:ir.ui.view,arch_db:survey.user_input_session_open
+msgid "<span>Waiting for attendees...</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+msgid "<span>When does ... start?</span><br/>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+msgid "<span>When is Christmas?</span><br/>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+msgid "<span>Which are yellow?</span><br/>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+msgid "<span>Which is yellow?</span><br/>"
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/models/survey_question.py:0
 #, python-format
 msgid "A label must be attached to only one question."
-msgstr ""
+msgstr "Štítok musí byť pripojený iba k jednej otázke."
 
 #. module: survey
-#: sql_constraint:survey.question:0
+#: model:ir.model.constraint,message:survey.constraint_survey_question_positive_len_max
+#: model:ir.model.constraint,message:survey.constraint_survey_question_positive_len_min
 msgid "A length must be positive!"
 msgstr "Dĺžka musí byť kladná"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_survey__description
-msgid "A long description of the purpose of the survey"
-msgstr "Dlhý popis účelu prieskumu"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_label__quizz_mark
+#: model:ir.model.fields,help:survey.field_survey_question_answer__answer_score
 msgid ""
 "A positive score indicates a correct choice; a negative or null score "
 "indicates a wrong answer"
@@ -228,29 +544,44 @@ msgstr ""
 " odpoveď"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.page
-msgid "A problem has occured"
-msgstr "Vyskytol sa problém"
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
+msgid "A problem has occurred"
+msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.frow_2_2_4
-msgid "A process is defined for all enterprise flows"
-msgstr "Proces je definovaný pre všetky podnikové toky"
+#: code:addons/survey/models/survey_user_input.py:0
+#, python-format
+msgid "A question can either be skipped or answered, not both."
+msgstr "Otázku je možné preskočiť alebo na ňu odpovedať, nie obe."
 
 #. module: survey
-#: sql_constraint:survey.user_input:0
-msgid "A token must be unique!"
-msgstr "Token musí byť unikátny!"
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "About our ecommerce"
+msgstr "O našom elektronickom obchode"
 
 #. module: survey
-#: model:survey.page,title:survey.feedback_1
-msgid "About your Odoo usage"
-msgstr "O vašom Odoo používaní"
+#: code:addons/survey/models/survey_survey_template.py:0
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "About you"
+msgstr "O tebe"
 
 #. module: survey
-#: selection:survey.mail.compose.message,moderation_status:0
-msgid "Accepted"
-msgstr "Akceptované"
+#: model:ir.model.fields,field_description:survey.field_survey_invite__survey_access_mode
+#: model:ir.model.fields,field_description:survey.field_survey_survey__access_mode
+msgid "Access Mode"
+msgstr "Režim prístupu"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__access_token
+msgid "Access Token"
+msgstr "Prístupový token"
+
+#. module: survey
+#: model:ir.model.constraint,message:survey.constraint_survey_survey_access_token_unique
+msgid "Access token should be unique"
+msgstr "Prístupový token by mal byť jedinečný"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_needaction
@@ -263,175 +594,397 @@ msgid "Active"
 msgstr "Aktívne"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__active_domain
-msgid "Active domain"
-msgstr "Aktívna doména"
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_ids
 msgid "Activities"
 msgstr "Aktivity"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Označenie výnimky v aktivite"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "Stav aktivity"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__add_sign
-msgid "Add Sign"
-msgstr ""
+#: model:ir.model.fields,field_description:survey.field_survey_survey__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Ikona typ aktivity"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
+#: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid ""
 "Add a list of email of recipients (will not be converted into contacts). "
 "Separated by commas, semicolons or newline..."
 msgstr ""
+"Pridajte zoznam e-mailov príjemcov (nebudú prevedené na kontakty). Oddelené "
+"čiarkami, bodkočiarkami alebo novým riadkom ..."
 
 #. module: survey
-#: model_terms:ir.actions.act_window,help:survey.action_survey_form
-msgid "Add a new survey"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "Add a question"
+msgstr "Pridajte otázku"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "Add a section"
+msgstr "Pridaj sekciu"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Add existing contacts..."
+msgstr "Pridať existujúce kontakty..."
+
+#. module: survey
+#. openerp-web
+#: code:addons/survey/static/src/xml/survey_sample_modal.xml:0
+#, python-format
+msgid "Add some fun to your presentations by sharing questions live."
 msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.fcol_2_1_3
-#: model:survey.label,value:survey.fcol_2_2_3
-#: model:survey.label,value:survey.fcol_2_5_3
-#: model:survey.label,value:survey.fcol_2_7_3
+#: model:ir.model.fields,field_description:survey.field_survey_invite__emails
+msgid "Additional emails"
+msgstr "Ďalšie e-maily"
+
+#. module: survey
+#: model:res.groups,name:survey.group_survey_manager
+msgid "Administrator"
+msgstr "Správca"
+
+#. module: survey
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
 msgid "Agree"
 msgstr "Súhlas"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
-msgid "Allow Comments"
-msgstr "Povoliť komentáre"
+#: model:ir.model.constraint,message:survey.constraint_survey_question_scored_date_have_answers
+msgid ""
+"All \"Is a scored question = True\" and \"Question Type: Date\" questions "
+"need an answer"
+msgstr ""
+"Na všetky otázky typu „Je bodovaná otázka = Pravda“ a „Typ otázky: Dátum“ je"
+" potrebné odpovedať"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_page__description
-msgid "An introductory text to your page"
-msgstr "Úovdný text na vašu stránku"
+#: model:ir.model.constraint,message:survey.constraint_survey_question_scored_datetime_have_answers
+msgid ""
+"All \"Is a scored question = True\" and \"Question Type: Datetime\" "
+"questions need an answer"
+msgstr ""
+"Na všetky otázky typu „Je bodovaná otázka = Pravda“ a „Typ otázky: Dátum a "
+"čas“ je potrebné odpovedať"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_kanban
-msgid "Analyze Answers"
-msgstr "Analyzovať odpovede"
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_selection__all
+msgid "All questions"
+msgstr "Všetky otázky"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_choice
-msgid "Answer Choices"
-msgstr "Možnosti odpovedí"
+#: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
+msgid "All surveys"
+msgstr "Všetky prieskumy"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_user_input__type
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "Amenhotep"
+msgstr "Amenhotep"
+
+#. module: survey
+#: model:ir.model.constraint,message:survey.constraint_survey_user_input_unique_token
+msgid "An access token must be unique!"
+msgstr "Prístupový token musí byť jedinečný!"
+
+#. module: survey
+#: model:ir.model.constraint,message:survey.constraint_survey_question_positive_answer_score
+msgid "An answer score for a non-multiple choice question cannot be negative!"
+msgstr ""
+"Skóre odpovede na otázku, ktorá nemá výber z viacerých odpovedí, nemôže byť "
+"záporné!"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.user_input_session_leaderboard
+msgid "Anonymous"
+msgstr "Anonymné"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.question_result_choice
+msgid "Answer"
+msgstr "Odpoveď"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__answer_type
 msgid "Answer Type"
 msgstr "Typ odpovede"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result
+#: model:ir.model.fields,field_description:survey.field_survey_invite__deadline
+msgid "Answer deadline"
+msgstr "Termín odpovede"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_question__triggering_answer_id
+msgid "Answer that will trigger the display of the current question."
+msgstr "Odpoveď, ktorá spustí zobrazenie aktuálnej otázky."
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "Answered"
 msgstr "Zodpovedané"
 
 #. module: survey
-#: model:ir.actions.act_window,name:survey.action_survey_user_input
 #: model:ir.model.fields,field_description:survey.field_survey_question__user_input_line_ids
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__user_input_line_ids
-#: model:ir.ui.menu,name:survey.menu_survey_type_form1
-#: model_terms:ir.ui.view,arch_db:survey.survey_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Answers"
 msgstr "Odpovede"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__no_auto_thread
-msgid ""
-"Answers do not go in the original document discussion thread. This has an "
-"impact on the generated message-id."
-msgstr ""
-"Odpovede neputujú do originálneho vlákna diskusie dokumentu. Toto má dopad "
-"na generované ID správy."
+#: model:ir.model.fields,field_description:survey.field_survey_survey__session_answer_count
+msgid "Answers Count"
+msgstr "Počet odpovedí"
 
 #. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__access_mode__public
+msgid "Anyone with the link"
+msgstr "Ktokoľvek s odkazom"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_gamification_challenge__challenge_category
+msgid "Appears in"
+msgstr "Objavuje sa v"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Archived"
 msgstr "Archivovaný"
 
 #. module: survey
-#: model:survey.question,question:survey.feedback_1_1
-msgid "Are you using Odoo on a daily basis?"
-msgstr "Používate Odoo na dennej báze?"
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Počet príloh"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__attachment_ids
+#: model:ir.model.fields,field_description:survey.field_survey_invite__attachment_ids
 msgid "Attachments"
 msgstr "Prílohy"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__attachment_ids
-msgid ""
-"Attachments are linked to a document through model / res_id and to the "
-"message through this field."
-msgstr ""
+#: model:ir.model.fields,field_description:survey.field_survey_user_input__attempts_number
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
+msgid "Attempt n°"
+msgstr "Pokus č."
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__author_id
+#: model:ir.model.fields,field_description:survey.field_survey_survey__answer_done_count
+msgid "Attempts"
+msgstr "Pokusy"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_user_input__nickname
+msgid ""
+"Attendee nickname, mainly used to identify him in the survey session "
+"leaderboard."
+msgstr ""
+"Prezývka účastníka, ktorá sa používa hlavne na jeho identifikáciu v tabuľke "
+"výsledkov relácie."
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
+msgid "Attendees are answering the question..."
+msgstr "Účastníci odpovedajú na otázku ..."
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_survey__session_speed_rating
+msgid "Attendees get more points if they answer quickly"
+msgstr "Účastníci získajú viac bodov, ak odpovedia rýchlo"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_invite__author_id
 msgid "Author"
 msgstr "Autor"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__author_id
+#: model:ir.model.fields,help:survey.field_survey_invite__author_id
+msgid "Author of the message."
+msgstr "Autor správy."
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_survey__certification_mail_template_id
 msgid ""
-"Author of the message. If not set, email_from may hold an email address that"
-" did not match any partner."
+"Automated email sent to the user when he succeeds the certification, "
+"containing his certification document."
 msgstr ""
-"Autor správy. Pokiaľ nie je uvedený, email_from môže obsahovať emailovú "
-"adresu ktorá nemusí zodpovedať žiadnemu partnerovi."
+"Automatický e-mail odoslaný používateľovi, keď uspeje v certifikácii, "
+"obsahujúci jeho certifikačný dokument."
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__author_avatar
-msgid "Author's avatar"
-msgstr "Avatar autora"
+#: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
+msgid "Average"
+msgstr "Priemerné"
 
 #. module: survey
-#: model:ir.model,name:survey.model_ir_autovacuum
-msgid "Automatic Vacuum"
+#: model:ir.model.fields,field_description:survey.field_survey_survey__answer_duration_avg
+msgid "Average Duration"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.back
-msgid "Back to Survey"
-msgstr "Späť na prieskum"
+#: model:ir.model.fields,help:survey.field_survey_survey__answer_duration_avg
+msgid "Average duration of the survey (in hours)"
+msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.choice_1_2_4
-msgid "CRM"
-msgstr "CRM"
+#: model:ir.model.fields,field_description:survey.field_survey_survey__answer_score_avg
+msgid "Avg Score (%)"
+msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "Back Button"
+msgstr "Tlačidlo späť"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_question__background_image
+#: model:ir.model.fields,field_description:survey.field_survey_survey__background_image
+msgid "Background Image"
+msgstr "Obrázok pozadia"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_question__background_image_url
+#: model:ir.model.fields,field_description:survey.field_survey_survey__background_image_url
+msgid "Background Url"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.gamification_badge_form_view_simplified
+msgid "Badge"
+msgstr "Odznak"
+
+#. module: survey
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "But first, keep listening to the host."
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_invite__can_edit_body
+msgid "Can Edit Body"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Cancel"
-msgstr "Zrušiť"
+msgstr "Zrušené"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__channel_ids
-msgid "Channels"
-msgstr "Kanály"
+#. openerp-web
+#: code:addons/survey/models/survey_survey_template.py:0
+#: code:addons/survey/static/src/xml/survey_sample_modal.xml:0
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_tree
+#, python-format
+msgid "Certification"
+msgstr "Osvedčenie"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__child_ids
-msgid "Child Messages"
-msgstr "Podriadené správy"
+#: model:ir.model.fields,field_description:survey.field_survey_survey__certification_badge_id
+msgid "Certification Badge"
+msgstr "Certifikačný znak"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__certification_badge_id_dummy
+msgid "Certification Badge "
+msgstr "Certifikačný odznak"
+
+#. module: survey
+#: code:addons/survey/models/survey_survey.py:0
+#, python-format
+msgid "Certification Badge is not configured for the survey %(survey_name)s"
+msgstr ""
+
+#. module: survey
+#: model:mail.template,report_name:survey.mail_template_certification
+msgid "Certification Document"
+msgstr "Certifikačný dokument"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_modern
+msgid "Certification Failed"
+msgstr "Certifikácia zlyhala"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "Certification Title"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_modern
+msgid "Certification n°"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__certification_report_layout
+msgid "Certification template"
+msgstr "Šablóna certifikácie"
+
+#. module: survey
+#: model:mail.template,subject:survey.mail_template_certification
+msgid "Certification: {{ object.survey_id.display_name }}"
+msgstr ""
+
+#. module: survey
+#: model:ir.actions.report,name:survey.certification_report
+#: model:ir.model.fields.selection,name:survey.selection__gamification_challenge__challenge_category__certification
+msgid "Certifications"
+msgstr "Certifikácie"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_res_partner__certifications_count
+#: model:ir.model.fields,field_description:survey.field_res_users__certifications_count
+msgid "Certifications Count"
+msgstr "Počet certifikácií"
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.res_partner_action_certifications
+msgid "Certifications Succeeded"
+msgstr "Certifikácia bola úspešná"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid "Certified"
+msgstr "Certifikované"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__certification_mail_template_id
+msgid "Certified Email Template"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_header
+msgid "Chart"
+msgstr "Graf"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_survey__is_attempts_limited
+#: model:ir.model.fields,help:survey.field_survey_user_input__is_attempts_limited
+msgid "Check this option if you want to limit the number of attempts per user"
+msgstr ""
+"Túto možnosť začiarknite, ak chcete obmedziť počet pokusov na používateľa"
+
+#. module: survey
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "China"
+msgstr "Čína"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -439,41 +992,49 @@ msgid "Choices"
 msgstr "Možnosti"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.simple_choice
-msgid "Choose..."
-msgstr "Vyberte..."
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__certification_report_layout__classic_blue
+msgid "Classic Blue"
+msgstr "Klasická modrá"
 
 #. module: survey
-#: code:addons/survey/models/survey.py:110
-#, python-format
-msgid "Click here to start survey"
-msgstr "Kliknite sem pre spustenie prieskumu"
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__certification_report_layout__classic_gold
+msgid "Classic Gold"
+msgstr "Klasické zlato"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.page
-#: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__certification_report_layout__classic_purple
+msgid "Classic Purple"
+msgstr "Klasická fialová"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Close"
-msgstr "Zatvor"
+msgstr "Zatvoriť"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_stage__closed
-#: model:survey.stage,name:survey.stage_closed
-msgid "Closed"
-msgstr "Uzavreté"
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "Close Live Session"
+msgstr "Ukončite reláciu naživo"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_kanban
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 msgid "Color"
 msgstr "Farba"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__color
 msgid "Color Index"
-msgstr "Farebný index"
+msgstr "Index farieb"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_comments
-#: selection:survey.mail.compose.message,message_type:0
+#: model_terms:ir.actions.act_window,help:survey.action_survey_question_form
+msgid "Come back once you have added questions to your Surveys."
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.question_result_comments
 msgid "Comment"
 msgstr "Komentár"
 
@@ -488,41 +1049,42 @@ msgid "Comment Message"
 msgstr "Správa komentára"
 
 #. module: survey
-#: model:survey.page,title:survey.feedback_3
-msgid "Community and contributors"
-msgstr "Komunita a prispievatelia"
+#: model:ir.model.fields,field_description:survey.field_res_partner__certifications_company_count
+#: model:ir.model.fields,field_description:survey.field_res_users__certifications_company_count
+msgid "Company Certifications Count"
+msgstr "Počet certifikácií spoločnosti"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.layout
-msgid "Company name"
-msgstr "Názov spoločnosti"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_tree
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
-#: selection:survey.user_input,state:0
+#: model:ir.model.fields.selection,name:survey.selection__survey_user_input__state__done
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Completed"
 msgstr "Dokončené"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
+#: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
+msgid "Completed surveys"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Compose Email"
-msgstr "Vytvoriť Email"
+msgstr "Vytvoriť email"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__composition_mode
-msgid "Composition mode"
-msgstr "Kompozičný režim"
+#: code:addons/survey/models/survey_user_input.py:0
+#, python-format
+msgid "Computing score requires a question in arguments."
+msgstr "Výpočetné skóre si vyžaduje otázku v argumentoch."
 
 #. module: survey
-#: model:ir.ui.menu,name:survey.menu_surveys_configuration
-msgid "Configuration"
-msgstr "Konfigurácia"
+#: model:ir.model.fields,field_description:survey.field_survey_question__is_conditional
+msgid "Conditional Display"
+msgstr "Podmienené zobrazenie"
 
 #. module: survey
-#: model:survey.label,value:survey.frow_2_7_2
-msgid "Configuration wizard exists for each important setting"
-msgstr "Sprievodca konfiguráciou existuje pre každé dôležité nastavenie"
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
+msgid "Congratulations, you have passed the test!"
+msgstr "Gratulujeme, zvládli ste test!"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -530,44 +1092,97 @@ msgid "Constraints"
 msgstr "Obmedzenia"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__body
+#: model:ir.model,name:survey.model_res_partner
+msgid "Contact"
+msgstr "Kontakt"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__has_conditional_questions
+msgid "Contains conditional questions"
+msgstr "Obsahuje podmienené otázky"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_invite__body
 msgid "Contents"
 msgstr "Obsahy"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
-msgid ""
-"Copy and paste the HTML code below to add this web link to any webpage."
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
+msgid "Continue"
+msgstr "Pokračovať"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
+msgid "Continue here"
+msgstr "Pokračujte tu"
+
+#. module: survey
+#. openerp-web
+#: code:addons/survey/static/src/js/survey_session_manage.js:0
+#, python-format
+msgid "Copied !"
+msgstr "Skopírované!"
+
+#. module: survey
+#. openerp-web
+#: code:addons/survey/models/survey_user_input.py:0
+#: code:addons/survey/static/src/js/survey_result.js:0
+#: model:ir.model.fields,field_description:survey.field_survey_question_answer__is_correct
+#: model:ir.model.fields,field_description:survey.field_survey_user_input_line__answer_is_correct
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
+#, python-format
+msgid "Correct"
+msgstr "Správne"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+msgid "Correct Answer"
+msgstr "Správna odpoveď"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_question__answer_datetime
+msgid "Correct date and time answer for this question."
+msgstr "Správny dátum a čas odpovede na túto otázku."
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_question__answer_date
+msgid "Correct date answer"
+msgstr "Správna odpoveď na dátum"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_question__answer_date
+msgid "Correct date answer for this question."
+msgstr "Správny dátum odpovede na túto otázku."
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_question__answer_datetime
+msgid "Correct datetime answer"
+msgstr "Správna odpoveď na čas a čas"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_question__answer_numerical_box
+msgid "Correct number answer for this question."
+msgstr "Správna odpoveď na túto otázku."
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_question__answer_numerical_box
+msgid "Correct numerical answer"
+msgstr "Správna číselná odpoveď"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "Create Live Session"
+msgstr "Vytvorte reláciu naživo"
+
+#. module: survey
+#: model_terms:ir.actions.act_window,help:survey.action_survey_form
+msgid "Create a Survey"
 msgstr ""
-"Skopírujte a vložte HTML kód dole pre pridanie tohto webového odkazu na "
-"akúkoľvek webstránku."
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
-msgid "Copy, paste and share the web link below to your audience."
-msgstr "Skopírujte, vložte a zdielajte webový odkaz dole s vaším publikom."
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.layout
-msgid "Copyright &amp;copy;"
-msgstr "Autorské právo &amp;copy;"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_user_input_line__date_create
-msgid "Create Date"
-msgstr "Dátum Vytvorenia"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.layout
-msgid "Create a"
-msgstr ""
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_label__create_uid
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__create_uid
-#: model:ir.model.fields,field_description:survey.field_survey_page__create_uid
+#: model:ir.model.fields,field_description:survey.field_survey_invite__create_uid
 #: model:ir.model.fields,field_description:survey.field_survey_question__create_uid
-#: model:ir.model.fields,field_description:survey.field_survey_stage__create_uid
+#: model:ir.model.fields,field_description:survey.field_survey_question_answer__create_uid
 #: model:ir.model.fields,field_description:survey.field_survey_survey__create_uid
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__create_uid
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__create_uid
@@ -575,11 +1190,9 @@ msgid "Created by"
 msgstr "Vytvoril"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_label__create_date
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__create_date
-#: model:ir.model.fields,field_description:survey.field_survey_page__create_date
+#: model:ir.model.fields,field_description:survey.field_survey_invite__create_date
 #: model:ir.model.fields,field_description:survey.field_survey_question__create_date
-#: model:ir.model.fields,field_description:survey.field_survey_stage__create_date
+#: model:ir.model.fields,field_description:survey.field_survey_question_answer__create_date
 #: model:ir.model.fields,field_description:survey.field_survey_survey__create_date
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__create_date
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__create_date
@@ -587,20 +1200,73 @@ msgid "Created on"
 msgstr "Vytvorené"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_user_input__date_create
-msgid "Creation Date"
-msgstr "Dátum vytvorenia"
+#: code:addons/survey/models/survey_survey.py:0
+#, python-format
+msgid "Creating test token is not allowed for you."
+msgstr "Vytváranie testovacích tokenov pre vás nie je povolené."
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__starred
-msgid "Current user has a starred notification linked to this message"
+#: code:addons/survey/models/survey_survey.py:0
+#, python-format
+msgid ""
+"Creating token for anybody else than employees is not allowed for internal "
+"surveys."
 msgstr ""
-"Aktuálny užívateľ má aktivovanú notifikáciu nalinkovanú na túto správu"
+"Pre interné prieskumy nie je povolené vytváranie tokenov pre kohokoľvek "
+"iného ako zamestnancov."
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__date
-#: selection:survey.question,type:0
-#: selection:survey.user_input_line,answer_type:0
+#: code:addons/survey/models/survey_survey.py:0
+#, python-format
+msgid "Creating token for closed/archived surveys is not allowed."
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/models/survey_survey.py:0
+#: code:addons/survey/models/survey_survey.py:0
+#, python-format
+msgid ""
+"Creating token for external people is not allowed for surveys requesting "
+"authentication."
+msgstr ""
+"Pre prieskumy vyžadujúce overenie nie je povolené vytváranie tokenov pre "
+"externých ľudí."
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__session_question_id
+msgid "Current Question"
+msgstr "Aktuálna otázka"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__session_question_start_time
+msgid "Current Question Start Time"
+msgstr "Aktuálny čas začatia otázky"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__session_start_time
+msgid "Current Session Start Time"
+msgstr "Aktuálny čas začiatku relácie"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_question__is_time_limited
+msgid "Currently only supported for live sessions."
+msgstr "Momentálne je podporované iba pri živých reláciách"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
+msgid ""
+"Customers will receive a new token and be able to completely retake the "
+"survey."
+msgstr "Zákazníci dostanú nový token a budú môcť prieskum kompletne opakovať."
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
+msgid "Customers will receive the same token."
+msgstr "Zákazníci dostanú rovnaký token."
+
+#. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__date
+#: model:ir.model.fields.selection,name:survey.selection__survey_user_input_line__answer_type__date
 msgid "Date"
 msgstr "Dátum"
 
@@ -610,10 +1276,21 @@ msgid "Date answer"
 msgstr "Dátum odpovede"
 
 #. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__datetime
+#: model:ir.model.fields.selection,name:survey.selection__survey_user_input_line__answer_type__datetime
+msgid "Datetime"
+msgstr "Dátum čas"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_datetime
+msgid "Datetime answer"
+msgstr "Odpoveď na dátum a čas"
+
+#. module: survey
 #: model:ir.model.fields,help:survey.field_survey_user_input__deadline
-msgid "Date by which the person can open the survey and submit answers"
+msgid "Datetime until customer can open the survey and submit answers"
 msgstr ""
-"Dátum, ku ktorému táto osoba môže otvoriť prieskum a predložiť odpovede"
+"Dátum a čas, kým zákazník nebude môcť otvoriť prieskum a odoslať odpovede"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__deadline
@@ -621,164 +1298,107 @@ msgid "Deadline"
 msgstr "Uzávierka"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__date_deadline
-msgid ""
-"Deadline to which the invitation to respond for this survey is valid. If the"
-" field is empty,        the invitation is still valid."
-msgstr ""
+#: model:ir.model.fields,field_description:survey.field_survey_invite__null_value
+msgid "Default Value"
+msgstr "Predvolená hodnota"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__date_deadline
-msgid "Deadline to which the invitation to respond is valid"
-msgstr "Uzávierka dokedy je výzva na reakciu platná."
+#: model:ir.model.fields,help:survey.field_gamification_challenge__challenge_category
+msgid "Define the visibility of the challenge through menus"
+msgstr "Definujte viditeľnosť výzvy v menu"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_kanban
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 msgid "Delete"
 msgstr "Zmazať"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__auto_delete
-msgid "Delete Emails"
-msgstr ""
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__auto_delete_message
-msgid "Delete Message Copy"
-msgstr ""
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__auto_delete
-msgid "Delete sent emails (mass mailing only)"
-msgstr ""
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_page__description
 #: model:ir.model.fields,field_description:survey.field_survey_question__description
 #: model:ir.model.fields,field_description:survey.field_survey_survey__description
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Description"
 msgstr "Popis"
 
 #. module: survey
-#: model:survey.label,value:survey.frow_2_7_1
-msgid "Descriptions and help tooltips are clear enough"
-msgstr "Popisky a pomocné nápovedy sú dostatočne jasné"
+#: model:ir.actions.act_window,name:survey.survey_user_input_line_action
+#: model:ir.ui.menu,name:survey.menu_survey_response_line_form
+msgid "Detailed Answers"
+msgstr "Podrobné odpovede"
 
 #. module: survey
-#: model_terms:ir.actions.act_window,help:survey.action_survey_form
-msgid ""
-"Design easily your survey, send invitations to answer by email and analyse "
-"answers."
-msgstr ""
-"Vytvorte ľahko svoj prieskum, pošlite pozvánky na odpovedanie "
-"prostredníctvom emailu a analyzujte odpovede."
-
-#. module: survey
-#: model:survey.label,value:survey.fcol_2_1_2
-#: model:survey.label,value:survey.fcol_2_2_2
-#: model:survey.label,value:survey.fcol_2_5_2
-#: model:survey.label,value:survey.fcol_2_7_2
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
 msgid "Disagree"
 msgstr "Nesúhlasím"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_question__display_mode
-msgid "Display Mode"
-msgstr "Mód zobrazenia"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_label__display_name
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__display_name
-#: model:ir.model.fields,field_description:survey.field_survey_page__display_name
+#: model:ir.model.fields,field_description:survey.field_survey_invite__display_name
 #: model:ir.model.fields,field_description:survey.field_survey_question__display_name
-#: model:ir.model.fields,field_description:survey.field_survey_stage__display_name
+#: model:ir.model.fields,field_description:survey.field_survey_question_answer__display_name
 #: model:ir.model.fields,field_description:survey.field_survey_survey__display_name
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__display_name
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__display_name
 msgid "Display Name"
-msgstr "Zobrazovaný Názov"
+msgstr "Zobrazovaný názov"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
-msgid "Display mode"
-msgstr "Režim zobrazenia"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__auto_delete_message
-msgid ""
-"Do not keep a copy of the email in the document communication history (mass "
-"mailing only)"
+#: model:ir.model.fields,field_description:survey.field_survey_survey__progression_mode
+msgid "Display Progress as"
 msgstr ""
 
 #. module: survey
-#: model:survey.question,question:survey.feedback_3_3
-msgid "Do you have a proposition to attract new contributors?"
-msgstr "Máte návrh na pritiahnututie nových prispievateľov?"
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "Douglas Fir"
+msgstr "Douglasová jedľa"
 
 #. module: survey
-#: model:survey.question,question:survey.feedback_3_2
-msgid "Do you have a proposition to help people to contribute?"
-msgstr "Máte návrh na pomoc ľudom aby prispievali?"
-
-#. module: survey
-#: model:survey.question,question:survey.feedback_2_3
-msgid "Do you have suggestions on how to improve the process view ?"
-msgstr "Máte nejaké podnety ako zlepšiť procesné zobrazenie?"
-
-#. module: survey
-#: model:survey.stage,name:survey.stage_draft
-msgid "Draft"
-msgstr "Návrh"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_kanban
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 msgid "Dropdown menu"
-msgstr ""
+msgstr "Rozbaľovacie menu"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_user_input__email
-msgid "E-mail"
-msgstr "Email"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_form
-msgid "Edit Pages and Questions"
-msgstr "Upraviť stránky a otázky"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_kanban
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 msgid "Edit Survey"
 msgstr "Upraviť prieskum"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
-#: selection:survey.mail.compose.message,message_type:0
+#: model_terms:ir.ui.view,arch_db:survey.survey_void_content
+msgid "Edit in backend"
+msgstr "Editovať v backedne"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_user_input__email
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Email"
 msgstr "Email"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey__email_template_id
-msgid "Email Template"
-msgstr "Šablóna emailu"
+#: model:ir.model.fields,help:survey.field_survey_invite__email_from
+msgid "Email address of the sender."
+msgstr "E-mailová adresa odosielateľa."
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__email_from
-msgid ""
-"Email address of the sender. This field is set when no matching partner is "
-"found and replaces the author_id field in the chatter."
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid "End Live Session"
 msgstr ""
-"Emailová adresa odosielateľa. Toto pole je nastavené keď sa nenájde žiaden "
-"vyhovujúci partner a zamení pole author_id v chate."
 
 #. module: survey
-#: model:ir.model,name:survey.model_survey_mail_compose_message
-msgid "Email composition wizard for Survey"
-msgstr "Sprievodca zostavovaním emailov pre Prieskum"
+#: model:ir.model.fields,field_description:survey.field_survey_survey__description_done
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "End Message"
+msgstr "Ukončiť správu"
 
 #. module: survey
-#: model:survey.page,title:survey.feedback_2
-msgid "Ergonomy and ease of use"
-msgstr "Ergonómia a uľahčenie použitia"
+#: model:ir.model.fields,field_description:survey.field_survey_user_input__end_datetime
+msgid "End date and time"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_session_code
+msgid "Enter Session Code"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__constr_error_msg
@@ -786,34 +1406,72 @@ msgid "Error message"
 msgstr "Chybová správa"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__partner_ids
-msgid "Existing contacts"
-msgstr "Existujúce kontakty"
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "European Yew"
+msgstr "Európsky tis"
 
 #. module: survey
-#: model:survey.label,value:survey.frow_2_7_3
-msgid "Extra modules proposed are relevant"
-msgstr "Navrhnuté extra moduly sú relevantné"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__starred_partner_ids
-msgid "Favorited By"
-msgstr "Má v obľúbených"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_choice
-msgid "Filter question"
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
+msgid "Exclude Test Entries"
 msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.choice_1_2_3
-msgid "Financial Management"
-msgstr "Finančný manažment"
+#: model:ir.model.fields,field_description:survey.field_survey_invite__existing_partner_ids
+msgid "Existing Partner"
+msgstr "Existujúci partner"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_stage__fold
-msgid "Folded in kanban view"
-msgstr "Zložené v kanban zobrazení"
+#: model:ir.model.fields,field_description:survey.field_survey_invite__existing_emails
+msgid "Existing emails"
+msgstr "Existujúce e-maily"
+
+#. module: survey
+#: code:addons/survey/models/survey_survey.py:0
+#, python-format
+msgid "Failed"
+msgstr "Nepodarilo sa"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
+msgid "Failed only"
+msgstr ""
+
+#. module: survey
+#. openerp-web
+#: code:addons/survey/models/survey_survey_template.py:0
+#: code:addons/survey/static/src/xml/survey_sample_modal.xml:0
+#, python-format
+msgid "Feedback Form"
+msgstr "Forma spätnej väzby"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_invite__model_object_field
+msgid "Field"
+msgstr "Pole"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.question_result_choice
+#: model_terms:ir.ui.view,arch_db:survey.question_result_matrix
+msgid "Filter surveys"
+msgstr ""
+
+#. module: survey
+#. openerp-web
+#: code:addons/survey/static/src/js/survey_session_manage.js:0
+#: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
+#, python-format
+msgid "Final Leaderboard"
+msgstr "Konečná výsledková tabuľka"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_invite__copyvalue
+msgid ""
+"Final placeholder expression, to be copy-pasted in the desired template "
+"field."
+msgstr ""
+"Konečné vyjadrenie vlatníka, ktorý bude kopírovaný-vložený v požadovanom "
+"poli šablóny."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_follower_ids
@@ -821,115 +1479,141 @@ msgid "Followers"
 msgstr "Odberatelia"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Odberatelia (Kanály)"
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Odberatelia (Partneri)"
+msgstr "Odberatelia (partneri)"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
-msgid "Format"
-msgstr "Formát"
+#: model:ir.model.fields,help:survey.field_survey_survey__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Úžasná ikona fronty napr. fa-tasks"
 
 #. module: survey
-#: selection:survey.user_input_line,answer_type:0
+#: model:ir.model.fields.selection,name:survey.selection__survey_user_input_line__answer_type__text_box
 msgid "Free Text"
 msgstr "Voľný text"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_free_text
+#: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_text_box
 msgid "Free Text answer"
 msgstr "Voľno textová odpoveď"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__email_from
+#: model:ir.model.fields,field_description:survey.field_survey_invite__email_from
 msgid "From"
 msgstr "Od"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_page_search
+#: model:ir.model,name:survey.model_gamification_badge
+msgid "Gamification Badge"
+msgstr "Ocenenie gemifikácie"
+
+#. module: survey
+#: model:ir.model,name:survey.model_gamification_challenge
+msgid "Gamification Challenge"
+msgstr "Gamifikačná výzva"
+
+#. module: survey
+#. openerp-web
+#: code:addons/survey/static/src/xml/survey_sample_modal.xml:0
+#, python-format
+msgid "Gather feedbacks from your employees and customers."
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__certification_give_badge
+msgid "Give Badge"
+msgstr "Daj odznak"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
+#: model_terms:ir.ui.view,arch_db:survey.user_input_session_open
+msgid "Go to"
+msgstr "Choď na"
+
+#. module: survey
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "Good luck!"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.question_result_choice
+msgid "Graph"
+msgstr "Graf"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_answer_view_search
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_search
-#: model_terms:ir.ui.view,arch_db:survey.survey_response_line_search
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_line_view_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Group By"
 msgstr "Zoskupiť podľa"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__has_error
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__has_error
-msgid "Has error"
+#: model:ir.model.fields,field_description:survey.field_survey_invite__existing_mode
+#: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
+msgid "Handle existing"
 msgstr ""
 
 #. module: survey
-#: model:survey.question,question:survey.feedback_3_1
-msgid "How do you contribute or plan to contribute to Odoo?"
-msgstr "Ako prispievate alebo máte v úmysle prispieť k Odoo?"
+#. openerp-web
+#: code:addons/survey/static/src/xml/survey_sample_modal.xml:0
+#, python-format
+msgid "Handle quiz & certifications online."
+msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.choice_1_2_6
-msgid "Human Resources"
-msgstr "Ľudské zdroje"
+#: model:ir.model.fields,field_description:survey.field_survey_survey__has_message
+msgid "Has Message"
+msgstr "Má správu"
 
 #. module: survey
-#: model:survey.label,value:survey.choice_3_1_3
-msgid "I develop new features"
-msgstr "Vyvíjam nové funkcie"
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+msgid "Help Participants know what to write"
+msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.choice_4_1_4
-msgid "I do not publish my developments"
-msgstr "Nezverejňujem svoje vývoje"
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "Hemiunu"
+msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.choice_3_1_4
-msgid "I help to translate"
-msgstr "Pomáham prekladať"
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "History"
+msgstr "História"
 
 #. module: survey
-#: model:survey.label,value:survey.choice_4_1_3
-msgid "I host them on my own website"
-msgstr "Poskytujem im hosting na mojej vlastnej webstránke"
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "How frequently do you buy products online?"
+msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.choice_3_1_1
-msgid "I participate to discussion and forums"
-msgstr "Zúčastňujem sa diskusií a fór"
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "How many times did you order products on our website?"
+msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.choice_4_1_1
-msgid "I use Github, like all official Odoo projects"
-msgstr "Používam Github, ako všetky oficiálne Odoo projekty"
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "How many years did the 100 years war last?"
+msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.choice_4_1_2
-msgid "I use another repository system (SourceForge...)"
-msgstr "Používam iný schránkový systém (SourceForge...)"
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "How well do you know trees? Let's find out!"
+msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.frow_2_1_3
-msgid "I use the contextual help in Odoo"
-msgstr "Používam kontextuálnu pomoc v Odoo"
-
-#. module: survey
-#: model:survey.label,value:survey.choice_3_1_5
-msgid "I write documentations"
-msgstr "Píšem dokumentácie"
-
-#. module: survey
-#: model:survey.label,value:survey.choice_3_1_2
-msgid "I'd like to contribute but I don't know how?"
-msgstr "Chcel by som prispieť ale neviem ako?"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_label__id
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__id
-#: model:ir.model.fields,field_description:survey.field_survey_page__id
+#: model:ir.model.fields,field_description:survey.field_survey_invite__id
 #: model:ir.model.fields,field_description:survey.field_survey_question__id
-#: model:ir.model.fields,field_description:survey.field_survey_stage__id
+#: model:ir.model.fields,field_description:survey.field_survey_question_answer__id
 #: model:ir.model.fields,field_description:survey.field_survey_survey__id
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__id
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__id
@@ -937,23 +1621,54 @@ msgid "ID"
 msgstr "ID"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_user_input__token
+#: model:ir.model.fields,field_description:survey.field_survey_survey__activity_exception_icon
+msgid "Icon"
+msgstr "Ikona"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_survey__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Ikona indikujúca výnimočnú aktivitu."
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_user_input__access_token
 msgid "Identification token"
 msgstr "Identifikačný token"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_survey__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
+#: model:ir.model.fields,help:survey.field_survey_survey__progression_mode
+msgid ""
+"If Number is selected, it will display the number of questions answered on "
+"the total number of question to answer."
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
+msgstr "Ak označené, potom nové správy vyžadujú vašu pozornosť."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_has_error
+#: model:ir.model.fields,help:survey.field_survey_survey__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
+msgstr "Ak označené, potom majú niektoré správy chybu dodania."
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_question__save_as_email
+msgid ""
+"If checked, this option will save the user's answer as its email address."
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_question__save_as_nickname
+msgid "If checked, this option will save the user's answer as its nickname."
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_question__is_conditional
+msgid ""
+"If checked, this question will be displayed only\n"
+"        if the specified conditional answer have been selected in a previous question"
 msgstr ""
 
 #. module: survey
@@ -962,56 +1677,81 @@ msgid "If checked, users can go back to previous pages."
 msgstr "Ak zaškrtnuté, používatelia sa môžu vrátiť na predchádzajúce stránky."
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_stage__closed
-#: model:ir.model.fields,help:survey.field_survey_survey__is_closed
-msgid "If closed, people won't be able to answer to surveys in this column."
+#: model:ir.model.fields,help:survey.field_survey_invite__survey_users_login_required
+#: model:ir.model.fields,help:survey.field_survey_survey__users_login_required
+msgid ""
+"If checked, users have to login before answering even with a valid token."
 msgstr ""
-"Ak zatvorené, ľudia nebudú môcť odpovedať na prieskumy v tomto stĺpci."
 
 #. module: survey
-#: code:addons/survey/models/survey.py:471
-#: model:survey.question,comments_message:survey.feedback_1_1
-#: model:survey.question,comments_message:survey.feedback_1_2
-#: model:survey.question,comments_message:survey.feedback_2_1
-#: model:survey.question,comments_message:survey.feedback_2_2
-#: model:survey.question,comments_message:survey.feedback_2_3
-#: model:survey.question,comments_message:survey.feedback_2_4
-#: model:survey.question,comments_message:survey.feedback_2_5
-#: model:survey.question,comments_message:survey.feedback_2_6
-#: model:survey.question,comments_message:survey.feedback_2_7
-#: model:survey.question,comments_message:survey.feedback_3_1
-#: model:survey.question,comments_message:survey.feedback_3_2
-#: model:survey.question,comments_message:survey.feedback_3_3
-#: model:survey.question,comments_message:survey.feedback_4_1
+#: code:addons/survey/models/survey_question.py:0
 #, python-format
 msgid "If other, please specify:"
+msgstr "Iné, uveďte prosím:"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_question__questions_selection
+msgid ""
+"If randomized is selected, add the number of random questions next to the "
+"section."
 msgstr ""
 
 #. module: survey
-#: model_terms:survey.page,description:survey.feedback_4
-msgid "If you do not contribute or develop in Odoo, skip this page."
-msgstr "Ak neprispievate alebo nevyvíjate v Odoo, preskočte túto stránku."
+#: model:ir.model.fields,help:survey.field_survey_survey__questions_selection
+msgid ""
+"If randomized is selected, you can configure the number of random questions "
+"by section. This mode is ignored in live session."
+msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.sfinished
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
 msgid "If you wish, you can"
 msgstr "Ak si želáte, môžte"
 
 #. module: survey
-#: model:survey.stage,name:survey.stage_in_progress
-msgid "In progress"
-msgstr "Prebieha"
+#: model:ir.model.fields,field_description:survey.field_survey_question_answer__value_image
+msgid "Image"
+msgstr "Obrázok"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:72
+#: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
-msgid "Incorrect Email Address: %s"
+msgid "Imhotep"
 msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__parent_id
-msgid "Initial thread message."
-msgstr "Pôvodná správa vlákna"
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__session_state__in_progress
+#: model:ir.model.fields.selection,name:survey.selection__survey_user_input__state__in_progress
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
+msgid "In Progress"
+msgstr "Spracováva sa"
+
+#. module: survey
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "In the list below, select all the coniferous."
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "In which country did the bonsai technique develop?"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_question__is_scored_question
+msgid ""
+"Include this question as part of quiz scoring. Requires an answer and answer"
+" score to be taken into account."
+msgstr ""
+
+#. module: survey
+#. openerp-web
+#: code:addons/survey/models/survey_user_input.py:0
+#: code:addons/survey/static/src/js/survey_result.js:0
+#, python-format
+msgid "Incorrect"
+msgstr "Nesprávne"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_email
@@ -1019,84 +1759,104 @@ msgid "Input must be an email"
 msgstr "Vstup musí byť email"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_tree
-msgid "Invitations sent"
-msgstr "Pozvánky poslané"
+#: model:ir.model.fields,field_description:survey.field_survey_user_input__invite_token
+msgid "Invite token"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__access_mode__token
+msgid "Invited people only"
+msgstr "Len pozvaný"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_invite__is_mail_template_editor
+msgid "Is Editor"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_is_follower
 msgid "Is Follower"
-msgstr "Je odberateľ"
+msgstr "Odberateľ"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey__is_closed
-msgid "Is closed"
+#: model:ir.model.fields,field_description:survey.field_survey_survey__certification
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
+msgid "Is a Certification"
 msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey__designed
-msgid "Is designed?"
-msgstr "Je nadizajnovaný?"
+#: model:ir.model.fields,field_description:survey.field_survey_question__is_page
+msgid "Is a page?"
+msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.choice_2_4_2
-msgid "It can be improved"
-msgstr "Môže to byť zlepšené"
+#: model:ir.model.fields,field_description:survey.field_survey_user_input__is_session_answer
+msgid "Is in a Session"
+msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.frow_2_1_2
-msgid "It helps in the beginning"
-msgstr "Pomáha to zo začiatku"
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
+msgid "Is not a Certification"
+msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.frow_2_1_5
-msgid "It is clear"
-msgstr "Je to jasné"
+#: model:ir.model.fields,help:survey.field_survey_user_input__is_session_answer
+msgid "Is that user input part of a survey session or not."
+msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.frow_2_1_4
-msgid "It is complete"
-msgstr "Je to kompletné"
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "It is easy to find the product that I want"
+msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.frow_2_1_1
-msgid "It is up-to-date"
-msgstr "Je to aktuálne"
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "Japan"
+msgstr "Japonsko"
 
 #. module: survey
-#: model:survey.label,value:survey.frow_2_2_5
-msgid "It's easy to find the process you need"
-msgstr "Je jednoduché nájsť proces ktorý potrebujete"
+#: model_terms:ir.ui.view,arch_db:survey.survey_session_code
+msgid "Join Session"
+msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_label__sequence
+#: model:ir.model.fields,field_description:survey.field_survey_question_answer__sequence
 msgid "Label Sequence order"
 msgstr "Poradie sekvencie štítku"
 
 #. module: survey
-#: model:ir.actions.act_window,name:survey.action_survey_label_form
-#: model:ir.ui.menu,name:survey.menu_survey_label_form1
-msgid "Labels"
-msgstr "Popisky"
+#: model:ir.model.fields,help:survey.field_survey_question__matrix_row_ids
+msgid "Labels used for proposed choices: rows of matrix"
+msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_label____last_update
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message____last_update
-#: model:ir.model.fields,field_description:survey.field_survey_page____last_update
+#: model:ir.model.fields,help:survey.field_survey_question__suggested_answer_ids
+msgid ""
+"Labels used for proposed choices: simple choice, multiple choice and columns"
+" of matrix"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_invite__lang
+msgid "Language"
+msgstr "Jazyk"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_invite____last_update
 #: model:ir.model.fields,field_description:survey.field_survey_question____last_update
-#: model:ir.model.fields,field_description:survey.field_survey_stage____last_update
+#: model:ir.model.fields,field_description:survey.field_survey_question_answer____last_update
 #: model:ir.model.fields,field_description:survey.field_survey_survey____last_update
 #: model:ir.model.fields,field_description:survey.field_survey_user_input____last_update
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line____last_update
 msgid "Last Modified on"
-msgstr "Posledná modifikácia"
+msgstr "Posledná úprava"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_label__write_uid
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__write_uid
-#: model:ir.model.fields,field_description:survey.field_survey_page__write_uid
+#: model:ir.model.fields,field_description:survey.field_survey_invite__write_uid
 #: model:ir.model.fields,field_description:survey.field_survey_question__write_uid
-#: model:ir.model.fields,field_description:survey.field_survey_stage__write_uid
+#: model:ir.model.fields,field_description:survey.field_survey_question_answer__write_uid
 #: model:ir.model.fields,field_description:survey.field_survey_survey__write_uid
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__write_uid
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__write_uid
@@ -1104,11 +1864,9 @@ msgid "Last Updated by"
 msgstr "Naposledy upravoval"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_label__write_date
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__write_date
-#: model:ir.model.fields,field_description:survey.field_survey_page__write_date
+#: model:ir.model.fields,field_description:survey.field_survey_invite__write_date
 #: model:ir.model.fields,field_description:survey.field_survey_question__write_date
-#: model:ir.model.fields,field_description:survey.field_survey_stage__write_date
+#: model:ir.model.fields,field_description:survey.field_survey_question_answer__write_date
 #: model:ir.model.fields,field_description:survey.field_survey_survey__write_date
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__write_date
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__write_date
@@ -1117,59 +1875,85 @@ msgstr "Naposledy upravované"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__last_displayed_page_id
-msgid "Last displayed page"
-msgstr "Posledná zobrazená stránka"
+msgid "Last displayed question/page"
+msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Late Activities"
-msgstr ""
+msgstr "Omeškané aktivity"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__layout
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Layout"
+msgstr "Usporiadanie"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_inner
+#: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
+msgid "Leaderboard"
 msgstr ""
 
 #. module: survey
-#: selection:survey.user_input,type:0
-msgid "Link"
-msgstr "Odkaz"
+#: model_terms:ir.actions.act_window,help:survey.action_survey_form
+msgid "Let's create one and share it! Not sure where to start?"
+msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__multi_email
-msgid "List of emails"
-msgstr "Zoznam emailov"
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "Limit Attempts"
+msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__is_log
-msgid "Log an Internal Note"
-msgstr "Pridať internú poznámku"
+#: model:ir.model.fields,field_description:survey.field_survey_survey__is_attempts_limited
+#: model:ir.model.fields,field_description:survey.field_survey_user_input__is_attempts_limited
+msgid "Limited number of attempts"
+msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey__auth_required
-#: model_terms:ir.ui.view,arch_db:survey.auth_required
+#. openerp-web
+#: code:addons/survey/models/survey_survey_template.py:0
+#: code:addons/survey/static/src/xml/survey_sample_modal.xml:0
+#, python-format
+msgid "Live Presentation"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "Live Session"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+msgid "Live Sessions"
+msgstr ""
+
+#. module: survey
+#. openerp-web
+#: code:addons/survey/static/src/js/survey_renderers.js:0
+#, python-format
+msgid "Load a Survey"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.actions.act_window,help:survey.action_survey_form
+msgid "Load a survey"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_auth_required
 msgid "Login required"
 msgstr "Prihlásenie vyžadované"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.layout
-msgid "Logo"
-msgstr "Logo"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__mail_activity_type_id
-msgid "Mail Activity Type"
-msgstr ""
+#: model:ir.model.fields,field_description:survey.field_survey_invite__template_id
+msgid "Mail Template"
+msgstr "Mailová šablóna"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
-
-#. module: survey
-#: model:res.groups,name:survey.group_survey_manager
-msgid "Manager"
-msgstr "Manažér"
+msgstr "Hlavná príloha"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__constr_mandatory
@@ -1178,14 +1962,14 @@ msgid "Mandatory Answer"
 msgstr "Povinná odpoveď"
 
 #. module: survey
-#: selection:survey.user_input,type:0
-msgid "Manually"
-msgstr "Manuálne"
-
-#. module: survey
-#: selection:survey.question,type:0
+#: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__matrix
 msgid "Matrix"
 msgstr "Matrica"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_question__matrix_row_ids
+msgid "Matrix Rows"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__matrix_subtype
@@ -1193,29 +1977,39 @@ msgid "Matrix Type"
 msgstr "Typ matrice"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result
-msgid "Matrix:"
-msgstr "Matrica:"
-
-#. module: survey
-#: sql_constraint:survey.question:0
+#: model:ir.model.constraint,message:survey.constraint_survey_question_validation_date
 msgid "Max date cannot be smaller than min date!"
 msgstr "Max dátum nemôže byť menší ako min dátum!"
 
 #. module: survey
-#: sql_constraint:survey.question:0
+#: model:ir.model.constraint,message:survey.constraint_survey_question_validation_datetime
+msgid "Max datetime cannot be smaller than min datetime!"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.constraint,message:survey.constraint_survey_question_validation_length
 msgid "Max length cannot be smaller than min length!"
 msgstr "Max dĺžka nemôže byť menšia ako min dĺžka!"
 
 #. module: survey
-#: sql_constraint:survey.question:0
+#: model:ir.model.constraint,message:survey.constraint_survey_question_validation_float
 msgid "Max value cannot be smaller than min value!"
 msgstr "Max hodnota nemôže byť nižšia ako min hodnota!"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
+msgid "Maximum"
+msgstr "Maximum"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_max_date
 msgid "Maximum Date"
 msgstr "Maximálny dátum"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_question__validation_max_datetime
+msgid "Maximum Datetime"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_length_max
@@ -1228,38 +2022,14 @@ msgid "Maximum value"
 msgstr "Maximálna hodnota"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.403
+#: model_terms:ir.ui.view,arch_db:survey.survey_403_page
 msgid "Maybe you were looking for"
 msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_has_error
 msgid "Message Delivery error"
-msgstr ""
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__record_name
-msgid "Message Record Name"
-msgstr "Názov záznamu správy"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__message_type
-msgid ""
-"Message type: email for email message, notification for system message, "
-"comment for other messages such as user replies"
-msgstr ""
-"Typ správy: email pre zaslanie emailu, notifikácia ako systémová správa, "
-"koment pre ostatné správy ako napr. odpovede od užívateľov"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__message_id
-msgid "Message unique identifier"
-msgstr "Unikátny identifikátor správy"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__message_id
-msgid "Message-Id"
-msgstr "ID správy"
+msgstr "Chyba zobrazovania správ"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_ids
@@ -1267,9 +2037,19 @@ msgid "Messages"
 msgstr "Správy"
 
 #. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
+msgid "Minimum"
+msgstr ""
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_min_date
 msgid "Minimum Date"
 msgstr "MInimálny dátum"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_question__validation_min_datetime
+msgid "Minimum Datetime"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_length_min
@@ -1282,17 +2062,28 @@ msgid "Minimum value"
 msgstr "Minimálna hodnota"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__moderator_id
-msgid "Moderated By"
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__certification_report_layout__modern_blue
+msgid "Modern Blue"
 msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__moderation_status
-msgid "Moderation Status"
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__certification_report_layout__modern_gold
+msgid "Modern Gold"
 msgstr ""
 
 #. module: survey
-#: selection:survey.question,type:0
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__certification_report_layout__modern_purple
+msgid "Modern Purple"
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "Mountain Pine"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__text_box
 msgid "Multiple Lines Text Box"
 msgstr "Textové okienko s viacerými riadkami"
 
@@ -1307,55 +2098,56 @@ msgid "Multiple choice with one answer"
 msgstr ""
 
 #. module: survey
-#: selection:survey.question,type:0
+#: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__multiple_choice
 msgid "Multiple choice: multiple answers allowed"
 msgstr "Viaceré možnosti: viaceré odpovede povolené"
 
 #. module: survey
-#: selection:survey.question,type:0
+#: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__simple_choice
 msgid "Multiple choice: only one answer"
 msgstr "Viaceré možnosti: iba jedna odpoveď"
 
 #. module: survey
-#: selection:survey.question,matrix_subtype:0
+#: model:ir.model.fields.selection,name:survey.selection__survey_question__matrix_subtype__multiple
 msgid "Multiple choices per row"
 msgstr "Viaceré možnosti za rad"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
-msgid "My Activities"
+#: model:ir.model.fields,field_description:survey.field_survey_survey__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Termín mojej aktivity"
+
+#. module: survey
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "Neutral"
 msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_stage__name
-msgid "Name"
-msgstr "Meno"
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "Never"
+msgstr "Nikdy"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__record_name
-msgid "Name get of the related document."
-msgstr "Získať názov súvisiaceho dokumentu."
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__needaction
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__needaction
-msgid "Need Action"
-msgstr "Vyžaduje akciu"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__need_moderation
-msgid "Need moderation"
-msgstr ""
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "New"
 msgstr "Nové"
 
 #. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_invite__existing_mode__new
+msgid "New invite"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Kalendár ďalších aktivít eventu"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Ďalší konečný termín aktivity"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_summary
@@ -1365,81 +2157,68 @@ msgstr "Zhrnutie ďalšej aktivity"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Typ ďalšej aktivity"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.page
-msgid "Next page"
-msgstr "Ďalšia strana"
-
-#. module: survey
-#: model_terms:ir.actions.act_window,help:survey.action_survey_page_form
-msgid "No pages found"
+#: model:ir.model.fields,field_description:survey.field_survey_user_input__nickname
+msgid "Nickname"
 msgstr ""
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_question_form
-msgid "No questions found"
+msgid "No Questions yet!"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.actions.act_window,help:survey.action_survey_label_form
+#: model_terms:ir.actions.act_window,help:survey.action_survey_user_input
+msgid "No answers yet!"
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/models/survey_survey.py:0
+#, python-format
+msgid "No attempts left."
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
+msgid "No one answered this question."
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_void_content
+msgid "No question yet, come back later."
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__scoring_type__no_scoring
+msgid "No scoring"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.actions.act_window,help:survey.survey_question_answer_action
 msgid "No survey labels found"
 msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__no_auto_thread
-msgid "No threading for answers"
-msgstr "Žiadne vlákna v odpovediach"
-
-#. module: survey
-#: model_terms:ir.actions.act_window,help:survey.action_survey_user_input_line
+#: model_terms:ir.actions.act_window,help:survey.survey_user_input_line_action
 msgid "No user input lines found"
 msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.choice_1_1_4
-msgid "No, I just tested it"
-msgstr "Nie, iba som to testoval"
-
-#. module: survey
-#: model_terms:ir.actions.act_window,help:survey.action_selected_survey_user_input
-#: model_terms:ir.actions.act_window,help:survey.action_survey_user_input
-msgid "Nobody has replied to your surveys yet"
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "Norway Spruce"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.notopen
-msgid "Not open"
-msgstr "Nie otvorené"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.nopages
-msgid "Not ready"
-msgstr "Nepripravené"
-
-#. module: survey
-#: selection:survey.user_input,state:0
+#: model:ir.model.fields.selection,name:survey.selection__survey_user_input__state__new
 msgid "Not started yet"
 msgstr "Ešte nezačaté"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__notification_ids
-msgid "Notifications"
-msgstr "Notifikácie"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__notify
-msgid "Notify followers"
-msgstr "Notifikovať sledujúcich"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__notify
-msgid "Notify followers of the document (mass post only)"
-msgstr "Notifikovať sledujúcich dokumentu (len pri hromadých správach)"
-
-#. module: survey
-#: selection:survey.user_input_line,answer_type:0
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__progression_mode__number
+#: model:ir.model.fields.selection,name:survey.selection__survey_user_input_line__answer_type__numerical_box
 msgid "Number"
 msgstr "Číslo"
 
@@ -1449,320 +2228,458 @@ msgid "Number of Actions"
 msgstr "Počet akcií"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_question__column_nb
-#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
-msgid "Number of columns"
-msgstr "Počet stĺpcov"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey__tot_comp_survey
-msgid "Number of completed surveys"
-msgstr "Počet skompletizovaných prieskumov"
+#: model:ir.model.fields,field_description:survey.field_survey_survey__attempts_limit
+#: model:ir.model.fields,field_description:survey.field_survey_user_input__attempts_limit
+msgid "Number of attempts"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_has_error_counter
-msgid "Number of error"
-msgstr ""
+msgid "Number of errors"
+msgstr "Počet chýb"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "Počet správ ktoré vyžadujú akciu"
+msgstr "Počet správ, ktoré vyžadujú akciu"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Počet doručených správ s chybou"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey__tot_sent_survey
-msgid "Number of sent surveys"
-msgstr "Počet odoslaných prieskumov"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey__tot_start_survey
-msgid "Number of started surveys"
-msgstr "Počet začatých prieskumov"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_survey__message_unread_counter
-msgid "Number of unread messages"
-msgstr "Počet neprečítaných správ"
-
-#. module: survey
-#: selection:survey.question,type:0
+#: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__numerical_box
 msgid "Numerical Value"
 msgstr "Numerická hodnota"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_number
+#: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_numerical_box
 msgid "Numerical answer"
 msgstr "Numerická odpoveď"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_number
-msgid "Occurence"
-msgstr "Výskyt"
+#: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
+msgid "Occurrence"
+msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.layout
-msgid "Odoo"
-msgstr "Odoo"
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "Once a day"
+msgstr ""
 
 #. module: survey
-#: selection:survey.question,matrix_subtype:0
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "Once a month"
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "Once a week"
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "Once a year"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_question__matrix_subtype__simple
 msgid "One choice per row"
 msgstr "Jedna možnosť za rad"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_form
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_layout__page_per_question
+msgid "One page per question"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_layout__page_per_section
+msgid "One page per section"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_layout__one_page
+msgid "One page with all the questions"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.question_result_choice
+#: model_terms:ir.ui.view,arch_db:survey.question_result_matrix
+msgid "Only show survey results having selected this answer"
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/models/survey_survey.py:0
+#: code:addons/survey/models/survey_survey.py:0
+#, python-format
+msgid "Only survey users can manage sessions."
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "Open Session Manager"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_invite__lang
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. {{ "
+"object.partner_id.lang }}."
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_invite__null_value
+msgid "Optional value to use if the target field is empty"
+msgstr "Voliteľná hodnota použitá v prípade že cieľové pole je prázdne"
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Options"
 msgstr "Možnosti"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__mail_server_id
+#: code:addons/survey/models/survey_question.py:0
+#: code:addons/survey/models/survey_question.py:0
+#, python-format
+msgid "Other (see comments)"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_invite__mail_server_id
 msgid "Outgoing mail server"
 msgstr "Server odchádzajúcej pošty"
 
 #. module: survey
-#: selection:survey.survey,activity_state:0
-msgid "Overdue"
-msgstr "Oneskorené"
+#. openerp-web
+#: code:addons/survey/static/src/js/survey_result.js:0
+#, python-format
+msgid "Overall Performance"
+msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_user_input_line__page_id
-#: model_terms:ir.ui.view,arch_db:survey.page
-#: model_terms:ir.ui.view,arch_db:survey.survey_page_search
-#: model_terms:ir.ui.view,arch_db:survey.survey_question_search
+#: model:ir.model.fields,field_description:survey.field_survey_question__page_id
 msgid "Page"
 msgstr "Strana"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_page__title
-#: model_terms:ir.ui.view,arch_db:survey.survey_page_form
-msgid "Page Title"
-msgstr "Názov stránky"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_page__sequence
-msgid "Page number"
-msgstr "Číslo strany"
-
-#. module: survey
-#: model:ir.actions.act_window,name:survey.act_survey_pages
-#: model:ir.actions.act_window,name:survey.action_survey_page_form
 #: model:ir.model.fields,field_description:survey.field_survey_survey__page_ids
-#: model:ir.ui.menu,name:survey.menu_survey_page_form1
 msgid "Pages"
 msgstr "Stránky"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__parent_id
-msgid "Parent Message"
-msgstr "Nadradená správa"
+#: model:ir.model.fields,field_description:survey.field_survey_survey__questions_layout
+msgid "Pagination"
+msgstr "Stránkovanie"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
-msgid "Partially Completed"
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "Papyrus"
 msgstr ""
 
 #. module: survey
-#: selection:survey.user_input,state:0
-msgid "Partially completed"
-msgstr "Čiastočne kompletné"
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
+msgid "Partial"
+msgstr "Čiastočné"
+
+#. module: survey
+#. openerp-web
+#: code:addons/survey/models/survey_user_input.py:0
+#: code:addons/survey/static/src/js/survey_result.js:0
+#, python-format
+msgid "Partially"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "Participants"
+msgstr "Účastníci"
+
+#. module: survey
+#: model:mail.template,subject:survey.mail_template_user_input_invite
+msgid "Participate to {{ object.survey_id.display_name }} survey"
+msgstr ""
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.action_survey_user_input
+#: model:ir.ui.menu,name:survey.menu_survey_type_form1
+msgid "Participations"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__partner_id
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Partner"
 msgstr "Partner"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__needaction_partner_ids
-msgid "Partners with Need Action"
-msgstr "Partner s Vyžaduje akciu"
-
-#. module: survey
-#: selection:survey.mail.compose.message,moderation_status:0
-msgid "Pending Moderation"
+#: code:addons/survey/models/survey_survey.py:0
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+#, python-format
+msgid "Passed"
 msgstr ""
 
 #. module: survey
-#: model:survey.stage,name:survey.stage_permanent
-msgid "Permanent"
-msgstr "Permanentné"
-
-#. module: survey
-#: selection:survey.survey,activity_state:0
-msgid "Planned"
+#: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
+msgid "Passed and Failed"
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:188
+#: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
+msgid "Passed only"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
+msgid "Pay attention to the host screen until the next question."
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__progression_mode__percent
+msgid "Percentage left"
+msgstr ""
+
+#. module: survey
+#. openerp-web
+#: code:addons/survey/static/src/js/survey_result.js:0
+#, python-format
+msgid "Performance by Section"
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "Pick a nickname"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.question_result_choice
+msgid "Pie Graph"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_question__question_placeholder
+msgid "Placeholder"
+msgstr "Vlastník"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_invite__copyvalue
+msgid "Placeholder Expression"
+msgstr "Výraz vlastníka"
+
+#. module: survey
+#: code:addons/survey/wizard/survey_invite.py:0
 #, python-format
 msgid "Please enter at least one valid recipient."
 msgstr "Prosím zadajte aspoň jedného platného príjmateľa."
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.page
-msgid "Previous page"
-msgstr "Predchádzajúca strana"
+#: model_terms:ir.ui.view,arch_db:survey.survey_void_content
+msgid ""
+"Please make sure you have at least one question in your survey. You also "
+"need at least one section if you chose the \"Page per section\" layout.<br/>"
+msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_form
-msgid "Print Survey"
-msgstr "Vytlačiť prieskum"
+#: model:ir.model.fields,field_description:survey.field_survey_user_input__predefined_question_ids
+msgid "Predefined Questions"
+msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_form
-msgid "Print These Answers"
-msgstr "Vytlačiť tieto odpovede"
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "Preview"
+msgstr "Náhľad"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey__print_url
-msgid "Print link"
-msgstr "Odkaz tlače"
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
+msgid "Print"
+msgstr "Tlač"
 
 #. module: survey
-#: model:survey.label,value:survey.choice_1_2_5
-msgid "Project Management"
-msgstr "Projektový manažment"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__public_url_html
-msgid "Public HTML web link"
-msgstr "Verjný HTML wbový odkaz"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey__public_url
-msgid "Public link"
-msgstr "Verejný odkaz"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey__public_url_html
-msgid "Public link (html version)"
-msgstr "Verejný odkaz (html verzia)"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_user_input__print_url
-msgid "Public link to the empty survey"
-msgstr "Verejný odkaz na prázdny prieskum"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_user_input__result_url
-msgid "Public link to the survey results"
-msgstr "Verejný odkaz na výsledky prieskumu"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__public_url
-msgid "Public url"
-msgstr "Verejná url"
-
-#. module: survey
-#: model:survey.label,value:survey.choice_1_2_2
-msgid "Purchases Management"
-msgstr "Nákupný manažment"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_label__question_id
+#: model:ir.model.fields,field_description:survey.field_survey_question_answer__question_id
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__question_id
-#: model_terms:ir.ui.view,arch_db:survey.survey_label_search
-#: model_terms:ir.ui.view,arch_db:survey.survey_question_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_answer_view_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Question"
 msgstr "Otázka"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_label__question_id_2
-msgid "Question 2"
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
+msgid "Question & Pages"
 msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_question__question
-#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
-msgid "Question Name"
-msgstr "Názov otázky"
+#: model:ir.model.fields,field_description:survey.field_survey_question_answer__matrix_question_id
+msgid "Question (as matrix row)"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_answer_view_form
+msgid "Question Answer Form"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__session_question_answer_count
+msgid "Question Answers Count"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_question__questions_selection
+#: model:ir.model.fields,field_description:survey.field_survey_survey__questions_selection
+msgid "Question Selection"
+msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
-msgid "Question name"
-msgstr "Názov otázky"
+msgid "Question Time Limit"
+msgstr ""
 
 #. module: survey
-#: model:ir.actions.act_window,name:survey.act_survey_page_question
-#: model:ir.actions.act_window,name:survey.act_survey_question
+#: model:ir.model.fields,field_description:survey.field_survey_user_input__question_time_limit_reached
+msgid "Question Time Limit Reached"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_question__question_type
+#: model:ir.model.fields,field_description:survey.field_survey_question_answer__question_type
+msgid "Question Type"
+msgstr "Typ otázky"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_question__triggering_question_id
+msgid ""
+"Question containing the triggering answer to display the current question."
+msgstr ""
+
+#. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_question_form
-#: model:ir.model.fields,field_description:survey.field_survey_page__question_ids
+#: model:ir.model.fields,field_description:survey.field_survey_question__question_ids
+#: model:ir.model.fields,field_description:survey.field_survey_survey__question_ids
 #: model:ir.ui.menu,name:survey.menu_survey_question_form1
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Questions"
 msgstr "Otázky"
 
 #. module: survey
-#: model:survey.page,title:survey.feedback_4
-msgid "Questions for developers"
-msgstr "Oázky pre vývojárov"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey__quizz_mode
-msgid "Quizz Mode"
+#: model:ir.ui.menu,name:survey.survey_menu_questions
+msgid "Questions & Answers"
 msgstr ""
 
 #. module: survey
-#: selection:survey.question,display_mode:0
-msgid "Radio Buttons"
-msgstr "Rádio tlačidlá"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__rating_value
-msgid "Rating Value"
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "Quiz"
 msgstr ""
 
 #. module: survey
-#: selection:survey.mail.compose.message,moderation_status:0
-msgid "Rejected"
-msgstr "Odmietnuté"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__res_id
-msgid "Related Document ID"
-msgstr "Súvisiace ID dokumentu"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__model
-msgid "Related Document Model"
-msgstr "Súvisiaci model dokumentu"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__rating_ids
-msgid "Related ratings"
+#: model:ir.model.fields,field_description:survey.field_survey_user_input__scoring_success
+msgid "Quizz Passed"
 msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__reply_to
-msgid ""
-"Reply email address. Setting the reply_to bypasses the automatic thread "
-"creation."
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
+msgid "Quizz passed"
 msgstr ""
-"Emailová adresa pre odpoveď. Nastavením reply_to vypnete automatické "
-"vytváranie vlákien."
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__reply_to
-msgid "Reply-To"
-msgstr "Odpoveď-pre"
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_selection__random
+msgid "Randomized per Section"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__session_state__ready
+msgid "Ready"
+msgstr "Pripravené"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_invite__partner_ids
+msgid "Recipients"
+msgstr "Príjemcovia"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__answer_count
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "Registered"
+msgstr "Registrovaný"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_invite__render_model
+msgid "Rendering Model"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "Reopen"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_invite__survey_users_login_required
+#: model:ir.model.fields,field_description:survey.field_survey_survey__users_login_required
+msgid "Require Login"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__scoring_success_min
+msgid "Required Score (%)"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_invite__existing_text
+msgid "Resend Comment"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
+msgid "Resend Invitation"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_invite__existing_mode__resend
+msgid "Resend invite"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__user_id
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
+msgid "Responsible"
+msgstr "Zodpovedný"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_user_id
 msgid "Responsible User"
-msgstr "Zodpovedný používateľ"
+msgstr "Zodpovedný užívateľ"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey__result_url
-msgid "Results link"
-msgstr "Odkaz výsledkov"
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_inner
+msgid "Results Overview"
+msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_suggested_row
+#: model_terms:ir.ui.view,arch_db:survey.survey_button_retake
+msgid "Retry"
+msgstr "Skúsiť znova"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__session_speed_rating
+msgid "Reward quick answers"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.gamification_badge_form_view_simplified
+msgid "Rewards for challenges"
+msgstr "Odmeny za výzvy"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_user_input_line__matrix_row_id
 msgid "Row answer"
 msgstr "Rad odpovede"
 
@@ -1787,54 +2704,70 @@ msgid "Rows"
 msgstr "Rady"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_question__labels_ids_2
-msgid "Rows of the Matrix"
-msgstr "Rady matrice"
+#: model:ir.model.fields,field_description:survey.field_survey_survey__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Chyba doručenia SMS"
 
 #. module: survey
-#: model:survey.label,value:survey.frow_2_7_4
-msgid "Running the configuration wizards is a good way to spare time"
-msgstr "Spustenie sprievodcu konfiguráciou je dobrý spôsob na šetrenie času"
+#: model:ir.model.fields,field_description:survey.field_survey_question__save_as_email
+msgid "Save as user email"
+msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.choice_1_2_1
-msgid "Sales Management"
-msgstr "Spravovanie predaja"
+#: model:ir.model.fields,field_description:survey.field_survey_question__save_as_nickname
+msgid "Save as user nickname"
+msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
-msgid "Save as a new template"
-msgstr "Uložiť ako novú šablónu"
+#: model:ir.model.fields,field_description:survey.field_survey_question__answer_score
+#: model:ir.model.fields,field_description:survey.field_survey_question_answer__answer_score
+#: model:ir.model.fields,field_description:survey.field_survey_user_input_line__answer_score
+#: model_terms:ir.ui.view,arch_db:survey.question_result_choice
+#: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
+msgid "Score"
+msgstr "Výsledok"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
-msgid "Save as new template"
-msgstr "Uložiť ako novú šablónu"
+#: model:ir.model.fields,field_description:survey.field_survey_user_input__scoring_percentage
+msgid "Score (%)"
+msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_user_input__quizz_score
-msgid "Score for the quiz"
-msgstr "Skóre kvízu"
+#: model:ir.model.fields,help:survey.field_survey_question__answer_score
+msgid "Score value for a correct answer to this question."
+msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_label__quizz_mark
-msgid "Score for this choice"
-msgstr "Skóre pre túto voľbu"
+#: model:ir.model.fields,field_description:survey.field_survey_question__is_scored_question
+msgid "Scored"
+msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_user_input_line__quizz_mark
-msgid "Score given for this choice"
-msgstr "Skóre priradené tejto voľbe"
+#: model:ir.model.fields,field_description:survey.field_survey_survey__scoring_type
+#: model:ir.model.fields,field_description:survey.field_survey_user_input__scoring_type
+msgid "Scoring"
+msgstr "Bodovanie"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_label_search
+#: model:ir.model.fields,field_description:survey.field_survey_question__scoring_type
+#: model:ir.model.fields,field_description:survey.field_survey_question_answer__scoring_type
+msgid "Scoring Type"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__scoring_type__scoring_with_answers
+msgid "Scoring with answers at the end"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__scoring_type__scoring_without_answers
+msgid "Scoring without answers at the end"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_answer_view_search
 msgid "Search Label"
 msgstr "Vyľadať štítok"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_page_search
-msgid "Search Page"
-msgstr "Vyhľadať stranu"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_search
@@ -1842,74 +2775,79 @@ msgid "Search Question"
 msgstr "Vyhľada otázku"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Search Survey"
 msgstr "Vyhľadať prieskum"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_response_line_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_line_view_search
 msgid "Search User input lines"
 msgstr "Vyhľadať riadky vstupu používateľov"
 
 #. module: survey
-#: selection:survey.question,display_mode:0
-msgid "Selection Box"
-msgstr "Box výberu"
+#: model:ir.model.fields,field_description:survey.field_survey_user_input_line__page_id
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+msgid "Section"
+msgstr "Sekcia"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
+#: model:ir.model.fields,field_description:survey.field_survey_survey__question_and_page_ids
+msgid "Sections and Questions"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid "See results"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_invite__model_object_field
+msgid ""
+"Select target field from the related document model.\n"
+"If it is a relationship field you will be able to select a target field at the destination of the relationship."
+msgstr ""
+"Vyberte cieľové pole zo súvisiaceho modelu dokumentu.\n"
+"Pokiaľ sa jedná o vzťahové pole, budete môcť vybrať cieľové pole v destinácií vzťahu."
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Send"
 msgstr "Poslať"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_form
-msgid "Send Invitation Again"
-msgstr ""
-
-#. module: survey
-#: selection:survey.mail.compose.message,public:0
-msgid "Send by email the public web link to your audience."
-msgstr "Pošlite emailom verejný webový odkaz vášmu publiku."
-
-#. module: survey
-#: selection:survey.mail.compose.message,public:0
-msgid ""
-"Send private invitation to your audience (only one response per recipient "
-"and per invitation)."
-msgstr ""
-"Poslať privátnu pozvánku vášmu publiku (iba jedna odpoveď za príjemcu a za "
-"pozvánku)"
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__sequence
-#: model:ir.model.fields,field_description:survey.field_survey_stage__sequence
+#: model:ir.model.fields,field_description:survey.field_survey_user_input_line__question_sequence
 msgid "Sequence"
 msgstr "Postupnosť"
 
 #. module: survey
-#: sql_constraint:survey.stage:0
-msgid "Sequence number MUST be a natural"
-msgstr "Sekvenčné číslo MUSÍ byť prirodzené"
+#: model:ir.model.fields,field_description:survey.field_survey_survey__session_code
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "Session Code"
+msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_kanban
-msgid "Share &amp;amp; Invite"
-msgstr "Zdielať &amp;amp; Pozvánku"
+#: model:ir.model.fields,field_description:survey.field_survey_survey__session_link
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "Session Link"
+msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_form
-msgid "Share and invite by email"
-msgstr "Zdielať a pozvať emailom"
+#: model:ir.model.fields,field_description:survey.field_survey_survey__session_state
+msgid "Session State"
+msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__public
-msgid "Share options"
-msgstr "Možnosti zdielania"
+#: model:ir.model.constraint,message:survey.constraint_survey_survey_session_code_unique
+msgid "Session code should be unique"
+msgstr ""
 
 #. module: survey
-#: selection:survey.mail.compose.message,public:0
-msgid "Share the public web link to your audience."
-msgstr "Zdielajte verejný webový odkaz s vašim publikom."
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid "Share"
+msgstr "Zdieľať"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__comments_allowed
@@ -1917,68 +2855,67 @@ msgid "Show Comments Field"
 msgstr "Zobraziť pole komentárov"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
-msgid "Show all records which has next action date is before today"
+#: model:ir.model.fields,field_description:survey.field_survey_survey__session_show_leaderboard
+msgid "Show Session Leaderboard"
 msgstr ""
 
 #. module: survey
-#: selection:survey.question,type:0
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
+msgid "Show all records which has next action date is before today"
+msgstr "Zobraz všetky záznamy, ktorých následná aktivita je pred dnešným dňom"
+
+#. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__char_box
 msgid "Single Line Text Box"
 msgstr "Textové okienko s jedným riadkom"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__skipped
-#: model_terms:ir.ui.view,arch_db:survey.result
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "Skipped"
 msgstr "Preskočené"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__author_avatar
-msgid ""
-"Small-sized image of this contact. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is"
-" required."
+#: code:addons/survey/wizard/survey_invite.py:0
+#, python-format
+msgid "Some emails you just entered are incorrect: %s"
 msgstr ""
-"Malý obrázok tohto kontaktu. Veľkosť je automaticky zmenená na 64x64px "
-"obrázok, so zachovaním pomeru strán. Použite toto pole vždy keď je potrebný "
-"malý obrázok."
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.page
-msgid ""
-"Something went wrong while contacting survey server. <strong class=\"text-"
-"danger\">Your answers have probably not been recorded.</strong> Try "
-"refreshing."
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_header
+msgid "Sorry, no one answered this survey yet."
 msgstr ""
-"Niečo sa pokazilo pri kontaktovaní prieskumového servera. <strong class"
-"=\"text-danger\">Vaše odpovede pravdepodobne neboli zaznamenané</strong> "
-"Skúste obnoviť."
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result
-msgid "Sorry, No one answered this question."
-msgstr "Prepáčte, nikto neodpovedal na túto otázku."
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
+msgid "Sorry, you have not been fast enough."
+msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey__stage_id
-#: model_terms:ir.ui.view,arch_db:survey.survey_stage_form
-msgid "Stage"
-msgstr "Etapa"
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "South Korea"
+msgstr "Južná Kórea"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__starred
-msgid "Starred"
-msgstr "Obľúbené"
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
+msgid "Start Certification"
+msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_init
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid "Start Live Session"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
 msgid "Start Survey"
 msgstr "Začať prieskum"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_tree
-msgid "Started"
-msgstr "Začaté"
+#: model:ir.model.fields,field_description:survey.field_survey_user_input__start_datetime
+msgid "Start date and time"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__state
@@ -1993,76 +2930,120 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Status založený na aktivitách\n"
+"Zmeškané: dátum už vypršal\n"
+"Dnes: dátum aktivity je dnes\n"
+"Plán: budúce aktivity"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__subject
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "Strongly agree"
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "Strongly disagree"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_invite__sub_model_object_field
+msgid "Sub-field"
+msgstr "Pod-pole"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_invite__sub_object
+msgid "Sub-model"
+msgstr "Pod-model"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_invite__subject
 msgid "Subject"
 msgstr "Predmet"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
+#: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Subject..."
 msgstr "Subjekt..."
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.page
-msgid "Submit survey"
-msgstr "Odovzdať prieskum"
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
+msgid "Submit"
+msgstr "Predložiť"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__subtype_id
-msgid "Subtype"
-msgstr "Podtyp"
+#: model:ir.model.fields,field_description:survey.field_survey_survey__success_count
+msgid "Success"
+msgstr "Úspech"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_suggested
+#: model:ir.model.fields,field_description:survey.field_survey_survey__success_ratio
+msgid "Success Ratio (%)"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_inner
+msgid "Success rate:"
+msgstr ""
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.survey_question_answer_action
+#: model:ir.ui.menu,name:survey.menu_survey_label_form1
+msgid "Suggested Values"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_user_input_line__suggested_answer_id
 msgid "Suggested answer"
 msgstr "Navrhnutá odpoveď"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_label__value
+#: model:ir.model.fields,field_description:survey.field_survey_question_answer__value
 msgid "Suggested value"
 msgstr "Navrhnutá hodnota"
 
 #. module: survey
-#: selection:survey.user_input_line,answer_type:0
+#: model:ir.model.fields.selection,name:survey.selection__survey_user_input_line__answer_type__suggestion
 msgid "Suggestion"
 msgstr "Návrh"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__survey_id
-#: model:ir.model.fields,field_description:survey.field_survey_page__survey_id
+#: model:ir.model.fields,field_description:survey.field_gamification_badge__survey_id
+#: model:ir.model.fields,field_description:survey.field_survey_invite__survey_id
 #: model:ir.model.fields,field_description:survey.field_survey_question__survey_id
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__survey_id
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__survey_id
-#: model_terms:ir.ui.view,arch_db:survey.survey_form
-#: model_terms:ir.ui.view,arch_db:survey.survey_page_search
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_search
-#: model_terms:ir.ui.view,arch_db:survey.survey_response_line_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
-#: model_terms:ir.ui.view,arch_db:survey.survey_tree
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_tree
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_line_view_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Survey"
 msgstr "Prehliadka"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_response_line_tree
+#: model_terms:ir.ui.view,arch_db:survey.survey_response_line_view_tree
 msgid "Survey Answer Line"
 msgstr "Riadok odpovede prieskumu"
 
 #. module: survey
-#: model:ir.model,name:survey.model_survey_label
-#: model_terms:ir.ui.view,arch_db:survey.survey_label_tree
-msgid "Survey Label"
-msgstr "Štítok prieskumu"
+#: model:ir.model.fields,field_description:survey.field_gamification_badge__survey_ids
+msgid "Survey Ids"
+msgstr ""
 
 #. module: survey
-#: model:ir.model,name:survey.model_survey_page
-#: model_terms:ir.ui.view,arch_db:survey.survey_page_form
-#: model_terms:ir.ui.view,arch_db:survey.survey_page_tree
-msgid "Survey Page"
-msgstr "Strana prieskumu"
+#: model:ir.model,name:survey.model_survey_invite
+msgid "Survey Invitation Wizard"
+msgstr ""
+
+#. module: survey
+#: model:ir.model,name:survey.model_survey_question_answer
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_answer_view_tree
+msgid "Survey Label"
+msgstr "Štítok prieskumu"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_question
@@ -2072,14 +3053,25 @@ msgid "Survey Question"
 msgstr "Otázka prieskumu"
 
 #. module: survey
-#: model:ir.model,name:survey.model_survey_stage
-msgid "Survey Stage"
-msgstr "Fáza prieskumu"
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "Survey Time Limit"
+msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_form
+#: model:ir.model.fields,field_description:survey.field_survey_user_input__survey_time_limit_reached
+msgid "Survey Time Limit Reached"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__title
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Survey Title"
 msgstr "Názov prieskumu"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_invite__survey_start_url
+msgid "Survey URL"
+msgstr ""
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_user_input
@@ -2092,34 +3084,19 @@ msgid "Survey User Input Line"
 msgstr "Riadok vstupu používateľa prieskumu"
 
 #. module: survey
-#: model:ir.actions.act_window,name:survey.action_survey_user_input_line
-msgid "Survey User Input lines"
-msgstr "Riadky vstupu používateľa prieskumu"
-
-#. module: survey
-#: model:ir.actions.act_window,name:survey.action_selected_survey_user_input
-msgid "Survey User input"
-msgstr "Vstup používateľa prieskumu"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_form
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_tree
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_tree
 msgid "Survey User inputs"
 msgstr "Vstupy používateľov prieskumu"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_matrix
-msgid "Survey filter"
+#: model:mail.template,name:survey.mail_template_user_input_invite
+msgid "Survey: Invite"
 msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_question__page_id
-msgid "Survey page"
-msgstr "Strana prieskumu"
-
-#. module: survey
-#: model:ir.actions.server,name:survey.survey_action_server_clean_test_answers
-msgid "Survey: Clean test answers"
+#: model:mail.template,name:survey.mail_template_certification
+msgid "Survey: Send certification by email"
 msgstr ""
 
 #. module: survey
@@ -2130,17 +3107,21 @@ msgid "Surveys"
 msgstr "Prieskumy"
 
 #. module: survey
-#: selection:survey.mail.compose.message,message_type:0
-msgid "System notification"
-msgstr "Systémové upozornenia"
+#: model_terms:ir.actions.act_window,help:survey.action_survey_form
+msgid ""
+"Surveys can serve many purposes: collect customer feedback, gather market "
+"insights, structure employee evaluations, test and certify resellers, "
+"support a live presentation, ..."
+msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_kanban
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 msgid "Test"
 msgstr "Test"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Test Entries"
 msgstr ""
 
@@ -2150,241 +3131,314 @@ msgid "Test Entry"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_form
-msgid "Test Survey"
-msgstr "Testovací prieskum"
-
-#. module: survey
-#: selection:survey.user_input_line,answer_type:0
+#: model:ir.model.fields.selection,name:survey.selection__survey_user_input_line__answer_type__char_box
 msgid "Text"
 msgstr "Text"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_text
+#: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_char_box
 msgid "Text answer"
 msgstr "Textová odpoveď"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.sfinished
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "Thank you for your participation, hope you had a blast!"
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid ""
+"Thank you very much for your feedback. We at MyCompany value your opinion!"
+msgstr ""
+
+#. module: survey
+#. openerp-web
+#: code:addons/survey/static/src/js/survey_session_manage.js:0
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
+#, python-format
 msgid "Thank you!"
 msgstr "Ďakujeme Vám!"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey__thank_you_message
-msgid "Thanks Message"
-msgstr "Ďakovná správa"
-
-#. module: survey
-#: model:survey.label,value:survey.frow_2_5_3
-msgid "The 'Usability/Extended View' group helps in daily work"
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "Thank you. We will contact you soon."
 msgstr ""
-"Skupina '\"Použiteľnosť/Rozšírené zobrazenie' pomáha pri každodennej práci"
 
 #. module: survey
-#: model:survey.label,value:survey.frow_2_5_4
-msgid "The 'Usability/Extended View' group hides only optional fields"
-msgstr ""
-"Skupina '\"Použiteľnosť/Rozšírené zobrazenie' skrýva iba voliteľné polia"
-
-#. module: survey
-#: code:addons/survey/models/survey.py:819
+#: code:addons/survey/models/survey_user_input.py:0
 #, python-format
 msgid "The answer must be in the right type"
 msgstr "Odpoveď musí byť správneho typu"
 
 #. module: survey
-#: code:addons/survey/models/survey.py:485
-#: model:survey.question,validation_error_msg:survey.feedback_1_1
-#: model:survey.question,validation_error_msg:survey.feedback_1_2
-#: model:survey.question,validation_error_msg:survey.feedback_2_1
-#: model:survey.question,validation_error_msg:survey.feedback_2_2
-#: model:survey.question,validation_error_msg:survey.feedback_2_3
-#: model:survey.question,validation_error_msg:survey.feedback_2_4
-#: model:survey.question,validation_error_msg:survey.feedback_2_5
-#: model:survey.question,validation_error_msg:survey.feedback_2_6
-#: model:survey.question,validation_error_msg:survey.feedback_2_7
-#: model:survey.question,validation_error_msg:survey.feedback_3_1
-#: model:survey.question,validation_error_msg:survey.feedback_3_2
-#: model:survey.question,validation_error_msg:survey.feedback_3_3
-#: model:survey.question,validation_error_msg:survey.feedback_4_1
+#: code:addons/survey/models/survey_question.py:0
 #, python-format
-msgid "The answer you entered has an invalid format."
-msgstr "Odpoveď ktorú ste zadal má neplatný formát."
+msgid "The answer you entered is not valid."
+msgstr "Odpoveď, ktorú ste zadali, je neplatná."
 
 #. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:163
+#: model:ir.model.constraint,message:survey.constraint_survey_survey_attempts_limit_check
+msgid ""
+"The attempts limit needs to be a positive number if the survey has a limited"
+" number of attempts."
+msgstr ""
+
+#. module: survey
+#: model:ir.model.constraint,message:survey.constraint_survey_survey_badge_uniq
+msgid "The badge for each survey should be unique!"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_survey__session_question_id
+msgid "The current question of the survey session."
+msgstr ""
+
+#. module: survey
+#. openerp-web
+#: code:addons/survey/static/src/js/survey_form.js:0
+#, python-format
+msgid "The date you selected is greater than the maximum date: "
+msgstr ""
+
+#. module: survey
+#. openerp-web
+#: code:addons/survey/static/src/js/survey_form.js:0
+#, python-format
+msgid "The date you selected is lower than the minimum date: "
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_survey__description
+msgid ""
+"The description will be displayed on the home page of the survey. You can "
+"use this to give the purpose and guidelines to your candidates before they "
+"start it."
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/wizard/survey_invite.py:0
+#, python-format
+msgid "The following customers have already received an invite"
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/wizard/survey_invite.py:0
+#, python-format
+msgid "The following emails have already received an invite"
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/wizard/survey_invite.py:0
 #, python-format
 msgid ""
-"The content of the text don't contain '__URL__'.                     __URL__"
-" is automaticaly converted into the special url of the survey."
+"The following recipients have no user account: %s. You should create user "
+"accounts for them or allow external signup in configuration."
 msgstr ""
-"Obsah textu neobsahujúci '__URL__'. __URL__ je automaticky prekonvertovaný "
-"na špeciálne url prieskumu."
 
 #. module: survey
-#: model:survey.label,value:survey.choice_2_4_1
-msgid "The current menu structure is good"
-msgstr "Súčasné štruktúra menu je dobrá"
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "The new layout and design is fresh and up-to-date"
+msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.frow_2_5_5
-msgid "The groups set on menu items are relevant"
-msgstr "Skupiny nastavené na položky menu sú relevantné"
-
-#. module: survey
-#: model:survey.label,value:survey.choice_2_6_3
-msgid "The number of groups is good"
-msgstr "Počet skupín je dobrý"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.403
+#: model_terms:ir.ui.view,arch_db:survey.survey_403_page
 msgid "The page you were looking for could not be authorized."
 msgstr "Stránka ktorú ste hľadali nemohla byť autorizovaná."
 
 #. module: survey
-#: model:survey.label,value:survey.frow_2_5_1
-msgid "The security rules defined on groups are useful"
-msgstr "Bezpečnostné pravidlá definované na skupinách sú užitočné"
-
-#. module: survey
-#: model:survey.label,value:survey.choice_2_6_2
-msgid "There are too few groups defined, security isn't accurate enough"
+#: model:ir.model.constraint,message:survey.constraint_survey_survey_scoring_success_min_check
+msgid "The percentage of success has to be defined between 0 and 100."
 msgstr ""
-"Je zadefinovaných príliš málo skupín, bezpečnosť nie je dostatočne presná"
 
 #. module: survey
-#: model:survey.label,value:survey.choice_2_6_1
-msgid "There are too many groups defined, security is too complex to set"
+#: model:ir.model.fields,field_description:survey.field_survey_question__is_time_limited
+msgid "The question is limited in time"
 msgstr ""
-"Je zadefinovaných príliš veľa skupín, bezpečnosť je príliš komplexná na "
-"nastavenie"
 
 #. module: survey
-#: model:survey.label,value:survey.choice_2_4_3
-msgid "There are too much menus, it's complex to understand"
-msgstr "Príliš veľa menu ponúk, je to komplexné na pochopenie"
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
+msgid "The session will begin automatically when the host starts."
+msgstr ""
 
 #. module: survey
-#: model_terms:survey.page,description:survey.feedback_2
+#: code:addons/survey/controllers/main.py:0
+#, python-format
+msgid "The survey has already started."
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__is_time_limited
+msgid "The survey is limited in time"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_survey__session_question_start_time
 msgid ""
-"These questions relate to the ergonomy and ease of use of Odoo. Try to remind your firsts days on Odoo and\n"
-"what have been your difficulties."
+"The time at which the current question has started, used to handle the timer"
+" for attendees."
 msgstr ""
-"Tieto otázky sa týkajú ergonómie a jednoduchosti používania Odoo. Skúste si spomenúť na svoje prvé dni na Odoo a\n"
-"čo vám robilo problémy."
 
 #. module: survey
-#: model:survey.label,value:survey.frow_2_2_2
-msgid "They are clean and correct"
-msgstr "Sú čisté a správne"
+#: model:ir.model.constraint,message:survey.constraint_survey_survey_time_limit_check
+msgid ""
+"The time limit needs to be a positive number if the survey is time limited."
+msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.frow_2_2_3
-msgid "They are useful on a daily usage"
-msgstr "Sú užitočné na denné použitie"
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "The tool to compare the products is useful to make a choice"
+msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.frow_2_2_1
-msgid "They help new users to understand Odoo"
-msgstr "Pomáhajú novým používateľom pochopiť Odoo"
+#: code:addons/survey/controllers/main.py:0
+#, python-format
+msgid "The user has not succeeded the certification"
+msgstr ""
 
 #. module: survey
-#: code:addons/survey/models/survey.py:544
-#: code:addons/survey/tests/test_survey.py:86
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
+msgid "There was an error during the validation of the survey."
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/models/survey_question.py:0
+#: code:addons/survey/tests/test_survey.py:0
 #, python-format
 msgid "This answer must be an email address"
 msgstr "Táto odpoveď musí byť emailová adresa"
 
 #. module: survey
-#: code:addons/survey/models/survey.py:588
-#: code:addons/survey/tests/test_survey.py:107
+#. openerp-web
+#: code:addons/survey/static/src/js/survey_form.js:0
+#, python-format
+msgid "This answer must be an email address."
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
+msgid "This certificate is presented to"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_modern
+msgid ""
+"This certificate is presented to\n"
+"                                <br/>"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_survey__session_code
+msgid ""
+"This code will be used by your attendees to reach your session. Feel free to"
+" customize it however you like!"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
+msgid "This is a Test Survey."
+msgstr ""
+
+#. module: survey
+#. openerp-web
+#: code:addons/survey/models/survey_question.py:0
+#: code:addons/survey/static/src/js/survey_form.js:0
+#: code:addons/survey/tests/test_survey.py:0
 #, python-format
 msgid "This is not a date"
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/models/survey.py:565
-#: code:addons/survey/tests/test_survey.py:97
+#: code:addons/survey/models/survey_question.py:0
+#: code:addons/survey/tests/test_survey.py:0
 #, python-format
 msgid "This is not a number"
 msgstr "Toto nie je číslo"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__multi_email
+#: model:ir.model.fields,help:survey.field_survey_invite__emails
 msgid ""
 "This list of emails of recipients will not be converted in contacts.        "
 "Emails must be separated by commas, semicolons or newline."
 msgstr ""
+"Tento zoznam e-mailov príjemcov nebude prevedený do kontaktov. E-mailové "
+"adresy musia byť oddelené čiarkami, bodkočiarkami alebo novým riadkom."
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_survey__thank_you_message
+#: model:ir.model.fields,help:survey.field_survey_survey__description_done
 msgid "This message will be displayed when survey is completed"
 msgstr "Táto správa bude zobrazená keď bude prieskum dokončený"
 
 #. module: survey
-#: code:addons/survey/models/survey.py:806
-#, python-format
-msgid "This question cannot be unanswered or skipped."
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_tree
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "This question depends on another question's answer."
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/models/survey.py:489
-#: model:survey.question,constr_error_msg:survey.feedback_1_1
-#: model:survey.question,constr_error_msg:survey.feedback_1_2
-#: model:survey.question,constr_error_msg:survey.feedback_2_1
-#: model:survey.question,constr_error_msg:survey.feedback_2_2
-#: model:survey.question,constr_error_msg:survey.feedback_2_3
-#: model:survey.question,constr_error_msg:survey.feedback_2_4
-#: model:survey.question,constr_error_msg:survey.feedback_2_5
-#: model:survey.question,constr_error_msg:survey.feedback_2_6
-#: model:survey.question,constr_error_msg:survey.feedback_2_7
-#: model:survey.question,constr_error_msg:survey.feedback_3_1
-#: model:survey.question,constr_error_msg:survey.feedback_3_2
-#: model:survey.question,constr_error_msg:survey.feedback_3_3
-#: model:survey.question,constr_error_msg:survey.feedback_4_1
+#: code:addons/survey/models/survey_question.py:0
 #, python-format
 msgid "This question requires an answer."
 msgstr "Táto otázka vyžaduje odpoveď."
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.nopages
-msgid "This survey has no pages by now!"
-msgstr "Tento prieskum nemá teraz žiadne stránky!"
+#: code:addons/survey/wizard/survey_invite.py:0
+#, python-format
+msgid ""
+"This survey does not allow external people to participate. You should create"
+" user accounts or update survey access mode accordingly."
+msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.notopen
-msgid "This survey is not open. Thank you for your interest!"
-msgstr "Tento prieskum nie je otvorený. Ďakujeme za váš záujem!"
+#: model_terms:ir.ui.view,arch_db:survey.survey_closed_expired
+msgid "This survey is now closed. Thank you for your interest !"
+msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.auth_required
+#: model_terms:ir.ui.view,arch_db:survey.survey_auth_required
 msgid "This survey is open only to registered people. Please"
 msgstr "Tento prieskum je otvorený len pre zaregistrovaných ľudí. Prosím"
 
 #. module: survey
-#: model_terms:survey.survey,description:survey.feedback_form
-msgid "This survey should take less than five minutes."
-msgstr "Tento prieskum by mal trvať menej ako päť minút."
-
-#. module: survey
-#: model:survey.label,value:survey.frow_2_5_2
-msgid ""
-"Those security rules are standard and can be used out-of-the-box in most "
-"cases"
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "Time & Scoring"
 msgstr ""
-"Tieto bezpečnostné pravidlá sú štandardné a môžu byť použité kreatívnym "
-"myslením vo väčšine prípadov"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey__title
-#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
+#: model:ir.model.fields,field_description:survey.field_survey_survey__time_limit
+msgid "Time limit (minutes)"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_question__time_limit
+msgid "Time limit (seconds)"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
+msgid "Time limit for this certification:"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
+msgid "Time limit for this survey:"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_question__title
 msgid "Title"
 msgstr "Titul"
 
 #. module: survey
-#: selection:survey.survey,activity_state:0
-msgid "Today"
-msgstr "Dnes"
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
+msgid ""
+"To take this survey, please close all other tabs on <strong class=\"text-"
+"danger\"/>."
+msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
@@ -2392,63 +3446,59 @@ msgid "Today Activities"
 msgstr "Dnešné aktivity"
 
 #. module: survey
-#: model:survey.label,value:survey.fcol_2_1_4
-#: model:survey.label,value:survey.fcol_2_2_4
-#: model:survey.label,value:survey.fcol_2_5_4
-#: model:survey.label,value:survey.fcol_2_7_4
-msgid "Totally agree"
-msgstr "Úplne súhlasím"
-
-#. module: survey
-#: model:survey.label,value:survey.fcol_2_1_1
-#: model:survey.label,value:survey.fcol_2_2_1
-#: model:survey.label,value:survey.fcol_2_5_1
-#: model:survey.label,value:survey.fcol_2_7_1
-msgid "Totally disagree"
-msgstr "Vôbec nesúhlasím"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__tracking_value_ids
-msgid ""
-"Tracked values are stored in a separate model. This field allow to "
-"reconstruct the tracking and to generate statistics on the model."
+#: model:ir.model.fields,field_description:survey.field_survey_user_input__scoring_total
+msgid "Total Score"
 msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__tracking_value_ids
-msgid "Tracking values"
-msgstr "Hodnoty sledovania"
+#: model:ir.model.fields,field_description:survey.field_survey_question__triggering_answer_id
+msgid "Triggering Answer"
+msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__message_type
+#: model:ir.model.fields,field_description:survey.field_survey_question__triggering_question_id
+msgid "Triggering Question"
+msgstr ""
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_search
 msgid "Type"
 msgstr "Typ"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_question__type
-msgid "Type of Question"
-msgstr "Typ otázky"
+#: model:ir.model.fields,help:survey.field_survey_survey__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Typ výnimočnej aktivity v zázname."
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
-msgid "Type of answers"
-msgstr "Typ odpovede"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_question__labels_ids
+#: model:ir.model.fields,field_description:survey.field_survey_question__suggested_answer_ids
 msgid "Types of answers"
 msgstr "Typy odpovedí"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey__message_unread
-msgid "Unread Messages"
-msgstr "Neprečítané správy"
+#: code:addons/survey/wizard/survey_invite.py:0
+#, python-format
+msgid "Unable to post message, please configure the sender's email address."
+msgstr "Nemožno odoslať email, prosím nastavte emailovú adresu odosielateľa."
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey__message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Počítadlo neprečítaných správ"
+#. openerp-web
+#: code:addons/survey/models/survey_user_input.py:0
+#: code:addons/survey/static/src/js/survey_result.js:0
+#, python-format
+msgid "Unanswered"
+msgstr "Nezodpovedané"
+
+#. module: survey
+#: code:addons/survey/models/survey_user_input.py:0
+#, python-format
+msgid "Uncategorized"
+msgstr "Nekategorizované"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
+msgid "Unfortunately, you have failed the test."
+msgstr "V teste ste, žiaľ, neuspeli."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
@@ -2456,57 +3506,43 @@ msgid "Upcoming Activities"
 msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__use_active_domain
-msgid "Use active domain"
-msgstr "Použite aktívnu doménu"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__template_id
-#: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
-msgid "Use template"
-msgstr "Použiť šablónu"
-
-#. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__description
 msgid ""
-"Use this field to add         additional explanations about your question"
+"Use this field to add additional explanations about your question or to "
+"illustrate it with pictures or a video"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_question__random_questions_count
+msgid ""
+"Used on randomized sections to take X random questions from all the "
+"questions of that section."
 msgstr ""
 
 #. module: survey
 #: model:res.groups,name:survey.group_survey_user
 msgid "User"
-msgstr "Používateľ"
+msgstr "Užívateľ"
 
 #. module: survey
-#: model:survey.survey,title:survey.feedback_form
-msgid "User Feedback Form"
-msgstr "Použiť formulár spätnej väzby"
+#: model_terms:ir.ui.view,arch_db:survey.question_result_choice
+msgid "User Choice"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__user_input_id
-#: model_terms:ir.ui.view,arch_db:survey.survey_response_line_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_line_view_search
 msgid "User Input"
 msgstr "Vstup používateľa"
 
 #. module: survey
-#: model:ir.ui.menu,name:survey.menu_survey_response_line_form
-msgid "User Input Lines"
-msgstr "Riadky vstupu používateľa"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_choice
-#: model_terms:ir.ui.view,arch_db:survey.result_number
-#: model_terms:ir.ui.view,arch_db:survey.result_text
+#: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
+#: model_terms:ir.ui.view,arch_db:survey.question_result_text
 msgid "User Responses"
 msgstr "Odozvy používateľov"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_form
-msgid "User can come back in the previous page"
-msgstr "Pouźívateľ sa môže vrátiť na predošlú stránku"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_line_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_line_view_form
 msgid "User input line details"
 msgstr "Detaily riadku vstupu používateľa"
 
@@ -2521,13 +3557,10 @@ msgid "Users can go back"
 msgstr "Používatelia sa môžu vrátiť"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_survey__auth_required
-msgid ""
-"Users with a public link will be requested to login before taking part to "
-"the survey"
+#: model:ir.model.fields,field_description:survey.field_survey_invite__survey_users_can_signup
+#: model:ir.model.fields,field_description:survey.field_survey_survey__users_can_signup
+msgid "Users can signup"
 msgstr ""
-"Používatelia s verejným odkazom budú požiadaný o prihlásenie sa pred "
-"zúčastnením sa na prieskume"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_required
@@ -2540,129 +3573,146 @@ msgid "Validation Error message"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_form
-msgid "View Results"
-msgstr "Zobraziť výsledky"
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "Vietnam"
+msgstr "Vietnam"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_form
-msgid "View results"
-msgstr "Zobraziť výsledky"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_choice
-msgid "Vote"
-msgstr "Hlasovať"
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
+msgid ""
+"We have registered your answer! Please wait for the host to go to the next "
+"question."
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__website_message_ids
 msgid "Website Messages"
-msgstr "Správy Webových stránok"
+msgstr "Správy webstránok"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__website_message_ids
 msgid "Website communication history"
-msgstr "História komunikácie webových stránok"
+msgstr "História komunikácie webstránok"
 
 #. module: survey
-#: model:survey.question,question:survey.feedback_2_7
-msgid "What do you think about configuration wizards?"
-msgstr "Čo si myslíte o sprievodcoch inštaláciou?"
-
-#. module: survey
-#: model:survey.question,question:survey.feedback_2_1
-msgid "What do you think about the documentation available on doc.odoo.com?"
-msgstr "Čo si myslíte o dokumentácii dostupnej na doc.odoo.com?"
-
-#. module: survey
-#: model:survey.question,question:survey.feedback_2_5
-msgid "What do you think about the groups of users?"
-msgstr "Čo si myslíte o skupinách používateľov?"
-
-#. module: survey
-#: model:survey.question,question:survey.feedback_2_2
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
 msgid ""
-"What do you think about the process views of Odoo, available in the web "
-"client ?"
+"Welcome to the History certification. You will receive 2 random questions."
 msgstr ""
-"Čo si myslíte o procesných zobrazeniach Odoo, dostupných vo webovom kliente?"
 
 #. module: survey
-#: model:survey.question,question:survey.feedback_2_4
-#: model:survey.question,question:survey.feedback_2_6
-msgid "What do you think about the structure of the menus?"
-msgstr "Čo si myslíte o štruktúrach menu?"
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "What do you think about our new eCommerce?"
+msgstr ""
 
 #. module: survey
-#: model:survey.question,question:survey.feedback_4_1
-msgid "Where do you develop your new features?"
-msgstr "Kde vyvíjate vaše nové funkcie?"
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "What do you think of our new eShop? Let us hear your voice!"
+msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__is_log
-msgid "Whether the message is an internal note (comment mode only)"
-msgstr "Či je správa interná poznámka (iba v móde komentu)"
+#: model:ir.model.fields,help:survey.field_survey_invite__sub_model_object_field
+msgid ""
+"When a relationship field is selected as first field, this field lets you "
+"select the target field within the destination document model (sub-model)."
+msgstr ""
+"Keď je vzťahové pole vybrané ako prvé pole, toto pole umožňuje vybrať "
+"cieľove pole vnútri modelu cieľového dokumentu (podmodel)."
 
 #. module: survey
-#: model:survey.question,question:survey.feedback_1_2
-msgid "Which modules are you using/testing?"
-msgstr "Ktoré moduly používate/testujete?"
+#: model:ir.model.fields,help:survey.field_survey_invite__sub_object
+msgid ""
+"When a relationship field is selected as first field, this field shows the "
+"document model the relationship goes to."
+msgstr ""
+"Keď je vzťahové pole vybrané ako prvé pole, toto pole zobrazuje model "
+"dokumentu ku ktorému sa vzťahuje."
+
+#. module: survey
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "When did Genghis Khan die?"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_survey__session_show_leaderboard
+msgid ""
+"Whether or not we want to show the attendees leaderboard for this survey."
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/models/survey_survey_template.py:0
+#, python-format
+msgid "Who is the architect of the Great Pyramid of Giza ?"
+msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid ""
 "YYYY-MM-DD\n"
-"                                            <i class=\"fa fa-calendar fa-2x\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
+"                                        <i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
 msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.choice_1_1_1
-msgid "Yes, I use a version < 7.0"
-msgstr "Áno, používam verziu < 7.0"
-
-#. module: survey
-#: model:survey.label,value:survey.choice_1_1_2
-msgid "Yes, I use the 7.0 version, installed locally"
-msgstr "Áno, používam verziu 7.0, nainštalovanú lokálne"
-
-#. module: survey
-#: model:survey.label,value:survey.choice_1_1_3
-msgid "Yes, I use the online version of Odoo"
-msgstr "Áno, používam online verziu Odoo"
-
-#. module: survey
-#: model_terms:ir.actions.act_window,help:survey.action_survey_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid ""
-"You can create surveys for different purposes: customer opinion, services "
-"feedback, recruitment interviews, employee's periodical evaluations, "
-"marketing campaigns, etc."
+"YYYY-MM-DD hh:mm:ss\n"
+"                                        <i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
 msgstr ""
-"Môžete vytvárať prieskumy pre rôzne ciele: názor zákazníka, spätná väzba na služby,\n"
-"prijímacie pohovory, periodické vyhodnocovania zamestnancov, marketingové kampane, atď."
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
+#: model:ir.model.constraint,message:survey.constraint_survey_survey_certification_check
 msgid ""
-"You can share your survey web public link and/or send private invitations to"
-" your audience. People can answer once per invitation, and whenever they "
-"want with the public web link (in this case, the \"Login Required\" setting "
-"must be disabled)."
+"You can only create certifications for surveys that have a scoring "
+"mechanism."
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/models/survey.py:315
+#: model_terms:ir.actions.act_window,help:survey.action_survey_user_input
+msgid ""
+"You can share your links through different means: email, invite shortcut, "
+"live presentation, ..."
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/models/survey_survey.py:0
+#, python-format
+msgid ""
+"You cannot send an invitation for a \"One page per section\" survey if the "
+"survey has no sections."
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/models/survey_survey.py:0
+#, python-format
+msgid ""
+"You cannot send an invitation for a \"One page per section\" survey if the "
+"survey only contains empty sections."
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "You cannot send an invitation for a survey that has no questions."
 msgstr "Nemôžete poslať pozvánku pre prieskum ktorý nemá žiadne otázky."
 
 #. module: survey
-#: code:addons/survey/models/survey.py:318
+#: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "You cannot send invitations for closed surveys."
 msgstr "Nemôžete poslať pozvánky pre zavreté prieskumy."
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.sfinished
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
+msgid "You received the badge"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
 msgid "You scored"
 msgstr "Vaše skóre"
 
@@ -2672,36 +3722,131 @@ msgid "ans"
 msgstr "a"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.layout
-msgid "free website"
+#: model_terms:ir.ui.view,arch_db:survey.survey_progression
+msgid "answered"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.auth_required
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "attempts"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
+msgid "dropdown-item d-flex align-items-center justify-content-between"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "e.g. \"Thank you very much for your feedback!\""
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "e.g. \"The following Survey will help us...\""
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+msgid "e.g. \"What is the...\""
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_session_code
+msgid "e.g. 4812"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.gamification_badge_form_view_simplified
+msgid "e.g. No one can solve challenges like you do"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.gamification_badge_form_view_simplified
+msgid "e.g. Problem Solver"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "e.g. Satisfaction Survey"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_modern
+msgid ""
+"for successfully completing\n"
+"                                <br/>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_auth_required
 msgid "log in"
 msgstr "prihlásiť sa"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.page
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "minutes"
+msgstr "minúty"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_progression
 msgid "of"
 msgstr "z"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.sfinished
-msgid "points."
-msgstr "body."
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_modern
+msgid "of achievement"
+msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.sfinished
+#. openerp-web
+#: code:addons/survey/static/src/js/survey_form.js:0
+#, python-format
+msgid "or press CTRL+Enter"
+msgstr ""
+
+#. module: survey
+#. openerp-web
+#: code:addons/survey/static/src/js/survey_form.js:0
+#, python-format
+msgid "or press Enter"
+msgstr ""
+
+#. module: survey
+#. openerp-web
+#: code:addons/survey/static/src/js/survey_form.js:0
+#, python-format
+msgid "or press ⌘+Enter"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_progression
+msgid "pages"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
 msgid "review your answers"
 msgstr "skontrolovať vaše odpovede"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.403
-msgid "this page"
+#: model_terms:ir.ui.view,arch_db:survey.survey_closed_expired
+msgid "survey expired"
+msgstr "Ukončená platnosť prieskumu"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_void_content
+msgid "survey is empty"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.layout
-msgid "with"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:survey.survey_403_page
+msgid "this page"
+msgstr "táto stránka"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "to"
+msgstr "na"

@@ -1,19 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_sale_wishlist
+# 	* website_sale_wishlist
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2018
-# Manami Hashi <manami@roomsfor.hk>, 2018
-# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018
+# Noma Yuki, 2022
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
+# Ryoko Tsuda <ryoko@quartile.co>, 2022
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
+"PO-Revision-Date: 2017-07-17 09:13+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,16 +23,21 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_sale_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.header
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
 msgid ""
-"<i class=\"fa fa-heart\"/>\n"
-"                        Wishlist"
+"<i class=\"fa fa-heart-o mr-2\" role=\"img\" aria-label=\"Add to "
+"wishlist\"/>Add to wishlist"
 msgstr ""
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "<small><i class=\"fa fa-trash-o\"/> Remove</small>"
 msgstr "<small><i class=\"fa fa-trash-o\"/> 削除</small>"
+
+#. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
+msgid "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__active
@@ -46,18 +52,17 @@ msgstr ""
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Add product to my cart but keep it in my wishlist"
-msgstr ""
+msgstr "カートにプロダクトを追加し、ウィッシュリストにも残す"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
 msgid "Add to Wishlist"
-msgstr ""
+msgstr "ウィッシュリストに追加"
 
 #. module: website_sale_wishlist
-#: model:ir.model,name:website_sale_wishlist.model_ir_autovacuum
-msgid "Automatic Vacuum"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
+msgid "Add to wishlist"
+msgstr "ウィッシュリストに追加"
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_res_partner
@@ -82,7 +87,12 @@ msgstr "通貨"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__display_name
 msgid "Display Name"
-msgstr "表示名"
+msgstr "名前を表示"
+
+#. module: website_sale_wishlist
+#: model:ir.model.constraint,message:website_sale_wishlist.constraint_product_wishlist_product_unique_partner_id
+msgid "Duplicated wishlisted product for this partner."
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__id
@@ -107,7 +117,7 @@ msgstr "最終更新日"
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "My Wishlist"
-msgstr ""
+msgstr "自分のウィッシュリスト"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__partner_id
@@ -135,9 +145,15 @@ msgid "Pricelist when added"
 msgstr ""
 
 #. module: website_sale_wishlist
+#: model:ir.model,name:website_sale_wishlist.model_product_product
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__product_id
 msgid "Product"
 msgstr "プロダクト"
+
+#. module: website_sale_wishlist
+#: model:ir.model,name:website_sale_wishlist.model_product_template
+msgid "Product Template"
+msgstr "プロダクトテンプレート"
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_product_wishlist
@@ -155,6 +171,11 @@ msgid "Shop Wishlist"
 msgstr ""
 
 #. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.snippet_options
+msgid "Show Empty Wishlist"
+msgstr ""
+
+#. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_res_users
 msgid "Users"
 msgstr "ユーザ"
@@ -167,5 +188,6 @@ msgstr "ウェブサイト"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner__wishlist_ids
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users__wishlist_ids
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.header_wishlist_link
 msgid "Wishlist"
 msgstr ""

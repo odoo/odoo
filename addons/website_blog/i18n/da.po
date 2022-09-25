@@ -3,32 +3,28 @@
 # 	* website_blog
 # 
 # Translators:
-# Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2019
-# Visti Kristensen <visti@vkdata.dk>, 2019
-# Morten Schou <ms@msteknik.dk>, 2019
-# JonathanStein <jstein@image.dk>, 2019
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
-# Ejner Sønniksen <ejner@vkdata.dk>, 2019
-# Joe Hansen <joedalton2@yahoo.dk>, 2019
-# Martin Trigaux, 2019
-# Jesper Carstensen <jc@danodoo.dk>, 2019
-# Sanne Kristensen <sanne@vkdata.dk>, 2019
-# lhmflexerp <lhm@flexerp.dk>, 2019
-# Per Rasmussen <perhgrasmussen@gmail.com>, 2019
+# Mads Søndergaard, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-30 09:42+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Per Rasmussen <perhgrasmussen@gmail.com>, 2019\n"
+"POT-Creation-Date: 2021-12-07 10:46+0000\n"
+"PO-Revision-Date: 2016-08-05 13:11+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: website_blog
+#: code:addons/website_blog/models/website_blog.py:0
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (kopi)"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post_fullwidth_design
@@ -43,62 +39,17 @@ msgstr "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "' page header."
-msgstr ""
+msgstr "' sidehoved."
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
+msgid "'. Showing results for '"
+msgstr "'. Viser resultater for '"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.date_selector
 msgid "-- All dates"
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
-msgid "1 post max"
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
-msgid "10 posts max"
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
-msgid "2 posts max"
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
-msgid "3 posts max"
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
-msgid "4 posts max"
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
-msgid "5 posts max"
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
-msgid "6 posts max"
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
-msgid "7 posts max"
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
-msgid "8 posts max"
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
-msgid "9 posts max"
-msgstr ""
+msgstr "-- Alle datoer"
 
 #. module: website_blog
 #. openerp-web
@@ -127,6 +78,8 @@ msgid ""
 "<b>That's it, your blog post is published!</b> Discover more features "
 "through the <i>Customize</i> menu."
 msgstr ""
+"<b>Det var det. Dit blog indlæg er udgivet!</b> Opdag yderligere funktioner "
+"gennem <i>Tilpas</i> menuen."
 
 #. module: website_blog
 #. openerp-web
@@ -137,11 +90,14 @@ msgid ""
 " image or table, set bold or italic, etc. Drag and drop building blocks for "
 "more graphical blogs."
 msgstr ""
+"<b>Skriv din historie her.</b> Brug værktøjslinjen øverst til at style din "
+"tekst: Tilføj et billede eller en tabel, angiv teksten som fed eller kursiv,"
+" osv. Træk og slip en bygningsklods for at få en mere grafisk blog."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_tags_display
-msgid "<em>No tags definied</em>"
-msgstr ""
+msgid "<em>No tags defined</em>"
+msgstr "<em>Ingen tags defineret</em>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_complete
@@ -149,29 +105,20 @@ msgid ""
 "<i class=\"fa fa-angle-down fa-3x text-white\" aria-label=\"To blog "
 "content\" title=\"To blog content\"/>"
 msgstr ""
+"<i class=\"fa fa-angle-down fa-3x text-white\" aria-label=\"Til blog "
+"indhold\" title=\"Til blog indhold\"/> "
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_view_kanban
 msgid "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Post date\" title=\"Post date\"/>"
 msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
-msgid "<i class=\"fa fa-folder-open\"/> Choose a blog"
-msgstr ""
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Posterings dato\" "
+"title=\"Posterings dato\"/> "
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_follow_us
 msgid "<i class=\"fa fa-github text-github\" aria-label=\"Github\" title=\"Github\"/>"
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_share_links_display
-#: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_follow_us
-msgid ""
-"<i class=\"fa fa-google-plus-square text-google-plus\" aria-label=\"Google "
-"Plus\" title=\"Google Plus\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-github text-github\" aria-label=\"Github\" title=\"Github\"/>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_follow_us
@@ -179,6 +126,8 @@ msgid ""
 "<i class=\"fa fa-instagram text-instagram\" aria-label=\"Instagram\" "
 "title=\"Instagram\"/>"
 msgstr ""
+"<i class=\"fa fa-instagram text-instagram\" aria-label=\"Instagram\" "
+"title=\"Instagram\"/>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_share_links_display
@@ -187,22 +136,21 @@ msgid ""
 "<i class=\"fa fa-linkedin text-linkedin\" aria-label=\"LinkedIn\" "
 "title=\"LinkedIn\"/>"
 msgstr ""
+"<i class=\"fa fa-linkedin text-linkedin\" aria-label=\"LinkedIn\" "
+"title=\"LinkedIn\"/>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_follow_us
 msgid "<i class=\"fa fa-rss-square\" aria-label=\"RSS\" title=\"RSS\"/>"
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
-msgid "<i class=\"fa fa-sort-numeric-asc\"/> Posts limit"
-msgstr ""
+msgstr "<i class=\"fa fa-rss-square\" aria-label=\"RSS\" title=\"RSS\"/>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_share_links_display
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_follow_us
 msgid "<i class=\"fa fa-twitter text-twitter\" aria-label=\"Twitter\" title=\"Twitter\"/>"
 msgstr ""
+"<i class=\"fa fa-twitter text-twitter\" aria-label=\"Twitter\" "
+"title=\"Twitter\"/>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_follow_us
@@ -210,13 +158,17 @@ msgid ""
 "<i class=\"fa fa-youtube-play text-youtube\" aria-label=\"Youtube\" "
 "title=\"Youtube\"/>"
 msgstr ""
+"<i class=\"fa fa-youtube-play text-youtube\" aria-label=\"Youtube\" "
+"title=\"Youtube\"/>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_read_next
 msgid ""
-"<span class=\"bg-gamma h6 d-inline-block py-1 px-2 rounded-sm\">Read "
+"<span class=\"bg-o-color-3 h6 d-inline-block py-1 px-2 rounded-sm\">Read "
 "Next</span>"
 msgstr ""
+"<span class=\"bg-o-color-3 h6 d-inline-block py-1 px-2 rounded-sm\">Læs "
+"Næste</span>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_read_next
@@ -225,16 +177,19 @@ msgid ""
 "                                    <i class=\"fa fa-angle-right fa-3x text-white\" aria-label=\"Read next\" title=\"Read Next\"/>\n"
 "                                </span>"
 msgstr ""
+"<span class=\"h4 d-inline-block py-1 px-2 rounded-sm text-white\"> <i "
+"class=\"fa fa-angle-right fa-3x text-white\" aria-label=\"Læs næste\" "
+"title=\"Læs næste\"/> </span> "
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
 msgid "<span class=\"mr-1\">Show:</span>"
-msgstr ""
+msgstr "<span class=\"mr-1\">Vis:</span>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blogs_nav
 msgid "<span class=\"nav-link disabled pl-0\">Blogs:</span>"
-msgstr ""
+msgstr "<span class=\"nav-link disabled pl-0\">Blogs:</span>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_template_new_post
@@ -249,7 +204,7 @@ msgstr "Om os"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_template_new_post
 msgid "Access post"
-msgstr ""
+msgstr "Tilgå indlæg"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_needaction
@@ -266,7 +221,7 @@ msgstr "Aktiv"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_tags_display
 msgid "Add some"
-msgstr ""
+msgstr "Tilføj nogle"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blogs_nav
@@ -276,21 +231,25 @@ msgstr "Alle"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.post_breadcrumbs
 msgid "All Blogs"
-msgstr ""
+msgstr "Alle blogs"
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
 msgid "All blogs"
+msgstr "Alle blogs"
+
+#. module: website_blog
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+#, python-format
+msgid "Alone in the ocean"
 msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/s_latest_posts_frontend.js:0
+#: code:addons/website_blog/static/src/js/website_blog.js:0
 #, python-format
-msgid ""
-"An error occured with this latest posts block. If the problem persists, "
-"please consider deleting it and adding a new one"
-msgstr ""
+msgid "Amazing blog article: %s! Check it live: %s"
+msgstr "Fantastisk blog artikel: %s! Tjek den ud live: %s"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_archive_display
@@ -299,6 +258,8 @@ msgstr "Arkivér"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_blog_view_search
+#: model_terms:ir.ui.view,arch_db:website_blog.view_blog_blog_form
+#: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_search
 msgid "Archived"
 msgstr "Arkiveret"
@@ -316,12 +277,12 @@ msgstr "Artikel"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
 msgid "Articles"
-msgstr ""
+msgstr "Artikler"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "Atom Feed"
-msgstr ""
+msgstr "Atom Feed"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_attachment_count
@@ -336,16 +297,31 @@ msgid "Author"
 msgstr "Forfatter"
 
 #. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_post__author_name
+msgid "Author Name"
+msgstr "Forfatter"
+
+#. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__author_avatar
 msgid "Avatar"
 msgstr "Avatar"
 
 #. module: website_blog
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+#, python-format
+msgid "Awesome hotel rooms"
+msgstr ""
+
+#. module: website_blog
+#: code:addons/website_blog/models/website.py:0
+#: model:ir.model,name:website_blog.model_blog_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__blog_id
+#: model:website.menu,name:website_blog.menu_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_blog_view_search
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_blog_form
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_search
-#: model:website.menu,name:website_blog.menu_blog
+#, python-format
 msgid "Blog"
 msgstr "Blog"
 
@@ -368,13 +344,18 @@ msgstr "Blogindlæg"
 #: code:addons/website_blog/models/website.py:0
 #, python-format
 msgid "Blog Post <b>%s</b> seems to be calling this file !"
-msgstr ""
+msgstr "Blog indlæg <b>%s</b> ser ud til at kalde denne fil !"
 
 #. module: website_blog
 #: code:addons/website_blog/models/website.py:0
 #, python-format
 msgid "Blog Post <b>%s</b> seems to have a link to this page !"
 msgstr "Blogindlæg <b>%s</b> lader til at have et link til denne side !"
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_complete
+msgid "Blog Post Cover"
+msgstr "Blog Indlæg Cover"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_complete
@@ -389,49 +370,50 @@ msgstr "Overskrift på blogindlæg"
 #: code:addons/website_blog/models/website.py:0
 #: code:addons/website_blog/models/website.py:0
 #: model:ir.actions.act_window,name:website_blog.action_blog_post
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog__blog_post_ids
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_list
 #, python-format
 msgid "Blog Posts"
-msgstr ""
+msgstr "Blog indlæg"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__subtitle
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post_fullwidth_design
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Blog Subtitle"
-msgstr ""
+msgstr "Blog undertekst"
 
 #. module: website_blog
 #: model:ir.model,name:website_blog.model_blog_tag
 msgid "Blog Tag"
-msgstr ""
+msgstr "Blog tag"
 
 #. module: website_blog
 #: model:ir.model,name:website_blog.model_blog_tag_category
 msgid "Blog Tag Category"
-msgstr ""
+msgstr "Blog tag kategori"
 
 #. module: website_blog
 #: model:ir.actions.act_window,name:website_blog.action_tags
 msgid "Blog Tags"
-msgstr ""
+msgstr "Blog tags"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post_fullwidth_design
 msgid "Blog Title"
-msgstr ""
+msgstr "Blog overskrift"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post
 msgid "Blog's Title"
-msgstr ""
+msgstr "Blog overskift"
 
 #. module: website_blog
 #: model:ir.actions.act_window,name:website_blog.action_blog_blog
-#: model:ir.model,name:website_blog.model_blog_blog
 #: model:ir.ui.menu,name:website_blog.menu_blog_global
 #: model:ir.ui.menu,name:website_blog.menu_website_blog_root
 #: model:ir.ui.menu,name:website_blog.menu_website_blog_root_global
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_searchbar_input_snippet_options
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_blog_list
 msgid "Blogs"
 msgstr "Blogs"
@@ -439,7 +421,7 @@ msgstr "Blogs"
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__can_publish
 msgid "Can Publish"
-msgstr ""
+msgstr "Kan udgives "
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__category_id
@@ -450,15 +432,15 @@ msgstr "Kategori"
 #. openerp-web
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
-msgid "Change Cover"
-msgstr ""
+msgid "Choose an image from the library."
+msgstr "Vælg et billede fra biblioteket."
 
 #. module: website_blog
 #. openerp-web
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
-msgid "Choose an image from the library."
-msgstr "Vælg et billede fra biblioteket."
+msgid "Click here to add new content to your website."
+msgstr "Klik her for at tilføje nyt indhold til din hjemmeside."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
@@ -466,13 +448,8 @@ msgid ""
 "Click on \"<b>New</b>\" in the top-right corner to write your first blog "
 "post."
 msgstr ""
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/tours/website_blog.js:0
-#, python-format
-msgid "Click on <b>Save</b> to set the picture as cover."
-msgstr ""
+"Klik på \"<b>Ny</b>\" i hjørnet oppe til højre, for at skrive dit første "
+"blog indlæg."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
@@ -486,6 +463,7 @@ msgstr "Kommentar"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_regular_cover
+#: model_terms:ir.ui.view,arch_db:website_blog.post_info
 msgid "Comments"
 msgstr "Bemærkninger"
 
@@ -500,12 +478,12 @@ msgstr "Indhold"
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__cover_properties
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__cover_properties
 msgid "Cover Properties"
-msgstr ""
+msgstr "Cover egenskaber"
 
 #. module: website_blog
 #: model_terms:ir.actions.act_window,help:website_blog.action_blog_post
 msgid "Create a new blog post"
-msgstr ""
+msgstr "Opret et nyt blog indlæg"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__create_uid
@@ -524,6 +502,26 @@ msgid "Created on"
 msgstr "Oprettet den"
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_searchbar_input_snippet_options
+msgid "Date (new to old)"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_searchbar_input_snippet_options
+msgid "Date (old to new)"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_searchbar_input_snippet_options
+msgid "Description"
+msgstr "Beskrivelse"
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
+msgid "Dexter"
+msgstr "Dexter"
+
+#. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__display_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__display_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__display_name
@@ -538,28 +536,23 @@ msgstr "Duplikér"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_tags_display
-msgid "Edit"
-msgstr "Rediger"
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_tags_display
 msgid "Edit in backend"
 msgstr "Redigér backend"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "Edit the '"
-msgstr ""
+msgstr "Rediger '"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "Edit the 'All Blogs' page header."
-msgstr ""
+msgstr "Rediger 'Alle blogs' sidehovedet."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "Edit the 'Filter Results' page header."
-msgstr ""
+msgstr "Rediger 'Filtrer resultater' sidehovedet."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_share_links_display
@@ -570,7 +563,7 @@ msgstr "Facebook"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_follow_us
 msgid "Follow Us"
-msgstr ""
+msgstr "Følg os:"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_follower_ids
@@ -579,26 +572,21 @@ msgid "Followers"
 msgstr "Følgere"
 
 #. module: website_blog
-#: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_channel_ids
-#: model:ir.model.fields,field_description:website_blog.field_blog_post__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Følgere (kanaler)"
-
-#. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_partner_ids
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Følgere (partnere)"
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_share_links_display
-msgid "Google Plus"
-msgstr "Google Plus"
-
-#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_search
 msgid "Group By"
 msgstr "Sortér efter"
+
+#. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog__has_message
+#: model:ir.model.fields,field_description:website_blog.field_blog_post__has_message
+msgid "Has Message"
+msgstr "Har besked"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__id
@@ -625,6 +613,11 @@ msgid "If checked, some messages have a delivery error."
 msgstr "Hvis afkrydset har nogle beskeder en leveringsfejl"
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.dynamic_filter_template_blog_post_card
+msgid "In"
+msgstr "I"
+
+#. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_is_follower
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__message_is_follower
 msgid "Is Follower"
@@ -632,12 +625,25 @@ msgstr "Er følger"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__is_published
+#: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_list
 msgid "Is Published"
+msgstr "Er udgivet"
+
+#. module: website_blog
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+#, python-format
+msgid "Islands"
+msgstr ""
+
+#. module: website_blog
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+#, python-format
+msgid "Jungle"
 msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website_blog.editor.js:0
+#: code:addons/website_blog/static/src/js/options.js:0
 #, python-format
 msgid "Large"
 msgstr "Stor"
@@ -675,12 +681,12 @@ msgstr "Sidst opdateret den"
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post_fullwidth_design
 msgid "Latest"
-msgstr ""
+msgstr "Senest"
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts
-#: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_big_picture
-msgid "Latest Posts"
+#: model:ir.filters,name:website_blog.dynamic_snippet_latest_blog_post_filter
+#: model:website.snippet.filter,name:website_blog.dynamic_filter_latest_blog_posts
+msgid "Latest Blog Posts"
 msgstr ""
 
 #. module: website_blog
@@ -695,8 +701,13 @@ msgid "Main Attachment"
 msgstr "Vedhæftning"
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
+msgid "Marley"
+msgstr "Marley"
+
+#. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website_blog.editor.js:0
+#: code:addons/website_blog/static/src/js/options.js:0
 #, python-format
 msgid "Medium"
 msgstr "Medium"
@@ -716,16 +727,22 @@ msgstr "Beskeder"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Meta Description"
-msgstr ""
+msgstr "Meta beskrivelse"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Meta Keywords"
-msgstr ""
+msgstr "Meta nøgleord"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Meta Title"
+msgstr "Meta titel"
+
+#. module: website_blog
+#: model:ir.filters,name:website_blog.dynamic_snippet_most_viewed_blog_post_filter
+#: model:website.snippet.filter,name:website_blog.dynamic_filter_most_viewed_blog_posts
+msgid "Most Viewed Blog Posts"
 msgstr ""
 
 #. module: website_blog
@@ -742,13 +759,6 @@ msgid "New Blog Post"
 msgstr "Nyt blogindlæg"
 
 #. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/s_latest_posts_frontend.js:0
-#, python-format
-msgid "No blog post was found. Make sure your posts are published."
-msgstr ""
-
-#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
 msgid "No blog post yet."
 msgstr "Intet blogindlæg endnu."
@@ -759,9 +769,24 @@ msgid "No of Views"
 msgstr "Antal visninger"
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
+msgid "No results for \"%s\"."
+msgstr "Intet resultat for \"%s\"."
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
+msgid "No results found for '"
+msgstr "Ingen resultater fundet for '"
+
+#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_tags
 msgid "No tags defined yet."
-msgstr ""
+msgstr "Ingen tags defineret endnu."
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
+msgid "None"
+msgstr "Ingen"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_needaction_counter
@@ -773,7 +798,7 @@ msgstr "Antal handlinger"
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_has_error_counter
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Antal fejl"
 
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_blog__message_needaction_counter
@@ -799,11 +824,12 @@ msgstr "Antal ulæste beskeder"
 #, python-format
 msgid "Once you have reviewed the content on mobile, close the preview."
 msgstr ""
+"Når du har gennemgået indholdet på mobil, bedes du lukke forhåndsvisningen."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_tags
 msgid "Others"
-msgstr ""
+msgstr "Andre"
 
 #. module: website_blog
 #: model:blog.blog,name:website_blog.blog_blog_1
@@ -813,48 +839,54 @@ msgstr ""
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_blogs_display
 msgid "Our blogs"
-msgstr ""
+msgstr "Vores blogs"
 
 #. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog__blog_post_count
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__post_ids
 msgid "Posts"
 msgstr "Indlæg"
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_searchbar_input_snippet_options
+msgid "Publication Date"
+msgstr ""
+
+#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
 msgid "Published ("
-msgstr ""
+msgstr "Udgivet ("
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__published_date
 msgid "Published Date"
-msgstr ""
+msgstr "Udgivelsesdato"
 
 #. module: website_blog
 #: model:mail.message.subtype,description:website_blog.mt_blog_blog_published
 #: model:mail.message.subtype,name:website_blog.mt_blog_blog_published
 msgid "Published Post"
-msgstr ""
+msgstr "Udgivet indlæg"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Publishing Options"
-msgstr ""
+msgstr "Udgivelse indstillinger"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__post_date
 msgid "Publishing date"
-msgstr ""
+msgstr "Udgivelses dato"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post
 msgid "Read more"
-msgstr ""
+msgstr "Læs mere"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
 msgid "Read more <i class=\"fa fa-chevron-right ml-2\"/>"
-msgstr ""
+msgstr "Læs mere <i class=\"fa fa-chevron-right ml-2\"/>"
 
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_blog__website_id
@@ -865,7 +897,7 @@ msgstr "Begræns udgivelse til denne hjemmeside."
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "SEO"
-msgstr ""
+msgstr "SEO"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__is_seo_optimized
@@ -878,6 +910,39 @@ msgstr "SEO optimeret"
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_has_sms_error
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__message_has_sms_error
 msgid "SMS Delivery error"
+msgstr "SMS leveringsfejl"
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.dynamic_filter_template_blog_post_big_picture
+#: model_terms:ir.ui.view,arch_db:website_blog.dynamic_filter_template_blog_post_card
+#: model_terms:ir.ui.view,arch_db:website_blog.dynamic_filter_template_blog_post_horizontal
+#: model_terms:ir.ui.view,arch_db:website_blog.dynamic_filter_template_blog_post_list
+msgid "Sample"
+msgstr "Prøve"
+
+#. module: website_blog
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+#, python-format
+msgid "Satellites"
+msgstr ""
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/tours/website_blog.js:0
+#, python-format
+msgid "Search for an image. (eg: type \"business\")"
+msgstr "Søg efter et billede. (f.eks. type \"forretning\")"
+
+#. module: website_blog
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+#, python-format
+msgid "Seaside vs mountain side"
+msgstr ""
+
+#. module: website_blog
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+#, python-format
+msgid "Seeing the world from above"
 msgstr ""
 
 #. module: website_blog
@@ -885,43 +950,45 @@ msgstr ""
 #: code:addons/website_blog/static/src/js/website_blog.editor.js:0
 #, python-format
 msgid "Select Blog"
-msgstr ""
+msgstr "Vælg Blog"
 
 #. module: website_blog
 #. openerp-web
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "Select the blog you want to add the post to."
-msgstr ""
+msgstr "Vælg bloggen du vil tilføje indlægget til"
 
 #. module: website_blog
 #. openerp-web
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "Select this menu item to create a new blog post."
-msgstr ""
+msgstr "Vælg denne menu for at oprette et nyt blog indlæg"
+
+#. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog__seo_name
+#: model:ir.model.fields,field_description:website_blog.field_blog_post__seo_name
+#: model:ir.model.fields,field_description:website_blog.field_blog_tag__seo_name
+msgid "Seo name"
+msgstr "SEO navn"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Separate every keyword with a comma"
-msgstr ""
+msgstr "Separer hvert nøgleord med et komma"
 
 #. module: website_blog
 #. openerp-web
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "Set a blog post <b>cover</b>."
-msgstr ""
+msgstr "Angiv blog indlæg som <b>cover</b>."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_share_links_display
 msgid "Share on Facebook"
 msgstr "Del på Facebook"
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_share_links_display
-msgid "Share on Google Plus"
-msgstr "Del på Google Plus"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_share_links_display
@@ -936,6 +1003,23 @@ msgstr "Del på Twitter"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_share_links_display
 msgid "Share this post"
+msgstr "Del dette indlæg"
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
+msgid "Silly-Chico"
+msgstr "Silly-Chico"
+
+#. module: website_blog
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+#, python-format
+msgid "Skies"
+msgstr ""
+
+#. module: website_blog
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+#, python-format
+msgid "Spotting the fauna"
 msgstr ""
 
 #. module: website_blog
@@ -944,7 +1028,7 @@ msgstr ""
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "Start writing here..."
-msgstr ""
+msgstr "Begynd at skrive her..."
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__subtitle
@@ -969,27 +1053,27 @@ msgstr "Tag kategorier"
 #. module: website_blog
 #: model:ir.actions.act_window,name:website_blog.action_tag_category
 msgid "Tag Category"
-msgstr ""
+msgstr "Tag kategori"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_tag_category_form
 msgid "Tag Category Form"
-msgstr ""
+msgstr "Tag kategori formular"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_tag_form
 msgid "Tag Form"
-msgstr ""
+msgstr "Tag formular"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_tag_tree
 msgid "Tag List"
-msgstr ""
+msgstr "Tag liste"
 
 #. module: website_blog
 #: model:ir.model.constraint,message:website_blog.constraint_blog_tag_category_name_uniq
 msgid "Tag category already exists !"
-msgstr ""
+msgstr "Tag kategori eksistere allerede !"
 
 #. module: website_blog
 #: model:ir.model.constraint,message:website_blog.constraint_blog_tag_name_uniq
@@ -1002,18 +1086,25 @@ msgstr "Tag navn eksisterer allerede!"
 #: model:ir.ui.menu,name:website_blog.menu_blog_tag_global
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_tags_display
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_tags
+#: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Tags"
 msgstr "Tags"
 
 #. module: website_blog
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+#, python-format
+msgid "Taking pictures in the dark"
+msgstr ""
+
+#. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__teaser
 msgid "Teaser"
-msgstr ""
+msgstr "Teaser"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__teaser_manual
 msgid "Teaser Content"
-msgstr ""
+msgstr "Teaser indhold"
 
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_post__post_date
@@ -1032,20 +1123,27 @@ msgstr "Den fulde URL for at få adgang til dokumentet via hjemmesiden."
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
 msgid "This box will not be visible to your visitors"
-msgstr ""
+msgstr "Denne boks vil ikke være synlig for dine besøgende"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website_blog.editor.js:0
+#: code:addons/website_blog/static/src/js/options.js:0
+#, python-format
+msgid "This tag already exists"
+msgstr "Dette tag eksisterer allerede"
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/options.js:0
 #, python-format
 msgid "Tiny"
-msgstr ""
+msgstr "Bitte"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__name
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_regular_cover
 msgid "Title"
-msgstr "Overskrift"
+msgstr "Titel"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_share_links_display
@@ -1055,7 +1153,7 @@ msgstr "Twitter"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
 msgid "Unpublished ("
-msgstr ""
+msgstr "Ikke udgivet ("
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_unread
@@ -1089,9 +1187,20 @@ msgid "Used in:"
 msgstr "Anvendt i:"
 
 #. module: website_blog
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+#, python-format
+msgid "Viewpoints"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.post_info
+msgid "Views"
+msgstr "Visninger"
+
+#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.index
 msgid "Visible in all blogs' pages"
-msgstr ""
+msgstr "Synlig på alle blogs sider"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__website_published
@@ -1121,6 +1230,11 @@ msgstr "Hjemmeside blogs"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__website_message_ids
 msgid "Website Messages"
 msgstr "Beskeder fra hjemmesiden"
+
+#. module: website_blog
+#: model:ir.model,name:website_blog.model_website_snippet_filter
+msgid "Website Snippet Filter"
+msgstr "Hjemmeside Snippet Filter"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__website_url
@@ -1162,9 +1276,15 @@ msgid "Website opengraph image"
 msgstr "Hjemmeside - opengraph-billede"
 
 #. module: website_blog
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+#, python-format
+msgid "With a View"
+msgstr ""
+
+#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.sidebar_blog_index
 msgid "Write a small text here to describe your blog or company."
-msgstr ""
+msgstr "Skriv en kort tekst her, der beskriver din blog eller virksomhed."
 
 #. module: website_blog
 #. openerp-web
@@ -1174,14 +1294,6 @@ msgid "Write a title, the subtitle is optional."
 msgstr "Skriv en overskrift, undertitlen er valgfri."
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_share_links_display
-#: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_follow_us
-msgid ""
-"bg-100 border mx-1 mb-2 rounded-circle d-flex align-items-center justify-"
-"content-center text-decoration-none"
-msgstr ""
-
-#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_template_new_post
 msgid "blog. Click here to access the blog :"
 msgstr "blog. Klik her for at få adgang til bloggen :"
@@ -1189,7 +1301,7 @@ msgstr "blog. Klik her for at få adgang til bloggen :"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.post_breadcrumbs
 msgid "breadcrumb"
-msgstr ""
+msgstr "brødkrumme"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_regular_cover
@@ -1210,22 +1322,17 @@ msgstr "i"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post
 msgid "in <i class=\"fa fa-folder-open text-muted\"/>"
-msgstr ""
+msgstr "i <i class=\"fa fa-folder-open text-muted\"/>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post_fullwidth_design
 msgid "in <i class=\"fa fa-folder-open text-white-75\"/>"
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
-msgid "justify-content-center"
-msgstr ""
+msgstr "i <i class=\"fa fa-folder-open text-white-75\"/>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_comment
 msgid "to leave a comment"
-msgstr ""
+msgstr "for at efterlade en kommentar"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
@@ -1234,5 +1341,17 @@ msgstr "ikke udgivet"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_regular_cover
+msgid ""
+"|\n"
+"                            <i class=\"fa fa-comment text-muted mr-1\"/>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_regular_cover
 msgid "| No comments yet"
+msgstr "| Ingen kommentarer endnu"
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
+msgid "⌙ Hover effect"
 msgstr ""

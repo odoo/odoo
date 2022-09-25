@@ -1041,6 +1041,12 @@ msgstr "<span>Bedrag</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "<span>Amount In Currency</span>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Description</span>"
 msgstr "<span>Omschrijving</span>"
@@ -1317,7 +1323,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_group_uniq_name
 msgid "A journal group name must be unique per company."
-msgstr ""
+msgstr "Een dagboekgroepsnaam moet uniek zijn per bedrijf."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -1367,7 +1373,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "A second payment has been created: %s"
-msgstr ""
+msgstr "Er is een tweede betaling aangemaakt: %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -1906,6 +1912,8 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                    And"
 " its reverse entry: %(reverse_entry)s."
 msgstr ""
+"Toerekeningspost gemaakt op %(date)s: %(accrual_entry)s. En de omgekeerde "
+"invoer: %(reverse_entry)s."
 
 #. module: account
 #: code:addons/account/wizard/accrued_orders.py:0
@@ -2170,6 +2178,9 @@ msgid ""
 "cancelling {percent:.2f}%% of {amount}</li><li>%(link0)s postponing it to "
 "{new_date}</li></ul>"
 msgstr ""
+"Er zijn aanpassingen gemaakt voor deze factuur:<ul><li>%(link1)s annuleert "
+"{percent:.2f}%% van {amount}</li><li>%(link0)s stelt het uit naar {new_date "
+"}</li></ul>"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -2186,6 +2197,8 @@ msgid ""
 "Adjusting Entry for {link}: {percent:.2f}% of {amount} recognized on "
 "{new_date}"
 msgstr ""
+"Invoer aanpassen voor {link}: {percent:.2f}% van {amount} erkend op "
+"{new_date}"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -2199,6 +2212,7 @@ msgstr ""
 msgid ""
 "Adjusting Entry {link}: {percent:.2f}% of {amount} recognized from {date}"
 msgstr ""
+"Invoer aanpassen {link}: {percent:.2f}% van {amount} erkend vanaf {date}"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__adjustment_type
@@ -2376,7 +2390,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Allows you to use Storno accounting."
-msgstr ""
+msgstr "Hiermee kun je Storno-accounting gebruiken."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4088,7 +4102,7 @@ msgstr "Bedrijf document lay-out"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_storno
 msgid "Company Storno Accounting"
-msgstr ""
+msgstr "Bedrijf Storno Boekhouding"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_chart_of_accounts
@@ -4682,7 +4696,7 @@ msgstr "Kredietlimiet"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Credit Limits"
-msgstr ""
+msgstr "Kredietlimieten"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__refund_method
@@ -4737,7 +4751,7 @@ msgstr "Creditdagboek items die overeenkomen met dit dagboek item."
 #: model:ir.model.fields,help:account.field_res_partner__credit_limit
 #: model:ir.model.fields,help:account.field_res_users__credit_limit
 msgid "Credit limit specific to this partner."
-msgstr ""
+msgstr "Kredietlimiet specifiek voor deze partner."
 
 #. module: account
 #: model:mail.template,name:account.email_template_edi_credit_note
@@ -5181,7 +5195,7 @@ msgstr "Standaard rekeningen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_default_credit_limit
 msgid "Default Credit Limit"
-msgstr ""
+msgstr "Standaard kredietlimiet"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -5714,6 +5728,8 @@ msgid ""
 "Downpayments posted on this account will be considered by the Tax Closing "
 "Entry."
 msgstr ""
+"Vooruitbetalingen die op deze rekening zijn geboekt, worden in aanmerking "
+"genomen door de belastingafsluiting."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__draft
@@ -5830,7 +5846,7 @@ msgstr "Dupliceren"
 #: model:ir.model.fields,field_description:account.field_res_partner__duplicated_bank_account_partners_count
 #: model:ir.model.fields,field_description:account.field_res_users__duplicated_bank_account_partners_count
 msgid "Duplicated Bank Account Partners Count"
-msgstr ""
+msgstr "Gedupliceerde bankrekeningpartners tellen mee"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -5884,7 +5900,7 @@ msgstr "E-mail"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__email_add_signature
 msgid "Email Add Signature"
-msgstr ""
+msgstr "E-mail Handtekening toevoegen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_id
@@ -5896,7 +5912,7 @@ msgstr "E-mail alias"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__email_layout_xmlid
 msgid "Email Notification Layout"
-msgstr ""
+msgstr "Lay-out voor e-mailmeldingen"
 
 #. module: account
 #: model:ir.model,name:account.model_mail_thread
@@ -5922,7 +5938,7 @@ msgstr "Standaard e-mailen"
 #: model:ir.model.fields,help:account.field_res_company__account_use_credit_limit
 #: model:ir.model.fields,help:account.field_res_config_settings__account_use_credit_limit
 msgid "Enable the use of credit limit on partners."
-msgstr ""
+msgstr "Schakel het gebruik van kredietlimiet voor partners in."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox__end_bank_stmt_ids
@@ -6034,6 +6050,8 @@ msgid ""
 "Error when reading the original PDF for: %r.\n"
 "Please make sure the file is valid."
 msgstr ""
+"Fout bij het lezen van de originele PDF voor: %r.\n"
+"Zorg ervoor dat het bestand geldig is."
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
@@ -6225,7 +6243,7 @@ msgstr "Financiële labels"
 #. module: account
 #: model:account.account.tag,name:account.account_tag_financing
 msgid "Financing Activities"
-msgstr ""
+msgstr "Financiële activiteiten"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__payment_ref_regex
@@ -6271,7 +6289,7 @@ msgstr "Fiscale land"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_fiscal_country_id
 msgid "Fiscal Country Code"
-msgstr ""
+msgstr "Fiscale landcode"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -6514,17 +6532,17 @@ msgstr "Vanaf :"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Non Trade Receivable accounts"
-msgstr ""
+msgstr "Van niet-handelsvorderingen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Trade Payable accounts"
-msgstr ""
+msgstr "Van handelscrediteuren"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Trade Receivable accounts"
-msgstr ""
+msgstr "Van handelsvorderingen"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line__amount_type__regex
@@ -6744,7 +6762,7 @@ msgstr "Heeft afgeletterde boekingen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_sequence_holes
 msgid "Has Sequence Holes"
-msgstr ""
+msgstr "Heeft sequentiegaten"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__has_unreconciled_entries
@@ -6981,6 +6999,8 @@ msgid ""
 "If set, this account will belong to Non Trade Receivable/Payable in reports and filters.\n"
 "If not, this account will belong to Trade Receivable/Payable in reports and filters."
 msgstr ""
+"Indien ingesteld, zal deze rekening behoren tot Non Trade Receivable/Payable in rapporten en filters.\n"
+"Zo niet, dan hoort deze rekening in rapporten en filters bij Handelsvorderingen/Te betalen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__preceding_subtotal
@@ -7476,7 +7496,7 @@ msgstr "Labels omkeren"
 #. module: account
 #: model:account.account.tag,name:account.account_tag_investing
 msgid "Investing & Extraordinary Activities"
-msgstr ""
+msgstr "Investeren en buitengewone activiteiten"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -7860,7 +7880,7 @@ msgstr "Is afrondregel"
 #: model:ir.model.fields,field_description:account.field_account_move__is_storno
 #: model:ir.model.fields,field_description:account.field_account_payment__is_storno
 msgid "Is Storno"
-msgstr ""
+msgstr "Is Storno"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_valid_balance_start
@@ -8085,7 +8105,7 @@ msgstr "Boekingsregel"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Journal Item %s updated"
-msgstr ""
+msgstr "Boekingsregel %s bijgewerkt"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_label
@@ -8215,7 +8235,7 @@ msgstr "Dagboek beschikbaarheid"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__period_lock_date
 msgid "Journals Entries Lock Date"
-msgstr ""
+msgstr "Vergrendelingsdatum dagboeken"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__json_activity_data
@@ -8733,7 +8753,7 @@ msgstr "MEM"
 #: model:ir.model.fields,field_description:account.field_account_move__made_sequence_hole
 #: model:ir.model.fields,field_description:account.field_account_payment__made_sequence_hole
 msgid "Made Sequence Hole"
-msgstr ""
+msgstr "Gemaakt sequentiegat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mail_activity_type_id
@@ -9324,17 +9344,17 @@ msgstr "Aantal cijfers voor gebruik in rekeningcode"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__non_trade
 msgid "Non Trade"
-msgstr ""
+msgstr "Niet handel"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Non Trade Payable"
-msgstr ""
+msgstr "Niet in de handel te betalen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Non Trade Receivable"
-msgstr ""
+msgstr "Niet-handelsvorderingen"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_non_current_assets
@@ -9657,6 +9677,8 @@ msgstr "Zodra je factuur klaar is, druk je op BEVESTIGEN."
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "One or more Bank Accounts set on this partner are also used by other"
 msgstr ""
+"Een of meer bankrekeningen die bij deze partner zijn ingesteld, worden ook "
+"door anderen gebruikt"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_category_ids
@@ -9810,7 +9832,7 @@ msgstr "Opening debetwaarde voor deze rekening."
 #. module: account
 #: model:account.account.tag,name:account.account_tag_operating
 msgid "Operating Activities"
-msgstr ""
+msgstr "Bedrijfsactiviteiten"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -10189,7 +10211,7 @@ msgstr "Relatie contracten"
 #: model:ir.model.fields,field_description:account.field_account_move__partner_credit_warning
 #: model:ir.model.fields,field_description:account.field_account_payment__partner_credit_warning
 msgid "Partner Credit Warning"
-msgstr ""
+msgstr "Partnerkredietwaarschuwing"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_partner
@@ -10206,7 +10228,7 @@ msgstr "Saldilijst per klant/leverancier"
 #: model:ir.model.fields,field_description:account.field_res_partner__use_partner_credit_limit
 #: model:ir.model.fields,field_description:account.field_res_users__use_partner_credit_limit
 msgid "Partner Limit"
-msgstr ""
+msgstr "Partnerlimiet"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -11070,7 +11092,7 @@ msgstr "Hernummeren"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__real_amount
 msgid "Real amount to apply"
-msgstr ""
+msgstr "Werkelijk bedrag om toe te passen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
@@ -11749,7 +11771,7 @@ msgstr "Verkoop"
 #: model:ir.model.fields,field_description:account.field_res_company__account_use_credit_limit
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_use_credit_limit
 msgid "Sales Credit Limit"
-msgstr ""
+msgstr "Verkoopkredietlimiet"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_receipt
@@ -12378,7 +12400,7 @@ msgstr "Toon volledige boekhoudkundige opties - Alleen lezen"
 #: model:ir.model.fields,field_description:account.field_res_partner__show_credit_limit
 #: model:ir.model.fields,field_description:account.field_res_users__show_credit_limit
 msgid "Show Credit Limit"
-msgstr ""
+msgstr "Toon kredietlimiet"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__show_decimal_separator
@@ -12737,13 +12759,13 @@ msgstr "Stap voltooid!"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Storno Accounting"
-msgstr ""
+msgstr "Storno Boekhouding"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_storno
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_storno
 msgid "Storno accounting"
-msgstr ""
+msgstr "Storno boekhouding"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__string_to_hash
@@ -13139,6 +13161,8 @@ msgid ""
 "Tax current account used as a counterpart to the Tax Closing Entry when in "
 "favor of the authorities."
 msgstr ""
+"Fiscale rekening-courant gebruikt als tegenboeking van de Fiscale "
+"Afsluitingspost ten gunste van de overheid."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__property_tax_receivable_account_id
@@ -13146,6 +13170,8 @@ msgid ""
 "Tax current account used as a counterpart to the Tax Closing Entry when in "
 "favor of the company."
 msgstr ""
+"Fiscale rekening-courant gebruikt als tegenboeking van de fiscale "
+"afsluitingspost in het voordeel van het bedrijf."
 
 #. module: account
 #: model:res.groups,name:account.group_show_line_subtotals_tax_excluded
@@ -14472,6 +14498,8 @@ msgstr "De bovenliggende BTW voor deze regel"
 #, python-format
 msgid "The partner cannot be deleted because it is used in Accounting"
 msgstr ""
+"De partner kan niet worden verwijderd omdat deze wordt gebruikt in "
+"Boekhouding"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__has_unreconciled_entries
@@ -14938,7 +14966,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "There was a problem with the following move(s):\n"
-msgstr ""
+msgstr "Er was een probleem met de volgende verplaatsing(en):\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_error
@@ -15120,6 +15148,8 @@ msgid ""
 "This is the default credit limit that will be used on partners that do not "
 "have a specific limit on them."
 msgstr ""
+"Dit is de standaard kredietlimiet die wordt gebruikt voor partners die geen "
+"specifieke limiet hebben."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -15199,7 +15229,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "This payment has been created from %s"
-msgstr ""
+msgstr "Deze betaling is gemaakt vanuit %s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_supplier_payment_term_id
@@ -15477,6 +15507,8 @@ msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
 "Total Receivable amount exceeding a limit."
 msgstr ""
+"Activeer waarschuwingen bij het maken van facturen en verkooporders voor "
+"partners met een totaal te ontvangen bedrag dat een limiet overschrijdt."
 
 #. module: account
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
@@ -15712,7 +15744,7 @@ msgstr "Gebruik een specifiek dagboek"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__use_storno_accounting
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Use Storno accounting"
-msgstr ""
+msgstr "Storno-boekhouding gebruiken"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__use_active_domain
@@ -15850,6 +15882,8 @@ msgid ""
 "Utility field to express whether the journal item is subject to storno "
 "accounting"
 msgstr ""
+"Utility-veld om aan te geven of de boekingsregel onderworpen is aan storno "
+"accounting"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
@@ -16439,6 +16473,8 @@ msgid ""
 "You can't provide a foreign currency without specifying an amount in 'Amount"
 " in Currency' field."
 msgstr ""
+"Je kunt geen vreemde valuta opgeven zonder een bedrag op te geven in het "
+"veld 'Bedrag in valuta'."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -16755,6 +16791,8 @@ msgid ""
 "You cannot remove/deactivate the accounts \"%s\" which are set on a tax "
 "repartition line."
 msgstr ""
+"Je kunt de rekeningen \"%s\" die op een belastingverdelingsregel zijn "
+"ingesteld niet verwijderen/deactiveren."
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -16763,6 +16801,8 @@ msgid ""
 "You cannot remove/deactivate the accounts \"%s\" which are set on the "
 "account mapping of a fiscal position."
 msgstr ""
+"Je kunt de rekeningen \"%s\" die zijn ingesteld op de rekeningtoewijzing van"
+" een fiscale positie niet verwijderen/deactiveren."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

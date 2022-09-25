@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Simone Bernini <simone@aperturelabs.it>, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # Friederike Fasterling-Nesselbosch, 2022
 # Martin Trigaux, 2022
-# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-30 06:06+0000\n"
 "PO-Revision-Date: 2016-08-05 12:58+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -521,7 +521,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_stress_day_view_form
 msgid "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" title=\"To\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" title=\"A\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
@@ -655,6 +655,9 @@ msgid ""
 "                                            From\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"oe_inline\" attrs=\"{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}\">\n"
+"                                            Da\n"
+"                                        </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -663,6 +666,9 @@ msgid ""
 "                                            To\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"oe_inline\" attrs=\"{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}\">\n"
+"                                            A\n"
+"                                        </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
@@ -1850,6 +1856,9 @@ msgid ""
 "\n"
 "        Not Allowed: User cannot request an allocation."
 msgstr ""
+"Sono consentite richieste di giorni extra: L'utente può richiedere un'assegnazione per sé.\n"
+"\n"
+"Non consentito: L'utente non può richiedere un'assegnazione."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__feb
@@ -2321,7 +2330,7 @@ msgstr "Permesso"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar__associated_leaves_count
 msgid "Leave Count"
-msgstr ""
+msgstr "Conteggio permessi"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__leave_id
@@ -2372,7 +2381,7 @@ msgstr "Livello"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "Level <span class=\"o_hr_holidays_plan_level_level\"/>"
-msgstr ""
+msgstr "Livello <span class=\"o_hr_holidays_plan_level_level\"/>"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__transition_mode
@@ -2506,7 +2515,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__postpone_max_days
 msgid "Maximum amount of accruals to transfer"
-msgstr ""
+msgstr "Importo massimo dei ratei da trasferire"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__may
@@ -2933,7 +2942,7 @@ msgstr "Altro"
 #: code:addons/hr_holidays/static/src/components/thread_icon/thread_icon.xml:0
 #, python-format
 msgid "Out of office"
-msgstr ""
+msgstr "Fuori ufficio"
 
 #. module: hr_holidays
 #. openerp-web
@@ -3275,6 +3284,8 @@ msgid ""
 "Set a maximum of days an allocation keeps at the end of the year. 0 for no "
 "limit."
 msgstr ""
+"Imposta il numero massimo di giorni che un'assegnazione conserva alla fine "
+"dell'anno. 0 per non avere limiti."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__show_transition_mode
@@ -3504,7 +3515,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_stress_day_date_from_after_day_to
 msgid "The start date must be anterior than the end date."
-msgstr ""
+msgstr "La data di inizio deve essere anteriore alla data di fine."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_date_check2
@@ -4007,6 +4018,8 @@ msgstr "Due volte all'anno"
 msgid ""
 "Two public holidays cannot overlap each other for the same working hours."
 msgstr ""
+"Due giorni festivi non possono sovrapporsi l'uno all'altro per lo stesso "
+"orario di lavoro."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -4208,6 +4221,9 @@ msgid ""
 "\n"
 "              No Limit: Time Off requests can be taken without any prior allocation."
 msgstr ""
+"Sì: le richieste di ferie devono avere un'assegnazione valida.\n"
+"\n"
+"Nessun limite: le richieste di ferie possono essere prese senza alcuna assegnazione precedente."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -4283,6 +4299,8 @@ msgstr "Impossibile eliminare ferie che si trovano nel passato"
 msgid ""
 "You cannot delete an allocation request which has some validated leaves."
 msgstr ""
+"Non puoi eliminare una richiesta di assegnazione che ha delle foglie "
+"convalidate."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0

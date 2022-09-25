@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Paolo Valier, 2022
-# Friederike Fasterling-Nesselbosch, 2022
 # Sergio Zanchetta <primes2h@gmail.com>, 2022
 # Martin Trigaux, 2022
+# Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-30 06:06+0000\n"
+"POT-Creation-Date: 2022-09-02 08:11+0000\n"
 "PO-Revision-Date: 2016-08-05 13:08+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -642,6 +642,14 @@ msgstr ""
 " condivisione del progetto. Rimuovi i duplicati e riprova."
 
 #. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"A personal stage cannot be linked to a project because it is only visible to"
+" its corresponding user."
+msgstr ""
+
+#. module: project
 #: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
 msgid "A tag with the same name already exists."
 msgstr ""
@@ -1079,7 +1087,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__rating_avg
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_avg
 msgid "Average Rating"
-msgstr ""
+msgstr "Valutazione Media"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_avg_percentage
@@ -1687,26 +1695,6 @@ msgid "Define the steps your tasks move through from creation to completion."
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_project__privacy_visibility
-#: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
-msgid ""
-"People to whom this project and its tasks will be visible.\n"
-"\n"
-"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
-" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
-"\n"
-"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
-"\n"
-"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
-"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
-"\n"
-"When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks, but not edit them.\n"
-"When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n"
-"\n"
-"In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
-msgstr ""
-
-#. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
 #: model:ir.actions.server,name:project.unlink_task_type_action
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -1906,7 +1894,7 @@ msgstr "Modifica"
 #: code:addons/project/static/src/js/project_kanban.js:0
 #, python-format
 msgid "Edit Personal Stage"
-msgstr ""
+msgstr "Modifica la fase personale"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -3420,6 +3408,26 @@ msgstr ""
 "Modello principale contenente l'alias. Il modello che contiene il "
 "riferimento alias non è necessariamente quello fornito da alias_model_id "
 "(esempio: progetto (parent_model) e lavoro (model))"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project__privacy_visibility
+#: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
+msgid ""
+"People to whom this project and its tasks will be visible.\n"
+"\n"
+"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
+"\n"
+"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"\n"
+"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+"\n"
+"When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks, but not edit them.\n"
+"When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n"
+"\n"
+"In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
@@ -5485,6 +5493,8 @@ msgid ""
 "You should at least have one personal stage. Create a new stage to which the"
 " tasks can be transferred after this one is deleted."
 msgstr ""
+"Dovresti avere almeno una fase personale. Crea una nuova fase in cui "
+"trasferire le attività dopo che questa è stata cancellata."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban

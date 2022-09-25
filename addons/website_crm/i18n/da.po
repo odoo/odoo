@@ -3,21 +3,15 @@
 # 	* website_crm
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2019
-# Per Rasmussen <perhgrasmussen@gmail.com>, 2019
-# Morten Schou <ms@msteknik.dk>, 2019
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
-# Sanne Kristensen <sanne@vkdata.dk>, 2019
-# lhmflexerp <lhm@flexerp.dk>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 11:31+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
+"POT-Creation-Date: 2021-12-07 10:46+0000\n"
+"PO-Revision-Date: 2016-08-05 13:12+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,12 +22,17 @@ msgstr ""
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_website_visitor__lead_count
 msgid "# Leads"
-msgstr ""
+msgstr "# Leads"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_page_count
 msgid "# Page Views"
 msgstr "# Sidevisninger"
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">Contact Form</span>"
+msgstr "<span class=\"o_form_label\">Kontakt Formular</span>"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -44,15 +43,15 @@ msgstr "Tilføj en kontaktformular i"
 #. openerp-web
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 #, python-format
-msgid "Assign leads/opportunities to a sales channel."
-msgstr ""
+msgid "Assign leads/opportunities to a sales team."
+msgstr "Tildel kundeemner/muligheder til salgshold."
 
 #. module: website_crm
 #. openerp-web
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 #, python-format
 msgid "Assign leads/opportunities to a salesperson."
-msgstr ""
+msgstr "Tilføj leads/muligheder til en sælger."
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -63,11 +62,6 @@ msgstr "Kommunikation"
 #: model:ir.model,name:website_crm.model_res_config_settings
 msgid "Config Settings"
 msgstr "Konfigurer opsætning"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
-msgid "Contact Form"
-msgstr "Kontaktformular"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -107,20 +101,12 @@ msgstr ""
 "Kontaktformularen."
 
 #. module: website_crm
-#. openerp-web
-#: code:addons/website_crm/static/src/xml/website_crm.xml:0
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-#, python-format
-msgid "Email"
-msgstr "E-mail"
-
-#. module: website_crm
 #: model:ir.model,name:website_crm.model_crm_lead
 msgid "Lead/Opportunity"
 msgstr "Kundeemne/Salgsmulighed"
 
 #. module: website_crm
-#: model:ir.actions.act_window,name:website_crm.website_visitor_crm_lead_action
+#: model:ir.actions.act_window,name:website_crm.crm_lead_action_from_visitor
 #: model:ir.model.fields,field_description:website_crm.field_website_visitor__lead_ids
 #: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_form
 #: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_search
@@ -129,8 +115,8 @@ msgstr "Kundeemner"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_kanban
-msgid "Leads/Opportunities"
-msgstr "Kundeemner / salgsmuligheder"
+msgid "Leads / Opportunities"
+msgstr ""
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -138,22 +124,14 @@ msgid "New messages are managed as leads or opportunities in your CRM app."
 msgstr "Nye beskeder behandles som kundeemner eller muligheder i din CRM app."
 
 #. module: website_crm
-#: model_terms:ir.actions.act_window,help:website_crm.website_visitor_crm_lead_action
+#: model_terms:ir.actions.act_window,help:website_crm.crm_lead_action_from_visitor
 msgid "No lead linked for this visitor"
-msgstr ""
+msgstr "Denne gæst er ikke koblet til noget Lead"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.crm_lead_view_form
 msgid "Page views"
 msgstr "Sidevisninger"
-
-#. module: website_crm
-#. openerp-web
-#: code:addons/website_crm/static/src/xml/website_crm.xml:0
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-#, python-format
-msgid "Phone Number"
-msgstr "Telefonnummer"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -167,12 +145,8 @@ msgstr ""
 #. module: website_crm
 #. openerp-web
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
-#, python-format
-msgid "Sales Channel"
-msgstr "Salgskanal"
-
-#. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+#, python-format
 msgid "Sales Team"
 msgstr "Salgsteam"
 
@@ -185,26 +159,13 @@ msgid "Salesperson"
 msgstr "Sælger"
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "Send"
-msgstr "Send"
-
-#. module: website_crm
-#. openerp-web
-#: code:addons/website_crm/static/src/xml/website_crm.xml:0
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-#, python-format
-msgid "Subject"
-msgstr "Emne"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_search
-msgid "Visitors"
-msgstr ""
-
-#. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_ids
 msgid "Web Visitors"
+msgstr "Web besøgende"
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.crm_lead_merge_summary_inherit_website
+msgid "Web Visitors:"
 msgstr ""
 
 #. module: website_crm
@@ -220,31 +181,7 @@ msgstr "Kontaktformular"
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_website_visitor
 msgid "Website Visitor"
-msgstr ""
-
-#. module: website_crm
-#. openerp-web
-#: code:addons/website_crm/static/src/xml/website_crm.xml:0
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-#, python-format
-msgid "Your Company"
-msgstr "Din virksomhed"
-
-#. module: website_crm
-#. openerp-web
-#: code:addons/website_crm/static/src/xml/website_crm.xml:0
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-#, python-format
-msgid "Your Name"
-msgstr "Dit navn"
-
-#. module: website_crm
-#. openerp-web
-#: code:addons/website_crm/static/src/xml/website_crm.xml:0
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-#, python-format
-msgid "Your Question"
-msgstr "Dit spørgsmål"
+msgstr "Hjemmeside besøgende"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form

@@ -13,8 +13,8 @@
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2022
 # Martin Trigaux, 2022
 # Lukas Van Cauter <cvl@odoo.com>, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-02 08:11+0000\n"
 "PO-Revision-Date: 2016-08-05 13:08+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2022\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,6 +42,13 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    Geen mijlpalen gevonden. Laten we er een maken!\n"
+"                </p><p>\n"
+"                    Houd belangrijke voortgangspunten bij die moeten worden bereikt om succes te behalen.\n"
+"                </p>\n"
+"            "
 
 #. module: project
 #. openerp-web
@@ -410,11 +417,14 @@ msgid ""
 "                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" attrs=\"{'invisible': ['|', ('rating_avg', '&lt;', 2.33), ('rating_avg', '&gt;=', 3.66)]}\" title=\"Okay\"/>\n"
 "                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" attrs=\"{'invisible': [('rating_avg', '&gt;=', 2.33)]}\" title=\"Dissatisfied\"/>"
 msgstr ""
+"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" attrs=\"{'invisible': [('rating_avg', '&lt;', 3.66)]}\" title=\"Tevreden\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" attrs=\"{'invisible': ['|', ('rating_avg', '&lt;', 2.33), ('rating_avg', '&gt;=', 3.66)]}\" title=\"Oké\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" attrs=\"{'invisible': [('rating_avg', '&gt;=', 2.33)]}\" title=\"Ontevreden\"/ >"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
 msgid "<i class=\"fa fa-lock\"/> Private"
-msgstr ""
+msgstr "<i class=\"fa fa-lock\"/> Privé"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -553,7 +563,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Sub-tasks</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Subtaken</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -907,6 +917,7 @@ msgstr ""
 msgid ""
 "Analyze the progress of your projects and the performance of your employees."
 msgstr ""
+"Analyseer de voortgang van uw projecten en de prestaties van uw medewerkers."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__april
@@ -951,6 +962,8 @@ msgstr "Gearchiveerd"
 #, python-format
 msgid "Archived tasks cannot be recurring. Please unarchive the task first."
 msgstr ""
+"Gearchiveerde taken kunnen niet terugkerend zijn. Maak de taak eerst "
+"ongedaan."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -1107,25 +1120,25 @@ msgstr "Gemiddelde Score"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_avg_percentage
 msgid "Average Rating (%)"
-msgstr ""
+msgstr "Gemiddelde score (%)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Dissatisfied"
-msgstr ""
+msgstr "Gemiddelde beoordeling: ontevreden"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Okay"
-msgstr ""
+msgstr "Gemiddelde beoordeling: Oké"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Satisfied"
-msgstr ""
+msgstr "Gemiddelde beoordeling: tevreden"
 
 #. module: project
 #. openerp-web
@@ -1368,7 +1381,7 @@ msgstr "Bevestiging"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Congratulations, you are now a master of project management."
-msgstr ""
+msgstr "Gefeliciteerd, je bent nu een meester in projectmanagement."
 
 #. module: project
 #. openerp-web
@@ -1423,6 +1436,8 @@ msgstr "Aanmaken"
 msgid ""
 "Create <b>activities</b> to set yourself to-dos or to schedule meetings."
 msgstr ""
+"Maak <b>activiteiten</b> om taken voor uzelf in te stellen of om "
+"vergaderingen te plannen."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__create_date
@@ -1703,11 +1718,13 @@ msgstr ""
 msgid ""
 "Define the steps your projects move through from creation to completion."
 msgstr ""
+"Definieer de stappen die uw projecten doorlopen van creatie tot voltooiing."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 msgid "Define the steps your tasks move through from creation to completion."
 msgstr ""
+"Definieer de stappen die uw taken doorlopen van creatie tot voltooiing."
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
@@ -1843,7 +1860,7 @@ msgstr "Schermnaam"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__display_parent_task_button
 msgid "Display Parent Task Button"
-msgstr ""
+msgstr "Bovenliggende taakknop weergeven"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__display_project_id
@@ -2050,7 +2067,7 @@ msgstr "Gevouwen in kanban"
 #: model:ir.model.fields,help:project.field_project_task_burndown_chart_report__is_closed
 #: model:ir.model.fields,help:project.field_report_project_task_user__is_closed
 msgid "Folded in Kanban stages are closing stages."
-msgstr ""
+msgstr "Ingevouwen Kanban-fasen zijn slotfasen."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2436,13 +2453,13 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Invalid operator: %s"
-msgstr ""
+msgstr "Ongeldige operator: %s"
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Invalid value: %s"
-msgstr ""
+msgstr "Ongeldige waarde: %s"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -2487,7 +2504,7 @@ msgstr "Is een volger"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_milestone_exceeded
 msgid "Is Milestone Exceeded"
-msgstr ""
+msgstr "Is mijlpaal overschreden"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_private
@@ -2519,6 +2536,9 @@ msgid ""
 "It seems that some tasks are part of a recurrence. At least one of them must"
 " be kept as a model to create the next occurences."
 msgstr ""
+"Het lijkt erop dat sommige taken deel uitmaken van een herhaling. Ten minste"
+" één ervan moet als model worden bewaard om de volgende gebeurtenissen te "
+"creëren."
 
 #. module: project
 #. openerp-web
@@ -2591,6 +2611,8 @@ msgid ""
 "Keep track of the progress of your tasks from creation to completion.<br>\n"
 "                    Collaborate efficiently by chatting in real-time or via email."
 msgstr ""
+"Houd de voortgang van uw taken bij, van het maken tot het voltooien.<br>\n"
+"                    Werk efficiënt samen door in realtime of via e-mail te chatten."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_action
@@ -2598,6 +2620,8 @@ msgid ""
 "Keep track of the progress of your tasks from creation to completion.<br>\n"
 "                Collaborate efficiently by chatting in real-time or via email."
 msgstr ""
+"Houd de voortgang van uw taken bij, van het maken tot het voltooien.<br>\n"
+"                Werk efficiënt samen door in realtime of via e-mail te chatten."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened_value
@@ -2711,7 +2735,7 @@ msgstr "Te late activiteiten"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Late Milestones"
-msgstr ""
+msgstr "Late mijlpalen"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
@@ -2866,6 +2890,8 @@ msgid ""
 "Measure your customer satisfaction by sending rating requests when your "
 "tasks reach a certain stage."
 msgstr ""
+"Meet uw klanttevredenheid door beoordelingsverzoeken te verzenden wanneer uw"
+" taken een bepaald stadium bereiken."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__favorite_user_ids
@@ -3105,7 +3131,7 @@ msgstr "Volgende herhaling"
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "No Rating"
-msgstr ""
+msgstr "Geen beoordeling"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3340,6 +3366,8 @@ msgid ""
 "Organize your tasks by dispatching them across the pipeline.<br>\n"
 "                    Collaborate efficiently by chatting in real-time or via email."
 msgstr ""
+"Organiseer uw taken door ze over de pijplijn te verdelen.<br>\n"
+"                    Werk efficiënt samen door in realtime of via e-mail te chatten."
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -3822,6 +3850,8 @@ msgstr "Project gearchiveerd"
 msgid ""
 "Projects contain tasks on the same topic, and each has its own dashboard."
 msgstr ""
+"Projecten bevatten taken over hetzelfde onderwerp en elk heeft zijn eigen "
+"dashboard."
 
 #. module: project
 #. openerp-web
@@ -4190,7 +4220,7 @@ msgstr "Zat"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Satisfaction"
-msgstr ""
+msgstr "Tevredenheid"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -4322,7 +4352,7 @@ msgstr "Omslagafbeelding instellen"
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__to_define
 #, python-format
 msgid "Set Status"
-msgstr ""
+msgstr "Status instellen"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -4506,7 +4536,7 @@ msgstr "Status"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Status Update - "
-msgstr ""
+msgstr "Status update - "
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__activity_state
@@ -4557,7 +4587,7 @@ msgstr "Sub-taken geplande uren"
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 msgid "Submitted On"
-msgstr ""
+msgstr "Ingediend op"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__subtask_planned_hours
@@ -4725,7 +4755,7 @@ msgstr "Taak geblokkeerd"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_progress
 msgid "Task in Progress"
-msgstr ""
+msgstr "Taak in uitvoering"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -4906,7 +4936,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
 msgid "The project's start date must be before its end date."
-msgstr ""
+msgstr "De startdatum van het project moet voor de einddatum vallen."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -4946,7 +4976,7 @@ msgstr "Er zijn geen taken."
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "There is nothing to report."
-msgstr ""
+msgstr "Er valt niets te melden."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_from
@@ -5059,7 +5089,7 @@ msgstr "Titel van de update"
 #: code:addons/project/static/src/xml/project_templates.xml:0
 #, python-format
 msgid "To Bill"
-msgstr ""
+msgstr "Aanrekenen"
 
 #. module: project
 #: model:project.project.stage,name:project.project_project_stage_0
@@ -5162,7 +5192,7 @@ msgstr "Tweemaal per maand"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Two tasks cannot depend on each other."
-msgstr ""
+msgstr "Twee taken kunnen niet van elkaar afhankelijk zijn."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__activity_exception_decoration
@@ -5222,7 +5252,7 @@ msgstr "Bijwerken"
 #: model:mail.message.subtype,name:project.mt_project_update_create
 #: model:mail.message.subtype,name:project.mt_update_create
 msgid "Update Created"
-msgstr ""
+msgstr "Update gemaakt"
 
 #. module: project
 #. openerp-web
@@ -5550,7 +5580,7 @@ msgstr "bijv. Bedrijfsfeest"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
 #: model_terms:ir.ui.view,arch_db:project.quick_create_task_form
 msgid "e.g. Send Invitations"
-msgstr ""
+msgstr "bijv. Uitnodigingen versturen"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified

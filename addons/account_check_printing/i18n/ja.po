@@ -1,20 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * account_check_printing
+# 	* account_check_printing
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2018
-# Manami Hashi <manami@roomsfor.hk>, 2018
-# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2018
-# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018
+# Martin Trigaux, 2022
+# Ryoko Tsuda <ryoko@quartile.co>, 2022
+# Noma Yuki, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2016-08-05 12:55+0000\n"
+"Last-Translator: Noma Yuki, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,21 +22,10 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_journal.py:58
+#: code:addons/account_check_printing/models/account_journal.py:0
 #, python-format
 msgid " : Check Number Sequence"
-msgstr ""
-
-#. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:63
-#, python-format
-msgid "A check memo cannot exceed 60 characters."
-msgstr ""
-
-#. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_account_chart_template
-msgid "Account Chart Template"
-msgstr ""
+msgstr ":番号順をチェック"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_margin_left
@@ -49,13 +37,12 @@ msgstr ""
 msgid ""
 "Adjust the margins of generated checks to make it fit your printer's "
 "settings."
-msgstr ""
+msgstr "プリンタの設定に合うように生成された小切手の余白を調整します。"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_amount_in_words
-#: model:ir.model.fields,field_description:account_check_printing.field_account_register_payments__check_amount_in_words
 msgid "Amount in Words"
-msgstr ""
+msgstr "金額の文字表記"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -66,57 +53,56 @@ msgstr "取消"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_layout
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_layout
 msgid "Check Layout"
-msgstr ""
+msgstr "小切手のレイアウト"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_left
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_left
 msgid "Check Left Margin"
-msgstr ""
+msgstr "小切手の左マージン"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_number
-#: model:ir.model.fields,field_description:account_check_printing.field_account_register_payments__check_number
 msgid "Check Number"
-msgstr ""
+msgstr "小切手の番号"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_journal_form_inherited
 msgid "Check Printing"
-msgstr ""
-
-#. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_printing_payment_method_selected
-msgid "Check Printing Payment Method Selected"
-msgstr ""
+msgstr "小切手の印刷"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_right
 msgid "Check Right Margin"
-msgstr ""
+msgstr "小切手の右マージン"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_sequence_id
 msgid "Check Sequence"
-msgstr ""
+msgstr "小切手のシーケンス"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_top
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_top
 msgid "Check Top Margin"
-msgstr ""
+msgstr "小切手の上余白"
+
+#. module: account_check_printing
+#: code:addons/account_check_printing/models/account_payment.py:0
+#, python-format
+msgid "Check numbers can only consist of digits"
+msgstr "小切手番号は数字のみが使えます。"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_manual_sequencing
-#: model:ir.model.fields,help:account_check_printing.field_account_register_payments__check_manual_sequencing
 msgid "Check this option if your pre-printed checks are not numbered."
-msgstr ""
+msgstr "印刷済の小切手が番号付けされていない場合は、このオプションをチェックしてください。"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
 msgid "Check to print"
-msgstr ""
+msgstr "印刷対象の小切手"
 
 #. module: account_check_printing
 #: model:account.payment.method,name:account_check_printing.account_payment_method_check
@@ -124,25 +110,21 @@ msgid "Checks"
 msgstr "小切手"
 
 #. module: account_check_printing
-#: model_terms:ir.ui.view,arch_db:account_check_printing.view_payment_check_printing_search
-msgid "Checks To Print"
-msgstr ""
-
-#. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_sequence_id
 msgid "Checks numbering sequence."
-msgstr ""
+msgstr "小切手の番号シーケンス"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_journal.py:97
+#: code:addons/account_check_printing/models/account_journal.py:0
+#: model_terms:ir.ui.view,arch_db:account_check_printing.view_payment_check_printing_search
 #, python-format
 msgid "Checks to Print"
-msgstr ""
+msgstr "印刷する小切手"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
 msgid "Checks to print"
-msgstr ""
+msgstr "印刷する小切手"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_res_company
@@ -150,14 +132,14 @@ msgid "Companies"
 msgstr "会社"
 
 #. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__country_code
-msgid "Company Country code"
-msgstr ""
-
-#. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "コンフィグ設定"
+
+#. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_res_partner
+msgid "Contact"
+msgstr "連絡先"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__create_uid
@@ -172,7 +154,14 @@ msgstr "作成日"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__display_name
 msgid "Display Name"
-msgstr "表示名"
+msgstr "名前を表示"
+
+#. module: account_check_printing
+#: code:addons/account_check_printing/models/account_payment.py:0
+#: code:addons/account_check_printing/models/account_payment.py:0
+#, python-format
+msgid "Go to the configuration panel"
+msgstr "コンフィグレーションパネルに移動"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__id
@@ -180,17 +169,22 @@ msgid "ID"
 msgstr "ID"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:84
+#: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid ""
 "In order to print multiple checks at once, they must belong to the same bank"
 " journal."
-msgstr ""
+msgstr "一度に複数の小切手を印刷するためには、同じ銀行の台帳に属している必要があります。"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_journal
 msgid "Journal"
 msgstr "仕訳帳"
+
+#. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_account_move
+msgid "Journal Entry"
+msgstr "仕訳"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks____last_update
@@ -210,34 +204,55 @@ msgstr "最終更新日"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_manual_sequencing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_manual_sequencing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_register_payments__check_manual_sequencing
 msgid "Manual Numbering"
+msgstr "手動番号割当"
+
+#. module: account_check_printing
+#: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_line_id
+msgid ""
+"Manual: Pay or Get paid by any method outside of Odoo.\n"
+"Payment Acquirers: Each payment acquirer has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
+"Check: Pay bills by check and print it from Odoo.\n"
+"Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
+"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
+"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
 msgid "Multi-Pages Check Stub"
-msgstr ""
+msgstr "マルチページをチェックするスタブ"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_next_number
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__next_check_number
 msgid "Next Check Number"
-msgstr ""
+msgstr "次の小切手番号"
 
 #. module: account_check_printing
-#: selection:res.company,account_check_printing_layout:0
+#: code:addons/account_check_printing/models/account_journal.py:0
+#: code:addons/account_check_printing/wizard/print_prenumbered_checks.py:0
+#, python-format
+msgid "Next Check Number should only contains numbers."
+msgstr "次の小切手番号は数字だけであるべきです。"
+
+#. module: account_check_printing
+#: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__disabled
 msgid "None"
 msgstr "なし"
 
 #. module: account_check_printing
-#: model:ir.model.fields,help:account_check_printing.field_account_register_payments__check_number
-msgid ""
-"Number of the check corresponding to this payment. If your pre-printed check"
-" are not already numbered, you can manage the numbering in the journal "
-"configuration page."
-msgstr ""
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__payment_method_line_id
+#: model:ir.model.fields,field_description:account_check_printing.field_res_partner__property_payment_method_id
+#: model:ir.model.fields,field_description:account_check_printing.field_res_users__property_payment_method_id
+msgid "Payment Method"
+msgstr "支払方法"
+
+#. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_account_payment_method
+msgid "Payment Methods"
+msgstr "支払方法"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment
@@ -245,19 +260,36 @@ msgid "Payments"
 msgstr "支払"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:81
+#: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid ""
 "Payments to print as a checks must have 'Check' selected as payment method "
 "and not have already been reconciled"
-msgstr ""
+msgstr "小切手を支払い方法として選択する場合は、支払い方法に'小切手'を選択していると共に、未消込みである必要があります。"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
 "Please enter the number of the first pre-printed check that you are about to"
 " print on."
+msgstr "印刷したい最初の印刷済み小切手の番号を入力してください。"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_bank_statement_line__preferred_payment_method_id
+#: model:ir.model.fields,field_description:account_check_printing.field_account_move__preferred_payment_method_id
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__preferred_payment_method_id
+msgid "Preferred Payment Method"
+msgstr "優先お支払い方法"
+
+#. module: account_check_printing
+#: model:ir.model.fields,help:account_check_printing.field_res_partner__property_payment_method_id
+#: model:ir.model.fields,help:account_check_printing.field_res_users__property_payment_method_id
+msgid ""
+"Preferred payment method when paying this vendor. This is used to filter "
+"vendor bills by preferred payment method to register payments in mass. Use "
+"cases: create bank files for batch wires, check runs."
 msgstr ""
+"このベンダーを支払う際に支払い方法を好適。これは、質量の支払いを登録するために好適な支払方法によってフィルタベンダー紙幣に使用されます。ユースケースは:バッチワイヤ、チェックを実行するために銀行のファイルを作成します。"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -272,31 +304,31 @@ msgstr "小切手印刷"
 #. module: account_check_printing
 #: model:ir.actions.server,name:account_check_printing.action_account_print_checks
 msgid "Print Checks"
-msgstr ""
+msgstr "印刷チェック"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_date_label
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_date_label
 msgid "Print Date Label"
-msgstr ""
+msgstr "印刷日付ラベル"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:94
+#: code:addons/account_check_printing/models/account_payment.py:0
 #: model:ir.model,name:account_check_printing.model_print_prenumbered_checks
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 #, python-format
 msgid "Print Pre-numbered Checks"
-msgstr ""
+msgstr "前の番号のチェックを印刷"
 
 #. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_account_register_payments
-msgid "Register Payments"
-msgstr "支払情報を登録"
+#: model:ir.model,name:account_check_printing.model_account_payment_register
+msgid "Register Payment"
+msgstr "支払登録"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_right
 msgid "Right Margin"
-msgstr ""
+msgstr "右マージン"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_layout
@@ -305,35 +337,44 @@ msgid ""
 "Select the format corresponding to the check paper you will be printing your checks on.\n"
 "In order to disable the printing feature, select 'None'."
 msgstr ""
+"あなたの小切手に印刷される小切手用紙に対応するフォーマットを選択します。\n"
+"印刷機能を無効にするためには、'なし'を選択。"
+
+#. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
+msgid "Sent"
+msgstr "送信済"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_next_number
 msgid "Sequence number of the next printed check."
-msgstr ""
+msgstr "次に印刷された小切手のシーケンス番号。"
 
 #. module: account_check_printing
-#: model:ir.model.fields,help:account_check_printing.field_account_journal__check_printing_payment_method_selected
+#: code:addons/account_check_printing/models/account_payment.py:0
+#, python-format
 msgid ""
-"Technical feature used to know whether check printing was enabled as payment"
-" method."
-msgstr ""
+"Something went wrong with Check Layout, please select another layout in "
+"Invoicing/Accounting Settings and try again."
+msgstr "チェックレイアウトにて何か問題が起きました、請求書発行/会計設定で別のレイアウトを選択して、もう一度お試しください。"
 
 #. module: account_check_printing
-#: model:ir.model.fields,help:account_check_printing.field_res_config_settings__country_code
+#: code:addons/account_check_printing/models/account_payment.py:0
+#, python-format
 msgid ""
-"The ISO country code in two chars. \n"
-"You can use this field for quick search."
+"The following numbers are already used:\n"
+"%s"
 msgstr ""
-"ISOの国別コードは2文字です。\n"
-"これを使ってクイックサーチできます。"
+"次の番号は、すでに使用されています:\n"
+"%s"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_journal.py:26
+#: code:addons/account_check_printing/models/account_journal.py:0
 #, python-format
 msgid ""
 "The last check number was %s. In order to avoid a check being rejected by "
 "the bank, you can only use a greater number."
-msgstr ""
+msgstr "最後のチェックの数は%sでした。銀行によって却下された小切手の利用を回避するために、より大きな番号を使用することができます。"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_number
@@ -342,6 +383,7 @@ msgid ""
 "printed check paper already has numbers or if the current numbering is "
 "wrong, you can change it in the journal configuration page."
 msgstr ""
+"選択された台帳は、小切手番号を印刷するように構成されています。印刷済みの小切手用紙は、既に番号を持っているか、現在の番号が間違っている場合は、ジャーナルの設定ページで変更できます。"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -349,46 +391,39 @@ msgstr ""
 msgid ""
 "This option allows you to print check details (stub) on multiple pages if "
 "they don't fit on a single page."
-msgstr ""
+msgstr "このオプションは、それらが単一ページに収まらない場合は、複数ページのチェックの詳細情報（スタブ）を印刷することができます。"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_date_label
 msgid ""
-"This option allows you to print the date label on the check as per CPA. "
+"This option allows you to print the date label on the check as per CPA.\n"
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
+"このオプションにより、CPAごとに小切手へ日付ラベルを印刷することができます。\n"
+"印刷済の小切手台紙に日付ラベルが含まれている場合、無効にしてください。"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
 "This will allow to save on payments the number of the corresponding check."
-msgstr ""
+msgstr "これは、支払いに対応する小切手の数を節約することができます。"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Unmark Sent"
-msgstr ""
+msgstr "送付済みを選択解除"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:116
+#: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
+msgid "Void Check"
+msgstr "無効な小切手"
+
+#. module: account_check_printing
+#: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid ""
-"You have to choose a check layout. For this, go in Apps, search for 'Checks "
-"layout' and install one."
+"You have to choose a check layout. For this, go in Invoicing/Accounting "
+"Settings, search for 'Checks layout' and set one."
 msgstr ""
-
-#. module: account_check_printing
-#: selection:res.company,account_check_printing_layout:0
-msgid "check in middle"
-msgstr ""
-
-#. module: account_check_printing
-#: selection:res.company,account_check_printing_layout:0
-msgid "check on bottom"
-msgstr ""
-
-#. module: account_check_printing
-#: selection:res.company,account_check_printing_layout:0
-msgid "check on top"
-msgstr ""
+"あなたが小切手のレイアウトを選択する必要があります。このため、'小切手のレイアウト'とセット1を検索し、請求書発行/会計セッティングに行きます。"

@@ -1,22 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * web_tour
+# 	* web_tour
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Morten Schou <ms@msteknik.dk>, 2019
-# Jesper Carstensen <jc@danodoo.dk>, 2019
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
-# Sanne Kristensen <sanne@vkdata.dk>, 2019
-# lhmflexerp <lhm@flexerp.dk>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
+"POT-Creation-Date: 2021-09-14 10:29+0000\n"
+"PO-Revision-Date: 2016-08-05 13:11+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,10 +21,27 @@ msgstr ""
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/js/tour_manager.js:386
+#: code:addons/web_tour/static/src/js/tour_manager.js:0
+#, python-format
+msgid ""
+"<strong><b>Good job!</b> You went through all steps of this tour.</strong>"
+msgstr ""
+"<strong><b>Godt arbejde!</b>Du gennemgik alle trin i denne "
+"rundvisning.</strong>"
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/js/tip.js:0
+#, python-format
+msgid "Click here to go to the next step."
+msgstr ""
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/js/tour_step_utils.js:0
 #, python-format
 msgid "Click on the <i>Home icon</i> to navigate across apps."
-msgstr ""
+msgstr "Klik på <i>Hjem ikonet</i> for at navigere på tværs af applikationer."
 
 #. module: web_tour
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__user_id
@@ -38,10 +50,10 @@ msgstr "Forbrugt af"
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:7
+#: code:addons/web_tour/static/src/debug/debug_manager.js:0
 #, python-format
 msgid "Disable Tours"
-msgstr ""
+msgstr "Deaktiver rundvisninger"
 
 #. module: web_tour
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__display_name
@@ -70,31 +82,89 @@ msgstr "Menu"
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:17
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
 #, python-format
 msgid "Name"
 msgstr "Navn"
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:18
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Onboarding tours"
+msgstr ""
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/js/tour_step_utils.js:0
+#, python-format
+msgid "Open bugger menu."
+msgstr "Åben bugger menu."
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
 #, python-format
 msgid "Path"
 msgstr "Sti"
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/js/tour_manager.js:76
+#: code:addons/web_tour/static/src/js/tip.js:0
 #, python-format
-msgid "Skip tour"
-msgstr "Spring over rundturen"
+msgid "Scroll to reach the next step."
+msgstr "Rul for at nå det næste trin."
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:8
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Sequence"
+msgstr "Sekvens"
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Start"
+msgstr "Start"
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/debug/debug_manager.js:0
 #, python-format
 msgid "Start Tour"
 msgstr "Start rundtur"
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Start tour"
+msgstr "Start tur"
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Test"
+msgstr "Test"
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Test tour"
+msgstr "Test rundvisning"
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Testing tours"
+msgstr ""
 
 #. module: web_tour
 #: model_terms:ir.ui.view,arch_db:web_tour.edit_tour_search
@@ -102,20 +172,16 @@ msgid "Tip"
 msgstr "Tip"
 
 #. module: web_tour
-#. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:25
-#, python-format
-msgid "Tour"
-msgstr ""
-
-#. module: web_tour
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__name
 msgid "Tour name"
 msgstr "Navn på rundtur"
 
 #. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.js:0
 #: model:ir.actions.act_window,name:web_tour.edit_tour_action
 #: model:ir.model,name:web_tour.model_web_tour_tour
 #: model:ir.ui.menu,name:web_tour.menu_tour_action
+#, python-format
 msgid "Tours"
 msgstr "Rundture"

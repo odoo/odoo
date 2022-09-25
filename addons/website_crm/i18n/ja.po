@@ -1,19 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_crm
+# 	* website_crm
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2018
-# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2018
-# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018
+# Ryoko Tsuda <ryoko@quartile.co>, 2022
+# Tsuda Ryoko <ryoko04nov@gmail.com>, 2022
+# Noma Yuki, 2022
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018\n"
+"POT-Creation-Date: 2021-12-07 10:46+0000\n"
+"PO-Revision-Date: 2016-08-05 13:12+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,10 +25,19 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website_crm.contactus_thanks
-msgid "&amp;times;"
-msgstr "&amp;times;"
+#: model:ir.model.fields,field_description:website_crm.field_website_visitor__lead_count
+msgid "# Leads"
+msgstr "＃リード"
+
+#. module: website_crm
+#: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_page_count
+msgid "# Page Views"
+msgstr ""
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">Contact Form</span>"
+msgstr "<span class=\"o_form_label\">コンタクトフォーム</span>"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -33,19 +45,28 @@ msgid "Add a contact form in the"
 msgstr "次のページにコンタクトフォームを追加:"
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
-msgid "Communication"
-msgstr "摘要"
+#. openerp-web
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
+#, python-format
+msgid "Assign leads/opportunities to a sales team."
+msgstr ""
 
 #. module: website_crm
-#: model:ir.model,name:website_crm.model_res_config_settings
-msgid "Config Settings"
+#. openerp-web
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
+#, python-format
+msgid "Assign leads/opportunities to a salesperson."
 msgstr ""
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
-msgid "Contact Form"
-msgstr "連絡先フォーム"
+msgid "Communication"
+msgstr "通信欄"
+
+#. module: website_crm
+#: model:ir.model,name:website_crm.model_res_config_settings
+msgid "Config Settings"
+msgstr "コンフィグ設定"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -81,14 +102,22 @@ msgid "Default salesperson for new leads created through the Contact Us form."
 msgstr ""
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "Email"
-msgstr "Eメール"
-
-#. module: website_crm
 #: model:ir.model,name:website_crm.model_crm_lead
 msgid "Lead/Opportunity"
 msgstr "リード / 案件"
+
+#. module: website_crm
+#: model:ir.actions.act_window,name:website_crm.crm_lead_action_from_visitor
+#: model:ir.model.fields,field_description:website_crm.field_website_visitor__lead_ids
+#: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_form
+#: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_search
+msgid "Leads"
+msgstr "リード"
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_kanban
+msgid "Leads / Opportunities"
+msgstr ""
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -96,9 +125,14 @@ msgid "New messages are managed as leads or opportunities in your CRM app."
 msgstr ""
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "Phone Number"
-msgstr "電話番号"
+#: model_terms:ir.actions.act_window,help:website_crm.crm_lead_action_from_visitor
+msgid "No lead linked for this visitor"
+msgstr ""
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.crm_lead_view_form
+msgid "Page views"
+msgstr "ページビュー"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -108,36 +142,30 @@ msgid ""
 msgstr ""
 
 #. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+#, python-format
 msgid "Sales Team"
 msgstr "販売チーム"
 
 #. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+#, python-format
 msgid "Salesperson"
 msgstr "販売担当者"
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "Send"
-msgstr "送信"
+#: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_ids
+msgid "Web Visitors"
+msgstr ""
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "Subject"
-msgstr "件名"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website_crm.contactus_thanks
-msgid "Thanks!"
-msgstr "お問い合わせありがとうございます。"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website_crm.contactus_thanks
-msgid "We will get back to you shortly."
-msgstr "内容を確認の上返信差し上げます。今しばらくお待ち願います。"
+#: model_terms:ir.ui.view,arch_db:website_crm.crm_lead_merge_summary_inherit_website
+msgid "Web Visitors:"
+msgstr ""
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_website
@@ -150,25 +178,9 @@ msgid "Website Contact Form"
 msgstr "ウェブサイトお問い合わせフォーム"
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "Your Company"
-msgstr "会社名"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "Your Name"
-msgstr "お名前"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "Your Question"
-msgstr "ご質問内容"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website_crm.contactus_thanks
-msgid "Your message has been sent successfully."
-msgstr "メッセージは正常に送信されました。"
+#: model:ir.model,name:website_crm.model_website_visitor
+msgid "Website Visitor"
+msgstr "ウェブサイト訪問者"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form

@@ -8,6 +8,7 @@
 # Sergio Zanchetta <primes2h@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Friederike Fasterling-Nesselbosch, 2022
+# Davide Speranza <dsp@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-02 08:11+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Davide Speranza <dsp@odoo.com>, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +29,8 @@ msgstr ""
 #, python-format
 msgid "\tCannot create unbalanced journal entry. The balance is equal to %s\n"
 msgstr ""
+"\tNon è possibile creare una riga giornale non bilanciata. Il bilancio è "
+"uguale a %s\n"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -907,6 +910,12 @@ msgstr "<span>5,00</span>"
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Amount</span>"
 msgstr "<span>Importo</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.bill_preview
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "<span>Amount In Currency</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -2469,6 +2478,8 @@ msgid ""
 "An analytic default requires an analytic account or an analytic tag used for"
 " analytic distribution."
 msgstr ""
+"Un default analitico richiede un account analitico o un tag analitico "
+"utilizzato per la distribuzione analitica."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

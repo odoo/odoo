@@ -3,22 +3,28 @@
 # 	* delivery
 # 
 # Translators:
-# Martin Trigaux, 2019
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2019
-# Anatolij, 2019
-# Silvija Butko <silvija.butko@gmail.com>, 2019
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2019
-# Antanas Muliuolis <an.muliuolis@gmail.com>, 2019
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2019
-# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# Antanas Muliuolis <an.muliuolis@gmail.com>, 2022
+# Anatolij, 2022
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2022
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2022
+# grupoda2 <dmitrijus.ivanovas@gmail.com>, 2022
+# Arunas V. <arunas@devoro.com>, 2022
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022
+# Denis Knotko <denis_knotko@yahoo.com>, 2022
+# Jonas Zinkevicius <jozi@odoo.com>, 2022
+# Linas Versada <linaskrisiukenas@gmail.com>, 2022
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2022
+# Donatas <donatasvaliulis16@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Silvija Butko <silvija.butko@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
+"POT-Creation-Date: 2022-04-19 13:57+0000\n"
+"PO-Revision-Date: 2016-08-05 12:57+0000\n"
+"Last-Translator: Silvija Butko <silvija.butko@gmail.com>, 2022\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -83,10 +89,26 @@ msgstr ""
 "                                    <span class=\"o_stat_text\">Aplinka</span>"
 
 #. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.stock_report_delivery_package_section_line_inherit_delivery
+msgid "<span> - Weight (estimated): </span>"
+msgstr ""
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.delivery_stock_report_delivery_no_package_section_line
+#: model_terms:ir.ui.view,arch_db:delivery.stock_report_delivery_package_section_line_inherit_delivery
+msgid "<span> - Weight: </span>"
+msgstr ""
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
+msgid "<span>Shipping Weight: </span>"
+msgstr ""
+
+#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
 #: model_terms:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Carrier:</strong>"
-msgstr ""
+msgstr "<strong>Vežėjas:</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -95,18 +117,36 @@ msgstr ""
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
+msgid "<strong>Shipping Weight: </strong>"
+msgstr ""
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
 msgid ""
 "<strong>Shipping Weight:</strong>\n"
+"                    <br/>"
+msgstr ""
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
+msgid ""
+"<strong>Total Weight:</strong>\n"
 "                <br/>"
 msgstr ""
+"<strong>Svoris:</strong>\n"
+"                <br/>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
 msgid "<strong>Tracking Number:</strong>"
+msgstr "<strong>Sekimo numeris:</strong>"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
+msgid "<strong>Weight: </strong>"
 msgstr ""
 
 #. module: delivery
-#: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
 #: model_terms:ir.ui.view,arch_db:delivery.report_shipping2
 msgid ""
 "<strong>Weight:</strong>\n"
@@ -155,6 +195,7 @@ msgstr ""
 " valiuta"
 
 #. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
 msgstr "Archyvuotas"
@@ -186,13 +227,30 @@ msgstr "Atšaukti"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__carrier_id
-#: model:ir.model.fields,field_description:delivery.field_product_packaging__package_carrier_type
+#: model:ir.model.fields,field_description:delivery.field_stock_move_line__carrier_id
+#: model:ir.model.fields,field_description:delivery.field_stock_package_type__package_carrier_type
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_id
+#: model_terms:ir.ui.view,arch_db:delivery.stock_move_line_view_search_delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
 msgid "Carrier"
 msgstr "Kurjeris"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_package_type__shipper_package_code
+msgid "Carrier Code"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_move_line__carrier_name
+msgid "Carrier Name"
+msgstr ""
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.stock_move_line_view_search_delivery
+msgid "Carrier name"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_choose_delivery_carrier__carrier_id
@@ -214,12 +272,12 @@ msgstr "Sąlyga"
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
 msgid "Contact"
-msgstr "Kontaktai"
+msgstr "Kontaktas"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__display_price
 msgid "Cost"
-msgstr "Išlaidos"
+msgstr "Savikaina"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__country_ids
@@ -269,16 +327,6 @@ msgid "Define a new delivery method"
 msgstr "Nustatyti naują pristatymo būdą"
 
 #. module: delivery
-#: model:product.category,name:delivery.product_category_deliveries
-msgid "Deliveries"
-msgstr "Pristatymai"
-
-#. module: delivery
-#: model:ir.ui.menu,name:delivery.menu_delivery
-msgid "Delivery"
-msgstr "Pristatymas"
-
-#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Delivery Carrier"
 msgstr "Siuntos kurjeris"
@@ -313,22 +361,14 @@ msgid "Delivery Package Selection Wizard"
 msgstr "Siuntos pakuotės pasirinkimo vedlys"
 
 #. module: delivery
-#: model:ir.actions.act_window,name:delivery.action_delivery_packaging_view
-#: model:ir.ui.menu,name:delivery.menu_delivery_packagings
-#: model_terms:ir.ui.view,arch_db:delivery.product_packaging_delivery_tree
-msgid "Delivery Packages"
-msgstr "Pristatymo pakuotės"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__delivery_packaging_id
-#: model_terms:ir.ui.view,arch_db:delivery.product_packaging_delivery_form
-msgid "Delivery Packaging"
-msgstr "Siuntos pakavimas"
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__delivery_package_type_id
+msgid "Delivery Package Type"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_price
 msgid "Delivery Price"
-msgstr ""
+msgstr "Pristatymo kaina"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_price_rule
@@ -357,9 +397,20 @@ msgid "Delivery cost should be recomputed"
 msgstr ""
 
 #. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.vpicktree_view_tree
+msgid "Destination"
+msgstr "Pristatymo vieta"
+
+#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Destination Availability"
 msgstr "Vietos pasiekiamumas"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_move_line__destination_country_code
+#: model:ir.model.fields,field_description:delivery.field_stock_picking__destination_country_code
+msgid "Destination Country"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__sequence
@@ -443,6 +494,12 @@ msgid "Fixed Price"
 msgstr "Fiksuota kaina"
 
 #. module: delivery
+#: code:addons/delivery/models/sale_order.py:0
+#, python-format
+msgid "Free Shipping"
+msgstr "Nemokamas pristatymas"
+
+#. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.product,name:delivery.product_product_delivery
 #: model:product.template,name:delivery.product_product_delivery_product_template
@@ -477,18 +534,9 @@ msgstr "Grupuoti pagal"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_product__hs_code
 #: model:ir.model.fields,field_description:delivery.field_product_template__hs_code
+#: model_terms:ir.ui.view,arch_db:delivery.product_template_hs_code
 msgid "HS Code"
 msgstr "HS kodas"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_product_packaging__height
-msgid "Height"
-msgstr "Aukštis"
-
-#. module: delivery
-#: model:ir.model.constraint,message:delivery.constraint_product_packaging_positive_height
-msgid "Height must be positive"
-msgstr "Aukštis turi būti teigiamas"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__id
@@ -511,6 +559,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Install more Providers"
 msgstr "Įdiegti daugiau tiekėjų"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__shipping_insurance
+msgid "Insurance Percentage"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__integration_level
@@ -562,16 +615,6 @@ msgid "Last Updated on"
 msgstr "Paskutinį kartą atnaujinta"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_product_packaging__length
-msgid "Length"
-msgstr "Ilgis"
-
-#. module: delivery
-#: model:ir.model.constraint,message:delivery.constraint_product_packaging_positive_length
-msgid "Length must be positive"
-msgstr "Ilgis turi būti teigiamas"
-
-#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__debug_logging
 msgid "Log requests in order to ease debugging"
 msgstr "Sekti užklausas, kad būtų lengviau taisyti klaidas"
@@ -592,33 +635,17 @@ msgid "Margin on Rate"
 msgstr "Papildoma marža"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_product_packaging__max_weight
-msgid "Max Weight"
-msgstr "Maksimalus svoris"
-
-#. module: delivery
-#: model:ir.model.constraint,message:delivery.constraint_product_packaging_positive_max_weight
-msgid "Max Weight must be positive"
-msgstr "Maksimalus svoris turi būti teigiamas"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__max_value
 msgid "Maximum Value"
 msgstr "Maksimali reikšmė"
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_product_packaging__max_weight
-msgid "Maximum weight shippable in this packaging"
-msgstr "Maksimalus gabenamas svoris šioje pakuotėje"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__name
-#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Name"
-msgstr "Vardas"
+msgstr "Pavadinimas"
 
 #. module: delivery
-#: model:ir.model.fields.selection,name:delivery.selection__product_packaging__package_carrier_type__none
+#: model:ir.model.fields.selection,name:delivery.selection__stock_package_type__package_carrier_type__none
 msgid "No carrier integration"
 msgstr "Kurjerio integracijos nėra"
 
@@ -633,7 +660,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "OK"
-msgstr "OK"
+msgstr "Gerai"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__operator
@@ -646,14 +673,15 @@ msgid "Order"
 msgstr "Užsakymas"
 
 #. module: delivery
-#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
-msgid "Package"
-msgstr "Pakuotė"
+#: model:ir.model.fields,field_description:delivery.field_product_product__country_of_origin
+#: model:ir.model.fields,field_description:delivery.field_product_template__country_of_origin
+msgid "Origin of Goods"
+msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_product_packaging__shipper_package_code
-msgid "Package Code"
-msgstr "Pakuotės kodas"
+#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
+msgid "Package"
+msgstr "Paketas"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:0
@@ -676,7 +704,7 @@ msgstr "Pakuotės"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__picking_id
 msgid "Picking"
-msgstr "Paėmimas"
+msgstr "Judėjimas"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -707,9 +735,9 @@ msgid "Print Return Label"
 msgstr ""
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_product_packaging
-msgid "Product Packaging"
-msgstr "Produkto pakavimas"
+#: model:ir.model,name:delivery.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "Produkto perkėlimai (atsargų perkėlimo eilutė)"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__product_qty
@@ -756,12 +784,21 @@ msgid "Return Picking"
 msgstr "Paėmimo grąžinimas"
 
 #. module: delivery
+#: model:ir.model.fields,help:delivery.field_product_product__country_of_origin
+#: model:ir.model.fields,help:delivery.field_product_template__country_of_origin
+msgid ""
+"Rules of origin determine where goods originate, i.e. not where they have been shipped from, but where they have been produced or manufactured.\n"
+"As such, the ‘origin’ is the 'economic nationality' of goods traded in commerce."
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_base_price
 msgid "Sale Base Price"
 msgstr "Bazinė pardavimo kaina"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_price
+#: model:ir.model.fields,field_description:delivery.field_stock_move_line__sale_price
 msgid "Sale Price"
 msgstr "Pardavimo kaina"
 
@@ -805,11 +842,9 @@ msgstr "Nustatykite kaip teigiamą, jei esate sertifikuoti gamybai."
 #: code:addons/delivery/models/stock_picking.py:0
 #, python-format
 msgid ""
-"Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: "
-"%.2f %s"
+"Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
+"%(ref)s<br/>Cost: %(price).2f %(currency)s"
 msgstr ""
-"Siunta išsiųsta kurjeriui%s pristatymui su siuntos numeriu %s<br/>Kaina: "
-"%.2f %s"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_price
@@ -823,6 +858,7 @@ msgstr "Pristatymo informacija "
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__carrier_id
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Shipping Method"
 msgstr ""
 
@@ -833,7 +869,7 @@ msgstr ""
 #: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
 msgid "Shipping Methods"
-msgstr ""
+msgstr "Siuntimo metodai"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__shipping_weight
@@ -845,6 +881,13 @@ msgstr "Siuntos svoris"
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
 msgid "Shipping Weight:"
 msgstr "Siuntos svoris:"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__shipping_insurance
+msgid ""
+"Shipping insurance is a service which may reimburse senders whose parcels "
+"are lost, stolen, and/or damaged in transit."
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_product__hs_code
@@ -865,6 +908,36 @@ msgid "Stock Move"
 msgstr "Atsargų perkėlimas"
 
 #. module: delivery
+#: model:ir.model,name:delivery.model_stock_package_type
+msgid "Stock package type"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__supports_shipping_insurance
+msgid "Supports Shipping Insurance"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_quant_package__weight_uom_rounding
+msgid "Technical field indicating weight's number of decimal places"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_quant_package__weight_is_kg
+msgid "Technical field indicating whether weight uom is kg or not (i.e. lb)"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_stock_move_line__destination_country_code
+#: model:ir.model.fields,help:delivery.field_stock_picking__destination_country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"ISO šalies kodas dviem simboliais. \n"
+"Galite naudoti šį lauką greitai paieškai."
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
 msgid ""
 "The return label can be downloaded by the customer from the customer portal."
@@ -873,6 +946,11 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__return_label_on_delivery
 msgid "The return label is automatically generated at the delivery."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.constraint,message:delivery.constraint_delivery_carrier_shipping_insurance_is_percentage
+msgid "The shipping insurance must be a percentage between 0 and 100."
 msgstr ""
 
 #. module: delivery
@@ -925,15 +1003,21 @@ msgid "Total weight of all the products contained in the package."
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_stock_quant_package__shipping_weight
-msgid "Total weight of the package."
+#: model:ir.model.fields,help:delivery.field_stock_picking__shipping_weight
+msgid ""
+"Total weight of packages and products not in a package. Packages with no "
+"shipping weight specified will default to their products' total weight. This"
+" is the weight used to compute the cost of the shipping."
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_stock_picking__shipping_weight
-msgid ""
-"Total weight of the packages and products which are not in a package. That's"
-" the weight used to compute the cost of the shipping."
+#: model:ir.model.fields,help:delivery.field_stock_picking__weight_bulk
+msgid "Total weight of products which are not in a package."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_stock_quant_package__shipping_weight
+msgid "Total weight of the package."
 msgstr ""
 
 #. module: delivery
@@ -975,7 +1059,7 @@ msgstr "Perkelti"
 #: model:product.product,uom_name:delivery.product_product_delivery
 #: model:product.template,uom_name:delivery.product_product_delivery_product_template
 msgid "Units"
-msgstr ""
+msgstr "Vienetai"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -1000,7 +1084,6 @@ msgid "Variable Factor"
 msgstr "Kintamasis faktorius"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_stock_picking__volume
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__volume
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable_factor__volume
 msgid "Volume"
@@ -1030,38 +1113,28 @@ msgstr "Siuntos svoris"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Weight for shipping"
-msgstr ""
+msgstr "Siuntos svoris"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__weight_uom_name
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__weight_uom_name
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr "Matavimo vieneto etiketė"
+msgstr "Svorio matavimo vieneto etiketė"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_product_packaging__width
-msgid "Width"
-msgstr "Plotis"
+#: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
+msgid "Weight:"
+msgstr ""
 
 #. module: delivery
-#: model:ir.model.constraint,message:delivery.constraint_product_packaging_positive_width
-msgid "Width must be positive"
-msgstr "Plotis turi būti teigiamas"
-
-#. module: delivery
-#: code:addons/delivery/models/stock_picking.py:0
+#: code:addons/delivery/models/sale_order.py:0
 #, python-format
 msgid ""
-"You are shipping different packaging types in the same shipment.\n"
-"Packaging Types: %s"
-msgstr ""
-"Jūs siunčiate skirtingus pakavimo tipus toje pačioje siuntoje.\n"
-"Pakuočių tipai: %s"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_choose_delivery_carrier__partner_id
-msgid "You can find a customer from their name, email, tax ID or reference."
+"You can not update the shipping costs on an order where it was already invoiced!\n"
+"\n"
+"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"\n"
 msgstr ""
 
 #. module: delivery
@@ -1088,6 +1161,26 @@ msgstr "Pašto kodas nuo"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_to
 msgid "Zip To"
 msgstr "Pašto kodas iki"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.label_package_template_view_delivery
+msgid "^A0N,44,33^FDShipping Weight:"
+msgstr ""
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.label_package_template_view_delivery
+msgid "^A0N,44,33^FDWeight:"
+msgstr ""
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.label_package_template_view_delivery
+msgid "^FO310,200"
+msgstr ""
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.label_package_template_view_delivery
+msgid "^FS"
+msgstr ""
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form

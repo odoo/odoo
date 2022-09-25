@@ -116,7 +116,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" title=\"Company\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" title=\"Société\"/>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -144,6 +144,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('address_id', '!=', False)]}\" "
 "class=\"oe_read_only\">Remote</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('address_id', '!=', False)]}\" "
+"class=\"oe_read_only\">A distance</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
@@ -203,7 +205,7 @@ msgstr "<span class=\"o_stat_text\">Trackers</span>"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "<span class=\"o_stat_value\">Employee</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_value\">Employé</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_stage_kanban
@@ -746,7 +748,7 @@ msgstr "Activités en retard"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activities_today
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Activities Today"
-msgstr ""
+msgstr "Activités d'aujourd'hui"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_exception_decoration
@@ -922,7 +924,7 @@ msgstr "Candidats"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__applicant_hired
 msgid "Applicants Hired"
-msgstr ""
+msgstr "Candidats embauchés"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
@@ -1793,7 +1795,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__interviewer_ids
 msgid "Interviewers"
-msgstr ""
+msgstr "Interviewers"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__is_mail_template_editor
@@ -2341,6 +2343,10 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
+"Langue de traduction facultative (code ISO) à sélectionner lors de l'envoi "
+"d'un email. S'il n'est pas défini, la version anglaise sera utilisée. Il "
+"doit généralement s'agir d'une expression d'espace réservé qui fournit le "
+"langage approprié, par ex. {{ object.partner_id.lang }}."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_applicant_send_mail__null_value
@@ -2488,7 +2494,7 @@ msgstr "Analyse du recrutement"
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_interviewer
 msgid "Recruitment Interviewer"
-msgstr ""
+msgstr "Intervieweur de recrutement"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -2554,12 +2560,12 @@ msgstr "Refusée"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Remote"
-msgstr ""
+msgstr "A distance"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "Modèle de rendu"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.report_hr_recruitment
@@ -2684,7 +2690,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_applicant_send_mail
 msgid "Send mails to applicants"
-msgstr ""
+msgstr "Envoyer des emails aux candidats"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -2819,7 +2825,7 @@ msgstr "Sujet"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__name
 msgid "Subject / Application"
-msgstr ""
+msgstr "Sujet / Candidature"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
@@ -2853,6 +2859,8 @@ msgid ""
 "The UTM campaign '%s' cannot be deleted as it is used in the recruitment "
 "process."
 msgstr ""
+"La campagne UTM '%s' ne peut pas être supprimée car elle est utilisée dans "
+"le processus de recrutement."
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_3
@@ -2884,7 +2892,7 @@ msgstr ""
 #: code:addons/hr_recruitment/wizard/applicant_send_mail.py:0
 #, python-format
 msgid "The following applicants are missing an email address: %s."
-msgstr ""
+msgstr "Il manque une adresse email aux candidats suivants : %s."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_model_id
@@ -3099,13 +3107,13 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
 msgid "Write your message here..."
-msgstr ""
+msgstr "Ecrivez votre message ici..."
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "You are not allowed to perform this action."
-msgstr ""
+msgstr "Vous n'êtes pas autorisé à effectuer cette action."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
@@ -3123,6 +3131,8 @@ msgid ""
 "You cannot delete these UTM Sources as they are linked to the following recruitment sources in Recruitment:\n"
 "%(recruitment_sources)s"
 msgstr ""
+"Vous ne pouvez pas supprimer ces sources UTM car elles sont liées aux sources de recrutement suivantes dans Recrutement :\n"
+"%(recruitment_sources)s"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0

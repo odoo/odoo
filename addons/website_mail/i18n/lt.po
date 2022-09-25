@@ -3,17 +3,17 @@
 # 	* website_mail
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Antanas Muliuolis <an.muliuolis@gmail.com>, 2019
-# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# Jonas Zinkevicius <jozi@odoo.com>, 2022
+# Linas Versada <linaskrisiukenas@gmail.com>, 2022
+# Antanas Muliuolis <an.muliuolis@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 13:50+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2016-08-05 13:13+0000\n"
+"Last-Translator: Antanas Muliuolis <an.muliuolis@gmail.com>, 2022\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,30 +22,14 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: website_mail
-#: model:ir.model.fields,field_description:website_mail.field_mail_mail__description
-#: model:ir.model.fields,field_description:website_mail.field_mail_message__description
-msgid "Description"
-msgstr "Aprašymas"
+#: model_terms:ir.ui.view,arch_db:website_mail.follow
+msgid "<small>Follow</small><i class=\"fa fa-fw ml-1\"/>"
+msgstr "<small>Sekti</small><i class=\"fa fa-fw ml-1\"/>"
 
 #. module: website_mail
-#: model:ir.model,name:website_mail.model_mail_message
-msgid "Message"
-msgstr "Žinutė"
-
-#. module: website_mail
-#: model:ir.model.fields,help:website_mail.field_mail_mail__description
-#: model:ir.model.fields,help:website_mail.field_mail_message__description
-msgid "Message description: either the subject, or the beginning of the body"
-msgstr "Žinutės aprašymas: arba tema, arba aprašymo pradžia"
-
-#. module: website_mail
-#. openerp-web
-#: code:addons/website_mail/static/src/xml/portal_chatter.xml:0
-#: model:ir.model.fields,field_description:website_mail.field_mail_mail__website_published
-#: model:ir.model.fields,field_description:website_mail.field_mail_message__website_published
-#, python-format
-msgid "Published"
-msgstr "Paskelbtas"
+#: model_terms:ir.ui.view,arch_db:website_mail.follow
+msgid "<small>Unfollow</small><i class=\"fa fa-fw ml-1\"/>"
+msgstr "<small>Nesekti</small><i class=\"fa fa-fw ml-1\"/>"
 
 #. module: website_mail
 #: model:ir.model,name:website_mail.model_publisher_warranty_contract
@@ -53,51 +37,14 @@ msgid "Publisher Warranty Contract"
 msgstr "Leidėjo garantijos kontraktas"
 
 #. module: website_mail
-#: code:addons/website_mail/models/mail_message.py:0
-#, python-format
-msgid "Records:"
-msgstr ""
-
-#. module: website_mail
 #: model_terms:ir.ui.view,arch_db:website_mail.follow
 msgid "Subscribe"
 msgstr "Prenumeruoti"
 
 #. module: website_mail
-#: code:addons/website_mail/models/mail_message.py:0
-#, python-format
-msgid ""
-"The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
-"\n"
-"(Document type: %s, Operation: %s)"
-msgstr ""
-"Pageidaujama operacija negali būti įvykdyta dėl saugos apribojimų. Prašome susisiekti su savo sistemos administratoriumi.\n"
-"\n"
-"(Dokumento tipas: %s, Operacija: %s)"
-
-#. module: website_mail
-#. openerp-web
-#: code:addons/website_mail/static/src/xml/portal_chatter.xml:0
-#, python-format
-msgid "Unpublished"
-msgstr "Nepaskelbtas"
-
-#. module: website_mail
 #: model_terms:ir.ui.view,arch_db:website_mail.follow
 msgid "Unsubscribe"
 msgstr "Nebeprenumeruoti"
-
-#. module: website_mail
-#: code:addons/website_mail/models/mail_message.py:0
-#, python-format
-msgid "User:"
-msgstr "Vartotojas:"
-
-#. module: website_mail
-#: model:ir.model.fields,help:website_mail.field_mail_mail__website_published
-#: model:ir.model.fields,help:website_mail.field_mail_message__website_published
-msgid "Visible on the website as a comment"
-msgstr "Matomas svetainėje kaip komentaras"
 
 #. module: website_mail
 #: model_terms:ir.ui.view,arch_db:website_mail.follow

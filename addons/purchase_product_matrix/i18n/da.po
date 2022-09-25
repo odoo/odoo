@@ -3,15 +3,15 @@
 # 	* purchase_product_matrix
 # 
 # Translators:
-# Martin Trigaux, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2019-12-16 11:08+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +30,7 @@ msgstr "Egenskabs værdier"
 #: code:addons/purchase_product_matrix/static/src/js/product_matrix_configurator.js:0
 #, python-format
 msgid "Edit Configuration"
-msgstr ""
+msgstr "Rediger Konfiguration"
 
 #. module: purchase_product_matrix
 #. openerp-web
@@ -38,7 +38,7 @@ msgstr ""
 #: code:addons/purchase_product_matrix/static/src/js/product_matrix_configurator.js:0
 #, python-format
 msgid "External Link"
-msgstr ""
+msgstr "Ekstern link"
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__grid
@@ -48,12 +48,12 @@ msgstr "Grid"
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__grid_product_tmpl_id
 msgid "Grid Product Tmpl"
-msgstr ""
+msgstr "Gitter produkt skbl"
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__grid_update
 msgid "Grid Update"
-msgstr ""
+msgstr "Gitter opdater"
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__report_grids
@@ -61,16 +61,18 @@ msgid ""
 "If set, the matrix of configurable products will be shown on the report of "
 "this order."
 msgstr ""
+"Hvis angivet, vil matriks af konfigurerbare produkter blive vist på "
+"rapporten for denne ordre."
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order_line__is_configurable_product
 msgid "Is the product configurable?"
-msgstr ""
+msgstr "Kan produktet konfigureres?"
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__report_grids
 msgid "Print Variant Grids"
-msgstr ""
+msgstr "Print variant gitter"
 
 #. module: purchase_product_matrix
 #: model_terms:ir.ui.view,arch_db:purchase_product_matrix.purchase_order_form_matrix
@@ -85,7 +87,7 @@ msgstr "Produktskabelon"
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order_line__product_no_variant_attribute_value_ids
 msgid "Product attribute values that do not create variants"
-msgstr ""
+msgstr "Produkt egenskabs værdier som ikke opretter varianter"
 
 #. module: purchase_product_matrix
 #: model:ir.model,name:purchase_product_matrix.model_purchase_order
@@ -100,20 +102,24 @@ msgstr "Indkøbsordrelinie"
 #. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__grid_product_tmpl_id
 msgid "Technical field for product_matrix functionalities."
-msgstr ""
+msgstr "Teknisk felt for product_matrix funktionaliteter."
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__grid
 msgid ""
 "Technical storage of grid. \n"
-"If grid_update, will be loaded on the SO. \n"
+"If grid_update, will be loaded on the PO. \n"
 "If not, represents the matrix to open."
 msgstr ""
+"Teknisk lagring af gitter.\n"
+"Hvis grid_update; vil be indlæst på salgsordren.\n"
+"Hvis ikke; repræsentere den det matriks som skal åbnes."
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__grid_update
 msgid "Whether the grid field contains a new matrix to apply or not."
 msgstr ""
+"Hvorvidt gitter feltet indeholder et nyt matriks til anvendelse eller ej."
 
 #. module: purchase_product_matrix
 #: code:addons/purchase_product_matrix/models/purchase.py:0
@@ -122,3 +128,5 @@ msgid ""
 "You cannot change the quantity of a product present in multiple purchase "
 "lines."
 msgstr ""
+"Du kan ikke ændre mængden af et produkt, som er til stede, i flere "
+"købslinjer."

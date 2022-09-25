@@ -3,21 +3,15 @@
 # 	* website_customer
 # 
 # Translators:
-# Joe Hansen <joedalton2@yahoo.dk>, 2019
-# Martin Trigaux, 2019
-# Morten Schou <ms@msteknik.dk>, 2019
-# Jesper Carstensen <jc@danodoo.dk>, 2019
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
-# Sanne Kristensen <sanne@vkdata.dk>, 2019
-# Ejner Sønniksen <ejner@vkdata.dk>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Ejner Sønniksen <ejner@vkdata.dk>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2016-08-05 13:12+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,8 +47,8 @@ msgstr "Alle lande"
 #. module: website_customer
 #: code:addons/website_customer/controllers/main.py:0
 #, python-format
-msgid "All Sectors of Activity"
-msgstr "Alle aktivitetssektorer"
+msgid "All Industries"
+msgstr "Alle Brancher"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.res_partner_tag_view_search
@@ -69,7 +63,7 @@ msgstr "Bootstrap class til at tilpasse farven"
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__can_publish
 msgid "Can Publish"
-msgstr ""
+msgstr "Kan udgives "
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__name
@@ -124,7 +118,7 @@ msgstr "Implementeret af"
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__is_published
 msgid "Is Published"
-msgstr ""
+msgstr "Er udgivet"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag____last_update
@@ -181,8 +175,9 @@ msgid "Partners"
 msgstr "Partnere"
 
 #. module: website_customer
+#: code:addons/website_customer/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website_customer.references_block
-#: model:website.menu,name:website_customer.menu_customers
+#, python-format
 msgid "References"
 msgstr "Reference"
 
@@ -193,8 +188,8 @@ msgstr "Referencer pr. land"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_industry_list
-msgid "References by Sectors of Activity"
-msgstr "Referencer pr. aktivitetssektorer"
+msgid "References by Industries"
+msgstr "Referencer per Branche"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_tag_list
@@ -209,7 +204,7 @@ msgstr "Søg"
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.res_partner_tag_view_search
 msgid "Search Partner Tag"
-msgstr ""
+msgstr "Søg partner tag"
 
 #. module: website_customer
 #: model:ir.model.fields,help:website_customer.field_res_partner_tag__website_url
@@ -225,6 +220,11 @@ msgstr "Betroet af millioner over hele verden"
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__website_published
 msgid "Visible on current website"
 msgstr "Synlig på denne hjemmeside"
+
+#. module: website_customer
+#: model:ir.model,name:website_customer.model_website
+msgid "Website"
+msgstr "Hjemmeside"
 
 #. module: website_customer
 #: model:ir.actions.act_window,name:website_customer.action_partner_tag_form

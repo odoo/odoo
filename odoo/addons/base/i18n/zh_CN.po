@@ -52,8 +52,8 @@
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # Chill Liao <chill421@qq.com>, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # Martin Trigaux, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -61,7 +61,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-19 09:36+0000\n"
 "PO-Revision-Date: 2016-08-05 12:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -237,6 +237,87 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Localization Module for Denmark\n"
+"===============================\n"
+"\n"
+"This is the module to manage the **accounting chart for Denmark**. Cover both one-man business as well as I/S, IVS, ApS and A/S\n"
+"\n"
+"**Modulet opsætter:**\n"
+"\n"
+"- **Dansk kontoplan**\n"
+"\n"
+"- Dansk moms\n"
+"        - 25% moms\n"
+"        - Resturationsmoms 6,25%\n"
+"        - Omvendt betalingspligt\n"
+"\n"
+"- Konteringsgrupper\n"
+"        - EU (Virksomhed)\n"
+"        - EU (Privat)\n"
+"        - 3.lande\n"
+"\n"
+"- Finans raporter\n"
+"        - Resulttopgørelse\n"
+"        - Balance\n"
+"        - Momsafregning\n"
+"            - Afregning\n"
+"            - Rubrik A, B og C\n"
+"\n"
+"- **Anglo-Saxon regnskabsmetode**\n"
+"\n"
+".\n"
+"\n"
+"Produkt setup:\n"
+"==============\n"
+"\n"
+"**Vare**\n"
+"\n"
+"**Salgsmoms:**      Salgmoms 25%\n"
+"\n"
+"**Salgskonto:**     1010 Salg af vare, m/moms\n"
+"\n"
+"**Købsmoms:**       Købsmoms 25%\n"
+"\n"
+"**Købskonto:**      2010 Direkte omkostninger vare, m/moms\n"
+"\n"
+".\n"
+"\n"
+"**Ydelse**\n"
+"\n"
+"**Salgsmoms:**      Salgmoms 25%, ydelser\n"
+"\n"
+"**Salgskonto:**     1011 Salg af ydelser, m/moms\n"
+"\n"
+"**Købsmoms:**       Købsmoms 25%, ydelser\n"
+"\n"
+"**Købskonto:**      2011 Direkte omkostninger ydelser, m/moms\n"
+"\n"
+".\n"
+"\n"
+"**Vare med omvendt betalingspligt**\n"
+"\n"
+"**Salgsmoms:**      Salg omvendt betalingspligt\n"
+"\n"
+"**Salgskonto:**     1012 Salg af vare, u/moms\n"
+"\n"
+"**Købsmoms:**       Køb omvendt betalingspligt\n"
+"\n"
+"**Købskonto:**      2012 Direkte omkostninger vare, u/moms\n"
+"\n"
+"\n"
+".\n"
+"\n"
+"**Restauration**\n"
+"\n"
+"**Købsmoms:**       Restaurationsmoms 6,25%, købsmoms\n"
+"\n"
+"**Købskonto:**      4010 Restaurationsbesøg\n"
+"\n"
+".\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do
@@ -1033,6 +1114,9 @@ msgid ""
 "        Enable the VAT wizard when posting a tax return journal entry\n"
 "    "
 msgstr ""
+"\n"
+"        Enable the VAT wizard when posting a tax return journal entry\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_digest_enterprise
@@ -1685,6 +1769,9 @@ msgid ""
 "    Contains advanced features for eLeaning such as new views\n"
 "    "
 msgstr ""
+"\n"
+"    Contains advanced features for eLeaning such as new views\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp_workorder_worksheet
@@ -2042,6 +2129,14 @@ msgid ""
 "and encourage users to configure their 2FA using an authenticator app.\n"
 "    "
 msgstr ""
+"\n"
+"2FA by mail\n"
+"===============\n"
+"Two-Factor authentication by sending a code to the user email inbox\n"
+"when the 2FA using an authenticator app is not configured.\n"
+"To enforce users to use a two-factor authentication by default,\n"
+"and encourage users to configure their 2FA using an authenticator app.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_intrastat
@@ -2401,6 +2496,12 @@ msgid ""
 "to the administration.\n"
 "    "
 msgstr ""
+"\n"
+"Accounting Reports Tax Reminder\n"
+"===============================\n"
+"This module adds a notification when the tax report is ready to be sent\n"
+"to the administration.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_co_reports
@@ -2523,6 +2624,11 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Accounting reports for Portugal\n"
+"================================\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sg_reports
@@ -2549,6 +2655,8 @@ msgid ""
 "\n"
 "Add Subcontracting information in Cost Analysis Report and The Production Analysis\n"
 msgstr ""
+"\n"
+"Add Subcontracting information in Cost Analysis Report and The Production Analysis\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_contract_reports
@@ -3780,6 +3888,10 @@ msgid ""
 "Plan contable chileno e impuestos de acuerdo a disposiciones vigentes.\n"
 "    "
 msgstr ""
+"\n"
+"Chilean accounting chart and tax localization.\n"
+"Plan contable chileno e impuestos de acuerdo a disposiciones vigentes.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_timesheet_forecast_sale
@@ -3968,6 +4080,18 @@ msgid ""
 " * Filter and Tag\n"
 " * Statistics\n"
 msgstr ""
+"\n"
+"Create Online Courses\n"
+"=====================\n"
+"\n"
+"Featuring\n"
+"\n"
+" * Integrated course and lesson management\n"
+" * Fullscreen navigation\n"
+" * Support Youtube videos, Google documents, PDF, images, articles\n"
+" * Test knowledge with quizzes\n"
+" * Filter and Tag\n"
+" * Statistics\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_industry_fsm_report
@@ -4564,6 +4688,14 @@ msgid ""
 "It is primarily used for EDIs that might need a special city code.\n"
 "        "
 msgstr ""
+"\n"
+"Extended Addresses Management\n"
+"=============================\n"
+"\n"
+"This module provides the ability to choose a city from a list (in specific countries).\n"
+"\n"
+"It is primarily used for EDIs that might need a special city code.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_snailmail_account_followup
@@ -5277,6 +5409,8 @@ msgid ""
 "\n"
 "Helpdesk integration with time off\n"
 msgstr ""
+"\n"
+"Helpdesk integration with time off\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_import_module
@@ -5424,6 +5558,19 @@ msgid ""
 "For the creation of API username and password please ref this document: <https://service.odoo.co.in/einvoice_create_api_user>\n"
 "    "
 msgstr ""
+"\n"
+"Indian - E-invoicing\n"
+"====================\n"
+"To submit invoicing through API to the government.\n"
+"We use \"Tera Software Limited\" as GSP\n"
+"\n"
+"Step 1: First you need to create an API username and password in the E-invoice portal.\n"
+"Step 2: Switch to company related to that GST number\n"
+"Step 3: Set that username and password in Odoo (Goto: Invoicing/Accounting -> Configration -> Settings -> Customer Invoices or find \"E-invoice\" in search bar)\n"
+"Step 4: Repeat steps 1,2,3 for all GSTIN you have in odoo. If you have a multi-company with the same GST number then perform step 1 for the first company only.\n"
+"\n"
+"For the creation of API username and password please ref this document: <https://service.odoo.co.in/einvoice_create_api_user>\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in
@@ -7611,6 +7758,9 @@ msgid ""
 "Take into account the working schedule (sick leaves, part time, ...) of employees when scheduling appointments\n"
 "--------------------------------------------------------------------------------------------------------------\n"
 msgstr ""
+"\n"
+"Take into account the working schedule (sick leaves, part time, ...) of employees when scheduling appointments\n"
+"--------------------------------------------------------------------------------------------------------------\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_product_configurator
@@ -8009,6 +8159,10 @@ msgid ""
 "==============================================================================\n"
 "    "
 msgstr ""
+"\n"
+"This is the base module to manage the accounting chart for Egypt in Odoo.\n"
+"==============================================================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gr
@@ -9122,6 +9276,9 @@ msgid ""
 "This module is intended to test the main crm flows of Odoo, both frontend and\n"
 "backend. It notably includes IAP bridges modules to test their impact. "
 msgstr ""
+"\n"
+"This module is intended to test the main crm flows of Odoo, both frontend and\n"
+"backend. It notably includes IAP bridges modules to test their impact. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_association
@@ -9150,6 +9307,10 @@ msgid ""
 "\n"
 "Allows to prepare batches depending on their carrier\n"
 msgstr ""
+"\n"
+"This module makes the link between the batch pickings and carrier applications.\n"
+"\n"
+"Allows to prepare batches depending on their carrier\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_requisition_stock_dropshipping
@@ -9733,6 +9894,14 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Website Forum integration for the helpdesk module\n"
+"=================================================\n"
+"\n"
+"    Allow your teams to have related forums to answer customer questions.\n"
+"    Transform tickets into questions on the forum with a single click.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_helpdesk_livechat
@@ -13245,7 +13414,7 @@ msgstr "比利时 - 会计报表"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_reports_post_wizard
 msgid "Belgium - Accounting Reports (post wizard)"
-msgstr ""
+msgstr "Belgium - Accounting Reports (post wizard)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_reports_sms
@@ -15539,27 +15708,27 @@ msgstr "DHL 快递"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_din5008
 msgid "DIN 5008"
-msgstr ""
+msgstr "DIN 5008"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_din5008_purchase
 msgid "DIN 5008 - Purchase"
-msgstr ""
+msgstr "DIN 5008 - Purchase"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_din5008_repair
 msgid "DIN 5008 - Repair"
-msgstr ""
+msgstr "DIN 5008 - Repair"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_din5008_sale
 msgid "DIN 5008 - Sale"
-msgstr ""
+msgstr "DIN 5008 - Sale"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_din5008_stock
 msgid "DIN 5008 - Stock"
-msgstr ""
+msgstr "DIN 5008 - Stock"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__dle
@@ -18544,7 +18713,7 @@ msgstr "一般规则使用逻辑与AND操作符组合在一起，以及下面步
 #. module: base
 #: model:ir.module.module,description:base.module_google_gmail
 msgid "Gmail support for incoming / outgoing mail servers"
-msgstr ""
+msgstr "Gmail support for incoming / outgoing mail servers"
 
 #. module: base
 #: code:addons/base/models/res_config.py:0
@@ -19222,7 +19391,7 @@ msgstr "匈牙利"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hu_reports
 msgid "Hungary - Accounting Reports"
-msgstr ""
+msgstr "Hungary - Accounting Reports"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_I
@@ -19830,7 +19999,7 @@ msgstr "印度-会计报表"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_edi
 msgid "Indian - E-invoicing"
-msgstr ""
+msgstr "Indian - E-invoicing"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_pos
@@ -26828,7 +26997,7 @@ msgstr "葡萄牙 - 会计"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pt_reports
 msgid "Portugal - Accounting Reports"
-msgstr ""
+msgstr "Portugal - Accounting Reports"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__definition
@@ -31268,7 +31437,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_din5008
 msgid "This is the base module that defines the DIN 5008 standard in Odoo."
-msgstr ""
+msgstr "This is the base module that defines the DIN 5008 standard in Odoo."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_report__attachment

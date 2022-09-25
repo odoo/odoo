@@ -330,7 +330,7 @@ msgstr "-> Voir les écritures partiellement lettrées"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid ". Please make sure that this is a wanted behavior."
-msgstr ""
+msgstr ". Veuillez vous assurer qu'il s'agit d'un comportement souhaité."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1117,6 +1117,12 @@ msgstr "<span>5,00</span>"
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Amount</span>"
 msgstr "<span>Montant</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.bill_preview
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "<span>Amount In Currency</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -3799,6 +3805,9 @@ msgid ""
 "accordance with their internal legislation. Any withholding at source will "
 "be paid by the client to the tax authorities. Under no circumstances can"
 msgstr ""
+"Certains pays appliquent une retenue à la source sur le montant des "
+"factures, conformément à leur législation. Toute retenue à la source sera "
+"versée par le client à l'administration fiscale. En aucun cas "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__action__change_account
@@ -5262,7 +5271,7 @@ msgstr "Type de Compte par Défaut"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Default Accounts"
-msgstr ""
+msgstr "Comptes par défaut"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_default_credit_limit
@@ -9912,6 +9921,10 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
+"Langue de traduction facultative (code ISO) à sélectionner lors de l'envoi "
+"d'un email. S'il n'est pas défini, la version anglaise sera utilisée. Il "
+"doit généralement s'agir d'une expression d'espace réservé qui fournit le "
+"langage approprié, par ex. {{ object.partner_id.lang }}."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__code
@@ -11393,7 +11406,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "Modèle de rendu"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_resequence_wizard__ordering__date

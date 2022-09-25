@@ -1,24 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * hr_timesheet_attendance
+# 	* hr_timesheet_attendance
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2018
-# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
+# Noma Yuki, 2022
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018\n"
+"POT-Creation-Date: 2022-04-19 13:58+0000\n"
+"PO-Revision-Date: 2016-08-05 12:59+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_timesheet_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__company_id
+msgid "Company"
+msgstr "会社"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__date
@@ -29,12 +35,12 @@ msgstr "日付"
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__display_name
 msgid "Display Name"
-msgstr "表示名"
+msgstr "名前を表示"
 
 #. module: hr_timesheet_attendance
-#: model:ir.actions.act_window,name:hr_timesheet_attendance.action_hr_timesheet_attendance_report
-msgid "HR Timesheet/Attendance Report"
-msgstr "HR タイムシート / 勤怠レポート"
+#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
+msgid "Employee"
+msgstr "従業員"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__id
@@ -47,14 +53,48 @@ msgid "Last Modified on"
 msgstr "最終更新日"
 
 #. module: hr_timesheet_attendance
+#: model:ir.model,name:hr_timesheet_attendance.model_ir_ui_menu
+msgid "Menu"
+msgstr "メニュー"
+
+#. module: hr_timesheet_attendance
+#: model_terms:ir.actions.act_window,help:hr_timesheet_attendance.action_hr_timesheet_attendance_report
+msgid "No data yet!"
+msgstr "まだデータはありません！"
+
+#. module: hr_timesheet_attendance
+#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_tree
+msgid "Sum of Total Attendance"
+msgstr ""
+
+#. module: hr_timesheet_attendance
+#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_tree
+msgid "Sum of Total Difference"
+msgstr ""
+
+#. module: hr_timesheet_attendance
+#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_tree
+msgid "Sum of Total Timesheet"
+msgstr ""
+
+#. module: hr_timesheet_attendance
+#: model:ir.actions.act_window,name:hr_timesheet_attendance.action_hr_timesheet_attendance_report
 #: model:ir.ui.menu,name:hr_timesheet_attendance.menu_hr_timesheet_attendance_report
 msgid "Timesheet / Attendance"
 msgstr "タイムシート / 出退勤"
 
 #. module: hr_timesheet_attendance
+#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_graph
+#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_tree
+#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_pivot
+#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
+msgid "Timesheet Attendance"
+msgstr ""
+
+#. module: hr_timesheet_attendance
 #: model:ir.model,name:hr_timesheet_attendance.model_hr_timesheet_attendance_report
 msgid "Timesheet Attendance Report"
-msgstr ""
+msgstr "タイムシート出席レポート"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__total_attendance
@@ -75,9 +115,3 @@ msgstr "全ての勤務表"
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__user_id
 msgid "User"
 msgstr "ユーザ"
-
-#. module: hr_timesheet_attendance
-#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_pivot
-#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
-msgid "timesheet attendance"
-msgstr "タイムシート 出退勤"

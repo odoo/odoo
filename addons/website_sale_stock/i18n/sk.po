@@ -1,18 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_sale_stock
+# 	* website_sale_stock
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2022
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2022
+# Damian Brencic <brencicdamian12313@gmail.com>, 2022
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018\n"
+"POT-Creation-Date: 2022-04-19 13:58+0000\n"
+"PO-Revision-Date: 2016-08-05 13:14+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,48 +24,39 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid ""
+"<span attrs=\"{'invisible': [('show_availability', '=', "
+"False)]}\">Units</span>"
+msgstr ""
+
+#. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_payment
 msgid "<strong>Warning!</strong>"
-msgstr ""
-
-#. module: website_sale_stock
-#: model:ir.model.fields,help:website_sale_stock.field_product_product__inventory_availability
-#: model:ir.model.fields,help:website_sale_stock.field_product_template__inventory_availability
-msgid "Adds an inventory availability status on the web product page."
-msgstr ""
-
-#. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
-msgid "Availability"
-msgstr "Dostupnosť"
-
-#. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__available_threshold
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__available_threshold
-#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__available_threshold
-msgid "Availability Threshold"
-msgstr ""
+msgstr "<strong>Výstraha!</strong>"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__cart_qty
 msgid "Cart Qty"
-msgstr ""
+msgstr "Množstvo v košíku"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Nastavenia konfigurácie"
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__custom_message
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__custom_message
-msgid "Custom Message"
-msgstr ""
-
-#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Default Mode"
+msgid "Continue Selling"
+msgstr "Pokračovať v predaji"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__allow_out_of_stock_order
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__allow_out_of_stock_order
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__allow_out_of_stock_order
+msgid "Continue selling when out-of-stock"
 msgstr ""
 
 #. module: website_sale_stock
@@ -74,33 +68,43 @@ msgstr ""
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Default threshold"
+msgid "Default visibility for custom messages."
+msgstr ""
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "How to display products having low quantities (on hand - reserved)"
+msgstr ""
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Inventory Defaults"
 msgstr ""
 
 #. module: website_sale_stock
 #. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:16
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
-msgid "In stock"
+msgid "Only"
+msgstr "Len"
+
+#. module: website_sale_stock
+#. openerp-web
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+#, python-format
+msgid "Out of Stock"
 msgstr ""
 
 #. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Inventory"
-msgstr "Sklad"
-
-#. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__inventory_availability
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__inventory_availability
-#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__inventory_availability
-msgid "Inventory Availability"
+msgid "Out-of-Stock"
 msgstr ""
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid ""
-"Manage the inventory of your products and display their availability status "
-"on the website."
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__out_of_stock_message
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__out_of_stock_message
+msgid "Out-of-Stock Message"
 msgstr ""
 
 #. module: website_sale_stock
@@ -111,56 +115,47 @@ msgstr "Produkt"
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_template
 msgid "Product Template"
-msgstr "šablona produktu"
+msgstr "Šablóna produktu"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order
-msgid "Sale Order"
-msgstr "Objednávka predaja"
+msgid "Sales Order"
+msgstr "Objednávka "
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Položky objednávky"
+msgstr "Položka objednávok"
 
 #. module: website_sale_stock
-#: selection:product.template,inventory_availability:0
-#: selection:res.config.settings,inventory_availability:0
-msgid "Sell regardless of inventory"
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Show Available Qty"
 msgstr ""
 
 #. module: website_sale_stock
-#: selection:product.template,inventory_availability:0
-#: selection:res.config.settings,inventory_availability:0
-msgid "Show inventory below a threshold and prevent sales if not enough stock"
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__available_threshold
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__available_threshold
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__available_threshold
+msgid "Show Threshold"
 msgstr ""
 
 #. module: website_sale_stock
-#: selection:product.template,inventory_availability:0
-#: selection:res.config.settings,inventory_availability:0
-msgid "Show inventory on website and prevent sales if not enough stock"
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__show_availability
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__show_availability
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__show_availability
+msgid "Show availability Qty"
 msgstr ""
 
 #. module: website_sale_stock
-#: selection:product.template,inventory_availability:0
-#: selection:res.config.settings,inventory_availability:0
-msgid "Show product-specific notifications"
-msgstr ""
-
-#. module: website_sale_stock
-#: code:addons/website_sale_stock/models/sale_order.py:30
+#: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
 msgid ""
 "Some products became unavailable and your cart has been updated. We're sorry"
 " for the inconvenience."
 msgstr ""
-
-#. module: website_sale_stock
-#. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:22
-#, python-format
-msgid "Temporarily out of stock"
-msgstr ""
+"Niektoré produkty prestali byť k dispozícii a váš košík bol aktualizovaný. "
+"Ospravedlňujeme sa za nepríjemnosti."
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking
@@ -168,14 +163,22 @@ msgid "Transfer"
 msgstr "Prevod"
 
 #. module: website_sale_stock
-#. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:13
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:22
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
+msgid "Units"
+msgstr "Jednotky"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__website_warehouse_id
+#: model:ir.model.fields,field_description:website_sale_stock.field_website__warehouse_id
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Warehouse"
+msgstr "Sklad"
+
+#. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__warning_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_line__warning_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_payment
-#, python-format
 msgid "Warning"
 msgstr "Varovanie"
 
@@ -183,44 +186,56 @@ msgstr "Varovanie"
 #: model:ir.model,name:website_sale_stock.model_website
 #: model:ir.model.fields,field_description:website_sale_stock.field_stock_picking__website_id
 msgid "Website"
-msgstr "Webová stránka"
+msgstr "Webstránka"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,help:website_sale_stock.field_stock_picking__website_id
 msgid "Website this picking belongs to."
-msgstr ""
+msgstr "Webstránka, do ktorého tento výber patrí."
 
 #. module: website_sale_stock
 #. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:19
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "You already added"
+msgstr "Už ste pridali"
+
+#. module: website_sale_stock
+#. openerp-web
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+#, python-format
+msgid "You already added all the available product in your cart."
 msgstr ""
 
 #. module: website_sale_stock
-#: code:addons/website_sale_stock/models/sale_order.py:27
+#: code:addons/website_sale_stock/controllers/main.py:0
+#, python-format
+msgid ""
+"You ask for %(quantity)s products but only %(available_qty)s is available"
+msgstr ""
+
+#. module: website_sale_stock
+#: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
 msgid "You ask for %s products but only %s is available"
-msgstr ""
+msgstr "Žiadate o%svýrobkov ,ale iba %sje k dispozícii "
 
 #. module: website_sale_stock
 #. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:20
-#, python-format
-msgid "all"
-msgstr "všetko"
-
-#. module: website_sale_stock
-#. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:9
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:14
-#, python-format
-msgid "available"
-msgstr ""
-
-#. module: website_sale_stock
-#. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:20
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "in your cart."
+msgstr "vo vašom košíku."
+
+#. module: website_sale_stock
+#. openerp-web
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+#, python-format
+msgid "left in stock."
+msgstr ""
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "only if below"
 msgstr ""

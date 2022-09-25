@@ -1,19 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * google_drive
+# 	* google_drive
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2018
-# Manami Hashi <manami@roomsfor.hk>, 2018
-# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018
+# Manami Hashi <manami@roomsfor.hk>, 2022
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
+# Noma Yuki, 2022
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2016-08-05 12:58+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,6 +39,33 @@ msgstr ""
 "                                 - 「すべてのユーザーと共有する」を選択すると、販売部の案件にあるすべてのユーザーに対して、「その他」オプションでGoogleドキュメントのリンクが表示されます。<br/>\n"
 "                                 - 「すべてのユーザーと共有する」を選択しないと、「その他」オプションのGoogleドキュメントのリンクは、販売部門の他のユーザーには表示されません。<br/>\n"
 "                                 - フィルタが指定されていない場合、Googleドキュメントのリンクは、すべてのユーザーに対して、「すべてのオプション」に表示されます。"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "<i class=\"fa fa-arrow-right\"/> Reset token"
+msgstr ""
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "<i class=\"fa fa-arrow-right\"/> Set up token"
+msgstr ""
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid ""
+"<i class=\"fa fa-exclamation-triangle text-warning\"/> &amp;nbsp; No refresh"
+" token set"
+msgstr ""
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "<i class=\"text-success fa fa-check\"/> &amp;nbsp; Refresh token set"
+msgstr ""
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
+msgid "<span>Get an authorization code and set it in the field below.</span>"
+msgstr ""
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
@@ -64,7 +93,12 @@ msgid "Add a new template"
 msgstr ""
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:42
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_config_view_search
+msgid "Archived"
+msgstr "アーカイブ済"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
 #, python-format
 msgid "At least one key cannot be found in your Google Drive name pattern."
 msgstr ""
@@ -73,6 +107,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings__google_drive_authorization_code
 msgid "Authorization Code"
 msgstr "認証コード"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
+msgid "Cancel"
+msgstr "取消"
 
 #. module: google_drive
 #: model:ir.model.fields,help:google_drive.field_google_drive_config__name_template
@@ -84,7 +123,12 @@ msgstr "新しいGoogleドライブの名前付け方法をGoogle側で選択し
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "コンフィグ設定"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
+msgid "Confirm"
+msgstr "確認"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__create_uid
@@ -97,7 +141,7 @@ msgid "Created on"
 msgstr "作成日"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:161
+#: code:addons/google_drive/models/google_drive.py:0
 #, python-format
 msgid "Creating google drive may only be done by one at a time."
 msgstr "Googleドライブの作成は、一度に1つだけ行うことができます。"
@@ -110,7 +154,7 @@ msgstr "顧客"
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__display_name
 msgid "Display Name"
-msgstr "表示名"
+msgstr "名前を表示"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__filter_id
@@ -118,8 +162,13 @@ msgid "Filter"
 msgstr "フィルタ"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:61
-#: code:addons/google_drive/models/google_drive.py:82
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
+msgid "Get Authorization Code"
+msgstr ""
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#: code:addons/google_drive/models/google_drive.py:0
 #, python-format
 msgid "Go to the configuration panel"
 msgstr "コンフィグレーションパネルに移動"
@@ -146,8 +195,8 @@ msgid "Google Drive Templates"
 msgstr "Googleドライブテンプレート"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:63
-#: code:addons/google_drive/models/google_drive.py:84
+#: code:addons/google_drive/models/google_drive.py:0
+#: code:addons/google_drive/models/google_drive.py:0
 #, python-format
 msgid "Google Drive is not yet configured. Please contact your administrator."
 msgstr "Googleドライブはまだ設定されていません。 管理者に連絡してください。"
@@ -161,6 +210,15 @@ msgstr "Googleドライブのテンプレート設定"
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__id
 msgid "ID"
 msgstr "ID"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid ""
+"Incoherent Google Drive %(drive)s: the model of the selected filter "
+"%(filter)r is not matching the model of current template (%(filter_model)r, "
+"%(drive_model)r)"
+msgstr ""
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config____last_update
@@ -196,10 +254,15 @@ msgid "Model"
 msgstr "モデル"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:203
+#: code:addons/google_drive/models/google_drive.py:0
 #, python-format
 msgid "Please enter a valid Google Document URL."
 msgstr "有効なGoogleドキュメントのURLを入力してください。"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_res_config_settings__is_google_drive_token_generated
+msgid "Refresh Token Generated"
+msgstr ""
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__model
@@ -212,7 +275,18 @@ msgid "Resource Id"
 msgstr "リソースID"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:81
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_config_view_search
+msgid "Search Google Drive Config"
+msgstr ""
+
+#. module: google_drive
+#: code:addons/google_drive/models/res_config_settings.py:0
+#, python-format
+msgid "Set up refresh token"
+msgstr ""
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
 #, python-format
 msgid ""
 "Something went wrong during the token generation. Please request again an "
@@ -235,7 +309,7 @@ msgid "Templates"
 msgstr "テンプレート"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:99
+#: code:addons/google_drive/models/google_drive.py:0
 #, python-format
 msgid "The Google Template cannot be found. Maybe it has been deleted."
 msgstr "Googleテンプレートが見つかりません。削除されたのかもしれません。"
@@ -243,7 +317,15 @@ msgstr "Googleテンプレートが見つかりません。削除されたのか
 #. module: google_drive
 #: model:ir.model.fields,help:google_drive.field_res_config_settings__google_drive_uri
 msgid "The URL to generate the authorization code from Google"
-msgstr "The URL to generate the authorization code from Google"
+msgstr "Googleの許可コードを生成するためのURL"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid ""
+"The document filter must not include any 'dynamic' part, so it should not be"
+" based on the current time or current user, for example."
+msgstr ""
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
@@ -255,7 +337,7 @@ msgid ""
 msgstr ""
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:135
+#: code:addons/google_drive/models/google_drive.py:0
 #, python-format
 msgid ""
 "The permission 'reader' for 'anyone with the link' has not been written on "
@@ -263,17 +345,27 @@ msgid ""
 msgstr "「リンクをしている人」のパーミッション「リーダー」がドキュメントに書き込まれていません"
 
 #. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid ""
+"There is no refresh code set for Google Drive. You can set it up from the "
+"configuration panel."
+msgstr ""
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "This module will stop working after the 3rd October 2022 due to"
+msgstr ""
+
+#. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings__google_drive_uri
 msgid "URI"
 msgstr "URI"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:60
-#, python-format
-msgid ""
-"You haven't configured 'Authorization Code' generated from google, Please "
-"generate and configure it ."
-msgstr "Googleから生成された「認証コード」を設定していません。生成して設定してください。"
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "changes in Google Authentication API"
+msgstr ""
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form

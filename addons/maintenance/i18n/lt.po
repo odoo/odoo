@@ -3,25 +3,31 @@
 # 	* maintenance
 # 
 # Translators:
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2019
-# Silvija Butko <silvija.butko@gmail.com>, 2019
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2019
-# Rolandas <info@paninfo.lt>, 2019
-# Šarūnas Ažna <sarunas.azna@gmail.com>, 2019
-# Antanas Muliuolis <an.muliuolis@gmail.com>, 2019
-# Edgaras Kriukonis <edgaras@focusate.eu>, 2019
-# Martin Trigaux, 2019
-# Monika Raciunaite <monika.raciunaite@gmail.com>, 2019
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2019
-# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022
+# Arunas Vaitekunas <vaitekunas@gmail.com>, 2022
+# Šarūnas Ažna <sarunas.azna@gmail.com>, 2022
+# Jonas Zinkevicius <jozi@odoo.com>, 2022
+# Antanas Muliuolis <an.muliuolis@gmail.com>, 2022
+# grupoda2 <dmitrijus.ivanovas@gmail.com>, 2022
+# Edgaras Kriukonis <edgaras@focusate.eu>, 2022
+# Monika Raciunaite <monika.raciunaite@gmail.com>, 2022
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2022
+# Paulius Sladkevičius <paulius@versada.eu>, 2022
+# Silvija Butko <silvija.butko@gmail.com>, 2022
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2022
+# Martin Trigaux, 2022
+# Arunas V. <arunas@devoro.com>, 2022
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2022
+# Rolandas <info@paninfo.lt>, 2022
+# Linas Versada <linaskrisiukenas@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
-"PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
+"POT-Creation-Date: 2022-04-19 13:57+0000\n"
+"PO-Revision-Date: 2016-08-05 13:05+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2022\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,11 +56,6 @@ msgid "<b>Serial Number:</b>"
 msgstr "<b>Serijinis numeris:</b>"
 
 #. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
-msgid "<i class=\"fa fa-comments\" role=\"img\" aria-label=\"Unread Messages\"/>"
-msgstr "<i class=\"fa fa-comments\" role=\"img\" aria-label=\"Unread Messages\"/>"
-
-#. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
@@ -76,8 +77,8 @@ msgstr "<span>Ataskaitos</span>"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
-msgid "<span>View</span>"
-msgstr "<span>Peržiūra</span>"
+msgid "<span>Requests</span>"
+msgstr ""
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.view_maintenance_equipment_category_kanban
@@ -103,7 +104,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_needaction
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_needaction
 msgid "Action Needed"
-msgstr "Reikia veiksmo"
+msgstr "Reikalingas veiksmas"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__active
@@ -121,13 +122,19 @@ msgstr "Veiklos"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_exception_decoration
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Veiklos Išimties Dekoravimas"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_state
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_state
 msgid "Activity State"
 msgstr "Veiklos būsena"
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_type_icon
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Veiklos tipo ikona"
 
 #. module: maintenance
 #: model:ir.actions.act_window,name:maintenance.mail_activity_type_action_config_maintenance
@@ -209,7 +216,9 @@ msgstr "Archyvuoti"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_search
 msgid "Archived"
 msgstr "Archyvuotas"
@@ -233,7 +242,7 @@ msgstr "Priskyrimo data"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "Assigned to"
-msgstr "Priskirtas"
+msgstr "Priskirta"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_attachment_count
@@ -247,7 +256,7 @@ msgstr "Prisegtukų skaičius"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Blocked"
-msgstr "Blokuota"
+msgstr "Neleidžiamas"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -296,6 +305,7 @@ msgstr "Įmonė"
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_maintenance_configuration
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Configuration"
 msgstr "Konfigūracija"
 
@@ -307,7 +317,7 @@ msgstr "Korekcinis"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__cost
 msgid "Cost"
-msgstr "Išlaidos"
+msgstr "Savikaina"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -341,6 +351,11 @@ msgstr "Sukurta"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__maintenance_open_count
 msgid "Current Maintenance"
 msgstr "Dabartinė peržiūra"
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_bounced_content
+msgid "Custom Bounced Message"
+msgstr "Pasirinktinis peradresuotas pranešimas"
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_dashboard
@@ -430,7 +445,7 @@ msgstr "Trukmė"
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__duration
 msgid "Duration in hours."
-msgstr ""
+msgstr "Trukmė valandomis."
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
@@ -459,7 +474,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__email_cc
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Email cc"
-msgstr ""
+msgstr "El. Pašto CC"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__equipment_count
@@ -496,7 +511,6 @@ msgstr "Įrangos valdytojas"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__name
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Equipment Name"
 msgstr "Įrangos pavadinimas"
 
@@ -508,12 +522,6 @@ msgstr "Įrangos pavadinimas"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Equipments"
 msgstr "Įranga"
-
-#. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
-msgid "Exception Activities"
-msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__fold
@@ -540,18 +548,17 @@ msgid "Followers"
 msgstr "Sekėjai"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_channel_ids
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_channel_ids
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Sekėjai (kanalai)"
-
-#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_partner_ids
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_partner_ids
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Sekėjai (partneriai)"
+
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__activity_type_icon
+#: model:ir.model.fields,help:maintenance.field_maintenance_request__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesome piktograma, pvz., fa-tasks"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -565,6 +572,13 @@ msgstr "Būsimos veiklos"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Group by..."
 msgstr "Grupuoti pagal..."
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__has_message
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__has_message
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__has_message
+msgid "Has Message"
+msgstr "Turi žinutę"
 
 #. module: maintenance
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__priority__3
@@ -604,15 +618,12 @@ msgstr "Piktograma"
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__activity_exception_icon
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Išimties veiklą žyminti piktograma."
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_needaction
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_unread
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_needaction
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_unread
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_needaction
-#: model:ir.model.fields,help:maintenance.field_maintenance_request__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Jeigu pažymėta, naujiems pranešimams reikės jūsų dėmesio."
 
@@ -624,9 +635,18 @@ msgid "If checked, some messages have a delivery error."
 msgstr "Jei pažymėta, yra žinučių, turinčių pristatymo klaidų."
 
 #. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_bounced_content
+msgid ""
+"If set, this content will automatically be sent out to unauthorized users "
+"instead of the default message."
+msgstr ""
+"Jei nustatyta, šis turinys bus automatiškai išsiųstas neįgaliotiems "
+"vartotojams, vietoj numatyto pranešimo."
+
+#. module: maintenance
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__kanban_state__normal
-#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 #: model:maintenance.stage,name:maintenance.stage_1
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "In Progress"
 msgstr "Vykdoma"
 
@@ -637,8 +657,8 @@ msgstr "Vidinė priežiūra"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
-msgid "Internal Note ......."
-msgstr "Vidinė pastaba ......."
+msgid "Internal Notes"
+msgstr "Vidinės pastabos"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_is_follower
@@ -688,7 +708,7 @@ msgstr "Vėluojančios veiklos"
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__email_cc
 msgid "List of cc from incoming emails."
-msgstr ""
+msgstr "Gaunamų el. laiškų kopijų sąrašas."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__location
@@ -756,8 +776,8 @@ msgstr "Priežiūros įrangos kategorija"
 
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_request
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 #: model:mail.activity.type,name:maintenance.mail_act_maintenance_request
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Maintenance Request"
 msgstr "Priežiūros užklausa"
 
@@ -852,7 +872,13 @@ msgstr "Žinutės"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__model
 msgid "Model"
-msgstr "Modelis"
+msgstr "Šablonas"
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__my_activity_date_deadline
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Veiklos paskutinis terminas"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
@@ -869,12 +895,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_tree
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Name"
-msgstr "Vardas"
+msgstr "Pavadinimas"
 
 #. module: maintenance
 #: model:maintenance.stage,name:maintenance.stage_0
 msgid "New Request"
 msgstr "Nauja užklausa"
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_calendar_event_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_date_deadline
@@ -946,7 +978,7 @@ msgstr "Aukšto prioriteto užklausų skaičius"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_has_error_counter
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Klaidų kiekis"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_needaction_counter
@@ -961,13 +993,6 @@ msgstr "Žinučių, kurioms reikia jūsų veiksmo, skaičius"
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "Žinučių su pristatymo klaida skaičius"
-
-#. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_unread_counter
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_unread_counter
-#: model:ir.model.fields,help:maintenance.field_maintenance_request__message_unread_counter
-msgid "Number of unread messages"
-msgstr "Neperskaitytų žinučių skaičius"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_force_thread_id
@@ -1092,6 +1117,7 @@ msgstr "Ataskaitos"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__request_ids
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "Request"
@@ -1116,8 +1142,8 @@ msgstr "Užklausa atlikta"
 #. module: maintenance
 #: code:addons/maintenance/models/maintenance.py:0
 #, python-format
-msgid "Request planned for <a href=\"#\" data-oe-model=\"%s\" data-oe-id=\"%s\">%s</a>"
-msgstr "Užklausa suplanuota <a href=\"#\" data-oe-model=\"%s\" data-oe-id=\"%s\">%s</a>"
+msgid "Request planned for %s"
+msgstr ""
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -1191,11 +1217,6 @@ msgid ""
 msgstr ""
 "Nustatykite archyvavimą kaip teigiamą, jei norite paslėpti priežiūros "
 "užklausą jos neištrinant."
-
-#. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
-msgid "Settings"
-msgstr "Nustatymai"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -1312,11 +1333,6 @@ msgid "The user will be able to manage equipments."
 msgstr "Vartotojas galės valdyti įrangą."
 
 #. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
-msgid "Title"
-msgstr "Pavadinimas"
-
-#. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "To Do"
@@ -1347,7 +1363,7 @@ msgstr ""
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__activity_exception_decoration
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Įrašytos išimties veiklos tipas."
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
@@ -1360,21 +1376,10 @@ msgid "Under Maintenance"
 msgstr "Vykdoma priežiūra"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_unread
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_unread
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_unread
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Unread Messages"
 msgstr "Neperskaitytos žinutės"
-
-#. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_unread_counter
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_unread_counter
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Neperskaitytų žinučių skaičiavimas"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -1396,7 +1401,7 @@ msgstr "Tiekėjas"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__partner_ref
 msgid "Vendor Reference"
-msgstr "Tiekėjo numeris"
+msgstr "Sąskaitos nr."
 
 #. module: maintenance
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__priority__0
@@ -1422,6 +1427,26 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "days"
 msgstr "dienos"
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
+msgid "e.g. Internal Maintenance"
+msgstr ""
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
+msgid "e.g. LED Monitor"
+msgstr ""
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
+msgid "e.g. Monitors"
+msgstr ""
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
+msgid "e.g. Screen not working"
+msgstr ""
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form

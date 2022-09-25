@@ -1,18 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_livechat
+# 	* website_livechat
 # 
 # Translators:
-# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2017
-# William Surya Permana <zarambie_game@yahoo.com>, 2017
-# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
+# Bonny Useful <bonny.useful@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Abe Manyo, 2022
+# oon arfiandwi <oon.arfiandwi@gmail.com>, 2022
+# pnyet <david@zeromail.us>, 2022
+# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2022
+# Altela Eleviansyah Pramardhika <altela_pramardhika@yahoo.com>, 2022
+# whenwesober, 2022
+# Ryanto The <ry.the77@gmail.com>, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017\n"
+"POT-Creation-Date: 2022-04-19 13:58+0000\n"
+"PO-Revision-Date: 2016-08-05 13:13+0000\n"
+"Last-Translator: Ryanto The <ry.the77@gmail.com>, 2022\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,8 +28,54 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_website_visitor__session_count
+msgid "# Sessions"
+msgstr ""
+
+#. module: website_livechat
+#: code:addons/website_livechat/models/mail_channel.py:0
+#, python-format
+msgid "%s has left the conversation."
+msgstr ""
+
+#. module: website_livechat
+#: code:addons/website_livechat/models/mail_channel.py:0
+#, python-format
+msgid ""
+"%s has started a conversation with %s. \n"
+"                        The chat request has been canceled."
+msgstr ""
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
+msgid "<small>%</small>"
+msgstr ""
+
+#. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "<span>Livechat Channel</span>"
+msgstr ""
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_search
+msgid "Available"
+msgstr "Tersedia"
+
+#. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "Avatar"
+msgstr "Avatar"
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
+msgid "Bad"
+msgstr "Bad"
+
+#. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__can_publish
+msgid "Can Publish"
 msgstr ""
 
 #. module: website_livechat
@@ -31,18 +84,85 @@ msgid "Channel"
 msgstr "Saluran"
 
 #. module: website_livechat
-#: model:ir.model.fields,help:website_livechat.field_im_livechat_channel_website_description
+#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
+#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_tree
+msgid "Chat"
+msgstr "Chat"
+
+#. module: website_livechat
+#: model:ir.model,name:website_livechat.model_chatbot_script
+msgid "Chatbot Script"
+msgstr ""
+
+#. module: website_livechat
+#: model:ir.model,name:website_livechat.model_chatbot_script_step
+msgid "Chatbot Script Step"
+msgstr ""
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_form
+#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
+msgid "Chats"
+msgstr ""
+
+#. module: website_livechat
+#: model:ir.model,name:website_livechat.model_res_config_settings
+msgid "Config Settings"
+msgstr "Pengaturan Konfigurasi"
+
+#. module: website_livechat
+#: model:ir.model.fields,help:website_livechat.field_im_livechat_channel__website_description
 msgid "Description of the channel displayed on the website page"
 msgstr ""
 
 #. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
-msgid "Live Chat"
+#: model:ir.model,name:website_livechat.model_mail_channel
+msgid "Discussion Channel"
+msgstr "Saluran Diskusi"
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
+msgid "Great"
 msgstr ""
 
 #. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
-msgid "Live chat channel of your website"
+#: model:ir.model,name:website_livechat.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP routing"
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
+msgid "Happy face"
+msgstr ""
+
+#. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "History"
+msgstr "Riwayat"
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_search
+msgid "In Conversation"
+msgstr ""
+
+#. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__is_published
+msgid "Is Published"
+msgstr ""
+
+#. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "Lang"
+msgstr ""
+
+#. module: website_livechat
+#: code:addons/website_livechat/models/website.py:0
+#, python-format
+msgid "Live Support"
 msgstr ""
 
 #. module: website_livechat
@@ -51,19 +171,104 @@ msgid "Livechat Channel"
 msgstr ""
 
 #. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.header_footer_custom
-msgid "Livechat Support"
+#: model_terms:ir.ui.view,arch_db:website_livechat.channel_list_page
+msgid "Livechat Support Channels"
 msgstr ""
 
 #. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_list_page
-msgid "Livechat Support Channels"
+#. openerp-web
+#: code:addons/website_livechat/static/src/js/website_livechat.editor.js:0
+#, python-format
+msgid "Name"
+msgstr "Nama"
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
+msgid "Neutral face"
+msgstr ""
+
+#. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/js/website_livechat.editor.js:0
+#, python-format
+msgid "New Channel"
+msgstr "Saluran Baru"
+
+#. module: website_livechat
+#: code:addons/website_livechat/models/website_visitor.py:0
+#, python-format
+msgid "No Livechat Channel allows you to send a chat request for website %s."
+msgstr ""
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
+msgid "Not rated yet"
+msgstr ""
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
+msgid "Okay"
+msgstr ""
+
+#. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "Online"
+msgstr "Daring"
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
+msgid "Operator Avatar"
+msgstr ""
+
+#. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_website_visitor__livechat_operator_name
+msgid "Operator Name"
+msgstr ""
+
+#. module: website_livechat
+#: code:addons/website_livechat/models/website_visitor.py:0
+#, python-format
+msgid ""
+"Recipients are not available. Please refresh the page to get latest visitors"
+" status."
+msgstr ""
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
+msgid "Sad face"
+msgstr ""
+
+#. module: website_livechat
+#: model:ir.actions.server,name:website_livechat.website_livechat_send_chat_request_action_server
+msgid "Send Chat Requests"
+msgstr ""
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_form
+msgid "Send chat request"
+msgstr ""
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
+msgid "Speaking With"
+msgstr ""
+
+#. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_website_visitor__livechat_operator_id
+msgid "Speaking with"
 msgstr ""
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "Statistics"
 msgstr "Statistik"
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.chatbot_script_view_form
+msgid "Test"
+msgstr "Tes"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
@@ -76,41 +281,100 @@ msgid "The Team"
 msgstr ""
 
 #. module: website_livechat
+#: model:ir.model.fields,help:website_livechat.field_im_livechat_channel__website_url
+msgid "The full URL to access the document through the website."
+msgstr "URL lengkap untuk mengakses dokumen melalui website."
+
+#. module: website_livechat
+#: code:addons/website_livechat/models/mail_channel.py:0
+#, python-format
+msgid "The visitor"
+msgstr ""
+
+#. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_list_page
-msgid "There is no public livechat channel to show."
+msgid "There are no public livechat channels to show."
 msgstr ""
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "This is no rating for this channel for now."
+msgid "There are no ratings for this channel for now."
 msgstr ""
 
 #. module: website_livechat
-#: model:ir.model,name:website_livechat.model_website
-msgid "Website"
-msgstr "Situs Web"
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_published
+msgid "Visible on current website"
+msgstr ""
 
 #. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_res_config_settings_channel_id
+#: model:ir.model.fields,field_description:website_livechat.field_mail_channel__livechat_visitor_id
+msgid "Visitor"
+msgstr "Pengunjung"
+
+#. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "Visitor is online"
+msgstr ""
+
+#. module: website_livechat
+#: model:ir.actions.act_window,name:website_livechat.website_visitor_livechat_session_action
+msgid "Visitor's Sessions"
+msgstr ""
+
+#. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_website_visitor__mail_channel_ids
+msgid "Visitor's livechat channels"
+msgstr ""
+
+#. module: website_livechat
+#: model:ir.ui.menu,name:website_livechat.website_livechat_visitor_menu
+msgid "Visitors"
+msgstr ""
+
+#. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#: model:ir.model,name:website_livechat.model_website
+#, python-format
+msgid "Website"
+msgstr "Website"
+
+#. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_res_config_settings__channel_id
 msgid "Website Live Channel"
 msgstr ""
 
 #. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_website_channel_id
+#: model:ir.model.fields,field_description:website_livechat.field_website__channel_id
 msgid "Website Live Chat Channel"
 msgstr ""
 
 #. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel_website_description
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_url
+msgid "Website URL"
+msgstr "URL Website"
+
+#. module: website_livechat
+#: code:addons/website_livechat/tests/test_livechat_basic_flow.py:0
+#: model:ir.model,name:website_livechat.model_website_visitor
+#, python-format
+msgid "Website Visitor"
+msgstr ""
+
+#. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_description
 msgid "Website description"
-msgstr "Deskripsi situs web"
+msgstr "Deskripsi website"
+
+#. module: website_livechat
+#: code:addons/website_livechat/models/mail_channel.py:0
+#, python-format
+msgid "an operator"
+msgstr ""
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "last feedbacks"
 msgstr ""
-
-#. module: website_livechat
-#: model:ir.model,name:website_livechat.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

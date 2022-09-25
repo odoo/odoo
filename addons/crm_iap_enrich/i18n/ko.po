@@ -1,0 +1,117 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* crm_iap_enrich
+# 
+# Translators:
+# JH CHOI <hwangtog@gmail.com>, 2022
+# Linkup <link-up@naver.com>, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~15.2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"PO-Revision-Date: 2022-02-14 08:09+0000\n"
+"Last-Translator: Linkup <link-up@naver.com>, 2022\n"
+"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: crm_iap_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_notfound
+msgid ""
+"<span> No company data found based on the email address or email address is "
+"one of an email provider. No credit was consumed. </span>"
+msgstr ""
+"<span> 이메일 주소 또는 이메일 주소를 기반으로 하는 회사 데이터가 이메일 제공자 중 하나가 아닙니다. 크레딧이 소비되지 "
+"않았습니다. </span>"
+
+#. module: crm_iap_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_no_email
+msgid ""
+"<span>Enrichment could not be done because the email address does not look "
+"valid.</span>"
+msgstr ""
+
+#. module: crm_iap_enrich
+#: model:ir.model.fields,field_description:crm_iap_enrich.field_crm_lead__show_enrich_button
+msgid "Allow manual enrich"
+msgstr "수동 강화 허용"
+
+#. module: crm_iap_enrich
+#: model:ir.actions.server,name:crm_iap_enrich.ir_cron_lead_enrichment_ir_actions_server
+#: model:ir.cron,cron_name:crm_iap_enrich.ir_cron_lead_enrichment
+#: model:ir.cron,name:crm_iap_enrich.ir_cron_lead_enrichment
+msgid "CRM: enrich leads (IAP)"
+msgstr "CRM : 영업제안 강화(인앱결제)"
+
+#. module: crm_iap_enrich
+#: model:ir.model,name:crm_iap_enrich.model_res_config_settings
+msgid "Config Settings"
+msgstr "설정 구성"
+
+#. module: crm_iap_enrich
+#: model:ir.actions.server,name:crm_iap_enrich.action_enrich_mail
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.crm_lead_view_form
+msgid "Enrich"
+msgstr "강화"
+
+#. module: crm_iap_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.crm_lead_view_form
+msgid "Enrich lead with company data"
+msgstr ""
+
+#. module: crm_iap_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.crm_lead_view_form
+msgid "Enrich opportunity with company data"
+msgstr ""
+
+#. module: crm_iap_enrich
+#: model:ir.model.fields,field_description:crm_iap_enrich.field_crm_lead__iap_enrich_done
+msgid "Enrichment done"
+msgstr "강화 완료"
+
+#. module: crm_iap_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_no_email
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_notfound
+msgid "Lead Enrichment (based on email address)"
+msgstr ""
+
+#. module: crm_iap_enrich
+#: code:addons/crm_iap_enrich/models/crm_lead.py:0
+#, python-format
+msgid "Lead enriched based on email address"
+msgstr "이메일 주소를 기반으로 영업제안이 강화됨"
+
+#. module: crm_iap_enrich
+#: model:ir.model,name:crm_iap_enrich.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "영업제안/영업기회"
+
+#. module: crm_iap_enrich
+#: code:addons/crm_iap_enrich/models/crm_lead.py:0
+#, python-format
+msgid "Not enough credits for Lead Enrichment"
+msgstr ""
+
+#. module: crm_iap_enrich
+#: code:addons/crm_iap_enrich/models/crm_lead.py:0
+#, python-format
+msgid "Sent batch %s enrich requests: failed with exception %s"
+msgstr ""
+
+#. module: crm_iap_enrich
+#: code:addons/crm_iap_enrich/models/crm_lead.py:0
+#, python-format
+msgid "The leads/opportunities have successfully been enriched"
+msgstr ""
+
+#. module: crm_iap_enrich
+#: model:ir.model.fields,help:crm_iap_enrich.field_crm_lead__iap_enrich_done
+msgid ""
+"Whether IAP service for lead enrichment based on email has been performed on"
+" this lead."
+msgstr "이 영업제안에 대해 이메일 기반 영업제안 강화를 위한 IAP 서비스가 수행되었는지 여부."

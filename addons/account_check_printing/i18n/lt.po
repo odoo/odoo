@@ -3,20 +3,22 @@
 # 	* account_check_printing
 # 
 # Translators:
-# Martin Trigaux, 2019
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2019
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2019
-# Rytis Štreimikis <r.streimikis@hotmail.lt>, 2019
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2019
-# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# Arunas V. <arunas@devoro.com>, 2022
+# Rytis Štreimikis <r.streimikis@hotmail.lt>, 2022
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2022
+# Martin Trigaux, 2022
+# grupoda2 <dmitrijus.ivanovas@gmail.com>, 2022
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2022
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2022
+# Linas Versada <linaskrisiukenas@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:08+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2016-08-05 12:55+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2022\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,22 +31,6 @@ msgstr ""
 #, python-format
 msgid " : Check Number Sequence"
 msgstr ": Kvito numerio eiliškumas"
-
-#. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:0
-#, python-format
-msgid "A check memo cannot exceed 60 characters."
-msgstr "Kvito pastaba negali viršyti 60 ženklų."
-
-#. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_account_chart_template
-msgid "Account Chart Template"
-msgstr "Sąskaitų plano šablonas"
-
-#. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_account_reconciliation_widget
-msgid "Account Reconciliation widget"
-msgstr "Sąskaitos sudengimo valdiklis"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_margin_left
@@ -93,11 +79,6 @@ msgid "Check Printing"
 msgstr "Kvito spausdinimas"
 
 #. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_printing_payment_method_selected
-msgid "Check Printing Payment Method Selected"
-msgstr "Kvito spausdinimo mokėjimo būdas pasirinktas"
-
-#. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_right
 msgid "Check Right Margin"
 msgstr "Dešinė kvito paraštė"
@@ -112,6 +93,12 @@ msgstr "Kvito eiliškumas"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_top
 msgid "Check Top Margin"
 msgstr "Viršutinė kvito paraštė"
+
+#. module: account_check_printing
+#: code:addons/account_check_printing/models/account_payment.py:0
+#, python-format
+msgid "Check numbers can only consist of digits"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
@@ -152,14 +139,14 @@ msgid "Companies"
 msgstr "Įmonės"
 
 #. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__country_code
-msgid "Company Country code"
-msgstr "Įmonės šalies kodas"
-
-#. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_res_config_settings
 msgid "Config Settings"
 msgstr "Konfigūracijos nustatymai"
+
+#. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_res_partner
+msgid "Contact"
+msgstr "Kontaktas"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__create_uid
@@ -175,6 +162,13 @@ msgstr "Sukurta"
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__display_name
 msgid "Display Name"
 msgstr "Rodomas pavadinimas"
+
+#. module: account_check_printing
+#: code:addons/account_check_printing/models/account_payment.py:0
+#: code:addons/account_check_printing/models/account_payment.py:0
+#, python-format
+msgid "Go to the configuration panel"
+msgstr "Eiti į nustatymų skydelį"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__id
@@ -197,6 +191,11 @@ msgid "Journal"
 msgstr "Žurnalas"
 
 #. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_account_move
+msgid "Journal Entry"
+msgstr "Žurnalo įrašas"
+
+#. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks____last_update
 msgid "Last Modified on"
 msgstr "Paskutinį kartą keista"
@@ -216,6 +215,17 @@ msgstr "Paskutinį kartą atnaujinta"
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_manual_sequencing
 msgid "Manual Numbering"
 msgstr "Rankinis numeravimas"
+
+#. module: account_check_printing
+#: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_line_id
+msgid ""
+"Manual: Pay or Get paid by any method outside of Odoo.\n"
+"Payment Acquirers: Each payment acquirer has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
+"Check: Pay bills by check and print it from Odoo.\n"
+"Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
+"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
+"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -242,6 +252,18 @@ msgid "None"
 msgstr "Nieko"
 
 #. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__payment_method_line_id
+#: model:ir.model.fields,field_description:account_check_printing.field_res_partner__property_payment_method_id
+#: model:ir.model.fields,field_description:account_check_printing.field_res_users__property_payment_method_id
+msgid "Payment Method"
+msgstr "Mokėjimo būdas"
+
+#. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_account_payment_method
+msgid "Payment Methods"
+msgstr "Mokėjimo būdai"
+
+#. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment
 msgid "Payments"
 msgstr "Mokėjimai"
@@ -264,6 +286,22 @@ msgid ""
 msgstr ""
 "Įveskite pirmojo iš anksto atspausdinto kvito, kurį rengiatės spausdinti, "
 "numerį."
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_bank_statement_line__preferred_payment_method_id
+#: model:ir.model.fields,field_description:account_check_printing.field_account_move__preferred_payment_method_id
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__preferred_payment_method_id
+msgid "Preferred Payment Method"
+msgstr ""
+
+#. module: account_check_printing
+#: model:ir.model.fields,help:account_check_printing.field_res_partner__property_payment_method_id
+#: model:ir.model.fields,help:account_check_printing.field_res_users__property_payment_method_id
+msgid ""
+"Preferred payment method when paying this vendor. This is used to filter "
+"vendor bills by preferred payment method to register payments in mass. Use "
+"cases: create bank files for batch wires, check runs."
+msgstr ""
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -300,11 +338,6 @@ msgid "Register Payment"
 msgstr "Užregistruoti mokėjimą"
 
 #. module: account_check_printing
-#: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
-msgid "Reset Amount in Words"
-msgstr ""
-
-#. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_right
 msgid "Right Margin"
 msgstr "Dešinė paraštė"
@@ -320,27 +353,30 @@ msgstr ""
 "Norėdami išjungti šią funkciją, pasirinkite \"nieko\"."
 
 #. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
+msgid "Sent"
+msgstr "Išsiųsta"
+
+#. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_next_number
 msgid "Sequence number of the next printed check."
 msgstr "Sekos numeris turi būti kito atspausdinto kvito."
 
 #. module: account_check_printing
-#: model:ir.model.fields,help:account_check_printing.field_account_journal__check_printing_payment_method_selected
+#: code:addons/account_check_printing/models/account_payment.py:0
+#, python-format
 msgid ""
-"Technical feature used to know whether check printing was enabled as payment"
-" method."
+"Something went wrong with Check Layout, please select another layout in "
+"Invoicing/Accounting Settings and try again."
 msgstr ""
-"Techninė funkcija, naudojama sužinoti, ar kvitų spausdinimas buvo įjungtas "
-"kaip mokėjimo būdas."
 
 #. module: account_check_printing
-#: model:ir.model.fields,help:account_check_printing.field_res_config_settings__country_code
+#: code:addons/account_check_printing/models/account_payment.py:0
+#, python-format
 msgid ""
-"The ISO country code in two chars. \n"
-"You can use this field for quick search."
+"The following numbers are already used:\n"
+"%s"
 msgstr ""
-"ISO šalies kodas dviem simboliais. \n"
-"Galite naudoti šį lauką greitai paieškai."
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:0
@@ -377,11 +413,9 @@ msgstr ""
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_date_label
 msgid ""
-"This option allows you to print the date label on the check as per CPA. "
+"This option allows you to print the date label on the check as per CPA.\n"
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
-"Šis pasirinkimas leidžia jums ant kvito spausdinti datą, kaip CPA. Išjunkite"
-" jį, jei jūsų iš anksto atspausdintuose kvituose jau yra data."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -395,26 +429,14 @@ msgid "Unmark Sent"
 msgstr "Atžymėti išsiųstus"
 
 #. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
+msgid "Void Check"
+msgstr ""
+
+#. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid ""
-"You have to choose a check layout. For this, go in Apps, search for 'Checks "
-"layout' and install one."
+"You have to choose a check layout. For this, go in Invoicing/Accounting "
+"Settings, search for 'Checks layout' and set one."
 msgstr ""
-"Turite pasirinkti čekio išdėstymą. Eikite į programas, suraskite \"Čekių "
-"išdėstymą\" ir jį įdiekite."
-
-#. module: account_check_printing
-#: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__action_print_check_middle
-msgid "check in middle"
-msgstr "čekis viduryje"
-
-#. module: account_check_printing
-#: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__action_print_check_bottom
-msgid "check on bottom"
-msgstr "čekis apačioje"
-
-#. module: account_check_printing
-#: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__action_print_check_top
-msgid "check on top"
-msgstr "čekis viršuje"

@@ -1,19 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * product_margin
+# 	* product_margin
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2018
-# Manami Hashi <manami@roomsfor.hk>, 2018
-# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018
+# Ryoko Tsuda <ryoko@quartile.co>, 2022
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
+# Martin Trigaux, 2022
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
+# Noma Yuki, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2016-08-05 13:08+0000\n"
+"Last-Translator: Noma Yuki, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,12 +56,12 @@ msgstr "仕入先請求書の平均価格"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__purchase_avg_price
 msgid "Avg. Purchase Unit Price"
-msgstr ""
+msgstr "平均購入単価"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__sale_avg_price
 msgid "Avg. Sale Unit Price"
-msgstr ""
+msgstr "平均販売単価"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
@@ -89,11 +91,11 @@ msgstr "作成日"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__display_name
 msgid "Display Name"
-msgstr "表示名"
+msgstr "名前を表示"
 
 #. module: product_margin
-#: selection:product.margin,invoice_state:0
-#: selection:product.product,invoice_state:0
+#: model:ir.model.fields.selection,name:product_margin.selection__product_margin__invoice_state__draft_open_paid
+#: model:ir.model.fields.selection,name:product_margin.selection__product_product__invoice_state__draft_open_paid
 msgid "Draft, Open and Paid"
 msgstr "ドラフト、オープンと支払済"
 
@@ -130,7 +132,7 @@ msgstr "想定マージン * 100 / 想定売上"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__from_date
 msgid "From"
-msgstr "差出人"
+msgstr "from"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.product_margin_form_view
@@ -194,14 +196,14 @@ msgid "Open Margins"
 msgstr "マージンを表示"
 
 #. module: product_margin
-#: selection:product.margin,invoice_state:0
-#: selection:product.product,invoice_state:0
+#: model:ir.model.fields.selection,name:product_margin.selection__product_margin__invoice_state__open_paid
+#: model:ir.model.fields.selection,name:product_margin.selection__product_product__invoice_state__open_paid
 msgid "Open and Paid"
 msgstr "オープンと支払済"
 
 #. module: product_margin
-#: selection:product.margin,invoice_state:0
-#: selection:product.product,invoice_state:0
+#: model:ir.model.fields.selection,name:product_margin.selection__product_margin__invoice_state__paid
+#: model:ir.model.fields.selection,name:product_margin.selection__product_product__invoice_state__paid
 msgid "Paid"
 msgstr "支払済"
 
@@ -216,7 +218,7 @@ msgid "Product Margin"
 msgstr "プロダクトマージン"
 
 #. module: product_margin
-#: code:addons/product_margin/wizard/product_margin.py:49
+#: code:addons/product_margin/wizard/product_margin.py:0
 #: model:ir.actions.act_window,name:product_margin.product_margin_act_window
 #: model:ir.ui.menu,name:product_margin.menu_action_product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
@@ -293,7 +295,7 @@ msgstr "顧客請求書の数量合計"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__to_date
 msgid "To"
-msgstr "終了日"
+msgstr "宛先"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__total_cost

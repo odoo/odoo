@@ -3,20 +3,15 @@
 # 	* website_sale_wishlist
 # 
 # Translators:
-# Joe Hansen <joedalton2@yahoo.dk>, 2019
-# Martin Trigaux, 2019
-# Morten Schou <ms@msteknik.dk>, 2019
-# Jesper Carstensen <jc@danodoo.dk>, 2019
-# Sanne Kristensen <sanne@vkdata.dk>, 2019
-# Ejner Sønniksen <ejner@vkdata.dk>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Ejner Sønniksen <ejner@vkdata.dk>, 2019\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
+"PO-Revision-Date: 2017-07-17 09:13+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,13 +20,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.header
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
 msgid ""
-"<i class=\"fa fa-heart\"/>\n"
-"                        Wishlist"
+"<i class=\"fa fa-heart-o mr-2\" role=\"img\" aria-label=\"Add to "
+"wishlist\"/>Add to wishlist"
 msgstr ""
-"<i class=\"fa fa-heart\"/>\n"
-"                        Ønskeliste"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -42,13 +35,6 @@ msgstr "<small><i class=\"fa fa-trash-o\"/> Fjern</small>"
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
 msgid "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
 msgstr "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
-
-#. module: website_sale_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
-msgid ""
-"<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/> "
-"Add to wishlist"
-msgstr ""
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__active
@@ -71,9 +57,9 @@ msgid "Add to Wishlist"
 msgstr "Tilføj til ønskeliste"
 
 #. module: website_sale_wishlist
-#: model:ir.model,name:website_sale_wishlist.model_ir_autovacuum
-msgid "Automatic Vacuum"
-msgstr "Automatisk sletning"
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
+msgid "Add to wishlist"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_res_partner
@@ -103,7 +89,7 @@ msgstr "Vis navn"
 #. module: website_sale_wishlist
 #: model:ir.model.constraint,message:website_sale_wishlist.constraint_product_wishlist_product_unique_partner_id
 msgid "Duplicated wishlisted product for this partner."
-msgstr ""
+msgstr "Duplikeret ønskeliste produkt for denne partner"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__id
@@ -182,6 +168,11 @@ msgid "Shop Wishlist"
 msgstr "Ønskeliste i shoppen"
 
 #. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.snippet_options
+msgid "Show Empty Wishlist"
+msgstr "Vis Tom Ønskeseddel"
+
+#. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_res_users
 msgid "Users"
 msgstr "Brugere"
@@ -194,5 +185,6 @@ msgstr "Hjemmeside"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner__wishlist_ids
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users__wishlist_ids
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.header_wishlist_link
 msgid "Wishlist"
 msgstr "Ønskeliste"

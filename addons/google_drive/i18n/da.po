@@ -3,22 +3,15 @@
 # 	* google_drive
 # 
 # Translators:
-# Martin Trigaux, 2019
-# jonas jensen <j.jensen@tcomp.dk>, 2019
-# Morten Schou <ms@msteknik.dk>, 2019
-# Jesper Carstensen <jc@danodoo.dk>, 2019
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
-# Sanne Kristensen <sanne@vkdata.dk>, 2019
-# Ejner Sønniksen <ejner@vkdata.dk>, 2019
-# lhmflexerp <lhm@flexerp.dk>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2016-08-05 12:58+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,16 +29,22 @@ msgid ""
 "                                - If you don't select \"Share with all users\", link of google document in \"More\" options will not appear for other users in opportunities of Sales Department.<br/>\n"
 "                                - If filter is not specified, link of google document will appear in \"More\" option for all users for all opportunities."
 msgstr ""
+"<b>For at oprette et nyt filter:</b><br/>\n"
+"                                - Gå til det Odoo dokument du vil filtrere. For eksempel, gå til Muligheder og søg efter Salgsafdeling.<br/>\n"
+"                                - I denne \"Søg\" visning, vælg muligheden \"Gem Nuværende Filter\", skriv navnet (Eks: Salgsafdeling)<br/>\n"
+"                                - Hvis du vælger \"Del med alle brugere\", vil linket til google dokumentet blive synlig for alle brugere i muligheder i salgsafdelingen under \"Mere\" muligheden.<br/>\n"
+"                                - Hvis du ikke vælger \"Del med alle brugere\", vil linket til google dokumentet ikke blive synlig for nogle brugere i muligheder i salgsafdelingen under \"Mere\" muligheden.<br/>\n"
+"                                - Hvis filter ikke er specificeret, vil linket til google dokumentet blive synligt for alle bruger under alle muligheder."
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
 msgid "<i class=\"fa fa-arrow-right\"/> Reset token"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> Nulstil token"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
 msgid "<i class=\"fa fa-arrow-right\"/> Set up token"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> Opsæt token"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
@@ -53,16 +52,19 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle text-warning\"/> &amp;nbsp; No refresh"
 " token set"
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle text-warning\"/> &amp;nbsp; Ingen "
+"opdater token angivet"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
 msgid "<i class=\"text-success fa fa-check\"/> &amp;nbsp; Refresh token set"
-msgstr ""
+msgstr "<i class=\"text-success fa fa-check\"/> &amp;nbsp; Opdater token angivet"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
 msgid "<span>Get an authorization code and set it in the field below.</span>"
 msgstr ""
+"<span>Få en autoriserings kode og angiv den i feltet nedenunder.</span>"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
@@ -87,7 +89,7 @@ msgstr "Aktiv"
 #. module: google_drive
 #: model_terms:ir.actions.act_window,help:google_drive.action_google_drive_users_config
 msgid "Add a new template"
-msgstr ""
+msgstr "Tilføj en ny skabelon"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.google_drive_config_view_search
@@ -99,6 +101,7 @@ msgstr "Arkiveret"
 #, python-format
 msgid "At least one key cannot be found in your Google Drive name pattern."
 msgstr ""
+"Mindst én nøgle må ikke være at finde i dit Google Drive navn mønster."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings__google_drive_authorization_code
@@ -116,6 +119,8 @@ msgid ""
 "Choose how the new google drive will be named, on google side. Eg. "
 "gdoc_%(field_name)s"
 msgstr ""
+"Vælg hvordan det nye google drive skal navngives, på googles side. F.eks. "
+"gdoc_%(field_name)s"
 
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_res_config_settings
@@ -141,7 +146,12 @@ msgstr "Oprettet den"
 #: code:addons/google_drive/models/google_drive.py:0
 #, python-format
 msgid "Creating google drive may only be done by one at a time."
-msgstr ""
+msgstr "Oprettelse af google drive kan kun ske én ad gangen."
+
+#. module: google_drive
+#: model:ir.filters,name:google_drive.filter_partner
+msgid "Customer"
+msgstr "Kunde"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__display_name
@@ -154,6 +164,11 @@ msgid "Filter"
 msgstr "Filter"
 
 #. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
+msgid "Get Authorization Code"
+msgstr ""
+
+#. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:0
 #: code:addons/google_drive/models/google_drive.py:0
 #, python-format
@@ -163,7 +178,7 @@ msgstr "Gå til konfigurations fanebladet"
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__google_drive_client_id
 msgid "Google Client"
-msgstr ""
+msgstr "Google Klient"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
@@ -174,7 +189,7 @@ msgstr "Google Drev Konfiguration"
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__name_template
 msgid "Google Drive Name Pattern"
-msgstr ""
+msgstr "Google Drive navn mønster"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
@@ -187,6 +202,7 @@ msgstr "Google Drive Skabeloner"
 #, python-format
 msgid "Google Drive is not yet configured. Please contact your administrator."
 msgstr ""
+"Google Drive er endnu ikke konfigureret. Kontakt venligst din administrator."
 
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_google_drive_config
@@ -197,6 +213,15 @@ msgstr "Google Drev skabeloner konfigurationsfil"
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__id
 msgid "ID"
 msgstr "ID"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid ""
+"Incoherent Google Drive %(drive)s: the model of the selected filter "
+"%(filter)r is not matching the model of current template (%(filter_model)r, "
+"%(drive_model)r)"
+msgstr ""
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config____last_update
@@ -222,6 +247,12 @@ msgid ""
 "checklist for each order in a foreign country, ... Its very easy to manage "
 "them, link them to Odoo and use them to collaborate with your employees."
 msgstr ""
+"forbind dine egne google drive skabeloner til ethvert datasæt i Odoo. Hvis "
+"du har virkelig specifikke dokumenter som du ønsker din samarbejdspartner "
+"skal udfylde, f.eks. bruge regneark til at kontrollere kvaliteten på dine "
+"produkter, eller gennemgå leverings checklisten for hver ordre i et udlang, "
+"... det er meget nemt at administrere dem, forbind dem til Odoo og brug dem "
+"til at arbejde sammen med dine ansatte."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__model_id
@@ -237,7 +268,7 @@ msgstr "Indtast venligst et gyldigt Google Document URL."
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings__is_google_drive_token_generated
 msgid "Refresh Token Generated"
-msgstr ""
+msgstr "Opdater token genereret"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__model
@@ -247,18 +278,18 @@ msgstr "Relateret model"
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__google_drive_resource_id
 msgid "Resource Id"
-msgstr ""
+msgstr "Resource ID"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.google_drive_config_view_search
 msgid "Search Google Drive Config"
-msgstr ""
+msgstr "Søg Google Drive Konfiguration"
 
 #. module: google_drive
 #: code:addons/google_drive/models/res_config_settings.py:0
 #, python-format
 msgid "Set up refresh token"
-msgstr ""
+msgstr "Opsæt opdater token"
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:0
@@ -267,6 +298,8 @@ msgid ""
 "Something went wrong during the token generation. Please request again an "
 "authorization code ."
 msgstr ""
+"Noget gik galt under token generering. Anmod venligst om en autoriserings "
+"kode igen."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__name
@@ -292,7 +325,17 @@ msgstr "Google Skabelonen kan ikke findes. Måske er den blevet slettet."
 #. module: google_drive
 #: model:ir.model.fields,help:google_drive.field_res_config_settings__google_drive_uri
 msgid "The URL to generate the authorization code from Google"
+msgstr "URL'en til generering af autoriserings koden fra Google"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid ""
+"The document filter must not include any 'dynamic' part, so it should not be"
+" based on the current time or current user, for example."
 msgstr ""
+"Dokument filtret må ikke inkludere en 'dynamisk' del, så den bør ikke være "
+"baseret på det nuværende tidspunkt eller den nuværende bruger, for eksempel."
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
@@ -302,6 +345,10 @@ msgid ""
 "                                in the Google Drive name field, the document in your Google Drive and in Odoo attachment will be named\n"
 "                                'Deco_Addict_SO0001_Sales'."
 msgstr ""
+"Navnet på det vedhæftede dokument kan bruge faste eller variable data. Til at skelne mellem dokumenter i\n"
+"                                   Google Drive, brug faste ord og felter. For eksempel som ovenover, hvis du skrev Deco_Addict_%(name)s_Sales\n"
+"                                   I Google Drive navn feltet, vil dokumentet i dit Google Drive og i Odoo vedhæftelse blive navngivet\n"
+"                                    'Deco_Addict_SO00001_Sales'."
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:0
@@ -310,6 +357,8 @@ msgid ""
 "The permission 'reader' for 'anyone with the link' has not been written on "
 "the document"
 msgstr ""
+"Tilladelsen 'læser' for 'enhver med et link' er ikke blevet tilskrevet "
+"dokumentet"
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:0
@@ -318,10 +367,22 @@ msgid ""
 "There is no refresh code set for Google Drive. You can set it up from the "
 "configuration panel."
 msgstr ""
+"Der er ingen opdater kode angivet for Google Drive. Du kan angive den fra "
+"konfigurations panelet."
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "This module will stop working after the 3rd October 2022 due to"
+msgstr ""
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings__google_drive_uri
 msgid "URI"
+msgstr "URI"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "changes in Google Authentication API"
 msgstr ""
 
 #. module: google_drive
@@ -329,3 +390,4 @@ msgstr ""
 msgid ""
 "https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
 msgstr ""
+"https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"

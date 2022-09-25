@@ -1,27 +1,42 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * uom
+# 	* uom
 # 
 # Translators:
-# Martin Trigaux, 2018
-# 최재호 <hwangtog@gmail.com>, 2018
-# Link Up링크업 <linkup.way@gmail.com>, 2018
-# Linkup <link-up@naver.com>, 2018
-# Mark Lee <odoos@soti.33mail.com>, 2018
+# Link Up링크업 <linkup.way@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Linkup <link-up@naver.com>, 2022
+# JH CHOI <hwangtog@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:33+0000\n"
-"Last-Translator: Mark Lee <odoos@soti.33mail.com>, 2018\n"
+"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"PO-Revision-Date: 2018-06-25 08:30+0000\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
+msgid ""
+"<span class=\"oe_grey oe_inline\">\n"
+"                                    e.g: 1*(reference unit)=ratio*(this unit)\n"
+"                                </span>"
+msgstr ""
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
+msgid ""
+"<span class=\"oe_grey oe_inline\">\n"
+"                                    e.g: 1*(this unit)=ratio*(reference unit)\n"
+"                                </span>"
+msgstr ""
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__active
@@ -31,12 +46,17 @@ msgstr "활성"
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
 msgid "Add a new unit of measure"
-msgstr ""
+msgstr "새 단위 추가하기"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
 msgid "Add a new unit of measure category"
-msgstr ""
+msgstr "새 단위 범주 추가하기"
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
+msgid "Archived"
+msgstr "보관됨"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor_inv
@@ -44,21 +64,32 @@ msgid "Bigger Ratio"
 msgstr "더 큰 비율"
 
 #. module: uom
-#: selection:uom.uom,uom_type:0
+#: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__bigger
 msgid "Bigger than the reference Unit of Measure"
-msgstr "기준 측정 단위보다 큼"
+msgstr "기준 단위보다 큼"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__category_id
+#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
 msgid "Category"
-msgstr "분류"
+msgstr "카테고리"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__color
+msgid "Color"
+msgstr "색상"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__ratio
+msgid "Combined Ratio"
+msgstr ""
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__category_id
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
-msgstr "측정 단위 사이의 변환은 동일 분류 항목에서만 가능합니다. 변환은 비율에 따라 이루어집니다."
+msgstr "단위 사이의 변환은 동일 카테고리에서만 가능합니다. 변환은 비율에 따라 이루어집니다."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__create_uid
@@ -70,27 +101,37 @@ msgstr "작성자"
 #: model:ir.model.fields,field_description:uom.field_uom_category__create_date
 #: model:ir.model.fields,field_description:uom.field_uom_uom__create_date
 msgid "Created on"
-msgstr "작성일"
+msgstr "작성일자"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_day
-msgid "Day(s)"
+msgid "Days"
 msgstr "일"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__display_name
 #: model:ir.model.fields,field_description:uom.field_uom_uom__display_name
 msgid "Display Name"
-msgstr "이름 표시"
+msgstr "표시명"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_dozen
-msgid "Dozen(s)"
+msgid "Dozens"
 msgstr "다스"
 
 #. module: uom
+#: model:ir.model.fields,help:uom.field_uom_category__reference_uom_id
+msgid "Dummy field to keep track of reference uom change"
+msgstr ""
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
+msgid "Group By"
+msgstr "그룹별"
+
+#. module: uom
 #: model:uom.uom,name:uom.product_uom_hour
-msgid "Hour(s)"
+msgid "Hours"
 msgstr "시간"
 
 #. module: uom
@@ -98,14 +139,14 @@ msgstr "시간"
 msgid ""
 "How many times this Unit of Measure is bigger than the reference Unit of "
 "Measure in this category: 1 * (this unit) = ratio * (reference unit)"
-msgstr ""
+msgstr "이 단위가 이 범주의 기준 단위보다 몇 배 더 큰지 : 1 * (해당 단위) = 비율 * (기준 단위)"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__factor
 msgid ""
 "How much bigger or smaller this unit is compared to the reference Unit of "
 "Measure for this category: 1 * (reference unit) = ratio * (this unit)"
-msgstr ""
+msgstr "이 범주의 기준 단위와 비교하여 이 단위가 얼마나 크거나 작습니까 : 1 * (기준 단위) = 비율 * (해당 단위)"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__id
@@ -117,7 +158,7 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:uom.field_uom_category____last_update
 #: model:ir.model.fields,field_description:uom.field_uom_uom____last_update
 msgid "Last Modified on"
-msgstr "최근 수정"
+msgstr "최근 수정일"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__write_uid
@@ -129,12 +170,7 @@ msgstr "최근 갱신한 사람"
 #: model:ir.model.fields,field_description:uom.field_uom_category__write_date
 #: model:ir.model.fields,field_description:uom.field_uom_uom__write_date
 msgid "Last Updated on"
-msgstr "최근 갱신 날짜"
-
-#. module: uom
-#: selection:uom.category,measure_type:0
-msgid "Length"
-msgstr ""
+msgstr "최근 갱신 일자"
 
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_length
@@ -142,34 +178,35 @@ msgid "Length / Distance"
 msgstr "길이 / 거리"
 
 #. module: uom
-#: model:uom.uom,name:uom.product_uom_litre
-msgid "Liter(s)"
-msgstr "리터"
-
-#. module: uom
 #: model:res.groups,name:uom.group_uom
 msgid "Manage Multiple Units of Measure"
-msgstr "복수의 측정 단위 관리"
+msgstr "복수의 단위 관리"
 
 #. module: uom
 #: model:ir.model,name:uom.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr "상품 단위"
+msgstr "품목 단위"
 
 #. module: uom
 #: model:ir.model,name:uom.model_uom_category
 msgid "Product UoM Categories"
-msgstr ""
+msgstr "상품 단위 범주"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
 msgid "Ratio"
 msgstr "비율"
 
 #. module: uom
-#: selection:uom.uom,uom_type:0
+#: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__reference
 msgid "Reference Unit of Measure for this category"
-msgstr "이 분류의 기준 측정 단위"
+msgstr "이 분류의 기준 단위"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__reference_uom_id
+msgid "Reference UoM"
+msgstr ""
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__rounding
@@ -177,46 +214,77 @@ msgid "Rounding Precision"
 msgstr "올림 정확도"
 
 #. module: uom
-#: selection:uom.uom,uom_type:0
+#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
+msgid "Search UOM"
+msgstr "단위 검색"
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.uom_categ_view_search
+msgid "Search UoM Category"
+msgstr ""
+
+#. module: uom
+#: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__smaller
 msgid "Smaller than the reference Unit of Measure"
-msgstr "기준 측정 단위보다 작음"
+msgstr "기준 단위보다 작음"
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid ""
+"Some critical fields have been modified on %s.\n"
+"Note that existing data WON'T be updated by this change.\n"
+"\n"
+"As units of measure impact the whole system, this may cause critical issues.\n"
+"E.g. modifying the rounding could disturb your inventory balance.\n"
+"\n"
+"Therefore, changing core units of measure in a running database is not recommended."
+msgstr ""
+
+#. module: uom
+#: model:uom.category,name:uom.uom_categ_surface
+msgid "Surface"
+msgstr ""
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__rounding
 msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
 "of Measure that cannot be further split, such as a piece."
-msgstr ""
+msgstr "계산된 수량은 이 값의 배수입니다. 조각과 같이 더 이상 분할할 수 없는 단위에는 1.0을 사용하십시오."
 
 #. module: uom
-#: sql_constraint:uom.uom:0
+#: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_gt_zero
 msgid "The conversion ratio for a unit of measure cannot be 0!"
+msgstr "단위의 변환 비율은 0 일 수 없습니다!"
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid ""
+"The following units of measure are used by the system and cannot be deleted: %s\n"
+"You can archive them instead."
 msgstr ""
 
 #. module: uom
-#: sql_constraint:uom.uom:0
+#: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_reference_is_one
 msgid "The reference unit must have a conversion factor equal to 1."
-msgstr ""
+msgstr "기준 단위의 변환 계수는 1과 같아야 합니다."
 
 #. module: uom
-#: sql_constraint:uom.uom:0
+#: model:ir.model.constraint,message:uom.constraint_uom_uom_rounding_gt_zero
 msgid "The rounding precision must be strictly positive."
-msgstr ""
+msgstr "반올림 정밀도는 반드시 양수여야 합니다."
 
 #. module: uom
-#: code:addons/uom/models/uom_uom.py:152
+#: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid ""
 "The unit of measure %s defined on the order line doesn't belong to the same "
-"category than the unit of measure %s defined on the product. Please correct "
+"category as the unit of measure %s defined on the product. Please correct "
 "the unit of measure defined on the order line or on the product, they should"
 " belong to the same category."
 msgstr ""
-
-#. module: uom
-#: selection:uom.category,measure_type:0
-msgid "Time"
-msgstr "시간"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__uom_type
@@ -224,25 +292,15 @@ msgid "Type"
 msgstr "유형"
 
 #. module: uom
-#: model:ir.model.fields,field_description:uom.field_uom_category__measure_type
-msgid "Type of Measure"
-msgstr ""
-
-#. module: uom
-#: model:ir.model.fields,field_description:uom.field_uom_uom__measure_type
-msgid "Type of measurement category"
-msgstr ""
-
-#. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__active
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
-msgstr ""
+msgstr "단위를 삭제하지 않고 비활성화하려면 필드 활성화를 선택 취소하십시오."
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_unit
 msgid "Unit"
-msgstr "유닛"
+msgstr "단위"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__name
@@ -250,36 +308,33 @@ msgid "Unit of Measure"
 msgstr "단위"
 
 #. module: uom
-#: model:ir.actions.act_window,name:uom.product_uom_categ_form_action
-msgid "Unit of Measure Categories"
-msgstr "측정단위 카테고리"
-
-#. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__name
 msgid "Unit of Measure Category"
-msgstr ""
+msgstr "단위 범주"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_unit
-msgid "Unit(s)"
+msgid "Units"
 msgstr "단위"
 
 #. module: uom
-#: selection:uom.category,measure_type:0
-msgid "Units"
-msgstr ""
-
-#. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_form_action
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_tree_view
 msgid "Units of Measure"
-msgstr "측정단위"
+msgstr "단위"
+
+#. module: uom
+#: model:ir.actions.act_window,name:uom.product_uom_categ_form_action
+msgid "Units of Measure Categories"
+msgstr "단위 카테고리"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_tree_view
 msgid "Units of Measure categories"
-msgstr "UoM 카테고리"
+msgstr "단위 범주"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
@@ -289,29 +344,46 @@ msgid ""
 "            <i>'Time'</i>, you will have the following units of measure:\n"
 "            Hours, Days."
 msgstr ""
+"동일한 범주에 속하는 단위는 서로 변환할 수 있습니다. \n"
+"             예를 들어 <i>'시간'</i> 범주에는 \n"
+"             다음과 같은 측정 단위가 있습니다 : \n"
+"             시간, 일."
 
 #. module: uom
-#: code:addons/uom/models/uom_uom.py:93
+#: code:addons/uom/models/uom_uom.py:0
 #, python-format
-msgid ""
-"UoM category %s should have a reference unit of measure. If you just created"
-" a new category, please record the 'reference' unit first."
+msgid "UoM category %s must have at least one reference unit of measure."
 msgstr ""
 
 #. module: uom
-#: code:addons/uom/models/uom_uom.py:95
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid "UoM category %s should have a reference unit of measure."
+msgstr ""
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
+msgstr "UoM 범주 %s는 기준 측정 단위가 하나만 있어야 합니다."
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__uom_ids
+msgid "Uom"
 msgstr ""
 
 #. module: uom
-#: selection:uom.category,measure_type:0
 #: model:uom.category,name:uom.product_uom_categ_vol
 msgid "Volume"
 msgstr "부피"
 
 #. module: uom
-#: selection:uom.category,measure_type:0
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid "Warning for %s"
+msgstr "%s에 대한 경고"
+
+#. module: uom
 #: model:uom.category,name:uom.product_uom_categ_kgm
 msgid "Weight"
 msgstr "무게"
@@ -322,65 +394,53 @@ msgid "Working Time"
 msgstr "근무 시간"
 
 #. module: uom
-#: sql_constraint:uom.category:0
-msgid "You can have only one category per measurement type."
-msgstr ""
-
-#. module: uom
-#: code:addons/uom/models/uom_uom.py:28
-#, python-format
-msgid "You cannot delete this UoM Category as it is used by the system."
-msgstr ""
-
-#. module: uom
-#: code:addons/uom/models/uom_uom.py:115
-#, python-format
-msgid ""
-"You cannot delete this UoM as it is used by the system. You should rather "
-"archive it."
-msgstr ""
-
-#. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
 msgid ""
 "You must define a conversion rate between several Units of\n"
 "            Measure within the same category."
 msgstr ""
+"동일한 범주 내에서 여러 단위 간의 \n"
+"              변환 비율을 정의해야 합니다."
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cm
 msgid "cm"
-msgstr "센티미터"
-
-#. module: uom
-#: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
-msgid "e.g: 1 * (reference unit) = ratio * (this unit)"
-msgstr "예: 1 * (기준 단위) = 비율 * (이 단위)"
-
-#. module: uom
-#: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
-msgid "e.g: 1 * (this unit) = ratio * (reference unit)"
-msgstr "e.g: 1 * (이 단위) = 비율 * (기준 단위)"
+msgstr "cm"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_floz
-msgid "fl oz"
-msgstr "fl oz"
+msgid "fl oz (US)"
+msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_foot
-msgid "foot(ft)"
-msgstr "피트"
+msgid "ft"
+msgstr ""
+
+#. module: uom
+#: model:uom.uom,name:uom.uom_square_foot
+msgid "ft²"
+msgstr ""
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_cubic_foot
+msgid "ft³"
+msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_gal
-msgid "gal(s)"
-msgstr "갤런"
+msgid "gal (US)"
+msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_inch
-msgid "inch(es)"
-msgstr "인치"
+msgid "in"
+msgstr "분류"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_cubic_inch
+msgid "in³"
+msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_kgm
@@ -394,20 +454,40 @@ msgstr "km"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_lb
-msgid "lb(s)"
-msgstr "파운드"
+msgid "lb"
+msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_mile
-msgid "mile(s)"
-msgstr "마일"
+msgid "mi"
+msgstr ""
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_millimeter
+msgid "mm"
+msgstr ""
+
+#. module: uom
+#: model:uom.uom,name:uom.uom_square_meter
+msgid "m²"
+msgstr ""
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_cubic_meter
+msgid "m³"
+msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_oz
-msgid "oz(s)"
+msgid "oz"
 msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_qt
-msgid "qt"
-msgstr "개"
+msgid "qt (US)"
+msgstr ""
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_yard
+msgid "yd"
+msgstr ""

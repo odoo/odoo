@@ -3,17 +3,15 @@
 # 	* project_timesheet_holidays
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Sanne Kristensen <sanne@vkdata.dk>, 2019
-# Ejner Sønniksen <ejner@vkdata.dk>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Ejner Sønniksen <ejner@vkdata.dk>, 2019\n"
+"POT-Creation-Date: 2021-09-14 10:29+0000\n"
+"PO-Revision-Date: 2017-12-13 14:57+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +26,7 @@ msgstr "Analytisk linje"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave__timesheet_ids
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_resource_calendar_leaves__timesheet_ids
 msgid "Analytic Lines"
 msgstr "Analyselinjer"
 
@@ -36,9 +35,12 @@ msgstr "Analyselinjer"
 #, python-format
 msgid ""
 "Both the internal project and task are required to generate a timesheet for "
-"the time off. If you don't want a timesheet, you should leave the internal "
-"project and task empty."
+"the time off %s. If you don't want a timesheet, you should leave the "
+"internal project and task empty."
 msgstr ""
+"Både det interne projekt samt opgave er nødvendig, for at generere en "
+"timeseddel for fri tid %s. Hvis du ikke ønsker en timeseddel, bør du lade "
+"det interne projekt samt opgave stå tomme."
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_company
@@ -51,10 +53,14 @@ msgid "Config Settings"
 msgstr "Konfigurer opsætning"
 
 #. module: project_timesheet_holidays
-#: model:ir.model.fields,help:project_timesheet_holidays.field_res_company__leave_timesheet_project_id
-#: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_project_id
+#: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__internal_project_id
 msgid "Default project value for timesheet generated from time off type."
-msgstr ""
+msgstr "Standard projekt værdi for timeseddel genereret fra fri tids type."
+
+#. module: project_timesheet_holidays
+#: model:ir.model,name:project_timesheet_holidays.model_hr_employee
+msgid "Employee"
+msgstr "Medarbejder"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
@@ -62,17 +68,28 @@ msgid "Generate Timesheet"
 msgstr "Generér timeseddel"
 
 #. module: project_timesheet_holidays
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__global_leave_id
+msgid "Global Time Off"
+msgstr "Global fri tid"
+
+#. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
 msgid ""
 "If checked, when validating a time off, timesheet will be generated in the "
 "Vacation Project of the company."
 msgstr ""
+"Hvis markeret, ved godkendelse af fri tid, vil timesedlen blive genereret i "
+"Ferie Projektet for virksomheden."
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/res_company.py:0
-#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_project_id
-#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__leave_timesheet_project_id
+#: code:addons/project_timesheet_holidays/models/res_company.py:0
 #, python-format
+msgid "Internal"
+msgstr "Intern"
+
+#. module: project_timesheet_holidays
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__internal_project_id
 msgid "Internal Project"
 msgstr "Internt projekt"
 
@@ -88,20 +105,15 @@ msgid "Project"
 msgstr "Projekt"
 
 #. module: project_timesheet_holidays
-#: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.res_config_settings_view_form
-msgid "Task"
-msgstr "Opgave"
+#: model:ir.model,name:project_timesheet_holidays.model_resource_calendar_leaves
+msgid "Resource Time Off Detail"
+msgstr "Resource fritid detaljer"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_task_id
-msgid "Task for timesheet"
-msgstr ""
-
-#. module: project_timesheet_holidays
-#: code:addons/project_timesheet_holidays/models/res_company.py:0
-#, python-format
-msgid "The Internal Project of a company should be in that company."
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.res_config_settings_view_form
+msgid "Task"
+msgstr "Opgave"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_hr_leave_type__timesheet_project_id
@@ -109,34 +121,43 @@ msgid ""
 "The project will contain the timesheet generated when a time off is "
 "validated."
 msgstr ""
+"Projektet vil indeholde den timeseddel, som genereres når fri godkendes."
 
 #. module: project_timesheet_holidays
+#: code:addons/project_timesheet_holidays/models/res_company.py:0
 #: code:addons/project_timesheet_holidays/models/res_company.py:0
 #: model:ir.model,name:project_timesheet_holidays.model_hr_leave
 #, python-format
 msgid "Time Off"
+msgstr "Fri"
+
+#. module: project_timesheet_holidays
+#: code:addons/project_timesheet_holidays/models/hr_holidays.py:0
+#: code:addons/project_timesheet_holidays/models/resource_calendar_leaves.py:0
+#, python-format
+msgid "Time Off (%s/%s)"
 msgstr ""
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_task_id
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
 msgid "Time Off Task"
-msgstr ""
+msgstr "Fri opgave"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_leave_type
 msgid "Time Off Type"
-msgstr ""
+msgstr "Fri type"
 
 #. module: project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
-msgid "Timesheet"
-msgstr "Tidsskema"
+msgid "Timesheets"
+msgstr "Timesedler"
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 #, python-format
 msgid ""
-"You cannot delete timesheet lines attached to a leaves. Please cancel the "
-"leaves instead."
+"You cannot delete timesheets linked to time off. Please, cancel the time off"
+" instead."
 msgstr ""

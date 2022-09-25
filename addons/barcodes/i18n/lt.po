@@ -3,19 +3,21 @@
 # 	* barcodes
 # 
 # Translators:
-# Martin Trigaux, 2019
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2019
-# Silvija Butko <silvija.butko@gmail.com>, 2019
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2019
-# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2022
+# Arunas V. <arunas@devoro.com>, 2022
+# Silvija Butko <silvija.butko@gmail.com>, 2022
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2022
+# Linas Versada <linaskrisiukenas@gmail.com>, 2022
+# Jonas Zinkevicius <jozi@odoo.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2016-08-05 12:56+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,29 +26,11 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:0
+#: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"
 msgstr ""
 "'*' nėra tinkama brūkšninio kodo struktūra. Gal turėjote omenyje  '.*' ?"
-
-#. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:0
-#, python-format
-msgid ": a rule can only contain one pair of braces."
-msgstr ": taisyklė gali turėti tik vieną porą skliaustelių."
-
-#. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:0
-#, python-format
-msgid ": braces can only contain N's followed by D's."
-msgstr ": skliausteliuose gali būti tik N, kuriuos seka D."
-
-#. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:0
-#, python-format
-msgid ": empty braces."
-msgstr ": tušti skliausteliai."
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -164,7 +148,6 @@ msgstr "Atmesti"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__display_name
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__display_name
-#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__display_name
 msgid "Display Name"
 msgstr "Rodomas pavadinimas"
 
@@ -184,40 +167,16 @@ msgid "EAN-8"
 msgstr "EAN-8"
 
 #. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
+#, python-format
+msgid "Enable edit mode to modify this document"
+msgstr ""
+
+#. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__encoding
 msgid "Encoding"
 msgstr "Kodavimas"
-
-#. module: barcodes
-#. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#, python-format
-msgid "Error: Barcode command is undefined"
-msgstr "Klaida: brūkšninio kodo komanda yra nenustatyta"
-
-#. module: barcodes
-#. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#, python-format
-msgid "Error: Document not editable"
-msgstr "Klaida: dokumentas ne redaguojamas"
-
-#. module: barcodes
-#. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#, python-format
-msgid "Error: No last scanned barcode"
-msgstr "Klaida: nėra paskutinio skenuoto brūkšninio kodo"
-
-#. module: barcodes
-#. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#, python-format
-msgid "Error: Pager not available"
-msgstr "Klaida: puslapis nepasiekiamas"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_ir_http
@@ -227,14 +186,12 @@ msgstr "HTTP nukreipimas"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__id
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__id
-#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__id
 msgid "ID"
 msgstr "ID"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature____last_update
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule____last_update
-#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin____last_update
 msgid "Last Modified on"
 msgstr "Paskutinį kartą keista"
 
@@ -259,6 +216,13 @@ msgstr "Niekada"
 #: model:ir.model.fields,field_description:barcodes.field_res_company__nomenclature_id
 msgid "Nomenclature"
 msgstr "Terminologija"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
+#, python-format
+msgid "Pager unavailable"
+msgstr ""
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -286,6 +250,13 @@ msgstr "Taisyklės pavadinimas"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__rule_ids
 msgid "Rules"
 msgstr "Taisyklės"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
+#, python-format
+msgid "Scan a barcode to set the quantity"
+msgstr "Nuskaitykite brūkšninį kodą, tam kad nustatytumėte kiekį"
 
 #. module: barcodes
 #. openerp-web
@@ -327,12 +298,27 @@ msgid "The matched pattern will alias to this barcode"
 msgstr "Susijusi struktūra susisies su šiuo brūkšniniu kodu"
 
 #. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:0
-#: code:addons/barcodes/models/barcodes.py:0
-#: code:addons/barcodes/models/barcodes.py:0
+#: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
-msgid "There is a syntax error in the barcode pattern "
-msgstr "Sintaksės klaida brūkšninio kodo struktūroje."
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
+"contain one pair of braces."
+msgstr ""
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcode_rule.py:0
+#, python-format
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: braces can only "
+"contain N's followed by D's."
+msgstr ""
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcode_rule.py:0
+#, python-format
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: empty braces."
+msgstr ""
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
@@ -342,20 +328,6 @@ msgid ""
 msgstr ""
 "Ši taisyklė bus pritaikyta tik jei brūkšninis kodas bus užkoduotas nurodytu "
 "kodavimu"
-
-#. module: barcodes
-#. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#, python-format
-msgid "To modify this document, please first start edition."
-msgstr "Norėdami keisti šį dokumentą, pradėkite nuo redagavimo."
-
-#. module: barcodes
-#. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#, python-format
-msgid "To set the quantity please scan a barcode first."
-msgstr "Prieš nustatant kiekį, pirma nuskenuokite brūkšninį kodą,"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__type
@@ -387,6 +359,13 @@ msgstr "UPC-A į EAN-13"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__upc_ean_conv
 msgid "UPC/EAN Conversion"
 msgstr "UPC/EAN keitimas"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
+#, python-format
+msgid "Undefined barcode command"
+msgstr ""
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__type__product

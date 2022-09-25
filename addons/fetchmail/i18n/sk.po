@@ -1,19 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * fetchmail
+# 	* fetchmail
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
-# gebri <gebri@inmail.sk>, 2018
+# SAKodoo <sak@odoo.com>, 2022
+# Damian Brencic <brencicdamian12313@gmail.com>, 2022
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2022
+# Jan Prokop, 2022
+# Martin Trigaux, 2022
+# Filip Hanes <filip.hanes@protonmail.com>, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: gebri <gebri@inmail.sk>, 2018\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2016-08-05 12:57+0000\n"
+"Last-Translator: Filip Hanes <filip.hanes@protonmail.com>, 2022\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +43,20 @@ msgstr "Pokročilé"
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Advanced Options"
-msgstr "Pokročilé možnosti"
+msgstr "Dalšie možnosti"
+
+#. module: fetchmail
+#: code:addons/fetchmail/models/fetchmail.py:0
+#, python-format
+msgid ""
+"An SSL exception occurred. Check SSL/TLS configuration on server port.\n"
+" %s"
+msgstr ""
+
+#. module: fetchmail
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "Archived"
+msgstr "Archivovaný"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__configuration
@@ -48,12 +65,12 @@ msgid "Configuration"
 msgstr "Konfigurácia"
 
 #. module: fetchmail
-#: selection:fetchmail.server,state:0
+#: model:ir.model.fields.selection,name:fetchmail.selection__fetchmail_server__state__done
 msgid "Confirmed"
 msgstr "Potvrdené"
 
 #. module: fetchmail
-#: code:addons/fetchmail/models/fetchmail.py:136
+#: code:addons/fetchmail/models/fetchmail.py:0
 #, python-format
 msgid "Connection test failed: %s"
 msgstr "Test pripojenia zlyhal: %s"
@@ -90,12 +107,12 @@ msgstr "Definuje poradie spracovania, nižšie hodnoty znamenjú vyššiu priori
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__display_name
 msgid "Display Name"
-msgstr "Zobrazovaný Názov"
+msgstr "Zobrazovaný názov"
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_tree
 msgid "Email Count"
-msgstr ""
+msgstr "Počet emailov"
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
@@ -118,7 +135,7 @@ msgid "IMAP"
 msgstr "IMAP"
 
 #. module: fetchmail
-#: selection:fetchmail.server,type:0
+#: model:ir.model.fields.selection,name:fetchmail.selection__fetchmail_server__server_type__imap
 msgid "IMAP Server"
 msgstr "IMAP Server"
 
@@ -135,9 +152,10 @@ msgstr "Server prichádzajúcej pošty"
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.res_config_settings_view_form
 msgid "Incoming Email Servers"
-msgstr ""
+msgstr "Servery prichádzajúcej pošty"
 
 #. module: fetchmail
+#: model:ir.model,name:fetchmail.model_fetchmail_server
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Incoming Mail Server"
@@ -148,6 +166,16 @@ msgstr "Server prichádzajúcej pošty"
 #: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
 msgid "Incoming Mail Servers"
 msgstr "Servery prichádzajúcej pošty"
+
+#. module: fetchmail
+#: code:addons/fetchmail/models/fetchmail.py:0
+#, python-format
+msgid ""
+"Invalid server name !\n"
+" %s"
+msgstr ""
+"Neplatný názov servera!\n"
+" %s"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__attach
@@ -167,7 +195,7 @@ msgstr "Dátum posledného načítania"
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server____last_update
 msgid "Last Modified on"
-msgstr "Posledná modifikácia"
+msgstr "Posledná úprava"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__write_uid
@@ -180,7 +208,7 @@ msgid "Last Updated on"
 msgstr "Naposledy upravované"
 
 #. module: fetchmail
-#: selection:fetchmail.server,type:0
+#: model:ir.model.fields.selection,name:fetchmail.selection__fetchmail_server__server_type__local
 msgid "Local Server"
 msgstr "Lokálny server"
 
@@ -194,7 +222,7 @@ msgstr "Prihlasovacie údaje"
 #: model:ir.cron,cron_name:fetchmail.ir_cron_mail_gateway_action
 #: model:ir.cron,name:fetchmail.ir_cron_mail_gateway_action
 msgid "Mail: Fetchmail Service"
-msgstr ""
+msgstr "Služba Fetchmail"
 
 #. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.act_server_history
@@ -208,14 +236,24 @@ msgid "Name"
 msgstr "Meno"
 
 #. module: fetchmail
-#: selection:fetchmail.server,state:0
+#: code:addons/fetchmail/models/fetchmail.py:0
+#, python-format
+msgid ""
+"No response received. Check server information.\n"
+" %s"
+msgstr ""
+"Neprišlia žiadna odpoveď. Skontrolujte info servera.\n"
+"%s"
+
+#. module: fetchmail
+#: model:ir.model.fields.selection,name:fetchmail.selection__fetchmail_server__state__draft
 msgid "Not Confirmed"
 msgstr "Nepotvrdené"
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.res_config_settings_view_form
 msgid "Outgoing Email Servers"
-msgstr ""
+msgstr "Servery odchádzajúcej pošty"
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_mail_mail
@@ -228,14 +266,9 @@ msgid "POP"
 msgstr "POP"
 
 #. module: fetchmail
-#: selection:fetchmail.server,type:0
+#: model:ir.model.fields.selection,name:fetchmail.selection__fetchmail_server__server_type__pop
 msgid "POP Server"
 msgstr "POP Server"
-
-#. module: fetchmail
-#: model:ir.model,name:fetchmail.model_fetchmail_server
-msgid "POP/IMAP Server"
-msgstr "POP/IMAP Server"
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_tree
@@ -309,9 +342,19 @@ msgid "Server Priority"
 msgstr "Priorita servera"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__type
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__server_type
 msgid "Server Type"
 msgstr "Typ servera"
+
+#. module: fetchmail
+#: code:addons/fetchmail/models/fetchmail.py:0
+#, python-format
+msgid ""
+"Server replied with following exception:\n"
+" %s"
+msgstr ""
+"Server odpovedal s nasledujúcou výnimkou:\n"
+" %s"
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
@@ -345,6 +388,9 @@ msgid ""
 "attached to each processed message. This will usually double the size of "
 "your message database."
 msgstr ""
+"Či sa má úplná originálna kópia každého e-mailu uchovať pre referenciu a "
+"priložiť ku každej spracovanej správe. Zvyčajne to zdvojnásobí veľkosť "
+"databázy správ."
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server__attach
@@ -352,5 +398,5 @@ msgid ""
 "Whether attachments should be downloaded. If not enabled, incoming emails "
 "will be stripped of any attachments before being processed"
 msgstr ""
-"Či by mali byť stiahnuté prílohy. Ak to nie je povolené, budú prichádzajúce "
-"emaily zbavené všetkých príloh pred spracovaním"
+"Či by sa mali sťahovať prílohy. Ak to nie je povolené, prichádzajúce e-maily"
+" budú pred spracovaním zbavené všetkých príloh"

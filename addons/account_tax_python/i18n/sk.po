@@ -1,23 +1,49 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * account_tax_python
+# 	* account_tax_python
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
+# Martin Trigaux, 2022
+# Martin Ondrejka <martin.ondrejka@anuva.eu>, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2016-08-05 12:55+0000\n"
+"Last-Translator: Martin Ondrejka <martin.ondrejka@anuva.eu>, 2022\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: sk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__amount_type
+msgid ""
+"\n"
+"    - Group of Taxes: The tax is a set of sub taxes.\n"
+"    - Fixed: The tax amount stays the same whatever the price.\n"
+"    - Percentage of Price: The tax amount is a % of the price:\n"
+"        e.g 100 * (1 + 10%) = 110 (not price included)\n"
+"        e.g 110 / (1 + 10%) = 100 (price included)\n"
+"    - Percentage of Price Tax Included: The tax amount is a division of the price:\n"
+"        e.g 180 / (1 - 10%) = 200 (not price included)\n"
+"        e.g 200 * (1 - 10%) = 180 (price included)\n"
+"        "
+msgstr ""
+"\n"
+"    - Skupina daní: Daň je skupinou čiastkových daní.\n"
+"    - Fixná: výška dane zostáva rovnaká bez ohľadu na cenu.\n"
+"    - Percento z ceny: Výška dane je % z ceny:\n"
+"        napr. 100 * (1 + 10%) = 110 (nie je zahrnuté v cene)\n"
+"        napr. 110 / (1 + 10%) = 100 (zahrnuté v cene)\n"
+"    - Percento z ceny vrátane dane: Výška dane je podielom z ceny:\n"
+"        napr. 180 / (1 - 10%) = 200 (nie je zahrnuté v cene)\n"
+"        napr. 200 * (1 - 10%) = 180 (zahrnuté v cene)\n"
+"        "
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
@@ -103,34 +129,10 @@ msgstr ""
 ":param partner: res.partner záznam singleton alebo None"
 
 #. module: account_tax_python
-#: selection:account.tax,amount_type:0
-#: selection:account.tax.template,amount_type:0
-msgid "Fixed"
-msgstr "Pevný"
-
-#. module: account_tax_python
-#: selection:account.tax,amount_type:0
-#: selection:account.tax.template,amount_type:0
-msgid "Group of Taxes"
-msgstr "Skupina daní"
-
-#. module: account_tax_python
-#: selection:account.tax,amount_type:0
-#: selection:account.tax.template,amount_type:0
-msgid "Percentage of Price"
-msgstr "Percento ceny"
-
-#. module: account_tax_python
-#: selection:account.tax,amount_type:0
-#: selection:account.tax.template,amount_type:0
-msgid "Percentage of Price Tax Included"
-msgstr "Percento ceny dane zahrnuté"
-
-#. module: account_tax_python
-#: selection:account.tax,amount_type:0
-#: selection:account.tax.template,amount_type:0
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_compute
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_compute
+#: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
+#: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax_template__amount_type__code
 msgid "Python Code"
 msgstr "Kód Pyton"
 
@@ -148,4 +150,4 @@ msgstr "Výpočet dane"
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax_template
 msgid "Templates for Taxes"
-msgstr "Templates for Taxes"
+msgstr "Šablóny pre dane"

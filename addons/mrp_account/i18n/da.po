@@ -3,17 +3,15 @@
 # 	* mrp_account
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Sanne Kristensen <sanne@vkdata.dk>, 2019
-# Ejner Sønniksen <ejner@vkdata.dk>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Ejner Sønniksen <ejner@vkdata.dk>, 2019\n"
+"POT-Creation-Date: 2022-05-30 06:07+0000\n"
+"PO-Revision-Date: 2016-08-05 13:29+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,9 +20,53 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: mrp_account
+#: model:ir.model,name:mrp_account.model_account_analytic_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_bom__analytic_account_id
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__analytic_account_id
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__costs_hour_account_id
+#: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
 msgid "Analytic Account"
 msgstr "Analysekonto"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Analytisk linje"
+
+#. module: mrp_account
+#: model:ir.model.fields,help:mrp_account.field_mrp_production__analytic_account_id
+msgid ""
+"Analytic account in which cost and revenue entries will take        place "
+"for financial management of the manufacturing order."
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model.fields,help:mrp_account.field_mrp_bom__analytic_account_id
+msgid ""
+"Analytic account in which cost and revenue entries will take place for "
+"financial management of the manufacturing order."
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_mrp_bom
+msgid "Bill of Material"
+msgstr "Stykliste"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_ids
+#: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
+msgid "Bills of Materials"
+msgstr "Styklister"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_count
+msgid "BoM Count"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_line__category
+msgid "Category"
+msgstr "Kategori"
 
 #. module: mrp_account
 #: model:ir.actions.server,name:mrp_account.action_compute_price_bom_product
@@ -33,7 +75,7 @@ msgstr "Analysekonto"
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_view_form_normal_inherit_extended
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_variant_easy_edit_view_bom_inherit
 msgid "Compute Price from BoM"
-msgstr ""
+msgstr "Udregn pris fra stykliste"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_ext_form_view2
@@ -54,12 +96,12 @@ msgstr "Registrerede omkostninger"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__extra_cost
 msgid "Extra Cost"
-msgstr ""
+msgstr "Ekstra omkostning"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_production__extra_cost
 msgid "Extra cost per produced unit"
-msgstr ""
+msgstr "Ekstra omkostning per produceret enhed"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__costs_hour_account_id
@@ -67,6 +109,32 @@ msgid ""
 "Fill this only if you want automatic analytic accounting entries on "
 "production orders."
 msgstr "Udfyld kun hvis du ønsker analytisk regnskab på produktionsordrer."
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_account_move_line
+msgid "Journal Item"
+msgstr "Journalpost"
+
+#. module: mrp_account
+#: model:ir.model.fields.selection,name:mrp_account.selection__account_analytic_line__category__manufacturing_order
+msgid "Manufacturing Order"
+msgstr "Produktionsordre"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__production_ids
+#: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
+msgid "Manufacturing Orders"
+msgstr "Produktionsordrer"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__production_count
+msgid "Manufacturing Orders Count"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__mo_analytic_account_line_id
+msgid "Mo Analytic Account Line"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_product
@@ -84,6 +152,21 @@ msgid "Production Order"
 msgstr "Produktionsordre"
 
 #. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__show_valuation
+msgid "Show Valuation"
+msgstr "Vis evaluering"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_stock_move
+msgid "Stock Move"
+msgstr "Lagerflytning"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_stock_rule
+msgid "Stock Rule"
+msgstr "Lager regel"
+
+#. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter_productivity__cost_already_recorded
 msgid ""
 "Technical field automatically checked when a ongoing production posts "
@@ -91,14 +174,10 @@ msgid ""
 " multiple times and only consider new entries in the work centers time "
 "lines."
 msgstr ""
-
-#. module: mrp_account
-#: code:addons/mrp_account/models/product.py:40
-#, python-format
-msgid ""
-"The inventory valuation of some products %s is automated. You can only "
-"update their cost from the product form."
-msgstr ""
+"Teknisk felt der automatisk tjekkes når en igangværende produktion posterer "
+"journalpostering for dens omkostninger. På denne måde kan vi registrere en "
+"produktions omkostninger flere gange, og kun tage højde for posteringer i "
+"arbejdscentrenes tidslinjer."
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
@@ -106,11 +185,44 @@ msgid "Valuation"
 msgstr "Værdisætning"
 
 #. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__wc_analytic_account_line_id
+msgid "Wc Analytic Account Line"
+msgstr ""
+
+#. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter
 msgid "Work Center"
 msgstr "Arbejdscenter"
 
 #. module: mrp_account
+#: model:ir.model,name:mrp_account.model_mrp_workorder
+msgid "Work Order"
+msgstr "Produktionsordre"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__workorder_count
+msgid "Work Order Count"
+msgstr ""
+
+#. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter_productivity
 msgid "Workcenter Productivity Log"
+msgstr "Workcenter produktivitets log"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__workcenter_ids
+msgid "Workcenters"
+msgstr ""
+
+#. module: mrp_account
+#: code:addons/mrp_account/models/stock_move.py:0
+#, python-format
+msgid "[Raw] %s"
+msgstr ""
+
+#. module: mrp_account
+#: code:addons/mrp_account/models/mrp_production.py:0
+#: code:addons/mrp_account/models/mrp_workorder.py:0
+#, python-format
+msgid "[WC] %s"
 msgstr ""

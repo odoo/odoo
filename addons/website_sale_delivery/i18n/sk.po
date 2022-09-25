@@ -1,19 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_sale_delivery
+# 	* website_sale_delivery
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Matus Krnac <matus.krnac@gmail.com>, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
-# gebri <gebri@inmail.sk>, 2018
+# Damian Brencic <brencicdamian12313@gmail.com>, 2022
+# Jan Prokop, 2022
+# Matus Krnac <matus.krnac@gmail.com>, 2022
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2022
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: gebri <gebri@inmail.sk>, 2018\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2016-08-05 13:14+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +36,13 @@ msgid ""
 " This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
+"Popis produktu ktorý chcete odkomunikovať vašim zákazníkom. Tento\n"
+"popis bude skopírovaný na každú predajnú objednávku, dodaciu objednávku a zákaznícku faktúru/Dobropis"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__can_publish
+msgid "Can Publish"
+msgstr "Môžete publikovať"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
@@ -46,20 +56,13 @@ msgstr "Štát"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
-msgid "DHL Delivery Methods"
-msgstr ""
+msgid "DHL Shipping Methods"
+msgstr "DHL spôsoby dopravy"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order__amount_delivery
 msgid "Delivery Amount"
 msgstr "Suma dodania"
-
-#. module: website_sale_delivery
-#: model:ir.model,name:website_sale_delivery.model_delivery_carrier
-#: model:ir.ui.menu,name:website_sale_delivery.menu_ecommerce_delivery
-#: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
-msgid "Delivery Methods"
-msgstr "Dodacie metódy"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.cart_delivery
@@ -79,45 +82,54 @@ msgstr "Popis"
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
 msgid "Description displayed on the eCommerce and on online quotations."
-msgstr ""
+msgstr "Popis zobrazený na eCommerce a na online cenových ponúk."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_description
 msgid "Description for Online Quotations"
-msgstr "Popis pre Online cenové ponuky"
+msgstr "Popis pre online cenové ponuky"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
-msgid "Easypost Delivery Methods"
+msgid "Easypost Shipping Methods"
 msgstr ""
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
-msgid "FedEx Delivery Methods"
-msgstr ""
+msgid "FedEx Shipping Methods"
+msgstr "FedEx spôsoby dopravy"
 
 #. module: website_sale_delivery
+#. openerp-web
+#: code:addons/website_sale_delivery/static/src/js/website_sale_delivery.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery_methods
+#, python-format
 msgid "Free"
 msgstr "Voľný"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_sale_order__has_delivery
-msgid "Has an order line set for delivery"
-msgstr "Má riadok objednávky nastavený na dodanie"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order__has_delivery
-msgid "Has delivery"
-msgstr "Má dodanie"
-
-#. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__is_published
-msgid "Is published"
+msgid "Is Published"
+msgstr "Publikované"
+
+#. module: website_sale_delivery
+#: code:addons/website_sale_delivery/controllers/main.py:0
+#, python-format
+msgid ""
+"It seems that a delivery method is not compatible with your address. Please "
+"refresh the page and try again."
 msgstr ""
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/controllers/main.py:44
+#: code:addons/website_sale_delivery/controllers/main.py:0
+#, python-format
+msgid ""
+"It seems that there is already a transaction for your order, you can not "
+"change the delivery method anymore"
+msgstr ""
+
+#. module: website_sale_delivery
+#: code:addons/website_sale_delivery/controllers/main.py:0
 #, python-format
 msgid ""
 "No shipping method is available for your current order and shipping address."
@@ -127,33 +139,19 @@ msgstr ""
 " adresu. Prosím kontaktujte nás pre viac informácií."
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order__website_order_line
-msgid "Order Lines displayed on Website"
-msgstr "Riadky objednávky zobrazené na webstránke"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_sale_order__website_order_line
-msgid ""
-"Order Lines to be displayed on the website. They should not be used for "
-"computation purpose."
-msgstr ""
-"Riadky ibjednávky na zobrazenie na webstránke. Nemali by byť použité pre "
-"účely výpočtu."
-
-#. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_search_inherit_website_sale_delivery
 msgid "Published"
-msgstr "Publikované"
+msgstr "Publikovať"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_id
 msgid "Restrict publishing to this website."
-msgstr ""
+msgstr "Obmedzte publikovanie na túto webstránku."
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_sale_order
-msgid "Sale Order"
-msgstr "Objednávka predaja"
+msgid "Sales Order"
+msgstr "Objednávka "
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery_methods
@@ -161,7 +159,14 @@ msgid "Select to compute delivery rate"
 msgstr ""
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/controllers/main.py:43
+#: model:ir.model,name:website_sale_delivery.model_delivery_carrier
+#: model:ir.ui.menu,name:website_sale_delivery.menu_ecommerce_delivery
+#: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
+msgid "Shipping Methods"
+msgstr "Spôsoby dopravy"
+
+#. module: website_sale_delivery
+#: code:addons/website_sale_delivery/controllers/main.py:0
 #, python-format
 msgid "Sorry, we are unable to ship your order"
 msgstr "Prepáčte, nevieme odoslať vašu objednávku"
@@ -177,31 +182,26 @@ msgid "The full URL to access the document through the website."
 msgstr "Úplná URL na prístup k dokumentu cez webové stránky."
 
 #. module: website_sale_delivery
-#: model_terms:ir.ui.view,arch_db:website_sale_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale_delivery
-msgid "Tracking:"
-msgstr ""
-
-#. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
-msgid "USPS Delivery Methods"
+msgid "USPS Shipping Methods"
 msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_published
 msgid "Visible on current website"
-msgstr ""
+msgstr "Viditeľné na aktuálnej webstránke"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_id
 msgid "Website"
-msgstr "Webová stránka"
+msgstr "Webstránka"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_url
 msgid "Website URL"
-msgstr "URL Webových stránok"
+msgstr "URL Webstránok"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
-msgid "bpost Delivery Methods"
+msgid "bpost Shipping Methods"
 msgstr ""

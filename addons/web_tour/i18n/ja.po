@@ -1,18 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * web_tour
+# 	* web_tour
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2018
-# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018
+# Tim Siu Lai <tl@roomsfor.hk>, 2022
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
+# Ryoko Tsuda <ryoko@quartile.co>, 2022
+# Martin Trigaux, 2022
+# Noma Yuki, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018\n"
+"POT-Creation-Date: 2021-09-14 10:29+0000\n"
+"PO-Revision-Date: 2016-08-05 13:11+0000\n"
+"Last-Translator: Noma Yuki, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +26,22 @@ msgstr ""
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/js/tour_manager.js:386
+#: code:addons/web_tour/static/src/js/tour_manager.js:0
+#, python-format
+msgid ""
+"<strong><b>Good job!</b> You went through all steps of this tour.</strong>"
+msgstr "<strong><b>Good job!</b> あなたはこのツアーのすべてのステップを通過しました。</strong>"
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/js/tip.js:0
+#, python-format
+msgid "Click here to go to the next step."
+msgstr ""
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/js/tour_step_utils.js:0
 #, python-format
 msgid "Click on the <i>Home icon</i> to navigate across apps."
 msgstr ""
@@ -34,7 +53,7 @@ msgstr "使用履歴"
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:7
+#: code:addons/web_tour/static/src/debug/debug_manager.js:0
 #, python-format
 msgid "Disable Tours"
 msgstr "ツアーを無効化"
@@ -42,12 +61,12 @@ msgstr "ツアーを無効化"
 #. module: web_tour
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__display_name
 msgid "Display Name"
-msgstr "表示名"
+msgstr "名前を表示"
 
 #. module: web_tour
 #: model:ir.model,name:web_tour.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTPルーティング"
 
 #. module: web_tour
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__id
@@ -66,43 +85,94 @@ msgstr "メニュー"
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:17
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
 #, python-format
 msgid "Name"
-msgstr "名称"
+msgstr "氏名"
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:18
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Onboarding tours"
+msgstr ""
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/js/tour_step_utils.js:0
+#, python-format
+msgid "Open bugger menu."
+msgstr ""
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
 #, python-format
 msgid "Path"
 msgstr "パス"
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/js/tour_manager.js:76
+#: code:addons/web_tour/static/src/js/tip.js:0
 #, python-format
-msgid "Skip tour"
-msgstr "ツアーをスキップ"
+msgid "Scroll to reach the next step."
+msgstr ""
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:8
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Sequence"
+msgstr "付番"
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Start"
+msgstr "開始"
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/debug/debug_manager.js:0
 #, python-format
 msgid "Start Tour"
 msgstr "ツアーを開始"
 
 #. module: web_tour
-#: model_terms:ir.ui.view,arch_db:web_tour.edit_tour_search
-msgid "Tip"
-msgstr "ヒント"
+#. openerp-web
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Start tour"
+msgstr "ツアー開始"
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:25
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
 #, python-format
-msgid "Tour"
+msgid "Test"
+msgstr "テスト"
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Test tour"
 msgstr ""
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Testing tours"
+msgstr ""
+
+#. module: web_tour
+#: model_terms:ir.ui.view,arch_db:web_tour.edit_tour_search
+msgid "Tip"
+msgstr "チップ"
 
 #. module: web_tour
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__name
@@ -110,8 +180,11 @@ msgid "Tour name"
 msgstr "ツアー名"
 
 #. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.js:0
 #: model:ir.actions.act_window,name:web_tour.edit_tour_action
 #: model:ir.model,name:web_tour.model_web_tour_tour
 #: model:ir.ui.menu,name:web_tour.menu_tour_action
+#, python-format
 msgid "Tours"
 msgstr "ツアー"

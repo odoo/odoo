@@ -1,20 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * lunch
+# 	* lunch
 # 
 # Translators:
-# Martin Trigaux, 2018
-# 최재호 <hwangtog@gmail.com>, 2018
-# Link Up링크업 <linkup.way@gmail.com>, 2018
-# Linkup <link-up@naver.com>, 2018
+# Seongseok Shin <shinss61@hotmail.com>, 2022
+# Heesoo Choi, 2022
+# Linkup <link-up@naver.com>, 2022
+# JH CHOI <hwangtog@gmail.com>, 2022
+# Link Up링크업 <linkup.way@gmail.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-08-24 09:20+0000\n"
-"Last-Translator: Linkup <link-up@naver.com>, 2018\n"
+"POT-Creation-Date: 2022-04-19 13:57+0000\n"
+"PO-Revision-Date: 2016-08-05 13:05+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,14 +25,79 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
-msgid "<span class=\"o_stat_text\">Balance</span>"
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
+msgid ""
+"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Receive button\" "
+"title=\"Receive button\"/>"
+msgstr ""
+"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Receive button\" "
+"title=\"Receive button\"/>"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
+#: model_terms:ir.ui.view,arch_db:lunch.view_lunch_cashmove_kanban
+#: model_terms:ir.ui.view,arch_db:lunch.view_lunch_cashmove_report_kanban
+msgid "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
+msgid ""
+"<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Send notification\" "
+"title=\"Send notification\"/>"
 msgstr ""
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.report_lunch_order
-msgid "<strong>Total</strong>"
-msgstr "<strong>합계</strong>"
+#: model_terms:ir.ui.view,arch_db:lunch.view_lunch_cashmove_kanban
+#: model_terms:ir.ui.view,arch_db:lunch.view_lunch_cashmove_report_kanban
+msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Amount\" title=\"Amount\"/>"
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Amount\" title=\"Amount\"/>"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
+msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Money\" title=\"Money\"/>"
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Money\" title=\"Money\"/>"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
+msgid ""
+"<i class=\"fa fa-paper-plane\" role=\"img\" aria-label=\"Send button\" "
+"title=\"Send button\"/>"
+msgstr ""
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
+msgid ""
+"<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Order button\" "
+"title=\"Order button\"/>"
+msgstr ""
+"<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Order button\" "
+"title=\"Order button\"/>"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
+msgid ""
+"<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" "
+"title=\"Cancel button\"/>"
+msgstr ""
+"<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" "
+"title=\"Cancel button\"/>"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">Lunch Overdraft</span>\n"
+"                                <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr ""
+"<span class=\"o_form_label\">점심 인원 초과</span>\n"
+"                                <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">Reception notification</span>\n"
+"                                <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr ""
 
 #. module: lunch
 #: model:mail.template,body_html:lunch.lunch_order_mail_supplier
@@ -45,7 +112,7 @@ msgid ""
 "                <tr><td valign=\"middle\">\n"
 "                    <span style=\"font-size: 10px;\">Lunch Order</span><br/>\n"
 "                </td><td valign=\"middle\" align=\"right\">\n"
-"                    <img src=\"/logo.png?company=${user.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"'%s' % company.name\"/>\n"
+"                    <img t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\"/>\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
 "                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
@@ -60,35 +127,63 @@ msgid ""
 "                <tr>\n"
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "    <div>\n"
-"        % set lines = ctx['lines']\n"
-"        % set order = ctx['order']\n"
-"        % set supplier = user.env['res.partner'].browse(order['supplier_id'])\n"
-"        % set currency = user.env['res.currency'].browse(order['currency_id'])\n"
+"        <t t-set=\"lines\" t-value=\"ctx.get('lines', [])\"/>\n"
+"        <t t-set=\"order\" t-value=\"ctx.get('order')\"/>\n"
+"        <t t-set=\"currency\" t-value=\"user.env['res.currency'].browse(order.get('currency_id'))\"/>\n"
 "        <p>\n"
-"        Dear ${order['supplier_name']},\n"
+"        Dear <t t-out=\"order.get('supplier_name', '')\">Laurie Poiret</t>,\n"
 "        </p><p>\n"
-"        Here is, today orders for ${order['company_name']}:\n"
+"        Here is, today orders for <t t-out=\"order.get('company_name', '')\">LunchCompany</t>:\n"
 "        </p>\n"
 "\n"
-"      <ul>\n"
-"        % for line in lines:\n"
-"            <li>\n"
-"                <strong>\n"
-"                    ${line['product']}\n"
-"                    (x${line['quantity']})\n"
-"                 </strong>\n"
-"                % if line['note']:\n"
-"                    <em>(${line['note']})</em>\n"
-"                % endif\n"
-"                <div style=\"display: inline-block; float:right\">\n"
-"                    ${format_amount(line['price'], currency)}\n"
-"                </div>\n"
-"            </li>\n"
-"        % endfor\n"
-"        </ul>\n"
+"        <t t-if=\"sites\">\n"
+"            <br/>\n"
+"            <p>Location</p>\n"
+"            <t t-foreach=\"site\" t-as=\"site\">\n"
+"                <p><t t-out=\"site['name'] or ''\"/> : <t t-out=\"site['address'] or ''\"/></p>\n"
+"            </t>\n"
+"            <br/>\n"
+"        </t>\n"
 "\n"
-"        <p>Amounting in <strong>${format_amount(order['amount_total'], currency)}</strong>.</p>\n"
-"        <p>Do not hesitate to contact us if you have any question.</p>\n"
+"        <table>\n"
+"            <thead>\n"
+"                <tr style=\"background-color:rgb(233,232,233);\">\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>Product</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>Comments</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>Person</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>Site</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\" align=\"center\"><strong>Qty</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\" align=\"center\"><strong>Price</strong></th>\n"
+"                </tr>\n"
+"            </thead>\n"
+"            <tbody>\n"
+"                <tr t-foreach=\"lines\" t-as=\"line\">\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" t-out=\"line['product'] or ''\">Sushi salmon</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\">\n"
+"                    <t t-if=\"line['toppings']\">\n"
+"                        <t t-out=\"line['toppings'] or ''\">Soy sauce</t>\n"
+"                    </t>\n"
+"                    <t t-if=\"line['note']\">\n"
+"                        <div style=\"color: rgb(173,181,189);\" t-out=\"line['note'] or ''\">With wasabi.</div>\n"
+"                    </t>\n"
+"                    </td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" t-out=\"line['username'] or ''\">lap</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" t-out=\"line['site'] or ''\">Office 1</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" align=\"right\" t-out=\"line['quantity'] or ''\">10</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" align=\"right\" t-out=\"format_amount(line['price'], currency) or ''\">$ 1.00</td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td/>\n"
+"                    <td/>\n"
+"                    <td/>\n"
+"                    <td/>\n"
+"                    <td style=\"width: 100%; font-size: 13px; border-top: 1px solid black;\"><strong>Total</strong></td>\n"
+"                    <td style=\"width: 100%; font-size: 13px; border-top: 1px solid black;\" align=\"right\"><strong t-out=\"format_amount(order['amount_total'], currency) or ''\">$ 10.00</strong></td>\n"
+"                </tr>\n"
+"            </tbody>\n"
+"        </table>\n"
+"\n"
+"        <p>Do not hesitate to contact us if you have any questions.</p>\n"
 "    </div>\n"
 "                    </td>\n"
 "                </tr>\n"
@@ -105,24 +200,18 @@ msgid ""
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\" align=\"left\">\n"
-"                    ${user.company_id.name}\n"
+"                    <t t-out=\"user.company_id.name or ''\">YourCompany</t>\n"
 "                </td></tr>\n"
 "                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
-"                    ${user.company_id.phone}\n"
-"                    % if user.company_id.phone and (user.company_id.email or user.company_id.website)\n"
-"                    |\n"
-"                    % endif\n"
-"                    % if user.company_id.email\n"
-"                    <a href=\"'mailto:%s' % ${user.company_id.email}\" style=\"text-decoration:none; color: #454748;\">${user.company_id.email}</a>\n"
-"                    % endif\n"
-"                    % if user.company_id.email and user.company_id.website\n"
-"                    |\n"
-"                    % endif\n"
-"                    % if user.company_id.website\n"
-"                    <a href=\"'%s' % ${user.company_id.website}\" style=\"text-decoration:none; color: #454748;\">\n"
-"                    ${user.company_id.website}\n"
-"                    </a>\n"
-"                    % endif\n"
+"                    <t t-out=\"user.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"user.company_id.phone and (user.company_id.email or user.company_id.website)\">|</t>\n"
+"                    <t t-if=\"user.company_id.email\">\n"
+"                        <a t-attf-href=\"'mailto:%s' % {{ user.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"user.company_id.email and user.company_id.website\">|</t>\n"
+"                    <t t-if=\"user.company_id.website\">\n"
+"                        <a t-attf-href=\"'%s' % {{ user.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -143,162 +232,243 @@ msgid ""
 msgstr ""
 
 #. module: lunch
-#: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_action_control_accounts
+#: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_report_action_control_accounts
 msgid ""
 "A cashmove can either be an expense or a payment.<br>\n"
-"                An expense is automatically created at the order receipt.<br>\n"
-"                A payment represents the employee reimbursement to the company."
+"            An expense is automatically created at the order receipt.<br>\n"
+"            A payment represents the employee reimbursement to the company."
 msgstr ""
+"이체는 비용일 수도 있고 지불일 수도 있습니다.<br>\n"
+"            비용은 주문 영수증에서 자동으로 생성됩니다.<br>\n"
+"            지불은 회사에 대한 직원 변제를 나타냅니다."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action
+#: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_statbutton
 msgid "A product is defined by its name, category, price and vendor."
-msgstr ""
+msgstr "상품은 이름, 범주, 가격 및 공급업체로 정의됩니다."
+
+#. module: lunch
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__notification_moment__am
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__moment__am
+msgid "AM"
+msgstr "AM"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_needaction
+msgid "Action Needed"
+msgstr "조치 필요"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__active
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__active
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__active
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__active
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__active
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_search
 msgid "Active"
 msgstr "활성"
 
 #. module: lunch
-#. openerp-web
-#: code:addons/lunch/static/src/xml/lunch.xml:15
-#, python-format
-msgid "Add"
-msgstr "추가"
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_ids
+msgid "Activities"
+msgstr "활동"
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:425
-#, python-format
-msgid "Alert"
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "활동 예외 장식"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_state
+msgid "Activity State"
+msgstr "활동 상태"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "활동 유형 아이콘"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
+msgid "Add To Cart"
+msgstr "장바구니에 담기"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_location__address
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
+msgid "Address"
+msgstr "주소"
+
+#. module: lunch
+#: model:res.groups,name:lunch.group_lunch_manager
+msgid "Administrator"
+msgstr "관리자"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__name
+msgid "Alert Name"
+msgstr "알림 이름"
+
+#. module: lunch
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__mode__alert
+msgid "Alert in app"
+msgstr "앱에서 알림"
+
+#. module: lunch
+#: model:ir.ui.menu,name:lunch.lunch_alert_menu
+msgid "Alerts"
 msgstr "경고"
 
 #. module: lunch
-#: model:ir.actions.act_window,name:lunch.lunch_alert_action
-#: model:ir.model.fields,field_description:lunch.field_lunch_order__alerts
-#: model:ir.ui.menu,name:lunch.lunch_alert_menu
-msgid "Alerts"
-msgstr ""
-
-#. module: lunch
-#: model_terms:ir.actions.act_window,help:lunch.lunch_alert_action
-msgid ""
-"Alerts are used to warn employee from possible issues concerning the lunch orders.\n"
-"                To create a lunch alert you have to define its recurrence, the time interval during which the alert should be executed and the message to display."
-msgstr ""
-
-#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__amount
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_report__amount
 msgid "Amount"
 msgstr "금액"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert__end_hour
-msgid "And"
-msgstr "및"
-
-#. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_search
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_search
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_form
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_search
 msgid "Archived"
-msgstr "아카이브됨"
+msgstr "보관됨"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_product__available
-msgid "Available"
-msgstr "사용 가능"
+#: model:ir.model.fields,help:lunch.field_lunch_order__available_toppings_1
+#: model:ir.model.fields,help:lunch.field_lunch_order__available_toppings_2
+#: model:ir.model.fields,help:lunch.field_lunch_order__available_toppings_3
+msgid "Are extras available for this product"
+msgstr "이 상품에 대한 추가 상품 유무"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order__balance_visible
-msgid "Balance Visible"
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_attachment_count
+msgid "Attachment Count"
+msgstr "첨부 파일 수"
+
+#. module: lunch
+#: model:ir.model.constraint,message:lunch.constraint_lunch_supplier_automatic_email_time_range
+msgid "Automatic Email Sending Time should be between 0 and 12"
+msgstr "자동 이메일 전송 시간은 0에서 12 사이여야 합니다"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
+msgid "Availability"
+msgstr "가용성"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Available Today"
 msgstr ""
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert__start_hour
-msgid "Between"
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__available_toppings_1
+msgid "Available Toppings 1"
+msgstr "사용 가능한 토핑 1"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__available_toppings_2
+msgid "Available Toppings 2"
+msgstr "사용 가능한 토핑 2"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__available_toppings_3
+msgid "Available Toppings 3"
+msgstr "사용 가능한 토핑 3"
+
+#. module: lunch
+#: model:lunch.product.category,name:lunch.categ_burger
+msgid "Burger"
 msgstr ""
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.view_lunch_alert_kanban
-msgid "Between:"
-msgstr ""
-
-#. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search_2
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search_2
 msgid "By Employee"
 msgstr "직원별"
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
-msgid "By Order"
-msgstr "주문별"
-
-#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
 msgid "By User"
 msgstr "사용자별"
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
-msgid "By Vendor"
-msgstr "공급업체별"
-
-#. module: lunch
-#: model:ir.model.fields,help:lunch.field_lunch_cashmove__description
-msgid "Can be an order or a payment"
-msgstr ""
-
-#. module: lunch
-#: model:ir.model.fields,help:lunch.field_lunch_cashmove__amount
-msgid ""
-"Can be positive (payment) or negative (order or payment if user wants to get"
-" his money back)"
-msgstr ""
-
-#. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_kanban
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
-#: model_terms:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
 msgid "Cancel"
 msgstr "취소"
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
-#: selection:lunch.order,state:0 selection:lunch.order.line,state:0
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_order__state__cancelled
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 msgid "Cancelled"
 msgstr "취소 됨"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__cashmove
-msgid "Cash Move"
-msgstr ""
+#: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_payment
+#: model:ir.ui.menu,name:lunch.lunch_cashmove_report_menu_payment
+msgid "Cash Moves"
+msgstr "이체"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order__cash_move_balance
-msgid "Cash Move Balance"
-msgstr ""
+#: model:ir.model,name:lunch.model_lunch_cashmove_report
+msgid "Cashmoves report"
+msgstr "이체 보고서"
 
 #. module: lunch
-#: model_terms:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Categories"
+msgstr "범주"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Category"
+msgstr "카테고리"
+
+#. module: lunch
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__mode__chat
+msgid "Chat notification"
+msgstr "채팅 알림"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__city
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
+msgid "City"
+msgstr "시/군/구"
+
+#. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_control_suppliers
 msgid ""
 "Click on the <span class=\"fa fa-phone text-success\" title=\"Order button\"></span> to announce that the order is ordered.<br>\n"
-"                Click on the <span class=\"fa fa-check text-success\" title=\"Receive button\"></span> to announce that the order is received.<br>\n"
-"                Click on the <span class=\"fa fa-times-circle text-danger\" title=\"Cancel button\"></span> red X to announce that the order isn't available."
+"            Click on the <span class=\"fa fa-check text-success\" title=\"Receive button\"></span> to announce that the order is received.<br>\n"
+"            Click on the <span class=\"fa fa-times-circle text-danger\" title=\"Cancel button\"></span> red X to announce that the order isn't available."
 msgstr ""
+"주문되었음을 알리려면 <span class=\"fa fa-phone text-success\" title=\"Order button\"></span>을 클릭하십시오.<br>\n"
+"                접수되었음을 알리려면 <span class=\"fa fa-check text-success\" title=\"Receive button\"></span>를 클릭하십시오.<br>\n"
+"                주문이 제공되지 않는다는 것을 알리려면 <span class=\"fa fa-times-circle text-danger\" title=\"Cancel button\"></span> 빨간색 X를 클릭하십시오."
 
 #. module: lunch
-#: model_terms:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
-msgid ""
-"Click on the <span class=\"fa fa-phone text-success\" title=\"Order button\"></span> to announce that the order is ordered.<br>\n"
-"                Click on the <span class=\"fa fa-check text-success\" title=\"Receive button\"></span> to announce that the order is received.<br>\n"
-"                Click on the <span class=\"fa fa-times-circle text-danger\" title=\"Cancel button\"></span> to announce that the order isn't available."
-msgstr ""
+#: model:ir.model,name:lunch.model_res_company
+msgid "Companies"
+msgstr "회사"
 
 #. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_location__company_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__company_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__company_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__company_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__company_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_topping__company_id
 msgid "Company"
 msgstr "회사"
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_res_config_settings
+msgid "Config Settings"
+msgstr "설정 구성"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_config
@@ -306,255 +476,487 @@ msgid "Configuration"
 msgstr "구성"
 
 #. module: lunch
-#: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_control_accounts
-#: model:ir.ui.menu,name:lunch.lunch_cashmove_menu_control_accounts
+#. openerp-web
+#: code:addons/lunch/static/src/js/lunch_controller_common.js:0
+#, python-format
+msgid "Configure Your Order"
+msgstr ""
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
+msgid "Confirm"
+msgstr "승인"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
+msgid "Confirm Orders"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.lunch_cashmove_report_action_control_accounts
+#: model:ir.ui.menu,name:lunch.lunch_cashmove_report_menu_control_accounts
 msgid "Control Accounts"
-msgstr ""
+msgstr "계정 관리"
 
 #. module: lunch
-#: model:ir.actions.act_window,name:lunch.lunch_order_line_action_control_suppliers
+#: model:ir.actions.act_window,name:lunch.lunch_order_action_control_suppliers
+#: model:ir.ui.menu,name:lunch.lunch_order_menu_control_suppliers
 msgid "Control Vendors"
-msgstr ""
+msgstr "공급업체 관리"
 
 #. module: lunch
-#: model_terms:ir.actions.act_window,help:lunch.lunch_alert_action
-msgid "Create a new lunch alert"
-msgstr ""
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__country_id
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
+msgid "Country"
+msgstr "국가"
+
+#. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_report_action_control_accounts
+msgid "Create a new payment"
+msgstr "새 결제 만들기"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_category_action
-msgid "Create a new lunch category"
-msgstr ""
-
-#. module: lunch
-#: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_action_control_accounts
-msgid "Create a new payment"
-msgstr ""
+msgid "Create a new product category"
+msgstr "새 상품 범주 만들기"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action
+#: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_statbutton
 msgid "Create a new product for lunch"
-msgstr ""
+msgstr "점심 식사를 위한 새 상품 만들기"
+
+#. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_alert_action
+msgid "Create new lunch alerts"
+msgstr "새 점심 알림 만들기"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__create_uid
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__create_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_location__create_uid
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__create_uid
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__create_uid
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky__create_uid
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__create_uid
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__create_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__create_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_topping__create_uid
 msgid "Created by"
 msgstr "작성자"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__create_date
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__create_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_location__create_date
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__create_date
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__create_date
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky__create_date
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__create_date
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__create_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__create_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_topping__create_date
 msgid "Created on"
-msgstr "작성일"
+msgstr "작성일자"
 
 #. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__cron_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__cron_id
+msgid "Cron"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__currency_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_report__currency_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__currency_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__currency_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__currency_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__currency_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_topping__currency_id
+#: model:ir.model.fields,field_description:lunch.field_res_config_settings__currency_id
 msgid "Currency"
-msgstr "환율"
+msgstr "통화"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_search
+msgid "Currently inactive"
+msgstr "현재 비활성"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__date
-#: model:ir.model.fields,field_description:lunch.field_lunch_order__date
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__date
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_report__date
 msgid "Date"
-msgstr "날짜"
+msgstr "일자"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert__specific_day
-msgid "Day"
-msgstr "일"
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__delivery
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__delivery__delivery
+msgid "Delivery"
+msgstr "배송"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__description
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_report__description
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__product_description
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__description
-#: model_terms:ir.ui.view,arch_db:lunch.report_lunch_order
 msgid "Description"
-msgstr "내용"
+msgstr "설명"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert__display
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
+msgid "Discard"
+msgstr "작성 취소"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__mode
 msgid "Display"
 msgstr "표시"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__display_name
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__display_name
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_report__display_name
+#: model:ir.model.fields,field_description:lunch.field_lunch_location__display_name
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__display_name
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__display_name
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky__display_name
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__display_name
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__display_name
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__display_name
+#: model:ir.model.fields,field_description:lunch.field_lunch_topping__display_name
 msgid "Display Name"
-msgstr "이름 표시"
+msgstr "표시명"
 
 #. module: lunch
-#. openerp-web
-#: code:addons/lunch/static/src/xml/lunch.xml:7
-#, python-format
-msgid "Don't forget the alerts displayed in the reddish area"
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__display_reorder_button
+msgid "Display Reorder Button"
 msgstr ""
 
 #. module: lunch
-#: model:ir.ui.menu,name:lunch.lunch_cashmove_menu_payment
-msgid "Employee Payments"
-msgstr ""
+#: model:lunch.product.category,name:lunch.categ_drinks
+msgid "Drinks"
+msgstr "음료수"
 
 #. module: lunch
-#: model:ir.model.fields,help:lunch.field_lunch_order_line_lucky__is_max_budget
-msgid "Enable this option to set a maximal budget for your lucky order."
-msgstr ""
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__email
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__send_by__mail
+msgid "Email"
+msgstr "이메일"
 
 #. module: lunch
-#: selection:lunch.alert,alert_type:0
-msgid "Every Day"
-msgstr "매일"
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__recipients__last_month
+msgid "Employee who ordered last month"
+msgstr "지난 달에 주문한 직원"
 
 #. module: lunch
-#: selection:lunch.alert,alert_type:0
-msgid "Every Week"
-msgstr "매일"
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__recipients__last_week
+msgid "Employee who ordered last week"
+msgstr "지난 주에 주문한 직원"
 
 #. module: lunch
-#: model_terms:ir.actions.act_window,help:lunch.lunch_alert_action
-msgid ""
-"Example:<br>\n"
-"                Recurency: Everyday,<br>\n"
-"                Time interval: from 00h00 am to 11h59 pm,<br>\n"
-"                Message: \"You must order before 10h30 am\"."
-msgstr ""
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__recipients__last_year
+msgid "Employee who ordered last year"
+msgstr "작년에 주문한 직원"
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
-msgid "Feeling Lucky"
-msgstr ""
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__recipients__everyone
+msgid "Everyone"
+msgstr "전체"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert__friday
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_label_1
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_label_1
+msgid "Extra 1 Label"
+msgstr "추가 1 항목"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_quantity_1
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_quantity_1
+msgid "Extra 1 Quantity"
+msgstr "추가 1 수량"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_label_2
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_label_2
+msgid "Extra 2 Label"
+msgstr "추가 2 항목"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_quantity_2
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_quantity_2
+msgid "Extra 2 Quantity"
+msgstr "추가 2 수량"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_label_3
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_label_3
+msgid "Extra 3 Label"
+msgstr "추가 3 항목"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_quantity_3
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_quantity_3
+msgid "Extra 3 Quantity"
+msgstr "추가 3 수량"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__display_toppings
+msgid "Extras"
+msgstr "추가 항목"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_ids_1
+msgid "Extras 1"
+msgstr "추가 항목 1"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_ids_2
+msgid "Extras 2"
+msgstr "추가 항목 2"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_ids_3
+msgid "Extras 3"
+msgstr "추가 항목 3"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_res_users__favorite_lunch_product_ids
+msgid "Favorite Lunch Product"
+msgstr "즐겨찾는 점심 상품"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__favorite_user_ids
+msgid "Favorite User"
+msgstr "즐겨찾기 사용자"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_follower_ids
+msgid "Followers"
+msgstr "팔로워"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "팔로워 (파트너)"
+
+#. module: lunch
+#: model:ir.model.fields,help:lunch.field_lunch_supplier__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "멋진 아이콘 폰트 예 : fa-tasks"
+
+#. module: lunch
+#: model:ir.model.fields,help:lunch.field_lunch_supplier__email_formatted
+msgid "Format email address \"Name <email@domain>\""
+msgstr "이메일 주소 형식 \"이름  <email@domain>\""
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__email_formatted
+msgid "Formatted Email"
+msgstr "서식있는 이메일"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__fri
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__fri
+msgid "Fri"
+msgstr "금"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Friday"
 msgstr "금요일"
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search_2
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search_2
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Group By"
 msgstr "그룹별"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__has_message
+msgid "Has Message"
+msgstr "메시지가 있습니다"
 
 #. module: lunch
 #: model:ir.module.category,description:lunch.module_lunch_category
 msgid ""
 "Helps you handle your lunch needs, if you are a manager you will be able to "
 "create new products, cashmoves and to confirm or cancel orders."
-msgstr ""
+msgstr "점심 식사 요구를 처리하는 데 도움이 되며, 관리자라면 신제품, 현금 이동을 만들고 주문을 확인하거나 취소할 수 있습니다."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_category_action
 msgid "Here you can access all categories for the lunch products."
-msgstr ""
+msgstr "여기서 점심 제품의 모든 범주에 접근할 수 있습니다."
 
 #. module: lunch
-#: model_terms:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
+#: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_by_supplier
 msgid "Here you can see today's orders grouped by vendors."
-msgstr ""
+msgstr "여기에서 현재 주문을 공급 업체별로 그룹화할 수 있습니다."
 
 #. module: lunch
-#: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_action_account
+#: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_report_action_account
 msgid ""
 "Here you can see your cash moves.<br>A cash move can either be an expense or a payment.\n"
-"                An expense is automatically created when an order is received while a payment is a reimbursement to the company encoded by the manager."
+"            An expense is automatically created when an order is received while a payment is a reimbursement to the company encoded by the manager."
 msgstr ""
-
-#. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
-msgid "I'm feeling lucky"
-msgstr ""
-
-#. module: lunch
-#: model:ir.actions.act_window,name:lunch.action_lunch_order_line_lucky
-#: model_terms:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
-msgid "I'm feeling lucky today !"
-msgstr ""
-
-#. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky__is_max_budget
-msgid "I'm not feeling rich"
-msgstr ""
+"여기 이체가 있습니다. <br>이체는 비용 또는 지불이 될 수 있습니다.\n"
+"                   비용은 주문을 받을 때 자동으로 생성됩니다. 지불은 관리자가 인코딩한 회사에 대한 상환입니다."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__id
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__id
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_report__id
+#: model:ir.model.fields,field_description:lunch.field_lunch_location__id
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__id
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__id
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky__id
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__id
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__id
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__id
+#: model:ir.model.fields,field_description:lunch.field_lunch_topping__id
 msgid "ID"
 msgstr "ID"
 
 #. module: lunch
-#: model:ir.model.fields,help:lunch.field_lunch_alert__partner_id
-msgid "If specified, the selected vendor can be ordered only on selected days"
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_exception_icon
+msgid "Icon"
+msgstr "아이콘"
+
+#. module: lunch
+#: model:ir.model.fields,help:lunch.field_lunch_supplier__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "예외 활동을 표시하기 위한 아이콘"
+
+#. module: lunch
+#: model:ir.model.fields,help:lunch.field_lunch_supplier__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "만약 선택하였으면, 신규 메시지에 주의를 기울여야 합니다."
+
+#. module: lunch
+#: model:ir.model.fields,help:lunch.field_lunch_supplier__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "이 옵션을 선택하면 일부 정보가 전달 오류를 생성합니다."
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__image_1920
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__image_1920
+msgid "Image"
+msgstr "이미지"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__image_1024
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__image_1024
+msgid "Image 1024"
+msgstr "1024 이미지"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__image_128
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__image_128
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__image_128
+msgid "Image 128"
+msgstr "128 이미지"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__image_1920
+msgid "Image 1920"
 msgstr ""
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__state
-msgid "Is an order or a payment"
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__image_256
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__image_256
+msgid "Image 256"
+msgstr "256 이미지"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__image_512
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__image_512
+msgid "Image 512"
+msgstr "512 이미지"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
+msgid "Information, allergens, ..."
 msgstr ""
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__available_today
+msgid "Is Displayed Today"
+msgstr "오늘 표시할지 여부"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__is_favorite
+msgid "Is Favorite"
+msgstr "즐겨찾기 여부"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_is_follower
+msgid "Is Follower"
+msgstr "팔로워임"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__is_new
+msgid "Is New"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_res_users__last_lunch_location_id
+msgid "Last Lunch Location"
+msgstr "최근 점심 위치"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert____last_update
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove____last_update
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_report____last_update
+#: model:ir.model.fields,field_description:lunch.field_lunch_location____last_update
 #: model:ir.model.fields,field_description:lunch.field_lunch_order____last_update
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line____last_update
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky____last_update
 #: model:ir.model.fields,field_description:lunch.field_lunch_product____last_update
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category____last_update
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier____last_update
+#: model:ir.model.fields,field_description:lunch.field_lunch_topping____last_update
 msgid "Last Modified on"
-msgstr "최근 수정"
+msgstr "최근 수정일"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__last_order_date
+msgid "Last Order Date"
+msgstr "최근 주문일"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__write_uid
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__write_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_location__write_uid
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__write_uid
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__write_uid
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky__write_uid
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__write_uid
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__write_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__write_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_topping__write_uid
 msgid "Last Updated by"
 msgstr "최근 갱신한 사람"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__write_date
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__write_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_location__write_date
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__write_date
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__write_date
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky__write_date
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__write_date
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__write_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__write_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_topping__write_date
 msgid "Last Updated on"
-msgstr "최근 갱신 날짜"
+msgstr "최근 갱신 일자"
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
-msgid "List"
-msgstr "목록"
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__location_ids
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__available_location_ids
+msgid "Location"
+msgstr "위치"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_location__name
+msgid "Location Name"
+msgstr "위치 명칭"
+
+#. module: lunch
+#: model:ir.ui.menu,name:lunch.lunch_location_menu
+msgid "Locations"
+msgstr "위치"
 
 #. module: lunch
 #: model:ir.module.category,name:lunch.module_lunch_category
 #: model:ir.ui.menu,name:lunch.menu_lunch
+#: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
 msgid "Lunch"
 msgstr "점심"
 
@@ -564,224 +966,425 @@ msgid "Lunch Alert"
 msgstr "점심 알림"
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:393
+#: model:ir.actions.act_window,name:lunch.lunch_alert_action
+msgid "Lunch Alerts"
+msgstr "점심 알림"
+
+#. module: lunch
+#: code:addons/lunch/models/lunch_cashmove.py:0
+#: code:addons/lunch/report/lunch_cashmove_report.py:0
 #: model:ir.model,name:lunch.model_lunch_cashmove
 #, python-format
 msgid "Lunch Cashmove"
+msgstr "점심 이체"
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_topping
+msgid "Lunch Extras"
+msgstr "점심 추가 항목"
+
+#. module: lunch
+#. openerp-web
+#: code:addons/lunch/static/src/js/lunch_kanban_view.js:0
+#, python-format
+msgid "Lunch Kanban"
+msgstr "점심 칸반"
+
+#. module: lunch
+#. openerp-web
+#: code:addons/lunch/static/src/js/lunch_list_view.js:0
+#, python-format
+msgid "Lunch List"
 msgstr ""
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:67
-#: model:ir.actions.report,name:lunch.action_report_lunch_order
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__lunch_location_id
+msgid "Lunch Location"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.lunch_location_action
+#: model:ir.model,name:lunch.model_lunch_location
+msgid "Lunch Locations"
+msgstr "점심 위치"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_res_company__lunch_minimum_threshold
+msgid "Lunch Minimum Threshold"
+msgstr "점심 최소 임계 값"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_res_company__lunch_notify_message
+msgid "Lunch Notify Message"
+msgstr ""
+
+#. module: lunch
 #: model:ir.model,name:lunch.model_lunch_order
-#: model_terms:ir.ui.view,arch_db:lunch.report_lunch_order
-#, python-format
 msgid "Lunch Order"
 msgstr "점심 주문"
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
-msgid "Lunch Order Form"
-msgstr ""
-
-#. module: lunch
-#: model:ir.model,name:lunch.model_lunch_order_line
-msgid "Lunch Order Line"
-msgstr ""
-
-#. module: lunch
-#: model:ir.model,name:lunch.model_lunch_order_line_lucky
-msgid "Lunch Order Line Lucky"
-msgstr ""
-
-#. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product
 msgid "Lunch Product"
-msgstr ""
+msgstr "점심 상품"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product_category
 msgid "Lunch Product Category"
+msgstr "점심 상품 범주"
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_supplier
+msgid "Lunch Supplier"
+msgstr "점심 공급업체"
+
+#. module: lunch
+#: code:addons/lunch/models/lunch_order.py:0
+#, python-format
+msgid "Lunch notification"
 msgstr ""
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.action_server_lunch_archive_product
-msgid "Lunch: Archive/Restore products"
-msgstr "점심 : 상품 달성/복구"
+#: model:ir.model.fields,field_description:lunch.field_res_config_settings__company_lunch_notify_message
+msgid "Lunch notification message"
+msgstr ""
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_order_line_action_cancel
+#: model:ir.actions.server,name:lunch.lunch_order_action_cancel
 msgid "Lunch: Cancel meals"
 msgstr "점심 : 식사 취소"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_order_line_action_order
-msgid "Lunch: Order meals"
-msgstr "점심 : 식사 주문"
-
-#. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_order_line_action_confirm
+#: model:ir.actions.server,name:lunch.lunch_order_action_confirm
 msgid "Lunch: Receive meals"
 msgstr "점심 : 식사 수령"
 
 #. module: lunch
+#: model:mail.template,name:lunch.lunch_order_mail_supplier
+msgid "Lunch: Send by email"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_order_action_notify
+msgid "Lunch: Send notifications"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_221
+msgid "Lunch: send automatic email to Lunch Supplier"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "주요 첨부 파일"
+
+#. module: lunch
+#: model:ir.model.fields,help:lunch.field_res_config_settings__currency_id
+msgid "Main currency of the company."
+msgstr "회사의 기본 통화입니다."
+
+#. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_admin
-#: model:res.groups,name:lunch.group_lunch_manager
 msgid "Manager"
 msgstr "관리자"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky__max_budget
-msgid "Max Budget"
-msgstr ""
+#: model:ir.model.fields,field_description:lunch.field_res_config_settings__company_lunch_minimum_threshold
+msgid "Maximum Allowed Overdraft"
+msgstr "최대 허용 초과 인출 수"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
+msgid "Maximum overdraft that your employees can reach"
+msgstr "직원이 도달할 수 있는 최대 초과 인출 수"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__message
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_form
 msgid "Message"
-msgstr "메세지"
+msgstr "메시지"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert__monday
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_has_error
+msgid "Message Delivery error"
+msgstr "메시지 전송 오류"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_ids
+msgid "Messages"
+msgstr "메시지"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__moment
+msgid "Moment"
+msgstr "순간"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__mon
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__mon
+msgid "Mon"
+msgstr "월"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Monday"
 msgstr "월요일"
 
 #. module: lunch
+#: model:ir.actions.act_window,name:lunch.lunch_cashmove_report_action_account
+msgid "My Account"
+msgstr "내 계정"
+
+#. module: lunch
+#: model:ir.ui.menu,name:lunch.lunch_cashmove_report_menu_form
+msgid "My Account History"
+msgstr "내 계정 이력"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
 msgid "My Account grouped"
-msgstr ""
+msgstr "내 계정 그룹화"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "내 활동 마감일"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_title
 msgid "My Lunch"
-msgstr "나의 점심"
+msgstr "점심 주문"
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
+#: model:ir.ui.menu,name:lunch.lunch_order_menu_tree
+msgid "My Order History"
+msgstr "점심 주문 이력"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.lunch_order_action
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 msgid "My Orders"
-msgstr "나의 주문"
+msgstr "내 주문"
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.report_lunch_order
-msgid "Name/Date"
-msgstr "이름/날짜"
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__name
+#: model:ir.model.fields,field_description:lunch.field_lunch_topping__name
+msgid "Name"
+msgstr "이름"
 
 #. module: lunch
-#: selection:lunch.order,state:0 selection:lunch.order.line,state:0
+#: model_terms:ir.ui.view,arch_db:lunch.view_lunch_product_kanban_order
 msgid "New"
-msgstr "새로운"
+msgstr "신규"
 
 #. module: lunch
-#: model:ir.actions.act_window,name:lunch.lunch_order_action_form
 #: model:ir.ui.menu,name:lunch.lunch_order_menu_form
 msgid "New Order"
+msgstr "새 주문"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__new_until
+msgid "New Until"
+msgstr "새 마감"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
 msgstr ""
 
 #. module: lunch
-#: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_action_account
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "다음 활동 마감일"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_summary
+msgid "Next Activity Summary"
+msgstr "다음 활동 요약"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_type_id
+msgid "Next Activity Type"
+msgstr "다음 활동 유형"
+
+#. module: lunch
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__delivery__no_delivery
+msgid "No Delivery"
+msgstr "배달 안됨"
+
+#. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_report_action_account
 msgid "No cash move yet"
-msgstr ""
+msgstr "아직 이체 없음"
 
 #. module: lunch
-#: model_terms:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
+#: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_control_suppliers
 msgid "No lunch order yet"
-msgstr ""
+msgstr "아직 점심 주문 없음"
 
 #. module: lunch
-#: model_terms:ir.actions.act_window,help:lunch.lunch_order_line_action
+#: model_terms:ir.actions.act_window,help:lunch.lunch_order_action
 msgid "No previous order found"
-msgstr ""
+msgstr "이전 주문 없음"
 
 #. module: lunch
-#: code:addons/lunch/wizard/lucky_order.py:40
-#, python-format
-msgid "No product is matching your request. Now you will starve to death."
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
+msgid "None"
+msgstr "없음"
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_1__0_more
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_2__0_more
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_3__0_more
+msgid "None or More"
+msgstr "0개 이상"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 msgid "Not Received"
-msgstr ""
+msgstr "아직 받지 못함"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__note
-msgid "Note"
+#. openerp-web
+#: code:addons/lunch/static/src/js/lunch_controller_common.js:0
+#, python-format
+msgid "Not enough money in your wallet"
+msgstr "지갑에 돈이 충분하지 않습니다"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__note
+msgid "Notes"
 msgstr "메모"
 
 #. module: lunch
-#: model_terms:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
+#: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_by_supplier
 msgid "Nothing to order today"
+msgstr "오늘은 주문이 없습니다"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__notification_moment
+msgid "Notification Moment"
+msgstr "알림 순간"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__notification_time
+msgid "Notification Time"
+msgstr "알림 시간"
+
+#. module: lunch
+#: model:ir.model.constraint,message:lunch.constraint_lunch_alert_notification_time_range
+msgid "Notification time must be between 0 and 12"
+msgstr "알림 시간은 0에서 12 사이여야 합니다."
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__notified
+msgid "Notified"
 msgstr ""
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:318
-#, python-format
-msgid "Only your lunch manager cancels the orders."
-msgstr ""
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_needaction_counter
+msgid "Number of Actions"
+msgstr "작업 수"
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:287
-#, python-format
-msgid "Only your lunch manager processes the orders."
-msgstr ""
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_has_error_counter
+msgid "Number of errors"
+msgstr "오류 횟수"
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:307
-#, python-format
-msgid "Only your lunch manager sets the orders as received."
-msgstr ""
+#: model:ir.model.fields,help:lunch.field_lunch_supplier__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "조치가 필요한 메시지 수"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__order_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__order_id
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_kanban
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
-#: model_terms:ir.ui.view,arch_db:lunch.report_lunch_order
-#: selection:lunch.cashmove,state:0
+#: model:ir.model.fields,help:lunch.field_lunch_supplier__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "전송 오류 메시지 수"
+
+#. module: lunch
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_1__1_more
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_2__1_more
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_3__1_more
+msgid "One or More"
+msgstr "하나 이상"
+
+#. module: lunch
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_1__1
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_2__1
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_3__1
+msgid "Only One"
+msgstr "하나만"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
 msgid "Order"
 msgstr "주문"
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__date
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 msgid "Order Date"
 msgstr "주문일"
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
-msgid "Order lines Tree"
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__order_deadline_passed
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__order_deadline_passed
+msgid "Order Deadline Passed"
 msgstr ""
 
 #. module: lunch
-#: selection:lunch.order.line,state:0
-msgid "Ordered"
-msgstr ""
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__automatic_email_time
+msgid "Order Time"
+msgstr "주문 시간"
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
-msgid "Orders Form"
-msgstr ""
+#: model:ir.actions.act_window,name:lunch.lunch_product_action_order
+msgid "Order Your Lunch"
+msgstr "귀하의 점심 주문"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
-msgid "Orders Tree"
-msgstr ""
+msgid "Order lines Tree"
+msgstr "주문 명세 내역"
 
 #. module: lunch
-#: model:ir.actions.act_window,name:lunch.lunch_order_line_action_by_supplier
-#: model:ir.ui.menu,name:lunch.lunch_order_line_menu_control_suppliers
-msgid "Orders by Vendor"
-msgstr ""
+#. openerp-web
+#: code:addons/lunch/static/src/xml/lunch_templates.xml:0
+#, python-format
+msgid "Order now"
+msgstr "지금 주문"
+
+#. module: lunch
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_order__state__ordered
+msgid "Ordered"
+msgstr "주문함"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
+msgid "Orders"
+msgstr "주문"
 
 #. module: lunch
 #: model:mail.template,subject:lunch.lunch_order_mail_supplier
-msgid "Orders for ${ctx['order']['company_name']}"
+msgid "Orders for {{ ctx['order']['company_name'] }}"
 msgstr ""
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
-#: selection:lunch.cashmove,state:0
+#: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
+msgid "Overdraft"
+msgstr "초과"
+
+#. module: lunch
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__notification_moment__pm
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__moment__pm
+msgid "PM"
+msgstr "PM"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search
 msgid "Payment"
-msgstr "지급"
+msgstr "결제"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_action_payment
@@ -789,338 +1392,644 @@ msgid ""
 "Payments are used to register liquidity movements. You can process those "
 "payments by your own means or by using installed facilities."
 msgstr ""
+"지불은 유동성 이동을 등록하는 데 사용됩니다. 이러한 결제는 사용자가 직접 사용하거나 설치된 설비를 사용하여 처리할 수 있습니다."
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order__previous_order_ids
-msgid "Previous Order"
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__phone
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__send_by__phone
+msgid "Phone"
+msgstr "전화번호"
+
+#. module: lunch
+#: model:lunch.product.category,name:lunch.categ_pizza
+msgid "Pizza"
 msgstr ""
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order__previous_order_widget
-msgid "Previous Order Widget"
-msgstr ""
-
-#. module: lunch
-#: model:ir.ui.menu,name:lunch.lunch_order_menu_tree
-msgid "Previous Orders"
-msgstr ""
-
-#. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__price
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__price
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
+#: model:ir.model.fields,field_description:lunch.field_lunch_topping__price
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
 msgid "Price"
 msgstr "가격"
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.view_lunch_product_kanban
-msgid "Price:"
-msgstr "가격 :"
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__product_id
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Product"
+msgstr "품목"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__product_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky__product_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_product__name
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
-msgid "Product"
-msgstr "상품"
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__is_available_at
+msgid "Product Availability"
+msgstr "품목 사용 가능 여부"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_product_category_action
 #: model:ir.ui.menu,name:lunch.lunch_product_category_menu
 msgid "Product Categories"
-msgstr "상품 범주"
-
-#. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__category_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_product__category_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__name
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
-msgid "Product Category"
-msgstr "상품 범주"
+msgstr "품목 카테고리"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_form
-msgid "Product Category:"
-msgstr ""
+msgid "Product Categories Form"
+msgstr "상품 범주 양식"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__name
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__category_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__category_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__name
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_tree
+msgid "Product Category"
+msgstr "품목 카테고리"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__product_count
+msgid "Product Count"
+msgstr "상품 수"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__product_image
+msgid "Product Image"
+msgstr "품목 이미지"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__name
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__name
 msgid "Product Name"
-msgstr "상품명"
+msgstr "품목 명"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Product Search"
+msgstr "상품 찾기"
+
+#. module: lunch
+#: code:addons/lunch/models/lunch_order.py:0
+#, python-format
+msgid "Product is no longer available."
 msgstr ""
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_product_action
-#: model:ir.model.fields,field_description:lunch.field_lunch_order__order_line_ids
+#: model:ir.actions.act_window,name:lunch.lunch_product_action_statbutton
 #: model:ir.ui.menu,name:lunch.lunch_product_menu
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_form
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_kanban
 msgid "Products"
-msgstr "상품"
+msgstr "품목"
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_form
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_form
 msgid "Products Form"
-msgstr ""
+msgstr "제품 양식"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_tree
+msgid "Products List"
+msgstr "제품 목록"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_tree
 msgid "Products Tree"
-msgstr ""
+msgstr "제품 트리"
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_form
-msgid ""
-"Products from this vendor can <strong>not</strong> be ordered at that "
-"moment."
-msgstr ""
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__quantity
+msgid "Quantity"
+msgstr "수량"
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_form
-msgid "Products from this vendor can be ordered at that moment."
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
+msgid "Re-order"
+msgstr "재주문"
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_kanban
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
 msgid "Receive"
-msgstr ""
+msgstr "수신"
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
-#: selection:lunch.order,state:0 selection:lunch.order.line,state:0
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_order__state__confirmed
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 msgid "Received"
-msgstr "수신함"
+msgstr "수령함"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert__alert_type
-msgid "Recurrence"
-msgstr ""
-
-#. module: lunch
-#: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_payment
-msgid "Register Cash Moves"
-msgstr ""
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__recipients
+msgid "Recipients"
+msgstr "수신인"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_action_payment
 msgid "Register a payment"
+msgstr "결제 등록"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
+msgid "Reset"
+msgstr "초기화"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__responsible_id
+msgid "Responsible"
+msgstr "담당자"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_user_id
+msgid "Responsible User"
+msgstr "담당 사용자"
+
+#. module: lunch
+#: model:lunch.product.category,name:lunch.categ_sandwich
+msgid "Sandwich"
 msgstr ""
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert__saturday
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__sat
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__sat
+msgid "Sat"
+msgstr "토"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Saturday"
 msgstr "토요일"
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_form
-msgid "Schedule"
-msgstr "일정"
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
+msgid "Save"
+msgstr "저장"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_search
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 msgid "Search"
 msgstr "검색"
 
 #. module: lunch
-#. openerp-web
-#: code:addons/lunch/static/src/xml/lunch.xml:5
-#, python-format
-msgid "Select a product and put your order comments on the note."
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
+msgid "Send"
+msgstr "보내기"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
+msgid "Send Notification"
 msgstr ""
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
-msgid "Select your order"
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__send_by
+msgid "Send Order By"
+msgstr "다음 주문자에게 보내기"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
+msgid "Send Orders"
 msgstr ""
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
-msgid "Select your vendor"
+#: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
+msgid "Send this message to your users when their order has been delivered."
 msgstr ""
 
 #. module: lunch
-#: selection:lunch.alert,alert_type:0
-msgid "Specific Day"
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_order__state__sent
+msgid "Sent"
+msgstr "전송됨"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.lunch_config_settings_action
+#: model:ir.ui.menu,name:lunch.lunch_settings_menu
+msgid "Settings"
+msgstr "설정"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__show_confirm_button
+msgid "Show Confirm Button"
 msgstr ""
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__show_order_button
+msgid "Show Order Button"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__until
+msgid "Show Until"
+msgstr "여기까지 표시"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__state_id
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
+msgid "State"
+msgstr "시/도"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__state
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__state
 msgid "Status"
 msgstr "상태"
 
 #. module: lunch
-#: model_terms:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
-msgid "Summary of all lunch orders, grouped by vendor and by date."
+#: model:ir.model.fields,help:lunch.field_lunch_supplier__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
 msgstr ""
+"활동에 기조한 상태입니다\n"
+"기한초과: 이미 기한이 지났습니다\n"
+"오늘: 활동 날짜가 오늘입니다\n"
+"계획: 향후 활동입니다."
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert__sunday
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__street
+msgid "Street"
+msgstr "도로명"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
+msgid "Street 2..."
+msgstr "도로명 2..."
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
+msgid "Street..."
+msgstr "읍/면/동 도로명..."
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__street2
+msgid "Street2"
+msgstr "상세주소"
+
+#. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_control_suppliers
+msgid "Summary of all lunch orders, grouped by vendor and by date."
+msgstr "모든 점심 주문의 요약. 공급업체별 및 날짜별로 그룹화."
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__sun
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__sun
+msgid "Sun"
+msgstr "일"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Sunday"
 msgstr "일요일"
 
 #. module: lunch
-#: model:ir.model.fields,help:lunch.field_lunch_order__company_id
-msgid "The company this user is currently working for."
-msgstr "해당 사용자가 현재 근무하는 회사"
-
-#. module: lunch
-#: code:addons/lunch/models/lunch.py:130
-#, python-format
-msgid "The date of your order is in the past."
+#: model:ir.model.fields,field_description:lunch.field_lunch_topping__supplier_id
+msgid "Supplier"
 msgstr ""
 
 #. module: lunch
-#: model_terms:ir.actions.act_window,help:lunch.lunch_order_line_action
+#: code:addons/lunch/models/lunch_product.py:0
+#, python-format
+msgid ""
+"The following product categories are archived. You should either unarchive the categories or change the category of the product.\n"
+"%s"
+msgstr ""
+
+#. module: lunch
+#: code:addons/lunch/models/lunch_product.py:0
+#, python-format
+msgid ""
+"The following suppliers are archived. You should either unarchive the suppliers or change the supplier of the product.\n"
+"%s"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model.fields,help:lunch.field_lunch_product_category__product_count
+msgid "The number of products related to this category"
+msgstr "이 범주와 관련된 제품 수"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
+msgid "The orders for this vendor have already been sent."
+msgstr ""
+
+#. module: lunch
+#: code:addons/lunch/models/lunch_supplier.py:0
+#, python-format
+msgid "The orders have been confirmed!"
+msgstr ""
+
+#. module: lunch
+#: code:addons/lunch/models/lunch_supplier.py:0
+#, python-format
+msgid "The orders have been sent!"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model.fields,help:lunch.field_lunch_supplier__responsible_id
+msgid ""
+"The responsible is the person that will order lunch for everyone. It will be"
+" used as the 'from' when sending the automatic email."
+msgstr "책임자는 모든 사람을 위해 점심을 주문할 사람입니다. 자동 이메일을 보낼 때 '보낸 사람'으로 사용됩니다."
+
+#. module: lunch
+#: code:addons/lunch/models/lunch_order.py:0
+#: code:addons/lunch/models/lunch_order.py:0
+#, python-format
+msgid "The vendor related to this order is not available today."
+msgstr ""
+
+#. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_order_action
 msgid ""
 "There is no previous order recorded. Click on \"My Lunch\" and then create a"
 " new lunch order."
-msgstr ""
+msgstr "이전 주문이 기록되지 않았습니다. \"점심 주문\"을 클릭한 다음 새로운 점심 주문을 만듭니다."
 
 #. module: lunch
-#. openerp-web
-#: code:addons/lunch/static/src/xml/lunch.xml:4
-#, python-format
-msgid "This is the first time you order a meal"
-msgstr "이것은 첫번쨰 고기 주문입니다."
+#: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_order
+msgid "There is no product available today"
+msgstr "현재 사용할 수 있는 상품이 없습니다"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert__thursday
+#: model:ir.model.fields,help:lunch.field_lunch_topping__topping_category
+msgid "This field is a technical field"
+msgstr "이 필드는 기술 필드입니다"
+
+#. module: lunch
+#: model:ir.model.fields,help:lunch.field_lunch_supplier__recurrency_end_date
+msgid "This field is used in order to "
+msgstr "이 필드는 다음을 위해 사용됩니다"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__available_today
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__available_today
+msgid "This is True when if the supplier is available today"
+msgstr "오늘 공급업체를 이용할 수 있는 경우면 이 필드는 참입니다"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__thu
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__thu
+msgid "Thu"
+msgstr "목"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Thursday"
 msgstr "목요일"
 
 #. module: lunch
-#: model:ir.ui.menu,name:lunch.lunch_order_line_menu_by_supplier
-msgid "Today's Orders"
-msgstr ""
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__tz
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__tz
+msgid "Timezone"
+msgstr "시간대"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order__total
+#. openerp-web
+#: code:addons/lunch/static/src/js/lunch_widget.js:0
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_order__state__new
+#, python-format
+msgid "To Order"
+msgstr "주문 대기"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_payment_dialog
+msgid "To add some money to your wallet, please contact your lunch manager."
+msgstr "지갑에 돈을 추가하려면 점심 관리자에게 문의하십시오."
+
+#. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_location_action
+msgid "To see some locations, create one using the create button"
+msgstr "일부 위치를 보려면 만들기 단추를 사용하여 위치를 작성하십시오."
+
+#. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_order
+msgid ""
+"To see some products, check if your vendors are available today and that you"
+" have configured some products"
+msgstr "일부 제품을 보려면 현재 공급업체가 사용 가능하고 일부 제품을 구성했는지 확인하십시오."
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
+msgid "Today"
+msgstr "오늘"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.lunch_order_action_by_supplier
+#: model:ir.ui.menu,name:lunch.lunch_order_menu_by_supplier
+msgid "Today's Orders"
+msgstr "오늘의 주문"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_topping__topping_category
+msgid "Topping Category"
+msgstr "토핑 범주"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_ids_1
+msgid "Topping Ids 1"
+msgstr "토핑 Ids 1"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_ids_2
+msgid "Topping Ids 2"
+msgstr "토핑 Ids 2"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_ids_3
+msgid "Topping Ids 3"
+msgstr "토핑 Ids 3"
+
+#. module: lunch
+#. openerp-web
+#: code:addons/lunch/static/src/xml/lunch_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_tree
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_tree_2
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_tree
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_tree_2
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
+#, python-format
 msgid "Total"
 msgstr "합계"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert__tuesday
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__price
+msgid "Total Price"
+msgstr "총금액"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__tue
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__tue
+msgid "Tue"
+msgstr "화"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Tuesday"
 msgstr "화요일"
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.report_lunch_order
-msgid "Unit Price"
-msgstr "단가"
+#: model:ir.model.fields,help:lunch.field_lunch_supplier__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "레코드에 있는 예외 활동의 유형입니다."
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__recurrency_end_date
+msgid "Until"
+msgstr "반복 종료일"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__user_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_report__user_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__user_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__user_id
 #: model:res.groups,name:lunch.group_lunch_user
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 msgid "User"
 msgstr "사용자"
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:234
-#, python-format
-msgid ""
-"Validate order for one company at a time to send emails (mixed orders from "
-"%s and %s)"
-msgstr ""
+#: model:ir.model,name:lunch.model_res_users
+msgid "Users"
+msgstr "사용자"
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:239
-#, python-format
-msgid ""
-"Validate order for one currency at a time to send emails (mixed orders from "
-"%s and %s)"
-msgstr ""
-
-#. module: lunch
-#: code:addons/lunch/models/lunch.py:229
-#, python-format
-msgid ""
-"Validate order for one supplier at a time to send emails (mixed orders from "
-"%s and %s)"
-msgstr ""
-
-#. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert__partner_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__supplier
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky__supplier_ids
-#: model:ir.model.fields,field_description:lunch.field_lunch_product__supplier
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_form
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__supplier_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__supplier_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__partner_id
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
 msgid "Vendor"
 msgstr "공급업체"
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 msgid "Vendor Orders by Date"
-msgstr ""
+msgstr "날짜별 공급업체 주문"
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:192
-#, python-format
-msgid "Vendor(s) '%s' is not available today"
-msgstr ""
+#: model:ir.actions.act_window,name:lunch.lunch_vendors_action
+#: model:ir.ui.menu,name:lunch.lunch_vendors_menu
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Vendors"
+msgstr "공급업체"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert__wednesday
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__wed
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__wed
+msgid "Wed"
+msgstr "수"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Wednesday"
 msgstr "수요일"
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_form
-msgid "Write the message you want to display during the defined period..."
-msgstr ""
+#: code:addons/lunch/controllers/main.py:0
+#, python-format
+msgid ""
+"You are trying to impersonate another user, but this can only be done by a "
+"lunch manager"
+msgstr "다른 사용자를 가장하려고 하지만 점심 관리자만 수행할 수 있습니다."
 
 #. module: lunch
-#: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_account
-msgid "Your Account"
-msgstr ""
+#: code:addons/lunch/models/lunch_order.py:0
+#, python-format
+msgid "You have to order one and only one %s"
+msgstr "%s 하나만 주문하셔야 합니다"
 
 #. module: lunch
-#: model:ir.ui.menu,name:lunch.lunch_cashmove_menu_form
-msgid "Your Lunch Account"
-msgstr "점심 계정"
-
-#. module: lunch
-#: model:ir.actions.act_window,name:lunch.lunch_order_line_action
-msgid "Your Orders"
-msgstr ""
+#: code:addons/lunch/models/lunch_order.py:0
+#, python-format
+msgid "You should order at least one %s"
+msgstr "적어도 하나 이상 %s을 주문해야 합니다."
 
 #. module: lunch
 #. openerp-web
-#: code:addons/lunch/static/src/xml/lunch.xml:6
+#: code:addons/lunch/static/src/xml/lunch_templates.xml:0
 #, python-format
-msgid "Your favorite meals will be created based on your last orders."
+msgid "Your Account"
+msgstr "귀하의 계정"
+
+#. module: lunch
+#. openerp-web
+#: code:addons/lunch/static/src/xml/lunch_templates.xml:0
+#, python-format
+msgid ""
+"Your cart\n"
+"                ("
+msgstr ""
+"귀하의 장바구니\n"
+"                ("
+
+#. module: lunch
+#. openerp-web
+#: code:addons/lunch/static/src/xml/lunch_templates.xml:0
+#, python-format
+msgid "Your order"
+msgstr "귀하의 주문"
+
+#. module: lunch
+#: code:addons/lunch/models/lunch_order.py:0
+#, python-format
+msgid ""
+"Your wallet does not contain enough money to order that. To add some money "
+"to your wallet, please contact your lunch manager."
 msgstr ""
 
 #. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
+msgid "ZIP"
+msgstr "우편번호"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__zip_code
+msgid "Zip"
+msgstr "우편번호"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_form
+msgid "alert form"
+msgstr "경고 양식"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_form
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_form
 msgid "cashmove form"
-msgstr ""
+msgstr "이체 양식"
 
 #. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_tree
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_tree_2
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_tree
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_tree_2
 msgid "cashmove tree"
+msgstr "이체 트리"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_form
+msgid "e.g. Order before 11am"
 msgstr ""
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search_2
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
+msgid "e.g. The Pizzeria Inn"
+msgstr ""
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search_2
 msgid "lunch cashmove"
-msgstr ""
+msgstr "점심 이체"
 
 #. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
 msgid "lunch employee payment"
-msgstr ""
+msgstr "점심 식사비 지불"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_kanban
+msgid "on"
+msgstr "있음"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_kanban
+msgid "to"
+msgstr "종료"

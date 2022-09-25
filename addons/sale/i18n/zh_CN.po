@@ -10,7 +10,6 @@
 # JZH-Odoo <jzh@odoo.com>, 2018
 # niulin lnc. <admin@niulin.net>, 2019
 # bf2549c5415a9287249cba2b8a5823c7, 2019
-# keecome <7017511@qq.com>, 2019
 # e2f <projects@e2f.com>, 2019
 # v2exerer <9010446@qq.com>, 2019
 # Siyuan Gu <siyuancn@hotmail.com>, 2019
@@ -42,14 +41,15 @@
 # Martin Trigaux, 2022
 # 智能科技奇客罗方 <alanljj@gmail.com>, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# keecome <7017511@qq.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-19 13:58+0000\n"
+"POT-Creation-Date: 2022-09-02 08:12+0000\n"
 "PO-Revision-Date: 2016-08-05 13:09+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Last-Translator: keecome <7017511@qq.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2597,7 +2597,7 @@ msgstr "包装数量"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_credit_warning
 msgid "Partner Credit Warning"
-msgstr ""
+msgstr "合作伙伴信用警告"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2809,8 +2809,7 @@ msgstr ""
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
-msgid ""
-"Product taxes have been recomputed according to fiscal position <b>%s<b>."
+msgid "Product taxes have been recomputed according to fiscal position %s."
 msgstr ""
 
 #. module: sale
@@ -4243,6 +4242,8 @@ msgid "Volume"
 msgstr "体积"
 
 #. module: sale
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 #: model:ir.model.fields.selection,name:sale.selection__product_template__sale_line_warn__warning
 #: model:ir.model.fields.selection,name:sale.selection__res_partner__sale_warn__warning

@@ -3,20 +3,18 @@
 # 	* hr_attendance
 # 
 # Translators:
-# peso <peer.sommerlund@gmail.com>, 2019
-# Martin Trigaux, 2019
-# Morten Schou <ms@msteknik.dk>, 2019
-# Jesper Carstensen <jc@danodoo.dk>, 2019
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
-# Sanne Kristensen <sanne@vkdata.dk>, 2019
+# Mads Søndergaard, 2022
+# Martin Trigaux, 2022
+# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2022
+# lhmflexerp <lhm@flexerp.dk>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2019\n"
+"POT-Creation-Date: 2021-12-07 10:46+0000\n"
+"PO-Revision-Date: 2016-08-05 12:58+0000\n"
+"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2022\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,16 +48,29 @@ msgid ""
 "<b>Warning! Last check in was over 12 hours ago.</b><br/>If this isn't "
 "right, please contact Human Resource staff"
 msgstr ""
+"<b>Advarsel! Sidste tjek var over 12 timer siden.</b><br/>Hvis dette ikke er"
+" korrekt, skal du venligst kontakte HR personalet"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_kanban
 msgid "<i class=\"fa fa-calendar\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
+msgstr "<i class=\"fa fa-calendar\" aria-label=\"Periode\" role=\"img\" title=\"Periode\"/>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Employee PIN</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Medarbejder PIN</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
@@ -69,24 +80,32 @@ msgid ""
 "                            Last Month\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            Sidste måned                        </span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "<span class=\"o_stat_text\">Attendance</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Tilstedeværelse</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "<span class=\"o_stat_text\">Attended Since</span>"
+msgstr "<span class=\"o_stat_text\">Deltaget siden</span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
+msgid "<span class=\"o_stat_text\">Extra Hours</span>"
 msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "<span class=\"o_stat_text\">Not Attended Since</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Ikke tilstede siden</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
@@ -95,13 +114,41 @@ msgid ""
 "oe_hr_attendance_status_green\" role=\"img\" aria-label=\"Available\" "
 "title=\"Available\"/>"
 msgstr ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle "
+"oe_hr_attendance_status_green\" role=\"img\" aria-label=\"Tilgængelig\" "
+"title=\"Tilgængelig\"/> "
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
 msgid ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle oe_hr_attendance_status_orange\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
+"                                    </span>"
+msgstr ""
 "<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle "
-"oe_hr_attendance_status_red\" role=\"img\" aria-label=\"Not available\" "
-"title=\"Not available\"/>"
+"oe_hr_attendance_status_orange\" role=\"img\" aria-label=\"Utilgængelig\" "
+"title=\"Utilgængelig\"> </span> "
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "<span> Minutes</span>"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"<span> Minutes</span>\n"
+"                                    <br/>\n"
+"                                    <br/>"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "<span>Time Period </span>"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Activate the count of employees' extra hours."
 msgstr ""
 
 #. module: hr_attendance
@@ -110,10 +157,36 @@ msgid ""
 "Add a few employees to be able to select an employee here and perform his check in / check out.\n"
 "                To create employees go to the Employees menu."
 msgstr ""
+"Tilføj et par medarbejdere for at kunne vælge en medarbejder her, og udfør hans tjek ind / tjek ud.\n"
+"                For at oprette medarbejdere, går du til Medarbejderer menuen."
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__adjustment
+msgid "Adjustment"
+msgstr "Justering"
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_manager
 msgid "Administrator"
+msgstr "Administrator"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"Allow a period of time (around working hours) where extra time will not be "
+"counted, in benefit of the company"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"Allow a period of time (around working hours) where extra time will not be "
+"deducted, in benefit of the employee"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
+msgid "Amount of extra hours"
 msgstr ""
 
 #. module: hr_attendance
@@ -134,31 +207,40 @@ msgstr "Endnu en god dag på arbejde! Vi ses snart!"
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_my_attendances
 #: model:ir.model,name:hr_attendance.model_hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_ids
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_base__attendance_ids
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__attendance_ids
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_graph
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_pivot
 msgid "Attendance"
 msgstr "Tilstedeværelse"
 
 #. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_graph
-#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_graph_filtered
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_report_action
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_report_action_filtered
 msgid "Attendance Analysis"
 msgstr "Fremmøde analyse"
 
 #. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_attendance_overtime
+msgid "Attendance Overtime"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_attendance_report
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_graph
+msgid "Attendance Statistics"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_state
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_base__attendance_state
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__attendance_state
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__attendance_state
 msgid "Attendance Status"
-msgstr ""
+msgstr "Tilstedeværelse status"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_employee
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_overview
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_kiosk_mode
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_attendances_overview
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_root
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_view_attendances
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_department_view_kanban
@@ -169,16 +251,12 @@ msgstr "Fremmødte"
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 #, python-format
 msgid "Available"
 msgstr "Til rådighed"
-
-#. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_employee_base
-msgid "Basic Employee"
-msgstr ""
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:0
@@ -214,10 +292,10 @@ msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_in
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__check_in
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_check_in
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_base__last_check_in
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__last_check_in
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__last_check_in
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Check In"
 msgstr "Tjek-ind"
@@ -225,13 +303,11 @@ msgstr "Tjek-ind"
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_my_attendances
 msgid "Check In / Check Out"
-msgstr ""
+msgstr "Tjek ind / Tjek ud"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_out
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_check_out
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_base__last_check_out
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__last_check_out
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__last_check_out
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Check Out"
@@ -240,12 +316,10 @@ msgstr "Tjek-ud"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Check-In/Out"
-msgstr ""
+msgstr "Tjek-ind/ud"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee__attendance_state__checked_in
-#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee_base__attendance_state__checked_in
-#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee_public__attendance_state__checked_in
 msgid "Checked in"
 msgstr "Tjekket ind"
 
@@ -258,8 +332,6 @@ msgstr "Tjekket ind den"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee__attendance_state__checked_out
-#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee_base__attendance_state__checked_out
-#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee_public__attendance_state__checked_out
 msgid "Checked out"
 msgstr "Tjekket ud"
 
@@ -276,7 +348,17 @@ msgstr "Tjekket ud på"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Click to"
-msgstr ""
+msgstr "Klik for"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_res_company
+msgid "Companies"
+msgstr "Virksomheder"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__company_id
+msgid "Company"
+msgstr "Virksomhed"
 
 #. module: hr_attendance
 #. openerp-web
@@ -284,6 +366,11 @@ msgstr ""
 #, python-format
 msgid "Company Logo"
 msgstr "Virksomhedslogo"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Compare attendance with working hours set on employee."
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_config_settings
@@ -296,27 +383,55 @@ msgid "Configuration"
 msgstr "Konfiguration"
 
 #. module: hr_attendance
-#: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
-msgid "Create a new employee"
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__hr_attendance_overtime
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__hr_attendance_overtime
+msgid "Count Extra Hours"
 msgstr ""
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Count of Extra Hours"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"Count of extra hours is considered from this date. Potential extra hours "
+"prior to this date are not considered."
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
+msgid "Create a new employee"
+msgstr "Opret en ny medarbejder"
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__create_uid
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__create_uid
 msgid "Created by"
 msgstr "Oprettet af"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__create_date
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__create_date
 msgid "Created on"
 msgstr "Oprettet den"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__date
+msgid "Day"
+msgstr "Dag"
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__department_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__department_id
 msgid "Department"
 msgstr "Afdeling"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__display_name
 msgid "Display Name"
 msgstr "Vis navn"
 
@@ -337,7 +452,11 @@ msgstr ""
 "tigger"
 
 #. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_employee
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__employee_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__employee_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__employee_id
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
 msgid "Employee"
@@ -356,7 +475,6 @@ msgstr "Medarbejder fremmøde"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_employee_attendance_action_kanban
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_view_employees_kanban
 msgid "Employees"
 msgstr "Ansatte"
 
@@ -371,6 +489,37 @@ msgstr "Gør det muligt at bruge PIN"
 #, python-format
 msgid "Error: could not find corresponding employee."
 msgstr "Fejl : kunne ikke finde den tilsvarende ansatte."
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_overtime_action
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__duration
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__overtime_hours
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Extra Hours"
+msgstr "Extra timer"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__duration_real
+msgid "Extra Hours (Real)"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_start_date
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_start_date
+msgid "Extra Hours Starting Date"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Extra hours today:"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.fields,help:hr_attendance.field_hr_attendance_overtime__duration_real
+msgid "Extra-hours including the threshold duration"
+msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
@@ -391,9 +540,10 @@ msgstr "Vi er glade for at have dig tilbage, det er længe siden sidst!"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Go back"
-msgstr ""
+msgstr "Gå tilbage"
 
 #. module: hr_attendance
 #. openerp-web
@@ -433,9 +583,15 @@ msgid "Goodbye"
 msgstr "Farvel"
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Group By"
 msgstr "Sortér efter"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
+msgid "HR Attendance Search"
+msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
@@ -473,25 +629,25 @@ msgstr "Timer"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_last_month
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_base__hours_last_month
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__hours_last_month
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__hours_last_month
 msgid "Hours Last Month"
-msgstr ""
+msgstr "Timer forrige måned"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_last_month_display
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_base__hours_last_month_display
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__hours_last_month_display
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__hours_last_month_display
 msgid "Hours Last Month Display"
-msgstr ""
+msgstr "Timer forrige måned vis"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_today
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_base__hours_today
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__hours_today
 msgid "Hours Today"
+msgstr "Timer i dag"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__worked_hours
+msgid "Hours Worked"
 msgstr ""
 
 #. module: hr_attendance
@@ -501,6 +657,8 @@ msgstr "Hr fremmøde søgning"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__id
 msgid "ID"
 msgstr "ID"
 
@@ -508,8 +666,8 @@ msgstr "ID"
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
-msgid "Identify"
-msgstr ""
+msgid "Identify Manually"
+msgstr "Identificer Manuelt"
 
 #. module: hr_attendance
 #. openerp-web
@@ -526,36 +684,39 @@ msgid "Invalid request, please return to the main menu."
 msgstr "Ugyldig anmodning, gå tilbage til hovedmenu."
 
 #. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_kiosk_mode
+#: model:res.groups,name:hr_attendance.group_hr_attendance_kiosk
+msgid "Kiosk Attendance"
+msgstr "Kiosk Fremmøde"
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_kiosk_no_user_mode
 msgid "Kiosk Mode"
 msgstr "Kiosk mode"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_attendance_id
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_base__last_attendance_id
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__last_attendance_id
 msgid "Last Attendance"
 msgstr "Sidste fremmøde"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance____last_update
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime____last_update
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report____last_update
 msgid "Last Modified on"
 msgstr "Sidst ændret den"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__write_uid
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__write_uid
 msgid "Last Updated by"
 msgstr "Sidst opdateret af"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__write_date
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__write_date
 msgid "Last Updated on"
 msgstr "Sidst opdateret den"
-
-#. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_manage_attendances
-msgid "Manager"
-msgstr "Leder"
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance
@@ -563,11 +724,9 @@ msgid "Manual Attendance"
 msgstr "Manuelt fremmøde"
 
 #. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
-#, python-format
-msgid "Manually"
-msgstr "Manuelt"
+#: model:ir.model,name:hr_attendance.model_ir_ui_menu
+msgid "Menu"
+msgstr "Menu"
 
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_greeting_message
@@ -587,24 +746,25 @@ msgstr "Ingen tjek-ud"
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action
 msgid "No attendance records found"
-msgstr ""
+msgstr "Ingen tilstedeværelses registreringer fundet"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_overview
 msgid "No attendance records to display"
-msgstr ""
+msgstr "Ingen tilstedeværelses registreringer at fremvise"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:0
 #, python-format
-msgid "No employee corresponding to barcode %(barcode)s"
-msgstr "Ingen ansatte stemmer overens med stregkode %(barcode)s"
+msgid "No employee corresponding to Badge ID '%(barcode)s.'"
+msgstr "Ingen medarbejder der svarer til Badge ID '%(barcode)s.'"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "Not available"
-msgstr ""
+msgstr "Ikke tilgængelig"
 
 #. module: hr_attendance
 #. openerp-web
@@ -619,11 +779,16 @@ msgid "Officer"
 msgstr "Officer"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__overtime_ids
+msgid "Overtime"
+msgstr "Overtid"
+
+#. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Please enter your PIN to"
-msgstr ""
+msgstr "Angiv venligst din PIN for at"
 
 #. module: hr_attendance
 #. openerp-web
@@ -631,6 +796,11 @@ msgstr ""
 #, python-format
 msgid "Please return to the main menu."
 msgstr "Gå venligst tilbage til hovedmenuen."
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_employee_public
+msgid "Public Employee"
+msgstr "Offentlig ansat"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_report
@@ -648,6 +818,7 @@ msgstr "Skan dit badge"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Set PIN codes in the employee detail form (in HR Settings tab)."
 msgstr ""
+"Angiv PIN koder medarbejder detaljer formularen (i HR Indstillinger fanen)."
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
@@ -656,6 +827,8 @@ msgstr "Opsætning"
 
 #. module: hr_attendance
 #. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
@@ -667,9 +840,23 @@ msgstr "Log ind"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Sign out"
 msgstr "Log ud"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Start from"
+msgstr "Start fra"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/models/hr_employee.py:0
+#, python-format
+msgid "Such grouping is not allowed."
+msgstr "Sådanne grupperinger er ikke tilladte."
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action
@@ -685,11 +872,21 @@ msgid "The early bird catches the worm"
 msgstr "De tidlige fugle fanger ormen"
 
 #. module: hr_attendance
+#: model:res.groups,comment:hr_attendance.group_hr_attendance_kiosk
+msgid ""
+"The user will be able to open the kiosk mode and validate the employee PIN."
+msgstr ""
+"Brugeren vil være i stand til at åbne kiosk tilstanden og validere "
+"medarbejder PIN'en."
+
+#. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance
 msgid ""
 "The user will gain access to the human resources attendance menu, enabling "
 "him to manage his own attendance."
 msgstr ""
+"Brugeren vil få adgang til HR tilstedeværelses menuen, hvilket gør dem i "
+"stand til at administrere deres egen tilstedeværelse."
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_use_pin
@@ -701,17 +898,53 @@ msgstr ""
 "firmacomputeren."
 
 #. module: hr_attendance
+#: code:addons/hr_attendance/models/hr_employee.py:0
+#, python-format
+msgid ""
+"To activate Kiosk mode without pin code, you must have access right as an "
+"Officer or above in the Attendance app. Please contact your administrator."
+msgstr ""
+
+#. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Today's work hours:"
+msgstr "Dagens arbejdstimer:"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_company_threshold
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_company_threshold
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Tolerance Time In Favor Of Company"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_employee_threshold
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_employee_threshold
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Tolerance Time In Favor Of Employee"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__total_overtime
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__total_overtime
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__total_overtime
+msgid "Total Overtime"
+msgstr "Total overtid"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Total extra hours:"
 msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Use PIN codes to check in in Kiosk Mode"
-msgstr ""
+msgstr "Brug PIN koder til at tjekke ind i Kiosk tilstand"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_users
@@ -724,7 +957,7 @@ msgstr "Brugere"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Want to check out?"
-msgstr ""
+msgstr "Vil du tjekke ind?"
 
 #. module: hr_attendance
 #. openerp-web
@@ -734,6 +967,8 @@ msgid ""
 "Warning : Your user should be linked to an employee to use attendance. "
 "Please contact your administrator."
 msgstr ""
+"Advarsel : Din bruger bør være forbundet til en ansat for at bruge "
+"tilstedeværelse. Kontakt venligst din administrator."
 
 #. module: hr_attendance
 #. openerp-web
@@ -755,12 +990,12 @@ msgstr "Velkommen til"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Welcome!"
-msgstr ""
+msgstr "Velkommen!"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
 msgid "Work Hours"
-msgstr ""
+msgstr "Arbejdstimer"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__worked_hours
@@ -771,7 +1006,7 @@ msgstr "Antal arbejdstimer"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "Worked hours last month"
-msgstr ""
+msgstr "Arbejdstimer forrige måned"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:0
@@ -786,13 +1021,18 @@ msgid "You cannot duplicate an attendance."
 msgstr "Du kan ikke kopiere et fremmøde."
 
 #. module: hr_attendance
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_overview
+msgid "Your attendance records will be displayed here."
+msgstr ""
+
+#. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "check in"
-msgstr ""
+msgstr "tjek ind"
 
 #. module: hr_attendance
 #. openerp-web
@@ -801,12 +1041,10 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "check out"
-msgstr ""
+msgstr "tjek ud"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee__attendance_ids
-#: model:ir.model.fields,help:hr_attendance.field_hr_employee_base__attendance_ids
-#: model:ir.model.fields,help:hr_attendance.field_hr_employee_public__attendance_ids
 msgid "list of attendances for the employee"
 msgstr "Liste over fremmøde for de ansatte           "
 

@@ -1,17 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * sale_purchase
+# 	* sale_purchase
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2022
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
+# Martin Trigaux, 2022
+# Jan Prokop, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018\n"
+"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"PO-Revision-Date: 2019-03-20 14:59+0000\n"
+"Last-Translator: Jan Prokop, 2022\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,29 +29,41 @@ msgid ""
 ".\n"
 "            Manual actions may be needed."
 msgstr ""
+".\n"
+"            Môže byť potrebný ručný zásah ."
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_inherited_form_purchase
+msgid "<span class=\"o_stat_text\">Purchase</span>"
+msgstr ""
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.purchase_order_inherited_form_sale
+msgid "<span class=\"o_stat_text\">Sale</span>"
+msgstr ""
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
 msgid "Exception(s) occurred on the purchase order(s):"
-msgstr ""
+msgstr "Výnimka(y) nastala(i) pri objednávke nákupu:"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 msgid "Exception(s) occurred on the sale order(s):"
-msgstr ""
+msgstr "Výnimka(y) nastala(i) pri objednávke predaja:"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
 msgid "Exception(s):"
-msgstr ""
+msgstr "Výnimka(y)"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__purchase_line_ids
 msgid "Generated Purchase Lines"
-msgstr ""
+msgstr "Generované položky nákupu"
 
 #. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_product_product__service_to_purchase
@@ -58,24 +73,32 @@ msgid ""
 "automatically created to buy the product. Tip: don't forget to set a vendor "
 "on the product."
 msgstr ""
+"Ak je začiarknuté, pri každom predaji tohto produktu prostredníctvom SO sa "
+"automaticky vytvorí RfQ na zakúpenie produktu. Tip: Nezabudnite na produkt "
+"nastaviť dodávateľa."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 msgid "Manual actions may be needed."
-msgstr ""
+msgstr "Môže byť potrebný ručný zásah."
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order__purchase_order_count
-msgid "Number of Purchase Order"
+msgid "Number of Purchase Order Generated"
+msgstr ""
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__sale_order_count
+msgid "Number of Source Sale"
 msgstr ""
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__purchase_line_count
 msgid "Number of generated purchase items"
-msgstr ""
+msgstr "Počet vygenerovaných nákupných položiek"
 
 #. module: sale_purchase
-#: code:addons/sale_purchase/models/sale_order.py:91
+#: code:addons/sale_purchase/models/sale_order.py:0
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr "Objednané množstvo pokleslo!"
@@ -83,23 +106,25 @@ msgstr "Objednané množstvo pokleslo!"
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_line_id
 msgid "Origin Sale Item"
+msgstr "Pôvodná položka predaja"
+
+#. module: sale_purchase
+#: code:addons/sale_purchase/models/product_template.py:0
+#, python-format
+msgid ""
+"Please define the vendor from whom you would like to purchase this service "
+"automatically."
 msgstr ""
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_product_template
 msgid "Product Template"
-msgstr "šablona produktu"
+msgstr "Šablóna produktu"
 
 #. module: sale_purchase
-#: sql_constraint:product.template:0
+#: model:ir.model.constraint,message:sale_purchase.constraint_product_template_service_to_purchase
 msgid "Product that is not a service can not create RFQ."
-msgstr ""
-
-#. module: sale_purchase
-#: model:ir.model.fields,field_description:sale_purchase.field_product_product__service_to_purchase
-#: model:ir.model.fields,field_description:sale_purchase.field_product_template__service_to_purchase
-msgid "Purchase Automatically"
-msgstr ""
+msgstr "Produkt, ktorý nie je službou, tomu nemôže vytvoriť RFQ."
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order
@@ -112,9 +137,10 @@ msgid "Purchase Order Line"
 msgstr "Riadok nákupnej objednávky"
 
 #. module: sale_purchase
-#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_form_view_inherit
-msgid "Purchase Orders"
-msgstr "Nakupné objednávky"
+#: code:addons/sale_purchase/models/sale_order.py:0
+#, python-format
+msgid "Purchase Order generated from %s"
+msgstr ""
 
 #. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_sale_order_line__purchase_line_ids
@@ -122,16 +148,13 @@ msgid ""
 "Purchase line generated by this Sales item on order confirmation, or when "
 "the quantity was increased."
 msgstr ""
-
-#. module: sale_purchase
-#: model:ir.model,name:sale_purchase.model_sale_order
-msgid "Quotation"
-msgstr "Cenová ponuka"
+"Nákupný riadok vygenerovaný touto položkou Predaj pri potvrdení objednávky "
+"alebo pri zvýšení množstva."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
 msgid "Reordering"
-msgstr ""
+msgstr "Preobjednanie"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_order_id
@@ -139,31 +162,52 @@ msgid "Sale Order"
 msgstr "Objednávka predaja"
 
 #. module: sale_purchase
-#: model:ir.model,name:sale_purchase.model_sale_order_line
-msgid "Sales Order Line"
-msgstr "Položky objednávky"
+#: model:ir.model,name:sale_purchase.model_sale_order
+msgid "Sales Order"
+msgstr "Objednávka "
 
 #. module: sale_purchase
-#: code:addons/sale_purchase/models/sale_order.py:273
+#: model:ir.model,name:sale_purchase.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Položka objednávok"
+
+#. module: sale_purchase
+#: code:addons/sale_purchase/models/purchase_order.py:0
+#, python-format
+msgid "Sources Sale Orders %s"
+msgstr ""
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_product_product__service_to_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_product_template__service_to_purchase
+msgid "Subcontract Service"
+msgstr ""
+
+#. module: sale_purchase
+#: code:addons/sale_purchase/models/sale_order.py:0
 #, python-format
 msgid ""
 "There is no vendor associated to the product %s. Please define a vendor for "
 "this product."
 msgstr ""
+"K produktu %s nie je priradený dodávateľ. Zadefinujte prosím dodávateľa "
+"tohto produktu."
 
 #. module: sale_purchase
-#: code:addons/sale_purchase/models/sale_order.py:92
+#: code:addons/sale_purchase/models/sale_order.py:0
 #, python-format
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the purchase order if needed."
 msgstr ""
+"Znižujete objednané množstvo! V prípade potreby nezabudnite manuálne "
+"aktualizovať objednávku."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
 msgid "cancelled"
-msgstr ""
+msgstr "zrušené"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
@@ -175,4 +219,4 @@ msgstr "z"
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 msgid "ordered instead of"
-msgstr ""
+msgstr "objednané namiesto"

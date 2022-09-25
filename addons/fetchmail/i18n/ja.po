@@ -1,22 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * fetchmail
+# 	* fetchmail
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2018
-# Manami Hashi <manami@roomsfor.hk>, 2018
-# NOKA Shigekazu <shigekazu.noka@gmail.com>, 2018
-# ook rio <riokoko5@gmail.com>, 2018
-# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018
-# 前園義博 <yoshihiro.maezono@pro-spire.co.jp>, 2018
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
+# ook rio <riokoko5@gmail.com>, 2022
+# Ryoko Tsuda <ryoko@quartile.co>, 2022
+# Shigekazu N. <shigekazu.noka@gmail.com>, 2022
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
+# Martin Trigaux, 2022
+# Noma Yuki, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: 前園義博 <yoshihiro.maezono@pro-spire.co.jp>, 2018\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2016-08-05 12:57+0000\n"
+"Last-Translator: Noma Yuki, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,18 +46,31 @@ msgid "Advanced Options"
 msgstr "高度オプション"
 
 #. module: fetchmail
+#: code:addons/fetchmail/models/fetchmail.py:0
+#, python-format
+msgid ""
+"An SSL exception occurred. Check SSL/TLS configuration on server port.\n"
+" %s"
+msgstr ""
+
+#. module: fetchmail
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "Archived"
+msgstr "アーカイブ済"
+
+#. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__configuration
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Configuration"
 msgstr "設定"
 
 #. module: fetchmail
-#: selection:fetchmail.server,state:0
+#: model:ir.model.fields.selection,name:fetchmail.selection__fetchmail_server__state__done
 msgid "Confirmed"
 msgstr "確認済"
 
 #. module: fetchmail
-#: code:addons/fetchmail/models/fetchmail.py:136
+#: code:addons/fetchmail/models/fetchmail.py:0
 #, python-format
 msgid "Connection test failed: %s"
 msgstr "接続テストに失敗しました: %s"
@@ -91,7 +105,7 @@ msgstr "処理の順序を定義します。値が小さいほど優先度が高
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__display_name
 msgid "Display Name"
-msgstr "表示名"
+msgstr "名前を表示"
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_tree
@@ -101,7 +115,7 @@ msgstr ""
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Fetch Now"
-msgstr "いま読み取る。"
+msgstr "今読み取る"
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server__server
@@ -119,7 +133,7 @@ msgid "IMAP"
 msgstr "IMAP"
 
 #. module: fetchmail
-#: selection:fetchmail.server,type:0
+#: model:ir.model.fields.selection,name:fetchmail.selection__fetchmail_server__server_type__imap
 msgid "IMAP Server"
 msgstr "IMAP サーバー"
 
@@ -139,6 +153,7 @@ msgid "Incoming Email Servers"
 msgstr "受信メールサーバ"
 
 #. module: fetchmail
+#: model:ir.model,name:fetchmail.model_fetchmail_server
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Incoming Mail Server"
@@ -149,6 +164,14 @@ msgstr "受信メールサーバ"
 #: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
 msgid "Incoming Mail Servers"
 msgstr "受信メールサーバ"
+
+#. module: fetchmail
+#: code:addons/fetchmail/models/fetchmail.py:0
+#, python-format
+msgid ""
+"Invalid server name !\n"
+" %s"
+msgstr "サーバー名が無効です' %s"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__attach
@@ -181,7 +204,7 @@ msgid "Last Updated on"
 msgstr "最終更新日"
 
 #. module: fetchmail
-#: selection:fetchmail.server,type:0
+#: model:ir.model.fields.selection,name:fetchmail.selection__fetchmail_server__server_type__local
 msgid "Local Server"
 msgstr "ローカルサーバ"
 
@@ -195,7 +218,7 @@ msgstr "ログイン情報"
 #: model:ir.cron,cron_name:fetchmail.ir_cron_mail_gateway_action
 #: model:ir.cron,name:fetchmail.ir_cron_mail_gateway_action
 msgid "Mail: Fetchmail Service"
-msgstr "メール：フェッチメールサービス"
+msgstr "メール: フェッチメールサービス"
 
 #. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.act_server_history
@@ -206,10 +229,18 @@ msgstr "メッセージ"
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__name
 msgid "Name"
-msgstr "名称"
+msgstr "氏名"
 
 #. module: fetchmail
-#: selection:fetchmail.server,state:0
+#: code:addons/fetchmail/models/fetchmail.py:0
+#, python-format
+msgid ""
+"No response received. Check server information.\n"
+" %s"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.model.fields.selection,name:fetchmail.selection__fetchmail_server__state__draft
 msgid "Not Confirmed"
 msgstr "未確認"
 
@@ -229,14 +260,9 @@ msgid "POP"
 msgstr "POP"
 
 #. module: fetchmail
-#: selection:fetchmail.server,type:0
+#: model:ir.model.fields.selection,name:fetchmail.selection__fetchmail_server__server_type__pop
 msgid "POP Server"
 msgstr "POPサーバ"
-
-#. module: fetchmail
-#: model:ir.model,name:fetchmail.model_fetchmail_server
-msgid "POP/IMAP Server"
-msgstr "POP/IMAPサーバ"
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_tree
@@ -310,9 +336,17 @@ msgid "Server Priority"
 msgstr "サーバの優先度"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__type
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__server_type
 msgid "Server Type"
 msgstr "サーバタイプ"
+
+#. module: fetchmail
+#: code:addons/fetchmail/models/fetchmail.py:0
+#, python-format
+msgid ""
+"Server replied with following exception:\n"
+" %s"
+msgstr "サーバーは次の例外で応答しました:%s"
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search

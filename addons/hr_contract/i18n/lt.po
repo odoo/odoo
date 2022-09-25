@@ -3,22 +3,26 @@
 # 	* hr_contract
 # 
 # Translators:
-# Martin Trigaux, 2019
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2019
-# Silvija Butko <silvija.butko@gmail.com>, 2019
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2019
-# Rolandas <info@paninfo.lt>, 2019
-# Monika Raciunaite <monika.raciunaite@gmail.com>, 2019
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2019
-# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2022
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2022
+# Monika Raciunaite <monika.raciunaite@gmail.com>, 2022
+# Silvija Butko <silvija.butko@gmail.com>, 2022
+# Arunas V. <arunas@devoro.com>, 2022
+# Rolandas <info@paninfo.lt>, 2022
+# Arunas Vaitekunas <vaitekunas@gmail.com>, 2022
+# Jonas Zinkevicius <jozi@odoo.com>, 2022
+# Linas Versada <linaskrisiukenas@gmail.com>, 2022
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
+"POT-Creation-Date: 2021-12-07 10:46+0000\n"
+"PO-Revision-Date: 2016-08-05 12:58+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,24 +31,29 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: hr_contract
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_employee_view_kanban
-msgid ""
-"<i class=\"fa fa-exclamation-triangle text-danger\" role=\"img\" "
-"title=\"There is something wrong with the contract. Either there is no "
-"running contract for this employee or employee's contract is about to "
-"expire.\" aria-label=\"There is something wrong with the contract. Either "
-"there is no running contract for this employee or employee's contract is "
-"about to expire.\"/>"
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_count
+msgid "# Contracts"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_resource_calendar__contracts_count
+msgid "# Contracts using it"
+msgstr ""
+
+#. module: hr_contract
+#: code:addons/hr_contract/report/hr_contract_history.py:0
+#, python-format
+msgid "%s's Contracts History"
 msgstr ""
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid ""
 "<span attrs=\"{'invisible': ['|', ('calendar_mismatch', '=', False), ('state', '!=', 'open')]}\" class=\"fa fa-exclamation-triangle text-danger o_calendar_warning pl-3\">\n"
-"                                        </span>\n"
-"                                        <span class=\"o_calendar_warning_tooltip text-danger\">\n"
-"                                            Calendar Mismatch : The employee's calendar does not match this contract's calendar. This could lead to unexpected behaviors.\n"
-"                                        </span>"
+"                                    </span>\n"
+"                                    <span class=\"o_calendar_warning_tooltip text-danger\">\n"
+"                                        Calendar Mismatch : The employee's calendar does not match this contract's calendar. This could lead to unexpected behaviors.\n"
+"                                    </span>"
 msgstr ""
 
 #. module: hr_contract
@@ -58,9 +67,28 @@ msgid ""
 msgstr ""
 
 #. module: hr_contract
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
-msgid "<span class=\"text-muted\">(If fixed-term contract)</span>"
-msgstr "<span class=\"text-muted\">(jei terminuota sutartis)</span>"
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
+msgid ""
+"<span class=\"o_stat_text text-danger\" attrs=\"{'invisible' : [('contract_warning', '=', False)]}\" title=\"In Contract Since\">\n"
+"                                    In Contract Since\n"
+"                                </span>"
+msgstr ""
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
+msgid ""
+"<span class=\"o_stat_text text-danger\">\n"
+"                                    Contracts\n"
+"                                </span>"
+msgstr ""
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
+msgid ""
+"<span class=\"o_stat_text text-success\" attrs=\"{'invisible' : "
+"[('contract_warning', '=', True)]}\" title=\"In Contract Since\"> In "
+"Contract Since</span>"
+msgstr ""
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -70,12 +98,22 @@ msgstr "<span>/ mėnuo</span>"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_needaction
 msgid "Action Needed"
-msgstr "Reikia veiksmo"
+msgstr "Reikalingas veiksmas"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__active
 msgid "Active"
 msgstr "Aktyvus"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__active_employee
+msgid "Active Employee"
+msgstr "Aktyvus darbuotojas"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+msgid "Active Employees"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_ids
@@ -85,37 +123,35 @@ msgstr "Veiklos"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Veiklos Išimties Dekoravimas"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_state
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__activity_state
 msgid "Activity State"
 msgstr "Veiklos būsena"
 
 #. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Veiklos tipo ikona"
+
+#. module: hr_contract
 #: model:res.groups,name:hr_contract.group_hr_contract_manager
 msgid "Administrator"
-msgstr ""
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__advantages
-msgid "Advantages"
-msgstr "Privalumai"
-
-#. module: hr_contract
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
-msgid "Advantages..."
-msgstr "Privalumai..."
+msgstr "Administratorius"
 
 #. module: hr_contract
 #: code:addons/hr_contract/models/hr_contract.py:0
 #, python-format
 msgid ""
-"An employee can only have one contract at the same time. (Excluding Draft "
-"and Cancelled contracts)"
+"An employee can only have one contract at the same time. (Excluding Draft and Cancelled contracts).\n"
+"\n"
+"Employee: %(employee_name)s"
 msgstr ""
 
 #. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Archived"
 msgstr "Archyvuotas"
@@ -138,11 +174,13 @@ msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__state__cancel
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__state__cancel
 msgid "Cancelled"
 msgstr "Atšauktas"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__company_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__company_id
 msgid "Company"
 msgstr "Įmonė"
 
@@ -153,10 +191,25 @@ msgid "Company Vehicle"
 msgstr "Įmonės automobilis"
 
 #. module: hr_contract
-#: model:ir.model,name:hr_contract.model_hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__company_country_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__company_country_id
+msgid "Company country"
+msgstr "Įmonės kodas"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_id
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_departure_wizard_view_form
 msgid "Contract"
 msgstr "Sutartis"
+
+#. module: hr_contract
+#: code:addons/hr_contract/models/hr_contract.py:0
+#, python-format
+msgid ""
+"Contract %(contract)s: start date (%(start)s) must be earlier than contract "
+"end date (%(end)s)."
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contracts_count
@@ -169,6 +222,23 @@ msgid "Contract Details"
 msgstr "Sutarties detalės"
 
 #. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_departure_wizard_view_form
+msgid "Contract End Date"
+msgstr ""
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
+msgid "Contract History"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__name
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
+msgid "Contract Name"
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__name
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Contract Reference"
@@ -176,8 +246,22 @@ msgstr "Sutarties numeris"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
-msgid "Contract Terms"
-msgstr "Sutarties sąlygos"
+msgid "Contract Start Date"
+msgstr "Sutarties pradžios data"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_hr_contract_type
+#: model:ir.model,name:hr_contract.model_hr_payroll_structure_type
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__contract_type_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_type_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__name
+msgid "Contract Type"
+msgstr "Sutarties tipas"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__contract_wage
+msgid "Contract Wage"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_warning
@@ -197,11 +281,9 @@ msgid "Contract expired"
 msgstr "Sutartis nebegalioja"
 
 #. module: hr_contract
-#: code:addons/hr_contract/models/hr_contract.py:0
-#, python-format
-msgid "Contract start date must be earlier than contract end date."
+#: model:ir.model,name:hr_contract.model_hr_contract_history
+msgid "Contract history"
 msgstr ""
-"Sutarties pradžios data turi būti ankstesnė nei sutarties pabaigos data."
 
 #. module: hr_contract
 #: model:mail.message.subtype,name:hr_contract.mt_department_contract_pending
@@ -209,15 +291,44 @@ msgid "Contract to Renew"
 msgstr "Sutartys atnaujinimui"
 
 #. module: hr_contract
-#: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract
+#: model:ir.actions.act_window,name:hr_contract.hr_contract_history_view_form_action
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_ids
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_history
 #: model:ir.ui.menu,name:hr_contract.menu_human_resources_configuration_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_list
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_activity
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_tree
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
+#: model_terms:ir.ui.view,arch_db:hr_contract.resource_calendar_view_form
 msgid "Contracts"
 msgstr "Sutartys"
+
+#. module: hr_contract
+#: model:ir.actions.act_window,name:hr_contract.hr_contract_history_to_review_view_list_action
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+msgid "Contracts to Review"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__under_contract_state
+msgid "Contractual Status"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__country_id
+msgid "Country"
+msgstr "Valstybė"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__country_code
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__country_code
+msgid "Country Code"
+msgstr "Valstybės kodas"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
+msgid "Create"
+msgstr "Sukurti"
 
 #. module: hr_contract
 #: model_terms:ir.actions.act_window,help:hr_contract.action_hr_contract
@@ -226,16 +337,21 @@ msgstr "Sukurkite naują sutartį"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__create_uid
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__create_uid
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__create_uid
 msgid "Created by"
 msgstr "Sukūrė"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__create_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__create_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__create_date
 msgid "Created on"
 msgstr "Sukurta"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__currency_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__currency_id
 msgid "Currency"
 msgstr "Valiuta"
 
@@ -246,9 +362,24 @@ msgid "Current Contract"
 msgstr "Einamoji sutartis"
 
 #. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
+msgid "Current Contracts"
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_employee__contract_id
 msgid "Current contract of the employee"
 msgstr ""
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+msgid "Currently Under Contract"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__default_resource_calendar_id
+msgid "Default Working Hours"
+msgstr "Numatytosios darbo valandos"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
@@ -257,11 +388,27 @@ msgstr "Trinti"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__department_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__department_id
 msgid "Department"
 msgstr "Skyrius"
 
 #. module: hr_contract
+#: model:ir.model,name:hr_contract.model_hr_departure_wizard
+msgid "Departure Wizard"
+msgstr ""
+
+#. module: hr_contract
+#: code:addons/hr_contract/wizard/hr_departure_wizard.py:0
+#, python-format
+msgid ""
+"Departure date can't be earlier than the start date of current contract."
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__display_name
 msgid "Display Name"
 msgstr "Rodomas pavadinimas"
 
@@ -283,14 +430,25 @@ msgstr ""
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_employee
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__employee_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__employee_id
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Employee"
 msgstr "Darbuotojas"
 
 #. module: hr_contract
+#: model:ir.model,name:hr_contract.model_hr_contract
+msgid "Employee Contract"
+msgstr "Darbuotojo sutartis"
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_ids
 msgid "Employee Contracts"
 msgstr "Darbuotojų sutartys"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
+msgid "Employee Information"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_res_users__bank_account_id
@@ -299,11 +457,18 @@ msgstr "Darbuotojo atlyginimo darbo sąskaita"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__wage
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_history__wage
 msgid "Employee's monthly gross wage."
 msgstr "Darbuotojo mėnesinis atlyginimas į rankas"
 
 #. module: hr_contract
+#: model:ir.actions.act_window,name:hr_contract.hr_contract_history_view_list_action
+msgid "Employees"
+msgstr "Darbuotojai"
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__date_end
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__date_end
 msgid "End Date"
 msgstr "Pabaigos data"
 
@@ -324,9 +489,17 @@ msgstr "Bandomojo laikotarpio pabaiga"
 
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__state__close
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__state__close
 #: model:mail.message.subtype,name:hr_contract.mt_contract_close
 msgid "Expired"
 msgstr "Negalioja"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__first_contract_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__first_contract_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_public__first_contract_date
+msgid "First Contract Date"
+msgstr "Pirmosios sutarties data"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_follower_ids
@@ -334,14 +507,19 @@ msgid "Followers"
 msgstr "Sekėjai"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Sekėjai (kanalai)"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Sekėjai (partneriai)"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesome piktograma, pvz., fa-tasks"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Future Activities"
+msgstr "Būsimos veiklos"
 
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__kanban_state__done
@@ -354,6 +532,7 @@ msgid "Grey"
 msgstr "Pilka"
 
 #. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Group By"
 msgstr "Grupuoti pagal"
@@ -367,11 +546,25 @@ msgstr "Darbo sutartis: statuso atnaujinimas"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__hr_responsible_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__hr_responsible_id
 msgid "HR Responsible"
 msgstr "Atsakingas įdarbintojas"
 
 #. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__has_message
+msgid "Has Message"
+msgstr "Turi žinutę"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__date_hired
+msgid "Hire Date"
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__id
 msgid "ID"
 msgstr "ID"
 
@@ -383,7 +576,7 @@ msgstr "Piktograma"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Išimties veiklą žyminti piktograma."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_needaction
@@ -393,9 +586,13 @@ msgstr "Jeigu pažymėta, naujiems pranešimams reikės jūsų dėmesio."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error
-#: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Jei pažymėta, yra žinučių, turinčių pristatymo klaidų."
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__is_under_contract
+msgid "Is Currently Under Contract"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_is_follower
@@ -404,6 +601,8 @@ msgstr "Yra sekėjas"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__job_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__job_id
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Job Position"
 msgstr "Pareigos"
@@ -415,29 +614,35 @@ msgstr "Kanban būsena"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract____last_update
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history____last_update
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type____last_update
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type____last_update
 msgid "Last Modified on"
 msgstr "Paskutinį kartą keista"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__write_uid
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__write_uid
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__write_uid
 msgid "Last Updated by"
 msgstr "Paskutinį kartą atnaujino"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__write_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__write_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__write_date
 msgid "Last Updated on"
 msgstr "Paskutinį kartą atnaujinta"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Late Activities"
+msgstr "Vėluojančios veiklos"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_main_attachment_id
 msgid "Main Attachment"
 msgstr "Pagrindinis prisegtukas"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__medic_exam
-#: model:ir.model.fields,field_description:hr_contract.field_res_users__medic_exam
-msgid "Medical Examination Date"
-msgstr "Medicininio patikrinimo data"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_error
@@ -450,19 +655,30 @@ msgid "Messages"
 msgstr "Žinutės"
 
 #. module: hr_contract
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
-msgid "Monthly Advantages in Cash"
-msgstr "Mėnesiniai priedai grynaisiais"
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
+msgid "Monthly Wage"
+msgstr ""
 
 #. module: hr_contract
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
-msgid "Need Action"
-msgstr "Reikia veiksmo"
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Veiklos paskutinis terminas"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__name
+msgid "Name"
+msgstr "Pavadinimas"
 
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__state__draft
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__state__draft
 msgid "New"
 msgstr "Naujas"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_date_deadline
@@ -480,6 +696,21 @@ msgid "Next Activity Type"
 msgstr "Kito veiksmo tipas"
 
 #. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+msgid "No Contracts"
+msgstr ""
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Not Running"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__under_contract_state__blocked
+msgid "Not Under Contract"
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__notes
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Notes"
@@ -493,7 +724,7 @@ msgstr "Veiksmų skaičius"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Klaidų kiekis"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_needaction_counter
@@ -511,8 +742,18 @@ msgid "Number of unread messages"
 msgstr "Neperskaitytų žinučių skaičius"
 
 #. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
+msgid "Open Contract"
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__hr_responsible_id
 msgid "Person responsible for validating the employee's contracts."
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_hr_employee_public
+msgid "Public Employee"
 msgstr ""
 
 #. module: hr_contract
@@ -521,9 +762,25 @@ msgid "Red"
 msgstr "Raudona"
 
 #. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_list
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+msgid "Reference Working Time"
+msgstr ""
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_employee_public_view_form
+msgid "Related User"
+msgstr "Susietas vartotojas"
+
+#. module: hr_contract
 #: model:ir.model,name:hr_contract.model_resource_calendar
 msgid "Resource Working Time"
 msgstr "Ištekliaus darbo laikas"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_resource_resource
+msgid "Resources"
+msgstr "Ištekliai"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_user_id
@@ -532,13 +789,14 @@ msgstr "Atsakingas vartotojas"
 
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__state__open
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__state__open
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Running"
 msgstr "Veikiantis"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_sms_error
-msgid "SMS Delivery error"
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+msgid "Running Contracts"
 msgstr ""
 
 #. module: hr_contract
@@ -547,12 +805,42 @@ msgid "Salary Information"
 msgstr "Atlyginimo informacija"
 
 #. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__structure_type_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__structure_type_id
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Salary Structure Type"
+msgstr ""
+
+#. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Search Contract"
 msgstr "Ieškoti sutarties"
 
 #. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+msgid "Search Reference Contracts"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_departure_wizard__set_date_end
+msgid "Set Contract End Date"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_departure_wizard__set_date_end
+msgid "Set the end date on the current contract."
+msgstr ""
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Show all records which have a next action date before today"
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__date_start
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__date_start
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Start Date"
 msgstr "Pradžios data"
 
@@ -563,12 +851,16 @@ msgstr "Sutarties pradžios data"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__state
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__state
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_employee_public_view_form
 msgid "Status"
 msgstr "Būsena"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_state
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_history__activity_state
 msgid ""
 "Status based on activities\n"
 "Overdue: Due date is already passed\n"
@@ -586,13 +878,39 @@ msgid "Status of the contract"
 msgstr "Sutarties būsena"
 
 #. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__country_code
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_history__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"ISO šalies kodas dviem simboliais. \n"
+"Galite naudoti šį lauką greitai paieškai."
+
+#. module: hr_contract
+#: code:addons/hr_contract/models/hr_contract.py:0
+#, python-format
+msgid "The contract of %s is about to expire."
+msgstr ""
+
+#. module: hr_contract
 #: model:mail.message.subtype,name:hr_contract.mt_contract_pending
 msgid "To Renew"
 msgstr "Atnaujinti"
 
 #. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Today Activities"
+msgstr "Šiandienos veiklos"
+
+#. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_exception_decoration
 msgid "Type of the exception activity on record."
+msgstr "Įrašytos išimties veiklos tipas."
+
+#. module: hr_contract
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__under_contract_state__done
+msgid "Under Contract"
 msgstr ""
 
 #. module: hr_contract
@@ -622,18 +940,9 @@ msgstr "Vizos Nr"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__wage
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__wage
 msgid "Wage"
 msgstr "Atlyginimas"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__website_message_ids
-msgid "Website Messages"
-msgstr "Interneto svetainės žinutės"
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract__website_message_ids
-msgid "Website communication history"
-msgstr "Svetainės komunikacijos istorija"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__permit_no
@@ -642,5 +951,7 @@ msgstr "Leidimo dirbti nr."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__resource_calendar_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__resource_calendar_id
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Working Schedule"
 msgstr "Darbo grafikas"

@@ -1,0 +1,160 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* google_gmail
+# 
+# Translators:
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2022
+# Silvija Butko <silvija.butko@gmail.com>, 2022
+# Arunas V. <arunas@devoro.com>, 2022
+# Linas Versada <linaskrisiukenas@gmail.com>, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~15.2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"PO-Revision-Date: 2022-02-14 08:09+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2022\n"
+"Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: lt\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
+
+#. module: google_gmail
+#: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
+msgid ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                        Connect your Gmail account"
+msgstr ""
+
+#. module: google_gmail
+#: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
+msgid ""
+"<i class=\"fa fa-cog\"/>\n"
+"                        Edit Settings"
+msgstr ""
+"<i class=\"fa fa-cog\"/>\n"
+"                        Keisti nustatymus"
+
+#. module: google_gmail
+#: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
+msgid ""
+"<span attrs=\"{'invisible': ['|', ('smtp_authentication', '!=', 'gmail'), ('google_gmail_refresh_token', '=', False)]}\" class=\"badge badge-success\">\n"
+"                        Gmail Token Valid\n"
+"                    </span>"
+msgstr ""
+
+#. module: google_gmail
+#: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__google_gmail_access_token
+#: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__google_gmail_access_token
+msgid "Access Token"
+msgstr "Prieigos raktas"
+
+#. module: google_gmail
+#: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__google_gmail_access_token_expiration
+#: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__google_gmail_access_token_expiration
+msgid "Access Token Expiration Timestamp"
+msgstr ""
+
+#. module: google_gmail
+#: code:addons/google_gmail/controllers/main.py:0
+#: code:addons/google_gmail/controllers/main.py:0
+#, python-format
+msgid "An error occur during the authentication process: %s."
+msgstr ""
+
+#. module: google_gmail
+#: code:addons/google_gmail/models/google_gmail_mixin.py:0
+#, python-format
+msgid "An error occurred when fetching the access token."
+msgstr ""
+
+#. module: google_gmail
+#: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__smtp_authentication
+msgid "Authenticate with"
+msgstr ""
+
+#. module: google_gmail
+#: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__google_gmail_authorization_code
+#: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__google_gmail_authorization_code
+msgid "Authorization Code"
+msgstr "Patvirtinimo kodas"
+
+#. module: google_gmail
+#: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
+msgid "Client ID"
+msgstr "Kliento ID"
+
+#. module: google_gmail
+#: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
+msgid "Client Secret"
+msgstr "Kliento slaptas kodas"
+
+#. module: google_gmail
+#: model:ir.model,name:google_gmail.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigūracijos nustatymai"
+
+#. module: google_gmail
+#: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__google_gmail_client_identifier
+msgid "Gmail Client Id"
+msgstr ""
+
+#. module: google_gmail
+#: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__google_gmail_client_secret
+msgid "Gmail Client Secret"
+msgstr ""
+
+#. module: google_gmail
+#: model:ir.model.fields.selection,name:google_gmail.selection__ir_mail_server__smtp_authentication__gmail
+msgid "Gmail OAuth Authentication"
+msgstr ""
+
+#. module: google_gmail
+#: model:ir.model,name:google_gmail.model_google_gmail_mixin
+msgid "Google Gmail Mixin"
+msgstr ""
+
+#. module: google_gmail
+#: model:ir.model,name:google_gmail.model_ir_mail_server
+msgid "Mail Server"
+msgstr "Pašto serveris"
+
+#. module: google_gmail
+#: code:addons/google_gmail/models/google_gmail_mixin.py:0
+#, python-format
+msgid "Only the administrator can link a Gmail mail server."
+msgstr ""
+
+#. module: google_gmail
+#: code:addons/google_gmail/models/google_gmail_mixin.py:0
+#, python-format
+msgid "Please configure your Gmail credentials."
+msgstr ""
+
+#. module: google_gmail
+#: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__google_gmail_refresh_token
+#: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__google_gmail_refresh_token
+msgid "Refresh Token"
+msgstr "Atnaujinti prieigos raktą"
+
+#. module: google_gmail
+#: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
+msgid ""
+"Setup your Gmail API credentials in the general settings to link a Gmail "
+"account."
+msgstr ""
+
+#. module: google_gmail
+#: model:ir.model.fields,help:google_gmail.field_google_gmail_mixin__google_gmail_uri
+#: model:ir.model.fields,help:google_gmail.field_ir_mail_server__google_gmail_uri
+msgid "The URL to generate the authorization code from Google"
+msgstr "URL, naudojamas gauti patvirtinimo kodą iš \"Google\""
+
+#. module: google_gmail
+#: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__google_gmail_uri
+#: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__google_gmail_uri
+msgid "URI"
+msgstr "URI"

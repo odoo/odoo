@@ -1,20 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * rating
+# 	* rating
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Matus Krnac <matus.krnac@gmail.com>, 2018
-# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
-# gebri <gebri@inmail.sk>, 2018
+# SAKodoo <sak@odoo.com>, 2022
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2022
+# Jan Prokop, 2022
+# Matus Krnac <matus.krnac@gmail.com>, 2022
+# Damian Brencic <brencicdamian12313@gmail.com>, 2022
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: gebri <gebri@inmail.sk>, 2018\n"
+"POT-Creation-Date: 2022-04-19 13:58+0000\n"
+"PO-Revision-Date: 2016-08-05 13:09+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,15 +26,23 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
-msgid ""
-"<br/>\n"
-"                            on our services on \""
-msgstr ""
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_count
+msgid "# Ratings"
+msgstr "# Hodnotenia"
 
 #. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
-msgid "<span class=\"o_stat_text\">Resource</span>"
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
+msgid "<i class=\"fa fa-clock-o mr-2\" aria-label=\"Create date\"/>"
+msgstr "<i class=\"fa fa-clock-o mr-2\" aria-label=\"Create date\"/>"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
+msgid "<i class=\"fa fa-folder mr-2\" aria-label=\"Open folder\"/>"
+msgstr "<i class=\"fa fa-folder mr-2\" aria-label=\"Open folder\"/>"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
+msgid "A star"
 msgstr ""
 
 #. module: rating
@@ -53,6 +64,17 @@ msgid "Author of the rating"
 msgstr "Autor hodnotenia"
 
 #. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_avg
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_avg
+msgid "Average Rating"
+msgstr ""
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_avg_percentage
+msgid "Average Rating (%)"
+msgstr ""
+
+#. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__feedback
 msgid "Comment"
 msgstr "Komentár"
@@ -61,11 +83,6 @@ msgstr "Komentár"
 #: model:ir.model.fields,field_description:rating.field_rating_rating__create_uid
 msgid "Created by"
 msgstr "Vytvoril"
-
-#. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating__create_date
-msgid "Created on"
-msgstr "Vytvorené"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__partner_id
@@ -79,13 +96,22 @@ msgid "Date"
 msgstr "Dátum"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_mixin__display_name
 #: model:ir.model.fields,field_description:rating.field_rating_rating__display_name
 msgid "Display Name"
-msgstr "Zobrazovaný Názov"
+msgstr "Zobrazovaný názov"
+
+#. module: rating
+#: code:addons/rating/controllers/main.py:0
+#: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__ko
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__ko
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+#, python-format
+msgid "Dissatisfied"
+msgstr ""
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_id
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
 msgid "Document"
 msgstr "Dokument"
 
@@ -102,16 +128,21 @@ msgstr "Emailové vlákno"
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__consumed
 msgid "Enabled if the rating has been filled."
+msgstr "Povolené, ak je hodnotenie vyplnené."
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
+msgid "Feel free to write a feedback on your experience:"
 msgstr ""
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__consumed
 msgid "Filled Rating"
-msgstr ""
+msgstr "Vyplnené hodnotenie"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
-msgid "Go to our website"
+msgid "Go back to the Homepage"
 msgstr ""
 
 #. module: rating
@@ -120,13 +151,17 @@ msgid "Group By"
 msgstr "Zoskupiť podľa"
 
 #. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-#: selection:rating.rating,rating_text:0
-msgid "Highly dissatisfied"
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
+msgid "Half a star"
 msgstr ""
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_mixin__id
+#: model:ir.model.fields,help:rating.field_rating_rating__is_internal
+msgid ""
+"Hide to public / portal users, independently from subtype configuration."
+msgstr ""
+
+#. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__id
 msgid "ID"
 msgstr "ID"
@@ -142,10 +177,31 @@ msgid "Image"
 msgstr "Obrázok"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_mixin____last_update
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rating_image_url
+msgid "Image URL"
+msgstr "URL obrázku"
+
+#. module: rating
+#: code:addons/rating/controllers/main.py:0
+#: code:addons/rating/controllers/main.py:0
+#, python-format
+msgid "Incorrect rating: should be 1, 3 or 5 (received %d)"
+msgstr ""
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Last 30 days"
+msgstr "Posledných 30 dní"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Last 7 days"
+msgstr "Posledných 7 dní"
+
+#. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating____last_update
 msgid "Last Modified on"
-msgstr "Posledná modifikácia"
+msgstr "Posledná úprava"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__write_uid
@@ -158,12 +214,8 @@ msgid "Last Updated on"
 msgstr "Naposledy upravované"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating__message_id
-msgid "Linked message"
-msgstr "Pripojená správa"
-
-#. module: rating
 #: model:ir.model,name:rating.model_mail_message
+#: model:ir.model.fields,field_description:rating.field_rating_rating__message_id
 msgid "Message"
 msgstr "Správa"
 
@@ -175,90 +227,113 @@ msgstr "Model sledovaného zdroja"
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "My Ratings"
-msgstr ""
+msgstr "Moje hodnotenia"
 
 #. module: rating
-#: selection:rating.rating,rating_text:0
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rated_partner_name
+msgid "Name"
+msgstr "Meno"
+
+#. module: rating
+#: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__none
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__none
 msgid "No Rating yet"
-msgstr ""
+msgstr "Zatiaľ žiadne hodnotenie"
 
 #. module: rating
-#: model_terms:ir.actions.act_window,help:rating.action_view_rating
+#: model_terms:ir.actions.act_window,help:rating.rating_rating_action
 msgid "No rating yet"
-msgstr ""
+msgstr "Zatiaľ žiadne hodnotenie"
 
 #. module: rating
+#: code:addons/rating/controllers/main.py:0
+#: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__ok
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__ok
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-#: selection:rating.rating,rating_text:0
-msgid "Not satisfied"
-msgstr ""
+#, python-format
+msgid "Okay"
+msgstr "OK"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__rated_partner_id
 msgid "Owner of the rated resource"
-msgstr ""
+msgstr "Vlastník hodnoteného zdroja"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_id
 msgid "Parent Document"
-msgstr ""
+msgstr "Nadradený dokument"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_model
 msgid "Parent Document Model"
-msgstr ""
+msgstr "Nadradený model dokumentu"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_name
 msgid "Parent Document Name"
+msgstr "Názov nadradeného dokumentu"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
+msgid "Parent Holder"
+msgstr ""
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__parent_ref
+msgid "Parent Ref"
 msgstr ""
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_model_id
 msgid "Parent Related Document Model"
-msgstr ""
+msgstr "Súvisiaci model nadradeného dokumentu"
 
 #. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-msgid "Rated User"
+#: model:ir.model.fields,help:rating.field_rating_parent_mixin__rating_percentage_satisfaction
+msgid "Percentage of happy ratings"
+msgstr "Percento spokojných hodnotení"
+
+#. module: rating
+#: code:addons/rating/models/mail_thread.py:0
+#, python-format
+msgid "Posting a rating should be done using message post API."
 msgstr ""
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rated_partner_id
-msgid "Rated person"
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Rated Operator"
 msgstr ""
 
 #. module: rating
-#: model:ir.actions.act_window,name:rating.action_view_rating
 #: model:ir.model,name:rating.model_rating_rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_ids
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rating_text
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form_text
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_tree
 msgid "Rating"
 msgstr "Hodnotenie"
 
 #. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_graph
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_pivot
-msgid "Rating Average"
-msgstr "Priemerné hodnotenie"
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_avg_text
+msgid "Rating Avg Text"
+msgstr ""
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr ""
+msgstr "Hodnotenie posledná spätná väzba"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_image
 msgid "Rating Last Image"
-msgstr ""
+msgstr "Hodnotenie posledný obrázok"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_value
 msgid "Rating Last Value"
-msgstr ""
+msgstr "Hodnotenie posledná hodnota"
 
 #. module: rating
 #: model:ir.model,name:rating.model_rating_mixin
@@ -266,34 +341,59 @@ msgid "Rating Mixin"
 msgstr "Hodnotenie mixin"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating__rating
-msgid "Rating Number"
+#: model:ir.model,name:rating.model_rating_parent_mixin
+msgid "Rating Parent Mixin"
+msgstr "Hodnotenie Mixin"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_percentage_satisfaction
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_percentage_satisfaction
+msgid "Rating Satisfaction"
+msgstr "Spokojnosť s hodnotením"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_text
+msgid "Rating Text"
 msgstr ""
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_mail_compose_message__rating_value
 #: model:ir.model.fields,field_description:rating.field_mail_mail__rating_value
 #: model:ir.model.fields,field_description:rating.field_mail_message__rating_value
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rating
 msgid "Rating Value"
-msgstr ""
+msgstr "Hodnota hodnotenia"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_graph
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_pivot
+msgid "Rating Value (/5)"
+msgstr "Hodnota hodnotenia (/5)"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_count
 msgid "Rating count"
-msgstr ""
+msgstr "Počet hodnotení"
 
 #. module: rating
-#: sql_constraint:rating.rating:0
-msgid "Rating should be between 0 to 10"
+#: model:ir.model.constraint,message:rating.constraint_rating_rating_rating_range
+msgid "Rating should be between 0 and 5"
 msgstr ""
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__rating
-msgid "Rating value: 0=Unhappy, 10=Happy"
+msgid "Rating value: 0=Unhappy, 5=Happy"
 msgstr ""
 
 #. module: rating
+#: model:ir.actions.act_window,name:rating.rating_rating_action
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_ids
+#: model:ir.ui.menu,name:rating.rating_rating_menu_technical
+#: model_terms:ir.ui.view,arch_db:rating.mail_message_view_form
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_graph
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_pivot
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_tree
 msgid "Ratings"
 msgstr "Hodnotenia"
 
@@ -309,11 +409,10 @@ msgid "Related Document Model"
 msgstr "Súvisiaci model dokumentu"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_mail_compose_message__rating_ids
 #: model:ir.model.fields,field_description:rating.field_mail_mail__rating_ids
 #: model:ir.model.fields,field_description:rating.field_mail_message__rating_ids
 msgid "Related ratings"
-msgstr ""
+msgstr "Súvisiace hodnotenia"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -321,15 +420,23 @@ msgid "Resource"
 msgstr "Prostriedok"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating__res_name
-msgid "Resource name"
+#: model:ir.model.fields,field_description:rating.field_rating_rating__resource_ref
+msgid "Resource Ref"
 msgstr ""
 
 #. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__res_name
+msgid "Resource name"
+msgstr "Názov zdroja"
+
+#. module: rating
+#: code:addons/rating/controllers/main.py:0
+#: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__top
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__top
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-#: selection:rating.rating,rating_text:0
+#, python-format
 msgid "Satisfied"
-msgstr ""
+msgstr "Spokojný"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__access_token
@@ -339,79 +446,54 @@ msgstr "Bezpečnostný token"
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Send Feedback"
-msgstr ""
+msgstr "Zaslať spätnú väzbu"
 
 #. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_tree
+#: model:ir.model.fields,field_description:rating.field_rating_rating__create_date
 msgid "Submitted on"
-msgstr ""
+msgstr "Odoslané dňa"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
-msgid "Thanks! We appreciate your feedback."
+msgid "Thank you for rating our services!"
+msgstr ""
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
+msgid "Thank you, we appreciate your feedback!"
 msgstr ""
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__res_name
 msgid "The name of the rated resource."
-msgstr ""
+msgstr "Názov hodnoteného zdroja."
 
 #. module: rating
-#: model_terms:ir.actions.act_window,help:rating.action_view_rating
+#: model_terms:ir.actions.act_window,help:rating.rating_rating_action
 msgid "There is no rating for this object at the moment."
 msgstr "Momentálne neexistuje žiadne hodnotenie pre tento objekt."
 
 #. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
-msgid "We appreciate your feedback!"
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Today"
+msgstr "Dnes"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__is_internal
+msgid "Visible Internally Only"
 msgstr ""
 
 #. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
-msgid "Would be great if you can provide more information:"
-msgstr ""
-
-#. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
-msgid "Your rating has been submitted."
-msgstr ""
-
-#. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
 msgid "by"
-msgstr " by"
+msgstr "pomocou"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
 msgid "for"
-msgstr ""
-
-#. module: rating
-#: code:addons/rating/controllers/main.py:21
-#, python-format
-msgid "highly dissatisfied"
-msgstr ""
-
-#. module: rating
-#: code:addons/rating/controllers/main.py:20
-#, python-format
-msgid "not satisfied"
-msgstr ""
+msgstr "pre"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
 msgid "on"
 msgstr "na"
-
-#. module: rating
-#: code:addons/rating/controllers/main.py:22
-#, python-format
-msgid "satisfied"
-msgstr ""
-
-#. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
-msgid "you are"
-msgstr ""

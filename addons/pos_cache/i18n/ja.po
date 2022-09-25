@@ -1,25 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * pos_cache
+# 	* pos_cache
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2018
-# Manami Hashi <manami@roomsfor.hk>, 2018
-# NOKA Shigekazu <shigekazu.noka@gmail.com>, 2018
+# Martin Trigaux, 2022
+# Noma Yuki, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: NOKA Shigekazu <shigekazu.noka@gmail.com>, 2018\n"
+"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"PO-Revision-Date: 2016-08-05 13:07+0000\n"
+"Last-Translator: Noma Yuki, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: pos_cache
+#. openerp-web
+#: code:addons/pos_cache/static/src/js/Chrome.js:0
+#, python-format
+msgid "All products are loaded."
+msgstr ""
 
 #. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache__cache
@@ -35,7 +41,7 @@ msgstr ""
 #. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache__config_id
 msgid "Config"
-msgstr ""
+msgstr "構成"
 
 #. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache__create_uid
@@ -50,7 +56,7 @@ msgstr "作成日"
 #. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache__display_name
 msgid "Display Name"
-msgstr "表示名"
+msgstr "名前を表示"
 
 #. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache__id
@@ -78,11 +84,9 @@ msgid "Last Updated on"
 msgstr "最終更新日"
 
 #. module: pos_cache
-#. openerp-web
-#: code:addons/pos_cache/static/src/js/pos_cache.js:39
-#, python-format
-msgid "Loading"
-msgstr "ロード中"
+#: model:ir.model.fields,field_description:pos_cache.field_pos_config__limit_products_per_request
+msgid "Limit Products Per Request"
+msgstr ""
 
 #. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_config__oldest_cache_time
@@ -97,9 +101,19 @@ msgid "PoS: refresh cache"
 msgstr ""
 
 #. module: pos_cache
+#: model:ir.model,name:pos_cache.model_pos_cache
+msgid "Point of Sale Cache"
+msgstr ""
+
+#. module: pos_cache
 #: model:ir.model,name:pos_cache.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr ""
+msgstr "POS設定"
+
+#. module: pos_cache
+#: model:ir.model,name:pos_cache.model_pos_session
+msgid "Point of Sale Session"
+msgstr "POSセッション"
 
 #. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache__product_domain
@@ -109,9 +123,4 @@ msgstr ""
 #. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache__product_fields
 msgid "Product Fields"
-msgstr ""
-
-#. module: pos_cache
-#: model:ir.model,name:pos_cache.model_pos_cache
-msgid "pos.cache"
 msgstr ""

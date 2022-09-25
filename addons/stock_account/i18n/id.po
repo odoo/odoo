@@ -1,20 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * stock_account
+# 	* stock_account
 # 
 # Translators:
-# Bonny Useful <bonny.useful@gmail.com>, 2017
-# William Surya Permana <zarambie_game@yahoo.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
-# Hendro Yulianto <hyulianto@gmail.com>, 2017
+# Bonny Useful <bonny.useful@gmail.com>, 2022
+# pnyet <david@zeromail.us>, 2022
+# Ikhsanul Wirsa <iwirsa02@outlook.co.id>, 2022
+# Martin Trigaux, 2022
+# oon arfiandwi <oon.arfiandwi@gmail.com>, 2022
+# Gusti Rini <gustirini@gmail.com>, 2022
+# William Surya Permana <zarambie_game@yahoo.com>, 2022
+# Ryanto The <ry.the77@gmail.com>, 2022
+# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2022
+# whenwesober, 2022
+# Abdul Munif Hanafi <amunifhanafi@gmail.com>, 2022
+# Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-10 11:34+0000\n"
-"PO-Revision-Date: 2017-10-10 11:34+0000\n"
-"Last-Translator: Hendro Yulianto <hyulianto@gmail.com>, 2017\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2016-08-05 13:10+0000\n"
+"Last-Translator: Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2022\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,12 +31,61 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_account_move
-msgid "Account Entry"
-msgstr "Pencatatan Akun"
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+#, python-format
+msgid " Product cost updated from %(previous)s to %(new_cost)s."
+msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_move_account_move_ids
+#: code:addons/stock_account/models/product.py:0
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid "%(user)s changed cost from %(previous)s to %(new_price)s - %(product)s"
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+#, python-format
+msgid ""
+"%(user)s changed stock valuation from  %(previous)s to %(new_value)s - "
+"%(product)s"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
+msgid ""
+")\n"
+"                            <small class=\"mx-2 font-italic\">Use a negative added value to record a decrease in the product value</small>"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
+msgid "<b>Set other input/output accounts on specific </b>"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
+msgid "<span>Product</span>"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
+msgid "<span>Quantity</span>"
+msgstr "<span>Jumlah</span>"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
+msgid "<span>SN/LN</span>"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_account_chart_template
+msgid "Account Chart Template"
+msgstr "Template Bagan Akun"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_move__account_move_ids
 msgid "Account Move"
 msgstr ""
 
@@ -38,9 +95,16 @@ msgid "Account Stock Properties"
 msgstr "Properti Stock akun"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_quant__accounting_date
+#: model:ir.model.fields,field_description:stock_account.field_stock_request_count__accounting_date
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__date
+msgid "Accounting Date"
+msgstr "Tanggal Akuntansi"
+
+#. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_move_form_inherit
 msgid "Accounting Entries"
-msgstr "Akuntansi entri"
+msgstr "Entri Jurnal Akuntansi"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
@@ -48,31 +112,56 @@ msgid "Accounting Information"
 msgstr "Informasi Akuntansi"
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_res_config_settings_module_stock_landed_costs
-#: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
-msgid ""
-"Affect landed costs on receipt operations and split them among products to "
-"update their cost price."
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
+msgid "Add Manual Valuation"
 msgstr ""
 
 #. module: stock_account
-#: selection:product.category,property_valuation:0
+#: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
+msgid ""
+"Add additional cost (transport, customs, ...) in the value of the product."
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
+msgid "Added Value"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__added_value
+msgid "Added value"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
+msgid ""
+"Affect landed costs on reception operations and split them among products to"
+" update their cost price."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_move__analytic_account_line_id
+msgid "Analytic Account Line"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__real_time
 msgid "Automated"
 msgstr ""
 
 #. module: stock_account
-#: selection:product.category,property_cost_method:0
-#: selection:product.template,property_cost_method:0
+#: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__average
 msgid "Average Cost (AVCO)"
 msgstr ""
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Cancel"
 msgstr "Batal"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:409
+#: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
 "Cannot find a stock input account for the product %s. You must define one on"
@@ -80,7 +169,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:411
+#: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
 "Cannot find a stock output account for the product %s. You must define one "
@@ -89,31 +178,26 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
-msgid "Change Price"
-msgstr "Perubahan Harga"
-
-#. module: stock_account
-#: model:ir.actions.act_window,name:stock_account.action_view_change_standard_price
-#: model:ir.model,name:stock_account.model_stock_change_standard_price
-#: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
-msgid "Change Standard Price"
-msgstr "Rubah Harga Standar"
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_stock_inventory_accounting_date
+#: code:addons/stock_account/models/product.py:0
+#, python-format
 msgid ""
-"Choose the accounting date at which you want to value the stock moves "
-"created by the inventory instead of the default one (the inventory end date)"
+"Changing your cost method is an important change that will impact your "
+"inventory valuation. Are you sure you want to make that change?"
 msgstr ""
 
 #. module: stock_account
-#: model_terms:ir.actions.act_window,help:stock_account.stock_move_valuation_action
-msgid "Click to create a stock movement."
-msgstr "Klik untuk membuat sebuah gerakan yang stok."
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__company_id
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__company_id
+msgid "Company"
+msgstr "Perusahaan"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:480
+#: model:ir.model,name:stock_account.model_res_config_settings
+msgid "Config Settings"
+msgstr "Pengaturan Konfigurasi"
+
+#. module: stock_account
+#: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
 "Configuration error. Please configure the price difference account on the "
@@ -121,154 +205,230 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
-msgid "Cost"
-msgstr "Biaya"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_cost_method
-#: model:ir.model.fields,field_description:stock_account.field_product_template_cost_method
-msgid "Cost Method"
-msgstr ""
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
-msgid "Costing"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category_property_cost_method
-#: model:ir.model.fields,field_description:stock_account.field_product_product_property_cost_method
-#: model:ir.model.fields,field_description:stock_account.field_product_template_property_cost_method
+#: model:ir.model.fields,field_description:stock_account.field_product_category__property_cost_method
+#: model:ir.model.fields,field_description:stock_account.field_product_product__cost_method
+#: model:ir.model.fields,field_description:stock_account.field_product_template__cost_method
 msgid "Costing Method"
 msgstr "Metode penetapan biaya"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id
-msgid "Counter-Part Account"
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid "Costing method change for product category %s: from %s to %s."
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id_required
-msgid "Counter-Part Account Required"
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_id
+msgid "Counterpart Account"
+msgstr "Akun Kontra"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_input_categ_id
+msgid ""
+"Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
+"                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_uid
+#: model:ir.model.fields,field_description:stock_account.field_stock_picking__country_code
+msgid "Country Code"
+msgstr "Kode Negara"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__create_uid
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__create_uid
 msgid "Created by"
 msgstr "Dibuat oleh"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_date
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__create_date
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__create_date
 msgid "Created on"
 msgstr "Dibuat pada"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_display_name
+#: model:ir.model.fields,field_description:stock_account.field_stock_quant__currency_id
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__currency_id
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__currency_id
+msgid "Currency"
+msgstr "Mata Uang"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__current_quantity_svl
+msgid "Current Quantity"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__current_value_svl
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
+msgid "Current Value"
+msgstr "Nilai sekarang"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
+msgid "Date"
+msgstr "Tanggal"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_quant__accounting_date
+msgid ""
+"Date at which the accounting entries will be created in case of automated "
+"inventory valuation. If empty, the inventory date will be used."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__uom_id
+msgid "Default unit of measure used for all stock operations."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__description
+msgid "Description"
+msgstr "Deskripsi"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_res_config_settings__group_lot_on_invoice
+msgid "Display Lots & Serial Numbers on Invoices"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__display_name
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__display_name
 msgid "Display Name"
 msgstr "Nama Tampilan"
 
 #. module: stock_account
-#: selection:product.category,property_cost_method:0
-#: selection:product.template,property_cost_method:0
-msgid "First In First Out (FIFO)"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_inventory_accounting_date
-msgid "Force Accounting Date"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_id
-msgid "ID"
-msgstr "ID"
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_stock_change_standard_price_new_price
-msgid ""
-"If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
-"If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
-msgstr ""
-"Jika harga biaya meningkat, account stok variasi akan didebet dan  account stok output akan dikreditkan dengan nilai = (perbedaan kuantitas jumlah * tersedia).\n"
-"Jika harga biaya menurun, account stok variasi akan creadited dan  account  stok input akan didebet."
-
-#. module: stock_account
-#: model_terms:ir.actions.act_window,help:stock_account.product_valuation_action
-msgid "If there are products, you will see its name and valuation."
+#: model:res.groups,name:stock_account.group_lot_on_invoice
+msgid "Display Serial & Lot Number on Invoices"
 msgstr ""
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
-msgid "Include landed costs in product cost"
+msgid "Documentation"
+msgstr "Dokumentasi"
+
+#. module: stock_account
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid ""
+"Due to a change of product category (from %s to %s), the costing method"
+"                                has changed for product template %s: from %s"
+" to %s."
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_stock_inventory
-msgid "Inventory"
-msgstr "Persediaan"
+#: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
+msgid "First In First Out (FIFO)"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
+msgid "Group by..."
+msgstr "Kelompokkan menurut...."
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__id
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__id
+msgid "ID"
+msgstr "ID"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
 msgid "Inventory Locations"
-msgstr "Lokasi persediaan"
+msgstr "Lokasi Stok Persediaan"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category_property_valuation
-#: model:ir.model.fields,field_description:stock_account.field_product_product_property_valuation
-#: model:ir.model.fields,field_description:stock_account.field_product_template_property_valuation
+#: code:addons/stock_account/__init__.py:0
+#: code:addons/stock_account/__init__.py:0
+#: code:addons/stock_account/models/account_chart_template.py:0
+#: model:ir.model.fields,field_description:stock_account.field_product_category__property_valuation
+#: model:ir.model.fields,field_description:stock_account.field_product_product__valuation
+#: model:ir.model.fields,field_description:stock_account.field_product_template__valuation
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__property_valuation
 #: model:ir.ui.menu,name:stock_account.menu_valuation
-#: model_terms:ir.ui.view,arch_db:stock_account.product_template_valuation_form_view
-#: model_terms:ir.ui.view,arch_db:stock_account.product_valuation_form_view
-#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
+#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form_stock
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
+#, python-format
 msgid "Inventory Valuation"
-msgstr "Persediaan Penilaian"
+msgstr "Penilaian Stok Persediaan"
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_account_invoice
-msgid "Invoice"
-msgstr "Invoice"
+#: model:ir.model.fields,field_description:stock_account.field_account_move_line__is_anglo_saxon_line
+msgid "Is Anglo Saxon Line"
+msgstr ""
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_account_invoice_line
-msgid "Invoice Line"
-msgstr "Baris Invoice"
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_journal_id
+msgid "Journal"
+msgstr "Jurnal"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_res_config_settings_module_stock_landed_costs
+#: model:ir.model,name:stock_account.model_account_move
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__account_move_id
+msgid "Journal Entry"
+msgstr "Entri Jurnal"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_account_move_line
+msgid "Journal Item"
+msgstr "Item Jurnal"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_res_config_settings__module_stock_landed_costs
 msgid "Landed Costs"
-msgstr "Biaya mendarat"
+msgstr "Landed Costs"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price___last_update
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer____last_update
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation____last_update
 msgid "Last Modified on"
 msgstr "Terakhir diubah pada"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_write_uid
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__write_uid
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__write_uid
 msgid "Last Updated by"
 msgstr "Terakhir diperbarui oleh"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_write_date
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__write_date
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__write_date
 msgid "Last Updated on"
 msgstr "Terakhir diperbarui pada"
 
 #. module: stock_account
-#: selection:product.category,property_valuation:0
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_id
+msgid "Linked To"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
+msgid "Lots &amp; Serial numbers will appear on the invoice"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__manual_periodic
 msgid "Manual"
 msgstr "Manual"
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_property_valuation
-#: model:ir.model.fields,help:stock_account.field_product_template_property_valuation
-msgid ""
-"Manual: The accounting entries to value the inventory are not posted automatically.\n"
-"        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company."
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+#, python-format
+msgid "Manual Stock Valuation: %s."
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_category_property_valuation
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+#, python-format
+msgid "Manual Stock Valuation: No Reason Given."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_category__property_valuation
+#: model:ir.model.fields,help:stock_account.field_product_product__valuation
+#: model:ir.model.fields,help:stock_account.field_product_template__valuation
+#: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__property_valuation
 msgid ""
 "Manual: The accounting entries to value the inventory are not posted automatically.\n"
 "        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.\n"
@@ -276,121 +436,138 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_move_tree_valuation
-msgid "Moves"
-msgstr "Berpindah"
-
-#. module: stock_account
-#: code:addons/stock_account/models/product.py:128
-#, python-format
-msgid "No difference between standard price and new price!"
-msgstr "Tidak ada perbedaan antara harga standar dan harga baru!"
-
-#. module: stock_account
-#: model:ir.model,name:stock_account.model_stock_move_line
-msgid "Packing Operation"
-msgstr "kemasaning operasi"
-
-#. module: stock_account
-#: selection:product.template,property_valuation:0
-msgid "Periodic (manual)"
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__new_value
+msgid "New value"
 msgstr ""
 
 #. module: stock_account
-#: selection:product.template,property_valuation:0
-msgid "Perpetual (automated)"
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__new_value_by_qty
+msgid "New value by quantity"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_new_price
-msgid "Price"
-msgstr "Harga"
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_product_product_replenishment
+msgid "On Hand Value"
+msgstr ""
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_procurement_group
-msgid "Procurement Requisition"
-msgstr "Pengadaan Permintaan"
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
+msgid "Other Info"
+msgstr "Info Lainnya"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_product
-#: model_terms:ir.ui.view,arch_db:stock_account.product_valuation_tree
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__product_id
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Product"
 msgstr "Produk"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__categ_id
 msgid "Product Category"
-msgstr "kategori-produk"
+msgstr "Kategori Produk"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/models/product.py:0
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
+#, python-format
+msgid "Product Revaluation"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__product_tmpl_id
 msgid "Product Template"
-msgstr "Templete produk"
+msgstr "Templete Produk"
 
 #. module: stock_account
-#: model:ir.actions.act_window,name:stock_account.product_valuation_action
-msgid "Product Valuation"
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid "Product value manually modified (from %s to %s)"
 msgstr ""
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_move_tree_valuation
-msgid "Qty"
-msgstr "Qty"
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__quantity
+#: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__quantity
+msgid "Quantity"
+msgstr "Kuantitas"
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.product_valuation_tree
-msgid "Quantity on Hand"
+#: model:ir.model.fields,field_description:stock_account.field_product_product__quantity_svl
+msgid "Quantity Svl"
 msgstr ""
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_move_tree_valuation
-msgid "Reference"
-msgstr "Rujukan"
+#: model:ir.model,name:stock_account.model_stock_quant
+msgid "Quants"
+msgstr "Kuant"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_move_remaining_qty
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__reason
+msgid "Reason"
+msgstr "Alasan"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__reason
+msgid "Reason of the revaluation"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__product_id
+msgid "Related product"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_qty
 msgid "Remaining Qty"
 msgstr "Sisa Qty"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_move_remaining_value
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_value
 msgid "Remaining Value"
 msgstr ""
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Kembali memetik"
+msgstr "Pengembalian Pengambilan"
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
-msgid "Set standard cost"
+#: model:ir.model,name:stock_account.model_stock_return_picking_line
+msgid "Return Picking Line"
 msgstr ""
 
 #. module: stock_account
-#: selection:product.category,property_cost_method:0
-#: selection:product.template,property_cost_method:0
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+#, python-format
+msgid "Revaluation of %s"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
+msgid "Revalue"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__categ_id
+msgid "Select category for the current product"
+msgstr "Pilih kategori untuk produk ini"
+
+#. module: stock_account
+#: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__standard
 msgid "Standard Price"
 msgstr "Standar Harga"
 
 #. module: stock_account
-#: code:addons/stock_account/models/product.py:145
-#: code:addons/stock_account/models/product.py:150
-#, python-format
-msgid "Standard Price changed  - %s"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_property_cost_method
-#: model:ir.model.fields,help:stock_account.field_product_template_property_cost_method
-msgid ""
-"Standard Price: The products are valued at their standard cost defined on the product.\n"
-"        Average Cost (AVCO): The products are valued at weighted average cost.\n"
-"        First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first."
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_category_property_cost_method
+#: model:ir.model.fields,help:stock_account.field_product_category__property_cost_method
+#: model:ir.model.fields,help:stock_account.field_product_product__cost_method
+#: model:ir.model.fields,help:stock_account.field_product_template__cost_method
 msgid ""
 "Standard Price: The products are valued at their standard cost defined on the product.\n"
 "        Average Cost (AVCO): The products are valued at weighted average cost.\n"
@@ -399,108 +576,182 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_input_categ_id
-#: model:ir.model.fields,field_description:stock_account.field_product_product_property_stock_account_input
-#: model:ir.model.fields,field_description:stock_account.field_product_template_property_stock_account_input
+#: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_input_categ_id
 msgid "Stock Input Account"
 msgstr "Akun stok Masukan"
 
 #. module: stock_account
-#: code:addons/stock_account/models/account_chart_template.py:15
-#: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_journal
-#, python-format
+#: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_journal
 msgid "Stock Journal"
 msgstr "Jurnal Stok"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
-#: model:ir.model.fields,field_description:stock_account.field_account_move_stock_move_id
+#: model:ir.model.fields,field_description:stock_account.field_account_bank_statement_line__stock_move_id
+#: model:ir.model.fields,field_description:stock_account.field_account_move__stock_move_id
+#: model:ir.model.fields,field_description:stock_account.field_account_payment__stock_move_id
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_move_id
 msgid "Stock Move"
-msgstr "Pergerakan Stock"
+msgstr "Pergerakan Stok"
 
 #. module: stock_account
-#: model:ir.actions.act_window,name:stock_account.stock_move_valuation_action
-msgid "Stock Moves"
-msgstr "Perpindahan Stok"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_output_categ_id
-#: model:ir.model.fields,field_description:stock_account.field_product_product_property_stock_account_output
-#: model:ir.model.fields,field_description:stock_account.field_product_template_property_stock_account_output
+#: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_output_categ_id
 msgid "Stock Output Account"
 msgstr "Akun Stok Kluar"
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.product_valuation_tree
-#: model_terms:ir.ui.view,arch_db:stock_account.view_move_tree_valuation
-#: model_terms:ir.ui.view,arch_db:stock_account.view_template_property_form
+#: model:ir.model,name:stock_account.model_stock_quantity_history
+msgid "Stock Quantity History"
+msgstr "Riwayat Kuantitas Stok"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_report_stock_report_product_product_replenishment
+msgid "Stock Replenishment Report"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_request_count
+msgid "Stock Request an Inventory Count"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.stock_valuation_layer_action
 msgid "Stock Valuation"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_valuation_account_id
+#: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_valuation_account_id
 msgid "Stock Valuation Account"
 msgstr "Akun Valuasi stok"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_location_valuation_in_account_id
+#: model:ir.model.fields,field_description:stock_account.field_stock_location__valuation_in_account_id
 msgid "Stock Valuation Account (Incoming)"
 msgstr "Akun Valuasi stok (masuk)"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_location_valuation_out_account_id
+#: model:ir.model.fields,field_description:stock_account.field_stock_location__valuation_out_account_id
 msgid "Stock Valuation Account (Outgoing)"
 msgstr "Akun Valuasi stok (Outgoing)"
 
 #. module: stock_account
-#: model:ir.actions.server,name:stock_account.action_stock_account_valuation_report
-msgid "Stock Valuation Report"
+#: model:ir.model,name:stock_account.model_stock_valuation_layer
+#: model:ir.model.fields,field_description:stock_account.field_account_bank_statement_line__stock_valuation_layer_ids
+#: model:ir.model.fields,field_description:stock_account.field_account_move__stock_valuation_layer_ids
+#: model:ir.model.fields,field_description:stock_account.field_account_payment__stock_valuation_layer_ids
+#: model:ir.model.fields,field_description:stock_account.field_product_product__stock_valuation_layer_ids
+#: model:ir.model.fields,field_description:stock_account.field_stock_move__stock_valuation_layer_ids
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_ids
+msgid "Stock Valuation Layer"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_account_chart_template
-msgid "Templates for Account Chart"
-msgstr "Cetakan Bagan Akun"
+#: model:ir.model.fields,help:stock_account.field_account_move_line__is_anglo_saxon_line
+msgid "Technical field used to retrieve the anglo-saxon lines."
+msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:435
+#: model:ir.model.fields,help:stock_account.field_stock_picking__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"Kode ISO negara dalam dua karakter.\n"
+"Anda dapat menggunakan kolom ini untuk pencarian cepat."
+
+#. module: stock_account
+#: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
-"The cost of %s is currently equal to 0. Change the cost or the configuration"
-" of your product to avoid an incorrect valuation."
+"The Stock Input and/or Output accounts cannot be the same as the Stock "
+"Valuation account."
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_move_to_refund
-#: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line_to_refund
-msgid "To Refund (update SO/PO)"
+#: code:addons/stock_account/models/product.py:0
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid ""
+"The action leads to the creation of a journal entry, for which you don't "
+"have the access rights."
 msgstr ""
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.product_valuation_tree
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+#, python-format
+msgid "The added value doesn't have any impact on the stock valuation"
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/models/stock_move.py:0
+#, python-format
+msgid ""
+"The move lines are not in a consistent state: some are entering and other "
+"are leaving the company."
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/models/stock_move.py:0
+#, python-format
+msgid ""
+"The move lines are not in a consistent states: they are doing an "
+"intercompany in a single step while they should go through the intercompany "
+"transit location."
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/models/stock_move.py:0
+#, python-format
+msgid ""
+"The move lines are not in a consistent states: they do not share the same "
+"origin or destination company."
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_action
+msgid ""
+"There is no valuation layers. Valuation layers are created when some product"
+" moves should impact the valuation of the stock."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__value
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Total Value"
 msgstr "Nilai Total"
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_stock_move_to_refund
-#: model:ir.model.fields,help:stock_account.field_stock_return_picking_line_to_refund
+#: model:ir.model,name:stock_account.model_stock_picking
+msgid "Transfer"
+msgstr "Transfer"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_move__to_refund
+#: model:ir.model.fields,help:stock_account.field_stock_return_picking_line__to_refund
 msgid ""
 "Trigger a decrease of the delivered/received quantity in the associated Sale"
 " Order/Purchase Order"
 msgstr ""
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_move_tree_valuation
-msgid "Unit of Measure"
-msgstr "Satuan Ukuran"
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_template_property_form
-msgid "Update Cost"
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__unit_cost
+msgid "Unit Value"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_stock_location_valuation_in_account_id
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__uom_id
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__product_uom_name
+msgid "Unit of Measure"
+msgstr "Satuan"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_move__to_refund
+#: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line__to_refund
+msgid "Update quantities on SO/PO"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_location__valuation_in_account_id
 msgid ""
 "Used for real-time inventory valuation. When set on a virtual location (non "
 "internal type), this account will be used to hold the value of products "
@@ -508,14 +759,14 @@ msgid ""
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
-"Digunakan untuk real-time penilaian persediaan. Ketika ditetapkan pada "
+"Digunakan untuk real-time penilaian stok persediaan. Ketika ditetapkan pada "
 "lokasi virtual (jenis non internal), akun ini akan digunakan untuk menyimpan"
 " nilai produk dipindahkan dari lokasi internal ke lokasi ini, bukan generik "
 "Rekening Efek Keluaran set pada produk. Ini tidak berpengaruh untuk lokasi "
 "internal."
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_stock_location_valuation_out_account_id
+#: model:ir.model.fields,help:stock_account.field_stock_location__valuation_out_account_id
 msgid ""
 "Used for real-time inventory valuation. When set on a virtual location (non "
 "internal type), this account will be used to hold the value of products "
@@ -523,111 +774,118 @@ msgid ""
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
-"Digunakan untuk real-time penilaian persediaan. Ketika ditetapkan pada "
+"Digunakan untuk real-time penilaian stok persediaan. Ketika ditetapkan pada "
 "lokasi virtual (jenis non internal), akun ini akan digunakan untuk menyimpan"
 " nilai produk dipindahkan dari lokasi ini dan menjadi lokasi intern, bukan "
 "generik Rekening Efek Keluaran set pada produk. Ini tidak berpengaruh untuk "
 "lokasi internal."
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
-#: model:ir.model.fields,field_description:stock_account.field_product_template_valuation
+#: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_picking
 msgid "Valuation"
+msgstr "Penilaian"
+
+#. module: stock_account
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid "Valuation method change for product category %s: from %s to %s."
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_stock_value
-#: model:ir.model.fields,field_description:stock_account.field_stock_move_value
+#: model:ir.model.fields,field_description:stock_account.field_stock_quant__value
 msgid "Value"
 msgstr "Nilai"
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_input_categ_id
-msgid ""
-"When doing real-time inventory valuation, counterpart journal items for all "
-"incoming stock moves will be posted in this account, unless there is a "
-"specific valuation account set on the source location. This is the default "
-"value for all products in this category. It can also directly be set on each"
-" product"
+#: model:ir.model.fields,field_description:stock_account.field_product_product__value_svl
+msgid "Value Svl"
 msgstr ""
-"Ketika melakukan real-time penilaian persediaan, item jurnal rekan untuk "
-"semua bergerak stok yang masuk akan diposting di akun ini, kecuali ada "
-"rekening penilaian tertentu yang ditetapkan pada lokasi sumber. Ini adalah "
-"nilai default untuk semua produk dalam kategori ini. Hal ini juga dapat "
-"langsung ditetapkan pada setiap produk"
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_property_stock_account_input
-#: model:ir.model.fields,help:stock_account.field_product_template_property_stock_account_input
-msgid ""
-"When doing real-time inventory valuation, counterpart journal items for all "
-"incoming stock moves will be posted in this account, unless there is a "
-"specific valuation account set on the source location. When not set on the "
-"product, the one from the product category is used."
-msgstr ""
-"Ketika melakukan real-time penilaian persediaan, item jurnal rekan untuk "
-"semua bergerak stok yang masuk akan diposting di akun ini, kecuali ada "
-"rekening penilaian tertentu yang ditetapkan pada lokasi sumber. Bila tidak "
-"ditetapkan pada produk, satu dari kategori produk yang digunakan."
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid "Warning"
+msgstr "Peringatan"
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_output_categ_id
+#: model:ir.model.fields,help:stock_account.field_product_category__property_stock_valuation_account_id
 msgid ""
-"When doing real-time inventory valuation, counterpart journal items for all "
-"outgoing stock moves will be posted in this account, unless there is a "
-"specific valuation account set on the destination location. This is the "
-"default value for all products in this category. It can also directly be set"
-" on each product"
-msgstr ""
-"Ketika melakukan real-time penilaian persediaan, item jurnal rekan untuk "
-"semua bergerak stok keluar akan diposting di akun ini, kecuali ada rekening "
-"penilaian tertentu yang ditetapkan di lokasi tujuan. Ini adalah nilai "
-"default untuk semua produk dalam kategori ini. Hal ini juga dapat langsung "
-"ditetapkan pada setiap produk"
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_property_stock_account_output
-#: model:ir.model.fields,help:stock_account.field_product_template_property_stock_account_output
-msgid ""
-"When doing real-time inventory valuation, counterpart journal items for all "
-"outgoing stock moves will be posted in this account, unless there is a "
-"specific valuation account set on the destination location. When not set on "
-"the product, the one from the product category is used."
-msgstr ""
-"Ketika melakukan real-time penilaian persediaan, item jurnal rekan untuk "
-"semua bergerak stok keluar akan diposting di akun ini, kecuali ada rekening "
-"penilaian tertentu yang ditetapkan di lokasi tujuan. Bila tidak ditetapkan "
-"pada produk, satu dari kategori produk yang digunakan."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_category_property_stock_journal
-msgid ""
-"When doing real-time inventory valuation, this is the Accounting Journal in "
-"which entries will be automatically posted when stock moves are processed."
-msgstr ""
-"Ketika melakukan penilaian persediaan real-time, ini adalah Jurnal Akuntansi"
-" di mana entri akan secara otomatis diposting ketika stok bergerak diproses"
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_category_property_stock_valuation_account_id
-msgid ""
-"When real-time inventory valuation is enabled on a product, this account "
+"When automated inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
 msgstr ""
-"Ketika penilain persediaan produk secara real-time diaktifkan ,account ini "
-"akan menampung nilai saat ini dari produk."
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:407
+#: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_output_categ_id
+msgid ""
+"When doing automated inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account,\n"
+"                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
+"                It can also directly be set on each product."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_category__property_stock_journal
+msgid ""
+"When doing automated inventory valuation, this is the Accounting Journal in "
+"which entries will be automatically posted when stock moves are processed."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_valuation_layer_revaluation
+msgid "Wizard model to reavaluate a stock inventory for a product"
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+#, python-format
+msgid "You cannot revalue a product with a standard cost method."
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+#, python-format
+msgid "You cannot revalue a product with an empty or negative stock."
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid ""
+"You cannot update the cost of a product in automated valuation as it leads "
+"to the creation of a journal entry, for which you don't have the access "
+"rights."
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid ""
+"You don't have any input valuation account defined on your product category."
+" You must define one before processing this operation."
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid ""
+"You don't have any stock input account defined on your product category. You"
+" must define one before processing this operation."
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
-"you have installed a chart of accounts"
+"you have installed a chart of accounts."
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/product.py:130
-#: code:addons/stock_account/models/stock.py:413
+#: code:addons/stock_account/models/product.py:0
+#: code:addons/stock_account/models/product.py:0
+#: code:addons/stock_account/models/product.py:0
+#: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
 "You don't have any stock valuation account defined on your product category."
@@ -635,16 +893,22 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
-msgid "_Apply"
-msgstr "_Apply"
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid "You must set a counterpart account on your product category."
+msgstr ""
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
+msgid "by"
+msgstr "oleh"
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_stock_return_picking_line
-msgid "stock.return.picking.line"
-msgstr "Stock.Return.picking.Line"
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
+msgid "for"
+msgstr "untuk"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
+msgid "locations"
+msgstr ""

@@ -1,20 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_crm
+# 	* website_crm
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Link Up링크업 <linkup.way@gmail.com>, 2018
-# Linkup <link-up@naver.com>, 2018
-# Seongseok Shin <shinss61@hotmail.com>, 2018
+# Heesoo Choi, 2022
+# Linkup <link-up@naver.com>, 2022
+# Martin Trigaux, 2022
+# JH CHOI <hwangtog@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-08-24 09:33+0000\n"
-"Last-Translator: Seongseok Shin <shinss61@hotmail.com>, 2018\n"
+"POT-Creation-Date: 2021-12-07 10:46+0000\n"
+"PO-Revision-Date: 2016-08-05 13:12+0000\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,10 +23,19 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website_crm.contactus_thanks
-msgid "&amp;times;"
-msgstr "&amp; 번"
+#: model:ir.model.fields,field_description:website_crm.field_website_visitor__lead_count
+msgid "# Leads"
+msgstr "# 영업제안"
+
+#. module: website_crm
+#: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_page_count
+msgid "# Page Views"
+msgstr "# 페이지 조회수"
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">Contact Form</span>"
+msgstr ""
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -34,19 +43,28 @@ msgid "Add a contact form in the"
 msgstr "문의 양식을 추가"
 
 #. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
+#, python-format
+msgid "Assign leads/opportunities to a sales team."
+msgstr "영업팀에게 리드/기회 할당"
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
+#, python-format
+msgid "Assign leads/opportunities to a salesperson."
+msgstr "영업사원에게 영업제안/영업기회 배정"
+
+#. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "Communication"
-msgstr "커뮤니케이션"
+msgstr "의사소통"
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
-msgid "Contact Form"
-msgstr "문의 양식"
+msgstr "설정 구성"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -56,18 +74,18 @@ msgstr "문의하기"
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_res_config_settings__crm_default_team_id
 msgid "Default Sales Team"
-msgstr ""
+msgstr "기본 영업팀"
 
 #. module: website_crm
 #: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_team_id
 #: model:ir.model.fields,help:website_crm.field_website__crm_default_team_id
 msgid "Default Sales Team for new leads created through the Contact Us form."
-msgstr ""
+msgstr "신규 영업제안을 위한 기본 영업팀은 문의하기 양식을 통해 새로운 영업제안을 생성합니다."
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_website__crm_default_team_id
 msgid "Default Sales Teams"
-msgstr ""
+msgstr "기본 영업팀"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_res_config_settings__crm_default_user_id
@@ -79,66 +97,73 @@ msgstr "기본 영업 사원"
 #: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_user_id
 #: model:ir.model.fields,help:website_crm.field_website__crm_default_user_id
 msgid "Default salesperson for new leads created through the Contact Us form."
-msgstr "문의양식을 통해 생성 된 신규리드에 대한 기본 영업사원"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "Email"
-msgstr "이메일"
+msgstr "문의 양식을 통해 생성된 신규 영업제안에 대한 기본 영업사원"
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr "리드(영업제안)/기회"
+msgstr "영업제안/영업기회"
+
+#. module: website_crm
+#: model:ir.actions.act_window,name:website_crm.crm_lead_action_from_visitor
+#: model:ir.model.fields,field_description:website_crm.field_website_visitor__lead_ids
+#: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_form
+#: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_search
+msgid "Leads"
+msgstr "영업제안"
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_kanban
+msgid "Leads / Opportunities"
+msgstr ""
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "New messages are managed as leads or opportunities in your CRM app."
-msgstr "새로운 메시지는 CRM 앱에서 리드(영업제안) 또는 기회로 관리됩니다."
+msgstr "새로운 메시지는 CRM 앱에서 영업제안 또는 기회로 관리됩니다."
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "Phone Number"
-msgstr "전화번호"
+#: model_terms:ir.actions.act_window,help:website_crm.crm_lead_action_from_visitor
+msgid "No lead linked for this visitor"
+msgstr "이 방문자에 연결된 영업제안이 없습니다."
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.crm_lead_view_form
+msgid "Page views"
+msgstr "페이지 조회수"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid ""
 "Please set a Sales Team for the website. Otherwise you can't follow related "
 "events."
-msgstr ""
+msgstr "웹사이트의 영업팀을 설정하세요. 그렇지 않으면 관련된 행사를 팔로우할 수 없습니다."
 
 #. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+#, python-format
 msgid "Sales Team"
 msgstr "영업팀"
 
 #. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+#, python-format
 msgid "Salesperson"
 msgstr "영업사원"
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "Send"
-msgstr "보내기"
+#: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_ids
+msgid "Web Visitors"
+msgstr "웹사이트 방문자"
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "Subject"
-msgstr "제목"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website_crm.contactus_thanks
-msgid "Thanks!"
-msgstr "감사합니다!"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website_crm.contactus_thanks
-msgid "We will get back to you shortly."
-msgstr "잠시 후 다시 연락 드리겠습니다."
+#: model_terms:ir.ui.view,arch_db:website_crm.crm_lead_merge_summary_inherit_website
+msgid "Web Visitors:"
+msgstr ""
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_website
@@ -151,25 +176,9 @@ msgid "Website Contact Form"
 msgstr "웹 사이트 문의 양식"
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "Your Company"
-msgstr "내 회사"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "Your Name"
-msgstr "귀하의 성명"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "Your Question"
-msgstr "귀하의 질문"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website_crm.contactus_thanks
-msgid "Your message has been sent successfully."
-msgstr "귀하의 메시지가 성공적으로 전송되었습니다."
+#: model:ir.model,name:website_crm.model_website_visitor
+msgid "Website Visitor"
+msgstr "웹사이트 방문자"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form

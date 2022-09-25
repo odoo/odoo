@@ -3,19 +3,18 @@
 # 	* pos_hr
 # 
 # Translators:
-# Aleksandr Jadov <a.jadov@tata.lt>, 2019
-# Martin Trigaux, 2019
-# Silvija Butko <silvija.butko@gmail.com>, 2019
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2019
-# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# Martin Trigaux, 2022
+# Aleksandr Jadov <a.jadov@tata.lt>, 2022
+# Silvija Butko <silvija.butko@gmail.com>, 2022
+# Linas Versada <linaskrisiukenas@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
+"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"PO-Revision-Date: 2019-03-20 14:58+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2022\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,18 +36,10 @@ msgstr "Kasininkas"
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/js/chrome.js:0
-#: code:addons/pos_hr/static/src/js/screens.js:0
+#: code:addons/pos_hr/static/src/js/useSelectEmployee.js:0
 #, python-format
 msgid "Change Cashier"
 msgstr "Keisti kasininką"
-
-#. module: pos_hr
-#. openerp-web
-#: code:addons/pos_hr/static/src/xml/pos.xml:0
-#, python-format
-msgid "Close session"
-msgstr ""
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_hr_employee
@@ -76,37 +67,21 @@ msgstr ""
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/js/gui.js:0
+#: code:addons/pos_hr/static/src/js/useSelectEmployee.js:0
 #, python-format
 msgid "Incorrect Password"
 msgstr "Neteisingas slaptažodis"
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/js/chrome.js:0
-#, python-format
-msgid "Lock"
-msgstr "Užrakinti"
-
-#. module: pos_hr
-#. openerp-web
-#: code:addons/pos_hr/static/src/xml/pos.xml:0
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Log in to"
 msgstr ""
 
 #. module: pos_hr
-#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
-msgid ""
-"Only users with Manager access rights for PoS app can modify the product "
-"prices on orders."
-msgstr ""
-"Tik vartotojai su vadovo prieigos teisėmis PT programoje gali užsakymuose "
-"keisti produktų kainas."
-
-#. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/js/gui.js:0
+#: code:addons/pos_hr/static/src/js/useSelectEmployee.js:0
 #, python-format
 msgid "Password ?"
 msgstr "Slaptažodis ?"
@@ -134,35 +109,23 @@ msgid "Point of Sale Orders Report"
 msgstr "Pardavimo taško užsakymų ataskaita"
 
 #. module: pos_hr
-#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
-msgid "Price Control"
-msgstr "Kainų kontrolė"
-
-#. module: pos_hr
-#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
-msgid "Restrict price modification to managers"
-msgstr "Leisti kainų keitimus tik vadovams"
+#: model:ir.model,name:pos_hr.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Pardavimo taško sesija"
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/xml/pos.xml:0
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Scan your badge"
 msgstr "Skenuokite savo pažymėjimą"
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/xml/pos.xml:0
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Select Cashier"
 msgstr ""
-
-#. module: pos_hr
-#. openerp-web
-#: code:addons/pos_hr/static/src/js/gui.js:0
-#, python-format
-msgid "Select User"
-msgstr "Pasirinkti vartotoją"
 
 #. module: pos_hr
 #: code:addons/pos_hr/models/hr_employee.py:0
@@ -174,7 +137,14 @@ msgstr ""
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/xml/pos.xml:0
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "or"
 msgstr "arba"
+
+#. module: pos_hr
+#. openerp-web
+#: code:addons/pos_hr/static/src/xml/CashierName.xml:0
+#, python-format
+msgid "selectCashier"
+msgstr ""

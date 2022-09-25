@@ -13,11 +13,12 @@
 # Arnau Ros, 2021
 # Harcogourmet, 2022
 # Jonatan Gk, 2022
-# jabelchi, 2022
 # Martin Trigaux, 2022
 # Quim - eccit <quim@eccit.com>, 2022
 # marcescu, 2022
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2022
+# Mohamed Sallam, 2022
+# jabelchi, 2022
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-19 13:58+0000\n"
 "PO-Revision-Date: 2016-08-05 13:08+0000\n"
-"Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2022\n"
+"Last-Translator: jabelchi, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -83,12 +84,12 @@ msgstr ""
 #: model:ir.actions.report,print_report_name:product.report_product_template_label
 #: model:ir.actions.report,print_report_name:product.report_product_template_label_dymo
 msgid "'Products Labels - %s' % (object.name)"
-msgstr "Etiquetes 'Produccions - %s' % (objecte. nom)"
+msgstr "'Etiquetes Produccions - %s' % (object.name)"
 
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_packaging
 msgid "'Products packaging - %s' % (object.name)"
-msgstr "'Productor - %s' % (objecte. nom)"
+msgstr "'Productor- %s' % (object.name)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -1504,6 +1505,14 @@ msgstr "Resum de la següent activitat"
 #: model:ir.model.fields,field_description:product.field_product_template__activity_type_id
 msgid "Next Activity Type"
 msgstr "Tipus de la següent activitat"
+
+#. module: product
+#: code:addons/product/wizard/product_label_layout.py:0
+#, python-format
+msgid ""
+"No product to print, if the product is archived please unarchive it before "
+"printing its label."
+msgstr ""
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
@@ -2928,6 +2937,12 @@ msgid ""
 msgstr ""
 "No pot definir una precisió decimal dels comptes que sigui major que el "
 "factor d'arrodoniment de la moneda actual de la companyia."
+
+#. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "You cannot delete the %s product category."
+msgstr "No podeu esborrar la categoria de producte %s."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0

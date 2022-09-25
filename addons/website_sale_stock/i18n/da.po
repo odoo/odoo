@@ -3,18 +3,17 @@
 # 	* website_sale_stock
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Morten Schou <ms@msteknik.dk>, 2019
-# Sanne Kristensen <sanne@vkdata.dk>, 2019
-# lhmflexerp <lhm@flexerp.dk>, 2019
+# Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2022
+# lhmflexerp <lhm@flexerp.dk>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
+"POT-Creation-Date: 2022-04-19 13:58+0000\n"
+"PO-Revision-Date: 2016-08-05 13:14+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,28 +22,17 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid ""
+"<span attrs=\"{'invisible': [('show_availability', '=', "
+"False)]}\">Units</span>"
+msgstr ""
+
+#. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_payment
 msgid "<strong>Warning!</strong>"
 msgstr "<strong>Advarsel!</strong>"
-
-#. module: website_sale_stock
-#: model:ir.model.fields,help:website_sale_stock.field_product_product__inventory_availability
-#: model:ir.model.fields,help:website_sale_stock.field_product_template__inventory_availability
-msgid "Adds an inventory availability status on the web product page."
-msgstr "Tilføjer status på lagertilgængelighed til webproduktsiden."
-
-#. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
-msgid "Availability"
-msgstr "Til rådighed"
-
-#. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__available_threshold
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__available_threshold
-#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__available_threshold
-msgid "Availability Threshold"
-msgstr ""
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__cart_qty
@@ -57,9 +45,16 @@ msgid "Config Settings"
 msgstr "Konfigurer opsætning"
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__custom_message
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__custom_message
-msgid "Custom Message"
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Continue Selling"
+msgstr "Fortsæt med at sælge"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__allow_out_of_stock_order
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__allow_out_of_stock_order
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__allow_out_of_stock_order
+msgid "Continue selling when out-of-stock"
 msgstr ""
 
 #. module: website_sale_stock
@@ -68,37 +63,49 @@ msgid ""
 "Default availability mode set on newly created storable products. This can "
 "be changed at the product level."
 msgstr ""
+"Standard tilgængeligheds tilstand angivet på nyligt oprettede lagervare. "
+"Dette kan ændret på produkt niveauet."
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Default visibility for custom messages."
+msgstr ""
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "How to display products having low quantities (on hand - reserved)"
+msgstr ""
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Inventory Defaults"
+msgstr ""
 
 #. module: website_sale_stock
 #. openerp-web
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
-msgid "In stock"
-msgstr "På lager"
+msgid "Only"
+msgstr "Kun"
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Inventory"
-msgstr "Lager"
-
-#. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__inventory_availability
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__inventory_availability
-#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__inventory_availability
-msgid "Inventory Availability"
-msgstr "Lagertilgængelighed"
-
-#. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid ""
-"Manage the inventory of your products and display their availability status "
-"on the website."
+#. openerp-web
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+#, python-format
+msgid "Out of Stock"
 msgstr ""
 
 #. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Mode"
-msgstr "Tilstand"
+msgid "Out-of-Stock"
+msgstr ""
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__out_of_stock_message
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__out_of_stock_message
+msgid "Out-of-Stock Message"
+msgstr ""
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_product
@@ -121,36 +128,24 @@ msgid "Sales Order Line"
 msgstr "Salgsordrelinje"
 
 #. module: website_sale_stock
-#: model:ir.model.fields.selection,name:website_sale_stock.selection__product_template__inventory_availability__never
-#: model:ir.model.fields.selection,name:website_sale_stock.selection__res_config_settings__inventory_availability__never
-msgid "Sell regardless of inventory"
-msgstr "Sælg uanset om varen er på lager"
-
-#. module: website_sale_stock
-#: model:ir.model.fields.selection,name:website_sale_stock.selection__product_template__inventory_availability__threshold
-msgid "Show inventory below a threshold and prevent sales if not enough stock"
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Show Available Qty"
 msgstr ""
 
 #. module: website_sale_stock
-#: model:ir.model.fields.selection,name:website_sale_stock.selection__product_template__inventory_availability__always
-#: model:ir.model.fields.selection,name:website_sale_stock.selection__res_config_settings__inventory_availability__always
-msgid "Show inventory on website and prevent sales if not enough stock"
-msgstr ""
-"Vis lagerbeholdning på hjemmesiden og undgå salg, hvis der ikke er nok på "
-"lager."
-
-#. module: website_sale_stock
-#: model:ir.model.fields.selection,name:website_sale_stock.selection__res_config_settings__inventory_availability__threshold
-msgid ""
-"Show inventory when below the threshold and prevent sales if not enough "
-"stock"
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__available_threshold
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__available_threshold
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__available_threshold
+msgid "Show Threshold"
 msgstr ""
 
 #. module: website_sale_stock
-#: model:ir.model.fields.selection,name:website_sale_stock.selection__product_template__inventory_availability__custom
-#: model:ir.model.fields.selection,name:website_sale_stock.selection__res_config_settings__inventory_availability__custom
-msgid "Show product-specific notifications"
-msgstr "Vis produktspecifikke notifikationer"
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__show_availability
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__show_availability
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__show_availability
+msgid "Show availability Qty"
+msgstr ""
 
 #. module: website_sale_stock
 #: code:addons/website_sale_stock/models/sale_order.py:0
@@ -159,23 +154,18 @@ msgid ""
 "Some products became unavailable and your cart has been updated. We're sorry"
 " for the inconvenience."
 msgstr ""
-
-#. module: website_sale_stock
-#. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-#, python-format
-msgid "Temporarily out of stock"
-msgstr "Midlertidigt ingen på lager"
-
-#. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Threshold"
-msgstr ""
+"Visse produkter blev utilgængelige, og din indkøbskurv er blevet opdateret. "
+"Vi beklager ubelejligheden."
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking
 msgid "Transfer"
 msgstr "Overfør"
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
+msgid "Units"
+msgstr "Enheder"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__website_warehouse_id
@@ -185,14 +175,10 @@ msgid "Warehouse"
 msgstr "Lagerstyring"
 
 #. module: website_sale_stock
-#. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__warning_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_line__warning_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_payment
-#, python-format
 msgid "Warning"
 msgstr "Advarsel"
 
@@ -205,7 +191,7 @@ msgstr "Hjemmeside"
 #. module: website_sale_stock
 #: model:ir.model.fields,help:website_sale_stock.field_stock_picking__website_id
 msgid "Website this picking belongs to."
-msgstr ""
+msgstr "Hjemmeside dette pluk tilhører."
 
 #. module: website_sale_stock
 #. openerp-web
@@ -213,6 +199,23 @@ msgstr ""
 #, python-format
 msgid "You already added"
 msgstr "Du har allerede tilføjet"
+
+#. module: website_sale_stock
+#. openerp-web
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+#, python-format
+msgid "You already added all the available product in your cart."
+msgstr ""
+"Du har allerede tilføjet alle de tilgængelige produkter til din indkøbskurv."
+
+#. module: website_sale_stock
+#: code:addons/website_sale_stock/controllers/main.py:0
+#, python-format
+msgid ""
+"You ask for %(quantity)s products but only %(available_qty)s is available"
+msgstr ""
+"Du spørger efter %(quantity)s produkter, men kun %(available_qty)s er "
+"tilgængelig"
 
 #. module: website_sale_stock
 #: code:addons/website_sale_stock/models/sale_order.py:0
@@ -224,20 +227,18 @@ msgstr "Du beder om %s produkter men kun %s er tilgængelige"
 #. openerp-web
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
-msgid "all"
-msgstr "alle"
-
-#. module: website_sale_stock
-#. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-#, python-format
-msgid "available"
-msgstr "tilrådighed"
-
-#. module: website_sale_stock
-#. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-#, python-format
 msgid "in your cart."
 msgstr "i din kurv."
+
+#. module: website_sale_stock
+#. openerp-web
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+#, python-format
+msgid "left in stock."
+msgstr ""
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "only if below"
+msgstr ""

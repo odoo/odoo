@@ -1,21 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * hr_maintenance
+# 	* hr_maintenance
 # 
 # Translators:
-# Martin Trigaux, 2018
-# 최재호 <hwangtog@gmail.com>, 2018
-# Link Up링크업 <linkup.way@gmail.com>, 2018
-# Linkup <link-up@naver.com>, 2018
-# Seongseok Shin <shinss61@hotmail.com>, 2018
+# Link Up링크업 <linkup.way@gmail.com>, 2022
+# Martin Trigaux, 2022
+# JH CHOI <hwangtog@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-08-24 09:19+0000\n"
-"Last-Translator: Seongseok Shin <shinss61@hotmail.com>, 2018\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2016-08-05 12:59+0000\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,75 +22,106 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_maintenance
+#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__assign_date
+msgid "Assigned Date"
+msgstr "할당일"
+
+#. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__department_id
-msgid "Assigned to Department"
-msgstr ""
+msgid "Assigned Department"
+msgstr "지정된 부서"
 
 #. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__employee_id
-msgid "Assigned to Employee"
-msgstr ""
+msgid "Assigned Employee"
+msgstr "지정된 직원"
+
+#. module: hr_maintenance
+#: model:ir.model.fields,field_description:hr_maintenance.field_res_users__equipment_count
+msgid "Assigned Equipments"
+msgstr "지정된 장비"
 
 #. module: hr_maintenance
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_request_view_form_inherit_hr
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_request_view_search_inherit_hr
 msgid "Created By"
-msgstr "작성자"
+msgstr "작성인"
 
 #. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__owner_user_id
 msgid "Created by User"
-msgstr ""
+msgstr "사용자가 작성함"
 
 #. module: hr_maintenance
-#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__department_id
+#: model:ir.model.fields.selection,name:hr_maintenance.selection__maintenance_equipment__equipment_assign_to__department
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_form_inherit_hr
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_search_inherit_hr
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_tree_inherit_hr
-#: selection:maintenance.equipment,equipment_assign_to:0
 msgid "Department"
 msgstr "부서"
 
 #. module: hr_maintenance
+#: model:ir.model,name:hr_maintenance.model_hr_employee
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__employee_id
+#: model:ir.model.fields.selection,name:hr_maintenance.selection__maintenance_equipment__equipment_assign_to__employee
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_form_inherit_hr
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_search_inherit_hr
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_tree_inherit_hr
-#: selection:maintenance.equipment,equipment_assign_to:0
 msgid "Employee"
 msgstr "임직원"
 
 #. module: hr_maintenance
+#: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee__equipment_ids
+#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__equipment_id
+msgid "Equipment"
+msgstr "장비"
+
+#. module: hr_maintenance
+#: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee__equipment_count
+msgid "Equipments"
+msgstr "장비 및 설비"
+
+#. module: hr_maintenance
 #: model:ir.model,name:hr_maintenance.model_maintenance_equipment
 msgid "Maintenance Equipment"
-msgstr ""
+msgstr "유지보수 장비"
 
 #. module: hr_maintenance
 #: model:ir.model,name:hr_maintenance.model_maintenance_request
 msgid "Maintenance Request"
-msgstr ""
+msgstr "유지보수 요청"
+
+#. module: hr_maintenance
+#: model:ir.model.fields,field_description:hr_maintenance.field_res_users__equipment_ids
+msgid "Managed Equipments"
+msgstr "관리된 장비"
 
 #. module: hr_maintenance
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_request_view_search_inherit_hr
-msgid "My Requests"
-msgstr "나의 요청"
+msgid "My Maintenances"
+msgstr "내 유지보수"
 
 #. module: hr_maintenance
-#: selection:maintenance.equipment,equipment_assign_to:0
+#: model:ir.model.fields.selection,name:hr_maintenance.selection__maintenance_equipment__equipment_assign_to__other
 msgid "Other"
 msgstr "기타"
 
 #. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__owner_user_id
 msgid "Owner"
-msgstr "담당자(파트너)"
+msgstr "소유자"
 
 #. module: hr_maintenance
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_kanban_inherit_hr
 msgid "Unassigned"
-msgstr "미배정(할당)"
+msgstr "미지정"
 
 #. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__equipment_assign_to
 msgid "Used By"
-msgstr ""
+msgstr "사용자"
+
+#. module: hr_maintenance
+#: model:ir.model,name:hr_maintenance.model_res_users
+msgid "Users"
+msgstr "사용자"

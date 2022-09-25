@@ -1,29 +1,36 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * purchase
+# 	* purchase
 # 
 # Translators:
-# Bonny Useful <bonny.useful@gmail.com>, 2017
-# Ryanto The <ry.the77@gmail.com>, 2017
-# firman firman <firman.olxbpn@gmail.com>, 2017
-# William Surya Permana <zarambie_game@yahoo.com>, 2017
-# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# graha hutamawuri <grahehw@yahoo.com>, 2017
-# Hendro Yulianto <hyulianto@gmail.com>, 2017
-# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2017
-# Lorenz Damara <lorenzrenz@gmail.com>, 2017
-# Febrasari Almania <febrasari.almania@gmail.com>, 2017
-# Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2017
-# Rizki Mudhar <mudharrizki@gmail.com>, 2017
-# Hendra So <mask783@gmail.com>, 2017
+# Edy Kend <edy@azmall.co.id>, 2022
+# Andhitia Rama <andhitia.r@gmail.com>, 2022
+# Febrasari Almania <febrasari.almania@gmail.com>, 2022
+# Abe Manyo, 2022
+# oon arfiandwi <oon.arfiandwi@gmail.com>, 2022
+# pnyet <david@zeromail.us>, 2022
+# Ikhsanul Wirsa <iwirsa02@outlook.co.id>, 2022
+# Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2022
+# PAS IRVANUS <ipankbiz@gmail.com>, 2022
+# Muftiara Syuhada <muftiara.syuhada@gmail.com>, 2022
+# graha hutamawuri, 2022
+# Gradien Foundation <gradien.co@gmail.com>, 2022
+# William Surya Permana <zarambie_game@yahoo.com>, 2022
+# firman firman <firman.olxbpn@gmail.com>, 2022
+# whenwesober, 2022
+# Abdul Munif Hanafi <amunifhanafi@gmail.com>, 2022
+# Bonny Useful <bonny.useful@gmail.com>, 2022
+# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Ryanto The <ry.the77@gmail.com>, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: Hendra So <mask783@gmail.com>, 2017\n"
+"POT-Creation-Date: 2022-04-19 13:57+0000\n"
+"PO-Revision-Date: 2016-08-05 13:08+0000\n"
+"Last-Translator: Ryanto The <ry.the77@gmail.com>, 2022\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,151 +39,70 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: purchase
-#: model:mail.template,body_html:purchase.email_template_edi_purchase
+#: model:ir.actions.report,print_report_name:purchase.action_report_purchase_order
 msgid ""
 "\n"
-"<p>Dear\n"
-"% if object.partner_id.is_company and object.child_ids:\n"
-"    ${object.partner_id.child_ids[0].name}\n"
-"% else :\n"
-"    ${object.partner_id.name}\n"
-"% endif\n"
-",</p><p>\n"
-"Here is, in attachment, a ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} <strong>${object.name}</strong>\n"
-"% if object.partner_ref:\n"
-"    with reference: ${object.partner_ref}\n"
-"% endif\n"
-"% if object.origin:\n"
-"    (RFQ origin: ${object.origin})\n"
-"% endif\n"
-"amounting in <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
-"from ${object.company_id.name}.\n"
-"</p>\n"
-"\n"
-"<p>Do not hesitate to contact us, further you have any question.</p>\n"
-"<p>Best regards,</p>\n"
-"<p style=\"color:#888888;\">\n"
-"% if object.user_id and object.user_id.signature:\n"
-"    ${object.user_id.signature | safe}\n"
-"% endif\n"
-"</p>\n"
+"                (object.state in ('draft', 'sent') and 'Request for Quotation - %s' % (object.name) or\n"
+"                'Purchase Order - %s' % (object.name))"
 msgstr ""
-"\n"
-"<p>Yth. \n"
-"% if object.partner_id.is_company and object.child_ids:\n"
-"    ${object.partner_id.child_ids[0].name}\n"
-"% else :\n"
-"    ${object.partner_id.name}\n"
-"% endif\n"
-",</p><p>\n"
-"Bersama email ini terlampir sebuah ${object.state in ('draft', 'sent') dan 'request for quotation' or 'purchase order confirmation'} <strong>${object.name}</strong>\n"
-"% if object.partner_ref:\n"
-"    with reference: ${object.partner_ref}\n"
-"% endif\n"
-"% if object.origin:\n"
-"    (RFQ origin: ${object.origin})\n"
-"% endif\n"
-"dengan jumlah <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
-"dari ${object.company_id.name}.\n"
-"</p>\n"
-"\n"
-"<p>Jangan ragu untuk menghubungi kami jika Anda memiliki pertanyaan.</p>\n"
-"<p>Salam hormat,</p>\n"
-"<p style=\"color:#888888;\">\n"
-"% if object.user_id and object.user_id.signature:\n"
-"    ${object.user_id.signature | safe}\n"
-"% endif\n"
-"</p>\n"
 
 #. module: purchase
-#: model:mail.template,body_html:purchase.email_template_edi_purchase_done
-msgid ""
-"\n"
-"<p>Dear ${object.partner_id.name} \n"
-"% if object.partner_id.parent_id:\n"
-"    (<i>${object.partner_id.parent_id.name}</i>)\n"
-"% endif\n"
-",</p>\n"
-"<p>\n"
-"Please find in attachment a <strong>${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} ${object.name}</strong>\n"
-"% if object.partner_ref:\n"
-"    with reference: ${object.partner_ref}\n"
-"% endif\n"
-"% if object.origin:\n"
-"    (RFQ origin: ${object.origin})\n"
-"% endif\n"
-"amounting <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
-"from ${object.company_id.name}.\n"
-"</p>\n"
-"\n"
-"<p>You can reply to this email if you have any questions.</p>\n"
-"<p>Thank you,</p>\n"
-msgstr ""
-"\n"
-"<p>Yth, ${object.partner_id.name} \n"
-"% if object.partner_id.parent_id:\n"
-"(<i>${object.partner_id.parent_id.name}</i>)\n"
-"% endif\n"
-",</p>\n"
-"<p>\n"
-"Terlampir <strong>${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} ${object.name}</strong>\n"
-"% if object.partner_ref:\n"
-"dengan referensi: ${object.partner_ref}\n"
-"% endif\n"
-"% if object.origin:\n"
-"(RFQ origin: ${object.origin})\n"
-"% endif\n"
-"sebesar <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
-"from ${object.company_id.name}.\n"
-"</p>\n"
-"\n"
-"<p>Jika ada hal lain yang ingin ditanyakan, dapat langsung menghubungi kami dengan membalas email ini.</p>\n"
-"<p>Terimakasih,</p>\n"
-
-#. module: purchase
-#: code:addons/purchase/models/stock.py:79
-#, python-format
-msgid " Buy"
-msgstr "Beli"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_product_product_purchase_count
-#: model:ir.model.fields,field_description:purchase.field_product_template_purchase_count
-msgid "# Purchases"
-msgstr "# Pembelian"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_partner_supplier_invoice_count
-#: model:ir.model.fields,field_description:purchase.field_res_users_supplier_invoice_count
+#: model:ir.model.fields,field_description:purchase.field_res_partner__supplier_invoice_count
+#: model:ir.model.fields,field_description:purchase.field_res_users__supplier_invoice_count
 msgid "# Vendor Bills"
 msgstr "# Tagihan Pemasok"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_count
-msgid "# of Bills"
-msgstr "# Tagihan"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_nbr_lines
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__nbr_lines
 msgid "# of Lines"
-msgstr "# dari Baris"
+msgstr "# Baris"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_order_count
-#: model:ir.model.fields,field_description:purchase.field_res_users_purchase_order_count
-msgid "# of Purchase Order"
-msgstr "# Order Pembelian"
+#: code:addons/purchase/models/purchase.py:0
+#, python-format
+msgid "%(amount)s due %(date)s"
+msgstr ""
 
 #. module: purchase
-#: model:mail.template,subject:purchase.email_template_edi_purchase
-#: model:mail.template,subject:purchase.email_template_edi_purchase_done
-msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
-msgstr "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
+#: code:addons/purchase/models/purchase.py:0
+#: code:addons/purchase/models/purchase.py:0
+#, python-format
+msgid "%(product)s from %(original_receipt_date)s to %(new_receipt_date)s"
+msgstr ""
 
 #. module: purchase
-#: model:mail.template,subject:purchase.mail_template_data_notification_email_purchase_order
-msgid "${object.subject}"
-msgstr "${object.subject}"
+#: code:addons/purchase/models/purchase.py:0
+#, python-format
+msgid "%s confirmed the receipt will take place on %s."
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:0
+#, python-format
+msgid "%s modified receipt dates for the following products:"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
+msgid "&amp;nbsp;"
+msgstr "&amp;nbsp;"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+msgid "&amp;times;"
+msgstr "&amp;times;"
+
+#. module: purchase
+#: model:ir.actions.report,print_report_name:purchase.report_purchase_quotation
+msgid "'Request for Quotation - %s' % (object.name)"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.track_po_line_qty_received_template
+#: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
+msgid "-&gt;"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -184,163 +110,254 @@ msgid "3-way matching"
 msgstr "pencocokan 3 arah"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_config_settings_module_account_3way_match
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_account_3way_match
 msgid "3-way matching: purchases, receptions and bills"
 msgstr "pencocokan 3 arah: pembelian, penerimaan, dan penagihan"
 
 #. module: purchase
-#: model:mail.template,body_html:purchase.mail_template_data_notification_email_purchase_order
+#: model:mail.template,body_html:purchase.email_template_edi_purchase_reminder
 msgid ""
-"<html>\n"
-"                <head></head>\n"
-"                <body style=\"margin: 0; padding: 0;\">\n"
-"                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed\" summary=\"o_mail_notification\">\n"
-"                    <tbody>\n"
-"\n"
-"                      <!-- HEADER -->\n"
-"                      <tr>\n"
-"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
-"                            <tr>\n"
-"                              <td valign=\"middle\">\n"
-"                                  <span style=\"font-size:20px; color:white; font-weight: bold;\">\n"
-"                                      ${object.record_name}\n"
-"                                  </span>\n"
-"                              </td>\n"
-"                              <td valign=\"middle\" align=\"right\">\n"
-"                                  <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
-"                              </td>\n"
-"                            </tr>\n"
-"                          </table>\n"
-"                        </td>\n"
-"                      </tr>\n"
-"\n"
-"                      <!-- CONTENT -->\n"
-"                      <tr>\n"
-"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px;\">\n"
-"                            <tbody>\n"
-"                              <td valign=\"top\" style=\"font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
-"                                ${object.body | safe}\n"
-"                              </td>\n"
-"                            </tbody>\n"
-"                          </table>\n"
-"                        </td>\n"
-"                      </tr>\n"
-"\n"
-"                      <!-- FOOTER -->\n"
-"                      <tr>\n"
-"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
-"                            <tr>\n"
-"                              <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
-"                                ${user.company_id.name}<br/>\n"
-"                                ${user.company_id.phone or ''}\n"
-"                              </td>\n"
-"                              <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
-"                                % if user.company_id.email:\n"
-"                                <a href=\"mailto:${user.company_id.email}\" style=\"text-decoration:none; color: white;\">${user.company_id.email}</a><br/>\n"
-"                                % endif\n"
-"                                % if user.company_id.website:\n"
-"                                    <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: white;\">\n"
-"                                        ${user.company_id.website}\n"
-"                                    </a>\n"
-"                                % endif\n"
-"                              </td>\n"
-"                            </tr>\n"
-"                          </table>\n"
-"                        </td>\n"
-"                      </tr>\n"
-"                      <tr>\n"
-"                        <td align=\"center\">\n"
-"                            Powered by <a href=\"https://www.odoo.com\">Odoo</a>.\n"
-"                        </td>\n"
-"                      </tr>\n"
-"                    </tbody>\n"
-"                </table>\n"
-"                </body>\n"
-"                </html>\n"
-"            "
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Here is a reminder that the delivery of the purchase order <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            <span style=\"font-weight:bold;\">(<t t-out=\"object.partner_ref or ''\">REF_XXX</t>)</span>\n"
+"        </t>\n"
+"        is expected for \n"
+"        <t t-if=\"object.date_planned\">\n"
+"            <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"        </t>\n"
+"         <t t-else=\"\">\n"
+"            <span style=\"font-weight:bold;\">undefined</span>.\n"
+"        </t>\n"
+"        Could you please confirm it will be delivered on time?\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>"
 msgstr ""
-"<html>\n"
-"                <head></head>\n"
-"                <body style=\"margin: 0; padding: 0;\">\n"
-"                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed\" summary=\"o_mail_notification\">\n"
-"                    <tbody>\n"
-"\n"
-"                      <!-- HEADER -->\n"
-"                      <tr>\n"
-"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
-"                            <tr>\n"
-"                              <td valign=\"middle\">\n"
-"                                  <span style=\"font-size:20px; color:white; font-weight: bold;\">\n"
-"                                      ${object.record_name}\n"
-"                                  </span>\n"
-"                              </td>\n"
-"                              <td valign=\"middle\" align=\"right\">\n"
-"                                  <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
-"                              </td>\n"
-"                            </tr>\n"
-"                          </table>\n"
-"                        </td>\n"
-"                      </tr>\n"
-"\n"
-"                      <!-- CONTENT -->\n"
-"                      <tr>\n"
-"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px;\">\n"
-"                            <tbody>\n"
-"                              <td valign=\"top\" style=\"font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
-"                                ${object.body | safe}\n"
-"                              </td>\n"
-"                            </tbody>\n"
-"                          </table>\n"
-"                        </td>\n"
-"                      </tr>\n"
-"\n"
-"                      <!-- FOOTER -->\n"
-"                      <tr>\n"
-"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
-"                            <tr>\n"
-"                              <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
-"                                ${user.company_id.name}<br/>\n"
-"                                ${user.company_id.phone or ''}\n"
-"                              </td>\n"
-"                              <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
-"                                % if user.company_id.email:\n"
-"                                <a href=\"mailto:${user.company_id.email}\" style=\"text-decoration:none; color: white;\">${user.company_id.email}</a><br/>\n"
-"                                % endif\n"
-"                                % if user.company_id.website:\n"
-"                                    <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: white;\">\n"
-"                                        ${user.company_id.website}\n"
-"                                    </a>\n"
-"                                % endif\n"
-"                              </td>\n"
-"                            </tr>\n"
-"                          </table>\n"
-"                        </td>\n"
-"                      </tr>\n"
-"                      <tr>\n"
-"                        <td align=\"center\">\n"
-"                            Disajikan oleh <a href=\"https://www.odoo.com\">Odoo</a>.\n"
-"                        </td>\n"
-"                      </tr>\n"
-"                    </tbody>\n"
-"                </table>\n"
-"                </body>\n"
-"                </html>\n"
-"            "
+
+#. module: purchase
+#: model:mail.template,body_html:purchase.email_template_edi_purchase_done
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Here is in attachment a purchase order <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            with reference: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
+"        </t>\n"
+"        amounting in <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
+"        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>. \n"
+"        <br/><br/>\n"
+"        <t t-if=\"object.date_planned\">\n"
+"            The receipt is expected for <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            <br/><br/>\n"
+"            Could you please acknowledge the receipt of this order?\n"
+"        </t>\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>"
+msgstr ""
+
+#. module: purchase
+#: model:mail.template,body_html:purchase.email_template_edi_purchase
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Here is in attachment a request for quotation <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            with reference: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
+"        </t>\n"
+"        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br/><br/>\n"
+"        If you have any questions, please do not hesitate to contact us.\n"
+"        <br/><br/>\n"
+"        Best regards,\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+msgid "<i class=\"fa fa-comment\"/> Send message"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+msgid "<i class=\"fa fa-download\"/> Download"
+msgstr "<i class=\"fa fa-download\"/> Unduh"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
 msgid ""
-"<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/> "
-"Cancelled</span>"
+"<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" "
+"title=\"Done\"/><span class=\"d-none d-md-inline\"> Done</span>"
 msgstr ""
-"<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/> "
-"Dibatalkan</span>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+msgid "<i class=\"fa fa-fw fa-check\"/> <b>Paid</b>"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Waiting Payment</b>"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_partner_kanban_view
+msgid ""
+"<i class=\"fa fa-fw fa-credit-card\" role=\"img\" aria-label=\"Purchases\" "
+"title=\"Purchases\"/>"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
+msgid ""
+"<i class=\"fa fa-fw fa-file-text\" role=\"img\" aria-label=\"Waiting for "
+"Bill\" title=\"Waiting for Bill\"/><span class=\"d-none d-md-inline\"> "
+"Waiting for Bill</span>"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
+msgid ""
+"<i class=\"fa fa-fw fa-remove\" role=\"img\" aria-label=\"Cancelled\" "
+"title=\"Cancelled\"/><span class=\"d-none d-md-inline\"> Cancelled</span>"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+msgid "<i class=\"fa fa-print\"/> Print"
+msgstr "<i class=\"fa fa-print\"/> Cetak"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
+msgid ""
+"<span class=\"d-none d-md-inline\">Confirmation Date</span>\n"
+"                          <span class=\"d-block d-md-none\">Confirmation</span>"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
+msgid ""
+"<span class=\"d-none d-md-inline\">Purchase Order #</span>\n"
+"                          <span class=\"d-block d-md-none\">Ref.</span>"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
+msgid ""
+"<span class=\"d-none d-md-inline\">Request for Quotation #</span>\n"
+"                        <span class=\"d-block d-md-none\">Ref.</span>"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid ""
+"<span class=\"o_form_label\" attrs=\"{'invisible': [('state','not in',('draft','sent'))]}\">Request for Quotation </span>\n"
+"                        <span class=\"o_form_label\" attrs=\"{'invisible': [('state','in',('draft','sent'))]}\">Purchase Order </span>"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
+msgid "<span class=\"o_stat_text\">Purchased</span>"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid ""
+"<span class=\"text-muted\" attrs=\"{'invisible': "
+"[('mail_reception_confirmed','=', False)]}\">(confirmed by vendor)</span>"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid ""
+"<span class=\"text-muted\" attrs=\"{'invisible': "
+"[('mail_reminder_confirmed', '=', False)]}\">(confirmed by vendor)</span>"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+msgid ""
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
+"                              <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
+msgid "<span> day(s) before</span>"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "<span>Ask confirmation</span>"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+msgid "<span>Taxes</span>"
+msgstr "<span>Pajak</span>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+msgid "<strong class=\"d-block mb-1\">From:</strong>"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+msgid "<strong class=\"d-block mb-1\">Invoices</strong>"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "<strong class=\"mr16\">Subtotal</strong>"
+msgstr "<strong class=\"mr16\">Subtotal</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+msgid "<strong class=\"text-muted\">Purchase Representative</strong>"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -348,14 +365,14 @@ msgid "<strong>Amount</strong>"
 msgstr "<strong>Jumlah</strong>"
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+msgid "<strong>Confirmation Date:</strong>"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Date Req.</strong>"
 msgstr "<strong>Tanggal Permintaan</strong>"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
-msgid "<strong>Date:</strong>"
-msgstr "<strong>Tanggal:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -369,19 +386,20 @@ msgid "<strong>Expected Date</strong>"
 msgstr "<strong>Tanggal Perkiraan</strong>"
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Order Date:</strong>"
 msgstr "<strong>Tanggal Pemesanan:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
-msgid "<strong>Our Order Reference:</strong>"
-msgstr "<strong>Order Referensi Kami:</strong>"
+msgid "<strong>Order Deadline:</strong>"
+msgstr ""
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
-msgid "<strong>Product</strong>"
-msgstr "<strong>Produk</strong>"
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "<strong>Purchase Representative:</strong>"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -390,21 +408,20 @@ msgid "<strong>Qty</strong>"
 msgstr "<strong>Jml</strong>"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
-msgid "<strong>Quantity</strong>"
-msgstr "<strong>Kuantitas</strong>"
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+msgid "<strong>Receipt Date:</strong>"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+msgid "<strong>Request For Quotation Date:</strong>"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Shipping address:</strong>"
 msgstr "<strong>Alamat pengiriman:</strong>"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
-#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
-msgid "<strong>Subtotal</strong>"
-msgstr "<strong>Subtotal</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -417,20 +434,24 @@ msgid "<strong>The ordered quantity has been updated.</strong>"
 msgstr "<strong>Jumlah dipesan telah diperbarui.</strong>"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
-msgid "<strong>Total:</strong>"
-msgstr "<strong>Total:</strong>"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
-msgid "<strong>Total</strong>"
-msgstr "<strong>Total</strong>"
+#: model_terms:ir.ui.view,arch_db:purchase.track_po_line_qty_received_template
+msgid "<strong>The received quantity has been updated.</strong>"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+msgid "<strong>This purchase has been canceled.</strong>"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Unit Price</strong>"
 msgstr "<strong>Harga Satuan</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+msgid "<strong>Update Here</strong>"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -438,56 +459,193 @@ msgid "<strong>Your Order Reference:</strong>"
 msgstr "<strong>Referensi Order Anda:</strong>"
 
 #. module: purchase
+#: code:addons/purchase/models/purchase.py:0
+#, python-format
+msgid "A sample email has been sent to %s."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order_line__product_type
+msgid ""
+"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A consumable product is a product for which stock is not managed.\n"
+"A service is a non-material product you provide."
+msgstr ""
+
+#. module: purchase
 #: model:res.groups,name:purchase.group_warning_purchase
 msgid "A warning can be set on a product or a customer (Purchase)"
 msgstr "Peringatan dapat diterapkan pada produk atau pelanggan (Pembelian)"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_account_invoice_purchase_id
-msgid "Add Purchase Order"
-msgstr "Tambah Order Pembelian"
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+msgid ""
+"Ability to select a package type in purchase orders and to force a quantity "
+"that is a multiple of the number of units per package."
+msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/controllers/portal.py:53
+#: code:addons/purchase/models/purchase.py:0
+#, python-format
+msgid "Accept"
+msgstr "Terima"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__access_warning
+msgid "Access warning"
+msgstr "Peringatan akses"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order_line__qty_received_method
+msgid ""
+"According to product configuration, the received quantity can be automatically computed by mechanism :\n"
+"  - Manual: the quantity is set manually on the line\n"
+"  - Stock Moves: the quantity comes from confirmed pickings\n"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_accrued_expense_entry
+msgid "Accrued Expense Entry"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction
+msgid "Action Needed"
+msgstr "Perlu Tindakan"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_ids
+msgid "Activities"
+msgstr "Aktivitas"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Dekorasi Pengecualian Aktivitas"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_state
+msgid "Activity State"
+msgstr "Status Aktivitas"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Ikon Jenis Aktifitas"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Add a note"
+msgstr "Tambahkan catatan"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Add a product"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Add a section"
+msgstr "Add a section"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+msgid "Add several variants to the purchase order from a grid"
+msgstr ""
+
+#. module: purchase
+#. openerp-web
+#: code:addons/purchase/static/src/js/tours/purchase.js:0
+#, python-format
+msgid "Add some products or services to your quotation."
+msgstr ""
+
+#. module: purchase
+#: model:res.groups,name:purchase.group_purchase_manager
+msgid "Administrator"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/controllers/portal.py:0
 #, python-format
 msgid "All"
 msgstr "Semua"
 
 #. module: purchase
-#: selection:res.company,po_lock:0
+#. openerp-web
+#: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
+#, python-format
+msgid "All Draft RFQs"
+msgstr ""
+
+#. module: purchase
+#. openerp-web
+#: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
+#, python-format
+msgid "All Late RFQs"
+msgstr ""
+
+#. module: purchase
+#. openerp-web
+#: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
+#, python-format
+msgid "All RFQs"
+msgstr ""
+
+#. module: purchase
+#. openerp-web
+#: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
+#, python-format
+msgid "All Waiting RFQs"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_res_config_settings__group_send_reminder
+msgid "Allow automatically send email to remind your vendor the receipt date"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__res_company__po_lock__edit
 msgid "Allow to edit purchase orders"
 msgstr "Ijinkan untuk mengubah order pembelian"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_account
-msgid "Allows you to specify an analytic account on purchase order lines."
-msgstr "Anda dapat menentukan akun analitik pada baris order pembelian."
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__amount
+msgid "Amount"
+msgstr "Jumlah"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_account_analytic_id
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_account_analytic_id
+#: model:ir.model.fields,help:purchase.field_purchase_report__delay_pass
+msgid ""
+"Amount of time between date planned and order by date for each purchase "
+"order line."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_report__avg_days_to_purchase
+msgid ""
+"Amount of time between purchase approval and document creation date. Due to "
+"a hack needed to calculate this,               every record will show the "
+"same average value, therefore only use this as an aggregated value with "
+"group_operator=avg"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_report__delay
+msgid "Amount of time between purchase approval and order by date."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_account_analytic_account
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__account_analytic_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__account_analytic_id
 msgid "Analytic Account"
 msgstr "Akun Analitik"
 
 #. module: purchase
-#: model:res.groups,name:purchase.group_analytic_accounting
-msgid "Analytic Accounting for Purchases"
-msgstr "Akuntansi Analitik untuk Pembelian"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_analytic_tag_ids
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_tag_ids
 msgid "Analytic Tags"
-msgstr "Tag Analisis"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_config_settings_group_analytic_account_for_purchases
-msgid "Analytic accounting for purchases"
-msgstr "Akuntansi Analitis untuk Pembelian"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_date_approve
-msgid "Approval Date"
-msgstr "Tanggal Disetujui"
+msgstr "Tag Analitik"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -495,38 +653,107 @@ msgid "Approve Order"
 msgstr "Setujui Order"
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_account_invoice_line_purchase_id
-msgid ""
-"Associated Purchase Order. Filled in automatically when a PO is chosen on "
-"the vendor bill."
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_attachment_count
+msgid "Attachment Count"
+msgstr "Hitungan Lampiran"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+msgid "Attributes"
+msgstr "Atribut"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
+msgid "Auto-Complete"
+msgstr "Auto-Complete"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__purchase_vendor_bill_id
+#: model:ir.model.fields,field_description:purchase.field_account_move__purchase_vendor_bill_id
+#: model:ir.model.fields,field_description:purchase.field_account_payment__purchase_vendor_bill_id
+msgid "Auto-complete"
 msgstr ""
-"Order Pembelian Terkait. Akan terisi secara otomatis ketika Order Pembelian "
-"dipilih pada tagihan pemasok."
 
 #. module: purchase
-#: model:ir.filters,name:purchase.filter_purchase_order_average_delivery_time
-msgid "Average Delivery Time"
-msgstr "Waktu Rata-rata Pengiriman"
+#: model:ir.model.fields,help:purchase.field_account_bank_statement_line__purchase_vendor_bill_id
+#: model:ir.model.fields,help:purchase.field_account_move__purchase_vendor_bill_id
+#: model:ir.model.fields,help:purchase.field_account_payment__purchase_vendor_bill_id
+msgid "Auto-complete from a past bill / purchase order."
+msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_price_average
-msgid "Average Price"
-msgstr "Harga Rata-rata"
+#: model:ir.model.fields,help:purchase.field_account_bank_statement_line__purchase_id
+#: model:ir.model.fields,help:purchase.field_account_move__purchase_id
+#: model:ir.model.fields,help:purchase.field_account_payment__purchase_id
+msgid "Auto-complete from a past purchase order."
+msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_config_settings_default_purchase_method
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+msgid "Automatically lock confirmed orders to prevent editing"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+msgid "Automatically remind the receipt date to your vendors"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__receipt_reminder_email
+#: model:ir.model.fields,help:purchase.field_res_partner__receipt_reminder_email
+#: model:ir.model.fields,help:purchase.field_res_users__receipt_reminder_email
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid ""
+"Automatically send a confirmation email to the vendor X days before the "
+"expected receipt date, asking him to confirm the exact date."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__price_average
+msgid "Average Cost"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__avg_days_to_purchase
+msgid "Average Days to Purchase"
+msgstr ""
+
+#. module: purchase
+#. openerp-web
+#: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
+#, python-format
+msgid "Avg Order Value ("
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__default_purchase_method
 msgid "Bill Control"
 msgstr "Kontrol Tagihan"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_invoice_lines
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__invoice_count
+msgid "Bill Count"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__invoice_lines
 msgid "Bill Lines"
 msgstr "Baris Tagihan"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_qty_invoiced
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Billed"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced
 msgid "Billed Qty"
 msgstr "Kuantitas Tertagih"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Billed Quantity"
+msgstr "Jumlah ditagih"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
@@ -534,54 +761,35 @@ msgid "Billed Quantity:"
 msgstr "Kuantitas Tertagih:"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_status
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__invoice_status
 msgid "Billing Status"
 msgstr "Status Tagihan"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_ids
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__invoice_ids
 msgid "Bills"
 msgstr "Tagihan"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "Bills Received"
 msgstr "Tagihan Diterima"
 
 #. module: purchase
-#: selection:product.template,purchase_line_warn:0
-#: selection:res.partner,purchase_warn:0
+#: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_line_warn__block
+#: model:ir.model.fields.selection,name:purchase.selection__res_partner__purchase_warn__block
 msgid "Blocking Message"
 msgstr "Blokir Pesan"
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:73
-#: model:stock.location.route,name:purchase.route_warehouse0_buy
-#, python-format
-msgid "Buy"
-msgstr "Beli"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_stock_warehouse_buy_pull_id
-msgid "Buy rule"
-msgstr "Aturan Pembelian"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid ""
-"By default, vendor prices can be set manually in the product detail form. If"
-" your vendors provide you with pricelist files, this option allows you to "
-"easily import them into the system from ‘Purchase > Vendor Pricelists’ menu."
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__user_id
+msgid "Buyer"
 msgstr ""
-"Secara standar, harga pemasok dapat diatur secara manual pada halaman detail"
-" produk. Jika pemasok Anda menyediakan Anda berkas daftar harga, opsi ini "
-"memungkinkan Anda untuk mengimpornya dengan mudah ke dalam sistem dari menu "
-"'Pembelian > Daftar Harga Pemasok'."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_calendar
 msgid "Calendar View"
-msgstr "Tampilan kalender"
+msgstr "Tampilan Kalender"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -598,63 +806,36 @@ msgstr ""
 " beberapa pemasok."
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:76
-#, python-format
-msgid "Can't find any generic Buy route."
-msgstr "Tidak dapat menemukan rute Beli umum."
-
-#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Cancel"
 msgstr "Batal"
 
 #. module: purchase
-#: code:addons/purchase/controllers/portal.py:55
-#: selection:purchase.order,state:0 selection:purchase.report,state:0
+#: code:addons/purchase/controllers/portal.py:0
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__cancel
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__cancel
 #, python-format
 msgid "Cancelled"
 msgstr "Dibatalkan"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:737
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "Cancelled Purchase Order #"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
-msgstr "Tidak dapat menghapus baris order pembelian yang dalam keadaan '%s'."
+msgstr "Tidak dapat menghapus batas order penjualan yang dalam keadaan '%s'."
 
 #. module: purchase
-#: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
-msgid "Click here to record a vendor bill."
-msgstr "Klik untuk membuat tagihan pemasok."
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_category_id
+msgid "Category"
+msgstr "Kategori"
 
 #. module: purchase
-#: model_terms:ir.actions.act_window,help:purchase.purchase_form_action
-msgid ""
-"Click to create a quotation that will be converted into a purchase order."
-msgstr "Klik untuk membuat penawaran yang dapat dijadikan order pembelian."
-
-#. module: purchase
-#: model_terms:ir.actions.act_window,help:purchase.purchase_rfq
-msgid "Click to create a request for quotation."
-msgstr "Klik untuk membuat permintaan penawaran."
-
-#. module: purchase
-#: model_terms:ir.actions.act_window,help:purchase.action_invoice_pending
-msgid "Click to create a vendor bill."
-msgstr "Klik untuk membuat tagihan pemasok."
-
-#. module: purchase
-#: model_terms:ir.actions.act_window,help:purchase.product_normal_action_puchased
-#: model_terms:ir.actions.act_window,help:purchase.product_product_action
-msgid "Click to define a new product."
-msgstr "Klik untuk menambahkan produk baru."
-
-#. module: purchase
-#: model_terms:ir.actions.act_window,help:purchase.purchase_open_invoice
-msgid "Click to record a vendor bill related to this purchase."
-msgstr "Klik untuk menambahkan Tagihan Pemasok terkait dengan pembelian ini."
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_commercial_partner_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__commercial_partner_id
 msgid "Commercial Entity"
 msgstr "Entitas Komersial"
 
@@ -664,18 +845,30 @@ msgid "Companies"
 msgstr "Perusahaan"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_company_id
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_company_id
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_company_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__company_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__company_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__company_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__company_id
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Company"
 msgstr "Perusahaan"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:313
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__company_currency_id
+msgid "Company Currency"
+msgstr "Mata Uang Perusahaan"
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:0
+#: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Compose Email"
 msgstr "Buat Email"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_res_config_settings
+msgid "Config Settings"
+msgstr "Pengaturan Konfigurasi"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config
@@ -683,79 +876,173 @@ msgid "Configuration"
 msgstr "Konfigurasi"
 
 #. module: purchase
+#: code:addons/purchase/models/purchase.py:0
+#, python-format
+msgid "Confirm"
+msgstr "Konfirmasi"
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Confirm Order"
 msgstr "Konfirmasi Order"
 
 #. module: purchase
-#: selection:res.company,po_double_validation:0
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Confirm Receipt Date"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__res_company__po_double_validation__one_step
 msgid "Confirm purchase orders in one step"
 msgstr "Konfirmasi order pembelian dalam satu langkah"
 
 #. module: purchase
-#: selection:res.company,po_lock:0
+#. openerp-web
+#: code:addons/purchase/static/src/js/tours/purchase.js:0
+#, python-format
+msgid "Confirm your purchase."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__date_approve
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__date_approve
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__date_approve
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Confirmation Date"
+msgstr "Tanggal Konfirmasi"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Confirmation Date Last Year"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__res_company__po_lock__lock
 msgid "Confirmed purchase orders are not editable"
 msgstr "order pembelian yang telah dikonfirmasi tidak dapat diubah"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "Contact"
 msgstr "Kontak"
 
 #. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_purchase_control
-msgid "Control"
-msgstr "Kontrol"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_product_product_purchase_method
-#: model:ir.model.fields,field_description:purchase.field_product_template_purchase_method
+#: model:ir.model.fields,field_description:purchase.field_product_product__purchase_method
+#: model:ir.model.fields,field_description:purchase.field_product_template__purchase_method
 msgid "Control Policy"
 msgstr "Kebijakan Kontrol"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_stock_move_created_purchase_line_id
-msgid "Created Purchase Order Line"
-msgstr "Baris Order Pembelian Telah Dibuat"
+#: model:ir.model.fields,help:purchase.field_purchase_order_line__product_uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Konversi antara satuan hanya dapat terjadi jika mereka berada pada kategori "
+"yang sama. Konversi akan dibuat berdasarkan rasio."
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_create_uid
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__country_code
+msgid "Country code"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Create Bill"
+msgstr "Buat Tagihan"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
+msgid "Create Bills"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.server,name:purchase.action_purchase_batch_bills
+msgid "Create Vendor Bills"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.actions.act_window,help:purchase.product_product_action
+msgid "Create a new product variant"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__create_uid
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__create_uid
 msgid "Created by"
 msgstr "Dibuat oleh"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_create_date
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_create_date
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__create_date
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__create_date
 msgid "Created on"
 msgstr "Dibuat pada"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_currency_id
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_currency_id
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_currency_id
-#: model:ir.model.fields,field_description:purchase.field_res_config_settings_company_currency_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__currency_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__currency_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__currency_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__currency_id
 msgid "Currency"
 msgstr "Mata Uang"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_date_approve
-msgid "Date Approved"
-msgstr "Tanggal Disetujui"
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__currency_rate
+msgid "Currency Rate"
+msgstr "Kurs Mata Uang"
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_report_date_order
-msgid "Date on which this document has been created"
-msgstr "Tanggal dokumen ini dibuat"
+#: model:ir.model.fields,help:purchase.field_purchase_order__access_url
+msgid "Customer Portal URL"
+msgstr "Customer Portal URL"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_delay_pass
-msgid "Days to Deliver"
-msgstr "Lama Pengiriman"
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__date
+msgid "Date"
+msgstr "Tanggal"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_delay
-msgid "Days to Validate"
-msgstr "Lama Penyetujuan"
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__date_calendar_start
+msgid "Date Calendar Start"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:0
+#: code:addons/purchase/models/purchase.py:0
+#, python-format
+msgid "Date Updated"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+msgid "Date:"
+msgstr "Tanggal:"
+
+#. module: purchase
+#. openerp-web
+#: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
+#, python-format
+msgid "Days"
+msgstr "Hari"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__reminder_date_before_receipt
+#: model:ir.model.fields,field_description:purchase.field_res_partner__reminder_date_before_receipt
+#: model:ir.model.fields,field_description:purchase.field_res_users__reminder_date_before_receipt
+msgid "Days Before Receipt"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__delay
+msgid "Days to Confirm"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__delay_pass
+msgid "Days to Receive"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -763,100 +1050,97 @@ msgid "Define your terms and conditions ..."
 msgstr "Tentukan syarat dan ketentuan Anda ..."
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_picking_type_id
-msgid "Deliver To"
-msgstr "Dikirim Untuk"
-
-#. module: purchase
-#: selection:res.config.settings,default_purchase_method:0
-msgid "Delivered quantities"
-msgstr "Jumlah terkirim"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Deliveries & Invoices"
-msgstr "Pengiriman & Faktur"
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_date_order
-#: model:ir.model.fields,help:purchase.field_purchase_order_line_date_order
+#: model:ir.model.fields,help:purchase.field_purchase_order_line__date_planned
 msgid ""
-"Depicts the date where the Quotation should be validated and converted into "
-"a purchase order."
+"Delivery date expected from vendor. This date respectively defaults to "
+"vendor pricelist lead time then today's date."
 msgstr ""
-"Tentukan tanggal di mana Penawaran harus divalidasi dan diubah menjadi order"
-" pembelian."
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_name
+#: model:ir.model.fields,help:purchase.field_purchase_order__date_planned
+msgid ""
+"Delivery date promised by vendor. This date is used to determine expected "
+"arrival of products."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_report__date_order
+msgid ""
+"Depicts the date when the Quotation should be validated and converted into a"
+" purchase order."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__date_order
+#: model:ir.model.fields,help:purchase.field_purchase_order_line__date_order
+msgid ""
+"Depicts the date within which the Quotation should be confirmed and "
+"converted into a purchase order."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__name
 msgid "Description"
 msgstr "Deskripsi"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
-msgid "Description for Vendors"
-msgstr "Deskripsi untuk Pemasok"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_default_location_dest_id_usage
-msgid "Destination Location Type"
-msgstr "Tipe Lokasi Tujuan"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_display_name
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_display_name
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_display_name
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__display_name
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__display_name
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__display_name
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__display_name
 msgid "Display Name"
 msgstr "Nama Tampilan"
 
 #. module: purchase
-#: selection:purchase.report,state:0
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__display_type
+msgid "Display Type"
+msgstr "Display Type"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+msgid "Documentation"
+msgstr "Dokumentasi"
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__done
 msgid "Done"
 msgstr "Selesai"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_company_po_double_validation_amount
+#: model:ir.model.fields,field_description:purchase.field_res_company__po_double_validation_amount
 msgid "Double validation amount"
 msgstr "Jumlah validasi ganda"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_move_dest_ids
-msgid "Downstream Moves"
-msgstr "Pergerakan Alur Bawah"
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+msgid "Download"
+msgstr "Unduh"
 
 #. module: purchase
-#: selection:purchase.report,state:0
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__draft
 msgid "Draft RFQ"
 msgstr "Rancangan PPw"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_dest_address_id
-msgid "Drop Ship Address"
-msgstr "Alamat dropship"
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+msgid "Draft RFQs"
+msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_config_settings_module_stock_dropshipping
-msgid "Dropshipping"
-msgstr "Dropship"
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__dest_address_id
+msgid "Dropship Address"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr "Petunjuk komposisi email"
+msgstr "Wisaya komposisi email"
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_account_invoice_purchase_id
-msgid ""
-"Encoding help. When selected, the associated purchase order lines are added "
-"to the vendor bill. Several PO can be selected."
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__date_planned
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__date_planned
+msgid "Expected Arrival"
 msgstr ""
-"Bantuan perekaman. Ketika dipilih, baris order pembelian yang terkait akan "
-"ditambahkan ke tagihan pemasok. Beberapa Order Pembelian dapat dipilih."
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
-msgid "Expected Date"
-msgstr "Tanggal Perkiraan"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
@@ -864,25 +1148,50 @@ msgid "Extended Filters"
 msgstr "Penyaring Tambahan"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:577
+#: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Extra line with %s "
 msgstr "Baris tambahan dengan %s"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_fiscal_position_id
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_fiscal_position_id
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__fiscal_position_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__fiscal_position_id
 msgid "Fiscal Position"
 msgstr "Posisi Fiskal"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
-msgid "Future Activities"
-msgstr "Aktifitas Akan Datang"
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_follower_ids
+msgid "Followers"
+msgstr "Pengikut"
 
 #. module: purchase
-#: selection:res.company,po_double_validation:0
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Pengikut (Rekanan)"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Ikon font awesome, misalnya fa-tasks"
+
+#. module: purchase
+#: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_non_accountable_null_fields
+msgid "Forbidden values on non-accountable purchase order line"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__invoice_status__invoiced
+msgid "Fully Billed"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+msgid "Future Activities"
+msgstr "Kegiatan - Kegiatan Mendatang"
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__res_company__po_double_validation__two_step
 msgid "Get 2 levels of approvals to confirm a purchase order"
 msgstr "2 level penyetujuan untuk mengkonfirmasi order pembelian"
 
@@ -892,16 +1201,22 @@ msgid "Get warnings in orders for products or vendors"
 msgstr "Terima peringatan pada order untuk produk atau pelanggan"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_weight
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__weight
 msgid "Gross Weight"
 msgstr "Berat kotor"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Group By"
-msgstr "Dikelompokkan Menurut"
+msgstr "Dikelompokkan berdasarkan"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__has_message
+msgid "Has Message"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
@@ -909,16 +1224,38 @@ msgid "Hide cancelled lines"
 msgstr "Sembunyikan baris dibatalkan"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid "How to import"
-msgstr "Bagaimana cara mengimpor"
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+msgid "History"
+msgstr "Riwayat"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_id
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_id
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__id
 msgid "ID"
 msgstr "ID"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_exception_icon
+msgid "Icon"
+msgstr "Ikon"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Ikon untuk menunjukkan sebuah aktivitas pengecualian."
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Jika dicentang, pesan baru memerlukan penanganan dan perhatian Anda."
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__message_has_error
+#: model:ir.model.fields,help:purchase.field_purchase_order__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Jika dicentang, beberapa pesan mempunyai kesalahan dalam pengiriman."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -931,49 +1268,49 @@ msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid "Import vendor pricelists"
-msgstr "Impor daftar harga pemasok"
+msgid ""
+"If installed, the product variants will be added to purchase orders through "
+"a grid entry."
+msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:206
+#: model:ir.model.fields,help:purchase.field_product_packaging__purchase
+msgid "If true, the packaging can be used for purchase orders"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/models/product.py:0
+#, python-format
+msgid "Import Template for Products"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
 msgstr ""
 "Untuk menghapus order pembelian, anda harus membatalkannya terlebih dahulu"
 
 #. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
-msgid "Incoming  Products"
-msgstr "Produk Masuk"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Incoming Shipments"
-msgstr "Pengiriman Barang Masuk"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_incoterm_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__incoterm_id
 msgid "Incoterm"
 msgstr "Incoterm"
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_incoterm_id
+#. openerp-web
+#: code:addons/purchase/static/src/js/tours/purchase.js:0
+#, python-format
+msgid "Indicate the product quantity you want to order."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__incoterm_id
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
 msgstr ""
 "Syarat Komersial Internasional adalah serangkaian standar istilah komersial "
 "yang digunakan dalam transaksi internasional."
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_account_invoice
-msgid "Invoice"
-msgstr "Faktur"
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_account_invoice_line
-msgid "Invoice Line"
-msgstr "Baris Faktur"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -986,46 +1323,89 @@ msgid "Invoicing"
 msgstr "Penagihan"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_is_shipped
-msgid "Is Shipped"
-msgstr "Telah Dikirim"
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_is_follower
+msgid "Is Follower"
+msgstr "Pengikut"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_config_settings_is_installed_sale
-msgid "Is the Sale Module Installed"
-msgstr "Apakah Modul Penjualan Terpasang"
+#: model:ir.model,name:purchase.model_account_move
+msgid "Journal Entry"
+msgstr "Entri Jurnal"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order___last_update
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line___last_update
-#: model:ir.model.fields,field_description:purchase.field_purchase_report___last_update
+#: model:ir.model,name:purchase.model_account_move_line
+msgid "Journal Item"
+msgstr "Item Jurnal"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union____last_update
+#: model:ir.model.fields,field_description:purchase.field_purchase_order____last_update
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line____last_update
+#: model:ir.model.fields,field_description:purchase.field_purchase_report____last_update
 msgid "Last Modified on"
 msgstr "Terakhir diubah pada"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_write_uid
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_write_uid
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__write_uid
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__write_uid
 msgid "Last Updated by"
 msgstr "Terakhir diperbarui oleh"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_write_date
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_write_date
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__write_date
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__write_date
 msgid "Last Updated on"
 msgstr "Terakhir diperbarui pada"
 
 #. module: purchase
+#. openerp-web
+#: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
+#, python-format
+msgid "Late"
+msgstr "Terlambat"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Late Activities"
 msgstr "Aktifitas terakhir"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_company_po_double_validation
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+msgid "Late RFQs"
+msgstr ""
+
+#. module: purchase
+#. openerp-web
+#: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
+#, python-format
+msgid "Lead Time to Purchase"
+msgstr ""
+
+#. module: purchase
+#. openerp-web
+#: code:addons/purchase/static/src/js/tours/purchase.js:0
+#, python-format
+msgid "Let's create your first request for quotation."
+msgstr ""
+
+#. module: purchase
+#. openerp-web
+#: code:addons/purchase/static/src/js/tours/purchase.js:0
+#: code:addons/purchase/static/src/js/tours/purchase.js:0
+#, python-format
+msgid ""
+"Let's try the Purchase app to manage the flow from purchase to reception and"
+" invoice control."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_company__po_double_validation
 msgid "Levels of Approvals"
 msgstr "Penyetujuan Bertahap"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_config_settings_po_double_validation
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_double_validation
 msgid "Levels of Approvals *"
 msgstr "Penyetujuan Bertahap *"
 
@@ -1035,21 +1415,21 @@ msgid "Lock"
 msgstr "Kunci"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_config_settings_lock_confirmed_po
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__lock_confirmed_po
 msgid "Lock Confirmed Orders"
-msgstr "Kunci Pesanan yang telah Dikonfirmasi"
+msgstr "Kunci Order yang telah Dikonfirmasi"
 
 #. module: purchase
-#: code:addons/purchase/controllers/portal.py:56
-#: selection:purchase.order,state:0
+#: code:addons/purchase/controllers/portal.py:0
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__done
 #, python-format
 msgid "Locked"
 msgstr "Dikunci"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid "Logistics"
-msgstr "Logistik"
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Lampiran Utama"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1060,24 +1440,14 @@ msgstr ""
 "pesanan Anda"
 
 #. module: purchase
-#: model:res.groups,name:purchase.group_manage_vendor_price
-msgid "Manage Vendor Price"
-msgstr "Kelola Harga Pemasok"
-
-#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Manage your purchase agreements (call for tenders, blanket orders)"
 msgstr "Kelola perjanjian pembelian Anda (permintaan tender, order blanket)"
 
 #. module: purchase
-#: model:res.groups,name:purchase.group_purchase_manager
-msgid "Manager"
-msgstr "Manajer"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid "Managers must approve orders"
-msgstr "Manajer harus menyetujui order"
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__qty_received_method__manual
+msgid "Manual"
+msgstr "Manual"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
@@ -1085,8 +1455,13 @@ msgid "Manual Invoices"
 msgstr "Faktur Manual"
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_res_company_po_lead
-#: model:ir.model.fields,help:purchase.field_res_config_settings_po_lead
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received_manual
+msgid "Manual Received Qty"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_res_company__po_lead
+#: model:ir.model.fields,help:purchase.field_res_config_settings__po_lead
 msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
 "Orders for procuring products, they will be scheduled that many days earlier"
@@ -1098,8 +1473,7 @@ msgstr ""
 "pemasok."
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_res_config_settings_use_po_lead
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
+#: model:ir.model.fields,help:purchase.field_res_config_settings__use_po_lead
 msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
 "Orders for reordering products,they will be scheduled that many days earlier"
@@ -1111,93 +1485,170 @@ msgstr ""
 "pemasok."
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn_msg
-#: model:ir.model.fields,field_description:purchase.field_res_users_purchase_warn_msg
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error
+msgid "Message Delivery error"
+msgstr "Kesalahan Pengiriman Pesan"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_warn_msg
+#: model:ir.model.fields,field_description:purchase.field_res_users__purchase_warn_msg
 msgid "Message for Purchase Order"
 msgstr "Pesan untuk Order Pembelian"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_product_product_purchase_line_warn_msg
-#: model:ir.model.fields,field_description:purchase.field_product_template_purchase_line_warn_msg
+#: model:ir.model.fields,field_description:purchase.field_product_product__purchase_line_warn_msg
+#: model:ir.model.fields,field_description:purchase.field_product_template__purchase_line_warn_msg
 msgid "Message for Purchase Order Line"
 msgstr "Pesan untuk Baris Order Pembelian"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_config_settings_po_double_validation_amount
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_ids
+msgid "Messages"
+msgstr "Pesan"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_double_validation_amount
 msgid "Minimum Amount"
 msgstr "Jumlah Minimum"
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_stock_warehouse_orderpoint
-msgid "Minimum Inventory Rule"
-msgstr "Aturan Persediaan Minimum"
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_res_company_po_double_validation_amount
-#: model:ir.model.fields,help:purchase.field_res_config_settings_po_double_validation_amount
+#: model:ir.model.fields,help:purchase.field_res_company__po_double_validation_amount
+#: model:ir.model.fields,help:purchase.field_res_config_settings__po_double_validation_amount
 msgid "Minimum amount for which a double validation is required"
 msgstr "Jumlah minimum di mana validasi ganda diharuskan"
 
 #. module: purchase
-#: model:ir.filters,name:purchase.filter_purchase_order_monthly_purchases
-msgid "Monthly Purchases"
-msgstr "Pembelian Bulanan"
-
-#. module: purchase
-#: model_terms:ir.actions.act_window,help:purchase.purchase_rfq
-msgid ""
-"Most propositions of purchase orders are created automatically\n"
-"                by Odoo based on inventory needs."
+#: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_accountable_required_fields
+msgid "Missing required fields on accountable purchase order line."
 msgstr ""
-"Hampir semua penawaran untuk order pembelian dibuat secara otomatis oleh "
-"Odoo menurut kebutuhan persediaan."
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
-msgid "Move forward expected delivery dates by"
-msgstr "Majukan jadwal pengiriman sebanyak"
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr ""
+
+#. module: purchase
+#. openerp-web
+#: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
+#, python-format
+msgid "My Draft RFQs"
+msgstr ""
+
+#. module: purchase
+#. openerp-web
+#: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
+#, python-format
+msgid "My Late RFQs"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
+msgid "My Orders"
+msgstr "Orderku"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
-msgid "My Activities"
-msgstr "Aktifitasku"
+msgid "My Purchases"
+msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/controllers/portal.py:44
+#. openerp-web
+#: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
+#, python-format
+msgid "My RFQs"
+msgstr ""
+
+#. module: purchase
+#. openerp-web
+#: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
+#, python-format
+msgid "My Waiting RFQs"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/controllers/portal.py:0
 #, python-format
 msgid "Name"
 msgstr "Nama"
 
 #. module: purchase
-#: code:addons/purchase/controllers/portal.py:43
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Name, TIN, Email, or Reference"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/controllers/portal.py:0
 #, python-format
 msgid "Newest"
 msgstr "Terbaru"
 
 #. module: purchase
-#: selection:purchase.order,invoice_status:0
-msgid "No Bill to Receive"
-msgstr "Tidak Ada Tagihan yang dapat Diterima"
-
-#. module: purchase
-#: selection:product.template,purchase_line_warn:0
-#: selection:res.partner,purchase_warn:0
-msgid "No Message"
-msgstr "Tidak ada pesan"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid "No longer edit orders once confirmed"
-msgstr "Tidak ijinkan ubah order yang telah dikonfirmasi"
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_line_product_image
-msgid ""
-"Non-stored related field to allow portal user to see the image of the "
-"product he has ordered"
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
 msgstr ""
-"Kolom terkait yang tidak tersimpan, memungkinkan pengguna portal untuk "
-"melihat gambar dari produk yang telah dia pesan"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Batas Waktu Aktivitas Berikutnya"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_summary
+msgid "Next Activity Summary"
+msgstr "Ringkasan Aktivitas Berikutnya"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_type_id
+msgid "Next Activity Type"
+msgstr "Tipe Aktivitas Berikutnya"
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_line_warn__no-message
+#: model:ir.model.fields.selection,name:purchase.selection__res_partner__purchase_warn__no-message
+msgid "No Message"
+msgstr "Tidak Ada Pesan"
+
+#. module: purchase
+#: model_terms:ir.actions.act_window,help:purchase.purchase_action_dashboard_kanban
+#: model_terms:ir.actions.act_window,help:purchase.purchase_action_dashboard_list
+msgid "No RFQs to display"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.actions.act_window,help:purchase.product_normal_action_puchased
+msgid "No product found. Let's create one!"
+msgstr "Product tidak ditemukan. Silahkan buat!"
+
+#. module: purchase
+#: model_terms:ir.actions.act_window,help:purchase.purchase_form_action
+msgid "No purchase order found. Let's create one!"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.actions.act_window,help:purchase.action_purchase_history
+msgid "No purchase order were made for this product yet!"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.actions.act_window,help:purchase.purchase_rfq
+msgid "No request for quotation found. Let's create one!"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__priority__0
+msgid "Normal"
+msgstr "Biasa"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
+msgid "Not Acknowledged"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__display_type__line_note
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Note"
+msgstr "Catatan"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1205,70 +1656,104 @@ msgid "Notes"
 msgstr "Catatan"
 
 #. module: purchase
-#: selection:purchase.order,invoice_status:0
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__invoice_status__no
 msgid "Nothing to Bill"
-msgstr "Tidak Ada yang bisa Ditagih"
+msgstr "Belum"
 
 #. module: purchase
-#: selection:product.template,purchase_method:0
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Jumlah Tindakan"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__reminder_date_before_receipt
+#: model:ir.model.fields,help:purchase.field_res_partner__reminder_date_before_receipt
+#: model:ir.model.fields,help:purchase.field_res_users__reminder_date_before_receipt
+msgid "Number of days to send reminder email before the promised receipt date"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error_counter
+msgid "Number of errors"
+msgstr "Jumlah kesalahan"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Jumlah pesan yang butuh tindakan"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Jumlah dari pesan dengan kesalahan pengiriman"
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_method__purchase
 msgid "On ordered quantities"
 msgstr "Jumlah yang dipesan"
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_product_product_purchase_method
-#: model:ir.model.fields,help:purchase.field_product_template_purchase_method
+#: model:ir.model.fields,help:purchase.field_product_product__purchase_method
+#: model:ir.model.fields,help:purchase.field_product_template__purchase_method
 msgid ""
-"On ordered quantities: control bills based on ordered quantities.\n"
-"On received quantities: control bills based on received quantity."
+"On ordered quantities: Control bills based on ordered quantities.\n"
+"On received quantities: Control bills based on received quantities."
 msgstr ""
-"Pada jumlah yang dipesan: kontrol tagihan berdasarkan jumlah yang dipesan.\n"
-"Pada jumlah yang diterima: kontrol tagihan berdasarkan jumlah yang diterima."
 
 #. module: purchase
-#: selection:product.template,purchase_method:0
+#: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_method__receive
 msgid "On received quantities"
 msgstr "Jumlah yang diterima"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_config_settings_po_order_approval
-msgid "Order Approval"
-msgstr "Penyetujuan Order"
+#. openerp-web
+#: code:addons/purchase/static/src/js/tours/purchase.js:0
+#, python-format
+msgid ""
+"Once you get the price from the vendor, you can complete the purchase order "
+"with the right price."
+msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_date_order
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_date_order
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_date_order
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
+#: model_terms:ir.actions.act_window,help:purchase.purchase_form_action
+msgid ""
+"Once you ordered your products to your supplier, confirm your request for "
+"quotation and it will turn into a purchase order."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__order_id
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+msgid "Order"
+msgstr "Order"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__date_order
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__date_order
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Order Date"
 msgstr "Tanggal Order"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_order_line
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__date_order
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
+msgid "Order Deadline"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__order_line
 msgid "Order Lines"
-msgstr "Baris Order"
+msgstr "Detail Order"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
-msgid "Order Month"
-msgstr "Bulan Pemesanan"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_order_id
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_name
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__name
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__order_id
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
 msgid "Order Reference"
 msgstr "Referensi Order"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_state
-msgid "Order Status"
-msgstr "Status Order"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
-msgid "Order of Day"
-msgstr "Hari Order"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
@@ -1276,57 +1761,89 @@ msgid "Ordered Quantity:"
 msgstr "Kuantitas Dipesan:"
 
 #. module: purchase
-#: selection:res.config.settings,default_purchase_method:0
+#: model:ir.model.fields.selection,name:purchase.selection__res_config_settings__default_purchase_method__purchase
 msgid "Ordered quantities"
 msgstr "Jumlah dipesan"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_orderpoint_id
-msgid "Orderpoint"
-msgstr "Titik Order"
-
-#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_procurement_management
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Orders"
 msgstr "Order"
 
 #. module: purchase
-#: model:mail.template,report_name:purchase.email_template_edi_purchase_done
-msgid "PO_${(object.name or '').replace('/','_')}"
-msgstr "PO_$ {(object.name or '') .replace('/','_')}"
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Other Information"
+msgstr "Informasi Lainnya"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_partner_id
+#: model:mail.template,report_name:purchase.email_template_edi_purchase_done
+#: model:mail.template,report_name:purchase.email_template_edi_purchase_reminder
+msgid "PO_{{ (object.name or '').replace('/','_') }}"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_packaging_id
+msgid "Packaging"
+msgstr "Kemasan"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_packaging_qty
+msgid "Packaging Quantity"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__partner_id
 msgid "Partner"
 msgstr "Rekanan"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_country_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__country_id
 msgid "Partner Country"
 msgstr "Negara Rekanan"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
-msgid "Partner's Country"
-msgstr "Negara Rekanan"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_payment_term_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__payment_term_id
 msgid "Payment Terms"
-msgstr "Syarat Pembayaran:"
+msgstr "Syarat Pembayaran"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_product_category_property_account_creditor_price_difference_categ
-#: model:ir.model.fields,field_description:purchase.field_product_product_property_account_creditor_price_difference
-#: model:ir.model.fields,field_description:purchase.field_product_template_property_account_creditor_price_difference
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+msgid "Payment terms"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:0
+#, python-format
+msgid "Please define an accounting purchase journal for the company %s (%s)."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__access_url
+msgid "Portal Access URL"
+msgstr "Portal Access URL"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Preview the reminder email by sending it to yourself."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_product_category__property_account_creditor_price_difference_categ
+#: model:ir.model.fields,field_description:purchase.field_product_product__property_account_creditor_price_difference
+#: model:ir.model.fields,field_description:purchase.field_product_template__property_account_creditor_price_difference
 msgid "Price Difference Account"
 msgstr "Akun Perbedaan Harga"
 
 #. module: purchase
-#: model:ir.filters,name:purchase.filter_purchase_order_price_per_supplier
-msgid "Price Per Vendor"
-msgstr "Harga Per Pemasok"
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+msgid "Pricing"
+msgstr "Harga"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+msgid "Print"
+msgstr "Cetak"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1334,28 +1851,25 @@ msgid "Print RFQ"
 msgstr "Cetak PPw"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_group_id
-msgid "Procurement Group"
-msgstr "Grup Pengadaan"
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_procurement_group
-msgid "Procurement Requisition"
-msgstr "Permintaan Pengadaan"
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_procurement_rule
-msgid "Procurement Rule"
-msgstr "Aturan Pengadaan"
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__priority
+msgid "Priority"
+msgstr "Prioritas"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_product
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_id
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_product_id
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_product_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__product_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__product_id
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Product"
 msgstr "Produk"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_attribute_action
+msgid "Product Attributes"
+msgstr "Atribut produk"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
@@ -1364,31 +1878,26 @@ msgstr "Kategori Produk"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_category
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_category_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__category_id
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Product Category"
 msgstr "Kategori Produk"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_image
-msgid "Product Image"
-msgstr "Gambar Produk"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_unit_quantity
-msgid "Product Quantity"
-msgstr "Kuantitas Produk"
+#: model:ir.model,name:purchase.model_product_packaging
+msgid "Product Packaging"
+msgstr "Kemasan Produk"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_template
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_product_tmpl_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__product_tmpl_id
 msgid "Product Template"
-msgstr "Templete produk"
+msgstr "Templete Produk"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_uom
-msgid "Product Unit of Measure"
-msgstr "Satuan Produk"
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_type
+msgid "Product Type"
+msgstr "Tipe Produk"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.product_product_action
@@ -1400,36 +1909,37 @@ msgstr "Varian Produk"
 #: model:ir.actions.act_window,name:purchase.product_normal_action_puchased
 #: model:ir.ui.menu,name:purchase.menu_procurement_partner_contact_form
 #: model:ir.ui.menu,name:purchase.menu_product_in_config_purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_products
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Products"
 msgstr "Produk"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_price_standard
-msgid "Products Value"
-msgstr "Nilai Produk"
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_res_company_po_double_validation
-#: model:ir.model.fields,help:purchase.field_res_config_settings_po_double_validation
+#: model:ir.model.fields,help:purchase.field_res_company__po_double_validation
+#: model:ir.model.fields,help:purchase.field_res_config_settings__po_double_validation
 msgid "Provide a double validation mechanism for purchases"
 msgstr "Menyediakan mekanisme dua kali validasi untuk pembelian"
 
 #. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_procurement_management
+#: model:ir.model.fields,field_description:purchase.field_product_packaging__purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_root
+#: model:ir.ui.menu,name:purchase.purchase_report
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Purchase"
 msgstr "Pembelian"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_config_settings_module_purchase_requisition
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_requisition
 msgid "Purchase Agreements"
 msgstr "Perjanjian Pembelian"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_report_view_tree
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_graph
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_pivot
 msgid "Purchase Analysis"
 msgstr "Analisis Pembelian"
 
@@ -1445,59 +1955,90 @@ msgstr ""
 "melacak performa negosiasi, performa pengiriman oleh pemasok, dsb."
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_account
-msgid "Purchase Analytics"
-msgstr "Analitik Pembelian"
-
-#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
-msgid "Purchase Bills"
-msgstr "Tagihan Pembelian"
+msgid "Purchase Description"
+msgstr "Deskripsi Pembelian"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_company_po_lead
-#: model:ir.model.fields,field_description:purchase.field_res_config_settings_po_lead
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_product_matrix
+msgid "Purchase Grid Entry"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Purchase History"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:0
+#, python-format
+msgid "Purchase History for %s"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_company__po_lead
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_lead
 msgid "Purchase Lead Time"
 msgstr "Lama Waktu Pembelian"
 
 #. module: purchase
-#: code:addons/purchase/controllers/portal.py:54
+#: code:addons/purchase/controllers/portal.py:0
+#: code:addons/purchase/models/purchase.py:0
+#: code:addons/purchase/models/purchase.py:0
 #: model:ir.actions.report,name:purchase.action_report_purchase_order
 #: model:ir.model,name:purchase.model_purchase_order
-#: model:ir.model.fields,field_description:purchase.field_account_invoice_line_purchase_id
-#: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn
-#: model:ir.model.fields,field_description:purchase.field_res_users_purchase_warn
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+#: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__purchase_id
+#: model:ir.model.fields,field_description:purchase.field_account_move__purchase_id
+#: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_order_id
+#: model:ir.model.fields,field_description:purchase.field_account_payment__purchase_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__purchase_order_id
+#: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_warn
+#: model:ir.model.fields,field_description:purchase.field_res_users__purchase_warn
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_graph
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_pivot
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_tree
-#: selection:purchase.order,state:0 selection:purchase.report,state:0
-#: model:res.request.link,name:purchase.req_link_purchase_order
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_activity
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 #, python-format
 msgid "Purchase Order"
 msgstr "Order Pembelian"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
-msgid "Purchase Order Confirmation #"
-msgstr "Konfirmasi Order Pembelian #"
+msgid "Purchase Order #"
+msgstr ""
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
-msgid "Purchase Order Fiscal Position"
-msgstr "Posisi Fiskal Order Pembelian"
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_order_approval
+msgid "Purchase Order Approval"
+msgstr ""
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_analytic_account__purchase_order_count
+#: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_order_count
+#: model:ir.model.fields,field_description:purchase.field_res_users__purchase_order_count
+msgid "Purchase Order Count"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_history
 #: model:ir.model,name:purchase.model_purchase_order_line
-#: model:ir.model.fields,field_description:purchase.field_account_invoice_line_purchase_line_id
-#: model:ir.model.fields,field_description:purchase.field_product_product_purchase_line_warn
-#: model:ir.model.fields,field_description:purchase.field_product_template_purchase_line_warn
-#: model:ir.model.fields,field_description:purchase.field_stock_move_purchase_line_id
+#: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_id
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
 msgid "Purchase Order Line"
 msgstr "Baris Order Pembelian"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_product_product__purchase_line_warn
+#: model:ir.model.fields,field_description:purchase.field_product_template__purchase_line_warn
+msgid "Purchase Order Line Warning"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1506,18 +2047,18 @@ msgid "Purchase Order Lines"
 msgstr "Baris Order Pembelian"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_company_po_lock
+#: model:ir.model.fields,field_description:purchase.field_res_company__po_lock
 msgid "Purchase Order Modification"
 msgstr "Perubahan Order Pembelian"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_config_settings_po_lock
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_lock
 msgid "Purchase Order Modification *"
 msgstr "Perubahan Order Pembelian *"
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_res_company_po_lock
-#: model:ir.model.fields,help:purchase.field_res_config_settings_po_lock
+#: model:ir.model.fields,help:purchase.field_res_company__po_lock
+#: model:ir.model.fields,help:purchase.field_res_config_settings__po_lock
 msgid ""
 "Purchase Order Modification used when you want to purchase order editable "
 "after confirm"
@@ -1526,65 +2067,109 @@ msgstr ""
 "dapat diubah setelah dikonfirmasi."
 
 #. module: purchase
+#: model:mail.template,name:purchase.email_template_edi_purchase_done
+msgid "Purchase Order: Send PO"
+msgstr ""
+
+#. module: purchase
+#: model:mail.template,name:purchase.email_template_edi_purchase
+msgid "Purchase Order: Send RFQ"
+msgstr ""
+
+#. module: purchase
+#: model:mail.template,name:purchase.email_template_edi_purchase_reminder
+msgid "Purchase Order: Vendor Reminder"
+msgstr ""
+
+#. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
-#: model:ir.actions.act_window,name:purchase.purchase_order_action_generic
-#: model:ir.model.fields,field_description:purchase.field_stock_picking_purchase_id
 #: model:ir.ui.menu,name:purchase.menu_purchase_form_action
+#: model_terms:ir.ui.view,arch_db:purchase.account_analytic_account_view_form_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_menu_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Purchase Orders"
 msgstr "Order Pembelian"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
-msgid "Purchase Orders #"
-msgstr "Order Pembelian #"
+#: model:ir.model,name:purchase.model_purchase_report
+msgid "Purchase Report"
+msgstr ""
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_graph
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_pivot
-msgid "Purchase Orders Statistics"
-msgstr "Statistik Order Pembelian"
-
-#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__user_id
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Purchase Representative"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_warning_purchase
+msgid "Purchase Warnings"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "Purchase orders that have been invoiced."
 msgstr "Order pembelian yang telah difakturkan."
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "Purchase orders that include lines not invoiced."
 msgstr "Order pembelian yang mencakup baris belum difakturkan."
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_stock_warehouse_buy_to_resupply
-msgid "Purchase to resupply this warehouse"
-msgstr "Beli untuk memasok gudang ini"
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+msgid "Purchase products by multiple of unit # per package"
+msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_negociation
-msgid "Purchase-Standard Price"
-msgstr "Harga Standar Pembelian"
+#: model:ir.actions.server,name:purchase.purchase_send_reminder_mail_ir_actions_server
+#: model:ir.cron,cron_name:purchase.purchase_send_reminder_mail
+#: model:ir.cron,name:purchase.purchase_send_reminder_mail
+msgid "Purchase reminder"
+msgstr ""
 
 #. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
-#: model:ir.ui.menu,name:purchase.menu_purchase_root
-#: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+msgid "Purchase variants of a product using attributes (size, color, etc.)"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_product_product__purchased_product_qty
+#: model:ir.model.fields,field_description:purchase.field_product_template__purchased_product_qty
+msgid "Purchased"
+msgstr "Dibeli"
+
+#. module: purchase
+#. openerp-web
+#: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
+#, python-format
+msgid "Purchased Last 7 Days ("
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
-#: model_terms:ir.ui.view,arch_db:purchase.view_warehouse_orderpoint_purchase_form
+msgid "Purchased in the last 365 days"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
 msgid "Purchases"
 msgstr "Pembelian"
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_purchase_report
-msgid "Purchases Orders"
-msgstr "Order Pembelian"
+#: model:ir.model,name:purchase.model_purchase_bill_union
+msgid "Purchases & Bills Union"
+msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_dest_address_id
+#: model:ir.model.fields,help:purchase.field_purchase_order__dest_address_id
 msgid ""
 "Put an address if you want to deliver directly from the vendor to the "
 "customer. Otherwise, keep empty to deliver to your own company."
@@ -1594,23 +2179,43 @@ msgstr ""
 "sendiri."
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_billed
+msgid "Qty Billed"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_ordered
+msgid "Qty Ordered"
+msgstr "Jml Dipesan"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_received
+msgid "Qty Received"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_to_be_billed
+msgid "Qty to be Billed"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Quantities billed by vendors"
 msgstr "Kuantitas yang ditagih oleh pemasok"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_qty
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_qty
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "Quantity"
-msgstr "Jumlah"
+msgstr "Kuantitas"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
-msgid "Quotations"
-msgstr "Penawaran"
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Quantity:"
+msgstr "Jumlah:"
 
 #. module: purchase
-#: selection:purchase.order,state:0
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__draft
 msgid "RFQ"
 msgstr "PPw"
 
@@ -1630,14 +2235,27 @@ msgid "RFQ Done"
 msgstr "PPw Selesai"
 
 #. module: purchase
-#: selection:purchase.order,state:0 selection:purchase.report,state:0
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__sent
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__sent
 msgid "RFQ Sent"
 msgstr "PPw Dikirim"
 
 #. module: purchase
 #: model:mail.template,report_name:purchase.email_template_edi_purchase
-msgid "RFQ_${(object.name or '').replace('/','_')}"
-msgstr "PPw_$ {(object.name or '') .replace('/','_')}"
+msgid "RFQ_{{ (object.name or '').replace('/','_') }}"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+msgid "RFQs"
+msgstr ""
+
+#. module: purchase
+#. openerp-web
+#: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
+#, python-format
+msgid "RFQs Sent Last 7 Days"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
@@ -1645,45 +2263,89 @@ msgid "RFQs and Purchases"
 msgstr "PPw dan Pembelian"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Re-Send RFQ by Email"
-msgstr "Mengirim Ulang PPw melalui Email"
+#: model:ir.model.fields,help:purchase.field_purchase_order__currency_rate
+msgid "Ratio between the purchase order currency and the company currency"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Receive Products"
-msgstr "Terima Produk"
+msgid "Re-Send by Email"
+msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_qty_received
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_send_reminder
+#: model:ir.model.fields,field_description:purchase.field_res_partner__receipt_reminder_email
+#: model:ir.model.fields,field_description:purchase.field_res_users__receipt_reminder_email
+msgid "Receipt Reminder"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__receipt_reminder_email
+msgid "Receipt Reminder Email"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Received"
+msgstr "Diterima"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received
 msgid "Received Qty"
 msgstr "Jml Diterima"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received_method
+msgid "Received Qty Method"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Received Quantity"
+msgstr "Kuantitas yang diterima"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.track_po_line_qty_received_template
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "Received Quantity:"
 msgstr "Jumlah Diterima:"
 
 #. module: purchase
-#: model:ir.actions.act_window,name:purchase.purchase_open_picking
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_picking_count
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_picking_ids
-msgid "Receptions"
-msgstr "Penerimaan"
+#: model:ir.model.fields.selection,name:purchase.selection__res_config_settings__default_purchase_method__receive
+msgid "Received quantities"
+msgstr ""
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__mail_reception_confirmed
+msgid "Reception Confirmed"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
+msgid "Record a new vendor bill"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__name
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_tree
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Reference"
 msgstr "Referensi"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_product_uom
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_tree
+msgid "Reference Document"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__product_uom
 msgid "Reference Unit of Measure"
 msgstr "Lebih besar dari Satuan Dasar"
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_origin
+#: model:ir.model.fields,help:purchase.field_purchase_order__origin
 msgid ""
 "Reference of the document that generated this purchase order request (e.g. a"
 " sales order)"
@@ -1692,7 +2354,7 @@ msgstr ""
 "order penjualan)"
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_partner_ref
+#: model:ir.model.fields,help:purchase.field_purchase_order__partner_ref
 msgid ""
 "Reference of the sales order or bid sent by the vendor. It's used to do the "
 "matching when you receive the products as this reference is usually written "
@@ -1703,14 +2365,21 @@ msgstr ""
 "biasanya tertulis pada surat jalan dari pemasok Anda."
 
 #. module: purchase
-#: model:ir.ui.menu,name:purchase.purchase_report
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__mail_reminder_confirmed
+msgid "Reminder Confirmed"
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.purchase_report_main
 msgid "Reporting"
 msgstr "Laporan"
 
 #. module: purchase
+#: code:addons/purchase/models/purchase.py:0
 #: model:ir.actions.report,name:purchase.report_purchase_quotation
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
+#, python-format
 msgid "Request for Quotation"
 msgstr "Permintaan Penawaran"
 
@@ -1721,59 +2390,104 @@ msgstr "Permintaan Penawaran #"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid "Request your vendors to deliver to your customers"
-msgstr "Minta pemasok Anda untuk mengirim langsung ke pelanggan Anda"
+msgid "Request managers to approve orders above a minimum amount"
+msgstr ""
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
+msgid "Requests For Quotation"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_rfq_form
+#: model:ir.actions.act_window,name:purchase.purchase_action_dashboard_kanban
+#: model:ir.actions.act_window,name:purchase.purchase_action_dashboard_list
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
 #: model:ir.ui.menu,name:purchase.menu_purchase_rfq
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_menu_purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Requests for Quotation"
 msgstr "Permintaan Penawaran"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_move_ids
-msgid "Reservation"
-msgstr "Reservasi"
+#: model_terms:ir.actions.act_window,help:purchase.purchase_rfq
+msgid ""
+"Requests for quotation are documents that will be sent to your suppliers to request prices for different products you consider buying.\n"
+"                Once an agreement has been found with the supplier, they will be confirmed and turned into purchase orders."
+msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_create_uid
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_user_id
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
-msgid "Responsible"
-msgstr "Penanggung Jawab"
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_user_id
+msgid "Responsible User"
+msgstr "Tanggung-jawab"
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_stock_return_picking
-msgid "Return Picking"
-msgstr "Pengembalian Pengambilan"
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Kesalahan Pengiriman SMS"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
-msgid "Schedule receivings earlier to avoid delays"
-msgstr "Jadwalkan penerimaan lebih awal untuk menghindari penundaan"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_date_planned
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_date_planned
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "Scheduled Date"
 msgstr "Tanggal Terjadwal"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Search Purchase Order"
 msgstr "Cari Order Pembelian"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_config_settings_use_po_lead
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
+msgid "Search Reference Document"
+msgstr ""
+
+#. module: purchase
+#. openerp-web
+#: code:addons/purchase/static/src/js/tours/purchase.js:0
+#, python-format
+msgid "Search a vendor name, or create one on the fly."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__display_type__line_section
+msgid "Section"
+msgstr "Bagian"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Section Name (eg. Products, Services)"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__use_po_lead
 msgid "Security Lead Time for Purchase"
 msgstr "Lama Waktu Pengamanan untuk Pembelian"
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_product_product_purchase_line_warn
-#: model:ir.model.fields,help:purchase.field_product_template_purchase_line_warn
-#: model:ir.model.fields,help:purchase.field_res_partner_purchase_warn
-#: model:ir.model.fields,help:purchase.field_res_users_purchase_warn
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__access_token
+msgid "Security Token"
+msgstr "Token Keamanan"
+
+#. module: purchase
+#. openerp-web
+#: code:addons/purchase/static/src/js/tours/purchase.js:0
+#, python-format
+msgid "Select a product, or create a new one on the fly."
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
+msgid "Select a purchase order or an old bill"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_product_product__purchase_line_warn
+#: model:ir.model.fields,help:purchase.field_product_template__purchase_line_warn
+#: model:ir.model.fields,help:purchase.field_res_partner__purchase_warn
+#: model:ir.model.fields,help:purchase.field_res_users__purchase_warn
 msgid ""
 "Selecting the \"Warning\" option will notify user with the message, "
 "Selecting \"Blocking Message\" will throw an exception with the message and "
@@ -1789,24 +2503,32 @@ msgid "Send PO by Email"
 msgstr "Kirim melalui email"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Send RFQ by Email"
-msgstr "Kirim PPw melalui email"
+#: model:ir.actions.server,name:purchase.action_purchase_send_reminder
+msgid "Send Reminder"
+msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_sequence
+#: model:res.groups,name:purchase.group_send_reminder
+msgid "Send an automatic reminder email to confirm delivery"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Send by Email"
+msgstr "Kirim sebagai Email"
+
+#. module: purchase
+#. openerp-web
+#: code:addons/purchase/static/src/js/tours/purchase.js:0
+#: code:addons/purchase/static/src/js/tours/purchase.js:0
+#, python-format
+msgid "Send the request for quotation to your vendor."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__sequence
 msgid "Sequence"
-msgstr "Penomoran"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_account
-msgid "Set analytic accounts in purchase orders"
-msgstr "Set akun analitik pada order pembelian"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Set date to all order lines"
-msgstr "Set tanggal pada semua baris order"
+msgstr "Urutan"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1820,121 +2542,152 @@ msgid "Settings"
 msgstr "Pengaturan"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Shipment"
-msgstr "Pengiriman"
+#: model:ir.actions.server,name:purchase.model_purchase_order_action_share
+msgid "Share"
+msgstr "Bagikan"
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Show all records which has next action date is before today"
-msgstr "Tampilkan semua dokumen dengan tindakan berikut sebelum hari ini"
+msgstr "Tampilkan semua dokumen dengan aksi berikut sebelum hari ini"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_origin
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__reference
+msgid "Source"
+msgstr "Sumber"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__origin
 msgid "Source Document"
-msgstr "Dokumen sumber"
+msgstr "Dokumen Sumber"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_state
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_state
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+msgid "Starred"
+msgstr "Membintangi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__state
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__state
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__state
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Status"
 msgstr "Status"
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_stock_move
-msgid "Stock Move"
-msgstr "Pergerakan Stock"
+#: model:ir.model.fields,help:purchase.field_purchase_order__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Status berdasarkan aktivitas\n"
+"Terlambat: Batas waktu telah terlewati\n"
+"Hari ini: Tanggal aktivitas adalah hari ini\n"
+"Direncanakan: Aktivitas yang akan datang."
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
-msgid "Stock Moves"
-msgstr "Pergerakan Stock"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_subtotal
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_subtotal
 msgid "Subtotal"
 msgstr "Subtotal"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_partner_property_purchase_currency_id
-#: model:ir.model.fields,field_description:purchase.field_res_users_property_purchase_currency_id
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_report_view_tree
+msgid "Sum of Qty Billed"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_report_view_tree
+msgid "Sum of Qty Ordered"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_report_view_tree
+msgid "Sum of Qty Received"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_report_view_tree
+msgid "Sum of Total"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_report_view_tree
+msgid "Sum of Untaxed Total"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_partner__property_purchase_currency_id
+#: model:ir.model.fields,field_description:purchase.field_res_users__property_purchase_currency_id
 msgid "Supplier Currency"
 msgstr "Mata Uang Pemasok"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_tax
+#: model:ir.model,name:purchase.model_product_supplierinfo
+msgid "Supplier Pricelist"
+msgstr "Daftar harga Supplier"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_tax
 msgid "Tax"
 msgstr "Pajak"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_amount_tax
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_taxes_id
-#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_country_id
+msgid "Tax Country"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_totals_json
+msgid "Tax Totals Json"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_tax
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__taxes_id
 msgid "Taxes"
 msgstr "Pajak"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
-msgid "Taxes:"
-msgstr "Pajak:"
+#: model:ir.model.fields,help:purchase.field_purchase_order_line__display_type
+msgid "Technical field for UX purpose."
+msgstr "Technical field for UX purpose."
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_default_location_dest_id_usage
-msgid "Technical field used to display the Drop Ship Address"
-msgstr "Kolom teknis yang digunakan untuk menampilkan Alamat Dropship"
+#: model:ir.model.fields,help:purchase.field_purchase_order__tax_country_id
+msgid ""
+"Technical field to filter the available taxes depending on the fiscal "
+"country and fiscal position."
+msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_notes
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+msgid "Terms &amp; Conditions"
+msgstr "Syarat &amp; Ketentuan"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__notes
 msgid "Terms and Conditions"
 msgstr "Syarat dan Ketentuan"
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_website_url
-msgid "The full URL to access the document through the website."
-msgstr "URL lengkap untuk mengakses dokumen melalui situs web."
-
-#. module: purchase
-#: model_terms:ir.actions.act_window,help:purchase.product_product_action
+#: model:ir.model.fields,help:purchase.field_purchase_order__country_code
 msgid ""
-"The product form contains detailed information to improve the\n"
-"                purchase process: prices, procurement logistics, accounting data,\n"
-"                available vendors, etc."
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
 msgstr ""
-"Formulir Produk memiliki informasi rinci untuk memperbarui proses pembelian:"
-" harga, logistik pengadaan, data akuntansi, pemasok yang tersedia, dsb."
+"Kode ISO negara dalam dua karakter.\n"
+"Anda dapat menggunakan kolom ini untuk pencarian cepat."
 
 #. module: purchase
-#: model_terms:ir.actions.act_window,help:purchase.product_normal_action_puchased
-msgid ""
-"The product form contains detailed information to improve the\n"
-"            purchase process: prices, procurement logistics, accounting data,\n"
-"            available vendors, etc."
-msgstr ""
-"Formulir Produk memiliki informasi rinci untuk memperbarui proses pembelian:"
-" harga, logistik pengadaan, data akuntansi, pemasok yang tersedia, dsb."
-
-#. module: purchase
-#: code:addons/purchase/models/purchase.py:649
+#: code:addons/purchase/models/purchase.py:0
 #, python-format
-msgid ""
-"The quantities on your purchase order indicate less than billed. You should "
-"ask for a refund. "
+msgid "The order receipt has been acknowledged by %s."
 msgstr ""
-"Kuantitas pada order pembelian Anda lebih sedikit daripada yang ditagih. "
-"Anda sebaiknya meminta pengembalian dana."
-
-#. module: purchase
-#: model_terms:ir.actions.act_window,help:purchase.purchase_rfq
-msgid ""
-"The quotation contains the history of the discussion/negotiation\n"
-"                you had with your vendor. Once confirmed, a request for\n"
-"                quotation is converted into a purchase order."
-msgstr ""
-"Penawaran berisi riwayat diskusi/negosiasi dengan pemasok.\n"
-"Setelah dikonfirmasi, permintaan penawaran diproses\n"
-"menjadi order pembelian."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -1948,17 +2701,34 @@ msgstr ""
 "barang dan tagihan pemasok."
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:878
-#, python-format
-msgid ""
-"There is no vendor associated to the product %s. Please define a vendor for "
-"this product."
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
+msgid "There are currently no purchase orders for your account."
 msgstr ""
-"Tidak ada pemasok yang terkait dengan produk %s. Silahkan tentukan pemasok "
-"untuk produk ini."
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_product_category_property_account_creditor_price_difference_categ
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
+msgid "There are currently no requests for quotation for your account."
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:0
+#, python-format
+msgid ""
+"There is no invoiceable line. If a product has a control policy based on "
+"received quantity, please make sure that a quantity has been received."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_product_product__property_account_creditor_price_difference
+#: model:ir.model.fields,help:purchase.field_product_template__property_account_creditor_price_difference
+msgid ""
+"This account is used in automated inventory valuation to record the price "
+"difference between a purchase order and its related vendor bill when "
+"validating this vendor bill."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_product_category__property_account_creditor_price_difference_categ
 msgid ""
 "This account will be used to value price difference between purchase price "
 "and accounting cost."
@@ -1967,40 +2737,8 @@ msgstr ""
 " dan modal akuntansi."
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_product_product_property_account_creditor_price_difference
-#: model:ir.model.fields,help:purchase.field_product_template_property_account_creditor_price_difference
-msgid ""
-"This account will be used to value price difference between purchase price "
-"and cost price."
-msgstr ""
-"Akun ini akan digunakan untuk menilai perbedaan harga antara harga pembelian"
-" dan harga modal."
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid ""
-"This adds a dropshipping route to apply on products in order to request your"
-" vendors to deliver to your customers. A product to dropship will generate a"
-" purchase request for quotation once the sales order confirmed. This is a "
-"on-demand flow. The requested delivery address will be the customer delivery"
-" address and not your warehouse."
-msgstr ""
-"Ini akan menambahkan rute dropship untuk diterapkan pada produk untuk "
-"meminta pemasok Anda mengirim langsung ke pelanggan Anda. Produk akan di-"
-"dropship akan membuat permintaan pembelian untuk penawaran ketika order "
-"penjualan dikonfirmasi. Ini adalah alur on-demand. Alamat pengiriman adalah "
-"alamat pelanggan Anda dan bukan alamat gudang Anda."
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "This changes the scheduled date of all order lines to the given date"
-msgstr ""
-"Ini akan mengganti tanggal terjadwal untuk semua baris order ke tanggal "
-"tersebut"
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_res_partner_property_purchase_currency_id
-#: model:ir.model.fields,help:purchase.field_res_users_property_purchase_currency_id
+#: model:ir.model.fields,help:purchase.field_res_partner__property_purchase_currency_id
+#: model:ir.model.fields,help:purchase.field_res_users__property_purchase_currency_id
 msgid ""
 "This currency will be used, instead of the default one, for purchases from "
 "the current partner"
@@ -2009,7 +2747,7 @@ msgstr ""
 "rekanan ini"
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_res_config_settings_default_purchase_method
+#: model:ir.model.fields,help:purchase.field_res_config_settings__default_purchase_method
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid ""
 "This default value is applied to any new product created. This can be "
@@ -2020,104 +2758,153 @@ msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
-msgid "This note will show up on purchase orders."
-msgstr "Catatan ini akan tampil pada order pembelian."
+msgid "This note is added to purchase orders."
+msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/account_invoice.py:203
+#: code:addons/purchase/models/purchase.py:0
+#, python-format
+msgid ""
+"This product is packaged by %(pack_size).2f %(pack_name)s. You should "
+"purchase %(quantity).2f %(unit)s."
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/models/account_invoice.py:0
 #, python-format
 msgid "This vendor bill has been created from: %s"
 msgstr "Tagihan penjual dibuat dari tanggal: %s"
 
 #. module: purchase
-#: code:addons/purchase/models/account_invoice.py:217
+#: code:addons/purchase/models/account_invoice.py:0
 #, python-format
 msgid "This vendor bill has been modified from: %s"
 msgstr "Tagihan penjual ini diubah dari tanggal: %s"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
-msgid "This vendor has no purchase order. Click to create a new RfQ."
-msgstr "Belum ada order pembelian untuk pemasok ini. Klik untuk membuat PPw."
+msgid "This vendor has no purchase order. Create a new RfQ"
+msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_picking_type_id
-msgid "This will determine operation type of incoming shipment"
-msgstr "Ini akan menentukan tipe operasi dari pengiriman barang masuk"
+#: model:digest.tip,name:purchase.digest_tip_purchase_0
+#: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_0
+msgid "Tip: How to keep late receipts under control?"
+msgstr ""
 
 #. module: purchase
+#: model:digest.tip,name:purchase.digest_tip_purchase_1
+#: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_1
+msgid "Tip: Never miss a purchase order"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__to_approve
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__to_approve
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
-#: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "To Approve"
-msgstr "Untuk Disetujui"
+msgstr "Akan Disetujui"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_to_invoice
+msgid "To Invoice Quantity"
+msgstr ""
+
+#. module: purchase
+#. openerp-web
+#: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
+#, python-format
+msgid "To Send"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Today Activities"
-msgstr "Aktivitas Hari Ini"
+msgstr "Aktivitas Hari ini"
 
 #. module: purchase
-#: code:addons/purchase/controllers/portal.py:45
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_amount_total
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_total
+#: code:addons/purchase/controllers/portal.py:0
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_total
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_total
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__price_total
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
 #, python-format
 msgid "Total"
 msgstr "Total"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_price_total
-msgid "Total Price"
-msgstr "Harga Total"
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_qty
+msgid "Total Quantity"
+msgstr "Total Kuantitas"
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 msgid "Total Untaxed amount"
 msgstr "Jumlah Total Sebelum Pajak"
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 msgid "Total amount"
 msgstr "Jumlah total"
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_stock_picking
-msgid "Transfer"
-msgstr "Transfer"
+#: model:ir.model.fields,help:purchase.field_purchase_order__mail_reception_confirmed
+msgid "True if PO reception is confirmed by the vendor."
+msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:362
+#: model:ir.model.fields,help:purchase.field_purchase_order__mail_reminder_confirmed
+msgid "True if the reminder email is confirmed by the vendor."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Jenis dari aktivitas pengecualian pada rekaman data."
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid ""
-"Unable to cancel purchase order %s as some receptions have already been "
-"done."
+"Unable to cancel this purchase order. You must first cancel the related "
+"vendor bills."
 msgstr ""
-"Tidak dapat membatalkan order pembelian %s karena telah menerima sebagian "
-"barang."
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:365
-#, python-format
-msgid ""
-"Unable to cancel this purchase order. You must first cancel related vendor "
-"bills."
-msgstr ""
-"Tidak dapat membatalkan order pembelian ini. Anda harus membatalkan tagihan "
-"pemasok terkait terlebih dahulu."
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_unit
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_unit
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "Unit Price"
 msgstr "Harga Satuan"
 
 #. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
-msgid "Unit of Measure Categories"
-msgstr "Kategori Satuan"
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Unit Price:"
+msgstr "Harga Satuan:"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom
+msgid "Unit of Measure"
+msgstr "Satuan"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
 msgid "Units of Measure"
+msgstr "Satuan"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
+msgid "Units of Measure Categories"
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_unit_of_measure_in_config_purchase
+msgid "Units of Measures"
 msgstr "Satuan"
 
 #. module: purchase
@@ -2126,49 +2913,37 @@ msgid "Unlock"
 msgstr "Buka"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
-msgid "Unread Messages"
-msgstr "Pesan yang belum dibaca"
-
-#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 msgid "Untaxed"
 msgstr "Sebelum Pajak"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_amount_untaxed
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_untaxed
 msgid "Untaxed Amount"
 msgstr "Jumlah Sebelum Pajak"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
-msgid "Untaxed Amount:"
-msgstr "Jumlah Sebelum Pajak:"
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__untaxed_total
+msgid "Untaxed Total"
+msgstr "Total Sebelum Pajak"
 
 #. module: purchase
-#: model_terms:ir.actions.act_window,help:purchase.action_invoice_pending
-msgid ""
-"Use this menu to control the invoices to be received from your\n"
-"            vendors. When registering a new bill, set the purchase order\n"
-"            and Odoo will fill the bill automatically according to ordered\n"
-"            or received quantities."
-msgstr ""
-"Gunakan menu ini untuk mengontrol faktur yang diterima dari pemasok Anda. "
-"Ketika membuat tagihan baru, set order pembelian dan Odoo akan mengisi "
-"tagihan secara otomatis menurut jumlah dipesan dan jumlah dikirim."
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "UoM"
+msgstr "Satuan"
 
 #. module: purchase
-#: model_terms:ir.actions.act_window,help:purchase.purchase_form_action
-msgid ""
-"Use this menu to search within your purchase orders by\n"
-"                references, vendor, products, etc. For each purchase order,\n"
-"                you can track the related discussion with the vendor, control\n"
-"                the products received and control the vendor bills."
+#: code:addons/purchase/models/purchase.py:0
+#, python-format
+msgid "Update Dates"
 msgstr ""
-"Gunakan menu ini untuk mencari di antara order pembelian Anda menurut "
-"referensi, pemasok, produk, dsb. Untuk setiap order pembelian, Anda dapat "
-"melacak diskusi terkait dengan pemasok, mengontrol produk yang diterima, dan"
-" mengontrol tagihan pemasok."
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__priority__1
+msgid "Urgent"
+msgstr "Mendesak"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_user
@@ -2176,44 +2951,57 @@ msgid "User"
 msgstr "Pengguna"
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_res_config_settings_company_currency_id
+#: model:ir.model.fields,help:purchase.field_res_config_settings__company_currency_id
 msgid "Utility field to express amount currency"
-msgstr "Kolom utilitas untuk menyatakan mata uang"
+msgstr "Kolom utilitas untuk menyatakan jumlah mata uang"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_partner_id
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_partner_id
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+msgid "Variant Grid Entry"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__partner_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__partner_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__partner_id
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Vendor"
 msgstr "Pemasok"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__vendor_bill_id
+msgid "Vendor Bill"
+msgstr "Tagihan Pemasok"
+
+#. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
-#: model:ir.actions.act_window,name:purchase.action_invoice_pending
-#: model:ir.actions.act_window,name:purchase.purchase_open_invoice
-#: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_account_buttons
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Vendor Bills"
 msgstr "Tagihan Pemasok"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_config_settings_group_manage_vendor_price
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Vendor Country"
+msgstr ""
+
+#. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
 msgid "Vendor Pricelists"
 msgstr "Daftar Harga Pemasok"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_partner_ref
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__partner_ref
 msgid "Vendor Reference"
 msgstr "Referensi Pemasok"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_supplier_name
-#: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Vendors"
 msgstr "Pemasok"
 
@@ -2230,31 +3018,45 @@ msgstr ""
 "dari pemasok Anda menurut rancangan dokumen di Odoo."
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_volume
+#: code:addons/purchase/models/purchase.py:0
+#, python-format
+msgid "View"
+msgstr "Tampilan"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__volume
 msgid "Volume"
 msgstr "Volume"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
-#: selection:purchase.order,invoice_status:0
+#. openerp-web
+#: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
+#, python-format
+msgid "Waiting"
+msgstr "Menunggu"
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__invoice_status__to_invoice
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "Waiting Bills"
-msgstr "Menunggu Tagihan"
+msgstr "Siap Difakturkan"
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_stock_warehouse
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_picking_type_id
-msgid "Warehouse"
-msgstr "Gudang"
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+msgid "Waiting RFQs"
+msgstr ""
 
 #. module: purchase
-#: selection:product.template,purchase_line_warn:0
-#: selection:res.partner,purchase_warn:0
+#: code:addons/purchase/models/purchase.py:0
+#: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_line_warn__warning
+#: model:ir.model.fields.selection,name:purchase.selection__res_partner__purchase_warn__warning
+#, python-format
 msgid "Warning"
 msgstr "Peringatan"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:268
-#: code:addons/purchase/models/purchase.py:808
+#: code:addons/purchase/models/purchase.py:0
+#: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Warning for %s"
 msgstr "Peringatan untuk %s"
@@ -2270,61 +3072,91 @@ msgid "Warning when Purchasing this Product"
 msgstr "Peringatan ketika membeli produk ini"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_config_settings_group_warning_purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Warnings"
 msgstr "Peringatan"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_website_url
-msgid "Website URL"
-msgstr "URL Situs Web"
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__website_message_ids
+msgid "Website Messages"
+msgstr "Pesan Website"
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_stock_warehouse_buy_to_resupply
-msgid "When products are bought, they can be delivered to this warehouse"
-msgstr "Ketika produk dibeli, mereka bisa dikirim ke gudang ini"
+#: model:ir.model.fields,help:purchase.field_purchase_order__website_message_ids
+msgid "Website communication history"
+msgstr "Sejarah komunikasi website"
 
 #. module: purchase
-#: model_terms:ir.actions.act_window,help:purchase.purchase_open_invoice
+#: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_0
 msgid ""
-"You can control the invoice from your vendor according to\n"
-"            what you purchased (services) or received (products)."
+"When creating a purchase order, have a look at the vendor's <i>On Time "
+"Delivery</i> rate: the percentage of products shipped on time. If it is too "
+"low, activate the <i>automated reminders</i>. A few days before the due "
+"shipment, Odoo will send the vendor an email to ask confirmation of shipment"
+" dates and keep you informed in case of any delays. To get the vendor's "
+"performance statistics, click on the OTD rate."
 msgstr ""
-"Anda dapat mengontrol faktur dari pemasok Anda berdasarkan pada apa yang "
-"Anda beli (jasa) atau Anda terima (produk)."
+
+#. module: purchase
+#: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_1
+msgid ""
+"When sending a purchase order by email, Odoo asks the vendor to acknowledge "
+"the reception of the order. When the vendor acknowledges the order by "
+"clicking on a button in the email, the information is added on the purchase "
+"order. Use filters to track orders that have not been acknowledged."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__partner_id
+#: model:ir.model.fields,help:purchase.field_purchase_order_line__partner_id
+msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:0
+#, python-format
+msgid ""
+"You cannot change the type of a purchase order line. Instead you should "
+"delete the current line and create a new line of the proper type."
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_product_action
 msgid ""
-"You must define a product for everything you purchase, whether\n"
-"                it's a physical product, a consumable or services you buy to\n"
-"                subcontractors."
+"You must define a product for everything you sell or purchase,\n"
+"                whether it's a storable product, a consumable or a service."
 msgstr ""
-"Anda harus menetapkan produk untuk semua yang Anda beli, apakah\n"
-" produk fisik maupun produk konsumsi, maupun jasa yang Anda beli dari pemasok."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_normal_action_puchased
 msgid ""
-"You must define a product for everything you purchase, whether\n"
-"            it's a physical product, a consumable or services you buy to\n"
-"            subcontractors."
+"You must define a product for everything you sell or purchase,\n"
+"            whether it's a storable product, a consumable or a service."
 msgstr ""
-"Anda harus menetapkan produk untuk semua yang Anda beli, apakah\n"
-" produk fisik maupun produk konsumsi, maupun jasa yang Anda beli dari pemasok."
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:395
+#: code:addons/purchase/models/purchase.py:0
 #, python-format
-msgid "You must set a Vendor Location for this partner %s"
-msgstr "Kamu harus menentukan Lokasi Pemasok untuk rekanan ini %s"
+msgid ""
+"Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
+" Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
+msgstr ""
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
-msgid "days"
-msgstr "hari"
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+msgid "close"
+msgstr "tutup"
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "day(s) before"
+msgstr ""
+
+#. module: purchase
+#: model:mail.template,subject:purchase.email_template_edi_purchase
+#: model:mail.template,subject:purchase.email_template_edi_purchase_done
+#: model:mail.template,subject:purchase.email_template_edi_purchase_reminder
+msgid "{{ object.company_id.name }} Order (Ref {{ object.name or 'n/a' }})"
+msgstr ""

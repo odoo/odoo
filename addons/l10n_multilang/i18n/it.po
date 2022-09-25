@@ -1,27 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * l10n_multilang
+# 	* l10n_multilang
 # 
 # Translators:
-# Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2019
-# Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2019
-# Paolo Valier, 2019
-# Léonie Bouchat <lbo@odoo.com>, 2019
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 14:33+0000\n"
-"PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
+"POT-Creation-Date: 2022-04-19 09:20+0000\n"
+"PO-Revision-Date: 2016-08-05 13:05+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_account
@@ -34,9 +31,29 @@ msgid "Account Chart Template"
 msgstr "Modello piano dei conti"
 
 #. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_group
+msgid "Account Group"
+msgstr "Gruppo contabile"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_account__name
+msgid "Account Name"
+msgstr "Nome conto"
+
+#. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_account_tag
 msgid "Account Tag"
 msgstr "Etichetta conto"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_tax_report
+msgid "Account Tax Report"
+msgstr "Resoconto fiscale conto"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_tax_report_line
+msgid "Account Tax Report Line"
+msgstr "Riga resoconto fiscale contabilità"
 
 #. module: l10n_multilang
 #: model:ir.model.fields,help:l10n_multilang.field_res_country_state__name
@@ -51,6 +68,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_analytic_account__name
 msgid "Analytic Account"
 msgstr "Conto analitico"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,help:l10n_multilang.field_account_tax_report_line__name
+msgid "Complete name for this report line, to be used in report."
+msgstr "Nome completo per questa riga del documento, da usare nel rendiconto."
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_res_country_state
@@ -76,7 +98,7 @@ msgstr "Modello posizione fiscale"
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_base_language_install
 msgid "Install Language"
-msgstr "Installa lingua"
+msgstr "Installazione lingua"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_journal
@@ -99,18 +121,32 @@ msgid "Legal mentions that have to be printed on the invoices."
 msgstr "Riferimenti legali che devono essere stampati sulla fattura."
 
 #. module: l10n_multilang
-#: model:ir.model.fields,field_description:l10n_multilang.field_account_account__name
-#: model:ir.model.fields,field_description:l10n_multilang.field_account_account_tag__name
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_account_template__name
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_chart_template__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_group__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_group_template__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_tax_report__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_tax_report_line__name
 msgid "Name"
 msgstr "Nome"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,help:l10n_multilang.field_account_tax_report__name
+msgid "Name of this tax report"
+msgstr "Nome del resoconto fiscale"
 
 #. module: l10n_multilang
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_fiscal_position__note
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_fiscal_position_template__note
 msgid "Notes"
 msgstr "Note"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,help:l10n_multilang.field_account_tax_report_line__tag_name
+msgid ""
+"Short name for the tax grid corresponding to this report line. Leave empty "
+"if this report line should not correspond to any such grid."
+msgstr ""
 
 #. module: l10n_multilang
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_chart_template__spoken_languages
@@ -120,7 +156,7 @@ msgstr "Lingue parlate"
 #. module: l10n_multilang
 #: model:ir.model.fields,field_description:l10n_multilang.field_res_country_state__name
 msgid "State Name"
-msgstr "Nome provincia"
+msgstr "Nome stato/provincia"
 
 #. module: l10n_multilang
 #: model:ir.model.fields,help:l10n_multilang.field_account_chart_template__spoken_languages
@@ -136,6 +172,12 @@ msgstr ""
 "stessi. Indicare i codici della lingua separati da \";\""
 
 #. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_account_tag__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_tax_report_line__tag_name
+msgid "Tag Name"
+msgstr "Nome etichetta"
+
+#. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_tax
 msgid "Tax"
 msgstr "Imposta"
@@ -145,6 +187,11 @@ msgstr "Imposta"
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_tax_template__name
 msgid "Tax Name"
 msgstr "Nome imposta"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_group_template
+msgid "Template for Account Groups"
+msgstr "Modello per gruppi conto"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_fiscal_position_template

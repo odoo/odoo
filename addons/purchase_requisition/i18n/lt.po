@@ -3,24 +3,29 @@
 # 	* purchase_requisition
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Arminas Grigonis <arminas@versada.lt>, 2019
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2019
-# Silvija Butko <silvija.butko@gmail.com>, 2019
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2019
-# Rolandas <info@paninfo.lt>, 2019
-# Monika Raciunaite <monika.raciunaite@gmail.com>, 2019
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2019
-# Edgaras Kriukonis <edgaras@focusate.eu>, 2019
-# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# Edgaras Kriukonis <edgaras@focusate.eu>, 2022
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2022
+# Silvija Butko <silvija.butko@gmail.com>, 2022
+# Monika Raciunaite <monika.raciunaite@gmail.com>, 2022
+# Rolandas <info@paninfo.lt>, 2022
+# Arunas V. <arunas@devoro.com>, 2022
+# Arunas Vaitekunas <vaitekunas@gmail.com>, 2022
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2022
+# Jonas Zinkevicius <jozi@odoo.com>, 2022
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2022
+# grupoda2 <dmitrijus.ivanovas@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Linas Versada <linaskrisiukenas@gmail.com>, 2022
+# Arminas Grigonis <arminas@versada.lt>, 2022
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
+"POT-Creation-Date: 2022-05-30 06:07+0000\n"
+"PO-Revision-Date: 2016-08-05 13:09+0000\n"
+"Last-Translator: Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,8 +40,8 @@ msgstr ""
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
-msgid "<strong>Call for Tender Reference:</strong><br/>"
-msgstr "<strong>Kvietimo pateikti pasiūlymą numeris:</strong><br/>"
+msgid "<strong>Agreement Deadline:</strong><br/>"
+msgstr ""
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -75,11 +80,6 @@ msgstr "<strong>Suplanuota užsakymo data:</strong><br/>"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
-msgid "<strong>Selection Type:</strong><br/>"
-msgstr "<strong>Pasirinkimo tipas:</strong><br/>"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Source:</strong><br/>"
 msgstr "<strong>Šaltinis:</strong><br/>"
 
@@ -91,7 +91,12 @@ msgstr "<strong>Tiekėjas </strong>"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction
 msgid "Action Needed"
-msgstr "Reikia veiksmo"
+msgstr "Reikalingas veiksmas"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__active
+msgid "Active"
+msgstr "Aktyvus"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_ids
@@ -101,12 +106,17 @@ msgstr "Veiklos"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Veiklos Išimties Dekoravimas"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_state
 msgid "Activity State"
 msgstr "Veiklos būsena"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Veiklos tipo ikona"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_id
@@ -146,6 +156,12 @@ msgid "Analytic Tags"
 msgstr "Analitinės žymos"
 
 #. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_search
+msgid "Archived"
+msgstr "Archyvuotas"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_attachment_count
 msgid "Attachment Count"
 msgstr "Prisegtukų skaičius"
@@ -168,7 +184,6 @@ msgstr "Kvietimas pateikti pasiūlymą"
 
 #. module: purchase_requisition
 #: model:ir.actions.report,name:purchase_requisition.action_report_purchase_requisitions
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Call for Tenders"
 msgstr "Kvietimas pateikti pasiūlymą"
 
@@ -271,6 +286,11 @@ msgid "Currency"
 msgstr "Valiuta"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_description_variants
+msgid "Custom Description"
+msgstr ""
+
+#. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Data for new quotations"
 msgstr "Duomenys naujoms užklausoms"
@@ -318,19 +338,9 @@ msgstr ""
 "pasiūlymams."
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-msgid "Exception Activities"
-msgstr ""
-
-#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_follower_ids
 msgid "Followers"
 msgstr "Sekėjai"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Sekėjai (kanalai)"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_partner_ids
@@ -338,15 +348,17 @@ msgid "Followers (Partners)"
 msgstr "Sekėjai (partneriai)"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesome piktograma, pvz., fa-tasks"
+
+#. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid ""
 "For a blanket order, you can record an agreement for a specifc period\n"
 "            (e.g. a year) and you order products within this agreement, benefiting\n"
-"            from the negociated prices."
+"            from the negotiated prices."
 msgstr ""
-"Ilgalaikiam užsakymui galite įrašyti susitarimą konkrečiam laikui\n"
-"(pvz., metams) ir užsakyti produktus pagal šį susitarimą, taip išlošdami\n"
-"geresnes kainas."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -357,6 +369,11 @@ msgstr "Būsimos veiklos"
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Group By"
 msgstr "Grupuoti pagal"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__has_message
+msgid "Has Message"
+msgstr "Turi žinutę"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__id
@@ -373,11 +390,10 @@ msgstr "Piktograma"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Išimties veiklą žyminti piktograma."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_needaction
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Jeigu pažymėta, naujiems pranešimams reikės jūsų dėmesio."
 
@@ -456,14 +472,19 @@ msgid "Messages"
 msgstr "Žinutės"
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
-msgid "Multiple Requisitions"
-msgstr "Kelios užklausos"
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Veiklos paskutinis terminas"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "My Agreements"
 msgstr "Mano susitarimai"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
+msgid "Name, TIN, Email, or Reference"
+msgstr "Pavadinimas, mokėtojo kodas, el. paštas arba numeris"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -474,6 +495,11 @@ msgstr "Nauji susitarimai"
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "New Quotation"
 msgstr "Naujas komercinis pasiūlymas "
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_date_deadline
@@ -503,7 +529,7 @@ msgstr "Užsakymų skaičius"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Klaidų kiekis"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_needaction_counter
@@ -514,11 +540,6 @@ msgstr "Žinučių, kurioms reikia jūsų veiksmo, skaičius"
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "Žinučių su pristatymo klaida skaičius"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_unread_counter
-msgid "Number of unread messages"
-msgstr "Neperskaitytų žinučių skaičius"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__ongoing
@@ -536,6 +557,11 @@ msgstr "Užsakyti kiekiai"
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Ordering Date"
 msgstr "Užsakymo data"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "Price Unit"
+msgstr "Kainos vienetas"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_product__purchase_requisition
@@ -641,11 +667,6 @@ msgid "Purchase Requisition Type"
 msgstr "Pirkimo užklausos tipas"
 
 #. module: purchase_requisition
-#: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
-msgid "Purchase orders"
-msgstr "Pirkimo užsakymai"
-
-#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__is_quantity_copy
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__is_quantity_copy
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__quantity_copy
@@ -667,6 +688,11 @@ msgstr "Pirkimo užklausos / Užsakymai"
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Reference"
 msgstr "Numeris"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "Reference:"
+msgstr "Nuoroda:"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.product_template_form_view_inherit
@@ -706,7 +732,7 @@ msgstr "Atsakingas vartotojas"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "SMS pristatymo klaida"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__schedule_date
@@ -720,8 +746,8 @@ msgstr "Ieškoti pirkimo susitarimų"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__multiple
-msgid "Select multiple RFQ"
-msgstr "Pasirinkti kelias pirkimo užklausas"
+msgid "Select multiple RFQ (non-exclusive)"
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__exclusive
@@ -733,16 +759,20 @@ msgstr "Pasirinkti tik vieną pirkimo užklausą"
 msgid ""
 "Select only one RFQ (exclusive):  when a purchase order is confirmed, cancel the remaining purchase order.\n"
 "\n"
-"                    Select multiple RFQ: allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
+"                    Select multiple RFQ (non-exclusive): allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
 msgstr ""
-"Pasirinkti tik vieną prikimo užklausą: kai pirkimo užsakymas yra patvirtinamas, atšaukia likusį pirkimo užsakymą.\n"
-"\n"
-"Pasirinkti kelias pirkimo užklausas: leidžia kelis pirkimo užsakymus. Patvirtinus pirkimo užsakymą, tai neatšaukia likusių užsakymų."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__sequence
 msgid "Sequence"
 msgstr "Seka"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_type__active
+msgid ""
+"Set active to false to hide the Purchase Agreement Types without removing "
+"it."
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__quantity_copy__none
@@ -814,11 +844,9 @@ msgstr "Numatoma ir suplanuota pristatymo data, kai visi produktai bus gauti"
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid ""
-"There is already an open blanket order for this supplier. We suggest you to "
-"use to complete this open blanket order instead of creating a new one."
+"There is already an open blanket order for this supplier. We suggest you "
+"complete this open blanket order, instead of creating a new one."
 msgstr ""
-"Šiam tiekėjui jau yra atidarytas ilgalaikis užsakymas. Siūlome užbaigti šį "
-"atvirą užsakymą, o ne kurti naują."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -828,22 +856,12 @@ msgstr "Šiandienos veiklos"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Įrašytos išimties veiklos tipas."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__price_unit
 msgid "Unit Price"
 msgstr "Vieneto kaina"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_unread
-msgid "Unread Messages"
-msgstr "Neperskaitytos žinutės"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Neperskaitytų žinučių skaičiavimas"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form

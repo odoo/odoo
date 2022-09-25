@@ -3,17 +3,16 @@
 # 	* payment_buckaroo
 # 
 # Translators:
-# Silvija Butko <silvija.butko@gmail.com>, 2019
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2019
-# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# Linas Versada <linaskrisiukenas@gmail.com>, 2022
+# Silvija Butko <silvija.butko@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
+"POT-Creation-Date: 2022-01-17 16:38+0000\n"
+"PO-Revision-Date: 2016-08-05 13:07+0000\n"
+"Last-Translator: Silvija Butko <silvija.butko@gmail.com>, 2022\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,48 +21,45 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/payment.py:0
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
 #, python-format
-msgid "; multiple order found"
-msgstr "; rasti keli užsakymai"
+msgid ""
+"An error occurred during processing of your payment (code %s). Please try "
+"again."
+msgstr ""
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/payment.py:0
-#, python-format
-msgid "; no order found"
-msgstr "; užsakymų nerasta"
-
-#. module: payment_buckaroo
+#: model:account.payment.method,name:payment_buckaroo.payment_method_buckaroo
 #: model:ir.model.fields.selection,name:payment_buckaroo.selection__payment_acquirer__provider__buckaroo
 msgid "Buckaroo"
 msgstr "Buckaroo"
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/payment.py:0
-#, python-format
-msgid "Buckaroo: invalid shasign, received %s, computed %s, for data %s"
-msgstr "Buckaroo: negalimas shasign, gauta %s, suskaičiuota %s, duomenims %s"
-
-#. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/payment.py:0
-#, python-format
-msgid "Buckaroo: received data for reference %s"
-msgstr "Buckaroo: numeriui %s gauti duomenys"
-
-#. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/payment.py:0
-#, python-format
-msgid ""
-"Buckaroo: received data with missing reference (%s) or pay_id (%s) or "
-"shasign (%s)"
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__buckaroo_secret_key
+msgid "Buckaroo Secret Key"
 msgstr ""
-"Buckaroo: gauti duomenys su trūkstamu numeriu (%s) arba pay_id (%s) arba "
-"shasign (%s)"
+
+#. module: payment_buckaroo
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+#, python-format
+msgid "Invalid shasign: received %(sign)s, computed %(check)s"
+msgstr ""
+
+#. module: payment_buckaroo
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr ""
 
 #. module: payment_buckaroo
 #: model:ir.model,name:payment_buckaroo.model_payment_acquirer
 msgid "Payment Acquirer"
 msgstr "Mokėjimo surinkėjas"
+
+#. module: payment_buckaroo
+#: model:ir.model,name:payment_buckaroo.model_account_payment_method
+msgid "Payment Methods"
+msgstr "Mokėjimo būdai"
 
 #. module: payment_buckaroo
 #: model:ir.model,name:payment_buckaroo.model_payment_transaction
@@ -76,11 +72,45 @@ msgid "Provider"
 msgstr "Tiekėjas"
 
 #. module: payment_buckaroo
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__brq_secretkey
-msgid "SecretKey"
-msgstr "SecretKey"
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing reference (%(ref)s) or shasign (%(sign)s)"
+msgstr ""
 
 #. module: payment_buckaroo
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__brq_websitekey
-msgid "WebsiteKey"
-msgstr "WebsiteKey"
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing transaction keys"
+msgstr ""
+
+#. module: payment_buckaroo
+#: model_terms:ir.ui.view,arch_db:payment_buckaroo.payment_acquirer_form
+msgid "Secret Key"
+msgstr "Slaptas raktas"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,help:payment_buckaroo.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
+msgstr ""
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,help:payment_buckaroo.field_payment_acquirer__buckaroo_website_key
+msgid "The key solely used to identify the website with Buckaroo"
+msgstr ""
+
+#. module: payment_buckaroo
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+#, python-format
+msgid "Unknown status code: %s"
+msgstr ""
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__buckaroo_website_key
+msgid "Website Key"
+msgstr ""
+
+#. module: payment_buckaroo
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+#, python-format
+msgid "Your payment was refused (code %s). Please try again."
+msgstr ""

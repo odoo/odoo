@@ -3,19 +3,20 @@
 # 	* payment_authorize
 # 
 # Translators:
-# Aleksandr Jadov <a.jadov@tata.lt>, 2019
-# Martin Trigaux, 2019
-# Silvija Butko <silvija.butko@gmail.com>, 2019
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2019
-# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# Silvija Butko <silvija.butko@gmail.com>, 2022
+# Aleksandr Jadov <a.jadov@tata.lt>, 2022
+# Jonas Zinkevicius <jozi@odoo.com>, 2022
+# Linas Versada <linaskrisiukenas@gmail.com>, 2022
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,11 +25,8 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/controllers/main.py:0
-#, python-format
-msgid ""
-" If you don't have any account, ask your salesperson to grant you a portal "
-"access. "
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "ABA Routing Number"
 msgstr ""
 
 #. module: payment_authorize
@@ -38,8 +36,8 @@ msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_login
-msgid "API Login Id"
-msgstr "API prisijungimo ID"
+msgid "API Login ID"
+msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_signature_key
@@ -52,58 +50,158 @@ msgid "API Transaction Key"
 msgstr "API operacijos raktas"
 
 #. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Account Number"
+msgstr "Sąskaitos numeris"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_payment_method_type
+msgid "Allow Payments From"
+msgstr ""
+
+#. module: payment_authorize
+#. openerp-web
+#: code:addons/payment_authorize/static/src/js/payment_form.js:0
+#, python-format
+msgid "An error occurred when displayed this payment form."
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_currency_id
+msgid "Authorize Currency"
+msgstr ""
+
+#. module: payment_authorize
+#: model:account.payment.method,name:payment_authorize.payment_method_authorize
 #: model:ir.model.fields.selection,name:payment_authorize.selection__payment_acquirer__provider__authorize
 msgid "Authorize.Net"
 msgstr "Authorize.Net"
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/authorize_request.py:0
-#, python-format
-msgid ""
-"Authorize.net Error:\n"
-"Code: %s\n"
-"Message: %s"
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_payment_method_type
+msgid "Authorize.Net Payment Type"
 msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
-msgid "Authorize.net Profile ID"
-msgstr "Authorize.net profilio ID"
+msgid "Authorize.Net Profile ID"
+msgstr ""
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:0
+#: code:addons/payment_authorize/models/payment_acquirer.py:0
+#, python-format
+msgid "Bank (powered by Authorize)"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields.selection,name:payment_authorize.selection__payment_acquirer__authorize_payment_method_type__bank_account
+#: model:ir.model.fields.selection,name:payment_authorize.selection__payment_token__authorize_payment_method_type__bank_account
+msgid "Bank Account (USA Only)"
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Bank Account Type"
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Bank Name"
+msgstr "Banko pavadinimas"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Business Checking"
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Card Code"
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Card Number"
+msgstr "Kortelės numeris"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment_acquirer.py:0
 #, python-format
 msgid ""
-"Authorize: received data with missing reference (%s) or trans_id (%s) or "
-"fingerprint (%s)"
+"Could not fetch merchant details:\n"
+"%s"
 msgstr ""
-"Patvirtinimas: gauti duomenys su trūkstamu numeriu (%s) arba trans_id (%s) "
-"arba pirštų antspaudu (%s)"
 
 #. module: payment_authorize
-#: model_terms:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
+#: model:ir.model.fields.selection,name:payment_authorize.selection__payment_acquirer__authorize_payment_method_type__credit_card
+#: model:ir.model.fields.selection,name:payment_authorize.selection__payment_token__authorize_payment_method_type__credit_card
+msgid "Credit Card"
+msgstr "Kreditinė kortelė"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment_acquirer.py:0
+#, python-format
+msgid "Credit Card (powered by Authorize)"
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.payment_acquirer_form
+msgid "Currency"
+msgstr "Valiuta"
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_acquirer__authorize_payment_method_type
+msgid "Determines with what payment method the customer can pay."
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Expiration"
+msgstr "Galiojimo pabaiga"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment_acquirer.py:0
+#, python-format
+msgid ""
+"Failed to authenticate.\n"
+"%s"
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.payment_acquirer_form
 msgid "Generate Client Key"
 msgstr ""
 
 #. module: payment_authorize
-#: model_terms:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.payment_acquirer_form
 msgid "How to get paid with Authorize.Net"
 msgstr "Kaip gauti mokėjimą per Authorize.Net"
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:0
-#, python-format
-msgid ""
-"Invalid token found: the Authorize profile is missing.Please make sure the "
-"token has a valid acquirer reference."
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "MM"
 msgstr ""
-"Rastas netinkamas raktas: trūksta patvirtinimo profilio. Įsitikinkite, kad "
-"raktas turi teisingą surinkėjo numerį."
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Name On Account"
+msgstr ""
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_acquirer
 msgid "Payment Acquirer"
 msgstr "Mokėjimo surinkėjas"
+
+#. module: payment_authorize
+#: model:ir.model,name:payment_authorize.model_account_payment_method
+msgid "Payment Methods"
+msgstr "Mokėjimo būdai"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_token
@@ -116,30 +214,41 @@ msgid "Payment Transaction"
 msgstr "Mokėjimo operacija"
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/controllers/main.py:0
-#, python-format
-msgid "Please complete your profile. "
-msgstr "Užpildykite savo profilį."
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Personal Checking"
+msgstr ""
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/controllers/main.py:0
-#, python-format
-msgid "Please sign in to complete the payment."
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Personal Savings"
 msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__provider
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__provider
 msgid "Provider"
 msgstr "Tiekėjas"
 
 #. module: payment_authorize
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__save_token
-msgid "Save Cards"
-msgstr "Išsaugoti korteles"
+#: code:addons/payment_authorize/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with status code \"%(status)s\" and error code \"%(error)s\""
+msgstr ""
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/controllers/main.py:0
+#, python-format
+msgid "Received tampered payment request data."
+msgstr ""
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment_token.py:0
+#, python-format
+msgid "Saved payment methods cannot be restored once they have been deleted."
+msgstr ""
 
 #. module: payment_authorize
 #. openerp-web
+#: code:addons/payment_authorize/static/src/js/payment_form.js:0
 #: code:addons/payment_authorize/static/src/js/payment_form.js:0
 #: code:addons/payment_authorize/static/src/js/payment_form.js:0
 #, python-format
@@ -147,60 +256,69 @@ msgid "Server Error"
 msgstr "Serverio klaida"
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:0
-#, python-format
-msgid "The Customer Profile creation in Authorize.NET failed."
-msgstr "Kliento profilio kūrimas per Authorize.NET nepavyko."
+#: model_terms:ir.ui.view,arch_db:payment_authorize.payment_acquirer_form
+msgid "Set Account Currency"
+msgstr ""
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/controllers/main.py:0
-#, python-format
-msgid ""
-"The transaction cannot be processed because some contact details are missing"
-" or invalid: "
+#: model:ir.model.fields,help:payment_authorize.field_payment_acquirer__authorize_login
+msgid "The ID solely used to identify the account with Authorize.Net"
 msgstr ""
-"Operacija negali būti apdorota, nes trūksta kontaktinės informacijos ar ji "
-"yra neteisinga:"
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_acquirer__authorize_client_key
+msgid ""
+"The public client key. To generate directly from Odoo or from Authorize.Net "
+"backend."
+msgstr ""
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment_transaction.py:0
+#, python-format
+msgid "The transaction is not linked to a token."
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_payment_method_type
+msgid "The type of payment method this token is linked to."
+msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
 msgid ""
-"This contains the unique reference for this partner/payment token "
-"combination in the Authorize.net backend"
+"The unique reference for the partner/token combination in the Authorize.net "
+"backend."
 msgstr ""
-"Čia yra unikalus numeris šiai partnerio ir mokėjimo rakto kombinacijai "
-"Authorize.net techninėje dalyje"
 
 #. module: payment_authorize
-#: model:ir.model.fields,help:payment_authorize.field_payment_token__save_token
-msgid ""
-"This option allows customers to save their credit card as a payment token "
-"and to reuse it for a later purchase. If you manage subscriptions (recurring"
-" invoicing), you need it to automatically charge the customer when you issue"
-" an invoice."
-msgstr ""
-"Šis pasirinkimas leidžia klientams išsaugoti savo kreditinę kortelę kaip "
-"mokėjimo raktą ir naudoti ją tolimesniems pirkimams. Jei valdote "
-"prenumeratas (pasikartojančias sąskaitas), jums reikia, kad ji automatiškai "
-"nuskaičiuotų pinigus iš kliento tada, kai išrašote sąskaitą."
-
-#. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:0
+#: code:addons/payment_authorize/models/payment_acquirer.py:0
 #, python-format
 msgid ""
-"Unable to fetch Client Key, make sure the API Login and Transaction Key are "
-"correct."
+"There are active tokens linked to this acquirer. To change the payment "
+"method type, please disable the acquirer and duplicate it. Then, change the "
+"payment method type on the duplicated acquirer."
 msgstr ""
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:0
+#: code:addons/payment_authorize/models/payment_acquirer.py:0
 #, python-format
-msgid "Warning"
-msgstr "Įspėjimas"
+msgid "This action cannot be performed while the acquirer is disabled."
+msgstr ""
 
 #. module: payment_authorize
 #. openerp-web
 #: code:addons/payment_authorize/static/src/js/payment_form.js:0
+#: code:addons/payment_authorize/static/src/js/payment_form.js:0
 #, python-format
-msgid "We are not able to add your payment method at the moment."
-msgstr "Mums nepavyko pridėti jūsų mokėjimo būdo."
+msgid "We are not able to process your payment."
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "YY"
+msgstr ""

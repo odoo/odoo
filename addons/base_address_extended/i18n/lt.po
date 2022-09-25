@@ -3,17 +3,22 @@
 # 	* base_address_extended
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Silvija Butko <silvija.butko@gmail.com>, 2019
-# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# grupoda2 <dmitrijus.ivanovas@gmail.com>, 2022
+# Monika Raciunaite <monika.raciunaite@gmail.com>, 2022
+# Linas Versada <linaskrisiukenas@gmail.com>, 2022
+# Arunas V. <arunas@devoro.com>, 2022
+# Silvija Butko <silvija.butko@gmail.com>, 2022
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:31+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
+"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"PO-Revision-Date: 2017-02-15 10:48+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,28 +27,79 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: base_address_extended
-#: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_country_extended_form
-msgid ""
-"Change how the system computes the full street field based on the different "
-"street subfields"
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "<span> - </span>"
 msgstr ""
-"Pakeiskite, kaip sistema atvaizduoja pilną gatvės adresą, naudodami "
-"skirtingus gatvės laukus."
 
 #. module: base_address_extended
-#: model:ir.model,name:base_address_extended.model_res_company
-msgid "Companies"
-msgstr "Įmonės"
+#: model:ir.model.fields,help:base_address_extended.field_res_country__enforce_cities
+#: model:ir.model.fields,help:base_address_extended.field_res_partner__country_enforce_cities
+#: model:ir.model.fields,help:base_address_extended.field_res_users__country_enforce_cities
+msgid ""
+"Check this box to ensure every address created in that country has a 'City' "
+"chosen in the list of the country's cities."
+msgstr ""
+"Pažymėkite šį laukelį, kad užtikrintumėte, jog kiekvienas tos šalies adresas"
+" turėtų pasirinktą miestą iš šalies miestų sąrašo."
+
+#. module: base_address_extended
+#: model:ir.actions.act_window,name:base_address_extended.action_res_city_tree
+#: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_country_city_extended_form
+msgid "Cities"
+msgstr "Miestai"
+
+#. module: base_address_extended
+#: model:ir.model,name:base_address_extended.model_res_city
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_city_form
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+#: model_terms:ir.ui.view,arch_db:base_address_extended.view_city_filter
+#: model_terms:ir.ui.view,arch_db:base_address_extended.view_city_tree
+msgid "City"
+msgstr "Miestas"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__city_id
+#: model:ir.model.fields,field_description:base_address_extended.field_res_users__city_id
+msgid "City ID"
+msgstr ""
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_partner
 msgid "Contact"
-msgstr "Kontaktai"
+msgstr "Kontaktas"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_country
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__country_id
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "Country"
 msgstr "Valstybė"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__create_uid
+msgid "Created by"
+msgstr "Sukūrė"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__create_date
+msgid "Created on"
+msgstr "Sukurta"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__display_name
+msgid "Display Name"
+msgstr "Rodomas pavadinimas"
+
+#. module: base_address_extended
+#: model_terms:ir.actions.act_window,help:base_address_extended.action_res_city_tree
+msgid ""
+"Display and manage the list of all cities that can be assigned to\n"
+"                your partner records. Note that an option can be set on each country separately\n"
+"                to enforce any address of it to have a city in this list."
+msgstr ""
+"Rodyti ir valdyti visų miestų, kurie gali būti priskirti jūsų\n"
+"partnerių įrašams, sąrašą. Atkreipkite dėmesį, kad šis pasirinkimas gali būti nustatytas kiekvienai\n"
+"šaliai atskirai, kad būtų forsuojamas privalomas miesto iš šio sąrašo turėjimas."
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number2
@@ -52,28 +108,16 @@ msgid "Door"
 msgstr "Butas"
 
 #. module: base_address_extended
-#: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_number2
-#: model:ir.model.fields,help:base_address_extended.field_res_partner__street_number2
-#: model:ir.model.fields,help:base_address_extended.field_res_users__street_number2
-msgid "Door Number"
-msgstr "Buto numeris"
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "Door #"
+msgstr ""
 
 #. module: base_address_extended
-#: model:ir.model.fields,help:base_address_extended.field_res_country__street_format
-msgid ""
-"Format to use for streets belonging to this country.\n"
-"\n"
-"You can use the python-style string pattern with all the fields of the street (for example, use '%(street_name)s, %(street_number)s' if you want to display the street name, followed by a comma and the house number)\n"
-"%(street_name)s: the name of the street\n"
-"%(street_number)s: the house number\n"
-"%(street_number2)s: the door number"
-msgstr ""
-"Adresų formatas, naudojamas šioje šalyje.\n"
-"\n"
-"Galite naudoti python tipo struktūrą gatvės laukams (pavyzdžiui, naudokite '%(street_name)s, %(street_number)s' norėdami atvaizduoti gatvės pavadinimą ir namo numerį, atskirtus kableliu)\n"
-"%(street_name)s: gatvės pavadinimas\n"
-"%(street_number)s: namo numeris\n"
-"%(street_number2)s: buto numeris"
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__enforce_cities
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__country_enforce_cities
+#: model:ir.model.fields,field_description:base_address_extended.field_res_users__country_enforce_cities
+msgid "Enforce Cities"
+msgstr "Forsuoti miestus"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number
@@ -82,39 +126,73 @@ msgid "House"
 msgstr "Namas"
 
 #. module: base_address_extended
-#: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_number
-#: model:ir.model.fields,help:base_address_extended.field_res_partner__street_number
-#: model:ir.model.fields,help:base_address_extended.field_res_users__street_number
-msgid "House Number"
-msgstr "Namo numeris"
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "House #"
+msgstr ""
 
 #. module: base_address_extended
-#: model:ir.model.fields,field_description:base_address_extended.field_res_country__street_format
-msgid "Street Format"
-msgstr "Adreso formatas"
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__id
+msgid "ID"
+msgstr "ID"
 
 #. module: base_address_extended
-#: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city____last_update
+msgid "Last Modified on"
+msgstr "Paskutinį kartą keista"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__write_uid
+msgid "Last Updated by"
+msgstr "Paskutinį kartą atnaujino"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__write_date
+msgid "Last Updated on"
+msgstr "Paskutinį kartą atnaujinta"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__name
+msgid "Name"
+msgstr "Pavadinimas"
+
+#. module: base_address_extended
+#: model_terms:ir.ui.view,arch_db:base_address_extended.view_city_filter
+msgid "Search City"
+msgstr "Ieškoti miesto"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__state_id
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "State"
+msgstr "Būsena"
+
+#. module: base_address_extended
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "Street"
+msgstr "Gatvė"
+
+#. module: base_address_extended
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "Street 2..."
+msgstr "Gatvė 2..."
+
+#. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_name
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_name
 msgid "Street Name"
 msgstr "Gatvės pavadinimas"
 
 #. module: base_address_extended
-#: model_terms:ir.ui.view,arch_db:base_address_extended.view_partner_address_structured_form
-#: model_terms:ir.ui.view,arch_db:base_address_extended.view_partner_structured_form
-#: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_company_extended_form
-msgid "Street Name..."
-msgstr "Gatvės pavadinimas..."
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "Street..."
+msgstr "Gatvė..."
 
 #. module: base_address_extended
-#: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_country_extended_form
-msgid "Street format..."
-msgstr "Adreso formatas..."
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "ZIP"
+msgstr "Pašto kodas"
 
 #. module: base_address_extended
-#: code:addons/base_address_extended/models/base_address_extended.py:64
-#: code:addons/base_address_extended/models/base_address_extended.py:112
-#, python-format
-msgid "Unrecognized field %s in street format."
-msgstr "Neatpažintas laukas %s adreso formate."
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__zipcode
+msgid "Zip"
+msgstr "Pašto kodas"

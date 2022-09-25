@@ -1,18 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * google_account
+# 	* google_account
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
-# gebri <gebri@inmail.sk>, 2018
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: gebri <gebri@inmail.sk>, 2018\n"
+"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"PO-Revision-Date: 2016-08-05 12:58+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,53 +20,32 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service__create_uid
-msgid "Created by"
-msgstr "Vytvoril"
-
-#. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service__create_date
-msgid "Created on"
-msgstr "Vytvorené"
-
-#. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service__display_name
-msgid "Display Name"
-msgstr "Zobrazovaný Názov"
+#: code:addons/google_account/models/google_service.py:0
+#, python-format
+msgid "Google %s is not yet configured."
+msgstr ""
 
 #. module: google_account
 #: model:ir.model,name:google_account.model_google_service
 msgid "Google Service"
-msgstr ""
+msgstr "Služba Google"
 
 #. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service__id
-msgid "ID"
-msgstr "ID"
-
-#. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service____last_update
-msgid "Last Modified on"
-msgstr "Posledná modifikácia"
-
-#. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service__write_uid
-msgid "Last Updated by"
-msgstr "Naposledy upravoval"
-
-#. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service__write_date
-msgid "Last Updated on"
-msgstr "Naposledy upravované"
-
-#. module: google_account
-#: code:addons/google_account/models/google_service.py:172
+#: code:addons/google_account/models/google_service.py:0
 #, python-format
 msgid "Method not supported [%s] not in [GET, POST, PUT, PATCH or DELETE]!"
+msgstr "Metóda nepodporovaná  [%s] nie je [GET, POST, PUT, PATCH or DELETE]!"
+
+#. module: google_account
+#: code:addons/google_account/models/google_service.py:0
+#, python-format
+msgid ""
+"Something went wrong during the token generation. Please request again an "
+"authorization code."
 msgstr ""
 
 #. module: google_account
-#: code:addons/google_account/models/google_service.py:120
+#: code:addons/google_account/models/google_service.py:0
 #, python-format
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
@@ -77,7 +55,7 @@ msgstr ""
 "kód neplatný"
 
 #. module: google_account
-#: code:addons/google_account/models/google_service.py:56
+#: code:addons/google_account/models/google_service.py:0
 #, python-format
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
@@ -87,23 +65,7 @@ msgstr ""
 "kód neplatný alebo už expirovaný"
 
 #. module: google_account
-#: code:addons/google_account/models/google_service.py:150
+#: code:addons/google_account/models/google_service.py:0
 #, python-format
-msgid ""
-"Something went wrong during your token generation. Maybe your Authorization "
-"Code is invalid or already expired [%s]"
-msgstr ""
-"Niečo sa pokazilo počas generovania vášho tokenu. Možno je váš autorizačný "
-"kód neplatný alebo už expirovaný [%s]"
-
-#. module: google_account
-#: code:addons/google_account/models/google_service.py:193
-#, python-format
-msgid "Something went wrong with your request to google"
-msgstr "Niečo sa pokazilo na vašej požiadavke na google"
-
-#. module: google_account
-#: code:addons/google_account/models/google_service.py:131
-#, python-format
-msgid "The account for the Google service '%s' is not configured."
+msgid "The refresh token for authentication is not set."
 msgstr ""

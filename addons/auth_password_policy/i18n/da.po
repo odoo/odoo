@@ -3,16 +3,15 @@
 # 	* auth_password_policy
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Sanne Kristensen <sanne@vkdata.dk>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2019-03-20 14:55+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,29 +27,34 @@ msgstr "Konfigurer opsætning"
 #. module: auth_password_policy
 #: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__minlength
 msgid "Minimum Password Length"
-msgstr ""
+msgstr "Mindste længde på kodeord"
 
 #. module: auth_password_policy
 #: model:ir.model.fields,help:auth_password_policy.field_res_config_settings__minlength
 msgid ""
 "Minimum number of characters passwords must contain, set to 0 to disable."
 msgstr ""
+"Mindste antal tegn, som kodeord skal indeholde (sættes til 0 for at slå "
+"kontrollen fra)."
 
 #. module: auth_password_policy
-#: code:addons/auth_password_policy/models/res_users.py:30
+#: code:addons/auth_password_policy/models/res_users.py:0
 #, python-format
 msgid "Passwords must have at least %d characters, got %d."
-msgstr ""
+msgstr "Kodeordet skal have mindst %d tegn (kun %d tegn indtastet)."
 
 #. module: auth_password_policy
 #. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:123
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
 #, python-format
 msgid ""
 "Required: %s.\n"
 "\n"
 "Hint: increase length, use multiple words and use non-letter characters to increase your password's strength."
 msgstr ""
+"Påkrævet: %s.\n"
+"\n"
+"Anbefaling: Forøg længden, brug flere ord og brug tegn, der ikke er bogstaver for at øge kodeordets styrke."
 
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_users
@@ -59,28 +63,28 @@ msgstr "Brugere"
 
 #. module: auth_password_policy
 #. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:28
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
 #, python-format
 msgid "at least %d character classes"
-msgstr ""
+msgstr "mindst %d tegn-typer"
 
 #. module: auth_password_policy
 #. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:22
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
 #, python-format
 msgid "at least %d characters"
-msgstr ""
+msgstr "mindst %d tegn"
 
 #. module: auth_password_policy
 #. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:25
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
 #, python-format
 msgid "at least %d words"
-msgstr ""
+msgstr "mindst %d ord"
 
 #. module: auth_password_policy
 #. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:125
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
 #, python-format
 msgid "no requirements"
-msgstr ""
+msgstr "ingen krav"
