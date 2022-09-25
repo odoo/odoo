@@ -15,9 +15,9 @@
 # José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
 # Harcogourmet, 2022
 # Jonatan Gk, 2022
-# jabelchi, 2022
 # marcescu, 2022
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2022
+# jabelchi, 2022
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-16 09:00+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2022\n"
+"Last-Translator: jabelchi, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -887,7 +887,7 @@ msgstr "Auto"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Automate Orders"
-msgstr "Ordres d' automatització"
+msgstr "Automatitza comandes"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__auto
@@ -2587,7 +2587,7 @@ msgstr "Lliure per a usar l' import "
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "From"
-msgstr "De"
+msgstr "Des de"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__owner_id
@@ -4106,7 +4106,7 @@ msgstr "No disponible"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "Not Snoozed"
-msgstr "No s' ha \" Snexed \""
+msgstr "No ajornat"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -4313,7 +4313,7 @@ msgstr "Ordre"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Order Once"
-msgstr "Una vegada l' ordre"
+msgstr "Ordena un cop"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -4717,7 +4717,7 @@ msgstr "Operacions pre- preceditesNoun, name of the user action"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__route_id
 msgid "Preferred Route"
-msgstr "Camí preferida"
+msgstr "Ruta preferida"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__route_ids
@@ -5524,7 +5524,7 @@ msgstr "Aprovisionament"
 #: code:addons/stock/models/stock_orderpoint.py:0
 #, python-format
 msgid "Replenishment Report"
-msgstr "Informe de respostes"
+msgstr "Informe de reabastiment"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
@@ -6166,12 +6166,12 @@ msgstr "Signat"
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 #, python-format
 msgid "Snooze"
-msgstr "Migdiada "
+msgstr "Ajorna "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__snoozed_until
 msgid "Snooze Date"
-msgstr "Data esbiaixada"
+msgstr "Ajornat fins"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_orderpoint_snooze
@@ -6186,7 +6186,7 @@ msgstr "Snexed for"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__snoozed_until
 msgid "Snoozed"
-msgstr "Snexed"
+msgstr "Ajornat"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
@@ -7042,7 +7042,7 @@ msgstr "Consell: velocitat de les operacions d' inventari amb codis de barres"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "To"
-msgstr "Per"
+msgstr "Fins a"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_line__to_backorder
@@ -7059,7 +7059,7 @@ msgstr "Per fer"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_to_order
 msgid "To Order"
-msgstr "A l' ordre"
+msgstr "Quantitat a demanar"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_immediate_transfer_line__to_immediate
@@ -8154,8 +8154,8 @@ msgid ""
 "You have not recorded <i>done</i> quantities yet, by clicking on "
 "<i>apply</i> Odoo will process all the quantities."
 msgstr ""
-"Encara no heu registrat <i>done </i> quantitats, clicant a <i>apply </i> "
-"Odoo processarà totes les quantitats."
+"Encara no heu enregistrat quantitats <i>fetes</i>, clicant a <i>APLICAR </i>"
+" Odoo processarà totes les quantitats."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -8273,8 +8273,8 @@ msgid ""
 "            To save time in the future, set the rules as \"automated\"."
 msgstr ""
 "Aquí trobareu propostes intel·ligents de replenament basades en projeccions d'inventari.\n"
-"            Seleccioneu la quantitat de comprar o fabricar i llançar ordres en un clic.\n"
-"            Per a estalviar temps en el futur, establiu les regles com a \"automatats.\""
+"            Seleccioneu la quantitat a comprar o fabricar i llanceu ordres amb un clic.\n"
+"            Per a estalviar temps en el futur, establiu les regles com a \"auto\""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule

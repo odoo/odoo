@@ -8,7 +8,7 @@
 # Manuela Feliciani <mfeliciani@alice.it>, 2020
 # Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
-# maiolif <maiolif@mgftools.com>, 2020
+# neveroils <maiolif@mgftools.com>, 2020
 # Luigia Cimmino Caserta <lcc@odoo.com>, 2020
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2020
 # Luigi Di Naro <gigidn@gmail.com>, 2020
@@ -37,7 +37,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__state
@@ -4230,8 +4230,8 @@ msgstr ""
 #. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
-msgid "The Workoder (%s) cannot be started twice!"
-msgstr ""
+msgid "The Workorder (%s) cannot be started twice!"
+msgstr "Questo ordine di lavoro (%s) non può essere avviato due volte!"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -4326,6 +4326,14 @@ msgid ""
 msgstr ""
 "Il numero di serie %(number)s, utilizzato dal componente %(component)s, è "
 "già stato consumato"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#, python-format
+msgid ""
+"The selected serial number does not correspond to the one used in the "
+"manufacturing order, please select another one."
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
