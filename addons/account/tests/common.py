@@ -661,7 +661,7 @@ class TestAccountReconciliationCommon(AccountTestInvoicingCommon):
         if currency_id:
             invoice_vals['currency_id'] = currency_id
 
-        invoice = self.env['account.move'].with_context(default_move_type=type).create(invoice_vals)
+        invoice = self.env['account.move'].with_context(default_move_type=move_type).create(invoice_vals)
         if auto_validate:
             invoice.action_post()
         return invoice
