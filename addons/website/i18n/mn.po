@@ -6,7 +6,6 @@
 # Tsog Tsog <ts.tsogoo@gmail.com>, 2019
 # nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
 # Minj P <pminj322@gmail.com>, 2019
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
 # Otgonbayar.A <gobi.mn@gmail.com>, 2019
 # Onii Onii <onii0223@yahoo.com>, 2019
 # Martin Trigaux, 2019
@@ -14,16 +13,17 @@
 # Bayarkhuu Bataa, 2019
 # tserendavaa tsogtoo <tseegii011929@gmail.com>, 2019
 # baaska sh <sh.baaskash@gmail.com>, 2020
-# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2020
 # Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2020
+# hish, 2022
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-27 09:21+0000\n"
+"POT-Creation-Date: 2022-01-07 12:31+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2020\n"
+"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,6 +53,28 @@ msgstr "\"URL \" хоосон байж болохгүй"
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
+msgid "\"URL to\" cannot contain parameter %s which is not used in \"URL from\"."
+msgstr ""
+"\"Очих URL\" нь %s параметр агуулж болохгүй учир нь \"Гарах URL\" нь уг "
+"параметрыг агуулаагүй байна."
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" is invalid: %s"
+msgstr "\"Очих URL\" буруу байна: %s"
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" must contain parameter %s used in \"URL from\"."
+msgstr ""
+"\"Очих URL\" нь %s параметрыг агуулсан байх ёстой учир нь \"Гарах URL \" нь "
+"агуулсан байна."
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
 msgid "\"URL to\" must start with a leading slash."
 msgstr "\"URL to\" налуу зураасаар эхлэх ёстой"
 
@@ -72,17 +94,6 @@ msgstr "%s (id:%s)"
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
 msgid "&amp;times;"
 msgstr "&amp;цаг;"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.sitemap_index_xml
-#: model_terms:ir.ui.view,arch_db:website.sitemap_xml
-msgid "&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;"
-msgstr "&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.default_xml
-msgid "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
-msgstr "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
 
 #. module: website
 #. openerp-web
@@ -125,11 +136,6 @@ msgid ""
 msgstr ""
 ".\n"
 "            Нэр соливол дээрх дуудлагуудыг таслах болно"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.default_csv
-msgid "1,2,3"
-msgstr "1,2,3"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -190,12 +196,12 @@ msgstr "3/5"
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__301
 msgid "301 Moved permanently"
-msgstr ""
+msgstr "301 Бүр мөсөн зөөгдсөн"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__302
 msgid "302 Moved temporarily"
-msgstr ""
+msgstr "302 Түх хугацаанд зөөгдсөн"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__308
@@ -388,6 +394,8 @@ msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                                            Enable billing on your Google Project"
 msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                                            Та Google Project дээрээ төлбөрийг идэвхижүүлээрэй"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -894,6 +902,8 @@ msgid ""
 "A CDN helps you serve your website’s content with high availability and high"
 " performance to any visitor wherever they are located."
 msgstr ""
+"CDN нь таны вебсайтын агуулгыг бүр төрлийн байршилаас хандсан бүр "
+"хэрэглэгчдэд өндөр чанартайгаар хурдан дамжуулахад тусална."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
@@ -934,17 +944,17 @@ msgstr ""
 #: model:ir.model.fields,help:website.field_website_visitor__visit_count
 msgid ""
 "A new visit is considered if last connection was more than 8 hours ago."
-msgstr ""
+msgstr "Сүүлд нэвтэрснээс хойш 8 цаг өнгөрсөн байвал шинээр зочилсонд тооцох."
 
 #. module: website
 #: model:ir.model.constraint,message:website.constraint_website_visitor_partner_uniq
 msgid "A partner is linked to only one visitor."
-msgstr ""
+msgstr "Харилцагчын бүртгэл зөвхөн нэг л зочинтой холбоотой байх ёстой."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features
 msgid "A small explanation of this great <br/>feature, in clear words."
-msgstr ""
+msgstr "Энэхүү гайхалтай <br/>зүйлийн багахан тайлбар, товч үгээр."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__is_connected
@@ -952,6 +962,8 @@ msgid ""
 "A visitor is considered as connected if his last page view was within the "
 "last 5 minutes."
 msgstr ""
+"Вебсайтын зочин сүүлийн 5 минут дотор ямар нэг хуудсыг үзэж зочилсон байвал "
+"түүнийг онлайн зочин гэж тооцно."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__module_website_version
@@ -986,7 +998,7 @@ msgstr "Хандах Токен"
 #. module: website
 #: model:ir.model.constraint,message:website.constraint_website_visitor_access_token_unique
 msgid "Access token should be unique."
-msgstr ""
+msgstr "Хандалтын токэн дахин давтагдашгүй байх ёстой."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -1015,6 +1027,9 @@ msgid ""
 "move columns, select the column and use the top icons to perform your "
 "action."
 msgstr ""
+"Энэ гурван баганыг өөрийн загварын хэрэгцээнд тааруулж өөрчлөөрэй.\n"
+"Хувилах, устгах, зөөхийн тулд баганыг сонгоод дээр нь байрлах таних \n"
+"тэмдгүүдийг ашиглаарай."
 
 #. module: website
 #. openerp-web
@@ -1129,6 +1144,10 @@ msgid ""
 "or indirectly, implying any approval, association, sponsorship, endorsement,"
 " or affiliation with any linked website, unless specifically stated herein."
 msgstr ""
+"Энэ вебсайт нь магадгүй өөр бусад вебсайтуудтай холбоотой байж болно, гэхдээ"
+" бид бол шууд ба шууд бусаар ямар нэг зөвшөөрөл, холбоо, ивээн тэтгэлэг, "
+"дэмжлэг, харьяа хамаарал бүхий вебсайттай тусгай хэрэгцээ шаардлаггүй л бол "
+"холбогдож ажилладаггүй. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
@@ -1183,7 +1202,7 @@ msgstr "Архивласан"
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__specific_user_account
 msgid "Are newly created user accounts website specific"
-msgstr ""
+msgstr "Шинээр бүртгэгдэх хэрэглэгчид зориулан оноох вебсайт"
 
 #. module: website
 #. openerp-web
@@ -1195,7 +1214,7 @@ msgstr "Та энэ хуудсыг устгахдаа итгэлтэй байн�
 #. module: website
 #: model:ir.model,name:website.model_web_editor_assets
 msgid "Assets Utils"
-msgstr ""
+msgstr "Assets Utils"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_attachment
@@ -1420,6 +1439,9 @@ msgid ""
 "Choose a vibrant image and write an inspiring paragraph about it.<br/> It "
 "does not have to be long, but it should reinforce your image."
 msgstr ""
+"Эрч хүчтэй зураг сонгоод сэтгэл хөдөлгөм мөртүүдийг бичээрэй. <br/> Тэдгээр "
+"мөртүүд нь урт хэмжээтэй байх албагүй боловч таны зургын утга санаанд хүч "
+"өгөх хэрэгтэй."
 
 #. module: website
 #. openerp-web
@@ -1622,6 +1644,8 @@ msgid ""
 "Contact us about anything related to our company or services.<br/>\n"
 "                                                                We'll do our best to get back to you as soon as possible."
 msgstr ""
+"Манай компанитай болон бүтээгдэхүүн, үйлчилгээтэй холбоотой аливаа зүйлээр бидэнтэй холбогдоно уу.<br/>\n"
+"Тантай буцаж хурдан холбогдохын тулд бид чадах бүхнээ хийх болно."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__cdn_activated
@@ -2515,6 +2539,18 @@ msgid "Google Maps API Key"
 msgstr "Google Maps API түлхүүр"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"Google deprecated both its \"Universal Analytics\" and \"Google Sign-In\" "
+"API. It means that only accounts and keys created before 2020 will be able "
+"to integrate their Analytics dashboard in Odoo (or any other website). This "
+"will be possible only up to mid 2023. After that, those services won't work "
+"anymore, at all."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Great Value"
 msgstr "Агуу Үнэ цэнэ"
@@ -2968,15 +3004,6 @@ msgstr "Холбогдсонд ?"
 #: code:addons/website/static/src/xml/website.pageProperties.xml:0
 #, python-format
 msgid "It looks like your file is being called by"
-msgstr ""
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/content/website_root.js:0
-#, python-format
-msgid ""
-"It might be possible to edit the relevant items or fix the issue in <a "
-"href=\"%s\">the classic Odoo interface</a>"
 msgstr ""
 
 #. module: website
@@ -3534,6 +3561,15 @@ msgstr "Шинэ Арга хэмжээ"
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "New Forum"
 msgstr "Шинэ Хэлэлцүүлэг"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"New Google Analytics accounts and keys are now using Google Analytics 4 "
+"which, for now, can't be integrated/embed in external websites."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -4881,6 +4917,12 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: code:addons/website/models/website_visitor.py:0
+#, python-format
+msgid "This operator is not supported"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.page_404
 msgid ""
 "This page does not exist, but you can create it as you are administrator of "
@@ -4896,6 +4938,15 @@ msgstr "Энэ хуудас нь <b>%s</b> цэсэнд байна"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 msgid "This page will be visible on {{ date_formatted }}"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"Those accounts should now check their Analytics dashboard in the Google "
+"platform directly."
 msgstr ""
 
 #. module: website
@@ -5961,11 +6012,6 @@ msgstr "url"
 #: model_terms:ir.ui.view,arch_db:website.menu_search
 msgid "website"
 msgstr "вэбсайт"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "www.odoo.com"
-msgstr "www.odoo.com"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
