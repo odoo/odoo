@@ -164,7 +164,7 @@ msgstr "(object._get_report_base_filename())"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View partially reconciled entries"
-msgstr "-> Ver asientos parcialmente reconciliados"
+msgstr "-> Ver apuntes parcialmente conciliados"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1880,7 +1880,7 @@ msgstr "Todos los asientos"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__all_lines_reconciled
 msgid "All Lines Reconciled"
-msgstr "Todas las líneas reconciliadas"
+msgstr "Todas las líneas conciliadas"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_common_journal_report__target_move__posted
@@ -2120,7 +2120,7 @@ msgstr "Importe:"
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "An Off-Balance account can not be reconcilable"
-msgstr "Una cuenta fuera de balance no puede ser reconciliada"
+msgstr "Una cuenta fuera de balance no puede ser conciliada"
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -2447,7 +2447,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Auto Reconcile"
-msgstr "Reconciliación automática"
+msgstr "Conciliación automática"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2631,12 +2631,12 @@ msgstr "Partner Bancario"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_tree
 msgid "Bank Reconciliation Move Presets"
-msgstr "Preconfiguración de reconciliación de movimientos bancarios"
+msgstr "Preconfiguración de conciliación de movimientos bancarios"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Bank Reconciliation Move preset"
-msgstr "Preconfiguración de reconciliación de movimientos bancarios"
+msgstr "Preconfiguración de conciliación de movimientos bancarios"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement
@@ -5917,13 +5917,13 @@ msgstr "Tiene asientos contables"
 #: model:ir.model.fields,field_description:account.field_account_move__has_reconciled_entries
 #: model:ir.model.fields,field_description:account.field_account_payment__has_reconciled_entries
 msgid "Has Reconciled Entries"
-msgstr "Tiene asientos reconciliados"
+msgstr "Tiene apuntes conciliados"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__has_unreconciled_entries
 #: model:ir.model.fields,field_description:account.field_res_users__has_unreconciled_entries
 msgid "Has Unreconciled Entries"
-msgstr "Tiene asientos no conciliados"
+msgstr "Tiene apuntes no conciliados"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -6401,10 +6401,10 @@ msgid ""
 "Account instead of the receivable account."
 msgstr ""
 "Los asientos de pagos generados por facturas / facturas rectificativas se "
-"publicarán en la Cuenta de recibos pendientes y se mostrarán como líneas "
-"azules en el widget de conciliación bancaria. Durante el proceso de "
+"publicarán en la cuenta de cobros pendientes y se mostrarán como líneas "
+"azules en la pantalla de conciliación bancaria. Durante el proceso de "
 "conciliación, las transacciones en cuestión se conciliarán con los asientos "
-"en la Cuenta de recibos pendientes en lugar de la cuenta por cobrar."
+"en la cuenta de cobros pendientes en lugar de la cuenta por cobrar."
 
 #. module: account
 #: code:addons/account/wizard/setup_wizards.py:0
@@ -6827,7 +6827,7 @@ msgstr "Facturas a validar"
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_invoice_ids
 msgid "Invoices whose journal items have been reconciled with these payments."
 msgstr ""
-"Facturas cuyas apuntes individuales se han reconciliado con estos pagos."
+"Facturas cuyas apuntes individuales se han conciliado con estos pagos."
 
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices_without_payment
@@ -8789,9 +8789,9 @@ msgid ""
 "transactions will be reconciled with entries on the Outstanding Payments "
 "Account instead of the payable account."
 msgstr ""
-"Los asientos de pagos salientes activados por facturas/facturas "
-"rectificativas se publicarán en la Cuenta de pagos pendientes y se mostrarán"
-" como líneas azules en el widget de conciliación bancaria. Durante el "
+"Los asientos de pagos salientes generados por facturas / facturas "
+"rectificativas se publicarán en la cuenta de pagos pendientes y se mostrarán"
+" como líneas azules en la pantalla de conciliación bancaria. Durante el "
 "proceso de conciliación, las transacciones en cuestión se conciliarán con "
 "los asientos en la cuenta de pagos pendientes en lugar de la cuenta por "
 "pagar."
@@ -8822,7 +8822,7 @@ msgstr "Recibos pendientes"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__payment_debit_account_id
 msgid "Outstanding Receipts Account"
-msgstr "Cuenta de recibos pendientes"
+msgstr "Cuenta de cobros pendientes"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14602,7 +14602,7 @@ msgid ""
 "You can't create a new payment without an outstanding payments/receipts "
 "account set on the %s journal."
 msgstr ""
-"No puedes crear un nuevo pago sin una cuenta de pagos / recibos pendientes "
+"No puede crear un nuevo pago sin una cuenta de pagos / cobros pendientes "
 "establecida en el diario %s."
 
 #. module: account
