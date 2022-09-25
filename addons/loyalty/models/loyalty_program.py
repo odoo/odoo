@@ -399,34 +399,34 @@ class LoyaltyProgram(models.Model):
             return {
                 'gift_card': {
                     'title': _('Gift Card'),
-                    'description': _('Sell Gift Cards, that can be used to purchase products'),
+                    'description': _('Sell Gift Cards, that allows to purchase products'),
                     'icon': 'gift_card',
                 },
                 'ewallet': {
                     'title': _('eWallet'),
-                    'description': _('Fill in your eWallet, and use it to pay future orders'),
+                    'description': _('Fill in your eWallet, to pay future orders'),
                     'icon': 'ewallet',
                 },
             }
         return {
             'promo_code': {
                 'title': _('Promo Code'),
-                'description': _('Get a code to receive 10% discount on specific products'),
+                'description': _('Get 10% of on some products, with a code'),
                 'icon': 'promo_code',
             },
             'loyalty': {
                 'title': _('Loyalty Cards'),
-                'description': _('Win points with each purchases, and use points to get gifts'),
+                'description': _('Win points with each purchases, and claim gifts'),
                 'icon': 'loyalty_cards',
             },
             'fidelity': {
                 'title': _('Fidelity Cards'),
-                'description': _('Buy 10 products, and get 10$ discount on the 11th one'),
+                'description': _('Buy 10 products to get 10$ off on the 11th one'),
                 'icon': 'fidelity_cards',
             },
             'promotion': {
                 'title': _('Promotional Program'),
-                'description': _('Automatic promotion: 10% discount on orders higher than $50'),
+                'description': _('Automatic promo: 10% off on orders higher than $50'),
                 'icon': 'promotional_program',
             },
             'coupons': {
@@ -441,7 +441,7 @@ class LoyaltyProgram(models.Model):
             },
             'next_order_coupons': {
                 'title': _('Next Order Coupons'),
-                'description': _('Send unique, single-use coupon code for the next purchase'),
+                'description': _('Send a coupon after an order, valid for next purchase'),
                 'icon': 'coupons',
             },
         }
