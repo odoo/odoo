@@ -26,6 +26,9 @@ msgid ""
 "                {{ (object.company_id.name + ': We are glad to inform you that your order n° ' + object.origin + ' has been shipped.' if object.origin else object.company_id.name + ': We are glad to inform you that your order has been shipped.') + (' Your tracking reference is ' + (object.carrier_tracking_ref) + '.' if hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
 "            "
 msgstr ""
+"\n"
+"                {{ (object.company_id.name + ': Wir freuen uns, Ihnen mitteilen zu können, dass Ihre Bestellung Nr. ' + object.origin + ' versendet wurde.' if object.origin else object.company_id.name + ': Wir freuen uns, Ihnen mitteilen zu können, dass Ihre Bestellung versendet wurde.') + (' Ihre Sendungsnummer ist ' + (object.carrier_tracking_ref) + '.' if hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
+"            "
 
 #. module: stock_sms
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms

@@ -3,6 +3,7 @@
 # 	* event_sms
 # 
 # Translators:
+# Friederike Fasterling-Nesselbosch, 2022
 # Martin Trigaux, 2022
 # 
 msgid ""
@@ -74,6 +75,11 @@ msgid ""
 "object.event_id.name }} event is starting {{ object.get_date_range_str() }}."
 " We confirm your registration and hope to meet you there."
 msgstr ""
+"{{ object.event_id.organizer_id.name or object.event_id.company_id.name or "
+"user.env.company.name }}: Wir möchten Sie gerne daran erinnern, dass die "
+"Veranstaltung {{ object.event_id.name }} bevorsteht: {{ "
+"object.get_date_range_str() }}. Wir bestätigen Ihre Anmeldung und hoffen, "
+"Sie dort zu sehen."
 
 #. module: event_sms
 #: model:sms.template,body:event_sms.sms_template_data_event_registration
@@ -82,3 +88,6 @@ msgid ""
 "user.env.company.name }}: We are happy to confirm your registration for the "
 "{{ object.event_id.name }} event."
 msgstr ""
+"{{ object.event_id.organizer_id.name or object.event_id.company_id.name or "
+"user.env.company.name }}: Wir freuen uns, Ihre Registrierung für die "
+"Veranstaltung {{ object.event_id.name }} bestätigen zu können."

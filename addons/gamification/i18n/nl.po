@@ -168,6 +168,16 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    <strong>Herinnering</strong><br/>\n"
+"    Je hebt je voortgang voor het doel niet bijgewerkt <t t-out=\"object.definition_id.name or ''\"/> (momenteel  <t t-out=\"object.completeness or ''\"/>% bereikt) voor tenminste <t t-out=\"object.remind_update_delay or ''\"/> dagen. Vergeet het niet te doen.\n"
+"    <br/><br/>\n"
+"    Dank je,\n"
+"    <t t-if=\"object.challenge_id.manager_id.signature\">\n"
+"        <br/>\n"
+"        <t t-out=\"object.challenge_id.manager_id.signature or ''\"/>\n"
+"    </t>\n"
+"</div>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view

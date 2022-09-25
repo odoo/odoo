@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2022-06-17 09:53+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,6 +27,8 @@ msgid ""
 "%(matching_images_count)s matching images have been found for "
 "%(product_count)s products."
 msgstr ""
+"%(matching_images_count)s знайдено відповідні зображення для товарів "
+"%(product_count)s."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
@@ -35,6 +38,10 @@ msgid ""
 "                            done tomorrow.\n"
 "                        </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('nb_products_selected', '&lt;=', 10000)]}\">\n"
+"                            Оскільки в день можна обробити лише 10 000 товарів, решту \n"
+"буде зроблено завтра.\n"
+"                        </span>"
 
 #. module: product_images
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
@@ -43,6 +50,8 @@ msgid ""
 "A task to process products in the background is already running. Please try "
 "againlater."
 msgstr ""
+"Завдання обробки товарів у фоновому режимі вже виконується. Будь-ласка "
+"спробуйте пізніше."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.res_config_settings_view_form
@@ -80,22 +89,24 @@ msgid ""
 "Fetch product images from Google Images based on the product's barcode "
 "number."
 msgstr ""
+"Отримайте зображення товару з Google Images на основі номера штрих-коду "
+"товару."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
 msgid "Get Pictures"
-msgstr ""
+msgstr "Отримати зображення"
 
 #. module: product_images
 #: model:ir.actions.act_window,name:product_images.product_product_action_get_pic_with_barcode
 #: model:ir.actions.act_window,name:product_images.product_template_action_get_pic_with_barcode
 msgid "Get Pictures from Google Images"
-msgstr ""
+msgstr "Отримати зображення з Google Images"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_res_config_settings__google_custom_search_key
 msgid "Google Custom Search API Key"
-msgstr ""
+msgstr "Ключ API кастомного пошуку Google"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__id
@@ -105,7 +116,7 @@ msgstr "ID"
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_product__image_fetch_pending
 msgid "Image Fetch Pending"
-msgstr ""
+msgstr "Очікує отримання зображення"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard____last_update
@@ -125,17 +136,17 @@ msgstr "Останнє оновлення"
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__nb_products_unable_to_process
 msgid "Number of product unprocessable"
-msgstr ""
+msgstr "Кількість товару, який не обробляється"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__nb_products_to_process
 msgid "Number of products to process"
-msgstr ""
+msgstr "Кількість товару для обробки"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__nb_products_selected
 msgid "Number of selected products"
-msgstr ""
+msgstr "Кількість обраних товарів"
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
@@ -143,6 +154,8 @@ msgid ""
 "Please note that some images might not be royalty-free. You should not\n"
 "                        publish these on your website."
 msgstr ""
+"Зауважте, що деякі зображення можуть бути не безкоштовними. Ви не повинні \n"
+"публікувати їх на своєму веб-сайті."
 
 #. module: product_images
 #: model:ir.model,name:product_images.model_product_product
@@ -154,18 +167,18 @@ msgstr "Товар"
 #: model:ir.cron,cron_name:product_images.ir_cron_fetch_image
 #: model:ir.cron,name:product_images.ir_cron_fetch_image
 msgid "Product Images: Get product images from Google"
-msgstr ""
+msgstr "Зображення товарів. Отримайте зображення товарів з Google"
 
 #. module: product_images
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
 #, python-format
 msgid "Product images"
-msgstr ""
+msgstr "Зображення товарів"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__products_to_process
 msgid "Products To Process"
-msgstr ""
+msgstr "Товари для обробки"
 
 #. module: product_images
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
@@ -174,17 +187,21 @@ msgid ""
 "Products are processed in the background. Images will be updated "
 "progressively."
 msgstr ""
+"Товари обробляються у фоновому режимі. Зображення будуть поступово "
+"оновлюватися."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.res_config_settings_view_form
 msgid "Search Engine ID"
-msgstr ""
+msgstr "ID пошукової системи"
 
 #. module: product_images
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
 #, python-format
 msgid "The API Key and Search Engine ID must be set in the General Settings."
 msgstr ""
+"Ключ API та ID пошукової системи мають бути встановлені в Загальних "
+"налаштуваннях."
 
 #. module: product_images
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
@@ -194,11 +211,15 @@ msgid ""
 "your Google Cloud Platform project page and enable it, then retry. If you "
 "enabled this API recently, please wait a few minutes and retry."
 msgstr ""
+"API користувацького пошуку не ввімкнено у вашому проекті Google. Відвідайте "
+"сторінку проекту Google Cloud Platform і ввімкніть її, а потім повторіть "
+"спробу. Якщо ви нещодавно ввімкнули цей API, зачекайте кілька хвилин і "
+"повторіть спробу."
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_res_config_settings__google_pse_id
 msgid "The identifier of the Google Programmable Search Engine"
-msgstr ""
+msgstr "Ідентифікатор програмованої пошукової системи Google"
 
 #. module: product_images
 #: model:ir.model.fields,help:product_images.field_product_fetch_image_wizard__products_to_process
@@ -206,6 +227,8 @@ msgid ""
 "The list of selected products that meet the criteria (have a barcode and no "
 "image)"
 msgstr ""
+"Список вибраних товарів, які відповідають критеріям (мають штрих-код і немає"
+" зображення)"
 
 #. module: product_images
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
@@ -216,12 +239,15 @@ msgid ""
 "been deleted. Please contact your administrator to have the action restored "
 "or to reinstall the module \"product_images\"."
 msgstr ""
+"Заплановану дію \"Зображення товарів: отримувати зображення товарів від "
+"Google\" видалено. Зверніться до свого адміністратора, щоб відновити дію або"
+" перевстановити модуль \"product_images\"."
 
 #. module: product_images
 #: code:addons/product_images/models/ir_cron_trigger.py:0
 #, python-format
 msgid "This action is already scheduled. Please try again later."
-msgstr ""
+msgstr "Ця акція вже запланована. Будь-ласка спробуйте пізніше."
 
 #. module: product_images
 #: model:ir.model,name:product_images.model_ir_cron_trigger
@@ -232,22 +258,23 @@ msgstr "Запущені дії"
 #: model:ir.model.fields,help:product_images.field_product_product__image_fetch_pending
 msgid "Whether an image must be fetched for this product. Handled by a cron."
 msgstr ""
+"Чи потрібно завантажувати зображення для цього продукту. Обробляється cron."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
 msgid "You selected"
-msgstr ""
+msgstr "Ви обрали"
 
 #. module: product_images
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
 #, python-format
 msgid "Your API Key or your Search Engine ID is incorrect."
-msgstr ""
+msgstr "Ваш ключ API або ID пошукової системи невірні."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
 msgid "of which will be processed."
-msgstr ""
+msgstr "якого буде оброблено."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
@@ -256,8 +283,11 @@ msgid ""
 "                            processed because they either already have an image or their barcode\n"
 "                            number is not set."
 msgstr ""
+"товари не будуть оброблені, \n"
+"оскільки вони вже мають зображення або їх номер штрих-коду \n"
+"не встановлено."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
 msgid "products,"
-msgstr ""
+msgstr "товари,"

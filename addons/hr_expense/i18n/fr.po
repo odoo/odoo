@@ -712,6 +712,7 @@ msgstr "Ligne de frais"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__is_editable
 msgid "Expense Lines Are Editable By Current User"
 msgstr ""
+"Les lignes de notes de frais sont modifiables par l'utilisateur actuel"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__expense_manager_id
@@ -881,7 +882,7 @@ msgstr "Notes de Frais par Date"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Expenses must have the same To Reimburse status."
-msgstr ""
+msgstr "Les notes de frais doivent avoir le même statut 'À Rembourser'."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -943,7 +944,7 @@ msgstr "Information Générale"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Generate Expenses"
-msgstr ""
+msgstr "Générer des notes de frais"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
@@ -1023,7 +1024,7 @@ msgstr "En paiement"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__tax_ids
 msgid "Included taxes"
-msgstr ""
+msgstr "Taxes incluses"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1060,7 +1061,7 @@ msgstr "Est un abonné"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__same_currency
 msgid "Is currency_id different from the company_currency_id"
-msgstr ""
+msgstr "Est-ce que currency_id est différent de company_currency_id"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_cost
@@ -1203,7 +1204,7 @@ msgstr "Nouveau rapport de notes de frais"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "New Expense Reports"
-msgstr ""
+msgstr "Nouveaux rapports de notes de frais"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_calendar_event_id
@@ -1278,7 +1279,7 @@ msgstr "Aucun rapport trouvé"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all
 msgid "No expense reports found. Let's create one!"
-msgstr ""
+msgstr "Aucun rapport de notes de frais trouvé. Créons-en un !"
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__payment_state__not_paid
@@ -1306,7 +1307,7 @@ msgstr "Nombre de documents joints"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__expense_number
 msgid "Number of Expenses"
-msgstr ""
+msgstr "Nombre de notes de frais"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_error_counter
@@ -1415,7 +1416,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Post Entries"
-msgstr ""
+msgstr "Comptabiliser les écritures"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -1463,7 +1464,7 @@ msgstr "Article"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_description
 msgid "Product Description"
-msgstr ""
+msgstr "Description du produit"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -1662,7 +1663,7 @@ msgstr "Scan"
 #: code:addons/hr_expense/static/src/xml/expense_qr_modal_template.xml:0
 #, python-format
 msgid "Scan this QR code to get the Odoo app:"
-msgstr ""
+msgstr "Scannez ce QR code pour obtenir l'application Odoo :"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
@@ -1671,6 +1672,8 @@ msgid ""
 "Select the user responsible for approving \"Expenses\" of this employee.\n"
 "If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
 msgstr ""
+"Sélectionnez l'utilisateur responsable de l'approbation des \"Notes de frais\" de cet employé.\n"
+"Si vide, l'approbation est faite par un Administrateur ou un Approbateur (déterminé dans les paramètres/utilisateurs)."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -1679,6 +1682,8 @@ msgid ""
 "Selected Unit of Measure for expense %(expense)s does not belong to the same"
 " category as the Unit of Measure of product %(product)s."
 msgstr ""
+"L'unité de mesure sélectionnée pour la dépense %(expense)s n'appartient pas "
+"à la même catégorie que l'unité de mesure du produit %(product)s."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1689,6 +1694,12 @@ msgid ""
 "category will automatically be set. Type the expense amount in the mail "
 "subject to set it on the expense too."
 msgstr ""
+"Envoyez un courrier électronique à cet alias avec le reçu en pièce jointe "
+"pour créer une note de frais en un clic. Si le premier mot de l'objet du "
+"courrier contient la référence interne de la catégorie ou le nom de la "
+"catégorie, la catégorie correspondante sera automatiquement définie. Tapez "
+"le montant de la dépense dans l'objet du courrier pour le définir également "
+"sur la note de frais."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
@@ -1714,7 +1725,7 @@ msgstr "Feuille"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__sheet_is_editable
 msgid "Sheet Is Editable"
-msgstr ""
+msgstr "Feuille modifiable"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1797,7 +1808,7 @@ msgstr "Montant de la taxe"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__amount_tax
 msgid "Tax amount in Currency"
-msgstr ""
+msgstr "Montant de la taxe en devise"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__amount_tax_company
@@ -1807,7 +1818,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__amount_tax
 msgid "Tax amount in currency"
-msgstr ""
+msgstr "Montant de la taxe en devise"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__total_amount_taxes
@@ -1867,6 +1878,9 @@ msgid ""
 "than some expenses of this report. Please verify this report does not "
 "contain duplicates."
 msgstr ""
+"Les notes de frais approuvées suivantes ont un employé, un montant et une "
+"catégorie similaires à certaines dépenses de ce rapport. Veuillez vérifier "
+"que ce rapport ne contient pas de doublons."
 
 #. module: hr_expense
 #: model:ir.model.constraint,message:hr_expense.constraint_hr_expense_sheet_journal_id_required_posted
@@ -1971,7 +1985,7 @@ msgstr "Prix unitaire"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__unit_amount_display
 msgid "Unit Price Display"
-msgstr ""
+msgstr "Affichage du prix unitaire"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_uom_id
@@ -2073,7 +2087,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
 msgid "Whether tax is defined on a selected product"
-msgstr ""
+msgstr "Si la taxe est définie sur un produit sélectionné"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -2127,6 +2141,7 @@ msgstr "Vous pouvez seulement refuser les notes de frais de votre département"
 #, python-format
 msgid "You can't mix sample expenses and regular ones"
 msgstr ""
+"Vous ne pouvez pas mélanger des exemples de notes de frais et des régulières"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -2170,7 +2185,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot report the expenses without amount!"
-msgstr ""
+msgstr "Vous ne pouvez pas déclarer les notes de frais sans montant !"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0

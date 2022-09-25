@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:34+0000\n"
 "PO-Revision-Date: 2022-06-17 09:48+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,6 +26,8 @@ msgid ""
 ".\n"
 "                <br/>"
 msgstr ""
+".\n"
+"                <br/>"
 
 #. module: auth_totp_mail_enforce
 #: model:mail.template,body_html:auth_totp_mail_enforce.mail_template_totp_mail_code
@@ -65,6 +68,40 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    Ciao<t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
+"    <p>Qualcuno sta cercando di accedere al tuo account da un nuovo dispositivo.</p>\n"
+"    <ul>\n"
+"        <t t-set=\"not_available\">N/A</t>\n"
+"        <li>Location: <t t-out=\"ctx.get('location') or not_available\"/></li>\n"
+"        <li>Dispositivo: <t t-out=\"ctx.get('device') or not_available\"/></li>\n"
+"        <li>Browser: <t t-out=\"ctx.get('browser') or not_available\"/></li>\n"
+"        <li>Indirizzo IP: <t t-out=\"ctx.get('ip') or not_available\"/></li>\n"
+"    </ul>\n"
+"    <p>Se sei tu, inserisci il seguente codice per completare il login:</p>\n"
+"    <t t-set=\"code_expiration\" t-value=\"object._get_totp_mail_code()\"/>\n"
+"    <t t-set=\"code\" t-value=\"code_expiration[0]\"/>\n"
+"    <t t-set=\"expiration\" t-value=\"code_expiration[1]\"/>\n"
+"    <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"        <span t-out=\"code\" style=\"background-color:#faf9fa; border: 1px solid #dad8de; padding: 8px 16px 8px 16px; font-size: 24px; color: #875A7B; border-radius: 5px;\"/>\n"
+"    </div>\n"
+"    <small>Si prega di notare che questo codice scade in <t t-out=\"expiration\"/>.</small>\n"
+"\n"
+"    <p style=\"margin: 16px 0px 16px 0px;\">\n"
+"        Se NON hai iniziato questo log-in,\n"
+"cambia immediatamente la tua password per garantire la sicurezza dell'account.\n"
+"    </p>\n"
+"\n"
+"    <p style=\"margin: 16px 0px 16px 0px;\">\n"
+"       Raccomandiamo anche vivamente di attivare l'autenticazione a due fattori utilizzando un'app di autenticazione per aiutare a proteggere il tuo account.\n"
+"    </p>\n"
+"\n"
+"    <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"        <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"  Attivare la mia autenticazione a due fattori\n"
+"        </a>\n"
+"    </p>\n"
+"</div>"
 
 #. module: auth_totp_mail_enforce
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.auth_totp_mail_form
@@ -72,6 +109,8 @@ msgid ""
 "<i class=\"fa fa-envelope-o\"/>\n"
 "                To login, enter below the six-digit authentication code just sent via email to"
 msgstr ""
+"<i class=\"fa fa-envelope-o\"/>\n"
+"                Per accedere, inserire qui sotto il codice di autenticazione a sei cifre appena inviato via e-mail a"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields.selection,name:auth_totp_mail_enforce.selection__res_config_settings__auth_totp_policy__all_required
@@ -88,7 +127,7 @@ msgstr ""
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields.selection,name:auth_totp_mail_enforce.selection__auth_totp_rate_limit_log__limit_type__code_check
 msgid "Code Checking"
-msgstr ""
+msgstr "Controllo codice"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model,name:auth_totp_mail_enforce.model_res_config_settings
@@ -164,7 +203,7 @@ msgstr "Scopri di più"
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__limit_type
 msgid "Limit Type"
-msgstr ""
+msgstr "Limit Type"
 
 #. module: auth_totp_mail_enforce
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.auth_totp_mail_form
@@ -189,7 +228,7 @@ msgstr "TOTP per utenti: Autenticazione via e-mail"
 #. module: auth_totp_mail_enforce
 #: model:ir.model,name:auth_totp_mail_enforce.model_auth_totp_rate_limit_log
 msgid "TOTP rate limit logs"
-msgstr ""
+msgstr "TOTP rate limit logs"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_res_config_settings__auth_totp_policy

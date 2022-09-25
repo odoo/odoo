@@ -4,6 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# marcescu, 2022
+# Camille Dantinne <cmd@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2022-06-17 09:49+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Camille Dantinne <cmd@odoo.com>, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -89,7 +91,7 @@ msgstr ""
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_user_id
 msgid "Automatically assign the created leads to this Salesperson."
-msgstr ""
+msgstr "Asignar automáticamente los leads creados a este vendedor."
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__company_id
@@ -99,17 +101,17 @@ msgstr "Compañía"
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_event__lead_count
 msgid "Counter for the leads linked to this event"
-msgstr ""
+msgstr "Número de leads vinculados a este evento"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_registration__lead_count
 msgid "Counter for the leads linked to this registration"
-msgstr ""
+msgstr "Número de leads vinculados a este registro"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_crm_lead__registration_count
 msgid "Counter for the registrations linked to this lead"
-msgstr ""
+msgstr "Número de registros vinculados a este lead"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_creation_basis
@@ -119,12 +121,12 @@ msgstr "Crear"
 #. module: event_crm
 #: model_terms:ir.actions.act_window,help:event_crm.event_lead_rule_action
 msgid "Create a Lead Generation Rule"
-msgstr ""
+msgstr "Crear una regla de generación de leads"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_ids
 msgid "Created Leads"
-msgstr ""
+msgstr "Leads creados"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__create_uid
@@ -139,7 +141,7 @@ msgstr "Creado el"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
 msgid "Creation Type"
-msgstr ""
+msgstr "Tipo de creación"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_creation_trigger
@@ -148,11 +150,14 @@ msgid ""
 "Confirmation: when attendee is confirmed, manually or automatically;\n"
 "Attended: when attendance is confirmed and registration set to done;"
 msgstr ""
+"Creación: cuando se crea un asistente;\n"
+"Confirmación: cuando se confirma el asistente, manual o automáticamente;\n"
+"Asistió: cuando se confirma la asistencia y el registro se establece como hecho;"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_type
 msgid "Default lead type when this rule is applied."
-msgstr ""
+msgstr "Tipo de lead predeterminado cuando se aplica esta regla."
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__display_name
@@ -188,7 +193,7 @@ msgstr "Registros al evento"
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_crm_lead__event_id
 msgid "Event triggering the rule that created this lead"
-msgstr ""
+msgstr "Eventos que activan la regla que creó este lead"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.crm_lead_merge_summary_inherit_event_crm
@@ -198,7 +203,7 @@ msgstr ""
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_registration_filter
 msgid "Filter the attendees that will or not generate leads."
-msgstr ""
+msgstr "Filtre los asistentes que generarán o no leads."
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_type_ids
@@ -206,6 +211,9 @@ msgid ""
 "Filter the attendees to include those of this specific event category. If "
 "not set, no event category restriction will be applied."
 msgstr ""
+"Filtre los asistentes para incluir aquellos que pertenecen a esta categoría "
+"de evento en específico. Si no se establece, no se aplicará ninguna "
+"restricción de categoría de evento."
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_id
@@ -213,11 +221,14 @@ msgid ""
 "Filter the attendees to include those of this specific event. If not set, no"
 " event restriction will be applied."
 msgstr ""
+"Filtre los asistentes para incluir aquellos que pertenecen a este evento en "
+"específico. Si no se establece, no se aplicará ninguna restricción de "
+"evento."
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
 msgid "For any of these Events"
-msgstr ""
+msgstr "Para cualquiera de estos eventos"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__id
@@ -227,7 +238,7 @@ msgstr "ID"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
 msgid "If the Attendees meet these Conditions"
-msgstr ""
+msgstr "Si los asistentes cumplen con las siguientes condiciones"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule____last_update
@@ -252,12 +263,12 @@ msgstr "Iniciativa"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_tree
 msgid "Lead Creation Type"
-msgstr ""
+msgstr "Tipo de creación de leads"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
 msgid "Lead Default Values"
-msgstr ""
+msgstr "Valores predeterminados de leads"
 
 #. module: event_crm
 #: model:ir.ui.menu,name:event_crm.event_lead_rule_menu
@@ -273,7 +284,7 @@ msgstr "Regla de generación de iniciativas"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_tree
 msgid "Lead Generation Rules"
-msgstr ""
+msgstr "Reglas de generación de leads"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_type
@@ -296,12 +307,12 @@ msgstr "Iniciativas"
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_registration__lead_ids
 msgid "Leads generated from the registration."
-msgstr ""
+msgstr "Leads generados a partir del registro."
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_event__lead_ids
 msgid "Leads generated from this event"
-msgstr ""
+msgstr "Leads generados de este evento"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
@@ -312,13 +323,13 @@ msgstr "Nombre"
 #: code:addons/event_crm/models/event_lead_rule.py:0
 #, python-format
 msgid "New registrations"
-msgstr ""
+msgstr "Nuevos registros"
 
 #. module: event_crm
 #: model_terms:ir.actions.act_window,help:event_crm.crm_lead_action_from_event
 #: model_terms:ir.actions.act_window,help:event_crm.crm_lead_action_from_registration
 msgid "No leads found"
-msgstr ""
+msgstr "No se encontraron leads"
 
 #. module: event_crm
 #: model_terms:ir.actions.act_window,help:event_crm.event_registration_action_from_lead
@@ -348,6 +359,8 @@ msgid ""
 "Per Attendee : A Lead is created for each Attendee (B2C).\n"
 "Per Order : A single Lead is created per Ticket Batch/Sale Order (B2B)"
 msgstr ""
+"Por asistente: Se crea un lead por cada asistente (B2C).\n"
+"Por orden: Se crea un solo lead por lote de entrada u orden de venta (B2B)"
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_basis__order
@@ -372,7 +385,7 @@ msgstr "Registro de dominio"
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_crm_lead__registration_ids
 msgid "Registrations triggering the rule that created this lead"
-msgstr ""
+msgstr "Los registros que activan la regla que creó este lead"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__company_id
@@ -380,6 +393,8 @@ msgid ""
 "Restrict the trigger of this rule to events belonging to a specific company.\n"
 "If not set, no company restriction will be applied."
 msgstr ""
+"Restringir el activador de esta regla a eventos que pertenezcan a una empresa en específico.\n"
+"Si no se establece, no se aplicará ninguna restricción de empresa."
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__name
@@ -404,7 +419,7 @@ msgstr "Comercial"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
 msgid "Search Lead Generation Rules"
-msgstr ""
+msgstr "Buscar reglas de generación de leads"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_id
@@ -424,7 +439,7 @@ msgstr "Categorías"
 #. module: event_crm
 #: model_terms:ir.actions.act_window,help:event_crm.event_lead_rule_action
 msgid "Those automatically create leads when attendees register."
-msgstr ""
+msgstr "Crean leads automáticamente cuando los asistentes se registran."
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search

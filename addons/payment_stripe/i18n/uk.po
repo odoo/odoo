@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-22 14:45+0000\n"
 "PO-Revision-Date: 2022-06-17 09:52+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +23,7 @@ msgstr ""
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
 msgid "Connect Stripe"
-msgstr ""
+msgstr "Підключіть Stripe"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
@@ -33,12 +34,12 @@ msgstr "Не вдалося встановити з’єднання з API."
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
 msgid "Generate your webhook"
-msgstr ""
+msgstr "Створіть ваш webhook"
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
 msgid "Get your Secret and Publishable keys"
-msgstr ""
+msgstr "Отримайте ваш секретний та публічний ключ"
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_webhook_secret
@@ -46,6 +47,9 @@ msgid ""
 "If a webhook is enabled on your Stripe account, this signing secret must be "
 "set to authenticate the messages sent from Stripe to Odoo."
 msgstr ""
+"Якщо вебхук увімкнено у вашому обліковому записі Stripe, цей секрет підпису "
+"має бути встановлений для автентифікації повідомлень, надісланих від Stripe "
+"до Odoo."
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_transaction.py:0
@@ -86,25 +90,25 @@ msgstr "Провайдер"
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_publishable_key
 msgid "Publishable Key"
-msgstr ""
+msgstr "Публічний ключ"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid intent status: %s"
-msgstr ""
+msgstr "Отримані дані з недійсним статусом наміру: %s"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing intent status."
-msgstr ""
+msgstr "Отримані дані із відсутнім статусом наміру."
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing merchant reference"
-msgstr ""
+msgstr "Отримані дані з відсутнім посиланням на мерчант"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_secret_key
@@ -125,25 +129,25 @@ msgstr "ID призначення платежу Stripe"
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
 msgid "Stripe Payment Method ID"
-msgstr ""
+msgstr "ID способу оплати Stripe"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid "Stripe Proxy error: %(error)s"
-msgstr ""
+msgstr "Помилка Stripe Proxy: %(error)s"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid "Stripe Proxy: An error occurred when communicating with the proxy."
-msgstr ""
+msgstr "Проксі Stripe: Виникла помилка під час з'єднання з проксі."
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid "Stripe Proxy: Could not establish the connection."
-msgstr ""
+msgstr "Проксі Stripe: Не вдалося встановити з’єднання."
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__provider
@@ -159,11 +163,16 @@ msgid ""
 "Stripe gave us the following info about the problem:\n"
 "'%s'"
 msgstr ""
+"З'єднання з API не вдалося.\n"
+"Stripe надав нам наступні інформацію про проблему:\n"
+"'%s'"
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_publishable_key
 msgid "The key solely used to identify the account with Stripe"
 msgstr ""
+"Ключ, який використовується виключно для ідентифікації облікового запису за "
+"допомогою Stripe"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_transaction.py:0
@@ -175,18 +184,18 @@ msgstr "Транзакція не зв'язана з токеном."
 #: code:addons/payment_stripe/models/payment_token.py:0
 #, python-format
 msgid "Unable to convert payment token to new API."
-msgstr ""
+msgstr "Неможливо конвертувати платіжний токен на новий API."
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_webhook_secret
 msgid "Webhook Signing Secret"
-msgstr ""
+msgstr "Секретний ключ підписання вебхуку"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid "You Stripe Webhook was successfully set up!"
-msgstr ""
+msgstr "Ваш вебхук Stripe було успішно встановлено!"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
@@ -194,6 +203,8 @@ msgstr ""
 msgid ""
 "You cannot create a Stripe Webhook if your Stripe Secret Key is not set."
 msgstr ""
+"Ви не можете створити вебхук Stripe якщо ваш секретний клю Stripe не "
+"встановлено."
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
@@ -202,9 +213,11 @@ msgid ""
 "You cannot set the acquirer to Test Mode while it is linked with your Stripe"
 " account."
 msgstr ""
+"Ви не можете встановити еквайєр у тестовий режим у той час, коли він "
+"пов'язаний з обліковим записом Stripe."
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid "Your Stripe Webhook is already set up."
-msgstr ""
+msgstr "Ваш вебхук Stripe вже встановлено."

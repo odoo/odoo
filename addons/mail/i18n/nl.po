@@ -429,6 +429,9 @@ msgid ""
 "'=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the "
 "document and</span>"
 msgstr ""
+"<span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', "
+"'=', False), ('composition_mode', '=', 'mass_mail')]}\">Volgers van het "
+"document en</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -621,6 +624,7 @@ msgstr "Activiteiten"
 #: model:ir.model.constraint,message:mail.constraint_mail_activity_check_res_id_is_set
 msgid "Activities have to be linked to records with a not null res_id."
 msgstr ""
+"Activiteiten moeten worden gekoppeld aan records met een niet-null res_id."
 
 #. module: mail
 #. openerp-web
@@ -1282,7 +1286,7 @@ msgstr "Camera staat uit"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__can_cancel
 msgid "Can Cancel"
-msgstr ""
+msgstr "Kan annuleren"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__can_edit_body
@@ -1293,7 +1297,7 @@ msgstr "Kan tekst bewerken"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__can_resend
 msgid "Can Resend"
-msgstr ""
+msgstr "Kan opnieuw verzenden"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__can_write
@@ -1592,7 +1596,7 @@ msgstr "Gesloten"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__new
 msgid "Collect replies on a specific email address"
-msgstr ""
+msgstr "Verzamel antwoorden op een specifiek e-mailadres"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -2454,7 +2458,7 @@ msgstr "E-mail"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_add_signature
 #: model:ir.model.fields,field_description:mail.field_mail_message__email_add_signature
 msgid "Email Add Signature"
-msgstr ""
+msgstr "E-mail Handtekening toevoegen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__email
@@ -2502,7 +2506,7 @@ msgstr "E-mail bulkmailing"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_layout_xmlid
 msgid "Email Notification Layout"
-msgstr ""
+msgstr "Lay-out voor e-mailmeldingen"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
@@ -3027,12 +3031,12 @@ msgstr "Algemene gebruiker van record"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Get Gmail API credentials"
-msgstr ""
+msgstr "Gmail API-inloggegevens ophalen"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Gmail Credentials"
-msgstr ""
+msgstr "Gmail-referenties"
 
 #. module: mail
 #: code:addons/mail/models/res_users.py:0
@@ -3950,7 +3954,7 @@ msgstr "Laad meer"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Load template"
-msgstr ""
+msgstr "Sjabloon laden"
 
 #. module: mail
 #. openerp-web
@@ -5074,7 +5078,7 @@ msgstr "Alleen aangepaste modellen kunnen worden veranderd"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_res_users_notification_type
 msgid "Only internal user can receive notifications in Odoo"
-msgstr ""
+msgstr "Alleen interne gebruikers kunnen meldingen ontvangen in Odoo"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -5718,7 +5722,7 @@ msgstr "Leesdatum"
 #: code:addons/mail/static/src/components/message/message.js:0
 #, python-format
 msgid "Read Less"
-msgstr ""
+msgstr "Lees minder"
 
 #. module: mail
 #. openerp-web
@@ -5789,7 +5793,7 @@ msgstr "Ontvanger"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__name
 msgid "Recipient Name"
-msgstr ""
+msgstr "Naam ontvanger"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__partner_ids
@@ -5988,7 +5992,7 @@ msgstr "Antwoord aan"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Reply-to Address"
-msgstr ""
+msgstr "Antwoordadres"
 
 #. module: mail
 #. openerp-web
@@ -6285,7 +6289,7 @@ msgstr "Verzenden"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Send & close"
-msgstr ""
+msgstr "Verzenden & sluiten"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__send_mail
@@ -6650,7 +6654,7 @@ msgstr "Scherm delen stoppen"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__update
 msgid "Store email and replies in the chatter of each record"
-msgstr ""
+msgstr "Sla e-mail en antwoorden op in de chatter van elk record"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_settings__push_to_talk_key
@@ -6745,7 +6749,7 @@ msgstr "Samenvatting"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__module_google_gmail
 msgid "Support Gmail Authentication"
-msgstr ""
+msgstr "Ondersteuning Gmail-verificatie"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_config_parameter
@@ -7257,7 +7261,7 @@ msgstr "Trigger volgende activiteit"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__resend
 msgid "Try Again"
-msgstr ""
+msgstr "Probeer het nog eens"
 
 #. module: mail
 #. openerp-web
@@ -7750,7 +7754,7 @@ msgstr "Weken"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Welcome to MyCompany!"
-msgstr ""
+msgstr "Welkom bij MijnCompany!"
 
 #. module: mail
 #. openerp-web
@@ -7819,7 +7823,7 @@ msgstr "Schrijf feedback"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Write your message here..."
-msgstr ""
+msgstr "Schrijf je bericht hier..."
 
 #. module: mail
 #: code:addons/mail/models/mail_message.py:0
@@ -8200,7 +8204,7 @@ msgstr "kanaal"
 #: code:addons/mail/static/src/webclient/commands/mail_providers.js:0
 #, python-format
 msgid "channels"
-msgstr ""
+msgstr "kanalen"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__days
@@ -8231,12 +8235,14 @@ msgstr "gereed"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "e.g. \"Welcome email\""
-msgstr ""
+msgstr "bijv. \"Welkom e-mail\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "e.g. \"Welcome to MyCompany\" or \"Nice to meet you, ${object.name}\""
 msgstr ""
+"bijv. \"Welkom bij MyCompany\" of \"Aangenaam kennis te maken, "
+"${object.name}\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -8282,7 +8288,7 @@ msgstr "bijv. waar.waar..f"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "e.g: \"info@mycompany.odoo.com\""
-msgstr ""
+msgstr "bijvoorbeeld: \"info@mijnbedrijf.odoo.com\""
 
 #. module: mail
 #. openerp-web
@@ -8552,7 +8558,7 @@ msgstr "onbekend doel model %s"
 #: code:addons/mail/static/src/webclient/commands/mail_providers.js:0
 #, python-format
 msgid "users"
-msgstr ""
+msgstr "gebruikers"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email
@@ -8576,7 +8582,7 @@ msgstr "Weken"
 #: code:addons/mail/static/src/xml/many2one_avatar_user.xml:0
 #, python-format
 msgid "widget.mode === 'readonly' && widget.displayAvatarName"
-msgstr ""
+msgstr "widget.mode === 'alleen-lezen' && widget.displayAvatarName"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form

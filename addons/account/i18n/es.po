@@ -3,8 +3,8 @@
 # 	* account
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
+# Martin Trigaux, 2022
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2022
 # 
 msgid ""
@@ -200,7 +200,7 @@ msgstr "- Asientos en borrador y publicados"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View partially reconciled entries"
-msgstr "-> Ver entradas parcialmente reconciliadas"
+msgstr "-> Ver apuntes parcialmente conciliados"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -874,6 +874,12 @@ msgstr "<span>5.00</span>"
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Amount</span>"
 msgstr "<span>Cantidad</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.bill_preview
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "<span>Amount In Currency</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -2115,7 +2121,7 @@ msgstr "Todos los asientos"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__all_lines_reconciled
 msgid "All Lines Reconciled"
-msgstr "Todas las líneas reconciliadas"
+msgstr "Todas las líneas conciliadas"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_common_journal_report__target_move__posted
@@ -2387,7 +2393,7 @@ msgstr "Importe:"
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "An Off-Balance account can not be reconcilable"
-msgstr "Una cuenta fuera de balance no puede ser reconciliada"
+msgstr "Una cuenta fuera de balance no puede ser conciliada"
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -2700,7 +2706,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Auto Reconcile"
-msgstr "Reconciliación automática"
+msgstr "Conciliación automática"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2898,12 +2904,12 @@ msgstr "Partner Bancario"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_tree
 msgid "Bank Reconciliation Move Presets"
-msgstr "Preconfiguración de reconciliación de movimientos bancarios"
+msgstr "Preconfiguración de conciliación de movimientos bancarios"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Bank Reconciliation Move preset"
-msgstr "Preconfiguración de reconciliación de movimientos bancarios"
+msgstr "Preconfiguración de conciliación de movimientos bancarios"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement
@@ -6559,13 +6565,13 @@ msgstr "Tiene un mensaje"
 #: model:ir.model.fields,field_description:account.field_account_move__has_reconciled_entries
 #: model:ir.model.fields,field_description:account.field_account_payment__has_reconciled_entries
 msgid "Has Reconciled Entries"
-msgstr "Tiene asientos reconciliados"
+msgstr "Tiene apuntes conciliados"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__has_unreconciled_entries
 #: model:ir.model.fields,field_description:account.field_res_users__has_unreconciled_entries
 msgid "Has Unreconciled Entries"
-msgstr "Tiene asientos no conciliados"
+msgstr "Tiene apuntes no conciliados"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -7576,7 +7582,7 @@ msgstr "Facturas a validar"
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_invoice_ids
 msgid "Invoices whose journal items have been reconciled with these payments."
 msgstr ""
-"Facturas cuyas apuntes individuales se han reconciliado con estos pagos."
+"Facturas cuyas apuntes individuales se han conciliado con estos pagos."
 
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices_without_payment
@@ -9851,12 +9857,12 @@ msgstr "Recibos pendientes"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_debit_account_id
 msgid "Outstanding Receipts Account"
-msgstr "Cuenta de recibos pendientes"
+msgstr "Cuenta de cobros pendientes"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Outstanding Receipts accounts"
-msgstr "Cuentas de recibos pendientes"
+msgstr "Cuentas de cobros pendientes"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14880,6 +14886,9 @@ msgid ""
 " country. Check company fiscal country in the settings and tax country in "
 "taxes configuration."
 msgstr ""
+"Esta entrada contiene uno o más impuestos que son incompatibles con su país "
+"fiscal. Compruebe el país fiscal de la empresa en los ajustes y el país "
+"fiscal en la configuración de impuestos."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14908,6 +14917,9 @@ msgid ""
 "This entry contains taxes that are not compatible with your fiscal position."
 " Check the country set in fiscal position and in your tax configuration."
 msgstr ""
+"Esta entrada contiene impuestos que no son compatibles con su posición "
+"fiscal. Compruebe el país establecido en la posición fiscal y en su "
+"configuración de impuestos."
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
