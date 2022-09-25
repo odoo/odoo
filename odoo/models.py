@@ -42,6 +42,8 @@ from collections.abc import MutableMapping
 from contextlib import closing
 from inspect import getmembers, currentframe
 from operator import attrgetter, itemgetter
+from typing import Iterator, Union
+from typing_extensions import Self
 
 import babel.dates
 import dateutil.relativedelta
@@ -462,12 +464,12 @@ class BaseModel(metaclass=MetaModel):
     .. seealso:: :class:`TransientModel`
     """
 
-    _name = None                #: the model name (in dot-notation, module namespace)
-    _description = None         #: the model's informal name
+    _name: Union[str, None] = None                #: the model name (in dot-notation, module namespace)
+    _description: Union[str, None] = None         #: the model's informal name
     _module = None              #: the model's module (in the Odoo sense)
     _custom = False             #: should be True for custom models only
 
-    _inherit = ()
+    _inherit: Union[str, list[str]] = ()
     """Python-inherited models:
 
     :type: str or list(str)
@@ -1515,7 +1517,7 @@ class BaseModel(metaclass=MetaModel):
     @api.returns('self',
         upgrade=lambda self, value, domain, offset=0, limit=None, order=None, count=False: value if count else self.browse(value),
         downgrade=lambda self, value, domain, offset=0, limit=None, order=None, count=False: value if count else value.ids)
-    def search(self, domain, offset=0, limit=None, order=None, count=False):
+    def search(self, domain, offset=0, limit=None, order=None, count=False) -> Self:
         """ search(domain[, offset=0][, limit=None][, order=None][, count=False])
 
         Searches for records based on the ``domain``
@@ -3922,7 +3924,7 @@ class BaseModel(metaclass=MetaModel):
 
     @api.model_create_multi
     @api.returns('self', lambda value: value.id)
-    def create(self, vals_list):
+    def create(self, vals_list) -> Self:
         """ create(vals_list) -> records
 
         Creates new records for the model.
@@ -5155,7 +5157,7 @@ class BaseModel(metaclass=MetaModel):
     #  - the global cache is only an index to "resolve" a record 'id'.
     #
 
-    def __init__(self, env, ids, prefetch_ids):
+    def __init__(self, env, ids=(), prefetch_ids=()):
         """ Create a recordset instance.
 
         :param env: an environment
@@ -5166,7 +5168,7 @@ class BaseModel(metaclass=MetaModel):
         self._ids = ids
         self._prefetch_ids = prefetch_ids
 
-    def browse(self, ids=None):
+    def browse(self, ids=None) -> Self:
         """ browse([ids]) -> records
 
         Returns a recordset for the ids provided as parameter in the current
@@ -5833,7 +5835,7 @@ class BaseModel(metaclass=MetaModel):
         """ Return the size of ``self``. """
         return len(self._ids)
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[Self]:
         """ Return an iterator over ``self``. """
         if len(self._ids) > PREFETCH_MAX and self._prefetch_ids is self._ids:
             for ids in self.env.cr.split_for_in_conditions(self._ids):
@@ -5843,7 +5845,7 @@ class BaseModel(metaclass=MetaModel):
             for id_ in self._ids:
                 yield self.__class__(self.env, (id_,), self._prefetch_ids)
 
-    def __reversed__(self):
+    def __reversed__(self) -> Iterator[Self]:
         """ Return an reversed iterator over ``self``. """
         if len(self._ids) > PREFETCH_MAX and self._prefetch_ids is self._ids:
             for ids in self.env.cr.split_for_in_conditions(reversed(self._ids)):
