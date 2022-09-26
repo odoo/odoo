@@ -296,6 +296,13 @@ class Website(models.Model):
         else:
             sale_order_sudo = SaleOrder
 
+        # Ignore the current order if a payment has been initiated. We don't want to retrieve the
+        # cart and allow the user to update it when the payment is about to confirm it.
+        if sale_order_sudo and sale_order_sudo.get_portal_last_transaction().state in (
+            'pending', 'authorized', 'done'
+        ):
+            sale_order_sudo = None
+
         if not (sale_order_sudo or force_create):
             # Do not create a SO record unless needed
             if request.session.get('sale_order_id'):

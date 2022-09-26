@@ -1080,6 +1080,12 @@ class WebsiteSale(http.Controller):
         """
         if sale_order_id is None:
             order = request.website.sale_get_order()
+            if not order and 'sale_last_order_id' in request.session:
+                # Retrieve the last known order from the session if the session key `sale_order_id`
+                # was prematurely cleared. This is done to prevent the user from updating their cart
+                # after payment in case they don't return from payment through this route.
+                last_order_id = request.session['sale_last_order_id']
+                order = request.env['sale.order'].sudo().browse(last_order_id).exists()
         else:
             order = request.env['sale.order'].sudo().browse(sale_order_id)
             assert order.id == request.session.get('sale_last_order_id')
