@@ -1,56 +1,52 @@
-/* global checkVATNumber */
-odoo.define('partner.autocomplete.Mixin', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var concurrency = require('web.concurrency');
-
-var core = require('web.core');
-var Qweb = core.qweb;
-var utils = require('web.utils');
-var _t = core._t;
+import { _t } from "@web/core/l10n/translation";
+import { KeepLast } from "@web/core/utils/concurrency";
+import { useService } from "@web/core/utils/hooks";
+import { renderToMarkup } from "@web/core/utils/render";
+import { getDataURLFromFile } from "@web/core/utils/urls";
 
 /**
- * This mixin only works with classes having EventDispatcherMixin in 'web.mixins'
+ * Get list of companies via Autocomplete API
+ *
+ * @param {string} value
+ * @returns {Promise}
+ * @private
  */
-var PartnerAutocompleteMixin = {
-    _dropPreviousOdoo: new concurrency.DropPrevious(),
-    _dropPreviousClearbit: new concurrency.DropPrevious(),
-    _timeout : 1000, // Timeout for Clearbit autocomplete in ms
+export function usePartnerAutocomplete() {
+    const keepLastOdoo = new KeepLast();
+    const keepLastClearbit = new KeepLast();
 
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
+    const http = useService("http");
+    const notification = useService("notification");
+    const orm = useService("orm");
 
-    /**
-     * Get list of companies via Autocomplete API
-     *
-     * @param {string} value
-     * @returns {Promise}
-     * @private
-     */
-    _autocomplete: function (value) {
-        var self = this;
+    function autocomplete(value, isVAT = false) {
         value = value.trim();
-        var isVAT = this._isVAT(value);
-        var odooSuggestions = [];
-        var clearbitSuggestions = [];
-        return new Promise(function (resolve, reject) {
-            var odooPromise = self._getOdooSuggestions(value, isVAT).then(function (suggestions){
+        let odooSuggestions = [];
+        let clearbitSuggestions = [];
+        return new Promise((resolve, reject) => {
+            const odooPromise = getOdooSuggestions(value, isVAT).then((suggestions) => {
                 odooSuggestions = suggestions;
             });
 
             // Only get Clearbit suggestions if not a VAT number
-            var clearbitPromise = isVAT ? false : self._getClearbitSuggestions(value).then(function (suggestions){
+            const clearbitPromise = isVAT ? false : getClearbitSuggestions(value).then((suggestions) => {
+                suggestions.forEach((suggestion) => {
+                    suggestion.label = suggestion.name;
+                    suggestion.website = suggestion.domain;
+                    suggestion.description = suggestion.website;
+                });
                 clearbitSuggestions = suggestions;
             });
 
-            var concatResults = function () {
+            const concatResults = () => {
                 // Add Clearbit result with Odoo result (with unique domain)
                 if (clearbitSuggestions && clearbitSuggestions.length) {
-                    var websites = odooSuggestions.map(function (suggestion) {
+                    const websites = odooSuggestions.map((suggestion) => {
                         return suggestion.website;
                     });
-                    clearbitSuggestions.forEach(function (suggestion) {
+                    clearbitSuggestions.forEach((suggestion) => {
                         if (websites.indexOf(suggestion.domain) < 0) {
                             websites.push(suggestion.domain);
                             odooSuggestions.push(suggestion);
@@ -58,19 +54,18 @@ var PartnerAutocompleteMixin = {
                     });
                 }
 
-                odooSuggestions = _.filter(odooSuggestions, function (suggestion) {
+                odooSuggestions = odooSuggestions.filter((suggestion) => {
                     return !suggestion.ignored;
                 });
-                _.each(odooSuggestions, function(suggestion){
-                delete suggestion.ignored;
+                odooSuggestions.forEach((suggestion) => {
+                    delete suggestion.ignored;
                 });
                 return resolve(odooSuggestions);
             };
 
-            self._whenAll([odooPromise, clearbitPromise]).then(concatResults, concatResults);
+            whenAll([odooPromise, clearbitPromise]).then(concatResults, concatResults);
         });
-
-    },
+    }
 
     /**
      * Get enrichment data
@@ -82,13 +77,13 @@ var PartnerAutocompleteMixin = {
      * @returns {Promise}
      * @private
      */
-    _enrichCompany: function (company) {
-        return this._rpc({
-            model: 'res.partner',
-            method: 'enrich_company',
-            args: [company.website, company.partner_gid, company.vat],
-        });
-    },
+    function enrichCompany(company) {
+        return orm.call(
+            'res.partner',
+            'enrich_company',
+            [company.website, company.partner_gid, company.vat]
+        );
+    }
 
     /**
      * Get the company logo as Base 64 image from url
@@ -97,14 +92,16 @@ var PartnerAutocompleteMixin = {
      * @returns {Promise}
      * @private
      */
-    _getCompanyLogo: function (url) {
-        return this._getBase64Image(url).then(function (base64Image) {
+    async function getCompanyLogo(url) {
+        try {
+            const base64Image = await getBase64Image(url)
             // base64Image equals "data:" if image not available on given url
             return base64Image ? base64Image.replace(/^data:image[^;]*;base64,?/, '') : false;
-        }).catch(function () {
+        }
+        catch {
             return false;
-        });
-    },
+        }
+    }
 
     /**
      * Get enriched data + logo before populating partner form
@@ -112,54 +109,54 @@ var PartnerAutocompleteMixin = {
      * @param {Object} company
      * @returns {Promise}
      */
-    _getCreateData: function (company) {
-        var self = this;
-
-        var removeUselessFields = function (company) {
-            var fields = 'label,description,domain,logo,legal_name,ignored,email'.split(',');
-            fields.forEach(function (field) {
+    function getCreateData(company) {
+        const removeUselessFields = (company) => {
+            // Delete attribute to avoid "Field_changed" errors
+            const fields = ['label', 'description', 'domain', 'logo', 'legal_name', 'ignored', 'email', 'bank_ids', 'classList'];
+            fields.forEach((field) => {
                 delete company[field];
             });
 
-            var notEmptyFields = "country_id,state_id".split(',');
-            notEmptyFields.forEach(function (field) {
-                if (!company[field]) delete company[field];
+            // Remove if empty and format it otherwise
+            const many2oneFields = ['country_id', 'state_id'];
+            many2oneFields.forEach((field) => {
+                if (!company[field]) {
+                    delete company[field];
+                }
             });
         };
 
-        return new Promise(function (resolve) {
+        return new Promise((resolve) => {
             // Fetch additional company info via Autocomplete Enrichment API
-            var enrichPromise = self._enrichCompany(company);
+            const enrichPromise = enrichCompany(company);
 
             // Get logo
-            var logoPromise = company.logo ? self._getCompanyLogo(company.logo) : false;
-            self._whenAll([enrichPromise, logoPromise]).then(function (result) {
-                var company_data = result[0];
-                var logo_data = result[1];
-
+            const logoPromise = company.logo ? getCompanyLogo(company.logo) : false;
+            whenAll([enrichPromise, logoPromise]).then(([company_data, logo_data]) => {
                 // The vat should be returned for free. This is the reason why
                 // we add it into the data of 'company' even if an error such as
-                // an insufficient credit error is raised. 
+                // an insufficient credit error is raised.
                 if (company_data.error && company_data.vat) {
                     company.vat = company_data.vat;
                 }
 
                 if (company_data.error) {
                     if (company_data.error_message === 'Insufficient Credit') {
-                        self._notifyNoCredits();
-                    } else if (company_data.error_message === 'No Account Token') {
-                        self._notifyAccountToken();
-                    } else {
-                        self.displayNotification({ message: company_data.error_message });
+                        notifyNoCredits();
+                    }
+                    else if (company_data.error_message === 'No Account Token') {
+                        notifyAccountToken();
+                    }
+                    else {
+                        notification.add(company_data.error_message);
                     }
                     company_data = company;
                 }
 
-                if (_.isEmpty(company_data)) {
+                if (!Object.keys(company_data).length) {
                     company_data = company;
                 }
 
-                // Delete attribute to avoid "Field_changed" errors
                 removeUselessFields(company_data);
 
                 // Assign VAT coming from parent VIES VAT query
@@ -172,33 +169,7 @@ var PartnerAutocompleteMixin = {
                 });
             });
         });
-    },
-
-    /**
-     * Check connectivity
-     *
-     * @returns {boolean}
-     */
-    _isOnline: function () {
-        return navigator && navigator.onLine;
-    },
-
-    /**
-     * Validate: Not empty and length > 1
-     *
-     * @param {string} search_val
-     * @param {string} onlyVAT : Only valid VAT Number search
-     * @returns {boolean}
-     * @private
-     */
-    _validateSearchTerm: function (search_val, onlyVAT) {
-        if (onlyVAT) return this._isVAT(search_val);
-        else return search_val && search_val.length > 2;
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
+    }
 
     /**
      * Returns a promise which will be resolved with the base64 data of the
@@ -208,18 +179,18 @@ var PartnerAutocompleteMixin = {
      * @param {string} url : the url where to find the image to fetch
      * @returns {Promise}
      */
-    _getBase64Image: function (url) {
-        return new Promise(function (resolve, reject) {
-            var xhr = new XMLHttpRequest();
-            xhr.onload = function () {
-                utils.getDataURLFromFile(xhr.response).then(resolve);
+    function getBase64Image(url) {
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.onload = () => {
+                getDataURLFromFile(xhr.response).then(resolve);
             };
             xhr.open('GET', url);
             xhr.responseType = 'blob';
             xhr.onerror = reject;
             xhr.send();
         });
-    },
+    }
 
     /**
      * Use Clearbit Autocomplete API to return suggestions
@@ -228,25 +199,11 @@ var PartnerAutocompleteMixin = {
      * @returns {Promise}
      * @private
      */
-    _getClearbitSuggestions: function (value) {
-        var url = 'https://autocomplete.clearbit.com/v1/companies/suggest?query=' + value;
-        var def = $.ajax({
-            url: url,
-            dataType: 'json',
-            timeout: this._timeout,
-            success: function (suggestions) {
-                suggestions.map(function (suggestion) {
-                    suggestion.label = suggestion.name;
-                    suggestion.website = suggestion.domain;
-                    suggestion.description = suggestion.website;
-                    return suggestion;
-                });
-                return suggestions;
-            },
-        });
-
-        return this._dropPreviousClearbit.add(def);
-    },
+    async function getClearbitSuggestions(value) {
+        const url = `https://autocomplete.clearbit.com/v1/companies/suggest?query=${value}`;
+        const prom = http.get(url);
+        return keepLastClearbit.add(prom);
+    }
 
     /**
      * Use Odoo Autocomplete API to return suggestions
@@ -256,56 +213,31 @@ var PartnerAutocompleteMixin = {
      * @returns {Promise}
      * @private
      */
-    _getOdooSuggestions: function (value, isVAT) {
-        var method = isVAT ? 'read_by_vat' : 'autocomplete';
+    async function getOdooSuggestions(value, isVAT) {
+        const method = isVAT ? 'read_by_vat' : 'autocomplete';
 
-        var def = this._rpc({
-            model: 'res.partner',
-            method: method,
-            args: [value],
-        }, {
-            shadow: true,
-        }).then(function (suggestions) {
-            suggestions.map(function (suggestion) {
-                suggestion.logo = suggestion.logo || '';
-                suggestion.label = suggestion.legal_name || suggestion.name;
-                if (suggestion.vat) suggestion.description = suggestion.vat;
-                else if (suggestion.website) suggestion.description = suggestion.website;
+        const prom = orm.silent.call(
+            'res.partner',
+            method,
+            [value],
+        );
 
-                if (suggestion.country_id && suggestion.country_id.display_name) {
-                    if (suggestion.description) suggestion.description += _.str.sprintf(' (%s)', suggestion.country_id.display_name);
-                    else suggestion.description += suggestion.country_id.display_name;
-                }
+        const suggestions = await keepLastOdoo.add(prom);
+        suggestions.map((suggestion) => {
+            suggestion.logo = suggestion.logo || '';
+            suggestion.label = suggestion.legal_name || suggestion.name;
+            if (suggestion.vat) suggestion.description = suggestion.vat;
+            else if (suggestion.website) suggestion.description = suggestion.website;
 
-                return suggestion;
-            });
-            return suggestions;
+            if (suggestion.country_id && suggestion.country_id.display_name) {
+                if (suggestion.description) suggestion.description += ` (${suggestion.country_id.display_name})`;
+                else suggestion.description += suggestion.country_id.display_name;
+            }
+
+            return suggestion;
         });
-
-        return this._dropPreviousOdoo.add(def);
-    },
-    /**
-     * Check if searched value is possibly a VAT : 2 first chars = alpha + min 5 numbers
-     *
-     * @param {string} search_val
-     * @returns {boolean}
-     * @private
-     */
-    _isVAT: function (search_val) {
-        var str = this._sanitizeVAT(search_val);
-        return checkVATNumber(str);
-    },
-
-    /**
-     * Sanitize search value by removing all not alphanumeric
-     *
-     * @param {string} search_value
-     * @returns {string}
-     * @private
-     */
-    _sanitizeVAT: function (search_value) {
-        return search_value ? search_value.replace(/[^A-Za-z0-9]/g, '') : '';
-    },
+        return suggestions;
+    }
 
     /**
      * Utility to wait for multiple promises
@@ -316,60 +248,49 @@ var PartnerAutocompleteMixin = {
      * @returns {Promise}
      * @private
      */
-    _whenAll: function (promises) {
-        return Promise.all(promises.map(function (p) {
+    function whenAll(promises) {
+        return Promise.all(promises.map((p) => {
             return Promise.resolve(p);
         }));
-    },
+    }
 
     /**
      * @private
      * @returns {Promise}
      */
-    _notifyNoCredits: function () {
-        var self = this;
-        return this._rpc({
-            model: 'iap.account',
-            method: 'get_credits_url',
-            args: ['partner_autocomplete'],
-        }).then(function (url) {
-            var title = _t('Not enough credits for Partner Autocomplete');
-            var content = Qweb.render('partner_autocomplete.insufficient_credit_notification', {
-                credits_url: url
+    async function notifyNoCredits() {
+        const url = await orm.call(
+            'iap.account',
+            'get_credits_url',
+            ['partner_autocomplete'],
+        );
+        const title = _t('Not enough credits for Partner Autocomplete');
+        const content = renderToMarkup('partner_autocomplete.InsufficientCreditNotification', {
+            credits_url: url
+        });
+        notification.add(content, {
+            title,
+        });
+    }
+
+    async function notifyAccountToken() {
+        const url = await orm.call(
+            'iap.account',
+            'get_config_account_url',
+            []
+        );
+        const title = _t('IAP Account Token missing');
+        if (url) {
+            const content = renderToMarkup('partner_autocomplete.AccountTokenMissingNotification', {
+                account_url: url
             });
-            self.displayNotification({
+            notification.add(content, {
                 title,
-                message: utils.Markup(content),
-                className: 'o_partner_autocomplete_no_credits_notify',
             });
-        });
-    },
-
-    _notifyAccountToken: function () {
-        var self = this;
-        return this._rpc({
-            model: 'iap.account',
-            method: 'get_config_account_url',
-            args: []
-        }).then(function (url) {
-            var title = _t('IAP Account Token missing');
-            if (url){
-                var content = Qweb.render('partner_autocomplete.account_token', {
-                    account_url: url
-                });
-                self.displayNotification({
-                    title,
-                    message: utils.Markup(content),
-                    className: 'o_partner_autocomplete_no_credits_notify',
-                });
-            }
-            else {
-                self.displayNotification({ title });
-            }
-        });
-    },
-};
-
-return PartnerAutocompleteMixin;
-
-});
+        }
+        else {
+            notification.add(title);
+        }
+    }
+    return { autocomplete, getCreateData };
+}
