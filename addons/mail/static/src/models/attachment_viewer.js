@@ -259,6 +259,9 @@ registerModel({
         isImageLoading: attr({
             default: false,
         }),
+        minScale: attr({
+            default: 0.5,
+        }),
         /**
          * Scale size of the image. Changes when user zooms in/out.
          */
