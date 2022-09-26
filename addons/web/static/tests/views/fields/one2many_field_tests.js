@@ -11103,7 +11103,7 @@ QUnit.module("Fields", (hooks) => {
         // the next line should be displayed below the newly added one
         assert.containsN(target, ".o_data_row", 2, "should have 2 records");
         assert.deepEqual(
-            getNodesTextContent(target.querySelectorAll(".o_data_cell")),
+            [...target.querySelectorAll(".o_data_cell")].map(el => el.textContent.trim()),
             ["pi", "", "kawa", ""],
             "should display the correct records on page 1"
         );

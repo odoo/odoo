@@ -225,7 +225,7 @@
                         data-tooltip-delay="1000"
                         t-on-click="(ev) => this.onCellClicked(record, column, ev)" tabindex="-1">
                         <t t-if="!evalModifier(column.modifiers.invisible, record)">
-                            <t t-if="canUseFormatter(column, record)" t-esc="getFormattedValue(column, record)"/>
+                            <t t-if="canUseFormatter(column, record)" t-out="getFormattedValue(column, record)"/>
                             <Field t-else="" name="column.name" record="record" type="column.widget" class="getFieldClass(column)" fieldInfo="props.archInfo.fieldNodes[column.name]" setDirty="(isDirty) => this.setDirty(isDirty)"/>
                         </t>
                     </td>
