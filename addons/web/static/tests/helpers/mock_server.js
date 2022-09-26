@@ -536,7 +536,7 @@ export class MockServer {
             case "get_views":
                 return this.mockGetViews(args.model, args.kwargs);
             case "name_create":
-                return this.mockNameCreate(args.model, args.args[0]);
+                return this.mockNameCreate(args.model, args.args[0], args.kwargs);
             case "name_get":
                 return this.mockNameGet(args.model, args.args);
             case "name_search":
@@ -710,14 +710,16 @@ export class MockServer {
      * @private
      * @param {string} modelName
      * @param {string} name
+     * @param {object} kwargs
+     * @param {object} [kwargs.context]
      * @returns {Array} a couple [id, name]
      */
-    mockNameCreate(modelName, name) {
+    mockNameCreate(modelName, name, kwargs) {
         const values = {
             name: name,
             display_name: name,
         };
-        const id = this.mockCreate(modelName, values);
+        const id = this.mockCreate(modelName, values, kwargs);
         return [id, name];
     }
 

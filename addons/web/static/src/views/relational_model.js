@@ -2320,6 +2320,7 @@ export class DynamicGroupList extends DynamicList {
             displayName,
             aggregates: {},
             groupByField: this.groupByField,
+            groupDomain: Domain.and([this.domain, [[this.groupByField.name, "=", id]]]).toList(),
             rawContext: this.rawContext,
         });
         group.isFolded = false;

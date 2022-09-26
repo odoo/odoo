@@ -4342,7 +4342,11 @@ QUnit.module("Views", (hooks) => {
                 if (route === "/web/dataset/resequence") {
                     return true;
                 }
-                if (args.model === "partner" && args.method === "write" && !(args.args && args.args[1] && args.args[1].product_id)) {
+                if (
+                    args.model === "partner" &&
+                    args.method === "write" &&
+                    !(args.args && args.args[1] && args.args[1].product_id)
+                ) {
                     // In the test, nothing should be draggable except the test on product_id
                     throw new Error("should not be draggable");
                 }
@@ -4433,7 +4437,6 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_group:nth-child(3) .o_kanban_record", 0);
 
         assert.deepEqual(getCardTexts(0), ["gnapGHI"]);
-
     });
 
     QUnit.test("prevent drag and drop if grouped by date/datetime field", async (assert) => {
@@ -11155,6 +11158,58 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(getProgressBars(1)[0].style.width, "25%"); // abc: 1
         assert.strictEqual(getProgressBars(1)[1].style.width, "50%"); // def: 2
         assert.strictEqual(getProgressBars(1)[2].style.width, "25%"); // ghi: 1
+    });
+
+    QUnit.test("click on the progressBar of a new column", async (assert) => {
+        serverData.models.partner.records = [];
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban on_create="quick_create">
+                    <progressbar field="state" colors='{"abc": "success", "def": "warning", "ghi": "danger"}' />
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="state" widget="state_selection" />
+                            <field name="id" />
+                        </div>
+                    </templates>
+                </kanban>
+            `,
+            groupBy: ["product_id"],
+            domain: [["id", ">", 0]],
+            mockRPC: (route, args) => {
+                const { method, kwargs } = args;
+                if (args.method === "web_search_read") {
+                    assert.step(method);
+                    assert.deepEqual(kwargs.domain, [
+                        "&",
+                        "&",
+                        ["id", ">", 0],
+                        ["product_id", "=", 6],
+                        "!",
+                        ["state", "in", ["abc", "def", "ghi"]],
+                    ]);
+                }
+            },
+        });
+
+        // Create a new column
+        await editColumnName("new column");
+        await validateColumn();
+
+        // Crete a record in the new column
+        await quickCreateRecord();
+        await editQuickCreateInput("display_name", "new product");
+        await validateRecord();
+        assert.containsOnce(target, ".o_kanban_record");
+
+        // Togggle the progressBar
+        await click(getProgressBars(0)[0]);
+        assert.containsOnce(target, ".o_kanban_record");
+
+        assert.verifySteps(["web_search_read"]);
     });
 
     QUnit.test(
