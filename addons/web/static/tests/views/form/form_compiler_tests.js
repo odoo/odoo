@@ -3,7 +3,7 @@ import { makeView } from "../helpers";
 import { setupViewRegistries } from "@web/../tests/views/helpers";
 import { FormCompiler } from "@web/views/form/form_compiler";
 import { registry } from "@web/core/registry";
-import { click, getFixture, patchWithCleanup } from "../../helpers/utils";
+import { getFixture, patchWithCleanup } from "../../helpers/utils";
 import { createElement } from "@web/core/utils/xml";
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 
@@ -38,7 +38,7 @@ QUnit.module("Form Compiler", (hooks) => {
         const arch = /*xml*/ `<form><div>lol</div></form>`;
         const expected = /*xml*/ `
             <t>
-                <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block" class="o_form_nosheet" t-ref="compiled_view_root">
+                <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ props.record.isVirtual or props.record.isDirty ? 'o_form_dirty' : 'o_form_saved' }}" class="o_form_nosheet" t-ref="compiled_view_root">
                     <div>lol</div>
                 </div>
             </t>`;
@@ -52,7 +52,7 @@ QUnit.module("Form Compiler", (hooks) => {
             const arch = /*xml*/ `<form><field name="test"/><label for="test" string=""/></form>`;
             const expected = /*xml*/ `
             <t>
-                <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block" class="o_form_nosheet" t-ref="compiled_view_root">
+                <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ props.record.isVirtual or props.record.isDirty ? 'o_form_dirty' : 'o_form_saved' }}" class="o_form_nosheet" t-ref="compiled_view_root">
                     <Field id="'test'" name="'test'" record="props.record" fieldInfo="props.archInfo.fieldNodes['test']" />
                     <FormLabel t-props="{id:'test',fieldName:'test',record:props.record,fieldInfo:props.archInfo.fieldNodes['test'],className:&quot;&quot;}" string="\`\`" />
                 </div>
@@ -65,7 +65,7 @@ QUnit.module("Form Compiler", (hooks) => {
         const arch = /*xml*/ `<form><div class="someClass">lol<field name="display_name"/></div></form>`;
         const expected = /*xml*/ `
             <t>
-                <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block" class="o_form_nosheet" t-ref="compiled_view_root">
+                <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ props.record.isVirtual or props.record.isDirty ? 'o_form_dirty' : 'o_form_saved' }}" class="o_form_nosheet" t-ref="compiled_view_root">
                     <div class="someClass">
                         lol
                         <Field id="'display_name'" name="'display_name'" record="props.record" fieldInfo="props.archInfo.fieldNodes['display_name']"/>
@@ -149,7 +149,7 @@ QUnit.module("Form Compiler", (hooks) => {
 
         const expected = /*xml*/ `
             <t>
-            <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block" class="o_form_nosheet" t-ref="compiled_view_root">
+            <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ props.record.isVirtual or props.record.isDirty ? 'o_form_dirty' : 'o_form_saved' }}" class="o_form_nosheet" t-ref="compiled_view_root">
                 <div class="o_form_statusbar position-relative d-flex justify-content-between border-bottom"><StatusBarButtons readonly="!props.record.isInEdition"/></div>
                 <div>someDiv</div>
             </div>
@@ -171,7 +171,7 @@ QUnit.module("Form Compiler", (hooks) => {
 
         const expected = /*xml*/ `
             <t>
-            <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-flex {{ uiService.size &lt; 6 ? &quot;flex-column&quot; : &quot;flex-nowrap h-100&quot; }}" t-ref="compiled_view_root">
+            <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-flex {{ uiService.size &lt; 6 ? &quot;flex-column&quot; : &quot;flex-nowrap h-100&quot; }} {{ props.record.isVirtual or props.record.isDirty ? 'o_form_dirty' : 'o_form_saved' }}" t-ref="compiled_view_root">
                 <div class="o_form_sheet_bg">
                     <div class="o_form_statusbar position-relative d-flex justify-content-between border-bottom"><StatusBarButtons readonly="!props.record.isInEdition"/></div>
                     <div>someDiv</div>
@@ -235,7 +235,7 @@ QUnit.module("Form Compiler", (hooks) => {
         const expected = /*xml*/ `
             <div class="o_form_statusbar position-relative d-flex justify-content-between border-bottom">
                <StatusBarButtons readonly="!props.record.isInEdition">
-                  <t t-set-slot="button_0" isVisible="true" displayInReadOnly="false">
+                  <t t-set-slot="button_0" isVisible="true">
                      <div>someDiv</div>
                   </t>
                </StatusBarButtons>
@@ -298,7 +298,6 @@ QUnit.module("Form Renderer", (hooks) => {
             resId: 1,
         });
 
-        await click(target.querySelector(".o_form_button_edit"));
         assert.containsN(target, ".o_form_editable input", 2);
     });
 

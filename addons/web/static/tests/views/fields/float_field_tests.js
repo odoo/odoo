@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
-import { click, editInput, getFixture, triggerEvent } from "@web/../tests/helpers/utils";
+import { click, clickSave, editInput, getFixture, triggerEvent } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
 
@@ -50,7 +50,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
+            target.querySelector(".o_field_widget input").value,
             "0.00",
             "Non-set float field should be considered as 0."
         );
@@ -68,7 +68,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector(".o_field_float").textContent,
+            target.querySelector(".o_field_float input").value,
             "0.4",
             "should contain a number rounded to 1 decimal"
         );
@@ -84,7 +84,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector(".o_field_float").textContent,
+            target.querySelector(".o_field_float input").value,
             "0.4",
             "should contain a number rounded to 1 decimal"
         );
@@ -100,7 +100,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector(".o_field_float").textContent,
+            target.querySelector(".o_field_float input").value,
             "0.4",
             "should contain a number rounded to 1 decimal"
         );
@@ -114,8 +114,6 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
             arch: `<form><field name="float_field" options="{'type': 'number', 'step': 0.3}"/></form>`,
         });
-
-        await click(target, ".o_form_button_edit");
 
         assert.ok(
             target.querySelector(".o_field_widget input").hasAttribute("step"),
@@ -145,17 +143,9 @@ QUnit.module("Fields", (hooks) => {
             "Float field should be considered set for value 0."
         );
         assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
+            target.querySelector(".o_field_widget input").value,
             "0.000",
             "The value should be displayed properly."
-        );
-
-        await click(target, ".o_form_button_edit");
-
-        assert.strictEqual(
-            target.querySelector(".o_field_widget[name=float_field] input").value,
-            "0.000",
-            "The value should be rendered with correct precision."
         );
 
         await editInput(target, 'div[name="float_field"] input', "108.2451938598598");
@@ -166,10 +156,10 @@ QUnit.module("Fields", (hooks) => {
         );
 
         await editInput(target, ".o_field_widget[name=float_field] input", "18.8958938598598");
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
 
         assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
+            target.querySelector(".o_field_widget input").value,
             "18.896",
             "The new value should be rounded properly."
         );
@@ -184,40 +174,36 @@ QUnit.module("Fields", (hooks) => {
             arch: `<form><field name="float_field" options="{ 'digits': [0, 3] }" /></form>`,
         });
 
-        await click(target, ".o_form_button_edit");
         await editInput(target, ".o_field_widget[name=float_field] input", "=20+3*2");
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
 
         assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
+            target.querySelector(".o_field_widget input").value,
             "26.000",
             "The new value should be calculated properly."
         );
 
-        await click(target, ".o_form_button_edit");
         await editInput(target, ".o_field_widget[name=float_field] input", "=2**3");
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
 
         assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
+            target.querySelector(".o_field_widget input").value,
             "8.000",
             "The new value should be calculated properly."
         );
 
-        await click(target, ".o_form_button_edit");
         await editInput(target, ".o_field_widget[name=float_field] input", "=2^3");
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
         assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
+            target.querySelector(".o_field_widget input").value,
             "8.000",
             "The new value should be calculated properly."
         );
 
-        await click(target, ".o_form_button_edit");
         await editInput(target, ".o_field_widget[name=float_field] input", "=100/3");
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
         assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
+            target.querySelector(".o_field_widget input").value,
             "33.333",
             "The new value should be calculated properly."
         );
@@ -232,9 +218,8 @@ QUnit.module("Fields", (hooks) => {
             arch: `<form><field name="float_field" options="{ 'digits': [0, 3] }" /></form>`,
         });
 
-        await click(target, ".o_form_button_edit");
         await editInput(target, ".o_field_widget[name=float_field] input", "=abc");
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
 
         assert.hasClass(
             target.querySelector(".o_field_widget[name=float_field]"),
@@ -244,7 +229,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".o_form_editable", "form view should still be editable");
 
         await editInput(target, ".o_field_widget[name=float_field] input", "=3:2?+4");
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
 
         assert.containsOnce(target, ".o_form_editable", "form view should still be editable");
         assert.hasClass(
@@ -291,32 +276,6 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("do not trigger a field_changed if they have not changed", async function (assert) {
-        serverData.models.partner.records[0].float_field = false;
-        serverData.models.partner.records[0].int_field = false;
-        await makeView({
-            serverData,
-            type: "form",
-            resModel: "partner",
-            arch: `
-                <form>
-                    <sheet>
-                        <field name="float_field" widget="float" digits="[5,3]"/>
-                        <field name="int_field"/>
-                    </sheet>
-                </form>`,
-            mockRPC(route, { method }) {
-                assert.step(method);
-            },
-            resId: 1,
-        });
-
-        await click(target.querySelector(".o_form_button_edit"));
-        await click(target.querySelector(".o_form_button_save"));
-
-        assert.verifySteps(["get_views", "read"]); // should not have save as nothing changed
-    });
-
     QUnit.test("float field with type number option", async function (assert) {
         await makeView({
             serverData,
@@ -336,7 +295,6 @@ QUnit.module("Fields", (hooks) => {
                 makeFakeLocalizationService({ thousandsSep: ",", grouping: [3, 0] })
             );
 
-        await click(target.querySelector(".o_form_button_edit"));
         assert.ok(
             target.querySelector(".o_field_widget input").hasAttribute("type"),
             "Float field with option type must have a type attribute."
@@ -348,18 +306,11 @@ QUnit.module("Fields", (hooks) => {
             'Float field with option type must have a type attribute equals to "number".'
         );
         await editInput(target, ".o_field_widget[name=float_field] input", "123456.7890");
-        await click(target.querySelector(".o_form_button_save"));
-        await click(target.querySelector(".o_form_button_edit"));
+        await clickSave(target);
         assert.strictEqual(
             target.querySelector(".o_field_widget input").value,
             "123456.789",
             "Float value must be not formatted if input type is number. (but the trailing 0 is gone)"
-        );
-        await click(target.querySelector(".o_form_button_save"));
-        assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
-            "123,456.79",
-            "Float value must be formatted in readonly view even if the input type is number."
         );
     });
 
@@ -386,7 +337,6 @@ QUnit.module("Fields", (hooks) => {
                 })
             );
 
-            await click(target.querySelector(".o_form_button_edit"));
             assert.ok(
                 target.querySelector(".o_field_widget input").hasAttribute("type"),
                 "Float field with option type must have a type attribute."
@@ -398,18 +348,11 @@ QUnit.module("Fields", (hooks) => {
                 'Float field with option type must have a type attribute equals to "number".'
             );
             await editInput(target, ".o_field_widget[name=float_field] input", "123456.789");
-            await click(target.querySelector(".o_form_button_save"));
-            await click(target.querySelector(".o_form_button_edit"));
+            await clickSave(target);
             assert.strictEqual(
                 target.querySelector(".o_field_widget input").value,
                 "123456.789",
                 "Float value must be not formatted if input type is number."
-            );
-            await click(target.querySelector(".o_form_button_save"));
-            assert.strictEqual(
-                target.querySelector(".o_field_widget").textContent,
-                "123.456,79",
-                "Float value must be formatted in readonly view even if the input type is number."
             );
         }
     );
@@ -430,7 +373,6 @@ QUnit.module("Fields", (hooks) => {
                 makeFakeLocalizationService({ thousandsSep: ",", grouping: [3, 0] })
             );
 
-        await click(target.querySelector(".o_form_button_edit"));
         assert.hasAttrValue(
             target.querySelector(".o_field_widget input"),
             "type",
@@ -439,8 +381,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         await editInput(target, ".o_field_widget[name=float_field] input", "123456.7890");
-        await click(target.querySelector(".o_form_button_save"));
-        await click(target.querySelector(".o_form_button_edit"));
+        await clickSave(target);
         assert.strictEqual(
             target.querySelector(".o_field_widget input").value,
             "123,456.79",

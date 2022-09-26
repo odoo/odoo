@@ -175,6 +175,13 @@ export class FormCompiler extends ViewCompiler {
         return hasContent ? buttonBox : null;
     }
 
+    compileButton(el, params) {
+        const compiled = super.compileButton(el, params);
+        compiled.setAttribute("disable", "props.disableViewButtons");
+        compiled.setAttribute("enable", "props.enableViewButtons");
+        return compiled;
+    }
+
     /**
      * @override
      */
@@ -218,9 +225,11 @@ export class FormCompiler extends ViewCompiler {
         const displayClasses = sheetNode
             ? `d-flex {{ uiService.size < ${SIZES.XXL} ? "flex-column" : "flex-nowrap h-100" }}`
             : "d-block";
+        const stateClasses =
+            "{{ props.record.isVirtual or props.record.isDirty ? 'o_form_dirty' : 'o_form_saved' }}";
         const form = createElement("div", {
             "t-att-class": "props.class",
-            "t-attf-class": `{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} ${displayClasses}`,
+            "t-attf-class": `{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} ${displayClasses} ${stateClasses}`,
         });
         if (!sheetNode) {
             for (const child of el.childNodes) {
@@ -329,13 +338,6 @@ export class FormCompiler extends ViewCompiler {
                             : `props.record.fields.${fieldName}.string`,
                         fieldInfo: `props.archInfo.fieldNodes[${fieldId}]`,
                     };
-                    // note: remove this oe_read/edit_only logic when form view
-                    // will always be in edit mode
-                    if (child.classList.contains("oe_read_only")) {
-                        props.className = `'oe_read_only'`;
-                    } else if (child.classList.contains("oe_edit_only")) {
-                        props.className = `'oe_edit_only'`;
-                    }
                     mainSlot.setAttribute("props", objectToString(props));
                     mainSlot.setAttribute("Component", "constructor.components.FormLabel");
                     mainSlot.setAttribute("subType", "'item_component'");
@@ -422,9 +424,6 @@ export class FormCompiler extends ViewCompiler {
             const slot = createElement("t", {
                 "t-set-slot": `button_${slotId++}`,
                 isVisible: button.getAttribute("t-if") || true,
-                displayInReadOnly:
-                    button.hasAttribute("className") &&
-                    button.getAttribute("className").includes("oe_read_only"),
             });
             append(slot, button);
             append(statusBarButtons, slot);

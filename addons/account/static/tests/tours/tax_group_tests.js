@@ -63,11 +63,6 @@ tour.register('account_tax_group', {
         content: "Save the account move",
         trigger: '.o_form_button_save',
     },
-    // Edit account.move
-    {
-        content: "Edit the account move",
-        trigger: '.o_form_button_edit',
-    },
     // Edit tax group amount
     {
         content: "Edit tax group amount",

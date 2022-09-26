@@ -183,7 +183,7 @@ QUnit.module('hr', {}, function () {
             res_id: m2xHrAvatarUserId1,
             views: [[false, 'form']],
         });
-        assert.strictEqual(document.querySelector('.o_field_widget[name=employee_id]').innerText.trim(), 'Mario');
+        assert.strictEqual(document.querySelector('.o_field_widget[name=employee_id] input').value.trim(), 'Mario');
 
         await dom.click(document.querySelector('.o_m2o_avatar > img'));
 
