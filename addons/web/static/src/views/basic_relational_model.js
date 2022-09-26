@@ -1025,7 +1025,7 @@ export class StaticList extends DataPoint {
     /**
      * @param {Array[]} commands  array of commands
      */
-    async applyBatchedCommands(commands) {
+    async applyCommands(fieldName, commands) {
         const commandsWithId = commands.map((command) => {
             return {
                 operation: command.operation,
@@ -1037,7 +1037,7 @@ export class StaticList extends DataPoint {
         const parentID = this.model.__bm__.localData[this.__bm_handle__].parentID;
         await this.model.__bm__.notifyChanges(parentID, {
             // FIXME: order_line hardcoded
-            order_line: {
+            [fieldName]: {
                 operation: "MULTI",
                 commands: commandsWithId,
             },
