@@ -3,7 +3,6 @@
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
-import { hidePDFJSButtons } from '@web/legacy/js/libs/pdfjs';
 
 const { Component, onMounted, onPatched, onWillUnmount } = owl;
 
@@ -41,7 +40,7 @@ export class AttachmentViewer extends Component {
         }
         this.root.el.focus();
         this.attachmentViewer.handleImageLoad();
-        this._hideUnwantedPdfJsButtons();
+        this.attachmentViewer.hideUnwantedPdfJsButtons();
         document.addEventListener('click', this._onClickGlobal);
     }
 
@@ -50,7 +49,7 @@ export class AttachmentViewer extends Component {
      */
     _patched() {
         this.attachmentViewer.handleImageLoad();
-        this._hideUnwantedPdfJsButtons();
+        this.attachmentViewer.hideUnwantedPdfJsButtons();
     }
 
     _willUnmount() {
@@ -71,17 +70,6 @@ export class AttachmentViewer extends Component {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
-
-    /**
-     * @see 'hidePDFJSButtons'
-     *
-     * @private
-     */
-    _hideUnwantedPdfJsButtons() {
-        if (this.attachmentViewer.iframeViewerPdfRef.el) {
-            hidePDFJSButtons(this.attachmentViewer.iframeViewerPdfRef.el);
-        }
-    }
 
     /**
      * Stop dragging interaction of the user.
