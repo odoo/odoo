@@ -5,7 +5,7 @@
             "id": "sheet1",
             "name": "Dashboard",
             "colNumber": 9,
-            "rowNumber": 83,
+            "rowNumber": 86,
             "rows": {
                 "6": {
                     "size": 40
@@ -43,10 +43,10 @@
             },
             "cols": {
                 "0": {
-                    "size": 175
+                    "size": 100
                 },
                 "1": {
-                    "size": 100
+                    "size": 175
                 },
                 "2": {
                     "size": 100
@@ -58,10 +58,10 @@
                     "size": 50
                 },
                 "5": {
-                    "size": 175
+                    "size": 100
                 },
                 "6": {
-                    "size": 100
+                    "size": 175
                 },
                 "7": {
                     "size": 100
@@ -2427,9 +2427,68 @@
     },
     "revisionId": "START_REVISION",
     "chartOdooMenusReferences": {
-        "a527960b-0812-4291-baba-f6b4b5280a0d": "sale.sale_menu_root"
+        "a527960b-0812-4291-baba-f6b4b5280a0d": "sale.sale_menu_root",
+        "51823220-f22b-4359-8711-579a249c91bb": "sale.menu_sale_quotations",
+        "9a38934c-b454-4a4b-88aa-17d1b80dbf5f": "sale.menu_sale_order",
+        "67858d0e-b5ba-4a3c-bf9e-c0fceaeedf65": "sale.menu_report_product_all",
+        "d43375c1-73a6-42a2-8dbd-0f13c285824f": "sale.menu_report_product_all"
     },
-    "odooVersion": 3,
+    "odooVersion": 4,
+    "lists": {
+        "1": {
+            "columns": [
+                "name",
+                "partner_id",
+                "user_id",
+                "amount_untaxed"
+            ],
+            "domain": [],
+            "model": "sale.order",
+            "context": {},
+            "orderBy": [
+                {
+                    "name": "amount_untaxed",
+                    "asc": false
+                }
+            ],
+            "id": "1",
+            "name": "Quotations by Untaxed Amount"
+        },
+        "2": {
+            "columns": [
+                "name",
+                "partner_id",
+                "user_id",
+                "amount_untaxed"
+            ],
+            "domain": [
+                [
+                    "state",
+                    "not in",
+                    [
+                        "draft",
+                        "sent",
+                        "cancel"
+                    ]
+                ]
+            ],
+            "model": "sale.order",
+            "context": {},
+            "orderBy": [
+                {
+                    "name": "amount_untaxed",
+                    "asc": false
+                },
+                {
+                    "name": "invoice_status",
+                    "asc": true
+                }
+            ],
+            "id": "2",
+            "name": "Sales Orders by Untaxed Amount"
+        }
+    },
+    "listNextId": 3,
     "pivots": {
         "3": {
             "colGroupBys": [],
@@ -2789,61 +2848,6 @@
         }
     },
     "pivotNextId": 13,
-    "lists": {
-        "1": {
-            "columns": [
-                "name",
-                "partner_id",
-                "user_id",
-                "amount_untaxed"
-            ],
-            "domain": [],
-            "model": "sale.order",
-            "context": {},
-            "orderBy": [
-                {
-                    "name": "amount_untaxed",
-                    "asc": false
-                }
-            ],
-            "id": "1",
-            "name": "Quotations by Untaxed Amount"
-        },
-        "2": {
-            "columns": [
-                "name",
-                "partner_id",
-                "user_id",
-                "amount_untaxed"
-            ],
-            "domain": [
-                [
-                    "state",
-                    "not in",
-                    [
-                        "draft",
-                        "sent",
-                        "cancel"
-                    ]
-                ]
-            ],
-            "model": "sale.order",
-            "context": {},
-            "orderBy": [
-                {
-                    "name": "amount_untaxed",
-                    "asc": false
-                },
-                {
-                    "name": "invoice_status",
-                    "asc": true
-                }
-            ],
-            "id": "2",
-            "name": "Sales Orders by Untaxed Amount"
-        }
-    },
-    "listNextId": 3,
     "globalFilters": [
         {
             "id": "13d30fda-b14d-4a56-b186-25468af3b1e9",
