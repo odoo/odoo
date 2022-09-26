@@ -22,9 +22,9 @@ class account_journal(models.Model):
 
     def _kanban_dashboard_graph(self):
         for journal in self:
-            if (journal.type in ['sale', 'purchase']) and journal.company_id.dashboard_graphs:
+            if (journal.type in ['sale', 'purchase']):
                 journal.kanban_dashboard_graph = json.dumps(journal.get_bar_graph_datas())
-            elif (journal.type in ['cash', 'bank']) and journal.company_id.dashboard_graphs:
+            elif (journal.type in ['cash', 'bank']):
                 journal.kanban_dashboard_graph = json.dumps(journal.get_line_graph_datas())
             else:
                 journal.kanban_dashboard_graph = False
