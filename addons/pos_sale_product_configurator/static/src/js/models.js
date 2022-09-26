@@ -22,7 +22,7 @@ odoo.define('pos_sale_product_configurator.models', function (require) {
                 );
                 if (isProductLoaded) {
                     const quantity = this.get_selected_orderline().get_quantity();
-                    const info = await this.env.pos.getProductInfo(product, quantity);
+                    const info = await this.pos.getProductInfo(product, quantity);
                     Gui.showPopup('ProductInfoPopup', {info: info , product: product});
                 }
             }
