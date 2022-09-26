@@ -471,7 +471,6 @@ class HolidaysRequest(models.Model):
     @api.depends('date_from', 'date_to', 'holiday_status_id')
     def _compute_has_stress_day(self):
         date_from, date_to = min(self.mapped('date_from')), max(self.mapped('date_to'))
-        resource_calendar_id = self.employee_id.resource_calendar_id or self.env.company.resource_calendar_id
         if date_from and date_to:
             stress_days = self.employee_id._get_stress_days(
                 date_from.date(),

@@ -281,11 +281,11 @@ class HrEmployee(models.Model):
 
     def _get_stress_days(self, start_date, end_date):
         stress_days = self.env['hr.leave.stress.day'].search([
-            ('start_date', '>=', start_date),
-            ('end_date', '<=', end_date),
+            ('start_date', '<=', end_date),
+            ('end_date', '>=', start_date),
             '|',
                 ('resource_calendar_id', '=', False),
-                ('resource_calendar_id', 'in', self.resource_calendar_id.ids),
+                ('resource_calendar_id', 'in', (self.resource_calendar_id | self.env.company.resource_calendar_id).ids),
         ])
 
         # a user with hr_holidays permissions will be able to see all stress days from his calendar

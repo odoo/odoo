@@ -87,6 +87,16 @@ class TestHrLeaveStressDays(TransactionCase):
                 'number_of_days': 1,
             })
 
+        with self.assertRaises(ValidationError):
+            self.env['hr.leave'].with_user(self.employee_user.id).create({
+                'name': 'coucou',
+                'holiday_status_id': self.leave_type.id,
+                'employee_id': self.employee_emp.id,
+                'date_from': datetime(2021, 11, 9),
+                'date_to': datetime(2021, 11, 9),
+                'number_of_days': 1,
+            })
+
         # ... but is allowed for a Time Off Officer
         self.env['hr.leave'].with_user(self.manager_user.id).create({
             'name': 'coucou',
