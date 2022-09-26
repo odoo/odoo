@@ -2223,8 +2223,8 @@ export class DynamicGroupList extends DynamicList {
     }
 
     async load(params = {}) {
-        this.limit = params.limit || this.limit;
-        this.offset = params.offset || this.offset;
+        this.limit = params.limit === undefined ? this.limit : params.limit;
+        this.offset = params.offset === undefined ? this.offset : params.offset;
         /** @type {[Group, number][]} */
         const previousGroups = this.groups.map((g, i) => [g, i]);
         this.groups = await this._loadGroups();
