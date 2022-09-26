@@ -1281,9 +1281,38 @@
     },
     "revisionId": "START_REVISION",
     "chartOdooMenusReferences": {
-        "e012bf45-55dc-4c46-b069-bc090a467d73": "point_of_sale.menu_point_root"
+        "e012bf45-55dc-4c46-b069-bc090a467d73": "point_of_sale.menu_point_root",
+        "cfee1ef1-ac54-4e9f-bdde-0162652de2cf": "point_of_sale.menu_point_ofsale",
+        "d141cc35-0b60-4e91-b736-5c1453fea925": "point_of_sale.menu_report_pos_order_all",
+        "615fb94e-8098-456e-9f71-7799b82f04c4": "point_of_sale.menu_report_pos_order_all"
     },
-    "odooVersion": 3,
+    "odooVersion": 4,
+    "lists": {
+        "1": {
+            "columns": [
+                "name",
+                "session_id",
+                "date_order",
+                "pos_reference",
+                "partner_id",
+                "employee_id",
+                "amount_total",
+                "state"
+            ],
+            "domain": [],
+            "model": "pos.order",
+            "context": {},
+            "orderBy": [
+                {
+                    "name": "amount_total",
+                    "asc": true
+                }
+            ],
+            "id": "1",
+            "name": "Orders by Total"
+        }
+    },
+    "listNextId": 2,
     "pivots": {
         "1": {
             "colGroupBys": [],
@@ -1461,32 +1490,6 @@
         }
     },
     "pivotNextId": 7,
-    "lists": {
-        "1": {
-            "columns": [
-                "name",
-                "session_id",
-                "date_order",
-                "pos_reference",
-                "partner_id",
-                "employee_id",
-                "amount_total",
-                "state"
-            ],
-            "domain": [],
-            "model": "pos.order",
-            "context": {},
-            "orderBy": [
-                {
-                    "name": "amount_total",
-                    "asc": true
-                }
-            ],
-            "id": "1",
-            "name": "Orders by Total"
-        }
-    },
-    "listNextId": 2,
     "globalFilters": [
         {
             "id": "ff0e1a26-3d4c-48b6-85a6-2777b522bb52",

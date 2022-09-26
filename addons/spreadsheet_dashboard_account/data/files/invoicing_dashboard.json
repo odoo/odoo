@@ -1570,9 +1570,48 @@
     },
     "revisionId": "START_REVISION",
     "chartOdooMenusReferences": {
-        "5ea5dd7f-9f83-4482-a2bb-2ec72ab35912": "account.menu_finance"
+        "5ea5dd7f-9f83-4482-a2bb-2ec72ab35912": "account.menu_finance",
+        "1aeea7b2-900b-4067-b8ad-3e4772c54028": "account.menu_action_move_out_invoice_type",
+        "bdfb27d0-5902-4a2a-9b7e-514a6625578c": "account.menu_action_account_invoice_report_all",
+        "b1673523-d139-47fb-b5ea-9e4f969aacb6": "account.menu_action_account_invoice_report_all"
     },
-    "odooVersion": 3,
+    "odooVersion": 4,
+    "lists": {
+        "1": {
+            "columns": [
+                "name",
+                "invoice_partner_display_name",
+                "invoice_date",
+                "invoice_date_due",
+                "activity_ids",
+                "amount_untaxed_signed",
+                "amount_total_signed",
+                "amount_total_in_currency_signed",
+                "payment_state",
+                "state"
+            ],
+            "domain": [
+                [
+                    "move_type",
+                    "=",
+                    "out_invoice"
+                ]
+            ],
+            "model": "account.move",
+            "context": {
+                "default_move_type": "out_invoice"
+            },
+            "orderBy": [
+                {
+                    "name": "amount_total_signed",
+                    "asc": false
+                }
+            ],
+            "id": "1",
+            "name": "Invoices by Total Signed"
+        }
+    },
+    "listNextId": 2,
     "pivots": {
         "1": {
             "colGroupBys": [],
@@ -1908,42 +1947,6 @@
         }
     },
     "pivotNextId": 8,
-    "lists": {
-        "1": {
-            "columns": [
-                "name",
-                "invoice_partner_display_name",
-                "invoice_date",
-                "invoice_date_due",
-                "activity_ids",
-                "amount_untaxed_signed",
-                "amount_total_signed",
-                "amount_total_in_currency_signed",
-                "payment_state",
-                "state"
-            ],
-            "domain": [
-                [
-                    "move_type",
-                    "=",
-                    "out_invoice"
-                ]
-            ],
-            "model": "account.move",
-            "context": {
-                "default_move_type": "out_invoice"
-            },
-            "orderBy": [
-                {
-                    "name": "amount_total_signed",
-                    "asc": false
-                }
-            ],
-            "id": "1",
-            "name": "Invoices by Total Signed"
-        }
-    },
-    "listNextId": 2,
     "globalFilters": [
         {
             "id": "757a1b4b-e339-4879-beb6-9851050387cf",
