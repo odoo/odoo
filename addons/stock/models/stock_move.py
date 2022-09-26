@@ -391,6 +391,18 @@ class StockMove(models.Model):
         return sum([ml.reserved_uom_qty for ml in self._get_move_lines()])
 
     def _quantity_done_set(self):
+        def _process_excess(move, qty):
+            '''Add excess quantity to the first move line or create a new line if picking destination is not a view'''
+            lines = move._get_move_lines()
+            if len(lines) > 0:
+                lines[0].qty_done += qty
+            elif move.picking_id and move.picking_id.location_id and move.picking_id.location_id.usage != 'view':
+                move_line = self.env['stock.move.line'].create(dict(
+                    move._prepare_move_line_vals(), qty_done=quantity_done,
+                    location_id=move.picking_id.location_id.id))
+                move.write({'move_line_ids': [(4, move_line.id)]})
+                move_line._apply_putaway_strategy()
+
         def _process_move_decrease(move, qty_dec):
             '''Want to decrease the current qty done. Traverse the mls bottom-up and decrease the ml.qty_done
             Prioritize decrease the ml without reserved qty'''
@@ -447,11 +459,17 @@ class StockMove(models.Model):
             elif (move.has_tracking != 'none' or move.is_multi_location()) and not move.scrapped:
                 mls_qty_done = move._get_qty_done_mls()
                 # Want to increase the current qty done
-                if mls_qty_done < quantity_done:
+                if float_compare(mls_qty_done, quantity_done, precision_rounding=move.product_uom.rounding) < 0:
+                    # If done > reserve then try assign with excess done
+                    if move.has_tracking == 'none' and float_compare(quantity_done, move._get_reserve_qty_mls(), precision_rounding=move.product_uom.rounding):
+                        move.with_context(reserve_excess_done=True)._action_assign()
                     qty_inc = quantity_done - mls_qty_done
                     qty_inc = _process_move_increase(move, qty_inc)
+                    # If there is still thing to distribute
+                    if move.has_tracking == 'none' and float_compare(qty_inc, 0.0, precision_rounding=move.product_uom.rounding) > 0:
+                        _process_excess(move, qty_inc)
                 # Want to decrease the current qty done
-                elif mls_qty_done > quantity_done:
+                elif float_compare(mls_qty_done, quantity_done, precision_rounding=move.product_uom.rounding) > 0:
                     qty_dec = mls_qty_done - quantity_done
                     _process_move_decrease(move, qty_dec)
             # 1 Location without tracking -> just edit the move_line since there should be only 1
@@ -1583,9 +1601,10 @@ class StockMove(models.Model):
         # to the putaway rules. This redirection will be applied on moves of `moves_to_redirect`.
         moves_to_redirect = OrderedSet()
         done_dict = dict()
-        for move in self.filtered(lambda m: m.state in ['confirmed', 'waiting', 'partially_available']):
+        reserve_excess_done = self.env.context.get('reserve_excess_done')
+        for move in self.filtered(lambda m: m.state in (['confirmed', 'waiting', 'partially_available', 'assigned'] if reserve_excess_done else ['confirmed', 'waiting', 'partially_available'])):
             rounding = roundings[move]
-            missing_reserved_uom_quantity = move.product_uom_qty - reserved_availability[move]
+            missing_reserved_uom_quantity = max(move.product_uom_qty, move.quantity_done if reserve_excess_done else 0.0)  - reserved_availability[move]
             missing_reserved_quantity = move.product_uom._compute_quantity(missing_reserved_uom_quantity, move.product_id.uom_id, rounding_method='HALF-UP')
             if move._should_bypass_reservation():
                 # create the move line(s) but do not impact quants
