@@ -271,6 +271,18 @@ registerModel({
                 isMemberListOpened: true,
             });
         },
+        onComponentUpdate() {
+            if (this.isDoFocus) {
+                this.update({ isDoFocus: false });
+                if (
+                    this.newMessageAutocompleteInputView &&
+                    this.newMessageAutocompleteInputView.component &&
+                    this.newMessageAutocompleteInputView.component.root.el
+                ) {
+                    this.newMessageAutocompleteInputView.component.root.el.focus();
+                }
+            }
+        },
         /**
          * @param {Event} ev
          */

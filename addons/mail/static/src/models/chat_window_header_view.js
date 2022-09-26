@@ -34,6 +34,9 @@ registerModel({
             identifying: true,
             inverse: 'chatWindowHeaderView',
         }),
+        hiddenMenuItem: one('ChatWindowHiddenMenuItemView', {
+            inverse: 'chatWindowHeaderView',
+        }),
         threadIconView: one('ThreadIconView', {
             compute() {
                 if (this.chatWindowOwner.thread && this.chatWindowOwner.thread.channel) {

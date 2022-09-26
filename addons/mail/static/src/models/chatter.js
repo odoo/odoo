@@ -98,7 +98,7 @@ registerModel({
             if (!this.threadView || !this.threadView.messageListView || !this.threadView.messageListView.component) {
                 return;
             }
-            this.threadView.messageListView.component.onScroll(ev);
+            this.threadView.messageListView.onScroll();
         },
         openAttachmentBoxView() {
             this.update({ attachmentBoxView: {} });

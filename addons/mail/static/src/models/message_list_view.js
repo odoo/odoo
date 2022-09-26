@@ -8,6 +8,114 @@ registerModel({
     name: 'MessageListView',
     recordMethods: {
         /**
+         * Update the scroll position of the message list.
+         * This is not done in patched/mounted hooks because scroll position is
+         * dependent on UI globally. To illustrate, imagine following UI:
+         *
+         * +----------+ < viewport top = scrollable top
+         * | message  |
+         * |   list   |
+         * |          |
+         * +----------+ < scrolltop = viewport bottom = scrollable bottom
+         *
+         * Now if a composer is mounted just below the message list, it is shrinked
+         * and scrolltop is altered as a result:
+         *
+         * +----------+ < viewport top = scrollable top
+         * | message  |
+         * |   list   | < scrolltop = viewport bottom  <-+
+         * |          |                                  |-- dist = composer height
+         * +----------+ < scrollable bottom            <-+
+         * +----------+
+         * | composer |
+         * +----------+
+         *
+         * Because of this, the scroll position must be changed when whole UI
+         * is rendered. To make this simpler, this is done when <ThreadView/>
+         * component is patched. This is acceptable when <ThreadView/> has a
+         * fixed height, which is the case for the moment. task-2358066
+         */
+        adjustFromComponentHints() {
+            for (const hint of this.threadViewOwner.componentHintList) {
+                switch (hint.type) {
+                    case 'change-of-thread-cache':
+                    case 'member-list-hidden':
+                    case 'adjust-scroll':
+                        // thread just became visible, the goal is to restore its
+                        // saved position if it exists or scroll to the end
+                        this.adjustScrollFromModel();
+                        break;
+                    case 'message-posted':
+                    case 'message-received':
+                    case 'messages-loaded':
+                    case 'new-messages-loaded':
+                        // messages have been added at the end, either scroll to the
+                        // end or keep the current position
+                        this.adjustScrollForExtraMessagesAtTheEnd();
+                        break;
+                    case 'more-messages-loaded':
+                        // messages have been added at the start, keep the current
+                        // position
+                        this.adjustScrollForExtraMessagesAtTheStart();
+                        break;
+                }
+                this.threadViewOwner.markComponentHintProcessed(hint);
+            }
+            this.component._willPatchSnapshot = undefined;
+        },
+        adjustScrollForExtraMessagesAtTheEnd() {
+            if (!this.getScrollableElement() || !this.hasScrollAdjust) {
+                return;
+            }
+            if (!this.threadViewOwner.hasAutoScrollOnMessageReceived) {
+                if (this.threadViewOwner.order === 'desc' && this.component._willPatchSnapshot) {
+                    const { scrollHeight, scrollTop } = this.component._willPatchSnapshot;
+                    this.setScrollTop(this.getScrollableElement().scrollHeight - scrollHeight + scrollTop);
+                }
+                return;
+            }
+            this.scrollToEnd();
+        },
+        adjustScrollForExtraMessagesAtTheStart() {
+            if (
+                !this.getScrollableElement() ||
+                !this.hasScrollAdjust ||
+                !this.component._willPatchSnapshot ||
+                this.threadViewOwner.order === 'desc'
+            ) {
+                return;
+            }
+            const { scrollHeight, scrollTop } = this.component._willPatchSnapshot;
+            this.setScrollTop(this.getScrollableElement().scrollHeight - scrollHeight + scrollTop);
+        },
+        adjustScrollFromModel() {
+            if (!this.getScrollableElement() || !this.hasScrollAdjust) {
+                return;
+            }
+            if (
+                this.threadViewOwner.threadCacheInitialScrollPosition !== undefined &&
+                this.getScrollableElement().scrollHeight === this.threadViewOwner.threadCacheInitialScrollHeight
+            ) {
+                this.setScrollTop(this.threadViewOwner.threadCacheInitialScrollPosition);
+                return;
+            }
+            this.scrollToEnd();
+        },
+        checkMostRecentMessageIsVisible() {
+            if (!this.exists()) {
+                return;
+            }
+            if (
+                this.threadViewOwner.lastMessageView &&
+                this.threadViewOwner.lastMessageView.component &&
+                this.threadViewOwner.lastMessageView.component.isPartiallyVisible()
+            ) {
+                this.threadViewOwner.handleVisibleMessage(
+                    this.threadViewOwner.lastMessageView.message,
+                );
+            }
+        },
+        /**
          * @returns {Element|undefined}
          */
         getScrollableElement() {
@@ -15,6 +123,19 @@ registerModel({
                 return this.threadViewOwner.threadViewer.chatter.scrollPanelRef.el;
             }
             return this.component.root.el;
+        },
+        /**
+         * @returns {boolean}
+         */
+        isLoadMoreVisible() {
+            const loadMore = this.loadMoreRef.el;
+            if (!loadMore) {
+                return false;
+            }
+            const loadMoreRect = loadMore.getBoundingClientRect();
+            const elRect = this.getScrollableElement().getBoundingClientRect();
+            const isInvisible = loadMoreRect.top > elRect.bottom || loadMoreRect.bottom < elRect.top;
+            return !isInvisible;
         },
         onClickRetryLoadMoreMessages() {
             if (!this.exists() || !this.thread) {
@@ -33,6 +154,75 @@ registerModel({
             }
             this.thread.cache.loadMoreMessages();
         },
+        onComponentUpdate() {
+            if (!this.exists()) {
+                return;
+            }
+            this.adjustFromComponentHints();
+        },
+        onScroll() {
+            this.scrollThrottle.do();
+        },
+        scrollToEnd() {
+            this.setScrollTop(this.threadViewOwner.order === 'asc' ? this.getScrollableElement().scrollHeight - this.getScrollableElement().clientHeight : 0);
+        },
+        /**
+         * @param {integer} value
+         */
+        setScrollTop(value) {
+            if (this.getScrollableElement().scrollTop === value) {
+                return;
+            }
+            this.update({ isLastScrollProgrammatic: true });
+            this.getScrollableElement().scrollTop = value;
+        },
+        /**
+         * @private
+         */
+        _onThrottledScroll() {
+            if (!this.exists()) {
+                return;
+            }
+            if (!this.getScrollableElement()) {
+                // could be unmounted in the meantime (due to throttled behavior)
+                return;
+            }
+            const scrollTop = this.getScrollableElement().scrollTop;
+            this.messaging.messagingBus.trigger('o-component-message-list-scrolled', {
+                orderedMessages: this.threadViewOwner.threadCache.orderedMessages,
+                scrollTop,
+                thread: this.threadViewOwner.thread,
+                threadViewer: this.threadViewOwner.threadViewer,
+            });
+            this.update({
+                clientHeight: this.getScrollableElement().clientHeight,
+                scrollHeight: this.getScrollableElement().scrollHeight,
+                scrollTop: this.getScrollableElement().scrollTop,
+            });
+            if (!this.isLastScrollProgrammatic) {
+                // Automatically scroll to new received messages only when the list is
+                // currently fully scrolled.
+                const hasAutoScrollOnMessageReceived = this.isAtEnd;
+                this.threadViewOwner.update({ hasAutoScrollOnMessageReceived });
+            }
+            this.threadViewOwner.threadViewer.saveThreadCacheScrollHeightAsInitial(
+                this.getScrollableElement().scrollHeight,
+                this.threadViewOwner.threadCache,
+            );
+            this.threadViewOwner.threadViewer.saveThreadCacheScrollPositionsAsInitial(
+                scrollTop,
+                this.threadViewOwner.threadCache,
+            );
+            if (
+                !this.isLastScrollProgrammatic &&
+                this.isLoadMoreVisible() &&
+                this.threadViewOwner.threadCache
+            ) {
+                this.threadViewOwner.threadCache.loadMoreMessages();
+            }
+            this.checkMostRecentMessageIsVisible();
+            this.update({ isLastScrollProgrammatic: false });
+        }
     },
     fields: {
         clientHeight: attr(),
@@ -78,6 +268,11 @@ registerModel({
             default: false,
         }),
         /**
+         * Reference of the "load more" item. Useful to trigger load more
+         * on scroll when it becomes visible.
+         */
+        loadMoreRef: attr(),
+        /**
          * States the message views used to display this thread view owner's messages.
          */
         messageListViewItems: many('MessageListViewItem', {
@@ -103,6 +298,12 @@ registerModel({
             inverse: 'messageListViewOwner',
         }),
         scrollHeight: attr(),
+        scrollThrottle: one('Throttle', {
+            compute() {
+                return { func: () => this._onThrottledScroll() };
+            },
+            inverse: 'messageListViewAsScroll',
+        }),
         scrollTop: attr(),
         thread: one('Thread', {
             related: 'threadViewOwner.thread',

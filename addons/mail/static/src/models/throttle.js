@@ -55,6 +55,9 @@ registerModel({
                 if (this.emojiGridViewAsOnScroll) {
                     return 150;
                 }
+                if (this.messageListViewAsScroll) {
+                    return 100;
+                }
                 if (this.threadAsThrottleNotifyCurrentPartnerTypingStatus) {
                     return 2.5 * 1000;
                 }
@@ -73,6 +76,10 @@ registerModel({
          * Inner function to be invoked and throttled.
          */
         func: attr(),
+        messageListViewAsScroll: one('MessageListView', {
+            identifying: true,
+            inverse: 'scrollThrottle',
+        }),
         messagingAsUpdateImStatusRegister: one('Messaging', {
             identifying: true,
             inverse: 'updateImStatusRegisterThrottle',
