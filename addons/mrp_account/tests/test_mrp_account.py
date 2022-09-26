@@ -234,32 +234,32 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
         production._post_inventory()
         production.button_mark_done()
 
+        production_account = self.product_A.categ_id.property_stock_account_production_categ_id
         # finished product move
         productA_debit_line = self.env['account.move.line'].search([('ref', 'ilike', 'MO%Product A'), ('credit', '=', 0)])
         productA_credit_line = self.env['account.move.line'].search([('ref', 'ilike', 'MO%Product A'), ('debit', '=', 0)])
         self.assertEqual(productA_debit_line.account_id, self.stock_valuation_account)
-        self.assertEqual(productA_credit_line.account_id, self.stock_input_account)
+        self.assertEqual(productA_credit_line.account_id, production_account)
         # component move
         productB_debit_line = self.env['account.move.line'].search([('ref', 'ilike', 'MO%Product B'), ('credit', '=', 0)])
         productB_credit_line = self.env['account.move.line'].search([('ref', 'ilike', 'MO%Product B'), ('debit', '=', 0)])
-        self.assertEqual(productB_debit_line.account_id, self.stock_output_account)
+        self.assertEqual(productB_debit_line.account_id, production_account)
         self.assertEqual(productB_credit_line.account_id, self.stock_valuation_account)
 
         # unbuild
         res_dict = production.button_unbuild()
         wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
         wizard.action_validate()
-
         # finished product move
         productA_debit_line = self.env['account.move.line'].search([('ref', 'ilike', 'UB%Product A'), ('credit', '=', 0)])
         productA_credit_line = self.env['account.move.line'].search([('ref', 'ilike', 'UB%Product A'), ('debit', '=', 0)])
-        self.assertEqual(productA_debit_line.account_id, self.stock_input_account)
+        self.assertEqual(productA_debit_line.account_id, production_account)
         self.assertEqual(productA_credit_line.account_id, self.stock_valuation_account)
         # component move
         productB_debit_line = self.env['account.move.line'].search([('ref', 'ilike', 'UB%Product B'), ('credit', '=', 0)])
         productB_credit_line = self.env['account.move.line'].search([('ref', 'ilike', 'UB%Product B'), ('debit', '=', 0)])
         self.assertEqual(productB_debit_line.account_id, self.stock_valuation_account)
-        self.assertEqual(productB_credit_line.account_id, self.stock_output_account)
+        self.assertEqual(productB_credit_line.account_id, production_account)
 
     def test_unbuild_account_01(self):
         """Test when production location has its valuation accounts. After unbuild,

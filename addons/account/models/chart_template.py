@@ -158,6 +158,7 @@ class AccountChartTemplate(models.Model):
     property_stock_account_input_categ_id = fields.Many2one('account.account.template', string="Input Account for Stock Valuation")
     property_stock_account_output_categ_id = fields.Many2one('account.account.template', string="Output Account for Stock Valuation")
     property_stock_valuation_account_id = fields.Many2one('account.account.template', string="Account Template for Stock Valuation")
+    property_stock_account_production_categ_id = fields.Many2one('account.account.template', string="Production Account Template for Stock Valuation")
     property_tax_payable_account_id = fields.Many2one('account.account.template', string="Tax current account (payable)")
     property_tax_receivable_account_id = fields.Many2one('account.account.template', string="Tax current account (receivable)")
     property_advance_tax_payment_account_id = fields.Many2one('account.account.template', string="Advance tax payment account")
@@ -531,6 +532,7 @@ class AccountChartTemplate(models.Model):
             ('property_account_payable_id', 'res.partner'),
             ('property_account_expense_categ_id', 'product.category'),
             ('property_account_income_categ_id', 'product.category'),
+            ('property_stock_account_production_categ_id', 'product.category'),
             ('property_account_expense_id', 'product.template'),
             ('property_account_income_id', 'product.template'),
             ('property_tax_payable_account_id', 'account.tax.group'),
