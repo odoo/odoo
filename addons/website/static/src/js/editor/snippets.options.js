@@ -117,6 +117,9 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         const googleFontsProperty = weUtils.getCSSVariableValue('google-fonts', style);
         this.googleFonts = googleFontsProperty ? googleFontsProperty.split(/\s*,\s*/g) : [];
         this.googleFonts = this.googleFonts.map(font => font.substring(1, font.length - 1)); // Unquote
+        const googleLocalFontsProperty = weUtils.getCSSVariableValue('google-local-fonts', style);
+        this.googleLocalFonts = googleLocalFontsProperty ?
+            googleLocalFontsProperty.slice(1, -1).split(/\s*,\s*/g) : [];
 
         await this._super(...arguments);
 
@@ -134,14 +137,25 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
             this.menuEl.appendChild(fontEl);
         });
 
+        if (this.googleLocalFonts.length) {
+            const googleLocalFontsEls = fontEls.splice(-this.googleLocalFonts.length);
+            googleLocalFontsEls.forEach((el, index) => {
+                $(el).append(core.qweb.render('website.delete_google_font_btn', {
+                    index: index,
+                    local: true,
+                }));
+            });
+        }
+
         if (this.googleFonts.length) {
-            const googleFontsEls = fontEls.slice(-this.googleFonts.length);
+            const googleFontsEls = fontEls.splice(-this.googleFonts.length);
             googleFontsEls.forEach((el, index) => {
                 $(el).append(core.qweb.render('website.delete_google_font_btn', {
                     index: index,
                 }));
             });
         }
+
         $(this.menuEl).append($(core.qweb.render('website.add_google_font_btn', {
             variable: variable,
         })));
@@ -215,10 +229,16 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
                         }
 
                         const font = m[1].replace(/\+/g, ' ');
-                        this.googleFonts.push(font);
+                        const googleFontServe = dialog.el.querySelector('#google_font_serve').checked;
+                        if (googleFontServe) {
+                            this.googleFonts.push(font);
+                        } else {
+                            this.googleLocalFonts.push(`'${font}': ''`);
+                        }
                         this.trigger_up('google_fonts_custo_request', {
                             values: {[variable]: `'${font}'`},
                             googleFonts: this.googleFonts,
+                            googleLocalFonts: this.googleLocalFonts,
                         });
                     },
                 },
@@ -236,6 +256,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
      */
     _onDeleteGoogleFontClick: async function (ev) {
         ev.preventDefault();
+        const values = {};
 
         const save = await new Promise(resolve => {
             Dialog.confirm(this, _t("Deleting a font requires a reload of the page. This will save all your changes and reload the page, are you sure you want to proceed?"), {
@@ -249,15 +270,23 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
 
         // Remove Google font
         const googleFontIndex = parseInt(ev.target.dataset.fontIndex);
-        const googleFont = this.googleFonts[googleFontIndex];
-        this.googleFonts.splice(googleFontIndex, 1);
+        const isLocalFont = ev.target.dataset.localFont;
+        let googleFontName;
+        if (isLocalFont) {
+            const googleFont = this.googleLocalFonts[googleFontIndex].split(':');
+            googleFontName = googleFont[0];
+            values['delete-font-attachment-id'] = googleFont[1];
+            this.googleLocalFonts.splice(googleFontIndex, 1);
+        } else {
+            googleFontName = this.googleFonts[googleFontIndex];
+            this.googleFonts.splice(googleFontIndex, 1);
+        }
 
         // Adapt font variable indexes to the removal
-        const values = {};
         const style = window.getComputedStyle(document.documentElement);
         _.each(FontFamilyPickerUserValueWidget.prototype.fontVariables, variable => {
             const value = weUtils.getCSSVariableValue(variable, style);
-            if (value.substring(1, value.length - 1) === googleFont) {
+            if (value.substring(1, value.length - 1) === googleFontName) {
                 // If an element is using the google font being removed, reset
                 // it to the theme default.
                 values[variable] = 'null';
@@ -267,6 +296,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         this.trigger_up('google_fonts_custo_request', {
             values: values,
             googleFonts: this.googleFonts,
+            googleLocalFonts: this.googleLocalFonts,
         });
     },
 });
@@ -732,10 +762,17 @@ options.Class.include({
     _onGoogleFontsCustoRequest: function (ev) {
         const values = ev.data.values ? _.clone(ev.data.values) : {};
         const googleFonts = ev.data.googleFonts;
+        const googleLocalFonts = ev.data.googleLocalFonts;
         if (googleFonts.length) {
             values['google-fonts'] = "('" + googleFonts.join("', '") + "')";
         } else {
             values['google-fonts'] = 'null';
+        }
+        // check undefined, this is a backport, a custo might not pass this key
+        if (googleLocalFonts !== undefined && googleLocalFonts.length) {
+            values['google-local-fonts'] = "(" + googleLocalFonts.join(", ") + ")";
+        } else {
+            values['google-local-fonts'] = 'null';
         }
         this.trigger_up('snippet_edition_request', {exec: async () => {
             return this._makeSCSSCusto('/website/static/src/scss/options/user_values.scss', values);
