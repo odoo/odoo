@@ -42,15 +42,17 @@ tour.register('event_configurator_tour', {
 }, {
     trigger: '.o_event_sale_js_event_configurator_ok'
 }, {
-    trigger: 'textarea[name="name"]',
+    trigger: "div[name='name'].o_field_section_and_note_text",
     run: function () {
-        var $textarea = $('textarea[name="name"]');
-        if ($textarea.val().includes('Design Fair Los Angeles') && $textarea.val().includes('VIP')) {
+        const $td = $("td.o_section_and_note_text_cell")[0];
+        const $textarea = $("div[name='name'].o_field_section_and_note_text");
+        const txt = $td.getAttribute("data-tooltip");
+        if (txt.includes('Design Fair Los Angeles') && txt.includes('VIP')) {
             $textarea.addClass('tour_success');
         }
     }
 }, {
-    trigger: 'textarea[name="name"].tour_success',
+    trigger: "div[name='name'].tour_success",
     run: function () {} // check
 }, {
     trigger: 'ul.nav a:contains("Order Lines")',
@@ -59,7 +61,7 @@ tour.register('event_configurator_tour', {
     trigger: 'td:contains("Event")',
     run: 'click'
 }, {
-    trigger: '.o_edit_product_configuration'
+    trigger: 'button.fa-pencil'
 }, {
     trigger: 'div[name="event_ticket_id"] input',
     run: 'click'
@@ -70,15 +72,17 @@ tour.register('event_configurator_tour', {
 }, {
     trigger: '.o_event_sale_js_event_configurator_ok'
 }, {
-    trigger: 'textarea[name="name"]',
+    trigger: "div[name='name'].o_field_section_and_note_text",
     run: function () {
-        var $textarea = $('textarea[name="name"]');
-        if ($textarea.val().includes('Standard')) {
+        const $td = $("td.o_section_and_note_text_cell")[0];
+        const $textarea = $("div[name='name'].o_field_section_and_note_text");
+        const txt = $td.getAttribute("data-tooltip");
+        if (txt.includes('Design Fair Los Angeles') && txt.includes('Standard')) {
             $textarea.addClass('tour_success_2');
         }
     }
 }, {
-    trigger: 'textarea[name="name"].tour_success_2',
+    trigger: "div[name='name'].tour_success_2",
     run: function () {} // check
 }, ...tour.stepUtils.discardForm()
 ]);
