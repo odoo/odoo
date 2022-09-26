@@ -2667,7 +2667,7 @@ var SnippetsMenu = Widget.extend({
                 stop: async function (ev, ui) {
                     const doc = self.options.wysiwyg.odooEditor.document;
                     $(doc.body).removeClass('oe_dropzone_active');
-                    self.options.wysiwyg.odooEditor.automaticStepUnactive();
+                    self.options.wysiwyg.odooEditor.automaticStepActive();
                     self.options.wysiwyg.odooEditor.automaticStepSkipStack();
                     $toInsert.removeClass('oe_snippet_body');
                     self.draggableComponent.$scrollTarget.off('scroll.scrolling_element');
