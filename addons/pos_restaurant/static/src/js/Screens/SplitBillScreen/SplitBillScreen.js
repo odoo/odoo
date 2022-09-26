@@ -76,6 +76,8 @@ odoo.define('pos_restaurant.SplitBillScreen', function(require) {
 
                 this.env.pos.get('orders').add(this.newOrder);
                 this.env.pos.set('selectedOrder', this.newOrder);
+                // Save new order to server.
+                this.env.pos.push_single_order(this.newOrder);
             }
         }
         /**
