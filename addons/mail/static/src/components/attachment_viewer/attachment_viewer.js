@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
-import { useRefs } from '@mail/component_hooks/use_refs';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { hidePDFJSButtons } from '@web/legacy/js/libs/pdfjs';
 
@@ -25,7 +24,7 @@ export class AttachmentViewer extends Component {
          * has a t-key, which was added to force the rendering of a new element when the src of the image changes.
          * This was made to remove the display of the previous image as soon as the src changes.
          */
-        this._getRefs = useRefs();
+        this._imageRef = useRef('image');
         /**
          * Reference of the zoomer node. Useful to apply translate
          * transformation on image visualisation.
@@ -96,8 +95,7 @@ export class AttachmentViewer extends Component {
         if (!this.attachmentViewer.exists() || !this.attachmentViewer.attachmentViewerViewable) {
             return;
         }
-        const refs = this._getRefs();
-        const image = refs[`image_${this.attachmentViewer.attachmentViewerViewable.localId}`];
+        const image = this._imageRef;
         if (
             this.attachmentViewer.attachmentViewerViewable.isImage &&
             (!image || !image.complete)
@@ -141,8 +139,7 @@ export class AttachmentViewer extends Component {
      */
     _updateZoomerStyle() {
         const attachmentViewer = this.attachmentViewer;
-        const refs = this._getRefs();
-        const image = refs[`image_${this.attachmentViewer.attachmentViewerViewable.localId}`];
+        const image = this._imageRef;
         const tx = image.offsetWidth * attachmentViewer.scale > this._zoomerRef.el.offsetWidth
             ? this._translate.x + this._translate.dx
             : 0;
