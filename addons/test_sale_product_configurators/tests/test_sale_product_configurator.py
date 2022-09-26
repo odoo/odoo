@@ -26,7 +26,11 @@ class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
         cls.env['res.partner'].create({'name': 'Tajine Saucisse'})
 
     def test_01_product_configurator(self):
-        self.start_tour("/web", 'sale_product_configurator_tour', login='salesman')
+        # TODO sad/edm: finish when fixed, can't reproduce manually, but adding the product in the
+        #  tour don't create the line, can edit it again, but it still won't create it. Show the SOL
+        #  like when there is a problem in the product name. Whatever I do, can't exit the "edit
+        #  mode" of the line (I succeed to delee it when clicking on the additional products though)
+        self.start_tour("/web", 'sale_product_configurator_tour', login='salesman', watch=True)
 
     def test_02_product_configurator_advanced(self):
         # group_delivery_invoice_address: show the shipping address (needed for a trigger)
@@ -85,7 +89,7 @@ class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
             len(product_template.product_variant_ids.product_template_attribute_value_ids), 0,
         )
 
-        self.start_tour("/web", 'sale_product_configurator_advanced_tour', login='salesman')
+        self.start_tour("/web", 'sale_product_configurator_advanced_tour', login='salesman', watch=True)
 
         # Ensures some dynamic create variants have been created by the configurator
         self.assertEqual(len(product_template.product_variant_ids), 2)
@@ -96,6 +100,7 @@ class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
         )
 
     def test_03_product_configurator_edition(self):
+
         self.start_tour("/web", 'sale_product_configurator_edition_tour', login='salesman')
 
     def test_04_product_configurator_single_custom_value(self):
@@ -140,7 +145,8 @@ class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
         # Remove tax from Conference Chair and Chair floor protection
         self.product_product_conf_chair.taxes_id = None
         self.product_product_conf_chair_floor_protect.taxes_id = None
-        self.start_tour("/web", 'sale_product_configurator_pricelist_tour', login='salesman')
+        print("quack")
+        self.start_tour("/web", 'sale_product_configurator_pricelist_tour', login='salesman', watch=True)
 
     def test_06_product_configurator_optional_products(self):
         """The goal of this test is to check that the product configurator window opens correctly

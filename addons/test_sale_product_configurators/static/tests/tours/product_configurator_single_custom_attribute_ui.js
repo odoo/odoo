@@ -35,15 +35,26 @@ tour.register('sale_product_configurator_single_custom_attribute_tour', {
     run: 'text great single custom value'
 }, {
     trigger: 'button span:contains(Confirm)',
-    extra_trigger: '.oe_advanced_configurator_modal',
+}, {
+    trigger: '.oe_title',
+    in_modal: false,
+    run: 'click',
+}, {
+    trigger: '.oe_title',
+    run: 'click',
+    // FIXME edm: These 2 steps were added for the owl migration. In the tours (and only in the
+    //  tours, can't be reproduced manually), the SOL isn't instantly created and stays in an
+    //  editable state, so we need to click elsewhere to trigger the creation of the SOL, which
+    //  sometimes raise a false warning for an incorrect SOL that we can ignore by clicking
+    //  elsewhere and, finally, force the creation of the SOL
 }, {
     trigger: 'td.o_data_cell:contains("single product attribute value: great single custom value")',
     extra_trigger: 'div[name="order_line"]',
     run: function (){} // check custom value
 }, {
-    trigger: 'td.o_product_configurator_cell',
+    trigger: 'div[name="product_template_id"]',
 }, {
-    trigger: '.o_edit_product_configuration',
+    trigger: '.fa-pencil',
 }, {
     trigger: '.main_product .variant_custom_value',
     run: function () {

@@ -24,8 +24,12 @@ tour.stepUtils.showAppsMenuItem(),
     trigger: 'ul.ui-autocomplete > li > a:contains(Azure)',
 }, {
     content: "search the pricelist",
-    trigger: 'div[name="pricelist_id"] input',
-    run: 'text Custom pricelist (TEST)'
+    trigger: 'input[id="pricelist_id"]',
+    run: 'click'
+}, {
+    content: "search the pricelist",
+    trigger: 'input[id="pricelist_id"]',
+    run: 'text Custo'
 }, {
     content: "select the pricelist",
     trigger: 'ul.ui-autocomplete > li > a:contains(Custom pricelist (TEST))',
@@ -65,7 +69,18 @@ tour.stepUtils.showAppsMenuItem(),
 }, {
     content: "add to SO",
     trigger: 'button span:contains(Confirm)',
-    extra_trigger: '.oe_advanced_configurator_modal',
+// }, {
+//     trigger: '.oe_title',
+//     in_modal: false,
+//     run: 'click',
+// }, {
+//     trigger: '.oe_title',
+//     run: 'click',
+//     // FIXME edm: These 2 steps were added for the owl migration. In the tours (and only in the
+//     //  tours, can't be reproduced manually), the SOL isn't instantly created and stays in an
+//     //  editable state, so we need to click elsewhere to trigger the creation of the SOL, which
+//     //  sometimes raise a false warning for an incorrect SOL that we can ignore by clicking
+//     //  elsewhere and, finally, force the creation of the SOL
 }, {
     content: "verify SO final price excluded",
     trigger: 'span[name="Untaxed Amount"]:contains("1,257.00")',

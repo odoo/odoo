@@ -41,37 +41,29 @@ tour.register('sale_product_configurator_tour', {
     run: function (){} // check confirm is available
 }, {
     trigger: 'span:contains("Aluminium"):eq(1)',
-    extra_trigger: '.oe_advanced_configurator_modal',
 }, {
-    trigger: '.js_product:has(strong:contains(Conference Chair)) .js_add',
-    extra_trigger: '.oe_advanced_configurator_modal',
+    trigger: '.js_product:contains(Conference Chair) .js_add',
 }, {
-    trigger: '.js_product:has(strong:contains(Chair floor protection)) .js_add',
-    extra_trigger: '.oe_advanced_configurator_modal',
+    trigger: '.js_product:contains(Chair floor protection) .js_add',
 }, {
     trigger: 'button span:contains(Confirm)',
-    extra_trigger: '.oe_advanced_configurator_modal',
     id: 'quotation_product_selected',
 },
 // check that 3 products were added to the SO
 {
+    // FIXME sad/edm: the tour fail at this step. Since the SOL isn't created yet (but should be and
+    //  is when doing it manually), the description can only be found in a tooltip and not as the
+    //  content of a cell. Both the others checks are working now, for the additional products
     trigger: 'td.o_data_cell:contains("Customizable Desk (TEST) (Aluminium, White)")',
-    extra_trigger: 'div[name="order_line"]',
-    in_modal: false,
     run: function (){}
 }, {
     trigger: 'td.o_data_cell:contains("Conference Chair (TEST) (Aluminium)")',
-    extra_trigger: 'div[name="order_line"]',
-    in_modal: false,
     run: function (){}
 }, {
     trigger: 'td.o_data_cell:contains("Chair floor protection")',
-    extra_trigger: 'div[name="order_line"]',
-    in_modal: false,
     run: function (){}
 }, {
     trigger: 'span[name=amount_total]:contains("0.00")',
-    in_modal: false,
     run: function (){}
 }, ...tour.stepUtils.discardForm()
 ]);
