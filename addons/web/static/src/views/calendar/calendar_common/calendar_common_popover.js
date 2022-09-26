@@ -88,6 +88,11 @@ CalendarCommonPopover.components = {
     Record,
 };
 CalendarCommonPopover.template = "web.CalendarCommonPopover";
+CalendarCommonPopover.subTemplates = {
+    popover: "web.CalendarCommonPopover.popover",
+    body: "web.CalendarCommonPopover.body",
+    footer: "web.CalendarCommonPopover.footer",
+};
 CalendarCommonPopover.props = {
     close: Function,
     record: Object,
