@@ -1789,10 +1789,6 @@ export class DynamicRecordList extends DynamicList {
         return this.records.find((r) => r.isInQuickCreation);
     }
 
-    get quickCreateRecordIndex() {
-        return this.records.findIndex((r) => r.isInQuickCreation);
-    }
-
     // -------------------------------------------------------------------------
     // Public
     // -------------------------------------------------------------------------
@@ -1943,7 +1939,7 @@ export class DynamicRecordList extends DynamicList {
         }
     }
 
-    async quickCreate(activeFields, context, atFirstPosition = true) {
+    async quickCreate(activeFields, context) {
         await this.model.mutex.getUnlockedDef();
         const record = this.quickCreateRecord;
         if (record) {
@@ -1953,10 +1949,7 @@ export class DynamicRecordList extends DynamicList {
             parent: this.rawContext,
             make: () => makeContext([context, {}]),
         };
-        return this.createRecord(
-            { activeFields, rawContext, isInQuickCreation: true },
-            atFirstPosition
-        );
+        return this.createRecord({ activeFields, rawContext, isInQuickCreation: true }, true);
     }
 
     /**
@@ -2245,7 +2238,7 @@ export class DynamicGroupList extends DynamicList {
         return this.groups.reduce((acc, group) => acc + group.count, 0);
     }
 
-    async quickCreate(group, atFirstPosition = true) {
+    async quickCreate(group) {
         group = group || this.groups[0];
         if (this.model.useSampleModel) {
             // Empty the groups because they contain sample data
@@ -2261,7 +2254,7 @@ export class DynamicGroupList extends DynamicList {
         if (isFolded) {
             await group.toggle();
         }
-        await group.quickCreate(this.quickCreateInfo.activeFields, this.context, atFirstPosition);
+        await group.quickCreate(this.quickCreateInfo.activeFields, this.context);
     }
 
     /**
@@ -2656,12 +2649,12 @@ export class Group extends DataPoint {
         });
     }
 
-    quickCreate(activeFields, context, atFirstPosition = false) {
+    quickCreate(activeFields, context) {
         const ctx = {
             ...context,
             [`default_${this.groupByField.name}`]: this.getServerValue(),
         };
-        return this.list.quickCreate(activeFields, ctx, atFirstPosition);
+        return this.list.quickCreate(activeFields, ctx);
     }
 
     /**
