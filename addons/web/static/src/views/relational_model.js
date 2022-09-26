@@ -814,7 +814,7 @@ export class Record extends DataPoint {
             const changes = params.changes || (await this._onChange());
             await this._load({ changes });
         } else {
-            let values = params.values || {};
+            let values = this._parseServerValues(params.values);
             const missingFields = this.fieldNames.filter((fieldName) => !(fieldName in values));
             if (missingFields.length) {
                 values = Object.assign({}, values, await this._read(missingFields));
@@ -2034,7 +2034,6 @@ export class DynamicRecordList extends DynamicList {
 
         const records = await Promise.all(
             rawRecords.map(async (data) => {
-                data = this._parseServerValues(data);
                 const record = this.model.createDataPoint("record", {
                     resModel: this.resModel,
                     resId: data.id,
@@ -3230,7 +3229,7 @@ export class StaticList extends DataPoint {
                     if (!this._initialValues) {
                         this._initialValues = {};
                     }
-                    this._initialValues[id] = this._parseServerValues(command[2]);
+                    this._initialValues[id] = command[2];
                 }
                 command[2] = symbolValues;
             }
