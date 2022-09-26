@@ -88,7 +88,10 @@ export const busService = {
         } else {
             worker.addEventListener('message', handleMessage);
         }
-        send('update_last_notification_id', multiTab.getSharedValue('last_notification_id', 0));
+        send('initialize_connection', {
+            debug: odoo.debug,
+            lastNotificationId: multiTab.getSharedValue('last_notification_id', 0),
+        });
         browser.addEventListener('unload', () => send('leave'));
 
 
