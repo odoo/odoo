@@ -2542,7 +2542,10 @@ class Model(models.AbstractModel):
         )
 
     @api.model
-    @tools.ormcache('self._get_view_cache_key(view_id, view_type, **options)')
+    @tools.conditional(
+        'xml' not in config['dev_mode'],
+        tools.ormcache('self._get_view_cache_key(view_id, view_type, **options)'),
+    )
     def _get_view_cache(self, view_id=None, view_type='form', **options):
         """ Get the view information ready to be cached
 
