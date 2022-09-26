@@ -169,6 +169,17 @@ export const luxonToMomentFormat = memoize(function luxonToMomentFormat(format) 
 // -----------------------------------------------------------------------------
 
 /**
+ * Returns true if the given format is a 24-hour format.
+ * Returns false otherwise.
+ *
+ * @param {string} [format=localization.timeFormat]
+ * @returns true if the format contains a 24 hour format
+ */
+export function is24HourFormat(format) {
+    return (format || localization.timeFormat).indexOf("H") !== -1;
+}
+
+/**
  * Formats a DateTime object to a date string
  *
  * @see formatDateTime
