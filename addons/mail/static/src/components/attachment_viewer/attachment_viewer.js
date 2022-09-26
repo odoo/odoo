@@ -6,7 +6,6 @@ import { hidePDFJSButtons } from '@web/legacy/js/libs/pdfjs';
 
 const { Component, onMounted, onPatched, onWillUnmount, useRef } = owl;
 
-const MIN_SCALE = 0.5;
 const SCROLL_ZOOM_STEP = 0.1;
 const ZOOM_STEP = 0.5;
 
@@ -18,7 +17,6 @@ export class AttachmentViewer extends Component {
     setup() {
         super.setup();
         useComponentToModel({ fieldName: 'component' });
-        this.MIN_SCALE = MIN_SCALE;
         /**
          * Used to ensure that the ref is always up to date, which seems to be needed if the element
          * has a t-key, which was added to force the rendering of a new element when the src of the image changes.
@@ -178,7 +176,7 @@ export class AttachmentViewer extends Component {
      * @param {boolean} [param0.scroll=false]
      */
     _zoomOut({ scroll = false } = {}) {
-        if (this.attachmentViewer.scale === MIN_SCALE) {
+        if (this.attachmentViewer.scale === this.attachmentViewer.minScale) {
             return;
         }
         const unflooredAdaptedScale = (
@@ -186,7 +184,7 @@ export class AttachmentViewer extends Component {
             (scroll ? SCROLL_ZOOM_STEP : ZOOM_STEP)
         );
         this.attachmentViewer.update({
-            scale: Math.max(MIN_SCALE, unflooredAdaptedScale),
+            scale: Math.max(this.attachmentViewer.minScale, unflooredAdaptedScale),
         });
         this._updateZoomerStyle();
     }
