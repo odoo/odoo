@@ -499,14 +499,14 @@
                             </td>
                             <td style="width:10%;text-align:center;">
                                 <p>
-                                    0
+                                    <t t-esc="total_discount_qty"/>
                                     /
                                 </p>
                             </td>
                             <td style="width:30%">
                                 <div class="right_content" style="text-align: right;font-size: 15px;">
                                     <p>
-                                        0.00
+                                        <span t-esc="total_discount_percentage + total_discount_global_minus + total_discount_coupon_minus" t-options='{"widget": "float", "precision": 2}'/>
                                         <t t-esc="company.currency_id.name"/>
                                     </p>
                                 </div>
@@ -604,11 +604,11 @@
                     <table style="width: 100%;">
                         <t t-set="is_open_cashier" t-value="1"/>
                         <t t-foreach="open_cashier_list" t-as="c">
-                            <tr>
+                            <tr t-if="is_open_cashier">
+                                <t t-set="is_open_cashier" t-value="0"/>
                                 <td style="width:28%">
                                     <div class="left_content" style="text-align: left;font-size: 15px;">
-                                        <p t-if="is_open_cashier">OPEN MANAGER:</p>
-                                        <t t-set="is_open_cashier" t-value="0"/>
+                                        <p>OPEN MANAGER:</p>
                                     </div>
                                 </td>
                                 <td style="width:40%">
@@ -627,11 +627,11 @@
                         </t>
                         <t t-set="is_close_cashier" t-value="1"/>
                         <t t-foreach="close_cashier_list" t-as="c">
-                            <tr>
+                            <tr t-if="is_close_cashier">
+                                <t t-set="is_close_cashier" t-value="0"/>
                                 <td style="width:28%">
                                     <div class="left_content" style="text-align: left;font-size: 15px;">
-                                        <p t-if="is_close_cashier">CLOSE MANAGER:</p>
-                                        <t t-set="is_close_cashier" t-value="0"/>
+                                        <p>CLOSE MANAGER:</p>
                                     </div>
                                 </td>
                                 <td style="width:40%">
@@ -650,11 +650,11 @@
                         </t>
                         <t t-set="is_receipt_no" t-value="1"/>
                         <t t-foreach="receipt_start_end_order_list" t-as="c">
-                            <tr>
+                            <tr t-if="is_receipt_no">
+                                <t t-set="is_receipt_no" t-value="0"/>
                                 <td style="width:28%">
                                     <div class="left_content" style="text-align: left;font-size: 15px;">
-                                        <p t-if="is_receipt_no">RECEIPT NO(s):</p>
-                                        <t t-set="is_receipt_no" t-value="0"/>
+                                        <p>RECEIPT NO(s):</p>
                                     </div>
                                 </td>
                                 <td style="width:40%">
@@ -668,11 +668,11 @@
                         </t>
                         <t t-set="is_trans_no" t-value="1"/>
                         <t t-foreach="start_end_order_list" t-as="c">
-                            <tr>
+                            <tr t-if="is_trans_no">
+                                <t t-set="is_trans_no" t-value="0"/>
                                 <td style="width:28%">
                                     <div class="left_content" style="text-align: left;font-size: 15px;">
-                                        <p t-if="is_trans_no">TRANS NO(s):</p>
-                                        <t t-set="is_trans_no" t-value="0"/>
+                                        <p>TRANS NO(s):</p>
                                     </div>
                                 </td>
                                 <td style="width:40%">
@@ -1093,14 +1093,14 @@
                             </td>
                             <td style="width:10%;text-align:center;">
                                 <p>
-                                    0
+                                    <t t-esc="total_discount_qty"/>
                                     /
                                 </p>
                             </td>
                             <td style="width:30%">
                                 <div class="right_content" style="text-align: right;font-size: 15px;">
                                     <p>
-                                        0.00
+                                        <span t-esc="total_discount_percentage + total_discount_global_minus + total_discount_coupon_minus" t-options='{"widget": "float", "precision": 2}'/>
                                         <t t-esc="company.currency_id.name"/>
                                     </p>
                                 </div>
