@@ -15082,6 +15082,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.verifySteps(["create"]);
     });
+
     QUnit.test(
         "classNames given to a field are set on the right field directly",
         async function (assert) {
@@ -15096,7 +15097,7 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
             });
             assert.doesNotHaveClass(
-                target.querySelector(".o_field_cell:nth-child(2)"),
+                target.querySelectorAll(".o_field_cell")[2],
                 "d-flex align-items-center",
                 "classnames are not set on the first cell"
             );
@@ -15105,15 +15106,10 @@ QUnit.module("Views", (hooks) => {
                 "d-flex align-items-center",
                 "classnames are set on the corresponding field div directly"
             );
-            assert.doesNotHaveClass(
-                target.querySelector(".o_field_cell:nth-child(3)"),
-                "d-none",
-                "classnames are not set on the second cell"
-            );
             assert.hasClass(
-                target.querySelector(".o_field_boolean"),
+                target.querySelectorAll(".o_field_cell")[3],
                 "d-none",
-                "classnames are set on the second field div directly"
+                "classnames are set on the second cell"
             );
         }
     );
