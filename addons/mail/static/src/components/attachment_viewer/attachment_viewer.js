@@ -1,10 +1,11 @@
 /** @odoo-module **/
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { hidePDFJSButtons } from '@web/legacy/js/libs/pdfjs';
 
-const { Component, onMounted, onPatched, onWillUnmount, useRef } = owl;
+const { Component, onMounted, onPatched, onWillUnmount } = owl;
 
 const SCROLL_ZOOM_STEP = 0.1;
 const ZOOM_STEP = 0.5;
@@ -17,21 +18,9 @@ export class AttachmentViewer extends Component {
     setup() {
         super.setup();
         useComponentToModel({ fieldName: 'component' });
-        /**
-         * Used to ensure that the ref is always up to date, which seems to be needed if the element
-         * has a t-key, which was added to force the rendering of a new element when the src of the image changes.
-         * This was made to remove the display of the previous image as soon as the src changes.
-         */
-        this._imageRef = useRef('image');
-        /**
-         * Reference of the zoomer node. Useful to apply translate
-         * transformation on image visualisation.
-         */
-        this._zoomerRef = useRef('zoomer');
-        /**
-         * Reference of the IFRAME node when the attachment is a PDF.
-         */
-        this._iframeViewerPdfRef = useRef('iframeViewerPdf');
+        useRefToModel({ fieldName: 'imageRef', refName: 'image' });
+        useRefToModel({ fieldName: 'zoomerRef', refName: 'zoomer' });
+        useRefToModel({ fieldName: 'iframeViewerPdfRef', refName: 'iframeViewerPdf' });
         /**
          * Tracked translate transformations on image visualisation. This is
          * not observed for re-rendering because they are used to compute zoomer
@@ -93,7 +82,7 @@ export class AttachmentViewer extends Component {
         if (!this.attachmentViewer.exists() || !this.attachmentViewer.attachmentViewerViewable) {
             return;
         }
-        const image = this._imageRef;
+        const image = this.attachmentViewer.imageRef;
         if (
             this.attachmentViewer.attachmentViewerViewable.isImage &&
             (!image || !image.complete)
@@ -108,8 +97,8 @@ export class AttachmentViewer extends Component {
      * @private
      */
     _hideUnwantedPdfJsButtons() {
-        if (this._iframeViewerPdfRef.el) {
-            hidePDFJSButtons(this._iframeViewerPdfRef.el);
+        if (this.attachmentViewer.iframeViewerPdfRef.el) {
+            hidePDFJSButtons(this.attachmentViewer.iframeViewerPdfRef.el);
         }
     }
 
@@ -137,11 +126,11 @@ export class AttachmentViewer extends Component {
      */
     _updateZoomerStyle() {
         const attachmentViewer = this.attachmentViewer;
-        const image = this._imageRef;
-        const tx = image.offsetWidth * attachmentViewer.scale > this._zoomerRef.el.offsetWidth
+        const image = this.attachmentViewer.imageRef;
+        const tx = image.offsetWidth * attachmentViewer.scale > this.attachmentViewer.zoomerRef.el.offsetWidth
             ? this._translate.x + this._translate.dx
             : 0;
-        const ty = image.offsetHeight * attachmentViewer.scale > this._zoomerRef.el.offsetHeight
+        const ty = image.offsetHeight * attachmentViewer.scale > this.attachmentViewer.zoomerRef.el.offsetHeight
             ? this._translate.y + this._translate.dy
             : 0;
         if (tx === 0) {
@@ -150,7 +139,7 @@ export class AttachmentViewer extends Component {
         if (ty === 0) {
             this._translate.y = 0;
         }
-        this._zoomerRef.el.style = `transform: ` +
+        this.attachmentViewer.zoomerRef.el.style = `transform: ` +
             `translate(${tx}px, ${ty}px)`;
     }
 
