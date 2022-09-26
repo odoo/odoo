@@ -9,14 +9,14 @@ patch(SaleOrderLineProductField.prototype, 'event_booth_sale', {
     async _onProductUpdate() {
         this._super(...arguments);
         if (this.props.record.data.product_type === 'event_booth') {
-            this._openEventBoothConfigurator();
+            this._openEventBoothConfigurator(false);
         }
     },
 
     _editLineConfiguration() {
         this._super(...arguments);
         if (this.props.record.data.product_type === 'event_booth') {
-            this._openEventBoothConfigurator();
+            this._openEventBoothConfigurator(true);
         }
     },
 
@@ -24,22 +24,27 @@ patch(SaleOrderLineProductField.prototype, 'event_booth_sale', {
         return this._super(...arguments) || Boolean(this.props.record.data.event_booth_category_id);
     },
 
-    async _openEventBoothConfigurator() {
+    async _openEventBoothConfigurator(edit) {
         let actionContext = {
-            'default_product_id': this.props.record.data.product_id[0],
+            default_product_id: this.props.record.data.product_id[0],
         };
-        if (this.props.record.data.event_id) {
-            actionContext['default_event_id'] = this.props.record.data.event_id[0];
-        }
-        if (this.props.record.data.event_booth_category_id) {
-            actionContext['default_event_booth_category_id'] = this.props.record.data.event_booth_category_id[0];
-        }
-        if (this.props.record.data.event_booth_pending_ids) {
-            actionContext['default_event_booth_ids'] = this.props.record.data.event_booth_pending_ids[0];
+        if (edit) {
+            const recordData = this.props.record.data;
+            if (recordData.event_id) {
+                actionContext.default_event_id = recordData.event_id[0];
+            }
+            if (recordData.event_booth_category_id) {
+                actionContext.default_event_booth_category_id = recordData.event_booth_category_id[0];
+            }
+            if (recordData.event_booth_pending_ids) {
+                actionContext.default_event_booth_ids = recordData.event_booth_pending_ids.records.map(
+                    record => {
+                        return [4, record.data.id];
+                    }
+                );
+            }
         }
         this.action.doAction(
-            // TODO VFE see if we can drop the action record
-            // and use static values here.
             'event_booth_sale.event_booth_configurator_action',
             {
                 additionalContext: actionContext,
@@ -55,9 +60,9 @@ patch(SaleOrderLineProductField.prototype, 'event_booth_sale', {
                     } else {
                         const eventBoothConfiguration = closeInfo.eventBoothConfiguration;
                         this.props.record.update({
-                            'event_id': eventBoothConfiguration.event_id,
-                            'event_booth_category_id': eventBoothConfiguration.event_booth_category_id,
-                            'event_booth_pending_ids': eventBoothConfiguration.event_booth_pending_ids,
+                            event_id: eventBoothConfiguration.event_id,
+                            event_booth_category_id: eventBoothConfiguration.event_booth_category_id,
+                            event_booth_pending_ids: eventBoothConfiguration.event_booth_pending_ids,
                         });
                     }
                 }
