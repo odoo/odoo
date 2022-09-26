@@ -530,7 +530,12 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
 
             var tour = self.tours[tour_name];
             if (typeof tip.run === "function") {
-                tip.run.call(tip.widget, action_helper);
+                try {
+                    tip.run.call(tip.widget, action_helper);
+                } catch (e) {
+                    console.error(`Tour ${tour_name} failed at step ${self._describeTip(tip)}: ${e.message}`);
+                    throw e;
+                }
             } else if (tip.run !== undefined) {
                 var m = tip.run.match(/^([a-zA-Z0-9_]+) *(?:\(? *(.+?) *\)?)?$/);
                 try {
