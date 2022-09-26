@@ -56,7 +56,7 @@
                         <div class="o_calendar_filter_items" t-att-class="transition.className">
                             <t t-foreach="getSortedFilters(section)" t-as="filter" t-key="filter.value">
                                 <t t-set="filterId" t-value="nextFilterId" />
-                                <t t-call="web.CalendarFilterPanel.filter" />
+                                <t t-call="{{ constructor.subTemplates.filter }}" />
                             </t>
                         </div>
                     </Transition>

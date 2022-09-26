@@ -224,3 +224,6 @@ CalendarFilterPanel.components = {
     Transition,
 };
 CalendarFilterPanel.template = "web.CalendarFilterPanel";
+CalendarFilterPanel.subTemplates = {
+    filter: "web.CalendarFilterPanel.filter",
+};
