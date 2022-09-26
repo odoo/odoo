@@ -15,7 +15,7 @@ import { ActionDialog } from "./action_dialog";
 import { CallbackRecorder } from "./action_hook";
 import { ReportAction } from "./reports/report_action";
 
-const { Component, markup, onMounted, onWillUnmount, onError, useChildSubEnv, xml } = owl;
+const { Component, markup, onMounted, onWillUnmount, onError, useChildSubEnv, xml, reactive } = owl;
 
 const actionHandlersRegistry = registry.category("action_handlers");
 const actionRegistry = registry.category("actions");
@@ -575,13 +575,20 @@ function makeActionManager(env) {
         }
         const nextStack = controllerStack.slice(0, index).concat(controllerArray);
         // Compute breadcrumbs
-        controller.config.breadcrumbs = action.target === "new" ? [] : _getBreadcrumbs(nextStack);
+        controller.config.breadcrumbs = reactive(
+            action.target === "new" ? [] : _getBreadcrumbs(nextStack)
+        );
         controller.config.getDisplayName = () => controller.displayName;
         controller.config.setDisplayName = (displayName) => {
             controller.displayName = displayName;
             if (controller === _getCurrentController()) {
                 // if not mounted yet, will be done in "mounted"
                 env.services.title.setParts({ action: controller.displayName });
+            }
+            if (action.target !== "new") {
+                // This is a hack to force the reactivity when a new displayName is set
+                controller.config.breadcrumbs.push(undefined);
+                controller.config.breadcrumbs.pop();
             }
         };
         controller.config.historyBack = () => {

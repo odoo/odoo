@@ -674,7 +674,7 @@ return AbstractRenderer.extend({
      * @override
      */
     async _renderView() {
-        this.$('.o_calendar_view')[0].prepend(this.calendarElement);
+        this.$('.o_legacy_calendar_view')[0].prepend(this.calendarElement);
         if (this._isInDOM) {
             this._renderCalendar();
         }
