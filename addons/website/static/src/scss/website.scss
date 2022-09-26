@@ -8,6 +8,12 @@ $-seen-urls: ();
     @if $-url and index($-seen-urls, $-url) == null {
         $-seen-urls: append($-seen-urls, $-url);
         @import url("https://fonts.googleapis.com/css?family=#{unquote($-url)}&display=swap");
+    } @else {
+        $-name: o-get-font-info($alias, 'name');
+        $-attachment: o-get-font-info($alias, 'attachment');
+        @if $-attachment {
+            @import url("/web/content/#{$-attachment}/google-font-#{unquote($-name)}");
+        }
     }
 }
 
