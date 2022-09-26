@@ -7,8 +7,6 @@ import { hidePDFJSButtons } from '@web/legacy/js/libs/pdfjs';
 
 const { Component, onMounted, onPatched, onWillUnmount, useRef } = owl;
 
-const ZOOM_STEP = 0.5;
-
 export class AttachmentViewer extends Component {
 
     /**
@@ -165,7 +163,7 @@ export class AttachmentViewer extends Component {
      */
     _zoomIn({ scroll = false } = {}) {
         this.attachmentViewer.update({
-            scale: this.attachmentViewer.scale + (scroll ? this.attachmentViewer.scrollZoomStep : ZOOM_STEP),
+            scale: this.attachmentViewer.scale + (scroll ? this.attachmentViewer.scrollZoomStep : this.attachmentViewer.zoomStep),
         });
         this._updateZoomerStyle();
     }
@@ -183,7 +181,7 @@ export class AttachmentViewer extends Component {
         }
         const unflooredAdaptedScale = (
             this.attachmentViewer.scale -
-            (scroll ? this.attachmentViewer.scrollZoomStep : ZOOM_STEP)
+            (scroll ? this.attachmentViewer.scrollZoomStep : this.attachmentViewer.zoomStep)
         );
         this.attachmentViewer.update({
             scale: Math.max(this.attachmentViewer.minScale, unflooredAdaptedScale),

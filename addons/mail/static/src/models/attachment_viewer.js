@@ -271,5 +271,8 @@ registerModel({
         scrollZoomStep: attr({
             default: 0.1,
         }),
+        zoomStep: attr({
+            default: 0.5,
+        }),
     },
 });
