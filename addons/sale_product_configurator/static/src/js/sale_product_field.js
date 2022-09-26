@@ -236,6 +236,7 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
      * @private
      */
     _convertConfiguratorDataToLinesCreationContext: function (optionalProductsData) {
+        // TODO add global user context
         return optionalProductsData.map(productData => {
             return {
                 default_product_id: productData.product_id,
