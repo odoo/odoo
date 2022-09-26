@@ -80,6 +80,12 @@ export class CalendarYearPopover extends Component {
 }
 CalendarYearPopover.components = { Dialog };
 CalendarYearPopover.template = "web.CalendarYearPopover";
+CalendarYearPopover.subTemplates = {
+    popover: "web.CalendarYearPopover.popover",
+    body: "web.CalendarYearPopover.body",
+    footer: "web.CalendarYearPopover.footer",
+    record: "web.CalendarYearPopover.record",
+};
 CalendarYearPopover.props = {
     close: Function,
     date: true,
