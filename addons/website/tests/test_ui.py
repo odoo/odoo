@@ -30,7 +30,7 @@ class TestUiCustomizeTheme(odoo.tests.HttpCase):
         website_test = Website.create({'name': 'Website Test'})
 
         # simulate attachment state when editing 2 theme through customize
-        custom_url = '/TEST/website/static/src/scss/options/colors/user_theme_color_palette.custom.web.assets_common.scss'
+        custom_url = '/TEST/website/static/src/scss/options/colors/user_theme_color_palette.custom.web.assets_frontend.scss'
         scss_attachment = Attachment.create({
             'name': custom_url,
             'type': 'binary',
