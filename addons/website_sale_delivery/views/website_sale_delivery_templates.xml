@@ -27,7 +27,7 @@
 
     <template id="payment_delivery_shipping_method" name="Delivery Shipping method" inherit_id="website_sale.address_on_payment">
         <xpath expr="//div[@id='shipping_and_billing']" position="inside">
-            <t t-set="delivery_nb" t-value="deliveries and len(deliveries)"/>
+            <t t-set="delivery_nb" t-value="deliveries and len(deliveries) or 0"/>
             <div t-if="delivery_nb == 1" id="delivery_carrier" class="mt4">
                 <b>Shipping Method: </b>
                 <t t-foreach="deliveries" t-as="delivery">
