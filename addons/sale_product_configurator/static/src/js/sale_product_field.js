@@ -21,6 +21,7 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
         this._super(...arguments);
 
         this.rpc = useService("rpc");
+        this.ui = useService("ui");
     },
 
     async _onProductTemplateUpdate() {
@@ -128,6 +129,14 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
             context: this.props.record.context,
             mode: mode,
         });
+        let modalEl;
+        optionalProductsModal.opened(() => {
+            modalEl = optionalProductsModal.el;
+            this.ui.activateElement(modalEl);
+        });
+        optionalProductsModal.on("closed", null, () => {
+            this.ui.deactivateElement(modalEl);
+        });
         optionalProductsModal.open();
 
         let confirmed = false;
@@ -137,20 +146,20 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
                 mainProduct,
                 ...optionalProducts
             ] = await optionalProductsModal.getAndCreateSelectedProducts();
-            // HACK: do not block line save bc the description was considered invalid
-            //  when we clicked on another part of the dom than the 'confirm' button
-            this.props.record._removeInvalidFields(['name']);
+
             this.productConfigured = true;
             await this.props.record.update(
                 this._convertConfiguratorDataToUpdateData(mainProduct)
             );
             const optionalProductLinesCreationContext = this._convertConfiguratorDataToLinesCreationContext(optionalProducts);
             for (let optionalProductLineCreationContext of optionalProductLinesCreationContext) {
-                await saleOrderRecord.data.order_line.addNew({
+                const line = await saleOrderRecord.data.order_line.addNew({
                     position: 'bottom',
                     context: optionalProductLineCreationContext,
                     mode: 'readonly',  // whatever but not edit !
                 });
+                // FIXME: update sets the field dirty otherwise on the next edit and click out it gets deleted
+                line.update({ sequence: line.data.sequence });
             }
         });
         optionalProductsModal.on("closed", null, () => {

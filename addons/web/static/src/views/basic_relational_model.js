@@ -960,10 +960,11 @@ export class StaticList extends DataPoint {
         await this.model.__bm__.save(this.__bm_handle__, { savePoint: true });
         this.model.__bm__.freezeOrder(this.__bm_handle__);
         await this.__syncParent(operation);
+        const newRecord = this.records[position === "bottom" ? this.records.length - 1 : 0];
         if (params.mode === "edit") {
-            const newRecord = this.records[position === "bottom" ? this.records.length - 1 : 0];
             await newRecord.switchMode("edit");
         }
+        return newRecord;
     }
 
     // x2many dialog edition
@@ -1035,6 +1036,7 @@ export class StaticList extends DataPoint {
 
         const parentID = this.model.__bm__.localData[this.__bm_handle__].parentID;
         await this.model.__bm__.notifyChanges(parentID, {
+            // FIXME: order_line hardcoded
             order_line: {
                 operation: "MULTI",
                 commands: commandsWithId,

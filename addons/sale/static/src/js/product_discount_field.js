@@ -21,7 +21,7 @@ export class ProductDiscountField extends FloatField {
     }
 
     onChange(ev) {
-        const x2mList = this.env.x2mList;
+        const x2mList = this.props.model.root.data.order_line;
         const orderLines = x2mList.records.filter(line => !line.data.display_type);
 
         if (orderLines.length < 3) {
