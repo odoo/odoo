@@ -7,7 +7,9 @@
     &.o-aside {
         border-left: $border-width solid;
         padding: map-get($spacers, 0);
-        width: $o-chatter-min-width;
+        min-width: $o-chatter-min-width;
+        grid-row: 1/3;
+        grid-column: 2;
 
         .o_Message.o-not-discussion {
             border-width: $border-width 0;

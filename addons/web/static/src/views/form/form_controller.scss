@@ -65,9 +65,17 @@
     background-color: $o-view-background-color;
 
     @include media-breakpoint-up(md) {
-        display: flex;
-        flex-flow: column nowrap;
-        min-height: 100%;
+        grid-template-columns: minmax(auto, $o-form-sheet-min-width + 2 * $o-horizontal-padding) auto;
+        grid-template-rows: fit-content(50px) auto;
+
+        .o_control_panel, .o_content {
+            grid-column: 1;
+            min-width: 0;
+
+            .o_cp_top {
+                grid-template-columns: minmax(auto, 70%) auto;
+            }
+        }
     }
 
     // Utility classes
@@ -198,13 +206,6 @@
                 width: 100% !important;
             }
         }
-    }
-
-    .o_form_view_container {
-        display: flex;
-        flex-flow: column nowrap;
-        height: 100%;
-        flex: 1 1 auto;
     }
 
     // No sheet

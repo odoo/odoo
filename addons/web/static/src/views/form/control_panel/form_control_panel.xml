@@ -2,9 +2,9 @@
 <templates xml:space="preserve">
 
     <t t-name="web.FormControlPanel" owl="1">
-        <div class="o_control_panel" t-ref="root">
-            <div t-if="display['top']" class="o_cp_top">
-                <div class="o_cp_top_left w-auto d-flex flex-grow-1">
+        <div class="o_control_panel m-0" t-ref="root">
+            <div t-if="display['top']" class="o_cp_top d-grid m-0 h-100">
+                <div class="o_cp_top_left d-flex flex-nowrap overflow-hidden w-100">
                     <t t-if="display['top-left']">
                         <t t-slot="control-panel-breadcrumb">
                             <t t-if="env.isSmall">

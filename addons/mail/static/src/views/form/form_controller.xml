@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-inherit="web.FormView" t-inherit-mode="extension">
-        <xpath expr="//div[hasclass('o_form_view_container')]" position="after">
+        <xpath expr="//Layout" position="after">
             <t t-if="mailTemplate">
                 <t t-call="{{ mailTemplate }}" />
             </t>

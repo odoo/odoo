@@ -1,6 +1,17 @@
 
 .o_form_view .o_control_panel {
+    min-height: 50px;
+    height: fit-content;
+
     .o_cp_action_menus {
         border-right: 1px solid $border-color;
+    }
+    .o_cp_top > div {
+        min-height: inherit;
+
+        .breadcrumb {
+            min-width: 0;
+            max-width: 100%;
+        }
     }
 }

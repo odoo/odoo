@@ -458,7 +458,7 @@ export class FormController extends Component {
         if (size <= SIZES.XS) {
             result.o_xxs_form_view = true;
         } else if (!this.env.inDialog && size === SIZES.XXL) {
-            result["o_xxl_form_view h-100"] = true;
+            result["o_xxl_form_view h-100 d-grid"] = true;
         }
         if (this.props.className) {
             result[this.props.className] = true;
