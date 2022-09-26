@@ -45,11 +45,6 @@ If you need to manage your meetings, you should install the CRM module.
         'web.assets_backend': [
             'calendar/static/src/scss/calendar.scss',
             'calendar/static/src/js/base_calendar.js',
-            'calendar/static/src/xml/base_calendar.xml',
-            'calendar/static/src/js/calendar_renderer.js',
-            'calendar/static/src/js/calendar_controller.js',
-            'calendar/static/src/js/calendar_model.js',
-            'calendar/static/src/js/calendar_view.js',
             'calendar/static/src/js/services/calendar_notification_service.js',
             'calendar/static/src/views/**/*',
             'calendar/static/src/components/*/*.xml',
