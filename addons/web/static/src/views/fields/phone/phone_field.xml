@@ -19,7 +19,7 @@
     </t>
 
     <t t-name="web.FormPhoneField" t-inherit="web.PhoneField" t-inherit-mode="primary">
-        <xpath expr="//div[hasclass('o_phone_content')]//input" position="after">
+        <xpath expr="//input" position="after">
             <a
                 t-if="props.value"
                 t-att-href="'tel:'+props.value"
