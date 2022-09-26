@@ -2,6 +2,7 @@
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
+import { increment } from '@mail/model/model_field_command';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component, onMounted, onPatched, onWillUnmount } = owl;
@@ -20,14 +21,6 @@ export class AttachmentViewer extends Component {
         useRefToModel({ fieldName: 'imageRef', refName: 'image' });
         useRefToModel({ fieldName: 'zoomerRef', refName: 'zoomer' });
         useRefToModel({ fieldName: 'iframeViewerPdfRef', refName: 'iframeViewerPdf' });
-        /**
-         * Tracked translate transformations on image visualisation. This is
-         * not observed for re-rendering because they are used to compute zoomer
-         * style, and this is changed directly on zoomer for performance
-         * reasons (overhead of making vdom is too significant for each mouse
-         * position changes while dragging)
-         */
-        this._translate = { x: 0, y: 0, dx: 0, dy: 0 };
         this._onClickGlobal = this._onClickGlobal.bind(this);
         onMounted(() => this._mounted());
         onPatched(() => this._patched());
@@ -78,10 +71,12 @@ export class AttachmentViewer extends Component {
      */
     _stopDragging() {
         this.attachmentViewer.update({ isDragging: false });
-        this._translate.x += this._translate.dx;
-        this._translate.y += this._translate.dy;
-        this._translate.dx = 0;
-        this._translate.dy = 0;
+        this.attachmentViewer.translate.update({
+            dx: 0,
+            dy: 0,
+            x: increment(this.attachmentViewer.translate.dx),
+            y: increment(this.attachmentViewer.translate.dy),
+        });
         this._updateZoomerStyle();
     }
 
@@ -97,16 +92,16 @@ export class AttachmentViewer extends Component {
         const attachmentViewer = this.attachmentViewer;
         const image = this.attachmentViewer.imageRef;
         const tx = image.offsetWidth * attachmentViewer.scale > this.attachmentViewer.zoomerRef.el.offsetWidth
-            ? this._translate.x + this._translate.dx
+            ? this.attachmentViewer.translate.x + this.attachmentViewer.translate.dx
             : 0;
         const ty = image.offsetHeight * attachmentViewer.scale > this.attachmentViewer.zoomerRef.el.offsetHeight
-            ? this._translate.y + this._translate.dy
+            ? this.attachmentViewer.translate.y + this.attachmentViewer.translate.dy
             : 0;
         if (tx === 0) {
-            this._translate.x = 0;
+            this.attachmentViewer.translate.update({ x: 0 });
         }
         if (ty === 0) {
-            this._translate.y = 0;
+            this.attachmentViewer.translate.update({ y: 0 });
         }
         this.attachmentViewer.zoomerRef.el.style = `transform: ` +
             `translate(${tx}px, ${ty}px)`;
@@ -276,8 +271,10 @@ export class AttachmentViewer extends Component {
         if (!this.attachmentViewer.isDragging) {
             return;
         }
-        this._translate.dx = ev.clientX - this._dragstartX;
-        this._translate.dy = ev.clientY - this._dragstartY;
+        this.attachmentViewer.translate.update({
+            dx: ev.clientX - this._dragstartX,
+            dy: ev.clientY - this._dragstartY,
+        });
         this._updateZoomerStyle();
     }
 
