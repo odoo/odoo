@@ -115,7 +115,7 @@
     <field name="model">blog.post</field>
     <field name="priority">99</field>
     <field name="arch" type="xml">
-        <tree js_class="website_pages_list" type="object" action="open_website_url">
+        <tree js_class="website_pages_list" type="object" action="open_website_url" multi_edit="1">
             <field name="active" invisible="1"/>
             <field name="name"/>
             <field name="website_url"/>
