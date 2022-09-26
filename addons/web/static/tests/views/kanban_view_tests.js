@@ -104,12 +104,8 @@ async function createRecord() {
     await click(target, "button.o-kanban-button-new");
 }
 
-async function quickCreateRecord(groupIndex, position = "top") {
-    if (position === "top") {
-        await click(getColumn(groupIndex), ".o_kanban_quick_add");
-    } else if (position === "bottom") {
-        await click(getColumn(groupIndex), ".o_kanban_quick_add_bottom");
-    }
+async function quickCreateRecord(groupIndex) {
+    await click(getColumn(groupIndex), ".o_kanban_quick_add");
 }
 
 async function editQuickCreateInput(field, value) {
@@ -11289,36 +11285,6 @@ QUnit.module("Views", (hooks) => {
             assert.hasClass(document.activeElement, "o_searchview_input");
         }
     );
-
-    QUnit.test("quick create record with bottom quick create button", async (assert) => {
-        await makeView({
-            type: "kanban",
-            resModel: "product",
-            serverData,
-            groupBy: ["name"],
-            arch: /* xml */ `
-                <kanban on_create="quick_create">
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div>
-                                <field name="display_name"/>
-                            </div>
-                        </t>
-                    </templates>
-                </kanban>
-            `,
-        });
-
-        // quick create at the bottom and verify the order
-        await quickCreateRecord(1, "bottom");
-        await editQuickCreateInput("display_name", "new product");
-        await validateRecord();
-        assert.deepEqual(getCardTexts(1), ["xmo", "new product"]);
-        // directly re-create another records at the bottom
-        await editQuickCreateInput("display_name", "new product 2");
-        await validateRecord();
-        assert.deepEqual(getCardTexts(1), ["xmo", "new product", "new product 2"]);
-    });
 
     QUnit.test("no leak of TransactionInProgress (grouped case)", async (assert) => {
         let def;
