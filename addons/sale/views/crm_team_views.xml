@@ -90,8 +90,8 @@
             <field name="company_id" position="after">
                 <label for="invoiced_target"/>
                 <div class="o_row">
-                    <field name="invoiced_target" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                    <span class="oe_read_only">/ Month</span>
+                    <field name="invoiced_target" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_inline"/>
+                    <span class="flex-grow-1">/ Month</span>
                 </div>
             </field>
         </field>

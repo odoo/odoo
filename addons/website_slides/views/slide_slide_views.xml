@@ -58,19 +58,19 @@
                                     <field name="slide_views" widget="statinfo" nolabel="1"/> Attendees
                                 </span>
                             </button>
-                            <button disabled="1" icon="fa-thumbs-up" class="oe_stat_button oe_read_only"
+                            <button disabled="1" icon="fa-thumbs-up" class="oe_stat_button"
                                 attrs="{'invisible': ['|', ('channel_type', '=', 'training'), ('likes', '=', 0)]}">
                                 <span class="o_stat_value" >
                                     <field class="ms-1" name="likes" widget="statinfo" nolabel="1"/> Likes
                                 </span>
                              </button>
-                             <button disabled="1" icon="fa-thumbs-down" class="oe_stat_button oe_read_only"
+                             <button disabled="1" icon="fa-thumbs-down" class="oe_stat_button"
                                 attrs="{'invisible': ['|', ('channel_type', '=', 'training'), ('dislikes', '=', 0)]}">
                                  <span class="o_stat_value">
                                     <field class="ms-1" name="dislikes" widget="statinfo" nolabel="1"/> Dislikes
                                  </span>
                              </button>
-                             <button disabled="1" icon="fa-comments" class="oe_stat_button oe_read_only"
+                             <button disabled="1" icon="fa-comments" class="oe_stat_button"
                                  attrs="{'invisible': ['|', ('channel_allow_comment', '!=', True), ('comments_count','=', 0)]}">
                                 <span class="o_stat_value">
                                     <field class="ms-1" name="comments_count" widget="statinfo" nolabel="1"/> Comments

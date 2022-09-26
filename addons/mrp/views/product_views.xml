@@ -18,7 +18,7 @@
                         <field name="days_to_prepare_mo" class="oe_inline"/> days
                         <button name="action_compute_bom_days" string="Compute from BoM" type="object" attrs="{'invisible':['|', ('type', '=', 'service'), ('bom_count', '=', 0)]}"
                                 help="Compute the days required to resupply all components from BoM, by either buying or manufacturing the components and/or subassemblies."
-                                class="oe_link oe_read_only pt-0"/>
+                                class="oe_link pt-0"/>
                     </div>
                 </xpath>
                 <xpath expr="//field[@name='product_variant_count']" position="after">
