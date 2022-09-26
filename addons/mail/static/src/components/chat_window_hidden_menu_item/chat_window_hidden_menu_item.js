@@ -7,24 +7,16 @@ const { Component } = owl;
 export class ChatWindowHiddenMenuItem extends Component {
 
     /**
-     * @returns {ChatWindowHeaderView}
+     * @returns {ChatWindowHiddenMenuItemView}
      */
-     get chatWindowHeaderView() {
-        return this.props.chatWindowHeaderView;
+    get chatWindowHiddenMenuItemView() {
+        return this.props.record;
     }
+
 }
 
 Object.assign(ChatWindowHiddenMenuItem, {
-    defaultProps: {
-        isLast: false,
-    },
-    props: {
-        chatWindowHeaderView: Object,
-        isLast: {
-            type: Boolean,
-            optional: true,
-        },
-    },
+    props: { record: Object },
     template: 'mail.ChatWindowHiddenMenuItem',
 });
 
