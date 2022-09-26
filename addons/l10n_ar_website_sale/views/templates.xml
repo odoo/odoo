@@ -43,7 +43,7 @@
 
     </template>
 
-    <template id="address_b2b" inherit_id="website_sale.address_b2b">
+    <template id="address" inherit_id="website_sale.address">
         <xpath expr="//input[@name='vat']/.." position="before">
             <t t-if="mode[1] == 'billing'" positon="inside">
                 <t t-if="res_company.country_id.code == 'AR'">
