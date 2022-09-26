@@ -78,11 +78,11 @@ tour.register('crm_tour', {
     },
 }, {
     trigger: ".o_lead_opportunity_form .o_statusbar_status",
-    content: _t("This bar also allows you to switch stage."),
+    content: _t("You can make your opportunity advance through your pipeline from here."),
     position: "bottom"
 }, {
     trigger: ".breadcrumb-item:not(.active):first",
-    content: _t("Click on the breadcrumb to go back to the Pipeline."),
+    content: _t("Click on the breadcrumb to go back to your Pipeline. Odoo will save all modifications as you navigate."),
     position: "bottom",
     run: function (actions) {
         actions.auto(".breadcrumb-item:not(.active):last");
