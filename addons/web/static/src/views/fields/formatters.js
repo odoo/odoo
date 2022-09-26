@@ -7,6 +7,8 @@ import { registry } from "@web/core/registry";
 import { escape, intersperse, nbsp, sprintf } from "@web/core/utils/strings";
 import { session } from "@web/session";
 
+const { markup } = owl;
+
 // -----------------------------------------------------------------------------
 // Helpers
 // -----------------------------------------------------------------------------
@@ -94,7 +96,13 @@ function humanNumber(number, options = { decimals: 0, minDigits: 1 }) {
  * @returns {string}
  */
 export function formatBoolean(value) {
-    return value ? _t("True") : _t("False");
+    return markup(`
+        <div class="o-checkbox d-inline-block me-2">
+            <input id="boolean_checkbox" type="checkbox" class="form-check-input" disabled ${
+                value ? "checked" : ""
+            }/>
+            <label for="boolean_checkbox" class="form-check-label"/>
+        </div>`);
 }
 
 /**
@@ -260,7 +268,7 @@ export function formatMany2one(value, options) {
     if (!value) {
         value = "";
     } else {
-        value = value[1];
+        value = value[1] || "";
     }
     if (options && options.escape) {
         value = encodeURIComponent(value);

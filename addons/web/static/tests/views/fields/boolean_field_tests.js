@@ -239,29 +239,6 @@ QUnit.module("Fields", (hooks) => {
             3,
             "should still have only 3 checked input"
         );
-
-        // Re-Edit the line to check the checkbox back but this time click on
-        // the checkbox directly in readonly mode.
-        // This should not toggle the checkbox and only pass the record in edition.
-        cell = target.querySelector("tr.o_data_row td:not(.o_list_record_selector)");
-        await click(cell, ".o_field_boolean");
-
-        assert.notOk(
-            cell.querySelector(".o-checkbox input").disabled,
-            "input should not have the disabled property in edit mode"
-        );
-        assert.containsN(
-            target,
-            "tbody td:not(.o_list_record_selector) .o-checkbox",
-            5,
-            "should still have 5 checkboxes"
-        );
-        assert.containsN(
-            target,
-            "tbody td:not(.o_list_record_selector) .o-checkbox input:checked",
-            3,
-            "should still have only 3 checked input"
-        );
     });
 
     QUnit.test("readonly boolean field", async function (assert) {
