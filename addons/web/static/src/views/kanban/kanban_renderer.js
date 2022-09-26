@@ -347,16 +347,15 @@ export class KanbanRenderer extends Component {
     // Edition methods
     // ------------------------------------------------------------------------
 
-    quickCreate(group, atFirstPosition = true) {
-        return this.props.list.quickCreate(group, atFirstPosition);
+    quickCreate(group) {
+        return this.props.list.quickCreate(group);
     }
 
     async validateQuickCreate(mode, group) {
         const values = group.list.quickCreateRecord.data;
-        const quickCreateRecordIndex = group.list.quickCreateRecordIndex;
         let record;
         try {
-            record = await group.validateQuickCreate(quickCreateRecordIndex);
+            record = await group.validateQuickCreate();
         } catch (e) {
             // TODO: filter RPC errors more specifically (eg, for access denied, there is no point in opening a dialog)
             if (!(e instanceof RPCError)) {
@@ -389,7 +388,7 @@ export class KanbanRenderer extends Component {
             if (mode === "edit") {
                 await this.props.openRecord(record, "edit");
             } else {
-                await this.quickCreate(group, quickCreateRecordIndex === 0);
+                await this.quickCreate(group);
             }
         }
     }
