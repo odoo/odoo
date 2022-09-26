@@ -4,7 +4,7 @@
         {
             "id": "sheet1",
             "name": "Dashboard",
-            "colNumber": 7,
+            "colNumber": 11,
             "rowNumber": 30,
             "rows": {
                 "6": {
@@ -12,35 +12,41 @@
                 },
                 "18": {
                     "size": 40
-                },
-                "31": {
-                    "size": 40
-                },
-                "32": {
-                    "size": 40
                 }
             },
             "cols": {
                 "0": {
-                    "size": 200
+                    "size": 100
                 },
                 "1": {
-                    "size": 125
+                    "size": 100
                 },
                 "2": {
-                    "size": 125
+                    "size": 100
                 },
                 "3": {
                     "size": 100
                 },
                 "4": {
-                    "size": 200
+                    "size": 75
                 },
                 "5": {
-                    "size": 125
+                    "size": 50
                 },
                 "6": {
-                    "size": 125
+                    "size": 100
+                },
+                "7": {
+                    "size": 100
+                },
+                "8": {
+                    "size": 100
+                },
+                "9": {
+                    "size": 100
+                },
+                "10": {
+                    "size": 75
                 }
             },
             "merges": [],
@@ -231,7 +237,7 @@
                     "id": "cc154c8b-08a2-4878-b245-37ea92d373c8",
                     "x": 0,
                     "y": 0,
-                    "width": 200,
+                    "width": 192,
                     "height": 120,
                     "tag": "chart",
                     "data": {
@@ -607,13 +613,20 @@
             ]
         }
     },
-    "revisionId": "37044b98-7397-41f5-9e62-a38f391fa707",
+    "revisionId": "aebd5982-19e1-4e68-8d75-6e1ef9493c95",
     "chartOdooMenusReferences": {
         "e4d80a72-4568-4b7b-9f10-439064db939e": "website_slides.website_slides_menu_root",
         "2f9b379a-0281-4399-8bc8-8847019c8ac7": "website_slides.website_slides_menu_root",
-        "122a4eb9-dc29-498c-bbbd-274252546078": "website_slides.website_slides_menu_root"
+        "122a4eb9-dc29-498c-bbbd-274252546078": "website_slides.website_slides_menu_root",
+        "cc154c8b-08a2-4878-b245-37ea92d373c8": "website_slides.website_slides_menu_report_courses",
+        "1a2f0ccc-460d-405a-aa89-a3f39a771104": "website_slides.website_slides_menu_report_contents",
+        "bbd06704-ff49-496b-90dc-e1616f65d613": "website_slides.website_slides_menu_report_reviews",
+        "1f39216f-cebd-4884-8cfb-27d94e5c2e22": "website_slides.website_slides_menu_report_attendees",
+        "165a7593-a6b6-4c5d-8758-d9b09572fa30": "website_sale_slides.website_slides_menu_report_revenues"
     },
-    "odooVersion": 3,
+    "odooVersion": 4,
+    "lists": {},
+    "listNextId": 1,
     "pivots": {
         "4": {
             "colGroupBys": [],
@@ -787,14 +800,12 @@
         }
     },
     "pivotNextId": 12,
-    "lists": {},
-    "listNextId": 1,
     "globalFilters": [
         {
             "id": "46b74887-ff98-4c97-9629-4a5a14084321",
             "type": "date",
             "label": "Period",
-            "defaultValue": "last_month",
+            "defaultValue": "last_three_months",
             "rangeType": "relative",
             "defaultsToCurrentPeriod": false,
             "pivotFields": {
