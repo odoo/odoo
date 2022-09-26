@@ -224,6 +224,11 @@ registerModel({
             isCausal: true,
         }),
         /**
+         * Reference of the IFRAME node when the attachment is a PDF.
+         */
+        iframeViewerPdfRef: attr(),
+        imageRef: attr(),
+        /**
          * Style of the image (scale + rotation).
          */
         imageStyle: attr({
@@ -268,5 +273,10 @@ registerModel({
         scale: attr({
             default: 1,
         }),
+        /**
+         * Reference of the zoomer node. Useful to apply translate
+         * transformation on image visualisation.
+         */
+        zoomerRef: attr(),
     },
 });
