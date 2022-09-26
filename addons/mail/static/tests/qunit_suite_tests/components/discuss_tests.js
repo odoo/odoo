@@ -1811,14 +1811,14 @@ QUnit.test('restore thread scroll position', async function (assert) {
         "should have scrolled to bottom of channel 1 initially"
     );
 
-    await afterNextRender(() => afterEvent({
+    await afterEvent({
         eventName: 'o-component-message-list-scrolled',
         func: () => document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`).scrollTop = 0,
         message: "should wait until channel 1 changed its scroll position to top",
         predicate: ({ thread }) => {
             return thread && thread.channel && thread.channel.id === mailChannelId1;
         },
-    }));
+    });
     assert.strictEqual(
         document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`).scrollTop,
         0,
