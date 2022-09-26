@@ -381,6 +381,9 @@ registerModel({
         scale: attr({
             default: 1,
         }),
+        scrollZoomStep: attr({
+            default: 0.1,
+        }),
         translate: one('AttachmentViewer.Translate', {
             default: {},
             inverse: 'owner',
