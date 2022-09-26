@@ -1,76 +1,56 @@
-odoo.define('hr_work_entry_contract.work_entries_calendar', function(require) {
-    'use strict';
+/** @odoo-module **/
 
-    var core = require('web.core');
-    var WorkEntryControllerMixin = require('hr_work_entry_contract.WorkEntryControllerMixin');
-    var CalendarController = require("web.CalendarController");
-    var CalendarModel = require('web.CalendarModel');
-    var CalendarRenderer = require('web.CalendarRenderer');
-    var CalendarView = require('web.CalendarView');
-    var viewRegistry = require('web.view_registry');
+import { registry } from "@web/core/registry";
+import { CalendarController } from '@web/views/calendar/calendar_controller';
+import { CalendarModel } from "@web/views/calendar/calendar_model";
+import { calendarView } from "@web/views/calendar/calendar_view";
+import { useWorkEntry } from "@hr_work_entry_contract/js/work_entries_controller_mixin_owl";
 
-    var _t = core._t;
+const { DateTime } = luxon;
+export class WorkEntryCalendarController extends CalendarController {
+    setup() {
+        super.setup(...arguments);
+        const { onRegenerateWorkEntries } = useWorkEntry();
+        this.onRegenerateWorkEntries = onRegenerateWorkEntries;
+    }
+}
 
+export class WorkEntryCalendarModel extends CalendarModel {
+    setup() {
+        super.setup(...arguments);
+        const { generateWorkEntries } = useWorkEntry();
+        this.generateWorkEntries = generateWorkEntries;
+    }
+    computeRange() {
+        const { scale, date } = this.meta;
+        const start = date.startOf(scale);
+        const end = date.endOf(scale);
+        return { start, end };
+    }
 
-    var WorkEntryCalendarController = CalendarController.extend(WorkEntryControllerMixin, {
-        events: _.extend({}, WorkEntryControllerMixin.events, CalendarController.prototype.events),
+    makeFilterAll() {
+        return {
+            ...super.makeFilterAll(...arguments),
+            label: this.env._t("Everybody's work entries"),
+            active: true
+        };
+    }
 
-        // Returns the records from the model
-        _fetchRecords: function () {
-            var self = this;
-            var records = _.filter(this.model.data.data, function (data) {
-                // Filter records that are not inside the current month
-                // (because in calendar view some days of prev. and next month are visible)
-                return data.record.date_start.isBefore(self.lastDay) && data.record.date_stop.isAfter(self.firstDay);
-            });
-            return _.pluck(records, 'record');
-        },
-        _fetchFirstDay: function () {
-            return this.model.data.target_date.clone().startOf('month');
-        },
-        _fetchLastDay: function () {
-            return this.model.data.target_date.clone().endOf('month');
-        },
-        _displayWarning: function ($warning) {
-            this.$('.o_calendar_container').before($warning);
-        },
-    });
-
-    var WorkEntryCalendarModel = CalendarModel.extend({
-         /**
-          * Display everybody's work entries if no employee filter exists
-          * @private
-          * @override
-          * @param {any} filter
-          * @returns {Deferred}
-         */
-        _loadFilter: function (filter) {
-            return this._super.apply(this, arguments).then(function () {
-                var filters = filter.filters;
-                var all_filter = filters[filters.length - 1];
-
-                if (all_filter) {
-                    all_filter.label = _t("Everybody's work entries");
-
-                    if (filter.write_model && filter.filters.length <= 1 && all_filter.active === undefined) {
-                        filter.all = true;
-                        all_filter.active = true;
-                    }
-                }
-
-            });
+    async updateData(data) {
+        const { start, end } = this.computeRange(data);
+        const shouldGenerateWorkEntries = start <= DateTime.now().plus({months: 10});
+        if (shouldGenerateWorkEntries) {
+            await this.generateWorkEntries(start, end);
         }
-    });
+        await super.updateData(data);
+    }
+}
 
-    var WorkEntryCalendarView = CalendarView.extend({
-        config: _.extend({}, CalendarView.prototype.config, {
-            Controller: WorkEntryCalendarController,
-            Model: WorkEntryCalendarModel,
-            Renderer: CalendarRenderer,
-        }),
-    });
+export const WorkEntryCalendarView = {
+    ...calendarView,
+    Controller: WorkEntryCalendarController,
+    Model: WorkEntryCalendarModel,
+    buttonTemplate: "hr_work_entry_contract.calendar.controlButtons"
+}
 
-    viewRegistry.add('work_entries_calendar', WorkEntryCalendarView);
-
-    return WorkEntryCalendarController;
-});
+registry.category("views").add("work_entries_calendar", WorkEntryCalendarView);
