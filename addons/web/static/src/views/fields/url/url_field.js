@@ -45,4 +45,8 @@ UrlField.extractProps = ({ attrs }) => {
     };
 };
 
+class FormUrlField extends UrlField {}
+FormUrlField.template = "web.FormUrlField";
+
 registry.category("fields").add("url", UrlField);
+registry.category("fields").add("form.url", FormUrlField);
