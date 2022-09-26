@@ -1069,4 +1069,45 @@ QUnit.module("ActionManager", (hooks) => {
             menu_id: 1,
         });
     });
+
+    QUnit.test(
+        "'no content helper' is markuped when action is retrieved from session storage",
+        async function (assert) {
+            // for the no content helper to show, we empty the data
+            serverData.models.partner.records = [];
+            serverData.actions[4].help = "<p>Some nice help</p>";
+
+            patchWithCleanup(browser.sessionStorage, {
+                getItem(k) {
+                    assert.step(`getItem session ${k}`);
+                    return this._super(k);
+                },
+            });
+
+            const webClient = await createWebClient({ serverData });
+
+            await doAction(webClient, 4);
+            assert.containsOnce(target, ".o_kanban_view", "should display a kanban view");
+
+            assert.strictEqual(
+                "Some nice help",
+                target.querySelector(".o_nocontent_help").innerText
+            );
+
+            await loadState(webClient, {
+                model: "partner",
+                view_type: "list",
+            });
+
+            assert.containsNone(target, ".o_kanban_view", "should no longer display a kanban view");
+            assert.containsOnce(target, ".o_list_view", "should display a list view");
+
+            assert.strictEqual(
+                "Some nice help",
+                target.querySelector(".o_nocontent_help").innerText
+            );
+
+            assert.verifySteps(["getItem session current_action"]);
+        }
+    );
 });
