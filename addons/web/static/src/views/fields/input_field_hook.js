@@ -17,7 +17,7 @@ const { useComponent, useEffect, useRef, useEnv } = owl;
  */
 export function useInputField(params) {
     const env = useEnv();
-    const inputRef = useRef(params.refName || "input");
+    const inputRef = params.ref || useRef(params.refName || "input");
     const component = useComponent();
 
     /*
