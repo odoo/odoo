@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import re
+import requests
+
+from werkzeug.urls import url_parse
 
 from odoo import models
 
@@ -25,6 +29,7 @@ class Assets(models.AbstractModel):
                 word hook). If a key is already in the file's map, its value is
                 overridden.
         """
+        IrAttachment = self.env['ir.attachment']
         if 'color-palettes-name' in values:
             self.reset_asset('/website/static/src/scss/options/colors/user_color_palette.scss', 'web.assets_common')
             self.reset_asset('/website/static/src/scss/options/colors/user_gray_color_palette.scss', 'web.assets_common')
@@ -42,6 +47,76 @@ class Assets(models.AbstractModel):
                 'footer-gradient': 'null',
                 'copyright-gradient': 'null',
             })
+
+        delete_attachment_id = values.pop('delete-font-attachment-id', None)
+        if delete_attachment_id:
+            delete_attachment_id = int(delete_attachment_id)
+            IrAttachment.search([
+                '|', ('id', '=', delete_attachment_id),
+                ('original_id', '=', delete_attachment_id),
+                ('name', 'like', '%google-font%')
+            ]).unlink()
+
+        google_local_fonts = values.get('google-local-fonts')
+        if google_local_fonts and google_local_fonts != 'null':
+            # "('font_x': 45, 'font_y': '')" -> {'font_x': '45', 'font_y': ''}
+            google_local_fonts = dict(re.findall(r"'([^']+)': '?(\d*)", google_local_fonts))
+            # Google is serving different font format (woff, woff2, ttf, eot..)
+            # based on the user agent. We need to get the woff2 as this is
+            # supported by all the browers we support.
+            headers_woff2 = {
+                'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.41 Safari/537.36',
+            }
+            for font_name in google_local_fonts:
+                if google_local_fonts[font_name]:
+                    google_local_fonts[font_name] = int(google_local_fonts[font_name])
+                else:
+                    font_family_attachments = IrAttachment
+                    font_content = requests.get(
+                        f'https://fonts.googleapis.com/css?family={font_name}&display=swap',
+                        timeout=5, headers=headers_woff2,
+                    ).content.decode()
+
+                    def fetch_google_font(src):
+                        statement = src.group()
+                        url, font_format = re.match(r'src: url\(([^\)]+)\) (.+)', statement).groups()
+                        req = requests.get(url, timeout=5, headers=headers_woff2)
+                        # https://fonts.gstatic.com/s/modak/v18/EJRYQgs1XtIEskMB-hRp7w.woff2
+                        # -> s-modak-v18-EJRYQgs1XtIEskMB-hRp7w.woff2
+                        name = url_parse(url).path.lstrip('/').replace('/', '-')
+                        attachment = IrAttachment.create({
+                            'name': f'google-font-{name}',
+                            'type': 'binary',
+                            'datas': base64.b64encode(req.content),
+                            'public': True,
+                        })
+                        nonlocal font_family_attachments
+                        font_family_attachments += attachment
+                        return 'src: url(/web/content/%s/%s) %s' % (
+                            attachment.id,
+                            name,
+                            font_format,
+                        )
+
+                    font_content = re.sub(r'src: url\(.+\)', fetch_google_font, font_content)
+
+                    attach_font = IrAttachment.create({
+                        'name': f'{font_name} (google-font)',
+                        'type': 'binary',
+                        'datas': base64.encodebytes(font_content.encode()),
+                        'mimetype': 'text/css',
+                        'public': True,
+                    })
+                    google_local_fonts[font_name] = attach_font.id
+                    # That field is meant to keep track of the original
+                    # image attachment when an image is being modified (by the
+                    # website builder for instance). It makes sense to use it
+                    # here to link font family attachment to the main font
+                    # attachment. It will ease the unlink later.
+                    font_family_attachments.original_id = attach_font.id
+
+            # {'font_x': 45, 'font_y': 55} -> "('font_x': 45, 'font_y': 55)"
+            values['google-local-fonts'] = str(google_local_fonts).replace('{', '(').replace('}', ')')
 
         custom_url = self.make_custom_asset_file_url(url, 'web.assets_common')
         updatedFileContent = self.get_asset_content(custom_url) or self.get_asset_content(url)
