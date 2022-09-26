@@ -157,7 +157,7 @@ export function makeDeferred() {
     return new Deferred();
 }
 
-function findElement(el, selector) {
+export function findElement(el, selector) {
     let target = el;
     if (selector) {
         const els = el.querySelectorAll(selector);

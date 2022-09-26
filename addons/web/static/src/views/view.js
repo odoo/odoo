@@ -12,7 +12,7 @@ import { WithSearch } from "@web/search/with_search/with_search";
 import { OnboardingBanner } from "@web/views/onboarding_banner";
 import { useActionLinks } from "@web/views/view_hook";
 
-const { Component, markRaw, onWillUpdateProps, onWillStart, toRaw, useSubEnv } = owl;
+const { Component, markRaw, onWillUpdateProps, onWillStart, toRaw, useSubEnv, reactive } = owl;
 const viewRegistry = registry.category("views");
 
 /** @typedef {Object} Config
@@ -41,18 +41,21 @@ export function getDefaultConfig() {
         actionId: false,
         actionType: false,
         actionFlags: {},
-        breadcrumbs: [
+        breadcrumbs: reactive([
             {
                 get name() {
                     return displayName;
                 },
             },
-        ],
+        ]),
         getDisplayName: () => displayName,
         historyBack: () => {},
         pagerProps: {},
         setDisplayName: (newDisplayName) => {
             displayName = newDisplayName;
+            // This is a hack to force the reactivity when a new displayName is set
+            config.breadcrumbs.push(undefined);
+            config.breadcrumbs.pop();
         },
         viewSwitcherEntries: [],
         views: [],

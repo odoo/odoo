@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.CalendarYearPopover" owl="1">
+        <t t-if="env.isSmall">
+            <Dialog title="dialogTitle">
+                <t t-call="web.CalendarYearPopover.body" />
+                <t t-set-slot="footer">
+                    <t t-call="web.CalendarYearPopover.footer" />
+                </t>
+            </Dialog>
+        </t>
+        <t t-else="">
+            <t t-call="web.CalendarYearPopover.popover" />
+        </t>
+    </t>
+
+    <t t-name="web.CalendarYearPopover.popover" owl="1">
+        <div class="position-absolute" style="top: 0; right: 0.5rem;">
+            <span class="o_cw_popover_close" t-on-click.stop="() => props.close()">
+                <i class="fa fa-close small" />
+            </span>
+        </div>
+        <div class="o_cw_body">
+            <t t-call="web.CalendarYearPopover.body" />
+        </div>
+        <div t-if="props.model.canCreate" class="mt-2">
+            <t t-call="web.CalendarYearPopover.footer" />
+        </div>
+    </t>
+
+    <t t-name="web.CalendarYearPopover.body" owl="1">
+        <t t-foreach="recordGroups" t-as="recordGroup" t-key="recordGroup.title">
+            <div class="fw-bold mt-2" t-esc="recordGroup.title" />
+            <t t-foreach="recordGroup.records" t-as="record" t-key="record.id">
+                <t t-call="web.CalendarYearPopover.record" />
+            </t>
+        </t>
+    </t>
+
+    <t t-name="web.CalendarYearPopover.footer" owl="1">
+        <t t-if="props.model.canCreate">
+            <a href="#" class="btn-link o_cw_popover_create" t-on-click.prevent="onCreateButtonClick">
+                <i class="fa fa-plus" />
+                Create
+            </a>
+        </t>
+        <t t-else="">
+            <button class="btn btn-primary o-default-button" t-on-click="props.close">
+                <t>Ok</t>
+            </button>
+        </t>
+    </t>
+
+    <t t-name="web.CalendarYearPopover.record" owl="1">
+        <a
+            href="#"
+            t-on-click.prevent="() => this.onRecordClick(record)"
+            t-attf-class="o_cw_popover_link btn-link d-block"
+            t-att-data-id="record.id"
+            t-att-data-title="record.title"
+        >
+            <t t-if="record.startHour"><t t-esc="record.startHour" /> </t>
+            <t t-esc="record.title"/>
+        </a>
+    </t>
+
+</templates>

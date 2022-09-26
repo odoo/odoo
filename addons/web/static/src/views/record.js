@@ -7,9 +7,11 @@ const { Component, xml, onWillStart, onWillUpdateProps } = owl;
 
 class _Record extends Component {
     setup() {
-        const activeFields = Object.fromEntries(
-            this.props.info.fieldNames.map((f) => [f, { attrs: {}, options: {}, domain: "[]" }])
-        );
+        const activeFields =
+            this.props.info.activeFields ||
+            Object.fromEntries(
+                this.props.info.fieldNames.map((f) => [f, { attrs: {}, options: {}, domain: "[]" }])
+            );
 
         this.model = useModel(RelationalModel, {
             resId: this.props.info.resId,
@@ -50,4 +52,13 @@ export class Record extends Component {
 }
 Record.template = xml`<_Record fields="fields" slots="props.slots" info="props" />`;
 Record.components = { _Record };
-Record.props = ["slots", "resModel", "fieldNames", "fields?", "resId?", "mode?", "initialValues?"];
+Record.props = [
+    "slots",
+    "resModel",
+    "fieldNames?",
+    "activeFields?",
+    "fields?",
+    "resId?",
+    "mode?",
+    "initialValues?",
+];

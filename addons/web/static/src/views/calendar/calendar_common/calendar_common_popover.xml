@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.CalendarCommonPopover" owl="1">
+        <t t-if="env.isSmall">
+            <Dialog title="props.record.title">
+                <t t-call="web.CalendarCommonPopover.body" />
+                <t t-set-slot="footer">
+                    <t t-call="web.CalendarCommonPopover.footer" />
+                </t>
+            </Dialog>
+        </t>
+        <t t-else="">
+            <t t-call="web.CalendarCommonPopover.popover" />
+        </t>
+    </t>
+
+    <t t-name="web.CalendarCommonPopover.popover" owl="1">
+        <div class="card-header d-flex justify-content-between py-2 pe-2">
+            <h4 class="p-0 pt-1">
+                <span class="popover-header border-0" t-esc="props.record.title" />
+            </h4>
+            <span class="o_cw_popover_close ms-4 mt-2 me-2" t-on-click.stop="() => props.close()">
+                <i class="fa fa-close" />
+            </span>
+        </div>
+        <div class="o_cw_body">
+            <t t-call="web.CalendarCommonPopover.body" />
+            <div class="card-footer border-top" t-att-class="{ 'o_footer_shrink': isEventEditable and isEventDeletable }">
+                <t t-call="web.CalendarCommonPopover.footer" />
+            </div>
+        </div>
+    </t>
+
+    <t t-name="web.CalendarCommonPopover.body" owl="1">
+        <ul class="list-group list-group-flush">
+            <li t-if="date" class="list-group-item">
+                <i class="fa fa-fw fa-calendar-o" />
+                <b class="text-capitalize" t-esc="date" /> <small t-if="dateDuration"><b t-esc="`(${dateDuration})`" /></small>
+            </li>
+            <li t-if="time" class="list-group-item">
+                <i class="fa fa-fw fa-clock-o" />
+                <b t-esc="time" /> <small t-if="timeDuration"><b t-esc="`(${timeDuration})`" /></small>
+            </li>
+        </ul>
+        <ul class="list-group list-group-flush o_cw_popover_fields_secondary">
+            <Record resModel="props.model.resModel" resId="props.record.id" fields="props.model.fields" activeFields="props.model.popoverFields" mode="'readonly'" initialValues="props.record.rawRecord" t-slot-scope="slot">
+                <t t-foreach="slot.record.fieldNames" t-as="fieldName" t-key="fieldName">
+                    <t t-if="!slot.record.isInvisible(fieldName)">
+                        <t t-set="fieldInfo" t-value="props.model.popoverFields[fieldName]" />
+                        <li class="list-group-item flex-shrink-0 d-flex flex-wrap align-items-center" t-att-class="fieldInfo.rawAttrs.class">
+                            <strong class="me-2">
+                                <t t-if="fieldInfo.options.icon">
+                                    <b>
+                                        <i t-att-class="fieldInfo.options.icon" />
+                                    </b>
+                                </t>
+                                <t t-else="">
+                                    <t t-esc="fieldInfo.string" />
+                                    :
+                                </t>
+                            </strong>
+                            <div class="flex-grow-1">
+                                <Field name="fieldName" record="slot.record" fieldInfo="fieldInfo" />
+                            </div>
+                        </li>
+                    </t>
+                </t>
+            </Record>
+        </ul>
+    </t>
+
+    <t t-name="web.CalendarCommonPopover.footer" owl="1">
+        <t t-if="isEventEditable">
+            <a href="#" class="btn btn-primary o_cw_popover_edit" t-on-click="onEditEvent">Edit</a>
+        </t>
+        <t t-if="isEventDeletable">
+            <a href="#" class="btn btn-secondary o_cw_popover_delete ms-2" t-on-click="onDeleteEvent">Delete</a>
+        </t>
+    </t>
+
+</templates>

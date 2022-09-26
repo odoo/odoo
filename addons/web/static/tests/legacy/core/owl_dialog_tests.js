@@ -3,6 +3,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
 
     const LegacyDialog = require('web.Dialog');
     const FormView = require('web.FormView');
+    const CalendarView = require('web.CalendarView');
     const makeTestEnvironment = require('web.test_env');
     const Dialog = require('web.OwlDialog');
     const testUtils = require('web.test_utils');
@@ -418,8 +419,10 @@ odoo.define('web.owl_dialog_tests', function (require) {
         });
 
         QUnit.test("remove tabindex on inactive dialog", async (assert) => {
+            registry.category("views").remove("calendar"); // remove new calendar from registry
             registry.category("views").remove("form"); // remove new form from registry
             legacyViewRegistry.add("form", FormView); // add legacy form -> will be wrapped and added to new registry
+            legacyViewRegistry.add("calendar", CalendarView); // add legacy calendar -> will be wrapped and added to new registry
 
             const serverData = {
                 actions: {

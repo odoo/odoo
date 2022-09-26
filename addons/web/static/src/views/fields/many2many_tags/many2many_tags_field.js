@@ -354,3 +354,6 @@ Many2ManyTagsFieldColorEditable.extractProps = (params) => {
 };
 
 registry.category("fields").add("form.many2many_tags", Many2ManyTagsFieldColorEditable);
+
+registry.category("fields").add("calendar.one2many", Many2ManyTagsField);
+registry.category("fields").add("calendar.many2many", Many2ManyTagsField);

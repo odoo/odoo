@@ -39,8 +39,8 @@
                     </div>
                 </t>
 
-                <div class="o_cp_pager" role="search">
-                    <Pager t-if="pagerProps and pagerProps.total > 0" t-props="pagerProps"/>
+                <div t-if="pagerProps and pagerProps.total > 0" class="o_cp_pager" role="search">
+                    <Pager t-props="pagerProps"/>
                 </div>
 
                 <t t-if="env.config.viewSwitcherEntries.length > 1">
@@ -135,8 +135,8 @@
                     <t t-slot="control-panel-bottom-left"/>
                 </div>
                 <div t-if="display['bottom-right']" class="o_cp_bottom_right">
-                    <div class="o_cp_pager" role="search">
-                        <Pager t-if="pagerProps and pagerProps.total > 0" t-props="pagerProps"/>
+                    <div t-if="pagerProps and pagerProps.total > 0" class="o_cp_pager" role="search">
+                        <Pager t-props="pagerProps"/>
                     </div>
 
                     <t t-if="env.config.viewSwitcherEntries.length > 1">
@@ -172,8 +172,8 @@
 
     <t t-name="web.Breadcrumbs" owl="1">
         <ol class="breadcrumb">
-            <t t-foreach="env.config.breadcrumbs" t-as="breadcrumb" t-key="breadcrumb.jsId">
-                <t t-set="isPenultimate" t-value="breadcrumb_index === env.config.breadcrumbs.length - 2"/>
+            <t t-foreach="breadcrumbs" t-as="breadcrumb" t-key="breadcrumb.jsId">
+                <t t-set="isPenultimate" t-value="breadcrumb_index === breadcrumbs.length - 2"/>
                 <li t-if="!breadcrumb_last" class="breadcrumb-item" t-att-data-hotkey="isPenultimate and 'b'" t-att-class="{ o_back_button: isPenultimate}" t-on-click.prevent="() => this.onBreadcrumbClicked(breadcrumb.jsId)">
                     <a href="#">
                         <t t-if="breadcrumb.name" t-esc="breadcrumb.name"/>
@@ -190,7 +190,6 @@
 
     <t t-name="web.Breadcrumbs.Small" owl="1">
         <ol class="breadcrumb">
-            <t t-set="breadcrumbs" t-value="env.config.breadcrumbs" />
             <t t-if="breadcrumbs.length > 1">
                 <t t-set="breadcrumb" t-value="breadcrumbs[breadcrumbs.length - 2]" />
                 <li class="breadcrumb-item o_back_button btn btn-secondary"
