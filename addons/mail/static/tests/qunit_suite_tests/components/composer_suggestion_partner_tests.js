@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { start, startServer } from '@mail/../tests/helpers/test_utils';
+import { nextAnimationFrame, start, startServer } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -16,16 +16,19 @@ QUnit.test('partner mention suggestion displayed', async function (assert) {
         im_status: 'online',
         name: 'Demo User',
     });
-    const { insertText, openDiscuss } = await start({
+    const { env, insertText, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: mailChannelId1,
             },
         },
         hasDiscuss: true,
+        hasTimeControl: true,
     });
     await openDiscuss();
     await insertText('.o_ComposerTextInput_textarea', "@demo");
+    await env.testUtils.advanceTime(300);
+    await nextAnimationFrame();
     assert.containsOnce(
         document.body,
         `.o_ComposerSuggestion`,
@@ -43,16 +46,19 @@ QUnit.test('partner mention suggestion correct data', async function (assert) {
         im_status: 'online',
         name: 'Demo User',
     });
-    const { insertText, openDiscuss } = await start({
+    const { env, insertText, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: mailChannelId1,
             },
         },
         hasDiscuss: true,
+        hasTimeControl: true,
     });
     await openDiscuss();
     await insertText('.o_ComposerTextInput_textarea', "@demo");
+    await env.testUtils.advanceTime(300);
+    await nextAnimationFrame();
     assert.containsOnce(
         document.querySelector('.o_ComposerSuggestion'),
         '.o_PartnerImStatusIcon',
@@ -90,16 +96,19 @@ QUnit.test('partner mention suggestion active', async function (assert) {
         im_status: 'online',
         name: 'Demo User',
     });
-    const { insertText, openDiscuss } = await start({
+    const { env, insertText, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: mailChannelId1,
             },
         },
         hasDiscuss: true,
+        hasTimeControl: true,
     });
     await openDiscuss();
     await insertText('.o_ComposerTextInput_textarea', "@demo");
+    await env.testUtils.advanceTime(300);
+    await nextAnimationFrame();
     assert.hasClass(
         document.querySelector('.o_ComposerSuggestion'),
         'active',
