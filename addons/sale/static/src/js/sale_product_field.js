@@ -9,8 +9,21 @@ export class SaleOrderLineProductField extends Many2OneField {
         super.setup();
         const { update } = this;
         this.update = async (value) => {
-            const record = await update(value);
-            if (!this.props.value || this.props.value[0] !== record[this.props.name][0]) {
+            await update(value);
+            let newValue = false;
+            // NB: quick creation doesn't go through here, but through quickCreate
+            // below
+            if (value) {
+                if (Array.isArray(value[0]) && this.props.value != value[0]) {
+                    // product (existing)
+                    newValue = true;
+                } else {
+                    // new product (Create & edit)
+                    // value[0] is a dict of creation values
+                    newValue = true;
+                }
+            }
+            if (newValue) {
                 if (this.props.relation === 'product.template') {
                     this._onProductTemplateUpdate();
                 } else {
@@ -18,6 +31,20 @@ export class SaleOrderLineProductField extends Many2OneField {
                 }
             }
         };
+
+        if (this.props.canQuickCreate) {
+            // HACK to make quick creation also open
+            //      configurators if needed
+            this.quickCreate = async (name, params = {}) => {
+                await this.props.record.update({ [this.props.name]: [false, name]});
+
+                if (this.props.relation === 'product.template') {
+                    this._onProductTemplateUpdate();
+                } else {
+                    this._onProductUpdate();
+                }
+            };
+        }
     }
 
     get hasConfigurationButton() {
