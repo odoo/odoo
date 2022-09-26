@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<templates>
-    <t t-extend="Calendar.attendee.status.popover">
-         <t t-jquery=".o_cw_popover_edit" t-operation="after">
-            <a t-if="widget.isGEventSyncedAndArchivable() and widget.isEventDetailsVisible()" href="#" class="btn btn-secondary o_cw_popover_archive_g">Delete</a>
-         </t>
-    </t>
-</templates>
