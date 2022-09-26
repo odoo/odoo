@@ -3,43 +3,21 @@
 import { registry } from '@web/core/registry';
 import { Many2OneField } from '@web/views/fields/many2one/many2one_field';
 
-const { onWillUpdateProps } = owl;
-
-
 export class SaleOrderLineProductField extends Many2OneField {
 
     setup() {
         super.setup();
-        // TODO how to trigger the _onProductUpdate only once
-        //      either when both columns are shown, or when only one is...
-        //      product_template_id widget should only trigger _onProductUpdate
-        //      if product_id widget isn't instantiated...
-
-        onWillUpdateProps(async (nextProps) => {
-            if (nextProps.record.mode === 'edit' && nextProps.value) {
-                if (
-                    !this.props.value ||
-                    this.props.value[0] != nextProps.value[0]
-                ) {
-                    // Field was updated if line was open in edit mode,
-                    //      field is not emptied,
-                    //      new value is different than existing value.
-
-                    if (this.props.relation == 'product.template') {
-                        this._onProductTemplateUpdate();
-                    } else {
-                        this._onProductUpdate();
-                    }
-                } else if (this.productConfigured) {
-                    // FIXME SAD productConfigured = temp solution
-                    //      we need a safe way to link configurators logic
-                    //      even if both template & variant columns are enabled
-                    //      jQuery ???
-                    this.productConfigured = false;
+        const { update } = this;
+        this.update = async (value) => {
+            const record = await update(value);
+            if (!this.props.value || this.props.value[0] !== record[this.props.name][0]) {
+                if (this.props.relation === 'product.template') {
+                    this._onProductTemplateUpdate();
+                } else {
                     this._onProductUpdate();
                 }
             }
-        });
+        };
     }
 
     get hasConfigurationButton() {

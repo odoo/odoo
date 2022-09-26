@@ -35,13 +35,13 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
         );
         if(result && result.product_id) {
             if (this.props.record.data.product_id != result.product_id.id) {
-                this.props.record.update({
+                await this.props.record.update({
                     product_id: [result.product_id, 'whatever'],
                 });
                 if (result.has_optional_products) {
                     this._openProductConfigurator('options');
                 } else {
-                    this.productConfigured = true;
+                    this._onProductUpdate();
                 }
             }
         } else {
@@ -147,10 +147,8 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
                 ...optionalProducts
             ] = await optionalProductsModal.getAndCreateSelectedProducts();
 
-            this.productConfigured = true;
-            await this.props.record.update(
-                this._convertConfiguratorDataToUpdateData(mainProduct)
-            );
+            await this.props.record.update(this._convertConfiguratorDataToUpdateData(mainProduct));
+            this._onProductUpdate();
             const optionalProductLinesCreationContext = this._convertConfiguratorDataToLinesCreationContext(optionalProducts);
             for (let optionalProductLineCreationContext of optionalProductLinesCreationContext) {
                 const line = await saleOrderRecord.data.order_line.addNew({
