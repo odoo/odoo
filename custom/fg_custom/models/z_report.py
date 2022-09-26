@@ -45,8 +45,9 @@ class FgZReport(models.AbstractModel):
             return_order_ids |= session_id.order_ids.filtered(lambda x: x.is_refunded)
             if end_order_id.pos_si_trans_reference and start_order_id.pos_si_trans_reference:
                 start_end_order_list.append(start_order_id.pos_si_trans_reference + ' - ' + end_order_id.pos_si_trans_reference)
-            if end_order_id.pos_reference and start_order_id.pos_reference:
-                receipt_start_end_order_list.append(start_order_id.pos_reference.split(' ')[1] + ' - ' + end_order_id.pos_reference.split(' ')[1])
+            # if end_order_id.pos_reference and start_order_id.pos_reference:
+            #     receipt_start_end_order_list.append(start_order_id.pos_reference.split(' ')[1] + ' - ' + end_order_id.pos_reference.split(' ')[1])
+                receipt_start_end_order_list.append(start_order_id.pos_si_trans_reference + ' - ' + end_order_id.pos_si_trans_reference)
             for order in session_id.order_ids.filtered(lambda x: not x.is_refunded and x.amount_total > 0):
                 total_qty += 1
                 is_total_discount_qty = False
@@ -93,6 +94,13 @@ class FgZReport(models.AbstractModel):
                         transactions_history[order.x_ext_source].update({'count': count, 'total': total})
                     else:
                         transactions_history[order.x_ext_source] = {'count': 1, 'total': order.amount_total}
+                else:
+                    if 'Retail' in transactions_history:
+                        count = transactions_history['Retail'].get('count') + 1
+                        total = transactions_history['Retail'].get('total') + order.amount_total
+                        transactions_history['Retail'].update({'count': count, 'total': total})
+                    else:
+                        transactions_history['Retail'] = {'count': 1, 'total': order.amount_total}
                 if order.payment_ids:
                     for pay in order.payment_ids:
                         if pay.payment_method_id.name in tender_history:
@@ -109,7 +117,8 @@ class FgZReport(models.AbstractModel):
             session_stop_at = timezone('UTC').localize(session_id.stop_at).astimezone(timezone(tz_name))
             print('-report----localized_dt, session_start_at-', localized_dt, session_start_at)
             cash_register_balance_start += session_id.cash_register_balance_start
-            cash_register_balance_end_real += session_id.cash_register_balance_end_real
+            # cash_register_balance_end_real += session_id.cash_register_balance_end_real
+            cash_register_balance_end_real += session_id.total_payments_amount
             open_cashier_list.append([session_id.user_id.name, session_start_at.strftime('%m/%d/%Y %H:%M:%S')])
             close_cashier_list.append([session_id.write_uid.name, session_stop_at.strftime('%m/%d/%Y %H:%M:%S')])
         data = {'session_name': ', '.join(s.name for s in session_ids), 'open_cashier_list': open_cashier_list,
