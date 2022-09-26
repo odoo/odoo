@@ -543,6 +543,13 @@ class Website(models.Model):
                 template.send_mail(sale_order.id, email_values=dict(email_to=sale_order.partner_id.email))
                 sale_order.cart_recovery_email_sent = True
 
+    def _display_partner_b2b_fields(self):
+        """ This method is to be inherited by localizations and return
+        True if localization should always displayed b2b fields """
+        self.ensure_one()
+
+        return self.is_view_active('website_sale.address_b2b')
+
 class WebsiteSaleExtraField(models.Model):
     _name = 'website.sale.extra.field'
     _description = 'E-Commerce Extra Info Shown on product page'
