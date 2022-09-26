@@ -17,7 +17,6 @@ patch(MockServer.prototype, 'bus', {
                 this._super(message);
             },
         });
-        this.pendingLongpollingPromise = null;
         this.notificationsToBeResolved = [];
         this.lastBusNotificationId = 0;
     },

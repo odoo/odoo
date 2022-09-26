@@ -1,44 +1,14 @@
 /** @odoo-module **/
 
 // ensure mail override is applied first.
-import '@mail/../tests/helpers/mock_server';
+import '@mail/../tests/helpers/mock_server/models/res_users';
 
 import { patch } from '@web/core/utils/patch';
 import { MockServer } from '@web/../tests/helpers/mock_server';
 
 import { datetime_to_str } from 'web.time';
 
-patch(MockServer.prototype, 'calendar', {
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    async _performRPC(route, args) {
-        // mail.activity methods
-        if (args.model === 'mail.activity' && args.method === 'action_create_calendar_event') {
-            return {
-                type: 'ir.actions.act_window',
-                name: "Meetings",
-                res_model: 'calendar.event',
-                view_mode: 'calendar',
-                views: [[false, 'calendar']],
-                target: 'current',
-            };
-        }
-        // calendar.event methods
-        if (args.model === 'calendar.event' && args.method === 'check_access_rights') {
-            return true;
-        }
-        return this._super(...arguments);
-    },
-
-    //--------------------------------------------------------------------------
-    // Private Mocked Methods
-    //--------------------------------------------------------------------------
-
+patch(MockServer.prototype, 'calendar/models/res_users', {
     /**
      * Simulates `_systray_get_calendar_event_domain` on `res.users`.
      *

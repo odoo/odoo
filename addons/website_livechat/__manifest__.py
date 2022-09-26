@@ -54,7 +54,7 @@ Allow website visitors to chat with the collaborators. This module also brings a
             'website_livechat/static/tests/tours/**/*',
         ],
         'web.tests_assets': [
-            'website_livechat/static/tests/helpers/*.js',
+            'website_livechat/static/tests/helpers/**/*.js',
         ],
         'web.qunit_suite_tests': [
             'website_livechat/static/tests/qunit_suite_tests/**/*.js',

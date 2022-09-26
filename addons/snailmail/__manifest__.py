@@ -41,7 +41,7 @@ Allows users to send documents by post
             'snailmail/static/src/components/*/*.xml',
         ],
         'web.tests_assets': [
-            'snailmail/static/tests/helpers/*.js',
+            'snailmail/static/tests/helpers/**/*.js',
         ],
         'web.qunit_suite_tests': [
             'snailmail/static/tests/qunit_suite_tests/**/*.js',

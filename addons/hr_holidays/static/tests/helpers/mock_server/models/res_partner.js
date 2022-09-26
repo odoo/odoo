@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import '@mail/../tests/helpers/mock_server'; // ensure mail overrides are applied first
+import '@mail/../tests/helpers/mock_server/models/res_partner'; // ensure mail overrides are applied first
 
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, 'hr_holidays', {
+patch(MockServer.prototype, 'hr_holidays/models/res_partner', {
     /**
      * Overrides to add out of office to employees.
      *
