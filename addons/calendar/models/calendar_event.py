@@ -876,7 +876,7 @@ class Meeting(models.Model):
                 if not start_update:
                     # Apply the same shift for start
                     start = base_time_values['start'] + (stop_update - self.stop)
-                    start_date = base_time_values['start_date'] + (stop_update.date() - self.stop.date())
+                    start_date = base_time_values['start'] + (stop_update.date() - self.stop.date())
                     update_dict.update({'start': start, 'start_date': start_date})
                 stop = base_time_values['stop'] + (stop_update - self.stop)
                 stop_date = base_time_values['stop'].date() + (stop_update.date() - self.stop.date())
