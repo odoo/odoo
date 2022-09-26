@@ -63,6 +63,14 @@ QUnit.module("Fields", (hooks) => {
             "input should contain field value"
         );
 
+        const webLink = target.querySelector(".o_field_url a");
+        assert.containsOnce(
+            target,
+            webLink,
+            "should have rendered the url button as a link with correct classes"
+        );
+        assert.hasAttrValue(webLink, "href", "http://yop", "should have proper href");
+
         await editInput(target, ".o_field_widget input[type='text']", "limbo");
 
         // save
