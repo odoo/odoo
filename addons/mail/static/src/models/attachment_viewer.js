@@ -298,6 +298,10 @@ registerModel({
         scale: attr({
             default: 1,
         }),
+        translate: one('AttachmentViewer.Translate', {
+            default: {},
+            inverse: 'owner',
+        }),
         /**
          * Reference of the zoomer node. Useful to apply translate
          * transformation on image visualisation.
