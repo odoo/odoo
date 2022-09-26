@@ -24,6 +24,21 @@ registerModel({
             return Boolean(this.component && this.component.root.el && this.component.root.el.contains(element));
         },
         /**
+         * Determine whether the current image is rendered for the 1st time, and if
+         * that's the case, display a spinner until loaded.
+         */
+        handleImageLoad() {
+            if (!this.exists() || !this.attachmentViewerViewable) {
+                return;
+            }
+            if (
+                this.attachmentViewerViewable.isImage &&
+                (!this.imageRef || !this.imageRef.complete)
+            ) {
+                this.update({ isImageLoading: true });
+            }
+        },
+        /**
          * Display the next attachment in the list of attachments.
          */
         next() {

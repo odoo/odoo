@@ -40,7 +40,7 @@ export class AttachmentViewer extends Component {
             return;
         }
         this.root.el.focus();
-        this._handleImageLoad();
+        this.attachmentViewer.handleImageLoad();
         this._hideUnwantedPdfJsButtons();
         document.addEventListener('click', this._onClickGlobal);
     }
@@ -49,7 +49,7 @@ export class AttachmentViewer extends Component {
      * When a new image is displayed, show a spinner until it is loaded.
      */
     _patched() {
-        this._handleImageLoad();
+        this.attachmentViewer.handleImageLoad();
         this._hideUnwantedPdfJsButtons();
     }
 
@@ -71,25 +71,6 @@ export class AttachmentViewer extends Component {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
-
-    /**
-     * Determine whether the current image is rendered for the 1st time, and if
-     * that's the case, display a spinner until loaded.
-     *
-     * @private
-     */
-    _handleImageLoad() {
-        if (!this.attachmentViewer.exists() || !this.attachmentViewer.attachmentViewerViewable) {
-            return;
-        }
-        const image = this.attachmentViewer.imageRef;
-        if (
-            this.attachmentViewer.attachmentViewerViewable.isImage &&
-            (!image || !image.complete)
-        ) {
-            this.attachmentViewer.update({ isImageLoading: true });
-        }
-    }
 
     /**
      * @see 'hidePDFJSButtons'
