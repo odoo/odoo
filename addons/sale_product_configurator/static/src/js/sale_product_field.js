@@ -13,10 +13,6 @@ import {
 
 patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
 
-    // 2) autofocus on first attribute in configurator
-    //      unable to enter by hand custom values bc of it
-    // 3) wizard opened when the variant is chosen in the 'Product Variant' field
-
     setup() {
         this._super(...arguments);
 
@@ -26,8 +22,6 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
 
     async _onProductTemplateUpdate() {
         this._super(...arguments);
-        // FIXME VFE do not trigger anything if update comes from the product variant
-        // field, as the 'new' value is only the related one.
         const result = await this.orm.call(
             'product.template',
             'get_single_product_variant',
@@ -75,7 +69,7 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
                 {
                     product_template_id: productTemplateId,
                     quantity: this.props.record.data.product_uom_qty || 1,
-                    pricelist_id: pricelistId, // HOW to get this from SO ?
+                    pricelist_id: pricelistId,
                     product_template_attribute_value_ids: this.props.record.data.product_template_attribute_value_ids.records.map(
                         record => record.data.id
                     ),
@@ -181,8 +175,6 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
             // bc 'whatever' is really displayed when showing the 'Product Variant' column
             product_id: [mainProduct.product_id, 'whatever'],
             product_uom_qty: mainProduct.quantity,
-            // don't think the ptmpl_id update is useful, will be the same anyway
-            //'product_template_id': [mainProduct.product_template_id, 'whatever'],
         };
         var customAttributeValues = mainProduct.product_custom_attribute_values;
         var customValuesCommands = [{ operation: "DELETE_ALL" }];

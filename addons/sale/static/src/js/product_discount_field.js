@@ -21,20 +21,17 @@ export class ProductDiscountField extends FloatField {
     }
 
     onChange(ev) {
-        const x2mList = this.props.model.root.data.order_line;
+        const x2mList = this.props.record.model.root.data.order_line;
         const orderLines = x2mList.records.filter(line => !line.data.display_type);
 
         if (orderLines.length < 3) {
-            return; // nothing to do here
+            return;
         }
 
         const isFirstOrderLine = this.props.record.data.id === orderLines[0].data.id;
-
         if (isFirstOrderLine && sameValue(orderLines)) {
-            const body = _lt("Do you want to apply this value to all lines ?");
-
             this.dialogService.add(ConfirmationDialog, {
-                body: body,
+                body: _lt("Do you want to apply this value to all lines ?"),
                 confirm: () => {
                     const commands = orderLines.slice(1).map((line) => {
                         return {
@@ -52,8 +49,8 @@ export class ProductDiscountField extends FloatField {
 }
 
 export function sameValue(orderLines) {
-    const compareValue = orderLines[1].data["discount"];
-    return orderLines.slice(1).every(line => line.data["discount"] == compareValue);
+    const compareValue = orderLines[1].data.discount;
+    return orderLines.slice(1).every(line => line.data.discount == compareValue);
 }
 
 
@@ -61,4 +58,4 @@ ProductDiscountField.components = { ConfirmationDialog };
 ProductDiscountField.template = "sale.ProductDiscountField";
 ProductDiscountField.displayName = _lt("Disc.%");
 
-registry.category("fields").add("product_discount", ProductDiscountField)
+registry.category("fields").add("sol_discount", ProductDiscountField)
