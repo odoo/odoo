@@ -19,7 +19,7 @@ class Assets(models.AbstractModel):
         Params:
             url (str):
                 the URL of the scss file to customize (supposed to be a variable
-                file which will appear in the assets_common bundle)
+                file which will appear in the assets_frontend bundle)
 
             values (dict):
                 key,value mapping to integrate in the file's map (containing the
@@ -27,8 +27,8 @@ class Assets(models.AbstractModel):
                 overridden.
         """
         if 'color-palettes-name' in values:
-            self.reset_asset('/website/static/src/scss/options/colors/user_color_palette.scss', 'web.assets_common')
-            self.reset_asset('/website/static/src/scss/options/colors/user_gray_color_palette.scss', 'web.assets_common')
+            self.reset_asset('/website/static/src/scss/options/colors/user_color_palette.scss', 'web.assets_frontend')
+            self.reset_asset('/website/static/src/scss/options/colors/user_gray_color_palette.scss', 'web.assets_frontend')
             # Do not reset all theme colors for compatibility (not removing alpha -> epsilon colors)
             self.make_scss_customization('/website/static/src/scss/options/colors/user_theme_color_palette.scss', {
                 'success': 'null',
@@ -44,7 +44,7 @@ class Assets(models.AbstractModel):
                 'copyright-gradient': 'null',
             })
 
-        custom_url = self._make_custom_asset_url(url, 'web.assets_common')
+        custom_url = self._make_custom_asset_url(url, 'web.assets_frontend')
         updatedFileContent = self._get_content_from_url(custom_url) or self._get_content_from_url(url)
         updatedFileContent = updatedFileContent.decode('utf-8')
         for name, value in values.items():
@@ -56,9 +56,7 @@ class Assets(models.AbstractModel):
             else:
                 updatedFileContent = re.sub(r'( *)(.*hook.*)', r'\1%s\1\2' % replacement, updatedFileContent)
 
-        # Bundle is 'assets_common' as this route is only meant to update
-        # variables scss files
-        self.save_asset(url, 'web.assets_common', updatedFileContent, 'scss')
+        self.save_asset(url, 'web.assets_frontend', updatedFileContent, 'scss')
 
     @api.model
     def _get_custom_attachment(self, custom_url, op='='):
