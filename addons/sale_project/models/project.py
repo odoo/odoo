@@ -558,15 +558,13 @@ class ProjectTask(models.Model):
 
     def action_project_sharing_view_so(self):
         self.ensure_one()
-        if self.user_has_groups('base.group_portal'):
-            if not self.display_sale_order_button:
-                return {}
-            return {
-                "name": "Portal Sale Order",
-                "type": "ir.actions.act_url",
-                "url": self.sale_order_id.access_url,
-            }
-        return self.action_view_so()
+        if not self.display_sale_order_button:
+            return {}
+        return {
+            "name": "Portal Sale Order",
+            "type": "ir.actions.act_url",
+            "url": self.sale_order_id.access_url,
+        }
 
     def _rating_get_partner(self):
         partner = self.partner_id or self.sale_line_id.order_id.partner_id
