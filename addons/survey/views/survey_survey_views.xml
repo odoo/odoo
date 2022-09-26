@@ -148,14 +148,8 @@
                                     </div>
                                 </group>
                                 <group string="Live Session">
-                                    <div class="o_td_label">
-                                        <label for="session_code" string="Session Code" class="oe_edit_only o_form_label" />
-                                        <label for="session_link" string="Session Link" class="oe_read_only o_form_label" />
-                                    </div>
-                                    <div class="d-flex">
-                                        <field name="session_code" nolabel="1" class="me-2 oe_edit_only" />
-                                        <field name="session_link" nolabel="1" widget="CopyClipboardChar" class="oe_read_only" />
-                                    </div>
+                                    <field name="session_code" />
+                                    <field name="session_link" widget="CopyClipboardChar" />
                                     <field name="session_speed_rating" />
                                 </group>
                             </group>
