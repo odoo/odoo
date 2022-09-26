@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="calendar.AttendeeCalendarCommonRenderer.event" owl="1">
+        <div class="fc-content">
+            <div t-attf-class="#{attendeeStatus != 'accepted' ? 'fw-normal' : ''} o_event_title me-2">
+                <span t-if="isAlone" class="fa fa-exclamation-circle"/>
+                <t t-esc="title"/>
+            </div>
+            <span t-if="!isTimeHidden" class="fc-time"/>
+        </div>
+    </t>
+</templates>
