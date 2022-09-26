@@ -4,6 +4,8 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
+import { hidePDFJSButtons } from '@web/legacy/js/libs/pdfjs';
+
 registerModel({
     name: 'AttachmentViewer',
     identifyingMode: 'xor',
@@ -36,6 +38,14 @@ registerModel({
                 (!this.imageRef || !this.imageRef.complete)
             ) {
                 this.update({ isImageLoading: true });
+            }
+        },
+        /**
+         * @see 'hidePDFJSButtons'
+         */
+        hideUnwantedPdfJsButtons() {
+            if (this.iframeViewerPdfRef.el) {
+                hidePDFJSButtons(this.iframeViewerPdfRef.el);
             }
         },
         /**
