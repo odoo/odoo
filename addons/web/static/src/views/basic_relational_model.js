@@ -1036,7 +1036,6 @@ export class StaticList extends DataPoint {
 
         const parentID = this.model.__bm__.localData[this.__bm_handle__].parentID;
         await this.model.__bm__.notifyChanges(parentID, {
-            // FIXME: order_line hardcoded
             [fieldName]: {
                 operation: "MULTI",
                 commands: commandsWithId,
