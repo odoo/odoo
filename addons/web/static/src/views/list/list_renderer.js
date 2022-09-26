@@ -345,9 +345,7 @@ export class ListRenderer extends Component {
     }
 
     canUseFormatter(column, record) {
-        return (
-            !record.isInEdition && !column.widget && record.fields[column.name].type !== "boolean"
-        );
+        return !record.isInEdition && !column.widget;
     }
 
     focusCell(column, forward = true) {

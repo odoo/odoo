@@ -9783,8 +9783,9 @@ QUnit.module("Views", (hooks) => {
                 </kanban>`,
         });
 
-        assert.containsN(target, ".o_kanban_record:contains(True)", 3);
-        assert.containsOnce(target, ".o_kanban_record:contains(False)");
+        assert.containsN(target, ".o_kanban_record input:disabled", 4);
+        assert.containsN(target, ".o_kanban_record input:checked", 3);
+        assert.containsOnce(target, ".o_kanban_record input:not(:checked)");
     });
 
     QUnit.test("kanban view with boolean widget", async (assert) => {
