@@ -4,14 +4,14 @@
     <t t-name="web.CalendarCommonPopover" owl="1">
         <t t-if="env.isSmall">
             <Dialog title="props.record.title">
-                <t t-call="web.CalendarCommonPopover.body" />
+                <t t-call="{{ constructor.subTemplates.body }}" />
                 <t t-set-slot="footer">
-                    <t t-call="web.CalendarCommonPopover.footer" />
+                    <t t-call="{{ constructor.subTemplates.footer }}" />
                 </t>
             </Dialog>
         </t>
         <t t-else="">
-            <t t-call="web.CalendarCommonPopover.popover" />
+            <t t-call="{{ constructor.subTemplates.popover }}" />
         </t>
     </t>
 
@@ -25,9 +25,9 @@
             </span>
         </div>
         <div class="o_cw_body">
-            <t t-call="web.CalendarCommonPopover.body" />
+            <t t-call="{{ constructor.subTemplates.body }}" />
             <div class="card-footer border-top" t-att-class="{ 'o_footer_shrink': isEventEditable and isEventDeletable }">
-                <t t-call="web.CalendarCommonPopover.footer" />
+                <t t-call="{{ constructor.subTemplates.footer }}" />
             </div>
         </div>
     </t>
@@ -61,7 +61,7 @@
                                 </t>
                             </strong>
                             <div class="flex-grow-1">
-                                <Field name="fieldName" record="slot.record" fieldInfo="fieldInfo" />
+                                <Field name="fieldName" record="slot.record" fieldInfo="fieldInfo" type="fieldInfo.widget" />
                             </div>
                         </li>
                     </t>

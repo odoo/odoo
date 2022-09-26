@@ -4,14 +4,14 @@
     <t t-name="web.CalendarYearPopover" owl="1">
         <t t-if="env.isSmall">
             <Dialog title="dialogTitle">
-                <t t-call="web.CalendarYearPopover.body" />
+                <t t-call="{{ constructor.subTemplates.body }}" />
                 <t t-set-slot="footer">
-                    <t t-call="web.CalendarYearPopover.footer" />
+                    <t t-call="{{ constructor.subTemplates.footer }}" />
                 </t>
             </Dialog>
         </t>
         <t t-else="">
-            <t t-call="web.CalendarYearPopover.popover" />
+            <t t-call="{{ constructor.subTemplates.popover }}" />
         </t>
     </t>
 
@@ -22,10 +22,10 @@
             </span>
         </div>
         <div class="o_cw_body">
-            <t t-call="web.CalendarYearPopover.body" />
+            <t t-call="{{ constructor.subTemplates.body }}" />
         </div>
         <div t-if="props.model.canCreate" class="mt-2">
-            <t t-call="web.CalendarYearPopover.footer" />
+            <t t-call="{{ constructor.subTemplates.footer }}" />
         </div>
     </t>
 
@@ -33,7 +33,7 @@
         <t t-foreach="recordGroups" t-as="recordGroup" t-key="recordGroup.title">
             <div class="fw-bold mt-2" t-esc="recordGroup.title" />
             <t t-foreach="recordGroup.records" t-as="record" t-key="record.id">
-                <t t-call="web.CalendarYearPopover.record" />
+                <t t-call="{{ constructor.subTemplates.record }}" />
             </t>
         </t>
     </t>
