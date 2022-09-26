@@ -15041,4 +15041,20 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_data_row:first-child td.o_list_button", 1);
         await click(target, ".o_data_row:first-child td.o_list_button");
     });
+
+    QUnit.test("group by going to next page then back to first", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree groups_limit="1"><field name="foo"/><field name="bar"/></tree>',
+            groupBy: ["bar"],
+        });
+
+        assert.deepEqual([...getPagerValue(target), getPagerLimit(target)], [1, 2]);
+        await pagerNext(target);
+        assert.deepEqual([...getPagerValue(target), getPagerLimit(target)], [2, 2]);
+        await pagerPrevious(target);
+        assert.deepEqual([...getPagerValue(target), getPagerLimit(target)], [1, 2]);
+    });
 });
