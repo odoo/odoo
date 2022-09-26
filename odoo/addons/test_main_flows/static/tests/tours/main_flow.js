@@ -951,25 +951,6 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
     trigger: "button[name='button_validate'].btn-primary",
     extra_trigger: "button[name='button_validate'].btn-primary",
     content: _t("Reconcile the bank transaction"),
-}, {
-    mobile: false,
-    edition: "enterprise",
-    trigger: ".o_control_panel .o_filter_menu .o_dropdown_title:contains('Filters'):first",
-    extra_trigger: "a.active[name='amls_tab']",
-    content: _t("Click on 'Filters'"),
-}, {
-    mobile: false,
-    edition: "enterprise",
-    trigger: ".o_control_panel .o_filter_menu .dropdown-item:contains('Matched')",
-    extra_trigger: ".o_control_panel .o_filter_menu .dropdown-item:contains('Matched')",
-    content: _t("Add the 'Matched' filters"),
-}, {
-    mobile: false,
-    edition: "enterprise",
-    trigger: "div.o_bank_rec_st_line_kanban_card span:contains('the_flow.customer')",
-    extra_trigger: "div.o_bank_rec_st_line_kanban_card span:contains('the_flow.customer')",
-    content: _t("Ensure the line is well reconciled"),
-    run: function(){},
 },
 // exit reconciliation widget
 {
