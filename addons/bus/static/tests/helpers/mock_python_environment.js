@@ -104,9 +104,6 @@ let pyEnv;
     }
     pyEnv = new Proxy(
         {
-            get currentPartner() {
-                return this.mockServer.currentPartner;
-            },
             getData() {
                 return this.mockServer.models;
             },

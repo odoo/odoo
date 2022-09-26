@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import '@mail/../tests/helpers/mock_server'; // ensure mail overrides are applied first
+import '@mail/../tests/helpers/mock_server/models/mail_message'; // ensure mail overrides are applied first
 
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, 'snailmail', {
+patch(MockServer.prototype, 'snailmail/models/mail_message', {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -13,7 +13,7 @@ patch(MockServer.prototype, 'snailmail', {
     /**
      * @override
      */
-    async performRPC(route, args) {
+    async _performRPC(route, args) {
         if (args.model === 'mail.message' && args.method === 'cancel_letter') {
             const ids = args.args[0];
             return this._mockMailMessageCancelLetter(ids);
