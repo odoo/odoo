@@ -675,6 +675,15 @@
                         : document.createElement(tagName);
                 }
                 if (el instanceof Element) {
+                    if (!domParentTree) {
+                        // some html elements may have side effects when setting their attributes.
+                        // For example, setting the src attribute of an <img/> will trigger a
+                        // request to get the corresponding image. This is something that we
+                        // don't want at compile time. We avoid that by putting the content of
+                        // the block in a <template/> element
+                        const fragment = document.createElement("template").content;
+                        fragment.appendChild(el);
+                    }
                     for (let i = 0; i < attrs.length; i++) {
                         const attrName = attrs[i].name;
                         const attrValue = attrs[i].value;
@@ -2599,66 +2608,70 @@
 
     const VText = text("").constructor;
     class VPortal extends VText {
-        constructor(selector, realBDom) {
+        constructor(selector, content) {
             super("");
             this.target = null;
             this.selector = selector;
-            this.realBDom = realBDom;
+            this.content = content;
         }
         mount(parent, anchor) {
             super.mount(parent, anchor);
             this.target = document.querySelector(this.selector);
-            if (!this.target) {
-                let el = this.el;
-                while (el && el.parentElement instanceof HTMLElement) {
-                    el = el.parentElement;
-                }
-                this.target = el && el.querySelector(this.selector);
-                if (!this.target) {
-                    throw new OwlError("invalid portal target");
-                }
+            if (this.target) {
+                this.content.mount(this.target, null);
             }
-            this.realBDom.mount(this.target, null);
+            else {
+                this.content.mount(parent, anchor);
+            }
         }
         beforeRemove() {
-            this.realBDom.beforeRemove();
+            this.content.beforeRemove();
         }
         remove() {
-            if (this.realBDom) {
+            if (this.content) {
                 super.remove();
-                this.realBDom.remove();
-                this.realBDom = null;
+                this.content.remove();
+                this.content = null;
             }
         }
         patch(other) {
             super.patch(other);
-            if (this.realBDom) {
-                this.realBDom.patch(other.realBDom, true);
+            if (this.content) {
+                this.content.patch(other.content, true);
             }
             else {
-                this.realBDom = other.realBDom;
-                this.realBDom.mount(this.target, null);
+                this.content = other.content;
+                this.content.mount(this.target, null);
             }
         }
     }
     /**
-     * <t t-slot="default"/>
+     * kind of similar to <t t-slot="default"/>, but it wraps it around a VPortal
      */
     function portalTemplate(app, bdom, helpers) {
         let { callSlot } = helpers;
         return function template(ctx, node, key = "") {
-            return callSlot(ctx, node, key, "default", false, null);
+            return new VPortal(ctx.props.target, callSlot(ctx, node, key, "default", false, null));
         };
     }
     class Portal extends Component {
         setup() {
             const node = this.__owl__;
-            const renderFn = node.renderFn;
-            node.renderFn = () => new VPortal(this.props.target, renderFn());
-            onWillUnmount(() => {
-                if (node.bdom) {
-                    node.bdom.remove();
+            onMounted(() => {
+                const portal = node.bdom;
+                if (!portal.target) {
+                    const target = document.querySelector(this.props.target);
+                    if (target) {
+                        portal.content.moveBefore(target, null);
+                    }
+                    else {
+                        throw new OwlError("invalid portal target");
+                    }
                 }
+            });
+            onWillUnmount(() => {
+                const portal = node.bdom;
+                portal.remove();
             });
         }
     }
@@ -2982,10 +2995,10 @@
      * visit recursively the props and all the children to check if they are valid.
      * This is why it is only done in 'dev' mode.
      */
-    function validateProps(name, props, parent) {
+    function validateProps(name, props, comp) {
         const ComponentClass = typeof name !== "string"
             ? name
-            : parent.constructor.components[name];
+            : comp.constructor.components[name];
         if (!ComponentClass) {
             // this is an error, wrong component. We silently return here instead so the
             // error is triggered by the usual path ('component' function)
@@ -2993,7 +3006,7 @@
         }
         const schema = ComponentClass.props;
         if (!schema) {
-            if (parent.__owl__.app.warnIfNoStaticProps) {
+            if (comp.__owl__.app.warnIfNoStaticProps) {
                 console.warn(`Component '${ComponentClass.name}' does not have a static props description`);
             }
             return;
@@ -4497,7 +4510,7 @@
                 expr = `\`${ast.name}\``;
             }
             if (this.dev) {
-                this.addLine(`helpers.validateProps(${expr}, ${propVar}, ctx);`);
+                this.addLine(`helpers.validateProps(${expr}, ${propVar}, this);`);
             }
             if (block && (ctx.forceNewBlock === false || ctx.tKeyExpr)) {
                 // todo: check the forcenewblock condition
@@ -5788,9 +5801,9 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '2.0.0-beta-20';
-    __info__.date = '2022-09-09T07:39:56.389Z';
-    __info__.hash = 'b51756f';
+    __info__.version = '2.0.0-beta-21';
+    __info__.date = '2022-09-26T13:49:57.969Z';
+    __info__.hash = 'ab72cdd';
     __info__.url = 'https://github.com/odoo/owl';
 
 
