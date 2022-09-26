@@ -23,7 +23,7 @@ function makeBarcodeInput() {
 export const barcodeService = {
     // Keys from a barcode scanner are usually processed as quick as possible,
     // but some scanners can use an intercharacter delay (we support <= 50 ms)
-    maxTimeBetweenKeysInMs: session.max_time_between_keys_in_ms || 55,
+    maxTimeBetweenKeysInMs: session.max_time_between_keys_in_ms || 100,
 
     // this is done here to make it easily mockable in mobile tests
     isMobileChrome: isMobileOS() && isBrowserChrome(),
