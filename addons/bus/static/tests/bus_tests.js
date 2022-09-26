@@ -366,15 +366,17 @@ QUnit.module('Bus', {
         let updateLastNotificationDeferred = makeDeferred();
         patchWebsocketWorkerWithCleanup({
             _onClientMessage(_, { action, data }) {
-                assert.step(`${action} - ${data}`);
-                updateLastNotificationDeferred.resolve();
+                if (action === 'initialize_connection') {
+                    assert.step(`${action} - ${data['lastNotificationId']}`);
+                    updateLastNotificationDeferred.resolve();
+                }
             },
         });
         await makeTestEnv();
         await updateLastNotificationDeferred;
         // First bus service has never received notifications thus the
         // default is 0.
-        assert.verifySteps(['update_last_notification_id - 0']);
+        assert.verifySteps(['initialize_connection - 0']);
 
         pyEnv['bus.bus']._sendmany([
             ['lambda', 'notifType', 'beta'],
@@ -387,7 +389,7 @@ QUnit.module('Bus', {
         await makeTestEnv();
         await updateLastNotificationDeferred;
         // Second bus service sends the last known notification id.
-        assert.verifySteps([`update_last_notification_id - 1`]);
+        assert.verifySteps([`initialize_connection - 1`]);
     });
 
     QUnit.test('Last notification id reset after db change', async function (assert) {
@@ -395,15 +397,17 @@ QUnit.module('Bus', {
         let updateLastNotificationDeferred = makeDeferred();
         patchWebsocketWorkerWithCleanup({
             _onClientMessage(_, { action, data }) {
-                assert.step(`${action} - ${data}`);
-                updateLastNotificationDeferred.resolve();
+                if (action === 'initialize_connection') {
+                    assert.step(`${action} - ${data['lastNotificationId']}`);
+                    updateLastNotificationDeferred.resolve();
+                }
             },
         });
         await makeTestEnv();
         await updateLastNotificationDeferred;
         // First bus service has never received notifications thus the
         // default is 0.
-        assert.verifySteps(['update_last_notification_id - 0']);
+        assert.verifySteps(['initialize_connection - 0']);
 
         pyEnv['bus.bus']._sendmany([
             ['lambda', 'notifType', 'beta'],
@@ -417,7 +421,7 @@ QUnit.module('Bus', {
         updateLastNotificationDeferred = makeDeferred();
         await makeTestEnv();
         await updateLastNotificationDeferred;
-        assert.verifySteps([`update_last_notification_id - 0`]);
+        assert.verifySteps([`initialize_connection - 0`]);
     });
 });
 
