@@ -312,6 +312,9 @@ function makeActionManager(env) {
                 // the session storage
                 const storedAction = browser.sessionStorage.getItem("current_action");
                 const lastAction = JSON.parse(storedAction || "{}");
+                if (lastAction.help) {
+                    lastAction.help = markup(lastAction.help);
+                }
                 if (lastAction.res_model === state.model) {
                     if (lastAction.context) {
                         // If this method is called because of a company switch, the
