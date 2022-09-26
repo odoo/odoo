@@ -210,12 +210,12 @@ QUnit.module("Views", ({ beforeEach }) => {
             "should contains 3 child nodes -> 1 label (USER) + 2 resources (user 1/2)"
         );
         assert.containsNone(target, ".o_calendar_sidebar");
-        assert.containsOnce(target, ".o_calendar_view");
+        assert.containsOnce(target, ".o_calendar_renderer");
 
         // Toggle the other calendar panel should hide the calendar view and show the sidebar
         await click(target, ".o_other_calendar_panel");
         assert.containsOnce(target, ".o_calendar_sidebar");
-        assert.containsNone(target, ".o_calendar_view");
+        assert.containsNone(target, ".o_calendar_renderer");
         assert.containsOnce(target, ".o_calendar_filter");
         assert.containsOnce(target, ".o_calendar_filter[data-name=partner_id]");
 
@@ -231,7 +231,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         // Toggle again the other calendar panel should hide the sidebar and show the calendar view
         await click(target, ".o_other_calendar_panel");
         assert.containsNone(target, ".o_calendar_sidebar");
-        assert.containsOnce(target, ".o_calendar_view");
+        assert.containsOnce(target, ".o_calendar_renderer");
     });
 
     QUnit.test('calendar: tap on "Free Zone" opens quick create', async function (assert) {

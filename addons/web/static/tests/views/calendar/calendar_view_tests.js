@@ -335,7 +335,7 @@ QUnit.module("Views", ({ beforeEach }) => {
 
         assert.containsOnce(
             target,
-            ".o_calendar_view .fc-view-container",
+            ".o_calendar_renderer .fc-view-container",
             "should instance of fullcalendar"
         );
 
@@ -3576,7 +3576,7 @@ QUnit.module("Views", ({ beforeEach }) => {
 
             assert.containsOnce(
                 target,
-                ".o_calendar_view .fc-view-container",
+                ".o_calendar_renderer .fc-view-container",
                 "should display in the calendar"
             );
 

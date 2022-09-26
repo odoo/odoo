@@ -100,6 +100,10 @@ export class CalendarController extends Component {
         return this.state.showSideBar;
     }
 
+    get className() {
+        return this.props.className;
+    }
+
     getTodayDay() {
         return luxon.DateTime.local().day;
     }

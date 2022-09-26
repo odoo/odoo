@@ -2,22 +2,24 @@
 <templates xml:space="preserve">
 
     <t t-name="web.CalendarController" owl="1">
-        <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="props.display">
-            <t t-set-slot="layout-buttons">
-                <t t-call="{{ props.buttonTemplate }}"/>
-            </t>
+        <div t-att-class="className" t-ref="root">
+            <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="props.display">
+                <t t-set-slot="layout-buttons">
+                    <t t-call="{{ props.buttonTemplate }}"/>
+                </t>
 
-            <div class="o_calendar_container">
-                <MobileFilterPanel t-if="env.isSmall" t-props="mobileFilterPanelProps" />
-                <t t-if="showCalendar" t-component="props.Renderer" t-props="rendererProps" />
-                <div t-if="showSideBar" class="o_calendar_sidebar_container d-md-block">
-                    <div class="o_calendar_sidebar">
-                        <DatePicker t-if="!env.isSmall" t-props="datePickerProps" />
-                        <FilterPanel t-props="filterPanelProps" />
+                <div class="o_calendar_container">
+                    <MobileFilterPanel t-if="env.isSmall" t-props="mobileFilterPanelProps" />
+                    <t t-if="showCalendar" t-component="props.Renderer" t-props="rendererProps" />
+                    <div t-if="showSideBar" class="o_calendar_sidebar_container d-md-block">
+                        <div class="o_calendar_sidebar">
+                            <DatePicker t-if="!env.isSmall" t-props="datePickerProps" />
+                            <FilterPanel t-props="filterPanelProps" />
+                        </div>
                     </div>
                 </div>
-            </div>
-        </Layout>
+            </Layout>
+        </div>
     </t>
 
     <t t-name="web.CalendarController.controlButtons" owl="1">
