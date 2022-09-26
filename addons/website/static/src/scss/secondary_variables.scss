@@ -230,6 +230,17 @@ $o-theme-font-configs: map-merge($o-base-theme-font-configs, $o-theme-font-confi
     ));
 }
 
+// Add locally hosted google fonts
+@each $font-name, $font-attach-id in (o-website-value('google-local-fonts') or ()) {
+    $o-theme-font-configs: map-merge($o-theme-font-configs, (
+        $font-name: (
+            'family': (quote($font-name), sans-serif),
+            'attachment': $font-attach-id,
+            'name': quote($font-name),
+        ),
+    ));
+}
+
 // Add odoo unicode support for all fonts
 @each $font-name, $font-config in $o-theme-font-configs {
     $o-theme-font-configs: map-merge($o-theme-font-configs, (
