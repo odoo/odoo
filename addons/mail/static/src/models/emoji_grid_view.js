@@ -109,7 +109,9 @@ registerModel({
             default: 0,
         }),
         height: attr({
-            default: "275px",
+            compute() {
+                return this.rowHeight * 9.5;
+            },
         }),
         itemWidth: attr({
             default: 30,
@@ -210,7 +212,7 @@ registerModel({
         viewBlockRef: attr(),
         width: attr({
             compute() {
-                return `${this.itemWidth * this.amountOfItemsPerRow + this.scrollbarThresholdWidth}px`;
+                return this.itemWidth * this.amountOfItemsPerRow + this.scrollbarThresholdWidth;
             },
         }),
     },
