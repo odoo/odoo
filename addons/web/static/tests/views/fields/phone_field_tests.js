@@ -85,6 +85,15 @@ QUnit.module("Fields", (hooks) => {
             "input should contain field value in edit mode"
         );
 
+        const phoneLink = target.querySelector(".o_field_phone a");
+        assert.containsOnce(
+            target,
+            phoneLink,
+            "should have rendered the phone number as a link with correct classes"
+        );
+        assert.strictEqual(phoneLink.textContent, "Call", "link is shown with the right text");
+        assert.hasAttrValue(phoneLink, "href", "tel:yop", "should have proper tel prefix");
+
         // change value in edit mode
         await editInput(target, "input[type='tel']", "new");
 
@@ -114,7 +123,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsN(
             target,
-            ".o_field_widget a.o_form_uri.o_phone_link",
+            ".o_field_widget a.o_form_uri",
             2,
             "should have the correct classnames"
         );
@@ -145,7 +154,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.containsN(
             target,
-            ".o_field_widget a.o_form_uri.o_phone_link",
+            ".o_field_widget a.o_form_uri",
             2,
             "should still have links with correct classes"
         );

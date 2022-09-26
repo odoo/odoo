@@ -28,4 +28,8 @@ PhoneField.extractProps = ({ attrs }) => {
     };
 };
 
+class FormPhoneField extends PhoneField {}
+FormPhoneField.template = "web.FormPhoneField";
+
 registry.category("fields").add("phone", PhoneField);
+registry.category("fields").add("form.phone", FormPhoneField);
