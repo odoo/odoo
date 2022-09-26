@@ -306,21 +306,12 @@ class TestKitPicking(common.TestMrpCommon):
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
             'immediate_transfer': True
         })
-        move_receipt_1 = self.env['stock.move'].create({
-            'name': self.kit_parent.name,
-            'product_id': self.kit_parent.id,
-            'quantity_done': 3,
-            'product_uom': self.kit_parent.uom_id.id,
-            'picking_id': picking.id,
-            'picking_type_id': self.env.ref('stock.picking_type_in').id,
-            'location_id':  self.test_supplier.id,
-            'location_dest_id': self.warehouse_1.wh_input_stock_loc_id.id,
-        })
-
-        self.env['stock.move.line'].create(dict(move_receipt_1._prepare_move_line_vals(), qty_done=3))
-
+        picking = Form(picking)
+        with picking.move_ids_without_package.new() as move:
+            move.product_id = self.kit_parent
+            move.quantity_done = 3
+        picking = picking.save()
         picking.button_validate()
-
         # We check that the picking has the correct quantities after its move were splitted.
         self.assertEqual(len(picking.move_ids), 7)
         for move_line in picking.move_ids:

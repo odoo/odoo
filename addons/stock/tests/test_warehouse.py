@@ -117,9 +117,6 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(product.virtual_available, -5.0)
 
         customer_move.quantity_done = 5
-        self.env['stock.move.line'].create(dict(
-            customer_move._prepare_move_line_vals(),
-            qty_done=5))
         customer_move._action_done()
         self.assertEqual(product.qty_available, -5.0)
 
@@ -160,7 +157,7 @@ class TestWarehouse(TestStockCommon):
             'location_id': stock_location.id,
             'location_dest_id': customer_location.id,
         })
-        move = self.env['stock.move'].create({
+        self.env['stock.move'].create({
             'name': productA.name,
             'product_id': productA.id,
             'product_uom_qty': 1,
@@ -171,9 +168,6 @@ class TestWarehouse(TestStockCommon):
         })
         picking_out.action_confirm()
         picking_out.move_ids.quantity_done = 1
-        self.env['stock.move.line'].create(dict(
-            move._prepare_move_line_vals(),
-            qty_done=1))
         picking_out._action_done()
 
         quant = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', stock_location.id)])
@@ -217,9 +211,6 @@ class TestWarehouse(TestStockCommon):
         })
         picking_out.action_confirm()
         picking_out.move_ids.quantity_done = 1
-        self.env['stock.move.line'].create(dict(
-            move._prepare_move_line_vals(),
-            qty_done=1))
         picking_out._action_done()
 
         # Make an inventory adjustment to set the quantity to 0

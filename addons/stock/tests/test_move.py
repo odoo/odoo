@@ -5185,20 +5185,12 @@ class StockMove(TransactionCase):
 
         move1.quantity_done = 10
         self.assertEqual(picking.move_ids.quantity_done, 10)
-        self.assertEqual(picking.move_ids._get_qty_done_mls(), 0)
+        self.assertEqual(picking.move_ids._get_qty_done_mls(), 10)
 
-        self.env['stock.move.line'].create({
-            'location_id': self.stock_location.id,
-            'location_dest_id': self.customer_location.id,
-            'product_id': self.product.id,
-            'product_uom_id': self.uom_unit.id,
-            'qty_done': 10.0,
-            'picking_id': picking.id,
-        })
         picking._action_done()
 
         self.assertEqual(len(picking.move_ids), 1, 'One move should exist for the picking.')
-        self.assertEqual(len(picking.move_line_ids), 1, 'One move line should exist for the picking.')
+        self.assertEqual(len(picking.move_line_ids), 1, 'One move line should exist for the picking')
         self.assertEqual(picking.move_ids.quantity_done, 10)
         self.assertEqual(picking.move_ids._get_qty_done_mls(), 10)
 
@@ -5623,10 +5615,9 @@ class StockMove(TransactionCase):
             'picking_id': picking.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
         })
+        picking.action_confirm()
+
         move1.quantity_done = 5
-        self.env['stock.move.line'].create(dict(
-            move1._prepare_move_line_vals(),
-            qty_done=5))
         picking.action_put_in_pack()  # Create a package
 
         delivery_form = Form(picking)
