@@ -6,8 +6,6 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component, onMounted, onPatched, onWillUnmount } = owl;
 
-const ZOOM_STEP = 0.5;
-
 export class AttachmentViewer extends Component {
 
     /**
@@ -71,7 +69,7 @@ export class AttachmentViewer extends Component {
      */
     _zoomIn({ scroll = false } = {}) {
         this.attachmentViewer.update({
-            scale: this.attachmentViewer.scale + (scroll ? this.attachmentViewer.scrollZoomStep : ZOOM_STEP),
+            scale: this.attachmentViewer.scale + (scroll ? this.attachmentViewer.scrollZoomStep : this.attachmentViewer.zoomStep),
         });
         this.attachmentViewer.updateZoomerStyle();
     }
@@ -89,7 +87,7 @@ export class AttachmentViewer extends Component {
         }
         const unflooredAdaptedScale = (
             this.attachmentViewer.scale -
-            (scroll ? this.attachmentViewer.scrollZoomStep : ZOOM_STEP)
+            (scroll ? this.attachmentViewer.scrollZoomStep : this.attachmentViewer.zoomStep)
         );
         this.attachmentViewer.update({
             scale: Math.max(this.attachmentViewer.minScale, unflooredAdaptedScale),

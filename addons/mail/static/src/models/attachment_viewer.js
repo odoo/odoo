@@ -393,5 +393,8 @@ registerModel({
          * transformation on image visualisation.
          */
         zoomerRef: attr(),
+        zoomStep: attr({
+            default: 0.5,
+        }),
     },
 });
