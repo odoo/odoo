@@ -1,0 +1,12 @@
+<odoo>
+    <t t-name="spreadsheet_dashboard.o-spreadsheet-Grid" t-inherit="spreadsheet.o-spreadsheet-Grid" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('o-grid-overlay')]" position="inside">
+            <div t-if="env.model.getters.isDashboard()"
+                 t-foreach="getClickableCells()"
+                 t-as="cell"
+                 class="o-dashboard-clickable-cell"
+                 t-att-style="getCellClickableStyle(cell)"
+                 t-key="cell.key"/>
+        </xpath>
+    </t>
+</odoo>
