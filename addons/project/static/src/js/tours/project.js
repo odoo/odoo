@@ -107,11 +107,29 @@ tour.register('project_tour', {
     position: "bottom",
     run: "click",
 }, {
+    trigger: ".o_field_widget[name='user_ids'] input",
+    extra_trigger: '.o_form_project_tasks',
+    content: _t("Assign a responsible to your task"),
+    position: "right",
+    run: "text a"
+}, {
+    trigger: ".ui-autocomplete > li > a:not(:has(i.fa))",
+    auto: true,
+}, {
+    trigger: ".o_form_button_save",
+    extra_trigger: '.o_form_project_tasks.o_form_dirty',
+    content: Markup(_t("You have unsaved changes - no worries! Odoo will automatically save it as you navigate.<br/> You can discard these changes from here or manually save your task.<br/>Let's save it manually.")),
+    position: "bottom",
+}, {
     trigger: ".breadcrumb-item:not(.active):last",
-    extra_trigger: '.o_form_project_tasks.o_form_saved',
+    extra_trigger: '.o_form_project_tasks',
     content: Markup(_t("Let's go back to the <b>kanban view</b> to have an overview of your next tasks.")),
     position: "right",
     run: 'click',
+}, {
+    trigger: '.o_kanban_renderer',
+    // last step to confirm we've come back before considering the tour successful
+    auto: true
 }]);
 
 });
