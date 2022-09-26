@@ -268,5 +268,8 @@ registerModel({
         scale: attr({
             default: 1,
         }),
+        scrollZoomStep: attr({
+            default: 0.1,
+        }),
     },
 });
