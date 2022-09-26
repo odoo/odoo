@@ -22,6 +22,7 @@ It also enables the "optional products" feature.
     'demo': [
         'data/sale_demo.xml',
     ],
+    'auto_install': True,
     'assets': {
         'web.assets_backend': [
             'sale/static/src/js/variant_mixin.js',
