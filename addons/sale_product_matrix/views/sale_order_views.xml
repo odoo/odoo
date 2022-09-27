@@ -11,6 +11,9 @@
                 <field name="grid_product_tmpl_id" invisible="1"/>
                 <field name="grid_update" invisible="1"/>
             </field>
+            <xpath expr="//tree/field[@name='product_template_id']" position="after">
+                <field name="product_add_mode" invisible="1"/>
+            </xpath>
             <xpath expr="//notebook//group[@name='sales_person']" position="inside">
                 <field name="report_grids" groups="base.group_no_one"/>
             </xpath>
