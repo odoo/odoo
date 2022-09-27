@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+    <t t-name="sale.SaleProductField" t-inherit="web.Many2OneField" t-inherit-mode="primary" owl="1">
+        <xpath expr="//t[@t-if='hasExternalButton']" position="before">
+            <t t-if="hasConfigurationButton">
+                <button
+                    type="button"
+                    t-att-class="configurationButtonIcon"
+                    tabindex="-1"
+                    draggable="false"
+                    t-att-aria-label="configurationButtonHelp"
+                    t-att-data-tooltip="configurationButtonHelp"
+                    t-on-click="onEditConfiguration"/>
+            </t>
+        </xpath>
+    </t>
+
+</templates>
