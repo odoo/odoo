@@ -26,12 +26,21 @@ export default class OdooGraphPlugin extends CorePlugin {
      */
     handle(cmd) {
         switch (cmd.type) {
-            case "CREATE_CHART": {
+            case "CREATE_CHART":
                 switch (cmd.definition.type) {
                     case "odoo_pie":
                     case "odoo_bar":
                     case "odoo_line":
-                        this._addGraphDataSource(cmd.id, cmd.definition.dataSourceId);
+                        this._addGraphDataSource(cmd.id);
+                        break;
+                }
+                break;
+            case "UPDATE_CHART": {
+                switch (cmd.definition.type) {
+                    case "odoo_pie":
+                    case "odoo_bar":
+                    case "odoo_line":
+                        this._setGraphDataSource(cmd.id);
                         break;
                 }
                 break;
@@ -75,7 +84,7 @@ export default class OdooGraphPlugin extends CorePlugin {
             if (sheet.figures) {
                 for (const figure of sheet.figures) {
                     if (figure.tag === "chart" && figure.data.type.startsWith("odoo_")) {
-                        this._addGraphDataSource(figure.id, this.uuidGenerator.uuidv4());
+                        this._addGraphDataSource(figure.id);
                     }
                 }
             }
@@ -87,17 +96,28 @@ export default class OdooGraphPlugin extends CorePlugin {
     // -------------------------------------------------------------------------
 
     /**
-     * @param {string} id
-     * @param {string} dataSourceId
+     * @param {string} chartId
      */
-    _addGraphDataSource(id, dataSourceId) {
+    _addGraphDataSource(chartId) {
+        const dataSourceId = this.uuidGenerator.uuidv4();
         const graphsDataSources = { ...this.graphsDataSources };
-        graphsDataSources[id] = dataSourceId;
-        const definition = this.getters.getChart(id).getDefinitionForDataSource();
+        graphsDataSources[chartId] = dataSourceId;
+        const definition = this.getters.getChart(chartId).getDefinitionForDataSource();
         if (!this.dataSources.contains(dataSourceId)) {
             this.dataSources.add(dataSourceId, GraphDataSource, definition);
         }
         this.history.update("graphsDataSources", graphsDataSources);
+        
+        this._setGraphDataSource(chartId);
+    }
+
+    /**
+     * Sets the catasource on the corresponding graph
+     * @param {string} chartId 
+     */
+    _setGraphDataSource(chartId) {
+        const chart = this.getters.getChart(chartId);
+        chart.setDataSource(this.getters.getGraphDataSource(chartId));
     }
 }
 

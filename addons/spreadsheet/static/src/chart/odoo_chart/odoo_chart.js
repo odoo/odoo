@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
+import GraphDataSource from "../data_source/graph_data_source";
 
 const { AbstractChart, CommandResult } = spreadsheet;
 
@@ -17,7 +18,6 @@ const { AbstractChart, CommandResult } = spreadsheet;
  * @property {boolean} stacked
  *
  * @typedef OdooChartDefinition
- * @property {string} id
  * @property {string} type
  * @property {MetaData} metaData
  * @property {SearchParams} searchParams
@@ -39,12 +39,12 @@ export class OdooChart extends AbstractChart {
      */
     constructor(definition, sheetId, getters) {
         super(definition, sheetId, getters);
-        this.id = definition.id;
         this.type = definition.type;
         this.metaData = definition.metaData;
         this.searchParams = definition.searchParams;
         this.legendPosition = definition.legendPosition;
         this.background = definition.background;
+        this.dataSource = undefined;
     }
 
     static transformDefinition(definition) {
@@ -79,7 +79,6 @@ export class OdooChart extends AbstractChart {
         return {
             //@ts-ignore Defined in the parent class
             title: this.title,
-            id: this.id,
             background: this.background,
             legendPosition: this.legendPosition,
             metaData: this.metaData,
@@ -121,5 +120,14 @@ export class OdooChart extends AbstractChart {
 
     getSheetIdsUsedInChartRanges() {
         return [];
+    }
+
+    setDataSource(dataSource) {
+        if (dataSource instanceof GraphDataSource) {
+            this.dataSource = dataSource;
+        }
+        else {
+            throw new Error("Only GraphDataSources can be added.");
+        }
     }
 }

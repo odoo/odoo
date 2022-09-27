@@ -145,6 +145,38 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
         assert.verifySteps(["web_read_group"], "it should have loaded the data");
     });
 
+    QUnit.test("Changing the chart type does not reload the data", async (assert) => {
+        const { model } = await createSpreadsheetWithGraph({
+            type: "odoo_line",
+            mockRPC: async function (route, args) {
+                if (args.method === "web_read_group") {
+                    assert.step("web_read_group");
+                }
+            },
+        });
+        const sheetId = model.getters.getActiveSheetId();
+        const chartId = model.getters.getChartIds(sheetId)[0];
+        const definition = model.getters.getChartDefinition(chartId);
+
+        // force runtime computation
+        model.getters.getChartRuntime(chartId);
+        await nextTick();
+
+        assert.verifySteps(["web_read_group"], "it should have loaded the data");
+        model.dispatch("UPDATE_CHART", {
+            definition: {
+                ...definition,
+                type: "odoo_bar",
+            },
+            id: chartId,
+            sheetId,
+        });
+        await nextTick();
+        // force runtime computation
+        model.getters.getChartRuntime(chartId);
+        assert.verifySteps([], "it should have not have loaded the data a second time");
+    });
+
     QUnit.test("Can import/export an Odoo chart", async (assert) => {
         const model = await createModelWithDataSource();
         insertGraphInSpreadsheet(model, "odoo_line");
@@ -284,6 +316,12 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
             JSON.stringify(model.getters.getChartRuntime(chartIds[1])),
             JSON.stringify(model.getters.getChartRuntime(chartId))
         );
+
+        assert.notEqual(
+            model.getters.getChart(chartId).dataSource,
+            model.getters.getChart(chartIds[1]).dataSource,
+            "The datasource is also duplicated"
+        );
     });
 
     QUnit.test("Can cut/paste Odoo chart", async (assert) => {
@@ -304,4 +342,24 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
         );
     });
 
+    QUnit.test("Duplicating a sheet correctly duplicates Odoo chart", async (assert) => {
+        const { model } = await createSpreadsheetWithGraph({ type: "odoo_bar" });
+        const sheetId = model.getters.getActiveSheetId();
+        const secondSheetId = "secondSheetId";
+        const chartId = model.getters.getChartIds(sheetId)[0];
+        model.dispatch("DUPLICATE_SHEET", { sheetId, sheetIdTo: secondSheetId });
+        const chartIds = model.getters.getChartIds(secondSheetId);
+        assert.strictEqual(chartIds.length, 1);
+        assert.ok(model.getters.getChart(chartIds[0]) instanceof OdooChart);
+        assert.strictEqual(
+            JSON.stringify(model.getters.getChartRuntime(chartIds[0])),
+            JSON.stringify(model.getters.getChartRuntime(chartId))
+        );
+
+        assert.notEqual(
+            model.getters.getChart(chartId).dataSource,
+            model.getters.getChart(chartIds[0]).dataSource,
+            "The datasource is also duplicated"
+        );
+    });
 });
