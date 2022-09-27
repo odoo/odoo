@@ -5,6 +5,7 @@ import uuid
 from collections import defaultdict
 
 from dateutil.relativedelta import relativedelta
+import ast
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.http_routing.models.ir_http import slug
@@ -623,7 +624,7 @@ class Channel(models.Model):
     def action_view_ratings(self):
         action = self.env["ir.actions.actions"]._for_xml_id("website_slides.rating_rating_action_slide_channel")
         action['name'] = _('Rating of %s') % (self.name)
-        action['domain'] = [('res_id', 'in', self.ids)]
+        action['domain'] = expression.AND([ast.literal_eval(action.get('domain', '[]')), [('res_id', 'in', self.ids)]])
         return action
 
     def action_request_access(self):
