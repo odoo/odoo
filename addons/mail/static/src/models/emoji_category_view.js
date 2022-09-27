@@ -49,5 +49,5 @@ registerModel({
             identifying: true,
             inverse: 'emojiCategoryView',
         }),
-    }
+    },
 });
