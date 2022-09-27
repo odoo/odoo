@@ -185,7 +185,7 @@
         <field name="name">sale.order.form</field>
         <field name="model">sale.order</field>
         <field name="arch" type="xml">
-            <form string="Sales Order" class="o_sale_order" js_class="sale_discount_form">
+            <form string="Sales Order" class="o_sale_order">
             <header>
                 <field name="authorized_transaction_ids" invisible="1"/>
                 <button name="payment_action_capture" type="object" data-hotkey="shift+g"
@@ -309,6 +309,7 @@
                                             force_save="1"
                                             widget="many2one_barcode"
                                             />
+                                        <field name="product_type" invisible="1"/>
                                         <field name="invoice_status" invisible="1"/>
                                         <field name="qty_to_invoice" invisible="1"/>
                                         <field name="qty_delivered_method" invisible="1"/>
@@ -395,7 +396,7 @@
                                 <!-- We do not display the type because we don't want the user to be bothered with that information if he has no section or note. -->
                                 <field name="display_type" invisible="1"/>
                                 <field name="product_uom_category_id" invisible="1"/>
-
+                                <field name="product_type" invisible="1"/>
                                 <field name="product_updatable" invisible="1"/>
                                 <field
                                     name="product_id"
@@ -414,7 +415,7 @@
                                         'default_description_sale': name
                                     }"
                                     domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
-                                    widget="product_configurator"
+                                    widget="sol_product_many2one"
                                 />
                                 <field name="product_template_id"
                                     string="Product"
@@ -433,7 +434,7 @@
                                         'default_description_sale': name
                                     }"
                                     domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
-                                    widget="product_configurator"/>
+                                    widget="sol_product_many2one"/>
                                 <field name="name" widget="section_and_note_text" optional="show"/>
                                 <field name="analytic_distribution_stored_char" invisible="1"/>
                                 <!-- TODO widget="analytic_distribution" -->
@@ -507,7 +508,7 @@
                                     attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"
                                     optional="show"
                                 />
-                                <field name="discount" string="Disc.%" groups="product.group_discount_per_so_line" optional="show" widget="product_discount"/>
+                                <field name="discount" string="Disc.%" groups="product.group_discount_per_so_line" optional="show" widget="sol_discount"/>
                                 <field name="is_downpayment" invisible="1"/>
                                 <field name="price_subtotal" widget="monetary" groups="account.group_show_line_subtotals_tax_excluded" attrs="{'invisible': [('is_downpayment', '=', True)]}"/>
                                 <field name="price_total" widget="monetary" groups="account.group_show_line_subtotals_tax_included" attrs="{'invisible': [('is_downpayment', '=', True)]}"/>
