@@ -28,8 +28,8 @@ class EventConfiguratorRecord extends Record {
         await super.save(options);
         this.model.action.doAction({type: 'ir.actions.act_window_close', infos: {
             eventConfiguration: {
-                event_id: {id: this.data.event_id[0]},
-                event_ticket_id: {id: this.data.event_ticket_id[0]}
+                event_id: this.data.event_id,
+                event_ticket_id: this.data.event_ticket_id,
             }
         }});
     }
