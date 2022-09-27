@@ -205,6 +205,27 @@ registerModel({
         rotate() {
             this.update({ angle: this.angle + 90 });
         },
+        /**
+         * Update the style of the zoomer based on translate transformation. Changes
+         * are directly applied on zoomer, instead of triggering re-render and
+         * defining them in the template, for performance reasons.
+         */
+        updateZoomerStyle() {
+            const tx = this.imageRef.offsetWidth * this.scale > this.zoomerRef.el.offsetWidth
+                ? this.translate.x + this.translate.dx
+                : 0;
+            const ty = this.imageRef.offsetHeight * this.scale > this.zoomerRef.el.offsetHeight
+                ? this.translate.y + this.translate.dy
+                : 0;
+            if (tx === 0) {
+                this.translate.update({ x: 0 });
+            }
+            if (ty === 0) {
+                this.translate.update({ y: 0 });
+            }
+            this.zoomerRef.el.style = `transform: ` +
+                `translate(${tx}px, ${ty}px)`;
+        },
     },
     fields: {
         /**

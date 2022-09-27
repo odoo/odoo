@@ -77,34 +77,7 @@ export class AttachmentViewer extends Component {
             x: increment(this.attachmentViewer.translate.dx),
             y: increment(this.attachmentViewer.translate.dy),
         });
-        this._updateZoomerStyle();
-    }
-
-    /**
-     * Update the style of the zoomer based on translate transformation. Changes
-     * are directly applied on zoomer, instead of triggering re-render and
-     * defining them in the template, for performance reasons.
-     *
-     * @private
-     * @returns {string}
-     */
-    _updateZoomerStyle() {
-        const attachmentViewer = this.attachmentViewer;
-        const image = this.attachmentViewer.imageRef;
-        const tx = image.offsetWidth * attachmentViewer.scale > this.attachmentViewer.zoomerRef.el.offsetWidth
-            ? this.attachmentViewer.translate.x + this.attachmentViewer.translate.dx
-            : 0;
-        const ty = image.offsetHeight * attachmentViewer.scale > this.attachmentViewer.zoomerRef.el.offsetHeight
-            ? this.attachmentViewer.translate.y + this.attachmentViewer.translate.dy
-            : 0;
-        if (tx === 0) {
-            this.attachmentViewer.translate.update({ x: 0 });
-        }
-        if (ty === 0) {
-            this.attachmentViewer.translate.update({ y: 0 });
-        }
-        this.attachmentViewer.zoomerRef.el.style = `transform: ` +
-            `translate(${tx}px, ${ty}px)`;
+        this.attachmentViewer.updateZoomerStyle();
     }
 
     /**
@@ -118,7 +91,7 @@ export class AttachmentViewer extends Component {
         this.attachmentViewer.update({
             scale: this.attachmentViewer.scale + (scroll ? SCROLL_ZOOM_STEP : ZOOM_STEP),
         });
-        this._updateZoomerStyle();
+        this.attachmentViewer.updateZoomerStyle();
     }
 
     /**
@@ -139,7 +112,7 @@ export class AttachmentViewer extends Component {
         this.attachmentViewer.update({
             scale: Math.max(this.attachmentViewer.minScale, unflooredAdaptedScale),
         });
-        this._updateZoomerStyle();
+        this.attachmentViewer.updateZoomerStyle();
     }
 
     /**
@@ -149,7 +122,7 @@ export class AttachmentViewer extends Component {
      */
     _zoomReset() {
         this.attachmentViewer.update({ scale: 1 });
-        this._updateZoomerStyle();
+        this.attachmentViewer.updateZoomerStyle();
     }
 
     //--------------------------------------------------------------------------
@@ -275,7 +248,7 @@ export class AttachmentViewer extends Component {
             dx: ev.clientX - this._dragstartX,
             dy: ev.clientY - this._dragstartY,
         });
-        this._updateZoomerStyle();
+        this.attachmentViewer.updateZoomerStyle();
     }
 
     /**
