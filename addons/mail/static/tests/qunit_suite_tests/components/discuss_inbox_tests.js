@@ -44,7 +44,7 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { click, insertText } = await this.start({
+    const { click, env, insertText } = await this.start({
         waitUntilEvent: {
             eventName: 'o-thread-view-hint-processed',
             message: "should wait until inbox displayed its messages",
@@ -56,6 +56,7 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
                 );
             },
         },
+        hasTimeControl: true,
     });
     assert.containsOnce(
         document.body,
@@ -93,6 +94,8 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
     );
 
     await insertText('.o_ComposerTextInput_textarea', "@Te");
+    await env.testUtils.advanceTime(300);
+    await nextAnimationFrame();
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion',

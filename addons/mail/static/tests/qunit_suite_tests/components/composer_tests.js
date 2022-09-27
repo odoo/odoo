@@ -770,7 +770,7 @@ QUnit.test('display partner mention suggestions on typing "@"', async function (
     pyEnv['res.partner'].create({ email: "testpartner2@odoo.com", name: "TestPartner2" });
     pyEnv['res.users'].create({ partner_id: resPartnerId1 });
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { createComposerComponent, insertText, messaging } = await start();
+    const { createComposerComponent, env, insertText, messaging } = await start({ hasTimeControl: true });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
@@ -783,6 +783,8 @@ QUnit.test('display partner mention suggestions on typing "@"', async function (
         "mention suggestions list should not be present"
     );
     await insertText('.o_ComposerTextInput_textarea', "@");
+    await env.testUtils.advanceTime(300);
+    await nextAnimationFrame();
     assert.hasClass(
         document.querySelector('.o_ComposerSuggestionList_list'),
         'show',
@@ -801,7 +803,7 @@ QUnit.test('mention a partner', async function (assert) {
     const pyEnv = await startServer();
     pyEnv['res.partner'].create({ email: "testpartner@odoo.com", name: "TestPartner" });
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { click, createComposerComponent, insertText, messaging } = await start();
+    const { click, createComposerComponent, env, insertText, messaging } = await start({ hasTimeControl: true });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
@@ -819,6 +821,8 @@ QUnit.test('mention a partner', async function (assert) {
         "text content of composer should be empty initially"
     );
     await insertText('.o_ComposerTextInput_textarea', '@Te');
+    await env.testUtils.advanceTime(300);
+    await nextAnimationFrame();
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion',
@@ -838,7 +842,7 @@ QUnit.test('mention a partner after some text', async function (assert) {
     const pyEnv = await startServer();
     pyEnv['res.partner'].create({ email: "testpartner@odoo.com", name: "TestPartner" });
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { click, createComposerComponent, insertText, messaging } = await start();
+    const { click, createComposerComponent, env, insertText, messaging } = await start({ hasTimeControl: true });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
@@ -865,6 +869,8 @@ QUnit.test('mention a partner after some text', async function (assert) {
         "text content of composer should have content"
     );
     await insertText('.o_ComposerTextInput_textarea', "@Te");
+    await env.testUtils.advanceTime(300);
+    await nextAnimationFrame();
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion',
@@ -884,7 +890,7 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
     const pyEnv = await startServer();
     pyEnv['res.partner'].create({ email: "testpartner@odoo.com", name: "TestPartner" });
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { click, createComposerComponent, insertText, messaging } = await start();
+    const { click, createComposerComponent, env, insertText, messaging } = await start({ hasTimeControl: true });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
@@ -902,6 +908,8 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
         "text content of composer should be empty initially"
     );
     await insertText('.o_ComposerTextInput_textarea', "@Te");
+    await env.testUtils.advanceTime(300);
+    await nextAnimationFrame();
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion',

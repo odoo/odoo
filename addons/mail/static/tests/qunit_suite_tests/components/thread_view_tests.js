@@ -5,6 +5,7 @@ import {
     afterNextRender,
     dragenterFiles,
     isScrolledToBottom,
+    nextAnimationFrame,
     start,
     startServer,
 } from '@mail/../tests/helpers/test_utils';
@@ -1036,7 +1037,7 @@ QUnit.test('Post a message containing an email address followed by a mention on 
         email: "testpartner@odoo.com",
         name: "TestPartner",
     });
-    const { click, createThreadViewComponent, insertText, messaging } = await start();
+    const { click, createThreadViewComponent, env, insertText, messaging } = await start({ hasTimeControl: true });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
@@ -1049,6 +1050,8 @@ QUnit.test('Post a message containing an email address followed by a mention on 
     await createThreadViewComponent(threadViewer.threadView);
     await insertText('.o_ComposerTextInput_textarea', "email@odoo.com\n");
     await insertText('.o_ComposerTextInput_textarea', "@Te");
+    await env.testUtils.advanceTime(300);
+    await nextAnimationFrame();
     await click('.o_ComposerSuggestion');
     await click('.o_Composer_buttonSend');
     assert.containsOnce(
@@ -1067,7 +1070,7 @@ QUnit.test(`Mention a partner with special character (e.g. apostrophe ')`, async
         email: "usatyi@example.com",
         name: "Pynya's spokesman",
     });
-    const { click, createThreadViewComponent, insertText, messaging } = await start();
+    const { click, createThreadViewComponent, env, insertText, messaging } = await start({ hasTimeControl: true });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
@@ -1079,6 +1082,8 @@ QUnit.test(`Mention a partner with special character (e.g. apostrophe ')`, async
     });
     await createThreadViewComponent(threadViewer.threadView);
     await insertText('.o_ComposerTextInput_textarea', "@Pyn");
+    await env.testUtils.advanceTime(300);
+    await nextAnimationFrame();
     await click('.o_ComposerSuggestion');
     await click('.o_Composer_buttonSend');
     assert.containsOnce(
@@ -1103,7 +1108,7 @@ QUnit.test('mention 2 different partners that have the same name', async functio
             name: "TestPartner",
         },
     ]);
-    const { click, createThreadViewComponent, insertText, messaging } = await start();
+    const { click, createThreadViewComponent, env, insertText, messaging } = await start({ hasTimeControl: true });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
@@ -1115,8 +1120,12 @@ QUnit.test('mention 2 different partners that have the same name', async functio
     });
     await createThreadViewComponent(threadViewer.threadView);
     await insertText('.o_ComposerTextInput_textarea', "@Te");
+    await env.testUtils.advanceTime(300);
+    await nextAnimationFrame();
     await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestion')[0].click());
     await insertText('.o_ComposerTextInput_textarea', "@Te");
+    await env.testUtils.advanceTime(300);
+    await nextAnimationFrame();
     await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestion')[1].click());
     await click('.o_Composer_buttonSend');
     assert.containsOnce(document.body, '.o_Message_content', 'should have one message after posting it');
@@ -1207,7 +1216,7 @@ QUnit.test('mention a channel on a second line when the first line contains #', 
     const mailChannelId1 = pyEnv['mail.channel'].create({
         name: "General good",
     });
-    const { click, createThreadViewComponent, insertText, messaging } = await start();
+    const { click, createThreadViewComponent, env, insertText, messaging } = await start({ hasTimeControl: true });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
@@ -1220,6 +1229,8 @@ QUnit.test('mention a channel on a second line when the first line contains #', 
     await createThreadViewComponent(threadViewer.threadView);
 
     await insertText('.o_ComposerTextInput_textarea', "#blabla\n");
+    await env.testUtils.advanceTime(300);
+    await nextAnimationFrame();
     await insertText('.o_ComposerTextInput_textarea', "#");
     await click('.o_ComposerSuggestion');
     await click('.o_Composer_buttonSend');
@@ -1518,7 +1529,7 @@ QUnit.test('first unseen message should be directly preceded by the new message 
         name: "General",
         uuid: 'channel20uuid',
     });
-    const { click, createThreadViewComponent, env, messaging } = await start();
+    const { click, createThreadViewComponent, env, messaging } = await start({ hasTimeControl: true });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel'
