@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { clear, increment } from '@mail/model/model_field_command';
 
 import { hidePDFJSButtons } from '@web/legacy/js/libs/pdfjs';
 
@@ -247,6 +247,19 @@ registerModel({
          */
         rotate() {
             this.update({ angle: this.angle + 90 });
+        },
+        /**
+         * Stop dragging interaction of the user.
+         */
+        stopDragging() {
+            this.update({ isDragging: false });
+            this.translate.update({
+                dx: 0,
+                dy: 0,
+                x: increment(this.translate.dx),
+                y: increment(this.translate.dy),
+            });
+            this.updateZoomerStyle();
         },
         /**
          * Update the style of the zoomer based on translate transformation. Changes

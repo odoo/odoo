@@ -2,7 +2,6 @@
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
-import { increment } from '@mail/model/model_field_command';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component, onMounted, onPatched, onWillUnmount } = owl;
@@ -65,22 +64,6 @@ export class AttachmentViewer extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * Stop dragging interaction of the user.
-     *
-     * @private
-     */
-    _stopDragging() {
-        this.attachmentViewer.update({ isDragging: false });
-        this.attachmentViewer.translate.update({
-            dx: 0,
-            dy: 0,
-            x: increment(this.attachmentViewer.translate.dx),
-            y: increment(this.attachmentViewer.translate.dy),
-        });
-        this.attachmentViewer.updateZoomerStyle();
-    }
-
-    /**
      * Zoom in the image.
      *
      * @private
@@ -131,7 +114,7 @@ export class AttachmentViewer extends Component {
             return;
         }
         ev.stopPropagation();
-        this._stopDragging();
+        this.attachmentViewer.stopDragging();
     }
 
     /**
