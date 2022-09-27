@@ -108,8 +108,10 @@ function mapActiveFieldsToFieldsInfo(activeFields, fields, viewType, env) {
         if (mode && mode.split(",").length !== 1) {
             mode = env.isSmall ? "kanban" : "list";
         }
+        const FieldComponent = fieldDescr.FieldComponent;
         const fieldInfo = {
-            Widget,
+            Widget, // remove this when we no longer support legacy fields inside wowl views
+            specialData: FieldComponent && FieldComponent.legacySpecialData,
             domain,
             context: fieldDescr.context,
             fieldDependencies: {}, // ??
@@ -123,20 +125,19 @@ function mapActiveFieldsToFieldsInfo(activeFields, fields, viewType, env) {
             __WOWL_FIELD_DESCR__: fieldDescr,
         };
 
-        if (fieldDescr.FieldComponent && fieldDescr.FieldComponent.limit) {
-            fieldInfo.limit = fieldDescr.FieldComponent.limit;
+        if (FieldComponent && FieldComponent.limit) {
+            fieldInfo.limit = FieldComponent.limit;
         }
 
         if (fieldDescr.modifiers && fieldDescr.modifiers.invisible === true) {
             fieldInfo.__no_fetch = true;
         }
 
-        if (!fieldInfo.__no_fetch && Widget.prototype.fieldsToFetch) {
-            fieldDescr.fieldsToFetch = fieldDescr.fieldsToFetch || {};
-            fieldInfo.relatedFields = { ...Widget.prototype.fieldsToFetch };
+        if (!fieldInfo.__no_fetch && FieldComponent && FieldComponent.fieldsToFetch) {
+            fieldInfo.relatedFields = { ...FieldComponent.fieldsToFetch };
             fieldInfo.viewType = "default";
             const defaultView = {};
-            for (const fieldName of Object.keys(Widget.prototype.fieldsToFetch)) {
+            for (const fieldName of Object.keys(FieldComponent.fieldsToFetch)) {
                 defaultView[fieldName] = {};
                 if (fieldDescr.fieldsToFetch[fieldName]) {
                     defaultView[fieldName].__WOWL_FIELD_DESCR__ =
@@ -1269,15 +1270,11 @@ export class RelationalModel extends Model {
             if (!fieldNames.includes(name)) {
                 const fieldType = legRec.fields[name].type;
                 const fieldInfo = legFieldsInfo[name];
-
                 // SpecialData case: field requires specialData that haven't
                 // been fetched yet.
-                if (fieldInfo.Widget) {
-                    const requiresSpecialData = fieldInfo.Widget.prototype.specialData;
-                    if (requiresSpecialData && !(name in legRec.specialData)) {
-                        fieldNames.push(name);
-                        continue;
-                    }
+                if (fieldInfo.specialData && !(name in legRec.specialData)) {
+                    fieldNames.push(name);
+                    continue;
                 }
 
                 // X2Many case: field is an x2many displayed as a list or

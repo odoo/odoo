@@ -2858,9 +2858,14 @@ var BasicModel = AbstractModel.extend({
         return Promise.all(_.map(fieldNames, function (name) {
             var viewType = (options && options.viewType) || record.viewType;
             var fieldInfo = record.fieldsInfo[viewType][name] || {};
-            var Widget = fieldInfo.Widget;
-            if (Widget && Widget.prototype.specialData) {
-                return self[Widget.prototype.specialData](record, name, fieldInfo).then(function (data) {
+            let specialData;
+            if ("specialData" in fieldInfo) {
+                specialData = fieldInfo.specialData;
+            } else if (fieldInfo.Widget) {
+                specialData = fieldInfo.Widget.prototype.specialData;
+            }
+            if (specialData) {
+                return self[specialData](record, name, fieldInfo).then(function (data) {
                     if (data === undefined) {
                         return;
                     }

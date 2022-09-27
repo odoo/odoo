@@ -68,6 +68,7 @@ BadgeSelectionField.props = {
 
 BadgeSelectionField.displayName = _lt("Badges");
 BadgeSelectionField.supportedTypes = ["many2one", "selection"];
+BadgeSelectionField.legacySpecialData = "_fetchSpecialMany2ones";
 
 BadgeSelectionField.isEmpty = (record, fieldName) => record.data[fieldName] === false;
 

@@ -167,6 +167,7 @@ StatusBarField.components = {
 
 StatusBarField.displayName = _lt("Status");
 StatusBarField.supportedTypes = ["many2one", "selection"];
+StatusBarField.legacySpecialData = "_fetchSpecialStatus";
 
 StatusBarField.isEmpty = (record, fieldName) => {
     return record.model.env.isSmall ? !record.data[fieldName] : false;

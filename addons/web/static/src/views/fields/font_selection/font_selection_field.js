@@ -41,6 +41,7 @@ FontSelectionField.props = {
 
 FontSelectionField.displayName = _lt("Font Selection");
 FontSelectionField.supportedTypes = ["selection"];
+FontSelectionField.legacySpecialData = "_fetchSpecialRelation";
 
 FontSelectionField.extractProps = ({ attrs }) => {
     return {

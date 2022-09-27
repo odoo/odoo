@@ -71,6 +71,7 @@ SelectionField.props = {
 
 SelectionField.displayName = _lt("Selection");
 SelectionField.supportedTypes = ["many2one", "selection"];
+SelectionField.legacySpecialData = "_fetchSpecialRelation";
 
 SelectionField.isEmpty = (record, fieldName) => record.data[fieldName] === false;
 SelectionField.extractProps = ({ attrs }) => {

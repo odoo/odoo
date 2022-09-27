@@ -357,6 +357,7 @@ function registerField(name, LegacyFieldWidget) {
     }
     LegacyField.template = legacyFieldTemplate;
     LegacyField.components = { FieldAdapter };
+    LegacyField.legacySpecialData = LegacyFieldWidget.prototype.specialData;
     LegacyField.fieldsToFetch = LegacyFieldWidget.prototype.fieldsToFetch || {};
     LegacyField.fieldDependencies = LegacyFieldWidget.prototype.fieldDependencies || {};
     LegacyField.useSubView = LegacyFieldWidget.prototype.useSubview;
