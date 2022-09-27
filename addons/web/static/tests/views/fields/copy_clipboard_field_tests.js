@@ -40,23 +40,6 @@ QUnit.module("Fields", (hooks) => {
         };
         target = getFixture();
         setupViewRegistries();
-        const fakePopoverService = {
-            async start() {
-                return {
-                    add(el, comp, params) {
-                        assert.strictEqual(el.textContent, "Copy", "button has the right text");
-                        assert.deepEqual(
-                            params,
-                            { tooltip: "Copied" },
-                            "tooltip has the right parameters"
-                        );
-                        assert.step("copied tooltip");
-                    },
-                };
-            },
-        };
-        serviceRegistry.remove("popover");
-        serviceRegistry.add("popover", fakePopoverService);
     });
 
     QUnit.module("CopyClipboardField");
@@ -67,7 +50,7 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "partner",
             arch: `
-                <form string="Partners">
+                <form>
                     <sheet>
                         <div>
                             <field name="text_field" widget="CopyClipboardText"/>
@@ -143,6 +126,24 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.test("CopyClipboard fields: display a tooltip on click", async function (assert) {
+        const fakePopoverService = {
+            async start() {
+                return {
+                    add(el, comp, params) {
+                        assert.strictEqual(el.textContent, "Copy", "button has the right text");
+                        assert.deepEqual(
+                            params,
+                            { tooltip: "Copied" },
+                            "tooltip has the right parameters"
+                        );
+                        assert.step("copied tooltip");
+                    },
+                };
+            },
+        };
+        serviceRegistry.remove("popover");
+        serviceRegistry.add("popover", fakePopoverService);
+
         patchWithCleanup(browser, {
             navigator: {
                 clipboard: {
@@ -163,7 +164,7 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "partner",
             arch: `
-                <form string="Partners">
+                <form>
                     <sheet>
                         <div>
                             <field name="text_field" widget="CopyClipboardText"/>
@@ -199,7 +200,7 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "partner",
             arch: `
-                <form string="Partners">
+                <form>
                     <sheet>
                         <div>
                             <field name="text_field" widget="CopyClipboardText"/>
@@ -215,5 +216,50 @@ QUnit.module("Fields", (hooks) => {
             ["This browser doesn't allow to copy to clipboard"],
             "console simply displays a warning on failure"
         );
+    });
+
+    QUnit.module("CopyToClipboardButtonField");
+
+    QUnit.test("CopyToClipboardButtonField in form view", async function (assert) {
+        patchWithCleanup(browser, {
+            navigator: {
+                clipboard: {
+                    writeText: (text) => {
+                        assert.step(text);
+                        return Promise.resolve();
+                    },
+                },
+            },
+        });
+
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: `
+                <form>
+                    <sheet>
+                        <div>
+                            <field name="text_field" widget="CopyClipboardButton"/>
+                            <field name="char_field" widget="CopyClipboardButton"/>
+                        </div>
+                    </sheet>
+                </form>`,
+            resId: 1,
+        });
+
+        assert.containsNone(target.querySelector(".o_field_widget[name=char_field]"), "input");
+        assert.containsNone(target.querySelector(".o_field_widget[name=text_field]"), "input");
+        assert.containsOnce(target, ".o_clipboard_button.o_btn_text_copy");
+        assert.containsOnce(target, ".o_clipboard_button.o_btn_char_copy");
+
+        await click(target.querySelector(".o_clipboard_button.o_btn_text_copy"));
+        await click(target.querySelector(".o_clipboard_button.o_btn_char_copy"));
+
+        assert.verifySteps([
+            `My little txt Value
+Ho-ho-hoooo Merry Christmas`,
+            "yop",
+        ]);
     });
 });
