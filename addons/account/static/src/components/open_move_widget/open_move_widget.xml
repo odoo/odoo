@@ -2,7 +2,7 @@
 <templates>
 
     <t t-name="account.OpenMoveWidget" owl="1">
-        <a href="#" t-esc="props.value" t-on-click.prevent="(ev) => this.openMove()"/>
+        <a href="#" t-esc="props.value" t-on-click.prevent.stop="(ev) => this.openMove()"/>
     </t>
 
 </templates>
