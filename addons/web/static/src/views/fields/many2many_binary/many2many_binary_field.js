@@ -55,8 +55,13 @@ Many2ManyBinaryField.props = {
     className: { type: String, optional: true },
     uploadText: { type: String, optional: true },
 };
-
 Many2ManyBinaryField.supportedTypes = ["many2many"];
+Many2ManyBinaryField.fieldsToFetch = {
+    name: { type: "char" },
+    mimetype: { type: "char" },
+    res_id: { type: "number" },
+    access_token: { type: "char" },
+};
 
 Many2ManyBinaryField.isEmpty = () => false;
 Many2ManyBinaryField.extractProps = ({ attrs, field }) => {

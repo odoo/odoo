@@ -116,6 +116,7 @@ ReferenceField.defaultProps = {
 
 ReferenceField.displayName = _lt("Reference");
 ReferenceField.supportedTypes = ["reference", "char"];
+ReferenceField.legacySpecialData = "_fetchSpecialReference";
 
 ReferenceField.extractProps = ({ attrs, field }) => {
     /*

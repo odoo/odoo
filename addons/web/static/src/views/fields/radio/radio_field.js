@@ -56,6 +56,7 @@ RadioField.defaultProps = {
 
 RadioField.displayName = _lt("Radio");
 RadioField.supportedTypes = ["many2one", "selection"];
+RadioField.legacySpecialData = "_fetchSpecialMany2ones";
 
 RadioField.isEmpty = (record, fieldName) => record.data[fieldName] === false;
 RadioField.extractProps = ({ attrs }) => {
