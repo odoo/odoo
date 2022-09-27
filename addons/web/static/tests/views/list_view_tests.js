@@ -1018,6 +1018,44 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["onchange", "create", "read"]);
     });
 
+    QUnit.test("save a record with an required field computed by another", async function (assert) {
+        serverData.models.foo.onchanges = {
+            foo(record) {
+                if (record.foo) {
+                    record.text = "plop";
+                }
+            },
+        };
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="top">
+                    <field name="foo"/>
+                    <field name="int_field"/>
+                    <field name="text" required="1"/>
+                </tree>`,
+        });
+        assert.containsN(target, ".o_data_row", 4);
+        assert.containsNone(target, ".o_selected_row");
+
+        await click(target.querySelector(".o_list_button_add"));
+        await editInput(target, "[name='int_field'] input", 1);
+        await click(target, ".o_list_view");
+        assert.containsN(target, ".o_data_row", 5);
+        assert.containsOnce(target, ".o_field_invalid");
+        assert.containsOnce(target, ".o_selected_row");
+
+        await editInput(target, "[name='foo'] input", "hello");
+        assert.containsNone(target, ".o_field_invalid");
+        assert.containsOnce(target, ".o_selected_row");
+
+        await click(target, ".o_list_view");
+        assert.containsN(target, ".o_data_row", 5);
+        assert.containsNone(target, ".o_selected_row");
+    });
+
     QUnit.test("boolean field has no title (data-tooltip)", async function (assert) {
         await makeView({
             type: "list",
