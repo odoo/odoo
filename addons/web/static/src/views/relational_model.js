@@ -446,7 +446,7 @@ export class Record extends DataPoint {
                 evalContext[fieldName] = false;
             } else if (isX2Many(this.fields[fieldName])) {
                 const list = this._cache[fieldName];
-                evalContext[fieldName] = list.getContext();
+                evalContext[fieldName] = list.currentIds;
                 // ---> implied to initialize (resIds, commands) currentIds before loading static list
             } else if (value && this.fields[fieldName].type === "date") {
                 evalContext[fieldName] = serializeDate(value);
