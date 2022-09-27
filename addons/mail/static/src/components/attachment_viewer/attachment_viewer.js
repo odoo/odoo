@@ -115,16 +115,6 @@ export class AttachmentViewer extends Component {
         this.attachmentViewer.updateZoomerStyle();
     }
 
-    /**
-     * Reset the zoom scale of the image.
-     *
-     * @private
-     */
-    _zoomReset() {
-        this.attachmentViewer.update({ scale: 1 });
-        this.attachmentViewer.updateZoomerStyle();
-    }
-
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -174,7 +164,7 @@ export class AttachmentViewer extends Component {
      */
     _onClickZoomReset(ev) {
         ev.stopPropagation();
-        this._zoomReset();
+        this.attachmentViewer.resetZoom();
     }
 
     /**
@@ -205,7 +195,7 @@ export class AttachmentViewer extends Component {
                 this._zoomOut();
                 break;
             case '0':
-                this._zoomReset();
+                this.attachmentViewer.resetZoom();
                 break;
             default:
                 return;

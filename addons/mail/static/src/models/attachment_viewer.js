@@ -236,6 +236,13 @@ registerModel({
             printWindow.document.close();
         },
         /**
+         * Reset the zoom scale of the image.
+         */
+        resetZoom() {
+            this.update({ scale: 1 });
+            this.updateZoomerStyle();
+        },
+        /**
          * Rotate the image by 90 degrees to the right.
          */
         rotate() {
