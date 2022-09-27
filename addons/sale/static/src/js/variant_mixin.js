@@ -326,8 +326,11 @@ var VariantMixin = {
             var route = '/sale/create_product_variant';
             if (useAjax) {
                 productReady = ajax.jsonRpc(route, 'call', params);
-            } else {
+            } else if (Boolean(this._rpc)) {
+                // HACK to combine owl and non owl calls
                 productReady = this._rpc({route: route, params: params});
+            } else {
+                productReady = this.rpc(route, params);
             }
         }
 
