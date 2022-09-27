@@ -223,8 +223,14 @@ class StockWarehouseOrderpoint(models.Model):
         action['res_id'] = res.id
         return action
 
-    def action_replenish(self):
+    def action_replenish(self, force_to_max=False):
         now = self.env.cr.now()
+        if force_to_max:
+            for orderpoint in self:
+                orderpoint.qty_to_order = orderpoint.product_max_qty - orderpoint.qty_forecast
+                remainder = orderpoint.qty_multiple > 0 and orderpoint.qty_to_order % orderpoint.qty_multiple or 0.0
+                if not float_is_zero(remainder, precision_rounding=orderpoint.product_uom.rounding):
+                    orderpoint.qty_to_order += orderpoint.qty_multiple - remainder
         try:
             self._procure_orderpoint_confirm(company_id=self.env.company)
         except UserError as e:
