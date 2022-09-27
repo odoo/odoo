@@ -76,17 +76,6 @@ export class AttachmentViewer extends Component {
     }
 
     /**
-     * Called when clicking on zoom out icon.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickZoomOut(ev) {
-        ev.stopPropagation();
-        this.attachmentViewer.zoomOut();
-    }
-
-    /**
      * Called when clicking on reset zoom icon.
      *
      * @private

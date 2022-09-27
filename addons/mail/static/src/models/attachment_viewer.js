@@ -162,6 +162,14 @@ registerModel({
             this.zoomIn();
         },
         /**
+         * Called when clicking on zoom out icon.
+         * @param {MouseEvent} ev
+         */
+        onClickZoomOut(ev) {
+            ev.stopPropagation();
+            this.zoomOut();
+        },
+        /**
          * Called when new image has been loaded
          *
          * @param {Event} ev
