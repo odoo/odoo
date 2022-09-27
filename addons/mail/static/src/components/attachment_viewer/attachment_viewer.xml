@@ -43,7 +43,7 @@
                                     <i class="fa fa-3x fa-circle-o-notch fa-fw fa-spin text-white" role="img" title="Loading"/>
                                 </div>
                             </t>
-                            <img class="o_AttachmentViewer_view o_AttachmentViewer_viewImage mw-100 mh-100 bg-black transition-base" t-on-click="attachmentViewer.onClickImage" t-on-mousedown="_onMousedownImage" t-on-wheel="_onWheelImage" t-on-load="attachmentViewer.onLoadImage" t-att-src="attachmentViewer.attachmentViewerViewable.imageUrl" t-att-style="attachmentViewer.imageStyle" draggable="false" alt="Viewer" t-ref="image"/>
+                            <img class="o_AttachmentViewer_view o_AttachmentViewer_viewImage mw-100 mh-100 bg-black transition-base" t-on-click="attachmentViewer.onClickImage" t-on-mousedown="attachmentViewer.onMousedownImage" t-on-wheel="_onWheelImage" t-on-load="attachmentViewer.onLoadImage" t-att-src="attachmentViewer.attachmentViewerViewable.imageUrl" t-att-style="attachmentViewer.imageStyle" draggable="false" alt="Viewer" t-ref="image"/>
                         </div>
                     </t>
                     <t t-if="attachmentViewer.attachmentViewerViewable.isPdf">

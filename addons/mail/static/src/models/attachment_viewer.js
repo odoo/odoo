@@ -166,6 +166,26 @@ registerModel({
             this.update({ isImageLoading: false });
         },
         /**
+         * @param {DragEvent} ev
+         */
+        onMousedownImage(ev) {
+            if (!this.exists()) {
+                return;
+            }
+            if (this.isDragging) {
+                return;
+            }
+            if (ev.button !== 0) {
+                return;
+            }
+            ev.stopPropagation();
+            this.update({
+                isDragging: true,
+                dragStartX: ev.clientX,
+                dragStartY: ev.clientY,
+            });
+        },
+        /**
          * @param {DragEvent}
          */
         onMousemoveView(ev) {
