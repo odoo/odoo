@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Ogone Payment Provider',
+    'name': 'Payment Provider: Ogone',
     'version': '2.0',
     'category': 'Accounting/Payment Providers',
-    'sequence': 370,
+    'sequence': 350,
     'summary': "This module is deprecated.",
     'depends': ['payment'],
     'data': [

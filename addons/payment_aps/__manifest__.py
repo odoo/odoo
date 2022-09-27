@@ -4,8 +4,8 @@
     'name': "Payment Provider: Amazon Payment Services",
     'version': '1.0',
     'category': 'Accounting/Payment Providers',
-    'sequence': 347,
-    'summary': "Amazon Payment Services' online payment provider covering the MENA region.",
+    'sequence': 350,
+    'summary': "An Amazon payment provider covering the MENA region.",
     'depends': ['payment'],
     'data': [
         'views/payment_aps_templates.xml',
