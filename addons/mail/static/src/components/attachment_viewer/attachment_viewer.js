@@ -228,9 +228,11 @@ export class AttachmentViewer extends Component {
             return;
         }
         ev.stopPropagation();
-        this.attachmentViewer.update({ isDragging: true });
-        this._dragstartX = ev.clientX;
-        this._dragstartY = ev.clientY;
+        this.attachmentViewer.update({
+            isDragging: true,
+            dragStartX: ev.clientX,
+            dragStartY: ev.clientY,
+        });
     }
 
     /**
@@ -245,8 +247,8 @@ export class AttachmentViewer extends Component {
             return;
         }
         this.attachmentViewer.translate.update({
-            dx: ev.clientX - this._dragstartX,
-            dy: ev.clientY - this._dragstartY,
+            dx: ev.clientX - this.attachmentViewer.dragStartX,
+            dy: ev.clientY - this.attachmentViewer.dragStartY,
         });
         this.attachmentViewer.updateZoomerStyle();
     }

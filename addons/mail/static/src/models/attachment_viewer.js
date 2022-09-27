@@ -269,6 +269,12 @@ registerModel({
             inverse: 'attachmentViewer',
             isCausal: true,
         }),
+        dragStartX: attr({
+            default: 0,
+        }),
+        dragStartY: attr({
+            default: 0,
+        }),
         /**
          * Reference of the IFRAME node when the attachment is a PDF.
          */
