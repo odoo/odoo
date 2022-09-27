@@ -123,8 +123,24 @@ class SaleOrder(models.Model):
             if order.pricelist_id and order.partner_id:
                 order_line = order._cart_find_product_line(product.id)
                 if order_line:
-                    price = self.env['account.tax']._fix_tax_included_price_company(price, product.taxes_id, order_line[0].tax_id, self.company_id)
-                    pu = self.env['account.tax']._fix_tax_included_price_company(pu, product.taxes_id, order_line[0].tax_id, self.company_id)
+                    price = product._get_tax_included_unit_price(
+                        self.company_id,
+                        order.currency_id,
+                        order.date_order,
+                        'sale',
+                        fiscal_position=order.fiscal_position_id,
+                        product_price_unit=price,
+                        product_currency=order.currency_id
+                    )
+                    pu = product._get_tax_included_unit_price(
+                        self.company_id,
+                        order.currency_id,
+                        order.date_order,
+                        'sale',
+                        fiscal_position=order.fiscal_position_id,
+                        product_price_unit=pu,
+                        product_currency=order.currency_id
+                    )
             if pu != 0:
                 if order.pricelist_id.currency_id != currency:
                     # we need new_list_price in the same currency as price, which is in the SO's pricelist's currency
@@ -145,7 +161,15 @@ class SaleOrder(models.Model):
             if order.pricelist_id and order.partner_id:
                 order_line = order._cart_find_product_line(product.id, force_search=True)
                 if order_line:
-                    pu = self.env['account.tax']._fix_tax_included_price_company(pu, product.taxes_id, order_line[0].tax_id, self.company_id)
+                    pu = product._get_tax_included_unit_price(
+                        self.company_id,
+                        order.currency_id,
+                        order.date_order,
+                        'sale',
+                        fiscal_position=order.fiscal_position_id,
+                        product_price_unit=product.price,
+                        product_currency=order.currency_id
+                    )
 
         return {
             'product_id': product_id,
