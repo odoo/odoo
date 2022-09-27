@@ -74,8 +74,9 @@ odoo.define('pos_restaurant.SplitBillScreen', function(require) {
                 this.currentOrder.set_customer_count(newCustomerCount || 1);
                 this.currentOrder.set_screen_data({ name: 'ProductScreen' });
 
-                this.env.pos.orders.add(this.newOrder);
-                this.env.pos.selectedOrder = this.newOrder;
+                const reactiveNewOrder = this.env.pos.makeOrderReactive(this.newOrder);
+                this.env.pos.orders.add(reactiveNewOrder);
+                this.env.pos.selectedOrder = reactiveNewOrder;
             }
             this.showScreen('PaymentScreen');
         }
