@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from hashlib import sha1
+
 from odoo import fields
 from odoo.http import request
 from odoo.tools import consteq, float_round, ustr
@@ -171,3 +173,29 @@ def check_rights_on_recordset(recordset):
     """
     recordset.check_access_rights('write')
     recordset.check_access_rule('write')
+
+
+# Idempotency
+
+def generate_idempotency_key(tx, scope=None):
+    """ Generate an idempotency key for the provided transaction and scope.
+
+    Idempotency keys are used to prevent API requests from going through twice in a short time: the
+    API rejects requests made after another one with the same payload and idempotency key if it
+    succeeded.
+
+    The idempotency key is generated based on the transaction reference, database UUID, and scope if
+    any. This guarantees the key is identical for two API requests with the same transaction
+    reference, database, and endpoint. Should one of these parameters differ, the key is unique from
+    one request to another (e.g., after dropping the database, for different endpoints, etc.).
+
+    :param recordset tx: The transaction to generate an idempotency key for, as a
+                         `payment.transaction` record.
+    :param str scope: The scope of the API request to generate an idempotency key for. This should
+                      typically be the API endpoint. It is not necessary to provide the scope if the
+                      API takes care of comparing idempotency keys per endpoint.
+    :return: The generated idempotency key.
+    :rtype: str
+    """
+    database_uuid = tx.env['ir.config_parameter'].sudo().get_param('database.uuid')
+    return sha1(f'{database_uuid}{tx.reference}{scope or ""}'.encode()).hexdigest()
