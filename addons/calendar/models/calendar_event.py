@@ -360,7 +360,7 @@ class Meeting(models.Model):
                     for field in recurrence_fields
                     if event.recurrence_id[field]
                 }
-                event.update({**false_values, **event_values, **rrule_values})
+                event.update({**false_values, **defaults, **event_values, **rrule_values})
             else:
                 event.update(false_values)
 
