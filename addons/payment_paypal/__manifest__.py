@@ -1,12 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Paypal Payment Provider',
+    'name': 'Payment Provider: Paypal',
     'version': '2.0',
     'category': 'Accounting/Payment Providers',
-    'sequence': 375,
-    'summary': 'Payment Provider: Paypal Implementation',
-    'description': """Paypal Payment Provider""",
+    'sequence': 350,
+    'summary': "An American payment provider for online payments all over the world.",
     'depends': ['payment'],
     'data': [
         'views/payment_paypal_templates.xml',
