@@ -333,6 +333,7 @@ class HolidaysAllocation(models.Model):
         first_day_this_year = today + relativedelta(month=1, day=1)
         for allocation in self:
             current_level = allocation._get_current_accrual_plan_level_id(first_day_this_year)[0]
+<<<<<<< HEAD
             if not current_level:
                 continue
             lastcall = current_level._get_previous_date(first_day_this_year)
@@ -341,6 +342,21 @@ class HolidaysAllocation(models.Model):
                 if lastcall == first_day_this_year:
                     lastcall = current_level._get_previous_date(first_day_this_year - relativedelta(days=1))
                     nextcall = first_day_this_year
+||||||| parent of 8b4875174bec... temp
+            lastcall = current_level._get_previous_date(first_day_this_year)
+            nextcall = current_level._get_next_date(first_day_this_year)
+            if lastcall == first_day_this_year:
+                lastcall = current_level._get_previous_date(first_day_this_year - relativedelta(days=1))
+                nextcall = first_day_this_year
+            if current_level and current_level.action_with_unused_accruals == 'lost':
+=======
+            if current_level and current_level.action_with_unused_accruals == 'lost':
+                lastcall = current_level._get_previous_date(first_day_this_year)
+                nextcall = current_level._get_next_date(first_day_this_year)
+                if lastcall == first_day_this_year:
+                    lastcall = current_level._get_previous_date(first_day_this_year - relativedelta(days=1))
+                    nextcall = first_day_this_year
+>>>>>>> 8b4875174bec... temp
                 # Allocations are lost but number_of_days should not be lower than leaves_taken
                 allocation.write({'number_of_days': allocation.leaves_taken, 'lastcall': lastcall, 'nextcall': nextcall})
             elif current_level.action_with_unused_accruals == 'postponed' and current_level.postpone_max_days:
