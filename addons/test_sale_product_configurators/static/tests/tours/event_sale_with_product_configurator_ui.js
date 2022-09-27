@@ -50,7 +50,7 @@ tour.register('event_sale_with_product_configurator_tour', {
     extra_trigger: '.o_monetary_cell span:contains("16.50")',  // wait for the optional product line
 }, {
     trigger: 'div[name="product_template_id"] input',
-    extra_trigger: '.o_field_many2one[name="product_template_id"] .o_dropdown_button',
+    extra_trigger: '[name="product_template_id"] .o_dropdown_button',
     run: 'text event (',
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Registration Event (TEST variants)")',
@@ -86,7 +86,7 @@ tour.register('event_sale_with_product_configurator_tour', {
     extra_trigger: '.o_monetary_cell span:contains("150.00")',  // wait for the adult tickets line
 }, {
     trigger: 'div[name="product_template_id"] input',
-    extra_trigger: '.o_field_many2one[name="product_template_id"] .o_dropdown_button',
+    extra_trigger: '[name="product_template_id"] .o_dropdown_button',
     run: 'text event (',
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Registration Event (TEST variants)")',

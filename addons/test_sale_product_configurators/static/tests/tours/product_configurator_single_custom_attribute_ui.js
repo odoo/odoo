@@ -35,15 +35,14 @@ tour.register('sale_product_configurator_single_custom_attribute_tour', {
     run: 'text great single custom value'
 }, {
     trigger: 'button span:contains(Confirm)',
-    extra_trigger: '.oe_advanced_configurator_modal',
 }, {
     trigger: 'td.o_data_cell:contains("single product attribute value: great single custom value")',
     extra_trigger: 'div[name="order_line"]',
     run: function (){} // check custom value
 }, {
-    trigger: 'td.o_product_configurator_cell',
+    trigger: 'div[name="product_template_id"]',
 }, {
-    trigger: '.o_edit_product_configuration',
+    trigger: '.fa-pencil',
 }, {
     trigger: '.main_product .variant_custom_value',
     run: function () {
