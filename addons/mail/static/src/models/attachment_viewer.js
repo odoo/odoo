@@ -154,6 +154,14 @@ registerModel({
             ev.stopPropagation();
         },
         /**
+         * Called when clicking on zoom in icon.
+         * @param {MouseEvent} ev
+         */
+        onClickZoomIn(ev) {
+            ev.stopPropagation();
+            this.zoomIn();
+        },
+        /**
          * Called when new image has been loaded
          *
          * @param {Event} ev

@@ -63,7 +63,7 @@
                 </div>
                 <t t-if="attachmentViewer.attachmentViewerViewable.isImage">
                     <div class="o_AttachmentViewer_toolbar position-absolute bottom-0 d-flex" role="toolbar">
-                        <div class="o_AttachmentViewer_toolbarButton btn btn-dark p-3 rounded-0" t-on-click="_onClickZoomIn" title="Zoom In (+)" role="button">
+                        <div class="o_AttachmentViewer_toolbarButton btn btn-dark p-3 rounded-0" t-on-click="attachmentViewer.onClickZoomIn" title="Zoom In (+)" role="button">
                             <i class="fa fa-fw fa-plus" role="img"/>
                         </div>
                         <div class="o_AttachmentViewer_toolbarButton btn btn-dark p-3 rounded-0" t-att-class="{ o_disabled: attachmentViewer.scale === 1 }" t-on-click="_onClickZoomReset" role="button" title="Reset Zoom (0)">
