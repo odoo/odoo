@@ -97,13 +97,19 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
             .filtered(lambda line: line.account_id == pay_term_lines.account_id)
         (pay_term_lines + to_reconcile).reconcile()
 
+        exchange_diff_move = pay_term_lines.full_reconcile_id.exchange_move_id
+
         # Check payments after reconciliation.
         reconciled_payments_widget_vals = json.loads(invoice.invoice_payments_widget)
 
         self.assertTrue(reconciled_payments_widget_vals)
 
         current_amounts = {vals['move_id']: vals['amount'] for vals in reconciled_payments_widget_vals['content']}
-        self.assertDictEqual(current_amounts, expected_amounts)
+
+        if exchange_diff_move:
+            self.assertDictEqual(current_amounts, {**expected_amounts, exchange_diff_move.id: exchange_diff_move.amount_total})
+        else:
+            self.assertDictEqual(current_amounts, expected_amounts)
 
     # -------------------------------------------------------------------------
     # TESTS

@@ -1621,26 +1621,27 @@ class AccountMove(models.Model):
 
         reconciled_vals = []
         for partial, amount, counterpart_line in self._get_reconciled_invoices_partials():
-            if counterpart_line.move_id.ref:
-                reconciliation_ref = '%s (%s)' % (counterpart_line.move_id.name, counterpart_line.move_id.ref)
-            else:
-                reconciliation_ref = counterpart_line.move_id.name
+            if not any(vals['payment_id'] == counterpart_line.id for vals in reconciled_vals):
+                if counterpart_line.move_id.ref:
+                    reconciliation_ref = '%s (%s)' % (counterpart_line.move_id.name, counterpart_line.move_id.ref)
+                else:
+                    reconciliation_ref = counterpart_line.move_id.name
 
-            reconciled_vals.append({
-                'name': counterpart_line.name,
-                'journal_name': counterpart_line.journal_id.name,
-                'amount': amount,
-                'currency': self.currency_id.symbol,
-                'digits': [69, self.currency_id.decimal_places],
-                'position': self.currency_id.position,
-                'date': counterpart_line.date,
-                'payment_id': counterpart_line.id,
-                'partial_id': partial.id,
-                'account_payment_id': counterpart_line.payment_id.id,
-                'payment_method_name': counterpart_line.payment_id.payment_method_id.name if counterpart_line.journal_id.type == 'bank' else None,
-                'move_id': counterpart_line.move_id.id,
-                'ref': reconciliation_ref,
-            })
+                reconciled_vals.append({
+                    'name': counterpart_line.name,
+                    'journal_name': counterpart_line.journal_id.name,
+                    'amount': amount,
+                    'currency': self.currency_id.symbol,
+                    'digits': [69, self.currency_id.decimal_places],
+                    'position': self.currency_id.position,
+                    'date': counterpart_line.date,
+                    'payment_id': counterpart_line.id,
+                    'partial_id': partial.id,
+                    'account_payment_id': counterpart_line.payment_id.id,
+                    'payment_method_name': counterpart_line.payment_id.payment_method_id.name if counterpart_line.journal_id.type == 'bank' else None,
+                    'move_id': counterpart_line.move_id.id,
+                    'ref': reconciliation_ref,
+                })
         return reconciled_vals
 
     @api.depends('move_type', 'line_ids.amount_residual')
@@ -2363,6 +2364,9 @@ class AccountMove(models.Model):
             invoice_partials.append((partial, partial.credit_amount_currency, partial.debit_move_id))
         for partial in pay_term_lines.matched_credit_ids:
             invoice_partials.append((partial, partial.debit_amount_currency, partial.credit_move_id))
+        for move in pay_term_lines.full_reconcile_id.exchange_move_id:
+            counterpart_lines = move.line_ids.filtered(lambda line: line.account_id == pay_term_lines.account_id)
+            invoice_partials.append((self.env['account.partial.reconcile'], move.amount_total, counterpart_lines[0]))
         return invoice_partials
 
     def _reverse_move_vals(self, default_values, cancel=True):
