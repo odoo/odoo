@@ -15,7 +15,7 @@
                     'bg-100': !composerView.messageViewInEditing and !composerView.threadView,
                     'pt-3 pb-4': composerView.hasCurrentPartnerAvatar and composerView.hasHeader,
                     'py-4': composerView.hasCurrentPartnerAvatar and !composerView.hasHeader and !composerView.threadView,
-                    'py-1': composerView.hasCurrentPartnerAvatar and !composerView.hasHeader and composerView.threadView, 
+                    'py-1': composerView.hasCurrentPartnerAvatar and !composerView.hasHeader and composerView.threadView,
                 }"
                 t-attf-class="{{ className }}"
                 t-on-keydown="composerView.onKeydown"
@@ -95,7 +95,7 @@
                                 'flex-row flex-grow-1 justify-content-between': !composerView.isCompact,
                             }">
                             <div class="o_Composer_primaryToolButtons d-flex align-items-center" t-att-class="{ 'o-composer-is-compact px-2': composerView.isCompact, 'flex-column': composerView.messageViewInEditing and composerView.messageViewInEditing.isInChatWindow }">
-                                <button class="o_Composer_button o_Composer_buttonEmojis o_Composer_toolButton btn btn-light border-0 rounded-pill bg-white"
+                                <button class="o_Composer_button o_Composer_buttonEmojis o_Composer_toolButton btn btn-light border-0 rounded-pill"
                                     t-att-class="{
                                         'o-open bg-200': composerView.emojisPopoverView,
                                         'o-isDeviceSmall': messaging.device.isSmall,
