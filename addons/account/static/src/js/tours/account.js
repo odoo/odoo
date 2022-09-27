@@ -35,13 +35,16 @@ tour.register('account_tour', {
         content: _t("Now, we'll create your first invoice."),
         position: "bottom",
     }, {
-        trigger: "div[name=partner_id] input",
+        trigger: "div[name=partner_id] .o_input_dropdown",
         // FIXME WOWL: this selector needs to work in both legacy and non-legacy views
         // because account_invoice_extracts *adds* a js_class on the base view which forces
         // the use of a legacy view in enterprise only
         extra_trigger: "[name=move_type] [raw-value=out_invoice], [name=move_type][raw-value=out_invoice]",
         content: Markup(_t("Write a company name to <b>create one</b> or <b>see suggestions</b>.")),
         position: "right",
+    }, {
+        trigger: "div[name=partner_id] input",
+        auto: true,
     }, {
         trigger: ".o_m2o_dropdown_option a:contains('Create')",
         // FIXME WOWL: this selector needs to work in both legacy and non-legacy views
