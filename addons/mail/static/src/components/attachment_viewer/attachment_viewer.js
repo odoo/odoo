@@ -61,20 +61,6 @@ export class AttachmentViewer extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * Zoom in the image.
-     *
-     * @private
-     * @param {Object} [param0={}]
-     * @param {boolean} [param0.scroll=false]
-     */
-    _zoomIn({ scroll = false } = {}) {
-        this.attachmentViewer.update({
-            scale: this.attachmentViewer.scale + (scroll ? this.attachmentViewer.scrollZoomStep : this.attachmentViewer.zoomStep),
-        });
-        this.attachmentViewer.updateZoomerStyle();
-    }
-
-    /**
      * Zoom out the image.
      *
      * @private
@@ -122,7 +108,7 @@ export class AttachmentViewer extends Component {
      */
     _onClickZoomIn(ev) {
         ev.stopPropagation();
-        this._zoomIn();
+        this.attachmentViewer.zoomIn();
     }
 
     /**
@@ -169,7 +155,7 @@ export class AttachmentViewer extends Component {
                 this.attachmentViewer.rotate();
                 break;
             case '+':
-                this._zoomIn();
+                this.attachmentViewer.zoomIn();
                 break;
             case '-':
                 this._zoomOut();
@@ -195,7 +181,7 @@ export class AttachmentViewer extends Component {
         if (ev.deltaY > 0) {
             this._zoomOut({ scroll: true });
         } else {
-            this._zoomIn({ scroll: true });
+            this.attachmentViewer.zoomIn({ scroll: true });
         }
     }
 

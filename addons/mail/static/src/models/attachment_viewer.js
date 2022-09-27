@@ -282,6 +282,17 @@ registerModel({
             this.zoomerRef.el.style = `transform: ` +
                 `translate(${tx}px, ${ty}px)`;
         },
+        /**
+         * Zoom in the image.
+         * @param {Object} [param0={}]
+         * @param {boolean} [param0.scroll=false]
+         */
+        zoomIn({ scroll = false } = {}) {
+            this.update({
+                scale: this.scale + (scroll ? this.scrollZoomStep : this.zoomStep),
+            });
+            this.updateZoomerStyle();
+        }
     },
     fields: {
         /**
