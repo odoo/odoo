@@ -75,42 +75,6 @@ export class AttachmentViewer extends Component {
         this.attachmentViewer.stopDragging();
     }
 
-    /**
-     * @private
-     * @param {KeyboardEvent} ev
-     */
-    _onKeydown(ev) {
-        switch (ev.key) {
-            case 'ArrowRight':
-                this.attachmentViewer.next();
-                break;
-            case 'ArrowLeft':
-                this.attachmentViewer.previous();
-                break;
-            case 'Escape':
-                this.attachmentViewer.close();
-                break;
-            case 'q':
-                this.attachmentViewer.close();
-                break;
-            case 'r':
-                this.attachmentViewer.rotate();
-                break;
-            case '+':
-                this.attachmentViewer.zoomIn();
-                break;
-            case '-':
-                this.attachmentViewer.zoomOut();
-                break;
-            case '0':
-                this.attachmentViewer.resetZoom();
-                break;
-            default:
-                return;
-        }
-        ev.stopPropagation();
-    }
-
 }
 
 Object.assign(AttachmentViewer, {

@@ -3,7 +3,7 @@
 
     <t t-name="mail.AttachmentViewer" owl="1">
         <t t-if="attachmentViewer">
-            <div class="o_AttachmentViewer flex-column align-items-center d-flex w-100 h-100" t-attf-class="{{ className }}" t-on-click="attachmentViewer.onClick" t-on-keydown="_onKeydown" tabindex="0" t-ref="root">
+            <div class="o_AttachmentViewer flex-column align-items-center d-flex w-100 h-100" t-attf-class="{{ className }}" t-on-click="attachmentViewer.onClick" t-on-keydown="attachmentViewer.onKeydown" tabindex="0" t-ref="root">
                 <div class="o_AttachmentViewer_header d-flex w-100 bg-black-75 text-400" t-on-click="attachmentViewer.onClickHeader">
                     <t t-if="attachmentViewer.attachmentViewerViewable.isViewable">
                         <div class="o_AttachmentViewer_headerItem o_AttachmentViewer_icon d-flex align-items-center ms-4 me-2">

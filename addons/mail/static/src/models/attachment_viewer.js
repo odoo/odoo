@@ -179,6 +179,40 @@ registerModel({
             this.resetZoom();
         },
         /**
+         * @param {KeyboardEvent} ev
+         */
+        onKeydown(ev) {
+            switch (ev.key) {
+                case 'ArrowRight':
+                    this.next();
+                    break;
+                case 'ArrowLeft':
+                    this.previous();
+                    break;
+                case 'Escape':
+                    this.close();
+                    break;
+                case 'q':
+                    this.close();
+                    break;
+                case 'r':
+                    this.rotate();
+                    break;
+                case '+':
+                    this.zoomIn();
+                    break;
+                case '-':
+                    this.zoomOut();
+                    break;
+                case '0':
+                    this.resetZoom();
+                    break;
+                default:
+                    return;
+            }
+            ev.stopPropagation();
+        },
+        /**
          * Called when new image has been loaded
          *
          * @param {Event} ev
