@@ -1281,6 +1281,39 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target.querySelector(".o_group_header"), ".o_list_number");
     });
 
+    QUnit.test(
+        "basic grouped list rendering with a date field between two fields with a group_operator",
+        async function (assert) {
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: `
+                <tree>
+                    <field name="int_field"/>
+                    <field name="date"/>
+                    <field name="int_field"/>
+                </tree>`,
+                groupBy: ["bar"],
+            });
+
+            assert.containsN(target, "thead th", 4); // record selector + Foo + Int + Date + Int
+            assert.containsOnce(target, "thead th.o_list_record_selector");
+            assert.deepEqual(getNodesTextContent(target.querySelectorAll("thead th")), [
+                "",
+                "int_field",
+                "Some Date",
+                "int_field",
+            ]);
+            assert.containsN(target, "tr.o_group_header", 2);
+            assert.containsN(target, "th.o_group_name", 2);
+            assert.deepEqual(
+                getNodesTextContent(target.querySelector(".o_group_header").querySelectorAll("td")),
+                ["-4", "", "-4"]
+            );
+        }
+    );
+
     QUnit.test("basic grouped list rendering 1 col without selector", async function (assert) {
         await makeView({
             type: "list",
