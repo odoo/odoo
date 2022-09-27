@@ -4229,6 +4229,31 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(document.body, ".modal", "there should not be a confirm modal");
     });
 
+    QUnit.test("discard invalid value", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="int_field"></field></form>',
+            resId: 1,
+        });
+
+        await editInput(target, ".o_field_widget[name=int_field] input", "tralala");
+        await click(target, ".o_form_view");
+        assert.containsOnce(target, ".o_field_invalid");
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=int_field] input").value,
+            "tralala"
+        );
+
+        await clickDiscard(target);
+        assert.containsNone(target, ".o_field_invalid");
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=int_field] input").value,
+            "10"
+        );
+    });
+
     QUnit.test("Domain: allow empty domain on fieldInfo", async function (assert) {
         assert.expect(1);
         serverData.models.partner.fields.product_id.domain = "[('display_name', '=', name)]";
