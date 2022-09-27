@@ -31,7 +31,7 @@
                         </group>
                         <group attrs="{'invisible': [('user_has_debug', '=', False), ('program_type', 'not in', ('loyalty', 'buy_x_get_y'))]}">
                             <separator string="Point(s)" colspan="2"/>
-                            <span colspan="2" attrs="{'invisible': [('program_type', '!=', 'coupons')]}">Grant the amount of coupon popints defined as the coupon value</span>
+                            <span colspan="2" attrs="{'invisible': [('program_type', '!=', 'coupons')]}">Grant the amount of coupon points defined as the coupon value</span>
                             <label for="reward_point_amount" string="Grant" attrs="{'invisible': [('program_type', 'not in', ('promotion', 'promo_code', 'next_order_coupons', 'loyalty', 'buy_x_get_y'))]}"/>
                             <div class="d-flex flex-row" attrs="{'invisible': [('program_type', 'not in', ('promotion', 'promo_code', 'next_order_coupons', 'loyalty', 'buy_x_get_y'))]}">
                                 <field name="reward_point_amount" class="oe_inline me-1"/>
