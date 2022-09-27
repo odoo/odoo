@@ -15,6 +15,7 @@ import { getTabableElements } from "@web/core/utils/ui";
 import { Field } from "@web/views/fields/field";
 import { getTooltipInfo } from "@web/views/fields/field_tooltip";
 import { getClassNameFromDecoration } from "@web/views/utils";
+import { PropertyValue } from "@web/views/fields/properties/property_value";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useBounceButton } from "@web/views/view_hook";
 
@@ -59,8 +60,10 @@ function getElementToFocus(cell) {
 
 export class ListRenderer extends Component {
     setup() {
+        // call this before anything related to fields or records
+        this.updateFilteredPropsForProperties(this.props);
+
         this.uiService = useService("ui");
-        this.allColumns = this.props.archInfo.columns;
         this.keyOptionalFields = this.createKeyOptionalFields();
         this.getOptionalActiveFields();
         this.cellClassByColumn = {};
@@ -89,7 +92,7 @@ export class ListRenderer extends Component {
             this.activeRowId = activeRow ? activeRow.dataset.id : null;
         });
         onWillUpdateProps((nextProps) => {
-            this.allColumns = nextProps.archInfo.columns;
+            this.updateFilteredPropsForProperties(nextProps);
             this.state.columns = this.getActiveColumns(nextProps.list);
         });
         onPatched(() => {
@@ -182,6 +185,37 @@ export class ListRenderer extends Component {
             }
             return !col.optional || this.optionalActiveFields[col.name];
         });
+    }
+
+    /**
+     * @returns {Array} of name of 'Properties' fields
+     */
+    getPropertiesFieldNames() {
+        const propertiesFieldNames = [];
+        for(const record of Object.values(this.props.list.records)) {
+            const recordFields = Object.values(record.fields);
+            for(const field of recordFields) {
+                if(field.type === 'properties' && !propertiesFieldNames.includes(field.name)) {
+                    propertiesFieldNames.push(field.name);
+                }
+            }
+        }
+        return propertiesFieldNames;
+    }
+
+    /**
+     * @param {String} propertyName name of the property ('23c100...')
+     * @param {String} propertiesFieldName name of the field it is contained in ('Property')
+     * @returns {String} Properly formated field name for a property value
+     */
+    getPropertyFieldName(propertyName, propertiesFieldName) {
+        if(!propertiesFieldName) {
+            return null;
+        }
+        if(propertyName.startsWith(propertiesFieldName)) {
+            return propertyName;
+        }
+        return `${propertiesFieldName}.${propertyName}`
     }
 
     get hasSelectors() {
@@ -329,10 +363,6 @@ export class ListRenderer extends Component {
         return !this.props.list.records.length;
     }
 
-    get fields() {
-        return this.props.list.fields;
-    }
-
     get nbCols() {
         let nbCols = this.state.columns.length;
         if (this.hasSelectors) {
@@ -348,7 +378,12 @@ export class ListRenderer extends Component {
     }
 
     canUseFormatter(column, record) {
-        return !record.isInEdition && !column.widget;
+        if(column.propertyType){
+            return false;
+        }
+        return (
+            !record.isInEdition && !column.widget
+        );
     }
 
     focusCell(column, forward = true) {
@@ -372,7 +407,7 @@ export class ListRenderer extends Component {
             // refactor
             if (!editedRecord.isReadonly(fieldName)) {
                 const cell = this.tableRef.el.querySelector(
-                    `.o_selected_row td[name=${fieldName}]`
+                    `.o_selected_row td[name="${fieldName}"]`
                 );
                 if (cell) {
                     const toFocus = getElementToFocus(cell);
@@ -490,7 +525,7 @@ export class ListRenderer extends Component {
             values = this.props.list.records.map((r) => r.data);
         }
         const aggregates = {};
-        for (const fieldName in this.props.list.activeFields) {
+        for (const fieldName in this.activeFields) {
             const field = this.fields[fieldName];
             const fieldValues = [];
             for (const value of values) {
@@ -667,7 +702,7 @@ export class ListRenderer extends Component {
                 // generate field decorations classNames (only if field-specific decorations
                 // have been defined in an attribute, e.g. decoration-danger="other_field = 5")
                 // only handle the text-decoration.
-                const { decorations } = record.activeFields[column.name];
+                const { decorations } = this.activeFields[column.name];
                 for (const decoName in decorations) {
                     if (evaluateExpr(decorations[decoName], record.evalContext)) {
                         classNames.push(getClassNameFromDecoration(decoName));
@@ -677,7 +712,7 @@ export class ListRenderer extends Component {
             if (
                 record.isInEdition &&
                 this.props.list.editedRecord &&
-                this.props.list.editedRecord.isReadonly(column.name)
+                (!column.propertyType && this.props.list.editedRecord.isReadonly(column.name))
             ) {
                 classNames.push("pe-none", "text-muted");
             } else {
@@ -1455,6 +1490,118 @@ export class ListRenderer extends Component {
             this.onCreateAction(context);
         }
     }
+   /**
+     * Create a list of fields for the property values of the 'properties' field
+     * @param {*} baseFieldObject The 'properties' field
+     * @returns a list of field for the property values
+     */
+    getPropertyFieldsFromPropertiesField(baseFieldObject) {
+        const fields = [];
+        for(const property of this.getPropertyDefinitions()) {
+            const propertyName = this.getPropertyFieldName(property.name, baseFieldObject.name);
+            const propertyColumn = {
+                ...baseFieldObject,
+                FieldComponent: PropertyValue,
+                rawAttrs: {
+                    ...baseFieldObject.rawAttrs,
+                    name: propertyName,
+                },
+                name: propertyName,
+                label: property.string,
+                propertyType: property.type,
+                string: property.string,
+            };
+            fields.push(propertyColumn)
+        }
+        return fields;
+    }
+
+    /**
+     * Create columns for properties
+     * @param {Array} columns all the columns (typically props.archInfo.columns)
+     * @returns the same array with the properties columns replaced by 1 column per property
+     */
+    propertiesGetAllColumns(columns) {
+        columns = [...columns];
+        for(const propertyName of this.getPropertiesFieldNames()) {
+            const propertiesColumnIndex = columns.findIndex(column => column.name === propertyName);
+            if(propertiesColumnIndex >= 0) {
+                const baseColumnObject = columns[propertiesColumnIndex];
+                const propertyColumns = this.getPropertyFieldsFromPropertiesField(baseColumnObject);
+                let property_column_id = 1;
+                for(const column of propertyColumns){
+                    column.id = `${column.id}_property_${property_column_id}`;
+                    property_column_id++;
+                }
+                columns.splice(propertiesColumnIndex, 1, ...propertyColumns);
+            }
+        }
+        return columns;
+    }
+
+    /**
+     * Replace 'properties' field with a field for each property value
+     * preserving most of the attributes of the original field.
+     * @param {Object} fields in the form of fieldInfo (e.g. this.props.list.fields)
+     * @returns input or altered copy of the input
+     */
+    propertiesProcessFields(fields) {
+        const propertiesFieldNames = this.getPropertiesFieldNames();
+        if(!propertiesFieldNames) {
+            return fields;
+        }
+        fields = {...fields};
+        for(const propertiesFieldName of propertiesFieldNames){
+            const properties = fields[propertiesFieldName];
+            if(properties) {
+                for(const property of this.getPropertyFieldsFromPropertiesField(properties)){
+                    fields[this.getPropertyFieldName(property.name, propertiesFieldName)] = property;
+                }
+                delete fields[propertiesFieldName];
+            }
+        }
+        return fields;
+    }
+
+    /**
+     * Turns the data value of the Properties fields into individual data values
+     * @param {Object} records
+     * @returns the same records Object with additional data values
+     */
+    propertiesProcessRecords(records) {
+        const propertiesFieldNames = this.getPropertiesFieldNames();
+        if(!propertiesFieldNames) {
+            return records;
+        }
+        for(const propertiesFieldName of propertiesFieldNames){
+            const recordsWithProperties = records.filter(record => record.data[propertiesFieldName]);
+            for(const record of recordsWithProperties){
+                const dataProperties = record.data[propertiesFieldName];
+                for(const propertyData of Object.values(dataProperties)){
+                    record.data[this.getPropertyFieldName(propertyData.name, propertiesFieldName)] = propertyData;
+                }
+            }
+        }
+        return records
+    }
+
+    /**
+     * returns fields for all property defined accross all loaded records
+     * @returns {Iterable} containing definitions as fields {fieldName: [propertyValues]}
+     */
+    getPropertyDefinitions() {
+        const propertiesData = {};
+        for(const record of this.props.list.records) {
+            for(const propertiesFieldName of this.getPropertiesFieldNames()){
+                const properties = record.data[propertiesFieldName] || [];
+                for(const property of properties){
+                    //Does not matter which data we get, only the definition matters
+                    propertiesData[this.getPropertyFieldName(property.name, propertiesFieldName)] = property;
+                }
+            }
+        }
+        return Object.values(propertiesData).flat();
+    }
 
     setDirty(isDirty) {
         this.lastIsDirty = isDirty;
@@ -1551,7 +1698,7 @@ export class ListRenderer extends Component {
             return { type: "relative", value: 1 };
         }
 
-        const type = column.widget || this.props.list.fields[column.name].type;
+        const type = column.widget || this.fields[column.name].type;
         if (type in FIXED_FIELD_COLUMN_WIDTHS) {
             return { type: "absolute", value: FIXED_FIELD_COLUMN_WIDTHS[type] };
         }
@@ -1567,8 +1714,8 @@ export class ListRenderer extends Component {
         return getTooltipInfo({
             viewMode: "list",
             resModel: this.props.list.resModel,
-            field: this.props.list.fields[column.name],
-            fieldInfo: this.props.list.activeFields[column.name],
+            field: this.fields[column.name],
+            fieldInfo: this.activeFields[column.name],
         });
     }
 
@@ -1746,6 +1893,17 @@ export class ListRenderer extends Component {
     sortStop({ element }) {
         element.classList.remove("o_dragged");
     }
+
+    /**
+     * Recompute all attributes related to properties.
+     * Should be called whenever record or field props are changed
+     */
+    updateFilteredPropsForProperties(props){
+        this.activeFields = this.propertiesProcessFields(props.list.activeFields);
+        this.allColumns = this.propertiesGetAllColumns(props.archInfo.columns);
+        this.fields = this.propertiesProcessFields(props.list.fields);
+        this.records = this.propertiesProcessRecords(props.list.records);
+    }
 }
 
 ListRenderer.template = "web.ListRenderer";
@@ -1754,7 +1912,7 @@ ListRenderer.rowsTemplate = "web.ListRenderer.Rows";
 ListRenderer.recordRowTemplate = "web.ListRenderer.RecordRow";
 ListRenderer.groupRowTemplate = "web.ListRenderer.GroupRow";
 
-ListRenderer.components = { DropdownItem, Field, ViewButton, CheckBox, Dropdown, Pager };
+ListRenderer.components = { DropdownItem, Field, ViewButton, CheckBox, Dropdown, Pager, PropertyValue };
 ListRenderer.props = [
     "activeActions?",
     "list",

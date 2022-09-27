@@ -3184,6 +3184,10 @@ class Properties(Field):
         'datetime', 'many2one', 'many2many', 'selection', 'tags',
     )
 
+    @property
+    def _description_sortable(self):
+        return False
+
     def _setup_attrs(self, model_class, name):
         super()._setup_attrs(model_class, name)
         if self.definition:
