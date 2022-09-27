@@ -1378,6 +1378,7 @@ export class Record extends DataPoint {
                 )
             ) {
                 const changes = await this._onChange(fieldNames);
+                this._removeInvalidFields(Object.keys(changes));
                 for (const [fieldName, value] of Object.entries(changes)) {
                     const field = this.fields[fieldName];
                     // for x2many fields, the onchange returns commands, not ids, so we need to process them

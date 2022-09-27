@@ -677,7 +677,16 @@ export class Record extends DataPoint {
                 viewType: this.__viewType,
             });
             prom.catch(resolveUpdatePromise); // onchange rpc may return an error
-            await prom;
+            const fieldNames = await prom;
+            this._removeInvalidFields(fieldNames);
+            for (const fieldName of fieldNames) {
+                if (["one2many", "many2many"].includes(this.fields[fieldName].type)) {
+                    const { editedRecord } = this.data[fieldName];
+                    if (editedRecord) {
+                        editedRecord._removeAllInvalidFields();
+                    }
+                }
+            }
             this.__syncData();
         }
         this._removeInvalidFields(Object.keys(changes));
@@ -825,6 +834,10 @@ export class Record extends DataPoint {
         for (const fieldName of fieldNames) {
             this._invalidFields.delete(fieldName);
         }
+    }
+
+    _removeAllInvalidFields() {
+        this._removeInvalidFields(Object.keys(this.activeFields));
     }
 }
 
