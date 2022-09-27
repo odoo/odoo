@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Alipay Payment Provider',
+    'name': 'Payment Provider: Alipay',
     'category': 'Accounting/Payment Providers',
     'version': '2.0',
-    'sequence': 345,
+    'sequence': 350,
     'summary': "This module is deprecated.",
     'depends': ['payment'],
     'data': [

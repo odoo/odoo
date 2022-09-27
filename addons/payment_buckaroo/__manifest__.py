@@ -1,12 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Buckaroo Payment Provider',
+    'name': 'Payment Provider: Buckaroo',
     'version': '2.0',
     'category': 'Accounting/Payment Providers',
-    'sequence': 355,
-    'summary': 'Payment Provider: Buckaroo Implementation',
-    'description': """Buckaroo Payment Provider""",
+    'sequence': 350,
+    'summary': "A Dutch payment provider covering several countries in Europe.",
     'depends': ['payment'],
     'data': [
         'views/payment_buckaroo_templates.xml',
