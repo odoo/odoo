@@ -227,6 +227,20 @@ registerModel({
             this.updateZoomerStyle();
         },
         /**
+         * @param {Event} ev
+         */
+        onWheelImage(ev) {
+            ev.stopPropagation();
+            if (!this.component.root.el) {
+                return;
+            }
+            if (ev.deltaY > 0) {
+                this.zoomOut({ scroll: true });
+            } else {
+                this.zoomIn({ scroll: true });
+            }
+        },
+        /**
          * Display the previous attachment in the list of attachments.
          */
         previous() {

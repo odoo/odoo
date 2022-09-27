@@ -111,22 +111,6 @@ export class AttachmentViewer extends Component {
         ev.stopPropagation();
     }
 
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onWheelImage(ev) {
-        ev.stopPropagation();
-        if (!this.root.el) {
-            return;
-        }
-        if (ev.deltaY > 0) {
-            this.attachmentViewer.zoomOut({ scroll: true });
-        } else {
-            this.attachmentViewer.zoomIn({ scroll: true });
-        }
-    }
-
 }
 
 Object.assign(AttachmentViewer, {
