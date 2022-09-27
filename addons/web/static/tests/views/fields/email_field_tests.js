@@ -68,6 +68,14 @@ QUnit.module("Fields", (hooks) => {
             "input should contain field value in edit mode"
         );
 
+        const emailBtn = target.querySelector(".o_field_email a");
+        assert.containsOnce(
+            target,
+            emailBtn,
+            "should have rendered the email button as a link with correct classes"
+        );
+        assert.hasAttrValue(emailBtn, "href", "mailto:yop", "should have proper mailto prefix");
+
         // change value in edit mode
         await editInput(target, ".o_field_email input[type='email']", "new");
 

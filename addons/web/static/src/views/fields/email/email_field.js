@@ -27,4 +27,8 @@ EmailField.extractProps = ({ attrs }) => {
 EmailField.displayName = _lt("Email");
 EmailField.supportedTypes = ["char"];
 
+class FormEmailField extends EmailField {}
+FormEmailField.template = "web.FormEmailField";
+
 registry.category("fields").add("email", EmailField);
+registry.category("fields").add("form.email", FormEmailField);
