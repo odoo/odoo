@@ -4,8 +4,12 @@
     <t t-name="web.CopyClipboardField" owl="1">
         <div t-if="props.value" class="d-grid rounded-3 overflow-hidden">
             <Field t-props="props"/>
-            <CopyButton className="`o_btn_${props.type}_copy`" content="props.value" copyText="copyText" successText="successText"/>
+            <CopyButton className="copyButtonClassName" content="props.value" copyText="copyText" successText="successText"/>
         </div>
+    </t>
+
+    <t t-name="web.CopyClipboardButtonField" owl="1">
+        <CopyButton t-if="props.value" className="copyButtonClassName" content="props.value" copyText="copyText" successText="successText"/>
     </t>
 
 </templates>
