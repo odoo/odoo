@@ -41,22 +41,24 @@
                 </div>
             </t>
             <!-- Main content -->
-            <h3 t-if="!dashboard" class="dashboard-loading-status">No available dashboard</h3>
-            <t t-else="">
-                <t t-set="status" t-value="dashboard.status"/>
-                <h3 t-if="status === Status.Loading" class="dashboard-loading-status">Loading...</h3>
-                <div t-elif="status === Status.Error" class="dashboard-loading-status error">
-                    An error occured while loading the dashboard
-                </div>
+            <div class="o_renderer" t-ref="wrapper">
+                <h3 t-if="!dashboard" class="dashboard-loading-status">No available dashboard</h3>
                 <t t-else="">
-                    <MobileFigureContainer t-if="env.isSmall" spreadsheetModel="dashboard.model" t-key="dashboard.id"/>
-                    <div t-else="" class="o_renderer" t-att-style="getStyle(dashboard.model)">
-                        <Spreadsheet
-                            model="dashboard.model"
-                            t-key="dashboard.id"/>
+                    <t t-set="status" t-value="dashboard.status"/>
+                    <h3 t-if="status === Status.Loading" class="dashboard-loading-status">Loading...</h3>
+                    <div t-elif="status === Status.Error" class="dashboard-loading-status error">
+                        An error occured while loading the dashboard
                     </div>
+                    <t t-else="">
+                        <MobileFigureContainer t-if="env.isSmall" spreadsheetModel="dashboard.model" t-key="dashboard.id"/>
+                        <div t-else="" class="o_renderer" t-att-style="getStyle(dashboard.model)">
+                            <Spreadsheet
+                                model="dashboard.model"
+                                t-key="dashboard.id"/>
+                        </div>
+                    </t>
                 </t>
-            </t>
+            </div>
         </div>
     </div>
 </templates>

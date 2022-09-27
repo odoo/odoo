@@ -12,7 +12,7 @@ import { loadSpreadsheetDependencies } from "@spreadsheet/helpers/helpers";
 import { useService } from "@web/core/utils/hooks";
 
 const { Spreadsheet } = spreadsheet;
-const { Component, onWillStart, useState, useEffect } = owl;
+const { Component, onWillStart, useState, useEffect, useRef } = owl;
 
 export class SpreadsheetDashboardAction extends Component {
     setup() {
@@ -25,6 +25,7 @@ export class SpreadsheetDashboardAction extends Component {
         };
         this.orm = useService("orm");
         this.router = useService("router");
+        this.wrapperRef = useRef("wrapper");
         // Use the non-protected orm service (`this.env.services.orm` instead of `useService("orm")`)
         // because spreadsheets models are preserved across multiple components when navigating
         // with the breadcrumb
@@ -72,6 +73,26 @@ export class SpreadsheetDashboardAction extends Component {
                 };
             },
         });
+
+        /** this is a really bad idea, and should definitely
+         * disappear once we create a dedicated dashboard component */
+        useEffect(
+            () => {
+                const wheelCallback = (ev) => {
+                    const gridEl = this.wrapperRef.el.querySelector(".o-grid");
+                    if (ev.target !== this.wrapperRef.el || !gridEl) {
+                        return;
+                    }
+                    gridEl.dispatchEvent(
+                        new WheelEvent("wheel", { deltaX: ev.deltaX, deltaY: ev.deltaY })
+                    );
+                };
+                this.wrapperRef.el.addEventListener("wheel", wheelCallback);
+
+                return () => this.wrapperRef.el.removeEventListener("mousemove", wheelCallback);
+            },
+            () => []
+        );
         /** @type {{ activeDashboard: import("./dashboard_loader").Dashboard}} */
         this.state = useState({ activeDashboard: undefined });
     }
