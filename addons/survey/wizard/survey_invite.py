@@ -48,8 +48,7 @@ class SurveyInvite(models.TransientModel):
     )
     existing_partner_ids = fields.Many2many(
         'res.partner', compute='_compute_existing_partner_ids', readonly=True, store=False)
-    emails = fields.Text(string='Additional emails', help="This list of emails of recipients will not be converted in contacts.\
-        Emails must be separated by commas, semicolons or newline.")
+    emails = fields.Text(string='Additional emails')
     existing_emails = fields.Text(
         'Existing emails', compute='_compute_existing_emails',
         readonly=True, store=False)
@@ -66,6 +65,16 @@ class SurveyInvite(models.TransientModel):
     survey_users_login_required = fields.Boolean(related="survey_id.users_login_required", readonly=True)
     survey_users_can_signup = fields.Boolean(related='survey_id.users_can_signup')
     deadline = fields.Datetime(string="Answer deadline")
+    send_email = fields.Boolean(compute="_compute_send_email",
+                                inverse="_inverse_send_email")
+
+    @api.depends('survey_access_mode')
+    def _compute_send_email(self):
+        for record in self:
+            record.send_email = record.survey_access_mode == 'token'
+
+    def _inverse_send_email(self):
+        pass
 
     @api.depends('partner_ids', 'survey_id')
     def _compute_existing_partner_ids(self):
@@ -151,10 +160,10 @@ class SurveyInvite(models.TransientModel):
     @api.depends('template_id', 'partner_ids')
     def _compute_subject(self):
         for invite in self:
-            langs = set(invite.partner_ids.mapped('lang')) - {False}
-            if len(langs) == 1:
-                invite = invite.with_context(lang=langs.pop())
-            super(SurveyInvite, invite)._compute_subject()
+            if invite.subject:
+                continue
+            else:
+                invite.subject = _("Participate to %(survey_name)s", survey_name=invite.survey_id.display_name)
 
     @api.depends('template_id', 'partner_ids')
     def _compute_body(self):
