@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from lxml import etree
+
 from odoo.fields import Command
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -89,6 +91,20 @@ class TestCommonTimesheet(TransactionCase):
             'name': 'User Empl Officer',
             'user_id': cls.user_manager.id,
         })
+
+    def assert_get_view_timesheet_encode_uom(self, expected):
+        companies = self.env['res.company'].create([
+            {'name': 'foo', 'timesheet_encode_uom_id': self.env.ref('uom.product_uom_hour').id},
+            {'name': 'bar', 'timesheet_encode_uom_id': self.env.ref('uom.product_uom_day').id},
+        ])
+        for view_xml_id, xpath_expr, expected_labels in expected:
+            for company, expected_label in zip(companies, expected_labels):
+                view = self.env.ref(view_xml_id)
+                view = self.env[view.model].with_company(company).get_view(view.id, view.type)
+                tree = etree.fromstring(view['arch'])
+                field_node = tree.xpath(xpath_expr)[0]
+                self.assertEqual(field_node.get('string'), expected_label)
+
 
 class TestTimesheet(TestCommonTimesheet):
 
@@ -492,3 +508,14 @@ class TestTimesheet(TestCommonTimesheet):
 
         with self.assertRaises(UserError):
             timesheet.employee_id = self.empl_employee2
+
+    def test_get_view_timesheet_encode_uom(self):
+        """ Test the label of timesheet time spent fields according to the company encoding timesheet uom """
+        self.assert_get_view_timesheet_encode_uom([
+            ('hr_timesheet.hr_timesheet_line_form', '//field[@name="unit_amount"]', ['Hours Spent', 'Days Spent']),
+            ('hr_timesheet.project_invoice_form', '//field[@name="allocated_hours"]', [None, 'Allocated Days']),
+            ('hr_timesheet.view_task_form2_inherited', '//field[@name="unit_amount"]', ['Hours Spent', 'Days Spent']),
+            ('hr_timesheet.view_task_tree2_inherited', '//field[@name="planned_hours"]', [None, 'Initially Planned Days']),
+            ('hr_timesheet.view_task_project_user_graph_inherited', '//field[@name="hours_planned"]', [None, 'Planned Days']),
+            ('hr_timesheet.timesheets_analysis_report_pivot_employee', '//field[@name="unit_amount"]', [None, 'Days Spent']),
+        ])

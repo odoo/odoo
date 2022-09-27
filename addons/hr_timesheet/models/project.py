@@ -81,6 +81,13 @@ class Project(models.Model):
         return [('id', operator_new, (query, ()))]
 
     @api.model
+    def _get_view_cache_key(self, view_id=None, view_type='form', **options):
+        """The override of _get_view changing the time field labels according to the company timesheet encoding UOM
+        makes the view cache dependent on the company timesheet encoding uom"""
+        key = super()._get_view_cache_key(view_id, view_type, **options)
+        return key + (self.env.company.timesheet_encode_uom_id,)
+
+    @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
         arch, view = super()._get_view(view_id, view_type, **options)
         if view_type in ['tree', 'form'] and self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day'):
@@ -372,6 +379,13 @@ class Task(models.Model):
                     name_mapping[task.id] = name_mapping.get(task.id, '') + u"\u00A0" + hours_left
             return list(name_mapping.items())
         return super().name_get()
+
+    @api.model
+    def _get_view_cache_key(self, view_id=None, view_type='form', **options):
+        """The override of _get_view changing the time field labels according to the company timesheet encoding UOM
+        makes the view cache dependent on the company timesheet encoding uom"""
+        key = super()._get_view_cache_key(view_id, view_type, **options)
+        return key + (self.env.company.timesheet_encode_uom_id,)
 
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
