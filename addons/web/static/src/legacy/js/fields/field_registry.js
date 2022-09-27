@@ -36,7 +36,6 @@ registry
     .add('html', basic_fields.FieldText)
     .add('float', basic_fields.FieldFloat)
     .add('char', basic_fields.FieldChar)
-    .add('link_button', basic_fields.LinkButton)
     .add('handle', basic_fields.HandleWidget)
     .add('email', basic_fields.FieldEmail)
     .add('phone', basic_fields.FieldPhone)
@@ -102,6 +101,5 @@ registry
 // Special fields
 registry
     .add('timezone_mismatch', special_fields.FieldTimezoneMismatch)
-    .add('report_layout', special_fields.FieldReportLayout)
     .add('iframe_wrapper', special_fields.IframeWrapper)
 });
