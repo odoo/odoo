@@ -4,7 +4,7 @@ import { useComponentToModel } from '@mail/component_hooks/use_component_to_mode
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-const { Component, onMounted, onPatched, onWillUnmount } = owl;
+const { Component, onMounted, onPatched } = owl;
 
 export class AttachmentViewer extends Component {
 
@@ -17,10 +17,8 @@ export class AttachmentViewer extends Component {
         useRefToModel({ fieldName: 'imageRef', refName: 'image' });
         useRefToModel({ fieldName: 'zoomerRef', refName: 'zoomer' });
         useRefToModel({ fieldName: 'iframeViewerPdfRef', refName: 'iframeViewerPdf' });
-        this._onClickGlobal = this._onClickGlobal.bind(this);
         onMounted(() => this._mounted());
         onPatched(() => this._patched());
-        onWillUnmount(() => this._willUnmount());
     }
 
     _mounted() {
@@ -30,7 +28,6 @@ export class AttachmentViewer extends Component {
         this.root.el.focus();
         this.attachmentViewer.handleImageLoad();
         this.attachmentViewer.hideUnwantedPdfJsButtons();
-        document.addEventListener('click', this._onClickGlobal);
     }
 
     /**
@@ -39,10 +36,6 @@ export class AttachmentViewer extends Component {
     _patched() {
         this.attachmentViewer.handleImageLoad();
         this.attachmentViewer.hideUnwantedPdfJsButtons();
-    }
-
-    _willUnmount() {
-        document.removeEventListener('click', this._onClickGlobal);
     }
 
     //--------------------------------------------------------------------------
@@ -54,25 +47,6 @@ export class AttachmentViewer extends Component {
      */
     get attachmentViewer() {
         return this.props.record;
-    }
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickGlobal(ev) {
-        if (!this.attachmentViewer.exists()) {
-            return;
-        }
-        if (!this.attachmentViewer.isDragging) {
-            return;
-        }
-        ev.stopPropagation();
-        this.attachmentViewer.stopDragging();
     }
 
 }

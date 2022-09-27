@@ -9,6 +9,14 @@ import { hidePDFJSButtons } from '@web/legacy/js/libs/pdfjs';
 registerModel({
     name: 'AttachmentViewer',
     identifyingMode: 'xor',
+    lifecycleHooks: {
+        _created() {
+            document.addEventListener('click', this._onClickGlobal);
+        },
+        _willDelete() {
+            document.removeEventListener('click', this._onClickGlobal);
+        },
+    },
     recordMethods: {
         /**
          * Close the dialog with this attachment viewer.
@@ -380,6 +388,20 @@ registerModel({
                 scale: Math.max(this.minScale, unflooredAdaptedScale),
             });
             this.updateZoomerStyle();
+        },
+        /**
+         * @private
+         * @param {MouseEvent} ev
+         */
+        _onClickGlobal(ev) {
+            if (!this.exists()) {
+                return;
+            }
+            if (!this.isDragging) {
+                return;
+            }
+            ev.stopPropagation();
+            this.stopDragging();
         },
     },
     fields: {
