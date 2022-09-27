@@ -1,6 +1,6 @@
 /** @odoo-module **/
 import { start, startServer } from '@mail/../tests/helpers/test_utils';
-import { click, clickEdit, clickSave, editInput, getFixture } from "@web/../tests/helpers/utils";
+import { click, clickSave, editInput, getFixture } from "@web/../tests/helpers/utils";
 import { DELAY } from "@base_iban/components/iban_widget/iban_widget";
 
 
@@ -55,8 +55,6 @@ QUnit.module('Fields', {}, function () {
     QUnit.test('Iban Widget full flow', async assert => {
         const { target, advanceTime, afterNextRender } = await openPreparedView(assert, [validIban], "");
 
-        assert.containsNone(target, ".o_iban", "Shouldn't display any validation icon while not editing");
-        await clickEdit(target);
         assert.containsNone(target, ".o_iban",
             "Shouldn't display any validation icon while not editing a specific line");
 
@@ -72,10 +70,6 @@ QUnit.module('Fields', {}, function () {
 
         await clickSave(target);
         assert.containsNone(target, ".o_iban", "Shouldn't display any validation while not editing");
-
-        await clickEdit(target);
-        assert.containsNone(target, ".o_iban",
-            "Shouldn't display any validation icon while not editing a specific line");
 
         await click(target, "td.o_iban_cell");
         await afterNextRender(() => advanceTime(DELAY));

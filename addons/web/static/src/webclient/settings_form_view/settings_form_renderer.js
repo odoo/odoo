@@ -20,13 +20,17 @@ export class SettingsFormRenderer extends FormRenderer {
         if (!labels[this.props.archInfo.arch]) {
             labels[this.props.archInfo.arch] = [];
         }
-        this.compileParams = {
+        super.setup();
+        this.searchState = useState(this.env.searchState);
+    }
+
+    get compileParams() {
+        return {
+            ...super.compileParams,
             labels: labels[this.props.archInfo.arch],
             getFieldExpr: this.getFieldExpr,
             record: this.props.record,
         };
-        super.setup();
-        this.searchState = useState(this.env.searchState);
     }
 
     getFieldExpr(fieldName, fieldWidget) {

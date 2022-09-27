@@ -1,5 +1,5 @@
 /** @odoo-module **/
-import { click, clickEdit, getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { click, getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { NameAndSignature } from "@web/core/signature/name_and_signature";
 
@@ -72,7 +72,6 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        await clickEdit(target);
         assert.containsOnce(
             target,
             "div[name=sign] div.o_signature svg",
@@ -112,7 +111,6 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        await clickEdit(target);
         assert.containsOnce(
             target,
             "div[name=sign] div.o_signature svg",
@@ -150,7 +148,6 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        await clickEdit(target);
         assert.containsN(target, ".o_signature", 3);
 
         const sign = target.querySelector("[name='sign'] .o_signature");
