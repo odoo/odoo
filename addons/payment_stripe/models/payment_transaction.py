@@ -264,7 +264,8 @@ class PaymentTransaction(models.Model):
             'payment_intents',
             payload=self._stripe_prepare_payment_intent_payload(),
             offline=self.operation == 'offline',
-        )
+            idempotency_key=payment_utils.generate_idempotency_key(self, scope='payment_intents'),
+        )  # Make the request idempotent to prevent multiple payments (e.g., rollback mechanism).
         if 'error' not in response:
             payment_intent = response
         else:  # A processing error was returned in place of the payment intent
