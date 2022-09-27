@@ -51,7 +51,7 @@ tour.register('shop_cart_recovery', {
     },
     {
         content: "click Send a Cart Recovery Email",
-        trigger: 'a:containsExact("Send a Cart Recovery Email")',
+        trigger: 'span:containsExact("Send a Cart Recovery Email")',
     },
     {
         content: "click Send email",
