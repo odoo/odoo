@@ -76,17 +76,6 @@ export class AttachmentViewer extends Component {
     }
 
     /**
-     * Called when clicking on reset zoom icon.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickZoomReset(ev) {
-        ev.stopPropagation();
-        this.attachmentViewer.resetZoom();
-    }
-
-    /**
      * @private
      * @param {KeyboardEvent} ev
      */

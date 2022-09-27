@@ -170,6 +170,15 @@ registerModel({
             this.zoomOut();
         },
         /**
+         * Called when clicking on reset zoom icon.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickZoomReset(ev) {
+            ev.stopPropagation();
+            this.resetZoom();
+        },
+        /**
          * Called when new image has been loaded
          *
          * @param {Event} ev
