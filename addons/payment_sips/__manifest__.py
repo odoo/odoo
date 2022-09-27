@@ -2,16 +2,11 @@
 # Original Copyright 2015 Eezee-It, modified and maintained by Odoo.
 
 {
-    'name': 'Worldline SIPS',
+    'name': 'Payment Provider: Worldline SIPS',
     'version': '2.0',
     'category': 'Accounting/Payment Providers',
-    'sequence': 390,
-    'description': """
-Worldline SIPS Payment Provider for online payments
-
-Implements the Worldline SIPS API for payment providers.
-Other SIPS providers may be compatible, though this is
-not guaranteed.""",
+    'sequence': 350,
+    'summary': "A French payment provider for online payments all over the world.",
     'depends': ['payment'],
     'data': [
         'views/payment_provider_views.xml',

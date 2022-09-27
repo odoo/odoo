@@ -5,8 +5,7 @@
     'version': '1.0',
     'category': 'Accounting/Payment Providers',
     'sequence': 350,
-    'summary': "An online payments provider covering several countries, currencies and payment "
-               "methods from Latin America.",
+    'summary': "A payment provider covering several countries in Latin America.",
     'depends': ['payment'],
     'data': [
         'views/payment_mercado_pago_templates.xml',

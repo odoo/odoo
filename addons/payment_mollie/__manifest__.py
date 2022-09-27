@@ -1,15 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Mollie Payment Provider',
+    'name': 'Payment Provider: Mollie',
     'version': '1.0',
     'category': 'Accounting/Payment Providers',
-    'sequence': 365,
-    'summary': 'Payment Provider: Mollie Implementation',
-    'description': """Mollie Payment Provider""",
+    'sequence': 350,
+    'summary': "A Dutch payment provider covering several European countries.",
     'author': 'Odoo S.A, Applix BV, Droggol Infotech Pvt. Ltd.',
     'website': 'https://www.mollie.com',
-
     'depends': ['payment'],
     'data': [
         'views/payment_mollie_templates.xml',

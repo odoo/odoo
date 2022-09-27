@@ -1,11 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Payment Provider',
+    'name': "Payment Engine",
     'version': '2.0',
     'category': 'Hidden',
-    'summary': 'Base Module for Payment Providers',
-    'description': """Payment Provider Base Module""",
+    'summary': "The payment engine used by payment provider modules.",
     'depends': ['portal'],
     'data': [
         'data/payment_icon_data.xml',
