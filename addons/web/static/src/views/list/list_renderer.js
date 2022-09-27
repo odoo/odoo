@@ -15,6 +15,7 @@ import { getTabableElements } from "@web/core/utils/ui";
 import { Field } from "@web/views/fields/field";
 import { getTooltipInfo } from "@web/views/fields/field_tooltip";
 import { getClassNameFromDecoration } from "@web/views/utils";
+import { PropertyValue } from "@web/views/fields/properties/property_value";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useBounceButton } from "@web/views/view_hook";
 import { Widget } from "@web/views/widgets/widget";
@@ -60,8 +61,10 @@ function getElementToFocus(cell) {
 
 export class ListRenderer extends Component {
     setup() {
+        // call this before anything related to fields or records
+        this._updateFilteredPropsForProperties(this.props);
+
         this.uiService = useService("ui");
-        this.allColumns = this.props.archInfo.columns;
         this.keyOptionalFields = this.createKeyOptionalFields();
         this.getOptionalActiveFields();
         this.cellClassByColumn = {};
@@ -90,7 +93,8 @@ export class ListRenderer extends Component {
             this.activeRowId = activeRow ? activeRow.dataset.id : null;
         });
         onWillUpdateProps((nextProps) => {
-            this.allColumns = nextProps.archInfo.columns;
+            this._updateFilteredPropsForProperties(nextProps);
+            this.getOptionalActiveFields();
             this.state.columns = this.getActiveColumns(nextProps.list);
         });
         onPatched(() => {
@@ -183,6 +187,19 @@ export class ListRenderer extends Component {
             }
             return !col.optional || this.optionalActiveFields[col.name];
         });
+    }
+
+    /**
+     * Get the name of the fields that hold 'properties' data (i.e. dynamic fields)
+     * so that they can later be processed to create virtual columns in the list
+     *
+     * @param {object} props
+     * @returns {Array} of name of 'Properties' fields
+     */
+    getPropertiesFieldNames(props) {
+        return Object.values(props.list.fields || {})
+        .filter(field => field.type === 'properties')
+        .map(field => field.name);
     }
 
     get hasSelectors() {
@@ -336,10 +353,6 @@ export class ListRenderer extends Component {
         return !this.props.list.records.length;
     }
 
-    get fields() {
-        return this.props.list.fields;
-    }
-
     get nbCols() {
         let nbCols = this.state.columns.length;
         if (this.hasSelectors) {
@@ -352,7 +365,7 @@ export class ListRenderer extends Component {
     }
 
     canUseFormatter(column, record) {
-        return !record.isInEdition && !column.widget;
+        return !column.propertyType && !record.isInEdition && !column.widget;
     }
 
     focusCell(column, forward = true) {
@@ -374,9 +387,9 @@ export class ListRenderer extends Component {
             const fieldName = column.name;
             // in findNextFocusableOnRow test is done by using classList
             // refactor
-            if (!editedRecord.isReadonly(fieldName)) {
+            if (!column.propertyType && !editedRecord.isReadonly(fieldName)) {
                 const cell = this.tableRef.el.querySelector(
-                    `.o_selected_row td[name=${fieldName}]`
+                    `.o_selected_row td[name="${fieldName}"]`
                 );
                 if (cell) {
                     const toFocus = getElementToFocus(cell);
@@ -448,8 +461,8 @@ export class ListRenderer extends Component {
         return viewIdentifier.join(",");
     }
 
-    get getOptionalFields() {
-        return this.allColumns
+    getOptionalFields(columns) {
+        return columns
             .filter((col) => col.optional)
             .map((col) => ({
                 label: col.label,
@@ -459,7 +472,7 @@ export class ListRenderer extends Component {
     }
 
     get displayOptionalFields() {
-        return this.getOptionalFields.length;
+        return this.getOptionalFields(this.allColumns).length;
     }
 
     nbRecordsInGroup(group) {
@@ -495,7 +508,7 @@ export class ListRenderer extends Component {
             values = this.props.list.records.map((r) => r.data);
         }
         const aggregates = {};
-        for (const fieldName in this.props.list.activeFields) {
+        for (const fieldName in this.activeFields) {
             const field = this.fields[fieldName];
             const fieldValues = values.map((v) => v[fieldName]).filter((v) => v || v === 0);
             if (!fieldValues.length) {
@@ -598,7 +611,7 @@ export class ListRenderer extends Component {
     isSortable(column) {
         const { hasLabel, name } = column;
         const { sortable } = this.fields[name];
-        const { options } = this.props.list.activeFields[name];
+        const { options } = this.activeFields[name];
         return (sortable || options.allow_order) && hasLabel;
     }
 
@@ -665,7 +678,12 @@ export class ListRenderer extends Component {
             this.cellClassByColumn[column.id] = classNames;
         }
         const classNames = [...this.cellClassByColumn[column.id]];
-        if (column.type === "field") {
+        if (column.propertyType) {
+            classNames.push("o_readonly_modifier");
+            if (record.isInEdition) {
+                classNames.push("text-muted");
+            }
+        } else if (column.type === "field") {
             if (record.isRequired(column.name)) {
                 classNames.push("o_required_modifier");
             }
@@ -679,7 +697,7 @@ export class ListRenderer extends Component {
                 // generate field decorations classNames (only if field-specific decorations
                 // have been defined in an attribute, e.g. decoration-danger="other_field = 5")
                 // only handle the text-decoration.
-                const { decorations } = record.activeFields[column.name];
+                const { decorations } = this.activeFields[column.name];
                 for (const decoName in decorations) {
                     if (evaluateExpr(decorations[decoName], record.evalContext)) {
                         classNames.push(getClassNameFromDecoration(decoName));
@@ -1472,6 +1490,179 @@ export class ListRenderer extends Component {
         }
     }
 
+   /**
+    * Create a list of virtual fields for the different property definitions of the 'properties' field
+    *
+    * @param {object} baseFieldObject The 'properties' field
+    * @param {array} propertyDefinitions relevant data to generate property 'fields'
+    * @returns {object} a list of field for the property values
+    */
+    getVirtualPropertyFields(baseFieldObject, propertyDefinitions) {
+        return propertyDefinitions.map(property => {
+            const propertyName = `${baseFieldObject.name}.${property.name}`;
+            return {
+                ...baseFieldObject,
+                FieldComponent: PropertyValue,
+                rawAttrs: {
+                    ...baseFieldObject.rawAttrs,
+                    name: propertyName,
+                },
+                name: propertyName,
+                label: property.string,
+                propertyType: property.type,
+                sortable: true,
+                string: property.string,
+                propertyParentId: property.parentId, //used to group related columns
+                propertyParentName: property.parentName,
+            };
+        });
+    }
+
+    /**
+     * Get the columns defined for the records with additional virtual columns
+     * Create for the different property values of the 'properties' field
+     *
+     * @param {Array} columns all the columns (typically props.archInfo.columns)
+     * @param {Array} propertyDefinitions relevant data to generate property 'fields'
+     * @returns {Array} the same array with the 'properties' columns replaced by 1 column per property
+     */
+    propertiesGetAllColumns(columns, propertyDefinitions) {
+        return columns.flatMap((column, columnIndex) => {
+            if (!Object.keys(propertyDefinitions).includes(column.name)) {
+                return [column];
+            }
+            const propertyColumns = this.getVirtualPropertyFields(column, propertyDefinitions[column.name]);
+            for (let i = 0; i < propertyColumns.length; i++) {
+                propertyColumns[i].id = `${columnIndex}_property_${i}`;
+            }
+            return propertyColumns;
+        });
+    }
+
+    /**
+     * Replace 'properties' field with a field for each property value
+     * preserving most of the attributes of the original field.
+     *
+     * @param {object} fields in the form of fieldInfo (e.g. this.props.list.fields)
+     * @param {array} propertyDefinitions list of relevant data about the property 'fields'
+     * @returns {object} input or altered copy of the input
+     */
+    propertiesProcessFields(fields, propertyDefinitions) {
+        const propertiesFieldNames = Object.keys(propertyDefinitions);
+        if (!propertiesFieldNames) {
+            return fields;
+        }
+        fields = {...fields};
+        for (const propertiesFieldName of propertiesFieldNames) {
+            const properties = fields[propertiesFieldName];
+            if (properties) {
+                for (const property of this.getVirtualPropertyFields(properties, propertyDefinitions[propertiesFieldName])) {
+                    fields[property.name] = property;
+                }
+                delete fields[propertiesFieldName];
+            }
+        }
+        return fields;
+    }
+
+    /**
+     * Creates virtual field values for each property
+     *
+     * @param {array} records
+     * @param {array} propertyDefinitions
+     * @returns {object} the same records Object with additional data values
+     */
+    propertiesProcessRecords(records, propertyDefinitions) {
+        const propertiesFieldNames = Object.keys(propertyDefinitions);
+        for (const propertiesFieldName of propertiesFieldNames) {
+            const recordsWithProperties = records.filter(record => record.data[propertiesFieldName]);
+            for (const record of recordsWithProperties) {
+                const dataProperties = record.data[propertiesFieldName];
+                for (const propertyData of dataProperties) {
+                    record.data[`${propertiesFieldName}.${propertyData.name}`] = propertyData;
+                }
+            }
+        }
+        return records;
+    }
+
+    /**
+     * returns useful data about the way the different properties of the are defined
+     *
+     * @param {object} props
+     * @param {string} fieldName name of the 'properties' field we're processing
+     * @param {string} parentModel name of the model where the field we're processing is defined
+     * @returns {iterable} containing definitions as fields {fieldName: [propertyValues]}
+     */
+    getPropertyDefinitions(props, fieldName, parentModel) {
+        const propertiesData = {};
+        for (const record of props.list.records) {
+            const properties = record.data[fieldName] || [];
+            for (const property of properties) {
+                if (!(parentModel in record.data)) {
+                    //TODO? rpc + async update instead of this?
+                    throw new Error(`A custom property field ${fieldName} requires its parent ${parentModel} field to be in the view as well`);
+                }
+                propertiesData[`${fieldName}.${property.name}`] = {
+                    ...property,
+                    parentId: record.data[parentModel][0],
+                    parentName: record.data[parentModel][1],
+                };
+            }
+        }
+        return Object.values(propertiesData).flat();
+    }
+
+    getNonPropertyColumns(columns) {
+        return columns.filter(column => !this.getPropertyParentModel(column.name));
+    }
+
+    /**
+     * Group property columns in a structure that allows to display them based on where they are defined.
+     * The structure is such that it can easily be iterated over in a forEach loop.
+     *
+     * @example [column1, ...] -> [{definitionModel: 'team_id', group: [{parentId: 3, columns: [column1, ...]}, ...]}, ...]
+     * @param {object} columns virtual property columns generated via ``getVirtualPropertyFields``
+     * @returns {Array} inlined groups per definition model, then per specific definition record
+     */
+    getPropertyColumnGroups(columns) {
+        const propertyColumns = columns.filter(column => this.getPropertyParentModel(column.name));
+        const grouped = {};
+        for (const column of propertyColumns) {
+            const columnPropertyDefinition = this.getPropertyParentModel(column.name);
+
+            if (!grouped[columnPropertyDefinition]) {
+                grouped[columnPropertyDefinition] = {};
+            }
+            if (!grouped[columnPropertyDefinition][column.propertyParentId]) {
+                grouped[columnPropertyDefinition][column.propertyParentId] = [];
+            }
+
+            grouped[columnPropertyDefinition][column.propertyParentId].push(column);
+        }
+
+        return Object.entries(grouped).map(([definitionModel, definitionGroup]) => (
+            {definitionModel: this.fields[definitionModel].string, // Must exist if it is listed in the definitions
+             group: Object.entries(definitionGroup).map(([parentId, columns]) => (
+                {parentId,
+                 parentName: columns[0].propertyParentName, // if there's an entry in the group, there's at least one column in it
+                 columns,
+                })),
+            }));
+    }
+    /**
+     * Get the model where the property is defined
+     *
+     * @param {string} propertyName properly formated property name (e.g. properties.a23fd...)
+     * @returns {string} name of the model where the property was defined
+     */
+    getPropertyParentModel(propertyName) {
+        if (!this.fields[propertyName]) {
+            return null;
+        }
+        return this.fields[propertyName].definition_record;
+    }
+
     setDirty(isDirty) {
         this.lastIsDirty = isDirty;
     }
@@ -1566,7 +1757,7 @@ export class ListRenderer extends Component {
             return { type: "relative", value: 1 };
         }
 
-        const type = column.widget || this.props.list.fields[column.name].type;
+        const type = column.widget || this.fields[column.name].type;
         if (type in FIXED_FIELD_COLUMN_WIDTHS) {
             return { type: "absolute", value: FIXED_FIELD_COLUMN_WIDTHS[type] };
         }
@@ -1582,8 +1773,8 @@ export class ListRenderer extends Component {
         return getTooltipInfo({
             viewMode: "list",
             resModel: this.props.list.resModel,
-            field: this.props.list.fields[column.name],
-            fieldInfo: this.props.list.activeFields[column.name],
+            field: this.fields[column.name],
+            fieldInfo: this.activeFields[column.name],
         });
     }
 
@@ -1768,6 +1959,26 @@ export class ListRenderer extends Component {
             this.toggleRecordSelection(record);
         }
     }
+
+    /**
+     * Recompute all attributes related to properties.
+     * Should be called whenever record or field props are changed
+     *
+     * @param {object} props the props passed to this component
+     */
+    _updateFilteredPropsForProperties(props) {
+        // we need the props to be passed around to use nextProp in onWillUpdateProps
+        let propertyDefinitions = {};
+        const propertiesFields = this.getPropertiesFieldNames(props);
+        for (const fieldName of propertiesFields) {
+            const field = props.list.fields[fieldName];
+            propertyDefinitions[fieldName] = this.getPropertyDefinitions(props, field.name, field.definition_record);
+        }
+        this.activeFields = this.propertiesProcessFields(props.list.activeFields, propertyDefinitions);
+        this.allColumns = this.propertiesGetAllColumns(props.archInfo.columns, propertyDefinitions);
+        this.fields = this.propertiesProcessFields(props.list.fields, propertyDefinitions);
+        this.records = this.propertiesProcessRecords(props.list.records, propertyDefinitions);
+    }
 }
 
 ListRenderer.template = "web.ListRenderer";
@@ -1776,7 +1987,7 @@ ListRenderer.rowsTemplate = "web.ListRenderer.Rows";
 ListRenderer.recordRowTemplate = "web.ListRenderer.RecordRow";
 ListRenderer.groupRowTemplate = "web.ListRenderer.GroupRow";
 
-ListRenderer.components = { DropdownItem, Field, ViewButton, CheckBox, Dropdown, Pager, Widget };
+ListRenderer.components = { DropdownItem, Field, ViewButton, CheckBox, Dropdown, Pager, Widget, PropertyValue };
 ListRenderer.props = [
     "activeActions?",
     "list",

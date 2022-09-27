@@ -100,6 +100,8 @@ QUnit.module("Views", (hooks) => {
                         text: { string: "text field", type: "text" },
                         qux: { string: "my float", type: "float" },
                         m2o: { string: "M2O field", type: "many2one", relation: "bar" },
+                        second_m2o_bar: { string: "Second M2O field", type: "many2one", relation: "bar"},
+                        third_m2o_baz: { string: "Third M2O field", type: "many2one", relation: "baz" },
                         o2m: { string: "O2M field", type: "one2many", relation: "bar" },
                         m2m: { string: "M2M field", type: "many2many", relation: "bar" },
                         amount: { string: "Monetary field", type: "monetary" },
@@ -130,6 +132,18 @@ QUnit.module("Views", (hooks) => {
                                 ["event", "Event"],
                             ],
                         },
+                        some_properties_field: {
+                            definition_record: 'm2o',
+                            string: "User fields",
+                            type: "properties",
+                            sortable: false,
+                        },
+                        some_other_properties_field: {
+                            definition_record: 'second_m2o_bar',
+                            string: "Custom fields",
+                            type: "properties",
+                            sortable: false,
+                        },
                     },
                     records: [
                         {
@@ -139,6 +153,7 @@ QUnit.module("Views", (hooks) => {
                             int_field: 10,
                             qux: 0.4,
                             m2o: 1,
+                            second_m2o_bar: 1,
                             m2m: [1, 2],
                             amount: 1200,
                             amount_currency: 1100,
@@ -147,6 +162,37 @@ QUnit.module("Views", (hooks) => {
                             date: "2017-01-25",
                             datetime: "2016-12-12 10:55:05",
                             reference: "bar,1",
+                            some_properties_field: [ //TODO? mock this in mock_server instead
+                                {name: 'spf1',
+                                 type: 'text',
+                                 string: 'Name',
+                                 value: 'John',
+                                },
+                                {name: 'spf2',
+                                 type: 'text',
+                                 string: 'Surname',
+                                },
+                                {name: '1', // ambiguous type on name
+                                 tags: [['test', 'test', 0],
+                                        ['test2', 'test2', 1],
+                                        ['test3', 'test3', 2]],
+                                 type: 'tags',
+                                 string: 'SomeTags',
+                                 value: ['test', 'test2'],
+                                },
+                            ],
+                            some_other_properties_field: [
+                                {name: 'ddd',
+                                 type: 'text',
+                                 string: '', // empty string rep
+                                 value: '',
+                                },
+                                {name: 'spf1', // check for same id on different definitions
+                                 type: 'text',
+                                 string: 'Surname',
+                                 value: '',
+                                },
+                            ],
                         },
                         {
                             id: 2,
@@ -155,9 +201,25 @@ QUnit.module("Views", (hooks) => {
                             int_field: 9,
                             qux: 13,
                             m2o: 2,
+                            second_m2o_bar: 2,
                             m2m: [1, 2, 3],
                             amount: 500,
                             reference: "res_currency,1",
+                            some_properties_field: false,
+                            some_other_properties_field: [
+                                {name: 'a',
+                                 type: 'selection',
+                                 string: 'g',
+                                 selection: [['a', '1'], ['b', '2'], ['c', 'choose']],
+                                 value: 'c',
+                                },
+                                {name: 'b',
+                                 type: 'many2many',
+                                 string: 'j',
+                                 comodel: 'bar',
+                                 value: [[2, 'Value 2'], [3, 'Value 3']],
+                                },
+                            ],
                         },
                         {
                             id: 3,
@@ -166,9 +228,43 @@ QUnit.module("Views", (hooks) => {
                             int_field: 17,
                             qux: -3,
                             m2o: 1,
+                            second_m2o_bar: 2,
                             m2m: [],
                             amount: 300,
                             reference: "res_currency,2",
+                            some_properties_field: [
+                                {name: 'spf1',
+                                 type: 'text',
+                                 string: 'Name',
+                                },
+                                {name: 'spf2',
+                                 type: 'text',
+                                 string: 'Surname',
+                                 value: 'Marko'
+                                },
+                                {name: '1',
+                                 tags: [['test', 'test', 0],
+                                        ['test2', 'test2', 1],
+                                        ['test3', 'test3', 2]],
+                                 type: 'tags',
+                                 string: 'SomeTags',
+                                 value: [],
+                                },
+                            ],
+                            some_other_properties_field: [
+                                {name: 'a',
+                                 type: 'selection',
+                                 string: 'g',
+                                 selection: [['a', '1'], ['b', '2'], ['c', 'choose']],
+                                 value: false,
+                                },
+                                {name: 'b',
+                                 type: 'many2many',
+                                 string: 'j',
+                                 comodel: 'bar',
+                                 value: false,
+                                },
+                            ],
                         },
                         {
                             id: 4,
@@ -188,6 +284,12 @@ QUnit.module("Views", (hooks) => {
                         { id: 1, display_name: "Value 1" },
                         { id: 2, display_name: "Value 2" },
                         { id: 3, display_name: "Value 3" },
+                    ],
+                },
+                baz: {
+                    fields: {},
+                    records: [
+                        { id: 1, display_name: "BazValue 1"},
                     ],
                 },
                 res_currency: {
@@ -16248,5 +16350,373 @@ QUnit.module("Views", (hooks) => {
         await click(target, ".o_data_row:nth-child(1) td.o_list_many2one");
         await click(target, ".o_field_many2one_selection .o-autocomplete--input");
         assert.verifySteps(["name_search"]);
+    });
+
+
+
+    // Properties fields
+
+    QUnit.test("properties fields columns are replaced by the columns of their definitions", async function (assert) {
+        assert.expect(3);
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="m2o" invisible="1"/>
+                    <field name="second_m2o_bar" invisible="1"/>
+                    <field name="some_properties_field"/>
+                    <field name="some_other_properties_field"/>
+                </tree>
+            `,
+        });
+
+        const propertiesColumns = [...target.querySelectorAll("th[data-name^='some_properties_field'],th[data-name^='some_other_properties_field']")];
+        const allColumns = [...target.querySelectorAll("table.o_list_table thead th[data-name]")];
+
+        assert.ok(propertiesColumns, "There should be some columns with a name starting in the form 'properties.xxx'");
+        assert.deepEqual(propertiesColumns.length, allColumns.length, 'All properties fields should have been replaced with their definitions');
+        assert.deepEqual(propertiesColumns, allColumns);
+    });
+
+    QUnit.test("properties with no value have columns", async function (assert) {
+        assert.expect(2);
+
+        // only display the empty property of the first record
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree limit="1">
+                    <field name="second_m2o_bar" invisible="1"/>
+                    <field name="some_other_properties_field"/>
+                </tree>
+            `,
+        });
+
+        const someOtherProperties = 'some_other_properties_field';
+        const propertyNames = ['ddd', 'spf1'].map(propertyName => `${someOtherProperties}.${propertyName}`);
+
+        const propertiesColumns = [...target.querySelectorAll("th[data-name^='some_other_properties_field']")];
+
+        assert.deepEqual(propertiesColumns.length, propertyNames.length, 'All properties defined in the displayed records should have a column even when no record has a value for it');
+        assert.deepEqual(propertiesColumns.map(propertyColumn => propertyColumn.getAttribute('data-name')), propertyNames, 'Properties columns should remain ordered');
+    });
+
+    QUnit.test("properties always readonly", async function (assert) {
+        assert.expect(1);
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="top">
+                    <field name="foo"/>
+                    <field name="m2o" invisible="1"/>
+                    <field name="some_properties_field"/>
+                </tree>
+            `,
+        });
+
+        await click(target.querySelector(".o_data_cell"));
+        triggerHotkey("Tab");
+        await nextTick();
+
+        //check that we skip to the next record
+        assert.deepEqual(target.querySelector(".o_selected_row"), target.querySelectorAll(".o_data_row")[1], "Should only be 1 editable field on each row");
+    });
+
+    QUnit.test("properties retain definition column ordering", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="top">
+                    <field name="foo"/>
+                    <field name="some_other_properties_field"/>
+                    <field name="m2o"/>
+                    <field name="bar"/>
+                    <field name="some_properties_field"/>
+                    <field name="second_m2o_bar" invisible="1"/>
+                </tree>
+            `,
+        });
+
+        const someProperties = "some_properties_field";
+        const someOtherProperties = "some_other_properties_field";
+        const somePropertiesNames = ['spf1', 'spf2', '1'].map(propertyName => `${someProperties}.${propertyName}`);
+        const someOtherPropertiesNames = ['ddd', 'spf1'].concat(['a', 'b']).map(propertyName => `${someOtherProperties}.${propertyName}`);
+        const somePropertiesStrings = ['Name', 'Surname', 'SomeTags'];
+        const someOtherPropertiesStrings = ['', 'Surname'].concat(['g', 'j']);
+
+        const somePropertiesColumns = [...target.querySelectorAll("th[data-name^='some_properties_field']")];
+        const someOtherPropertiesColumns = [...target.querySelectorAll("th[data-name^='some_other_properties_field']")];
+        const expectedColumns = [false, ...someOtherPropertiesColumns, false, false, ...somePropertiesColumns];
+        const expectedColumnNames = [false, ...someOtherPropertiesNames, false, false, ...somePropertiesNames];
+        const expectedColumnStrings = [false, ...someOtherPropertiesStrings, false, false, ...somePropertiesStrings];
+        const allColumns = [...target.querySelectorAll("table.o_list_table thead th[data-name]")];
+
+        assert.deepEqual(allColumns.length, expectedColumns.length);
+        for (let i = 0; i < allColumns.length; i++) {
+            if (!expectedColumns[i]) {
+                continue;
+            }
+            assert.deepEqual(expectedColumns[i], allColumns[i]);
+            // also check technical and displayed names
+            assert.deepEqual(expectedColumnNames[i], allColumns[i].getAttribute('data-name'));
+            assert.deepEqual(expectedColumnStrings[i], allColumns[i].textContent);
+        }
+    });
+
+    QUnit.test("modifiers applied on definition apply on properties", async function (assert) {
+        assert.expect(1);
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="top">
+                    <field name="m2o"/>
+                    <field name="some_properties_field" invisible="1"/>
+                </tree>
+            `,
+        });
+        const someOtherPropertiesColumns = [...target.querySelectorAll("th[data-name^='some_other_properties_field']")];
+        assert.deepEqual([], someOtherPropertiesColumns, "Properties should be invisible");
+    });
+
+    QUnit.test("properties appear in the optional menu", async function (assert) {
+        assert.expect(17);
+
+        const someProperties = "some_properties_field";
+        const someOtherProperties = "some_other_properties_field";
+        const somePropertiesNames = ['spf1', 'spf2', '1'].map(propertyName => `${someProperties}.${propertyName}`);
+        const someOtherPropertiesNames = ['spf1', 'ddd'].map(propertyName => `${someOtherProperties}.${propertyName}`);
+
+        patchWithCleanup(browser.localStorage, {
+            setItem(key, value) {
+                if (key.includes(someProperties) || key.includes(someOtherProperties)) {
+                    assert.step(`setOptionalStorage to ${JSON.stringify(value)}`);
+                }
+                return this._super(arguments);
+            },
+        });
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree limit="1">
+                    <field name="m2o"/>
+                    <field name="some_properties_field" optional="hide"/>
+                    <field name="second_m2o_bar"/>
+                    <field name="some_other_properties_field" optional="hide"/>
+                </tree>
+            `,
+        });
+
+        assert.containsOnce(
+            target,
+            "table .o_optional_columns_dropdown",
+            "Should have the optional columns dropdown toggle inside the table"
+        );
+
+        await click(target, "table .o_optional_columns_dropdown .dropdown-toggle");
+        assert.containsN(
+            target,
+            "div.o_optional_columns_dropdown span.dropdown-item",
+            somePropertiesNames.length + someOtherPropertiesNames.length,
+            `Should be one dropdown item for each property defined in ${someProperties} and ${someOtherProperties}`
+        );
+
+        let expectedColumnCount = 4;
+        const checkExpectedColumnCount = (expected, message) => {
+            assert.containsN(target, "table thead th", expected, message || '');
+        };
+        // tick one of the properties
+        checkExpectedColumnCount(expectedColumnCount, 'Should start with (checkbox, m2o, dropdown) visible');
+        await click(target, `div.o_optional_columns_dropdown span.dropdown-item input[name='${somePropertiesNames[0]}']`);
+        expectedColumnCount += 1;
+        checkExpectedColumnCount(expectedColumnCount, 'Clicking an optional property should add it to the columns');
+        assert.ok(
+            $(target).find(`th[data-name$='${somePropertiesNames[0]}']`).is(":visible"),
+            "Should have added the first property column"
+        );
+
+        // tick another from the same definition
+        await click(target, `div.o_optional_columns_dropdown span.dropdown-item input[name='${somePropertiesNames[1]}']`);
+        expectedColumnCount += 1;
+        checkExpectedColumnCount(expectedColumnCount, 'Clicking an optional property should add it to the columns');
+        assert.ok(
+            $(target).find(`th[data-name$='${somePropertiesNames[1]}']`).is(":visible"),
+            "Should have added the second property column"
+        );
+
+        // tick another from another definition
+        await click(target, `div.o_optional_columns_dropdown span.dropdown-item input[name='${someOtherPropertiesNames[0]}']`);
+        expectedColumnCount += 1;
+        checkExpectedColumnCount(expectedColumnCount, 'Clicking an optional property should add it to the columns');
+        assert.ok(
+            $(target).find(`th[data-name$='${someOtherPropertiesNames[0]}']`).is(":visible"),
+            "Should have added the second property column"
+        );
+
+        // untick the first one
+        await click(target, `div.o_optional_columns_dropdown span.dropdown-item input[name='${somePropertiesNames[0]}']`);
+        expectedColumnCount -= 1;
+        checkExpectedColumnCount(expectedColumnCount, 'Clicking a ticked property should remove it from the columns');
+        assert.notOk(
+            $(target).find(`th[data-name$='${somePropertiesNames[0]}']`).is(":visible"),
+            "Should have removed the first property column"
+        );
+        assert.ok(
+            $(target).find(`th[data-name$='${somePropertiesNames[1]}']`).is(":visible"),
+            "Should have kept the second property column"
+        );
+
+        // check that these properties were set in order
+        const step1 = [somePropertiesNames[0]];
+        const step2 = step1.concat(somePropertiesNames[1]);
+        const step3 = step2.concat(someOtherPropertiesNames[0]);
+        const step4 = [somePropertiesNames[1], someOtherPropertiesNames[0]];
+        assert.verifySteps([step1, step2, step3, step4].map(nameList => `setOptionalStorage to ${JSON.stringify(nameList)}`));
+    });
+
+    QUnit.test("property columns update based on displayed records", async function (assert) {
+        assert.expect(7);
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="foo"/>
+                    <field name="second_m2o_bar"/>
+                    <field name="some_other_properties_field" optional="show"/>
+                </tree>
+            `,
+            groupBy: ['id'],
+        });
+
+        const firstElementColNames = ['ddd', 'spf1'];
+        const otherElementColNames = ['a', 'b'];
+
+        const getPropertyColumns = (propertyIdArray) => {
+            return propertyIdArray.map(propertyId => target.querySelector(`th[data-name$='${propertyId}']`)).filter(col => col);
+        };
+        const getAllPropertyColumns = () => [...target.querySelectorAll("th[data-name^='some_other_properties_field']")];
+
+        assert.deepEqual([], getAllPropertyColumns(), 'Should not be any property when groups are collapsed');
+
+        // properties are shown/hidden based on displayed records
+        await click(target.querySelectorAll('.o_group_has_content')[0]);
+        assert.deepEqual(getPropertyColumns(firstElementColNames), getAllPropertyColumns(),
+        'Should be properties defined on m2o with id = 1 (used by the foo record with id 1)');
+        await click(target.querySelectorAll('.o_group_has_content')[1]);
+        assert.deepEqual(getPropertyColumns(firstElementColNames.concat(otherElementColNames)), getAllPropertyColumns(),
+        'Should be properties defined by all m2o records referenced in the records');
+        await click(target.querySelectorAll('.o_group_has_content')[0]);
+        assert.deepEqual(getPropertyColumns(otherElementColNames), getAllPropertyColumns(), 'Should be properties defined on m2o with id != 1 (used by all foo records except id 1)');
+        await click(target.querySelectorAll('.o_group_has_content')[1]);
+        assert.deepEqual(getPropertyColumns(firstElementColNames), getAllPropertyColumns(), 'Should not be any property when groups are re-collapsed');
+
+        // check that optional fields are remembered
+        await click(target.querySelectorAll('.o_group_has_content')[0]);
+        await click(target, "table .o_optional_columns_dropdown .dropdown-toggle");
+        await click(target, `div.o_optional_columns_dropdown span.dropdown-item input[name$='${firstElementColNames[0]}']`);
+        assert.deepEqual(firstElementColNames.length-1, getAllPropertyColumns().length, 'A property column should have been hidden');
+        await click(target.querySelectorAll('.o_group_has_content')[0]);
+        // open both to check that the individual properties do not influence the storage key
+        await click(target.querySelectorAll('.o_group_has_content')[1]);
+        await click(target.querySelectorAll('.o_group_has_content')[0]);
+        // TODO? Currently the fields that were not displayed will default to hidden
+        // as they are assumed to have been marked as visible the first time an optional field was toggled
+        // ideally the below test should be (firstElementColNames.length + otherElementColNames.length - 1)
+        assert.deepEqual(firstElementColNames.length - 1, getAllPropertyColumns().length,
+        'A singel property column should have remained hidden');
+    });
+
+    QUnit.test("property columns handled in restrained domain", async function (assert) {
+        assert.expect(6);
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="foo"/>
+                    <field name="m2o"/>
+                    <field name="some_properties_field" optional="show"/>
+                </tree>
+            `,
+            searchViewArch: `
+                <search>
+                    <filter name="show empty definition" domain="[('m2o', '=', 2)]"/>
+                </search>`, // that m2o record does not define anything for some_properties_field
+        });
+
+        const propertyNames = ['spf1', 'spf2', '1'];
+
+        const getPropertyColumns = (propertyIdArray) => {
+            return propertyIdArray.map(propertyId => target.querySelector(`th[data-name$='.${propertyId}']`)).filter(col => col);
+        };
+        const getAllPropertyColumns = () => [...target.querySelectorAll("th[data-name^='some_properties_field']")];
+
+        assert.deepEqual(getPropertyColumns(propertyNames), getAllPropertyColumns());
+        assert.deepEqual(getAllPropertyColumns().length, propertyNames.length);
+
+        await click(target, "table .o_optional_columns_dropdown .dropdown-toggle");
+        await click(target, `div.o_optional_columns_dropdown span.dropdown-item input[name$='${propertyNames[0]}']`);
+
+        assert.deepEqual(getAllPropertyColumns().length, propertyNames.length - 1);
+
+        await click(target, '.o_filter_menu button');
+        await click(target, '.o_menu_item');
+        assert.deepEqual([], getAllPropertyColumns(), 'Property columns should disappear when no relevant record is displayed');
+        await click(target, '.o_menu_item');
+        assert.deepEqual(getPropertyColumns(propertyNames), getAllPropertyColumns());
+        assert.deepEqual(getAllPropertyColumns().length, propertyNames.length - 1, 'Should have remembered hidden fields after changes of domain');
+
+    });
+
+    QUnit.test("properties take the right values", async function (assert) {
+        assert.expect(1);
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="foo"/>
+                    <field name="m2o"/>
+                    <field name="second_m2o_bar"/>
+                    <field name="some_other_properties_field"/>
+                    <field name="some_properties_field"/>
+                </tree>
+            `,
+        });
+
+        // column order verified in another test
+        // ddd[''], spf1['Surname'], a['g'], b['j'], spf1['Name'], spf2['Surname'], 1['SomeTags']
+        const recValues = [
+            ['', '', '', [], 'John', '', ['test', 'test2']],
+            ['', '', 'choose', ['Value 2', 'Value 3'], '', '', []],
+            ['', '', '', '', '', 'Marko', []],
+            ['', '', '', [], '', '', []],
+        ].flat().map(val => val.join ? val.join('') : val);
+
+        const propertyDataCellsContent = [...target.querySelectorAll('.o_data_cell')]
+            .filter((_, cellId) => cellId % 10 > 2)
+            .map(cell => cell.textContent);
+        assert.deepEqual(propertyDataCellsContent, recValues);
     });
 });

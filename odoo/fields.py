@@ -3224,6 +3224,7 @@ class Properties(Field):
 
     _description_definition_record = property(attrgetter('definition_record'))
     _description_definition_record_field = property(attrgetter('definition_record_field'))
+    _description_sortable = False
 
     ALLOWED_TYPES = (
         'boolean', 'integer', 'float', 'char', 'date',

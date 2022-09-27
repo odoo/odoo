@@ -3,6 +3,10 @@
 import { registry } from "@web/core/registry";
 import { Many2OneField } from "@web/views/fields/many2one/many2one_field";
 
+// ensure load order
+// TODO Remove me when the gantt view is converted in OWL
+import "@web/views/fields/x2many/x2many_field";
+
 export class SoLineField extends Many2OneField {
     setup() {
         super.setup();
