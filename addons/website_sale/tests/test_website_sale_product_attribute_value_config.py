@@ -150,14 +150,14 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleProductPricelist(TestSaleProductAttributeValueCommon):
     def test_cart_update_with_fpos(self):
-        # We will test that the mapping of an 10% included tax by a 0% by a fiscal position is taken into account when updating the cart
+        # We will test that the mapping of an 10% included tax by a 6% by a fiscal position is taken into account when updating the cart
         self.env.user.partner_id.country_id = False
         current_website = self.env['website'].get_current_website()
         pricelist = current_website.get_current_pricelist()
         (self.env['product.pricelist'].search([]) - pricelist).write({'active': False})
         # Add 10% tax on product
         tax10 = self.env['account.tax'].create({'name': "Test tax 10", 'amount': 10, 'price_include': True, 'amount_type': 'percent'})
-        tax0 = self.env['account.tax'].create({'name': "Test tax 0", 'amount': 0, 'price_include': True, 'amount_type': 'percent'})
+        tax6 = self.env['account.tax'].create({'name': "Test tax 6", 'amount': 6, 'price_include': True, 'amount_type': 'percent'})
 
         test_product = self.env['product.template'].create({
             'name': 'Test Product',
@@ -176,14 +176,14 @@ class TestWebsiteSaleProductPricelist(TestSaleProductAttributeValueCommon):
 
         pricelist.discount_policy = 'without_discount'
 
-        # Create fiscal position mapping taxes 10% -> 0%
+        # Create fiscal position mapping taxes 10% -> 6%
         fpos = self.env['account.fiscal.position'].create({
             'name': 'test',
         })
         self.env['account.fiscal.position.tax'].create({
             'position_id': fpos.id,
             'tax_src_id': tax10.id,
-            'tax_dest_id': tax0.id,
+            'tax_dest_id': tax6.id,
         })
         so = self.env['sale.order'].create({
             'partner_id': self.env.user.partner_id.id,
@@ -203,7 +203,7 @@ class TestWebsiteSaleProductPricelist(TestSaleProductAttributeValueCommon):
         sol.product_id_change()
         with MockRequest(self.env, website=current_website, sale_order_id=so.id):
             so._cart_update(product_id=test_product.product_variant_id.id, line_id=sol.id, set_qty=1)
-        self.assertEqual(round(sol.price_total), 50, "100$ with 50% discount + 0% tax (mapped from fp 10% -> 0%)")
+        self.assertEqual(round(sol.price_total), 53, "100$ with 50% discount + 6% tax (mapped from fp 10% -> 6%)")
 
     def test_cart_update_with_fpos_no_variant_product(self):
         # We will test that the mapping of an 10% included tax by a 0% by a fiscal position is taken into account when updating the cart for no_variant product
