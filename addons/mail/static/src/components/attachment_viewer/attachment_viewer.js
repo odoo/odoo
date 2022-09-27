@@ -2,9 +2,10 @@
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
+import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-const { Component, onMounted, onPatched } = owl;
+const { Component, onMounted } = owl;
 
 export class AttachmentViewer extends Component {
 
@@ -17,8 +18,8 @@ export class AttachmentViewer extends Component {
         useRefToModel({ fieldName: 'imageRef', refName: 'image' });
         useRefToModel({ fieldName: 'zoomerRef', refName: 'zoomer' });
         useRefToModel({ fieldName: 'iframeViewerPdfRef', refName: 'iframeViewerPdf' });
+        useUpdateToModel({ methodName: 'onComponentUpdate' });
         onMounted(() => this._mounted());
-        onPatched(() => this._patched());
     }
 
     _mounted() {
@@ -26,16 +27,6 @@ export class AttachmentViewer extends Component {
             return;
         }
         this.root.el.focus();
-        this.attachmentViewer.handleImageLoad();
-        this.attachmentViewer.hideUnwantedPdfJsButtons();
-    }
-
-    /**
-     * When a new image is displayed, show a spinner until it is loaded.
-     */
-    _patched() {
-        this.attachmentViewer.handleImageLoad();
-        this.attachmentViewer.hideUnwantedPdfJsButtons();
     }
 
     //--------------------------------------------------------------------------

@@ -187,6 +187,13 @@ registerModel({
             this.resetZoom();
         },
         /**
+         * When a new image is displayed, show a spinner until it is loaded.
+         */
+        onComponentUpdate() {
+            this.handleImageLoad();
+            this.hideUnwantedPdfJsButtons();
+        },
+        /**
          * @param {KeyboardEvent} ev
          */
         onKeydown(ev) {
