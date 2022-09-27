@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='composition_mode']" position="before">
                     <field name="all_valid" invisible="1" readonly="1"/>
-                    <div class="alert alert-warning text-center mb-0 no_print" attrs="{'invisible': [('all_valid', '=', True)]}">
+                    <div class="alert alert-warning text-center mb-0 no_print" role="alert" attrs="{'invisible': [('all_valid', '=', True)]}">
                         <span>
                             Some mail can't be sent (<a type="object" name="action_invalid_edi_moves">Invoices</a>).
                         </span>
