@@ -1124,7 +1124,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ":scope .o_notebook .nav");
     });
 
-    QUnit.test("notebook name transferred to DOM", async function (assert) {
+    QUnit.test("notebook page name and class transferred to DOM", async function (assert) {
         await makeView({
             type: "form",
             serverData,
@@ -1133,7 +1133,7 @@ QUnit.module("Views", (hooks) => {
             arch: `<form>
                         <sheet>
                             <notebook>
-                                <page name="choucroute" string="Choucroute">
+                                <page name="choucroute" string="Choucroute" class="sauerKraut">
                                     <field name="foo"/>
                                 </page>
                             </notebook>
@@ -1142,7 +1142,7 @@ QUnit.module("Views", (hooks) => {
         });
         assert.hasClass(
             target.querySelector(".o_notebook .nav .nav-link[name='choucroute']"),
-            "active"
+            "active sauerKraut"
         );
     });
 
