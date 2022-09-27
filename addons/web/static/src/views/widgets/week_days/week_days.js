@@ -3,6 +3,7 @@
 import { registry } from "@web/core/registry";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { localization } from "@web/core/l10n/localization";
+import { _lt } from "@web/core/l10n/translation";
 
 const { Component } = owl;
 
@@ -28,13 +29,13 @@ WeekDays.template = "web.WeekDays";
 WeekDays.components = { CheckBox };
 
 WeekDays.fieldDependencies = {
-    sun: { type: "boolean" },
-    mon: { type: "boolean" },
-    tue: { type: "boolean" },
-    wed: { type: "boolean" },
-    thu: { type: "boolean" },
-    fri: { type: "boolean" },
-    sat: { type: "boolean" },
+    sun: { type: "boolean", string: _lt("Sun") },
+    mon: { type: "boolean", string: _lt("Mon") },
+    tue: { type: "boolean", string: _lt("Tue") },
+    wed: { type: "boolean", string: _lt("Wed") },
+    thu: { type: "boolean", string: _lt("Thu") },
+    fri: { type: "boolean", string: _lt("Fri") },
+    sat: { type: "boolean", string: _lt("Sat") },
 };
 
 registry.category("view_widgets").add("week_days", WeekDays);
