@@ -219,12 +219,9 @@
         }
 
         .o_notebook {
-            > .o_notebook_headers {
-                @include o-form-nosheet-negative-margin;
-                > .nav.nav-tabs {
-                    @include o-form-nosheet-inner-left-padding;
-                }
-            }
+            --notebook-margin-x: -#{$o-horizontal-padding};
+            --notebook-padding-x: #{$o-horizontal-padding};
+
             > .tab-content > .tab-pane > :first-child {
                 // These elements will appear attached to the tabs
                 &.o_field_x2many.o_field_x2many_list {
@@ -484,55 +481,12 @@
         clear: both; // For the notebook not to have alongside floating elements
         margin-top: $o-form-spacing-unit * 2;
 
-        > .o_notebook_headers {
-            @include o-form-sheet-negative-margin;
+        --notebook-margin-x: -#{$o-horizontal-padding};
+        --notebook-padding-x: #{$o-horizontal-padding};
 
-            @include media-breakpoint-down(md) {
-                overflow-x: auto;
-                &::-webkit-scrollbar {
-                    display: none;
-                }
-                .nav.nav-tabs {
-                    flex-flow: row nowrap;
-                }
-            }
-
-            > .nav.nav-tabs {
-                @include o-form-sheet-inner-left-padding;
-                border-bottom-color: $border-color;
-
-                > .nav-item {
-                    white-space: nowrap;
-
-                    > .nav-link {
-                        color: $body-color;
-                        border-color: $border-color;
-                        background-color: white;
-
-                        &:hover, &:focus, &:active {
-                            outline: none;
-                            color: $link-color;
-                        }
-
-                        &.active {
-                            border-bottom-color: white;
-
-                            &, &:hover, &:focus, &:active {
-                                color: $headings-color;
-                                border-top-color: $o-brand-odoo;
-                            }
-                        }
-
-                        &.disabled {
-                            color: $text-muted;
-                        }
-                    }
-
-                    + .nav-item {
-                        margin-left: -1px;
-                    }
-                }
-            }
+        @include media-breakpoint-up(lg, $o-extra-grid-breakpoints) {
+            --notebook-margin-x: -#{$o-horizontal-padding * 2};
+            --notebook-padding-x: #{$o-horizontal-padding * 2};
         }
 
         > .tab-content {
