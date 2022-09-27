@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { IS_RECORD, registry } from '@mail/model/model_core';
+import { IS_RECORD, patchesAppliedPromise, registry } from '@mail/model/model_core';
 import { ModelField } from '@mail/model/model_field';
 import { ModelIndexAnd } from '@mail/model/model_index_and';
 import { ModelIndexXor } from '@mail/model/model_index_xor';
@@ -105,25 +105,7 @@ export class ModelManager {
      * @param {Object} values field name/value pairs to give at messaging create
      */
     async start(values) {
-        if (document.readyState === 'loading') {
-            await new Promise(resolve => {
-                /**
-                 * Called when all JS resources are loaded. This is useful in order
-                 * to do some processing after other JS files have been parsed, for
-                 * example new models or patched models that are coming from
-                 * other modules, because some of those patches might need to be
-                 * applied before messaging initialization.
-                 */
-                window.addEventListener('load', resolve);
-            });
-        }
-        /**
-         * All JS resources are loaded, but not necessarily processed.
-         * We assume no messaging-related modules return any Promise,
-         * therefore they should be processed *at most* asynchronously at
-         * "Promise time".
-         */
-        await new Promise(resolve => setTimeout(resolve));
+        await patchesAppliedPromise;
         this._generateModels();
         /**
          * Create the messaging singleton record.
