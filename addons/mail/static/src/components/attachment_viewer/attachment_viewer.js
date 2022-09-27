@@ -57,31 +57,6 @@ export class AttachmentViewer extends Component {
     }
 
     //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Zoom out the image.
-     *
-     * @private
-     * @param {Object} [param0={}]
-     * @param {boolean} [param0.scroll=false]
-     */
-    _zoomOut({ scroll = false } = {}) {
-        if (this.attachmentViewer.scale === this.attachmentViewer.minScale) {
-            return;
-        }
-        const unflooredAdaptedScale = (
-            this.attachmentViewer.scale -
-            (scroll ? this.attachmentViewer.scrollZoomStep : this.attachmentViewer.zoomStep)
-        );
-        this.attachmentViewer.update({
-            scale: Math.max(this.attachmentViewer.minScale, unflooredAdaptedScale),
-        });
-        this.attachmentViewer.updateZoomerStyle();
-    }
-
-    //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
@@ -119,7 +94,7 @@ export class AttachmentViewer extends Component {
      */
     _onClickZoomOut(ev) {
         ev.stopPropagation();
-        this._zoomOut();
+        this.attachmentViewer.zoomOut();
     }
 
     /**
@@ -158,7 +133,7 @@ export class AttachmentViewer extends Component {
                 this.attachmentViewer.zoomIn();
                 break;
             case '-':
-                this._zoomOut();
+                this.attachmentViewer.zoomOut();
                 break;
             case '0':
                 this.attachmentViewer.resetZoom();
@@ -179,7 +154,7 @@ export class AttachmentViewer extends Component {
             return;
         }
         if (ev.deltaY > 0) {
-            this._zoomOut({ scroll: true });
+            this.attachmentViewer.zoomOut({ scroll: true });
         } else {
             this.attachmentViewer.zoomIn({ scroll: true });
         }

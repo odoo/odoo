@@ -292,7 +292,22 @@ registerModel({
                 scale: this.scale + (scroll ? this.scrollZoomStep : this.zoomStep),
             });
             this.updateZoomerStyle();
-        }
+        },
+        /**
+         * Zoom out the image.
+         * @param {Object} [param0={}]
+         * @param {boolean} [param0.scroll=false]
+         */
+        zoomOut({ scroll = false } = {}) {
+            if (this.scale === this.minScale) {
+                return;
+            }
+            const unflooredAdaptedScale = this.scale - (scroll ? this.scrollZoomStep : this.zoomStep);
+            this.update({
+                scale: Math.max(this.minScale, unflooredAdaptedScale),
+            });
+            this.updateZoomerStyle();
+        },
     },
     fields: {
         /**
