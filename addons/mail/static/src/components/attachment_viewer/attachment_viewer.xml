@@ -35,7 +35,7 @@
                         <i class="fa fa-fw fa-times" role="img"/>
                     </div>
                 </div>
-                <div class="o_AttachmentViewer_main position-absolute top-0 bottom-0 start-0 end-0 align-items-center justify-content-center d-flex" t-att-class="{ 'o_with_img overflow-hidden': attachmentViewer.attachmentViewerViewable.isImage }" t-on-mousemove="_onMousemoveView">
+                <div class="o_AttachmentViewer_main position-absolute top-0 bottom-0 start-0 end-0 align-items-center justify-content-center d-flex" t-att-class="{ 'o_with_img overflow-hidden': attachmentViewer.attachmentViewerViewable.isImage }" t-on-mousemove="attachmentViewer.onMousemoveView">
                     <t t-if="attachmentViewer.attachmentViewerViewable.isImage">
                         <div class="o_AttachmentViewer_zoomer position-absolute align-items-center justify-content-center d-flex w-100 h-100" t-ref="zoomer">
                             <t t-if="attachmentViewer.isImageLoading">

@@ -237,24 +237,6 @@ export class AttachmentViewer extends Component {
 
     /**
      * @private
-     * @param {DragEvent}
-     */
-    _onMousemoveView(ev) {
-        if (!this.attachmentViewer.exists()) {
-            return;
-        }
-        if (!this.attachmentViewer.isDragging) {
-            return;
-        }
-        this.attachmentViewer.translate.update({
-            dx: ev.clientX - this.attachmentViewer.dragStartX,
-            dy: ev.clientY - this.attachmentViewer.dragStartY,
-        });
-        this.attachmentViewer.updateZoomerStyle();
-    }
-
-    /**
-     * @private
      * @param {Event} ev
      */
     _onWheelImage(ev) {

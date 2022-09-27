@@ -166,6 +166,22 @@ registerModel({
             this.update({ isImageLoading: false });
         },
         /**
+         * @param {DragEvent}
+         */
+        onMousemoveView(ev) {
+            if (!this.exists()) {
+                return;
+            }
+            if (!this.isDragging) {
+                return;
+            }
+            this.translate.update({
+                dx: ev.clientX - this.dragStartX,
+                dy: ev.clientY - this.dragStartY,
+            });
+            this.updateZoomerStyle();
+        },
+        /**
          * Display the previous attachment in the list of attachments.
          */
         previous() {
