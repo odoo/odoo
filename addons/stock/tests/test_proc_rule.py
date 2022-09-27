@@ -499,6 +499,23 @@ class TestProcRule(TransactionCase):
         self.assertEqual(orderpoint.location_id, location)
         orderpoint.unlink()
 
+    def test_replenishment_order_to_max(self):
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        self.product.detailed_type = 'product'
+        self.env['stock.quant']._update_available_quantity(self.product, warehouse.lot_stock_id, 10)
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'ProductB RR',
+            'product_id': self.product.id,
+            'product_min_qty': 5,
+            'product_max_qty': 200,
+        })
+        self.assertEqual(orderpoint.qty_forecast, 10.0)
+        # above minimum qty => nothing to order
+        orderpoint.action_replenish()
+        self.assertEqual(orderpoint.qty_forecast, 10.0)
+        orderpoint.action_replenish(force_to_max=True)
+        self.assertEqual(orderpoint.qty_forecast, 200.0)
+
 
 class TestProcRuleLoad(TransactionCase):
     def setUp(cls):
