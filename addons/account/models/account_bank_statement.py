@@ -58,7 +58,7 @@ class AccountBankStatement(models.Model):
                 .filtered(lambda line: not line.statement_complete) \
                 .sorted()
             if not lines:
-                raise UserError(_('No editable line selected.'))
+                raise UserError(_('One or more selected lines already belong to a complete statement.'))
         if lines:
             defaults['line_ids'] = [Command.set(lines.ids)]
             defaults['balance_start'] = lines[-1:].running_balance - lines[-1:].amount
