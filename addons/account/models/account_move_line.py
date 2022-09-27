@@ -947,7 +947,7 @@ class AccountMoveLine(models.Model):
                     'group_tax_id': tax['group'] and tax['group'].id or False,
                     'account_id': tax['account_id'] or line.account_id.id,
                     'currency_id': line.currency_id.id,
-                    'analytic_distribution': tax['analytic'] and line.analytic_distribution,
+                    'analytic_distribution': (tax['analytic'] or not tax['use_in_tax_closing']) and line.analytic_distribution,
                     'tax_ids': [(6, 0, tax['tax_ids'])],
                     'tax_tag_ids': [(6, 0, tax['tag_ids'])],
                     'partner_id': line.move_id.partner_id.id or line.partner_id.id,
@@ -1073,15 +1073,16 @@ class AccountMoveLine(models.Model):
     @api.depends('account_id', 'partner_id', 'product_id')
     def _compute_analytic_distribution_stored_char(self):
         for line in self:
-            distribution = self.env['account.analytic.distribution.model']._get_distributionjson({
-                "product_id": line.product_id.id,
-                "product_categ_id": line.product_id.categ_id.id,
-                "partner_id": line.partner_id.id,
-                "partner_category_id": line.partner_id.category_id.ids,
-                "account_prefix": line.account_id.code,
-                "company_id": line.company_id.id,
-            })
-            line.analytic_distribution_stored_char = distribution or line.analytic_distribution_stored_char
+            if line.display_type == 'product' or not line.move_id.is_invoice(include_receipts=True):
+                distribution = self.env['account.analytic.distribution.model']._get_distributionjson({
+                    "product_id": line.product_id.id,
+                    "product_categ_id": line.product_id.categ_id.id,
+                    "partner_id": line.partner_id.id,
+                    "partner_category_id": line.partner_id.category_id.ids,
+                    "account_prefix": line.account_id.code,
+                    "company_id": line.company_id.id,
+                })
+                line.analytic_distribution_stored_char = distribution or line.analytic_distribution_stored_char
             line._compute_analytic_distribution()
 
     # -------------------------------------------------------------------------

@@ -681,6 +681,7 @@ class AccountTax(models.Model):
                     'sequence': tax.sequence,
                     'account_id': repartition_line._get_aml_target_tax_account().id,
                     'analytic': tax.analytic,
+                    'use_in_tax_closing': repartition_line.use_in_tax_closing,
                     'price_include': price_include,
                     'tax_exigibility': tax.tax_exigibility,
                     'tax_repartition_line_id': repartition_line.id,
