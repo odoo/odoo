@@ -20,6 +20,7 @@ class AccountChartTemplate(models.Model):
         # created later but defined in this same function.
         yield self._get_demo_data_move()
         yield self._get_demo_data_statement()
+        yield self._get_demo_data_transactions()
         yield self._get_demo_data_reconcile_model()
         yield self._get_demo_data_attachment()
         yield self._get_demo_data_mail_message()
@@ -110,7 +111,7 @@ class AccountChartTemplate(models.Model):
         return ('account.bank.statement', {
             f'{cid}_demo_bank_statement_0': {
                 'name': f'{bnk_journal.name} - {time.strftime("%Y")}-01-01/1',
-                'balance_end_real': 5103.0,
+                'balance_end_real': 6378.0,
                 'balance_start': 0.0,
                 'line_ids': [
                     Command.create({
@@ -119,13 +120,6 @@ class AccountChartTemplate(models.Model):
                         'amount': 5103.0,
                         'date': time.strftime('%Y-01-01'),
                     }),
-                ]
-            },
-            f'{cid}_demo_bank_statement_1': {
-                'name': f'{bnk_journal.name} - {time.strftime("%Y")}-01-01/2',
-                'balance_end_real': 9944.87,
-                'balance_start': 5103.0,
-                'line_ids': [
                     Command.create({
                         'journal_id': bnk_journal.id,
                         'payment_ref': time.strftime('INV/%Y/00002 and INV/%Y/00003'),
@@ -133,46 +127,57 @@ class AccountChartTemplate(models.Model):
                         'date': time.strftime('%Y-01-01'),
                         'partner_id': ref('base.res_partner_12').id
                     }),
-                    Command.create({
-                        'journal_id': bnk_journal.id,
-                        'payment_ref': 'Bank Fees',
-                        'amount': -32.58,
-                        'date': time.strftime('%Y-01-01'),
-                    }),
-                    Command.create({
-                        'journal_id': bnk_journal.id,
-                        'payment_ref': 'Prepayment',
-                        'amount': 650,
-                        'date': time.strftime('%Y-01-01'),
-                        'partner_id': ref('base.res_partner_12').id
-                    }),
-                    Command.create({
-                        'journal_id': bnk_journal.id,
-                        'payment_ref': time.strftime(f'First {formatLang(self.env, 2000, currency_obj=self.env.company.currency_id)} of invoice %Y/00001'),
-                        'amount': 2000,
-                        'date': time.strftime('%Y-01-01'),
-                        'partner_id': ref('base.res_partner_12').id
-                    }),
-                    Command.create({
-                        'journal_id': bnk_journal.id,
-                        'payment_ref': 'Last Year Interests',
-                        'amount': 102.78,
-                        'date': time.strftime('%Y-01-01'),
-                    }),
-                    Command.create({
-                        'journal_id': bnk_journal.id,
-                        'payment_ref': time.strftime('INV/%Y/00002'),
-                        'amount': 750,
-                        'date': time.strftime('%Y-01-01'),
-                        'partner_id': ref('base.res_partner_2').id
-                    }),
-                    Command.create({
-                        'journal_id': bnk_journal.id,
-                        'payment_ref': f'R:9772938  10/07 AX 9415116318 T:5 BRT: {formatLang(self.env, 100.0, digits=2)} C/ croip',
-                        'amount': 96.67,
-                        'date': time.strftime('%Y-01-01'),
-                    }),
                 ]
+            },
+        })
+
+    @api.model
+    def _get_demo_data_transactions(self):
+        cid = self.env.company.id
+        ref = self.env.ref
+        bnk_journal = self.env['account.journal'].search(
+            domain=[('type', '=', 'bank'), ('company_id', '=', cid)],
+            limit=1,
+        )
+        return ('account.bank.statement.line', {
+            f'{cid}_demo_bank_statement_line_0': {
+                'journal_id': bnk_journal.id,
+                'payment_ref': 'Bank Fees',
+                'amount': -32.58,
+                'date': time.strftime('%Y-01-01'),
+            },
+            f'{cid}_demo_bank_statement_line_1': {
+                'journal_id': bnk_journal.id,
+                'payment_ref': 'Prepayment',
+                'amount': 650,
+                'date': time.strftime('%Y-01-01'),
+                'partner_id': ref('base.res_partner_12').id
+            },
+            f'{cid}_demo_bank_statement_line_2': {
+                'journal_id': bnk_journal.id,
+                'payment_ref': time.strftime(f'First {formatLang(self.env, 2000, currency_obj=self.env.company.currency_id)} of invoice %Y/00001'),
+                'amount': 2000,
+                'date': time.strftime('%Y-01-01'),
+                'partner_id': ref('base.res_partner_12').id
+            },
+            f'{cid}_demo_bank_statement_line_3': {
+                'journal_id': bnk_journal.id,
+                'payment_ref': 'Last Year Interests',
+                'amount': 102.78,
+                'date': time.strftime('%Y-01-01'),
+            },
+            f'{cid}_demo_bank_statement_line_4': {
+                'journal_id': bnk_journal.id,
+                'payment_ref': time.strftime('INV/%Y/00002'),
+                'amount': 750,
+                'date': time.strftime('%Y-01-01'),
+                'partner_id': ref('base.res_partner_2').id
+            },
+            f'{cid}_demo_bank_statement_line_5': {
+                'journal_id': bnk_journal.id,
+                'payment_ref': f'R:9772938  10/07 AX 9415116318 T:5 BRT: {formatLang(self.env, 100.0, digits=2)} C/ croip',
+                'amount': 96.67,
+                'date': time.strftime('%Y-01-01'),
             },
         })
 
@@ -215,15 +220,6 @@ class AccountChartTemplate(models.Model):
         cid = self.env.company.id
         ref = self.env.ref
         return ('ir.attachment', {
-            f'{cid}_ir_attachment_bank_statement_1': {
-                'type': 'binary',
-                'name': 'bank_statement_yourcompany_demo.pdf',
-                'res_model': 'account.bank.statement',
-                'res_id': ref(f'account.{cid}_demo_bank_statement_1').id,
-                'raw': file_open(
-                    'account/static/demo/bank_statement_yourcompany_1.pdf', 'rb'
-                ).read()
-            },
             f'{cid}_ir_attachment_in_invoice_1': {
                 'type': 'binary',
                 'name': 'in_invoice_yourcompany_demo.pdf',
@@ -249,16 +245,6 @@ class AccountChartTemplate(models.Model):
         cid = self.env.company.id
         ref = self.env.ref
         return ('mail.message', {
-            f'{cid}_mail_message_bank_statement_1': {
-                'model': 'account.bank.statement',
-                'res_id': ref(f'account.{cid}_demo_bank_statement_1').id,
-                'body': 'Bank statement attachment',
-                'message_type': 'comment',
-                'author_id': ref('base.partner_demo').id,
-                'attachment_ids': [Command.set([
-                    ref(f'account.{cid}_ir_attachment_bank_statement_1').id
-                ])]
-            },
             f'{cid}_mail_message_in_invoice_1': {
                 'model': 'account.move',
                 'res_id': ref(f'account.{cid}_demo_invoice_extract').id,
