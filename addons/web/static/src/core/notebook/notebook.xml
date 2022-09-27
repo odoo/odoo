@@ -6,7 +6,7 @@
             <div class="o_notebook_headers" t-att-class="{ 'm-0': props.orientation === 'vertical' }">
                 <ul t-attf-class="nav nav-tabs {{ props.orientation === 'horizontal' ? 'flex-row flex-nowrap' : 'flex-column p-0' }}">
                     <li t-foreach="navItems" t-as="navItem" t-key="navItem[0]" class="nav-item flex-nowrap cursor-pointer" t-if="navItem[1].isVisible">
-                        <a class="nav-link" t-attf-class="{{ navItem[0] === state.currentPage ? 'active' : '' }} {{ props.orientation === 'vertical' ? 'p-3 rounded-0' : '' }}" t-att-name="navItem[1].name" t-on-click.prevent="() => state.currentPage = navItem[0]" href="#" role="tab" tabindex="-1" t-esc="navItem[1].title"/>
+                        <a class="nav-link" t-attf-class="{{ navItem[0] === state.currentPage ? 'active' : '' }} {{ props.orientation === 'vertical' ? 'p-3 rounded-0' : '' }} {{ navItem[1].className }}" t-att-name="navItem[1].name" t-on-click.prevent="() => state.currentPage = navItem[0]" href="#" role="tab" tabindex="-1" t-esc="navItem[1].title"/>
                     </li>
                 </ul>
             </div>

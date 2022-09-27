@@ -513,6 +513,9 @@ export class FormCompiler extends ViewCompiler {
             pageSlot.setAttribute("t-set-slot", pageId);
             pageSlot.setAttribute("title", pageTitle);
             pageSlot.setAttribute("name", pageNodeName);
+            if (child.className) {
+                pageSlot.setAttribute("className", `"${child.className}"`);
+            }
 
             if (child.getAttribute("autofocus") === "autofocus") {
                 noteBook.setAttribute("defaultPage", `"${pageId}"`);
