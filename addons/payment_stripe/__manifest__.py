@@ -1,12 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Stripe Payment Provider',
+    'name': 'Payment Provider: Stripe',
     'version': '2.0',
     'category': 'Accounting/Payment Providers',
-    'sequence': 395,
-    'summary': 'Payment Provider: Stripe Implementation',
-    'description': """Stripe Payment Provider""",
+    'sequence': 350,
+    'summary': "An Irish-American payment provider covering the US and many others.",
     'depends': ['payment'],
     'data': [
         'views/payment_provider_views.xml',

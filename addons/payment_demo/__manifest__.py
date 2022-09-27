@@ -1,13 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Demo Payment Provider',
+    'name': 'Payment Provider: Demo',
     'version': '2.0',
     'category': 'Hidden',
-    'description': """
-This module adds a simple payment provider allowing to make demo payments.
-It should never be used in production environment. Make sure to disable it before going live.
-""",
+    'sequence': 350,
+    'summary': "A payment provider for running fake payment flows for demo purposes.",
     'depends': ['payment'],
     'data': [
         'views/payment_demo_templates.xml',
