@@ -27,6 +27,7 @@ export class Many2ManyAttendee extends Many2ManyTagsAvatarField {
     }
 }
 Many2ManyAttendee.additionalClasses = ["o_field_many2many_tags_avatar"];
+Many2ManyAttendee.legacySpecialData = "_fetchSpecialAttendeeStatus";
 
 registry.category("fields").add("many2manyattendee", Many2ManyAttendee);
 
