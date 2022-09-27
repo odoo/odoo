@@ -45,7 +45,7 @@ odoo.define('pos_loyalty.tour.PosCouponTourMethods', function (require) {
             if (valid) {
                 steps.push({
                     content: 'wait for the coupon to be loaded',
-                    trigger: `.active-coupon:contains("(${code})")`,
+                    trigger: `.active-reward:contains("(${code})")`,
                     run: () => {},
                 });
             }
