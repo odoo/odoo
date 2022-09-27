@@ -1,13 +1,6 @@
 /** @odoo-module */
 
-import {
-    click,
-    clickEdit,
-    editInput,
-    getFixture,
-    nextTick,
-    triggerHotkey,
-} from "@web/../tests/helpers/utils";
+import { click, editInput, getFixture, nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 QUnit.module("QuestionPageOneToManyField", (hooks) => {
@@ -108,7 +101,9 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
                     </field>
                 </form>
             `,
+            mode: "readonly",
         });
+
         await click(target.querySelector(".o_data_cell"));
         assert.containsNone(target, ".o_selected_row");
         assert.containsOnce(target, ".modal .o_form_view");
@@ -131,7 +126,6 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
                     </field>
                 </form>`,
         });
-        await clickEdit(target);
         await click(target.querySelector(".o_data_cell"));
         assert.hasClass(target.querySelector(".o_is_section"), "o_selected_row");
         assert.containsNone(target, ".modal .o_form_view");
@@ -155,7 +149,6 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
                 </form>
             `,
         });
-        await clickEdit(target);
         await click(target.querySelector(".o_data_row:nth-child(2) .o_data_cell"));
         assert.containsNone(target, ".o_selected_row");
         assert.containsOnce(target, ".modal .o_form_view");
@@ -184,7 +177,6 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
             `,
         });
 
-        await clickEdit(target);
         assert.containsNone(target, ".o_selected_row");
 
         await click(target.querySelectorAll(".o_field_x2many_list_row_add a")[1]);
@@ -215,7 +207,6 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
             `,
         });
 
-        await clickEdit(target);
         await click(target.querySelector(".o_field_x2many_list_row_add a"));
         assert.containsNone(target, ".o_selected_row");
         assert.containsOnce(target, ".modal .o_form_view");
@@ -241,7 +232,6 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
                 </form>
             `,
             });
-            await clickEdit(target);
             await click(target.querySelector(".o_data_row .o_data_cell"));
             assert.containsOnce(target, ".o_selected_row.o_is_section");
 

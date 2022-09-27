@@ -3,12 +3,11 @@
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useAutofocus } from "@web/core/utils/hooks";
-import { useDebounced } from "@web/core/utils/timing";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
 import { parseFloat } from "../parsers";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component, onWillUpdateProps, useRef, useState } = owl;
+const { Component, onWillUpdateProps, useRef, useState, useExternalListener } = owl;
 const formatters = registry.category("formatters");
 const parsers = registry.category("parsers");
 
@@ -17,13 +16,13 @@ export class ProgressBarField extends Component {
         useNumpadDecimal();
         useAutofocus({ refName: "maxValue", selectAll: true });
         useAutofocus({ refName: "currentValue", selectAll: true });
+        useExternalListener(document.body, "click", this.onClickAway, { capture: true });
         this.root = useRef("numpadDecimal");
         this.state = useState({
             currentValue: this.getCurrentValue(this.props),
             maxValue: this.getMaxValue(this.props),
             isEditing: false,
         });
-        this.onBlurDebounced = useDebounced(this.onBlur);
         onWillUpdateProps((nextProps) => {
             Object.assign(this.state, {
                 currentValue: this.getCurrentValue(nextProps),
@@ -113,14 +112,13 @@ export class ProgressBarField extends Component {
             this.state.isEditing = true;
         }
     }
-    // When both max and current value are editable, as one input is blurred when
-    // switching to the other, the state would revert to isEditing = false. We need
-    // to stay in edition mode if the focus is still in the field.
-    onBlur() {
-        if (this.root.el && this.root.el.contains(document.activeElement)) {
-            return;
+    /**
+     * @param {MouseEvent} ev
+     */
+    onClickAway(ev) {
+        if (this.root.el && !this.root.el.contains(ev.target)) {
+            this.state.isEditing = false;
         }
-        this.state.isEditing = false;
     }
 
     onCurrentValueInput(ev) {

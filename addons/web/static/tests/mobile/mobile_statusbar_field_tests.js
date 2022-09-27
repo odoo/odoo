@@ -102,10 +102,10 @@ QUnit.module("Mobile Fields", ({ beforeEach }) => {
             `,
         });
 
-        assert.hasClass(
+        assert.doesNotHaveClass(
             fixture.querySelector(".o_field_statusbar"),
             "o_field_empty",
-            "statusbar widget should have class o_field_empty"
+            "statusbar widget should have class o_field_empty in edit"
         );
         assert.containsOnce(
             fixture,

@@ -6,7 +6,6 @@ import { Many2ManyTagsField } from "@web/views/fields/many2many_tags/many2many_t
 import {
     click,
     clickDropdown,
-    clickEdit,
     clickOpenedDropdownItem,
     clickSave,
     editInput,
@@ -162,7 +161,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("Many2ManyTagsField with color: rendering and edition", async function (assert) {
-        assert.expect(28);
+        assert.expect(26);
 
         serverData.models.partner.records[0].timmy = [12, 14];
         serverData.models.partner_type.records.push({ id: 13, display_name: "red", color: 8 });
@@ -210,19 +209,6 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(".badge"),
             "o_tag_color_2",
             "should have correctly set the color"
-        );
-
-        await clickEdit(target);
-
-        assert.containsN(
-            target,
-            ".o_field_many2many_tags .badge",
-            2,
-            "should still contain 2 tags in edit mode"
-        );
-        assert.ok(
-            target.querySelector(".o_tag_color_2 .o_tag_badge_text").textContent === "gold",
-            'first tag should still contain "gold" and be color 2 in edit mode'
         );
         assert.containsN(
             target,
@@ -274,7 +260,7 @@ QUnit.module("Fields", (hooks) => {
             `should not contain tag 'silver' anymore but found: ${textContent}`
         );
         // save the record (should do the write RPC with the correct commands)
-        await click(target.querySelector(".o_form_button_save"));
+        await clickSave(target);
 
         // checkbox 'Hide in Kanban'
         const badgeElement = target.querySelectorAll(".o_field_many2many_tags .badge")[1]; // selects 'red' tag
@@ -426,8 +412,6 @@ QUnit.module("Fields", (hooks) => {
             "should have fetched and rendered gold partner tag"
         );
 
-        await clickEdit(target);
-
         await clickDropdown(target, "timmy");
 
         const autocompleteDropdown = target.querySelector(".o-autocomplete--dropdown-menu");
@@ -540,7 +524,6 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // Update the color in edit => write on save with rest of the record
-        await clickEdit(target);
         await click(badgeNode);
         await click(target, '.o_colorlist button[data-color="6"]');
         await nextTick();
@@ -727,7 +710,6 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
         });
 
-        await clickEdit(target);
         assert.containsOnce(target, ".o_field_many2many_tags .badge", "should contain one tag");
 
         // update foo, which will trigger an onchange and update timmy
@@ -840,8 +822,6 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
         });
 
-        await clickEdit(target);
-
         assert.strictEqual(
             target.querySelectorAll(".o_field_many2many_tags .badge").length,
             1,
@@ -913,7 +893,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsOnce(target, ".o_field_many2many_tags .badge");
 
-        await click(target.querySelector(".o_form_button_save"));
+        await clickSave(target);
 
         assert.strictEqual(
             target.querySelector(".o_field_many2many_tags").textContent.trim(),
@@ -986,7 +966,6 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
         });
 
-        await clickEdit(target);
         assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o_data_cell")),
             ["second recordaaa"],
@@ -1027,7 +1006,6 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.verifySteps(["world"]);
-        await clickEdit(target);
         await selectDropdownItem(target, "timmy", "silver");
         assert.verifySteps(["world"]);
     });
@@ -1056,7 +1034,6 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        await clickEdit(target);
         await selectDropdownItem(target, "timmy", "Search More...");
 
         assert.ok(target.querySelector(".o_dialog"), "should have open the modal");
@@ -1113,7 +1090,6 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
             });
 
-            await clickEdit(target);
             await selectDropdownItem(target, "timmy", "Search More...");
 
             // -1 for the one that is already on the form & +1 for the select all,
@@ -1172,7 +1148,6 @@ QUnit.module("Fields", (hooks) => {
                     }
                 },
             });
-            await clickEdit(target);
 
             await editInput(target, `div[name="timmy"] input`, "Ralts");
             await nameSearchProm;
@@ -1244,8 +1219,6 @@ QUnit.module("Fields", (hooks) => {
                 },
             });
 
-            await clickEdit(target);
-
             await editInput(target, ".o_field_widget input", "hello");
             await nameSearchProm;
             await nextTick();
@@ -1300,8 +1273,6 @@ QUnit.module("Fields", (hooks) => {
                 }
             },
         });
-
-        await clickEdit(target);
 
         // turtle_bar is true -> create and delete actions are available
         assert.containsOnce(

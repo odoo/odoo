@@ -1,5 +1,5 @@
 /** @odoo-module **/
-import { click, editInput, getFixture, clickEdit } from "@web/../tests/helpers/utils";
+import { click, editInput, getFixture } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -129,7 +129,6 @@ QUnit.module("Fields", (hooks) => {
             "field has the default color set as background if no value has been selected"
         );
         assert.strictEqual(target.querySelector(".o_field_color input").value, "#000000");
-        await clickEdit(target);
         await editInput(target, ".o_field_char[name='foo'] input", "someValue");
         assert.verifySteps([
             'onchange [[1],{"id":1,"foo":"someValue","hex_color":false},"foo",{"foo":"1","hex_color":""}]',

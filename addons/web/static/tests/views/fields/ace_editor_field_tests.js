@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { clickEdit, getFixture, triggerEvents } from "@web/../tests/helpers/utils";
+import { getFixture, triggerEvents } from "@web/../tests/helpers/utils";
 import { pagerNext } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
@@ -70,7 +70,6 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        await clickEdit(target);
         await triggerEvents(target, ".ace-view-editor textarea", ["focus", "click"]);
         assert.hasClass(target.querySelector(".ace-view-editor"), "ace_focus");
     });

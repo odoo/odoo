@@ -319,7 +319,6 @@ QUnit.module("ViewDialogs", (hooks) => {
             },
         });
 
-        await click(target, ".o_form_button_edit");
         await click(target, ".o_field_x2many_list_row_add a");
 
         await editInput(target, ".o_field_widget[name=instrument] input", "ABC");

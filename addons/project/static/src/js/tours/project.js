@@ -108,7 +108,7 @@ tour.register('project_tour', {
     run: "click",
 }, {
     trigger: ".breadcrumb-item:not(.active):last",
-    extra_trigger: '.o_form_project_tasks.o_form_readonly',
+    extra_trigger: '.o_form_project_tasks.o_form_saved',
     content: Markup(_t("Let's go back to the <b>kanban view</b> to have an overview of your next tasks.")),
     position: "right",
     run: 'click',

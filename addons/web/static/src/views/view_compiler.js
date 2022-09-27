@@ -254,7 +254,8 @@ export class ViewCompiler {
             return;
         }
         if (!params.enableInvisible) {
-            let isVisileExpr = `!evalDomainFromRecord(props.record,${JSON.stringify(invisible)})`;
+            const recordExpr = params.recordExpr || "props.record";
+            let isVisileExpr = `!evalDomainFromRecord(${recordExpr},${JSON.stringify(invisible)})`;
             if (compiled.hasAttribute("t-if")) {
                 const formerTif = compiled.getAttribute("t-if");
                 isVisileExpr = `( ${formerTif} ) and ${isVisileExpr}`;

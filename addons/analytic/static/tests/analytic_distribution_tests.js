@@ -2,7 +2,6 @@
 
 import {
     click,
-    clickEdit,
     getFixture,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
@@ -138,8 +137,6 @@ QUnit.module("Analytic", (hooks) => {
             "FI 69.7%",
             "should have rendered 'FI 69.7%'"
         );
-
-        await clickEdit(target);
 
         assert.containsN(
             target,

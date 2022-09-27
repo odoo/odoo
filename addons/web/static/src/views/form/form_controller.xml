@@ -3,43 +3,43 @@
 
     <t t-name="web.FormView" owl="1">
         <div t-att-class="className" t-ref="root">
-            <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="display">
-                <t t-set-slot="layout-buttons">
-                    <t t-if="footerArchInfo and env.inDialog">
-                        <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="footerArchInfo"/>
+            <div class="o_form_view_container">
+                <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="display">
+                    <t t-set-slot="layout-buttons">
+                        <t t-if="footerArchInfo and env.inDialog">
+                            <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="footerArchInfo" enableViewButtons.bind="enableButtons" disableViewButtons.bind="disableButtons"/>
+                        </t>
+                        <t t-else="">
+                            <t t-call="{{ props.buttonTemplate }}"/>
+                        </t>
                     </t>
-                    <t t-else="">
-                        <t t-call="{{ props.buttonTemplate }}"/>
-                    </t>
-                </t>
-                <t t-set-slot="control-panel-bottom-left">
-                    <t t-if="!env.isSmall and props.info.actionMenus and !model.root.isVirtual">
-                        <ActionMenus
-                            activeIds="[model.root.resId]"
-                            context="props.context"
-                            items="getActionMenuItems()"
-                            isDomainSelected="model.root.isDomainSelected"
-                            resModel="model.root.resModel"
-                            domain="props.domain"
-                            onActionExecuted="() => model.load()"
+                    <t t-set-slot="control-panel-action-menu">
+                        <t t-if="props.info.actionMenus">
+                            <ActionMenus
+                                activeIds="model.root.isVirtual ? [] : [model.root.resId]"
+                                context="props.context"
+                                items="getActionMenuItems()"
+                                isDomainSelected="model.root.isDomainSelected"
+                                resModel="model.root.resModel"
+                                domain="props.domain"
+                                onActionExecuted="() => model.load()"
+                                onBeforeAction.bind="beforeAction"
                         />
+                        </t>
                     </t>
-                </t>
-                <t t-set-slot="control-panel-bottom-right">
-                    <t t-if="env.isSmall and props.info.actionMenus and !model.root.isVirtual">
-                        <ActionMenus
-                            activeIds="[model.root.resId]"
-                            context="props.context"
-                            items="getActionMenuItems()"
-                            isDomainSelected="model.root.isDomainSelected"
-                            resModel="model.root.resModel"
-                            domain="props.domain"
-                            onActionExecuted="() => model.load()"
-                        />
+                    <t t-set-slot="control-panel-status-indicator">
+                        <t t-if="canEdit">
+                            <FormStatusIndicator model="model" discard.bind="discard" save.bind="save" isDisabled="state.isDisabled" />
+                        </t>
                     </t>
-                </t>
-                <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="archInfo" translateAlert="translateAlert"/>
-            </Layout>
+                    <t t-set-slot="control-panel-create-button">
+                        <t t-if="canCreate">
+                            <button type="button" class="btn btn-outline-primary o_form_button_create" data-hotkey="c" t-on-click.stop="create" t-att-disabled="state.isDisabled">Create</button>
+                        </t>
+                    </t>
+                    <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="archInfo" translateAlert="translateAlert" enableViewButtons.bind="enableButtons" disableViewButtons.bind="disableButtons"/>
+                </Layout>
+            </div>
         </div>
     </t>
 
@@ -53,11 +53,8 @@
                     Discard
                 </button>
             </div>
-            <div t-else="canEdit or canCreate" class="o_form_buttons_view">
-                <button t-if="canEdit" type="button" class="btn btn-primary o_form_button_edit" data-hotkey="a" data-bounce-button="" t-on-click.stop="edit">
-                    Edit
-                </button>
-                <button t-if="canCreate" type="button" class="btn btn-secondary o_form_button_create" data-hotkey="c" t-on-click.stop="create">
+            <div t-elif="canCreate" class="o_form_buttons_view">
+                <button type="button" class="btn btn-secondary o_form_button_create" data-hotkey="c" t-on-click.stop="create">
                     Create
                 </button>
             </div>

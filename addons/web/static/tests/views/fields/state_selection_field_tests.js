@@ -118,8 +118,6 @@ QUnit.module("Fields", (hooks) => {
             "should have one grey status since selection is the first, normal state"
         );
 
-        // switch to edit mode and check the result
-        await click(target.querySelector(".o_form_button_edit"));
         assert.containsNone(target, ".dropdown-menu", "there should still not be a dropdown");
         assert.containsNone(
             target,

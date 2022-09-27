@@ -3,7 +3,6 @@
 import { registry } from "@web/core/registry";
 import {
     click,
-    clickEdit,
     clickSave,
     editInput,
     getFixture,
@@ -124,50 +123,12 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
             );
 
             // change display_name to update buttons modifiers and make it visible
-            await clickEdit(fixture);
             await editInput(fixture, ".o_field_widget[name=display_name] input", "test");
             await clickSave(fixture);
             assert.containsOnce(
                 fixture,
                 ".o_statusbar_buttons .dropdown",
                 "statusbar should contain a dropdown"
-            );
-        }
-    );
-
-    QUnit.test(
-        `statusbar "Action" button not displayed in edit mode with .oe_read_only button`,
-        async (assert) => {
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch: `
-                    <form>
-                        <header>
-                            <button string="Share" type="action" class="oe_highlight oe_read_only" />
-                            <button string="Email" type="action" class="oe_highlight oe_read_only" />
-                        </header>
-                        <sheet>
-                            <group>
-                                <field name="display_name" />
-                            </group>
-                        </sheet>
-                    </form>
-                `,
-            });
-
-            assert.containsNone(
-                fixture,
-                ".o_statusbar_buttons .dropdown",
-                "dropdown should not be there"
-            );
-
-            await clickSave(fixture);
-            assert.containsOnce(
-                fixture,
-                ".o_statusbar_buttons .dropdown",
-                "dropdown should not be there"
             );
         }
     );
@@ -194,8 +155,6 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
                     </form>
                 `,
             });
-
-            await clickEdit(fixture);
 
             // There should be a simple statusbar button and no action dropdown
             assert.containsNone(
@@ -248,7 +207,6 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
                 `,
             });
 
-            await clickEdit(fixture);
             // Now there should an action dropdown, because there are two visible buttons
             assert.containsOnce(
                 fixture,
@@ -448,8 +406,6 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
                     return position.top;
                 },
             });
-
-            await clickEdit(fixture);
 
             window.scrollTo({ top: 265, left: 0 });
             assert.strictEqual(window.scrollY, 265, "Should have scrolled 265 px vertically");

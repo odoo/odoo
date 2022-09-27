@@ -52,6 +52,49 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
         });
+        assert.containsOnce(
+            target,
+            '.o_field_widget input[type="text"]',
+            "should have an input for the url field"
+        );
+        assert.strictEqual(
+            target.querySelector('.o_field_widget input[type="text"]').value,
+            "yop",
+            "input should contain field value"
+        );
+
+        await editInput(target, ".o_field_widget input[type='text']", "limbo");
+
+        // save
+        const editedElement = ".o_field_widget input[type='text']";
+        assert.containsOnce(target, editedElement, "should still have an input for the url field");
+        assert.containsOnce(
+            target,
+            editedElement,
+            "should still have a anchor with correct classes"
+        );
+        assert.strictEqual(
+            target.querySelector(editedElement).value,
+            "limbo",
+            "has the proper value"
+        );
+    });
+
+    QUnit.test("UrlField in form view (readonly)", async function (assert) {
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="foo" widget="url" readonly="1"/>
+                        </group>
+                    </sheet>
+                </form>`,
+            resId: 1,
+        });
         const matchingEl = target.querySelector("a.o_field_widget.o_form_uri");
         assert.containsOnce(target, matchingEl, "should have a anchor with correct classes");
         assert.hasAttrValue(matchingEl, "href", "http://yop", "should have proper href link");
@@ -62,48 +105,6 @@ QUnit.module("Fields", (hooks) => {
             "should have target attribute set to _blank"
         );
         assert.strictEqual(matchingEl.textContent, "yop", "the value should be displayed properly");
-
-        // switch to edit mode and check the result
-        await click(target.querySelector(".o_form_button_edit"));
-        assert.containsOnce(
-            target,
-            '.o_field_widget input[type="text"]',
-            "should have an input for the char field"
-        );
-        assert.strictEqual(
-            target.querySelector('.o_field_widget input[type="text"]').value,
-            "yop",
-            "input should contain field value in edit mode"
-        );
-
-        await editInput(target, ".o_field_widget input[type='text']", "limbo");
-
-        // save
-        await click(target.querySelector(".o_form_button_save"));
-        const editedElement = target.querySelector("a.o_field_widget.o_form_uri");
-        assert.containsOnce(
-            target,
-            editedElement,
-            "should still have a anchor with correct classes"
-        );
-        assert.hasAttrValue(
-            editedElement,
-            "href",
-            "http://limbo",
-            "should have proper new href link"
-        );
-        assert.strictEqual(editedElement.textContent, "limbo", "the new value should be displayed");
-
-        await click(target.querySelector(".o_form_button_edit"));
-        await editInput(target, ".o_field_widget input[type='text']", "/web/limbo");
-
-        await click(target.querySelector(".o_form_button_save"));
-        assert.hasAttrValue(
-            target.querySelector(".o_field_widget[name='foo'] a"),
-            "href",
-            "/web/limbo",
-            "shouldn't have change link"
-        );
     });
 
     QUnit.test("UrlField takes text from proper attribute", async function (assert) {
@@ -111,7 +112,7 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             type: "form",
             resModel: "partner",
-            arch: '<form><field name="foo" widget="url" text="kebeclibre"/></form>',
+            arch: '<form><field name="foo" widget="url" text="kebeclibre" readonly="1"/></form>',
             resId: 1,
         });
 
@@ -150,10 +151,10 @@ QUnit.module("Fields", (hooks) => {
             resModel: "partner",
             arch: `
                 <form>
-                    <field name="url1" widget="url"/>
-                    <field name="url2" widget="url" options="{'website_path': True}"/>
-                    <field name="url3" widget="url"/>
-                    <field name="url4" widget="url"/>
+                    <field name="url1" widget="url" readonly="1"/>
+                    <field name="url2" widget="url" readonly="1" options="{'website_path': True}"/>
+                    <field name="url3" widget="url" readonly="1"/>
+                    <field name="url4" widget="url" readonly="1"/>
                 </form>`,
             resId: 1,
         });
@@ -245,11 +246,6 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
         });
 
-        assert.containsOnce(target, "[name=foo]");
-        assert.strictEqual(target.querySelector("[name=foo]").textContent, "");
-
-        await click(target.querySelector(".o_form_button_edit"));
-
         assert.containsOnce(target, ".o_field_widget[name=foo] input");
         assert.strictEqual(target.querySelector("[name=foo] input").value, "");
     });
@@ -281,8 +277,6 @@ QUnit.module("Fields", (hooks) => {
             "yop",
             "the starting value should be displayed properly"
         );
-        await click(target.querySelector(".o_form_button_edit"));
-
         assert.strictEqual(
             target.querySelector(".o_field_widget[name=foo2] input").value,
             "foo2",

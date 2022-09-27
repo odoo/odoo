@@ -43,27 +43,31 @@ export class FormRenderer extends Component {
         if (!disableAutofocus) {
             const rootRef = useRef("compiled_view_root");
             useEffect(
-                (isInEdition, rootEl) => {
+                (isVirtual, rootEl) => {
                     if (!rootEl) {
                         return;
                     }
                     let elementToFocus;
-                    if (isInEdition) {
+                    if (isVirtual) {
                         elementToFocus =
                             (autofocusFieldId && rootEl.querySelector(`#${autofocusFieldId}`)) ||
-                            rootEl.querySelector(`.o_content .o_field_widget input`);
+                            rootEl.querySelector(`.o_content .o_field_widget input[type="text"]`);
                     }
                     if (elementToFocus) {
                         elementToFocus.focus();
                     }
                 },
-                () => [this.props.record.isInEdition, rootRef.el]
+                () => [this.props.record.isVirtual, rootRef.el]
             );
         }
     }
 
     evalDomainFromRecord(record, expr) {
         return evalDomain(expr, record.evalContext);
+    }
+
+    get compileParams() {
+        return {};
     }
 }
 

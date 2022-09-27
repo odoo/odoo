@@ -437,9 +437,7 @@ export class X2ManyFieldDialog extends Component {
                                 this.modalRef.el.querySelector(`#${autofocusFieldId}`)) ||
                             this.modalRef.el.querySelector(".o_field_widget input");
                     } else {
-                        elementToFocus =
-                            this.modalRef.el.querySelector("button.btn-primary") ||
-                            this.modalRef.el.querySelector(".o_control_panel .o_form_button_edit");
+                        elementToFocus = this.modalRef.el.querySelector("button.btn-primary");
                     }
                     if (elementToFocus) {
                         elementToFocus.focus();

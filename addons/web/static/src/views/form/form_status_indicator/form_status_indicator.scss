@@ -1,0 +1,15 @@
+.o_form_status_indicator:not(.o_form_status_indicator_new_record) {
+    .o_form_status_indicator_buttons {
+        visibility: hidden;
+    }
+
+    &:hover {
+        span {
+            visibility: hidden;
+        }
+
+        .o_form_status_indicator_buttons:not(.o_form_status_indicator_buttons_hidden) {
+            visibility: visible;
+        }
+    }
+}

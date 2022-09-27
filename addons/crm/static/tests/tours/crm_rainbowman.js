@@ -60,14 +60,18 @@
         }, {
             trigger: ".o_statusbar_status button[data-value='4']",
             content: "move lead to won stage",
-        }, {
+        },
+        ...tour.stepUtils.saveForm(),
+        {
             trigger: ".o_statusbar_status button[data-value='1']",
             extra_trigger: ".o_reward_rainbow",
             content: "move lead to previous stage & rainbowman appears",
         }, {
             trigger: "button[name=action_set_won_rainbowman]",
             content: "click button mark won",
-        }, {
+        },
+        ...tour.stepUtils.saveForm(),
+        {
             trigger: ".o_menu_brand",
             extra_trigger: ".o_reward_rainbow",
             content: "last rainbowman appears",

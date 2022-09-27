@@ -402,7 +402,6 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
             });
 
-            await click(target, ".o_form_button_edit");
             assert.containsN(target, ".o_statusbar_status button:not(.dropdown-toggle)", 3);
             const buttons = target.querySelectorAll(
                 ".o_statusbar_status button:not(.dropdown-toggle)"
@@ -435,7 +434,6 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
             });
 
-            await click(target, ".o_form_button_edit");
             await click(target, ".o_statusbar_status .dropdown-toggle");
 
             const status = target.querySelectorAll(".o_statusbar_status");
@@ -464,7 +462,6 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        await click(target, ".o_form_button_edit");
         assert.strictEqual(
             target.querySelector("[aria-label='Current state']").textContent,
             "aaa",
@@ -511,8 +508,6 @@ QUnit.module("Fields", (hooks) => {
                 }
             },
         });
-
-        await click(target, ".o_form_button_edit");
 
         assert.containsN(target, ".o_statusbar_status button.disabled", 3);
         assert.strictEqual(rpcCount, 1, "should have done 1 search_read rpc");

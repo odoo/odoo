@@ -201,7 +201,7 @@
         }
 
         .oe_title {
-            max-width: map-get($container-max-widths, md) - (2 * $o-horizontal-padding);
+            max-width: 75%;
         }
 
         .o_field_x2many .o_list_table .o_handle_cell .o_row_handle {
@@ -222,6 +222,13 @@
                 width: 100% !important;
             }
         }
+    }
+
+    .o_form_view_container {
+        display: flex;
+        flex-flow: column nowrap;
+        height: 100%;
+        flex: 1 1 auto;
     }
 
     // No sheet
@@ -979,8 +986,15 @@
             max-width: 300px;
         }
     }
-
     @include media-breakpoint-down(md) {
+        .o_control_panel {
+            padding-right: 16px;
+
+            > div.o_cp_top {
+                display: grid;
+            }
+        }
+
         .o_cp_buttons {
             width: 100%;
             div, .o-kanban-button-new {
@@ -1150,6 +1164,7 @@
 }
 
 .o_form_view.o_xxl_form_view {
+    flex-flow: row nowrap !important;
 
     .o_form_sheet_bg {
         flex: 1 1 auto; // Side chatter is disabled if this has to shrink but this was added for safety
