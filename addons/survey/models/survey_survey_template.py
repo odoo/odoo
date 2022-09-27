@@ -18,14 +18,13 @@ class SurveyTemplate(models.Model):
 
     @api.model
     def action_load_sample_feedback_form(self):
-        company = self.env.user.company_id.name
         return self.env['survey.survey'].create({
             'title': _('Feedback Form'),
             'description': '<br>'.join([
                 _('Please complete this very short survey to let us know how satisfied your are with our products.'),
                 _('Your responses will help us improve our product range to serve you even better.')
             ]),
-            'description_done': _('Thank you very much for your feedback. We at %s value your opinion very highly!', company),
+            'description_done': _('Thank you very much for your feedback. We highly value your opinion !'),
             'progression_mode': 'number',
             'questions_layout': 'page_per_question',
             'question_and_page_ids': [
@@ -55,9 +54,6 @@ class SurveyTemplate(models.Model):
                     'matrix_subtype': 'simple',
                     'suggested_answer_ids': [
                         (0, 0, { # survey.question.answer
-                            'value': _('Very Unlikely')
-                        }),
-                        (0, 0, { # survey.question.answer
                             'value': _('Unlikely')
                         }),
                         (0, 0, { # survey.question.answer
@@ -66,9 +62,6 @@ class SurveyTemplate(models.Model):
                         (0, 0, { # survey.question.answer
                             'value': _('Likely')
                         }),
-                        (0, 0, { # survey.question.answer
-                            'value': _('Very Likely')
-                        })
                     ],
                     'matrix_row_ids': [
                         (0, 0, { # survey.question.answer
