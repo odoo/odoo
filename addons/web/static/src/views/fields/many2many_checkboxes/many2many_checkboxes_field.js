@@ -35,6 +35,7 @@ Many2ManyCheckboxesField.components = { CheckBox };
 Many2ManyCheckboxesField.props = {
     ...standardFieldProps,
 };
+Many2ManyCheckboxesField.legacySpecialData = "_fetchSpecialRelation";
 
 Many2ManyCheckboxesField.displayName = _lt("Checkboxes");
 Many2ManyCheckboxesField.supportedTypes = ["many2many"];
