@@ -161,12 +161,12 @@ class AuthorizeAPI:
         bill_to = {}
         if 'profile' not in tx_data:
             split_name = payment_utils.split_partner_name(tx.partner_name)
-            partner_name = (tx.partner_name or "")[:50]  # max length defined by the Authorize API
+            # max lengths are defined by the Authorize API
             bill_to = {
                 'billTo': {
-                    'firstName': '' if tx.partner_id.is_company else split_name[0],
-                    'lastName': split_name[1],  # lastName is always required
-                    'company': partner_name if tx.partner_id.is_company else '',
+                    'firstName': '' if tx.partner_id.is_company else split_name[0][:50],
+                    'lastName': split_name[1][:50],  # lastName is always required
+                    'company': tx.partner_name[:50] if tx.partner_id.is_company else '',
                     'address': tx.partner_address,
                     'city': tx.partner_city,
                     'state': tx.partner_state_id.name or '',
