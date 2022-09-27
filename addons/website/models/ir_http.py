@@ -67,11 +67,6 @@ class Http(models.AbstractModel):
         return super(Http, cls).routing_map(key=key)
 
     @classmethod
-    def clear_caches(cls):
-        super()._clear_routing_map()
-        return super().clear_caches()
-
-    @classmethod
     def _slug_matching(cls, adapter, endpoint, **kw):
         for arg in kw:
             if isinstance(kw[arg], models.BaseModel):
@@ -86,6 +81,8 @@ class Http(models.AbstractModel):
         domain = [('redirect_type', 'in', ('308', '404')), '|', ('website_id', '=', False), ('website_id', '=', website_id)]
 
         rewrites = dict([(x.url_from, x) for x in request.env['website.rewrite'].sudo().search(domain)])
+        if not hasattr(cls, '_rewrite_len'):
+            cls._rewrite_len = {}
         cls._rewrite_len[website_id] = len(rewrites)
 
         for url, endpoint in super()._generate_routing_rules(modules, converters):

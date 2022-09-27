@@ -815,6 +815,7 @@ class TransactionCase(BaseCase):
         cls.registry = odoo.registry(get_db_name())
         cls.addClassCleanup(cls.registry.reset_changes)
         cls.addClassCleanup(cls.registry.clear_caches)
+        cls.addClassCleanup(cls.registry._clear_ormcache_longterm)
 
         cls.cr = cls.registry.cursor()
         cls.addClassCleanup(cls.cr.close)
@@ -831,6 +832,7 @@ class TransactionCase(BaseCase):
         self.addCleanup(envs.clear)
 
         self.addCleanup(self.registry.clear_caches)
+        self.addCleanup(self.registry._clear_ormcache_longterm)
         self.addCleanup(self.env.clear)
 
         # flush everything in setUpClass before introducing a savepoint
@@ -841,6 +843,16 @@ class TransactionCase(BaseCase):
         self.addCleanup(self.cr.execute, 'ROLLBACK TO SAVEPOINT test_%d' % self._savepoint_id)
 
         self.patch(self.registry['res.partner'], '_get_gravatar_image', lambda *a: False)
+
+    @classmethod
+    def update_write_date_for_cache_longterm(cls, record):
+        """ Force the write_date because cache long term use to generate the key.
+        Write_date is filtered in write method, we must change the cache to update the db value.
+        Note that it seems that _render + write + _render (in the same request) can lead to incoherent result
+        Also because the write_date doesn't change for all transaction
+        """
+        record.env.transaction.cache.set(record, type(record).write_date, datetime.now(), dirty=True)
+        record.flush_recordset(['write_date'])
 
 
 class SavepointCase(TransactionCase):
@@ -870,6 +882,7 @@ class SingleTransactionCase(BaseCase):
         cls.registry = odoo.registry(get_db_name())
         cls.addClassCleanup(cls.registry.reset_changes)
         cls.addClassCleanup(cls.registry.clear_caches)
+        cls.addClassCleanup(cls.registry._clear_ormcache_longterm)
 
         cls.cr = cls.registry.cursor()
         cls.addClassCleanup(cls.cr.close)

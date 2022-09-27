@@ -384,7 +384,6 @@ from odoo.tools.safe_eval import assert_valid_codeobj, _BUILTINS, to_opcodes, _E
 from odoo.tools.json import scriptsafe
 from odoo.tools.misc import str2bool
 from odoo.tools.image import image_data_uri
-from odoo.tools.lru import LRU
 from odoo.http import request
 from odoo.modules.module import get_resource_path, get_module_path
 from odoo.tools.profiler import QwebTracker
@@ -437,12 +436,6 @@ SPECIAL_DIRECTIVES = {'t-translation', 't-ignore', 't-title'}
 # Name of the variable to insert the content in t-call in the template.
 # The slot will be replaced by the `t-call` tag content of the caller.
 T_CALL_SLOT = '0'
-
-
-# This cache does not communicate with other workers, and should never
-# be invalidated! Cache keys should be chosen wisely. The keys
-# themselves may partly be in the normal orm cache.
-qweb_cache = LRU(8192)
 
 
 def indent_code(code, level):
@@ -2444,33 +2437,34 @@ class IrQWeb(models.AbstractModel):
 
     # The cache does not need to be invalidated if the 'base_key_cache'
     # in '_compile' method contains the write_date of all inherited views.
+    @tools.conditional(
+        'xml' not in tools.config['dev_mode'],
+        tools.ormcache_longterm('cache_key'),
+    )
     def _get_cached_values(self, cache_key, get_value):
         """ generate value from the function if the result is not cached. """
-        if not cache_key or 'xml' in tools.config['dev_mode']:
-            return get_value()
-        try:
-            return qweb_cache[cache_key]
-        except KeyError:
-            qweb_cache[cache_key] = get_value()
-            return qweb_cache[cache_key]
-
-    def _get_asset_cache_key(self):
-        context_key = tuple(self.context.get(k) for k in self._get_template_cache_keys())
-        return (
-            frozenset(self.env.registry._init_modules)
-            + self.env["ir.asset"]._get_cache_longterm_key()
-            + context_key)
+        return get_value()
 
     # other methods used for the asset bundles
+    @tools.conditional(
+        # in non-xml-debug mode we want assets to be cached forever, and the admin can force a cache clear
+        # by restarting the server after updating the source code (or using the "Clear server cache" in debug tools)
+        'xml' not in tools.config['dev_mode'],
+        tools.ormcache_longterm_context(
+            'frozenset(self.env.registry._init_modules)',
+            'self.env["ir.asset"]._get_cache_longterm_key()',
+            'bundle', 'css', 'js', 'debug', 'async_load', 'defer_load', 'lazy_load', 'media',
+            keys='self._get_template_cache_keys()'),
+    )
     def _generate_asset_nodes_cache(self, bundle, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
-        cache_key = self._get_asset_cache_key() + (bundle, css, js, debug, async_load, defer_load, lazy_load, media)
-        self._get_cached_values(cache_key, lambda: self._generate_asset_nodes(bundle, css, js, debug, async_load, defer_load, lazy_load, media))
+        return self._generate_asset_nodes(bundle, css, js, debug, async_load, defer_load, lazy_load, media)
 
+    @tools.ormcache_longterm_context(
+        'frozenset(self.env.registry._init_modules)',
+        'self.env["ir.asset"]._get_cache_longterm_key()',
+        'bundle', 'defer_load', 'lazy_load', 'media',
+        keys='self._get_template_cache_keys()')
     def _get_asset_content(self, bundle, defer_load=False, lazy_load=False, media=None):
-        cache_key = self._get_asset_cache_key() + (bundle, defer_load, lazy_load, media)
-        self._get_cached_values(cache_key, lambda: self.__get_asset_content(bundle, defer_load, lazy_load, media))
-
-    def __get_asset_content(self, bundle, defer_load=False, lazy_load=False, media=None):
         asset_paths = self.env['ir.asset']._get_asset_paths(bundle=bundle, css=True, js=True)
 
         files = []

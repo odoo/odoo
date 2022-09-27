@@ -120,6 +120,11 @@ class Registry(Mapping):
         self._constraint_queue = deque()
         self.__cache = LRU(8192)
 
+        # This cache does not communicate with other workers, and should never
+        # be invalidated! Cache keys should be chosen wisely. The keys
+        # themselves may partly be in the normal orm cache.
+        self.__cache_longterm = LRU(8192)
+
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules = set()
         self.updated_modules = []       # installed/updated modules
@@ -584,6 +589,15 @@ class Registry(Mapping):
         """ Clear the cache and mark it as invalidated. """
         self.__cache.clear()
         self.cache_invalidated = True
+
+    def _clear_ormcache_longterm(self):
+        """ Clear the cache long term.
+            This method should only be used for testing because the cache long
+            term is not supposed to be invalidated.
+        """
+        # if not self.in_test_mode():
+        #     _logger.warning("The long term cache cannot be invalidated.")
+        self.__cache_longterm.clear()
 
     def clear_caches(self):
         """ Clear the caches associated to methods decorated with

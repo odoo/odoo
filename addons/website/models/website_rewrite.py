@@ -4,7 +4,7 @@
 import re
 import werkzeug
 
-from odoo import models, fields, api, _
+from odoo import models, fields, api, _, tools
 from odoo.exceptions import ValidationError
 
 import logging
@@ -101,32 +101,19 @@ class WebsiteRewrite(models.Model):
                 except ValueError as e:
                     raise ValidationError(_('"URL to" is invalid: %s') % e)
 
+    @api.model
+    @tools.ormcache()
+    def _get_cache_longterm_key(self):
+        self.env.cr.execute("""SELECT SUM(extract(epoch from write_date)), array_agg(id) FROM website_rewrite""")
+        write_sum, ids = self.env.cr.fetchone()
+        return write_sum, frozenset(ids or ())
+
     def name_get(self):
         result = []
         for rewrite in self:
             name = "%s - %s" % (rewrite.redirect_type, rewrite.name)
             result.append((rewrite.id, name))
         return result
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        rewrites = super().create(vals_list)
-        self._invalidate_routing()
-        return rewrites
-
-    def write(self, vals):
-        res = super(WebsiteRewrite, self).write(vals)
-        self._invalidate_routing()
-        return res
-
-    def unlink(self):
-        res = super(WebsiteRewrite, self).unlink()
-        self._invalidate_routing()
-        return res
-
-    def _invalidate_routing(self):
-        # call clear_caches on this worker to reload routing table
-        self.env['ir.http'].clear_caches()
 
     def refresh_routes(self):
         self.env['website.route']._refresh()
