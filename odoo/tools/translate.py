@@ -942,7 +942,8 @@ def extract_spreadsheet_terms(fileobj, keywords, comment_tags, options):
     pivots = data.get('pivots', {}).values()
     lists = data.get('lists', {}).values()
     for data_source in itertools.chain(lists, pivots):
-        terms.append(data_source['name'])
+        if 'name' in data_source:
+            terms.append(data_source['name'])
     for global_filter in data.get('globalFilters', []):
         terms.append(global_filter['label'])
     return (
