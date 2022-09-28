@@ -79,12 +79,6 @@ class TestSqlLint(TransactionCase):
         self.assertFalse(r, f"unnecessary fstring should be innocuous\n{errs}")
 
         r, errs = self.check("""
-        def do_the_thing(cr, name, value):
-            cr.execute(f'select {name} from thing where field = %s', [value])
-        """)
-        self.assertFalse(r, f"probably has a good reason for the extra arg\n{errs}")
-
-        r, errs = self.check("""
         def do_the_thing(self):
             self.env.cr.execute(f'select name from {self._table}')
         """)

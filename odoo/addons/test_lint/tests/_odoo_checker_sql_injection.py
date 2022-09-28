@@ -126,8 +126,6 @@ class OdooBaseChecker(checkers.BaseChecker):
             node.func.attrname in ('execute', 'executemany') and
             # cursor expr (see above)
             self._get_cursor_name(node.func) in DFTL_CURSOR_EXPR and
-            # cr.execute("select * from %s" % foo, [bar]) -> probably a good reason for string formatting
-            len(node.args) <= 1 and
             # ignore in test files, probably not accessible
             not current_file_bname.startswith('test_')
         ):
