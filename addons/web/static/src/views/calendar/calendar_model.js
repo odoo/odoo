@@ -45,6 +45,10 @@ export class CalendarModel extends Model {
                     ? deserializeDateTime(params.context.initial_date)
                     : luxon.DateTime.local();
         }
+        // Prevent picking a scale that is not supported by the view
+        if (!this.meta.scales.includes(this.meta.scale)) {
+            this.meta.scale = this.meta.scales[0];
+        }
         const data = { ...this.data };
         await this.keepLast.add(this.updateData(data));
         this.data = data;

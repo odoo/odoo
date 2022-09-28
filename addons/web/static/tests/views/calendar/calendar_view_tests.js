@@ -3934,4 +3934,21 @@ QUnit.module("Views", ({ beforeEach }) => {
         // test would fail here if we don't ignore readonly modifier
         assert.containsOnce(target, ".o_cw_popover");
     });
+
+    QUnit.test("can not select invalid scale from datepicker", async (assert) => {
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" date_stop="stop" all_day="allday" mode="month" scales="month,year">
+                    <field name="name" attrs="{'readonly': [['unknown_field', '=', 42]]}" />
+                </calendar>
+            `,
+        });
+
+        await click(target, ".ui-datepicker-today");
+        // test would fail here if we went to week mode
+        assert.containsOnce(target, ".fc-dayGridMonth-view");
+    });
 });
