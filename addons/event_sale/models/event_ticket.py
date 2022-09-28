@@ -10,6 +10,7 @@ _logger = logging.getLogger(__name__)
 
 class EventTemplateTicket(models.Model):
     _inherit = 'event.type.ticket'
+    _order = "sequence, price, name, id"
 
     def _default_product_id(self):
         return self.env.ref('event_sale.product_product_event', raise_if_not_found=False)
@@ -101,7 +102,7 @@ class EventTemplateTicket(models.Model):
 
 class EventTicket(models.Model):
     _inherit = 'event.event.ticket'
-    _order = "event_id, price"
+    _order = "event_id, sequence, price, name, id"
 
     # product
     price_reduce_taxinc = fields.Float(

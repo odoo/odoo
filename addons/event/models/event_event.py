@@ -52,7 +52,7 @@ class EventType(models.Model):
 
     name = fields.Char('Event Template', required=True, translate=True)
     note = fields.Html(string='Note')
-    sequence = fields.Integer()
+    sequence = fields.Integer(default=10)
     # tickets
     event_type_ticket_ids = fields.One2many('event.type.ticket', 'event_type_id', string='Tickets')
     tag_ids = fields.Many2many('event.tag', string="Tags")
@@ -88,7 +88,7 @@ class EventEvent(models.Model):
     _name = 'event.event'
     _description = 'Event'
     _inherit = ['mail.thread', 'mail.activity.mixin']
-    _order = 'date_begin'
+    _order = 'date_begin, id'
 
     @api.model
     def default_get(self, fields_list):
