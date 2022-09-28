@@ -28,8 +28,13 @@
                 </t>
                 <small t-att-title="activityListViewItem.activity.dateDeadline" t-esc="activityListViewItem.delayLabel"/>
             </div>
-            <!-- TODO handle "mail_template_ids" -->
             <ActivityMarkDonePopoverContent t-if="activityListViewItem.markDoneView" record="activityListViewItem.markDoneView"/>
+            <div t-if="activityListViewItem.mailTemplateViews.length > 0" class="mx-3 mt-2">
+                <MailTemplate
+                    t-foreach="activityListViewItem.mailTemplateViews" t-as="mailTemplateView" t-key="mailTemplateView"
+                    record="mailTemplateView"
+                />
+            </div>
         </div>
     </t>
 </templates>
