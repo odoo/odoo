@@ -27,10 +27,10 @@ tour.register('sale_timesheet_tour', {
     content: Markup('Select a prepaid service product <i>(e.g. Service Product (Prepaid Hours))</i>'),
     run: 'text Service Product (Prepaid Hours)',
 }, {
-    trigger: 'ul.ui-menu.ui-widget.ui-autocomplete > li:first-child > a:contains(Service Product (Prepaid Hours))',
+    trigger: 'ul.ui-autocomplete a:contains(Service Product (Prepaid Hours))',
     content: 'Select the prepaid service product in the autocomplete dropdown',
 }, {
-    trigger: 'input[name="product_uom_qty"]',
+    trigger: 'div[name="product_uom_qty"] input',
     content: "Add 10 hours as ordered quantity for this product.",
     run: 'text 10',
 }, {
@@ -41,7 +41,7 @@ tour.register('sale_timesheet_tour', {
     extra_trigger: '.o_field_widget[name=state] button[data-value=sale].btn-primary',
     content: 'Click on Save button to save the Sales Order.',
 }, {
-    trigger: '.o_form_readonly',
+    trigger: '.o_form_status_indicator_buttons_hidden',
     content: 'Save is done and form is reloaded.',
 }, tour.stepUtils.toggleHomeMenu(),
 ...tour.stepUtils.goToAppSteps("project.menu_main_pm", 'Go to the Project app.'),
