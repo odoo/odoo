@@ -27,6 +27,7 @@ from psycopg2.sql import SQL, Identifier
 from difflib import get_close_matches
 from hashlib import sha256
 
+from .models import check_property_field_value_name
 from .tools import (
     float_repr, float_round, float_compare, float_is_zero, human_size,
     pg_varchar, ustr, OrderedSet, pycompat, sql, date_utils, unique,
@@ -3419,6 +3420,7 @@ class Properties(Field):
             ]
             for definition in value:
                 definition.pop('definition_changed', None)
+                check_property_field_value_name(definition.get('name', ''))
 
             # update the properties definition on the container
             container = records[self.definition_record]
