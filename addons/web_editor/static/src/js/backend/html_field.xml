@@ -29,11 +29,8 @@
                 <span t-attf-style="font-size: 15px; position: absolute; right: {{this.props.codeview ? '40px' : '5px'}}; top: 5px;">
                     <TranslationButton
                         fieldName="props.name"
-                        resId="props.record.resId"
-                        resModel="props.record.resModel"
-                        value="props.value"
+                        record="props.record"
                         updateField="props.update"
-                        context="props.record.context"
                     />
                 </span>
             </t>
