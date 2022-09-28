@@ -8,8 +8,9 @@
         <field name="priority" eval="20"/>
         <field name="arch" type="xml">
             <tree string="Event Template Tickets" editable="bottom">
+                <field name="sequence" widget="handle"/>
                 <field name="name"/>
-                <field name="description"/>
+                <field name="description" optional="hide"/>
                 <field name="seats_max"/>
                 <field name="seats_limited"/>
             </tree>
@@ -70,6 +71,7 @@
         <field name="priority" eval="20"/>
         <field name="arch" type="xml">
             <tree string="Tickets" editable="bottom">
+                <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="description" optional="hide"/>
                 <field name="start_sale_datetime" optional="show"/>
