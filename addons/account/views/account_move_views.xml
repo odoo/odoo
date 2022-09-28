@@ -1059,7 +1059,7 @@
                                         <field name="analytic_distribution" widget="analytic_distribution"
                                                groups="analytic.group_analytic_accounting"
                                                optional="show"
-                                               options="{'product_field': 'product_id', 'account_field': 'account_id'}"
+                                               options="{'account_field': 'account_id'}"
                                                business_domain_compute="parent.move_type in ['out_invoice', 'out_refund', 'out_receipt'] and 'sale' or parent.move_type in ['in_invoice', 'in_refund', 'in_receipt'] and 'purchase' or 'general'"/>
                                         <field name="date_maturity"
                                                optional="hide"
