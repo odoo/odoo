@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, tools
+from odoo import fields, models, tools, api
 
 
 class StockValuationLayer(models.Model):
@@ -55,3 +55,14 @@ class StockValuationLayer(models.Model):
     def _validate_analytic_accounting_entries(self):
         for svl in self:
             svl.stock_move_id._account_analytic_entry_move()
+
+    @api.model
+    def create(self, data_list):
+        try:
+            currency_rounding = self.env['res.company'].browse(data_list.get('company_id')).currency_id.rounding
+            n_digits = len(str(currency_rounding).split(".")[1])
+            data_list['value'] = round(data_list['value'], n_digits)
+            data_list['unit_cost'] = round(data_list['unit_cost'], n_digits)
+        except KeyError:
+            pass
+        return super(StockValuationLayer, self).create(data_list)
