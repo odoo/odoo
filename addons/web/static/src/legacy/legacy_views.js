@@ -174,6 +174,9 @@ function registerView(name, LegacyView) {
         Controller,
     };
     viewRegistry.add(name, legacyView);
+    if (odoo.debug) {
+        console.log(`Views: using legacy view: ${name}`);
+    }
 }
 
 // register views already in the legacy registry, and listens to future registrations
