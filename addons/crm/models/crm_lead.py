@@ -902,13 +902,6 @@ class Lead(models.Model):
         return super(Lead, self).unlink()
 
     @api.model
-    def _get_view(self, view_id=None, view_type='form', **options):
-        arch, view = super()._get_view(view_id, view_type, **options)
-        if view_type == 'form':
-            arch = self._view_get_address(arch)
-        return arch, view
-
-    @api.model
     def _read_group_stage_ids(self, stages, domain, order):
         # retrieve team_id from the context and write the domain
         # - ('id', 'in', stages.ids): add columns that should be present

@@ -3168,37 +3168,6 @@ class TestViews(ViewCase):
                         <field name="type"/>
                     </form>"""
 
-    def test_address_view(self):
-        # pe_partner_address_form
-        address_arch = """<form><div class="o_address_format"><field name="parent_name"/></div></form>"""
-        address_view = self.View.create({
-            'name': 'view',
-            'model': 'res.partner',
-            'arch': address_arch,
-            'priority': 900,
-        })
-
-        # view can be created without address_view
-        form_arch = """<form><field name="id"/><div class="o_address_format"><field name="street"/></div></form>"""
-        partner_view = self.View.create({
-            'name': 'view',
-            'model': 'res.partner',
-            'arch': form_arch,
-        })
-
-        # default view, no address_view defined
-        arch = self.env['res.partner'].get_view(partner_view.id)['arch']
-        self.assertIn('"street"', arch)
-        self.assertNotIn('"parent_name"', arch)
-
-        # custom view, address_view defined
-        self.env.company.country_id.address_view_id = address_view
-        arch = self.env['res.partner'].get_view(partner_view.id)['arch']
-        self.assertNotIn('"street"', arch)
-        self.assertIn('"parent_name"', arch)
-        # weird result: <form> inside a <form>
-        self.assertRegex(arch, r"<form>.*<form>.*</form>.*</form>")
-
     def test_graph_fields(self):
         self.assertValid('<graph string="Graph"><field name="model" type="row"/><field name="inherit_id" type="measure"/></graph>')
         self.assertInvalid(

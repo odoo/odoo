@@ -63,6 +63,23 @@ class FormatAddressMixin(models.AbstractModel):
                 address_node.getparent().replace(address_node, sub_arch)
         return arch
 
+    @api.model
+    def _get_view_cache_key(self, view_id=None, view_type='form', **options):
+        """The override of _get_view, using _view_get_address,
+        changing the architecture according to the address view of the company,
+        makes the view cache dependent on the company.
+        Different companies could use each a different address view"""
+        key = super()._get_view_cache_key(view_id, view_type, **options)
+        return key + (self.env.company, self._context.get('no_address_format'),)
+
+    @api.model
+    def _get_view(self, view_id=None, view_type='form', **options):
+        arch, view = super()._get_view(view_id, view_type, **options)
+        if view.type == 'form':
+            arch = self._view_get_address(arch)
+        return arch, view
+
+
 class PartnerCategory(models.Model):
     _description = 'Partner Tags'
     _name = 'res.partner.category'
@@ -380,18 +397,7 @@ class Partner(models.Model):
         if (not view_id) and (view_type == 'form') and self._context.get('force_email'):
             view_id = self.env.ref('base.view_partner_simple_form').id
         arch, view = super()._get_view(view_id, view_type, **options)
-        if view_type == 'form':
-            arch = self._view_get_address(arch)
         return arch, view
-
-    @api.model
-    def _get_view_cache_key(self, view_id=None, view_type='form', **options):
-        """The override of _get_view, using _view_get_address,
-        changing the architecture according to the address view of the company,
-        makes the view cache dependent on the company.
-        Different companies could use each a different address view"""
-        key = super()._get_view_cache_key(view_id, view_type, **options)
-        return key + (self.env.company,)
 
     @api.constrains('parent_id')
     def _check_parent_id(self):
