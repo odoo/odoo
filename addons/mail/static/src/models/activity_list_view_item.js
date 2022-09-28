@@ -98,6 +98,11 @@ registerModel({
             },
             inverse: 'activityListViewItemOwner',
         }),
+        hasMarkDoneButton: attr({
+            compute() {
+                return !this.fileUploader;
+            },
+        }),
         markDoneView: one('ActivityMarkDonePopoverContentView', {
             inverse: 'activityListViewItemOwner',
         }),
