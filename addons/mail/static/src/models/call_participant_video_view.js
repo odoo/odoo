@@ -1,12 +1,28 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'CallParticipantVideoView',
     recordMethods: {
+        /**
+         * Since it is not possible to directly put a mediaStreamObject as the src
+         * or src-object of the template, the video src is manually inserted into
+         * the DOM.
+         */
+        onComponentUpdate() {
+            if (!this.component.root.el) {
+                return;
+            }
+            if (!this.rtcSession || !this.rtcSession.videoStream) {
+                this.component.root.el.srcObject = undefined;
+            } else {
+                this.component.root.el.srcObject = this.rtcSession.videoStream;
+            }
+            this.component.root.el.load();
+        },
         /**
          * Plays the video as some browsers may not support or block autoplay.
          *
@@ -30,6 +46,7 @@ registerModel({
             identifying: true,
             inverse: 'callParticipantVideoView',
         }),
+        component: attr(),
         rtcSession: one('RtcSession', {
             compute() {
                 if (this.callParticipantCardOwner.rtcSession) {
