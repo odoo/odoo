@@ -7,6 +7,16 @@ from odoo import models
 class ReplenishmentReport(models.AbstractModel):
     _inherit = 'report.stock.report_product_product_replenishment'
 
+
+    def _serialize_docs(self, docs, product_template_ids=False, product_variant_ids=False):
+        res = super()._serialize_docs(docs, product_template_ids, product_variant_ids)
+        for i, line in enumerate(docs['lines']):
+            if not line['move_out'] or not line['move_out']['raw_material_production_id']:
+                continue
+            raw_material_production = line['move_out']['raw_material_production_id']
+            res['lines'][i]['move_out']['raw_material_production_id'] = raw_material_production.read(fields=['id', 'unreserve_visible', 'reserve_visible', 'priority'])[0]
+        return res
+
     def _move_draft_domain(self, product_template_ids, product_variant_ids, wh_location_ids):
         in_domain, out_domain = super()._move_draft_domain(product_template_ids, product_variant_ids, wh_location_ids)
         in_domain += [('production_id', '=', False)]

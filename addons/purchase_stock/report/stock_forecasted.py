@@ -7,6 +7,11 @@ from odoo import models
 class ReplenishmentReport(models.AbstractModel):
     _inherit = 'report.stock.report_product_product_replenishment'
 
+    def _serialize_docs(self, docs, product_template_ids=False, product_variant_ids=False):
+        res = super()._serialize_docs(docs, product_template_ids, product_variant_ids)
+        res['draft_purchase_orders'] = docs['draft_purchase_orders'].read(fields=['id', 'name'])
+        return res
+
     def _compute_draft_quantity_count(self, product_template_ids, product_variant_ids, wh_location_ids):
         res = super()._compute_draft_quantity_count(product_template_ids, product_variant_ids, wh_location_ids)
         domain = [('state', 'in', ['draft', 'sent', 'to approve'])]

@@ -3900,8 +3900,8 @@ class TestStockValuation(TransactionCase):
         report = self.env['report.stock.report_product_product_replenishment']
         report_for_company_1 = report.with_context(warehouse=warehouse_1.id)
         report_for_company_2 = report.with_context(warehouse=warehouse_2.id)
-        report_value_1 = report_for_company_1._get_report_values(docids=self.product1.ids)
-        report_value_2 = report_for_company_2._get_report_values(docids=self.product1.ids)
+        report_value_1 = report_for_company_1.get_report_values(docids=self.product1.ids)
+        report_value_2 = report_for_company_2.get_report_values(docids=self.product1.ids)
         self.assertEqual(report_value_1['docs']['value'], "U 50.00")
         self.assertEqual(report_value_2['docs']['value'], "48.00 DD")
 
