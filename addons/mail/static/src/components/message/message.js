@@ -27,15 +27,6 @@ export class Message extends Component {
         useRefToModel({ fieldName: 'prettyBodyRef', refName: 'prettyBody' });
         useUpdateToModel({ methodName: 'onComponentUpdate' });
         useUpdate({ func: () => this._update() });
-        /**
-         * Determines whether each "read more" is opened or closed. The keys are
-         * index, which is determined by their order of appearance in the DOM.
-         * If body changes so that "read more" count is different, their default
-         * value will be "wrong" at the next render but this is an acceptable
-         * limitation. It's more important to save the state correctly in a
-         * typical non-changing situation.
-         */
-        this._isReadMoreByIndex = new Map();
     }
 
     //--------------------------------------------------------------------------
@@ -188,11 +179,11 @@ export class Message extends Component {
             }).insertBefore(group[0]);
 
             // Toggle All next nodes
-            if (!this._isReadMoreByIndex.has(index)) {
-                this._isReadMoreByIndex.set(index, true);
+            if (!this.messageView.isReadMoreByIndex.has(index)) {
+                this.messageView.isReadMoreByIndex.set(index, true);
             }
             const updateFromState = () => {
-                const isReadMore = this._isReadMoreByIndex.get(index);
+                const isReadMore = this.messageView.isReadMoreByIndex.get(index);
                 for (const $child of group) {
                     $child.hide();
                     $child.toggle(!isReadMore);
@@ -201,7 +192,7 @@ export class Message extends Component {
             };
             $readMoreLess.click(e => {
                 e.preventDefault();
-                this._isReadMoreByIndex.set(index, !this._isReadMoreByIndex.get(index));
+                this.messageView.isReadMoreByIndex.set(index, !this.messageView.isReadMoreByIndex.get(index));
                 updateFromState();
             });
             updateFromState();
