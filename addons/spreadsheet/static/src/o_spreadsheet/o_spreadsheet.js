@@ -236,40 +236,9 @@
     const BACKGROUND_CHART_COLOR = "#FFFFFF";
     const MENU_ITEM_DISABLED_COLOR = "#CACACA";
     const DEFAULT_COLOR_SCALE_MIDPOINT_COLOR = 0xb6d7a8;
-    // Dimensions
-    const MIN_ROW_HEIGHT = 10;
-    const MIN_COL_WIDTH = 5;
-    const HEADER_HEIGHT = 26;
-    const HEADER_WIDTH = 48;
-    const TOPBAR_HEIGHT = 63;
-    const BOTTOMBAR_HEIGHT = 36;
-    const DEFAULT_CELL_WIDTH = 96;
-    const DEFAULT_CELL_HEIGHT = 23;
-    const SCROLLBAR_WIDTH$1 = 15;
-    const AUTOFILL_EDGE_LENGTH = 8;
-    const ICON_EDGE_LENGTH = 18;
-    const UNHIDE_ICON_EDGE_LENGTH = 14;
-    const MIN_CF_ICON_MARGIN = 4;
-    const MIN_CELL_TEXT_MARGIN = 4;
-    const CF_ICON_EDGE_LENGTH = 15;
-    const PADDING_AUTORESIZE_VERTICAL = 3;
-    const PADDING_AUTORESIZE_HORIZONTAL = MIN_CELL_TEXT_MARGIN;
-    // Menus
-    const MENU_WIDTH = 250;
-    const MENU_ITEM_HEIGHT = 28;
-    const MENU_SEPARATOR_BORDER_WIDTH = 1;
-    const MENU_SEPARATOR_PADDING = 5;
-    const MENU_SEPARATOR_HEIGHT = MENU_SEPARATOR_BORDER_WIDTH + 2 * MENU_SEPARATOR_PADDING;
-    const FIGURE_BORDER_SIZE = 1;
-    // Fonts
-    const DEFAULT_FONT_WEIGHT = "400";
-    const DEFAULT_FONT_SIZE = 10;
-    const HEADER_FONT_SIZE = 11;
-    const DEFAULT_FONT = "'Roboto', arial";
-    // Borders
-    const DEFAULT_BORDER_DESC = ["thin", "#000"];
     const LINK_COLOR = "#01666b";
-    const COLORS = [
+    // Color picker
+    const COLOR_PICKER_DEFAULTS = [
         "#000000",
         "#434343",
         "#666666",
@@ -351,6 +320,38 @@
         "#20124d",
         "#4c1130",
     ];
+    // Dimensions
+    const MIN_ROW_HEIGHT = 10;
+    const MIN_COL_WIDTH = 5;
+    const HEADER_HEIGHT = 26;
+    const HEADER_WIDTH = 48;
+    const TOPBAR_HEIGHT = 63;
+    const BOTTOMBAR_HEIGHT = 36;
+    const DEFAULT_CELL_WIDTH = 96;
+    const DEFAULT_CELL_HEIGHT = 23;
+    const SCROLLBAR_WIDTH$1 = 15;
+    const AUTOFILL_EDGE_LENGTH = 8;
+    const ICON_EDGE_LENGTH = 18;
+    const UNHIDE_ICON_EDGE_LENGTH = 14;
+    const MIN_CF_ICON_MARGIN = 4;
+    const MIN_CELL_TEXT_MARGIN = 4;
+    const CF_ICON_EDGE_LENGTH = 15;
+    const PADDING_AUTORESIZE_VERTICAL = 3;
+    const PADDING_AUTORESIZE_HORIZONTAL = MIN_CELL_TEXT_MARGIN;
+    // Menus
+    const MENU_WIDTH = 250;
+    const MENU_ITEM_HEIGHT = 28;
+    const MENU_SEPARATOR_BORDER_WIDTH = 1;
+    const MENU_SEPARATOR_PADDING = 5;
+    const MENU_SEPARATOR_HEIGHT = MENU_SEPARATOR_BORDER_WIDTH + 2 * MENU_SEPARATOR_PADDING;
+    const FIGURE_BORDER_SIZE = 1;
+    // Fonts
+    const DEFAULT_FONT_WEIGHT = "400";
+    const DEFAULT_FONT_SIZE = 10;
+    const HEADER_FONT_SIZE = 11;
+    const DEFAULT_FONT = "'Roboto', arial";
+    // Borders
+    const DEFAULT_BORDER_DESC = ["thin", "#000"];
     // DateTimeRegex
     const DATETIME_FORMAT = /[ymd:]/;
     // Ranges
@@ -364,18 +365,22 @@
     const DEFAULT_FIGURE_WIDTH = 536;
     // Chart
     const MAX_CHAR_LABEL = 20;
-    const DEBOUNCE_TIME = 200;
-    const MESSAGE_VERSION = 1;
-    const LOADING = "Loading...";
-    const DEFAULT_ERROR_MESSAGE = _lt("Invalid expression");
-    const FORBIDDEN_SHEET_CHARS = ["'", "*", "?", "/", "\\", "[", "]"];
-    const FORBIDDEN_IN_EXCEL_REGEX = /'|\*|\?|\/|\\|\[|\]/;
     const DEFAULT_GAUGE_LOWER_COLOR = "#cc0000";
     const DEFAULT_GAUGE_MIDDLE_COLOR = "#f1c232";
     const DEFAULT_GAUGE_UPPER_COLOR = "#6aa84f";
+    const LINE_FILL_TRANSPARENCY = 0.4;
+    // session
+    const DEBOUNCE_TIME = 200;
+    const MESSAGE_VERSION = 1;
+    // Sheets
+    const FORBIDDEN_SHEET_CHARS = ["'", "*", "?", "/", "\\", "[", "]"];
+    const FORBIDDEN_IN_EXCEL_REGEX = /'|\*|\?|\/|\\|\[|\]/;
     // Cells
     const NULL_FORMAT = undefined;
     const FORMULA_REF_IDENTIFIER = "|";
+    const LOADING = "Loading...";
+    const DEFAULT_ERROR_MESSAGE = _lt("Invalid expression");
+    // Components
     var ComponentsImportance;
     (function (ComponentsImportance) {
         ComponentsImportance[ComponentsImportance["Grid"] = 0] = "Grid";
@@ -389,6 +394,8 @@
         ComponentsImportance[ComponentsImportance["Popover"] = 30] = "Popover";
         ComponentsImportance[ComponentsImportance["ChartAnchor"] = 1000] = "ChartAnchor";
     })(ComponentsImportance || (ComponentsImportance = {}));
+    const DEFAULT_SHEETVIEW_SIZE = 1000;
+    const MAXIMAL_FREEZABLE_RATIO = 0.85;
 
     const fontSizes = [
         { pt: 7.5, px: 10 },
@@ -2706,7 +2713,7 @@
         "COPY",
         "PREPARE_SELECTION_INPUT_EXPANSION",
         "STOP_SELECTION_INPUT",
-        "RESIZE_VIEWPORT",
+        "RESIZE_SHEETVIEW",
         "SET_VIEWPORT_OFFSET",
         "SELECT_SEARCH_NEXT_MATCH",
         "SELECT_SEARCH_PREVIOUS_MATCH",
@@ -2730,6 +2737,11 @@
         "HIDE_COLUMNS_ROWS",
         "UNHIDE_COLUMNS_ROWS",
         "SET_GRID_LINES_VISIBILITY",
+        "UNFREEZE_COLUMNS",
+        "UNFREEZE_ROWS",
+        "FREEZE_COLUMNS",
+        "FREEZE_ROWS",
+        "UNFREEZE_COLUMNS_ROWS",
         /** MERGE */
         "ADD_MERGE",
         "REMOVE_MERGE",
@@ -2865,10 +2877,13 @@
         CommandResult[CommandResult["Readonly"] = 64] = "Readonly";
         CommandResult[CommandResult["InvalidOffset"] = 65] = "InvalidOffset";
         CommandResult[CommandResult["InvalidViewportSize"] = 66] = "InvalidViewportSize";
-        CommandResult[CommandResult["FigureDoesNotExist"] = 67] = "FigureDoesNotExist";
-        CommandResult[CommandResult["InvalidConditionalFormatId"] = 68] = "InvalidConditionalFormatId";
-        CommandResult[CommandResult["InvalidCellPopover"] = 69] = "InvalidCellPopover";
-        CommandResult[CommandResult["EmptyTarget"] = 70] = "EmptyTarget";
+        CommandResult[CommandResult["InvalidScrollingDirection"] = 67] = "InvalidScrollingDirection";
+        CommandResult[CommandResult["FigureDoesNotExist"] = 68] = "FigureDoesNotExist";
+        CommandResult[CommandResult["InvalidConditionalFormatId"] = 69] = "InvalidConditionalFormatId";
+        CommandResult[CommandResult["InvalidCellPopover"] = 70] = "InvalidCellPopover";
+        CommandResult[CommandResult["EmptyTarget"] = 71] = "EmptyTarget";
+        CommandResult[CommandResult["InvalidFreezeQuantity"] = 72] = "InvalidFreezeQuantity";
+        CommandResult[CommandResult["FrozenPaneOverlap"] = 73] = "FrozenPaneOverlap";
     })(exports.CommandResult || (exports.CommandResult = {}));
 
     var DIRECTION;
@@ -3149,6 +3164,14 @@
             .join("\n");
         return "\n" + str + "\n";
     }
+    function gridOverlayPosition() {
+        const spreadsheetElement = document.querySelector(".o-grid-overlay");
+        if (spreadsheetElement) {
+            const { top, left } = spreadsheetElement === null || spreadsheetElement === void 0 ? void 0 : spreadsheetElement.getBoundingClientRect();
+            return { top, left };
+        }
+        throw new Error("Can't find spreadsheet position");
+    }
 
     /**
      * Return the o-spreadsheet element position relative
@@ -3222,7 +3245,7 @@
     `;
         }
         get viewportDimension() {
-            return this.env.model.getters.getViewportDimensionWithHeaders();
+            return this.env.model.getters.getSheetViewDimensionWithHeaders();
         }
         get shouldRenderRight() {
             const { x } = this.props.position;
@@ -3561,10 +3584,11 @@
     LinkDisplay.size = { width: LINK_TOOLTIP_WIDTH, height: LINK_TOOLTIP_HEIGHT };
     const LinkCellPopoverBuilder = {
         onHover: (position, getters) => {
-            const cell = getters.getCell(getters.getActiveSheetId(), position.col, position.row);
+            const sheetId = getters.getActiveSheetId();
+            const cell = getters.getCell(sheetId, position.col, position.row);
             const shouldDisplayLink = !getters.isDashboard() &&
                 (cell === null || cell === void 0 ? void 0 : cell.isLink()) &&
-                getters.isVisibleInViewport(position.col, position.row, getters.getActiveViewport());
+                getters.isVisibleInViewport(sheetId, position.col, position.row);
             if (!shouldDisplayLink)
                 return { isOpen: false };
             return {
@@ -4049,7 +4073,7 @@
         if (result.isCancelledBecause(60 /* InvalidSortZone */)) {
             const { col, row } = anchor;
             env.model.selection.selectZone({ cell: { col, row }, zone });
-            env.notifyUser(_lt("Cannot sort. To sort, select only cells or only merges that have the same size."));
+            env.raiseError(_lt("Cannot sort. To sort, select only cells or only merges that have the same size."));
         }
     }
 
@@ -4057,7 +4081,7 @@
         const result = env.model.dispatch("CUT");
         if (!result.isSuccessful) {
             if (result.isCancelledBecause(17 /* WrongCutSelection */)) {
-                env.notifyUser(_lt("This operation is not allowed with multiple selections."));
+                env.raiseError(_lt("This operation is not allowed with multiple selections."));
             }
         }
     }
@@ -4066,17 +4090,21 @@
         wrongPasteSelection: _lt("This operation is not allowed with multiple selections."),
         willRemoveExistingMerge: _lt("This operation is not possible due to a merge. Please remove the merges first than try again."),
         wrongFigurePasteOption: _lt("Cannot do a special paste of a figure."),
+        frozenPaneOverlap: _lt("Cannot paste merged cells over a frozen pane."),
     };
     function handlePasteResult(env, result) {
         if (!result.isSuccessful) {
             if (result.reasons.includes(18 /* WrongPasteSelection */)) {
-                env.notifyUser(PasteInteractiveContent.wrongPasteSelection);
+                env.raiseError(PasteInteractiveContent.wrongPasteSelection);
             }
             else if (result.reasons.includes(2 /* WillRemoveExistingMerge */)) {
-                env.notifyUser(PasteInteractiveContent.willRemoveExistingMerge);
+                env.raiseError(PasteInteractiveContent.willRemoveExistingMerge);
             }
             else if (result.reasons.includes(20 /* WrongFigurePasteOption */)) {
-                env.notifyUser(PasteInteractiveContent.wrongFigurePasteOption);
+                env.raiseError(PasteInteractiveContent.wrongFigurePasteOption);
+            }
+            else if (result.reasons.includes(73 /* FrozenPaneOverlap */)) {
+                env.raiseError(PasteInteractiveContent.frozenPaneOverlap);
             }
         }
     }
@@ -4581,7 +4609,8 @@
     // Charts
     //------------------------------------------------------------------------------
     const CREATE_CHART = (env) => {
-        const zone = env.model.getters.getSelectedZone();
+        const getters = env.model.getters;
+        const zone = getters.getSelectedZone();
         let dataSetZone = zone;
         const id = env.model.uuidGenerator.uuidv4();
         let labelRange;
@@ -4589,16 +4618,22 @@
             dataSetZone = { ...zone, left: zone.left + 1 };
         }
         const dataSets = [zoneToXc(dataSetZone)];
-        const sheetId = env.model.getters.getActiveSheetId();
-        const viewport = env.model.getters.getActiveViewport();
-        const left = env.model.getters.getColDimensions(sheetId, viewport.left).start;
-        const top = env.model.getters.getRowDimensions(sheetId, viewport.top).start;
-        const { width, height } = env.model.getters.getViewportDimension();
+        const sheetId = getters.getActiveSheetId();
+        const { x: offsetCorrectionX, y: offsetCorrectionY } = getters.getMainViewportCoordinates();
+        const { offsetX, offsetY } = getters.getActiveSheetScrollInfo();
+        const { width, height } = getters.getSheetViewDimension();
         const size = { width: DEFAULT_FIGURE_WIDTH, height: DEFAULT_FIGURE_HEIGHT };
+        const rect = getters.getVisibleRect(getters.getActiveMainViewport());
+        const scrollableViewportWidth = Math.min(rect.width, width - offsetCorrectionX);
+        const scrollableViewportHeight = Math.min(rect.height, height - offsetCorrectionY);
         const position = {
-            x: left + Math.max(0, (width - DEFAULT_FIGURE_WIDTH) / 2),
-            y: top + Math.max(0, (height - DEFAULT_FIGURE_HEIGHT) / 2),
-        }; // Position at the center of the viewport
+            x: offsetCorrectionX +
+                offsetX +
+                Math.max(0, (scrollableViewportWidth - DEFAULT_FIGURE_WIDTH) / 2),
+            y: offsetCorrectionY +
+                offsetY +
+                Math.max(0, (scrollableViewportHeight - DEFAULT_FIGURE_HEIGHT) / 2),
+        }; // Position at the center of the scrollable viewport
         let title = "";
         const cells = env.model.getters.getCellsInZone(sheetId, {
             ...dataSetZone,
@@ -4615,8 +4650,9 @@
             }, []);
             const lastElement = texts.splice(-1)[0];
             title = texts.join(", ");
-            if (lastElement)
+            if (lastElement) {
                 title += (title ? " " + env._t("and") + " " : "") + lastElement;
+            }
         }
         if (zone.left !== zone.right) {
             labelRange = zoneToXc({
@@ -4637,7 +4673,7 @@
                 labelRange,
                 type: "bar",
                 background: BACKGROUND_CHART_COLOR,
-                stackedBar: false,
+                stacked: false,
                 dataSetsHaveTitle,
                 verticalAxisPosition: "left",
                 legendPosition: newLegendPos,
@@ -5161,6 +5197,16 @@
     const CustomCurrencyTerms = {
         Custom: _lt("Custom"),
     };
+    const MergeErrorMessage = _lt("Merged cells are preventing this operation. Unmerge those cells and try again.");
+
+    function interactiveFreezeColumnsRows(env, dimension, base) {
+        const sheetId = env.model.getters.getActiveSheetId();
+        const cmd = dimension === "COL" ? "FREEZE_COLUMNS" : "FREEZE_ROWS";
+        const result = env.model.dispatch(cmd, { sheetId, quantity: base });
+        if (result.isCancelledBecause(62 /* MergeOverlap */)) {
+            env.raiseError(MergeErrorMessage);
+        }
+    }
 
     const topbarMenuRegistry = new MenuItemRegistry();
     topbarMenuRegistry
@@ -5339,19 +5385,95 @@
         action: CREATE_SHEET_ACTION,
         separator: true,
     })
+        .addChild("unfreeze_panes", ["view"], {
+        name: _lt("Unfreeze"),
+        sequence: 4,
+        isVisible: (env) => {
+            const { xSplit, ySplit } = env.model.getters.getPaneDivisions(env.model.getters.getActiveSheetId());
+            return xSplit + ySplit > 0;
+        },
+        action: (env) => env.model.dispatch("UNFREEZE_COLUMNS_ROWS", {
+            sheetId: env.model.getters.getActiveSheetId(),
+        }),
+    })
+        .addChild("freeze_panes", ["view"], {
+        name: _lt("Freeze"),
+        sequence: 5,
+        separator: true,
+    })
+        .addChild("unfreeze_rows", ["view", "freeze_panes"], {
+        name: _lt("No rows"),
+        action: (env) => env.model.dispatch("UNFREEZE_ROWS", {
+            sheetId: env.model.getters.getActiveSheetId(),
+        }),
+        isReadonlyAllowed: true,
+        sequence: 5,
+        isVisible: (env) => !!env.model.getters.getPaneDivisions(env.model.getters.getActiveSheetId()).ySplit,
+    })
+        .addChild("freeze_first_row", ["view", "freeze_panes"], {
+        name: _lt("1 row"),
+        action: (env) => interactiveFreezeColumnsRows(env, "ROW", 1),
+        isReadonlyAllowed: true,
+        sequence: 10,
+    })
+        .addChild("freeze_second_row", ["view", "freeze_panes"], {
+        name: _lt("2 rows"),
+        action: (env) => interactiveFreezeColumnsRows(env, "ROW", 2),
+        isReadonlyAllowed: true,
+        sequence: 15,
+    })
+        .addChild("freeze_current_row", ["view", "freeze_panes"], {
+        name: _lt("Up to current row"),
+        action: (env) => {
+            const { bottom } = env.model.getters.getSelectedZone();
+            interactiveFreezeColumnsRows(env, "ROW", bottom + 1);
+        },
+        isReadonlyAllowed: true,
+        sequence: 20,
+        separator: true,
+    })
+        .addChild("unfreeze_columns", ["view", "freeze_panes"], {
+        name: _lt("No columns"),
+        action: (env) => env.model.dispatch("UNFREEZE_COLUMNS", {
+            sheetId: env.model.getters.getActiveSheetId(),
+        }),
+        isReadonlyAllowed: true,
+        sequence: 25,
+        isVisible: (env) => !!env.model.getters.getPaneDivisions(env.model.getters.getActiveSheetId()).xSplit,
+    })
+        .addChild("freeze_first_col", ["view", "freeze_panes"], {
+        name: _lt("1 column"),
+        action: (env) => interactiveFreezeColumnsRows(env, "COL", 1),
+        isReadonlyAllowed: true,
+        sequence: 30,
+    })
+        .addChild("freeze_second_col", ["view", "freeze_panes"], {
+        name: _lt("2 columns"),
+        action: (env) => interactiveFreezeColumnsRows(env, "COL", 2),
+        isReadonlyAllowed: true,
+        sequence: 35,
+    })
+        .addChild("freeze_current_col", ["view", "freeze_panes"], {
+        name: _lt("Up to current column"),
+        action: (env) => {
+            const { right } = env.model.getters.getSelectedZone();
+            interactiveFreezeColumnsRows(env, "COL", right + 1);
+        },
+        isReadonlyAllowed: true,
+        sequence: 40,
+    })
         .addChild("view_gridlines", ["view"], {
         name: (env) => env.model.getters.getGridLinesVisibility(env.model.getters.getActiveSheetId())
             ? _lt("Hide gridlines")
             : _lt("Show gridlines"),
         action: SET_GRID_LINES_VISIBILITY_ACTION,
-        sequence: 5,
-        separator: true,
+        sequence: 10,
     })
         .addChild("view_formulas", ["view"], {
         name: (env) => env.model.getters.shouldShowFormulas() ? _lt("Hide formulas") : _lt("Show formulas"),
         action: SET_FORMULA_VISIBILITY_ACTION,
         isReadonlyAllowed: true,
-        sequence: 10,
+        sequence: 15,
     })
         .addChild("format_number", ["format"], {
         name: _lt("Numbers"),
@@ -5744,7 +5866,7 @@
     class BarConfigPanel extends LineBarPieConfigPanel {
         onUpdateStacked(ev) {
             this.props.updateChart({
-                stackedBar: ev.target.checked,
+                stacked: ev.target.checked,
             });
         }
     }
@@ -6275,6 +6397,15 @@
         }
         return datasetValues;
     }
+    /** See https://www.chartjs.org/docs/latest/charts/area.html#filling-modes */
+    function getFillingMode(index) {
+        if (index === 0) {
+            return "origin";
+        }
+        else {
+            return index - 1;
+        }
+    }
 
     chartRegistry.add("bar", {
         match: (type) => type === "bar",
@@ -6294,7 +6425,7 @@
             this.background = definition.background;
             this.verticalAxisPosition = definition.verticalAxisPosition;
             this.legendPosition = definition.legendPosition;
-            this.stackedBar = definition.stackedBar;
+            this.stacked = definition.stacked;
         }
         static transformDefinition(definition, executed) {
             return transformChartDefinitionWithDataSetsWithZone(definition, executed);
@@ -6307,7 +6438,7 @@
                 background: context.background,
                 dataSets: context.range ? context.range : [],
                 dataSetsHaveTitle: false,
-                stackedBar: false,
+                stacked: false,
                 legendPosition: "top",
                 title: context.title || "",
                 type: "bar",
@@ -6350,7 +6481,7 @@
                     ? this.getters.getRangeString(labelRange, targetSheetId || this.sheetId)
                     : undefined,
                 title: this.title,
-                stackedBar: this.stackedBar,
+                stacked: this.stacked,
             };
         }
         getDefinitionForExcel() {
@@ -6362,7 +6493,6 @@
                 backgroundColor: toXlsxHexColor(this.background || BACKGROUND_CHART_COLOR),
                 fontColor: toXlsxHexColor(chartFontColor(this.background)),
                 dataSets,
-                stackedBar: this.stackedBar,
             };
         }
         updateRanges(applyChange) {
@@ -6415,7 +6545,7 @@
                 },
             ],
         };
-        if (chart.stackedBar) {
+        if (chart.stacked) {
             config.options.scales.xAxes[0].stacked = true;
             config.options.scales.yAxes[0].stacked = true;
         }
@@ -6920,6 +7050,7 @@
             this.verticalAxisPosition = definition.verticalAxisPosition;
             this.legendPosition = definition.legendPosition;
             this.labelsAsText = definition.labelsAsText;
+            this.stacked = definition.stacked;
         }
         static validateChartDefinition(validator, definition) {
             return validator.checkValidations(definition, checkDataset, checkLabelRange);
@@ -6938,6 +7069,7 @@
                 type: "line",
                 verticalAxisPosition: "left",
                 labelRange: context.auxiliaryRange || undefined,
+                stacked: false,
             };
         }
         getDefinition() {
@@ -6956,6 +7088,7 @@
                     : undefined,
                 title: this.title,
                 labelsAsText: this.labelsAsText,
+                stacked: this.stacked,
             };
         }
         getContextCreation() {
@@ -7058,7 +7191,17 @@
         const fontColor = chartFontColor(chart.background);
         const config = getDefaultChartJsRuntime(chart, labels, fontColor);
         const legend = {
-            labels: { fontColor },
+            labels: {
+                fontColor,
+                generateLabels(chart) {
+                    const { data } = chart;
+                    const labels = window.Chart.defaults.global.legend.labels.generateLabels(chart);
+                    for (const [index, label] of labels.entries()) {
+                        label.fillStyle = data.datasets[index].borderColor;
+                    }
+                    return labels;
+                },
+            },
         };
         if ((!chart.labelRange && chart.dataSets.length === 1) || chart.legendPosition === "none") {
             legend.display = false;
@@ -7094,6 +7237,9 @@
                 },
             ],
         };
+        if (chart.stacked) {
+            config.options.scales.yAxes[0].stacked = true;
+        }
         return config;
     }
     function createLineChartRuntime(chart, getters) {
@@ -7117,18 +7263,25 @@
             config.options.scales.xAxes[0].ticks.callback = (value) => formatValue(value, labelFormat);
         }
         const colors = new ChartColors();
-        for (let { label, data } of dataSetsValues) {
+        for (let [index, { label, data }] of dataSetsValues.entries()) {
             if (["linear", "time"].includes(axisType)) {
                 // Replace empty string labels by undefined to make sure chartJS doesn't decide that "" is the same as 0
                 data = data.map((y, index) => ({ x: labels[index] || undefined, y }));
             }
             const color = colors.next();
+            let backgroundRGBA = colorToRGBA(color);
+            if (chart.stacked) {
+                backgroundRGBA.a = LINE_FILL_TRANSPARENCY;
+            }
+            const backgroundColor = rgbaToHex(backgroundRGBA);
             const dataset = {
                 label,
                 data,
                 lineTension: 0,
                 borderColor: color,
-                backgroundColor: color,
+                backgroundColor,
+                pointBackgroundColor: color,
+                fill: chart.stacked ? getFillingMode(index) : false,
             };
             config.data.datasets.push(dataset);
         }
@@ -7583,7 +7736,7 @@
     class ColorPicker extends owl.Component {
         constructor() {
             super(...arguments);
-            this.COLORS = COLORS;
+            this.COLORS = COLOR_PICKER_DEFAULTS;
             this.state = owl.useState({
                 showGradient: false,
                 currentColor: isColorValid(this.props.currentColor) ? this.props.currentColor : "",
@@ -7862,6 +8015,11 @@
         onUpdateLabelsAsText(ev) {
             this.props.updateChart({
                 labelsAsText: ev.target.checked,
+            });
+        }
+        onUpdateStacked(ev) {
+            this.props.updateChart({
+                stacked: ev.target.checked,
             });
         }
     }
@@ -9468,9 +9626,10 @@
     ChartFigure.template = "o-spreadsheet-ChartFigure";
     ChartFigure.components = { Menu };
 
-    function startDnd(onMouseMove, onMouseUp) {
+    function startDnd(onMouseMove, onMouseUp, onMouseDown = () => { }) {
         const _onMouseUp = (ev) => {
             onMouseUp(ev);
+            window.removeEventListener("mousedown", onMouseDown);
             window.removeEventListener("mouseup", _onMouseUp);
             window.removeEventListener("dragstart", _onDragStart);
             window.removeEventListener("mousemove", onMouseMove);
@@ -9479,6 +9638,7 @@
         function _onDragStart(ev) {
             ev.preventDefault();
         }
+        window.addEventListener("mousedown", onMouseDown);
         window.addEventListener("mouseup", _onMouseUp);
         window.addEventListener("dragstart", _onDragStart);
         window.addEventListener("mousemove", onMouseMove);
@@ -9493,60 +9653,103 @@
      * (occurrence of the current column and the current row). Second intended for actions
      * performed during the mouseup event.
      */
-    function dragAndDropBeyondTheViewport(element, env, cbMouseMove, cbMouseUp) {
-        const position = element.getBoundingClientRect();
+    function dragAndDropBeyondTheViewport(env, cbMouseMove, cbMouseUp, only = false) {
         let timeOutId = null;
         let currentEv;
+        let previousEv;
+        let startingEv;
+        let startingX;
+        let startingY;
+        const getters = env.model.getters;
+        const sheetId = getters.getActiveSheetId();
+        const position = gridOverlayPosition();
+        let colIndex;
+        let rowIndex;
+        const onMouseDown = (ev) => {
+            previousEv = ev;
+            startingEv = ev;
+            startingX = startingEv.clientX - position.left;
+            startingY = startingEv.clientY - position.top;
+        };
         const onMouseMove = (ev) => {
             currentEv = ev;
             if (timeOutId) {
                 return;
             }
-            const offsetX = currentEv.clientX - position.left;
-            const offsetY = currentEv.clientY - position.top;
-            const edgeScrollInfoX = env.model.getters.getEdgeScrollCol(offsetX - HEADER_WIDTH);
-            const edgeScrollInfoY = env.model.getters.getEdgeScrollRow(offsetY - HEADER_HEIGHT);
-            const { top, left, bottom, right } = env.model.getters.getActiveViewport();
-            let colIndex;
-            if (edgeScrollInfoX.canEdgeScroll) {
-                colIndex = edgeScrollInfoX.direction > 0 ? right : left - 1;
+            const { maxOffsetX, maxOffsetY } = getters.getMaximumSheetOffset();
+            const { x: offsetCorrectionX, y: offsetCorrectionY } = getters.getMainViewportCoordinates();
+            let { top, left, bottom, right } = getters.getActiveMainViewport();
+            let { offsetScrollbarX: offsetX, offsetScrollbarY: offsetY } = getters.getActiveSheetScrollInfo();
+            const { xSplit, ySplit } = getters.getPaneDivisions(sheetId);
+            let canEdgeScroll = false;
+            let timeoutDelay = MAX_DELAY;
+            const x = currentEv.clientX - position.left;
+            colIndex = getters.getColIndex(x);
+            if (only !== "vertical") {
+                const previousX = previousEv.clientX - position.left;
+                const edgeScrollInfoX = getters.getEdgeScrollCol(x, previousX, startingX);
+                if (edgeScrollInfoX.canEdgeScroll) {
+                    canEdgeScroll = true;
+                    timeoutDelay = Math.min(timeoutDelay, edgeScrollInfoX.delay);
+                    let newTarget;
+                    switch (edgeScrollInfoX.direction) {
+                        case "reset":
+                            colIndex = xSplit;
+                            newTarget = xSplit;
+                            break;
+                        case 1:
+                            colIndex = right;
+                            newTarget = left + 1;
+                            break;
+                        case -1:
+                            colIndex = left - 1;
+                            newTarget = left - 1;
+                            break;
+                    }
+                    offsetX = Math.min(maxOffsetX, getters.getColDimensions(sheetId, newTarget).start - offsetCorrectionX);
+                }
             }
-            else {
-                colIndex = env.model.getters.getColIndex(offsetX - HEADER_WIDTH);
+            const y = currentEv.clientY - position.top;
+            rowIndex = getters.getRowIndex(y);
+            if (only !== "horizontal") {
+                const previousY = previousEv.clientY - position.top;
+                const edgeScrollInfoY = getters.getEdgeScrollRow(y, previousY, startingY);
+                if (edgeScrollInfoY.canEdgeScroll) {
+                    canEdgeScroll = true;
+                    timeoutDelay = Math.min(timeoutDelay, edgeScrollInfoY.delay);
+                    let newTarget;
+                    switch (edgeScrollInfoY.direction) {
+                        case "reset":
+                            rowIndex = ySplit;
+                            newTarget = ySplit;
+                            break;
+                        case 1:
+                            rowIndex = bottom;
+                            newTarget = top + edgeScrollInfoY.direction;
+                            break;
+                        case -1:
+                            rowIndex = top - 1;
+                            newTarget = top + edgeScrollInfoY.direction;
+                            break;
+                    }
+                    offsetY = Math.min(maxOffsetY, env.model.getters.getRowDimensions(sheetId, newTarget).start - offsetCorrectionY);
+                }
             }
-            let rowIndex;
-            if (edgeScrollInfoY.canEdgeScroll) {
-                rowIndex = edgeScrollInfoY.direction > 0 ? bottom : top - 1;
-            }
-            else {
-                rowIndex = env.model.getters.getRowIndex(offsetY - HEADER_HEIGHT);
-            }
-            cbMouseMove(colIndex, rowIndex);
-            const sheetId = env.model.getters.getActiveSheetId();
-            if (edgeScrollInfoX.canEdgeScroll) {
-                const { left, offsetY } = env.model.getters.getActiveViewport();
-                const offsetX = env.model.getters.getColDimensions(sheetId, left + edgeScrollInfoX.direction).start;
+            cbMouseMove(colIndex, rowIndex, currentEv);
+            if (canEdgeScroll) {
                 env.model.dispatch("SET_VIEWPORT_OFFSET", { offsetX, offsetY });
                 timeOutId = setTimeout(() => {
                     timeOutId = null;
                     onMouseMove(currentEv);
-                }, Math.round(edgeScrollInfoX.delay));
+                }, Math.round(timeoutDelay));
             }
-            if (edgeScrollInfoY.canEdgeScroll) {
-                const { top, offsetX } = env.model.getters.getActiveViewport();
-                const offsetY = env.model.getters.getRowDimensions(sheetId, top + edgeScrollInfoY.direction).start;
-                env.model.dispatch("SET_VIEWPORT_OFFSET", { offsetX, offsetY });
-                timeOutId = setTimeout(() => {
-                    timeOutId = null;
-                    onMouseMove(currentEv);
-                }, Math.round(edgeScrollInfoY.delay));
-            }
+            previousEv = currentEv;
         };
         const onMouseUp = () => {
             clearTimeout(timeOutId);
             cbMouseUp();
         };
-        startDnd(onMouseMove, onMouseUp);
+        startDnd(onMouseMove, onMouseUp, onMouseDown);
     }
 
     // -----------------------------------------------------------------------------
@@ -9611,7 +9814,7 @@
         onMouseDown(ev) {
             this.state.handler = true;
             this.state.position = { left: 0, top: 0 };
-            const { offsetY, offsetX } = this.env.model.getters.getActiveViewport();
+            const { offsetY, offsetX } = this.env.model.getters.getActiveSheetScrollInfo();
             const start = {
                 left: ev.clientX + offsetX,
                 top: ev.clientY + offsetY,
@@ -9623,14 +9826,14 @@
                 this.env.model.dispatch("AUTOFILL");
             };
             const onMouseMove = (ev) => {
-                const position = this.props.getGridBoundingClientRect();
-                const { offsetY, offsetX } = this.env.model.getters.getActiveViewport();
+                const position = gridOverlayPosition();
+                const { offsetY, offsetX } = this.env.model.getters.getActiveSheetScrollInfo();
                 this.state.position = {
                     left: ev.clientX - start.left + offsetX,
                     top: ev.clientY - start.top + offsetY,
                 };
-                const col = this.env.model.getters.getColIndex(ev.clientX - position.left - HEADER_WIDTH);
-                const row = this.env.model.getters.getRowIndex(ev.clientY - position.top - HEADER_HEIGHT);
+                const col = this.env.model.getters.getColIndex(ev.clientX - position.left);
+                const row = this.env.model.getters.getRowIndex(ev.clientY - position.top);
                 if (lastCol !== col || lastRow !== row) {
                     const activeSheetId = this.env.model.getters.getActiveSheetId();
                     const numberOfCols = this.env.model.getters.getNumberCols(activeSheetId);
@@ -9669,9 +9872,13 @@
     class ClientTag extends owl.Component {
         get tagStyle() {
             const { col, row, color } = this.props;
-            const viewport = this.env.model.getters.getActiveViewport();
-            const { height } = this.env.model.getters.getViewportDimensionWithHeaders();
-            const { x, y } = this.env.model.getters.getRect({ left: col, top: row, right: col, bottom: row }, viewport);
+            const { height } = this.env.model.getters.getSheetViewDimensionWithHeaders();
+            const { x, y } = this.env.model.getters.getVisibleRect({
+                left: col,
+                top: row,
+                right: col,
+                bottom: row,
+            });
             return `bottom: ${height - y + 15}px;left: ${x - 1}px;border: 1px solid ${color};background-color: ${color};${this.props.active ? "opacity:1 !important" : ""}`;
         }
     }
@@ -16570,7 +16777,7 @@
                         this.cancelEdition();
                         this.resetContent();
                         this.ui.notifyUI({
-                            type: "NOTIFICATION",
+                            type: "ERROR",
                             text: CELL_DELETED_MESSAGE,
                         });
                     }
@@ -16665,7 +16872,7 @@
             if (cmd.elements.includes(this.col) && this.mode !== "inactive") {
                 this.dispatch("STOP_EDITION", { cancel: true });
                 this.ui.notifyUI({
-                    type: "NOTIFICATION",
+                    type: "ERROR",
                     text: CELL_DELETED_MESSAGE,
                 });
                 return;
@@ -16678,7 +16885,7 @@
             if (cmd.elements.includes(this.row) && this.mode !== "inactive") {
                 this.dispatch("STOP_EDITION", { cancel: true });
                 this.ui.notifyUI({
-                    type: "NOTIFICATION",
+                    type: "ERROR",
                     text: CELL_DELETED_MESSAGE,
                 });
                 return;
@@ -17389,8 +17596,6 @@
                 argToFocus: 0,
             });
             this.isKeyStillDown = false;
-            /** Should be true if a mousedown was called on the composer, and the mouseUp still hasn't been handled */
-            this.mouseDownActive = false;
             this.borderStyle = `box-shadow: 0 1px 4px 3px rgba(60, 64, 67, 0.15);`;
             // we can't allow input events to be triggered while we remove and add back the content of the composer in processContent
             this.shouldProcessInputEvents = false;
@@ -17581,17 +17786,9 @@
                 // not main button, probably a context menu
                 return;
             }
-            if (this.props.focus === "inactive") {
-                const newSelection = this.contentHelper.getCurrentSelection();
-                this.props.onComposerContentFocused(newSelection);
-            }
-            else {
-                this.contentHelper.removeSelection();
-                this.mouseDownActive = true;
-            }
+            this.contentHelper.removeSelection();
         }
         onClick() {
-            this.mouseDownActive = false;
             if (this.env.model.getters.isReadonly()) {
                 return;
             }
@@ -17604,11 +17801,6 @@
             this.processTokenAtCursor();
         }
         onBlur() {
-            if (this.mouseDownActive && this.props.focus !== "inactive") {
-                const newSelection = this.contentHelper.getCurrentSelection();
-                this.env.model.dispatch("CHANGE_COMPOSER_CURSOR_SELECTION", newSelection);
-                this.mouseDownActive = false;
-            }
             this.isKeyStillDown = false;
         }
         onCompleted(text) {
@@ -17819,7 +18011,7 @@
                 top: row,
                 bottom: row,
             });
-            this.rect = this.env.model.getters.getRect(this.zone, this.env.model.getters.getActiveViewport());
+            this.rect = this.env.model.getters.getVisibleRect(this.zone);
             owl.onMounted(() => {
                 const el = this.gridComposerRef.el;
                 //TODO Should be more correct to have a props that give the parent's clientHeight and clientWidth
@@ -18015,68 +18207,98 @@
             const { width, height } = info.figure;
             return `width:${width}px;height:${height}px;border-width: ${this.getBorderWidth(info)}px;`;
         }
-        /** Get the overflow of the figure in the headers of the grid  */
-        getOverflow(info) {
-            const { figure, isSelected } = info;
-            const { offsetX, offsetY } = this.env.model.getters.getActiveViewport();
-            const target = figure.id === (isSelected && this.dnd.figureId) ? this.dnd : figure;
-            let x = target.x - offsetX;
-            let y = target.y - offsetY;
-            const overflowX = this.env.isDashboard() ? 0 : Math.max(0, -x);
-            const overflowY = this.env.isDashboard() ? 0 : Math.max(0, -y);
-            return { overflowX, overflowY };
-        }
         getContainerStyle(info) {
             const { figure, isSelected } = info;
-            const { offsetX, offsetY } = this.env.model.getters.getActiveViewport();
             const target = figure.id === (isSelected && this.dnd.figureId) ? this.dnd : figure;
-            const x = target.x - offsetX;
-            const y = target.y - offsetY;
-            const { width, height } = this.getFigureSizeWithBorders(info);
-            const { overflowX, overflowY } = this.getOverflow(info);
+            const { x: offsetCorrectionX, y: offsetCorrectionY } = this.env.model.getters.getMainViewportCoordinates();
+            const { offsetX, offsetY } = this.env.model.getters.getActiveSheetScrollInfo();
+            let { width, height } = this.getFigureSizeWithBorders(info);
+            let x, y;
+            // Visually, the content of the container is slightly shifted as it includes borders and/or corners.
+            // If we want to make assertions on the position of the content, we need to take this shift into account
+            const borderShift = ANCHOR_SIZE / 2;
+            if (target.x + borderShift < offsetCorrectionX) {
+                x = target.x;
+            }
+            else if (target.x + borderShift < offsetCorrectionX + offsetX) {
+                x = offsetCorrectionX;
+                width += target.x - offsetCorrectionX - offsetX;
+            }
+            else {
+                x = target.x - offsetX;
+            }
+            if (target.y + borderShift < offsetCorrectionY) {
+                y = target.y;
+            }
+            else if (target.y + borderShift < offsetCorrectionY + offsetY) {
+                y = offsetCorrectionY;
+                height += target.y - offsetCorrectionY - offsetY;
+            }
+            else {
+                y = target.y - offsetY;
+            }
             if (width < 0 || height < 0) {
                 return `display:none;`;
             }
             const borderOffset = BORDER_WIDTH - this.getBorderWidth(info);
             // TODO : remove the +1 once 2951210 is fixed
-            return (`top:${y + borderOffset + overflowY + 1}px;` +
-                `left:${x + borderOffset + overflowX}px;` +
-                `width:${width - overflowX}px;` +
-                `height:${height - overflowY}px;` +
+            return (`top:${y + borderOffset + 1}px;` +
+                `left:${x + borderOffset}px;` +
+                `width:${width}px;` +
+                `height:${height}px;` +
                 `z-index: ${ComponentsImportance.Figure + (info.isSelected ? 1 : 0)}`);
         }
         getAnchorPosition(anchor, info) {
-            const { width, height } = this.getFigureSizeWithBorders(info);
-            const { overflowX, overflowY } = this.getOverflow(info);
+            let { width, height } = this.getFigureSizeWithBorders(info);
             const anchorCenteringOffset = (ANCHOR_SIZE - ACTIVE_BORDER_WIDTH) / 2;
+            const { figure, isSelected } = info;
+            const target = figure.id === (isSelected && this.dnd.figureId) ? this.dnd : figure;
             let x = 0;
             let y = 0;
+            const { x: offsetCorrectionX, y: offsetCorrectionY } = this.env.model.getters.getMainViewportCoordinates();
+            const { offsetX, offsetY } = this.env.model.getters.getActiveSheetScrollInfo();
+            const borderShift = ANCHOR_SIZE / 2;
+            if (target.x + borderShift < offsetCorrectionX) {
+                x = 0;
+            }
+            else if (target.x + borderShift < offsetCorrectionX + offsetX) {
+                x = target.x - offsetCorrectionX - offsetX;
+            }
+            else {
+                x = 0;
+            }
+            if (target.y + borderShift < offsetCorrectionY) {
+                y = 0;
+            }
+            else if (target.y + borderShift < offsetCorrectionY + offsetY) {
+                y = target.y - offsetCorrectionY - offsetY;
+            }
+            else {
+                y = 0;
+            }
             if (anchor.includes("top")) {
-                y = -anchorCenteringOffset;
+                y -= anchorCenteringOffset;
             }
             else if (anchor.includes("bottom")) {
-                y = height - ACTIVE_BORDER_WIDTH - anchorCenteringOffset;
+                y += height - ACTIVE_BORDER_WIDTH - anchorCenteringOffset;
             }
             else {
-                y = (height - ACTIVE_BORDER_WIDTH) / 2 - anchorCenteringOffset;
+                y += (height - ACTIVE_BORDER_WIDTH) / 2 - anchorCenteringOffset;
             }
             if (anchor.includes("left")) {
-                x = -anchorCenteringOffset;
+                x += -anchorCenteringOffset;
             }
             else if (anchor.includes("right")) {
-                x = width - ACTIVE_BORDER_WIDTH - anchorCenteringOffset;
+                x += width - ACTIVE_BORDER_WIDTH - anchorCenteringOffset;
             }
             else {
-                x = (width - ACTIVE_BORDER_WIDTH) / 2 - anchorCenteringOffset;
+                x += (width - ACTIVE_BORDER_WIDTH) / 2 - anchorCenteringOffset;
             }
             let visibility = "visible";
-            if (overflowX && x < overflowX) {
+            if (x < -anchorCenteringOffset || y < -anchorCenteringOffset) {
                 visibility = "hidden";
             }
-            else if (overflowY && y < overflowY) {
-                visibility = "hidden";
-            }
-            return `visibility : ${visibility};top:${y - overflowY}px; left:${x - overflowX}px;`;
+            return `visibility:${visibility};top:${y}px; left:${x}px;`;
         }
         setup() {
             owl.onMounted(() => {
@@ -18143,16 +18365,35 @@
             if (this.props.sidePanelIsOpen) {
                 this.env.openSidePanel("ChartPanel", { figureId: figure.id });
             }
-            const initialX = ev.clientX;
-            const initialY = ev.clientY;
+            const position = gridOverlayPosition();
+            const { x: offsetCorrectionX, y: offsetCorrectionY } = this.env.model.getters.getMainViewportCoordinates();
+            const { offsetX, offsetY } = this.env.model.getters.getActiveSheetScrollInfo();
+            const initialX = ev.clientX - position.left;
+            const initialY = ev.clientY - position.top;
             this.dnd.figureId = figure.id;
             this.dnd.x = figure.x;
             this.dnd.y = figure.y;
             this.dnd.width = figure.width;
             this.dnd.height = figure.height;
             const onMouseMove = (ev) => {
-                this.dnd.x = Math.max(figure.x - initialX + ev.clientX, 0);
-                this.dnd.y = Math.max(figure.y - initialY + ev.clientY, 0);
+                const newX = ev.clientX - position.left;
+                let deltaX = newX - initialX;
+                if (newX > offsetCorrectionX && initialX < offsetCorrectionX) {
+                    deltaX += offsetX;
+                }
+                else if (newX < offsetCorrectionX && initialX > offsetCorrectionX) {
+                    deltaX -= offsetX;
+                }
+                this.dnd.x = Math.max(figure.x + deltaX, 0);
+                const newY = ev.clientY - position.top;
+                let deltaY = newY - initialY;
+                if (newY > offsetCorrectionY && initialY < offsetCorrectionY) {
+                    deltaY += offsetY;
+                }
+                else if (newY < offsetCorrectionY && initialY > offsetCorrectionY) {
+                    deltaY -= offsetY;
+                }
+                this.dnd.y = Math.max(figure.y + deltaY, 0);
             };
             const onMouseUp = (ev) => {
                 this.dnd.figureId = "";
@@ -18321,41 +18562,41 @@
             this.state.isMoving = true;
             const startDimensions = this._getDimensionsInViewport(this._getSelectedZoneStart());
             const endDimensions = this._getDimensionsInViewport(this._getSelectedZoneEnd());
-            const initialPosition = this._getClientPosition(ev);
             const defaultPosition = startDimensions.start;
             this.state.draggerLinePosition = defaultPosition;
             this.state.base = this._getSelectedZoneStart();
             this.state.draggerShadowPosition = defaultPosition;
             this.state.draggerShadowThickness = endDimensions.end - startDimensions.start;
-            const mouseMoveMovement = (elementIndex, currentEv) => {
+            const mouseMoveMovement = (col, row) => {
+                let elementIndex = this._getType() === "COL" ? col : row;
                 if (elementIndex >= 0) {
                     // define draggerLinePosition
                     const dimensions = this._getDimensionsInViewport(elementIndex);
                     if (elementIndex <= this._getSelectedZoneStart()) {
                         this.state.draggerLinePosition = dimensions.start;
+                        this.state.draggerShadowPosition = dimensions.start;
                         this.state.base = elementIndex;
                     }
                     else if (this._getSelectedZoneEnd() < elementIndex) {
                         this.state.draggerLinePosition = dimensions.end;
+                        this.state.draggerShadowPosition = dimensions.end - this.state.draggerShadowThickness;
                         this.state.base = elementIndex + 1;
                     }
                     else {
                         this.state.draggerLinePosition = startDimensions.start;
+                        this.state.draggerShadowPosition = startDimensions.start;
                         this.state.base = this._getSelectedZoneStart();
                     }
-                    // define draggerShadowPosition
-                    const delta = this._getClientPosition(currentEv) - initialPosition;
-                    this.state.draggerShadowPosition = Math.max(defaultPosition + delta, 0);
                 }
             };
-            const mouseUpMovement = (finalEv) => {
+            const mouseUpMovement = () => {
                 this.state.isMoving = false;
                 if (this.state.base !== this._getSelectedZoneStart()) {
                     this._moveElements();
                 }
-                this._computeGrabDisplay(finalEv);
+                this._computeGrabDisplay(ev);
             };
-            this.dragOverlayBeyondTheViewport(ev, mouseMoveMovement, mouseUpMovement);
+            dragAndDropBeyondTheViewport(this.env, mouseMoveMovement, mouseUpMovement);
         }
         startSelection(ev, index) {
             this.state.isSelecting = true;
@@ -18366,10 +18607,11 @@
                 this._selectElement(index, ev.ctrlKey);
             }
             this.lastSelectedElementIndex = index;
-            const mouseMoveSelect = (elementIndex) => {
-                if (elementIndex !== this.lastSelectedElementIndex && elementIndex !== -1) {
-                    this._increaseSelection(elementIndex);
-                    this.lastSelectedElementIndex = elementIndex;
+            const mouseMoveSelect = (col, row) => {
+                let newIndex = this._getType() === "COL" ? col : row;
+                if (newIndex !== this.lastSelectedElementIndex && newIndex !== -1) {
+                    this._increaseSelection(newIndex);
+                    this.lastSelectedElementIndex = newIndex;
                 }
             };
             const mouseUpSelect = () => {
@@ -18378,45 +18620,7 @@
                 this.env.model.dispatch(ev.ctrlKey ? "PREPARE_SELECTION_INPUT_EXPANSION" : "STOP_SELECTION_INPUT");
                 this._computeGrabDisplay(ev);
             };
-            this.dragOverlayBeyondTheViewport(ev, mouseMoveSelect, mouseUpSelect);
-        }
-        dragOverlayBeyondTheViewport(ev, cbMouseMove, cbMouseUp) {
-            let timeOutId = null;
-            let currentEv;
-            const initialPosition = this._getClientPosition(ev);
-            const initialOffset = this._getEvOffset(ev);
-            const onMouseMove = (ev) => {
-                // currentEv.target can be any DOM element
-                currentEv = ev;
-                if (timeOutId) {
-                    return;
-                }
-                const delta = this._getClientPosition(currentEv) - initialPosition;
-                const position = initialOffset + delta;
-                const EdgeScrollInfo = this._getEdgeScroll(position);
-                const { first, last } = this._getBoundaries();
-                let elementIndex;
-                if (EdgeScrollInfo.canEdgeScroll) {
-                    elementIndex = EdgeScrollInfo.direction > 0 ? last : first - 1;
-                }
-                else {
-                    elementIndex = this._getElementIndex(position);
-                }
-                cbMouseMove(elementIndex, currentEv);
-                // adjust viewport if necessary
-                if (EdgeScrollInfo.canEdgeScroll) {
-                    this._adjustViewport(EdgeScrollInfo.direction);
-                    timeOutId = setTimeout(() => {
-                        timeOutId = null;
-                        onMouseMove(currentEv);
-                    }, Math.round(EdgeScrollInfo.delay));
-                }
-            };
-            const onMouseUp = (finalEv) => {
-                clearTimeout(timeOutId);
-                cbMouseUp(finalEv);
-            };
-            startDnd(onMouseMove, onMouseUp);
+            dragAndDropBeyondTheViewport(this.env, mouseMoveSelect, mouseUpSelect);
         }
         onMouseUp(ev) {
             this.lastSelectedElementIndex = null;
@@ -18505,7 +18709,7 @@
             return ev.offsetX;
         }
         _getViewportOffset() {
-            return this.env.model.getters.getActiveViewport().left;
+            return this.env.model.getters.getActiveMainViewport().left;
         }
         _getClientPosition(ev) {
             return ev.clientX;
@@ -18520,11 +18724,7 @@
             return this.env.model.getters.getSelectedZone().right;
         }
         _getEdgeScroll(position) {
-            return this.env.model.getters.getEdgeScrollCol(position);
-        }
-        _getBoundaries() {
-            const { left, right } = this.env.model.getters.getActiveViewport();
-            return { first: left, last: right };
+            return this.env.model.getters.getEdgeScrollCol(position, position, position);
         }
         _getDimensionsInViewport(index) {
             return this.env.model.getters.getColDimensionsInViewport(this.env.model.getters.getActiveSheetId(), index);
@@ -18560,7 +18760,7 @@
                 elements,
             });
             if (!result.isSuccessful && result.reasons.includes(2 /* WillRemoveExistingMerge */)) {
-                this.env.notifyUser(_lt("Merged cells are preventing this operation. Unmerge those cells and try again."));
+                this.env.raiseError(MergeErrorMessage);
             }
         }
         _selectElement(index, ctrlKey) {
@@ -18568,12 +18768,6 @@
         }
         _increaseSelection(index) {
             this.env.model.selection.selectColumn(index, "updateAnchor");
-        }
-        _adjustViewport(direction) {
-            const { left, offsetY } = this.env.model.getters.getActiveViewport();
-            const sheetId = this.env.model.getters.getActiveSheetId();
-            const offsetX = this.env.model.getters.getColDimensions(sheetId, left + direction).start;
-            this.env.model.dispatch("SET_VIEWPORT_OFFSET", { offsetX, offsetY });
         }
         _fitElementSize(index) {
             const cols = this.env.model.getters.getActiveCols();
@@ -18684,7 +18878,7 @@
             return ev.offsetY;
         }
         _getViewportOffset() {
-            return this.env.model.getters.getActiveViewport().top;
+            return this.env.model.getters.getActiveMainViewport().top;
         }
         _getClientPosition(ev) {
             return ev.clientY;
@@ -18699,11 +18893,7 @@
             return this.env.model.getters.getSelectedZone().bottom;
         }
         _getEdgeScroll(position) {
-            return this.env.model.getters.getEdgeScrollRow(position);
-        }
-        _getBoundaries() {
-            const { top, bottom } = this.env.model.getters.getActiveViewport();
-            return { first: top, last: bottom };
+            return this.env.model.getters.getEdgeScrollRow(position, position, position);
         }
         _getDimensionsInViewport(index) {
             return this.env.model.getters.getRowDimensionsInViewport(this.env.model.getters.getActiveSheetId(), index);
@@ -18739,7 +18929,7 @@
                 elements,
             });
             if (!result.isSuccessful && result.reasons.includes(2 /* WillRemoveExistingMerge */)) {
-                this.env.notifyUser(_lt("Merged cells are preventing this operation. Unmerge those cells and try again."));
+                this.env.raiseError(MergeErrorMessage);
             }
         }
         _selectElement(index, ctrlKey) {
@@ -18747,12 +18937,6 @@
         }
         _increaseSelection(index) {
             this.env.model.selection.selectRow(index, "updateAnchor");
-        }
-        _adjustViewport(direction) {
-            const { top, offsetX } = this.env.model.getters.getActiveViewport();
-            const sheetId = this.env.model.getters.getActiveSheetId();
-            const offsetY = this.env.model.getters.getRowDimensions(sheetId, top + direction).start;
-            this.env.model.dispatch("SET_VIEWPORT_OFFSET", { offsetX, offsetY });
         }
         _fitElementSize(index) {
             const rows = this.env.model.getters.getActiveRows();
@@ -18849,22 +19033,21 @@
             const isLeft = ["n", "w", "s"].includes(this.props.orientation);
             const isHorizontal = ["n", "s"].includes(this.props.orientation);
             const isVertical = ["w", "e"].includes(this.props.orientation);
-            const sheetId = this.env.model.getters.getActiveSheetId();
             const z = this.props.zone;
             const margin = 2;
-            const left = this.env.model.getters.getColDimensions(sheetId, z.left).start + margin;
-            const right = this.env.model.getters.getColDimensions(sheetId, z.right).end - 2 * margin;
-            const top = this.env.model.getters.getRowDimensions(sheetId, z.top).start + margin;
-            const bottom = this.env.model.getters.getRowDimensions(sheetId, z.bottom).end - 2 * margin;
+            const rect = this.env.model.getters.getVisibleRect(z);
+            const left = rect.x;
+            const right = rect.x + rect.width - 2 * margin;
+            const top = rect.y;
+            const bottom = rect.y + rect.height - 2 * margin;
             const lineWidth = 4;
             const leftValue = isLeft ? left : right;
             const topValue = isTop ? top : bottom;
             const widthValue = isHorizontal ? right - left : lineWidth;
             const heightValue = isVertical ? bottom - top : lineWidth;
-            const { offsetX, offsetY } = this.env.model.getters.getActiveViewport();
             return `
-        left:${leftValue + HEADER_WIDTH - offsetX}px;
-        top:${topValue + HEADER_HEIGHT - offsetY}px;
+        left:${leftValue}px;
+        top:${topValue}px;
         width:${widthValue}px;
         height:${heightValue}px;
     `;
@@ -18905,18 +19088,24 @@
             this.isLeft = this.props.orientation[1] === "w";
         }
         get style() {
-            const { offsetX, offsetY } = this.env.model.getters.getActiveViewport();
-            const sheetId = this.env.model.getters.getActiveSheetId();
             const z = this.props.zone;
-            const leftValue = this.isLeft
-                ? this.env.model.getters.getColDimensions(sheetId, z.left).start
-                : this.env.model.getters.getColDimensions(sheetId, z.right).end;
-            const topValue = this.isTop
-                ? this.env.model.getters.getRowDimensions(sheetId, z.top).start
-                : this.env.model.getters.getRowDimensions(sheetId, z.bottom).end;
+            const col = this.isLeft ? z.left : z.right;
+            const row = this.isTop ? z.top : z.bottom;
+            const rect = this.env.model.getters.getVisibleRect({
+                left: col,
+                right: col,
+                top: row,
+                bottom: row,
+            });
+            // Don't show if not visible in the viewport
+            if (rect.width * rect.height === 0) {
+                return `display:none`;
+            }
+            const leftValue = this.isLeft ? rect.x : rect.x + rect.width;
+            const topValue = this.isTop ? rect.y : rect.y + rect.height;
             return `
-      left:${leftValue + HEADER_WIDTH - offsetX - AUTOFILL_EDGE_LENGTH / 2}px;
-      top:${topValue + HEADER_HEIGHT - offsetY - AUTOFILL_EDGE_LENGTH / 2}px;
+      left:${leftValue - AUTOFILL_EDGE_LENGTH / 2}px;
+      top:${topValue - AUTOFILL_EDGE_LENGTH / 2}px;
       background-color:${this.props.color};
     `;
         }
@@ -18934,7 +19123,6 @@
     class Highlight extends owl.Component {
         constructor() {
             super(...arguments);
-            this.highlightRef = owl.useRef("highlight");
             this.highlightState = owl.useState({
                 shiftingMode: "none",
             });
@@ -18978,16 +19166,15 @@
                 // to be changed when refactoring the 'edition' plugin
                 this.env.model.dispatch("STOP_COMPOSER_RANGE_SELECTION");
             };
-            dragAndDropBeyondTheViewport(this.highlightRef.el.parentElement, this.env, mouseMove, mouseUp);
+            dragAndDropBeyondTheViewport(this.env, mouseMove, mouseUp);
         }
         onMoveHighlight(clientX, clientY) {
             this.highlightState.shiftingMode = "isMoving";
             const z = this.props.zone;
-            const parent = this.highlightRef.el.parentElement;
-            const position = parent.getBoundingClientRect();
+            const position = gridOverlayPosition();
             const activeSheetId = this.env.model.getters.getActiveSheetId();
-            const initCol = this.env.model.getters.getColIndex(clientX - position.left - HEADER_WIDTH);
-            const initRow = this.env.model.getters.getRowIndex(clientY - position.top - HEADER_HEIGHT);
+            const initCol = this.env.model.getters.getColIndex(clientX - position.left);
+            const initRow = this.env.model.getters.getRowIndex(clientY - position.top);
             const deltaColMin = -z.left;
             const deltaColMax = this.env.model.getters.getNumberCols(activeSheetId) - z.right - 1;
             const deltaRowMin = -z.top;
@@ -19026,7 +19213,7 @@
                 // to be changed when refactoring the 'edition' plugin
                 this.env.model.dispatch("STOP_COMPOSER_RANGE_SELECTION");
             };
-            dragAndDropBeyondTheViewport(parent, this.env, mouseMove, mouseUp);
+            dragAndDropBeyondTheViewport(this.env, mouseMove, mouseUp);
         }
     }
     Highlight.template = "o-spreadsheet-Highlight";
@@ -19384,14 +19571,18 @@
     `;
         }
         get vScrollbarStyle() {
+            const { y } = this.env.model.getters.getMainViewportRect();
+            const { yRatio } = this.env.model.getters.getFrozenSheetViewRatio(this.env.model.getters.getActiveSheetId());
             return `
-      ${this.env.isDashboard() ? "width: 0px;" : ""}
-      top: ${this.env.isDashboard() ? 0 : HEADER_HEIGHT}px;`;
+      ${this.env.isDashboard() || yRatio >= 1 ? "width: 0px;" : ""}
+      top: ${y + (this.env.isDashboard() ? 0 : HEADER_HEIGHT)}px;`;
         }
         get hScrollbarStyle() {
+            const { x } = this.env.model.getters.getMainViewportRect();
+            const { xRatio } = this.env.model.getters.getFrozenSheetViewRatio(this.env.model.getters.getActiveSheetId());
             return `
-      ${this.env.isDashboard() ? "width: 0px;" : ""}
-      left: ${this.env.isDashboard() ? 0 : HEADER_WIDTH}px;`;
+      ${this.env.isDashboard() || xRatio >= 1 ? "width: 0px;" : ""}
+      left: ${x + (this.env.isDashboard() ? 0 : HEADER_WIDTH)}px;`;
         }
         get cellPopover() {
             if (this.menuState.isOpen) {
@@ -19437,19 +19628,25 @@
             const scrollBarWidth = this.env.isDashboard() ? 0 : SCROLLBAR_WIDTH$1;
             const currentHeight = this.gridEl.clientHeight - scrollBarWidth;
             const currentWidth = this.gridEl.clientWidth - scrollBarWidth;
-            const { height: viewportHeight, width: viewportWidth } = this.env.model.getters.getViewportDimensionWithHeaders();
+            const { height: viewportHeight, width: viewportWidth } = this.env.model.getters.getSheetViewDimensionWithHeaders();
             if (currentHeight != viewportHeight || currentWidth !== viewportWidth) {
-                this.env.model.dispatch("RESIZE_VIEWPORT", {
-                    height: currentHeight - (this.env.isDashboard() ? 0 : HEADER_HEIGHT),
-                    width: currentWidth - (this.env.isDashboard() ? 0 : HEADER_WIDTH),
+                const { top: gridTop, left: gridLeft } = this.gridEl.getBoundingClientRect();
+                const { top, left } = this.gridOverlay.el.getBoundingClientRect();
+                const gridOffsetX = left - gridLeft;
+                const gridOffsetY = top - gridTop;
+                this.env.model.dispatch("RESIZE_SHEETVIEW", {
+                    width: currentWidth - gridOffsetX,
+                    height: currentHeight - gridOffsetY,
+                    gridOffsetX,
+                    gridOffsetY,
                 });
             }
         }
         onScroll() {
-            const { offsetScrollbarX, offsetScrollbarY } = this.env.model.getters.getActiveViewport();
+            const { offsetScrollbarX, offsetScrollbarY } = this.env.model.getters.getActiveSheetScrollInfo();
             if (offsetScrollbarX !== this.hScrollbar.scroll ||
                 offsetScrollbarY !== this.vScrollbar.scroll) {
-                const { maxOffsetX, maxOffsetY } = this.env.model.getters.getMaximumViewportOffset(this.env.model.getters.getActiveSheet());
+                const { maxOffsetX, maxOffsetY } = this.env.model.getters.getMaximumSheetOffset();
                 this.env.model.dispatch("SET_VIEWPORT_OFFSET", {
                     offsetX: Math.min(this.hScrollbar.scroll, maxOffsetX),
                     offsetY: Math.min(this.vScrollbar.scroll, maxOffsetY),
@@ -19465,30 +19662,25 @@
         }
         getAutofillPosition() {
             const zone = this.env.model.getters.getSelectedZone();
-            const sheetId = this.env.model.getters.getActiveSheetId();
-            const { offsetX, offsetY } = this.env.model.getters.getActiveViewport();
-            const col = this.env.model.getters.getColDimensions(sheetId, zone.right);
-            const row = this.env.model.getters.getRowDimensions(sheetId, zone.bottom);
+            const rect = this.env.model.getters.getVisibleRect(zone);
             return {
-                left: col.end - AUTOFILL_EDGE_LENGTH / 2 + HEADER_WIDTH - offsetX,
-                top: row.end - AUTOFILL_EDGE_LENGTH / 2 + HEADER_HEIGHT - offsetY,
+                left: rect.x + rect.width - AUTOFILL_EDGE_LENGTH / 2,
+                top: rect.y + rect.height - AUTOFILL_EDGE_LENGTH / 2,
             };
         }
         isAutoFillActive() {
             const zone = this.env.model.getters.getSelectedZone();
-            const sheetId = this.env.model.getters.getActiveSheetId();
-            const { width, height } = this.env.model.getters.getViewportDimension();
-            const { offsetX, offsetY } = this.env.model.getters.getActiveViewport();
-            const rightCol = this.env.model.getters.getColDimensions(sheetId, zone.right);
-            const bottomRow = this.env.model.getters.getRowDimensions(sheetId, zone.bottom);
-            return (rightCol.end <= offsetX + width &&
-                rightCol.end > offsetX &&
-                bottomRow.end <= offsetY + height &&
-                bottomRow.end > offsetY);
+            const rect = this.env.model.getters.getVisibleRect({
+                left: zone.right,
+                right: zone.right,
+                top: zone.bottom,
+                bottom: zone.bottom,
+            });
+            return !(rect.width === 0 || rect.height === 0);
         }
         drawGrid() {
             //reposition scrollbar
-            const { offsetScrollbarX, offsetScrollbarY } = this.env.model.getters.getActiveViewport();
+            const { offsetScrollbarX, offsetScrollbarY } = this.env.model.getters.getActiveSheetScrollInfo();
             this.hScrollbar.scroll = offsetScrollbarX;
             this.vScrollbar.scroll = offsetScrollbarY;
             // check for position changes
@@ -19503,7 +19695,7 @@
                 dpr,
                 thinLineWidth,
             };
-            const { width, height } = this.env.model.getters.getViewportDimensionWithHeaders();
+            const { width, height } = this.env.model.getters.getSheetViewDimensionWithHeaders();
             canvas.style.width = `${width}px`;
             canvas.style.height = `${height}px`;
             canvas.width = width * dpr;
@@ -19581,7 +19773,6 @@
                 this.env.model.selection.selectCell(col, row);
                 return;
             }
-            const sheetId = this.env.model.getters.getActiveSheetId();
             this.closeOpenedPopover();
             if (this.env.model.getters.getEditionMode() === "editing") {
                 this.env.model.dispatch("STOP_EDITION");
@@ -19598,64 +19789,22 @@
             this.checkSheetChanges();
             let prevCol = col;
             let prevRow = row;
-            let isEdgeScrolling = false;
-            let timeOutId = null;
-            let timeoutDelay = 0;
-            let currentEv;
-            const onMouseMove = (ev) => {
-                currentEv = ev;
-                if (timeOutId) {
-                    return;
-                }
-                const [x, y] = this.getCoordinates(currentEv);
-                isEdgeScrolling = false;
-                timeoutDelay = 0;
-                const colEdgeScroll = this.env.model.getters.getEdgeScrollCol(x);
-                const rowEdgeScroll = this.env.model.getters.getEdgeScrollRow(y);
-                const { left, right, top, bottom } = this.env.model.getters.getActiveViewport();
-                let col, row;
-                if (colEdgeScroll.canEdgeScroll) {
-                    col = colEdgeScroll.direction > 0 ? right : left - 1;
-                }
-                else {
-                    col = this.env.model.getters.getColIndex(x);
-                    col = col === -1 ? prevCol : col;
-                }
-                if (rowEdgeScroll.canEdgeScroll) {
-                    row = rowEdgeScroll.direction > 0 ? bottom : top - 1;
-                }
-                else {
-                    row = this.env.model.getters.getRowIndex(y);
-                    row = row === -1 ? prevRow : row;
-                }
-                isEdgeScrolling = colEdgeScroll.canEdgeScroll || rowEdgeScroll.canEdgeScroll;
-                timeoutDelay = Math.min(colEdgeScroll.canEdgeScroll ? colEdgeScroll.delay : MAX_DELAY, rowEdgeScroll.canEdgeScroll ? rowEdgeScroll.delay : MAX_DELAY);
-                if (col !== prevCol || row !== prevRow) {
-                    prevCol = col;
-                    prevRow = row;
-                    this.env.model.selection.setAnchorCorner(col, row);
-                }
-                if (isEdgeScrolling) {
-                    const offsetX = this.env.model.getters.getColDimensions(sheetId, left + colEdgeScroll.direction).start;
-                    const offsetY = this.env.model.getters.getRowDimensions(sheetId, top + rowEdgeScroll.direction).start;
-                    this.env.model.dispatch("SET_VIEWPORT_OFFSET", { offsetX, offsetY });
-                    timeOutId = setTimeout(() => {
-                        timeOutId = null;
-                        onMouseMove(currentEv);
-                    }, Math.round(timeoutDelay));
+            const onMouseMove = (col, row) => {
+                if ((col !== prevCol && col != -1) || (row !== prevRow && row != -1)) {
+                    prevCol = col === -1 ? prevCol : col;
+                    prevRow = row === -1 ? prevRow : row;
+                    this.env.model.selection.setAnchorCorner(prevCol, prevRow);
                 }
             };
-            const onMouseUp = (ev) => {
-                clearTimeout(timeOutId);
+            const onMouseUp = () => {
                 this.env.model.dispatch("STOP_SELECTION_INPUT");
-                this.gridOverlay.el.removeEventListener("mousemove", onMouseMove);
                 if (this.env.model.getters.isPaintingFormat()) {
                     this.env.model.dispatch("PASTE", {
                         target: this.env.model.getters.getSelectedZones(),
                     });
                 }
             };
-            startDnd(onMouseMove, onMouseUp);
+            dragAndDropBeyondTheViewport(this.env, onMouseMove, onMouseUp);
         }
         onDoubleClick(ev) {
             const [col, row] = this.getCartesianCoordinates(ev);
@@ -19682,29 +19831,9 @@
                 ArrowRight: { direction: "right", delta: [1, 0] },
                 ArrowUp: { direction: "up", delta: [0, -1] },
             };
-            const { direction, delta } = arrowMap[ev.key];
+            const { direction } = arrowMap[ev.key];
             if (ev.shiftKey) {
-                const oldZone = this.env.model.getters.getSelectedZone();
                 this.env.model.selection.resizeAnchorZone(direction, ev.ctrlKey ? "end" : "one");
-                const newZone = this.env.model.getters.getSelectedZone();
-                const viewport = this.env.model.getters.getActiveViewport();
-                const sheetId = this.env.model.getters.getActiveSheetId();
-                let { col, row } = findCellInNewZone(oldZone, newZone);
-                col = Math.min(col, this.env.model.getters.getNumberCols(sheetId) - 1);
-                row = Math.min(row, this.env.model.getters.getNumberRows(sheetId) - 1);
-                const { left, right, top, bottom, offsetX, offsetY } = viewport;
-                const newOffsetX = col < left || col > right - 1
-                    ? this.env.model.getters.getColDimensions(sheetId, left + delta[0]).start
-                    : offsetX;
-                const newOffsetY = row < top || row > bottom - 1
-                    ? this.env.model.getters.getRowDimensions(sheetId, top + delta[1]).start
-                    : offsetY;
-                if (newOffsetX !== offsetX || newOffsetY !== offsetY) {
-                    this.env.model.dispatch("SET_VIEWPORT_OFFSET", {
-                        offsetX: newOffsetX,
-                        offsetY: newOffsetY,
-                    });
-                }
             }
             else {
                 this.env.model.selection.moveAnchorCell(direction, ev.ctrlKey ? "end" : "one");
@@ -21600,7 +21729,7 @@
             background: convertColor({ rgb: chartData.backgroundColor }) || "#FFFFFF",
             verticalAxisPosition: chartData.verticalAxisPosition,
             legendPosition: chartData.legendPosition,
-            stackedBar: chartData.stackedBar || false,
+            stacked: chartData.stacked || false,
             labelsAsText: false,
         };
     }
@@ -21726,6 +21855,9 @@
                 conditionalFormats: convertConditionalFormats(sheet.cfs, data.dxfs, warningManager),
                 figures: convertFigures(sheet),
                 isVisible: sheet.isVisible,
+                panes: sheetOptions
+                    ? { xSplit: sheetOptions.pane.xSplit, ySplit: sheetOptions.pane.ySplit }
+                    : { xSplit: 0, ySplit: 0 },
             };
         });
     }
@@ -22663,7 +22795,7 @@
                     legendPosition: DRAWING_LEGEND_POSITION_CONVERSION_MAP[this.extractChildAttr(rootChartElement, "c:legendPos", "val", {
                         default: "b",
                     }).asString()],
-                    stackedBar: barChartGrouping === "stacked",
+                    stacked: barChartGrouping === "stacked",
                     fontColor: "000000",
                 };
             })[0];
@@ -22838,6 +22970,7 @@
         }
         extractSheetViews(worksheet) {
             return this.mapOnElements({ parent: worksheet, query: "sheetView" }, (sheetViewElement) => {
+                const paneElement = this.querySelector(sheetViewElement, "pane");
                 return {
                     tabSelected: this.extractAttr(sheetViewElement, "tabSelected", {
                         default: false,
@@ -22851,6 +22984,14 @@
                     showRowColHeaders: this.extractAttr(sheetViewElement, "showRowColHeaders", {
                         default: true,
                     }).asBool(),
+                    pane: {
+                        xSplit: paneElement
+                            ? this.extractAttr(paneElement, "xSplit", { default: 0 }).asNum()
+                            : 0,
+                        ySplit: paneElement
+                            ? this.extractAttr(paneElement, "ySplit", { default: 0 }).asNum()
+                            : 0,
+                    },
                 };
             });
         }
@@ -23612,7 +23753,7 @@
                         chart.data.background = BACKGROUND_CHART_COLOR;
                         chart.data.verticalAxisPosition = "left";
                         chart.data.legendPosition = "top";
-                        chart.data.stackedBar = false;
+                        chart.data.stacked = false;
                     }
                 }
                 return data;
@@ -24714,11 +24855,15 @@
                             const id = this.nextId.toString();
                             this.history.update("nextId", this.nextId + 1);
                             const chart = (_a = this.charts[fig.id]) === null || _a === void 0 ? void 0 : _a.copyForSheetId(cmd.sheetIdTo);
-                            // TODO:
-                            // This is not really correct, it should be the role of figures to
-                            // duplicate a figure.
-                            this.addFigure(id, cmd.sheetIdTo, { x: fig.x, y: fig.y }, { width: fig.width, height: fig.height });
-                            this.history.update("charts", id, chart);
+                            if (chart) {
+                                this.dispatch("CREATE_CHART", {
+                                    id,
+                                    position: { x: fig.x, y: fig.y },
+                                    size: { width: fig.width, height: fig.height },
+                                    definition: chart.getDefinition(),
+                                    sheetId: cmd.sheetIdTo,
+                                });
+                            }
                         }
                     }
                     break;
@@ -25048,10 +25193,10 @@
                 return 25 /* InvalidSheetId */;
             const ruleIndex = this.cfRules[sheetId].findIndex((cf) => cf.id === cfId);
             if (ruleIndex === -1)
-                return 68 /* InvalidConditionalFormatId */;
+                return 69 /* InvalidConditionalFormatId */;
             const cfIndex2 = direction === "up" ? ruleIndex - 1 : ruleIndex + 1;
             if (cfIndex2 < 0 || cfIndex2 >= this.cfRules[sheetId].length) {
-                return 68 /* InvalidConditionalFormatId */;
+                return 69 /* InvalidConditionalFormatId */;
             }
             return 0 /* Success */;
         }
@@ -25287,7 +25432,7 @@
         checkFigureExists(sheetId, figureId) {
             var _a;
             if (((_a = this.figures[sheetId]) === null || _a === void 0 ? void 0 : _a[figureId]) === undefined) {
-                return 67 /* FigureDoesNotExist */;
+                return 68 /* FigureDoesNotExist */;
             }
             return 0 /* Success */;
         }
@@ -25691,9 +25836,9 @@
             return indexes.find((index) => this.getters.doesHeaderExist(sheetId, dimension, index) &&
                 !this.isHeaderHidden(sheetId, dimension, index));
         }
-        findLastVisibleColRowIndex(sheetId, dimension) {
+        findLastVisibleColRowIndex(sheetId, dimension, indexes) {
             let lastIndex;
-            for (lastIndex = this.getters.getNumberHeaders(sheetId, dimension) - 1; lastIndex >= 0; lastIndex--) {
+            for (lastIndex = indexes.last; lastIndex >= indexes.first; lastIndex--) {
                 if (!this.isHeaderHidden(sheetId, dimension, lastIndex)) {
                     return lastIndex;
                 }
@@ -25785,9 +25930,9 @@
             switch (cmd.type) {
                 case "ADD_MERGE":
                     if (force) {
-                        return 0 /* Success */;
+                        return this.checkValidations(cmd, this.checkFrozenPanes);
                     }
-                    return this.checkValidations(cmd, this.checkDestructiveMerge, this.checkOverlap);
+                    return this.checkValidations(cmd, this.checkDestructiveMerge, this.checkOverlap, this.checkFrozenPanes);
                 case "UPDATE_CELL":
                     return this.checkMergedContentUpdate(cmd);
                 default:
@@ -26008,6 +26153,19 @@
                     if (zone !== zone2 && overlap(zone, zone2)) {
                         return 62 /* MergeOverlap */;
                     }
+                }
+            }
+            return 0 /* Success */;
+        }
+        checkFrozenPanes({ sheetId, target }) {
+            const sheet = this.getters.tryGetSheet(sheetId);
+            if (!sheet)
+                return 0 /* Success */;
+            const { xSplit, ySplit } = this.getters.getPaneDivisions(sheetId);
+            for (const zone of target) {
+                if ((zone.left < xSplit && zone.right >= xSplit) ||
+                    (zone.top < ySplit && zone.bottom >= ySplit)) {
+                    return 73 /* FrozenPaneOverlap */;
                 }
             }
             return 0 /* Success */;
@@ -26238,13 +26396,24 @@
                     return this.orderedSheetIds.length > 1
                         ? 0 /* Success */
                         : 8 /* NotEnoughSheets */;
-                case "REMOVE_COLUMNS_ROWS":
+                case "REMOVE_COLUMNS_ROWS": {
                     const length = cmd.dimension === "COL"
                         ? this.getNumberCols(cmd.sheetId)
                         : this.getNumberRows(cmd.sheetId);
                     return length > cmd.elements.length
                         ? 0 /* Success */
                         : 7 /* NotEnoughElements */;
+                }
+                case "FREEZE_ROWS": {
+                    return cmd.quantity >= 1 && cmd.quantity < this.getNumberRows(cmd.sheetId)
+                        ? 0 /* Success */
+                        : 72 /* InvalidFreezeQuantity */;
+                }
+                case "FREEZE_COLUMNS": {
+                    return cmd.quantity >= 1 && cmd.quantity < this.getNumberCols(cmd.sheetId)
+                        ? 0 /* Success */
+                        : 72 /* InvalidFreezeQuantity */;
+                }
                 default:
                     return 0 /* Success */;
             }
@@ -26298,12 +26467,28 @@
                 case "UPDATE_CELL_POSITION":
                     this.updateCellPosition(cmd);
                     break;
+                case "FREEZE_COLUMNS":
+                    this.setPaneDivisions(cmd.sheetId, cmd.quantity, "COL");
+                    break;
+                case "FREEZE_ROWS":
+                    this.setPaneDivisions(cmd.sheetId, cmd.quantity, "ROW");
+                    break;
+                case "UNFREEZE_ROWS":
+                    this.setPaneDivisions(cmd.sheetId, 0, "ROW");
+                    break;
+                case "UNFREEZE_COLUMNS":
+                    this.setPaneDivisions(cmd.sheetId, 0, "COL");
+                    break;
+                case "UNFREEZE_COLUMNS_ROWS":
+                    this.setPaneDivisions(cmd.sheetId, 0, "COL");
+                    this.setPaneDivisions(cmd.sheetId, 0, "ROW");
             }
         }
         // ---------------------------------------------------------------------------
         // Import/Export
         // ---------------------------------------------------------------------------
         import(data) {
+            var _a, _b;
             // we need to fill the sheetIds mapping first, because otherwise formulas
             // that depends on a sheet not already imported will not be able to be
             // compiled
@@ -26320,6 +26505,10 @@
                     rows: createDefaultRows(rowNumber),
                     areGridLinesVisible: sheetData.areGridLinesVisible === undefined ? true : sheetData.areGridLinesVisible,
                     isVisible: sheetData.isVisible,
+                    panes: {
+                        xSplit: ((_a = sheetData.panes) === null || _a === void 0 ? void 0 : _a.xSplit) || 0,
+                        ySplit: ((_b = sheetData.panes) === null || _b === void 0 ? void 0 : _b.ySplit) || 0,
+                    },
                 };
                 this.orderedSheetIds.push(sheet.id);
                 this.sheets[sheet.id] = sheet;
@@ -26328,7 +26517,7 @@
         exportSheets(data) {
             data.sheets = this.orderedSheetIds.filter(isDefined$1).map((id) => {
                 const sheet = this.sheets[id];
-                return {
+                const sheetData = {
                     id: sheet.id,
                     name: sheet.name,
                     colNumber: sheet.numberOfCols,
@@ -26342,6 +26531,10 @@
                     areGridLinesVisible: sheet.areGridLinesVisible === undefined ? true : sheet.areGridLinesVisible,
                     isVisible: sheet.isVisible,
                 };
+                if (sheet.panes.xSplit || sheet.panes.ySplit) {
+                    sheetData.panes = sheet.panes;
+                }
+                return sheetData;
             });
         }
         export(data) {
@@ -26496,6 +26689,19 @@
                 right: this.getNumberCols(sheetId) - 1,
             };
         }
+        getPaneDivisions(sheetId) {
+            return this.getSheet(sheetId).panes;
+        }
+        setPaneDivisions(sheetId, base, dimension) {
+            const panes = { ...this.getPaneDivisions(sheetId) };
+            if (dimension === "COL") {
+                panes.xSplit = base;
+            }
+            else if (dimension === "ROW") {
+                panes.ySplit = base;
+            }
+            this.history.update("sheets", sheetId, "panes", panes);
+        }
         // ---------------------------------------------------------------------------
         // Row/Col manipulation
         // ---------------------------------------------------------------------------
@@ -26570,6 +26776,10 @@
                 rows: createDefaultRows(rowNumber),
                 areGridLinesVisible: true,
                 isVisible: true,
+                panes: {
+                    xSplit: 0,
+                    ySplit: 0,
+                },
             };
             const orderedSheetIds = this.orderedSheetIds.slice();
             orderedSheetIds.splice(position, 0, sheet.id);
@@ -26726,6 +26936,10 @@
             }
             const numberOfCols = this.sheets[sheet.id].numberOfCols;
             this.history.update("sheets", sheet.id, "numberOfCols", numberOfCols - columns.length);
+            const count = columns.filter((col) => col < sheet.panes.xSplit).length;
+            if (count) {
+                this.setPaneDivisions(sheet.id, sheet.panes.xSplit - count, "COL");
+            }
         }
         /**
          * Delete row. This requires a lot of handling:
@@ -26748,19 +26962,31 @@
                 // Effectively delete the element and recompute the left-right/top-bottom.
                 group.map((row) => this.updateRowsStructureOnDeletion(row, sheet));
             }
+            const count = rows.filter((row) => row < sheet.panes.ySplit).length;
+            if (count) {
+                this.setPaneDivisions(sheet.id, sheet.panes.ySplit - count, "ROW");
+            }
         }
         addColumns(sheet, column, position, quantity) {
+            const index = position === "before" ? column : column + 1;
             // Move the cells.
-            this.moveCellsOnAddition(sheet, position === "before" ? column : column + 1, quantity, "columns");
+            this.moveCellsOnAddition(sheet, index, quantity, "columns");
             const numberOfCols = this.sheets[sheet.id].numberOfCols;
             this.history.update("sheets", sheet.id, "numberOfCols", numberOfCols + quantity);
+            if (index < sheet.panes.xSplit) {
+                this.setPaneDivisions(sheet.id, sheet.panes.xSplit + quantity, "COL");
+            }
         }
         addRows(sheet, row, position, quantity) {
+            const index = position === "before" ? row : row + 1;
             this.addEmptyRows(sheet, quantity);
             // Move the cells.
-            this.moveCellsOnAddition(sheet, position === "before" ? row : row + 1, quantity, "rows");
+            this.moveCellsOnAddition(sheet, index, quantity, "rows");
             // Recompute the left-right/top-bottom.
             this.updateRowsStructureOnAddition(sheet, row, quantity);
+            if (index < sheet.panes.ySplit) {
+                this.setPaneDivisions(sheet.id, sheet.panes.ySplit + quantity, "ROW");
+            }
         }
         moveCellOnColumnsDeletion(sheet, deletedColumn) {
             for (let [index, row] of Object.entries(sheet.rows)) {
@@ -26978,6 +27204,7 @@
         "isEmpty",
         "getSheetSize",
         "getSheetZone",
+        "getPaneDivisions",
     ];
 
     /**
@@ -27355,8 +27582,7 @@
                 return;
             }
             const { ctx, thinLineWidth } = renderingContext;
-            const viewport = this.getters.getActiveViewport();
-            const { x, y, width, height } = this.getters.getRect(this.autofillZone, viewport);
+            const { x, y, width, height } = this.getters.getVisibleRect(this.autofillZone);
             if (width > 0 && height > 0) {
                 ctx.strokeStyle = "black";
                 ctx.lineWidth = thinLineWidth;
@@ -27653,7 +27879,7 @@
                         cellPopoverRegistry.get(cmd.popoverType);
                     }
                     catch (error) {
-                        return 69 /* InvalidCellPopover */;
+                        return 70 /* InvalidCellPopover */;
                     }
                     return 0 /* Success */;
                 default:
@@ -27680,9 +27906,8 @@
         getCellPopover({ col, row }) {
             var _a, _b;
             const sheetId = this.getters.getActiveSheetId();
-            const viewport = this.getters.getActiveViewport();
             if (this.persistentPopover &&
-                this.getters.isVisibleInViewport(this.persistentPopover.col, this.persistentPopover.row, viewport)) {
+                this.getters.isVisibleInViewport(sheetId, this.persistentPopover.col, this.persistentPopover.row)) {
                 const mainPosition = this.getters.getMainCellPosition(sheetId, this.persistentPopover.col, this.persistentPopover.row);
                 const popover = (_b = (_a = cellPopoverRegistry
                     .get(this.persistentPopover.type)).onOpen) === null || _b === void 0 ? void 0 : _b.call(_a, mainPosition, this.getters);
@@ -27695,7 +27920,7 @@
             }
             if (col === undefined ||
                 row === undefined ||
-                !this.getters.isVisibleInViewport(col, row, viewport)) {
+                !this.getters.isVisibleInViewport(sheetId, col, row)) {
                 return { isOpen: false };
             }
             const mainPosition = this.getters.getMainCellPosition(sheetId, col, row);
@@ -27711,8 +27936,7 @@
                 };
         }
         computePopoverProps({ col, row }, corner) {
-            const viewport = this.getters.getActiveViewport();
-            const { width, height } = this.getters.getRect(positionToZone({ col, row }), viewport);
+            const { width, height } = this.getters.getVisibleRect(positionToZone({ col, row }));
             return {
                 coordinates: this.computePopoverPosition({ col, row }, corner),
                 cellWidth: -width,
@@ -27721,14 +27945,13 @@
         }
         computePopoverPosition({ col, row }, corner) {
             const sheetId = this.getters.getActiveSheetId();
-            const viewport = this.getters.getActiveViewport();
             const merge = this.getters.getMerge(sheetId, col, row);
             if (merge) {
                 col = corner === "TopRight" ? merge.right : merge.left;
                 row = corner === "TopRight" ? merge.top : merge.bottom;
             }
             // x, y are relative to the canvas
-            const { x, y, width, height } = this.getters.getRect(positionToZone({ col, row }), viewport);
+            const { x, y, width, height } = this.getters.getVisibleRect(positionToZone({ col, row }));
             switch (corner) {
                 case "BottomLeft":
                     return { x, y: y + height };
@@ -27854,6 +28077,13 @@
                         clipboardHeight * clipboardWidth !== 1) {
                         return 2 /* WillRemoveExistingMerge */;
                     }
+                }
+            }
+            const { xSplit, ySplit } = this.getters.getPaneDivisions(sheetId);
+            for (const zone of this.getPasteZones(target)) {
+                if ((zone.left < xSplit && zone.right >= xSplit) ||
+                    (zone.top < ySplit && zone.bottom >= ySplit)) {
+                    return 73 /* FrozenPaneOverlap */;
                 }
             }
             return 0 /* Success */;
@@ -28139,7 +28369,6 @@
         }
         drawClipboard(renderingContext) {
             const { ctx, thinLineWidth } = renderingContext;
-            const viewport = this.getters.getActiveViewport();
             if (this.sheetId !== this.getters.getActiveSheetId() || !this.zones || !this.zones.length) {
                 return;
             }
@@ -28147,7 +28376,7 @@
             ctx.strokeStyle = SELECTION_BORDER_COLOR;
             ctx.lineWidth = 3.3 * thinLineWidth;
             for (const zone of this.zones) {
-                const { x, y, width, height } = this.getters.getRect(zone, viewport);
+                const { x, y, width, height } = this.getters.getVisibleRect(zone);
                 if (width > 0 && height > 0) {
                     ctx.strokeRect(x, y, width, height);
                 }
@@ -28182,7 +28411,7 @@
         }
         isPasteAllowed(target, option) {
             if (target.length === 0) {
-                return 70 /* EmptyTarget */;
+                return 71 /* EmptyTarget */;
             }
             if ((option === null || option === void 0 ? void 0 : option.pasteOption) !== undefined) {
                 return 20 /* WrongFigurePasteOption */;
@@ -28582,7 +28811,7 @@
                 [...new Set([...usedColors, ...this.customColors])]
                     .filter(isColorValid)
                     .map((c) => toHex(c).toLowerCase())),
-            ]).filter((color) => !COLORS.includes(color));
+            ]).filter((color) => !COLOR_PICKER_DEFAULTS.includes(color));
         }
         getColorsFromCells(cells) {
             var _a, _b;
@@ -28643,7 +28872,7 @@
         }
         tryToAddColor(color) {
             const formattedColor = toHex(color).toLowerCase();
-            if (color && !COLORS.includes(formattedColor)) {
+            if (color && !COLOR_PICKER_DEFAULTS.includes(formattedColor)) {
                 this.customColors.add(formattedColor);
             }
         }
@@ -29547,14 +29776,13 @@
         drawGrid(renderingContext) {
             const { ctx } = renderingContext;
             const sheetId = this.getters.getActiveSheetId();
-            const viewport = this.getters.getActiveViewport();
             for (const match of this.searchMatches) {
                 const merge = this.getters.getMerge(sheetId, match.col, match.row);
                 const left = merge ? merge.left : match.col;
                 const right = merge ? merge.right : match.col;
                 const top = merge ? merge.top : match.row;
                 const bottom = merge ? merge.bottom : match.row;
-                const { x, y, width, height } = this.getters.getRect({ top, left, right, bottom }, viewport);
+                const { x, y, width, height } = this.getters.getVisibleRect({ top, left, right, bottom });
                 if (width > 0 && height > 0) {
                     ctx.fillStyle = BACKGROUND_COLOR;
                     ctx.fillRect(x, y, width, height);
@@ -29666,7 +29894,6 @@
         drawGrid(renderingContext) {
             // rendering selection highlights
             const { ctx, thinLineWidth } = renderingContext;
-            const viewport = this.getters.getActiveViewport();
             const sheetId = this.getters.getActiveSheetId();
             const lineWidth = 3 * thinLineWidth;
             ctx.lineWidth = lineWidth;
@@ -29682,7 +29909,7 @@
             // For every highlight in the sheet, deduplicated by zone
             highlights.findIndex((h) => isEqual(h.zone, highlight.zone) && h.sheetId === sheetId) ===
                 index)) {
-                const { x, y, width, height } = this.getters.getRect(h.zone, viewport);
+                const { x, y, width, height } = this.getters.getVisibleRect(h.zone);
                 if (width > 0 && height > 0) {
                     ctx.strokeStyle = h.color;
                     ctx.strokeRect(x + lineWidth / 2, y + lineWidth / 2, width - lineWidth, height - lineWidth);
@@ -29705,44 +29932,18 @@
         // Getters
         // ---------------------------------------------------------------------------
         /**
-         * Returns the size, start and end coordinates of a column
-         */
-        getColDimensions(sheetId, col) {
-            const start = this.getColRowOffset("COL", 0, col, sheetId);
-            const size = this.getters.getColSize(sheetId, col);
-            const isColHidden = this.getters.isColHidden(sheetId, col);
-            return {
-                start,
-                size,
-                end: start + (isColHidden ? 0 : size),
-            };
-        }
-        /**
          * Returns the size, start and end coordinates of a column relative to the left
          * column of the current viewport
          */
         getColDimensionsInViewport(sheetId, col) {
-            const { left } = this.getters.getActiveViewport();
-            const start = this.getColRowOffset("COL", left, col, sheetId);
+            const left = Math.min(...this.getters.getSheetViewVisibleCols());
+            const start = this.getters.getColRowOffsetInViewport("COL", left, col);
             const size = this.getters.getColSize(sheetId, col);
             const isColHidden = this.getters.isColHidden(sheetId, col);
             return {
                 start,
                 size: size,
                 end: start + (isColHidden ? 0 : size),
-            };
-        }
-        /**
-         * Returns the size, start and end coordinates of a row
-         */
-        getRowDimensions(sheetId, row) {
-            const start = this.getColRowOffset("ROW", 0, row, sheetId);
-            const size = this.getters.getRowSize(sheetId, row);
-            const isRowHidden = this.getters.isRowHidden(sheetId, row);
-            return {
-                start,
-                size: size,
-                end: start + (isRowHidden ? 0 : size),
             };
         }
         /**
@@ -29750,8 +29951,8 @@
          * of the current viewport
          */
         getRowDimensionsInViewport(sheetId, row) {
-            const { top } = this.getters.getActiveViewport();
-            const start = this.getColRowOffset("ROW", top, row, sheetId);
+            const top = Math.min(...this.getters.getSheetViewVisibleRows());
+            const start = this.getters.getColRowOffsetInViewport("ROW", top, row);
             const size = this.getters.getRowSize(sheetId, row);
             const isRowHidden = this.getters.isRowHidden(sheetId, row);
             return {
@@ -29761,110 +29962,15 @@
             };
         }
         /**
-         * Returns the offset of a header (determined by the dimension) at the given index
-         * based on the referenceIndex given. If start === 0, this method will return
-         * the start attribute of the header.
-         */
-        getColRowOffset(dimension, referenceIndex, index, sheetId = this.getters.getActiveSheetId()) {
-            if (index < referenceIndex) {
-                return -this.getColRowOffset(dimension, index, referenceIndex);
-            }
-            let offset = 0;
-            for (let i = referenceIndex; i < index; i++) {
-                if (this.getters.isHeaderHidden(sheetId, dimension, i)) {
-                    continue;
-                }
-                offset +=
-                    dimension === "COL"
-                        ? this.getters.getColSize(sheetId, i)
-                        : this.getters.getRowSize(sheetId, i);
-            }
-            return offset;
-        }
-        /**
-         * Get the offset of a header (see getColRowOffset), adjusted with the header
+         * Get the offset of a header (see getColRowOffsetInViewport), adjusted with the header
          * size (HEADER_HEIGHT and HEADER_WIDTH)
          */
         getHeaderOffset(dimension, start, index) {
-            let size = this.getColRowOffset(dimension, start, index);
+            let size = this.getters.getColRowOffsetInViewport(dimension, start, index);
             if (!this.getters.isDashboard()) {
                 size += dimension === "ROW" ? HEADER_HEIGHT : HEADER_WIDTH;
             }
             return size;
-        }
-        /**
-         * Get the actual size between two headers.
-         * The size from A to B is the distance between A.start and B.end
-         */
-        getSizeBetweenHeaders(dimension, from, to) {
-            const sheetId = this.getters.getActiveSheetId();
-            let size = 0;
-            for (let i = from; i <= to; i++) {
-                if (this.getters.isHeaderHidden(sheetId, dimension, i)) {
-                    continue;
-                }
-                size +=
-                    dimension === "COL"
-                        ? this.getters.getColSize(sheetId, i)
-                        : this.getters.getRowSize(sheetId, i);
-            }
-            return size;
-        }
-        /**
-         * Computes the coordinates and size to draw the zone on the canvas
-         */
-        getRect(zone, viewport) {
-            const { left, top } = viewport;
-            const x = this.getHeaderOffset("COL", left, zone.left);
-            const width = this.getSizeBetweenHeaders("COL", zone.left, zone.right);
-            const y = this.getHeaderOffset("ROW", top, zone.top);
-            const height = this.getSizeBetweenHeaders("ROW", zone.top, zone.bottom);
-            return { x, y, width, height };
-        }
-        /**
-         * Check if a given position is visible in the viewport.
-         */
-        isVisibleInViewport(col, row, viewport) {
-            const { right, left, top, bottom } = viewport;
-            return row <= bottom && row >= top && col >= left && col <= right;
-        }
-        getEdgeScrollCol(x) {
-            let canEdgeScroll = false;
-            let direction = 0;
-            let delay = 0;
-            const { width } = this.getters.getViewportDimension();
-            const { width: gridWidth } = this.getters.getMaxViewportSize(this.getters.getActiveSheet());
-            const { left, offsetX } = this.getters.getActiveViewport();
-            if (x < 0 && left > 0) {
-                canEdgeScroll = true;
-                direction = -1;
-                delay = scrollDelay(-x);
-            }
-            else if (x > width && offsetX < gridWidth - width) {
-                canEdgeScroll = true;
-                direction = +1;
-                delay = scrollDelay(x - width);
-            }
-            return { canEdgeScroll, direction, delay };
-        }
-        getEdgeScrollRow(y) {
-            let canEdgeScroll = false;
-            let direction = 0;
-            let delay = 0;
-            const { height } = this.getters.getViewportDimension();
-            const { height: gridHeight } = this.getters.getMaxViewportSize(this.getters.getActiveSheet());
-            const { top, offsetY } = this.getters.getActiveViewport();
-            if (y < 0 && top > 0) {
-                canEdgeScroll = true;
-                direction = -1;
-                delay = scrollDelay(-y);
-            }
-            else if (y > height && offsetY < gridHeight - height) {
-                canEdgeScroll = true;
-                direction = +1;
-                delay = scrollDelay(y - height);
-            }
-            return { canEdgeScroll, direction, delay };
         }
         // ---------------------------------------------------------------------------
         // Grid rendering
@@ -29872,31 +29978,36 @@
         drawGrid(renderingContext, layer) {
             switch (layer) {
                 case 0 /* Background */:
-                    this.boxes = this.getGridBoxes(renderingContext);
+                    this.boxes = this.getGridBoxes();
                     this.drawBackground(renderingContext);
                     this.drawCellBackground(renderingContext);
                     this.drawBorders(renderingContext);
                     this.drawTexts(renderingContext);
                     this.drawIcon(renderingContext);
+                    this.drawFrozenPanes(renderingContext);
                     break;
                 case 7 /* Headers */:
-                    if (this.getters.isDashboard()) {
-                        return;
+                    if (!this.getters.isDashboard()) {
+                        this.drawHeaders(renderingContext);
+                        this.drawFrozenPanesHeaders(renderingContext);
                     }
-                    this.drawHeaders(renderingContext);
                     break;
             }
         }
         drawBackground(renderingContext) {
             const { ctx, thinLineWidth } = renderingContext;
-            const viewport = this.getters.getActiveViewport();
-            const { width, height } = this.getters.getViewportDimensionWithHeaders();
+            const { width, height } = this.getters.getSheetViewDimensionWithHeaders();
             const sheetId = this.getters.getActiveSheetId();
             // white background
             ctx.fillStyle = "#ffffff";
             ctx.fillRect(0, 0, width + CANVAS_SHIFT, height + CANVAS_SHIFT);
             // background grid
-            const { right, left, top, bottom } = viewport;
+            const visibleCols = this.getters.getSheetViewVisibleCols();
+            const left = visibleCols[0];
+            const right = visibleCols[visibleCols.length - 1];
+            const visibleRows = this.getters.getSheetViewVisibleRows();
+            const top = visibleRows[0];
+            const bottom = visibleRows[visibleRows.length - 1];
             if (!this.getters.getGridLinesVisibility(sheetId) || this.getters.isDashboard()) {
                 return;
             }
@@ -29904,22 +30015,16 @@
             ctx.strokeStyle = CELL_BORDER_COLOR;
             ctx.beginPath();
             // vertical lines
-            for (let i = left; i <= right; i++) {
-                if (this.getters.isColHidden(sheetId, i)) {
-                    continue;
-                }
+            for (const i of visibleCols) {
                 const zone = { top, bottom, left: i, right: i };
-                const { x, width: colWidth, height: colHeight } = this.getRect(zone, viewport);
+                const { x, width: colWidth, height: colHeight } = this.getters.getVisibleRect(zone);
                 ctx.moveTo(x + colWidth, 0);
                 ctx.lineTo(x + colWidth, Math.min(height, colHeight + (this.getters.isDashboard() ? 0 : HEADER_HEIGHT)));
             }
             // horizontal lines
-            for (let i = top; i <= bottom; i++) {
-                if (this.getters.isRowHidden(sheetId, i)) {
-                    continue;
-                }
+            for (const i of visibleRows) {
                 const zone = { left, right, top: i, bottom: i };
-                const { y, width: rowWidth, height: rowHeight } = this.getRect(zone, viewport);
+                const { y, width: rowWidth, height: rowHeight } = this.getters.getVisibleRect(zone);
                 ctx.moveTo(0, y + rowHeight);
                 ctx.lineTo(Math.min(width, rowWidth + (this.getters.isDashboard() ? 0 : HEADER_WIDTH)), y + rowHeight);
             }
@@ -30071,9 +30176,13 @@
         }
         drawHeaders(renderingContext) {
             const { ctx, thinLineWidth } = renderingContext;
-            const viewport = this.getters.getActiveViewport();
-            const { right, left, top, bottom } = viewport;
-            const { width, height } = this.getters.getViewportDimensionWithHeaders();
+            const visibleCols = this.getters.getSheetViewVisibleCols();
+            const left = visibleCols[0];
+            const right = visibleCols[visibleCols.length - 1];
+            const visibleRows = this.getters.getSheetViewVisibleRows();
+            const top = visibleRows[0];
+            const bottom = visibleRows[visibleRows.length - 1];
+            const { width, height } = this.getters.getSheetViewDimensionWithHeaders();
             const selection = this.getters.getSelectedZones();
             const sheetId = this.getters.getActiveSheetId();
             const numberOfCols = this.getters.getNumberCols(sheetId);
@@ -30092,17 +30201,17 @@
             // selection background
             ctx.fillStyle = BACKGROUND_HEADER_SELECTED_COLOR;
             for (let zone of selection) {
-                const colZone = intersection(zone, { ...viewport, top: 0, bottom: numberOfRows - 1 });
+                const colZone = intersection(zone, { left, right, top: 0, bottom: numberOfRows - 1 });
                 if (colZone) {
-                    const { x, width } = this.getRect(colZone, viewport);
+                    const { x, width } = this.getters.getVisibleRect(colZone);
                     ctx.fillStyle = activeCols.has(zone.left)
                         ? BACKGROUND_HEADER_ACTIVE_COLOR
                         : BACKGROUND_HEADER_SELECTED_COLOR;
                     ctx.fillRect(x, 0, width, HEADER_HEIGHT);
                 }
-                const rowZone = intersection(zone, { ...viewport, left: 0, right: numberOfCols - 1 });
+                const rowZone = intersection(zone, { top, bottom, left: 0, right: numberOfCols - 1 });
                 if (rowZone) {
-                    const { y, height } = this.getRect(rowZone, viewport);
+                    const { y, height } = this.getters.getVisibleRect(rowZone);
                     ctx.fillStyle = activeRows.has(zone.top)
                         ? BACKGROUND_HEADER_ACTIVE_COLOR
                         : BACKGROUND_HEADER_SELECTED_COLOR;
@@ -30119,31 +30228,67 @@
             ctx.stroke();
             ctx.beginPath();
             // column text + separator
-            for (let i = left; i <= right; i++) {
+            for (const i of visibleCols) {
                 const colSize = this.getters.getColSize(sheetId, i);
-                const isColHidden = this.getters.isColHidden(sheetId, i);
-                if (isColHidden) {
-                    continue;
-                }
                 const colName = numberToLetters(i);
                 ctx.fillStyle = activeCols.has(i) ? "#fff" : TEXT_HEADER_COLOR;
-                let colStart = this.getHeaderOffset("COL", viewport.left, i);
+                let colStart = this.getHeaderOffset("COL", left, i);
                 ctx.fillText(colName, colStart + colSize / 2, HEADER_HEIGHT / 2);
                 ctx.moveTo(colStart + colSize, 0);
                 ctx.lineTo(colStart + colSize, HEADER_HEIGHT);
             }
             // row text + separator
-            for (let i = top; i <= bottom; i++) {
+            for (const i of visibleRows) {
                 const rowSize = this.getters.getRowSize(sheetId, i);
-                const isRowHidden = this.getters.isRowHidden(sheetId, i);
-                if (isRowHidden) {
-                    continue;
-                }
                 ctx.fillStyle = activeRows.has(i) ? "#fff" : TEXT_HEADER_COLOR;
-                let rowStart = this.getHeaderOffset("ROW", viewport.top, i);
+                let rowStart = this.getHeaderOffset("ROW", top, i);
                 ctx.fillText(String(i + 1), HEADER_WIDTH / 2, rowStart + rowSize / 2);
                 ctx.moveTo(0, rowStart + rowSize);
                 ctx.lineTo(HEADER_WIDTH, rowStart + rowSize);
+            }
+            ctx.stroke();
+        }
+        drawFrozenPanesHeaders(renderingContext) {
+            const { ctx, thinLineWidth } = renderingContext;
+            const { x: offsetCorrectionX, y: offsetCorrectionY } = this.getters.getMainViewportCoordinates();
+            const widthCorrection = this.getters.isDashboard() ? 0 : HEADER_WIDTH;
+            const heightCorrection = this.getters.isDashboard() ? 0 : HEADER_HEIGHT;
+            ctx.lineWidth = 6 * thinLineWidth;
+            ctx.strokeStyle = "#BCBCBC";
+            ctx.beginPath();
+            if (offsetCorrectionX) {
+                ctx.moveTo(widthCorrection + offsetCorrectionX, 0);
+                ctx.lineTo(widthCorrection + offsetCorrectionX, heightCorrection);
+            }
+            if (offsetCorrectionY) {
+                ctx.moveTo(0, heightCorrection + offsetCorrectionY);
+                ctx.lineTo(widthCorrection, heightCorrection + offsetCorrectionY);
+            }
+            ctx.stroke();
+        }
+        drawFrozenPanes(renderingContext) {
+            const { ctx, thinLineWidth } = renderingContext;
+            const { x: offsetCorrectionX, y: offsetCorrectionY } = this.getters.getMainViewportCoordinates();
+            const visibleCols = this.getters.getSheetViewVisibleCols();
+            const left = visibleCols[0];
+            const right = visibleCols[visibleCols.length - 1];
+            const visibleRows = this.getters.getSheetViewVisibleRows();
+            const top = visibleRows[0];
+            const bottom = visibleRows[visibleRows.length - 1];
+            const viewport = { left, right, top, bottom };
+            const rect = this.getters.getVisibleRect(viewport);
+            const widthCorrection = this.getters.isDashboard() ? 0 : HEADER_WIDTH;
+            const heightCorrection = this.getters.isDashboard() ? 0 : HEADER_HEIGHT;
+            ctx.lineWidth = 6 * thinLineWidth;
+            ctx.strokeStyle = "#DADFE8";
+            ctx.beginPath();
+            if (offsetCorrectionX) {
+                ctx.moveTo(widthCorrection + offsetCorrectionX, heightCorrection);
+                ctx.lineTo(widthCorrection + offsetCorrectionX, rect.height + heightCorrection);
+            }
+            if (offsetCorrectionY) {
+                ctx.moveTo(widthCorrection, heightCorrection + offsetCorrectionY);
+                ctx.lineTo(rect.width + widthCorrection, heightCorrection + offsetCorrectionY);
             }
             ctx.stroke();
         }
@@ -30176,13 +30321,15 @@
             }
             return align || cell.defaultAlign;
         }
-        createZoneBox(sheetId, zone, viewport) {
-            const { right, left } = viewport;
+        createZoneBox(sheetId, zone) {
+            const visibleCols = this.getters.getSheetViewVisibleCols();
+            const left = visibleCols[0];
+            const right = visibleCols[visibleCols.length - 1];
             const col = zone.left;
             const row = zone.top;
             const cell = this.getters.getCell(sheetId, col, row);
             const showFormula = this.getters.shouldShowFormulas();
-            const { x, y, width, height } = this.getRect(zone, viewport);
+            const { x, y, width, height } = this.getters.getVisibleRect(zone);
             const box = {
                 x,
                 y,
@@ -30250,7 +30397,7 @@
                 switch (align) {
                     case "left": {
                         const emptyZoneOnTheLeft = positionToZone({ col: nextColIndex, row });
-                        const { x, y, width, height } = this.getRect(union(zone, emptyZoneOnTheLeft), viewport);
+                        const { x, y, width, height } = this.getters.getVisibleRect(union(zone, emptyZoneOnTheLeft));
                         if (width < textWidth || fontSizePX > height) {
                             box.clipRect = { x, y, width, height };
                         }
@@ -30258,7 +30405,7 @@
                     }
                     case "right": {
                         const emptyZoneOnTheRight = positionToZone({ col: previousColIndex, row });
-                        const { x, y, width, height } = this.getRect(union(zone, emptyZoneOnTheRight), viewport);
+                        const { x, y, width, height } = this.getters.getVisibleRect(union(zone, emptyZoneOnTheRight));
                         if (width < textWidth || fontSizePX > height) {
                             box.clipRect = { x, y, width, height };
                         }
@@ -30270,7 +30417,7 @@
                             right: nextColIndex,
                             left: previousColIndex,
                         };
-                        const { x, y, width, height } = this.getRect(emptyZone, viewport);
+                        const { x, y, width, height } = this.getters.getVisibleRect(emptyZone);
                         if (width < textWidth ||
                             previousColIndex === col ||
                             nextColIndex === col ||
@@ -30291,24 +30438,22 @@
             }
             return box;
         }
-        getGridBoxes(renderingContext) {
+        getGridBoxes() {
             const boxes = [];
-            const viewport = this.getters.getActiveViewport();
-            const { right, left, top, bottom } = viewport;
-            const sheet = this.getters.getActiveSheet();
-            const { id: sheetId } = sheet;
-            for (let rowNumber = top; rowNumber <= bottom; rowNumber++) {
-                if (this.getters.isRowHidden(sheetId, rowNumber)) {
-                    continue;
-                }
-                for (let colNumber = left; colNumber <= right; colNumber++) {
-                    if (this.getters.isColHidden(sheetId, colNumber)) {
-                        continue;
-                    }
+            const visibleCols = this.getters.getSheetViewVisibleCols();
+            const left = visibleCols[0];
+            const right = visibleCols[visibleCols.length - 1];
+            const visibleRows = this.getters.getSheetViewVisibleRows();
+            const top = visibleRows[0];
+            const bottom = visibleRows[visibleRows.length - 1];
+            const viewport = { left, right, top, bottom };
+            const sheetId = this.getters.getActiveSheetId();
+            for (const rowNumber of visibleRows) {
+                for (const colNumber of visibleCols) {
                     if (this.getters.isInMerge(sheetId, colNumber, rowNumber)) {
                         continue;
                     }
-                    boxes.push(this.createZoneBox(sheetId, positionToZone({ col: colNumber, row: rowNumber }), viewport));
+                    boxes.push(this.createZoneBox(sheetId, positionToZone({ col: colNumber, row: rowNumber })));
                 }
             }
             for (const merge of this.getters.getMerges(sheetId)) {
@@ -30316,7 +30461,7 @@
                     continue;
                 }
                 if (overlap(merge, viewport)) {
-                    const box = this.createZoneBox(sheetId, merge, viewport);
+                    const box = this.createZoneBox(sheetId, merge);
                     const borderBottomRight = this.getters.getCellBorder(sheetId, merge.right, merge.bottom);
                     box.border = {
                         ...box.border,
@@ -30331,16 +30476,7 @@
         }
     }
     RendererPlugin.layers = [0 /* Background */, 7 /* Headers */];
-    RendererPlugin.getters = [
-        "getColDimensions",
-        "getColDimensionsInViewport",
-        "getRowDimensions",
-        "getRowDimensionsInViewport",
-        "getRect",
-        "isVisibleInViewport",
-        "getEdgeScrollCol",
-        "getEdgeScrollRow",
-    ];
+    RendererPlugin.getters = ["getColDimensionsInViewport", "getRowDimensionsInViewport"];
 
     const selectionStatisticFunctions = [
         {
@@ -30906,7 +31042,6 @@
                 return;
             }
             const { ctx, thinLineWidth } = renderingContext;
-            const viewport = this.getters.getActiveViewport();
             // selection
             const zones = this.getSelectedZones();
             ctx.fillStyle = "#f3f7fe";
@@ -30916,7 +31051,7 @@
             ctx.lineWidth = 1.5 * thinLineWidth;
             ctx.globalCompositeOperation = "multiply";
             for (const zone of zones) {
-                const { x, y, width, height } = this.getters.getRect(zone, viewport);
+                const { x, y, width, height } = this.getters.getVisibleRect(zone);
                 ctx.fillRect(x, y, width, height);
                 ctx.strokeRect(x, y, width, height);
             }
@@ -30938,7 +31073,7 @@
                     right: col,
                 };
             }
-            const { x, y, width, height } = this.getters.getRect(zone, viewport);
+            const { x, y, width, height } = this.getters.getVisibleRect(zone);
             if (width > 0 && height > 0) {
                 ctx.strokeRect(x, y, width, height);
             }
@@ -31792,7 +31927,6 @@
                 return;
             }
             const { ctx, thinLineWidth } = renderingContext;
-            const viewport = this.getters.getActiveViewport();
             const activeSheetId = this.getters.getActiveSheetId();
             for (const client of this.getClientsToDisplay()) {
                 const { row, col } = client.position;
@@ -31802,7 +31936,7 @@
                     left: col,
                     right: col,
                 });
-                const { x, y, width, height } = this.getters.getRect(zone, viewport);
+                const { x, y, width, height } = this.getters.getVisibleRect(zone);
                 if (width <= 0 || height <= 0) {
                     continue;
                 }
@@ -31824,6 +31958,849 @@
     }
     SelectionMultiUserPlugin.getters = ["getClientsToDisplay"];
     SelectionMultiUserPlugin.layers = [5 /* Selection */];
+
+    class InternalViewport {
+        constructor(getters, sheetId, boundaries, sizeInGrid, options, offsets) {
+            this.getters = getters;
+            this.sheetId = sheetId;
+            this.boundaries = boundaries;
+            this.width = sizeInGrid.width;
+            this.height = sizeInGrid.height;
+            this.offsetScrollbarX = offsets.x;
+            this.offsetScrollbarY = offsets.y;
+            this.canScrollVertically = options.canScrollVertically;
+            this.canScrollHorizontally = options.canScrollHorizontally;
+            this.offsetCorrectionX = this.getters.getColDimensions(this.sheetId, this.boundaries.left).start;
+            this.offsetCorrectionY = this.getters.getRowDimensions(this.sheetId, this.boundaries.top).start;
+            this.adjustViewportOffsetX();
+            this.adjustViewportOffsetY();
+        }
+        // PUBLIC
+        getMaxSize() {
+            const lastCol = this.getters.findLastVisibleColRowIndex(this.sheetId, "COL", {
+                first: this.boundaries.left,
+                last: this.boundaries.right,
+            });
+            const lastRow = this.getters.findLastVisibleColRowIndex(this.sheetId, "ROW", {
+                first: this.boundaries.top,
+                last: this.boundaries.bottom,
+            });
+            const { end: lastColEnd, size: lastColSize } = this.getters.getColDimensions(this.sheetId, lastCol);
+            const { end: lastRowEnd, size: lastRowSize } = this.getters.getRowDimensions(this.sheetId, lastRow);
+            const leftColIndex = this.searchHeaderIndex("COL", lastColEnd - this.width, 0);
+            const leftColSize = this.getters.getColSize(this.sheetId, leftColIndex);
+            const leftRowIndex = this.searchHeaderIndex("ROW", lastRowEnd - this.height, 0);
+            const topRowSize = this.getters.getRowSize(this.sheetId, leftRowIndex);
+            const width = lastColEnd -
+                this.offsetCorrectionX +
+                (this.canScrollHorizontally
+                    ? Math.max(DEFAULT_CELL_WIDTH, Math.min(leftColSize, this.width - lastColSize))
+                    : 0);
+            const height = lastRowEnd -
+                this.offsetCorrectionY +
+                (this.canScrollVertically
+                    ? Math.max(DEFAULT_CELL_HEIGHT + 5, Math.min(topRowSize, this.height - lastRowSize))
+                    : 0);
+            return { width, height };
+        }
+        /**
+         * Return the index of a column given an offset x, based on the pane left
+         * visible cell.
+         * It returns -1 if no column is found.
+         */
+        getColIndex(x, absolute = false) {
+            if (x < this.offsetCorrectionX || x > this.offsetCorrectionX + this.width) {
+                return -1;
+            }
+            return this.searchHeaderIndex("COL", x - this.offsetCorrectionX, this.left, absolute);
+        }
+        /**
+         * Return the index of a row given an offset y, based on the pane top
+         * visible cell.
+         * It returns -1 if no row is found.
+         */
+        getRowIndex(y, absolute = false) {
+            if (y < this.offsetCorrectionY || y > this.offsetCorrectionY + this.height) {
+                return -1;
+            }
+            return this.searchHeaderIndex("ROW", y - this.offsetCorrectionY, this.top, absolute);
+        }
+        /**
+         * This function will make sure that the provided cell position (or current selected position) is part of
+         * the pane that is actually displayed on the client. We therefore adjust the offset of the pane
+         * until it contains the cell completely.
+         */
+        adjustPosition(position) {
+            const sheetId = this.sheetId;
+            if (!position) {
+                position = this.getters.getSheetPosition(sheetId);
+            }
+            const mainCellPosition = this.getters.getMainCellPosition(sheetId, position.col, position.row);
+            const { col, row } = this.getters.getNextVisibleCellPosition(sheetId, mainCellPosition.col, mainCellPosition.row);
+            if (isInside(col, this.boundaries.top, this.boundaries)) {
+                this.adjustPositionX(col);
+            }
+            if (isInside(this.boundaries.left, row, this.boundaries)) {
+                this.adjustPositionY(row);
+            }
+        }
+        adjustPositionX(col) {
+            const sheetId = this.sheetId;
+            const { start, end } = this.getters.getColDimensions(sheetId, col);
+            while (end > this.offsetX + this.offsetCorrectionX + this.width &&
+                this.offsetX + this.offsetCorrectionX < start) {
+                this.offsetX = this.getters.getColDimensions(sheetId, this.left).end - this.offsetCorrectionX;
+                this.offsetScrollbarX = this.offsetX;
+                this.adjustViewportZoneX();
+            }
+            while (col < this.left) {
+                let leftCol;
+                for (leftCol = this.left; leftCol >= 0; leftCol--) {
+                    if (!this.getters.isColHidden(sheetId, leftCol)) {
+                        break;
+                    }
+                }
+                this.offsetX =
+                    this.getters.getColDimensions(sheetId, leftCol - 1).start - this.offsetCorrectionX;
+                this.offsetScrollbarX = this.offsetX;
+                this.adjustViewportZoneX();
+            }
+        }
+        adjustPositionY(row) {
+            const sheetId = this.sheetId;
+            while (this.getters.getRowDimensions(sheetId, row).end >
+                this.offsetY + this.height + this.offsetCorrectionY &&
+                this.offsetY + this.offsetCorrectionY < this.getters.getRowDimensions(sheetId, row).start) {
+                this.offsetY = this.getters.getRowDimensions(sheetId, this.top).end - this.offsetCorrectionY;
+                this.offsetScrollbarY = this.offsetY;
+                this.adjustViewportZoneY();
+            }
+            while (row < this.top) {
+                let topRow;
+                for (topRow = this.top; topRow >= 0; topRow--) {
+                    if (!this.getters.isRowHidden(sheetId, topRow)) {
+                        break;
+                    }
+                }
+                this.offsetY =
+                    this.getters.getRowDimensions(sheetId, topRow - 1).start - this.offsetCorrectionY;
+                this.offsetScrollbarY = this.offsetY;
+                this.adjustViewportZoneY();
+            }
+        }
+        setViewportOffset(offsetX, offsetY) {
+            this.setViewportOffsetX(offsetX);
+            this.setViewportOffsetY(offsetY);
+        }
+        adjustViewportZone() {
+            this.adjustViewportZoneX();
+            this.adjustViewportZoneY();
+        }
+        getRect(zone) {
+            const targetZone = intersection(zone, this.zone);
+            if (targetZone) {
+                return {
+                    x: this.getters.getColRowOffset("COL", this.zone.left, targetZone.left) +
+                        this.offsetCorrectionX,
+                    y: this.getters.getColRowOffset("ROW", this.zone.top, targetZone.top) +
+                        this.offsetCorrectionY,
+                    width: this.getters.getColRowOffset("COL", targetZone.left, targetZone.right + 1),
+                    height: this.getters.getColRowOffset("ROW", targetZone.top, targetZone.bottom + 1),
+                };
+            }
+            else {
+                return undefined;
+            }
+        }
+        isVisible(col, row) {
+            const isInside = row <= this.bottom && row >= this.top && col >= this.left && col <= this.right;
+            return (isInside &&
+                !this.getters.isColHidden(this.sheetId, col) &&
+                !this.getters.isRowHidden(this.sheetId, row));
+        }
+        // PRIVATE
+        searchHeaderIndex(dimension, position, startIndex = 0, absolute = false) {
+            let size = 0;
+            const sheetId = this.sheetId;
+            const headers = this.getters.getNumberHeaders(sheetId, dimension);
+            for (let i = startIndex; i <= headers - 1; i++) {
+                const isHiddenInViewport = !absolute && dimension === "COL"
+                    ? i < this.left && i > this.right
+                    : i < this.top && i > this.bottom;
+                if (this.getters.isHeaderHidden(sheetId, dimension, i) || isHiddenInViewport) {
+                    continue;
+                }
+                size +=
+                    dimension === "COL"
+                        ? this.getters.getColSize(sheetId, i)
+                        : this.getters.getRowSize(sheetId, i);
+                if (size > position) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+        get zone() {
+            return { left: this.left, right: this.right, top: this.top, bottom: this.bottom };
+        }
+        setViewportOffsetX(offsetX) {
+            if (!this.canScrollHorizontally) {
+                return;
+            }
+            this.offsetScrollbarX = offsetX;
+            this.adjustViewportZoneX();
+        }
+        setViewportOffsetY(offsetY) {
+            if (!this.canScrollVertically) {
+                return;
+            }
+            this.offsetScrollbarY = offsetY;
+            this.adjustViewportZoneY();
+        }
+        /** Corrects the viewport's horizontal offset based on the current structure
+         *  To make sure that at least on column is visible inside the viewport.
+         */
+        adjustViewportOffsetX() {
+            if (this.canScrollHorizontally) {
+                const { width: viewportWidth } = this.getMaxSize();
+                if (this.width + this.offsetScrollbarX > viewportWidth) {
+                    this.offsetScrollbarX = Math.max(0, viewportWidth - this.width);
+                }
+            }
+            this.left = this.getColIndex(this.offsetScrollbarX, true);
+            this.right = this.getColIndex(this.offsetScrollbarX + this.width, true);
+            if (this.right === -1) {
+                this.right = this.boundaries.right;
+            }
+            this.adjustViewportZoneX();
+        }
+        /** Corrects the viewport's vertical offset based on the current structure
+         *  To make sure that at least on row is visible inside the viewport.
+         */
+        adjustViewportOffsetY() {
+            if (this.canScrollVertically) {
+                const { height: paneHeight } = this.getMaxSize();
+                if (this.height + this.offsetScrollbarY > paneHeight) {
+                    this.offsetScrollbarY = Math.max(0, paneHeight - this.height);
+                }
+            }
+            this.top = this.getRowIndex(this.offsetScrollbarY, true);
+            this.bottom = this.getRowIndex(this.offsetScrollbarY + this.width, true);
+            if (this.bottom === -1) {
+                this.bottom = this.boundaries.bottom;
+            }
+            this.adjustViewportZoneY();
+        }
+        /** Updates the pane zone and snapped offset based on its horizontal
+         * offset (will find Left) and its width (will find Right) */
+        adjustViewportZoneX() {
+            const sheetId = this.sheetId;
+            this.left = this.searchHeaderIndex("COL", this.offsetScrollbarX, this.boundaries.left);
+            this.right = Math.min(this.boundaries.right, this.searchHeaderIndex("COL", this.width, this.left));
+            if (this.right === -1) {
+                this.right = this.getters.getNumberCols(sheetId) - 1;
+            }
+            this.offsetX =
+                this.getters.getColDimensions(sheetId, this.left).start -
+                    this.getters.getColDimensions(sheetId, this.boundaries.left).start;
+        }
+        /** Updates the pane zone and snapped offset based on its vertical
+         * offset (will find Top) and its width (will find Bottom) */
+        adjustViewportZoneY() {
+            const sheetId = this.sheetId;
+            this.top = this.searchHeaderIndex("ROW", this.offsetScrollbarY, this.boundaries.top);
+            this.bottom = Math.min(this.boundaries.bottom, this.searchHeaderIndex("ROW", this.height, this.top));
+            if (this.bottom === -1) {
+                this.bottom = this.getters.getNumberRows(sheetId) - 1;
+            }
+            this.offsetY =
+                this.getters.getRowDimensions(sheetId, this.top).start -
+                    this.getters.getRowDimensions(sheetId, this.boundaries.top).start;
+        }
+    }
+
+    /**
+     *   EdgeScrollCases Schema
+     *
+     *  The dots/double dots represent a freeze (= a split of viewports)
+     *  In this example, we froze vertically between columns D and E
+     *  and horizontally between rows 4 and 5.
+     *
+     *  One can see that we scrolled horizontally from column E to G and
+     *  vertically from row 5 to 7.
+     *
+     *     A  B  C  D   G  H  I  J  K  L  M  N  O  P  Q  R  S  T
+     *     _______________________________________________________
+     *  1 |           :                                           |
+     *  2 |           :                                           |
+     *  3 |           :        B   ↑                 6            |
+     *  4 |           :        |   |                 |            |
+     *     ····················+···+·················+············|
+     *  7 |           :        |   |                 |            |
+     *  8 |           :        ↓   2                 |            |
+     *  9 |           :                              |            |
+     * 10 |       A --+--→                           |            |
+     * 11 |           :                              |            |
+     * 12 |           :                              |            |
+     * 13 |        ←--+-- 1                          |            |
+     * 14 |           :                              |        3 --+--→
+     * 15 |           :                              |            |
+     * 16 |           :                              |            |
+     * 17 |       5 --+-------------------------------------------+--→
+     * 18 |           :                              |            |
+     * 19 |           :                  4           |            |
+     * 20 |           :                  |           |            |
+     *     ______________________________+___________| ____________
+     *                                   |           |
+     *                                   ↓           ↓
+     */
+    /**
+     * Viewport plugin.
+     *
+     * This plugin manages all things related to all viewport states.
+     *
+     */
+    class SheetViewPlugin extends UIPlugin {
+        constructor() {
+            super(...arguments);
+            this.viewports = {};
+            /**
+             * The viewport dimensions are usually set by one of the components
+             * (i.e. when grid component is mounted) to properly reflect its state in the DOM.
+             * In the absence of a component (standalone model), is it mandatory to set reasonable default values
+             * to ensure the correct operation of this plugin.
+             */
+            this.sheetViewWidth = DEFAULT_SHEETVIEW_SIZE;
+            this.sheetViewHeight = DEFAULT_SHEETVIEW_SIZE;
+            this.gridOffsetX = 0;
+            this.gridOffsetY = 0;
+        }
+        // ---------------------------------------------------------------------------
+        // Command Handling
+        // ---------------------------------------------------------------------------
+        allowDispatch(cmd) {
+            switch (cmd.type) {
+                case "SET_VIEWPORT_OFFSET":
+                    return this.checkValidations(cmd, this.checkOffsetValidity, this.checkScrollingDirection);
+                case "RESIZE_SHEETVIEW":
+                    if (cmd.width < 0 || cmd.height < 0) {
+                        return 66 /* InvalidViewportSize */;
+                    }
+                    return 0 /* Success */;
+                case "FREEZE_COLUMNS": {
+                    const sheetId = this.getters.getActiveSheetId();
+                    const merges = this.getters.getMerges(sheetId);
+                    for (let merge of merges) {
+                        if (merge.left < cmd.quantity && cmd.quantity <= merge.right) {
+                            return 62 /* MergeOverlap */;
+                        }
+                    }
+                    return 0 /* Success */;
+                }
+                case "FREEZE_ROWS": {
+                    const sheetId = this.getters.getActiveSheetId();
+                    const merges = this.getters.getMerges(sheetId);
+                    for (let merge of merges) {
+                        if (merge.top < cmd.quantity && cmd.quantity <= merge.bottom) {
+                            return 62 /* MergeOverlap */;
+                        }
+                    }
+                    return 0 /* Success */;
+                }
+                default:
+                    return 0 /* Success */;
+            }
+        }
+        handleEvent(event) {
+            switch (event.type) {
+                case "HeadersSelected":
+                case "AlterZoneCorner":
+                    break;
+                case "ZonesSelected":
+                    // altering a zone should not move the viewport
+                    const sheetId = this.getters.getActiveSheetId();
+                    let { col, row } = findCellInNewZone(event.previousAnchor.zone, event.anchor.zone);
+                    col = Math.min(col, this.getters.getNumberCols(sheetId) - 1);
+                    row = Math.min(row, this.getters.getNumberRows(sheetId) - 1);
+                    this.refreshViewport(this.getters.getActiveSheetId(), { col, row });
+                    break;
+            }
+        }
+        handle(cmd) {
+            this.cleanViewports();
+            switch (cmd.type) {
+                case "START":
+                    this.selection.observe(this, {
+                        handleEvent: this.handleEvent.bind(this),
+                    });
+                    this.resetViewports(this.getters.getActiveSheetId());
+                    break;
+                case "UNDO":
+                case "REDO":
+                    this.resetSheetViews();
+                    break;
+                case "RESIZE_SHEETVIEW":
+                    this.resizeSheetView(cmd.height, cmd.width, cmd.gridOffsetX, cmd.gridOffsetY);
+                    break;
+                case "SET_VIEWPORT_OFFSET":
+                    this.setSheetViewOffset(cmd.offsetX, cmd.offsetY);
+                    break;
+                case "SHIFT_VIEWPORT_DOWN":
+                    const { top } = this.getActiveMainViewport();
+                    const sheetId = this.getters.getActiveSheetId();
+                    const shiftedOffsetY = this.clipOffsetY(this.getters.getRowDimensions(sheetId, top).start + this.sheetViewHeight);
+                    this.shiftVertically(shiftedOffsetY);
+                    break;
+                case "SHIFT_VIEWPORT_UP": {
+                    const { top } = this.getActiveMainViewport();
+                    const sheetId = this.getters.getActiveSheetId();
+                    const shiftedOffsetY = this.clipOffsetY(this.getters.getRowDimensions(sheetId, top).end - this.sheetViewHeight);
+                    this.shiftVertically(shiftedOffsetY);
+                    break;
+                }
+                case "REMOVE_COLUMNS_ROWS":
+                case "RESIZE_COLUMNS_ROWS":
+                case "HIDE_COLUMNS_ROWS":
+                case "ADD_COLUMNS_ROWS":
+                case "UNHIDE_COLUMNS_ROWS":
+                    this.resetViewports(cmd.sheetId);
+                    break;
+                case "ACTIVATE_SHEET":
+                    this.setViewports();
+                    this.refreshViewport(cmd.sheetIdTo);
+                    break;
+                case "UNFREEZE_ROWS":
+                case "UNFREEZE_COLUMNS":
+                case "FREEZE_COLUMNS":
+                case "FREEZE_ROWS":
+                case "UNFREEZE_COLUMNS_ROWS":
+                    this.resetViewports(this.getters.getActiveSheetId());
+                    break;
+            }
+        }
+        finalize() {
+            this.setViewports();
+        }
+        setViewports() {
+            var _a;
+            const sheetIds = this.getters.getSheetIds();
+            for (const sheetId of sheetIds) {
+                if (!((_a = this.viewports[sheetId]) === null || _a === void 0 ? void 0 : _a.bottomRight)) {
+                    this.resetViewports(sheetId);
+                }
+            }
+        }
+        // ---------------------------------------------------------------------------
+        // Getters
+        // ---------------------------------------------------------------------------
+        /**
+         * Return the index of a column given an offset x, based on the viewport left
+         * visible cell.
+         * It returns -1 if no column is found.
+         */
+        getColIndex(x) {
+            const sheetId = this.getters.getActiveSheetId();
+            return Math.max(...this.getSubViewports(sheetId).map((viewport) => viewport.getColIndex(x)));
+        }
+        /**
+         * Return the index of a row given an offset y, based on the viewport top
+         * visible cell.
+         * It returns -1 if no row is found.
+         */
+        getRowIndex(y) {
+            const sheetId = this.getters.getActiveSheetId();
+            return Math.max(...this.getSubViewports(sheetId).map((viewport) => viewport.getRowIndex(y)));
+        }
+        getSheetViewDimensionWithHeaders() {
+            return {
+                width: this.sheetViewWidth + this.gridOffsetX,
+                height: this.sheetViewHeight + this.gridOffsetY,
+            };
+        }
+        getSheetViewDimension() {
+            return {
+                width: this.sheetViewWidth,
+                height: this.sheetViewHeight,
+            };
+        }
+        /** type as pane, not viewport but basically pane extends viewport */
+        getActiveMainViewport() {
+            const sheetId = this.getters.getActiveSheetId();
+            return this.getMainViewport(sheetId);
+        }
+        getActiveSheetScrollInfo() {
+            const sheetId = this.getters.getActiveSheetId();
+            return this.getSheetScrollInfo(sheetId);
+        }
+        getSheetViewVisibleCols() {
+            const sheetId = this.getters.getActiveSheetId();
+            const viewports = this.getSubViewports(sheetId);
+            return [...new Set(viewports.map((v) => range(v.left, v.right + 1)).flat())].filter((col) => !this.getters.isHeaderHidden(sheetId, "COL", col));
+        }
+        getSheetViewVisibleRows() {
+            const sheetId = this.getters.getActiveSheetId();
+            const viewports = this.getSubViewports(sheetId);
+            return [...new Set(viewports.map((v) => range(v.top, v.bottom + 1)).flat())].filter((row) => !this.getters.isHeaderHidden(sheetId, "ROW", row));
+        }
+        /**
+         * Return the main viewport maximum size. That is the zone dimension
+         * with some bottom and right padding.
+         */
+        getMainViewportRect() {
+            const sheetId = this.getters.getActiveSheetId();
+            const viewport = this.getMainInternalViewport(sheetId);
+            const { xSplit, ySplit } = this.getters.getPaneDivisions(sheetId);
+            let { width, height } = viewport.getMaxSize();
+            const x = this.getters.getColDimensions(sheetId, xSplit).start;
+            const y = this.getters.getRowDimensions(sheetId, ySplit).start;
+            return { x, y, width, height };
+        }
+        getMaximumSheetOffset() {
+            const sheetId = this.getters.getActiveSheetId();
+            const { width, height } = this.getMainViewportRect();
+            const viewport = this.getMainInternalViewport(sheetId);
+            return {
+                maxOffsetX: Math.max(0, width - viewport.width + 1),
+                maxOffsetY: Math.max(0, height - viewport.height + 1),
+            };
+        }
+        getColRowOffsetInViewport(dimension, referenceIndex, index) {
+            const sheetId = this.getters.getActiveSheetId();
+            const visibleCols = this.getters.getSheetViewVisibleCols();
+            const visibleRows = this.getters.getSheetViewVisibleRows();
+            if (index < referenceIndex) {
+                return -this.getColRowOffsetInViewport(dimension, index, referenceIndex);
+            }
+            let offset = 0;
+            const visibleIndexes = dimension === "COL" ? visibleCols : visibleRows;
+            for (let i = referenceIndex; i < index; i++) {
+                if (!visibleIndexes.includes(i)) {
+                    continue;
+                }
+                offset +=
+                    dimension === "COL"
+                        ? this.getters.getColSize(sheetId, i)
+                        : this.getters.getRowSize(sheetId, i);
+            }
+            return offset;
+        }
+        /**
+         * Check if a given position is visible in the viewport.
+         */
+        isVisibleInViewport(sheetId, col, row) {
+            return this.getSubViewports(sheetId).some((pane) => pane.isVisible(col, row));
+        }
+        // => return s the new offset
+        getEdgeScrollCol(x, previousX, startingX) {
+            let canEdgeScroll = false;
+            let direction = 0;
+            let delay = 0;
+            /** 4 cases : See EdgeScrollCases Schema at the top
+             * 1. previous in XRight > XLeft
+             * 3. previous in XRight > outside
+             * 5. previous in Left > outside
+             * A. previous in Left > right
+             * with X a position taken in the bottomRIght (aka scrollable) viewport
+             */
+            const { xSplit } = this.getters.getPaneDivisions(this.getters.getActiveSheetId());
+            const { width } = this.getSheetViewDimension();
+            const { x: offsetCorrectionX } = this.getMainViewportCoordinates();
+            const currentOffsetX = this.getActiveSheetScrollInfo().offsetX;
+            if (x > width) {
+                // 3 & 5
+                canEdgeScroll = true;
+                delay = scrollDelay(x - width);
+                direction = 1;
+            }
+            else if (x < offsetCorrectionX && startingX >= offsetCorrectionX && currentOffsetX > 0) {
+                // 1
+                canEdgeScroll = true;
+                delay = scrollDelay(offsetCorrectionX - x);
+                direction = -1;
+            }
+            else if (xSplit && previousX < offsetCorrectionX && x > offsetCorrectionX) {
+                // A
+                canEdgeScroll = true;
+                delay = scrollDelay(x);
+                direction = "reset";
+            }
+            return { canEdgeScroll, direction, delay };
+        }
+        getEdgeScrollRow(y, previousY, tartingY) {
+            let canEdgeScroll = false;
+            let direction = 0;
+            let delay = 0;
+            /** 4 cases : See EdgeScrollCases Schema at the top
+             * 2. previous in XBottom > XTop
+             * 4. previous in XRight > outside
+             * 6. previous in Left > outside
+             * B. previous in Left > right
+             * with X a position taken in the bottomRIght (aka scrollable) viewport
+             */
+            const { ySplit } = this.getters.getPaneDivisions(this.getters.getActiveSheetId());
+            const { height } = this.getSheetViewDimension();
+            const { y: offsetCorrectionY } = this.getMainViewportCoordinates();
+            const currentOffsetY = this.getActiveSheetScrollInfo().offsetY;
+            if (y > height) {
+                // 4 & 6
+                canEdgeScroll = true;
+                delay = scrollDelay(y - height);
+                direction = 1;
+            }
+            else if (y < offsetCorrectionY && tartingY >= offsetCorrectionY && currentOffsetY > 0) {
+                // 2
+                canEdgeScroll = true;
+                delay = scrollDelay(offsetCorrectionY - y);
+                direction = -1;
+            }
+            else if (ySplit && previousY < offsetCorrectionY && y > offsetCorrectionY) {
+                // B
+                canEdgeScroll = true;
+                delay = scrollDelay(y);
+                direction = "reset";
+            }
+            return { canEdgeScroll, direction, delay };
+        }
+        /**
+         * Computes the coordinates and size to draw the zone on the canvas
+         */
+        getVisibleRect(zone) {
+            const sheetId = this.getters.getActiveSheetId();
+            const viewportRects = this.getSubViewports(sheetId)
+                .map((viewport) => viewport.getRect(zone))
+                .filter(isDefined$1);
+            if (viewportRects.length === 0) {
+                return { x: 0, y: 0, width: 0, height: 0 };
+            }
+            const x = Math.min(...viewportRects.map((rect) => rect.x));
+            const y = Math.min(...viewportRects.map((rect) => rect.y));
+            const width = Math.max(...viewportRects.map((rect) => rect.x + rect.width)) - x;
+            const height = Math.max(...viewportRects.map((rect) => rect.y + rect.height)) - y;
+            return {
+                x: x + this.gridOffsetX,
+                y: y + this.gridOffsetY,
+                width,
+                height,
+            };
+        }
+        /**
+         * Returns the position of the MainViewport relatively to the start of the grid (without headers)
+         * It corresponds to the summed dimensions of the visible cols/rows (in x/y respectively)
+         * situated before the pane divisions.
+         */
+        getMainViewportCoordinates() {
+            const sheetId = this.getters.getActiveSheetId();
+            const { xSplit, ySplit } = this.getters.getPaneDivisions(sheetId);
+            const x = this.getters.getColDimensions(sheetId, xSplit).start;
+            const y = this.getters.getRowDimensions(sheetId, ySplit).start;
+            return { x, y };
+        }
+        // ---------------------------------------------------------------------------
+        // Private
+        // ---------------------------------------------------------------------------
+        ensureMainViewportExist(sheetId) {
+            if (!this.viewports[sheetId]) {
+                this.resetViewports(sheetId);
+            }
+        }
+        getSubViewports(sheetId) {
+            this.ensureMainViewportExist(sheetId);
+            return Object.values(this.viewports[sheetId]).filter(isDefined$1);
+        }
+        checkScrollingDirection({ offsetX, offsetY, }) {
+            const pane = this.getMainInternalViewport(this.getters.getActiveSheetId());
+            if ((!pane.canScrollHorizontally && offsetX > 0) ||
+                (!pane.canScrollVertically && offsetY > 0)) {
+                return 67 /* InvalidScrollingDirection */;
+            }
+            return 0 /* Success */;
+        }
+        checkOffsetValidity({ offsetX, offsetY, }) {
+            const { maxOffsetX, maxOffsetY } = this.getMaximumSheetOffset();
+            if (offsetX < 0 || offsetY < 0 || offsetY > maxOffsetY || offsetX > maxOffsetX) {
+                return 65 /* InvalidOffset */;
+            }
+            return 0 /* Success */;
+        }
+        getMainViewport(sheetId) {
+            const viewport = this.getMainInternalViewport(sheetId);
+            return {
+                top: viewport.top,
+                left: viewport.left,
+                bottom: viewport.bottom,
+                right: viewport.right,
+            };
+        }
+        getMainInternalViewport(sheetId) {
+            this.ensureMainViewportExist(sheetId);
+            return this.viewports[sheetId].bottomRight;
+        }
+        getSheetScrollInfo(sheetId) {
+            const viewport = this.getMainInternalViewport(sheetId);
+            return {
+                offsetX: viewport.offsetX,
+                offsetY: viewport.offsetY,
+                offsetScrollbarX: viewport.offsetScrollbarX,
+                offsetScrollbarY: viewport.offsetScrollbarY,
+            };
+        }
+        /** gets rid of deprecated sheetIds */
+        cleanViewports() {
+            const sheetIds = this.getters.getSheetIds();
+            for (let sheetId of Object.keys(this.viewports)) {
+                if (!sheetIds.includes(sheetId)) {
+                    delete this.viewports[sheetId];
+                }
+            }
+        }
+        resetSheetViews() {
+            for (let sheetId of Object.keys(this.viewports)) {
+                const position = this.getters.getSheetPosition(sheetId);
+                this.resetViewports(sheetId);
+                const viewports = this.getSubViewports(sheetId);
+                Object.values(viewports).forEach((viewport) => {
+                    viewport.adjustPosition(position);
+                });
+            }
+        }
+        resizeSheetView(height, width, gridOffsetX = 0, gridOffsetY = 0) {
+            this.sheetViewHeight = height;
+            this.sheetViewWidth = width;
+            this.gridOffsetX = gridOffsetX;
+            this.gridOffsetY = gridOffsetY;
+            this.recomputeViewports();
+        }
+        recomputeViewports() {
+            for (let sheetId of Object.keys(this.viewports)) {
+                this.resetViewports(sheetId);
+            }
+        }
+        setSheetViewOffset(offsetX, offsetY) {
+            const sheetId = this.getters.getActiveSheetId();
+            Object.values(this.getSubViewports(sheetId)).forEach((viewport) => viewport.setViewportOffset(offsetX, offsetY));
+        }
+        /**
+         * Clip the vertical offset within the allowed range.
+         * Not above the sheet, nor below the sheet.
+         */
+        clipOffsetY(offsetY) {
+            const { height } = this.getMainViewportRect();
+            const maxOffset = height - this.sheetViewHeight;
+            offsetY = Math.min(offsetY, maxOffset);
+            offsetY = Math.max(offsetY, 0);
+            return offsetY;
+        }
+        getViewportOffset(sheetId) {
+            var _a, _b;
+            return {
+                x: ((_a = this.viewports[sheetId]) === null || _a === void 0 ? void 0 : _a.bottomRight.offsetScrollbarX) || 0,
+                y: ((_b = this.viewports[sheetId]) === null || _b === void 0 ? void 0 : _b.bottomRight.offsetScrollbarY) || 0,
+            };
+        }
+        resetViewports(sheetId) {
+            const { xSplit, ySplit } = this.getters.getPaneDivisions(sheetId);
+            const nCols = this.getters.getNumberCols(sheetId);
+            const nRows = this.getters.getNumberRows(sheetId);
+            const colOffset = this.getters.getColRowOffset("COL", 0, xSplit, sheetId);
+            const rowOffset = this.getters.getColRowOffset("ROW", 0, ySplit, sheetId);
+            const { xRatio, yRatio } = this.getFrozenSheetViewRatio(sheetId);
+            const canScrollHorizontally = xRatio < 1.0;
+            const canScrollVertically = yRatio < 1.0;
+            const previousOffset = this.getViewportOffset(sheetId);
+            const sheetViewports = {
+                topLeft: (ySplit &&
+                    xSplit &&
+                    new InternalViewport(this.getters, sheetId, { left: 0, right: xSplit - 1, top: 0, bottom: ySplit - 1 }, { width: colOffset, height: rowOffset }, { canScrollHorizontally: false, canScrollVertically: false }, { x: 0, y: 0 })) ||
+                    undefined,
+                topRight: (ySplit &&
+                    new InternalViewport(this.getters, sheetId, { left: xSplit, right: nCols - 1, top: 0, bottom: ySplit - 1 }, { width: this.sheetViewWidth - colOffset, height: rowOffset }, { canScrollHorizontally, canScrollVertically: false }, { x: canScrollHorizontally ? previousOffset.x : 0, y: 0 })) ||
+                    undefined,
+                bottomLeft: (xSplit &&
+                    new InternalViewport(this.getters, sheetId, { left: 0, right: xSplit - 1, top: ySplit, bottom: nRows - 1 }, { width: colOffset, height: this.sheetViewHeight - rowOffset }, { canScrollHorizontally: false, canScrollVertically }, { x: 0, y: canScrollVertically ? previousOffset.y : 0 })) ||
+                    undefined,
+                bottomRight: new InternalViewport(this.getters, sheetId, { left: xSplit, right: nCols - 1, top: ySplit, bottom: nRows - 1 }, {
+                    width: this.sheetViewWidth - colOffset,
+                    height: this.sheetViewHeight - rowOffset,
+                }, { canScrollHorizontally, canScrollVertically }, {
+                    x: canScrollHorizontally ? previousOffset.x : 0,
+                    y: canScrollVertically ? previousOffset.y : 0,
+                }),
+            };
+            this.viewports[sheetId] = sheetViewports;
+        }
+        /**
+         * Adjust the viewport such that the anchor position is visible
+         */
+        refreshViewport(sheetId, anchorPosition) {
+            Object.values(this.getSubViewports(sheetId)).forEach((viewport) => {
+                viewport.adjustViewportZone();
+                viewport.adjustPosition(anchorPosition);
+            });
+        }
+        /**
+         * Shift the viewport vertically and move the selection anchor
+         * such that it remains at the same place relative to the
+         * viewport top.
+         */
+        shiftVertically(offset) {
+            const { top } = this.getActiveMainViewport();
+            const { offsetX } = this.getActiveSheetScrollInfo();
+            this.setSheetViewOffset(offsetX, offset);
+            const { anchor } = this.getters.getSelection();
+            const deltaRow = this.getActiveMainViewport().top - top;
+            this.selection.selectCell(anchor.cell.col, anchor.cell.row + deltaRow);
+        }
+        getVisibleFigures() {
+            const sheetId = this.getters.getActiveSheetId();
+            const result = [];
+            const figures = this.getters.getFigures(sheetId);
+            const { offsetX, offsetY } = this.getSheetScrollInfo(sheetId);
+            const { x: offsetCorrectionX, y: offsetCorrectionY } = this.getters.getMainViewportCoordinates();
+            const { width, height } = this.getters.getSheetViewDimensionWithHeaders();
+            for (const figure of figures) {
+                if (figure.x >= offsetCorrectionX &&
+                    (figure.x + figure.width <= offsetCorrectionX + offsetX ||
+                        figure.x >= width + offsetX + offsetCorrectionX)) {
+                    continue;
+                }
+                if (figure.y >= offsetCorrectionY &&
+                    (figure.y + figure.height <= offsetCorrectionY + offsetY ||
+                        figure.y >= height + offsetY + offsetCorrectionY)) {
+                    continue;
+                }
+                result.push(figure);
+            }
+            return result;
+        }
+        getFrozenSheetViewRatio(sheetId) {
+            const { xSplit, ySplit } = this.getters.getPaneDivisions(sheetId);
+            const offsetCorrectionX = this.getters.getColDimensions(sheetId, xSplit).start;
+            const offsetCorrectionY = this.getters.getRowDimensions(sheetId, ySplit).start;
+            const width = this.sheetViewWidth + this.gridOffsetX;
+            const height = this.sheetViewHeight + this.gridOffsetY;
+            return { xRatio: offsetCorrectionX / width, yRatio: offsetCorrectionY / height };
+        }
+    }
+    SheetViewPlugin.getters = [
+        "getColIndex",
+        "getRowIndex",
+        "getActiveMainViewport",
+        "getSheetViewDimension",
+        "getSheetViewDimensionWithHeaders",
+        "getMainViewportRect",
+        "getMaximumSheetOffset",
+        "isVisibleInViewport",
+        "getEdgeScrollCol",
+        "getEdgeScrollRow",
+        "getVisibleFigures",
+        "getVisibleRect",
+        "getColRowOffsetInViewport",
+        "getMainViewportCoordinates",
+        "getActiveSheetScrollInfo",
+        "getSheetViewVisibleCols",
+        "getSheetViewVisibleRows",
+        "getFrozenSheetViewRatio",
+    ];
 
     class SortPlugin extends UIPlugin {
         allowDispatch(cmd) {
@@ -32268,6 +33245,55 @@
             }
             return brokenText;
         }
+        /**
+         * Returns the size, start and end coordinates of a column on an unfolded sheet
+         */
+        getColDimensions(sheetId, col) {
+            const start = this.getColRowOffset("COL", 0, col, sheetId);
+            const size = this.getters.getColSize(sheetId, col);
+            const isColHidden = this.getters.isColHidden(sheetId, col);
+            return {
+                start,
+                size,
+                end: start + (isColHidden ? 0 : size),
+            };
+        }
+        /**
+         * Returns the size, start and end coordinates of a row an unfolded sheet
+         */
+        getRowDimensions(sheetId, row) {
+            const start = this.getColRowOffset("ROW", 0, row, sheetId);
+            const size = this.getters.getRowSize(sheetId, row);
+            const isRowHidden = this.getters.isRowHidden(sheetId, row);
+            return {
+                start,
+                size: size,
+                end: start + (isRowHidden ? 0 : size),
+            };
+        }
+        /**
+         * Returns the offset of a header (determined by the dimension) at the given index
+         * based on the referenceIndex given. If start === 0, this method will return
+         * the start attribute of the header.
+         *
+         * i.e. The size from A to B is the distance between A.start and B.end
+         */
+        getColRowOffset(dimension, referenceIndex, index, sheetId = this.getters.getActiveSheetId()) {
+            if (index < referenceIndex) {
+                return -this.getColRowOffset(dimension, index, referenceIndex);
+            }
+            let offset = 0;
+            for (let i = referenceIndex; i < index; i++) {
+                if (this.getters.isHeaderHidden(sheetId, dimension, i)) {
+                    continue;
+                }
+                offset +=
+                    dimension === "COL"
+                        ? this.getters.getColSize(sheetId, i)
+                        : this.getters.getRowSize(sheetId, i);
+            }
+            return offset;
+        }
         // ---------------------------------------------------------------------------
         // Grid manipulation
         // ---------------------------------------------------------------------------
@@ -32297,421 +33323,14 @@
             return splitWord;
         }
     }
-    SheetUIPlugin.getters = ["getCellWidth", "getTextWidth", "getCellText", "getCellMultiLineText"];
-
-    /**
-     * Viewport plugin.
-     *
-     * This plugin manages all things related to all viewport states.
-     *
-     */
-    class ViewportPlugin extends UIPlugin {
-        constructor() {
-            super(...arguments);
-            this.viewports = {};
-            /**
-             * The viewport dimensions are usually set by one of the components
-             * (i.e. when grid component is mounted) to properly reflect its state in the DOM.
-             * In the absence of a component (standalone model), is it mandatory to set reasonable default values
-             * to ensure the correct operation of this plugin.
-             */
-            this.viewportWidth = 1000;
-            this.viewportHeight = 1000;
-        }
-        // ---------------------------------------------------------------------------
-        // Command Handling
-        // ---------------------------------------------------------------------------
-        allowDispatch(cmd) {
-            switch (cmd.type) {
-                case "SET_VIEWPORT_OFFSET":
-                    return this.checkOffsetValidity(cmd.offsetX, cmd.offsetY);
-                case "RESIZE_VIEWPORT":
-                    if (cmd.width < 0 || cmd.height < 0) {
-                        return 66 /* InvalidViewportSize */;
-                    }
-                    return 0 /* Success */;
-                default:
-                    return 0 /* Success */;
-            }
-        }
-        handleEvent(event) {
-            switch (event.type) {
-                case "HeadersSelected":
-                case "AlterZoneCorner":
-                    break;
-                case "ZonesSelected":
-                    // altering a zone should not move the viewport
-                    const sheetId = this.getters.getActiveSheetId();
-                    let { col, row } = findCellInNewZone(event.previousAnchor.zone, event.anchor.zone);
-                    col = Math.min(col, this.getters.getNumberCols(sheetId) - 1);
-                    row = Math.min(row, this.getters.getNumberRows(sheetId) - 1);
-                    this.refreshViewport(this.getters.getActiveSheetId(), { col, row });
-                    break;
-            }
-        }
-        handle(cmd) {
-            switch (cmd.type) {
-                case "START":
-                    this.selection.observe(this, {
-                        handleEvent: this.handleEvent.bind(this),
-                    });
-                    this.generateViewportState(this.getters.getActiveSheetId());
-                    break;
-                case "UNDO":
-                case "REDO":
-                    this.cleanViewports();
-                    this.resetViewports();
-                    break;
-                case "RESIZE_VIEWPORT":
-                    this.cleanViewports();
-                    this.resizeViewport(cmd.height, cmd.width);
-                    break;
-                case "SET_VIEWPORT_OFFSET":
-                    this.setViewportOffset(cmd.offsetX, cmd.offsetY);
-                    break;
-                case "SHIFT_VIEWPORT_DOWN":
-                    const { top } = this.getActiveViewport();
-                    const sheetId = this.getters.getActiveSheetId();
-                    const shiftedOffsetY = this.clipOffsetY(this.getters.getRowDimensions(sheetId, top).start + this.viewportHeight);
-                    this.shiftVertically(shiftedOffsetY);
-                    break;
-                case "SHIFT_VIEWPORT_UP": {
-                    const { top } = this.getActiveViewport();
-                    const sheetId = this.getters.getActiveSheetId();
-                    const shiftedOffsetY = this.clipOffsetY(this.getters.getRowDimensions(sheetId, top).end - this.viewportHeight);
-                    this.shiftVertically(shiftedOffsetY);
-                    break;
-                }
-                case "REMOVE_COLUMNS_ROWS":
-                case "RESIZE_COLUMNS_ROWS":
-                case "HIDE_COLUMNS_ROWS":
-                    if (cmd.dimension === "COL") {
-                        this.adjustViewportOffsetX(cmd.sheetId, this.getViewport(cmd.sheetId));
-                    }
-                    else {
-                        this.adjustViewportOffsetY(cmd.sheetId, this.getViewport(cmd.sheetId));
-                    }
-                    break;
-                case "ADD_COLUMNS_ROWS":
-                case "UNHIDE_COLUMNS_ROWS":
-                    if (cmd.dimension === "COL") {
-                        this.adjustViewportZoneX(cmd.sheetId, this.getViewport(cmd.sheetId));
-                    }
-                    else {
-                        this.adjustViewportZoneY(cmd.sheetId, this.getViewport(cmd.sheetId));
-                    }
-                    break;
-                case "ACTIVATE_SHEET":
-                    this.refreshViewport(cmd.sheetIdTo);
-                    break;
-            }
-        }
-        // ---------------------------------------------------------------------------
-        // Getters
-        // ---------------------------------------------------------------------------
-        /**
-         * Return the index of a column given an offset x, based on the viewport left
-         * visible cell.
-         * It returns -1 if no column is found.
-         */
-        getColIndex(x) {
-            if (x < 0) {
-                return -1;
-            }
-            const viewport = this.getActiveViewport();
-            return this.searchHeaderIndex("COL", this.getters.getActiveSheetId(), x, viewport.left);
-        }
-        /**
-         * Return the index of a row given an offset y, based on the viewport top
-         * visible cell.
-         * It returns -1 if no row is found.
-         */
-        getRowIndex(y) {
-            if (y < 0) {
-                return -1;
-            }
-            const viewport = this.getActiveViewport();
-            return this.searchHeaderIndex("ROW", this.getters.getActiveSheetId(), y, viewport.top);
-        }
-        getViewportDimensionWithHeaders() {
-            return {
-                width: this.viewportWidth + (this.getters.isDashboard() ? 0 : HEADER_WIDTH),
-                height: this.viewportHeight + (this.getters.isDashboard() ? 0 : HEADER_HEIGHT),
-            };
-        }
-        getViewportDimension() {
-            return {
-                width: this.viewportWidth,
-                height: this.viewportHeight,
-            };
-        }
-        getActiveViewport() {
-            const sheetId = this.getters.getActiveSheetId();
-            return this.getViewport(sheetId);
-        }
-        /**
-         * Return the maximum viewport size. That is the sheet dimension
-         * with some bottom and right padding.
-         */
-        getMaxViewportSize(sheet) {
-            const sheetId = sheet.id;
-            const lastCol = this.getters.findLastVisibleColRowIndex(sheetId, "COL");
-            const lastRow = this.getters.findLastVisibleColRowIndex(sheetId, "ROW");
-            const { end: lastColEnd, size: lastColSize } = this.getters.getColDimensions(sheetId, lastCol);
-            const { end: lastRowEnd, size: lastRowSize } = this.getters.getRowDimensions(sheetId, lastRow);
-            const leftColIndex = this.searchHeaderIndex("COL", sheetId, lastColEnd - this.viewportWidth, 0);
-            const leftCol = this.getters.getColSize(sheetId, leftColIndex);
-            const leftRowIndex = this.searchHeaderIndex("ROW", sheetId, lastRowEnd - this.viewportHeight, 0);
-            const topRow = this.getters.getRowSize(sheetId, leftRowIndex);
-            const width = lastColEnd +
-                Math.max(DEFAULT_CELL_WIDTH, Math.min(leftCol, this.viewportWidth - lastColSize));
-            const height = lastRowEnd +
-                Math.max(DEFAULT_CELL_HEIGHT + 5, Math.min(topRow, this.viewportHeight - lastRowSize));
-            return { width, height };
-        }
-        getMaximumViewportOffset(sheet) {
-            const { width, height } = this.getters.getMaxViewportSize(sheet);
-            return {
-                maxOffsetX: Math.max(0, width - this.viewportWidth + 1),
-                maxOffsetY: Math.max(0, height - this.viewportHeight + 1),
-            };
-        }
-        // ---------------------------------------------------------------------------
-        // Private
-        // ---------------------------------------------------------------------------
-        searchHeaderIndex(dimension, sheetId, position, startIndex = 0) {
-            let size = 0;
-            const headers = this.getters.getNumberHeaders(sheetId, dimension);
-            for (let i = startIndex; i <= headers - 1; i++) {
-                if (this.getters.isHeaderHidden(sheetId, dimension, i)) {
-                    continue;
-                }
-                size +=
-                    dimension === "COL"
-                        ? this.getters.getColSize(sheetId, i)
-                        : this.getters.getRowSize(sheetId, i);
-                if (size > position) {
-                    return i;
-                }
-            }
-            return -1;
-        }
-        checkOffsetValidity(offsetX, offsetY) {
-            const sheet = this.getters.getActiveSheet();
-            const { maxOffsetX, maxOffsetY } = this.getMaximumViewportOffset(sheet);
-            if (offsetX < 0 || offsetY < 0 || offsetY > maxOffsetY || offsetX > maxOffsetX) {
-                return 65 /* InvalidOffset */;
-            }
-            return 0 /* Success */;
-        }
-        getViewport(sheetId) {
-            if (!this.viewports[sheetId]) {
-                this.generateViewportState(sheetId);
-            }
-            return this.viewports[sheetId];
-        }
-        /** gets rid of deprecated sheetIds */
-        cleanViewports() {
-            const sheets = this.getters.getSheetIds();
-            for (let sheetId of Object.keys(this.viewports)) {
-                if (!sheets.includes(sheetId)) {
-                    delete this.viewports[sheetId];
-                }
-            }
-        }
-        resetViewports() {
-            for (let [sheetId, viewport] of Object.entries(this.viewports)) {
-                const position = this.getters.getSheetPosition(sheetId);
-                this.adjustViewportOffsetX(sheetId, viewport);
-                this.adjustViewportOffsetY(sheetId, viewport);
-                this.adjustViewportsPosition(sheetId, position);
-            }
-        }
-        /** Corrects the viewport's horizontal offset based on the current structure
-         *  To make sure that at least on column is visible inside the viewport.
-         */
-        adjustViewportOffsetX(sheetId, viewport) {
-            const { offsetX } = viewport;
-            const { width: sheetWidth } = this.getMaxViewportSize(this.getters.getSheet(sheetId));
-            if (this.viewportWidth + offsetX > sheetWidth) {
-                const diff = this.viewportWidth + offsetX - sheetWidth;
-                viewport.offsetScrollbarX = Math.max(0, offsetX - diff);
-            }
-            this.adjustViewportZoneX(sheetId, viewport);
-        }
-        /** Corrects the viewport's vertical offset based on the current structure
-         *  To make sure that at least on row is visible inside the viewport.
-         */
-        adjustViewportOffsetY(sheetId, viewport) {
-            const { offsetY } = viewport;
-            const { height: sheetHeight } = this.getMaxViewportSize(this.getters.getSheet(sheetId));
-            if (this.viewportHeight + offsetY > sheetHeight) {
-                const diff = this.viewportHeight + offsetY - sheetHeight;
-                viewport.offsetScrollbarY = Math.max(0, offsetY - diff);
-            }
-            this.adjustViewportZoneY(sheetId, viewport);
-        }
-        resizeViewport(height, width) {
-            this.viewportHeight = height;
-            this.viewportWidth = width;
-            this.recomputeViewports();
-        }
-        recomputeViewports() {
-            for (let sheetId of Object.keys(this.viewports)) {
-                this.adjustViewportOffsetX(sheetId, this.viewports[sheetId]);
-                this.adjustViewportOffsetY(sheetId, this.viewports[sheetId]);
-            }
-        }
-        setViewportOffset(offsetX, offsetY) {
-            const sheetId = this.getters.getActiveSheetId();
-            this.getViewport(sheetId);
-            this.viewports[sheetId].offsetScrollbarX = offsetX;
-            this.viewports[sheetId].offsetScrollbarY = offsetY;
-            this.adjustViewportZone(sheetId, this.viewports[sheetId]);
-        }
-        /**
-         * Clip the vertical offset within the allowed range.
-         * Not above the sheet, nor below the sheet.
-         */
-        clipOffsetY(offsetY) {
-            const { height } = this.getters.getMaxViewportSize(this.getters.getActiveSheet());
-            const maxOffset = height - this.viewportHeight;
-            offsetY = Math.min(offsetY, maxOffset);
-            offsetY = Math.max(offsetY, 0);
-            return offsetY;
-        }
-        generateViewportState(sheetId) {
-            this.viewports[sheetId] = {
-                left: 0,
-                right: 0,
-                top: 0,
-                bottom: 0,
-                offsetX: 0,
-                offsetY: 0,
-                offsetScrollbarX: 0,
-                offsetScrollbarY: 0,
-            };
-            this.adjustViewportZone(sheetId, this.viewports[sheetId]);
-        }
-        /**
-         * Adjust the viewport such that the anchor position is visible
-         */
-        refreshViewport(sheetId, anchorPosition) {
-            const viewport = this.getViewport(sheetId);
-            this.adjustViewportZone(sheetId, viewport);
-            this.adjustViewportsPosition(sheetId, anchorPosition);
-        }
-        adjustViewportZone(sheetId, viewport) {
-            this.adjustViewportZoneX(sheetId, viewport);
-            this.adjustViewportZoneY(sheetId, viewport);
-        }
-        /** Updates the viewport zone based on its horizontal offset (will find Left) and its width (will find Right) */
-        adjustViewportZoneX(sheetId, viewport) {
-            viewport.left = this.searchHeaderIndex("COL", sheetId, viewport.offsetScrollbarX);
-            viewport.right = this.searchHeaderIndex("COL", sheetId, this.viewportWidth, viewport.left);
-            if (viewport.right === -1) {
-                viewport.right = this.getters.getNumberCols(sheetId) - 1;
-            }
-            viewport.offsetX = this.getters.getColDimensions(sheetId, viewport.left).start;
-        }
-        /** Updates the viewport zone based on its vertical offset (will find Top) and its width (will find Bottom) */
-        adjustViewportZoneY(sheetId, viewport) {
-            viewport.top = this.searchHeaderIndex("ROW", sheetId, viewport.offsetScrollbarY);
-            viewport.bottom = this.searchHeaderIndex("ROW", sheetId, this.viewportHeight, viewport.top);
-            if (viewport.bottom === -1) {
-                viewport.bottom = this.getters.getNumberRows(sheetId) - 1;
-            }
-            viewport.offsetY = this.getters.getRowDimensions(sheetId, viewport.top).start;
-        }
-        /**
-         * This function will make sure that the provided cell position (or current selected position) is part of
-         * the viewport that is actually displayed on the client. We therefore adjust the offset of the snapped
-         * viewport until it contains the cell completely.
-         */
-        adjustViewportsPosition(sheetId, position) {
-            const sheet = this.getters.getSheet(sheetId);
-            const adjustedViewport = this.getViewport(sheetId);
-            if (!position) {
-                position = this.getters.getSheetPosition(sheetId);
-            }
-            const mainCellPosition = this.getters.getMainCellPosition(sheetId, position.col, position.row);
-            const { col, row } = this.getters.getNextVisibleCellPosition(sheet.id, mainCellPosition.col, mainCellPosition.row);
-            const { start, end } = this.getters.getColDimensions(sheetId, col);
-            while (end > adjustedViewport.offsetX + this.viewportWidth &&
-                adjustedViewport.offsetX < start) {
-                adjustedViewport.offsetX = this.getters.getColDimensions(sheetId, adjustedViewport.left).end;
-                adjustedViewport.offsetScrollbarX = adjustedViewport.offsetX;
-                this.adjustViewportZoneX(sheetId, adjustedViewport);
-            }
-            while (col < adjustedViewport.left) {
-                let leftCol;
-                for (leftCol = adjustedViewport.left; leftCol >= 0; leftCol--) {
-                    if (!this.getters.isColHidden(sheetId, leftCol)) {
-                        break;
-                    }
-                }
-                adjustedViewport.offsetX = this.getters.getColDimensions(sheetId, leftCol - 1).start;
-                adjustedViewport.offsetScrollbarX = adjustedViewport.offsetX;
-                this.adjustViewportZoneX(sheetId, adjustedViewport);
-            }
-            while (this.getters.getRowDimensions(sheetId, row).end >
-                adjustedViewport.offsetY + this.viewportHeight &&
-                adjustedViewport.offsetY < this.getters.getRowDimensions(sheetId, row).start) {
-                adjustedViewport.offsetY = this.getters.getRowDimensions(sheetId, adjustedViewport.top).end;
-                adjustedViewport.offsetScrollbarY = adjustedViewport.offsetY;
-                this.adjustViewportZoneY(sheetId, adjustedViewport);
-            }
-            while (row < adjustedViewport.top) {
-                let topRow;
-                for (topRow = adjustedViewport.top; topRow >= 0; topRow--) {
-                    if (!this.getters.isRowHidden(sheetId, topRow)) {
-                        break;
-                    }
-                }
-                adjustedViewport.offsetY = this.getters.getRowDimensions(sheetId, topRow - 1).start;
-                adjustedViewport.offsetScrollbarY = adjustedViewport.offsetY;
-                this.adjustViewportZoneY(sheetId, adjustedViewport);
-            }
-        }
-        /**
-         * Shift the viewport vertically and move the selection anchor
-         * such that it remains at the same place relative to the
-         * viewport top.
-         */
-        shiftVertically(offset) {
-            const { top, offsetX } = this.getActiveViewport();
-            this.setViewportOffset(offsetX, offset);
-            const { anchor } = this.getters.getSelection();
-            const deltaRow = this.getActiveViewport().top - top;
-            this.selection.selectCell(anchor.cell.col, anchor.cell.row + deltaRow);
-        }
-        getVisibleFigures() {
-            const sheetId = this.getters.getActiveSheetId();
-            const result = [];
-            const figures = this.getters.getFigures(sheetId);
-            const { offsetX, offsetY } = this.getters.getActiveViewport();
-            const { width, height } = this.getters.getViewportDimensionWithHeaders();
-            for (let figure of figures) {
-                if (figure.x >= offsetX + width || figure.x + figure.width <= offsetX) {
-                    continue;
-                }
-                if (figure.y >= offsetY + height || figure.y + figure.height <= offsetY) {
-                    continue;
-                }
-                result.push(figure);
-            }
-            return result;
-        }
-    }
-    ViewportPlugin.getters = [
-        "getColIndex",
-        "getRowIndex",
-        "getActiveViewport",
-        "getViewportDimension",
-        "getViewportDimensionWithHeaders",
-        "getMaxViewportSize",
-        "getMaximumViewportOffset",
-        "getVisibleFigures",
+    SheetUIPlugin.getters = [
+        "getCellWidth",
+        "getTextWidth",
+        "getCellText",
+        "getCellMultiLineText",
+        "getColDimensions",
+        "getRowDimensions",
+        "getColRowOffset",
     ];
 
     const corePluginRegistry = new Registry()
@@ -32735,7 +33354,7 @@
         .add("edition", EditionPlugin)
         .add("selectionInputManager", SelectionInputsManagerPlugin)
         .add("highlight", HighlightPlugin)
-        .add("viewport", ViewportPlugin)
+        .add("viewport", SheetViewPlugin)
         .add("grid renderer", RendererPlugin)
         .add("autofill", AutofillPlugin)
         .add("find_and_replace", FindAndReplacePlugin)
@@ -33217,13 +33836,13 @@
     SidePanel.template = "o-spreadsheet-SidePanel";
 
     const AddMergeInteractiveContent = {
-        mergeIsDestructive: _lt("Merging these cells will only preserve the top-leftmost value. Merge anyway?"),
+        MergeIsDestructive: _lt("Merging these cells will only preserve the top-leftmost value. Merge anyway?"),
     };
     function interactiveAddMerge(env, sheetId, target) {
         const result = env.model.dispatch("ADD_MERGE", { sheetId, target });
         if (!result.isSuccessful) {
             if (result.isCancelledBecause(3 /* MergeIsDestructive */)) {
-                env.askConfirmation(_lt(AddMergeInteractiveContent.mergeIsDestructive), () => {
+                env.askConfirmation(AddMergeInteractiveContent.MergeIsDestructive, () => {
                     env.model.dispatch("ADD_MERGE", { sheetId, target, force: true });
                 });
             }
@@ -33538,12 +34157,18 @@
         }
         updateCellState() {
             const zones = this.env.model.getters.getSelectedZones();
-            const { top, left, right, bottom } = zones[0];
-            this.cannotMerge = zones.length > 1 || (top === bottom && left === right);
+            const sheetId = this.env.model.getters.getActiveSheetId();
             this.inMerge = false;
+            const { top, left, right, bottom } = this.env.model.getters.getSelectedZone();
+            const { xSplit, ySplit } = this.env.model.getters.getPaneDivisions(sheetId);
+            this.cannotMerge =
+                zones.length > 1 ||
+                    (top === bottom && left === right) ||
+                    (left < xSplit && xSplit <= right) ||
+                    (top < ySplit && ySplit <= bottom);
             if (!this.cannotMerge) {
                 const { col, row } = this.env.model.getters.getPosition();
-                const zone = this.env.model.getters.expandZone(this.env.model.getters.getActiveSheetId(), {
+                const zone = this.env.model.getters.expandZone(sheetId, {
                     left: col,
                     right: col,
                     top: row,
@@ -33574,6 +34199,9 @@
             return getMenuName(menu, this.env);
         }
         toggleMerge() {
+            if (this.cannotMerge) {
+                return;
+            }
             const zones = this.env.model.getters.getSelectedZones();
             const target = [zones[zones.length - 1]];
             const sheetId = this.env.model.getters.getActiveSheetId();
@@ -33681,6 +34309,10 @@
 `;
     const t = (s) => s;
     class Spreadsheet extends owl.Component {
+        constructor() {
+            super(...arguments);
+            this.isViewportTooSmall = false;
+        }
         getStyle() {
             if (this.env.isDashboard()) {
                 return `grid-template-rows: auto;`;
@@ -33710,8 +34342,14 @@
             });
             owl.useExternalListener(window, "resize", () => this.render(true));
             owl.useExternalListener(window, "beforeunload", this.unbindModelEvents.bind(this));
-            owl.onMounted(() => this.bindModelEvents());
+            owl.onMounted(() => {
+                this.bindModelEvents();
+                this.checkViewportSize();
+            });
             owl.onWillUnmount(() => this.unbindModelEvents());
+            owl.onPatched(() => {
+                this.checkViewportSize();
+            });
         }
         get focusTopBarComposer() {
             return this.model.getters.getEditionMode() === "inactive"
@@ -33731,10 +34369,26 @@
             this.model.off("update", this);
             this.model.off("notify-ui", this);
         }
+        checkViewportSize() {
+            const { xRatio, yRatio } = this.env.model.getters.getFrozenSheetViewRatio(this.env.model.getters.getActiveSheetId());
+            if (yRatio > MAXIMAL_FREEZABLE_RATIO || xRatio > MAXIMAL_FREEZABLE_RATIO) {
+                if (this.isViewportTooSmall) {
+                    return;
+                }
+                this.env.notifyUser({
+                    text: _lt("The current window is too small to display this sheet properly. Consider resizing your browser window or adjusting frozen rows and columns."),
+                    tag: "viewportTooSmall",
+                });
+                this.isViewportTooSmall = true;
+            }
+            else {
+                this.isViewportTooSmall = false;
+            }
+        }
         onNotifyUI(payload) {
             switch (payload.type) {
-                case "NOTIFICATION":
-                    this.env.notifyUser(payload.text);
+                case "ERROR":
+                    this.env.raiseError(payload.text);
                     break;
             }
         }
@@ -33849,6 +34503,8 @@
     otRegistry.addTransformation("DELETE_FIGURE", ["UPDATE_FIGURE", "UPDATE_CHART"], updateChartFigure);
     otRegistry.addTransformation("CREATE_SHEET", ["CREATE_SHEET"], createSheetTransformation);
     otRegistry.addTransformation("ADD_MERGE", ["ADD_MERGE", "REMOVE_MERGE"], mergeTransformation);
+    otRegistry.addTransformation("ADD_COLUMNS_ROWS", ["FREEZE_COLUMNS", "FREEZE_ROWS"], freezeTransformation);
+    otRegistry.addTransformation("REMOVE_COLUMNS_ROWS", ["FREEZE_COLUMNS", "FREEZE_ROWS"], freezeTransformation);
     function transformTargetSheetId(cmd, executed) {
         const deletedSheetId = executed.sheetId;
         if (cmd.targetSheetId === deletedSheetId || cmd.sheetId === deletedSheetId) {
@@ -33897,6 +34553,29 @@
             return { ...cmd, target };
         }
         return undefined;
+    }
+    function freezeTransformation(cmd, executed) {
+        if (cmd.sheetId !== executed.sheetId) {
+            return cmd;
+        }
+        const dimension = cmd.type === "FREEZE_COLUMNS" ? "COL" : "ROW";
+        if (dimension !== executed.dimension) {
+            return cmd;
+        }
+        let quantity = cmd["quantity"];
+        if (executed.type === "REMOVE_COLUMNS_ROWS") {
+            const executedElements = [...executed.elements].sort((a, b) => b - a);
+            for (let removedElement of executedElements) {
+                if (quantity > removedElement) {
+                    quantity--;
+                }
+            }
+        }
+        if (executed.type === "ADD_COLUMNS_ROWS") {
+            const executedBase = executed.position === "before" ? executed.base - 1 : executed.base;
+            quantity = quantity > executedBase ? quantity + executed.quantity : quantity;
+        }
+        return quantity > 0 ? { ...cmd, quantity } : undefined;
     }
 
     const transformations = [
@@ -34011,6 +34690,9 @@
             return transformSheetResult === "IGNORE_COMMAND" ? "IGNORE_COMMAND" : cmd;
         }
         if (executed.type === "ADD_COLUMNS_ROWS" || executed.type === "REMOVE_COLUMNS_ROWS") {
+            if (executed.dimension !== cmd.dimension) {
+                return cmd;
+            }
             const isUnique = cmd.type === "ADD_COLUMNS_ROWS";
             const field = isUnique ? "base" : "elements";
             let elements = isUnique ? [cmd[field]] : cmd[field];
@@ -36183,8 +36865,8 @@
         }
         // Excel does not support this feature
         const axisPos = chart.verticalAxisPosition === "left" ? "l" : "r";
-        const grouping = chart.stackedBar ? "stacked" : "clustered";
-        const overlap = chart.stackedBar ? 100 : -20;
+        const grouping = chart.stacked ? "stacked" : "clustered";
+        const overlap = chart.stacked ? 100 : -20;
         return escapeXml /*xml*/ `
     <c:barChart>
       <c:barDir val="col"/>
@@ -36232,8 +36914,10 @@
         }
         // Excel does not support this feature
         const axisPos = chart.verticalAxisPosition === "left" ? "l" : "r";
+        const grouping = chart.stacked ? "stacked" : "standard";
         return escapeXml /*xml*/ `
     <c:lineChart>
+      <c:grouping val="${grouping}"/>
       <!-- each data marker in the series does not have a different color -->
       <c:varyColors val="0"/>
       ${joinXmlNodes(dataSetsNodes)}
@@ -37124,6 +37808,38 @@
         else
             return escapeXml ``;
     }
+    function addSheetViews(sheet) {
+        const panes = sheet.panes;
+        let splitPanes = escapeXml /*xml*/ ``;
+        if (panes && (panes.xSplit || panes.ySplit)) {
+            const xc = toXC(panes.xSplit, panes.ySplit);
+            //workbookViewId should be defined in the workbook file but it seems like Excel has a default behaviour.
+            const xSplit = panes.xSplit ? escapeXml `xSplit="${panes.xSplit}"` : "";
+            const ySplit = panes.ySplit ? escapeXml `ySplit="${panes.ySplit}"` : "";
+            const topRight = panes.xSplit ? escapeXml `<selection pane="topRight"/>` : "";
+            const bottomLeft = panes.ySplit ? escapeXml `<selection pane="bottomLeft"/>` : "";
+            const bottomRight = panes.xSplit && panes.ySplit ? escapeXml `<selection pane="bottomRight"/>` : "";
+            splitPanes = escapeXml /*xml*/ `
+    <pane
+      ${xSplit}
+      ${ySplit}
+      topLeftCell="${xc}"
+      activePane="${panes.xSplit ? (panes.ySplit ? "bottomRight" : "topRight") : "bottomLeft"}"
+      state="frozen"/>
+      ${topRight}
+      ${bottomLeft}
+      ${bottomRight}
+    `;
+        }
+        let sheetView = escapeXml /*xml*/ `
+      <sheetViews>
+        <sheetView showGridLines="${sheet.areGridLinesVisible ? 1 : 0}" workbookViewId="0">
+          ${splitPanes}
+        </sheetView>
+      </sheetViews>
+    `;
+        return sheetView;
+    }
 
     /**
      * Return the spreadsheet data in the Office Open XML file format.
@@ -37209,6 +37925,7 @@
             }
             const sheetXml = escapeXml /*xml*/ `
       <worksheet ${formatAttributes(namespaces)}>
+        ${addSheetViews(sheet)}
         <sheetFormatPr ${formatAttributes(sheetFormatAttributes)} />
         ${addColumns(sheet.cols)}
         ${addRows(construct, data, sheet)}
@@ -37714,6 +38431,9 @@
         ChartColors,
         EvaluationError,
         CellErrorLevel,
+        getFillingMode,
+        rgbaToHex,
+        colorToRGBA,
     };
     const components = {
         ChartPanel,
@@ -37763,8 +38483,8 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
     exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2022-09-22T12:32:07.231Z';
-    exports.__info__.hash = '739db5a';
+    exports.__info__.date = '2022-09-28T11:18:35.407Z';
+    exports.__info__.hash = '758a22f';
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map
