@@ -32,7 +32,7 @@ class TestReportsCommon(TransactionCase):
             product_ids = product_template_ids
         if context:
             report = report.with_context(context)
-        report_values = report._get_report_values(docids=product_ids)
+        report_values = report.get_report_values(docids=product_ids)
         docs = report_values['docs']
         lines = docs['lines']
         return report_values, docs, lines

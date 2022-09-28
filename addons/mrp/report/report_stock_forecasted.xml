@@ -1,41 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="mrp_report_product_product_replenishment" inherit_id="stock.report_product_product_replenishment">
-        <xpath expr="//tr[@name='draft_picking_in']" position="after">
-            <tr t-if="docs['draft_production_qty']['in']" name="draft_mo_in">
-                <td colspan="2">Production of Draft MO</td>
-                <td t-esc="docs['draft_production_qty']['in']" t-options="{'widget': 'float', 'precision': precision}" class="text-end"/>
-            </tr>
-        </xpath>
-        <xpath expr="//tr[@name='draft_picking_out']" position="after">
-            <tr t-if="docs['draft_production_qty']['out']" name="draft_mo_out">
-                <td colspan="2">Component of Draft MO</td>
-                <td t-esc="-docs['draft_production_qty']['out']" t-options="{'widget': 'float', 'precision': precision}" class="text-end"/>
-            </tr>
-        </xpath>
-         <xpath expr="//button[@name='unreserve_link']" position="after">
-            <button t-if="line['move_out'] and line['move_out'].raw_material_production_id and line['move_out'].raw_material_production_id.unreserve_visible"
-                class="btn btn-sm btn-primary o_report_replenish_unreserve"
-                t-attf-model="mrp.production"
-                t-att-model-id="line['move_out'].raw_material_production_id.id">
-                Unreserve
-            </button>
-        </xpath>
-        <xpath expr="//button[@name='reserve_link']" position="after">
-            <button t-if="line['move_out'] and line['move_out'].raw_material_production_id and line['move_out'].raw_material_production_id.reserve_visible"
-                class="btn btn-sm btn-primary o_report_replenish_reserve"
-                t-attf-model="mrp.production"
-                t-att-model-id="line['move_out'].raw_material_production_id.id">
-                Reserve
-            </button>
-        </xpath>
-         <xpath expr="//button[@name='change_priority_link']" position="after">
-            <button t-if="line['move_out'] and line['move_out'].raw_material_production_id"
-                t-attf-class="o_priority o_priority_star o_report_replenish_change_priority fa fa-star#{' one' if line['move_out'].raw_material_production_id.priority=='1' else '-o zero'}"
-                t-attf-model="mrp.production"
-                t-att-model-id="line['move_out'].raw_material_production_id.id"
-            />
-
-        </xpath>
    </template>
 </odoo>
