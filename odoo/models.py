@@ -69,7 +69,7 @@ _logger = logging.getLogger(__name__)
 _unlink = logging.getLogger(__name__ + '.unlink')
 
 regex_alphanumeric = re.compile(r'^[a-z0-9_]+$')
-regex_order = re.compile(r'^(\s*([a-z0-9:_]+|"[a-z0-9:_]+")(\.id)?(\s+(desc|asc))?\s*(,|$))+(?<!,)$', re.I)
+regex_order = re.compile(r'^(\s*([a-z0-9:_]+|"[a-z0-9:_]+")(\.[a-z0-9]+)?(\s+(desc|asc))?\s*(,|$))+(?<!,)$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 regex_pg_name = re.compile(r'^[a-z_][a-z0-9_$]*$', re.I)
 regex_field_agg = re.compile(r'(\w+)(?::(\w+)(?:\((\w+)\))?)?')
@@ -4570,6 +4570,12 @@ class BaseModel(metaclass=MetaModel):
         for order_part in order_spec.split(','):
             order_split = order_part.strip().split(' ')
             order_field = order_split[0].strip()
+
+            property_name = None
+            if "." in order_field:
+                order_field, property_name = order_field.split('.', 1)
+                check_property_field_value_name(property_name)
+
             order_direction = order_split[1].strip().upper() if len(order_split) == 2 else ''
             if reverse_direction:
                 order_direction = 'ASC' if order_direction == 'DESC' else 'DESC'
@@ -4593,6 +4599,8 @@ class BaseModel(metaclass=MetaModel):
                     qualifield_name = self._inherits_join_calc(alias, order_field, query)
                     if field.type == 'boolean':
                         qualifield_name = "COALESCE(%s, false)" % qualifield_name
+                    elif field.type == 'properties' and property_name:
+                        qualifield_name = f"({qualifield_name} -> '{property_name}')"
                     order_by_elements.append("%s %s" % (qualifield_name, order_direction))
                 else:
                     _logger.warning("Model %r cannot be sorted on field %r (not a column)", self._name, order_field)
