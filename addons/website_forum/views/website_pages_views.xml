@@ -169,7 +169,10 @@
     <field name="name">Forum Post Pages</field>
     <field name="res_model">forum.post</field>
     <field name="view_mode">tree,kanban,graph</field>
-    <field name="view_id" ref="view_forum_post_list"/>
+    <field name="view_ids" eval="[(5, 0, 0),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('view_forum_post_list')}),
+        (0, 0, {'view_mode': 'kanban', 'view_id': ref('forum_post_view_kanban')}),
+    ]"/>
     <field name="search_view_id" ref="view_forum_post_search"/>
     <field name="context">{'search_default_posts': 1, 'create_action': 'website_forum.forum_forum_action_add'}</field>
     <field name="help" type="html">

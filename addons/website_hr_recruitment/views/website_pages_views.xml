@@ -56,7 +56,7 @@
 <record id="action_job_pages_list" model="ir.actions.act_window">
     <field name="name">Job Pages</field>
     <field name="res_model">hr.job</field>
-    <field name="view_mode">tree,kanban</field>
+    <field name="view_mode">tree,kanban,form</field>
     <field name="view_ids" eval="[(5, 0, 0),
         (0, 0, {'view_mode': 'tree', 'view_id': ref('job_pages_tree_view')}),
         (0, 0, {'view_mode': 'kanban', 'view_id': ref('job_pages_kanban_view')}),

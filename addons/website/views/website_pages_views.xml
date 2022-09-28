@@ -164,7 +164,10 @@
     <field name="name">Website Pages</field>
     <field name="res_model">website.page</field>
     <field name="view_mode">tree,kanban</field>
-    <field name="view_id" ref="website.website_pages_tree_view"/>
+    <field name="view_ids" eval="[(5, 0, 0),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('website_pages_tree_view')}),
+        (0, 0, {'view_mode': 'kanban', 'view_id': ref('website_pages_kanban_view')}),
+    ]"/>
 </record>
 
 <menuitem id="menu_website_pages_list"
