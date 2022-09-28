@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
-import { useUpdate } from '@mail/component_hooks/use_update';
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
+import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
@@ -12,7 +13,8 @@ export class ComposerSuggestionView extends Component {
      */
     setup() {
         super.setup();
-        useUpdate({ func: () => this._update() });
+        useComponentToModel({ fieldName: 'component' });
+        useUpdateToModel({ methodName: 'onComponentUpdate' });
     }
 
     //--------------------------------------------------------------------------
@@ -24,26 +26,6 @@ export class ComposerSuggestionView extends Component {
      */
     get composerSuggestionView() {
         return this.props.record;
-    }
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _update() {
-        if (
-            this.root.el &&
-            this.composerSuggestionView.composerSuggestionListViewOwner.hasToScrollToActiveSuggestionView &&
-            this.composerSuggestionView.composerSuggestionListViewOwnerAsActiveSuggestionView
-        ) {
-            this.root.el.scrollIntoView({
-                block: 'center',
-            });
-            this.composerSuggestionView.composerSuggestionListViewOwner.update({ hasToScrollToActiveSuggestionView: false });
-        }
     }
 
 }
