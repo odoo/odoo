@@ -72,18 +72,21 @@ export class NewContentModal extends Component {
         this.state = useState({
             newContentElements: [
                 {
+                    moduleName: 'website_blog',
                     moduleXmlId: 'base.module_website_blog',
                     status: MODULE_STATUS.NOT_INSTALLED,
                     icon: xml`<i class="fa fa-rss"/>`,
                     title: this.env._t('Blog Post'),
                 },
                 {
+                    moduleName: 'website_event',
                     moduleXmlId: 'base.module_website_event',
                     status: MODULE_STATUS.NOT_INSTALLED,
                     icon: xml`<i class="fa fa-ticket"/>`,
                     title: this.env._t('Event'),
                 },
                 {
+                    moduleName: 'website_forum',
                     moduleXmlId: 'base.module_website_forum',
                     status: MODULE_STATUS.NOT_INSTALLED,
                     icon: xml`<i class="fa fa-comment"/>`,
@@ -91,24 +94,28 @@ export class NewContentModal extends Component {
                     title: this.env._t('Forum'),
                 },
                 {
+                    moduleName: 'website_hr_recruitment',
                     moduleXmlId: 'base.module_website_hr_recruitment',
                     status: MODULE_STATUS.NOT_INSTALLED,
                     icon: xml`<i class="fa fa-briefcase"/>`,
                     title: this.env._t('Job Position'),
                 },
                 {
+                    moduleName: 'website_sale',
                     moduleXmlId: 'base.module_website_sale',
                     status: MODULE_STATUS.NOT_INSTALLED,
                     icon: xml`<i class="fa fa-shopping-cart"/>`,
                     title: this.env._t('Product'),
                 },
                 {
+                    moduleName: 'website_slides',
                     moduleXmlId: 'base.module_website_slides',
                     status: MODULE_STATUS.NOT_INSTALLED,
                     icon: xml`<i class="fa module_icon" style="background-image: url('/website/static/src/img/apps_thumbs/website_slide.svg');background-repeat: no-repeat; background-position: center;"/>`,
                     title: this.env._t('Course'),
                 },
                 {
+                    moduleName: 'website_livechat',
                     moduleXmlId: 'base.module_website_livechat',
                     status: MODULE_STATUS.NOT_INSTALLED,
                     icon: xml`<i class="fa fa-comments"/>`,
@@ -131,10 +138,16 @@ export class NewContentModal extends Component {
     async onWillStart() {
         this.isDesigner = await this.user.hasGroup('website.group_website_designer');
         this.canInstall = await this.user.isAdmin;
-
-        const xmlIds = this.state.newContentElements.filter(({status}) => status === MODULE_STATUS.NOT_INSTALLED).map(({moduleXmlId}) => moduleXmlId);
         if (this.canInstall) {
-            this.modulesInfo = await this.rpc('/website/get_modules_info', {xml_ids: xmlIds});
+            const moduleNames = this.state.newContentElements.filter(({status}) => status === MODULE_STATUS.NOT_INSTALLED).map(({moduleName}) => moduleName);
+            this.modulesInfo = {};
+            for (const record of await this.orm.searchRead(
+                "ir.module.module",
+                [['name', 'in', moduleNames]],
+                ["id", "name", "shortdesc"],
+            )) {
+                this.modulesInfo[record.name] = {id: record.id, name: record.shortdesc};
+            }
         }
     }
 
@@ -169,7 +182,7 @@ export class NewContentModal extends Component {
             return element.createNewContent();
         }
 
-        const {id, name} = this.modulesInfo[element.moduleXmlId];
+        const {id, name} = this.modulesInfo[element.moduleName];
         const dialogProps = {
             title: element.title,
             installationText: _.str.sprintf(this.newContentText.installNeeded, name),
