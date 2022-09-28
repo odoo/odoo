@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
+import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
-import { useUpdate } from '@mail/component_hooks/use_update';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
@@ -13,8 +14,9 @@ export class CallMainView extends Component {
      */
     setup() {
         super.setup();
+        useComponentToModel({ fieldName: 'component' });
         useRefToModel({ fieldName: 'tileContainerRef', refName: 'tileContainer', });
-        useUpdate({ func: () => this._update() });
+        useUpdateToModel({ methodName: 'onComponentUpdate' });
     }
 
     //--------------------------------------------------------------------------
@@ -26,42 +28,6 @@ export class CallMainView extends Component {
      */
     get callMainView() {
         return this.props.record;
-    }
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _setTileLayout() {
-        if (!this.root.el) {
-            return;
-        }
-        if (!this.callMainView.tileContainerRef.el) {
-            return;
-        }
-        const { width, height } = this.callMainView.tileContainerRef.el.getBoundingClientRect();
-
-        const { tileWidth, tileHeight } = this.callMainView.calculateTessellation({
-            aspectRatio: this.callMainView.callView.aspectRatio,
-            containerHeight: height,
-            containerWidth: width,
-            tileCount: this.callMainView.tileContainerRef.el.children.length,
-        });
-
-        this.callMainView.update({
-            tileHeight,
-            tileWidth,
-        });
-    }
-
-    /**
-     * @private
-     */
-    _update() {
-        this._setTileLayout();
     }
 }
 

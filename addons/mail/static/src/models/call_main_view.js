@@ -70,6 +70,25 @@ registerModel({
         onClickShowSidebar(ev) {
             this.callView.update({ isSidebarOpen: true });
         },
+        onComponentUpdate() {
+            if (!this.component.root.el) {
+                return;
+            }
+            if (!this.tileContainerRef.el) {
+                return;
+            }
+            const { width, height } = this.tileContainerRef.el.getBoundingClientRect();
+            const { tileWidth, tileHeight } = this.calculateTessellation({
+                aspectRatio: this.callView.aspectRatio,
+                containerHeight: height,
+                containerWidth: width,
+                tileCount: this.tileContainerRef.el.children.length,
+            });
+            this.update({
+                tileHeight,
+                tileWidth,
+            });
+        },
         /**
          * @param {MouseEvent} ev
          */
@@ -144,6 +163,7 @@ registerModel({
             identifying: true,
             inverse: 'callMainView',
         }),
+        component: attr(),
         hasSidebarButton: attr({
             compute() {
                 return Boolean(this.callView.activeRtcSession && this.showOverlay && !this.callView.threadView.compact);
