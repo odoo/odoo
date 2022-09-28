@@ -338,11 +338,11 @@ class AccountReconcileModel(models.Model):
         tracking=True,
         help="The sum of total residual amount propositions and the statement line amount allowed gap type.",
     )
-    match_partner = fields.Boolean(string='Partner should be set', tracking=True,
+    match_partner = fields.Boolean(string='Partner is Set', tracking=True,
         help='The reconciliation model will only be applied when a customer/vendor is set.')
-    match_partner_ids = fields.Many2many('res.partner', string='Only Those Partners',
+    match_partner_ids = fields.Many2many('res.partner', string='Matching partners',
         help='The reconciliation model will only be applied to the selected customers/vendors.')
-    match_partner_category_ids = fields.Many2many('res.partner.category', string='Only Those Partner Categories',
+    match_partner_category_ids = fields.Many2many('res.partner.category', string='Matching categories',
         help='The reconciliation model will only be applied to the selected customer/vendor categories.')
 
     line_ids = fields.One2many('account.reconcile.model.line', 'model_id')
