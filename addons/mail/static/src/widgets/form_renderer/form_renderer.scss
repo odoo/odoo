@@ -16,12 +16,16 @@
     }
 
     &.o-isInFormSheetBg {
-        max-width: none;
         background-color: $white;
-        margin-left: -$o-horizontal-padding;
-        margin-right: -$o-horizontal-padding;
         width: auto;
         border-top: 1px solid $border-color;
+    }
+
+    .o_ChatterContainer {
+        @include make-container-max-widths();
+
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 
@@ -37,8 +41,7 @@
 .o_FormRenderer_chatterContainer {
     display: flex;
     margin: 0 auto;
-    max-width: $o-form-view-sheet-max-width;
-    padding: map-get($spacers, 3) map-get($spacers, 3) map-get($spacers, 5);
+    padding-bottom: map-get($spacers, 5);
     width: 100%;
 }
 
