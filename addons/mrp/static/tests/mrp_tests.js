@@ -28,38 +28,6 @@ QUnit.module('mrp', {
     },
 }, function () {
 
-    QUnit.test("mrp_time_counter: basic rendering", async function (assert) {
-        assert.expect(2);
-        var data = {
-            foo: {
-                fields: { duration: { string: "Duration", type: "float" } },
-                records: [{id: 1, duration:150.5}]
-            },
-        };
-        var form = await createView({
-            View: FormView,
-            model: 'foo',
-            data: data,
-            res_id: 1,
-            arch:
-                '<form>' +
-                    '<field name="duration" widget="mrp_time_counter"/>' +
-                '</form>',
-            mockRPC: function (route, args) {
-                if (args.method === 'search_read' && args.model === 'mrp.workcenter.productivity') {
-                    assert.ok(true, "the widget should fetch the mrp.workcenter.productivity");
-                    return Promise.resolve([]);
-                }
-                return this._super.apply(this, arguments);
-            },
-        });
-
-        assert.strictEqual(form.$('.o_field_widget[name="duration"]').text(), "150:30",
-            "the timer should be correctly set");
-
-        form.destroy();
-    });
-
     QUnit.test("embed_viewer rendering in form view", async function (assert) {
         assert.expect(8);
         var data = {
