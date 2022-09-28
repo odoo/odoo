@@ -138,7 +138,10 @@
     <field name="name">Blog Post Pages</field>
     <field name="res_model">blog.post</field>
     <field name="view_mode">tree,kanban,form</field>
-    <field name="view_id" ref="view_blog_post_list"/>
+    <field name="view_ids" eval="[(5, 0, 0),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('view_blog_post_list')}),
+        (0, 0, {'view_mode': 'kanban', 'view_id': ref('blog_post_view_kanban')}),
+    ]"/>
     <field name="search_view_id" ref="view_blog_post_search"/>
     <field name="context">{'create_action': 'website_blog.blog_post_action_add'}</field>
 </record>

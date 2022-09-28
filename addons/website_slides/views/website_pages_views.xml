@@ -60,7 +60,7 @@
 <record id="action_slide_channel_pages_list" model="ir.actions.act_window">
     <field name="name">Course Pages</field>
     <field name="res_model">slide.channel</field>
-    <field name="view_mode">tree,kanban</field>
+    <field name="view_mode">tree,kanban,form</field>
     <field name="view_ids" eval="[(5, 0, 0),
         (0, 0, {'view_mode': 'tree', 'view_id': ref('slide_channel_pages_tree_view')}),
         (0, 0, {'view_mode': 'kanban', 'view_id': ref('slide_channel_pages_kanban_view')}),
