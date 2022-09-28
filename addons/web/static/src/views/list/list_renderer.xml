@@ -126,7 +126,7 @@
             </tr>
             <t t-if="!props.list.isGrouped">
                 <tr t-foreach="getEmptyRowIds" t-as="emptyRowId" t-key="emptyRowId">
-                    <td t-att-colspan="props.list.editedRecord ? nbCols : nbCols + 1">&#8203;</td>
+                    <td t-att-colspan="nbCols">&#8203;</td>
                 </tr>
             </t>
         </t>
