@@ -461,12 +461,12 @@ class StockMove(models.Model):
                 # Want to increase the current qty done
                 if float_compare(mls_qty_done, quantity_done, precision_rounding=move.product_uom.rounding) < 0:
                     # If done > reserve then try assign with excess done
-                    if move.has_tracking == 'none' and float_compare(quantity_done, move._get_reserve_qty_mls(), precision_rounding=move.product_uom.rounding):
+                    if move.state != 'draft' and float_compare(quantity_done, move._get_reserve_qty_mls(), precision_rounding=move.product_uom.rounding) > 0:
                         move.with_context(reserve_excess_done=True)._action_assign()
                     qty_inc = quantity_done - mls_qty_done
                     qty_inc = _process_move_increase(move, qty_inc)
                     # If there is still thing to distribute
-                    if move.has_tracking == 'none' and float_compare(qty_inc, 0.0, precision_rounding=move.product_uom.rounding) > 0:
+                    if move.state != 'draft' and move.has_tracking == 'none' and float_compare(qty_inc, 0.0, precision_rounding=move.product_uom.rounding) > 0:
                         _process_excess(move, qty_inc)
                 # Want to decrease the current qty done
                 elif float_compare(mls_qty_done, quantity_done, precision_rounding=move.product_uom.rounding) > 0:
@@ -1396,6 +1396,7 @@ class StockMove(models.Model):
                             or move.picking_type_id.reservation_method == 'at_confirm'
                             or (move.reservation_date and move.reservation_date <= fields.Date.today())))\
              ._action_assign()
+
         if new_push_moves:
             neg_push_moves = new_push_moves.filtered(lambda sm: float_compare(sm.product_uom_qty, 0, precision_rounding=sm.product_uom.rounding) < 0)
             (new_push_moves - neg_push_moves)._action_confirm()

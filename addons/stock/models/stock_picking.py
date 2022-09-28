@@ -1190,7 +1190,12 @@ class Picking(models.Model):
                 picking.action_confirm()
                 # Make sure the reservation is bypassed in immediate transfer mode.
                 if picking.immediate_transfer:
-                    picking.move_ids.write({'state': 'assigned'})
+                    if picking.picking_type_code != 'incoming':
+                        picking.move_ids.write({'state': 'confirmed'})
+                        picking.move_ids.filtered(lambda m: float_compare(m.quantity_done, m._get_reserve_qty_mls(), precision_rounding=m.product_uom.rounding) != 0)\
+                            .with_context(reserve_excess_done=True)._action_assign()
+                    else:
+                        picking.move_ids.write({'state': 'assigned'})
 
     def _create_backorder(self):
         """ This method is called when the user chose to create a backorder. It will create a new
