@@ -235,6 +235,10 @@ registerModel({
             inverse: 'messageViewInEditing',
         }),
         /**
+         * Reference to the content of the message.
+         */
+        contentRef: attr(),
+        /**
          * States the time elapsed since date up to now.
          */
         dateFromNow: attr({

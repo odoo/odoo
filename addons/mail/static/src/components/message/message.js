@@ -22,14 +22,11 @@ export class Message extends Component {
     setup() {
         super.setup();
         useComponentToModel({ fieldName: 'component' });
+        useRefToModel({ fieldName: 'contentRef', refName: 'content' });
         useRefToModel({ fieldName: 'notificationIconRef', refName: 'notificationIcon' });
         useRefToModel({ fieldName: 'prettyBodyRef', refName: 'prettyBody' });
         useUpdateToModel({ methodName: 'onComponentUpdate' });
         useUpdate({ func: () => this._update() });
-        /**
-         * Reference to the content of the message.
-         */
-        this._contentRef = useRef('content');
         /**
          * To get checkbox state.
          */
@@ -235,12 +232,12 @@ export class Message extends Component {
         // Remove all readmore before if any before reinsert them with _insertReadMoreLess.
         // This is needed because _insertReadMoreLess is working with direct DOM mutations
         // which are not sync with Owl.
-        if (this._contentRef.el) {
-            for (const el of [...this._contentRef.el.querySelectorAll(':scope .o_Message_readMoreLess')]) {
+        if (this.messageView.contentRef.el) {
+            for (const el of [...this.messageView.contentRef.el.querySelectorAll(':scope .o_Message_readMoreLess')]) {
                 el.remove();
             }
             this._lastReadMoreIndex = 0;
-            this._insertReadMoreLess($(this._contentRef.el));
+            this._insertReadMoreLess($(this.messageView.contentRef.el));
             this.messaging.messagingBus.trigger('o-component-message-read-more-less-inserted', {
                 message: this.messageView.message,
             });
