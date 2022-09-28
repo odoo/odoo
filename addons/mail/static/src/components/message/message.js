@@ -4,6 +4,7 @@ import { useComponentToModel } from '@mail/component_hooks/use_component_to_mode
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { useUpdate } from '@mail/component_hooks/use_update';
 import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
+import { clear } from '@mail/model/model_field_command';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 import { _lt } from 'web.core';
@@ -24,11 +25,6 @@ export class Message extends Component {
         useRefToModel({ fieldName: 'notificationIconRef', refName: 'notificationIcon' });
         useUpdateToModel({ methodName: 'onComponentUpdate' });
         useUpdate({ func: () => this._update() });
-        /**
-         * Value of the last rendered prettyBody. Useful to compare to new value
-         * to decide if it has to be updated.
-         */
-        this._lastPrettyBody;
         /**
          * Reference to element containing the prettyBody. Useful to be able to
          * replace prettyBody with new value in JS (which is faster than t-raw).
@@ -233,12 +229,12 @@ export class Message extends Component {
      * @private
      */
     _update() {
-        if (this._prettyBodyRef.el && this.messageView.message.prettyBody !== this._lastPrettyBody) {
+        if (this._prettyBodyRef.el && this.messageView.message.prettyBody !== this.messageView.lastPrettyBody) {
             this._prettyBodyRef.el.innerHTML = this.messageView.message.prettyBody;
-            this._lastPrettyBody = this.messageView.message.prettyBody;
+            this.messageView.update({ lastPrettyBody: this.messageView.message.prettyBody });
         }
         if (!this._prettyBodyRef.el) {
-            this._lastPrettyBody = undefined;
+            this.messageView.update({ lastPrettyBody: clear() });
         }
         // Remove all readmore before if any before reinsert them with _insertReadMoreLess.
         // This is needed because _insertReadMoreLess is working with direct DOM mutations
