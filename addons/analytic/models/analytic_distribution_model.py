@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 import json
 
 class AccountAnalyticDistributionModel(models.Model):
@@ -26,9 +27,29 @@ class AccountAnalyticDistributionModel(models.Model):
     company_id = fields.Many2one(
         'res.company',
         string='Company',
+        default=lambda self: self.env.company,
         ondelete='cascade',
         help="Select a company for which the analytic distribution will be used (e.g. create new customer invoice or Sales order if we select this company, it will automatically take this as an analytic account)",
     )
+
+    @api.constrains('company_id', 'analytic_distribution_stored_char')
+    def _check_company_accounts(self):
+
+        self.flush_recordset(['company_id', 'analytic_distribution_stored_char'])
+
+        query = """
+            SELECT model.id
+              FROM account_analytic_distribution_model model
+              JOIN account_analytic_account account
+                ON CAST(model.analytic_distribution_stored_char AS jsonb) ? CAST(account.id AS VARCHAR)
+             WHERE account.company_id IS NOT NULL 
+               AND (model.company_id IS NULL 
+                OR model.company_id != account.company_id)
+          GROUP BY model.id
+        """
+        self._cr.execute(query)
+        if self._cr.fetchone():
+            raise UserError(_("You defined a model with accounts belonging to a company than the model's company (or the model has no company)."))
 
     @api.model
     def _get_distribution(self, vals):
