@@ -78,3 +78,8 @@ export class TranslationButton extends Component {
     }
 }
 TranslationButton.template = "web.TranslationButton";
+TranslationButton.props = {
+    fieldName: { type: String },
+    record: { type: Object },
+    updateField: { type: Function },
+};
