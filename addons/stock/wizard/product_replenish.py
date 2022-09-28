@@ -36,14 +36,15 @@ class ProductReplenish(models.TransientModel):
     def default_get(self, fields):
         res = super(ProductReplenish, self).default_get(fields)
         product_tmpl_id = self.env['product.template']
-        if 'product_id' in fields:
-            if self.env.context.get('default_product_id'):
-                product_id = self.env['product.product'].browse(self.env.context['default_product_id'])
-                product_tmpl_id = product_id.product_tmpl_id
+        if self.env.context.get('default_product_id'):
+            product_id = self.env['product.product'].browse(self.env.context['default_product_id'])
+            product_tmpl_id = product_id.product_tmpl_id
+            if 'product_id' in fields:
                 res['product_tmpl_id'] = product_id.product_tmpl_id.id
                 res['product_id'] = product_id.id
-            elif self.env.context.get('default_product_tmpl_id'):
-                product_tmpl_id = self.env['product.template'].browse(self.env.context['default_product_tmpl_id'])
+        elif self.env.context.get('default_product_tmpl_id'):
+            product_tmpl_id = self.env['product.template'].browse(self.env.context['default_product_tmpl_id'])
+            if 'product_id' in fields:
                 res['product_tmpl_id'] = product_tmpl_id.id
                 res['product_id'] = product_tmpl_id.product_variant_id.id
                 if len(product_tmpl_id.product_variant_ids) > 1:

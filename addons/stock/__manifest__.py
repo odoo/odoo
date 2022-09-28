@@ -87,6 +87,7 @@
         'views/stock_rule_views.xml',
         'views/stock_package_level_views.xml',
         'views/stock_package_type_view.xml',
+        'views/stock_forecasted.xml',
     ],
     'installable': True,
     'application': True,
@@ -100,7 +101,6 @@
             'stock/static/src/legacy_web_report/report_backend.scss',
 
             'web/static/src/legacy/scss/views.scss',
-            'stock/static/src/scss/report_stock_forecasted.scss',
             'stock/static/src/scss/report_stock_reception.scss',
             'stock/static/src/scss/report_stock_rule.scss',
         ],
@@ -110,6 +110,7 @@
         'web.assets_backend': [
             'stock/static/src/**/*.js',
             'stock/static/src/**/*.xml',
+            'stock/static/src/scss/stock_forecasted.scss',
             'stock/static/src/scss/forecast_widget.scss',
             'stock/static/src/scss/stock_empty_screen.scss',
             'stock/static/src/views/**/*',
