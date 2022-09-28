@@ -288,8 +288,20 @@ class SaleOrder(models.Model):
             discountable, discountable_per_tax = self._discountable_cheapest(reward)
         # Discountable should never surpass the order's current total amount
         discountable = min(self.amount_total, discountable)
+        reward_code = _generate_random_reward_code()
+
         if not discountable:
-            raise UserError(_('There is nothing to discount'))
+            return [{
+                'name': reward.description,
+                'product_id': reward.discount_line_product_id.id,
+                'price_unit': 0,
+                'product_uom_qty': 1.0,
+                'product_uom': reward.discount_line_product_id.uom_id.id,
+                'reward_id': reward.id,
+                'coupon_id': coupon.id,
+                'points_cost': 0,
+                'reward_identifier_code': reward_code,
+            }]
         max_discount = reward.currency_id._convert(reward.discount_max_amount, self.currency_id, self.company_id, fields.Date.today()) or float('inf')
         if reward.discount_mode == 'per_point':
             max_discount = min(max_discount,
@@ -301,7 +313,6 @@ class SaleOrder(models.Model):
         elif reward.discount_mode == 'percent':
             max_discount = min(max_discount, discountable * (reward.discount / 100))
         # Discount per taxes
-        reward_code = _generate_random_reward_code()
         point_cost = reward.required_points if not reward.clear_wallet else self._get_real_points_for_coupon(coupon)
         if reward.discount_mode == 'per_point' and not reward.clear_wallet:
             # Calculate the actual point cost if the cost is per point
@@ -568,7 +579,7 @@ class SaleOrder(models.Model):
             for reward in coupon.program_id.reward_ids:
                 if reward.is_global_discount and global_discount_reward and global_discount_reward.discount >= reward.discount:
                     continue
-                if reward.reward_type == 'discount' and total_is_zero:
+                if reward.reward_type == 'discount' and total_is_zero and reward.program_id.is_payment_program:
                     continue
                 if points >= reward.required_points:
                     result[coupon] |= reward
@@ -710,7 +721,7 @@ class SaleOrder(models.Model):
                 not line.coupon_id:
                 continue
             seen_rewards.add(line.reward_identifier_code)
-            if line.reward_id.program_id.is_payment_program:
+            if not line.reward_id.program_id.is_payment_program:
                 line_rewards.append((line.reward_id, line.coupon_id, line.reward_identifier_code, line.product_id))
             else:
                 payment_rewards.append((line.reward_id, line.coupon_id, line.reward_identifier_code, line.product_id))
