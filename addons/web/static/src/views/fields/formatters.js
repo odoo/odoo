@@ -200,7 +200,7 @@ export function formatFloatTime(value, options = {}) {
     let hour = Math.floor(value);
     // Although looking quite overkill, the following line ensures that we do
     // not have float issues while still considering that 59s is 00:00.
-    let min = Math.floor(Math.round((value % 1) * 100) / 100 * 60);
+    let min = Math.floor((Math.round((value % 1) * 100) / 100) * 60);
     if (min === 60) {
         min = 0;
         hour = hour + 1;
@@ -211,7 +211,7 @@ export function formatFloatTime(value, options = {}) {
     }
     let sec = "";
     if (options.displaySeconds) {
-        sec = ":" + `${(Math.round((value % 1) * 3600) - min * 60)}`.padStart(2, "0");
+        sec = ":" + `${Math.round((value % 1) * 3600) - min * 60}`.padStart(2, "0");
     }
     return `${isNegative ? "-" : ""}${hour}:${min}${sec}`;
 }
@@ -421,6 +421,7 @@ registry
     .add("html", (value) => value)
     .add("integer", formatInteger)
     .add("many2one", formatMany2one)
+    .add("many2one_reference", formatInteger)
     .add("one2many", formatX2many)
     .add("many2many", formatX2many)
     .add("monetary", formatMonetary)
