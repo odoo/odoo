@@ -3,14 +3,14 @@
 import tour from 'web_tour.tour';
 
 let EXPECTED = [
-    "Matrix", "PAV11", "PAV12 + $ 50.00",
+    "Matrix", "PAV11", "PAV12 $ 50.00",
 ]
 for (let no of ['PAV41', 'PAV42']) {
     for (let dyn of ['PAV31', 'PAV32']) {
         for (let al of ['PAV21', 'PAV22']) {
             let row_label = [al, dyn, no].join(' • ');
             if (dyn === 'PAV31') {
-                row_label += ' - $ 25.00';
+                row_label += ' $ -25.00';
             }
             EXPECTED.push(row_label, "", "");
         }
@@ -54,7 +54,7 @@ tour.register('sale_matrix_tour', {
     trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\n\nPA4: PAV41")',
     extra_trigger: '.o_form_editable',
 }, {
-    trigger: '.o_edit_product_configuration',  // edit the matrix
+    trigger: '[name=product_template_id] button.fa-pencil',  // edit the matrix
 }, {
     trigger: '.o_product_variant_matrix',
     run: function () {
@@ -83,7 +83,7 @@ tour.register('sale_matrix_tour', {
     trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\n\nPA4: PAV41")',
     extra_trigger: '.o_form_editable',
 }, {
-    trigger: '.o_edit_product_configuration',  // edit the matrix
+    trigger: '[name=product_template_id] button.fa-pencil',  // edit the matrix
 }, {
     trigger: '.o_product_variant_matrix',
     run: function () {
@@ -104,9 +104,9 @@ tour.register('sale_matrix_tour', {
     trigger: '.o_form_button_edit:contains("Edit")',  // Edit Sales Order.
 }, {
     trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\n\nPA4: PAV41")',
-    extra_trigger: '.o_form_editable',
+    extra_trigger: '.o_form_status_indicator_buttons_hidden', // wait for save to be finished
 }, {
-    trigger: '.o_edit_product_configuration',  // edit the matrix
+    trigger: '[name=product_template_id] button.fa-pencil',  // edit the matrix
 }, {
     trigger: '.o_product_variant_matrix',
     run: function () {
@@ -125,7 +125,7 @@ tour.register('sale_matrix_tour', {
 // Ensures the matrix is opened with the values, when adding the same product.
 {
     trigger: 'a:contains("Add a product")',
-    extra_trigger: '.o_form_editable',
+    extra_trigger: '.o_form_status_indicator_buttons_hidden',
 }, {
     trigger: 'div[name="product_template_id"] input',
     run: 'text Matrix',

@@ -21,12 +21,14 @@ class SaleOrder(models.Model):
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
         for so in self:
+            if not any(line.product_type == 'event' for line in so.order_line):
+                continue
             # confirm registration if it was free (otherwise it will be confirmed once invoice fully paid)
             so.order_line._update_registrations(confirm=so.amount_total == 0, cancel_to_draft=False)
-            if any(line.event_ok for line in so.order_line):
-                return self.env['ir.actions.act_window'] \
-                    .with_context(default_sale_order_id=so.id) \
-                    ._for_xml_id('event_sale.action_sale_order_event_registration')
+            if len(self) == 1:
+                return self.env['ir.actions.act_window'].with_context(
+                    default_sale_order_id=so.id
+                )._for_xml_id('event_sale.action_sale_order_event_registration')
         return res
 
     def _action_cancel(self):
@@ -68,6 +70,7 @@ class SaleOrderLine(models.Model):
         'event.event.ticket', string='Event Ticket',
         compute="_compute_event_ticket_id", store=True, readonly=False, precompute=True,
         help="Choose an event ticket and it will automatically create a registration for this event ticket.")
+    # TODO in master: remove this field, unused anymore
     event_ok = fields.Boolean(compute='_compute_event_ok')
 
     @api.depends('product_id.detailed_type')
@@ -89,7 +92,9 @@ class SaleOrderLine(models.Model):
         RegistrationSudo = self.env['event.registration'].sudo()
         registrations = RegistrationSudo.search([('sale_order_line_id', 'in', self.ids)])
         registrations_vals = []
-        for so_line in self.filtered('event_ok'):
+        for so_line in self:
+            if not so_line.product_type == 'event':
+                continue
             existing_registrations = registrations.filtered(lambda self: self.sale_order_line_id.id == so_line.id)
             if confirm:
                 existing_registrations.filtered(lambda self: self.state not in ['open', 'cancel']).action_confirm()
