@@ -20,7 +20,10 @@
                             <field name="total_amount" force_save="1" attrs="{'readonly': [('product_has_cost', '=', True)]}"/>
                             <field name="tax_ids" widget="many2many_tags" attrs="{'readonly': [('product_has_tax', '=', False)]}"/>
                             <field name="amount_tax"/>
-                            <field name="analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" groups="analytic.group_analytic_accounting"/>
+                            <field name="analytic_distribution_stored_char" invisible="1"/>
+                            <field name="analytic_distribution" widget="analytic_distribution"
+                                optional="show"
+                                groups="analytic.group_analytic_accounting"/>
                             <field name="employee_id" widget="many2one_avatar_employee"/>
                         </tree>
                     </field>
@@ -34,7 +37,7 @@
                     </group>
                     <field name="split_possible" invisible="1"/>
                     <footer>
-                        <button name="action_split_expense" disabled="disabled" attrs="{'invisible': [ ('split_possible', '=', True)]}" string="Split Expense" type="object" class="oe_highlight"  data-hotkey="q"/>
+                        <button name="action_split_expense" attrs="{'invisible': [ ('split_possible', '=', True)]}" string="Split Expense" type="object" class="oe_highlight disabled"  data-hotkey="q"/>
                         <button name="action_split_expense" string="Split Expense" attrs="{'invisible': [('split_possible', '=', False)]}" type="object" class="oe_highlight"  data-hotkey="q"/>
                         <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
                     </footer>
