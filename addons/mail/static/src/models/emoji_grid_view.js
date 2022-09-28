@@ -113,6 +113,9 @@ registerModel({
                 return this.rowHeight * 9.5;
             },
         }),
+        hoveredEmojiView: one('EmojiView', {
+            inverse: 'emojiGridViewAsHovered',
+        }),
         itemWidth: attr({
             default: 30,
         }),
