@@ -13,9 +13,6 @@ const { registry } = require("@web/core/registry");
 const { session } = require('@web/session');
 const { makeDeferred, nextTick, patchWithCleanup } = require("@web/../tests/helpers/utils");
 const { makeTestEnv } = require('@web/../tests/helpers/mock_env');
-const { createWebClient } = require("@web/../tests/webclient/helpers");
-
-const { afterNextRender } = owl.App;
 
 QUnit.module('Bus', {
     beforeEach: function () {
@@ -309,56 +306,6 @@ QUnit.module('Bus', {
             'subscribe - []',
             'subscribe - []',
         ]);
-    });
-
-    QUnit.test('displays reconnect notification', async (assert) => {
-        assert.expect(3);
-
-        let startPromise = Promise.resolve();
-        patchWebsocketWorkerWithCleanup({
-            async _start() {
-                const originalStart = this._super;
-                await startPromise;
-                return originalStart(...arguments);
-            },
-        });
-        const pyEnv = await startServer();
-        await createWebClient({});
-        // prevent websocket to connect and notification to disappear
-        // before the assertion.
-        startPromise = makeDeferred();
-        await afterNextRender(() => pyEnv.simulateConnectionLost(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE));
-
-        assert.containsOnce(document.body, '.o_notification');
-        assert.strictEqual(
-            document.querySelector('.o_notification .o_notification_content').textContent,
-            'Websocket connection lost. Trying to reconnect...'
-        );
-        // Wait for the worker to reconnect, post a message and the
-        // bus_service to receive it and remove the notification.
-        await afterNextRender(() => startPromise.resolve());
-        assert.containsNone(document.body, '.o_notification');
-    });
-
-    QUnit.test('does not display connection lost popup when refreshing the session', async (assert) => {
-        assert.expect(1);
-
-        const pyEnv = await startServer();
-        await createWebClient({});
-        pyEnv.simulateConnectionLost(WEBSOCKET_CLOSE_CODES.SESSION_EXPIRED);
-        await nextTick();
-        assert.containsNone(document.body, '.o_notification');
-    });
-
-
-    QUnit.test('does not display connection lost popup when refreshing the connection upon keep_alive_timeout', async (assert) => {
-        assert.expect(1);
-
-        const pyEnv = await startServer();
-        await createWebClient({});
-        pyEnv.simulateConnectionLost(WEBSOCKET_CLOSE_CODES.KEEP_ALIVE_TIMEOUT);
-        await nextTick();
-        assert.containsNone(document.body, '.o_notification');
     });
 
     QUnit.test('Last notification id is passed to the worker on service start', async function (assert) {
