@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
-import { useUpdate } from '@mail/component_hooks/use_update';
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
+import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
@@ -12,7 +13,8 @@ export class CallParticipantVideo extends Component {
      */
     setup() {
         super.setup();
-        useUpdate({ func: () => this._update() });
+        useComponentToModel({ fieldName: 'component' });
+        useUpdateToModel({ methodName: 'onComponentUpdate' });
     }
 
     //--------------------------------------------------------------------------
@@ -24,32 +26,6 @@ export class CallParticipantVideo extends Component {
      */
      get callParticipantVideoView() {
         return this.props.record;
-    }
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    _update() {
-        this._loadVideo();
-    }
-
-    /**
-     * Since it is not possible to directly put a mediaStreamObject as the src
-     * or src-object of the template, the video src is manually inserted into
-     * the DOM.
-     *
-     */
-    _loadVideo() {
-        if (!this.root.el) {
-            return;
-        }
-        if (!this.callParticipantVideoView.rtcSession || !this.callParticipantVideoView.rtcSession.videoStream) {
-            this.root.el.srcObject = undefined;
-        } else {
-            this.root.el.srcObject = this.callParticipantVideoView.rtcSession.videoStream;
-        }
-        this.root.el.load();
     }
 
 }
