@@ -1071,7 +1071,7 @@
                                         <field name="currency_id" options="{'no_create': True}"
                                                optional="hide" groups="base.group_multi_currency"
                                                attrs="{'column_invisible': [('parent.move_type', '!=', 'entry')]}"/>
-                                        <field name="tax_ids" widget="many2many_tags"
+                                        <field name="tax_ids" widget="autosave_many2many_tags"
                                                optional="hide"
                                                domain="[('type_tax_use', '=?', parent.invoice_filter_type_domain)]"
                                                context="{'append_type_to_tax_name': not parent.invoice_filter_type_domain}"
@@ -1148,7 +1148,7 @@
                                         <field name="debit" sum="Total Debit"/>
                                         <field name="credit" sum="Total Credit"/>
                                         <field name="balance" invisible="1"/>
-                                        <field name="tax_ids" string="Taxes Applied" widget="many2many_tags" options="{'no_create': True}"/>
+                                        <field name="tax_ids" string="Taxes Applied" widget="autosave_many2many_tags" options="{'no_create': True}"/>
                                         <field name="date_maturity" required="0" invisible="context.get('view_no_maturity', False)"/>
                                       </group>
                                     </form>

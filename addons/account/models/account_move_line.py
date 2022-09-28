@@ -1492,7 +1492,7 @@ class AccountMoveLine(models.Model):
     def _prevent_automatic_line_deletion(self):
         if not self.env.context.get('dynamic_unlink'):
             for line in self:
-                if line.display_type == 'tax':
+                if line.display_type == 'tax' and line.move_id.line_ids.tax_ids:
                     raise ValidationError(_(
                         "You cannot delete a tax line as it would impact the tax report"
                     ))
