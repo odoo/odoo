@@ -173,7 +173,7 @@ tour.register('project_update_tour', {
 }, ...openProjectUpdateAndReturnToTasks("Pivot", "o_pivot_view"), {
     trigger: '.o_switch_view.o_calendar',
     content: 'Open Calendar View of Tasks',
-}, ...openProjectUpdateAndReturnToTasks("Calendar", "o_legacy_calendar_view"), {
+}, ...openProjectUpdateAndReturnToTasks("Calendar", "o_calendar_view"), {
     trigger: '.o_switch_view.o_activity',
     content: 'Open Activity View of Tasks',
 }, ...openProjectUpdateAndReturnToTasks("Activity", "o_activity_view"),
