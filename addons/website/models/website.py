@@ -1217,10 +1217,10 @@ class Website(models.Model):
         # '/' already has a http.route & is in the routing_map so it will already have an entry in the xml
         domain = [('url', '!=', '/')]
         if not force:
-            domain += [('website_indexed', '=', True), ('visibility', '=', False)]
+            domain += [('website_indexed', '=', True), ('visibility', '=', 'public')]
             # is_visible
             domain += [
-                ('website_published', '=', True), ('visibility', '=', False),
+                ('website_published', '=', True), ('visibility', '=', 'public'),
                 '|', ('date_publish', '=', False), ('date_publish', '<=', fields.Datetime.now())
             ]
 
