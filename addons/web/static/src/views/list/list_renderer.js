@@ -338,7 +338,10 @@ export class ListRenderer extends Component {
         if (this.hasSelectors) {
             nbCols++;
         }
-        if (this.props.activeActions && this.props.activeActions.onDelete) {
+        if (
+            (this.props.activeActions && this.props.activeActions.onDelete) ||
+            this.displayOptionalFields
+        ) {
             nbCols++;
         }
         return nbCols;
