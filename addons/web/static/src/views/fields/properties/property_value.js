@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _lt } from "@web/core/l10n/translation";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { CheckBox } from "@web/core/checkbox/checkbox";
@@ -79,9 +80,11 @@ export class PropertyValue extends Component {
             // force to show at least 1 digit, even for integers
             return value;
         } else if (this.props.type === "datetime") {
-            return typeof value === "string" ? deserializeDateTime(value) : value;
+            const datetimeValue = typeof value === "string" ? deserializeDateTime(value) : value;
+            return datetimeValue && !datetimeValue.invalid ? datetimeValue : false;
         } else if (this.props.type === "date") {
-            return typeof value === "string" ? deserializeDate(value) : value;
+            const dateValue = typeof value === "string" ? deserializeDate(value) : value;
+            return dateValue && !dateValue.invalid ? dateValue : false;
         } else if (this.props.type === "boolean") {
             return !!value;
         } else if (this.props.type === "selection") {
@@ -95,16 +98,21 @@ export class PropertyValue extends Component {
                 return [];
             }
 
-            // Convert to TagList component format
+            // Convert to TagsList component format
             return value.map((many2manyValue) => {
+                const hasAccess = many2manyValue[1] !== null;
                 return {
                     id: many2manyValue[0],
-                    text: many2manyValue[1],
-                    onClick: async () =>
-                        await this._openRecord(this.props.comodel, many2manyValue[0]),
+                    text: hasAccess ? many2manyValue[1] : _lt('No Access'),
+                    onClick: hasAccess
+                        && (async () => await this._openRecord(this.props.comodel, many2manyValue[0])),
                     onDelete:
-                        !this.props.readonly && (() => this.onMany2manyDelete(many2manyValue[0])),
+                        !this.props.readonly && hasAccess
+                        && (() => this.onMany2manyDelete(many2manyValue[0])),
                     colorIndex: 0,
+                    img: this.showAvatar && hasAccess
+                        ? `/web/image/${this.props.comodel}/${many2manyValue[0]}/avatar_128`
+                        : null,
                 };
             });
         } else if (this.props.type === "tags") {
@@ -123,7 +131,11 @@ export class PropertyValue extends Component {
         if (!this.props.domain || !this.props.domain.length) {
             return [];
         }
-        return new Domain(this.props.domain).toList();
+        let domain = new Domain(this.props.domain);
+        if (this.props.type === "many2many" && this.props.value) {
+            domain = Domain.and([domain, [['id', 'not in', this.props.value.map(rec => rec[0])]]])
+        }
+        return domain.toList();
     }
 
     /**
@@ -152,6 +164,14 @@ export class PropertyValue extends Component {
         return value.toString();
     }
 
+    /**
+     * Return True if we need to display a avatar for the current property.
+     */
+    get showAvatar() {
+        return ["many2one", "many2many"].includes(this.props.type)
+            && ["res.users", "res.partner"].includes(this.props.comodel);
+    }
+
     /* --------------------------------------------------------
      * Event handlers
      * -------------------------------------------------------- */
@@ -163,9 +183,9 @@ export class PropertyValue extends Component {
      */
     async onValueChange(newValue) {
         if (this.props.type === "datetime") {
-            newValue = serializeDateTime(newValue);
+            newValue = newValue && serializeDateTime(newValue);
         } else if (this.props.type === "date") {
-            newValue = serializeDate(newValue);
+            newValue = newValue && serializeDate(newValue);
         } else if (this.props.type === "integer") {
             newValue = parseInt(newValue) || 0;
         } else if (this.props.type === "float") {

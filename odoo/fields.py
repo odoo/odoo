@@ -16,6 +16,7 @@ import enum
 import itertools
 import json
 import logging
+import uuid
 import warnings
 
 from markupsafe import Markup
@@ -3198,32 +3199,15 @@ class Properties(Field):
     # names to their corresponding value, like
     #
     #       {
-    #           '3adf37f3258cfe40f0907d9cbdd7d091': 'red',
-    #           'aa34746a6851ee4ea1f8d95746e45788': 1337,
+    #           '3adf37f3258cfe40': 'red',
+    #           'aa34746a6851ee4e': 1337,
     #       }
     #
     def convert_to_column(self, value, record, values=None, validate=True):
         if not value:
             return None
 
-        if isinstance(value, str):
-            # assume already JSONified
-            if not isinstance(json.loads(value), dict):
-                raise ValueError(f"Wrong property value {value!r}")
-            return value
-
-        if isinstance(value, dict):
-            return json.dumps(value)
-
-        if not isinstance(value, list):
-            raise ValueError(f"Wrong property type {type(value)!r}")
-
-        # Convert the list with all definitions into a simple dict
-        # {name: value} to store the strict minimum on the child
-        self._remove_display_name(value)
-        value = self._list_to_dict(value)
-
-        # the JSON value is sent as a string
+        value = self.convert_to_cache(value, record, validate=validate)
         return json.dumps(value)
 
     def convert_to_cache(self, value, record, validate=True):
@@ -3254,13 +3238,13 @@ class Properties(Field):
     # corresponding value, like
     #
     #       [{
-    #           'name': '3adf37f3258cfe40f0907d9cbdd7d091',
+    #           'name': '3adf37f3258cfe40',
     #           'string': 'Color Code',
     #           'type': 'char',
     #           'default': 'blue',
     #           'value': 'red',
     #       }, {
-    #           'name': 'aa34746a6851ee4ea1f8d95746e45788',
+    #           'name': 'aa34746a6851ee4e',
     #           'string': 'Partner',
     #           'type': 'many2one',
     #           'comodel': 'test_new_api.partner',
@@ -3283,13 +3267,13 @@ class Properties(Field):
     # field values have a display name.
     #
     #       [{
-    #           'name': '3adf37f3258cfe40f0907d9cbdd7d091',
+    #           'name': '3adf37f3258cfe40',
     #           'string': 'Color Code',
     #           'type': 'char',
     #           'default': 'blue',
     #           'value': 'red',
     #       }, {
-    #           'name': 'aa34746a6851ee4ea1f8d95746e45788',
+    #           'name': 'aa34746a6851ee4e',
     #           'string': 'Partner',
     #           'type': 'many2one',
     #           'comodel': 'test_new_api.partner',
@@ -3354,6 +3338,8 @@ class Properties(Field):
                     property_definition.pop('value', None)
                 container[self.definition_record_field] = properties_definition
 
+                _logger.info('Properties field: User #%i changed definition of %r', records.env.user.id, container)
+
         return super().write(records, value)
 
     def _compute(self, records):
@@ -3361,7 +3347,7 @@ class Properties(Field):
         for record in records:
             record[self.name] = self._add_default_values(
                 record.env,
-                {self.name: False, self.definition_record: record[self.definition_record]},
+                {self.name: record[self.name], self.definition_record: record[self.definition_record]},
             )
 
     def _add_default_values(self, env, values):
@@ -3404,9 +3390,8 @@ class Properties(Field):
 
         for properties_value in properties_list_values:
             if properties_value.get('value') is None:
-                default = properties_value.get('default')
-                if default:
-                    properties_value['value'] = default
+                default = properties_value.get('default') or False
+                properties_value['value'] = default
 
         return properties_list_values
 
@@ -3440,25 +3425,20 @@ class Properties(Field):
                         property_definition[value_key] = (property_value, display_name)
                     except AccessError:
                         # protect from access error message, show an empty name
-                        property_definition[value_key] = (property_value, _("No Access"))
+                        property_definition[value_key] = (property_value, None)
                     except MissingError:
-                        property_definition[value_key] = None
+                        property_definition[value_key] = False
 
                 elif property_type == 'many2many' and property_value and is_list_of(property_value, int):
-                    try:
-                        display_names = env[property_model].browse(property_value).mapped('display_name')
-                        property_definition[value_key] = [
-                            (record_id, display_name)
-                            for record_id, display_name, in zip(property_value, display_names)
-                        ]
-                    except AccessError:
-                        # protect from access error message, show an empty name
-                        property_definition[value_key] = [
-                            (res_id, _("No Access"))
-                            for res_id in property_value
-                        ]
-                    except MissingError:
-                        property_definition[value_key] = None
+                    property_definition[value_key] = []
+                    records = env[property_model].browse(property_value)
+                    for record in records:
+                        try:
+                            property_definition[value_key].append((record.id, record.display_name))
+                        except AccessError:
+                            property_definition[value_key].append((record.id, None))
+                        except MissingError:
+                            continue
 
     @classmethod
     def _remove_display_name(cls, values_list, value_key='value'):
@@ -3494,6 +3474,19 @@ class Properties(Field):
                     ]
 
     @classmethod
+    def _add_missing_names(cls, values_list):
+        """Generate new properties name if needed.
+
+        Modify in place "values_list".
+
+        :param values_list: List of properties definition with properties value
+        """
+        for definition in values_list:
+            if definition.get('definition_changed') and not definition.get('name'):
+                # keep only the first 64 bits
+                definition['name'] = str(uuid.uuid4()).replace('-', '')[:16]
+
+    @classmethod
     def _parse_json_types(cls, values_list, env, check_existence=True):
         """Parse the value stored in the JSON.
 
@@ -3515,7 +3508,8 @@ class Properties(Field):
                 # E.G. convert zero to False
                 property_value = bool(property_value)
 
-            elif property_type == 'char' and not isinstance(property_value, str):
+            elif property_type == 'char' and not isinstance(property_value, str) \
+                    and property_value is not None:
                 property_value = False
 
             elif property_value and property_type == 'selection':
@@ -3531,7 +3525,7 @@ class Properties(Field):
                 all_tags = {tag[0] for tag in property_definition.get('tags') or ()}
                 property_value = [tag for tag in property_value if tag in all_tags]
 
-            elif property_type == 'many2one' and property_value:
+            elif property_type == 'many2one' and property_value and res_model in env:
                 if not isinstance(property_value, int):
                     raise ValueError(f'Wrong many2one value: {property_value!r}.')
 
@@ -3539,7 +3533,7 @@ class Properties(Field):
                     # many2one might have been deleted
                     property_value = env[res_model].browse(property_value).exists().id
 
-            elif property_type == 'many2many' and property_value:
+            elif property_type == 'many2many' and property_value and res_model in env:
                 if not is_list_of(property_value, int):
                     raise ValueError(f'Wrong many2many value: {property_value!r}.')
 
@@ -3563,13 +3557,13 @@ class Properties(Field):
         E.G.
             Input list:
             [{
-                'name': '3adf37f3258cfe40f0907d9cbdd7d091',
+                'name': '3adf37f3258cfe40',
                 'string': 'Color Code',
                 'type': 'char',
                 'default': 'blue',
                 'value': 'red',
             }, {
-                'name': 'aa34746a6851ee4ea1f8d95746e45788',
+                'name': 'aa34746a6851ee4e',
                 'string': 'Partner',
                 'type': 'many2one',
                 'comodel': 'test_new_api.partner',
@@ -3578,8 +3572,8 @@ class Properties(Field):
 
             Output dict:
             {
-                '3adf37f3258cfe40f0907d9cbdd7d091': 'red',
-                'aa34746a6851ee4ea1f8d95746e45788': 1337,
+                '3adf37f3258cfe40': 'red',
+                'aa34746a6851ee4e': 1337,
             }
 
         :param values_list: List of properties definition and value
@@ -3588,9 +3582,11 @@ class Properties(Field):
         if not is_list_of(values_list, dict):
             raise ValueError(f'Wrong properties value {values_list!r}')
 
+        cls._add_missing_names(values_list)
+
         dict_value = {}
         for property_definition in values_list:
-            property_value = property_definition.get('value')
+            property_value = property_definition.get('value') or False
             property_type = property_definition.get('type')
             property_model = property_definition.get('comodel')
 
@@ -3633,7 +3629,7 @@ class PropertiesDefinition(Field):
     column_type = ('jsonb', 'jsonb')
     copy = True                         # containers may act like templates, keep definitions to ease usage
     readonly = False
-    prefetch = False
+    prefetch = True
 
     REQUIRED_KEYS = ('name', 'type')
     ALLOWED_KEYS = (
@@ -3650,13 +3646,13 @@ class PropertiesDefinition(Field):
         might contain the name_get of those records (and will be removed).
 
         [{
-            'name': '3adf37f3258cfe40f0907d9cbdd7d091',
+            'name': '3adf37f3258cfe40',
             'string': 'Color Code',
             'type': 'char',
             'default': 'blue',
             'default': 'red',
         }, {
-            'name': 'aa34746a6851ee4ea1f8d95746e45788',
+            'name': 'aa34746a6851ee4e',
             'string': 'Partner',
             'type': 'many2one',
             'comodel': 'test_new_api.partner',

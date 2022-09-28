@@ -2,12 +2,12 @@
 <templates xml:space="preserve">
     <t t-name="web.PropertiesField" owl="1">
         <div t-ref="properties" class="w-100">
-            <div class="o_group w-100 d-flex flex-row flex-wrap mt-0">
+            <div class="o_group w-100 d-flex flex-row flex-wrap my-0">
                 <div
                     t-foreach="propertiesList"
                     t-as="propertyConfiguration"
                     t-key="propertyConfiguration.name"
-                    class="o_property_field d-flex flex-row justify-content-start"
+                    class="o_property_field d-flex flex-row align-items-center justify-content-start"
                     t-att-property-name="propertyConfiguration.name"
                     t-attf-class="col-md-{{12 / props.columns}} col-sm-12">
                     <div class="o_td_label">
@@ -20,23 +20,23 @@
                                 New Property
                             </i>
                             <i
-                                t-if="state.canChangeDefinition"
+                                t-if="state.canChangeDefinition &amp;&amp; !props.readonly"
                                 class="o_field_property_open_popover fa fa-pencil ms-2"
                                 t-on-click="(event) => this.onPropertyEdit(event, propertyConfiguration.name)"/>
                         </label>
                     </div>
                     <div class="o_property_field_value align-top w-100">
                         <PropertyValue
-                            readonly="props.readonly"
                             canChangeDefinition="state.canChangeDefinition"
-                            type="propertyConfiguration.type"
-                            string="propertyConfiguration.string"
-                            value="propertyConfiguration.value"
-                            selection="propertyConfiguration.selection"
-                            tags="propertyConfiguration.tags"
                             comodel="propertyConfiguration.comodel || ''"
-                            domain="propertyConfiguration.domain || '[]'"
                             context="context"
+                            domain="propertyConfiguration.domain || '[]'"
+                            readonly="props.readonly"
+                            selection="propertyConfiguration.selection"
+                            string="propertyConfiguration.string"
+                            tags="propertyConfiguration.tags"
+                            type="propertyConfiguration.type"
+                            value="propertyConfiguration.value"
                             onChange.bind="(value) => this.onPropertyValueChange(propertyConfiguration.name, value)"
                             onTagsChange.bind="(newTags, newValue) => this.onTagsChange(propertyConfiguration.name, newTags, newValue)"
                         />

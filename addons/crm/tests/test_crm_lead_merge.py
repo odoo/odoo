@@ -338,6 +338,93 @@ class TestLeadMerge(TestLeadMergeCommon):
             leads._merge_opportunity(auto_unlink=False, max_length=None)
 
     @users('user_sales_manager')
+    def test_lead_merge_properties_formatting(self):
+        lead = self.lead_1
+        partners = self.env['res.partner'].create([{'name': 'Alice'}, {'name': 'Bob'}])
+
+        lead.lead_properties = [{
+            'type': 'many2one',
+            'comodel': 'res.partner',
+            'name': 'test_many2one',
+            'string': 'My Partner',
+            'value': partners[0].id,
+            'definition_changed': True,
+        }, {
+            'type': 'many2many',
+            'comodel': 'res.partner',
+            'name': 'test_many2many',
+            'string': 'My Partners',
+            'value': partners.ids,
+        }, {
+            'type': 'selection',
+            'selection': [['a', 'A'], ['b', 'B']],
+            'name': 'test_selection',
+            'string': 'My Selection',
+            'value': 'a',
+        }, {
+            'type': 'tags',
+            'tags': [['a', 'A', 1], ['b', 'B', 2], ['c', 'C', 3]],
+            'name': 'test_tags',
+            'string': 'My Tags',
+            'value': ['a', 'c'],
+        }, {
+            'type': 'boolean',
+            'name': 'test_boolean',
+            'string': 'My Boolean',
+            'value': True,
+        }, {
+            'type': 'integer',
+            'name': 'test_integer',
+            'string': 'My Integer',
+            'value': 1337,
+        }, {
+            'type': 'datetime',
+            'name': 'test_datetime',
+            'string': 'My Datetime',
+            'value': '2022-02-21 16:11:42',
+        }]
+
+        expected = [{
+            'label': 'My Partner',
+            'value': 'Alice',
+        }, {
+            'label': 'My Partners',
+            'values': [
+                {'name': 'Alice'},
+                {'name': 'Bob'},
+            ],
+        }, {
+            'label': 'My Selection',
+            'value': 'A',
+        }, {
+            'label': 'My Tags',
+            'values': [
+                {'name': 'A', 'color': 1},
+                {'name': 'C', 'color': 3},
+            ],
+        }, {
+            'label': 'My Boolean',
+            'value': 'Yes',
+        }, {
+            'label': 'My Integer',
+            'value': 1337,
+        }, {
+            'label': 'My Datetime',
+            # datetime are stored as string because they are not JSONifiable
+            'value': '2022-02-21 16:11:42',
+        }]
+
+        self.assertEqual(expected, lead._format_properties())
+
+        # check the rendered template
+        result = self.env['ir.qweb']._render(
+            'crm.crm_lead_merge_summary',
+            {'opportunities': lead, 'is_html_empty': lambda x: True})
+        self.assertIn("o_tag_color_1", result)
+        self.assertIn("Alice", result)
+        self.assertIn("Bob", result)
+
+    @users('user_sales_manager')
     def test_merge_method_dependencies(self):
         """ Test if dependences for leads are not lost while merging leads. In
         this test leads are ordered as

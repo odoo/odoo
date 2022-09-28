@@ -13,9 +13,6 @@
     .o_datepicker_button {
         @include print-variable(o-input-border-color, $o-form-lightsecondary);
         color: initial !important;
-        * {
-            color: initial !important;
-        }
     }
 
     & {
@@ -37,12 +34,9 @@
 }
 
 .o_property_field {
-    .o_td_label,
-    .o_property_field_value {
-        padding: 0 45px 0 0;
-    }
     .o_property_field_value {
         height: fit-content;
+        padding: 0 $o-innergroup-rpadding 0 0;
     }
 
     .o_field_property_dropdown input {
@@ -63,6 +57,8 @@
     .o_field_property_label {
         max-width: 150px;
         width: fit-content;
+        margin-right: -25px !important;
+
         b {
             word-break: break-word;
             max-height: 100px;
@@ -122,6 +118,7 @@
 .o_xxs_form_view .o_field_properties {
     // mobile view
     .o_property_field {
+        margin-bottom: 20px;
         min-width: 100%;
         flex-wrap: wrap;
         padding: 0;
@@ -129,7 +126,7 @@
         .o_td_label,
         .o_property_field_value {
             min-width: 100%;
-            padding: 0;
+            padding: 0 !important;
             &>* {
                 max-width: 100%;
             }

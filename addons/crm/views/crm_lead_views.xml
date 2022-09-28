@@ -258,7 +258,8 @@
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                             </group>
                         </group>
-
+                        <field attrs="{'invisible': [('team_id', '=', False)]}"
+                            name="lead_properties" nolabel="1" columns="2"/>
                         <notebook>
                             <page string="Internal Notes" name="internal_notes">
                                 <field name="description" placeholder="Add a description..." options="{'collaborative': true}" />

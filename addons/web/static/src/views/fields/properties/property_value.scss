@@ -18,17 +18,44 @@ input.o_field_property_input[type=number] {
     height: 25px;
 }
 
+.o_field_property_many2one_value {
+    img {
+        height: 1.4em;
+        width: 1.4em;
+        object-fit: cover;
+    }
+
+    &.avatar .o_input_dropdown{
+        // counter the avatar size to keep things aligned
+        margin-left: -1.6em;
+        padding-left: 1.6em;
+    }
+
+    a.disabled {
+        pointer-events: none;
+        color: $gray-400;
+        font-style: italic;
+    }
+}
+
 .o_field_property_many2many_value {
-    .o_tag {
-        margin: 1px 2px 1px 0;
-        .o_delete {
-            padding-left: 4px;
-        }
+    .o_tag,
+    .o_tag_badge_text,
+    .o_delete {
+        color: $gray-400 !important;
     }
     .o_delete {
-        margin-top: 2px;
+        line-height: 1;
     }
-    .o_badge_text {
-        line-height: 1.1;
+    .o_input_dropdown {
+        width: 100px !important;
+        min-width: 100px !important;
+        input {
+            border: 0px !important;
+        }
     }
+}
+
+.o_form_readonly .o_field_property_many2many_value {
+    border: 0px;
 }

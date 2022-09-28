@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.PropertyTags" owl="1">
-        <div class="o_field_property_tag">
+        <!-- Copy many2many tags style without duplicating all the CSS -->
+        <div class="o_field_property_tag o_field_widget o_field_many2manytags o_input py-1 d-flex flex-row align-items-center pt-2 w-100">
             <TagsList
                 tags="tagListItems"
                 className="props.canChangeTags ? '' : 'o_field_property_tag_readonly' "/>
@@ -11,7 +12,8 @@
                 <AutoComplete
                     value="''"
                     sources="autocompleteSources"
-                    onSelect.bind="(event) => this.onOptionSelected(event.value)"/>
+                    onSelect.bind="({value}) => this.onOptionSelected(value)"
+                    resetOnSelect="true"/>
                 <a role="button" class="o_dropdown_button" draggable="false" />
             </div>
         </div>
