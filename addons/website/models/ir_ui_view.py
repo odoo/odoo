@@ -23,7 +23,7 @@ class View(models.Model):
     page_ids = fields.One2many('website.page', 'view_id')
     first_page_id = fields.Many2one('website.page', string='Website Page', help='First page linked to this view', compute='_compute_first_page_id')
     track = fields.Boolean(string='Track', default=False, help="Allow to specify for one page of the website to be trackable or not")
-    visibility = fields.Selection([('', 'All'), ('connected', 'Signed In'), ('restricted_group', 'Restricted Group'), ('password', 'With Password')], default='')
+    visibility = fields.Selection([('public', 'Public'), ('connected', 'Signed In'), ('restricted_group', 'Restricted Group'), ('password', 'With Password')], default='public', required=True)
     visibility_password = fields.Char(groups='base.group_system', copy=False)
     visibility_password_display = fields.Char(compute='_get_pwd', inverse='_set_pwd', groups='website.group_website_designer')
 
@@ -382,7 +382,7 @@ class View(models.Model):
 
         visibility = self._get_cached_visibility()
 
-        if visibility and not request.env.user.has_group('website.group_website_designer'):
+        if visibility != 'public' and not request.env.user.has_group('website.group_website_designer'):
             if (visibility == 'connected' and request.website.is_public_user()):
                 error = werkzeug.exceptions.Forbidden()
             elif visibility == 'password' and \
