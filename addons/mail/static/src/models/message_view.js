@@ -583,6 +583,16 @@ registerModel({
          * replace prettyBody with new value in JS (which is faster than t-raw).
          */
         prettyBodyRef: attr(),
+        readLessText: attr({
+            compute() {
+                return this.env._t("Read Less");
+            },
+        }),
+        readMoreText: attr({
+            compute() {
+                return this.env._t("Read More");
+            },
+        }),
         /**
          * States whether this message view is the last one of its thread view.
          * Computed from inverse relation.
