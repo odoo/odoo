@@ -456,6 +456,11 @@ registerModel({
             },
             default: false,
         }),
+        /**
+         * Value of the last rendered prettyBody. Useful to compare to new value
+         * to decide if it has to be updated.
+         */
+        lastPrettyBody: attr(),
         linkPreviewListView: one('LinkPreviewListView', {
             compute() {
                 return (this.message && this.message.linkPreviews.length > 0) ? {} : clear();
