@@ -7,7 +7,8 @@ import unittest
 from unittest.mock import patch
 
 from odoo import Command
-from odoo.exceptions import AccessError
+
+from odoo.exceptions import AccessError, UserError
 from odoo.tests.common import Form, TransactionCase, users
 from odoo.tools import mute_logger
 
@@ -1336,6 +1337,7 @@ class PropertiesCase(TransactionCase):
         }
         self.assertEqual(expected_properties, sql_properties)
 
+    @mute_logger('odoo.fields')
     def test_properties_field_security(self):
         """Check the access right related to the Properties fields."""
         MultiTag = type(self.env['test_new_api.multi.tag'])
@@ -1668,3 +1670,86 @@ class PropertiesSearchCase(PropertiesCase):
         result = Model.search([('attributes.mychar', 'not ilike', 'hélène')])
         self.assertNotIn(self.message_1, result)
         self.assertNotIn(self.message_2, result)
+
+    @mute_logger('odoo.fields')
+    def test_properties_field_search_orderby_string(self):
+        """Test that we can order record by properties string values."""
+        (self.message_1 | self.message_2 | self.message_3).discussion = self.discussion_1
+        self.message_1.attributes = [{
+            'name': 'mychar',
+            'type': 'char',
+            'value': 'BB',
+            'definition_changed': True,
+        }]
+        self.message_2.attributes = {'mychar': 'AA'}
+        self.message_3.attributes = {'mychar': 'CC'}
+
+        self.env.flush_all()
+
+        result = self.env['test_new_api.message'].search(
+            domain=[['attributes.mychar', '!=', False]],
+            order='attributes.mychar ASC')
+        self.assertEqual(result[0], self.message_2)
+        self.assertEqual(result[1], self.message_1)
+        self.assertEqual(result[2], self.message_3)
+
+        result = self.env['test_new_api.message'].search(
+            domain=[['attributes.mychar', '!=', False]],
+            order='attributes.mychar DESC')
+        self.assertEqual(result[0], self.message_3)
+        self.assertEqual(result[1], self.message_1)
+        self.assertEqual(result[2], self.message_2)
+
+    @mute_logger('odoo.fields')
+    def test_properties_field_search_orderby_integer(self):
+        """Test that we can order record by properties integer values."""
+        (self.message_1 | self.message_2 | self.message_3).discussion = self.discussion_1
+        self.message_1.attributes = [{
+            'name': 'myinteger',
+            'type': 'integer',
+            'value': 22,
+            'definition_changed': True,
+        }]
+        self.message_2.attributes = {'myinteger': 111}
+        self.message_3.attributes = {'myinteger': 33}
+
+        self.env.flush_all()
+
+        result = self.env['test_new_api.message'].search(
+            domain=[['attributes.myinteger', '!=', False]],
+            order='attributes.myinteger ASC')
+        self.assertEqual(result[0], self.message_1)
+        self.assertEqual(result[1], self.message_3)
+        self.assertEqual(result[2], self.message_2)
+
+        result = self.env['test_new_api.message'].search(
+            domain=[['attributes.myinteger', '!=', False]],
+            order='attributes.myinteger DESC')
+        self.assertEqual(result[0], self.message_2)
+        self.assertEqual(result[1], self.message_3)
+        self.assertEqual(result[2], self.message_1)
+
+    @mute_logger('odoo.fields')
+    def test_properties_field_search_orderby_injection(self):
+        """Check the restriction on the property name."""
+        self.message_1.attributes = [{
+            'name': 'myinteger',
+            'type': 'integer',
+            'value': 22,
+            'definition_changed': True,
+        }]
+
+        for c in '! ()"\'.':
+            orders = (
+                f'attributes.myinteger{c} ASC',
+                f'attributes.my{c}integer ASC',
+                f'attribut{c}es.myinteger ASC',
+            )
+
+            if c == ' ':
+                # allow multiple spaces after the property name
+                orders = orders[1:]
+
+            for order in orders:
+                with self.assertRaises(UserError), self.assertQueryCount(0):
+                    self.env['test_new_api.message'].search(domain=[], order=order)
