@@ -916,8 +916,7 @@ class WebAsset(object):
 
     @func.lazy_property
     def name(self):
-        name = '<inline asset>' if self.inline else self.url
-        return "%s defined in bundle '%s'" % (name, self.bundle.name)
+        return '<inline asset>' if self.inline else self.url
 
     @property
     def html_url(self):
@@ -1030,13 +1029,11 @@ class JavascriptAsset(WebAsset):
         # format the header like
         #   /**************************
         #   *  Filepath: <asset_url>  *
-        #   *  Bundle: <name>         *
         #   *  Lines: 42              *
         #   **************************/
         line_count = content.count('\n')
         lines = [
             f"Filepath: {self.url}",
-            f"Bundle: {self.bundle.name}",
             f"Lines: {line_count}",
         ]
         length = max(map(len, lines))
@@ -1086,7 +1083,6 @@ class XMLAsset(WebAsset):
         line_count = content.count('\n')
         lines = [
             f"Filepath: {self.url}",
-            f"Bundle: {self.bundle.name}",
             f"Lines: {line_count}",
         ]
         length = max(map(len, lines))
