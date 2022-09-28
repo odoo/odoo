@@ -9,7 +9,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 import { _lt } from 'web.core';
 
-const { Component, useRef } = owl;
+const { Component } = owl;
 
 const READ_MORE = _lt("Read More");
 const READ_LESS = _lt("Read Less");
@@ -27,10 +27,6 @@ export class Message extends Component {
         useRefToModel({ fieldName: 'prettyBodyRef', refName: 'prettyBody' });
         useUpdateToModel({ methodName: 'onComponentUpdate' });
         useUpdate({ func: () => this._update() });
-        /**
-         * To get checkbox state.
-         */
-        this._checkboxRef = useRef('checkbox');
         /**
          * States the index of the last "read more" that was inserted.
          * Useful to remember the state for each "read more" even if their DOM
