@@ -521,6 +521,10 @@
 
     // Kanban Grouped Layout - Column Folded
     .o_kanban_group.o_column_folded {
+        // don't fill the width of record for a folded column
+        .o_kanban_record.o_record_draggable {
+            display: none !important;
+        }
         // don't visually fold on smaller screens (aka. mobile)
         @include media-breakpoint-up(md) {
             @include o-kanban-slim-col;
