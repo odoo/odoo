@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
 import { auto_str_to_date } from 'web.time';
@@ -28,44 +28,6 @@ registerModel({
          */
         onClickUploadDocument() {
             this.fileUploader.openBrowserFileUploader();
-        },
-        /**
-         * @private
-         * @param {MouseEvent} ev
-         * @returns {Promise}
-         */
-        async onClickSendMailTemplate(ev, mailTemplateId) {
-            await this.messaging.rpc({
-                model: this.activity.thread.model,
-                method: 'activity_send_mail',
-                args: [this.activity.thread.id, mailTemplateId],
-            });
-            this.activity.thread.fetchData(['activities']);
-        },
-        onClickPreviewMailTemplate(ev, mailTemplateId) {
-            const action = {
-                name: this.env._t('Compose Email'),
-                type: 'ir.actions.act_window',
-                res_model: 'mail.compose.message',
-                views: [[false, 'form']],
-                target: 'new',
-                context: {
-                    default_res_id: this.activity.thread.id,
-                    default_model: this.activity.thread.model,
-                    default_use_template: true,
-                    default_template_id: mailTemplateId,
-                    force_email: true,
-                },
-            };
-           this.env.services.action.doAction(action, {
-                on_close: () => {
-                   if (!this.activity.thread.exists()) {
-                       return;
-                   }
-                   this.activity.thread.fetchData(['activities']);
-                },
-            });
-            this.activityListViewOwner.popoverViewOwner.delete();
         },
     },
     fields: {
@@ -134,6 +96,10 @@ registerModel({
             compute() {
                 return this.activity.category === 'upload_file' ? {} : clear();
             },
+            inverse: 'activityListViewItemOwner',
+        }),
+        mailTemplateViewOwner: many('MailTemplateViewOwner', {
+            default: {},
             inverse: 'activityListViewItemOwner',
         }),
         markDoneButtonRef: attr(),

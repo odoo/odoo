@@ -12,7 +12,10 @@ registerModel({
         onClickPreview(ev) {
             ev.stopPropagation();
             ev.preventDefault();
-            this.mailTemplate.preview(this.activityViewOwner.activity);
+            this.mailTemplate.preview(this.owner.activity);
+            if (this.owner.activityListViewOwner) {
+                this.owner.activityListViewOwner.popoverViewOwner.delete();
+            }
         },
         /**
          * @param {MouseEvent} ev
@@ -20,16 +23,16 @@ registerModel({
         onClickSend(ev) {
             ev.stopPropagation();
             ev.preventDefault();
-            this.mailTemplate.send(this.activityViewOwner.activity);
+            this.mailTemplate.send(this.owner.activity);
         },
     },
     fields: {
-        activityViewOwner: one('ActivityView', {
-            identifying: true,
-            inverse: 'mailTemplateViews',
-        }),
         mailTemplate: one('MailTemplate', {
             identifying: true,
+        }),
+        owner: one('MailTemplateViewOwner', {
+            identifying: true,
+            inverse: 'mailTemplateViews',
         }),
     },
 });

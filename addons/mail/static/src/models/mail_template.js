@@ -26,7 +26,7 @@ registerModel({
             };
             this.env.services.action.doAction(
                 action,
-                { onClose: () => activity.thread.fetchData(['attachments', 'messages']) }
+                { onClose: () => activity.thread.fetchData(['activities', 'attachments', 'messages']) }
             );
         },
         /**
@@ -40,7 +40,7 @@ registerModel({
                 args: [[activity.thread.id], this.id],
             });
             if (thread.exists()) {
-                thread.fetchData(['attachments', 'messages']);
+                thread.fetchData(['activities', 'attachments', 'messages']);
             }
         },
     },

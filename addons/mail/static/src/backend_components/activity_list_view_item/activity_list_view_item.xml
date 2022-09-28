@@ -26,16 +26,17 @@
                 <small t-if="!activityListViewItem.activity.isCurrentPartnerAssignee and activityListViewItem.activity.assignee" class="me-1"><span t-esc="activityListViewItem.activity.assignee.displayName"/> -</small>
                 <small t-att-title="activityListViewItem.activity.dateDeadline" t-esc="activityListViewItem.delayLabel"/>
             </div>
-            <t t-if="activityListViewItem.activity.mailTemplates">
-                <div t-foreach="activityListViewItem.activity.mailTemplates" t-as="mail_template" t-key="mail_template.id" class="d-flex align-items-baseline mt-2">
+            <t t-if="activityListViewItem.mailTemplateViewOwner.mailTemplateViews">
+                <MailTemplate t-foreach="activityListViewItem.mailTemplateViewOwner.mailTemplateViews" t-as="mailTemplateView" t-key="mailTemplateView.localId"/>
+                <!-- <div t-foreach="activityListViewItem.activity.mailTemplates" t-as="mailTemplate" t-key="mailTemplate.localId" class="d-flex align-items-baseline mt-2">
                     <i class="fa fa-envelope-o fa-fw me-2 text-center text-muted" aria-label="Mail" title="Mail" role="img"/>
                     <small>
-                        <div class="mb-1" t-esc="mail_template.name + ':'"/>
-                        <a t-on-click.prevent="(ev) => activityListViewItem.onClickPreviewMailTemplate(ev, mail_template.id)" href="#">Preview</a>
+                        <div class="mb-1" t-esc="mailTemplate.name + ':'"/>
+                        <a t-on-click.prevent="(ev) => activityListViewItem.onClickPreviewMailTemplate(ev, mailTemplate)" href="#">Preview</a>
                         <small> or </small>
-                        <a t-on-click.prevent="(ev) => activityListViewItem.onClickSendMailTemplate(ev, mail_template.id)" href="#">Send Now</a>
+                        <a t-on-click.prevent="(ev) => activityListViewItem.onClickSendMailTemplate(ev, mailTemplate)" href="#">Send Now</a>
                     </small>
-                </div>
+                </div> -->
             </t>
         </div>
     </t>

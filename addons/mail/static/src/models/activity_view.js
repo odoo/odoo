@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
 import { auto_str_to_date, getLangDateFormat, getLangDatetimeFormat } from 'web.time';
@@ -165,10 +165,8 @@ registerModel({
                 return momentDeadlineDate.format(datetimeFormat);
             },
         }),
-        mailTemplateViews: many('MailTemplateView', {
-            compute() {
-                return this.activity.mailTemplates.map(mailTemplate => ({ mailTemplate }));
-            },
+        mailTemplateViewOwner: one('MailTemplateViewOwner', {
+            default: {},
             inverse: 'activityViewOwner',
         }),
         markDoneButtonRef: attr(),

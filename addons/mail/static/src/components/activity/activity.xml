@@ -108,9 +108,9 @@
                         </div>
                     </t>
 
-                    <t t-if="activityView.mailTemplateViews.length > 0">
+                    <t t-if="activityView.mailTemplateViewOwner.mailTemplateViews.length > 0">
                         <div class="o_Activity_mailTemplates">
-                            <t t-foreach="activityView.mailTemplateViews" t-as="mailTemplateView" t-key="mailTemplateView.localId">
+                            <t t-foreach="activityView.mailTemplateViewOwner.mailTemplateViews" t-as="mailTemplateView" t-key="mailTemplateView.localId">
                                 <MailTemplate
                                     className="'o_Activity_mailTemplate'"
                                     record="mailTemplateView"
