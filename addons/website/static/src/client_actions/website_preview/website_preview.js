@@ -240,6 +240,9 @@ export class WebsitePreview extends Component {
         // The original /web#action=... url is saved to be pushed on top of the
         // history when leaving the component, so that the webclient can
         // correctly find back and replay the client action.
+        if (this.websiteService.context.showAceEditor) {
+            return;
+        }
         if (!this.backendUrl) {
             this.backendUrl = routeToUrl(this.router.current);
         }
@@ -326,9 +329,17 @@ export class WebsitePreview extends Component {
         this.iframe.el.contentDocument.addEventListener('keyup', ev => {
             this.iframe.el.dispatchEvent(new KeyboardEvent('keyup', ev));
         });
+        const aceParam = AceEditorAdapterComponent.defaultProps.Component.prototype.mainParam;
+        if (new URLSearchParams(window.location.search).has(aceParam)) {
+            this.websiteService.context.showAceEditor = true;
+        }
     }
 
     _onPageUnload() {
+        if (!this.websiteService.keepAceOpen) {
+            AceEditorAdapterComponent.defaultProps.Component.prototype.cleanIframeUrl();
+            this.websiteService.context.showAceEditor = false;
+        }
         this.websiteService.websiteRootInstance = undefined;
         this.iframe.el.setAttribute('is-ready', 'false');
         // Before leaving the iframe, its content is replicated on an

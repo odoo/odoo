@@ -7,7 +7,17 @@ import AceEditor from 'web_editor.ace';
 const {Component} = owl;
 
 export const WebsiteAceEditor = AceEditor.extend({
+    mainParam: 'advanced-view-editor',
+    resParam: 'res',
 
+    start() {
+        const resId = new URL(window.location).searchParams.get(this.resParam);
+        if (resId) {
+            this.options.initialResID = resId;
+        }
+        this._super(...arguments);
+        this._updateURL();
+    },
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
@@ -16,7 +26,25 @@ export const WebsiteAceEditor = AceEditor.extend({
      * @override
      */
     do_hide() {
+        const url = new URL(window.location);
+        url.searchParams.delete(this.mainParam);
+        url.searchParams.delete(this.resParam);
+        window.history.replaceState({}, '', url);
+        this.cleanIframeUrl();
         this.options.toggleAceEditor(false);
+    },
+    cleanIframeUrl() {
+        const iframeEl = document.querySelector('iframe.o_iframe');
+        const src = decodeURIComponent(iframeEl.getAttribute('src'));
+        const paramsString = src.slice(src.lastIndexOf('?') + 1);
+        const searchParams = new URLSearchParams(paramsString);
+        if (searchParams.has(this.mainParam)) {
+            // If the user reloaded the page while the ACE editor was open,
+            // the iframe has unwanted parameters in its src.
+            searchParams.delete(this.mainParam);
+            searchParams.delete(this.resParam);
+            iframeEl.setAttribute('src', `${src.slice(0, src.lastIndexOf('?'))}?${searchParams.toString()}`);
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -55,6 +83,10 @@ export const WebsiteAceEditor = AceEditor.extend({
                 this.options.reload();
             }));
         });
+    },
+    _displayResource: function () {
+        this._super.apply(this, arguments);
+        this._updateURL();
     },
     /**
      * @override
@@ -105,6 +137,10 @@ export const WebsiteAceEditor = AceEditor.extend({
         });
         return this._super({...options, context: context});
     },
+    _updateURL: function (resID) {
+        resID = resID || this._getSelectedResource();
+        window.history.replaceState({}, '', `?${this.mainParam}=true&${this.resParam}=${resID}`);
+    },
 });
 
 export class AceEditorAdapterComponent extends ComponentAdapter {
@@ -137,7 +173,9 @@ export class AceEditorAdapterComponent extends ComponentAdapter {
                     'web.assets_frontend_lazy',
                 ],
                 reload: () => {
+                    this.website.keepAceOpen = true;
                     this.website.contentWindow.location.reload();
+                    delete this.website.keepAceOpen;
                 },
             }
         ];
