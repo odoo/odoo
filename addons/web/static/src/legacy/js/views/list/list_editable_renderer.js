@@ -15,6 +15,7 @@ import dom from 'web.dom';
 import ListRenderer from 'web.ListRenderer';
 import utils from 'web.utils';
 import { WidgetAdapterMixin } from 'web.OwlCompatibility';
+import concurrency from 'web.concurrency';
 
 var _t = core._t;
 
@@ -96,6 +97,8 @@ ListRenderer.include({
         this.currentFieldIndex = null;
         this.isResizing = false;
         this.eventListeners = [];
+
+        this.rowModeChangeMutex = new concurrency.Mutex();
     },
     /**
      * @override
@@ -419,7 +422,12 @@ ListRenderer.include({
      * @returns {Promise}
      */
     setRowMode: function (recordID, mode) {
-        var self = this;
+        // Use a mutex because we don't want to rerender a row before the previous render is finished
+        return this.rowModeChangeMutex.exec(this._setRowMode.bind(this, recordID, mode));
+    },
+
+    _setRowMode: async function (recordID, mode) {
+        const self = this;
         var record = self._getRecord(recordID);
         if (!record) {
             return Promise.resolve();
