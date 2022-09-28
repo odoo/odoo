@@ -1,10 +1,13 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
+import { errorService } from "@web/core/errors/error_service";
+import { RPCError } from "@web/core/network/rpc_service";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { Field } from "@web/views/fields/field";
 import { Record } from "@web/views/record";
+import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import {
     addRow,
     click,
@@ -2835,7 +2838,17 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("failing quick create on a many2one", async function (assert) {
-        assert.expect(4);
+        assert.expect(5);
+
+        registry.category("services").add("error", errorService);
+
+        // remove the override in qunit.js that swallows unhandledrejection errors
+        // s.t. we let the error service handle them
+        const originalOnUnhandledRejection = window.onunhandledrejection;
+        window.onunhandledrejection = () => {};
+        registerCleanup(() => {
+            window.onunhandledrejection = originalOnUnhandledRejection;
+        });
 
         serverData.views = {
             "product,false,form": '<form><field name="name" /></form>',
@@ -2848,7 +2861,7 @@ QUnit.module("Fields", (hooks) => {
             arch: '<form><field name="product_id" /></form>',
             mockRPC(route, { args, method }) {
                 if (method === "name_create") {
-                    return Promise.reject();
+                    throw new RPCError("Something went wrong");
                 }
                 if (method === "create") {
                     assert.deepEqual(args[0], { name: "xyz" });
@@ -2858,7 +2871,8 @@ QUnit.module("Fields", (hooks) => {
 
         await editInput(target, ".o_field_widget[name='product_id'] input", "abcd");
         await click(target.querySelector(".o_field_widget[name='product_id'] .dropdown-item"));
-
+        await nextTick(); // wait for the error service to ensure that there's no error dialog
+        assert.containsNone(target, ".o_form_error_dialog");
         assert.containsOnce(target, ".modal .o_form_view");
         assert.strictEqual(
             target.querySelector(".modal .o_field_widget[name='name'] input").value,
