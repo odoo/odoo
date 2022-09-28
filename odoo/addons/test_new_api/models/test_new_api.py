@@ -97,6 +97,7 @@ class Discussion(models.Model):
     important_emails = fields.One2many('test_new_api.emailmessage', 'discussion',
                                        domain=[('important', '=', True)])
 
+    history = fields.Json('History', default={'delete_messages': []})
     attributes_definition = fields.PropertiesDefinition('Message Properties')  # see message@attributes
 
     def _domain_very_important(self):
