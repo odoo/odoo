@@ -41,8 +41,9 @@
     'application': True,
     'assets': {
         'web.assets_backend': [
-            'hr_recruitment/static/src/scss/*.scss',
-            'hr_recruitment/static/src/js/recruitment.js',
+            'hr_recruitment/static/src/**/*.js',
+            'hr_recruitment/static/src/**/*.scss',
+            'hr_recruitment/static/src/**/*.xml',
             'hr_recruitment/static/src/js/tours/hr_recruitment.js',
         ],
     },
