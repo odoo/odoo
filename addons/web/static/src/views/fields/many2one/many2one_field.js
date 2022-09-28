@@ -149,7 +149,7 @@ export class Many2OneField extends Component {
             nameCreateField: this.props.nameCreateField,
             setInputFloats: this.setFloating,
             autocomplete_container: this.autocompleteContainerRef,
-        }
+        };
     }
     getDomain() {
         return this.domain.toList(this.context);
@@ -306,4 +306,6 @@ Many2OneField.extractProps = ({ attrs, field }) => {
 };
 
 registry.category("fields").add("many2one", Many2OneField);
+// the two following lines are there to prevent the fallback on legacy widgets
 registry.category("fields").add("list.many2one", Many2OneField);
+registry.category("fields").add("kanban.many2one", Many2OneField);
