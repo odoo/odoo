@@ -4,15 +4,16 @@ import { browser } from "@web/core/browser/browser";
 
 import { registerModel } from '@mail/model/model_core';
 import { clear } from '@mail/model/model_field_command';
-import { one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'CallSettingsMenu',
     identifyingMode: 'xor',
     lifecycleHooks: {
-        _created() {
+        async _created() {
             browser.addEventListener('keydown', this._onKeyDown);
             browser.addEventListener('keyup', this._onKeyUp);
+            this.update({ userDevices: await this.messaging.browser.navigator.mediaDevices.enumerateDevices() });
         },
         _willDelete() {
             browser.removeEventListener('keydown', this._onKeyDown);
@@ -129,6 +130,9 @@ registerModel({
         threadViewOwner: one('ThreadView', {
             identifying: true,
             inverse: 'callSettingsMenu',
+        }),
+        userDevices: attr({
+            default: [],
         }),
         userSetting: one('UserSetting', {
             related: 'messaging.userSetting',
