@@ -809,9 +809,23 @@ class TransactionCase(BaseCase):
     env: api.Environment = None
     cr: Cursor = None
 
+
+    @classmethod
+    def _gc_filestore(cls):
+        # attachment can be created or unlink during the tests.
+        # they can addup during test and take some disc space.
+        # since cron are not running during tests, we need to gc manually
+        # We need to check the status of the file system outside of the test cursor
+        with odoo.registry(get_db_name()).cursor() as cr:
+            gc_env = api.Environment(cr, odoo.SUPERUSER_ID, {})
+            gc_env['ir.attachment']._gc_file_store_unsafe()
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+
+        cls.addClassCleanup(cls._gc_filestore)
+
         cls.registry = odoo.registry(get_db_name())
         cls.addClassCleanup(cls.registry.reset_changes)
         cls.addClassCleanup(cls.registry.clear_caches)
