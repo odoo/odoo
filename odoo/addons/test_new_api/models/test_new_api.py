@@ -97,8 +97,18 @@ class Discussion(models.Model):
     important_emails = fields.One2many('test_new_api.emailmessage', 'discussion',
                                        domain=[('important', '=', True)])
 
-    history = fields.Json('History', default={'delete_messages': []})
+    history = fields.Json('History', default={'delete_messages': []}, search='_search_history')
     attributes_definition = fields.PropertiesDefinition('Message Properties')  # see message@attributes
+
+    def _search_history(self, operator, value):
+        # Search if any match one of delete_messages
+        # assert operator in ('like', 'ilike', '=')
+        query = f"""
+        SELECT id
+        FROM {self._table}
+        WHERE history->>'delete_messages' {operator} %s
+        """
+        return [('id', 'inselect', (query, [f"%{value}%"]))]
 
     def _domain_very_important(self):
         """Ensure computed O2M domains work as expected."""

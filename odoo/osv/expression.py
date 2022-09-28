@@ -684,6 +684,17 @@ class expression(object):
                 for dom_leaf in dom:
                     push(dom_leaf, model, alias)
 
+            elif field.search:
+                # Let the field generate a domain.
+                if len(path) > 1:
+                    right = comodel._search([(path[1], operator, right)], order='id')
+                    operator = 'in'
+                domain = field.determine_domain(model, operator, right)
+                model._flush_search(domain, order='id')
+
+                for elem in normalize_domain(domain):
+                    push(elem, model, alias, internal=True)
+
             # ----------------------------------------
             # PATH SPOTTED
             # -> many2one or one2many with _auto_join:
@@ -725,23 +736,12 @@ class expression(object):
 
             elif not field.store:
                 # Non-stored field should provide an implementation of search.
-                if not field.search:
-                    # field does not support search!
-                    _logger.error("Non-stored field %s cannot be searched.", field)
-                    if _logger.isEnabledFor(logging.DEBUG):
-                        _logger.debug(''.join(traceback.format_stack()))
-                    # Ignore it: generate a dummy leaf.
-                    domain = []
-                else:
-                    # Let the field generate a domain.
-                    if len(path) > 1:
-                        right = comodel._search([(path[1], operator, right)], order='id')
-                        operator = 'in'
-                    domain = field.determine_domain(model, operator, right)
-                    model._flush_search(domain, order='id')
-
-                for elem in normalize_domain(domain):
-                    push(elem, model, alias, internal=True)
+                # field does not support search!
+                _logger.error("Non-stored field %s cannot be searched.", field)
+                if _logger.isEnabledFor(logging.DEBUG):
+                    _logger.debug(''.join(traceback.format_stack()))
+                # Ignore it: generate a dummy leaf.
+                domain = []
 
             # -------------------------------------------------
             # RELATIONAL FIELDS

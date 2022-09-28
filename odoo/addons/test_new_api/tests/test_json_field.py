@@ -34,3 +34,15 @@ class JsonFieldTest(TransactionCase):
         self.discussion_1.flush_recordset()
 
         self.assertEqual(self.discussion_1.history, [random_str, random_str_2])
+
+    def test_json_field_custom_search(self):
+        random_str = "tVpajMuSvaR94DwSRVtRSLGNkKViNbWHt2hq13"
+
+        discu = self.env['test_new_api.discussion'].search([('history', 'ilike', 'tVpajMuSvaR94')])
+        self.assertEqual(discu, self.env['test_new_api.discussion'])
+
+        self.discussion_1.history = {'delete_messages': [random_str]}
+
+        discu = self.env['test_new_api.discussion'].search([('history', 'ilike', 'tVpajMuSvaR94')])
+
+        self.assertEqual(discu, self.discussion_1)
