@@ -5,26 +5,19 @@
         <t t-call="web.html_container">
             <div class="page" style="page-break:unset !important;page-break-inside: unset !important;">
                 <div class="report_header" style="text-align: center;">
-                    <strong>
-                        <h4>THE GOOD MEAT</h4>
-                    </strong>
-
-                    <p style="font-size: 10px;">
-                        <t t-esc="company.name"/>
-                        <br/>
+                    <p>
+                        THE GOOD MEAT<br/>
+                        <t t-esc="company.name"/><br/>
                         <t t-esc="company.street"/>
-                        <t t-esc="company.street2"/>
-                        <t t-esc="company.city"/>
-                        <br/>
+                        <t t-esc="company.street2"/><t t-if="company.street2 or company.street">, </t>
+                        <t t-esc="company.city"/><t t-if="company.city">, </t><t t-if="company.country_id" t-esc="company.country_id.code"/><br/>
+                        VAT Reg TIN: <t t-esc="company.vat"/><br/>
+                        POS01-SN:XXXXXXXXXXXXXXXXX<br/>
+                        MIN#XXXXXXXXXXXXXXXXX<br/>
                     </p>
-                    <t t-if="company.vat">
-                        <p style="font-size: 10px;">VAT Reg TIN:
-                            <t t-esc="company.vat"/>
-                        </p>
-                    </t>
-                    <p style="font-size: 10px;">
-                        <t t-esc="session_name"/>
-                    </p>
+<!--                    <p style="font-size: 10px;">-->
+<!--                        <t t-esc="session_name"/>-->
+<!--                    </p>-->
                     <p style="font-size: 10px;">======================================</p>
                     <p style="font-size: 10px;">CASHIER READING OF TERMINAL 01</p>
                     <p style="font-size: 10px;">======================================</p>
@@ -36,7 +29,7 @@
                             <tr>
                                 <td style="width:28%">
                                     <div class="left_content" style="text-align: left;font-size: 15px;">
-                                        <p t-if="is_open_cashier">OPEN MANAGER:</p>
+                                        <p t-if="is_open_cashier">OPEN CASHIER:</p>
                                         <t t-set="is_open_cashier" t-value="0"/>
                                     </div>
                                 </td>
@@ -93,7 +86,7 @@
                         <tr>
                             <td style="width:28%">
                                 <div class="left_content" style="text-align: left;font-size: 15px;">
-                                    <p>OPEN READING:</p>
+                                    <p>OPEN AMOUNT:</p>
                                 </div>
                             </td>
                             <td style="width:40%">
@@ -108,7 +101,7 @@
                         <tr>
                             <td style="width:28%">
                                 <div class="left_content" style="text-align: left;font-size: 15px;">
-                                    <p>CLOSE READING:</p>
+                                    <p>CLOSE AMOUNT:</p>
                                 </div>
                             </td>
                             <td style="width:40%">
@@ -390,7 +383,7 @@
                         <tr>
                             <td>
                                 <div class="left_content" style="text-align: left;font-size: 15px;">
-                                    <p>TERMINAL TOTAL:</p>
+                                    <p>CASHIER TOTAL:</p>
                                 </div>
                             </td>
 <!--                            <td colspan="2">.................................</td>-->
@@ -576,26 +569,35 @@
         <t t-call="web.html_container">
             <div class="page" style="page-break:unset !important;page-break-inside: unset !important;">
                 <div class="report_header" style="text-align: center;">
-                    <strong>
-                        <h4>THE GOOD MEAT</h4>
-                    </strong>
-
-                    <p style="font-size: 10px;">
-                        <t t-esc="company.name"/>
-                        <br/>
+                    <p>
+                        THE GOOD MEAT<br/>
+                        <t t-esc="company.name"/><br/>
                         <t t-esc="company.street"/>
-                        <t t-esc="company.street2"/>
-                        <t t-esc="company.city"/>
-                        <br/>
+                        <t t-esc="company.street2"/><t t-if="company.street2 or company.street">, </t>
+                        <t t-esc="company.city"/><t t-if="company.city">, </t><t t-if="company.country_id" t-esc="company.country_id.code"/><br/>
+                        VAT Reg TIN: <t t-esc="company.vat"/><br/>
+                        POS01-SN:XXXXXXXXXXXXXXXXX<br/>
+                        MIN#XXXXXXXXXXXXXXXXX<br/>
                     </p>
-                    <t t-if="company.vat">
-                        <p style="font-size: 10px;">VAT Reg TIN:
-                            <t t-esc="company.vat"/>
-                        </p>
-                    </t>
-                    <p style="font-size: 10px;">
-                        <t t-esc="session_name"/>
-                    </p>
+<!--                    <strong>-->
+<!--                        <h4>THE GOOD MEAT</h4>-->
+<!--                    </strong>-->
+<!--                    <p style="font-size: 10px;">-->
+<!--                        <t t-esc="company.name"/>-->
+<!--                        <br/>-->
+<!--                        <t t-esc="company.street"/>-->
+<!--                        <t t-esc="company.street2"/>-->
+<!--                        <t t-esc="company.city"/>-->
+<!--                        <br/>-->
+<!--                    </p>-->
+<!--                    <t t-if="company.vat">-->
+<!--                        <p style="font-size: 10px;">VAT Reg TIN:-->
+<!--                            <t t-esc="company.vat"/>-->
+<!--                        </p>-->
+<!--                    </t>-->
+<!--                    <p style="font-size: 10px;">-->
+<!--                        <t t-esc="session_name"/>-->
+<!--                    </p>-->
                     <p style="font-size: 10px;">======================================</p>
                     <p style="font-size: 10px;">CASHIER READING OF TERMINAL 01</p>
                     <p style="font-size: 10px;">======================================</p>
@@ -608,7 +610,7 @@
                                 <t t-set="is_open_cashier" t-value="0"/>
                                 <td style="width:28%">
                                     <div class="left_content" style="text-align: left;font-size: 15px;">
-                                        <p>OPEN MANAGER:</p>
+                                        <p>OPEN CASHIER:</p>
                                     </div>
                                 </td>
                                 <td style="width:40%">
