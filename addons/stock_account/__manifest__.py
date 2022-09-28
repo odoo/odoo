@@ -43,7 +43,7 @@ Dashboard / Reports for Warehouse Management includes:
     'post_init_hook': '_configure_journals',
     'assets': {
         'web.assets_backend': [
-            'stock_account/static/src/js/report_stock_forecasted.js',
+            'stock_account/static/src/stock_account_forecasted/*',
             'stock_account/static/src/xml/inventory_report.xml',
         ],
     },
