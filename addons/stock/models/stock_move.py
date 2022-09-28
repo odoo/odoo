@@ -610,8 +610,12 @@ class StockMove(models.Model):
         for move in self:
             if move.product_uom:
                 move.is_action_show_details_danger = float_compare(move.quantity_done, move._get_qty_done_mls(), precision_rounding=move.product_uom.rounding) != 0
-                if move.is_action_show_details_danger and (move.has_tracking == 'none' or float_compare(move.quantity_done, move._get_reserve_qty_mls(), precision_rounding=move.product_uom.rounding) <= 0):
-                    move.is_action_show_details_danger = False
+                # if move.is_action_show_details_danger:
+                #     if move.has_tracking == 'none' or float_compare(move.quantity_done, move._get_reserve_qty_mls(), precision_rounding=move.product_uom.rounding) <= 0:
+                #         move.is_action_show_details_danger = False
+                #     if move.has_tracking != 'none':
+                #         available_quantity = move._get_available_quantity(self.location_id, strict=True)
+                #         move.is_action_show_details_danger = float_compare(move.quantity_done, available_quantity, precision_rounding=move.product_uom.rounding) <= 0
 
     @api.depends('move_line_ids', 'move_line_ids.lot_id', 'move_line_ids.qty_done')
     def _compute_lot_ids(self):
