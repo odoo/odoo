@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+import copy
 
 from odoo import api, models
 from odoo.tools import float_is_zero, format_date, float_round
@@ -60,13 +61,65 @@ class ReplenishmentReport(models.AbstractModel):
             }
         }
 
+    def _serialize_docs(self, docs, product_template_ids=False, product_variant_ids=False):
+        """
+        Since conversion from report to owl client_action, adapt/override this method to make records available from js code.
+        """
+        res = copy.copy(docs)
+        if product_template_ids:
+            res['product_templates'] = docs['product_templates'].read(fields=['id', 'display_name'])
+            product_variants = []
+            for pv in docs['product_variants']:
+                product_variants.append({
+                        'id' : pv.id,
+                        'combination_name' : pv.product_template_attribute_value_ids._get_combination_name(),
+                    })
+            res['product_variants'] = product_variants
+        elif product_variant_ids:
+            res['product_variants'] = docs['product_variants'].read(fields=['id', 'display_name'])
+
+        res['lines'] = []
+        for line in docs['lines']:
+            res['lines'].append({
+                'document_in' : {
+                    '_name' : line['document_in']._name,
+                    'id' : line['document_in']['id'],
+                    'name' : line['document_in']['name'],
+                } if line['document_in'] else False,
+                'document_out' : {
+                    '_name' : line['document_out']._name,
+                    'id' : line['document_out']['id'],
+                    'name' : line['document_out']['name'],
+                } if line['document_out'] else False,
+                'uom_id' : line['uom_id'].read()[0],
+                'move_out' : line['move_out'].read()[0] if line['move_out'] else False,
+                'move_in' : line['move_in'].read()[0] if line['move_in'] else False,
+                'product': line['product'],
+                'replenishment_filled': line['replenishment_filled'],
+                'receipt_date': line['receipt_date'],
+                'delivery_date': line['delivery_date'],
+                'is_late': line['is_late'],
+                'quantity': line['quantity'],
+                'reservation': line['reservation'],
+                'is_matched': line['is_matched'],
+            })
+            if line['move_out'] and line['move_out']['picking_id']:
+                res['lines'][-1]['move_out'].update({
+                    'picking_id' : line['move_out']['picking_id'].read(fields=['id', 'priority'])[0],
+                    })
+
+        return res
+
     @api.model
-    def _get_report_values(self, docids, data=None):
+    def get_report_values(self, docids, data=None, serialize=False):
+        docs = self._get_report_data(product_variant_ids=docids)
+        if serialize:
+            docs = self._serialize_docs(docs, product_variant_ids=docids)
         return {
             'data': data,
             'doc_ids': docids,
             'doc_model': 'product.product',
-            'docs': self._get_report_data(product_variant_ids=docids),
+            'docs': docs,
             'precision': self.env['decimal.precision'].precision_get('Product Unit of Measure'),
         }
 
@@ -88,6 +141,7 @@ class ReplenishmentReport(models.AbstractModel):
         if product_template_ids:
             product_templates = self.env['product.template'].browse(product_template_ids)
             res['product_templates'] = product_templates
+            res['product_templates_ids'] = product_templates.ids
             res['product_variants'] = product_templates.product_variant_ids
             res['multiple_product'] = len(product_templates.product_variant_ids) > 1
             res['uom'] = product_templates[:1].uom_id.display_name
@@ -99,6 +153,7 @@ class ReplenishmentReport(models.AbstractModel):
             product_variants = self.env['product.product'].browse(product_variant_ids)
             res['product_templates'] = False
             res['product_variants'] = product_variants
+            res['product_variants_ids'] = product_variants.ids
             res['multiple_product'] = len(product_variants) > 1
             res['uom'] = product_variants[:1].uom_id.display_name
             res['quantity_on_hand'] = sum(product_variants.mapped('qty_available'))
@@ -242,11 +297,14 @@ class ReplenishmentTemplateReport(models.AbstractModel):
     _inherit = 'report.stock.report_product_product_replenishment'
 
     @api.model
-    def _get_report_values(self, docids, data=None):
+    def get_report_values(self, docids, data=None, serialize=False):
+        docs = self._get_report_data(product_template_ids=docids)
+        if serialize:
+            docs = self._serialize_docs(docs, product_template_ids=docids)
         return {
             'data': data,
             'doc_ids': docids,
-            'doc_model': 'product.product',
-            'docs': self._get_report_data(product_template_ids=docids),
+            'doc_model': 'product.template',
+            'docs': docs,
             'precision': self.env['decimal.precision'].precision_get('Product Unit of Measure'),
         }
