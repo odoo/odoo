@@ -4,7 +4,7 @@ import { useComponentToModel } from '@mail/component_hooks/use_component_to_mode
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { useUpdate } from '@mail/component_hooks/use_update';
 import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
-import { clear, increment } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
@@ -106,95 +106,6 @@ export class Message extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * Modifies the message to add the 'read more/read less' functionality
-     * All element nodes with 'data-o-mail-quote' attribute are concerned.
-     * All text nodes after a ``#stopSpelling`` element are concerned.
-     * Those text nodes need to be wrapped in a span (toggle functionality).
-     * All consecutive elements are joined in one 'read more/read less'.
-     *
-     * FIXME This method should be rewritten (task-2308951)
-     *
-     * @private
-     * @param {jQuery} $element
-     */
-    _insertReadMoreLess($element) {
-        const groups = [];
-        let readMoreNodes;
-
-        // nodeType 1: element_node
-        // nodeType 3: text_node
-        const $children = $element.contents()
-            .filter((index, content) =>
-                content.nodeType === 1 || (content.nodeType === 3 && content.nodeValue.trim())
-            );
-
-        for (const child of $children) {
-            let $child = $(child);
-
-            // Hide Text nodes if "stopSpelling"
-            if (
-                child.nodeType === 3 &&
-                $child.prevAll('[id*="stopSpelling"]').length > 0
-            ) {
-                // Convert Text nodes to Element nodes
-                $child = $('<span>', {
-                    text: child.textContent,
-                    'data-o-mail-quote': '1',
-                });
-                child.parentNode.replaceChild($child[0], child);
-            }
-
-            // Create array for each 'read more' with nodes to toggle
-            if (
-                $child.attr('data-o-mail-quote') ||
-                (
-                    $child.get(0).nodeName === 'BR' &&
-                    $child.prev('[data-o-mail-quote="1"]').length > 0
-                )
-            ) {
-                if (!readMoreNodes) {
-                    readMoreNodes = [];
-                    groups.push(readMoreNodes);
-                }
-                $child.hide();
-                readMoreNodes.push($child);
-            } else {
-                readMoreNodes = undefined;
-                this._insertReadMoreLess($child);
-            }
-        }
-
-        for (const group of groups) {
-            const index = this.messageView.update({ lastReadMoreIndex: increment() });
-            // Insert link just before the first node
-            const $readMoreLess = $('<a>', {
-                class: 'o_Message_readMoreLess d-block',
-                href: '#',
-                text: this.messagingView.readMoreText,
-            }).insertBefore(group[0]);
-
-            // Toggle All next nodes
-            if (!this.messageView.isReadMoreByIndex.has(index)) {
-                this.messageView.isReadMoreByIndex.set(index, true);
-            }
-            const updateFromState = () => {
-                const isReadMore = this.messageView.isReadMoreByIndex.get(index);
-                for (const $child of group) {
-                    $child.hide();
-                    $child.toggle(!isReadMore);
-                }
-                $readMoreLess.text(isReadMore ? this.messagingView.readMoreText : this.messagingView.readLessText);
-            };
-            $readMoreLess.click(e => {
-                e.preventDefault();
-                this.messageView.isReadMoreByIndex.set(index, !this.messageView.isReadMoreByIndex.get(index));
-                updateFromState();
-            });
-            updateFromState();
-        }
-    }
-
-    /**
      * @private
      */
     _update() {
@@ -205,15 +116,15 @@ export class Message extends Component {
         if (!this.messageView.prettyBodyRef.el) {
             this.messageView.update({ lastPrettyBody: clear() });
         }
-        // Remove all readmore before if any before reinsert them with _insertReadMoreLess.
-        // This is needed because _insertReadMoreLess is working with direct DOM mutations
+        // Remove all readmore before if any before reinsert them with insertReadMoreLess.
+        // This is needed because insertReadMoreLess is working with direct DOM mutations
         // which are not sync with Owl.
         if (this.messageView.contentRef.el) {
             for (const el of [...this.messageView.contentRef.el.querySelectorAll(':scope .o_Message_readMoreLess')]) {
                 el.remove();
             }
             this.messageView.update({ lastReadMoreIndex: clear() });
-            this._insertReadMoreLess($(this.messageView.contentRef.el));
+            this.messageView.insertReadMoreLess($(this.messageView.contentRef.el));
             this.messaging.messagingBus.trigger('o-component-message-read-more-less-inserted', {
                 message: this.messageView.message,
             });
