@@ -118,6 +118,27 @@ registerModel({
             if (this.threadViewOwnerAsLastMessageView && this.component && this.component.isPartiallyVisible()) {
                 this.threadViewOwnerAsLastMessageView.handleVisibleMessage(this.message);
             }
+            if (this.prettyBodyRef.el && this.message.prettyBody !== this.lastPrettyBody) {
+                this.prettyBodyRef.el.innerHTML = this.message.prettyBody;
+                this.update({ lastPrettyBody: this.message.prettyBody });
+            }
+            if (!this.prettyBodyRef.el) {
+                this.update({ lastPrettyBody: clear() });
+            }
+            // Remove all readmore before if any before reinsert them with insertReadMoreLess.
+            // This is needed because insertReadMoreLess is working with direct DOM mutations
+            // which are not sync with Owl.
+            if (this.contentRef.el) {
+                for (const el of [...this.contentRef.el.querySelectorAll(':scope .o_Message_readMoreLess')]) {
+                    el.remove();
+                }
+                this.update({ lastReadMoreIndex: clear() });
+                this.insertReadMoreLess($(this.contentRef.el));
+                this.messaging.messagingBus.trigger('o-component-message-read-more-less-inserted', {
+                    message: this.message,
+                });
+            }
+        }
         },
         onHighlightTimerTimeout() {
             this.update({

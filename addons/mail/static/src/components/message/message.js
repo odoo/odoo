@@ -2,9 +2,7 @@
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
-import { useUpdate } from '@mail/component_hooks/use_update';
 import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
-import { clear } from '@mail/model/model_field_command';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
@@ -21,7 +19,6 @@ export class Message extends Component {
         useRefToModel({ fieldName: 'notificationIconRef', refName: 'notificationIcon' });
         useRefToModel({ fieldName: 'prettyBodyRef', refName: 'prettyBody' });
         useUpdateToModel({ methodName: 'onComponentUpdate' });
-        useUpdate({ func: () => this._update() });
     }
 
     //--------------------------------------------------------------------------
@@ -98,36 +95,6 @@ export class Message extends Component {
             return new Promise(resolve => setTimeout(resolve, 500));
         } else {
             return Promise.resolve();
-        }
-    }
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _update() {
-        if (this.messageView.prettyBodyRef.el && this.messageView.message.prettyBody !== this.messageView.lastPrettyBody) {
-            this.messageView.prettyBodyRef.el.innerHTML = this.messageView.message.prettyBody;
-            this.messageView.update({ lastPrettyBody: this.messageView.message.prettyBody });
-        }
-        if (!this.messageView.prettyBodyRef.el) {
-            this.messageView.update({ lastPrettyBody: clear() });
-        }
-        // Remove all readmore before if any before reinsert them with insertReadMoreLess.
-        // This is needed because insertReadMoreLess is working with direct DOM mutations
-        // which are not sync with Owl.
-        if (this.messageView.contentRef.el) {
-            for (const el of [...this.messageView.contentRef.el.querySelectorAll(':scope .o_Message_readMoreLess')]) {
-                el.remove();
-            }
-            this.messageView.update({ lastReadMoreIndex: clear() });
-            this.messageView.insertReadMoreLess($(this.messageView.contentRef.el));
-            this.messaging.messagingBus.trigger('o-component-message-read-more-less-inserted', {
-                message: this.messageView.message,
-            });
         }
     }
 
