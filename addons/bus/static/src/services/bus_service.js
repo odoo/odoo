@@ -1,17 +1,10 @@
 /** @odoo-module **/
 
-import { WEBSOCKET_CLOSE_CODES } from "@bus/workers/websocket_worker";
-
 import { browser } from "@web/core/browser/browser";
 import { registry } from '@web/core/registry';
 import { session } from '@web/session';
 
 const { EventBus } = owl;
-const NO_POPUP_CLOSE_CODES = [
-    WEBSOCKET_CLOSE_CODES.SESSION_EXPIRED,
-    WEBSOCKET_CLOSE_CODES.KEEP_ALIVE_TIMEOUT,
-    WEBSOCKET_CLOSE_CODES.TRY_LATER,
-];
 
 /**
  * Communicate with a SharedWorker in order to provide a single websocket
@@ -24,7 +17,7 @@ const NO_POPUP_CLOSE_CODES = [
  *  @emits notification
  */
 export const busService = {
-    dependencies: ['localization', 'multi_tab', 'notification'],
+    dependencies: ['localization', 'multi_tab'],
 
     start(env, { multi_tab: multiTab }) {
         if (session.dbuuid && multiTab.getSharedValue('dbuuid') !== session.dbuuid) {
@@ -36,7 +29,6 @@ export const busService = {
         const worker = new workerClass('/bus/websocket_worker_bundle', {
             name: 'SharedWorker' in window ? 'odoo:websocket_shared_worker' : 'odoo:websocket_worker',
         });
-        let removeConnectionLostNotification;
 
         /**
         * Send a message to the worker.
@@ -65,17 +57,7 @@ export const busService = {
         function handleMessage(messageEv) {
             const { type } = messageEv.data;
             let { data } = messageEv.data;
-            // Do not trigger the connection lost pop up if the reconnecting
-            // event is caused by a session expired/keep_alive_timeout.
-            if (type === 'reconnecting' && !NO_POPUP_CLOSE_CODES.includes(data.closeCode)) {
-                removeConnectionLostNotification = env.services.notification.add(
-                    env._t("Websocket connection lost. Trying to reconnect..."),
-                    { sticky: true },
-                );
-            } else if (type === 'reconnect' && removeConnectionLostNotification) {
-                removeConnectionLostNotification();
-                removeConnectionLostNotification = null;
-            } else if (type === 'notification') {
+            if (type === 'notification') {
                 multiTab.setSharedValue('last_notification_id', data[data.length - 1].id);
                 data = data.map(notification => notification.message);
             }
