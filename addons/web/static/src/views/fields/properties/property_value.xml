@@ -64,18 +64,23 @@
             </t>
             <div
                 t-elif="props.type === 'many2one'"
-                class="d-flex flex-row">
+                t-attf-class="d-flex flex-row align-items-center o_field_property_many2one_value {{showAvatar ? 'avatar' : ''}}">
                 <t t-if="props.comodel">
+                    <t t-set="hasAccess" t-value="!propertyValue || propertyValue[1]"/>
+                    <img t-if="showAvatar &amp;&amp; propertyValue[0] &amp;&amp; hasAccess"
+                        t-attf-src="/web/image/{{props.comodel}}/{{propertyValue[0]}}/avatar_128"
+                        class="rounded-circle me-1"/>
                     <a
-                        t-if="props.readonly"
-                        class="o_form_uri"
+                        t-if="props.readonly || !hasAccess"
+                        t-attf-class="o_form_uri {{propertyValue &amp;&amp; propertyValue[1] ? '' : 'disabled'}}"
                         t-att-href="propertyValue[0] ? `#id=${propertyValue[0]}&amp;model=${props.comodel}` : '#'"
                         t-on-click.prevent="onMany2oneClick">
-                        <span t-out="propertyValue &amp;&amp; propertyValue[1] || ''" />
+                        <t t-if="hasAccess" t-out="propertyValue[1]"/>
+                        <t t-else="">No Access</t>
                     </a>
                     <Many2XAutocomplete
                         t-else=""
-                        value="propertyValue &amp;&amp; propertyValue[1] || ''"
+                        value="propertyValue[1] || ''"
                         id="propertyValue[0] ? propertyValue[0].toString() : ''"
                         resModel="props.comodel"
                         autoSelect="true"
@@ -87,7 +92,7 @@
                         activeActions="{canCreate: true, canCreateEdit: true, canWrite: true}"
                     />
                     <button
-                        t-if="!props.readonly &amp;&amp; propertyValue &amp;&amp; propertyValue[0]"
+                        t-if="!props.readonly &amp;&amp; propertyValue &amp;&amp; propertyValue[0] &amp;&amp; hasAccess"
                         type="button"
                         class="btn btn-secondary fa fa-external-link o_external_button o_properties_external_button py-0"
                         tabindex="-1"
@@ -99,7 +104,9 @@
                 </t>
             </div>
             <t t-elif="props.type === 'many2many'">
-                <div t-if="props.comodel" class="o_field_property_many2many_value">
+                <div t-if="props.comodel" class="o_field_property_many2many_value py-1 d-flex flex-row pt-2 w-100"
+                    t-attf-class="o_field_widget o_field_many2manytags o_input {{showAvatar ? 'avatar' : ''}}">
+                    <!-- Copy many2many tags style without duplicating all CSS -->
                     <TagsList tags="propertyValue"/>
                     <Many2XAutocomplete
                         t-if="!props.readonly"
