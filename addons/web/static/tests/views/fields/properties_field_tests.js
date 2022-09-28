@@ -20,6 +20,14 @@ async function closePopover(target) {
     await click(document, "html");
 }
 
+async function changeType(target, propertyType) {
+    const TYPES_INDEX = {"datetime": 6, "selection": 7, "tags": 8, "many2one": 9, "many2many": 10};
+    const propertyTypeIndex = TYPES_INDEX[propertyType];
+    await click(target, ".o_field_property_definition_type input");
+    await nextTick();
+    await click(target, `.o_field_property_definition_type .dropdown-item:nth-child(${propertyTypeIndex})`);
+}
+
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
         target = getFixture();
@@ -115,6 +123,26 @@ QUnit.module("Fields", (hooks) => {
                         {
                             id: 37,
                             display_name: "Company 1",
+                        },
+                    ],
+                },
+                'res.users': {
+                    fields: {
+                        name: {
+                            string: "Name",
+                            type: "char",
+                        },
+                    },
+                    records: [
+                        {
+                            id: 1,
+                            display_name: "Alice",
+                        }, {
+                            id: 2,
+                            display_name: "Bob",
+                        }, {
+                            id: 3,
+                            display_name: "Eve",
                         },
                     ],
                 },
@@ -222,11 +250,7 @@ QUnit.module("Fields", (hooks) => {
 
         // Change the property type to "Date & Time"
         await editInput(target, ".o_field_property_definition_header input", "My Datetime");
-        await click(target, ".o_field_property_definition_type button");
-        await click(
-            target,
-            ".o_field_property_definition_type .dropdown-menu .dropdown-item:nth-child(6)"
-        );
+        await changeType(target, "datetime");
         assert.strictEqual(type.value, "Date & Time", "Should have changed the property type");
 
         // Choosing a date in the date picker should not close the definition popover
@@ -586,9 +610,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_property_field:nth-child(2) .o_field_property_open_popover");
         let popover = target.querySelector(".o_property_field_popover");
         // Select the tags type
-        await click(popover, ".o_field_property_definition_type input");
-        await nextTick();
-        await click(popover, ".o_field_property_definition_type .dropdown-item:nth-child(8)");
+        await changeType(target, "tags");
 
         // Create 3 tags
         const tagsInputSelector = ".o_property_field_popover .o_field_property_dropdown_menu input";
@@ -718,9 +740,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_property_field:nth-child(2) .o_field_property_open_popover");
         const popover = target.querySelector(".o_property_field_popover");
         // Select the many2one type
-        await click(popover, ".o_field_property_definition_type input");
-        await nextTick();
-        await click(popover, ".o_field_property_definition_type .dropdown-item:nth-child(9)");
+        await changeType(target, "many2one");
 
         // Choose the "User" model
         await click(popover, ".o_field_property_definition_model input");
@@ -759,9 +779,8 @@ QUnit.module("Fields", (hooks) => {
 
     /**
      * Test the properties many2many
-     * FIXME: broken by mighty TDE
      */
-    QUnit.skip("properties: many2many", async function (assert) {
+    QUnit.test("properties: many2many", async function (assert) {
         async function mockRPC(route, { method, model, args, kwargs }) {
             if (method === "check_access_rights") {
                 return true;
@@ -770,6 +789,8 @@ QUnit.module("Fields", (hooks) => {
                     { model: "res.partner", display_name: "Partner" },
                     { model: "res.users", display_name: "User" },
                 ];
+            } else if (method === "display_name_for" && model === "ir.model" && args[0][0] === "res.users") {
+                return [{"display_name": "User", "model": "res.users"}];
             } else if (method === "name_create" && model === "res.users") {
                 // Add a prefix to check that "name_create"
                 // has been called with the right parameters
@@ -806,9 +827,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_property_field:nth-child(2) .o_field_property_open_popover");
         const popover = target.querySelector(".o_property_field_popover");
         // Select the many2many type
-        await click(popover, ".o_field_property_definition_type input");
-        await nextTick();
-        await click(popover, ".o_field_property_definition_type .dropdown-item:nth-child(10)");
+        await changeType(target, "many2many");
 
         // Choose the "User" model
         await click(popover, ".o_field_property_definition_model input");
@@ -941,5 +960,96 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps([]);
         await clickSave(target);
         assert.verifySteps(["write", "read"]);
+    });
+
+    /**
+     * Changing the type or the model of a property must regenerate it's name.
+     * (so if we change the type / model, all other property values on other records
+     * are set to False).
+     * Resetting the old model / type should reset the original name.
+     */
+    QUnit.test("properties: name reset", async function (assert) {
+        async function mockRPC(route, { method, model, kwargs }) {
+            if (method === "check_access_rights") {
+                return true;
+            } else if (method === "get_available_models" && model === "ir.model") {
+                return [
+                    { model: "res.partner", display_name: "Partner" },
+                    { model: "res.users", display_name: "User" },
+                ];
+            } else if (method === "display_name_for" && model === "ir.model") {
+                return [
+                    {"display_name": "User", "model": "res.users"},
+                    {"display_name": "Partner", "model": "res.partner"},
+                ];
+            } else if (method === "search_count") {
+                return 5;
+            }
+        }
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="company_id"/>
+                            <field name="properties"/>
+                        </group>
+                    </sheet>
+                </form>`,
+            mockRPC,
+        });
+
+        assert.ok(target.querySelector('.o_property_field[property-name="property_2"]'));
+
+        // open the definition popover
+        await click(target, ".o_property_field:nth-child(2) .o_field_property_open_popover");
+
+        // change the type to "many2one"
+        await changeType(target, "many2one");
+
+        // select the "User" model
+        await click(target, ".o_field_property_definition_model input");
+        await click(target, ".o_field_property_definition_model .ui-menu-item:nth-child(2)");
+
+        await closePopover(target);
+
+        // check that the name has been regenerated
+        let property = target.querySelector(".o_property_field:nth-child(2)");
+        const propertyName2 = property.getAttribute("property-name");
+        assert.ok(propertyName2 !== "property_2", "Name must have been regenerated");
+
+        // change back to "Selection" and verify that the original name is restored
+        await click(target, ".o_property_field:nth-child(2) .o_field_property_open_popover");
+        await changeType(target, "selection");
+        await closePopover(target);
+        property = target.querySelector(".o_property_field:nth-child(2)");
+        const propertyName3 = property.getAttribute("property-name");
+        assert.strictEqual(propertyName3, "property_2", "Name must have been restored");
+
+        // re-select many2one user
+        await click(target, ".o_property_field:nth-child(2) .o_field_property_open_popover");
+        await changeType(target, "many2one");
+        await click(target, ".o_field_property_definition_model input");
+        await click(target, ".o_field_property_definition_model .ui-menu-item:nth-child(2)");
+        property = target.querySelector(".o_property_field:nth-child(2)");
+        const propertyName4 = property.getAttribute("property-name");
+
+        // save (if we do not save, the name will be the same even if
+        // we change the model, because it would be useless to regenerate it again)
+        await closePopover(target);
+
+        // restore the model "User", and check that the name has been restored
+        await click(target, ".o_property_field:nth-child(2) .o_field_property_open_popover");
+        await click(target, ".o_field_property_definition_model input");
+        await click(target, ".o_field_property_definition_model .ui-menu-item:nth-child(2)");
+        await closePopover(target);
+        property = target.querySelector(".o_property_field:nth-child(2)");
+        const propertyName6 = property.getAttribute("property-name");
+        assert.strictEqual(propertyName4, propertyName6);
     });
 });

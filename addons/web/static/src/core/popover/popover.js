@@ -59,6 +59,10 @@ Popover.defaultProps = {
     position: "bottom",
 };
 Popover.props = {
+    id: {
+        optional: true,
+        type: Number,
+    },
     popoverClass: {
         optional: true,
         type: String,

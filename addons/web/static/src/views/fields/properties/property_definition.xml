@@ -12,16 +12,17 @@
                     placeholder="Property Name"
                     t-model="state.propertyDefinition.string"
                     t-on-change="onPropertyLabelChange"
+                    t-on-keypress="onPropertyLabelKeypress"
                 />
                 <div class="d-flex flex-row me-3">
                     <button
-                        class="btn btn-link p-0 m-0 me-2"
-                        t-on-click="() => props.onPropertyMove('up')">
+                        t-attf-class="btn btn-link p-0 m-0 me-2 {{this.isFirst ? 'disabled' : ''}}"
+                        t-on-click="() => this.onPropertyMove('up')">
                         <i class="fa fa-chevron-up"/>
                     </button>
                     <button
-                        class="btn btn-link p-0 m-0"
-                        t-on-click="() => props.onPropertyMove('down')">
+                        t-attf-class="btn btn-link p-0 m-0 {{this.isLast ? 'disabled' : ''}}"
+                        t-on-click="() => this.onPropertyMove('down')">
                         <i class="fa fa-chevron-down"/>
                     </button>
                     <button

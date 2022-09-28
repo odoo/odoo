@@ -7,7 +7,7 @@ from unittest.mock import patch
 
 from odoo import Command
 from odoo.exceptions import AccessError
-from odoo.tests.common import Form, TransactionCase
+from odoo.tests.common import Form, TransactionCase, users
 from odoo.tools import mute_logger
 
 
@@ -20,6 +20,12 @@ class PropertiesCase(TransactionCase):
         cls.user = cls.env.user
         cls.partner = cls.env['test_new_api.partner'].create({'name': 'Test Partner Properties'})
         cls.partner_2 = cls.env['test_new_api.partner'].create({'name': 'Test Partner Properties 2'})
+
+        cls.test_user = cls.env['res.users'].create({
+            'name': 'Test',
+            'login': 'test',
+            'company_id': cls.env.company.id,
+        })
 
         attributes_definition_1 = [{
             'name': 'discussion_color_code',
@@ -122,11 +128,12 @@ class PropertiesCase(TransactionCase):
 
         expected = self.discussion_2.attributes_definition
         for property_definition in expected:
-            property_definition['value'] = None
+            property_definition['value'] = False
 
         self.assertEqual(self.message_3.read(['attributes'])[0]['attributes'], expected)
         self.assertEqual(self.message_3.attributes, expected)
 
+    @mute_logger('odoo.fields')
     def test_properties_field_write_batch(self):
         """Test the behavior of the write called in batch.
 
@@ -169,7 +176,7 @@ class PropertiesCase(TransactionCase):
             'SELECT "test_new_api_message"."id" AS "id", "test_new_api_message"."attributes" AS "attributes" FROM "test_new_api_message" WHERE "test_new_api_message".id IN %s',
             'SELECT "test_new_api_message"."id" AS "id", "test_new_api_message"."discussion" AS "discussion", "test_new_api_message"."body" AS "body", "test_new_api_message"."author" AS "author", "test_new_api_message"."name" AS "name", "test_new_api_message"."important" AS "important", "test_new_api_message"."label"->>\'en_US\' AS "label", "test_new_api_message"."priority" AS "priority", "test_new_api_message"."create_uid" AS "create_uid", "test_new_api_message"."create_date" AS "create_date", "test_new_api_message"."write_uid" AS "write_uid", "test_new_api_message"."write_date" AS "write_date" FROM "test_new_api_message" WHERE "test_new_api_message".id IN %s',
             # read the definition on the definition record
-            'SELECT "test_new_api_discussion"."id" AS "id", "test_new_api_discussion"."attributes_definition" AS "attributes_definition" FROM "test_new_api_discussion" WHERE "test_new_api_discussion".id IN %s',
+            'SELECT "test_new_api_discussion"."id" AS "id", "test_new_api_discussion"."name" AS "name", "test_new_api_discussion"."moderator" AS "moderator", "test_new_api_discussion"."message_concat" AS "message_concat", "test_new_api_discussion"."attributes_definition" AS "attributes_definition", "test_new_api_discussion"."create_uid" AS "create_uid", "test_new_api_discussion"."create_date" AS "create_date", "test_new_api_discussion"."write_uid" AS "write_uid", "test_new_api_discussion"."write_date" AS "write_date" FROM "test_new_api_discussion" WHERE "test_new_api_discussion".id IN %s',
             # check the many2one existence
             'SELECT "test_new_api_partner".id FROM "test_new_api_partner" WHERE "test_new_api_partner".id IN %s',
             'SELECT "test_new_api_partner"."id" AS "id", "test_new_api_partner"."name" AS "name", "test_new_api_partner"."create_uid" AS "create_uid", "test_new_api_partner"."create_date" AS "create_date", "test_new_api_partner"."write_uid" AS "write_uid", "test_new_api_partner"."write_date" AS "write_date" FROM "test_new_api_partner" WHERE "test_new_api_partner".id IN %s',
@@ -185,6 +192,7 @@ class PropertiesCase(TransactionCase):
             # 2 more queries for message 2 to verify his partner existence / name_get
             (self.message_1 | self.message_2).read(['attributes'])
 
+    @mute_logger('odoo.fields')
     def test_properties_field_delete(self):
         """Test to delete a property using the flag "definition_deleted"."""
         self.message_1.attributes = [{
@@ -214,6 +222,7 @@ class PropertiesCase(TransactionCase):
         self.assertEqual(len(self.message_1.attributes), 1)
         self.assertEqual(self.message_1.attributes[0]['value'], 'purple')
 
+    @mute_logger('odoo.fields')
     def test_properties_field_create_batch(self):
         # first create to cache the access rights
         self.env['test_new_api.message'].create({'name': 'test'})
@@ -230,18 +239,20 @@ class PropertiesCase(TransactionCase):
             }])
             self.env.invalidate_all()
 
-        with self.assertQueryCount(9):
+        with self.assertQueryCount(8):
             messages = self.env['test_new_api.message'].create([{
                 'name': 'Test Message',
                 'discussion': self.discussion_1.id,
                 'author': self.user.id,
                 'attributes': [{
-                    'name': 'discussion_color_code',
-                    'string': 'New Label',
+                    # no name, should be automatically generated
+                    'string': 'Discussion Color code',
                     'type': 'char',
                     'default': 'blue',
                     'value': 'purple',
+                    'definition_changed': True,
                 }, {
+                    # the name is already set and shouldn't be re-generated
                     'name': 'moderator_partner_id',
                     'string': 'Partner',
                     'type': 'many2one',
@@ -254,7 +265,6 @@ class PropertiesCase(TransactionCase):
                 'discussion': self.discussion_2.id,
                 'author': self.user.id,
                 'attributes': [{
-                    'name': 'state',
                     'type': 'selection',
                     'string': 'Status',
                     'selection': [
@@ -269,12 +279,18 @@ class PropertiesCase(TransactionCase):
             self.env.invalidate_all()
 
         sql_definition = self._get_sql_definition(self.discussion_1)
+        self.assertEqual(len(sql_definition), 2)
+
+        # check the generated name
+        property_color_name = sql_definition[0]['name']
+        self.assertTrue(property_color_name, msg="Property name must have been generated")
+
         self.assertEqual(sql_definition, [
             {
-                'name': 'discussion_color_code',
-                'type': 'char', 'string':
-                'New Label', 'default':
-                'blue'
+                'name': property_color_name,
+                'default': 'blue',
+                'string': 'Discussion Color code',
+                'type': 'char',
             }, {
                 'name': 'moderator_partner_id',
                 'type': 'many2one',
@@ -284,7 +300,7 @@ class PropertiesCase(TransactionCase):
         ])
 
         self.assertEqual(
-            self.discussion_1.attributes_definition[0]['string'], 'New Label',
+            self.discussion_1.attributes_definition[0]['string'], 'Discussion Color code',
             msg='Should have updated the definition record')
 
         self.assertEqual(len(messages), 2)
@@ -293,11 +309,12 @@ class PropertiesCase(TransactionCase):
         self.assertEqual(
             sql_properties_1,
             {'moderator_partner_id': self.partner.id,
-             'discussion_color_code': 'purple'})
+             property_color_name: 'purple'})
         sql_properties_2 = self._get_sql_properties(messages[1])
+        status_name = self.discussion_2.attributes_definition[0]['name']
         self.assertEqual(
             sql_properties_2,
-            {'state': 'draft'})
+            {status_name: 'draft'})
 
         properties_values_1 = messages[0].attributes
         properties_values_2 = messages[1].attributes
@@ -472,7 +489,7 @@ class PropertiesCase(TransactionCase):
                 "type": "char",
                 "string": "Color Code",
                 "default": "blue",
-                "value": None,
+                "value": False,
             }, {
                 "name": "moderator_partner_id",
                 "type": "many2one",
@@ -495,7 +512,7 @@ class PropertiesCase(TransactionCase):
         self.assertEqual(properties[1]['value'], (self.partner_2.id, self.partner_2.display_name))
         self.assertEqual(properties[1]['comodel'], 'test_new_api.partner')
 
-    @mute_logger('odoo.models.unlink')
+    @mute_logger('odoo.models.unlink', 'odoo.fields')
     def test_properties_field_many2one_unlink(self):
         """Test the case where we unlink the many2one record."""
         self.message_2.attributes = [{
@@ -540,7 +557,7 @@ class PropertiesCase(TransactionCase):
                 'type': 'many2one',
                 'comodel': 'res.partner',
                 'default': (partner.id, partner.display_name),
-                'value': None,
+                'value': False,
             }],
         )
         partner.unlink()
@@ -550,8 +567,8 @@ class PropertiesCase(TransactionCase):
                 'name': 'moderator_partner_id',
                 'type': 'many2one',
                 'comodel': 'res.partner',
-                'default': None,
-                'value': None,
+                'default': False,
+                'value': False,
             }],
         )
 
@@ -788,7 +805,7 @@ class PropertiesCase(TransactionCase):
                 },
             ]
 
-    @mute_logger('odoo.models.unlink')
+    @mute_logger('odoo.models.unlink', 'odoo.fields')
     def test_properties_field_many2many_basic(self):
         """Test the basic operation on a many2many properties (read, write...).
 
@@ -807,7 +824,7 @@ class PropertiesCase(TransactionCase):
             'comodel': 'test_new_api.partner',
         }]
 
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(4):
             self.message_1.attributes = [
                 {
                     "name": "moderator_partner_ids",
@@ -897,6 +914,40 @@ class PropertiesCase(TransactionCase):
                 'value': [(partners[9].id, partners[9].display_name)],
             }])
 
+    @users('test')
+    @mute_logger('odoo.addons.base.models.ir_rule')
+    def test_properties_field_many2many_filtering(self):
+        # a user read a properties with a many2many and he doesn't have access to all records
+        tags = self.env['test_new_api.multi.tag'].create(
+            [{'name': f'Test Tag {i}'} for i in range(10)])
+
+        message = self.env['test_new_api.message'].create({
+            'name': 'Test Message',
+            'discussion': self.discussion_1.id,
+            'author': self.user.id,
+            'attributes': [{
+                'name': 'My Tags',
+                'type': 'many2many',
+                'comodel': 'test_new_api.multi.tag',
+                'value': tags.ids,
+                'definition_changed': True,
+            }],
+        })
+
+        self.env['ir.rule'].sudo().create({
+            'name': 'test_rule_tags',
+            'model_id': self.env['ir.model']._get('test_new_api.multi.tag').id,
+            'domain_force': [('name', 'not in', tags[5:].mapped('name'))],
+            'perm_read': True,
+            'perm_create': True,
+            'perm_write': True,
+        })
+
+        self.env.invalidate_all()
+
+        values = message.read(['attributes'])[0]['attributes'][0]['value']
+        self.assertEqual(values, [(tag.id, None if i >= 5 else tag.name) for i, tag in enumerate(tags.sudo())])
+
     def test_properties_field_performance(self):
         with self.assertQueryCount(4):
             self.message_1.attributes
@@ -981,11 +1032,12 @@ class PropertiesCase(TransactionCase):
                 {'name': 'state', 'type': 'datetime'},
             ]
 
+    @mute_logger('odoo.fields')
     def test_properties_field_onchange(self):
         """If we change the definition record, the onchange of the properties field must be triggered."""
         message_form = Form(self.env['test_new_api.message'])
 
-        with self.assertQueryCount(11):
+        with self.assertQueryCount(8):
             message_form.discussion = self.discussion_1
             message_form.author = self.user
 
@@ -1002,7 +1054,7 @@ class PropertiesCase(TransactionCase):
                     'string': 'Partner',
                     'type': 'many2one',
                     'comodel': 'test_new_api.partner',
-                    'value': None,
+                    'value': False,
                 }],
                 msg='Should take the new definition when changing the definition record',
             )
@@ -1019,7 +1071,7 @@ class PropertiesCase(TransactionCase):
                 msg='Should take the values of the new definition record',
             )
 
-        with self.assertQueryCount(7):
+        with self.assertQueryCount(6):
             message = message_form.save()
 
         self.assertEqual(
@@ -1034,7 +1086,7 @@ class PropertiesCase(TransactionCase):
 
         # change the definition record, change the definition and add default values
         self.assertEqual(message.discussion, self.discussion_2)
-        with self.assertQueryCount(7):
+        with self.assertQueryCount(4):
             message.discussion = self.discussion_1
         self.assertEqual(
             self.discussion_1.attributes_definition,
@@ -1063,7 +1115,7 @@ class PropertiesCase(TransactionCase):
                 'type': 'many2one',
                 'string': 'Partner',
                 'comodel': 'test_new_api.partner',
-                'value': None,
+                'value': False,
             }],
         )
 
@@ -1134,6 +1186,29 @@ class PropertiesCase(TransactionCase):
             message.attributes,
             [{'name': 'new_property', 'type': 'char', 'value': 'test value'}])
 
+        # re-write the same parent again and check that value are not reset
+        message.discussion = message.discussion
+        self.assertEqual(
+            message.attributes,
+            [{'name': 'new_property', 'type': 'char', 'value': 'test value'}])
+
+        # trigger a other onchange after setting the properties
+        # and check that it does not impact the properties
+        message.discussion.attributes_definition = []
+        message_form = Form(message)
+        message.attributes = [{
+            'name': 'new_property',
+            'type': 'char',
+            'value': 'test value',
+            'definition_changed': True,
+        }]
+        message_form.body = "a" * 42
+        message = message_form.save()
+        self.assertEqual(
+            message.attributes,
+            [{'name': 'new_property', 'type': 'char', 'value': 'test value'}])
+
+    @mute_logger('odoo.fields')
     def test_properties_field_definition_update(self):
         """Test the definition update from the child."""
         self.discussion_1.attributes_definition = []
@@ -1185,6 +1260,7 @@ class PropertiesCase(TransactionCase):
         }
         self.assertEqual(expected_properties, sql_properties)
 
+    @mute_logger('odoo.fields')
     def test_properties_field_security(self):
         """Check the access right related to the Properties fields."""
         MultiTag = type(self.env['test_new_api.multi.tag'])
@@ -1206,7 +1282,7 @@ class PropertiesCase(TransactionCase):
         self.env.invalidate_all()
         with patch.object(MultiTag, 'check_access_rights', side_effect=_mocked_check_access_rights):
             values = self.message_1.read(['attributes'])[0]['attributes'][0]
-        self.assertEqual(values['value'], (tag.id, 'No Access'))
+        self.assertEqual(values['value'], (tag.id, None))
 
     def _get_sql_properties(self, message):
         self.env.flush_all()
