@@ -4,7 +4,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 
-const { Component, onMounted } = owl;
+const { Component } = owl;
 
 export class EmojiGridView extends Component {
     setup() {
@@ -12,9 +12,6 @@ export class EmojiGridView extends Component {
         useRefToModel({ fieldName: 'listRef', refName: 'listRef'});
         useRefToModel({ fieldName: 'viewBlockRef', refName: 'viewBlockRef'});
         useUpdateToModel({ methodName: 'onComponentUpdate' });
-        onMounted(() => {
-            this.emojiGridView.calculateDimensions();
-        });
     }
 
     /**
