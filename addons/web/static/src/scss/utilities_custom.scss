@@ -98,12 +98,14 @@ $utilities: map-merge(
             map-get($utilities, "width"),
             (
                 responsive: true,
+                values: $utilities-sizes,
             ),
         ),
         "height": map-merge(
             map-get($utilities, "height"),
             (
                 responsive: true,
+                values: $utilities-sizes,
             ),
         ),
         "max-width": map-merge(
