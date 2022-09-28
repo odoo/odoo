@@ -3291,9 +3291,8 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             resId: 1,
-            mode: "readonly",
             arch: `
-                    <form>
+                    <form edit="0">
                         <sheet>
                             <field name="foo_o2m">
                                 <tree editable="bottom">
@@ -3303,8 +3302,8 @@ QUnit.module("Views", (hooks) => {
                         </sheet>
                     </form>`,
         });
-        // in readonly mode, the delete action is available and the empty lines should cover that col
-        assert.strictEqual(target.querySelector("tbody td").getAttribute("colspan"), "2");
+        // in readonly mode, the delete action is not available
+        assert.strictEqual(target.querySelector("tbody td").getAttribute("colspan"), "1");
     });
 
     QUnit.test("colspan of empty lines is correct in edit", async function (assert) {
@@ -3332,6 +3331,66 @@ QUnit.module("Views", (hooks) => {
         // in edit mode, the delete action is available and the empty lines should cover that col
         assert.strictEqual(target.querySelector("tbody td").getAttribute("colspan"), "2");
     });
+
+    QUnit.test(
+        "colspan of empty lines is correct in readonly with optional fields",
+        async function (assert) {
+            serverData.models.foo.fields.foo_o2m = {
+                string: "Foo O2M",
+                type: "one2many",
+                relation: "foo",
+            };
+            await makeView({
+                type: "form",
+                resModel: "foo",
+                serverData,
+                resId: 1,
+                arch: `
+                    <form edit="0">
+                        <sheet>
+                            <field name="foo_o2m">
+                                <tree editable="bottom">
+                                    <field name="int_field"/>
+                                    <field name="foo" optional="hidden"/>
+                                </tree>
+                            </field>
+                        </sheet>
+                    </form>`,
+            });
+            // in readonly mode, the delete action is not available but the optional fields is and the empty lines should cover that col
+            assert.strictEqual(target.querySelector("tbody td").getAttribute("colspan"), "2");
+        }
+    );
+
+    QUnit.test(
+        "colspan of empty lines is correct in edit with optional fields",
+        async function (assert) {
+            serverData.models.foo.fields.foo_o2m = {
+                string: "Foo O2M",
+                type: "one2many",
+                relation: "foo",
+            };
+            await makeView({
+                type: "form",
+                resModel: "foo",
+                serverData,
+                resId: 1,
+                arch: `
+                    <form>
+                        <sheet>
+                            <field name="foo_o2m">
+                                <tree editable="bottom">
+                                    <field name="int_field"/>
+                                    <field name="foo" optional="hidden"/>
+                                </tree>
+                            </field>
+                        </sheet>
+                    </form>`,
+            });
+            // in edit mode, both the delete action and the optional fields are available and the empty lines should cover that col
+            assert.strictEqual(target.querySelector("tbody td").getAttribute("colspan"), "2");
+        }
+    );
 
     QUnit.test(
         "width of some fields should be hardcoded if no data, and list initially invisible",
