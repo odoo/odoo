@@ -465,6 +465,14 @@ registerModel({
          * to decide if it has to be updated.
          */
         lastPrettyBody: attr(),
+        /**
+         * States the index of the last "read more" that was inserted.
+         * Useful to remember the state for each "read more" even if their DOM
+         * is re-rendered.
+         */
+        lastReadMoreIndex: attr({
+            default: 0,
+        }),
         linkPreviewListView: one('LinkPreviewListView', {
             compute() {
                 return (this.message && this.message.linkPreviews.length > 0) ? {} : clear();

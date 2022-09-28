@@ -4,7 +4,7 @@ import { useComponentToModel } from '@mail/component_hooks/use_component_to_mode
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { useUpdate } from '@mail/component_hooks/use_update';
 import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
-import { clear } from '@mail/model/model_field_command';
+import { clear, increment } from '@mail/model/model_field_command';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 import { _lt } from 'web.core';
@@ -27,12 +27,6 @@ export class Message extends Component {
         useRefToModel({ fieldName: 'prettyBodyRef', refName: 'prettyBody' });
         useUpdateToModel({ methodName: 'onComponentUpdate' });
         useUpdate({ func: () => this._update() });
-        /**
-         * States the index of the last "read more" that was inserted.
-         * Useful to remember the state for each "read more" even if their DOM
-         * is re-rendered.
-         */
-        this._lastReadMoreIndex = 0;
         /**
          * Determines whether each "read more" is opened or closed. The keys are
          * index, which is determined by their order of appearance in the DOM.
@@ -185,7 +179,7 @@ export class Message extends Component {
         }
 
         for (const group of groups) {
-            const index = this._lastReadMoreIndex++;
+            const index = this.messageView.update({ lastReadMoreIndex: increment() });
             // Insert link just before the first node
             const $readMoreLess = $('<a>', {
                 class: 'o_Message_readMoreLess d-block',
@@ -232,7 +226,7 @@ export class Message extends Component {
             for (const el of [...this.messageView.contentRef.el.querySelectorAll(':scope .o_Message_readMoreLess')]) {
                 el.remove();
             }
-            this._lastReadMoreIndex = 0;
+            this.messageView.update({ lastReadMoreIndex: clear() });
             this._insertReadMoreLess($(this.messageView.contentRef.el));
             this.messaging.messagingBus.trigger('o-component-message-read-more-less-inserted', {
                 message: this.messageView.message,
