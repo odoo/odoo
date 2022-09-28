@@ -23,13 +23,9 @@ export class Message extends Component {
         super.setup();
         useComponentToModel({ fieldName: 'component' });
         useRefToModel({ fieldName: 'notificationIconRef', refName: 'notificationIcon' });
+        useRefToModel({ fieldName: 'prettyBodyRef', refName: 'prettyBody' });
         useUpdateToModel({ methodName: 'onComponentUpdate' });
         useUpdate({ func: () => this._update() });
-        /**
-         * Reference to element containing the prettyBody. Useful to be able to
-         * replace prettyBody with new value in JS (which is faster than t-raw).
-         */
-        this._prettyBodyRef = useRef('prettyBody');
         /**
          * Reference to the content of the message.
          */
@@ -229,11 +225,11 @@ export class Message extends Component {
      * @private
      */
     _update() {
-        if (this._prettyBodyRef.el && this.messageView.message.prettyBody !== this.messageView.lastPrettyBody) {
-            this._prettyBodyRef.el.innerHTML = this.messageView.message.prettyBody;
+        if (this.messageView.prettyBodyRef.el && this.messageView.message.prettyBody !== this.messageView.lastPrettyBody) {
+            this.messageView.prettyBodyRef.el.innerHTML = this.messageView.message.prettyBody;
             this.messageView.update({ lastPrettyBody: this.messageView.message.prettyBody });
         }
-        if (!this._prettyBodyRef.el) {
+        if (!this.messageView.prettyBodyRef.el) {
             this.messageView.update({ lastPrettyBody: clear() });
         }
         // Remove all readmore before if any before reinsert them with _insertReadMoreLess.

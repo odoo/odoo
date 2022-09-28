@@ -554,6 +554,11 @@ registerModel({
             inverse: 'messageViewOwner',
         }),
         /**
+         * Reference to element containing the prettyBody. Useful to be able to
+         * replace prettyBody with new value in JS (which is faster than t-raw).
+         */
+        prettyBodyRef: attr(),
+        /**
          * States whether this message view is the last one of its thread view.
          * Computed from inverse relation.
          */
