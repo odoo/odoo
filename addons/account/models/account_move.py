@@ -1670,12 +1670,18 @@ class AccountMove(models.Model):
 
         unbalanced_moves = self._get_unbalanced_moves(container)
         if unbalanced_moves:
-            error_msg = _("There was a problem with the following move(s):\n")
-            for id_, balance, _debit, _credit in unbalanced_moves:
-                error_msg += _("- Move with id %i\n", id_)
-                if balance != 0.0:
-                    error_msg += _("\tCannot create unbalanced journal entry. The balance is equal to %s\n",
-                                   format_amount(self.env, balance, self.env['account.move'].browse(id_).currency_id))
+            error_msg = _("An error has occurred.")
+            for move_id, sum_debit, sum_credit in unbalanced_moves:
+                move = self.browse(move_id)
+                error_msg += _(
+                    "\n\n"
+                    "The move (%s) is not balanced.\n"
+                    "The total of debits equals %s and the total of credits equals %s.\n"
+                    "You might want to specify a default account on journal \"%s\" to automatically balance each move.",
+                    move.display_name,
+                    format_amount(self.env, sum_debit, move.currency_id),
+                    format_amount(self.env, sum_credit, move.currency_id),
+                    move.journal_id.name)
             raise UserError(error_msg)
 
     def _get_unbalanced_moves(self, container):
@@ -1685,27 +1691,20 @@ class AccountMove(models.Model):
             return
 
         # /!\ As this method is called in create / write, we can't make the assumption the computed stored fields
-        # are already done. Then, this query MUST NOT depend on computed stored fields (e.g. balance).
+        # are already done. Then, this query MUST NOT depend on computed stored fields.
         # It happens as the ORM calls create() with the 'no_recompute' statement.
         self.env['account.move.line'].flush_model(['debit', 'credit', 'balance', 'currency_id', 'move_id'])
-        self.env['account.move'].flush_model(['journal_id'])
         self._cr.execute('''
-            WITH error_moves AS (
-                SELECT line.move_id,
-                       ROUND(SUM(line.balance), currency.decimal_places) balance,
-                       ROUND(SUM(line.debit), currency.decimal_places) debit,
-                       ROUND(SUM(line.credit), currency.decimal_places) credit
-                  FROM account_move_line line
-                  JOIN account_move move ON move.id = line.move_id
-                  JOIN account_journal journal ON journal.id = move.journal_id
-                  JOIN res_company company ON company.id = journal.company_id
-                  JOIN res_currency currency ON currency.id = company.currency_id
-                 WHERE line.move_id IN %s
-              GROUP BY line.move_id, currency.decimal_places
-            )
-            SELECT *
-              FROM error_moves
-             WHERE balance !=0
+            SELECT line.move_id,
+                   ROUND(SUM(line.debit), currency.decimal_places) debit,
+                   ROUND(SUM(line.credit), currency.decimal_places) credit
+              FROM account_move_line line
+              JOIN account_move move ON move.id = line.move_id
+              JOIN res_company company ON company.id = move.company_id
+              JOIN res_currency currency ON currency.id = company.currency_id
+             WHERE line.move_id IN %s
+          GROUP BY line.move_id, currency.decimal_places
+            HAVING ROUND(SUM(line.balance), currency.decimal_places) != 0
         ''', [tuple(moves.ids)])
 
         return self._cr.fetchall()
@@ -1924,7 +1923,7 @@ class AccountMove(models.Model):
         vals_list = []
         unbalanced_moves = self._get_unbalanced_moves(container)
         if unbalanced_moves:
-            for move_id, _balance, debit, credit in unbalanced_moves:
+            for move_id, debit, credit in unbalanced_moves:
                 move = self.browse(move_id)
                 balance = debit - credit
                 vals_list.append({
