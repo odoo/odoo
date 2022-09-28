@@ -26,8 +26,19 @@ registerModel({
             composerViewOwner.closeSuggestions();
             composerViewOwner.update({ doFocus: true });
         },
+        onComponentUpdate() {
+            if (
+                this.component.root.el &&
+                this.composerSuggestionListViewOwner.hasToScrollToActiveSuggestionView &&
+                this.composerSuggestionListViewOwnerAsActiveSuggestionView
+            ) {
+                this.component.root.el.scrollIntoView({ block: 'center' });
+                this.composerSuggestionListViewOwner.update({ hasToScrollToActiveSuggestionView: false });
+            }
+        },
     },
     fields: {
+        component: attr(),
         composerSuggestionListViewOwner: one('ComposerSuggestionListView', {
             compute() {
                 if (this.composerSuggestionListViewExtraComposerSuggestionViewItemOwner) {
