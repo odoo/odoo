@@ -561,7 +561,9 @@ var dom = {
                 offsetTop = $el.offset().top;
                 el.classList.add('d-none');
             }
-            let elPosition = $scrollable[0].scrollTop + (offsetTop - $scrollable.offset().top);
+            const isDocScrollingEl = $scrollable.is(el.ownerDocument.scrollingElement);
+            let elPosition = offsetTop
+                - ($scrollable.offset().top - (isDocScrollingEl ? 0 : $scrollable[0].scrollTop));
             if (!isInOneDocument && $iframe.length) {
                 elPosition += $iframe.offset().top;
             }

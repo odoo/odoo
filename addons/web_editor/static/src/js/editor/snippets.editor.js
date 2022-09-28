@@ -1693,6 +1693,9 @@ var SnippetsMenu = Widget.extend({
         if (!this.$scrollingElement[0]) {
             this.$scrollingElement = $(this.ownerDocument).find('.o_editable');
         }
+        this.$scrollingTarget = this.$scrollingElement.is(this.ownerDocument.scrollingElement)
+            ? $(this.ownerDocument.defaultView)
+            : this.$scrollingElement;
         this._onScrollingElementScroll = _.throttle(() => {
             for (const editor of this.snippetEditors) {
                 editor.toggleOverlayVisibility(false);
@@ -1710,7 +1713,7 @@ var SnippetsMenu = Widget.extend({
         // Setting capture to true allows to take advantage of event bubbling
         // for events that otherwise don’t support it. (e.g. useful when
         // scrolling a modal)
-        this.$scrollingElement[0].addEventListener('scroll', this._onScrollingElementScroll, {capture: true});
+        this.$scrollingTarget[0].addEventListener('scroll', this._onScrollingElementScroll, {capture: true});
 
         // Auto-selects text elements with a specific class and remove this
         // on text changes
@@ -1805,8 +1808,9 @@ var SnippetsMenu = Widget.extend({
             }
             this.$window.off('.snippets_menu');
             this.$document.off('.snippets_menu');
-            if (this.$scrollingElement) {
-                this.$scrollingElement[0].removeEventListener('scroll', this._onScrollingElementScroll, {capture: true});
+
+            if (this.$scrollingTarget) {
+                this.$scrollingTarget[0].removeEventListener('scroll', this._onScrollingElementScroll, {capture: true});
             }
         }
         core.bus.off('deactivate_snippet', this, this._onDeactivateSnippet);
