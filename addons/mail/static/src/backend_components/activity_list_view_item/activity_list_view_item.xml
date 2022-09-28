@@ -16,8 +16,7 @@
                 <div class="flex-grow-1"/>
                 <t t-if="activityListViewItem.activity.canWrite" class="flex-grow-1 text-end">
                     <a t-if="activityListViewItem.fileUploader" class="fa fa-upload" title="Upload file" role="img" t-on-click="activityListViewItem.onClickUploadDocument"/>
-                    <a t-else="" class="o_ActivityListViewItem_markAsDone fa fa-check-circle" t-on-click="activityListViewItem.onClickMarkAsDone" title="Mark as done" role="img" aria-label="Mark as done" t-ref="markDoneButton"/>
-                    <!-- TODO sign override to change the button -->
+                    <a t-if="activityListViewItem.hasMarkDoneButton" class="o_ActivityListViewItem_markAsDone fa fa-check-circle" t-on-click="activityListViewItem.onClickMarkAsDone" title="Mark as done" role="img" aria-label="Mark as done" t-ref="markDoneButton"/>
                     <!-- TODO approvals override to change stuff -->
                 </t>
             </div>
