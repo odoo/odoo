@@ -55,7 +55,7 @@
                                     <label for="expected_revenue" class="oe_edit_only" />
                                     <div class="o_row">
                                         <field name="company_currency" invisible="1"/>
-                                        <field name="expected_revenue" class="oe_inline" widget='monetary' options="{'currency_field': 'company_currency'}"/>
+                                        <field name="expected_revenue" class="o_field_monetary_responsive" widget='monetary' options="{'currency_field': 'company_currency'}"/>
                                         <span class="oe_grey p-2" groups="crm.group_use_recurring_revenues"> + </span>
                                         <span class="oe_grey p-2" groups="!crm.group_use_recurring_revenues"> at </span>
                                     </div>
@@ -85,7 +85,7 @@
                                     </div>
                                     <div id="probability" class="o_row d-flex">
                                         <field name="is_automated_probability" invisible="1"/>
-                                        <field name="probability" widget="float" class="oe_inline"/>
+                                        <field name="probability" widget="float"/>
                                         <span class="oe_grey"> %</span>
                                     </div>
                                 </div>
