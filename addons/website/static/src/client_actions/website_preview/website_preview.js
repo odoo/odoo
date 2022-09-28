@@ -36,6 +36,7 @@ export class WebsitePreview extends Component {
             isBlocked: false,
             showLoader: false,
         });
+        this.currentWebsite = useState(this.websiteService.currentWebsite);
         // The params used to configure the context should be ignored when the
         // action is restored (example: click on the breadcrumb).
         this.isRestored = this.props.action.jsId === this.websiteService.actionJsId;
@@ -52,6 +53,17 @@ export class WebsitePreview extends Component {
                 this.initialUrl = this._getUrl(websiteId, this.path);
             }
         });
+
+        useEffect((reloadUrl) => {
+            if (!reloadUrl) {
+                return;
+            }
+            this.block();
+            this.reloadIframe(this._getUrl(this.currentWebsite.id, reloadUrl)).then(() => {
+                this.websiteService.currentWebsite.reloadUrl = '';
+                this.unblock();
+            });
+        }, () => [this.currentWebsite.reloadUrl]);
 
         useEffect(() => {
             if (this.isRestored) {
@@ -100,22 +112,16 @@ export class WebsitePreview extends Component {
          * These changes are reverted when the component is unmounted.
          */
         useEffect(() => {
-            const backendIconEl = document.querySelector("link[rel~='icon']");
             // Save initial backend values.
-            const backendIconHref = backendIconEl.href;
+            const backendIconHref = this.backendIconEl.href;
             const { zopenerp } = this.title.getParts();
             this.iframe.el.addEventListener('load', () => {
-                // Replace backend values with frontend's ones.
                 this.title.setParts({ zopenerp: null });
-                const frontendIconEl = this.iframe.el.contentDocument.querySelector("link[rel~='icon']");
-                if (frontendIconEl) {
-                    backendIconEl.href = frontendIconEl.href;
-                }
             }, { once: true });
             return () => {
                 // Restore backend initial values when leaving.
                 this.title.setParts({ zopenerp, action: null });
-                backendIconEl.href = backendIconHref;
+                this.backendIconEl.href = backendIconHref;
             };
         }, () => []);
 
@@ -193,6 +199,10 @@ export class WebsitePreview extends Component {
         return false;
     }
 
+    get backendIconEl() {
+        return document.querySelector("link[rel~='icon']");
+    }
+
     reloadIframe(url) {
         return new Promise((resolve, reject) => {
             this.iframe.el.addEventListener('OdooFrameContentLoaded', resolve, { once: true });
@@ -253,8 +263,9 @@ export class WebsitePreview extends Component {
     }
 
     /**
-     * This replaces the browser url (/web#action=website...) with
-     * the iframe's url (it is clearer for the user).
+     * This replaces the browser url (/web#action=website...) with the iframe's
+     * url (it is clearer for the user). It also replaces the title and the
+     * favicon.
      */
     _replaceBrowserUrl() {
         // The original /web#action=... url is saved to be pushed on top of the
@@ -268,6 +279,10 @@ export class WebsitePreview extends Component {
         this.currentTitle = this.iframe.el.contentDocument.title;
         history.replaceState({}, this.currentTitle, currentUrl.href);
         this.title.setParts({ action: this.currentTitle });
+        const frontendIconEl = this.iframe.el.contentDocument.querySelector("link[rel~='icon']");
+        if (frontendIconEl) {
+            this.backendIconEl.href = frontendIconEl.href;
+        }
     }
 
     _onPageLoaded() {

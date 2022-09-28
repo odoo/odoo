@@ -41,19 +41,21 @@ export const websiteService = {
         let invalidateSnippetCache = false;
         let lastWebsiteId = null;
 
-        const context = reactive({
+        const initialContext = {
             showNewContentModal: false,
             showAceEditor: false,
             edition: false,
             isPublicRootReady: false,
             snippetsLoaded: false,
             isMobile: false,
-        });
+        };
+        const context = reactive({ ...initialContext });
         const websiteDef = {
             id: null,
             domain: null,
             metadata: {},
             name: null,
+            reloadUrl: '',
         };
         const currentWebsite = reactive({ ...websiteDef });
         const bus = new EventBus();
@@ -197,21 +199,32 @@ export const websiteService = {
             },
 
             goToWebsite({ websiteId, path, edition, translation, lang } = {}) {
+                let finalPath = path || (contentWindow && contentWindow.location.href) || '/';
                 if (lang) {
                     invalidateSnippetCache = true;
-                    path = `/website/lang/${lang}?r=${encodeURIComponent(path)}`;
+                    finalPath = `/website/lang/${lang}?r=${encodeURIComponent(finalPath)}`;
                 }
-                action.doAction('website.website_preview', {
-                    clearBreadcrumbs: true,
-                    additionalContext: {
-                        params: {
-                            website_id: websiteId,
-                            path: path || (contentWindow && contentWindow.location.href) || '/',
-                            enable_editor: edition,
-                            edit_translations: translation,
+                if (!currentWebsite.id) {
+                    action.doAction('website.website_preview', {
+                        clearBreadcrumbs: true,
+                        additionalContext: {
+                            params: {
+                                website_id: websiteId,
+                                path: finalPath,
+                                enable_editor: edition,
+                                edit_translations: translation,
+                            },
                         },
-                    },
-                });
+                    });
+                } else {
+                    if (websiteId) {
+                        this.currentWebsiteId = websiteId;
+                    }
+                    currentWebsite.reloadUrl = finalPath;
+                    Object.assign(context, initialContext);
+                    context.edition = edition;
+                    context.translation = translation;
+                }
             },
             async fetchUserGroups() {
                 // Fetch user groups, before fetching the websites.
