@@ -191,6 +191,10 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
+        align-items: flex-end;
+        @include media-breakpoint-down(sm) {
+            justify-content: flex-end;
+        }
         column-gap: $o-horizontal-padding;
 
         > .o_cp_pager {
@@ -206,6 +210,7 @@
         > .o_cp_switch_buttons {
             .dropdown-menu {
                 right: 0;
+                justify-content: flex-end;
             }
         }
     }
