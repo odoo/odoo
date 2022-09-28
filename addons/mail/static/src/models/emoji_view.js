@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
+import { one } from '@mail/model/model_field';
+import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'EmojiView',
@@ -29,7 +30,7 @@ registerModel({
             if (!this.exists()) {
                 return;
             }
-            this.update({ isHovered: true });
+            this.update({ emojiGridViewAsHovered: this.emojiGridItemViewOwner.emojiGridRowViewOwner.emojiGridViewOwner });
         },
         /**
          * @param {MouseEvent} ev
@@ -38,7 +39,7 @@ registerModel({
             if (!this.exists()) {
                 return;
             }
-            this.update({ isHovered: false });
+            this.update({ emojiGridViewAsHovered: clear() });
         },
     },
     fields: {
@@ -50,8 +51,8 @@ registerModel({
             identifying: true,
             inverse: 'emojiView',
         }),
-        isHovered: attr({
-            default: false,
+        emojiGridViewAsHovered: one('EmojiGridView', {
+            inverse: 'hoveredEmojiView',
         }),
     }
 });
