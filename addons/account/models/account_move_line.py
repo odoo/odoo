@@ -2358,7 +2358,7 @@ class AccountMoveLine(models.Model):
                 continue
             distribution_by_root_plan = {}
             for analytic_account_id, percentage in (line.analytic_distribution or {}).items():
-                root_plan = self.env['account.analytic.account'].browse(analytic_account_id).root_plan_id
+                root_plan = self.env['account.analytic.account'].browse(int(analytic_account_id)).root_plan_id
                 distribution_by_root_plan[root_plan.id] = distribution_by_root_plan.get(root_plan.id, 0) + percentage
 
             for plan_id in mandatory_plans_ids:
