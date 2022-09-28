@@ -504,10 +504,7 @@
         position="menuState.position"
         onClose="() => this.closeMenu()"
       />
-      <t
-        t-set="gridSize"
-        t-value="env.model.getters.getMaxViewportSize(env.model.getters.getActiveSheet())"
-      />
+      <t t-set="gridSize" t-value="env.model.getters.getMainViewportRect()"/>
       <div
         class="o-scrollbar vertical"
         t-on-scroll="onScroll"
@@ -680,6 +677,14 @@
 
   <t t-name="o-spreadsheet-Highlight" owl="1">
     <div class="o-highlight" t-ref="highlight">
+      <t t-foreach="['n', 's', 'w', 'e']" t-as="orientation" t-key="orientation">
+        <Border
+          onMoveHighlight="(x, y) => this.onMoveHighlight(x,y)"
+          isMoving='highlightState.shiftingMode === "isMoving"'
+          orientation="orientation"
+          zone="props.zone"
+        />
+      </t>
       <t t-foreach="['nw', 'ne', 'sw', 'se']" t-as="orientation" t-key="orientation">
         <Corner
           onResizeHighlight="(isLeft, isTop) => this.onResizeHighlight(isLeft, isTop)"
@@ -687,14 +692,6 @@
           orientation="orientation"
           zone="props.zone"
           color="props.color"
-        />
-      </t>
-      <t t-foreach="['n', 's', 'w', 'e']" t-as="orientation" t-key="orientation">
-        <Border
-          onMoveHighlight="(x, y) => this.onMoveHighlight(x,y)"
-          isMoving='highlightState.shiftingMode === "isMoving"'
-          orientation="orientation"
-          zone="props.zone"
         />
       </t>
     </div>
@@ -1343,15 +1340,18 @@
 
   <t t-name="o-spreadsheet-BarConfigPanel" owl="1">
     <div>
-      <div class="o-section">
-        <div class="o_checkbox">
-          <input
-            type="checkbox"
-            name="stackedBar"
-            t-att-checked="props.definition.stackedBar"
-            t-on-change="onUpdateStacked"
-          />
-          Stacked barchart
+      <div class="o-section pt-0">
+        <div class="o-checkbox">
+          <label>
+            <input
+              type="checkbox"
+              name="stacked"
+              t-att-checked="props.definition.stacked"
+              t-on-change="onUpdateStacked"
+              class="align-middle"
+            />
+            Stacked barchart
+          </label>
         </div>
       </div>
       <div class="o-section o-data-series">
@@ -1363,12 +1363,15 @@
           onSelectionChanged="(ranges) => this.onDataSeriesRangesChanged(ranges)"
           onSelectionConfirmed="() => this.onDataSeriesConfirmed()"
         />
-        <input
-          type="checkbox"
-          t-att-checked="props.definition.dataSetsHaveTitle"
-          t-on-change="onUpdateDataSetsHaveTitle"
-        />
-        Data series include title
+        <label>
+          <input
+            type="checkbox"
+            t-att-checked="props.definition.dataSetsHaveTitle"
+            t-on-change="onUpdateDataSetsHaveTitle"
+            class="align-middle"
+          />
+          Data series include title
+        </label>
       </div>
       <div class="o-section o-data-labels">
         <div class="o-section-title">Categories / Labels</div>
@@ -1642,12 +1645,15 @@
           onSelectionChanged="(ranges) => this.onDataSeriesRangesChanged(ranges)"
           onSelectionConfirmed="() => this.onDataSeriesConfirmed()"
         />
-        <input
-          type="checkbox"
-          t-att-checked="props.definition.dataSetsHaveTitle"
-          t-on-change="onUpdateDataSetsHaveTitle"
-        />
-        Data series include title
+        <label>
+          <input
+            type="checkbox"
+            t-att-checked="props.definition.dataSetsHaveTitle"
+            t-on-change="onUpdateDataSetsHaveTitle"
+            class="align-middle"
+          />
+          Data series include title
+        </label>
       </div>
       <div class="o-section o-data-labels">
         <div class="o-section-title">Categories / Labels</div>
@@ -1714,6 +1720,20 @@
 
   <t t-name="o-spreadsheet-LineConfigPanel" owl="1">
     <div>
+      <div class="o-section pt-0">
+        <div class="o-checkbox">
+          <label>
+            <input
+              type="checkbox"
+              name="stacked"
+              t-att-checked="props.definition.stacked"
+              t-on-change="onUpdateStacked"
+              class="align-middle"
+            />
+            Stacked linechart
+          </label>
+        </div>
+      </div>
       <div class="o-section o-data-series">
         <div class="o-section-title">Data Series</div>
         <SelectionInput
@@ -1723,12 +1743,15 @@
           onSelectionChanged="(ranges) => this.onDataSeriesRangesChanged(ranges)"
           onSelectionConfirmed="() => this.onDataSeriesConfirmed()"
         />
-        <input
-          type="checkbox"
-          t-att-checked="props.definition.dataSetsHaveTitle"
-          t-on-change="onUpdateDataSetsHaveTitle"
-        />
-        Data series include title
+        <label>
+          <input
+            type="checkbox"
+            t-att-checked="props.definition.dataSetsHaveTitle"
+            t-on-change="onUpdateDataSetsHaveTitle"
+            class="align-middle"
+          />
+          Data series include title
+        </label>
       </div>
       <div class="o-section o-data-labels">
         <div class="o-section-title">Categories / Labels</div>
@@ -1740,13 +1763,15 @@
           onSelectionConfirmed="() => this.onLabelRangeConfirmed()"
         />
         <div t-if="canTreatLabelsAsText">
-          <input
-            type="checkbox"
-            name="labelsAsText"
-            t-att-checked="props.definition.labelsAsText"
-            t-on-change="onUpdateLabelsAsText"
-          />
-          Treat labels as text
+          <label>
+            <input
+              type="checkbox"
+              name="labelsAsText"
+              t-att-checked="props.definition.labelsAsText"
+              t-on-change="onUpdateLabelsAsText"
+            />
+            Treat labels as text
+          </label>
         </div>
       </div>
       <div class="o-section o-sidepanel-error" t-if="errorMessages">
@@ -2551,6 +2576,7 @@
           </div>
         </div>
         <div>
+          <!-- TODO: go through this css, the group misses a padding and could profit from BootStrap -->
           <div class="o-far-item">
             <label class="o-far-checkbox">
               <input
