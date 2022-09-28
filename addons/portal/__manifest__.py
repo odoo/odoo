@@ -36,7 +36,6 @@ a dependency towards website editing and customization capabilities.""",
             'portal/static/src/views/**/*',
         ],
         'web.assets_frontend': [
-            'portal/static/src/scss/bootstrap.extend.scss',
             'portal/static/src/scss/portal.scss',
             'portal/static/src/js/portal.js',
             'portal/static/src/js/portal_chatter.js',
