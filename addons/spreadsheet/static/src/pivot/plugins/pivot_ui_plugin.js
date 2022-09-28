@@ -192,6 +192,9 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
         const evaluatedArgs = args
             .map(astToFormula)
             .map((arg) => this.getters.evaluateFormula(arg));
+        if (evaluatedArgs.length <= 2) {
+            return [];
+        }
         const pivotId = evaluatedArgs[0];
         const argField = evaluatedArgs[evaluatedArgs.length - 2];
         const filters = this.getters.getGlobalFilters();
@@ -200,8 +203,9 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
         for (const filter of filters) {
             const dataSource = this.getters.getPivotDataSource(pivotId);
             const { field, aggregateOperator: time } = dataSource.parseGroupField(argField);
-            if (filter.pivotFields[pivotId].field === field.name) {
-                let value = dataSource.getPivotHeaderValue(evaluatedArgs.slice(1));
+            const pivotField = filter.pivotFields[pivotId];
+            if (pivotField && pivotField.field === field.name) {
+                let value = dataSource.getPivotHeaderValue(evaluatedArgs.slice(-2));
                 let transformedValue;
                 const currentValue = this.getters.getGlobalFilterValue(filter.id);
                 switch (filter.type) {
