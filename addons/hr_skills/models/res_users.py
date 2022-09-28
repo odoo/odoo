@@ -11,8 +11,14 @@ class User(models.Model):
 
     @property
     def SELF_READABLE_FIELDS(self):
-        return super().SELF_READABLE_FIELDS + ['resume_line_ids', 'employee_skill_ids']
+        return super().SELF_READABLE_FIELDS + [
+            'resume_line_ids',
+            'employee_skill_ids',
+        ]
 
     @property
     def SELF_WRITEABLE_FIELDS(self):
-        return super().SELF_WRITEABLE_FIELDS + ['resume_line_ids', 'employee_skill_ids']
+        return super().SELF_WRITEABLE_FIELDS + [
+            'resume_line_ids',
+            'employee_skill_ids',
+        ]
