@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+from collections import Counter
 
 from odoo import api, fields, models, _, _lt
 from odoo.osv import expression
@@ -16,11 +17,13 @@ class Project(models.Model):
         if not self.analytic_account_id:
             self.expenses_count = 0
             return
+        query = self.env['hr.expense']._search([])
+        query.add_where('hr_expense.analytic_distribution ?| array[%s]', [str(account_id) for account_id in self.analytic_account_id.ids])
+        query_string, query_param = query.select('analytic_distribution')
+        self._cr.execute(query_string, query_param)
+        mapped_data = Counter(account for data in self._cr.dictfetchall() for account in data['analytic_distribution'])
         for project in self:
-            expenses = self.env['hr.expense'].search([
-                ('analytic_distribution_stored_char', '=ilike', f'%"{project.analytic_account_id.id}":%')
-            ])
-            project.expenses_count = len(expenses)
+            project.expenses_count = mapped_data.get(project.analytic_account_id.id, 0)
 
     # ----------------------------
     #  Actions
@@ -64,14 +67,13 @@ class Project(models.Model):
         if not self.analytic_account_id:
             return {}
         can_see_expense = with_action and self.user_has_groups('hr_expense.group_hr_expense_team_approver')
-        expenses_read_group = self.env['hr.expense'].sudo()._read_group(
-            [('analytic_distribution_stored_char', '=ilike', f'%"{self.analytic_account_id.id}":%'),
-             ('is_refused', '=', False),
-             ('state', 'in', ['approved', 'done'])],
-            ['untaxed_amount', 'ids:array_agg(id)'],
-            [],
-        )
-        if not expenses_read_group or not expenses_read_group[0]['__count']:
+        query = self.env['hr.expense']._search([('is_refused', '=', False), ('state', 'in', ['approved', 'done'])])
+        query.order = None
+        query.add_where('hr_expense.analytic_distribution ? %s', [str(self.analytic_account_id.id)])
+        query_string, query_param = query.select('array_agg(id) as ids', 'SUM(untaxed_amount) as untaxed_amount')
+        self._cr.execute(query_string, query_param)
+        expenses_read_group = [expense for expense in self._cr.dictfetchall()]
+        if not expenses_read_group or not expenses_read_group[0].get('ids'):
             return {}
         expense_data = expenses_read_group[0]
         section_id = 'expenses'

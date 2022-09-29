@@ -447,7 +447,7 @@ class TestSaleToInvoice(TestSaleCommon):
         down_payment.create_invoices()
 
         aml = self.env['account.move.line'].search([('move_id', 'in', so.invoice_ids.ids)])[0]
-        self.assertRecordValues(aml, [{'analytic_distribution': {analytic_account_default.id: 100}}])
+        self.assertRecordValues(aml, [{'analytic_distribution': {str(analytic_account_default.id): 100}}])
 
     def test_invoice_analytic_account_so_not_default(self):
         """ Tests whether, when an analytic account rule is set and the so has an analytic account,
@@ -486,7 +486,7 @@ class TestSaleToInvoice(TestSaleCommon):
         down_payment.create_invoices()
 
         aml = self.env['account.move.line'].search([('move_id', 'in', so.invoice_ids.ids)])[0]
-        self.assertRecordValues(aml, [{'analytic_distribution': {analytic_account_default.id: 100, analytic_account_so.id: 100}}])
+        self.assertRecordValues(aml, [{'analytic_distribution': {str(analytic_account_default.id): 100, str(analytic_account_so.id): 100}}])
 
     def test_invoice_after_product_return_price_not_default(self):
         so = self.env['sale.order'].create({

@@ -3,6 +3,7 @@
 
 import json
 
+from collections import defaultdict
 from odoo import api, fields, models, _, _lt
 from odoo.osv import expression
 
@@ -17,33 +18,40 @@ class Project(models.Model):
         if not self.analytic_account_id:
             self.purchase_orders_count = 0
             return
+        query = self.env['purchase.order.line']._search([])
+        query.add_where('purchase_order_line.analytic_distribution ?| array[%s]', [str(account_id) for account_id in self.analytic_account_id.ids])
+        mapped_data = defaultdict(set)
+        query_string, query_param = query.select('analytic_distribution', 'order_id')
+        self._cr.execute(query_string, query_param)
+        for data in self._cr.dictfetchall():
+            for analytic_account_id in data['analytic_distribution']:
+                mapped_data[int(analytic_account_id)].add(data['order_id'])
         for project in self:
-            purchase_orders = self.env['purchase.order'].search([
-                ('order_line.analytic_distribution_stored_char', '=ilike', f'%"{project.analytic_account_id.id}":%')
-            ])
-            project.purchase_orders_count = len(purchase_orders)
+            project.purchase_orders_count = len(mapped_data.get(project.analytic_account_id.id, []))
 
     # ----------------------------
     #  Actions
     # ----------------------------
 
     def action_open_project_purchase_orders(self):
-        purchase_orders = self.env['purchase.order'].search([
-            ('order_line.analytic_distribution_stored_char', '=ilike', f'%"{self.analytic_account_id.id}":%')
-        ])
+        query = self.env['purchase.order.line']._search([])
+        query.add_where('purchase_order_line.analytic_distribution ? %s', [str(self.analytic_account_id.id)])
+        query_string, query_param = query.select('order_id')
+        self._cr.execute(query_string, query_param)
+        purchase_order_ids = [pol.get('order_id') for pol in self._cr.dictfetchall()]
         action_window = {
             'name': _('Purchase Orders'),
             'type': 'ir.actions.act_window',
             'res_model': 'purchase.order',
             'views': [[False, 'tree'], [False, 'form']],
-            'domain': [('id', 'in', purchase_orders.ids)],
+            'domain': [('id', 'in', purchase_order_ids)],
             'context': {
                 'project_id': self.id,
             }
         }
-        if len(purchase_orders) == 1:
+        if len(purchase_order_ids) == 1:
             action_window['views'] = [[False, 'form']]
-            action_window['res_id'] = purchase_orders.id
+            action_window['res_id'] = purchase_order_ids[0]
         return action_window
 
     def action_profitability_items(self, section_name, domain=None, res_id=False):
@@ -108,13 +116,16 @@ class Project(models.Model):
     def _get_profitability_items(self, with_action=True):
         profitability_items = super()._get_profitability_items(with_action)
         if self.analytic_account_id:
-            purchase_order_line_read = self.env['purchase.order.line'].sudo().search_read([
-                ('analytic_distribution_stored_char', '=ilike', f'%"{self.analytic_account_id.id}":%'),
+            query = self.env['purchase.order.line'].sudo()._search([
                 ('state', 'in', ['purchase', 'done']),
                 '|',
                 ('qty_invoiced', '>', 0),
                 '|', ('qty_to_invoice', '>', 0), ('product_uom_qty', '>', 0),
-            ], ['qty_invoiced', 'qty_to_invoice', 'product_uom_qty', 'price_unit'])
+            ])
+            query.add_where('purchase_order_line.analytic_distribution ? %s', [str(self.analytic_account_id.id)])
+            query_string, query_param = query.select('"purchase_order_line".id', 'qty_invoiced', 'qty_to_invoice', 'product_uom_qty', 'price_unit')
+            self._cr.execute(query_string, query_param)
+            purchase_order_line_read = [pol for pol in self._cr.dictfetchall()]
             if purchase_order_line_read:
                 amount_invoiced = amount_to_invoice = 0.0
                 purchase_order_line_ids = []
