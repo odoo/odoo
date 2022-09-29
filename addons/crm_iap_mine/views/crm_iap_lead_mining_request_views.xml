@@ -96,7 +96,7 @@
                             <field name="contact_filter_type" widget="radio" attrs="{'readonly': [('state', '=', 'done')]}" options="{'horizontal': true}"/>
                             <field name="preferred_role_id" options="{'no_create_edit': True, 'no_quick_create': True}" attrs="{'invisible': [('contact_filter_type','!=', 'role')], 'required': [('search_type', '=', 'people'), ('contact_filter_type', '=', 'role')], 'readonly': [('state', '=', 'done')]}"/>
                             <field name="role_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True, 'no_quick_create': True}" attrs="{'invisible': ['|', ('preferred_role_id','=', False), ('contact_filter_type','!=', 'role')], 'readonly': [('state', '=', 'done')]}"/>
-                            <field name="seniority_id" options="{'no_create_edit': True, 'no_quick_create': True}" attrs="{'invisible': [('contact_filter_type', '!=', 'seniority')], 'required': [('search_type', '=', 'people'), ('contact_filter_type', '=', 'seniority')], 'readonly': [('state', '=', 'done')]}"/>
+                            <field name="seniority_id" options="{'no_create_edit': True, 'no_quick_create': True, 'no_open': True}" attrs="{'invisible': [('contact_filter_type', '!=', 'seniority')], 'required': [('search_type', '=', 'people'), ('contact_filter_type', '=', 'seniority')], 'readonly': [('state', '=', 'done')]}"/>
                         </group>
                     </group>
                     <footer>
