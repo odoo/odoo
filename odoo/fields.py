@@ -2531,6 +2531,7 @@ class Selection(Field):
     def setup_nonrelated(self, model):
         super().setup_nonrelated(model)
         assert self.selection is not None, "Field %s without selection" % self
+        assert (not isinstance(self.selection, list)) or all(map(lambda o: o[0], self.selection)), "Field %s has selection without key" % self
 
     def setup_related(self, model):
         super().setup_related(model)
