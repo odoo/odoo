@@ -815,7 +815,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
             'mail_server_id': self.mail_servers.ids[idx % len(self.mail_servers.ids)],
             'recipient_ids': [(4, pid) for pid in self.partners.ids],
         } for idx in range(12)])
-        mails[-2].write({'email_cc': False, 'email_to': 'strange@example¢¡.com'})
+        mails[-2].write({'email_cc': False, 'email_to': 'strange@example¢¡.com', 'recipient_ids': [(5, 0)]})
         mails[-1].write({'email_cc': False, 'email_to': 'void', 'recipient_ids': [(5, 0)]})
         with self.assertQueryCount(__system__=44, employee=44):
             self.env['mail.mail'].sudo().browse(mails.ids).send()
@@ -824,9 +824,9 @@ class TestMailComplexPerformance(BaseMailPerformance):
             self.assertEqual(mail.state, 'sent')
             self.assertTrue(mail.to_delete, 'Mail: sent mails are to be unlinked')
         self.assertEqual(mails[-2].state, 'exception')
-        self.assertFalse(mails[-2].to_delete, 'Mail: invalid recipient, not to unlink')
+        self.assertTrue(mails[-2].to_delete, 'Mail: mails with invalid recipient are also to be unlinked')
         self.assertEqual(mails[-1].state, 'exception')
-        self.assertFalse(mails[-2].to_delete, 'Mail: ninvalid recipient, not to unlink')
+        self.assertTrue(mails[-1].to_delete, 'Mail: mails with invalid recipient are also to be unlinked')
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('__system__', 'employee')
