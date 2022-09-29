@@ -284,10 +284,10 @@ registerModel({
                 return;
             }
             this.saveStateInStore();
-            if (this.textareaLastInputValue !== this.textareaRef.el.value) {
+            if (this.textareaLastInputValue !== this.textInput.textareaRef.el.value) {
                 this.handleCurrentPartnerIsTyping();
             }
-            this.update({ textareaLastInputValue: this.textareaRef.el.value });
+            this.update({ textareaLastInputValue: this.textInput.textareaRef.el.value });
             this.updateTextInputHeight();
         },
         /**
@@ -626,10 +626,10 @@ registerModel({
          */
         saveStateInStore() {
             this.composer.update({
-                textInputContent: this.textareaRef.el.value,
-                textInputCursorEnd: this.textareaRef.el.selectionEnd,
-                textInputCursorStart: this.textareaRef.el.selectionStart,
-                textInputSelectionDirection: this.textareaRef.el.selectionDirection,
+                textInputContent: this.textInput.textareaRef.el.value,
+                textInputCursorEnd: this.textInput.textareaRef.el.selectionEnd,
+                textInputCursorStart: this.textInput.textareaRef.el.selectionStart,
+                textInputSelectionDirection: this.textInput.textareaRef.el.selectionDirection,
             });
         },
         /**
@@ -669,8 +669,8 @@ registerModel({
          * Updates the textarea height of text input.
          */
         updateTextInputHeight() {
-            this.mirroredTextareaRef.el.value = this.composer.textInputContent;
-            this.textareaRef.el.style.height = this.mirroredTextareaRef.el.scrollHeight + 'px';
+            this.textInput.mirroredTextareaRef.el.value = this.composer.textInputContent;
+            this.textInput.textareaRef.el.style.height = this.textInput.mirroredTextareaRef.el.scrollHeight + 'px';
         },
         /**
          * Update a posted message when the message is ready.
@@ -1303,12 +1303,6 @@ registerModel({
             inverse: 'composerViewInEditing',
         }),
         /**
-         * This is the invisible textarea used to compute the composer height
-         * based on the text content. We need it to downsize the textarea
-         * properly without flicker.
-         */
-        mirroredTextareaRef: attr(),
-        /**
          * Determines the next function to execute after the current mention
          * RPC is done, if any.
          */
@@ -1426,10 +1420,10 @@ registerModel({
                 return this.composer.textInputContent.substring(this.suggestionDelimiterPosition + 1, this.composer.textInputCursorStart);
             },
         }),
-        /**
-         * Reference of the textarea. Useful to set height, selection and content.
-         */
-        textareaRef: attr(),
+        textInput: one('ComposerTextInputView', {
+            default: {},
+            inverse: 'owner',
+        }),
         /**
          * States the thread view on which this composer allows editing (if any).
          */
