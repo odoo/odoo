@@ -311,8 +311,17 @@ class WebsiteEventController(http.Controller):
     def registration_confirm(self, event, **post):
         registrations = self._process_attendees_form(event, post)
         attendees_sudo = self._create_attendees_from_registration_post(event, registrations)
+        visitor_sudo = attendees_sudo.visitor_id
 
-        return request.redirect(('/event/%s/registration/success?' % event.id) + werkzeug.urls.url_encode({'registration_ids': ",".join([str(id) for id in attendees_sudo.ids])}))
+        redirect = request.redirect(('/event/%s/registration/success?' % event.id) + werkzeug.urls.url_encode({'registration_ids': ",".join([str(id) for id in attendees_sudo.ids])}))
+
+        # make sure the vistor's uuid is correctly logged in cookies when disabling "Track Visitor" on all the pages of the event
+        # we set visitor_uuid in the cookie to be sure "event_registration_success" can retrieve the visitor
+        if request.httprequest.cookies.get('visitor_uuid', '') != visitor_sudo.access_token:
+            expiration_date = datetime.now() + timedelta(days=365)
+            redirect.set_cookie('visitor_uuid', visitor_sudo.access_token, expires=expiration_date)
+
+        return redirect
 
     @http.route(['/event/<model("event.event"):event>/registration/success'], type='http', auth="public", methods=['GET'], website=True, sitemap=False)
     def event_registration_success(self, event, registration_ids):
