@@ -13,24 +13,21 @@ class Project(models.Model):
         if not self.analytic_account_id:
             return {}
         can_see_expense = with_action and self.user_has_groups('hr_expense.group_hr_expense_team_approver')
-        expenses_read_group = self.env['hr.expense'].sudo()._read_group(
-            [
-                ('analytic_distribution_stored_char', '=ilike', f'%"{self.analytic_account_id.id}":%'),
-                ('is_refused', '=', False),
-                ('state', 'in', ['approved', 'done']),
-            ],
-            ['sale_order_id', 'product_id', 'ids:array_agg(id)', 'untaxed_amount'],
-            ['sale_order_id', 'product_id'],
-            lazy=False,
-        )
+        query = self.env['hr.expense']._search([('is_refused', '=', False), ('state', 'in', ['approved', 'done'])])
+        query.add_where('hr_expense.analytic_distribution ? %s', [str(self.analytic_account_id.id)])
+        query.order = None
+        query_string, query_param = query.select('sale_order_id', 'product_id', 'array_agg(id) as ids', 'SUM(untaxed_amount) as untaxed_amount')
+        query_string = f"{query_string} GROUP BY sale_order_id, product_id"
+        self._cr.execute(query_string, query_param)
+        expenses_read_group = [expense for expense in self._cr.dictfetchall()]
         if not expenses_read_group:
             return {}
         expenses_per_so_id = {}
         expense_ids = []
         amount_billed = 0.0
         for res in expenses_read_group:
-            so_id = res['sale_order_id'] and res['sale_order_id'][0]
-            product_id = res['product_id'] and res['product_id'][0]
+            so_id = res['sale_order_id']
+            product_id = res['product_id']
             expenses_per_so_id.setdefault(so_id, {})[product_id] = res['ids']
             if can_see_expense:
                 expense_ids.extend(res['ids'])

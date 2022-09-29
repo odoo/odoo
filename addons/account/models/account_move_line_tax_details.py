@@ -182,8 +182,8 @@ class AccountMoveLine(models.Model):
                     )
                     AND (
                         NOT tax.analytic
-                        OR (base_line.analytic_distribution_stored_char IS NULL AND account_move_line.analytic_distribution_stored_char IS NULL)
-                        OR base_line.analytic_distribution_stored_char = account_move_line.analytic_distribution_stored_char
+                        OR (base_line.analytic_distribution IS NULL AND account_move_line.analytic_distribution IS NULL)
+                        OR base_line.analytic_distribution = account_move_line.analytic_distribution
                     )
                 LEFT JOIN affecting_base_tax_ids tax_line_tax_ids ON tax_line_tax_ids.id = account_move_line.id
                 JOIN affecting_base_tax_ids base_line_tax_ids ON base_line_tax_ids.id = base_line.id
