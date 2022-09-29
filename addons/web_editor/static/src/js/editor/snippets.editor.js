@@ -950,6 +950,16 @@ var SnippetEditor = Widget.extend({
         }
         previousDropzoneEl.classList.remove('invisible');
     },
+    /**
+     * Changes some behaviors before the drag and drop.
+     *
+     * @private
+     * @returns {Function} a function that restores what was changed when the
+     *  drag and drop is over.
+     */
+    _prepareDrag() {
+        return () => {};
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -975,7 +985,10 @@ var SnippetEditor = Widget.extend({
         this.trigger_up('drag_and_drop_start');
         this.options.wysiwyg.odooEditor.automaticStepUnactive();
         var self = this;
+        this.dragState = {};
         const rowEl = this.$target[0].parentNode;
+
+        this.dragState.restore = this._prepareDrag();
 
         // Allow the grid mode if the option is present in the right panel or
         // if the grid mode is already activated.
@@ -990,7 +1003,6 @@ var SnippetEditor = Widget.extend({
         // Number of grid columns and rows in the grid item (BS column).
         let columnColCount;
         let columnRowCount;
-        this.dragState = {};
         if (rowEl.classList.contains('row') && this.options.isWebsite) {
             if (allowGridMode) {
                 // Toggle grid mode if it is not already on.
@@ -1379,6 +1391,9 @@ var SnippetEditor = Widget.extend({
         if (!samePositionAsStart) {
             this.options.wysiwyg.odooEditor.historyStep();
         }
+
+        this.dragState.restore();
+
         delete this.$dropZones;
         delete this.dragState;
     },
