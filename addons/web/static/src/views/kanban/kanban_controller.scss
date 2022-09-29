@@ -24,6 +24,11 @@
     --KanbanColumn__highlight-border: #{$o-info};
     // ----------------------------------------------------------------------------
 
+    // Necessary for the drag and drop. Otherwise, with the flex system, nothing can be dropped farther than the initial screen width.
+    // Drawback: the scroll bar is only visible if fully scrolled down on the y axis. So big stack of kanban records can be annoying for 
+    // users not using the MAJ-Scroll shortcup to scroll horizontally.
+    overflow-x: scroll;
+
     .dropdown,
     .o_kanban_manage_button_section {
         position: inherit;
