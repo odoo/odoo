@@ -34,8 +34,8 @@ class MigrationManager(object):
         which contains a folder by version. Version can be 'module' version or 'server.module'
         version (in this case, the files will only be processed by this version of the server).
         Python file names must start by ``pre-`` or ``post-`` and will be executed, respectively,
-        before and after the module initialisation. ``end-`` scripts are run after all modules have
-        been updated.
+        before and after the module initialisation. ``begin-`` scripts are run before all modules 
+        (except base) have been updated.``end-`` scripts are run after all modules have been updated.
 
         A special folder named ``0.0.0`` can contain scripts that will be run on any version change.
         In `pre` stage, ``0.0.0`` scripts are run first, while in ``post`` and ``end``, they are run last.
@@ -45,6 +45,7 @@ class MigrationManager(object):
             <moduledir>
             `-- migrations
                 |-- 1.0
+                |   |-- begin-cleanup.py
                 |   |-- pre-update_table_x.py
                 |   |-- pre-update_table_y.py
                 |   |-- post-create_plop_records.py
@@ -93,13 +94,14 @@ class MigrationManager(object):
             }
 
     def migrate_module(self, pkg, stage):
-        assert stage in ('pre', 'post', 'end')
+        assert stage in ('begin', 'pre', 'post', 'end')
         stageformat = {
+            'begin': '[^%s]',
             'pre': '[>%s]',
             'post': '[%s>]',
             'end': '[$%s]',
         }
-        state = pkg.state if stage in ('pre', 'post') else getattr(pkg, 'load_state', None)
+        state = pkg.state if stage in ('begin', 'pre', 'post') else getattr(pkg, 'load_state', None)
 
         if not (hasattr(pkg, 'update') or state == 'to upgrade') or state == 'to install':
             return
@@ -119,7 +121,7 @@ class MigrationManager(object):
             if "0.0.0" in versions:
                 # reorder versions
                 versions.remove("0.0.0")
-                if stage == "pre":
+                if stage in ("begin", "pre"):
                     versions.insert(0, "0.0.0")
                 else:
                     versions.append("0.0.0")

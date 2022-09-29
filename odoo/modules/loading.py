@@ -368,6 +368,10 @@ def load_marked_modules(cr, graph, states, force, progressdict, report,
             break
         graph.add_modules(cr, module_list, force)
         _logger.debug('Updating graph with %d more modules', len(module_list))
+        # execute migration begin-scripts
+        migrations = odoo.modules.migration.MigrationManager(cr, graph)
+        for package in graph:
+            migrations.migrate_module(package, 'begin')
         loaded, processed = load_module_graph(
             cr, graph, progressdict, report=report, skip_modules=loaded_modules,
             perform_checks=perform_checks, models_to_check=models_to_check
