@@ -108,7 +108,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.module("Many2ManyTagsField");
 
     QUnit.test("Many2ManyTagsField with and without color", async function (assert) {
-        assert.expect(4);
+        assert.expect(12);
 
         serverData.models.partner.fields.partner_ids = {
             string: "Partner",
@@ -142,8 +142,18 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
+        // Add a tag to first field
+        assert.containsNone(target, "[name=partner_ids] .o_tag");
         await selectDropdownItem(target, "partner_ids", "first record");
+        assert.containsOnce(target, "[name=partner_ids] .o_tag");
 
+        // Show the color list
+        assert.containsNone(target, ".o_colorlist");
+        await click(target, "[name=partner_ids] .o_tag");
+        assert.containsOnce(target, ".o_colorlist");
+
+        // Add a tag to second field
+        assert.containsNone(target, "[name=timmy] .o_tag");
         await clickDropdown(target, "timmy");
         const autocomplete = target.querySelector("[name='timmy'] .o-autocomplete.dropdown");
         assert.strictEqual(
@@ -152,12 +162,18 @@ QUnit.module("Fields", (hooks) => {
             "autocomplete dropdown should have 3 entries (2 values + 'Search and Edit...')"
         );
         await clickOpenedDropdownItem(target, "timmy", "gold");
+        assert.containsOnce(target, "[name=timmy] .o_tag");
         assert.deepEqual(
             getNodesTextContent(
                 target.querySelectorAll(`.o_field_many2many_tags[name="timmy"] .badge`)
             ),
             ["gold"]
         );
+
+        // Show the color list
+        assert.containsNone(target, ".o_colorlist");
+        await click(target, "[name=timmy] .o_tag");
+        assert.containsNone(target, ".o_colorlist");
     });
 
     QUnit.test("Many2ManyTagsField with color: rendering and edition", async function (assert) {
