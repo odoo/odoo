@@ -101,6 +101,9 @@ registerModel({
                 if (this.deleteMessageConfirmView) {
                     return 'o_Dialog_componentLargeSize align-self-start mt-5';
                 }
+                if (this.linkPreviewDeleteConfirmView) {
+                    return 'o_Dialog_componentMediumSize align-self-start mt-5';
+                }
                 return '';
             },
         }),
