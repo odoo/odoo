@@ -1268,12 +1268,16 @@ class DisableCacheMiddleware(object):
             req = werkzeug.wrappers.Request(environ)
             root.setup_session(req)
             if req.session and req.session.debug and not 'wkhtmltopdf' in req.headers.get('User-Agent'):
-                new_headers = [('Cache-Control', 'no-cache')]
+                cache_control_value = 'no-cache'
+                new_headers = []
 
                 for k, v in headers:
                     if k.lower() != 'cache-control':
                         new_headers.append((k, v))
+                    elif 'no-cache' not in v:
+                        cache_control_value += ', %s' % v
 
+                new_headers.append(('Cache-Control', cache_control_value))
                 start_response(status, new_headers)
             else:
                 start_response(status, headers)
