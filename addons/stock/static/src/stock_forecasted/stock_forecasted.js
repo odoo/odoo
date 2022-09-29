@@ -34,9 +34,6 @@ class StockForecasted extends Component{
         this.reportModelName = `report.stock.report_product_${isTemplate ? 'template' : 'product'}_replenishment`;
         this.title = this.props.action.name;
 
-        if(!this.context.active_ids || this.context.active_ids === undefined)
-            this.context.active_ids = [this.productId];
-
         this.docs = useState({});
         
         onWillStart(this._getReportValues);
@@ -48,7 +45,7 @@ class StockForecasted extends Component{
             [],
             {
                 context : this.context,
-                docids : this.context.active_ids,
+                docids : [this.productId],
                 serialize : true,
             }
             );
