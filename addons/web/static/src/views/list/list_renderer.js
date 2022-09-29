@@ -116,12 +116,12 @@ export class ListRenderer extends Component {
             handle: ".o_handle_cell",
             cursor: "grabbing",
             // Hooks
-            onStart: (params) => {
+            onDragStart: (params) => {
                 const { element } = params;
                 dataRowId = element.dataset.id;
                 return this.sortStart(params);
             },
-            onStop: (params) => this.sortStop(params),
+            onDragEnd: (params) => this.sortStop(params),
             onDrop: (params) => this.sortDrop(dataRowId, params),
         });
 
