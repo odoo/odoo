@@ -5259,7 +5259,7 @@ QUnit.module("Views", (hooks) => {
             arch: `
                 <tree>
                     <field name="foo"/>
-                    <field name="bar" widget="toggle_button"/>
+                    <field name="bar" widget="boolean_favorite"/>
                 </tree>`,
         });
 
@@ -5296,7 +5296,7 @@ QUnit.module("Views", (hooks) => {
             getNodesTextContent([
                 target.querySelector('.o-tooltip--technical>li[data-item="widget"]'),
             ]),
-            ["Widget:Button (toggle_button)"],
+            ["Widget:Favorite (boolean_favorite) "],
             "widget description should be correct"
         );
     });
@@ -10695,12 +10695,12 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.test("grouped list edition with toggle_button widget", async function (assert) {
+    QUnit.test("grouped list edition with boolean_favorite widget", async function (assert) {
         await makeView({
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="bar" widget="toggle_button"/></tree>',
+            arch: '<tree><field name="bar" widget="boolean_favorite"/></tree>',
             groupBy: ["m2o"],
             mockRPC(route, args) {
                 if (args.method === "write") {
@@ -10716,14 +10716,14 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_group_header"));
         assert.containsOnce(
             target,
-            ".o_data_row:first .o_toggle_button_success",
+            ".o_data_row:first .fa-star",
             "boolean value of the first record should be true"
         );
-        await click(target.querySelector(".o_data_row .o_icon_button"));
-        assert.strictEqual(
-            $(target).find(".o_data_row:first .text-muted:not(.o_toggle_button_success)").length,
-            1,
-            "boolean button should have been updated"
+        await click(target.querySelector(".o_data_row .fa-star"));
+        assert.containsOnce(
+            target,
+            ".o_data_row:first .fa-star-o",
+            "boolean value of the first record should have been updated"
         );
     });
 

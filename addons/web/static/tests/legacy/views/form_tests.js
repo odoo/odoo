@@ -3,6 +3,7 @@ odoo.define('web.form_tests', function (require) {
 
 const AbstractField = require("web.AbstractField");
 var AbstractStorageService = require('web.AbstractStorageService');
+var basicFields = require('web.basic_fields');
 var BasicModel = require('web.BasicModel');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
@@ -23,6 +24,7 @@ const widgetRegistryOwl = require('web.widgetRegistry');
 var Widget = require('web.Widget');
 const { registry } = require('@web/core/registry');
 const legacyViewRegistry = require('web.view_registry');
+const { registerCleanup } = require("@web/../tests/helpers/cleanup");
 
 var _t = core._t;
 var createView = testUtils.createView;
@@ -9436,6 +9438,9 @@ QUnit.module('LegacyViews', {
 
     QUnit.test('edit a record in readonly and switch to edit before it is actually saved', async function (assert) {
         assert.expect(3);
+
+        fieldRegistry.add("toggle_button", basicFields.FieldToggleBoolean);
+        registerCleanup(() => delete fieldRegistry.map.toggle_button);
 
         const prom = testUtils.makeTestPromise();
         const form = await createView({
