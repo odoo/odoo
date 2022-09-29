@@ -402,9 +402,9 @@ class TestSalesTeam(SaleCommon):
             'order_id': sale_order.id,
         })
 
-        self.assertEqual(sol.analytic_distribution, {analytic_account_super.id: 100}, "The analytic distribution should be set to Super Account")
+        self.assertEqual(sol.analytic_distribution, {str(analytic_account_super.id): 100}, "The analytic distribution should be set to Super Account")
         sol.write({'product_id': great_product.id})
-        self.assertEqual(sol.analytic_distribution, {analytic_account_great.id: 100}, "The analytic distribution should be set to Great Account")
+        self.assertEqual(sol.analytic_distribution, {str(analytic_account_great.id): 100}, "The analytic distribution should be set to Great Account")
 
         so_no_analytic_account = self.env['sale.order'].create({
             'partner_id': self.env.ref('base.res_partner_1').id,

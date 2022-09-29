@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
-import json
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
+
 
 class AccountAnalyticDistributionModel(models.Model):
     _name = 'account.analytic.distribution.model'
@@ -26,9 +27,26 @@ class AccountAnalyticDistributionModel(models.Model):
     company_id = fields.Many2one(
         'res.company',
         string='Company',
+        default=lambda self: self.env.company,
         ondelete='cascade',
         help="Select a company for which the analytic distribution will be used (e.g. create new customer invoice or Sales order if we select this company, it will automatically take this as an analytic account)",
     )
+
+    @api.constrains('company_id')
+    def _check_company_accounts(self):
+        query = """
+            SELECT model.id
+              FROM account_analytic_distribution_model model
+              JOIN account_analytic_account account
+                ON model.analytic_distribution ? CAST(account.id AS VARCHAR)
+             WHERE account.company_id IS NOT NULL 
+               AND (model.company_id IS NULL 
+                OR model.company_id != account.company_id)
+          GROUP BY model.id
+        """
+        self.env.cr.execute(query)
+        if self.env.cr.dictfetchone():
+            raise UserError(_('You defined a distribution with analytic account(s) belonging to a specific company but a model shared between companies or with a different company'))
 
     @api.model
     def _get_distribution(self, vals):
@@ -71,9 +89,3 @@ class AccountAnalyticDistributionModel(models.Model):
             return [(fname, 'in', value)]
         else:
             return [(fname, 'in', [value, False])]
-
-    @api.model
-    def _get_distributionjson(self, vals):
-        """ Returns the distribution model as a json for the compute_analytic_distribution_stored_char functions"""
-        distribution = self._get_distribution(vals)
-        return json.dumps(distribution) if distribution else None

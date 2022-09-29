@@ -301,6 +301,9 @@ class SelectionConverter(models.AbstractModel):
         options.update(
             selection=dict(type='selection', string=_('Selection'), description=_('By default the widget uses the field information'), required=True)
         )
+        options.update(
+            selection=dict(type='json', string=_('Json'), description=_('By default the widget uses the field information'), required=True)
+        )
         return options
 
     @api.model

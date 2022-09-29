@@ -79,6 +79,12 @@ export class AnalyticDistribution extends Component {
         if (this.editingRecord) {
             await this.fetchAllPlans(this.props);
         }
+        const args = {
+            domain: [["name", "like", "Percentage Analytic"]],
+            fields: ["digits"],
+            context: [],
+        }
+        this.decimal_precision = await this.orm.call("decimal.precision", "search_read", [], args);
         await this.formatData(this.props);
     }
 
@@ -559,7 +565,8 @@ export class AnalyticDistribution extends Component {
     }
 
     formatPercentage(value) {
-        return formatPercentage(value / 100, { digits: [false, 2] });
+        return formatPercentage(value / 100, { digits: [false, this.decimal_precision[0].digits || 2] });
+
     }
 }
 AnalyticDistribution.template = "analytic_distribution";

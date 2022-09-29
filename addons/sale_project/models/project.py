@@ -152,23 +152,24 @@ class Project(models.Model):
         return action
 
     def action_open_project_invoices(self):
-        invoices = self.env['account.move'].search([
-            ('line_ids.analytic_distribution_stored_char', '=ilike', f'%"{self.analytic_account_id.id}":%'),
-            ('move_type', '=', 'out_invoice')
-        ])
+        query = self.env['account.move.line']._search([('move_id.move_type', '=', 'out_invoice')])
+        query.add_where('analytic_distribution ? %s', [str(self.analytic_account_id.id)])
+        query_string, query_param = query.select('DISTINCT move_id')
+        self._cr.execute(query_string, query_param)
+        invoice_ids = [line.get('move_id') for line in self._cr.dictfetchall()]
         action = {
             'name': _('Invoices'),
             'type': 'ir.actions.act_window',
             'res_model': 'account.move',
             'views': [[False, 'tree'], [False, 'form'], [False, 'kanban']],
-            'domain': [('id', 'in', invoices.ids)],
+            'domain': [('id', 'in', invoice_ids)],
             'context': {
                 'create': False,
             }
         }
-        if len(invoices) == 1:
+        if len(invoice_ids) == 1:
             action['views'] = [[False, 'form']]
-            action['res_id'] = invoices.id
+            action['res_id'] = invoice_ids[0]
         return action
 
     # ----------------------------
@@ -446,22 +447,24 @@ class Project(models.Model):
         return buttons
 
     def action_open_project_vendor_bills(self):
-        vendor_bills = self.env['account.move'].search([
-            ('line_ids.analytic_distribution_stored_char', '=ilike', f'%"{self.analytic_account_id.id}":%'),
-            ('move_type', '=', 'in_invoice')])
+        query = self.env['account.move.line']._search([('move_id.move_type', '=', 'in_invoice')])
+        query.add_where('analytic_distribution ? %s', [str(self.analytic_account_id.id)])
+        query_string, query_param = query.select('DISTINCT move_id')
+        self._cr.execute(query_string, query_param)
+        vendor_bill_ids = [line.get('move_id') for line in self._cr.dictfetchall()]
         action_window = {
             'name': _('Vendor Bills'),
             'type': 'ir.actions.act_window',
             'res_model': 'account.move',
             'views': [[False, 'tree'], [False, 'form'], [False, 'kanban']],
-            'domain': [('id', 'in', vendor_bills.ids)],
+            'domain': [('id', 'in', vendor_bill_ids)],
             'context': {
                 'create': False,
             }
         }
-        if len(vendor_bills) == 1:
+        if len(vendor_bill_ids) == 1:
             action_window['views'] = [[False, 'form']]
-            action_window['res_id'] = vendor_bills.id
+            action_window['res_id'] = vendor_bill_ids[0]
         return action_window
 
 class ProjectTask(models.Model):

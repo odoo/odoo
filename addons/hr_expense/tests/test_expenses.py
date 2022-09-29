@@ -199,7 +199,7 @@ class TestExpenses(TestExpenseCommon):
                 'product_id': self.product_b.id,
                 'currency_id': self.currency_data['currency'].id,
                 'tax_line_id': False,
-                'analytic_distribution': {self.analytic_account_2.id: 100},
+                'analytic_distribution': {str(self.analytic_account_2.id): 100},
             },
             # Product line (company currency):
             {
@@ -210,7 +210,7 @@ class TestExpenses(TestExpenseCommon):
                 'product_id': self.product_a.id,
                 'currency_id': self.company_data['currency'].id,
                 'tax_line_id': False,
-                'analytic_distribution': {self.analytic_account_1.id: 100},
+                'analytic_distribution': {str(self.analytic_account_1.id): 100},
             },
         ])
 
@@ -319,7 +319,7 @@ class TestExpenses(TestExpenseCommon):
                 'unit_amount': 350.00,
                 'tax_ids': [(6, 0, [self.tax_purchase_a.id])],
                 'sheet_id': expense.id,
-                'analytic_distribution': {self.analytic_account_1.id: 100},
+                'analytic_distribution': {str(self.analytic_account_1.id): 100},
             })
 
         expense.action_submit_sheet()

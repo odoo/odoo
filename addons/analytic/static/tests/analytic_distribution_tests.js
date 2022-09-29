@@ -63,7 +63,7 @@ QUnit.module("Analytic", (hooks) => {
                     fields: {
                         label: { string: "Label", type: "char" },
                         amount: { string: "Amount", type: "float" },
-                        analytic_distribution: { string: "Analytic", type: "char" },
+                        analytic_distribution: { string: "Analytic", type: "json" },
                         move_id: { string: "Account Move", type: "many2one", relation: "move" },
                     },
                     records: [
@@ -81,6 +81,15 @@ QUnit.module("Analytic", (hooks) => {
                         { id: 1, display_name: "INV0001", line_ids: [1, 2]},
                         { id: 2, display_name: "INV0002", line_ids: [3, 4]},
                     ],
+                },
+                "decimal.precision": {
+                    fields: {
+                        name: { string: "Name", type: "char" },
+                        digits: { string: "Digits", type: "int" },
+                    },
+                    records: [
+                        { id: 1, name: "Percentage Analytic", digits: 2}
+                    ]
                 }
             },
         };

@@ -21,6 +21,7 @@ that have no counterpart in the general financial accounts.
         'views/analytic_account_views.xml',
         'views/analytic_plan_views.xml',
         'views/analytic_distribution_model_views.xml',
+        'data/analytic_data.xml'
     ],
     'demo': [
         'data/analytic_account_demo.xml'

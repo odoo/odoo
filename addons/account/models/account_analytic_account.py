@@ -41,10 +41,16 @@ class AccountAnalyticAccount(models.Model):
 
     def action_view_invoice(self):
         self.ensure_one()
+        query = self.env['account.move.line']._search([('move_id.move_type', 'in', self.env['account.move'].get_sale_types())])
+        query.order = None
+        query.add_where('analytic_distribution ? %s', [str(self.id)])
+        query_string, query_param = query.select('DISTINCT move_id')
+        self._cr.execute(query_string, query_param)
+        move_ids = [line.get('move_id') for line in self._cr.dictfetchall()]
         result = {
             "type": "ir.actions.act_window",
             "res_model": "account.move",
-            "domain": [('line_ids.analytic_distribution_stored_char', '=ilike', f'%"{self.id}":%'), ('move_type', 'in', self.env['account.move'].get_sale_types())],
+            "domain": [('id', 'in', move_ids)],
             "context": {"create": False},
             "name": "Customer Invoices",
             'view_mode': 'tree,form',
@@ -53,10 +59,16 @@ class AccountAnalyticAccount(models.Model):
 
     def action_view_vendor_bill(self):
         self.ensure_one()
+        query = self.env['account.move.line']._search([('move_id.move_type', 'in', self.env['account.move'].get_purchase_types())])
+        query.order = None
+        query.add_where('analytic_distribution ? %s', [str(self.id)])
+        query_string, query_param = query.select('DISTINCT move_id')
+        self._cr.execute(query_string, query_param)
+        move_ids = [line.get('move_id') for line in self._cr.dictfetchall()]
         result = {
             "type": "ir.actions.act_window",
             "res_model": "account.move",
-            "domain": [('line_ids.analytic_distribution_stored_char', '=ilike', f'%"{self.id}":%'), ('move_type', 'in', self.env['account.move'].get_purchase_types())],
+            "domain": [('id', 'in', move_ids)],
             "context": {"create": False},
             "name": "Vendor Bills",
             'view_mode': 'tree,form',

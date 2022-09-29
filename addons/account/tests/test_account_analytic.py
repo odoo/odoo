@@ -21,10 +21,12 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon):
         cls.analytic_account_a = cls.env['account.analytic.account'].create({
             'name': 'analytic_account_a',
             'plan_id': cls.default_plan.id,
+            'company_id': False,
         })
         cls.analytic_account_b = cls.env['account.analytic.account'].create({
             'name': 'analytic_account_b',
             'plan_id': cls.default_plan.id,
+            'company_id': False,
         })
 
     def create_invoice(self, partner, product):
@@ -123,7 +125,7 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon):
 
         # Partner and product match, score 2
         invoice = self.create_invoice(self.partner_a, self.product_a)
-        self.assertEqual(invoice.invoice_line_ids.analytic_distribution, {self.analytic_account_b.id: 100})
+        self.assertEqual(invoice.invoice_line_ids.analytic_distribution, {str(self.analytic_account_b.id): 100})
 
         # Match the partner but not the product, score 0
         invoice = self.create_invoice(self.partner_a, self.product_b)
@@ -131,7 +133,7 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon):
 
         # Product match, score 1
         invoice = self.create_invoice(self.partner_b, self.product_a)
-        self.assertEqual(invoice.invoice_line_ids.analytic_distribution, {self.analytic_account_a.id: 100})
+        self.assertEqual(invoice.invoice_line_ids.analytic_distribution, {str(self.analytic_account_a.id): 100})
 
         # No rule match with the product, score 0
         invoice = self.create_invoice(self.partner_b, self.product_b)
@@ -141,10 +143,12 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon):
         """Test that the distribution is recomputed if and only if it is needed when changing the partner."""
         self.env['account.analytic.distribution.model'].create([{
             'partner_id': self.partner_a.id,
-            'analytic_distribution': {self.analytic_account_a.id: 100}
+            'analytic_distribution': {self.analytic_account_a.id: 100},
+            'company_id': False,
         }, {
             'partner_id': self.partner_b.id,
-            'analytic_distribution': {self.analytic_account_b.id: 100}
+            'analytic_distribution': {self.analytic_account_b.id: 100},
+            'company_id': False,
         }])
 
         invoice = self.create_invoice(self.env['res.partner'], self.product_a)
@@ -153,27 +157,27 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon):
 
         # A model is found, set the new values
         invoice.partner_id = self.partner_a
-        self.assertEqual(invoice.invoice_line_ids.analytic_distribution, {self.analytic_account_a.id: 100})
+        self.assertEqual(invoice.invoice_line_ids.analytic_distribution, {str(self.analytic_account_a.id): 100})
 
         # A model is found, set the new values
         invoice.partner_id = self.partner_b
-        self.assertEqual(invoice.invoice_line_ids.analytic_distribution, {self.analytic_account_b.id: 100})
+        self.assertEqual(invoice.invoice_line_ids.analytic_distribution, {str(self.analytic_account_b.id): 100})
 
         # No model is found, don't change previously set values
         invoice.partner_id = invoice.company_id.partner_id
-        self.assertEqual(invoice.invoice_line_ids.analytic_distribution, {self.analytic_account_b.id: 100})
+        self.assertEqual(invoice.invoice_line_ids.analytic_distribution, {str(self.analytic_account_b.id): 100})
 
         # No model is found, don't change previously set values
         invoice.partner_id = False
-        self.assertEqual(invoice.invoice_line_ids.analytic_distribution, {self.analytic_account_b.id: 100})
+        self.assertEqual(invoice.invoice_line_ids.analytic_distribution, {str(self.analytic_account_b.id): 100})
 
         # It manual value is not erased in form view when saving
         with Form(invoice) as invoice_form:
             invoice_form.partner_id = self.partner_a
             with invoice_form.invoice_line_ids.edit(0) as line_form:
-                self.assertEqual(line_form.analytic_distribution, {self.analytic_account_a.id: 100})
+                self.assertEqual(line_form.analytic_distribution, {str(self.analytic_account_a.id): 100})
                 line_form.analytic_distribution = {self.analytic_account_b.id: 100}
-        self.assertEqual(invoice.invoice_line_ids.analytic_distribution, {self.analytic_account_b.id: 100})
+        self.assertEqual(invoice.invoice_line_ids.analytic_distribution, {str(self.analytic_account_b.id): 100})
 
     def test_mandatory_plan_validation(self):
         invoice = self.create_invoice(self.partner_b, self.product_a)

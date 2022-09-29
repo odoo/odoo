@@ -24,7 +24,6 @@
                             <field name="show_force_tax_included" invisible="1"/>
                             <field name="force_tax_included"
                                    attrs="{'invisible': [('show_force_tax_included', '=', False)]}" force_save="1"/>
-                            <field name="analytic_distribution_stored_char" invisible="1"/>
                             <field name="analytic_distribution" widget="analytic_distribution"
                                    groups="analytic.group_analytic_accounting"
                                    options="{'account_field': 'account_id', 'business_domain': 'general'}"/>
@@ -244,7 +243,6 @@
                                                 <field name="tax_ids"
                                                        widget="many2many_tags"
                                                        optional="hide"/>
-                                                <field name="analytic_distribution_stored_char" invisible="1"/>
                                                 <field name="analytic_distribution" widget="analytic_distribution"
                                                        groups="analytic.group_analytic_accounting"
                                                        options="{'account_field': 'account_id', 'business_domain': 'general'}"/>

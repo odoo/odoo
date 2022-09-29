@@ -161,7 +161,6 @@
                                 <field name="product_uom_category_id" invisible="1"/>
                                 <field name="product_uom_id" string="UoM" groups="uom.group_uom" optional="show" attrs="{'required': [('product_id', '!=', False)]}"/>
                                 <field name="schedule_date" optional="hide"/>
-                                <field name="analytic_distribution_stored_char" invisible="1"/>
                                 <field name="analytic_distribution" widget="analytic_distribution"
                                        optional="hide"
                                        groups="analytic.group_analytic_accounting"
@@ -177,7 +176,6 @@
                                     <field name="product_uom_category_id" invisible="1"/>
                                     <field name="product_uom_id" />
                                     <field name="schedule_date"/>
-                                    <field name="analytic_distribution_stored_char" invisible="1"/>
                                     <field name="analytic_distribution" widget="analytic_distribution"
                                            groups="analytic.group_analytic_accounting"
                                            options="{'product_field': 'product_id', 'business_domain': 'purchase_order'}"/>
