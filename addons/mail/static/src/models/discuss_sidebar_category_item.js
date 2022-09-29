@@ -188,23 +188,24 @@ registerModel({
                 return this.channel.channel_type === 'channel';
             },
         }),
-        /**
-         * Boolean determines whether ThreadIcon will be displayed in UI.
-         */
-        hasThreadIcon: attr({
+        threadIconView: one('ThreadIconView', {
             compute() {
                 if (!this.thread) {
                     return clear();
                 }
                 switch (this.channel.channel_type) {
                     case 'channel':
-                        return !Boolean(this.thread.authorizedGroupFullName);
+                        if (!this.thread.authorizedGroupFullName) {
+                            return {};
+                        }
+                        return clear();
                     case 'chat':
-                        return true;
+                        return {};
                     case 'group':
-                        return false;
+                        return clear();
                 }
             },
+            inverse: 'discussSidebarCategoryItemOwner',
         }),
         /**
          * Boolean determines whether the item has a "unpin" command.

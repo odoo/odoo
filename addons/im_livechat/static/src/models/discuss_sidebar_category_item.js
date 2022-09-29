@@ -40,7 +40,7 @@ patchFields('DiscussSidebarCategoryItem', {
             return this._super();
         },
     },
-    hasThreadIcon: {
+    threadIconView: {
         compute() {
             if (this.channel.channel_type === 'livechat') {
                 return clear();

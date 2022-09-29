@@ -678,6 +678,15 @@ registerModel({
         thread: one('Thread', {
             related: 'threadView.thread',
         }),
+        threadIconView: one('ThreadView', {
+            compute() {
+                if (this.thread) {
+                    return {};
+                }
+                return clear();
+            },
+            inverse: 'threadViewTopbarOwner',
+        }),
         /**
          * States the OWL ref of the "thread name" input of this top bar.
          * Useful to focus it, or to know when a click is done outside of it.

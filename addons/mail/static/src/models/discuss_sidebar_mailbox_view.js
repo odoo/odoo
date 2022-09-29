@@ -35,5 +35,9 @@ registerModel({
             },
             required: true,
         }),
+        threadIconView: one('ThreadIconView', {
+            default: {},
+            inverse: 'discussSidebarMailboxViewOwner',
+        })
     },
 });
