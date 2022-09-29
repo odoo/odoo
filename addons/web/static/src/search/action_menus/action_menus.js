@@ -112,7 +112,9 @@ export class ActionMenus extends Component {
      * @param {Object} item
      */
     async onItemSelected(item) {
-        await this.props.onBeforeAction(item);
+        if (!(await this.props.shouldExecuteAction(item))) {
+            return;
+        }
         if (item.callback) {
             item.callback([item]);
         } else if (item.action) {
@@ -143,10 +145,10 @@ ActionMenus.props = {
         },
     },
     onActionExecuted: { type: Function, optional: true },
-    onBeforeAction: { type: Function, optional: true },
+    shouldExecuteAction: { type: Function, optional: true },
 };
 ActionMenus.defaultProps = {
     onActionExecuted: () => {},
-    onBeforeAction: () => {},
+    shouldExecuteAction: () => true,
 };
 ActionMenus.template = "web.ActionMenus";

@@ -37,6 +37,8 @@ import { scrollerService } from "@web/core/scroller_service";
 import BasicModel from "web.BasicModel";
 import { localization } from "@web/core/l10n/localization";
 import { SIZES } from "@web/core/ui/ui_service";
+import { errorService } from "@web/core/errors/error_service";
+import { RPCError } from "@web/core/network/rpc_service";
 
 import * as legacyCore from "web.core";
 
@@ -10899,6 +10901,63 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(target.querySelector('.o_field_widget[name="name"] input').value, "aaa");
     });
 
+    QUnit.test("Auto save: error on save when breadcrumb clicked", async function (assert) {
+        assert.expect(3);
+
+        registry.category("services").add("error", errorService);
+
+        // remove the override in qunit.js that swallows unhandledrejection errors
+        // s.t. we let the error service handle them
+        const originalOnUnhandledRejection = window.onunhandledrejection;
+        window.onunhandledrejection = () => {};
+        registerCleanup(() => {
+            window.onunhandledrejection = originalOnUnhandledRejection;
+        });
+
+        serverData.actions[1] = {
+            id: 1,
+            name: "Partner",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+        };
+
+        serverData.views = {
+            "partner,false,list": `
+                <tree>
+                    <field name="name"/>
+                </tree>`,
+            "partner,false,form": `
+                <form>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </form>`,
+            "partner,false,search": "<search></search>",
+        };
+
+        const webClient = await createWebClient({
+            serverData,
+            mockRPC(route, { method }) {
+                if (method === "write") {
+                    assert.step("write");
+                    throw new RPCError("Something went wrong");
+                }
+            },
+        });
+        await doAction(webClient, 1);
+        await click(target.querySelector(".o_data_row td.o_data_cell"));
+
+        await editInput(target, ".o_field_widget[name='name'] input", "aaa");
+        await click(target.querySelector(".breadcrumb-item.o_back_button"));
+        assert.verifySteps(["write"]);
+        await nextTick();
+        assert.containsOnce(target, ".o_form_error_dialog");
+    });
+
     QUnit.test("Auto save: save when action changed", async function (assert) {
         assert.expect(6);
 
@@ -11350,6 +11409,135 @@ QUnit.module("Views", (hooks) => {
             assert.verifySteps(["get_views", "read", "onchange"]);
         }
     );
+
+    QUnit.test("Auto save: save when action button clicked", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><field name="foo"/></form>`,
+            actionMenus: {},
+            resId: 1,
+            mockRPC(route, { method }) {
+                if (method === "write") {
+                    assert.step("write");
+                }
+            },
+        });
+
+        assert.strictEqual(target.querySelector(".o_field_widget[name='foo'] input").value, "yop");
+        await editInput(target, ".o_field_widget[name='foo'] input", "test");
+
+        assert.strictEqual(target.querySelector(".o_pager_counter").textContent, "1 / 1");
+        assert.strictEqual(target.querySelector(".o_field_widget[name='foo'] input").value, "test");
+        await click(target, ".o_cp_action_menus button");
+        await click(target.querySelector(".o_cp_action_menus .dropdown-menu .dropdown-item"));
+
+        assert.verifySteps(["write"]);
+        assert.strictEqual(target.querySelector(".o_pager_counter").textContent, "2 / 2");
+        assert.strictEqual(target.querySelector(".o_field_widget[name='foo'] input").value, "test");
+
+        await click(target, ".o_pager_previous");
+        assert.strictEqual(target.querySelector(".o_pager_counter").textContent, "1 / 2");
+        assert.strictEqual(target.querySelector(".o_field_widget[name='foo'] input").value, "test");
+    });
+
+    QUnit.test("Auto save: error on save when action button clicked", async function (assert) {
+        assert.expect(3);
+
+        registry.category("services").add("error", errorService);
+
+        // remove the override in qunit.js that swallows unhandledrejection errors
+        // s.t. we let the error service handle them
+        const originalOnUnhandledRejection = window.onunhandledrejection;
+        window.onunhandledrejection = () => {};
+        registerCleanup(() => {
+            window.onunhandledrejection = originalOnUnhandledRejection;
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><field name="foo"/></form>`,
+            actionMenus: {},
+            resId: 1,
+            mockRPC(route, { method }) {
+                if (method === "write") {
+                    assert.step("write");
+                    throw new RPCError("Something went wrong");
+                }
+            },
+        });
+
+        await editInput(target, ".o_field_widget[name='foo'] input", "test");
+        await click(target, ".o_cp_action_menus button");
+        await click(target.querySelector(".o_cp_action_menus .dropdown-menu .dropdown-item"));
+        assert.verifySteps(["write"]);
+        await nextTick();
+        assert.containsOnce(target, ".o_form_error_dialog");
+    });
+
+    QUnit.test("Auto save: save when create button clicked", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><field name="foo"/></form>`,
+            resId: 1,
+            mockRPC(route, { method }) {
+                if (method === "write") {
+                    assert.step("write");
+                }
+            },
+        });
+
+        assert.strictEqual(target.querySelector(".o_field_widget[name='foo'] input").value, "yop");
+        await editInput(target, ".o_field_widget[name='foo'] input", "test");
+
+        await click(target, ".o_form_button_create");
+        assert.verifySteps(["write"]);
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name='foo'] input").value,
+            "My little Foo Value"
+        );
+        assert.strictEqual(target.querySelector(".breadcrumb-item.active").textContent, "New");
+    });
+
+    QUnit.test("Auto save: error on save when create button clicked", async function (assert) {
+        assert.expect(3);
+
+        registry.category("services").add("error", errorService);
+
+        // remove the override in qunit.js that swallows unhandledrejection errors
+        // s.t. we let the error service handle them
+        const originalOnUnhandledRejection = window.onunhandledrejection;
+        window.onunhandledrejection = () => {};
+        registerCleanup(() => {
+            window.onunhandledrejection = originalOnUnhandledRejection;
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><field name="foo"/></form>`,
+            actionMenus: {},
+            resId: 1,
+            mockRPC(route, { method }) {
+                if (method === "write") {
+                    assert.step("write");
+                    throw new RPCError("Something went wrong");
+                }
+            },
+        });
+
+        await editInput(target, ".o_field_widget[name='foo'] input", "test");
+        await click(target, ".o_form_button_create");
+        assert.verifySteps(["write"]);
+        await nextTick();
+        assert.containsOnce(target, ".o_form_error_dialog");
+    });
 
     QUnit.test('field "length" with value 0: can apply onchange', async function (assert) {
         serverData.models.partner.fields.length = { string: "Length", type: "float", default: 0 };
