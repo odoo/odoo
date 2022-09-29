@@ -41,4 +41,8 @@ FloatTimeField.extractProps = ({ attrs }) => {
     };
 };
 
+export class FloatTimeFieldFixedSize extends FloatTimeField {}
+FloatTimeFieldFixedSize.template = "web.FloatTimeFieldFixedSize";
+
 registry.category("fields").add("float_time", FloatTimeField);
+registry.category("fields").add("float_time_fixed_size", FloatTimeFieldFixedSize);

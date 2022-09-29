@@ -6,4 +6,10 @@
         <input t-else="" t-att-id="props.id" t-ref="numpadDecimal" t-att-placeholder="props.placeholder" inputmode="numeric" class="o_input" />
     </t>
 
+    <t t-name="web.FloatTimeFieldFixedSize" owl="1" t-inherit="web.FloatTimeField" t-inherit-mode="primary">
+        <xpath expr="//input" position="attributes">
+            <attribute name="size">3</attribute>
+        </xpath>
+    </t>
+
 </templates>
