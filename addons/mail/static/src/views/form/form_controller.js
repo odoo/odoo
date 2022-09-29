@@ -59,7 +59,7 @@ patch(FormController.prototype, "mail", {
      * @returns {boolean}
      */
     hasAttachmentViewer() {
-        if (!this.getMessaging() || !this.model.root.resId) {
+        if (!this.hasAttachmentViewerInArch || !this.getMessaging() || !this.model.root.resId) {
             return false;
         }
         const thread = this.getMessaging().models['Thread'].insert({
