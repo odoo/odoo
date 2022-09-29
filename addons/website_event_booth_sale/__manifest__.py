@@ -19,7 +19,7 @@ Use the e-commerce to sell your event booths.
             '/website_event_booth_sale/static/src/js/booth_register.js',
         ],
         'web.assets_tests': [
-            '/website_event_booth_sale/static/tests/tours/website_event_booth.js',
+            '/website_event_booth_sale/static/tests/tours/**/**.js'
         ],
     },
     'license': 'LGPL-3',
