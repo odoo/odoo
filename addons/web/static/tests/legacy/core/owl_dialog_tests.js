@@ -2,13 +2,9 @@ odoo.define('web.owl_dialog_tests', function (require) {
     "use strict";
 
     const LegacyDialog = require('web.Dialog');
-    const FormView = require('web.FormView');
-    const CalendarView = require('web.CalendarView');
     const makeTestEnvironment = require('web.test_env');
     const Dialog = require('web.OwlDialog');
     const testUtils = require('web.test_utils');
-    const { registry } = require("@web/core/registry");
-    const legacyViewRegistry = require('web.view_registry');
 
     const { makeLegacyDialogMappingTestEnv } = require('@web/../tests/helpers/legacy_env_utils');
     const { Dialog: WowlDialog } = require("@web/core/dialog/dialog");
@@ -19,7 +15,6 @@ odoo.define('web.owl_dialog_tests', function (require) {
         mount,
         destroy,
     } = require("@web/../tests/helpers/utils");
-    const { createWebClient, doAction } = require("@web/../tests/webclient/helpers");
     const { LegacyComponent } = require("@web/legacy/legacy_component");
 
     const { Component, useState, xml } = owl;
@@ -416,116 +411,6 @@ odoo.define('web.owl_dialog_tests', function (require) {
             backEndModal.destroy();
             destroy(parent1);
             destroy(parent2);
-        });
-
-        QUnit.test("remove tabindex on inactive dialog", async (assert) => {
-            registry.category("views").remove("calendar"); // remove new calendar from registry
-            registry.category("views").remove("form"); // remove new form from registry
-            legacyViewRegistry.add("form", FormView); // add legacy form -> will be wrapped and added to new registry
-            legacyViewRegistry.add("calendar", CalendarView); // add legacy calendar -> will be wrapped and added to new registry
-
-            const serverData = {
-                actions: {
-                    1: {
-                        id: 1,
-                        flags: { initialDate: new Date(2020, 6, 13) },
-                        name: "Test",
-                        res_model: "event",
-                        type: "ir.actions.act_window",
-                        views: [[false, "calendar"]],
-                    },
-                    2: {
-                        id: 2,
-                        name: "Test",
-                        res_model: "event",
-                        target: "new",
-                        type: "ir.actions.act_window",
-                        views: [[2, "form"]],
-                    },
-                },
-                models: {
-                    event: {
-                        fields: {
-                            id: { type: "integer" },
-                            display_name: { type: "char" },
-                            start: { type: "date" },
-                        },
-                        records: [{ id: 1, display_name: "Event 1", start: "2020-07-13" }],
-                        methods: {
-                            async check_access_rights() {
-                                return true;
-                            },
-                            async get_formview_id() {
-                                return false;
-                            },
-                        },
-                    },
-                },
-                views: {
-                    "event,false,calendar": `<calendar date_start="start" event_open_popup="true" />`,
-                    "event,false,search": `<search />`,
-                    "event,false,form": `
-                        <form><sheet>
-                            <field name="display_name" />
-                            <button type="action" name="2">Click me</button>
-                        </sheet></form>
-                    `,
-                    "event,2,form": `<form><sheet><field name="display_name" /></sheet></form>`,
-                },
-                activateMockServer: true,
-            };
-
-            const target = getFixture();
-            const webClient = await createWebClient({ serverData });
-            await doAction(webClient, 1);
-
-            await testUtils.dom.click(target.querySelector(`.fc-event[data-event-id="1"]`));
-            await testUtils.dom.click(target.querySelector(`.o_cw_popover_edit`));
-
-            assert.containsNone(target, ".o_dialog");
-            assert.containsOnce(target, ".modal");
-            assert.containsOnce(target, ".modal[tabindex='-1']");
-
-            assert.strictEqual(
-                target.querySelector(`.o_field_widget[name="display_name"]`).value,
-                "Event 1"
-            );
-            await testUtils.fields.editInput(
-                target.querySelector(`.o_field_widget[name="display_name"]`),
-                "legacy"
-            );
-            assert.strictEqual(
-                target.querySelector(`.o_field_widget[name="display_name"]`).value,
-                "legacy"
-            );
-
-            await testUtils.dom.click(target.querySelector(`button[name="2"]`));
-            assert.containsOnce(target, ".o_dialog");
-            assert.containsN(target, ".modal", 2);
-            assert.containsOnce(target, ".modal:not([tabindex='-1'])");
-            assert.containsOnce(target, ".o_dialog .modal[tabindex='-1']");
-
-            assert.strictEqual(
-                target.querySelector(`.o_dialog .o_field_widget[name="display_name"]`).value,
-                ""
-            );
-            await testUtils.fields.editInput(
-                target.querySelector(`.o_dialog .o_field_widget[name="display_name"]`),
-                "wowl"
-            );
-            assert.strictEqual(
-                target.querySelector(`.o_dialog .o_field_widget[name="display_name"]`).value,
-                "wowl"
-            );
-
-            await testUtils.dom.click(target.querySelector(`.o_dialog .modal-header .btn-close`));
-            assert.containsNone(target, ".o_dialog");
-            assert.containsOnce(target, ".modal");
-            assert.containsOnce(target, ".modal[tabindex='-1']");
-
-            await testUtils.dom.click(target.querySelector(`.modal-header .btn-close`));
-            assert.containsNone(target, ".o_dialog");
-            assert.containsNone(target, ".modal");
         });
     });
 });
