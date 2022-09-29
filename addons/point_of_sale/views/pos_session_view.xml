@@ -45,6 +45,15 @@
                             groups="account.group_account_readonly"
                             >
                         </button>
+                        <button
+                            name="show_cash_register"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-bars"
+                            string="Cash Register"
+                            attrs="{'invisible':[('cash_control', '=', False)]}"
+                            groups="account.group_account_readonly"
+                        />
                     </div>
                     <h1 class="oe_title">
                         <field name="name" attrs="{'invisible': [('name','=','/')]}" class="oe_inline"/>
