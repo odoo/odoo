@@ -84,7 +84,7 @@
                             'o-has-current-partner-avatar': composerView.hasCurrentPartnerAvatar,
                             'rounded-start-3': composerView.isCompact and composerView.hasCurrentPartnerAvatar,
                         }"
-                        record="composerView"
+                        record="composerView.textInput"
                         t-key="composerView.localId"
                     />
                     <div class="o_Composer_buttons d-flex align-items-stretch align-self-stretch flex-shrink-0" t-att-class="{ 'o-composer-is-compact': composerView.isCompact, 'h-auto w-100 px-3': !composerView.isCompact, 'o-isDeviceSmall': messaging.device.isSmall, 'o-messaging-in-editing': composerView and composerView.messageViewInEditing, 'border-end': composerView.messageViewInEditing and !composerView.hasCurrentPartnerAvatar }">
