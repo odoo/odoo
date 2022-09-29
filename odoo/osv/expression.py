@@ -960,10 +960,17 @@ class expression(object):
                         expr, params = self.__leaf_to_sql(leaf, model, alias)
                         push_result(expr, params)
 
-                elif field.translate and right:
+                elif field.translate and isinstance(right, str):
                     sql_operator = {'=like': 'like', '=ilike': 'ilike'}.get(operator, operator)
                     expr = ''
                     params = []
+
+                    need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
+                    if not need_wildcard:
+                        right = field.convert_to_column(right, model, validate=False).adapted['en_US']
+
+                    if (need_wildcard and not right) or (right and sql_operator in NEGATIVE_TERM_OPERATORS):
+                        expr += f'"{alias}"."{left}" is NULL OR '
 
                     if self._has_trigram and field.index == 'trigram' and sql_operator in ('=', 'like', 'ilike'):
                         # a prefilter using trigram index to speed up '=', 'like', 'ilike'
@@ -977,7 +984,7 @@ class expression(object):
                             _unaccent = self._unaccent(field)
                             _left = _unaccent(f'''jsonb_path_query_array("{alias}"."{left}", '$.*')::text''')
                             _sql_operator = 'like' if sql_operator == '=' else sql_operator
-                            expr = f"{_left} {_sql_operator} {_unaccent('%s')} AND "
+                            expr += f"{_left} {_sql_operator} {_unaccent('%s')} AND "
                             params.append(_right)
 
                     unaccent = self._unaccent(field) if sql_operator.endswith('like') else lambda x: x
@@ -987,16 +994,32 @@ class expression(object):
                     else:
                         left = unaccent(f'''COALESCE("{alias}"."{left}"->>'{lang}', "{alias}"."{left}"->>'en_US')''')
 
-                    need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
                     if need_wildcard:
-                        right = '%%%s%%' % right
-                    if sql_operator in ('in', 'not in'):
-                        right = tuple(right)
+                        right = f'%{right}%'
 
                     expr += f"{left} {sql_operator} {unaccent('%s')}"
                     params.append(right)
-                    push_result(expr, params)
+                    push_result(f'({expr})', params)
 
+                elif field.translate and operator in ['in', 'not in'] and isinstance(right, (list, tuple)):
+                    params = [it for it in right if it is not False and it is not None]
+                    check_null = len(params) < len(right)
+                    if params:
+                        params = [field.convert_to_column(p, model, validate=False).adapted['en_US'] for p in params]
+                        lang = model.env.lang or 'en_US'
+                        if lang == 'en_US':
+                            query = f'''("{alias}"."{left}"->>'en_US' {operator} %s)'''
+                        else:
+                            query = f'''(COALESCE("{alias}"."{left}"->>'{lang}', "{alias}"."{left}"->>'en_US') {operator} %s)'''
+                        params = [tuple(params)]
+                    else:
+                        # The case for (left, 'in', []) or (left, 'not in', []).
+                        query = 'FALSE' if operator == 'in' else 'TRUE'
+                    if (operator == 'in' and check_null) or (operator == 'not in' and not check_null):
+                        query = '(%s OR %s."%s" IS NULL)' % (query, alias, left)
+                    elif operator == 'not in' and check_null:
+                        query = '(%s AND %s."%s" IS NOT NULL)' % (query, alias, left)  # needed only for TRUE.
+                    push_result(query, params)
                 else:
                     expr, params = self.__leaf_to_sql(leaf, model, alias)
                     push_result(expr, params)
@@ -1058,7 +1081,7 @@ class expression(object):
                     params = [it for it in (True, False) if it in right]
                     check_null = False in right
                 else:
-                    params = [it for it in right if it != False]
+                    params = [it for it in right if it is not False and it is not None]
                     check_null = len(params) < len(right)
                 if params:
                     if left != 'id':
