@@ -246,11 +246,9 @@ class SurveyTemplate(models.Model):
 
     def action_show_sample(self):
         action = self.env['ir.actions.act_window']._for_xml_id('survey.action_survey_form')
-        action['target'] = 'main'
         action['views'] = [[self.env.ref('survey.survey_survey_view_form').id, 'form']]
         action['res_id'] = self.id
         action['context'] = dict(ast.literal_eval(action.get('context', {})),
-            form_view_initial_mode='edit',
             create=False
         )
         return action
