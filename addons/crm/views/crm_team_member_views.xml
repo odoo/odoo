@@ -27,7 +27,7 @@
                         attrs="{'invisible': ['|', ('assignment_enabled', '=', False), ('assignment_optout', '=', True)]}">
                     <field name="assignment_max" invisible="1"/>
                     <field name="lead_month_count" widget="gauge"
-                        options="{'max_field': 'assignment_max'}"
+                        options="{'max_field': 'assignment_max', 'style': 'height: 80px; width: 100px;'}"
                         attrs="{'invisible': [('assignment_max', '=', 0)]}"/>
                 </div>
             </xpath>
