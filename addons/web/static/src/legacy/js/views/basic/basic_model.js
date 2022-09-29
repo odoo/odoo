@@ -1203,7 +1203,7 @@ var BasicModel = AbstractModel.extend({
                                 _.extend(record.data, _changes);
                                 resolve(changedFields);
                             }
-                        }).guardedCatch(reject);
+                        }).catch(reject);
                 } else {
                     resolve(changedFields);
                 }

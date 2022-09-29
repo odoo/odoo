@@ -31,19 +31,11 @@ FormErrorDialog.components = { Dialog };
 
 function formSaveErrorHandler(env, error, originalError) {
     if (originalError.__raisedOnFormSave) {
-        const event = originalError.event;
-        error.unhandledRejectionEvent.preventDefault();
-        if (event.isDefaultPrevented()) {
-            // in theory, here, event was already handled
-            return true;
-        }
-        event.preventDefault();
-
         env.services.dialog.add(
             FormErrorDialog,
             {
-                message: originalError.message.message,
-                data: originalError.message.data,
+                message: originalError.message,
+                data: originalError.data,
                 onDiscard: originalError.onDiscard,
                 onStayHere: originalError.onStayHere,
             },

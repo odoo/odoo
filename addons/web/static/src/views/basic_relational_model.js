@@ -1079,10 +1079,12 @@ export class StaticList extends DataPoint {
 }
 
 export class RelationalModel extends Model {
-    setup(params, { action, dialog, notification }) {
+    setup(params, { action, dialog, notification, rpc, user }) {
         this.actionService = action;
         this.dialogService = dialog;
         this.notificationService = notification;
+        this.rpcService = rpc;
+        this.userService = user;
         this.keepLast = new KeepLast();
 
         if (params.rootType !== "record") {
@@ -1310,7 +1312,16 @@ export class RelationalModel extends Model {
             if (payload.service === "ajax" && payload.method === "rpc") {
                 // ajax service uses an extra 'target' argument for rpc
                 args = args.concat(ev.target);
-                return payload.callback(owl.Component.env.session.rpc(...args));
+                const [route, params, options] = args;
+                // we add here the user context for ALL queries, mainly to pass
+                // the allowed_company_ids key (see session.js)
+                if (params && params.kwargs) {
+                    params.kwargs.context = {
+                        ...params.kwargs.context,
+                        ...this.userService.context,
+                    };
+                }
+                return payload.callback(this.rpcService(route, params, options));
             } else if (payload.service === "notification") {
                 return this.notificationService.add(payload.message, {
                     className: payload.className,
@@ -1368,5 +1379,5 @@ export class RelationalModel extends Model {
         return new this.constructor.Record(this, params, state);
     }
 }
-RelationalModel.services = ["action", "dialog", "notification"];
+RelationalModel.services = ["action", "dialog", "notification", "rpc", "user"];
 RelationalModel.Record = Record;
