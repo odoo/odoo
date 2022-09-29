@@ -1633,13 +1633,52 @@ class JsonRPCDispatcher(Dispatcher):
         if result is not None:
             response['result'] = result
 
+<<<<<<< HEAD
         body = json.dumps(response, default=date_utils.json_default)
+||||||| parent of 0b5c3fbf009c... temp
+                if "assets" in req.session.debug and (".js" in req.base_url or ".css" in req.base_url):
+                    new_headers = [('Cache-Control', 'no-store')]
+                else:
+                    new_headers = [('Cache-Control', 'no-cache')]
+=======
+                if "assets" in req.session.debug and (".js" in req.base_url or ".css" in req.base_url):
+                    new_cache_control = 'no-store'
+                else:
+                    new_cache_control = 'no-cache'
+>>>>>>> 0b5c3fbf009c... temp
 
+<<<<<<< HEAD
         return Response(body, status=status, headers=[
             ('Content-Type', 'application/json'),
             ('Content-Length', len(body)),
         ])
+||||||| parent of 0b5c3fbf009c... temp
+                for k, v in headers:
+                    if k.lower() != 'cache-control':
+                        new_headers.append((k, v))
+=======
+                cache_control_value = new_cache_control
+                new_headers = []
+                for k, v in headers:
+                    if k.lower() != 'cache-control':
+                        new_headers.append((k, v))
+                    elif new_cache_control not in v:
+                        cache_control_value += ', %s' % v
+>>>>>>> 0b5c3fbf009c... temp
 
+<<<<<<< HEAD
+||||||| parent of 0b5c3fbf009c... temp
+                start_response(status, new_headers)
+            else:
+                start_response(status, headers)
+        return self.app(environ, start_wrapped)
+=======
+                new_headers.append(('Cache-Control', cache_control_value))
+                start_response(status, new_headers)
+            else:
+                start_response(status, headers)
+        return self.app(environ, start_wrapped)
+>>>>>>> 0b5c3fbf009c... temp
 
 # =========================================================
 # WSGI Entry Point
