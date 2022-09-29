@@ -359,10 +359,10 @@ msgstr ""
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "           <t t-if=\"partner.name\">\n"
-"                你好，<t t-out=\"partner.name or ''\">布兰登-弗里曼</t>。<br/><br/>\n"
+"                您好，<t t-out=\"partner.name or ''\">布兰登-弗里曼</t>。<br/><br/>\n"
 "           </t>\n"
 "           <t t-else=\"\">\n"
-"                你好。<br/><br/>\n"
+"                您好。<br/><br/>\n"
 "           </t>\n"
 "            请花点时间对我们与<strong t-out=\"object.name or ''\">\"规划和预算</strong>\"任务相关的服务进行评价\n"
 "           <t t-if=\"object.rating_get_rated_partner_id().name\">\n"
@@ -433,10 +433,10 @@ msgid ""
 msgstr ""
 "<div>\n"
 "    亲爱的<t t-out=\"object.partner_id.name or 'customer'\">布兰登-弗里曼</t><br/>\n"
-"    谢谢你的询问。<br/>\n"
+"    谢谢您的询问。<br/>\n"
 "    如果您有任何问题，请告诉我们。\n"
 "   <br/><br/>\n"
-"    谢谢你。\n"
+"    谢谢您。\n"
 "    <t t-if=\"user.signature\">\n"
 "        <br/>\n"
 "        <t t-out=\"user.signature or ''\">--<br/>Mitchell 管理</t>\n"
@@ -898,7 +898,7 @@ msgid ""
 "Analytic account to which this task is linked for financial management. Use "
 "an analytic account to record cost and revenue on your task. If empty, the "
 "analytic account of the project will be used."
-msgstr "该任务与之相连的分析账户，用于财务管理。使用分析账户来记录你的任务的成本和收入。如果是空的，将使用项目的分析账户。"
+msgstr "该任务与之相连的分析账户，用于财务管理。使用分析账户来记录您的任务的成本和收入。如果是空的，将使用项目的分析账户。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -908,7 +908,7 @@ msgstr "分析"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree
 msgid "Analyze the performance of your tasks and your workers."
-msgstr "分析你的任务和工人的表现。"
+msgstr "分析您的任务和工人的表现。"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__april
@@ -951,7 +951,7 @@ msgstr "已归档"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
 msgid "Are you sure you want to continue?"
-msgstr "你确定你要继续吗？"
+msgstr "您确定您要继续吗？"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -1049,7 +1049,7 @@ msgid ""
 "                                    You can customize here the labels for each state."
 msgstr ""
 "在每个阶段，员工可以阻止任务，或将其标记为准备进行下一步的工作。\n"
-"                                    你可以在这里定制每个状态的标签。"
+"                                    您可以在这里定制每个状态的标签。"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_attachment_count
@@ -1237,7 +1237,7 @@ msgid ""
 "Choose a <b>name</b> for your project. <i>It can be anything you want: the name of a customer,\n"
 "     of a product, of a team, of a construction site, etc.</i>"
 msgstr ""
-"为你的项目选择一个<b>名称</b>。<i>它可以是任何你想要的东西：一个客户的名字。\n"
+"为您的项目选择一个<b>名称</b>。<i>它可以是任何您想要的东西：一个客户的名字。\n"
 "     一个产品的名字，一个团队的名字，一个建筑工地的名字，等等。</i>"
 
 #. module: project
@@ -1893,7 +1893,7 @@ msgstr "编辑个人阶段"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Edit recurring task"
-msgstr "编辑循环任务"
+msgstr "编辑周期任务"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -2000,7 +2000,7 @@ msgid ""
 "review the %s column to move important tasks %s. Every Monday, you review "
 "the %s column. %s"
 msgstr ""
-"通过电子邮件网关轻松填充你的收件箱。定期查看你的收件箱，通过将任务移到其他列来安排任务。每天，你审查%s列，将重要的任务%s移动。每周一，你审查%s栏。%s"
+"通过电子邮件网关轻松填充您的收件箱。定期查看您的收件箱，通过将任务移到其他列来安排任务。每天，您审查%s列，将重要的任务%s移动。每周一，您审查%s栏。%s"
 
 #. module: project
 #. openerp-web
@@ -2095,7 +2095,7 @@ msgstr "GTD"
 msgid ""
 "Get a snapshot of the status of your project and share its progress with key"
 " stakeholders."
-msgstr "获取你的项目状态的快照，并与关键利益相关者分享其进展。"
+msgstr "获取您的项目状态的快照，并与关键利益相关者分享其进展。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2200,7 +2200,7 @@ msgstr ""
 "- 改变阶段时的评级：当一个任务被拉到另一个阶段时，将发送一封电子邮件。\n"
 "- 定期评级：将定期发送一封电子邮件。\n"
 "\n"
-"不要忘记在你想获得客户反馈的阶段设置电子邮件模板。"
+"不要忘记在您想获得客户反馈的阶段设置电子邮件模板。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -2686,7 +2686,7 @@ msgstr "让我们创建您的第一个<b>任务</b>。"
 msgid ""
 "Let's go back to the <b>kanban view</b> to have an overview of your next "
 "tasks."
-msgstr "让我们回到<b>看板视图</b>，对你的下一个任务有一个概览。"
+msgstr "让我们回到<b>看板视图</b>，对您的下一个任务有一个概览。"
 
 #. module: project
 #. openerp-web
@@ -3399,7 +3399,7 @@ msgstr "计划"
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
 "to delete."
-msgstr "请移除在当前项目中已链接到你想移除的用户的任务."
+msgstr "请移除在当前项目中已链接到您想移除的用户的任务."
 
 #. module: project
 #. openerp-web
@@ -3640,7 +3640,7 @@ msgstr "项目任务"
 #: model:ir.cron,cron_name:project.ir_cron_recurring_tasks
 #: model:ir.cron,name:project.ir_cron_recurring_tasks
 msgid "Project: Create Recurring Tasks"
-msgstr "项目：创建循环任务"
+msgstr "项目：创建周期任务"
 
 #. module: project
 #: model:ir.actions.server,name:project.ir_cron_rating_project_ir_actions_server
@@ -3899,7 +3899,7 @@ msgstr "循环"
 #: model:ir.model.fields,field_description:project.field_project_task__allow_recurring_tasks
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_recurring_tasks
 msgid "Recurring Tasks"
-msgstr "循环任务"
+msgstr "周期任务"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_blocked
@@ -4716,7 +4716,7 @@ msgstr ""
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
-msgstr "邮件别名的名称，例如，如果你要收取 <jobs@example.odoo.com> 的EMail,别名就要设为：\"jobs\""
+msgstr "邮件别名的名称，例如，如果您要收取 <jobs@example.odoo.com> 的EMail,别名就要设为：\"jobs\""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_user_id
@@ -4938,23 +4938,23 @@ msgstr "追踪必须达到的主要进展点，以获得成功。"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track the costs and revenues linked to your projects"
-msgstr "跟踪与你的项目有关的成本和收入"
+msgstr "跟踪与您的项目有关的成本和收入"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track the progress of your projects"
-msgstr "追溯你仓库内的产品位置"
+msgstr "追溯您仓库内的产品位置"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_project_stage_configure
 msgid ""
 "Track the progress of your projects from their creation to their closing."
-msgstr "追踪你的项目从创建到结束的进展。"
+msgstr "追踪您的项目从创建到结束的进展。"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 msgid "Track the progress of your tasks from their creation to their closing."
-msgstr "追踪你的任务从创建到结束的进度。"
+msgstr "追踪您的任务从创建到结束的进度。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5070,7 +5070,7 @@ msgstr "使用项目评级"
 #. module: project
 #: model:res.groups,name:project.group_project_recurring_tasks
 msgid "Use Recurring Tasks"
-msgstr "使用循环任务"
+msgstr "使用周期任务"
 
 #. module: project
 #: model:res.groups,name:project.group_project_stages
@@ -5102,7 +5102,7 @@ msgstr "将此用于我的项目"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
 msgid "Use tags to categorize your tasks."
-msgstr "使用标签来对你的任务进行分类。"
+msgstr "使用标签来对您的任务进行分类。"
 
 #. module: project
 #. openerp-web
@@ -5112,7 +5112,7 @@ msgid ""
 "Use the chatter to <b>send emails</b> and communicate efficiently with your customers. \n"
 "    Add new people to the followers' list to make them aware of the main changes about this task."
 msgstr ""
-"使用喋喋不休地<b>发送电子邮件</b>，并与你的客户进行有效沟通。 \n"
+"使用喋喋不休地<b>发送电子邮件</b>，并与您的客户进行有效沟通。 \n"
 "    将新人加入追随者名单，使他们了解有关这项工作的主要变化。"
 
 #. module: project
@@ -5266,14 +5266,14 @@ msgstr "您也可以添加一个描述来帮助同事理解这个阶段的意义
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You cannot %s %s fields in task."
-msgstr "你不能在任务中%s%s字段。"
+msgstr "您不能在任务中%s%s字段。"
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid ""
 "You cannot archive recurring tasks. Please disable the recurrence first."
-msgstr "你不能对重复出现的任务进行存档。请先停用重复任务。"
+msgstr "您不能对重复出现的任务进行存档。请先停用重复任务。"
 
 #. module: project
 #: code:addons/project/models/analytic_account.py:0
@@ -5281,13 +5281,13 @@ msgstr "你不能对重复出现的任务进行存档。请先停用重复任务
 msgid ""
 "You cannot change the company of an analytic account if it is related to a "
 "project."
-msgstr "如果一个分析账户与一个项目有关，你不能改变它的公司。"
+msgstr "如果一个分析账户与一个项目有关，您不能改变它的公司。"
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You cannot create cyclic dependency."
-msgstr "你不能创建周期性的依赖关系。"
+msgstr "您不能创建周期性的依赖关系。"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -5302,7 +5302,7 @@ msgstr "您无法删除包含任务的项目。 您可将其归档或首先删�
 #, python-format
 msgid ""
 "You cannot delete recurring tasks. Please disable the recurrence first."
-msgstr "你不能删除重复出现的任务。请先停用重复出现的任务。"
+msgstr "您不能删除重复出现的任务。请先停用重复出现的任务。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -5333,7 +5333,7 @@ msgstr "您被指派到"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You have not write access of %s field."
-msgstr "你没有对%s字段的写入权限。"
+msgstr "您没有对%s字段的写入权限。"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -5341,7 +5341,7 @@ msgstr "你没有对%s字段的写入权限。"
 msgid ""
 "You should at least have one personal stage. Create a new stage to which the"
 " tasks can be transferred after this one is deleted."
-msgstr "你至少应该有一个个人阶段。创建一个新阶段，删除此阶段后，可以将任务传输到该阶段。"
+msgstr "您至少应该有一个个人阶段。创建一个新阶段，删除此阶段后，可以将任务传输到该阶段。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form

@@ -65,7 +65,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"调拨 %s：如果没有保留或完成任何数量的调拨，则无法验证这些调拨。 要强制执行这些调拨，请编辑以增加完成的数量。"
+"调拨 %s：如果没有预留或完成任何数量的调拨，则无法验证这些调拨。 要强制执行这些调拨，请编辑以增加完成的数量。"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -106,10 +106,10 @@ msgstr ""
 " * 草稿：调拨尚未确认。 预订不应用。\n"
 " * 等待另一个作业:在准备好之前，该传输正在等待另一个作业。\n"
 " * 等待：调拨正在等待某些产品的可用性。\n"
-"(a) 运输政策是“尽快”：没有产品可以保留。\n"
-"(b) 运输政策是“当所有产品准备就绪”时：并非所有产品都可以保留。\n"
+"(a) 运输政策是“尽快”：没有产品可以预留。\n"
+"(b) 运输政策是“当所有产品准备就绪”时：并非所有产品都可以预留。\n"
 " * 就绪：调拨已准备好进行处理。\n"
-"(a) 运输政策是“尽快”：至少保留了一种产品。\n"
+"(a) 运输政策是“尽快”：至少预留了一种产品。\n"
 "(b) 运输政策是“当所有产品准备就绪”时：所有产品都已预订。\n"
 " * 完成：已处理调拨。\n"
 " * 已取消：调拨已取消。"
@@ -205,7 +205,7 @@ msgstr ""
 "* 新建: 当库存调拨被创建，还没被确认时。\n"
 "* 等待其它调拨: 当需要等待另外一个移库完成时，出现该状态。例如：链式物流.\n"
 "* 等待可用: 当需求还不能被直接了当地解决时，出现该状态。可能需要等调度程序被运行，有个部件在等待制造等等...\n"
-"* 可用: 当产品已经被保留了，状态就被设置为 可用。\n"
+"* 可用: 当产品已经被预留了，状态就被设置为 可用。\n"
 "* 完成: 当这次装运被处理，状态就是“完成”。"
 
 #. module: stock
@@ -337,7 +337,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        你好，<t t-out=\"object.partner_id.name or ''\">布兰登-弗里曼</t>。<br/><br/>\n"
+"        您好，<t t-out=\"object.partner_id.name or ''\">布兰登-弗里曼</t>。<br/><br/>\n"
 "        我们很高兴地通知您，您的订单已经发货了。\n"
 "       <t t-if=\"hasattr(object, '承运商_tracking_ref') and object.承运商_tracking_ref\">\n"
 "            您的跟踪参考是\n"
@@ -360,7 +360,7 @@ msgstr ""
 "       \n"
 "       <br/><br/>\n"
 "        更多详情请见附件中您的送货单。<br/><br/>\n"
-"        谢谢你。\n"
+"        谢谢您。\n"
 "        <t t-if=\"user.signature\">\n"
 "            <br/>\n"
 "            <t t-out=\"user.signature or ''\">--<br/>Mitchell 管理</t>\n"
@@ -386,7 +386,7 @@ msgid ""
 "                                All products could not be reserved. Click on the \"Check Availability\" button to try to reserve products."
 msgstr ""
 "<i class=\"fa fa-exclamation-triangle\"/>\n"
-"                                所有产品都无法保留。 单击“检查可用性”按钮以尝试保留产品。"
+"                                所有产品都无法预留。 单击“检查可用性”按钮以尝试预留产品。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_mrp_line
@@ -584,7 +584,7 @@ msgid ""
 "<strong>Due to some stock moves done between your initial update of the "
 "quantity and now, the difference of quantity is not consistent "
 "anymore.</strong>"
-msgstr "<strong>由于在你最初更新数量和现在之间做了一些库存调拨，数量的差异不再是一致的。</strong>"
+msgstr "<strong>由于在您最初更新数量和现在之间做了一些库存调拨，数量的差异不再是一致的。</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -694,7 +694,7 @@ msgstr "<strong>追踪的产品(s)。</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
 msgid "<strong>Where do you want to send the products ?</strong>"
-msgstr "<strong>你要把产品发送到哪里？</strong>"
+msgstr "<strong>您要把产品发送到哪里？</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
@@ -721,9 +721,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"可库存商品是指在库存中受存量管控的产品。 要使用此项目你必须安装库存模块。\n"
+"可库存商品是指在库存中受存量管控的产品。 要使用此项目您必须安装库存模块。\n"
 "可消耗商品是指不受库存量管控的产品。\n"
-"服务是指你提供的非产品类服务业务。"
+"服务是指您提供的非产品类服务业务。"
 
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
@@ -814,7 +814,7 @@ msgid ""
 "Add and customize route operations to process product moves in your warehouse(s): e.g. unload > quality control > stock for incoming products, pick > pack > ship for outgoing products. \n"
 " You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
-"添加并自定义路线作业以处理你库存中的产品调拨：例如：卸货>品控>入库，拣货>包装>发运。\n"
+"添加并自定义路线作业以处理您库存中的产品调拨：例如：卸货>品控>入库，拣货>包装>发运。\n"
 "您也可以在仓位置置设置上架策略，以便直接将入库产品发送到特定的子位置（例如：特定的货位、货架）。"
 
 #. module: stock
@@ -826,12 +826,12 @@ msgid ""
 "strategies on warehouse locations in order to send incoming products into "
 "specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
-"添加并自定义路线作业以处理你库存中的产品调拨：例如：卸货>品控>入库，拣货>包装>发运。您也可以在仓位置置设置上架策略，以便直接将入库产品发送到特定的子位置（例如：特定的货位、货架）。"
+"添加并自定义路线作业以处理您库存中的产品调拨：例如：卸货>品控>入库，拣货>包装>发运。您也可以在仓位置置设置上架策略，以便直接将入库产品发送到特定的子位置（例如：特定的货位、货架）。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Add quality checks to your transfer operations"
-msgstr "为你的调拨操作增加质量检查"
+msgstr "为您的调拨作业增加质量检查"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -1091,7 +1091,7 @@ msgstr "自动，不增加步骤"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Automatically open reception report when a receipt is validated."
-msgstr "当一个收据被验证时，自动打开接收报告。"
+msgstr "当一个收货被验证时，自动打开收货报告。"
 
 #. module: stock
 #. openerp-web
@@ -1233,7 +1233,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_location__active
 msgid ""
 "By unchecking the active field, you may hide a location without deleting it."
-msgstr "通过取消勾选启用字段，你能隐藏一个位置而不是删除它。"
+msgstr "通过取消勾选启用字段，您能隐藏一个位置而不是删除它。"
 
 #. module: stock
 #: model:product.product,name:stock.product_cable_management_box
@@ -1315,7 +1315,7 @@ msgstr "按产品分类的容量"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Categorize your locations for smarter putaway rules"
-msgstr "对你的地点进行分类，以制定更明智的放行规则"
+msgstr "对您的地点进行分类，以制定更明智的放行规则"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_category_id
@@ -1440,7 +1440,7 @@ msgstr "选择纸张布局来打印标签"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quantity_history
 msgid "Choose your date"
-msgstr "选择你的日期"
+msgstr "选择您的日期"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
@@ -1636,7 +1636,7 @@ msgstr "通道(X)"
 msgid ""
 "Could not reserve all requested products. Please use the 'Mark as Todo' "
 "button to handle the reservation manually."
-msgstr "不能预留全部需要的产品。请使用‘标记为待做’按钮手工保留。"
+msgstr "不能预留全部需要的产品。请使用‘标记为待做’按钮手工预留。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__set_count
@@ -1705,7 +1705,7 @@ msgstr "创建欠单？"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__use_create_lots
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__use_create_lots
 msgid "Create New Lots/Serial Numbers"
-msgstr "创建新批次/序列号码"
+msgstr "创建新批次/序列号"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -1714,7 +1714,7 @@ msgid ""
 "                        products later. Do not create a backorder if you will not\n"
 "                        process the remaining products."
 msgstr ""
-"如果你后续要发货余下的的数量， 则需要建立一个欠单。 如果不用再发货后续数量， 则不用建立欠单。\n"
+"如果您后续要发货余下的的数量， 则需要建立一个欠单。 如果不用再发货后续数量， 则不用建立欠单。\n"
 "处理余下的产品。"
 
 #. module: stock
@@ -1730,7 +1730,7 @@ msgstr "创建新包裹"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Create customizable worksheets for your quality checks"
-msgstr "为你的质量检查创建可定制的工作表"
+msgstr "为您的质量检查创建可定制的工作表"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_putaway_tree
@@ -2237,7 +2237,7 @@ msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product in this packaging: whether it will be bought, manufactured, "
 "replenished on order, etc."
-msgstr "根据所安装的模块，这将允许你定义产品在这个包装规格中的路线：是否会被购买、制造、按订单补充，等等。"
+msgstr "根据所安装的模块，这将允许您定义产品在这个包装规格中的路线：是否会被购买、制造、按订单补充，等等。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
@@ -2353,7 +2353,7 @@ msgstr "目的路线"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #, python-format
 msgid "Detailed Operations"
-msgstr "详细作业"
+msgstr "作业详情"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_details_visible
@@ -2392,7 +2392,7 @@ msgstr "丢弃并手动解决冲突"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__display_assign_serial
 msgid "Display Assign Serial"
-msgstr "显示分配串行"
+msgstr "显示分配序列号"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__display_complete
@@ -2550,7 +2550,7 @@ msgstr "邮件确认拣货"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Email Template"
-msgstr "EMail模板"
+msgstr "电子邮件模板"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_mail_confirmation_template_id
@@ -2603,7 +2603,7 @@ msgid ""
 "            physical, partner or virtual locations."
 msgstr ""
 "系统中每一个库存作业都是将产品从一个\n"
-"位置移至另一位置。例如，若果你从供应商那边收到产品，\n"
+"位置移至另一位置。例如，若果您从供应商那边收到产品，\n"
 "Odoo将会把产品从供应商位置调拨到仓位置置。每个报告可用在\n"
 "实体位置、业务伙伴位置或者虚拟位置进行。"
 
@@ -2974,7 +2974,7 @@ msgstr "分组于..."
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_picking_wave
 msgid "Group your move operations in wave transfer to process them together"
-msgstr "将你的调拨操作以波浪式传输分组，以便一起处理它们"
+msgstr "将您的调拨作业以波浪式传输分组，以便一起处理它们"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__has_message
@@ -3050,7 +3050,7 @@ msgstr "历史"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__reservation_method
 msgid "How products in transfers of this operation type should be reserved."
-msgstr "该操作类型的转让中的产品应如何保留。"
+msgstr "该作业类型的转让中的产品应如何预留。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__id
@@ -3119,7 +3119,7 @@ msgid ""
 "payment date, My Company (Chicago) reserves the right to call on the "
 "services of a debt recovery company. All legal expenses will be payable by "
 "the client."
-msgstr "如果在到期付款日期后超过六十（60）天仍未付款，我公司（芝加哥）保留要求债务追讨公司提供服务的权利。所有法律费用将由客户支付。"
+msgstr "如果在到期付款日期后超过六十（60）天仍未付款，我公司（芝加哥）预留要求债务追讨公司提供服务的权利。所有法律费用将由客户支付。"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__same
@@ -3161,14 +3161,14 @@ msgstr "如果设置，将对动作进行组合。"
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "orderpoint without removing it."
-msgstr "如果启用字段被设置为否，系统将会允许你隐藏订货点而不是删除。"
+msgstr "如果启用字段被设置为否，系统将会允许您隐藏订货点而不是删除。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__active
 msgid ""
 "If the active field is set to False, it will allow you to hide the route "
 "without removing it."
-msgstr "如果启用字段被设置为否，系统将会允许你隐藏路线而不是删除。"
+msgstr "如果启用字段被设置为否，系统将会允许您隐藏路线而不是删除。"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__empty
@@ -3180,7 +3180,7 @@ msgstr "如果该位置是空的"
 msgid ""
 "If the picking is unlocked you can edit initial demand (for a draft picking)"
 " or done quantities (for a done picking)."
-msgstr "如果拣货被解锁，你可以编辑初始需求（适用于拣货草稿）或已完成数量（适用于已完成的拣货）。"
+msgstr "如果拣货被解锁，您可以编辑初始需求（适用于拣货草稿）或已完成数量（适用于已完成的拣货）。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_reserved
@@ -3189,12 +3189,12 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically pre-fill the detailed "
 "operations with the corresponding products, locations and lot/serial "
 "numbers."
-msgstr "如果勾选此复选框，Odoo将自动用相应的产品、位置和批次/序列号预先填写详细的作业。"
+msgstr "如果勾选此复选框，Odoo将自动用相应的产品、位置和批次/序列号预先填写作业详情。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__print_label
 msgid "If this checkbox is ticked, label will be print in this operation."
-msgstr "如果该复选框被选中，标签将在此操作中被打印。"
+msgstr "如果该复选框被选中，标签将在此作业中被打印。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__show_operations
@@ -3237,12 +3237,12 @@ msgstr "如果这个运输被拆分，该字段连接到包括了已经处理的
 #: model:ir.model.fields,help:stock.field_stock_picking__picking_type_entire_packs
 #: model:ir.model.fields,help:stock.field_stock_picking_type__show_entire_packs
 msgid "If ticked, you will be able to select entire packages to move"
-msgstr "如果勾选此项，你将被允许可以选择整个包装来进行移动。"
+msgstr "如果勾选此项，您将被允许可以选择整个包装来进行移动。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__active
 msgid "If unchecked, it will allow you to hide the rule without removing it."
-msgstr "如果不勾选，允许你隐藏规则而无需删除。"
+msgstr "如果不勾选，允许您隐藏规则而无需删除。"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_immediate_transfer
@@ -3609,14 +3609,14 @@ msgstr "完成数量是否可以编辑"
 #, python-format
 msgid ""
 "It is not possible to reserve more products of %s than you have in stock."
-msgstr "你不能保留超出库存的%s 产品。"
+msgstr "您不能预留超出库存的%s 产品。"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
 "It is not possible to unreserve more products of %s than you have in stock."
-msgstr "不能取消保留超过库存数量的 %s 产品。"
+msgstr "不能取消预留超过库存数量的 %s 产品。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -3674,7 +3674,7 @@ msgstr "保持<strong>计算的数量</strong>（差额将被更新）。"
 msgid ""
 "Keep the <strong>Difference</strong> (the Counted Quantity will be updated "
 "to reflect the same difference as when you counted)"
-msgstr "保留<strong>差额</strong>（计算的数量将被更新，以反映与你计算时相同的差额）。"
+msgstr "保留<strong>差额</strong>（计算的数量将被更新，以反映与您计算时相同的差额）。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
@@ -3699,7 +3699,7 @@ msgstr "最后的交付伙伴"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__last_inventory_date
 msgid "Last Effective Inventory"
-msgstr "最后的有效库存"
+msgstr "最近有效盘点"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group____last_update
@@ -4044,7 +4044,7 @@ msgstr "批次/序列号 :"
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 msgid "Lot/Serial Number"
-msgstr "批次/序列号码"
+msgstr "批次/序列号"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_lot_label
@@ -4231,14 +4231,14 @@ msgstr "最大重量应该是一个正数。"
 msgid ""
 "Maximum number of days before scheduled date that priority picking products "
 "should be reserved."
-msgstr "应在预定日期前保留优先拣货产品的最大天数。"
+msgstr "应在预定日期前预留优先拣货产品的最大天数。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__reservation_days_before
 msgid ""
 "Maximum number of days before scheduled date that products should be "
 "reserved."
-msgstr "应在预定日期前保留产品的最大天数。"
+msgstr "应在预定日期前预留产品的最大天数。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__max_weight
@@ -4273,7 +4273,7 @@ msgstr "消息"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_removal__method
 msgid "Method"
-msgstr "付款方式"
+msgstr "方法"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_min_qty
@@ -4493,7 +4493,7 @@ msgstr "下一活动类型"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__next_inventory_date
 msgid "Next Expected Inventory"
-msgstr "下一个预计库存"
+msgstr "预计下一次盘点"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__inventory_date
@@ -4539,7 +4539,7 @@ msgstr "此批号没有作业"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_get_picking_type_operations
 msgid "No operations found. Let's create a tranfer !"
-msgstr "没有找到操作。让我们创建一个转接!"
+msgstr "没有找到作业。让我们创建一个转接!"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
@@ -4726,7 +4726,7 @@ msgstr "在手数量"
 msgid ""
 "On hand quantity which hasn't been reserved on a transfer, in the default "
 "unit of measure of the product"
-msgstr "在调拨中未保留的现有数量，以产品的默认计量单位"
+msgstr "在调拨中未预留的现有数量，以产品的默认计量单位"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
@@ -4916,7 +4916,7 @@ msgid ""
 "My Company (Chicago) will be authorized to suspend any provision of services"
 " without prior warning in the event of late payment."
 msgstr ""
-"我们的结算单应在21个工作日内支付，除非结算单或订单上注明了其他付款时限。如果在到期日没有付款，我公司（芝加哥）保留要求支付固定利息的权利，金额为剩余款项的10%"
+"我们的结算单应在21个工作日内支付，除非结算单或订单上注明了其他付款时限。如果在到期日没有付款，我公司（芝加哥）预留要求支付固定利息的权利，金额为剩余款项的10%"
 " o%。如果逾期付款，我公司（芝加哥）将被授权暂停提供任何服务，而无需事先警告。"
 
 #. module: stock
@@ -5151,7 +5151,7 @@ msgstr "包装宽度"
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__packaging_ids
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "Packagings"
-msgstr "包装"
+msgstr "包装规格"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_pack_stock_loc_id
@@ -5293,7 +5293,7 @@ msgstr "请指定至少一个非0的数值。"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_reserved
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_reserved
 msgid "Pre-fill Detailed Operations"
-msgstr "预先填写的详细作业"
+msgstr "预填写作业详情"
 
 #. module: stock
 #. openerp-web
@@ -5368,7 +5368,7 @@ msgstr "使用条码更快的处理作业【亲，这是企业版的付费功能
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Process operations in wave transfers"
-msgstr "波浪传输中的工艺操作"
+msgstr "在波次调拨种处理作业"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5706,7 +5706,7 @@ msgstr "放入包裹"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Put your products in packs (e.g. parcels, boxes) and track them"
-msgstr "把你的产品放入包装（例如包裹，包装盒）并追溯它们"
+msgstr "把您的产品放入包装（例如包裹，包装盒）并追溯它们"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_putaway_rule
@@ -5783,7 +5783,7 @@ msgstr "量化"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quant's creation is restricted, you can't do this operation."
-msgstr "量化创建是被限制的，你不能做此作业。"
+msgstr "量化创建是被限制的，您不能做此作业。"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -5868,7 +5868,7 @@ msgstr "自上次统计以来，已经移动的数量"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__availability
 msgid "Quantity in stock that can still be reserved for this move"
-msgstr "库存中的数量仍然可以保留。"
+msgstr "库存中的数量仍然可以预留。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__product_qty
@@ -5923,7 +5923,7 @@ msgstr "数量应该是一个正数。"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__reserved_availability
 msgid "Quantity that has already been reserved for this move"
-msgstr "已为这次调拨保留的数量"
+msgstr "已为这次调拨预留的数量"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_label_layout__picking_quantity
@@ -5967,12 +5967,12 @@ msgstr "实际预留数量"
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__incoming
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 msgid "Receipt"
-msgstr "接收"
+msgstr "收货"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__reception_route_id
 msgid "Receipt Route"
-msgstr "接收路线"
+msgstr "收货路线"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -5980,7 +5980,7 @@ msgstr "接收路线"
 #: model:stock.picking.type,name:stock.picking_type_in
 #, python-format
 msgid "Receipts"
-msgstr "收货入库"
+msgstr "收货"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -6018,7 +6018,7 @@ msgstr "两步接收(收货+入库）"
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Receive in 3 steps (input + quality + stock)"
-msgstr "三步接收(收货+质检+入库)"
+msgstr "3步接收(收货+质检+入库)"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -6233,7 +6233,7 @@ msgstr "预留"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_category__packaging_reserve_method__full
 msgid "Reserve Only Full Packagings"
-msgstr "只保留完整的包装规格"
+msgstr "只预留完整包装"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_category__packaging_reserve_method
@@ -6241,18 +6241,18 @@ msgid ""
 "Reserve Only Full Packagings: will not reserve partial packagings. If customer orders 2 pallets of 1000 units each and you only have 1600 in stock, then only 1000 will be reserved\n"
 "Reserve Partial Packagings: allow reserving partial packagings. If customer orders 2 pallets of 1000 units each and you only have 1600 in stock, then 1600 will be reserved"
 msgstr ""
-"只保留完整的包装规格：将不保留部分包装规格。如果客户订购了2个托盘，每个托盘有1000个单位，而你只有1600个库存，那么只有1000个将被保留。\n"
-"保留部分包装规格：允许保留部分包装规格。如果客户订购了2个各1000件的托盘，而您只有1600件的库存，那么将保留1600件。"
+"只预留完整的包装规格：将不预留部分包装规格。如果客户订购了2个托盘，每个托盘有1000个单位，而您只有1600个库存，那么只有1000个将被预留。\n"
+"预留部分包装规格：允许预留部分包装规格。如果客户订购了2个各1000件的托盘，而您只有1600件的库存，那么将预留1600件。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__packaging_reserve_method
 msgid "Reserve Packagings"
-msgstr "储备包装规格"
+msgstr "预留包装"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_category__packaging_reserve_method__partial
 msgid "Reserve Partial Packagings"
-msgstr "储备部分包装规格物"
+msgstr "预留部分包装"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -6275,7 +6275,7 @@ msgstr "预留数量"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 msgid "Reserved from stock"
-msgstr "保留库存"
+msgstr "预留库存"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -6425,7 +6425,7 @@ msgstr "勾选的项目会自动建立补货路线"
 msgid ""
 "Routes will be created for these resupply warehouses and you can select them"
 " on products and product categories"
-msgstr "将会为这些补充仓库创建路线，而且你可以在产品和产品类别选择它们"
+msgstr "将会为这些补充仓库创建路线，而且您可以在产品和产品类别选择它们"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -6790,7 +6790,7 @@ msgstr "设置数量"
 msgid ""
 "Sets a location if you produce at a fixed location. This can be a partner "
 "location if you subcontract the manufacturing operations."
-msgstr "如果在固定位置生产，则可在此处配置位置；如果你将生产作业转包，这可以是业务伙伴的位置。"
+msgstr "如果在固定位置生产，则可在此处配置位置；如果您将生产作业转包，这可以是业务伙伴的位置。"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_config_settings
@@ -6839,7 +6839,7 @@ msgstr "缩写"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__code
 msgid "Short name used to identify your warehouse"
-msgstr "利用简称来标识你的仓库"
+msgstr "利用简称来标识您的仓库"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_allocation
@@ -6855,7 +6855,7 @@ msgstr "显示检查可用"
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_operations
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_operations
 msgid "Show Detailed Operations"
-msgstr "显示详细作业"
+msgstr "显示作业详情"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__show_forecasted_qty_status_button
@@ -6983,7 +6983,7 @@ msgstr "已延后"
 msgid ""
 "Some products of the inventory adjustment are tracked. Are you sure you "
 "don't want to specify a serial or lot number for them?"
-msgstr "部分商品的库存调整需要追溯。 你确认不需要指定一个序号或者批号吗？"
+msgstr "部分商品的库存调整需要追溯。 您确认不需要指定一个序号或者批号吗？"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.inventory_warning_set_view
@@ -7255,7 +7255,7 @@ msgstr "可库存产品"
 msgid ""
 "Storable products are physical items for which you manage the inventory "
 "level."
-msgstr "可储存的产品是你管理库存水平的实物项目。"
+msgstr "可储存的产品是您管理库存水平的实物项目。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -7303,7 +7303,7 @@ msgstr "储存位置"
 msgid ""
 "Store products in specific locations of your warehouse (e.g. bins, racks) "
 "and to track inventory accordingly."
-msgstr "将产品存储在你仓库的特定位置（如：箱柜、货架）并据此追溯库存。"
+msgstr "将产品存储在您仓库的特定位置（如：箱柜、货架）并据此追溯库存。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_out_id
@@ -7460,7 +7460,7 @@ msgid ""
 msgstr ""
 "序列号（%s）已经在这些位置使用：%s。\n"
 "\n"
-"这是否是预期的？例如，如果一个交付操作在其相应的收据操作被验证之前被验证，就会出现这种情况。在这种情况下，一旦所有步骤都完成，问题就会自动解决。否则，应该纠正序列号以防止数据不一致。"
+"这是否是预期的？例如，如果一个交付作业在其相应的收货作业被验证之前被验证，就会出现这种情况。在这种情况下，一旦所有步骤都完成，问题就会自动解决。否则，应该纠正序列号以防止数据不一致。"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -7661,7 +7661,7 @@ msgstr "建立此移库动作的相应规则"
 msgid ""
 "The stock will be reserved for operations waiting for availability and the "
 "reordering rules will be triggered."
-msgstr "库存会保留给待料的事务，同时会触发相应重订货规则。"
+msgstr "库存会预留给待料的事务，同时会触发相应重订货规则。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_warehouse_id
@@ -7693,7 +7693,7 @@ msgstr "此字段将填写挑选源和其调拨的名称"
 #: model:ir.model.fields,help:stock.field_stock_move__reservation_date
 msgid ""
 "This is a technical field for calculating when a move should be reserved"
-msgstr "这是一个技术领域，用于计算何时应该保留一个动作"
+msgstr "这是一个技术领域，用于计算何时应该预留一个动作"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_dest_id
@@ -7703,7 +7703,7 @@ msgid ""
 "routes put another location. If it is empty, it will check for the customer "
 "location on the partner. "
 msgstr ""
-"当你用这种拣货类型手工创建一个移库时候，这是一个默认的目标位置。你也可以改变这个位置或者在路径设置中更改为其他位置。如果为空，系统会检查相关业务伙伴的客户位置"
+"当您用这种拣货类型手工创建一个移库时候，这是一个默认的目标位置。您也可以改变这个位置或者在路径设置中更改为其他位置。如果为空，系统会检查相关业务伙伴的客户位置"
 " 。"
 
 #. module: stock
@@ -7760,8 +7760,8 @@ msgid ""
 "                operations on a specific product. You can filter on the product\n"
 "                to see all the past or future movements for the product."
 msgstr ""
-"此菜单能让你完整的追溯某一特定产品的盘点\n"
-"作业。你可以在产品上筛选此产品过去和将来的的所有的调拨。　　　　　　　　"
+"此菜单能让您完整的追溯某一特定产品的盘点\n"
+"作业。您可以在产品上筛选此产品过去和将来的的所有的调拨。　　　　　　　　"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
@@ -7770,7 +7770,7 @@ msgid ""
 "                    You can filter on the product to see all the past movements for the product."
 msgstr ""
 "此菜单为您提供特定产品的库存作业的完整可追溯性。\n"
-"你可以对产品进行过滤，查看产品过去的所有动作。"
+"您可以对产品进行过滤，查看产品过去的所有动作。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -7789,7 +7789,7 @@ msgstr "此说明添加到内部调拨订单中(例如，在仓库中何处提�
 msgid ""
 "This note is added to receipt orders (e.g. where to store the product in the"
 " warehouse)."
-msgstr "此说明添加到收据订单中(例如，产品在仓库的存储位置)。"
+msgstr "此说明添加到收货订单中(例如，产品在仓库的存储位置)。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
@@ -7799,7 +7799,7 @@ msgid ""
 "returned picking in order to avoid logistic rules to be applied again (which"
 " would create duplicated operations)"
 msgstr ""
-"这个拣货显示和别的作业链接起来. 稍后, 如果你正在接收退回的货物，确保<b>逆转</b> ，这样是为了防止同样的物流规则再次被执行 (创建重复作业)"
+"这个拣货显示和别的作业链接起来. 稍后, 如果您正在接收退回的货物，确保<b>逆转</b> ，这样是为了防止同样的物流规则再次被执行 (创建重复作业)"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -7845,7 +7845,7 @@ msgstr "该位置将被使用以替换默认值，同样，库存调拨的源位
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated when you do an inventory."
-msgstr "此库存位置将被使用以替换默认的，当你做盘点时，同样的作为根据制造单生成的库存调拨之源位置。"
+msgstr "此库存位置将被使用以替换默认的，当您做盘点时，同样的作为根据制造单生成的库存调拨之源位置。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__responsible_id
@@ -7858,7 +7858,7 @@ msgstr "该用户将负责与该产品物流作业相关的下一个活动。"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.inventory_warning_reset_view
 msgid "This will discard all unapplied counts, do you want to proceed?"
-msgstr "这将丢弃所有未应用的计数，你想继续吗？"
+msgstr "这将丢弃所有未应用的计数，您想继续吗？"
 
 #. module: stock
 #: model:digest.tip,name:stock.digest_tip_stock_0
@@ -7973,7 +7973,7 @@ msgstr "追溯以下日期的批次和序列号：最佳日期、删除、生命
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Track product location in your warehouse"
-msgstr "追溯你仓库内的产品位置"
+msgstr "追溯您仓库内的产品位置"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
@@ -8051,7 +8051,7 @@ msgstr "移动%s：请添加一些要移动的项目。"
 #: model_terms:ir.actions.act_window,help:stock.action_picking_type_list
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_action_picking_type
 msgid "Transfers allow you to move products from one location to another."
-msgstr "移动允许你将产品从一个位置移动到另外一个位置。"
+msgstr "移动允许您将产品从一个位置移动到另外一个位置。"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.do_view_pickings
@@ -8249,7 +8249,7 @@ msgstr "未读消息数"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "Unreserve"
-msgstr "取消保留"
+msgstr "取消预留"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_uom
@@ -8263,7 +8263,7 @@ msgstr "计量单位"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
 msgid "UoM Categories"
-msgstr "测量单位类别"
+msgstr "计量单位类别"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_change_product_quantity
@@ -8290,7 +8290,7 @@ msgstr "紧急"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__use_existing_lots
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__use_existing_lots
 msgid "Use Existing Lots/Serial Numbers"
-msgstr "使用已有批次/序列号码"
+msgstr "使用已有批次/序列号"
 
 #. module: stock
 #: model:res.groups,name:stock.group_reception_report
@@ -8303,7 +8303,7 @@ msgid ""
 "Use this assistant to replenish your stock.\n"
 "                Depending on your product configuration, launching a replenishment may trigger a request for quotation,\n"
 "                a manufacturing order or a transfer."
-msgstr "用这个助手补充你的存货，根据您的产品配置，启动补货可能会触发一个报价请求，\\制造订单或转让。"
+msgstr "用这个助手补充您的存货，根据您的产品配置，启动补货可能会触发一个报价请求，\\制造订单或转让。"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_picking_wave
@@ -8313,7 +8313,7 @@ msgstr "使用波次拣货"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Use your own routes"
-msgstr "使用你自己的路线"
+msgstr "使用您自己的路线"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
@@ -8698,7 +8698,7 @@ msgstr "向导"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "Write your SN/LN one by one or copy paste a list."
-msgstr "一个一个地写你的SN/LN或者复制粘贴一个列表。"
+msgstr "一个一个地写您的SN/LN或者复制粘贴一个列表。"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish
@@ -8712,7 +8712,7 @@ msgid ""
 "You are not allowed to change the product linked to a serial or lot number "
 "if some stock moves have already been created with that number. This would "
 "lead to inconsistencies in your stock."
-msgstr "当一个序号已有产生库存调拨时，你不能修改此已连接到序号或者批号的产品。 因这样会导致库存记录不完整。"
+msgstr "当一个序号已有产生库存调拨时，您不能修改此已连接到序号或者批号的产品。 因这样会导致库存记录不完整。"
 
 #. module: stock
 #: code:addons/stock/models/stock_production_lot.py:0
@@ -8728,7 +8728,7 @@ msgstr "在此作业类型下不能创建批次或者序列号。要更改此设
 msgid ""
 "You are trying to put products going to different locations into the same "
 "package"
-msgstr "你正在将发货到不同地方的产品装进同一个包装内。"
+msgstr "您正在将发货到不同地方的产品装进同一个包装内。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -8740,8 +8740,8 @@ msgid ""
 "valuate your stock or change its rounding precision to a smaller value "
 "(example: 0.00001)."
 msgstr ""
-"你使用的计量单位小于在储存产品时需要用到的计量单位。 "
-"这可能导致已保留数量上的舍入问题！你应该使用尽可能小的计量单位来管理库存或将其舍入精度更改为较小值（例如：0.00001）。"
+"您使用的计量单位小于在储存产品时需要用到的计量单位。 "
+"这可能导致已预留数量上的舍入问题！您应该使用尽可能小的计量单位来管理库存或将其舍入精度更改为较小值（例如：0.00001）。"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_routes_form
@@ -8751,7 +8751,7 @@ msgid ""
 "                routes can be assigned to a product, a product category or be fixed\n"
 "                on procurement or sales order."
 msgstr ""
-"你可以在这里定义贯穿于整个仓库的主要路线，\n"
+"您可以在这里定义贯穿于整个仓库的主要路线，\n"
 "与此同时这也决定了产品的流向。\n"
 "这些路径可以被设置在产品、产品类别上，\n"
 " 或者应用于补货和销售订单上。"
@@ -8759,7 +8759,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
 msgid "You can either :"
-msgstr "你可以选择:"
+msgstr "您可以选择:"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -8768,7 +8768,7 @@ msgid ""
 "You can not change the type of a product that is currently reserved on a "
 "stock move. If you need to change the type, you should first unreserve the "
 "stock move."
-msgstr "您无法更改当前在库存调拨中保留的产品类型。 如果您需要更改类型，则应先取消保留库存的调拨。"
+msgstr "您无法更改当前在库存调拨中预留的产品类型。 如果您需要更改类型，则应先取消预留库存的调拨。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -8776,7 +8776,7 @@ msgstr "您无法更改当前在库存调拨中保留的产品类型。 如果�
 msgid ""
 "You can not delete product moves if the picking is done. You can only "
 "correct the done quantities."
-msgstr "如果拣货已完成，不能删除产品调拨。你可以纠正完成数量。"
+msgstr "如果拣货已完成，不能删除产品调拨。您可以纠正完成数量。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -8788,7 +8788,7 @@ msgstr "不能输入负数数量"
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You can only delete draft moves."
-msgstr "你只能删除草稿状态的移动。"
+msgstr "您只能删除草稿状态的移动。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -8802,7 +8802,7 @@ msgstr "只能处理1.0%s具有唯一序列号的产品。"
 msgid ""
 "You can't desactivate the multi-location if you have more than once "
 "warehouse by company"
-msgstr "如果你公司不止一处仓库，则无法取消多地址激活"
+msgstr "如果您公司不止一处仓库，则无法取消多地址启用"
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:0
@@ -8829,7 +8829,7 @@ msgstr "您不能更改已完成或已取消调拨的预定日期。"
 #, python-format
 msgid ""
 "You cannot change the UoM for a stock move that has been set to 'Done'."
-msgstr "你无法改变已标记为“完成”的库存调拨的状态。"
+msgstr "您无法改变已标记为“完成”的库存调拨的状态。"
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:0
@@ -8837,7 +8837,7 @@ msgstr "你无法改变已标记为“完成”的库存调拨的状态。"
 msgid ""
 "You cannot change the location type or its use as a scrap location as there "
 "are products reserved in this location. Please unreserve the products first."
-msgstr "您无法更改位置类型或此位置已被作为废料位置且此位置中保留了产品。请先将产品取消保留。"
+msgstr "您无法更改位置类型或此位置已被作为废料位置且此位置中预留了产品。请先将产品取消预留。"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -8845,7 +8845,7 @@ msgstr "您无法更改位置类型或此位置已被作为废料位置且此位
 msgid ""
 "You cannot change the ratio of this unit of measure as some products with "
 "this UoM have already been moved or are currently reserved."
-msgstr "您无法更改此度量单位的比率，因为具有此UoM的某些产品已被调拨或当前已保留。"
+msgstr "您无法更改此度量单位的比率，因为具有此UoM的某些产品已被调拨或当前已预留。"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -8854,7 +8854,7 @@ msgid ""
 "You cannot change the unit of measure as there are already stock moves for "
 "this product. If you want to change the unit of measure, you should rather "
 "archive this product and create a new one."
-msgstr "你无法更改计量单位，因为此产品已有库存变动。如果要更改计量单位，则应该归档此产品并创建新产品。"
+msgstr "您无法更改计量单位，因为此产品已有库存变动。如果要更改计量单位，则应该归档此产品并创建新产品。"
 
 #. module: stock
 #: code:addons/stock/models/stock_scrap.py:0
@@ -8874,7 +8874,7 @@ msgstr "不能修改盘点损失数量"
 msgid ""
 "You cannot move the same package content more than once in the same transfer"
 " or split the same package into two location."
-msgstr "你不能在同一调拨中多次调拨同一包装内容，或将同一包装拆分到两个位置。"
+msgstr "您不能在同一调拨中多次调拨同一包装内容，或将同一包装拆分到两个位置。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -8882,19 +8882,19 @@ msgstr "你不能在同一调拨中多次调拨同一包装内容，或将同一
 msgid ""
 "You cannot perform the move because the unit of measure has a different "
 "category as the product unit of measure."
-msgstr "你无法执行此调拨，因为此计量单位与产品的计量单位不是同一类别。"
+msgstr "您无法执行此调拨，因为此计量单位与产品的计量单位不是同一类别。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot split a draft move. It needs to be confirmed first."
-msgstr "你不能拆分一个草稿移动。你需要先确认它。"
+msgstr "您不能拆分一个草稿移动。您需要先确认它。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot split a stock move that has been set to 'Done'."
-msgstr "你无法拆分状态已标记为“完成”的库存移动。"
+msgstr "您无法拆分状态已标记为“完成”的库存移动。"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -8908,7 +8908,7 @@ msgstr "您不能从“视图”（%s）类型的位置获取产品或将产品�
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot unreserve a stock move that has been set to 'Done'."
-msgstr "你无法取消状态已标记为“完成”的库存移动。"
+msgstr "您无法取消预留状态已标记为“完成”的库存移动。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -8925,14 +8925,14 @@ msgstr "您不能使用两次相同的序列号。 请更正序列号编码。"
 msgid ""
 "You cannot validate a transfer if no quantities are reserved nor done. To "
 "force the transfer, switch in edit mode and encode the done quantities."
-msgstr "如果没有保留或完成任何数量的订单，您将无法验证调拨。 要强制传输，请切换到编辑模式并对完成的数量进行编辑。"
+msgstr "如果没有预留或完成任何数量的订单，您将无法验证调拨。 要强制传输，请切换到编辑模式并对完成的数量进行编辑。"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid ""
 "You have manually created product lines, please delete them to proceed."
-msgstr "你已手动创建产品明细，需要删除才能继续。"
+msgstr "您已手动创建产品明细，需要删除才能继续。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_immediate_transfer
@@ -8944,7 +8944,7 @@ msgstr "您尚未记录<i>完成</i>的数量，单击<i>应用</i>，Odoo将处
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "You have processed less products than the initial demand."
-msgstr "你已经处理了初始需求的部分产品。"
+msgstr "您已经处理了初始需求的部分产品。"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -8952,14 +8952,14 @@ msgstr "你已经处理了初始需求的部分产品。"
 msgid ""
 "You have product(s) in stock that have no lot/serial number. You can assign "
 "lot/serial numbers by doing an inventory adjustment."
-msgstr "你有库存的产品没有批号/序列号。你可以通过库存调整来分配批次/序列号。"
+msgstr "您有库存的产品没有批号/序列号。您可以通过库存调整来分配批次/序列号。"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid ""
 "You have to define a groupby and sorted method and pass them as arguments."
-msgstr "你必须定义分组和筛选方法并将它们作为参数传递。"
+msgstr "您必须定义分组和筛选方法并将它们作为参数传递。"
 
 #. module: stock
 #: code:addons/stock/models/stock_orderpoint.py:0
@@ -8976,19 +8976,19 @@ msgstr "您必须选择与产品默认计量单位相同类别的产品计量单
 msgid ""
 "You have tried to create a record which already exists. The existing record "
 "has been modified instead."
-msgstr "你试图创建一个已经存在的记录。现有的记录已经被修改。"
+msgstr "您试图创建一个已经存在的记录。现有的记录已经被修改。"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid "You may only return Done pickings."
-msgstr "你只能退回已完成的拣货。"
+msgstr "您只能退回已完成的拣货。"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid "You may only return one picking at a time."
-msgstr "你每次只能退回一次拣货。"
+msgstr "您每次只能退回一次拣货。"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -9043,7 +9043,7 @@ msgstr "您对此产品仍然有一些取消归档的重新排序规则。 请�
 #: code:addons/stock/models/stock_location.py:0
 #, python-format
 msgid "You still have some product in locations %s"
-msgstr "你仍然有一些产品在%s的位置"
+msgstr "您仍然有一些产品在%s的位置"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish
@@ -9052,7 +9052,7 @@ msgid ""
 "            Choose the quantity to buy or manufacture and launch orders in a click.\n"
 "            To save time in the future, set the rules as \"automated\"."
 msgstr ""
-"在odoo系统可以自动补货，目的是减少人工干预，降低人力成本。在这里你可以找到基于智能化的库存预测的补货建议。\n"
+"在odoo系统可以自动补货，目的是减少人工干预，降低人力成本。在这里您可以找到基于智能化的库存预测的补货建议。\n"
 "            然后您就选择要购买或生产的数量，然后单击启动订单。\n"
 "            为了节省将来的时间，请将规则设置为“automated自动补货”。"
 

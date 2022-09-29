@@ -57,7 +57,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "<b>Set other input/output accounts on specific </b>"
-msgstr "<b>设置其他输入/输出账户的具体 </b>"
+msgstr "<b>设置其他的进货/出货科目，在具体的 </b>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -178,7 +178,7 @@ msgstr "找不到产品%s的库存出库库科目。 在处理此作业之前，
 msgid ""
 "Changing your cost method is an important change that will impact your "
 "inventory valuation. Are you sure you want to make that change?"
-msgstr "更改你的成本方法是一个重要的更改, 将影响您的库存评估。是否确实要进行此更改？"
+msgstr "更改您的成本方法是一个重要的更改, 将影响您的库存评估。是否确实要进行此更改？"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__company_id
@@ -223,7 +223,7 @@ msgid ""
 "Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
 "                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
 msgstr ""
-"所有传入库存变动的对应日记帐项目将过帐在此帐户中，除非有特定的估值科目\n"
+"所有传入库存变动的对应会计分录将过帐在此帐户中，除非有特定的估值科目\n"
 "                设置在源库位。这是此类别中所有产品的默认值。也可以直接设置每个产品。"
 
 #. module: stock_account
@@ -364,7 +364,7 @@ msgstr "日记账"
 #: model:ir.model,name:stock_account.model_account_move
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__account_move_id
 msgid "Journal Entry"
-msgstr "日记账分录"
+msgstr "会计凭证"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move_line
@@ -676,7 +676,7 @@ msgstr "库存出库和/或入库账户不能与库存估值账户相同。"
 msgid ""
 "The action leads to the creation of a journal entry, for which you don't "
 "have the access rights."
-msgstr "该操作将导致创建日记账分录，而您对此没有访问权限。"
+msgstr "该操作将导致创建会计凭证，而您对此没有访问权限。"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
@@ -837,13 +837,13 @@ msgstr "重新评估一个产品的库存的向导模型"
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with a standard cost method."
-msgstr "你不能用标准成本法对一个产品进行重估。"
+msgstr "您不能用标准成本法对一个产品进行重估。"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with an empty or negative stock."
-msgstr "你不能对一个空库存或负库存的产品进行重估。"
+msgstr "您不能对一个空库存或负库存的产品进行重估。"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -852,7 +852,7 @@ msgid ""
 "You cannot update the cost of a product in automated valuation as it leads "
 "to the creation of a journal entry, for which you don't have the access "
 "rights."
-msgstr "你不能在自动估价中更新产品的成本，因为这将导致创建一个分录，而你没有这个权限。"
+msgstr "您不能在自动估价中更新产品的成本，因为这将导致创建一个分录，而您没有这个权限。"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -860,7 +860,7 @@ msgstr "你不能在自动估价中更新产品的成本，因为这将导致创
 msgid ""
 "You don't have any input valuation account defined on your product category."
 " You must define one before processing this operation."
-msgstr "你没有在产品类别中定义任何输入评估账户。你必须在处理此作业之前定义一个。"
+msgstr "您没有在产品类别中定义任何输入评估账户。您必须在处理此作业之前定义一个。"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -868,7 +868,7 @@ msgstr "你没有在产品类别中定义任何输入评估账户。你必须在
 msgid ""
 "You don't have any stock input account defined on your product category. You"
 " must define one before processing this operation."
-msgstr "您的产品类别上没有定义任何库存输入账户。你必须在处理这个操作之前定义一个。"
+msgstr "您的产品类别上没有定义任何库存输入账户。您必须在处理这个作业之前定义一个。"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -893,7 +893,7 @@ msgstr "您没有在您的产品类别中定义任何库存评估账户。 处�
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "You must set a counterpart account on your product category."
-msgstr "你必须在你的产品类别上设置一个对应的账户。"
+msgstr "您必须在您的产品类别上设置一个对应的账户。"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view

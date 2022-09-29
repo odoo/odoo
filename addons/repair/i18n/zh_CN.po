@@ -94,7 +94,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
-"        你好，<t t-out=\"object.partner_id.name or ''\">布兰登-弗里曼</t>。<br/>\n"
+"        您好，<t t-out=\"object.partner_id.name or ''\">布兰登-弗里曼</t>。<br/>\n"
 "        这是您的维修单<strong t-out=\"object.name or ''\">RO/00004</strong>\n"
 "       <t t-if=\"object.invoice_method != 'none'\">\n"
 "            金额为<strong><t t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">100.00美元</t></strong>。<br/>\n"
@@ -102,9 +102,9 @@ msgstr ""
 "       <t t-else=\"\">\n"
 "            .<br/>\n"
 "       </t>\n"
-"        如果你有任何问题，可以回复此邮件。\n"
+"        如果您有任何问题，可以回复此邮件。\n"
 "       <br/><br/>\n"
-"        谢谢你。\n"
+"        谢谢您。\n"
 "        <t t-if=\"user.signature\">\n"
 "            <br/>\n"
 "            <t t-out=\"user.signature or ''\">--<br/>Mitchell 管理</t>\n"
@@ -313,7 +313,7 @@ msgid ""
 "You have to change either the product, the quantity or the pricelist."
 msgstr ""
 "找不到与此产品和数额匹配的价格表。\n"
-"你必须修改产品、数量或者价格表。"
+"您必须修改产品、数量或者价格表。"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
@@ -410,7 +410,7 @@ msgstr "您确认要维修吗"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Do you really want to create the invoice(s)?"
-msgstr "你真的要创建结算单吗 ？"
+msgstr "您真的要创建结算单吗 ？"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_line__state__done
@@ -533,8 +533,8 @@ msgid ""
 "                add or replace and record the time you spent on the different\n"
 "                operations."
 msgstr ""
-"在维修订单中，你可以非常详细定义你要移除和添加或者替代的组件\n"
-"并且可以记录你在不同操作上花费的时间"
+"在维修订单中，您可以非常详细定义您要移除和添加或者替代的组件\n"
+"并且可以记录您在不同操作上花费的时间"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__internal_notes
@@ -609,7 +609,7 @@ msgstr "关注者"
 #. module: repair
 #: model:ir.model,name:repair.model_account_move
 msgid "Journal Entry"
-msgstr "日记账分录"
+msgstr "会计凭证"
 
 #. module: repair
 #: model:ir.model,name:repair.model_account_move_line
@@ -1223,7 +1223,7 @@ msgstr "维修单的名必须唯一！"
 msgid ""
 "The product unit of measure you chose has a different category than the "
 "product unit of measure."
-msgstr "你选择的产品计量单位跟产品的计量单位类别不同。"
+msgstr "您选择的产品计量单位跟产品的计量单位类别不同。"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_line__state
@@ -1390,7 +1390,7 @@ msgstr "您必须在维修表单中选择一个价目表！ 在选择产品之�
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You have to select an invoice address in the repair form."
-msgstr "你必须在维修单上选择结算单地址。"
+msgstr "您必须在维修单上选择结算单地址。"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view

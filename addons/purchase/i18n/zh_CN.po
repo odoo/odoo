@@ -341,7 +341,7 @@ msgid ""
 "<span class=\"o_form_label\" attrs=\"{'invisible': [('state','not in',('draft','sent'))]}\">Request for Quotation </span>\n"
 "                        <span class=\"o_form_label\" attrs=\"{'invisible': [('state','in',('draft','sent'))]}\">Purchase Order </span>"
 msgstr ""
-"<span class=\"o_form_label\" attrs=\"{'invisible': [('state','not in',('draft','sent'))]}\">询价单</span>\n"
+"<span class=\"o_form_label\" attrs=\"{'invisible': [('state','not in',('draft','sent'))]}\">询价</span>\n"
 "<span class=\"o_form_label\" attrs=\"{'invisible': [('state','in',('draft','sent'))]}\">采购订单</span>"
 
 #. module: purchase
@@ -520,9 +520,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"可库存商品是指在库存中受存量管控的产品。 要使用此项目你必须安装库存模块。\n"
+"可库存商品是指在库存中受存量管控的产品。 要使用此项目您必须安装库存模块。\n"
 "可消耗商品是指不受库存量管控的产品。\n"
-"服务是指你提供的非产品类服务业务。"
+"服务是指您提供的非产品类服务业务。"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_warning_purchase
@@ -607,7 +607,7 @@ msgstr "在购买订单中用网格方式添加几个变体"
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Add some products or services to your quotation."
-msgstr "添加些产品或者服务到你的报价"
+msgstr "添加些产品或者服务到您的报价"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
@@ -651,7 +651,7 @@ msgstr "所有等待的询价"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__group_send_reminder
 msgid "Allow automatically send email to remind your vendor the receipt date"
-msgstr "允许自动发送邮件并提醒你的供应商单据日期"
+msgstr "允许自动发送邮件并提醒您的供应商单据日期"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_lock__edit
@@ -746,7 +746,7 @@ msgstr "自动锁定已确定的订单以防止编辑"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Automatically remind the receipt date to your vendors"
-msgstr "自动提醒收货日期到你的供应商"
+msgstr "自动提醒收货日期到您的供应商"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__receipt_reminder_email
@@ -849,7 +849,7 @@ msgid ""
 "product if you directly do a Request for Quotation to one vendor or if you "
 "want a Call for Tenders to compare offers from several vendors."
 msgstr ""
-"当你想为一组给定的产品生成报价给几个供应商的报价时，就需要招标。如果您直接向一个供应商报价，或者您想要一个招标来比较几个供应商的报价，您可以配置每个产品的配置。"
+"当您想为一组给定的产品生成报价给几个供应商的报价时，就需要招标。如果您直接向一个供应商报价，或者您想要一个招标来比较几个供应商的报价，您可以配置每个产品的配置。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -946,7 +946,7 @@ msgstr "直接确认订单"
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Confirm your purchase."
-msgstr "确定你的采购"
+msgstr "确定您的采购"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_approve
@@ -1084,7 +1084,7 @@ msgstr "接收天数"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Define your terms and conditions ..."
-msgstr "定义你的期限和条件…"
+msgstr "定义您的期限和条件…"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__date_planned
@@ -1161,7 +1161,7 @@ msgstr "下载"
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__draft
 msgid "Draft RFQ"
-msgstr "草稿询价单"
+msgstr "草稿询价"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1328,7 +1328,7 @@ msgstr "导入模板-产品"
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
-msgstr "要删除采购订单，你必须先取消它"
+msgstr "要删除采购订单，您必须先取消它"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__incoterm_id
@@ -1367,7 +1367,7 @@ msgstr "关注者"
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_move
 msgid "Journal Entry"
-msgstr "日记账分录"
+msgstr "会计凭证"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_move_line
@@ -1410,7 +1410,7 @@ msgstr "最近的活动"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Late RFQs"
-msgstr "迟到的询价单"
+msgstr "迟到的询价"
 
 #. module: purchase
 #. openerp-web
@@ -1472,12 +1472,12 @@ msgstr "主要附件"
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid ""
 "Make sure you only pay bills for which you received the goods you ordered"
-msgstr "确保你只支付你收到你订购的货物的账单。"
+msgstr "确保您只支付您收到您订购的货物的账单。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Manage your purchase agreements (call for tenders, blanket orders)"
-msgstr "管理你的请购（招标，一揽子订单）"
+msgstr "管理您的请购（招标，一揽子订单）"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__qty_received_method__manual
@@ -1654,7 +1654,7 @@ msgstr "还没有采购订单， 我们先创建一个"
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_rfq
 msgid "No request for quotation found. Let's create one!"
-msgstr "没有找到询价单，我们先创建一个"
+msgstr "没有找到询价，我们先创建一个"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.mail_notification_confirm
@@ -1746,14 +1746,14 @@ msgstr "收到数量"
 msgid ""
 "Once you get the price from the vendor, you can complete the purchase order "
 "with the right price."
-msgstr "当你从供应商得到价格你可以用合适的价格完成下采购订单"
+msgstr "当您从供应商得到价格您可以用合适的价格完成下采购订单"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_form_action
 msgid ""
 "Once you ordered your products to your supplier, confirm your request for "
 "quotation and it will turn into a purchase order."
-msgstr "当你下单到你的供应商，确定你的询价单它会变成采购订单"
+msgstr "当您下单到您的供应商，确定您的询价它会变成采购订单"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__order_id
@@ -1860,7 +1860,7 @@ msgstr "门户访问网址"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Preview the reminder email by sending it to yourself."
-msgstr "通过发送你自已一份邮件检查"
+msgstr "通过发送您自已一份邮件检查"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_category__property_account_creditor_price_difference_categ
@@ -1882,7 +1882,7 @@ msgstr "打印"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Print RFQ"
-msgstr "打印询价单"
+msgstr "打印询价"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__priority
@@ -1983,7 +1983,7 @@ msgid ""
 "Purchase Analysis allows you to easily check and analyse your company "
 "purchase history and performance. From this menu you can track your "
 "negotiation performance, the delivery performance of your vendors, etc."
-msgstr "采购需求能让你快捷的检查分析公司的采购记录和绩效。从这个菜单你可以追踪你的谈判绩效，以及客户的交货表现等等"
+msgstr "采购需求能让您快捷的检查分析公司的采购记录和绩效。从这个菜单您可以追踪您的谈判绩效，以及客户的交货表现等等"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -2191,7 +2191,7 @@ msgstr "采购 & 账单"
 msgid ""
 "Put an address if you want to deliver directly from the vendor to the "
 "customer. Otherwise, keep empty to deliver to your own company."
-msgstr "如果你想直接从供应商发货给客户，就填写一个地址。不然的话，留空把货物运到你的公司仓库"
+msgstr "如果您想直接从供应商发货给客户，就填写一个地址。不然的话，留空把货物运到您的公司仓库"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_billed
@@ -2232,28 +2232,28 @@ msgstr "数量："
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__draft
 msgid "RFQ"
-msgstr "询价单"
+msgstr "询价"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
 msgid "RFQ Approved"
-msgstr "询价单批准"
+msgstr "询价批准"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_confirmed
 msgid "RFQ Confirmed"
-msgstr "询价单确认"
+msgstr "询价确认"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_done
 msgid "RFQ Done"
-msgstr "询价单已完成"
+msgstr "询价已完成"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__sent
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__sent
 msgid "RFQ Sent"
-msgstr "发送询价单"
+msgstr "发送询价"
 
 #. module: purchase
 #: model:mail.template,report_name:purchase.email_template_edi_purchase
@@ -2263,7 +2263,7 @@ msgstr "{{ (object.name or '').replace('/','_') }}"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "RFQs"
-msgstr "询价单"
+msgstr "询价"
 
 #. module: purchase
 #. openerp-web
@@ -2275,7 +2275,7 @@ msgstr "过去7日发送的询价"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
 msgid "RFQs and Purchases"
-msgstr "询价单和采购订单"
+msgstr "询价和采购订单"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__currency_rate
@@ -2377,7 +2377,7 @@ msgid ""
 "Reference of the sales order or bid sent by the vendor. It's used to do the "
 "matching when you receive the products as this reference is usually written "
 "on the delivery order sent by your vendor."
-msgstr "销售订单的参照或者供应商发出的投标。当你接收产品的时候被显示在入库单上。主要用来做匹配"
+msgstr "销售订单的参照或者供应商发出的投标。当您接收产品的时候被显示在入库单上。主要用来做匹配"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__mail_reminder_confirmed
@@ -2396,12 +2396,12 @@ msgstr "报告"
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 #, python-format
 msgid "Request for Quotation"
-msgstr "采购询价单"
+msgstr "采购询价"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Request for Quotation #"
-msgstr "询价单#"
+msgstr "询价#"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2423,14 +2423,14 @@ msgstr "报价请求"
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Requests for Quotation"
-msgstr "询价单"
+msgstr "询价"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_rfq
 msgid ""
 "Requests for quotation are documents that will be sent to your suppliers to request prices for different products you consider buying.\n"
 "                Once an agreement has been found with the supplier, they will be confirmed and turned into purchase orders."
-msgstr "询价单是发送给您的供应商以咨询您购买产品价格的单据， 与供应商达成协议后，将对其进行确认并转换为采购订单。"
+msgstr "询价是发送给您的供应商以咨询您购买产品价格的单据， 与供应商达成协议后，将对其进行确认并转换为采购订单。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_user_id
@@ -2538,7 +2538,7 @@ msgstr "通过EMail发送"
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Send the request for quotation to your vendor."
-msgstr "发送询价单到你的供应商"
+msgstr "发送询价到您的供应商"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__sequence
@@ -2701,7 +2701,7 @@ msgid ""
 "The request for quotation is the first step of the purchases flow. Once\n"
 "                    converted into a purchase order, you will be able to control the receipt\n"
 "                    of the products and the vendor bill."
-msgstr "询价单是采购流程的第一步。一旦转换为采购订单，你就能操作相关的收货单和供应商发票"
+msgstr "询价是采购流程的第一步。一旦转换为采购订单，您就能操作相关的收货单和供应商发票"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -2764,7 +2764,7 @@ msgstr "本条备注被添加到采购订单"
 msgid ""
 "This product is packaged by %(pack_size).2f %(pack_name)s. You should "
 "purchase %(quantity).2f %(unit)s."
-msgstr "这个产品是由%(pack_size).2f%(pack_name)s包装的。你应该购买%(quantity).2f。%(unit)s."
+msgstr "这个产品是由%(pack_size).2f%(pack_name)s包装的。您应该购买%(quantity).2f。%(unit)s."
 
 #. module: purchase
 #: code:addons/purchase/models/account_invoice.py:0
@@ -2781,7 +2781,7 @@ msgstr "此供应商账单已从%s修改"
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid "This vendor has no purchase order. Create a new RfQ"
-msgstr "这个供应商没有采购订单.创建一个新的询价单."
+msgstr "这个供应商没有采购订单.创建一个新的询价."
 
 #. module: purchase
 #: model:digest.tip,name:purchase.digest_tip_purchase_0
@@ -3015,7 +3015,7 @@ msgid ""
 "                    document in Odoo."
 msgstr ""
 "供应商发票能根据销售订单或者收货单预先生成\n"
-"这能帮助你用系统生成的草稿发票和你从供应商那边得到的发票进行比对"
+"这能帮助您用系统生成的草稿发票和您从供应商那边得到的发票进行比对"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__volume
@@ -3093,7 +3093,7 @@ msgid ""
 "performance statistics, click on the OTD rate."
 msgstr ""
 "当创建一个采购订单，请查看供应商的<i>准时运输</i>率：已运输的准时百分比。如果很低，启动<i>自动提醒</i>。运输的前几天，Odoo "
-"会发送一封邮件给供应商确定运输日期并保持你被告知如果有任何推延。 点击 准时运输 去得到供应商的表现数据"
+"会发送一封邮件给供应商确定运输日期并保持您被告知如果有任何推延。 点击 准时运输 去得到供应商的表现数据"
 
 #. module: purchase
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_1
@@ -3114,7 +3114,7 @@ msgstr "是"
 #: model:ir.model.fields,help:purchase.field_purchase_order__partner_id
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__partner_id
 msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
-msgstr "你可以通过它的名字，TIN，EMail或内部参考找到一个客户。 "
+msgstr "您可以通过它的名字，TIN，EMail或内部参考找到一个客户。 "
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0
@@ -3122,7 +3122,7 @@ msgstr "你可以通过它的名字，TIN，EMail或内部参考找到一个客�
 msgid ""
 "You cannot change the type of a purchase order line. Instead you should "
 "delete the current line and create a new line of the proper type."
-msgstr "不能变更订单明细行的类型。你可以删除当前明细后再新建一行。"
+msgstr "不能变更订单明细行的类型。您可以删除当前明细后再新建一行。"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_product_action
@@ -3130,7 +3130,7 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
-"你必须一个用来销售或采购的产品，\n"
+"您必须一个用来销售或采购的产品，\n"
 "不论它是可库存的产品，可消耗的产品或者服务产品。"
 
 #. module: purchase
@@ -3139,7 +3139,7 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "            whether it's a storable product, a consumable or a service."
 msgstr ""
-"你必须一个用来销售或采购的产品，\n"
+"您必须一个用来销售或采购的产品，\n"
 "不论它是可库存的产品，可消耗的产品或者服务产品。"
 
 #. module: purchase
@@ -3149,7 +3149,7 @@ msgid ""
 "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
 " Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
-"你的报价包含来自公司 %(product_company)s 的产品，而你的报价属于公司 %(quote_company)s。\n"
+"您的报价包含来自公司 %(product_company)s 的产品，而您的报价属于公司 %(quote_company)s。\n"
 "请更改报价公司或从其他公司删除产品（%(bad_products)s）。"
 
 #. module: purchase
