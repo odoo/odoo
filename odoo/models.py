@@ -5365,6 +5365,33 @@ class BaseModel(metaclass=MetaModel):
             self.mapped(name)
         return self.browse([rec.id for rec in self if func(rec)])
 
+    def grouped(self, key):
+        """Eagerly groups the records of ``self`` by the ``key``, returning a
+        dict from the ``key``'s result to recordsets. All the resulting
+        recordsets are guaranteed to be part of the same prefetch-set.
+
+        Provides a convenience method to partition existing recordsets without
+        the overhead of a :meth:`~.read_group`, but performs no aggregation.
+
+        .. note:: unlike :func:`itertools.groupby`, does not care about input
+                  ordering, however the tradeoff is that it can not be lazy
+
+        :param key: either a callable from a :class:`Model` to a (hashable)
+                    value, or a field name. In the latter case, it is equivalent
+                    to ``itemgetter(key)`` (aka the named field's value)
+        :type key: callable | str
+        :rtype: dict
+        """
+        if isinstance(key, str):
+            key = itemgetter(key)
+
+        collator = defaultdict(list)
+        for record in self:
+            collator[key(record)].extend(record._ids)
+
+        browse = functools.partial(type(self), self.env, prefetch_ids=self._prefetch_ids)
+        return {key: browse(tuple(ids)) for key, ids in collator.items()}
+
     def filtered_domain(self, domain):
         """Return the records in ``self`` satisfying the domain and keeping the same order.
 
