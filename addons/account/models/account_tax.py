@@ -28,17 +28,17 @@ class AccountTaxGroup(models.Model):
     property_tax_payable_account_id = fields.Many2one(
         comodel_name='account.account',
         company_dependent=True,
-        string='Tax current account (payable)',
+        string='Tax Payable Account',
         help="Tax current account used as a counterpart to the Tax Closing Entry when in favor of the authorities.")
     property_tax_receivable_account_id = fields.Many2one(
         comodel_name='account.account',
         company_dependent=True,
-        string='Tax current account (receivable)',
+        string='Tax Receivable Account',
         help="Tax current account used as a counterpart to the Tax Closing Entry when in favor of the company.")
     property_advance_tax_payment_account_id = fields.Many2one(
         comodel_name='account.account',
         company_dependent=True,
-        string='Advance Tax payment account',
+        string='Tax Advance Account',
         help="Downpayments posted on this account will be considered by the Tax Closing Entry.")
     country_id = fields.Many2one(string="Country", comodel_name='res.country', help="The country for which this tax group is applicable.")
     country_code = fields.Char(related="country_id.code")
