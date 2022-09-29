@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
 <t t-name="web_editor.AutoResizeImage" owl="1">
-    <div t-ref="auto-resize-image-container" class="o_existing_attachment_cell o_we_image align-items-center justify-content-center me-1 mb-1 opacity-trigger-hover opacity-0 cursor-pointer" t-att-class="{ o_we_attachment_optimized: props.isOptimized, 'o_loaded position-relative opacity-100': state.loaded, o_we_attachment_selected: props.selected }" t-on-click="props.onImageClick">
+    <div t-ref="auto-resize-image-container" class="o_existing_attachment_cell o_we_image align-items-center justify-content-center me-1 mb-1 opacity-trigger-hover opacity-0 cursor-pointer" t-att-class="{ o_we_attachment_optimized: props.isOptimized, 'o_loaded position-relative opacity-100': state.loaded, o_we_attachment_selected: props.selected, 'position-fixed': !state.loaded }" t-on-click="props.onImageClick">
         <RemoveButton t-if="props.isRemovable" model="props.model" remove="() => this.remove()"/>
         <div class="o_we_media_dialog_img_wrapper">
             <img t-ref="auto-resize-image" class="o_we_attachment_highlight img img-fluid w-100" t-att-src="props.src" t-att-alt="props.altDescription" t-att-title="props.title" loading="lazy"/>
