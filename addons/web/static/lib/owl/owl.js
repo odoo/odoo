@@ -2906,14 +2906,15 @@
         return true;
     }
     class LazyValue {
-        constructor(fn, ctx, component, node) {
+        constructor(fn, ctx, component, node, key) {
             this.fn = fn;
             this.ctx = capture(ctx);
             this.component = component;
             this.node = node;
+            this.key = key;
         }
         evaluate() {
-            return this.fn.call(this.component, this.ctx, this.node);
+            return this.fn.call(this.component, this.ctx, this.node, this.key);
         }
         toString() {
             return this.evaluate().toString();
@@ -3599,6 +3600,13 @@
             result.push(`}`);
             return result.join("\n  ");
         }
+        currentKey(ctx) {
+            let key = this.loopLevel ? `key${this.loopLevel}` : "key";
+            if (ctx.tKeyExpr) {
+                key = `${ctx.tKeyExpr} + ${key}`;
+            }
+            return key;
+        }
     }
     const TRANSLATABLE_ATTRS = ["label", "title", "placeholder", "alt"];
     const translationRE = /^(\s*)([\s\S]+?)(\s*)$/;
@@ -3728,18 +3736,14 @@
         }
         insertBlock(expression, block, ctx) {
             let blockExpr = block.generateExpr(expression);
-            const tKeyExpr = ctx.tKeyExpr;
             if (block.parentVar) {
-                let keyArg = `key${this.target.loopLevel}`;
-                if (tKeyExpr) {
-                    keyArg = `${tKeyExpr} + ${keyArg}`;
-                }
+                let key = this.target.currentKey(ctx);
                 this.helpers.add("withKey");
-                this.addLine(`${block.parentVar}[${ctx.index}] = withKey(${blockExpr}, ${keyArg});`);
+                this.addLine(`${block.parentVar}[${ctx.index}] = withKey(${blockExpr}, ${key});`);
                 return;
             }
-            if (tKeyExpr) {
-                blockExpr = `toggler(${tKeyExpr}, ${blockExpr})`;
+            if (ctx.tKeyExpr) {
+                blockExpr = `toggler(${ctx.tKeyExpr}, ${blockExpr})`;
             }
             if (block.isRoot && !ctx.preventRoot) {
                 if (this.target.on) {
@@ -3784,74 +3788,62 @@
             })
                 .join("");
         }
+        /**
+         * @returns the newly created block name, if any
+         */
         compileAST(ast, ctx) {
             switch (ast.type) {
                 case 1 /* Comment */:
-                    this.compileComment(ast, ctx);
-                    break;
+                    return this.compileComment(ast, ctx);
                 case 0 /* Text */:
-                    this.compileText(ast, ctx);
-                    break;
+                    return this.compileText(ast, ctx);
                 case 2 /* DomNode */:
-                    this.compileTDomNode(ast, ctx);
-                    break;
+                    return this.compileTDomNode(ast, ctx);
                 case 4 /* TEsc */:
-                    this.compileTEsc(ast, ctx);
-                    break;
+                    return this.compileTEsc(ast, ctx);
                 case 8 /* TOut */:
-                    this.compileTOut(ast, ctx);
-                    break;
+                    return this.compileTOut(ast, ctx);
                 case 5 /* TIf */:
-                    this.compileTIf(ast, ctx);
-                    break;
+                    return this.compileTIf(ast, ctx);
                 case 9 /* TForEach */:
-                    this.compileTForeach(ast, ctx);
-                    break;
+                    return this.compileTForeach(ast, ctx);
                 case 10 /* TKey */:
-                    this.compileTKey(ast, ctx);
-                    break;
+                    return this.compileTKey(ast, ctx);
                 case 3 /* Multi */:
-                    this.compileMulti(ast, ctx);
-                    break;
+                    return this.compileMulti(ast, ctx);
                 case 7 /* TCall */:
-                    this.compileTCall(ast, ctx);
-                    break;
+                    return this.compileTCall(ast, ctx);
                 case 15 /* TCallBlock */:
-                    this.compileTCallBlock(ast, ctx);
-                    break;
+                    return this.compileTCallBlock(ast, ctx);
                 case 6 /* TSet */:
-                    this.compileTSet(ast, ctx);
-                    break;
+                    return this.compileTSet(ast, ctx);
                 case 11 /* TComponent */:
-                    this.compileComponent(ast, ctx);
-                    break;
+                    return this.compileComponent(ast, ctx);
                 case 12 /* TDebug */:
-                    this.compileDebug(ast, ctx);
-                    break;
+                    return this.compileDebug(ast, ctx);
                 case 13 /* TLog */:
-                    this.compileLog(ast, ctx);
-                    break;
+                    return this.compileLog(ast, ctx);
                 case 14 /* TSlot */:
-                    this.compileTSlot(ast, ctx);
-                    break;
+                    return this.compileTSlot(ast, ctx);
                 case 16 /* TTranslation */:
-                    this.compileTTranslation(ast, ctx);
-                    break;
+                    return this.compileTTranslation(ast, ctx);
                 case 17 /* TPortal */:
-                    this.compileTPortal(ast, ctx);
+                    return this.compileTPortal(ast, ctx);
             }
         }
         compileDebug(ast, ctx) {
             this.addLine(`debugger;`);
             if (ast.content) {
-                this.compileAST(ast.content, ctx);
+                return this.compileAST(ast.content, ctx);
             }
+            return null;
         }
         compileLog(ast, ctx) {
             this.addLine(`console.log(${compileExpr(ast.expr)});`);
             if (ast.content) {
-                this.compileAST(ast.content, ctx);
+                return this.compileAST(ast.content, ctx);
             }
+            return null;
         }
         compileComment(ast, ctx) {
             let { block, forceNewBlock } = ctx;
@@ -3867,6 +3859,7 @@
                 const text = xmlDoc.createComment(ast.value);
                 block.insert(text);
             }
+            return block.varName;
         }
         compileText(ast, ctx) {
             let { block, forceNewBlock } = ctx;
@@ -3886,6 +3879,7 @@
                 const createFn = ast.type === 0 /* Text */ ? xmlDoc.createTextNode : xmlDoc.createComment;
                 block.insert(createFn.call(xmlDoc, value));
             }
+            return block.varName;
         }
         generateHandlerCode(rawEvent, handler) {
             const modifiers = rawEvent
@@ -4078,6 +4072,7 @@
                     this.addLine(`let ${block.children.map((c) => c.varName)};`, codeIdx);
                 }
             }
+            return block.varName;
         }
         compileTEsc(ast, ctx) {
             let { block, forceNewBlock } = ctx;
@@ -4102,6 +4097,7 @@
                 const text = xmlDoc.createElement(`block-text-${idx}`);
                 block.insert(text);
             }
+            return block.varName;
         }
         compileTOut(ast, ctx) {
             let { block } = ctx;
@@ -4127,6 +4123,7 @@
                 blockStr = `safeOutput(${compileExpr(ast.expr)})`;
             }
             this.insertBlock(blockStr, block, ctx);
+            return block.varName;
         }
         compileTIfBranch(content, block, ctx) {
             this.target.indentLevel++;
@@ -4181,6 +4178,7 @@
                 const args = block.children.map((c) => c.varName).join(", ");
                 this.insertBlock(`multi([${args}])`, block, ctx);
             }
+            return block.varName;
         }
         compileTForeach(ast, ctx) {
             let { block } = ctx;
@@ -4253,6 +4251,7 @@
                 this.addLine(`ctx = ctx.__proto__;`);
             }
             this.insertBlock("l", block, ctx);
+            return block.varName;
         }
         compileTKey(ast, ctx) {
             const tKeyExpr = generateId("tKey_");
@@ -4262,7 +4261,7 @@
                 block: ctx.block,
                 index: ctx.index,
             });
-            this.compileAST(ast.content, ctx);
+            return this.compileAST(ast.content, ctx);
         }
         compileMulti(ast, ctx) {
             let { block, forceNewBlock } = ctx;
@@ -4270,11 +4269,13 @@
             let codeIdx = this.target.code.length;
             if (isNewBlock) {
                 const n = ast.content.filter((c) => c.type !== 6 /* TSet */).length;
+                let result = null;
                 if (n <= 1) {
                     for (let child of ast.content) {
-                        this.compileAST(child, ctx);
+                        const blockName = this.compileAST(child, ctx);
+                        result = result || blockName;
                     }
-                    return;
+                    return result;
                 }
                 block = this.createBlock(block, "multi", ctx);
             }
@@ -4314,6 +4315,7 @@
                 const args = block.children.map((c) => c.varName).join(", ");
                 this.insertBlock(`multi([${args}])`, block, ctx);
             }
+            return block.varName;
         }
         compileTCall(ast, ctx) {
             let { block, forceNewBlock } = ctx;
@@ -4326,12 +4328,11 @@
                 this.addLine(`${ctxVar} = Object.create(${ctxVar});`);
                 this.addLine(`${ctxVar}[isBoundary] = 1;`);
                 this.helpers.add("isBoundary");
-                const nextId = BlockDescription.nextBlockId;
                 const subCtx = createContext(ctx, { preventRoot: true, ctxVar });
-                this.compileAST({ type: 3 /* Multi */, content: ast.body }, subCtx);
-                if (nextId !== BlockDescription.nextBlockId) {
+                const bl = this.compileMulti({ type: 3 /* Multi */, content: ast.body }, subCtx);
+                if (bl) {
                     this.helpers.add("zero");
-                    this.addLine(`${ctxVar}[zero] = b${nextId};`);
+                    this.addLine(`${ctxVar}[zero] = ${bl};`);
                 }
             }
             const isDynamic = INTERP_REGEXP.test(ast.name);
@@ -4366,6 +4367,7 @@
             if (ast.body && !ctx.isLast) {
                 this.addLine(`${ctxVar} = ${ctxVar}.__proto__;`);
             }
+            return block.varName;
         }
         compileTCallBlock(ast, ctx) {
             let { block, forceNewBlock } = ctx;
@@ -4376,6 +4378,7 @@
             }
             block = this.createBlock(block, "multi", ctx);
             this.insertBlock(compileExpr(ast.name), block, { ...ctx, forceNewBlock: !block });
+            return block.varName;
         }
         compileTSet(ast, ctx) {
             this.target.shouldProtectScope = true;
@@ -4385,7 +4388,8 @@
                 this.helpers.add("LazyValue");
                 const bodyAst = { type: 3 /* Multi */, content: ast.body };
                 const name = this.compileInNewTarget("value", bodyAst, ctx);
-                let value = `new LazyValue(${name}, ctx, this, node)`;
+                let key = this.target.currentKey(ctx);
+                let value = `new LazyValue(${name}, ctx, this, node, ${key})`;
                 value = ast.value ? (value ? `withDefault(${expr}, ${value})` : expr) : value;
                 this.addLine(`ctx[\`${ast.name}\`] = ${value};`);
             }
@@ -4405,6 +4409,7 @@
                 this.helpers.add("setContextValue");
                 this.addLine(`setContextValue(${ctx.ctxVar || "ctx"}, "${ast.name}", ${value});`);
             }
+            return null;
         }
         generateComponentKey() {
             const parts = [generateId("__")];
@@ -4535,6 +4540,7 @@
             }
             block = this.createBlock(block, "multi", ctx);
             this.insertBlock(blockExpr, block, ctx);
+            return block.varName;
         }
         wrapWithEventCatcher(expr, on) {
             this.helpers.add("createCatcher");
@@ -4601,11 +4607,13 @@
             }
             block = this.createBlock(block, "multi", ctx);
             this.insertBlock(blockString, block, { ...ctx, forceNewBlock: false });
+            return block.varName;
         }
         compileTTranslation(ast, ctx) {
             if (ast.content) {
-                this.compileAST(ast.content, Object.assign({}, ctx, { translate: false }));
+                return this.compileAST(ast.content, Object.assign({}, ctx, { translate: false }));
             }
+            return null;
         }
         compileTPortal(ast, ctx) {
             if (!this.staticDefs.find((d) => d.id === "Portal")) {
@@ -4632,6 +4640,7 @@
             }
             block = this.createBlock(block, "multi", ctx);
             this.insertBlock(blockString, block, { ...ctx, forceNewBlock: false });
+            return block.varName;
         }
     }
 
@@ -5801,9 +5810,9 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '2.0.0-beta-21';
-    __info__.date = '2022-09-26T13:49:57.969Z';
-    __info__.hash = 'ab72cdd';
+    __info__.version = '2.0.0-beta-22';
+    __info__.date = '2022-09-29T07:17:44.146Z';
+    __info__.hash = '64bad25';
     __info__.url = 'https://github.com/odoo/owl';
 
 
