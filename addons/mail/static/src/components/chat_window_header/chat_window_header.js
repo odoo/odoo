@@ -6,17 +6,6 @@ const { Component } = owl;
 
 export class ChatWindowHeader extends Component {
 
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @returns {ChatWindow}
-     */
-    get chatWindow() {
-        return this.props.chatWindow;
-    }
-
     /**
      * @returns {ChatWindowHeaderView}
      */
@@ -27,10 +16,7 @@ export class ChatWindowHeader extends Component {
 }
 
 Object.assign(ChatWindowHeader, {
-    props: {
-        chatWindow: Object,
-        record: Object,
-    },
+    props: { record: Object },
     template: 'mail.ChatWindowHeader',
 });
 
