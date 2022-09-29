@@ -29,7 +29,7 @@ class LinkPreview(models.Model):
         if not message.body:
             return
         tree = html.fromstring(message.body)
-        urls = tree.xpath('//a/@href')
+        urls = tree.xpath('//a[not(@data-oe-model)]/@href')
         link_previews = self.env['mail.link.preview']
         requests_session = requests.Session()
         # Some websites are blocking non browser user agent.
