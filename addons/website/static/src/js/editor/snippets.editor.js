@@ -449,6 +449,29 @@ weSnippetEditor.SnippetEditor.include({
         }
         return this._super(...arguments);
     },
+    /**
+     * Changes some behaviors before the drag and drop.
+     *
+     * @private
+     * @override
+     * @returns {Function} a function that restores what was changed when the
+     *  drag and drop is over.
+     */
+    _prepareDrag() {
+        const restore = this._super(...arguments);
+        // Remove the footer scroll effect if it has one (because the footer
+        // dropzone flickers otherwise when it is in grid mode).
+        const wrapwrapEl = this.$body[0].ownerDocument.defaultView.document.body.querySelector('#wrapwrap');
+        const hasFooterScrollEffect = wrapwrapEl && wrapwrapEl.classList.contains('o_footer_effect_enable');
+        if (hasFooterScrollEffect) {
+            wrapwrapEl.classList.remove('o_footer_effect_enable');
+            return () => {
+                wrapwrapEl.classList.add('o_footer_effect_enable');
+                restore();
+            };
+        }
+        return restore;
+    },
 });
 return {
     SnippetsMenu: wSnippetMenu,
