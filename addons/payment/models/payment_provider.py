@@ -92,7 +92,7 @@ class PaymentProvider(models.Model):
         ondelete='restrict',
     )
 
-    # Availability fields.
+    # Availability fields
     available_country_ids = fields.Many2many(
         string="Countries",
         comodel_name='res.country',
@@ -170,7 +170,7 @@ class PaymentProvider(models.Model):
     # Module-related fields
     module_id = fields.Many2one(string="Corresponding Module", comodel_name='ir.module.module')
     module_state = fields.Selection(
-        string="Installation State", related='module_id.state', store=True)  # Stored for sorting
+        string="Installation State", related='module_id.state', store=True)  # Stored for sorting.
     module_to_buy = fields.Boolean(string="Odoo Enterprise Module", related='module_id.to_buy')
 
     # View configuration fields
@@ -204,11 +204,25 @@ class PaymentProvider(models.Model):
 
     @api.depends('code')
     def _compute_view_configuration_fields(self):
-        """ Compute view configuration fields based on the provider.
+        """ Compute the view configuration fields based on the provider.
 
-        By default, all fields are set to `True`.
-        For a provider to hide generic elements (pages, fields) in a view, it must override this
-        method and set their corresponding view configuration field to `False`.
+        View configuration fields are used to hide specific elements (notebook pages, fields, etc.)
+        from the form view of payment providers. These fields are set to `True` by default and are
+        as follows:
+
+        - `show_credentials_page`: Whether the "Credentials" notebook page should be shown.
+        - `show_allow_tokenization`: Whether the `allow_tokenization` field should be shown.
+        - `show_allow_express_checkout`: Whether the `allow_express_checkout` field should be shown.
+        - `show_payment_icon_ids`: Whether the `payment_icon_ids` field should be shown.
+        - `show_pre_msg`: Whether the `pre_msg` field should be shown.
+        - `show_pending_msg`: Whether the `pending_msg` field should be shown.
+        - `show_auth_msg`: Whether the `auth_msg` field should be shown.
+        - `show_done_msg`: Whether the `done_msg` field should be shown.
+        - `show_cancel_msg`: Whether the `cancel_msg` field should be shown.
+
+        For a provider to hide specific elements of the form view, it must override this method and
+        set the related view configuration fields to `False` on the appropriate `payment.provider`
+        records.
 
         :return: None
         """
@@ -225,9 +239,24 @@ class PaymentProvider(models.Model):
         })
 
     def _compute_feature_support_fields(self):
-        """ Compute the feature support fields.
+        """ Compute the feature support fields based on the provider.
 
-        For an provider to support one or more additional feature, it must override this method.
+        Feature support fields are used to specify which additional features are supported by a
+        given provider. These fields are as follows:
+
+        - `support_express_checkout`: Whether the "express checkout" feature is supported. `False`
+          by default.
+        - `support_fees`: Whether the "extra fees" feature is supported. `False` by default.
+        - `support_manual_capture`: Whether the "manual capture" feature is supported. `False` by
+          default.
+        - `support_refund`: Which type of the "refunds" feature is supported: `None`,
+          `'full_only'`, or `'partial'`. `None` by default.
+        - `support_tokenization`: Whether the "tokenization feature" is supported. `False` by
+          default.
+
+        For a provider to specify that it supports additional features, it must override this method
+        and set the related feature support fields to the desired value on the appropriate
+        `payment.provider` records.
 
         :return: None
         """
@@ -251,16 +280,14 @@ class PaymentProvider(models.Model):
 
     @api.onchange('state')
     def _onchange_state_warn_before_disabling_tokens(self):
-        """ Display a warning about the consequences of disabling an provider.
+        """ Display a warning about the consequences of disabling a provider.
 
-        Let the user know that tokens related to an provider get archived if it is disabled or if
-        its state is changed from 'test' to 'enabled' and vice versa.
+        Let the user know that tokens related to a provider get archived if it is disabled or if its
+        state is changed from 'test' to 'enabled', and vice versa.
 
-        :return: The warning message in a client action.
+        :return: A client action with the warning message, if any.
         :rtype: dict
         """
-        self.ensure_one()
-
         if self._origin.state in ('test', 'enabled') and self._origin.state != self.state:
             related_tokens = self.env['payment.token'].search(
                 [('provider_id', '=', self._origin.id)]
@@ -282,8 +309,8 @@ class PaymentProvider(models.Model):
     def _check_fee_var_within_boundaries(self):
         """ Check that variable fees are within realistic boundaries.
 
-        Variable fees values should always be positive and below 100% to respectively avoid negative
-        and infinite (division by zero) fees amount.
+        Variable fee values should always be positive and below 100% to respectively avoid negative
+        and infinite (division by zero) fee amounts.
 
         :return None
         """
@@ -315,9 +342,10 @@ class PaymentProvider(models.Model):
     def _check_required_if_provider(self):
         """ Check that provider-specific required fields have been filled.
 
-        The fields that have the `required_if_provider='<provider>'` attribute are made required
-        for all `payment.provider` records with the `code` field equal to <provider> and with the
-        `state` field equal to 'enabled' or 'test'.
+        The fields that have the `required_if_provider='<provider_code>'` attribute are made
+        required for all `payment.provider` records with the `code` field equal to `<provider_code>`
+        and with the `state` field equal to `'enabled'` or `'test'`.
+
         Provider-specific views should make the form fields required under the same conditions.
 
         :return: None
@@ -339,7 +367,7 @@ class PaymentProvider(models.Model):
             )
 
     def _handle_state_change(self):
-        """ Archive all the payment tokens linked to these providers.
+        """ Archive all the payment tokens linked to the providers.
 
         :return: None
         """
@@ -348,11 +376,11 @@ class PaymentProvider(models.Model):
     #=== ACTION METHODS ===#
 
     def button_immediate_install(self):
-        """ Install the provider's module and reload the page.
+        """ Install the module and reload the page.
 
-        Note: self.ensure_one()
+        Note: `self.ensure_one()`
 
-        :return: The action to reload the page
+        :return: The action to reload the page.
         :rtype: dict
         """
         if self.module_id and self.module_state != 'installed':
@@ -363,9 +391,9 @@ class PaymentProvider(models.Model):
             }
 
     def action_toggle_is_published(self):
-        """ Toggle the provider's is_published state.
+        """ Toggle the field `is_published`.
 
-        :return: none
+        :return: None
         :raise UserError: If the provider is disabled.
         """
         if self.state != 'disabled':
@@ -382,30 +410,31 @@ class PaymentProvider(models.Model):
     ):
         """ Select and return the providers matching the criteria.
 
-        The base criteria are that providers must not be disabled, be in the company that is
-        provided, and support the country of the partner if it exists.
+        The criteria are that providers must not be disabled, be in the company that is provided,
+        and support the country of the partner if it exists. The criteria can be further refined
+        by providing the keyword arguments.
 
-        :param int company_id: The company to which providers must belong, as a `res.company` id
-        :param int partner_id: The partner making the payment, as a `res.partner` id
-        :param float amount: The amount to pay, `0` for validation transactions.
-        :param int currency_id: The payment currency if known beforehand, as a `res.currency` id
-        :param bool force_tokenization: Whether only providers allowing tokenization can be matched
+        :param int company_id: The company to which providers must belong, as a `res.company` id.
+        :param int partner_id: The partner making the payment, as a `res.partner` id.
+        :param float amount: The amount to pay. `0` for validation transactions.
+        :param int currency_id: The payment currency, if known beforehand, as a `res.currency` id.
+        :param bool force_tokenization: Whether only providers allowing tokenization can be matched.
         :param bool is_express_checkout: Whether the payment is made through express checkout.
-        :param bool is_validation: Whether the operation is a validation
-        :param dict kwargs: Optional data. This parameter is not used here
-        :return: The compatible providers
+        :param bool is_validation: Whether the operation is a validation.
+        :param dict kwargs: Optional data. This parameter is not used here.
+        :return: The compatible providers.
         :rtype: recordset of `payment.provider`
         """
-        # Compute the base domain for compatible providers
+        # Compute the base domain for compatible providers.
         domain = ['&', ('state', 'in', ['enabled', 'test']), ('company_id', '=', company_id)]
 
         # Handle the is_published state.
         if not self.env.user._is_internal():
             domain = expression.AND([domain, [('is_published', '=', True)]])
 
-        # Handle partner country
+        # Handle partner country.
         partner = self.env['res.partner'].browse(partner_id)
-        if partner.country_id:  # The partner country must either not be set or be supported
+        if partner.country_id:  # The partner country must either not be set or be supported.
             domain = expression.AND([
                 domain, [
                     '|',
@@ -429,7 +458,7 @@ class PaymentProvider(models.Model):
                 ]
             ])
 
-        # Handle tokenization support requirements
+        # Handle tokenization support requirements.
         if force_tokenization or self._is_tokenization_required(**kwargs):
             domain = expression.AND([domain, [('allow_tokenization', '=', True)]])
 
@@ -446,21 +475,21 @@ class PaymentProvider(models.Model):
         For a module to make the tokenization required based on the transaction context, it must
         override this method and return whether it is required.
 
-        :param dict kwargs: The transaction context. This parameter is not used here
-        :return: Whether tokenizing the transaction is required
+        :param dict kwargs: The transaction context. This parameter is not used here.
+        :return: Whether tokenizing the transaction is required.
         :rtype: bool
         """
         return False
 
     def _should_build_inline_form(self, is_validation=False):
-        """ Return whether the inline form should be instantiated if it exists.
+        """ Return whether the inline payment form should be instantiated.
 
-        For a provider to handle both direct payments and payment with redirection, it should
-        override this method and return whether the inline form should be instantiated (i.e. if the
-        payment should be direct) based on the operation (online payment or validation).
+        For a provider to handle both direct payments and payments with redirection, it must
+        override this method and return whether the inline payment form should be instantiated (i.e.
+        if the payment should be direct) based on the operation (online payment or validation).
 
-        :param bool is_validation: Whether the operation is a validation
-        :return: Whether the inline form should be instantiated
+        :param bool is_validation: Whether the operation is a validation.
+        :return: Whether the inline form should be instantiated.
         :rtype: bool
         """
         return True
@@ -468,20 +497,19 @@ class PaymentProvider(models.Model):
     def _compute_fees(self, amount, currency, country):
         """ Compute the transaction fees.
 
-        The computation is based on the generic fields `fees_dom_fixed`, `fees_dom_var`,
-        `fees_int_fixed` and `fees_int_var` and is done according to the following formula:
-
-        `fees = (amount * variable / 100.0 + fixed) / (1 - variable / 100.0)` where the value
-        of `fixed` and `variable` is taken either from the domestic (dom) or international (int)
-        field depending on whether the country matches the company's country.
+        The computation is based on the fields `fees_dom_fixed`, `fees_dom_var`, `fees_int_fixed`
+        and `fees_int_var`, and is performed with the formula
+        :code:`fees = (amount * variable / 100.0 + fixed) / (1 - variable / 100.0)` where the values
+        of `fixed` and `variable` are taken from either the domestic (`dom`) or international
+        (`int`) fields, depending on whether the country matches the company's country.
 
         For a provider to base the computation on different variables, or to use a different
-        formula, it must override this method and return the resulting fees as a float.
+        formula, it must override this method and return the resulting fees.
 
-        :param float amount: The amount to pay for the transaction
-        :param recordset currency: The currency of the transaction, as a `res.currency` record
-        :param recordset country: The customer country, as a `res.country` record
-        :return: The computed fees
+        :param float amount: The amount to pay for the transaction.
+        :param recordset currency: The currency of the transaction, as a `res.currency` record.
+        :param recordset country: The customer country, as a `res.country` record.
+        :return: The computed fees.
         :rtype: float
         """
         self.ensure_one()
@@ -498,30 +526,29 @@ class PaymentProvider(models.Model):
         return fees
 
     def _get_validation_amount(self):
-        """ Get the amount to transfer in a payment method validation operation.
+        """ Return the amount to use for validation operations.
 
-        For a provider to support tokenization, it must override this method and return the amount
-        to be transferred in a payment method validation operation *if the validation amount is not
-        null*.
+        For a provider to support tokenization, it must override this method and return the
+        validation amount. If it is `0`, it is not necessary to create the override.
 
-        Note: self.ensure_one()
+        Note: `self.ensure_one()`
 
-        :return: The validation amount
+        :return: The validation amount.
         :rtype: float
         """
         self.ensure_one()
         return 0.0
 
     def _get_validation_currency(self):
-        """ Get the currency of the transfer in a payment method validation operation.
+        """ Return the currency to use for validation operations.
 
         For a provider to support tokenization, it must override this method and return the
-        currency to be used in a payment method validation operation *if the validation amount is
-        not null*.
+        validation currency. If the validation amount is `0`, it is not necessary to create the
+        override.
 
-        Note: self.ensure_one()
+        Note: `self.ensure_one()`
 
-        :return: The validation currency
+        :return: The validation currency.
         :rtype: recordset of `res.currency`
         """
         self.ensure_one()
@@ -533,10 +560,10 @@ class PaymentProvider(models.Model):
         For a provider to return a different view depending on whether the operation is a
         validation, it must override this method and return the appropriate view.
 
-        Note: self.ensure_one()
+        Note: `self.ensure_one()`
 
-        :param bool is_validation: Whether the operation is a validation
-        :return: The redirect form template
+        :param bool is_validation: Whether the operation is a validation.
+        :return: The view of the redirect form template.
         :rtype: record of `ir.ui.view`
         """
         self.ensure_one()
@@ -544,20 +571,21 @@ class PaymentProvider(models.Model):
 
     @api.model
     def _setup_provider(self, provider_code):
-        """ Prepare module-specific data for a given provider.
+        """ Perform module-specific setup steps for the provider.
 
-        This method is called after a new provider module is installed and also for all existing
-        providers when `account_payment` is installed.
+        This method is called after the module of a provider is installed, with its code passed as
+        `provider_code`.
 
         :param str provider_code: The code of the provider to setup.
         :return: None
         """
+        return
 
     @api.model
     def _remove_provider(self, provider_code):
-        """ Clean module-specific data for a given provider.
+        """ Remove the module-specific data of the given provider.
 
-        :param str provider_code: The code of the provider to setup.
+        :param str provider_code: The code of the provider whose data to remove.
         :return: None
         """
         providers = self.search([('code', '=', provider_code)])
@@ -576,10 +604,10 @@ class PaymentProvider(models.Model):
         """)
 
     def _neutralize_fields(self, provider_code, field_names):
-        """ Helper to neutralize API keys for a specific provider.
+        """ Helper to neutralize API keys for the given provider.
 
-        :param str provider_code: The code of the provider.
-        :param list field_names: The names of the fields to nullify.
+        :param str provider_code: The code of the provider whose fields to neutralize.
+        :param list field_names: The names of the fields to neutralize.
         :return: None
         """
         self.flush_model()
@@ -592,4 +620,4 @@ class PaymentProvider(models.Model):
             fields=sql.SQL(','.join(field_names)),
             vals=sql.SQL(', '.join(['NULL'] * len(field_names))),
         )
-        self.env.cr.execute(query, (provider_code, ))
+        self.env.cr.execute(query, (provider_code,))
