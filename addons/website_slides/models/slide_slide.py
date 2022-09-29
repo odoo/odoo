@@ -123,7 +123,7 @@ class Slide(models.Model):
     tag_ids = fields.Many2many('slide.tag', 'rel_slide_tag', 'slide_id', 'tag_id', string='Tags')
     is_preview = fields.Boolean('Allow Preview', default=False, help="The course is accessible by anyone : the users don't need to join the channel to access the content of the course.")
     is_new_slide = fields.Boolean('Is New Slide', compute='_compute_is_new_slide')
-    completion_time = fields.Float('Duration', digits=(10, 4), help="The estimated completion time for this slide")
+    completion_time = fields.Float('Duration', digits=(10, 4))
     # Categories
     is_category = fields.Boolean('Is a category', default=False)
     category_id = fields.Many2one('slide.slide', string="Section", compute="_compute_category_id", store=True)
@@ -193,8 +193,7 @@ class Slide(models.Model):
         help="Subtype of the slide category, allows more precision on the actual file type / source type.")
     document_google_url = fields.Char('Document Link', related='url', readonly=False,
         help="Link of the document (we currently only support Google Drive as source)")
-    document_binary_content = fields.Binary('PDF Content', related='binary_content', readonly=False,
-        help="Used to filter file input to PDF only")
+    document_binary_content = fields.Binary('PDF Content', related='binary_content', readonly=False)
     # content - videos
     video_url = fields.Char('Video Link', related='url', readonly=False,
         help="Link of the video (we support YouTube, Google Drive and Vimeo as sources)")
