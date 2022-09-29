@@ -21,7 +21,7 @@
         <xpath expr="//input[@name='booth_category_id']" position="attributes">
             <attribute name="t-att-data-price">
                 event.company_id.sudo().currency_id._convert(
-                    booth_category.price_reduce_taxeinc if env.user.has_group('account.group_show_line_subtotals_tax_included') else booth_category.price_reduce,
+                    booth_category.price_reduce_taxinc if env.user.has_group('account.group_show_line_subtotals_tax_included') else booth_category.price_reduce,
                     website.get_current_pricelist().currency_id,
                     event.company_id,
                     datetime.date.today()

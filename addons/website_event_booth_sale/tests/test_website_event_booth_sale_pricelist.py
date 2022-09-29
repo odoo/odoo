@@ -38,7 +38,7 @@ class TestWebsiteBoothPriceList(TestEventBoothSaleCommon, TestWebsiteEventSaleCo
         })
         # set pricelist to 0 - currency: company
         self.pricelist.write({
-            'currency_id': self.new_company.currency_id.id,
+            'currency_id': self.env.company.currency_id.id,
             'discount_policy': 'with_discount',
             'item_ids': [(5, 0, 0), (0, 0, {
                 'applied_on': '3_global',
@@ -50,7 +50,7 @@ class TestWebsiteBoothPriceList(TestEventBoothSaleCommon, TestWebsiteEventSaleCo
         with MockRequest(self.env, sale_order_id=self.so.id, website=self.current_website):
             self.WebsiteSaleController.pricelist(promo=None)
             self.so._cart_update(line_id=so_line.id, product_id=self.event_booth_product.id, set_qty=1)
-        self.assertEqual(so_line.price_reduce, 40)
+        self.assertEqual(so_line.price_reduce_taxexcl, 40)
 
         # set pricelist to 10% - without discount
         self.pricelist.write({
@@ -66,7 +66,7 @@ class TestWebsiteBoothPriceList(TestEventBoothSaleCommon, TestWebsiteEventSaleCo
         with MockRequest(self.env, sale_order_id=self.so.id, website=self.current_website):
             self.WebsiteSaleController.pricelist(promo=None)
             self.so._cart_update(line_id=so_line.id, product_id=self.event_booth_product.id, set_qty=1)
-        self.assertEqual(so_line.price_reduce, 360, 'Incorrect amount based on the pricelist "Without Discount" and its currency.')
+        self.assertEqual(so_line.price_reduce_taxexcl, 360, 'Incorrect amount based on the pricelist "Without Discount" and its currency.')
 
         # set pricelist to 10% - with discount
         self.pricelist.write({
@@ -76,4 +76,4 @@ class TestWebsiteBoothPriceList(TestEventBoothSaleCommon, TestWebsiteEventSaleCo
         with MockRequest(self.env, sale_order_id=self.so.id, website=self.current_website):
             self.WebsiteSaleController.pricelist(promo=None)
             self.so._cart_update(line_id=so_line.id, product_id=self.event_booth_product.id, set_qty=1)
-        self.assertEqual(so_line.price_reduce, 360, 'Incorrect amount based on the pricelist "With Discount" and its currency.')
+        self.assertEqual(so_line.price_reduce_taxexcl, 360, 'Incorrect amount based on the pricelist "With Discount" and its currency.')
