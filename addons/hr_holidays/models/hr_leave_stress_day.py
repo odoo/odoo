@@ -1,8 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from dateutil.relativedelta import relativedelta
 from random import randint
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class StressDay(models.Model):
@@ -15,8 +14,9 @@ class StressDay(models.Model):
     start_date = fields.Date(required=True)
     end_date = fields.Date(required=True)
     color = fields.Integer(default=lambda dummy: randint(1, 11))
-    resource_calendar_id = fields.Many2one('resource.calendar', 'Working Hours',
-        default=lambda self: self.env.company.resource_calendar_id.id, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    resource_calendar_id = fields.Many2one(
+        'resource.calendar', 'Working Hours',
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     department_ids = fields.Many2many('hr.department', string="Departments")
 
     _sql_constraints = [
