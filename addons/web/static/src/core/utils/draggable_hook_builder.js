@@ -10,6 +10,26 @@ import { debounce } from "@web/core/utils/timing";
  */
 
 /**
+ * @typedef DraggableBuilderParams
+ *
+ * Hook params
+ * @property {string} [name="useAnonymousDraggable"]
+ * @property {Record<string, string[]>} [acceptedParams]
+ *
+ * Build handlers
+ * @property {(params: DraggableBuilderHookParams) => any} onBuildSetup
+ * @property {(params: DraggableBuilderHookParams) => any} onComputeParams
+ *
+ * Runtime handlers
+ * @property {(params: DraggableBuilderHookParams) => any} onWillStartDrag
+ * @property {(params: DraggableBuilderHookParams) => any} onDragStart
+ * @property {(params: DraggableBuilderHookParams) => any} onDrag
+ * @property {(params: DraggableBuilderHookParams) => any} onDragEnd
+ * @property {(params: DraggableBuilderHookParams) => any} onDrop
+ * @property {(params: DraggableBuilderHookParams) => any} onCleanup
+ */
+
+/**
  * @typedef DraggableHookRunningContext
  * @property {{ el: HTMLElement | null }} ref
  * @property {string | null} [elementSelector=null]
@@ -23,6 +43,15 @@ import { debounce } from "@web/core/utils/timing";
  * @property {boolean} [enabled=false]
  * @property {Position} [mouse={ x: 0, y: 0 }]
  * @property {Position} [offset={ x: 0, y: 0 }]
+ */
+
+/**
+ * @typedef DraggableBuilderHookParams
+ * @property {DraggableHookRunningContext} ctx
+ * @property {Object} helpers
+ * @property {Function} helpers.addListener
+ * @property {Function} helpers.addStyle
+ * @property {Function} helpers.execHandler
  */
 
 const { useEffect, useEnv, useExternalListener, onWillUnmount, reactive } = owl;
@@ -57,6 +86,10 @@ function cssValueToNumber(val) {
     return Number(val.slice(0, -2));
 }
 
+/**
+ * @param {DraggableBuilderParams} hookParams
+ * @returns {(params: Record<any, any>) => { dragging: boolean }}
+ */
 export function makeDraggableHook(hookParams = {}) {
     const hookName = hookParams.name || "useAnonymousDraggable";
     const allAcceptedParams = { ...DEFAULT_ACCEPTED_PARAMS, ...hookParams.acceptedParams };

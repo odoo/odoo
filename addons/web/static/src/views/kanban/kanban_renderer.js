@@ -56,13 +56,13 @@ export class KanbanRenderer extends Component {
                 connectGroups: () => this.canMoveRecords,
                 cursor: "move",
                 // Hooks
-                onStart: (params) => {
+                onDragStart: (params) => {
                     const { element, group } = params;
                     dataRecordId = element.dataset.id;
                     dataGroupId = group && group.dataset.id;
                     return this.sortStart(params);
                 },
-                onStop: (params) => this.sortStop(params),
+                onDragEnd: (params) => this.sortStop(params),
                 onGroupEnter: (params) => this.sortRecordGroupEnter(params),
                 onGroupLeave: (params) => this.sortRecordGroupLeave(params),
                 onDrop: (params) => this.sortRecordDrop(dataRecordId, dataGroupId, params),
@@ -75,12 +75,12 @@ export class KanbanRenderer extends Component {
                 handle: ".o_column_title",
                 cursor: "move",
                 // Hooks
-                onStart: (params) => {
+                onDragStart: (params) => {
                     const { element } = params;
                     dataGroupId = element.dataset.id;
                     return this.sortStart(params);
                 },
-                onStop: (params) => this.sortStop(params),
+                onDragEnd: (params) => this.sortStop(params),
                 onDrop: (params) => this.sortGroupDrop(dataGroupId, params),
             });
         }
