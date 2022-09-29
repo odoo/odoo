@@ -1926,6 +1926,8 @@ class SaleOrderLine(models.Model):
         - in event_sale we need to know specifically the sales order line as well as the product to generate the name:
           the product is not sufficient because we also need to know the event_id and the event_ticket_id (both which belong to the sale order line).
         """
+        if not product:
+            return ''
         return product.get_product_multiline_description_sale() + self._get_sale_order_line_multiline_description_variants()
 
     def _get_sale_order_line_multiline_description_variants(self):
