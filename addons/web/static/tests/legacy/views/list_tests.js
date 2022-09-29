@@ -22,6 +22,7 @@ const widgetRegistryOwl = require('web.widgetRegistry');
 var Widget = require('web.Widget');
 const ControlPanel = require('web.ControlPanel');
 const ListController = require('web.ListController');
+const { registerCleanup } = require("@web/../tests/helpers/cleanup");
 
 const { registry } = require('@web/core/registry');
 const legacyViewRegistry = require('web.view_registry');
@@ -4393,6 +4394,9 @@ QUnit.module('LegacyViews', {
 
     QUnit.test('display a tooltip on a field', async function (assert) {
         assert.expect(4);
+
+        fieldRegistry.add("toggle_button", basicFields.FieldToggleBoolean);
+        registerCleanup(() => delete fieldRegistry.map.toggle_button);
 
         var initialDebugMode = odoo.debug;
         odoo.debug = false;
@@ -9244,6 +9248,9 @@ QUnit.module('LegacyViews', {
 
     QUnit.test('grouped list edition with toggle_button widget', async function (assert) {
         assert.expect(3);
+
+        fieldRegistry.add("toggle_button", basicFields.FieldToggleBoolean);
+        registerCleanup(() => delete fieldRegistry.map.toggle_button);
 
         var list = await createView({
             View: ListView,
