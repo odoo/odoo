@@ -531,8 +531,8 @@
                                     </div>
                                     <div class="o_kanban_record_body" t-if="!selection_mode" attrs="{'invisible': [('sent_date', '=', False), ('schedule_date', '=', False), ('state', '!=', 'in_queue')]}">
                                         <div>
-                                            <span attrs="{'invisible': [('sent_date', '=', False)]}"><b><field name="delivered"/> / <field name="expected"/></b> Delivered to</span>
-                                            <span attrs="{'invisible': [('sent_date', '!=', False)]}"><b><field name='total'/></b></span>
+                                            <span attrs="{'invisible': [('sent_date', '=', False)]}" class="me-1"><b><field name="delivered"/> / <field name="expected"/></b> Delivered to</span>
+                                            <span attrs="{'invisible': [('sent_date', '!=', False)]}" class="me-1"><b><field name='total'/></b></span>
                                             <field name='mailing_model_id' attrs="{'invisible': [('mailing_model_name','=','mailing.list')]}"/>
                                             <span attrs="{'invisible': [('mailing_model_name','!=','mailing.list')]}">Mailing Contact</span>
                                         </div>
@@ -563,7 +563,7 @@
                                         </span>
                                         <span attrs="{'invisible': ['|', '|', ('sent_date', '!=', False), ('schedule_date', '!=', False), ('state', '=', 'in_queue')]}"
                                             class="clearfix">
-                                            <b><field name='total'/></b>
+                                            <b><field name='total' class="me-1"/></b>
                                             <field name='mailing_model_id' attrs="{'invisible': [('mailing_model_name','=','mailing.list')]}"/>
                                             <span attrs="{'invisible': [('mailing_model_name','!=','mailing.list')]}">Mailing Contact</span>
                                         </span>
