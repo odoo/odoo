@@ -567,8 +567,24 @@ class TestCRMLead(TestCrmCommon):
             'country_id': self.env.ref('base.be').id,
             'phone': '+32485112233',
         })
+        lead_3 = self.env['crm.lead'].create({
+            'name': 'Lead 3',
+            'country_id': self.env.ref('base.be').id,
+            'phone': '+32495001122',
+            'mobile': '+32985001122',
+        })
+        lead_4 = self.env['crm.lead'].create({
+            'name': 'Lead 4',
+            'country_id': self.env.ref('base.be').id,
+        })
         self.assertEqual(lead_1, self.env['crm.lead'].search([
             ('phone_mobile_search', 'like', '+32485001122')
+        ]))
+        self.assertIn(lead_3, self.env['crm.lead'].search([
+            ('phone_mobile_search', '!=', False) # is set
+        ]))
+        self.assertIn(lead_4, self.env['crm.lead'].search([
+            ('phone_mobile_search', '=', False) # is not set
         ]))
 
         with self.assertRaises(UserError):

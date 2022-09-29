@@ -469,6 +469,21 @@ class Lead(models.Model):
                 lead.ribbon_message = False
 
     def _search_phone_mobile_search(self, operator, value):
+
+        if value is False and operator in ('=', '!='):
+            condition = 'IS NULL' if operator == '=' else 'IS NOT NULL'
+            query = """
+                SELECT model.id
+                FROM %s model
+                WHERE model.phone %s
+                AND model.mobile %s
+            """ % (self._table, condition, condition)
+            self._cr.execute(query, ())
+            res = self._cr.fetchall()
+            if not res:
+                return [(0, '=', 1)]
+            return [('id', 'in', [r[0] for r in res])]
+
         value = re.sub(r'[^\d+]+', '', value)
         if len(value) <= 2:
             raise UserError(_('Please enter at least 3 digits when searching on phone / mobile.'))
