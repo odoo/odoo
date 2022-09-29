@@ -92,7 +92,7 @@ def transfer_node_to_modifiers(node, modifiers):
         else:
             modifiers['invisible'] = [('state', 'not in', states)]
 
-    context_dependent_modifiers = []
+    context_dependent_modifiers = {}
     for attr in ('invisible', 'readonly', 'required'):
         value_str = node.attrib.pop(attr, None)
         if value_str:
@@ -112,8 +112,8 @@ def transfer_node_to_modifiers(node, modifiers):
                 # if str2bool fails, it means it's something else than 1/True/0/False,
                 # meaning most-likely `context.get('...')`,
                 # which should be evaluated after retrieving the view arch from the cache
-                value = value_str
-                context_dependent_modifiers.append(attr)
+                context_dependent_modifiers[attr] = value_str
+                continue
 
             if value or (attr not in modifiers or not isinstance(modifiers[attr], list)):
                 # Don't set the attribute to False if a dynamic value was
@@ -121,7 +121,7 @@ def transfer_node_to_modifiers(node, modifiers):
                 modifiers[attr] = value
 
     if context_dependent_modifiers:
-        node.set('context-dependent-modifiers', ','.join(context_dependent_modifiers))
+        node.set('context-dependent-modifiers', json.dumps(context_dependent_modifiers))
 
 
 def simplify_modifiers(modifiers):
@@ -1093,9 +1093,11 @@ actual arch.
             context-dependent-modifiers="invisible"/>
         """
         for node in tree.xpath('//*[@context-dependent-modifiers]'):
-            modifiers = json.loads(node.attrib.pop('modifiers'))
-            for attr in node.attrib.pop('context-dependent-modifiers').split(','):
-                modifiers[attr] = bool(safe_eval.safe_eval(modifiers[attr], {'context': self._context}))
+            modifiers = json.loads(node.attrib.pop('modifiers', '{}'))
+            for attr, value in json.loads(node.attrib.pop('context-dependent-modifiers')).items():
+                value = bool(safe_eval.safe_eval(value, {'context': self._context}))
+                if value or (attr not in modifiers or not isinstance(modifiers[attr], list)):
+                    modifiers[attr] = value
             transfer_modifiers_to_node(modifiers, node)
         return tree
 
