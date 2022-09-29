@@ -701,9 +701,19 @@ export class Record extends DataPoint {
      * @param {boolean} [options.stayInEdition=false]
      * @param {boolean} [options.noReload=false] prevents the record from
      *  reloading after changes are applied, typically used to defer the load.
+     * @param {boolean} [options.useSaveErrorDialog=false] displays a custom
+     *  dialog and await the response from this dialog when an error is
+     *  returned by the server.
      * @returns {Promise<boolean>}
      */
-    async save(options = { stayInEdition: true, noReload: false, savePoint: false }) {
+    async save(
+        options = {
+            stayInEdition: true,
+            noReload: false,
+            savePoint: false,
+            useSaveErrorDialog: false,
+        }
+    ) {
         const shouldSwitchToReadonly = !options.stayInEdition && this.isInEdition;
         let resolveSavePromise;
         this._savePromise = new Promise((r) => {
@@ -732,11 +742,23 @@ export class Record extends DataPoint {
             await this.model.__bm__.save(this.__bm_handle__, saveOptions);
         } catch (_e) {
             resolveSavePromise();
+            let canProceed = false;
+            if (options.useSaveErrorDialog) {
+                _e.__raisedOnFormSave = true;
+                canProceed = await new Promise((resolve) => {
+                    _e.onDiscard = async () => {
+                        await this.discard();
+                        resolve(true);
+                    };
+                    _e.onStayHere = () => resolve(false);
+                });
+            }
+
             if (!this.isInEdition) {
                 await this.load();
                 this.model.notify();
             }
-            return false;
+            return canProceed;
         }
         this.__syncData(true);
         if (shouldSwitchToReadonly) {

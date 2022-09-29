@@ -16,7 +16,6 @@ import { isX2Many } from "@web/views/utils";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { useSetupView } from "@web/views/view_hook";
 import { FormStatusIndicator } from "./form_status_indicator/form_status_indicator";
-import { useFormErrorDialog } from "./form_error_dialog/form_error_dialog";
 
 const { Component, onWillStart, useEffect, useRef, onRendered, useState, toRaw } = owl;
 
@@ -100,10 +99,6 @@ export class FormController extends Component {
             isDisabled: false,
         });
         useBus(this.ui.bus, "resize", this.render);
-        useFormErrorDialog(async () => {
-            await this.discard();
-            this.env.config.historyBack();
-        });
 
         this.archInfo = this.props.archInfo;
         const activeFields = this.archInfo.activeFields;
@@ -181,7 +176,11 @@ export class FormController extends Component {
             rootRef,
             beforeLeave: () => {
                 if (this.model.root.isDirty) {
-                    return this.model.root.save({ noReload: true, stayInEdition: true });
+                    return this.model.root.save({
+                        noReload: true,
+                        stayInEdition: true,
+                        useSaveErrorDialog: true,
+                    });
                 }
             },
             beforeUnload: () => this.beforeUnload(),
@@ -206,7 +205,10 @@ export class FormController extends Component {
                         await this.model.root.askChanges(); // ensures that isDirty is correct
                         let canProceed = true;
                         if (this.model.root.isDirty) {
-                            canProceed = await this.model.root.save({ stayInEdition: true });
+                            canProceed = await this.model.root.save({
+                                stayInEdition: true,
+                                useSaveErrorDialog: true,
+                            });
                         }
                         if (canProceed) {
                             return this.model.load({ resId: resIds[offset] });
@@ -302,7 +304,7 @@ export class FormController extends Component {
                 callback: () => this.duplicateRecord(),
             });
         }
-        if (this.archInfo.activeActions.delete) {
+        if (this.archInfo.activeActions.delete && !this.model.root.isVirtual) {
             otherActionItems.push({
                 key: "delete",
                 description: this.env._t("Delete"),
@@ -313,10 +315,11 @@ export class FormController extends Component {
         return Object.assign({}, this.props.info.actionMenus, { other: otherActionItems });
     }
 
-    async beforeAction(item) {
+    async shouldExecuteAction(item) {
         if ((this.model.root.isDirty || this.model.root.isVirtual) && !item.skipSave) {
-            await this.model.root.save({ stayInEdition: true });
+            return this.model.root.save({ stayInEdition: true, useSaveErrorDialog: true });
         }
+        return true;
     }
 
     async duplicateRecord() {
@@ -347,12 +350,14 @@ export class FormController extends Component {
 
     async beforeExecuteActionButton(clickParams) {
         if (clickParams.special !== "cancel") {
-            return this.model.root.save({ stayInEdition: true }).then((saved) => {
-                if (saved && this.props.onSave) {
-                    this.props.onSave(this.model.root);
-                }
-                return saved;
-            });
+            return this.model.root
+                .save({ stayInEdition: true, useSaveErrorDialog: true })
+                .then((saved) => {
+                    if (saved && this.props.onSave) {
+                        this.props.onSave(this.model.root);
+                    }
+                    return saved;
+                });
         } else if (this.props.onDiscard) {
             this.props.onDiscard(this.model.root);
         }
@@ -368,7 +373,10 @@ export class FormController extends Component {
         await this.model.root.askChanges(); // ensures that isDirty is correct
         let canProceed = true;
         if (this.model.root.isDirty) {
-            canProceed = await this.model.root.save({ stayInEdition: true });
+            canProceed = await this.model.root.save({
+                stayInEdition: true,
+                useSaveErrorDialog: true,
+            });
         }
         if (canProceed) {
             this.disableButtons();
@@ -391,15 +399,10 @@ export class FormController extends Component {
                 ...record.dirtyTranslatableFields,
             ]);
         }
-        try {
-            if (this.props.saveRecord) {
-                saved = await this.props.saveRecord(record, params);
-            } else {
-                saved = await record.save();
-            }
-        } catch {
-            // if the save failed, we want to re-enable buttons
-            this.enableButtons();
+        if (this.props.saveRecord) {
+            saved = await this.props.saveRecord(record, params);
+        } else {
+            saved = await record.save();
         }
         this.enableButtons();
         if (saved && this.props.onSave) {
