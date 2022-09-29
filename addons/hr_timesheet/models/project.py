@@ -98,6 +98,7 @@ class Project(models.Model):
             effective_hours = effective_hours_per_project_id.get(project.id, 0.0)
             project.remaining_hours = planned_hours - effective_hours if planned_hours else 0.0
             project.has_planned_hours_tasks = project.id in planned_hours_per_project_id
+            project.is_project_overtime = project.remaining_hours < 0.0
 
     @api.model
     def _search_is_project_overtime(self, operator, value):
