@@ -249,6 +249,30 @@
             </field>
         </record>
 
+        <record id="view_tax_group_form" model="ir.ui.view">
+            <field name="name">account.tax.group.form</field>
+            <field name="model">account.tax.group</field>
+            <field name="arch" type="xml">
+                <form string="Account Tax Group">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="country_id"/>
+                                <field name="sequence"/>
+                            </group>
+                            <group>
+                                <field name="property_tax_payable_account_id"/>
+                                <field name="property_tax_receivable_account_id"/>
+                                <field name="property_advance_tax_payment_account_id"/>
+                                <field name="preceding_subtotal"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <record id="action_tax_group" model="ir.actions.act_window">
             <field name="name">Tax Groups</field>
             <field name="res_model">account.tax.group</field>
