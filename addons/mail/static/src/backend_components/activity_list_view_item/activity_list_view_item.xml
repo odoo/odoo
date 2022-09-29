@@ -18,7 +18,7 @@
                     <a t-if="activityListViewItem.fileUploader" class="fa fa-upload" title="Upload file" role="img" t-on-click="activityListViewItem.onClickUploadDocument"/>
                     <a t-else="" class="o_ActivityListViewItem_markAsDone fa fa-check-circle" t-on-click="activityListViewItem.onClickMarkAsDone" title="Mark as done" role="img" aria-label="Mark as done" t-ref="markDoneButton"/>
                     <!-- TODO sign override to change the button -->
-                    <!-- TODO approvals override to change stuff -->
+                    <t xpath-target="approvals-activity-list-item"/>
                 </t>
             </div>
             <div t-if="activityListViewItem.activity.state !== 'today'" class="d-flex align-items-baseline">
