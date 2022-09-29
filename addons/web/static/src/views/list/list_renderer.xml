@@ -165,35 +165,36 @@
                 tabindex="-1"
                 t-attf-class="o_group_name fs-6 fw-bold {{!group.isFolded ? 'text-900' : 'text-700'}}"
                 t-att-colspan="getGroupNameCellColSpan(group)">
-
-                <span t-attf-class="fa fa-fw {{group.isFolded ? 'fa-caret-right' : 'fa-caret-down' }}"
-                    t-attf-style="padding-left: {{2 + getGroupLevel(group) * 20}}px; padding-right: 5px"/>
-                <t t-esc="getGroupDisplayName(group)"/> (<t t-esc="group.count"/>)
-                <div t-if="(groupByButtons[group.groupByField.name] and !group.isFolded)" class="o_group_buttons">
-                    <t t-foreach="groupByButtons[group.groupByField.name]" t-as="button" t-key="button.id">
-                        <t t-if="!evalModifier(button.modifiers.invisible, group.record)">
-                            <t t-if="button.clickParams.type === 'edit'">
-                                <button t-att-title="button.title" class="btn" t-on-click="() => this.editGroupRecord(group)" tabindex="-1">
-                                    <i t-attf-class="fa fa-fw {{button.icon}} o_button_icon"/>
-                                </button>
-                            </t>
-                            <t t-else="">
-                                <ViewButton
-                                    className="button.className"
-                                    clickParams="button.clickParams"
-                                    icon="button.icon"
-                                    record="group.record"
-                                    string="button.string"
-                                    title="button.title"
-                                    tabindex="'-1'"
-                                />
+                <div class="d-flex">
+                    <span t-attf-class="fa fa-fw {{group.isFolded ? 'fa-caret-right' : 'fa-caret-down' }}"
+                        t-attf-style="padding-left: {{2 + getGroupLevel(group) * 20}}px; padding-right: 5px"/>
+                    <t t-esc="getGroupDisplayName(group)"/> (<t t-esc="group.count"/>)
+                    <div t-if="(groupByButtons[group.groupByField.name] and !group.isFolded)" class="o_group_buttons">
+                        <t t-foreach="groupByButtons[group.groupByField.name]" t-as="button" t-key="button.id">
+                            <t t-if="!evalModifier(button.modifiers.invisible, group.record)">
+                                <t t-if="button.clickParams.type === 'edit'">
+                                    <button t-att-title="button.title" class="btn" t-on-click="() => this.editGroupRecord(group)" tabindex="-1">
+                                        <i t-attf-class="fa fa-fw {{button.icon}} o_button_icon"/>
+                                    </button>
+                                </t>
+                                <t t-else="">
+                                    <ViewButton
+                                        className="button.className"
+                                        clickParams="button.clickParams"
+                                        icon="button.icon"
+                                        record="group.record"
+                                        string="button.string"
+                                        title="button.title"
+                                        tabindex="'-1'"
+                                    />
+                                </t>
                             </t>
                         </t>
-                    </t>
+                    </div>
+                    <div t-if="showGroupPager(group)" class="ms-auto">
+                        <Pager t-props="getGroupPagerProps(group)"/>
+                    </div>
                 </div>
-            </th>
-            <th t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group)" t-if="showGroupPager(group)">
-                <Pager t-props="getGroupPagerProps(group)"/>
             </th>
             <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group)" t-foreach="getAggregateColumns(group)" t-as="column" t-key="column.id" t-att-class="{'o_list_number': column.type === 'field'}">
                 <t t-if="column.type === 'field'" t-esc="formatAggregateValue(group, column)"/>
