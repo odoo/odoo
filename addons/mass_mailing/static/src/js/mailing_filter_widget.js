@@ -1,188 +1,40 @@
 /** @odoo-module alias=mass_mailing.MailingFilterWidget **/
 
-import { FieldMany2One } from 'web.relational_fields';
+import { Many2OneField } from '@web/views/fields/many2one/many2one_field';
 import core from 'web.core';
 import Domain from 'web.Domain';
-import fieldRegistry from 'web.field_registry';
+import { useAutofocus, useService } from "@web/core/utils/hooks";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { registry } from "@web/core/registry";
 
+const { Component, useEffect, useRef, useChildSubEnv } = owl;
 const _t = core._t;
 
-/**
- * Widget to create / remove favorite filters on mass mailing and/or marketing automation, extended
- * from FieldMany2One. This widget is designed specifically for 'mailing_filter_id'
- * field on 'mailing.mailing' and 'marketing.campaign' form view.
- *
- * In edit mode, it will allow to save the latest configured domain
- * in form of the favorite filter, or to remove the store filters.
- *
- * @class
- */
-const FieldMailingFilter = FieldMany2One.extend({
-    template: 'mass_mailing.FieldMailingFilter',
-    events: Object.assign({}, FieldMany2One.prototype.events, {
-        'click .o_mass_mailing_btn_save_filter': '_onFavoriteFilterSaveClick',
-        'click .o_mass_mailing_remove_filter': '_onFavoriteFilterRemoveClick',
-        'keydown .o_mass_mailing_filter_name': '_onFavoriteFilterNameInputKeydown',
-        'shown.bs.dropdown': '_onFavoriteFilterDropdownShown',
-    }),
-    resetOnAnyFieldChange: true,
-
-    /**
-     * This widget is used for 'mass.mailing' and 'marketing.campaign', but
-     * the field names that stores domain and recipient models are different
-     * for both. So, it is strongly recommended to pass them explicitly with
-     * `nodeOptions`.
-     *
-     * @override
-     */
-    init() {
-        this._super(...arguments);
-        this.domainFieldName = this.nodeOptions.domain_field || 'mailing_domain';
-        this.modelFieldName = this.nodeOptions.model_field || 'mailing_model_id';
-    },
-
-    /**
-     * This widget now has two inputs, one for m2o and another for filter
-     * name. So this override makes sure that 'this.$input' now refers to
-     * only main input instead of both.
-     * see FieldMany2One#start for more details.
-     *
-     * @override
-     */
-    start() {
-        const def = this._super(...arguments);
-        this.$input = this.$('input.o_input');
-        return def;
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-    /**
-     * @override
-     * @private
-     */
-    _renderEdit() {
-        this._super(...arguments);
-        this._updateFilterIcons();
-    },
-
-    /**
-     * Updates the 'Add to favorite' / 'Remove' icons' visibility based on the
-     * current state, and shows the custom message when no filter is available
-     * for the selected model.
-     *
-     * The filter can be saved if one of those conditions is matched:
-     * - No favorite filter is currently set
-     * - User emptied the input
-     * - User changed the domain when favorite filter is set
-     * - The input is currently being edited, known by the "this.floating" variable
-     *   (see FieldMany2One#start for more information about the floating variable).
-     *
-     * @private
-     */
-    _updateFilterIcons: function () {
-        const filterCount = this.recordData.mailing_filter_count;
-        this.el.querySelector('.o_mass_mailing_no_filter').classList.toggle('d-none', filterCount);
-        this.el.querySelector('.o_field_many2one_selection > .o_input_dropdown').classList.toggle('d-none', !filterCount);
-        // By default, domains in recordData are in string format, but adding / removing a leaf from domain widget converts
-        // value into object, so we use 'Domain' class to convert them in same (string) format, allowing proper comparison.
-        const recordDomain = new Domain(this.recordData[this.domainFieldName] || []).toString();
-        const filterDomain = new Domain(this.recordData.mailing_filter_domain || []).toString();
-        this.el.querySelector('.o_mass_mailing_filter_container').classList.toggle('d-none', recordDomain === '[]');
-        const canSaveFilter = !this.recordData.mailing_filter_id
-            || !this.$input.val().length
-            || this.floating
-            || filterDomain !== recordDomain;
-        this.el.querySelector('.o_mass_mailing_save_filter_container').classList.toggle('d-none', !canSaveFilter);
-        this.el.querySelector('.o_mass_mailing_remove_filter').classList.toggle('d-none', canSaveFilter);
-    },
+class CreateFavoriteFilter extends Component {
+    setup() {
+        this.orm = useService('orm');
+        this.saveButtonRef = useRef('saveButton');
+        this.inputRef = useRef('input');
+        useAutofocus({ refName: 'input', preventScroll: true });
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
-    /**
-     * On opening the drop-down, remove existing input value (if any) and set
-     * focus on input
-     *
-     * @private
-     * @param {event} ev
-     */
-    _onFavoriteFilterDropdownShown(ev) {
-        const filterInput = ev.currentTarget.querySelector('input.o_mass_mailing_filter_name');
-        filterInput.value = '';
-        filterInput.focus({ preventScroll: true });
-    },
 
     /**
      * Focus the 'Save' button on 'Tab' key, or directly save the filter on 'Enter'
      *
-     * @private
      * @param {event} ev
      */
-    _onFavoriteFilterNameInputKeydown(ev) {
-        const btnSave = this.el.querySelector('.o_mass_mailing_btn_save_filter');
+    onInputKeydown(ev) {
         if (ev.key === 'Tab') {
-            btnSave.focus();
+            this.saveButtonRef.el.focus();
         } else if (ev.key === 'Enter') {
-            btnSave.click();
+            this.saveButtonRef.el.dispatchEvent(new Event('click'));
         }
-    },
-
-    /**
-     * Prevent opening m2o drop-down on click of filter's input (if drop-down is open)
-     *
-     * @override
-     * @private
-     */
-    _onInputClick: function () {
-        if (!this.el.querySelector('.o_mass_mailing_save_filter_container .dropdown-menu').classList.contains('show')) {
-            this._super(...arguments);
-        }
-    },
-
-    /**
-     * Update the filter / filter icons visibility with respect to current state
-     *
-     * @override
-     * @private
-     * @param {event} ev
-     */
-    _onInputKeyup(ev) {
-        this._super(...arguments);
-        this._updateFilterIcons();
-    },
-
-    /**
-     * Deletes the saved filter, but we do not reset the applied domain
-     * in this case.
-     *
-     * @private
-     * @param {event} ev
-     */
-    async _onFavoriteFilterRemoveClick(ev) {
-        const filterId = this.recordData.mailing_filter_id.res_id;
-        const mailingDomain = this.recordData[this.domainFieldName];
-        // Prevent multiple clicks to avoid trying to deleting same record multiple times.
-        ev.target.disabled = true;
-        // Avoid calling any 'onchange' (that depends on filter and might reset the domain) immediately
-        // after filter is removed. It shouldn't have any side effects because we don't want to change
-        // anything in any case when filter is unliked with with this widget.
-        this._setValue(false, {notifyChange: false});
-        await this._rpc({
-            model: 'mailing.filter',
-            method: 'unlink',
-            args: [filterId],
-        });
-        // When a filter is removed, compute method on mass mailing resets the domain while saving the
-        // record. This hack re-applies the domain and thus we don't loose it when record is saved.
-        this.trigger_up('field_changed', {
-            dataPointID: this.record.id,
-            changes: {
-                [this.domainFieldName]: mailingDomain,
-            },
-        });
-    },
+    }
 
     /**
      * Creates a new favorite filter, with the name provided from drop-down and
@@ -192,32 +44,124 @@ const FieldMailingFilter = FieldMany2One.extend({
      * Note: We do not disable the save button here to avoid multiple clicks as for the delete,
      * because as soon as the 'Save' button is clicked, the popup will be closed immediately.
      *
-     * @private
      * @param {event} ev
      */
-    async _onFavoriteFilterSaveClick(ev) {
-        const filterInput = this.el.querySelector('input.o_mass_mailing_filter_name');
-        const filterName = filterInput.value.trim();
+    async onSave(ev) {
+        const filterName = this.inputRef.el.value.trim();
         if (filterName.length === 0) {
             this.displayNotification({ message: _t("Please provide a name for the filter"), type: 'danger' });
             // Keep the drop-down open, and re-focus the input
             ev.stopPropagation();
-            filterInput.focus();
+            this.inputRef.el.focus();
         } else {
-            const newFilterId = await this._rpc({
-                model: 'mailing.filter',
-                method: 'create',
-                args: [{
-                    name: filterName,
-                    mailing_domain: this.recordData[this.domainFieldName],
-                    mailing_model_id: this.recordData[this.modelFieldName].data.id,
-                }]
-            });
-            this._setValue(newFilterId);
+            const newFilterId = await this.orm.create('mailing.filter', [{
+                name: filterName,
+                mailing_domain: this.env.record.data[this.env.domainField],
+                mailing_model_id: this.env.record.data[this.env.modelField][0],
+            }]);
+            this.env.update([newFilterId, filterName]);
         }
-    },
-});
+    }
+}
+CreateFavoriteFilter.template = 'mass_mailing.CreateFavoriteFilter';
+CreateFavoriteFilter.defaultProps = { value: '' };
 
-fieldRegistry.add('mailing_filter', FieldMailingFilter);
+/**
+ * Widget to create / remove favorite filters on mass mailing and/or marketing
+ * automation, extended from Many2OneField. This widget is designed specifically
+ * for 'mailing_filter_id' field on 'mailing.mailing' and 'marketing.campaign'
+ * form view.
+ *
+ * In edit mode, it will allow to save the latest configured domain in form of
+ * the favorite filter, or to remove the store filters.
+ *
+ * @class
+ */
+export class FieldMailingFilter extends Many2OneField {
+    /**
+     * This widget is used for 'mass.mailing' and 'marketing.campaign', but
+     * the field names that stores domain and recipient models are different
+     * for both. So it is strongly recommended to pass them explicitly as props.
+     *
+     * @override
+     */
+    setup() {
+        super.setup();
+        useChildSubEnv({
+            update: this.props.update,
+            record: this.props.record,
+            domainField: this.props.domainField,
+            modelField: this.props.modelField,
+        });
+        this.orm = useService('orm');
+        this.resetOnAnyFieldChange = true;
+        useEffect(() => {
+            // Can't be done in the template because it's in a child component.
+            this.autocompleteContainerRef.el.classList.toggle('d-none', !this.filterCount);
+        }, () => [this.autocompleteContainerRef, this.filterCount]);
+    }
 
-export default FieldMailingFilter;
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    get canSaveFilter() {
+        return !this.props.record.data.mailing_filter_id
+            || !this.props.value.length
+            || this.state.isFloating
+            || this.filterDomain !== this.recordDomain;
+    }
+    get filterCount() {
+        return this.props.record.data.mailing_filter_count;
+    }
+    // By default, domains in recordData are in string format, but
+    // adding/removing a leaf from domain widget converts value into object,
+    // so we use 'Domain' class to convert them in same (string) format,
+    // allowing proper comparison.
+    get filterDomain() {
+        return new Domain(this.props.record.data.mailing_filter_domain || []).toString();;
+    }
+    get recordDomain() {
+        return new Domain(this.props.record.data[this.props.domainField] || []).toString();
+    }
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Deletes the saved filter without resetting the current domain.
+     *
+     * @param {event} ev
+     */
+    async onFavoriteFilterRemoveClick(ev) {
+        const filterId = this.props.record.data.mailing_filter_id[0];
+        const mailingDomain = this.props.record.data[this.props.domainField];
+        ev.target.disabled = true; // Prevent multiple clicks.
+        await this.orm.unlink('mailing.filter', [filterId]);
+        this.props.update([]);
+        // Preserve the current domain after it was removed from the favorites.
+        this.props.record.update({ [this.props.domainField]: mailingDomain });
+    }
+}
+
+FieldMailingFilter.template = 'mass_mailing.FieldMailingFilter';
+FieldMailingFilter.components = {
+    ...Many2OneField.components,
+    Dropdown,
+    DropdownItem,
+    CreateFavoriteFilter,
+};
+FieldMailingFilter.props = {
+    ...Many2OneField.props,
+    domainField: { type: String, optional: true },
+    modelField: { type: String, optional: true },
+};
+FieldMailingFilter.extractProps = ({ attrs, field }) => {
+    return {
+        ...Many2OneField.extractProps({ attrs, field }),
+        domainField: attrs.options.domain_field || 'mailing_domain',
+        modelField: attrs.options.model_field || 'mailing_model_id',
+    }
+}
+registry.category("fields").add("mailing_filter", FieldMailingFilter);

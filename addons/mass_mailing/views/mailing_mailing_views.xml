@@ -217,7 +217,7 @@
                                                attrs="{'invisible': ['|', ('state', 'not in', ('sending', 'done')), ('mailing_filter_id', '=', False)]}"/>
                                         <field name="mailing_filter_id" placeholder="Reload a favorite filter"
                                                class="w-auto" widget="mailing_filter"
-                                               options="{'no_create': 1, 'no_open': 1, 'domain_field': 'mailing_domain', 'model_field': 'mailing_model_id'}"
+                                               options="{'no_create': '1', 'no_open': '1', 'domain_field': 'mailing_domain', 'model_field': 'mailing_model_id'}"
                                                attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                     </div>
                                     <field name="mailing_filter_count" invisible="1"/>

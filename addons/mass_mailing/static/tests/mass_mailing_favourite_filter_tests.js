@@ -1,7 +1,8 @@
 /** @odoo-module alias=mass_mailing.FieldMassMailingFavoriteFilter.test */
 
-import FormView from 'web.FormView';
 import testUtils from 'web.test_utils';
+import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { getFixture, clickDropdown, clickOpenedDropdownItem } from "@web/../tests/helpers/utils";
 
 QUnit.module('mass_mailing_favourite_filter', {}, function () {
 QUnit.module('favorite filter widget', {
@@ -100,6 +101,8 @@ QUnit.module('favorite filter widget', {
                 }],
             },
         };
+        setupViewRegistries();
+        this.target = getFixture();
     },
 
 }, function () {
@@ -107,11 +110,12 @@ QUnit.module('favorite filter widget', {
     QUnit.test('create favorite filter', async function (assert) {
         assert.expect(8);
 
-        const form = await testUtils.createView({
-            View: FormView,
-            model: 'mailing.mailing',
-            data: this.data,
-            arch: `<form>
+        await makeView({
+            type: 'form',
+            resModel: 'mailing.mailing',
+            resId: 2,
+            serverData: { models: this.data },
+            arch: /* xml */ `<form>
                     <field name="display_name"/>
                     <field name="subject"/>
                     <field name="mailing_domain"/>
@@ -121,110 +125,99 @@ QUnit.module('favorite filter widget', {
                     <field name="mailing_filter_domain" invisible="1"/>
                     <field name="mailing_filter_id"
                         widget="mailing_filter"
-                        options="{'no_create': '1', 'no_open': '1', 'domain_field': 'mailing_domain', 'model': 'mailing_model_id'}"/>
+                        options="{'no_create': '1', 'no_open': '1', 'domain_field': 'mailing_domain', 'model_field': 'mailing_model_id'}"/>
                 </form>`,
-            res_id: 2,
             mockRPC: function (route, args) {
                 if (args.method === 'create' && args.model === 'mailing.filter') {
                     assert.deepEqual(args.args,
                         [{mailing_domain: '[["new_user","=",True]]', mailing_model_id: 1, name: 'event promo - new users'}],
                         "should pass correct data in create");
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
-        await testUtils.form.clickEdit(form);
-        const $dropdown = form.$('.o_field_many2one[name="mailing_filter_id"] input').autocomplete('widget');
-        assert.isNotVisible(form.$('.o_mass_mailing_remove_filter'),
+        const dropdown = this.target.querySelector('.o_field_mailing_filter[name="mailing_filter_id"] .o_field_many2one_selection .o-autocomplete.dropdown');
+        assert.isNotVisible(this.target.querySelector('.o_mass_mailing_remove_filter'),
             "should hide the option to remove filter if no filter is set");
-        assert.isVisible(form.$('.o_mass_mailing_save_filter_container'),
+        assert.isVisible(this.target.querySelector('.o_mass_mailing_save_filter_container'),
             "should have option to save filter if no filter is set");
-        await testUtils.dom.click('.o_field_many2one[name="mailing_filter_id"] input');
-        assert.containsOnce($dropdown, 'li.ui-menu-item',
+        await testUtils.dom.click('.o_field_mailing_filter[name="mailing_filter_id"] .o_field_many2one_selection input');
+        assert.containsOnce(dropdown, 'li.ui-menu-item',
             "there should be only one existing filter");
         // create a new filter
-        await testUtils.dom.click(form.$('.o_mass_mailing_add_filter'));
-        form.el.querySelector('.o_mass_mailing_filter_name').value = 'event promo - new users';
+        await testUtils.dom.click(this.target.querySelector('.o_mass_mailing_add_filter'));
+        this.target.querySelector('.o_mass_mailing_filter_name').value = 'event promo - new users';
         // Simulate 'Enter' key, which actually 'clicks' the 'o_mass_mailing_btn_save_filter' btn
-        await testUtils.fields.triggerKeydown(form.el.querySelector('.o_mass_mailing_filter_name'), 'enter');
+        await testUtils.fields.triggerKeydown(this.target.querySelector('.o_mass_mailing_filter_name'), 'enter');
 
         // check if filter is set correctly
         assert.strictEqual(
-            form.el.querySelector('.o_field_many2one[name="mailing_filter_id"] input').value,
+            this.target.querySelector('.o_field_mailing_filter[name="mailing_filter_id"] input').value,
             'event promo - new users', "saved filter should be set automatically");
 
-        assert.isVisible(form.$('.o_mass_mailing_remove_filter'),
+        assert.isVisible(this.target.querySelector('.o_mass_mailing_remove_filter'),
             "should have option to remove filter if filter is already set");
-        assert.isNotVisible(form.$('.o_mass_mailing_save_filter_container'),
+        assert.isNotVisible(this.target.querySelector('.o_mass_mailing_save_filter_container'),
             "should not have option to save filter if filter is already set");
         // Ensures input is not focussed otherwise clicking on it will just close the dropdown instead of opening it
-        form.$('.o_field_many2one[name="mailing_filter_id"] .o_input_dropdown input').blur();
-        await testUtils.dom.click('.o_field_many2one[name="mailing_filter_id"] input');
-        assert.containsN($dropdown, 'li.ui-menu-item', 2,
+        this.target.querySelector('.o_field_mailing_filter[name="mailing_filter_id"] .o_input_dropdown input').blur();
+        await testUtils.dom.click('.o_field_mailing_filter[name="mailing_filter_id"] .o_field_many2one_selection input');
+        assert.containsN(dropdown, 'li.ui-menu-item', 2,
             "there should be two existing filters");
-        await testUtils.form.clickSave(form);
-
-        form.destroy();
     });
 
     QUnit.test('unlink favorite filter', async function (assert) {
         assert.expect(10);
 
-        const form = await testUtils.createView({
-            View: FormView,
-            model: 'mailing.mailing',
-            data: this.data,
-            arch: `<form>
-                    <field name="display_name"/>
-                    <field name="subject"/>
-                    <field name="mailing_domain"/>
-                    <field name="mailing_model_id"/>
-                    <field name="mailing_filter_domain" invisible="1"/>
-                    <field name="mailing_filter_count"/>
-                    <field name="mailing_filter_id"
-                        widget="mailing_filter"
-                        options="{'no_create': '1', 'no_open': '1', 'domain_field': 'mailing_domain', 'model': 'mailing_model_id'}"/>
-                </form>`,
-            res_id: 1,
+        await makeView({
+            type: 'form',
+            resModel: 'mailing.mailing',
+            resId: 1,
+            serverData: { models: this.data },
+            arch: /* xml */ `<form>
+                <field name="display_name"/>
+                <field name="subject"/>
+                <field name="mailing_domain" widget="char"/>
+                <field name="mailing_model_id"/>
+                <field name="mailing_filter_domain" invisible="1"/>
+                <field name="mailing_filter_count"/>
+                <field name="mailing_filter_id"
+                    widget="mailing_filter"
+                    options="{'no_create': '1', 'no_open': '1', 'domain_field': 'mailing_domain', 'model_field': 'mailing_model_id'}"/>
+                <field name="mailing_filter_id" widget="char"/>
+            </form>`,
             mockRPC: function (route, args) {
                 if (args.method === 'unlink' && args.model === 'mailing.filter') {
-                    assert.strictEqual(args.args[0], 1, "should pass correct filter ID for deletion");
-                } else if (args.method === 'write' && args.model === 'mailing.mailing') {
-                    assert.strictEqual(args.args[1].mailing_filter_id,
-                        false, "filter id should be");
-                    assert.strictEqual(args.args[1].mailing_domain,
-                        '[["country","=","be"]]', "mailing domain should be retained while unlinking filter");
+                    assert.deepEqual(args.args[0], [1], "should pass correct filter ID for deletion");
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
-        await testUtils.form.clickEdit(form);
         assert.strictEqual(
-            form.el.querySelector('.o_field_many2one[name="mailing_filter_id"] input').value,
+            this.target.querySelector('.o_field_mailing_filter[name="mailing_filter_id"] input').value,
             'Belgian Events', "there should be filter set");
-        assert.isVisible(form.$('.o_mass_mailing_remove_filter'),
+        assert.isVisible(this.target.querySelector('.o_mass_mailing_remove_filter'),
             "should have option to remove filter if filter is already set");
-        assert.isNotVisible(form.$('.o_mass_mailing_save_filter_container'),
+        assert.isNotVisible(this.target.querySelector('.o_mass_mailing_save_filter_container'),
             "should hide the option to save filter if filter is already set");
         // unlink filter
-        await testUtils.dom.click(form.$('.o_mass_mailing_remove_filter'));
+        await testUtils.dom.click(this.target.querySelector('.o_mass_mailing_remove_filter'));
+        assert.strictEqual(this.target.querySelector('.o_field_widget.o_field_char[name="mailing_filter_id"] input').value,
+            '', "filter id should be undefined");
+        assert.strictEqual(this.target.querySelector('.o_field_widget[name="mailing_domain"] input').value,
+            '[["country","=","be"]]', "mailing domain should be retained while unlinking filter");
         assert.strictEqual(
-            form.el.querySelector('.o_field_many2one[name="mailing_filter_id"] input').value,
+            this.target.querySelector('.o_field_mailing_filter[name="mailing_filter_id"] input').value,
             '', "filter should be empty");
-        assert.isNotVisible(form.$('.o_mass_mailing_remove_filter'),
+        assert.isNotVisible(this.target.querySelector('.o_mass_mailing_remove_filter'),
             "should hide the option to remove filter if no filter is set");
-        assert.isVisible(form.$('.o_mass_mailing_save_filter_container'),
+        assert.isVisible(this.target.querySelector('.o_mass_mailing_save_filter_container'),
             "should not hide the option to save filter if no filter is set");
         // check drop-down after filter deletion
-        const $dropdown = form.$('.o_field_many2one[name="mailing_filter_id"] input').autocomplete('widget');
-        await testUtils.dom.click('.o_field_many2one[name="mailing_filter_id"] input');
-        assert.containsNone($dropdown, 'li.ui-menu-item',
+        const dropdown = this.target.querySelector('.o_field_mailing_filter[name="mailing_filter_id"] .o_field_many2one_selection .o-autocomplete.dropdown');
+        await testUtils.dom.click('.o_field_mailing_filter[name="mailing_filter_id"] input');
+        assert.strictEqual(dropdown.querySelector('li.ui-menu-item').textContent, 'Start typing...',
             "there should be no available filters");
-        await testUtils.form.clickSave(form);
-
-        form.destroy();
     });
 
     QUnit.test('changing filter correctly applies the domain', async function (assert) {
@@ -264,38 +257,36 @@ QUnit.module('favorite filter widget', {
             },
         };
 
-        const form = await testUtils.createView({
-            View: FormView,
-            model: 'mailing.mailing',
-            data: this.data,
-            arch: `<form>
-                    <field name="display_name"/>
-                    <field name="subject"/>
-                    <field name="mailing_model_name" invisible="1"/>
-                    <field name="mailing_model_id"/>
-                    <field name="mailing_filter_count" />
-                    <field name="mailing_filter_id" widget="mailing_filter" options="{'no_create': '1', 'no_open': '1', 'domain_field': 'mailing_domain', 'model': 'mailing_model_id'}"/>
-                    <group>
-                        <field name="mailing_domain"
-                            widget="domain"
-                            options="{'model': 'mailing_model_name'}"/>
-                    </group>
-                </form>`,
-            res_id: 3,
+        await makeView({
+            type: 'form',
+            resModel: 'mailing.mailing',
+            resId: 3,
+            serverData: { models: this.data },
+            arch: /* xml */ `<form>
+                <field name="display_name"/>
+                <field name="subject"/>
+                <field name="mailing_model_name" invisible="1"/>
+                <field name="mailing_model_id"/>
+                <field name="mailing_filter_count" />
+                <field name="mailing_filter_id"
+                    widget="mailing_filter"
+                    options="{'no_create': '1', 'no_open': '1', 'domain_field': 'mailing_domain', 'model_field': 'mailing_model_id'}"/>
+                <group>
+                    <field name="mailing_domain"
+                        widget="domain"
+                        options="{'model': 'mailing_model_name'}"/>
+                </group>
+            </form>`,
         });
 
-        await testUtils.form.clickEdit(form);
-        assert.equal(form.$('.o_domain_show_selection_button').text().trim(), '2 record(s)',
+        assert.equal(this.target.querySelector('.o_domain_show_selection_button').textContent.trim(), '2 record(s)',
             "default domain should filter 2 records (all but Azure)");
 
-        await testUtils.dom.click('.o_field_many2one[name="mailing_filter_id"] input');
-        const $dropdown = form.$('.o_field_many2one[name="mailing_filter_id"] input').autocomplete('widget');
-        await testUtils.dom.click($dropdown[0].lastElementChild);
-        assert.equal(form.$('.o_domain_show_selection_button').text().trim(), '1 record(s)',
+        await testUtils.dom.click('.o_field_mailing_filter[name="mailing_filter_id"] input');
+        const dropdown = this.target.querySelector('.o_field_mailing_filter[name="mailing_filter_id"] .o_field_many2one_selection .o-autocomplete.dropdown');
+        await testUtils.dom.click(dropdown.querySelector('.dropdown-item'));
+        assert.equal(this.target.querySelector('.o_domain_show_selection_button').textContent.trim(), '1 record(s)',
             "applied filter should only display single record (only Azure)");
-        await testUtils.form.clickSave(form);
-
-        form.destroy();
     });
 
     QUnit.test('filter drop-down and filter icons visibility toggles properly based on filters available', async function (assert) {
@@ -352,66 +343,64 @@ QUnit.module('favorite filter widget', {
             },
         };
 
-        const form = await testUtils.createView({
-            View: FormView,
-            model: 'mailing.mailing',
-            data: this.data,
-            arch: `<form>
-                    <field name="display_name"/>
-                    <field name="subject"/>
-                    <field name="mailing_model_name" invisible="1"/>
-                    <field name="mailing_model_id"/>
-                    <field name="mailing_filter_count" />
-                    <field name="mailing_filter_id" widget="mailing_filter"
-                        options="{'no_create': '1', 'no_open': '1', 'domain_field': 'mailing_domain', 'model': 'mailing_model_id'}"/>
-                    <field name="mailing_filter_domain" invisible="1"/>
-                    <group>
-                        <field name="mailing_domain"
-                            widget="domain"
-                            options="{'model': 'mailing_model_name'}"/>
-                    </group>
-                </form>`,
-            res_id: 1,
+        await makeView({
+            type: 'form',
+            resModel: 'mailing.mailing',
+            resId: 1,
+            serverData: { models: this.data },
+            arch: /* xml */ `<form>
+                <field name="display_name"/>
+                <field name="subject"/>
+                <field name="mailing_model_name" invisible="1"/>
+                <field name="mailing_model_id"/>
+                <field name="mailing_filter_count" />
+                <field name="mailing_filter_id" widget="mailing_filter"
+                    options="{'no_create': '1', 'no_open': '1', 'domain_field': 'mailing_domain', 'model_field': 'mailing_model_id'}"/>
+                <field name="mailing_filter_domain" invisible="1"/>
+                <group>
+                    <field name="mailing_domain"
+                        widget="domain"
+                        options="{'model': 'mailing_model_name'}"/>
+                </group>
+            </form>`,
         });
 
-        await testUtils.form.clickEdit(form);
-        assert.isNotVisible(form.$('.o_field_many2one[name="mailing_filter_id"] .o_input_dropdown'),
+        assert.isNotVisible(this.target.querySelector('.o_field_mailing_filter[name="mailing_filter_id"] .o_input_dropdown'),
             "should hide the drop-down to select a filter because there is no filter available for 'Event'");
-        assert.isVisible(form.$('.o_mass_mailing_no_filter'),
+        assert.isVisible(this.target.querySelector('.o_mass_mailing_no_filter'),
             "should show custom message because there is no filter available for 'Event'");
-        assert.isVisible(form.$('.o_mass_mailing_save_filter_container'),
+        assert.isVisible(this.target.querySelector('.o_mass_mailing_save_filter_container'),
             "should show icon to save the filter because domain is set in the mailing");
 
         // If domain is not set on mailing and no filter available, both drop-down and icon container are hidden
-        await testUtils.dom.click(form.$('.o_domain_delete_node_button'));
-        assert.isNotVisible(form.$('.o_field_many2one[name="mailing_filter_id"] .o_input_dropdown'),
+        await testUtils.dom.click(this.target.querySelector('.o_domain_delete_node_button'));
+        assert.isNotVisible(this.target.querySelector('.o_field_mailing_filter[name="mailing_filter_id"] .o_input_dropdown'),
             "should not display drop-down because there is still no filter available to select from");
-        assert.isNotVisible(form.$('.o_mass_mailing_filter_container'),
+        assert.isNotVisible(this.target.querySelector('.o_mass_mailing_filter_container'),
             "should not show filter container because there is no filter available and no domain set in mailing");
 
-        // If domain is not set on mailing but filters available, display drop-down but hide the icon container
-        await testUtils.fields.many2one.clickOpenDropdown('mailing_model_id');
-        await testUtils.fields.many2one.clickItem('mailing_model_id', 'Partner');
-        assert.isVisible(form.$('.o_field_many2one[name="mailing_filter_id"] .o_input_dropdown'),
+        // If domain is not set on mailing but filters available, display
+        // drop-down but hide the icon container
+        await clickDropdown(this.target, 'mailing_model_id');
+        await clickOpenedDropdownItem(this.target, 'mailing_model_id', 'Partner');
+        assert.isVisible(this.target.querySelector('.o_field_mailing_filter[name="mailing_filter_id"] .o_input_dropdown'),
             "should show the drop-down to select a filter because there are filters available for 'Partner'");
-        assert.isNotVisible(form.$('.o_mass_mailing_filter_container'),
+        assert.isNotVisible(this.target.querySelector('.o_mass_mailing_filter_container'),
             "should not show filter container because there is no filter selected and no domain set in mailing");
 
         // Save / Remove icons visibility
-        await testUtils.dom.click('.o_field_many2one[name="mailing_filter_id"] input');
-        await testUtils.fields.many2one.clickItem('mailing_filter_id', 'Azure partner');
-        assert.isVisible(form.$('.o_mass_mailing_remove_filter'),
+        await testUtils.dom.click('.o_field_mailing_filter[name="mailing_filter_id"] input');
+        await clickOpenedDropdownItem(this.target, 'mailing_filter_id', 'Azure partner');
+        assert.isVisible(this.target.querySelector('.o_mass_mailing_remove_filter'),
             "should have option to remove filter if filter is selected");
-        assert.isNotVisible(form.$('.o_mass_mailing_save_filter_container'),
+        assert.isNotVisible(this.target.querySelector('.o_mass_mailing_save_filter_container'),
             "should not have option to save filter if filter is selected");
 
-        await testUtils.dom.click(form.$('.o_domain_add_node_button').first());
-        assert.isVisible(form.$('.o_mass_mailing_save_filter_container'),
+        await testUtils.dom.click(this.target.querySelector('.o_domain_add_node_button'));
+        assert.isVisible(this.target.querySelector('.o_mass_mailing_save_filter_container'),
             "should have option to save filter because mailing domain is changed");
-        assert.isNotVisible(form.$('.o_mass_mailing_remove_filter'),
+        assert.isNotVisible(this.target.querySelector('.o_mass_mailing_remove_filter'),
             "should not have option to remove filter because mailing domain is changed");
-
-        form.destroy();
     });
 });
 });

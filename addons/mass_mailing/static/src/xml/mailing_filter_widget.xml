@@ -1,28 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<templates id="template" xml:space="preserve">
+
+<templates xml:space="preserve">
     <!-- Template for 'mailing_filter' widget, specific for mailing form view -->
-    <t t-name="mass_mailing.FieldMailingFilter" t-extend="FieldMany2One" primary="True">
-        <t t-jquery="div.o_field_many2one_selection" t-operation="append">
-            <div class="o_mass_mailing_filter_container">
-                <div class="o_mass_mailing_save_filter_container pt-1">
-                    <span class="o_mass_mailing_add_filter" data-bs-toggle="dropdown" title="Add to favorite filters">
-                        <span class="o_mass_mailing_no_filter">Save as Favorite Filter</span>
-                        <i class="fa fa-floppy-o px-3 py-1"/>
-                    </span>
-                    <div class="dropdown-menu dropdown-menu-end">
-                        <span class="ms-2 text-muted">Create Favorite Filter</span><br/>
-                        <div class="d-inline-flex">
-                            <input type="text" class="o_mass_mailing_filter_name w-auto ms-2" placeholder='e.g. "VIP Customers"'/>
-                            <button class="btn btn-sm btn-primary o_mass_mailing_btn_save_filter mx-2">
-                                Add
-                            </button>
-                        </div>
-                    </div>
+    <t t-name="mass_mailing.FieldMailingFilter" t-inherit="web.Many2OneField" t-inherit-mode="primary" owl="1">
+        <xpath expr="//div[hasclass('o_field_many2one_selection')]/*[last()]" position="after">
+            <div class="o_mass_mailing_filter_container" t-att-class="{ 'd-none': recordDomain === '[]' }">
+                <div class="o_mass_mailing_save_filter_container pt-1" t-att-class="{ 'd-none': !canSaveFilter }">
+                    <Dropdown menuClass="'o_mass_mailing_create_filter'" position="'bottom-end'">
+                        <t t-set-slot="toggler">
+                            <span class="o_mass_mailing_add_filter" title="Add to favorite filters">
+                                <span class="o_mass_mailing_no_filter"
+                                    t-att-class="{ 'd-none': filterCount }">Save as Favorite Filter</span>
+                                <i class="fa fa-floppy-o px-3 py-1"/>
+                            </span>
+                        </t>
+                        <DropdownItem parentClosingMode="'none'"><CreateFavoriteFilter/></DropdownItem>
+                    </Dropdown>
                 </div>
-                <div class="o_mass_mailing_remove_filter pt-1">
+                <div class="o_mass_mailing_remove_filter pt-1" t-on-click="onFavoriteFilterRemoveClick"
+                    t-att-class="{ 'd-none': canSaveFilter }">
                     <i class="fa fa-trash px-3 py-1" title="Remove from Favorites"/>
                 </div>
             </div>
-        </t>
+        </xpath>
+    </t>
+
+    <t t-name="mass_mailing.CreateFavoriteFilter" owl="1">
+        <span class="ms-2 text-muted">Create Favorite Filter</span><br/>
+        <div class="d-inline-flex">
+            <input t-ref="input" t-on-keydown="onInputKeydown"
+                class="o_mass_mailing_filter_name w-auto ms-2" type="text"
+                placeholder='e.g. "VIP Customers"'/>
+            <button t-ref="saveButton" t-on-click="onSave"
+                class="btn btn-sm btn-primary o_mass_mailing_btn_save_filter mx-2">
+                Add
+            </button>
+        </div>
     </t>
 </templates>
