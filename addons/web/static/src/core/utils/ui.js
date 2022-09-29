@@ -1,6 +1,31 @@
 /** @odoo-module **/
 
 /**
+ * @typedef Position
+ * @property {number} x
+ * @property {number} y
+ */
+
+/**
+ * @param {Iterable<HTMLElement>} elements
+ * @param {Position} targetPos
+ * @returns {HTMLElement | null}
+ */
+export function closest(elements, targetPos) {
+    let closestEl = null;
+    let closestDistance = Infinity;
+    for (const el of elements) {
+        const rect = el.getBoundingClientRect();
+        const distance = getQuadrance(rect, targetPos);
+        if (!closestEl || distance < closestDistance) {
+            closestEl = el;
+            closestDistance = distance;
+        }
+    }
+    return closestEl;
+}
+
+/**
  * rough approximation of a visible element. not perfect (does not take into
  * account opacity = 0 for example), but good enough for our purpose
  *
@@ -69,6 +94,26 @@ export function _legacyIsVisible(el) {
 }
 
 /**
+ * @param {DOMRect} rect
+ * @param {Position} pos
+ * @returns {number}
+ */
+export function getQuadrance(rect, pos) {
+    let q = 0;
+    if (pos.x < rect.x) {
+        q += (rect.x - pos.x) ** 2;
+    } else if (rect.x + rect.width < pos.x) {
+        q += (pos.x - (rect.x + rect.width)) ** 2;
+    }
+    if (pos.y < rect.y) {
+        q += (rect.y - pos.y) ** 2;
+    } else if (rect.y + rect.height < pos.y) {
+        q += (pos.y - (rect.y + rect.height)) ** 2;
+    }
+    return q;
+}
+
+/**
  * @param {Element} activeElement
  * @param {String} selector
  * @returns all selected and visible elements present in the activeElement
@@ -83,6 +128,24 @@ export function getVisibleElements(activeElement, selector) {
         }
     }
     return visibleElements;
+}
+
+/**
+ * @param {Iterable<HTMLElement>} elements
+ * @param {Partial<DOMRect>} targetRect
+ * @returns {HTMLElement[]}
+ */
+export function touching(elements, targetRect) {
+    const r1 = { x: 0, y: 0, width: 0, height: 0, ...targetRect };
+    return [...elements].filter((el) => {
+        const r2 = el.getBoundingClientRect();
+        return (
+            r2.x + r2.width >= r1.x &&
+            r2.x <= r1.x + r1.width &&
+            r2.y + r2.height >= r1.y &&
+            r2.y <= r1.y + r1.height
+        );
+    });
 }
 
 // -----------------------------------------------------------------------------
