@@ -38,7 +38,7 @@ class TestWebsiteBoothPriceList(TestEventBoothSaleCommon, TestWebsiteEventSaleCo
         })
         # set pricelist to 0 - currency: company
         self.pricelist.write({
-            'currency_id': self.new_company.currency_id.id,
+            'currency_id': self.env.company.currency_id.id,
             'discount_policy': 'with_discount',
             'item_ids': [(5, 0, 0), (0, 0, {
                 'applied_on': '3_global',
