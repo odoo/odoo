@@ -327,7 +327,7 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
             'analytic_distribution': {analytic_account_default.id: 100},
             'product_id': self.product_order.id,
         })
-        analytic_distribution_manual = {analytic_account_manual.id: 100}
+        analytic_distribution_manual = {str(analytic_account_manual.id): 100}
 
         po_form = Form(self.env['purchase.order'].with_context(tracking_disable=True))
         po_form.partner_id = self.partner_a
@@ -373,9 +373,9 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
         purchase_order = po_form.save()
         purchase_order_line = purchase_order.order_line
 
-        self.assertEqual(purchase_order_line.analytic_distribution, {analytic_account_super.id: 100}, "The analytic account should be set to 'Super Account'")
+        self.assertEqual(purchase_order_line.analytic_distribution, {str(analytic_account_super.id): 100}, "The analytic account should be set to 'Super Account'")
         purchase_order_line.write({'product_id': great_product.id})
-        self.assertEqual(purchase_order_line.analytic_distribution, {analytic_account_great.id: 100}, "The analytic account should be set to 'Great Account'")
+        self.assertEqual(purchase_order_line.analytic_distribution, {str(analytic_account_great.id): 100}, "The analytic account should be set to 'Great Account'")
 
         po_no_analytic_distribution = self.env['purchase.order'].create({
             'partner_id': self.env.ref('base.res_partner_1').id,
