@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.Many2OneAvatarField" owl="1">
-        <div class="d-flex">
-            <span class="o_m2o_avatar">
-                <span t-if="props.value === false and !props.readonly" class="o_m2o_avatar_empty"></span>
-                <img t-if="props.value !== false" t-attf-src="/web/image/{{props.relation}}/{{props.value[0]}}/avatar_128" />
-            </span>
-            <Many2OneField t-props="props" />
-        </div>
+    <t t-name="web.Many2OneAvatarField.Avatar" owl="1">
+        <span class="o_m2o_avatar">
+            <span t-if="props.value === false and !props.readonly" class="o_m2o_avatar_empty"></span>
+            <img t-if="props.value !== false" t-attf-src="/web/image/{{props.relation}}/{{props.value[0]}}/avatar_128" />
+        </span>
+    </t>
+
+    <t t-name="web.Many2OneAvatarField" t-inherit="web.Many2OneField" t-inherit-mode="primary" owl="1">
+        <xpath expr="//t[@t-if='!props.canOpen']" position="before">
+            <t t-call="{{ constructor.avatarTemplate }}"/>
+        </xpath>
+        <xpath expr="//Many2XAutocomplete" position="before">
+            <t t-call="{{ constructor.avatarTemplate }}"/>
+        </xpath>
     </t>
 
 </templates>

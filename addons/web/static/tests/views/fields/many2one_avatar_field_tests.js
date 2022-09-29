@@ -85,6 +85,7 @@ QUnit.module("Fields", (hooks) => {
             '.o_m2o_avatar > img[data-src="/web/image/user/17/avatar_128"]'
         );
 
+        assert.containsOnce(target, ".o_field_many2one_selection > .o_m2o_avatar");
         assert.containsOnce(target, ".o_input_dropdown");
         assert.strictEqual(target.querySelector(".o_input_dropdown input").value, "Aline");
         assert.containsOnce(target, ".o_external_button");
@@ -153,6 +154,7 @@ QUnit.module("Fields", (hooks) => {
             '.o_m2o_avatar > img[data-src="/web/image/user/17/avatar_128"]'
         );
 
+        assert.containsOnce(target, ".o_field_many2one_avatar > .o_m2o_avatar");
         await editInput(target, "div[name=int_field] input", 1);
 
         assert.strictEqual(

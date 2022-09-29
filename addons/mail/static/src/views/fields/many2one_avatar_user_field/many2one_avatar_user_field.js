@@ -16,7 +16,7 @@ export class Many2OneAvatarUserField extends Many2OneAvatarField {
         this.openChat(this.props.value[0]);
     }
 }
-Many2OneAvatarUserField.template = "mail.Many2OneAvatarUserField";
+Many2OneAvatarUserField.avatarTemplate = "mail.Many2OneAvatarUserField.Avatar";
 Many2OneAvatarUserField.additionalClasses = ["o_field_many2one_avatar"];
 
 registry.category("fields").add("many2one_avatar_user", Many2OneAvatarUserField);
@@ -31,6 +31,7 @@ export class KanbanMany2OneAvatarUserField extends Many2OneAvatarUserField {
     }
 }
 KanbanMany2OneAvatarUserField.template = "mail.KanbanMany2OneAvatarUserField";
+KanbanMany2OneAvatarUserField.components = { Many2OneAvatarUserField };
 KanbanMany2OneAvatarUserField.props = {
     ...Many2OneAvatarUserField.props,
     displayAvatarName: { type: Boolean, optional: true },
