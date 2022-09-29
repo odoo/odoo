@@ -171,7 +171,7 @@ var RunningTourActionHelper = core.Class.extend({
             clientX: elementCenter.left,
             clientY: elementCenter.top,
         }));
-        element.dispatchEvent(new Event("mousemove", { bubbles: true, cancelable: true }));
+        element.dispatchEvent(new MouseEvent("mousemove", { bubbles: true, cancelable: true, clientX: toCenter.left, clientY: toCenter.top}));
         to.dispatchEvent(new Event("mouseenter", { clientX: toCenter.left, clientY: toCenter.top }));
         element.dispatchEvent(new Event("mouseup", {
             bubbles: true,
