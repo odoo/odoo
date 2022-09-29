@@ -1879,7 +1879,7 @@
     <template id="address_on_payment" name="Address on payment">
         <div class="card">
             <div class="card-body" id="shipping_and_billing">
-                <a class="float-end no-decoration" href="/shop/checkout"><i class="fa fa-edit"/> Edit</a>
+                <a groups="account.group_delivery_invoice_address" class="float-end no-decoration" href="/shop/checkout"><i class="fa fa-edit"/> Edit</a>
                 <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_id or only_services)" />
                 <div>
                     <b>Billing<t t-if="same_shipping and not only_services"> &amp; Shipping</t>: </b>
