@@ -49,7 +49,7 @@ class TestPaymentprovider(PaymentCommon):
         self.assertIn(self.provider, compatible_providers)
 
     def test_provider_compatible_when_payment_below_maximum_amount(self):
-        """ Test that an provider is compatible when the payment amount is less than the maximum
+        """ Test that a provider is compatible when the payment amount is less than the maximum
         amount. """
         self.provider.maximum_amount = self.amount + 10.0
 
@@ -59,7 +59,7 @@ class TestPaymentprovider(PaymentCommon):
         self.assertIn(self.provider, compatible_providers)
 
     def test_provider_not_compatible_when_payment_above_maximum_amount(self):
-        """ Test that an provider is not compatible when the payment amount is more than the maximum
+        """ Test that a provider is not compatible when the payment amount is more than the maximum
         amount. """
         self.provider.maximum_amount = self.amount - 10.0
 

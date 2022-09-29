@@ -22,7 +22,7 @@ class PaymentToken(models.Model):
         related='provider_id.company_id', store=True, index=True)
     provider_ref = fields.Char(
         string="Provider Reference", help="The provider reference of the token of the transaction",
-        required=True)  # This is not the same thing as the provider reference of the transaction
+        required=True)  # This is not the same thing as the provider reference of the transaction.
     transaction_ids = fields.One2many(
         string="Payment Transactions", comodel_name='payment.transaction', inverse_name='token_id')
     verified = fields.Boolean(string="Verified")
@@ -39,7 +39,7 @@ class PaymentToken(models.Model):
                 # Include provider-specific create values
                 values.update(self._get_specific_create_values(provider.code, values))
             else:
-                pass  # Let psycopg warn about the missing required field
+                pass  # Let psycopg warn about the missing required field.
 
         return super().create(values_list)
 
@@ -51,9 +51,9 @@ class PaymentToken(models.Model):
         dict of values. Provider-specific values take precedence over those of the dict of generic
         create values.
 
-        :param str provider_code: The code of the provider managing the token
-        :param dict values: The original create values
-        :return: The dict of provider-specific create values
+        :param str provider_code: The code of the provider managing the token.
+        :param dict values: The original create values.
+        :return: The dict of provider-specific create values.
         :rtype: dict
         """
         return dict()
@@ -76,14 +76,14 @@ class PaymentToken(models.Model):
         return super().write(values)
 
     def _handle_archiving(self):
-        """ Handle the archiving of the current tokens.
+        """ Handle the archiving of tokens.
 
         For a module to perform additional operations when a token is archived, it must override
         this method.
 
         :return: None
         """
-        return None
+        return
 
     def name_get(self):
         return [(token.id, token._build_display_name()) for token in self]
@@ -91,20 +91,22 @@ class PaymentToken(models.Model):
     #=== BUSINESS METHODS ===#
 
     def _build_display_name(self, *args, max_length=34, should_pad=True, **kwargs):
-        """ Build a token name of the desired maximum length with the format •••• 1234.
+        """ Build a token name of the desired maximum length with the format `•••• 1234`.
 
         The payment details are padded on the left with up to four padding characters. The padding
         is only added if there is enough room for it. If not, it is either reduced or not added at
         all. If there is not enough room for the payment details either, they are trimmed from the
         left.
 
-        For a module to customize the display name of a token, it must override this method.
+        For a module to customize the display name of a token, it must override this method and
+        return the customized display name.
 
-        Note: self.ensure_one()
+        Note: `self.ensure_one()`
 
         :param list args: The arguments passed by QWeb when calling this method.
-        :param int max_length: The desired maximum length of the token name.
-        :param bool should_pad: Whether the token should be padded or not.
+        :param int max_length: The desired maximum length of the token name. The default is `34` to
+                               fit the largest IBANs.
+        :param bool should_pad: Whether the token should be padded.
         :param dict kwargs: Optional data used in overrides of this method.
         :return: The padded token name.
         :rtype: str
@@ -128,17 +130,18 @@ class PaymentToken(models.Model):
         """ Return a list of information about records linked to the current token.
 
         For a module to implement payments and link documents to a token, it must override this
-        method and add information about linked records to the returned list.
+        method and add information about linked document records to the returned list.
 
         The information must be structured as a dict with the following keys:
-          - description: The description of the record's model (e.g. "Subscription")
-          - id: The id of the record
-          - name: The name of the record
-          - url: The url to access the record.
 
-        Note: self.ensure_one()
+        - `description`: The description of the record's model (e.g. "Subscription").
+        - `id`: The id of the record.
+        - `name`: The name of the record.
+        - `url`: The url to access the record.
 
-        :return: The list of information about linked documents
+        Note: `self.ensure_one()`
+
+        :return: The list of information about the linked document records.
         :rtype: list
         """
         self.ensure_one()

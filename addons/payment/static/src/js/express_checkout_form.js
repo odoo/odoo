@@ -50,7 +50,7 @@ publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
     /**
      * Prepare the provider-specific express checkout form based on the provided data.
      *
-     * For an provider to manage an express checkout form, it must override this method.
+     * For a provider to manage an express checkout form, it must override this method.
      *
      * @private
      * @param {Object} providerData - The provider-specific data.
@@ -63,8 +63,8 @@ publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
     /**
      * Prepare the params to send to the transaction route.
      *
-     * For an provider to overwrite generic params or to add provider-specific ones, it must
-     * override this method and return the extended transaction route params.
+     * For a provider to overwrite generic params or to add provider-specific ones, it must override
+     * this method and return the extended transaction route params.
      *
      * @private
      * @param {number} providerId - The id of the provider handling the transaction.
