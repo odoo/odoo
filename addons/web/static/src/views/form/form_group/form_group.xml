@@ -2,44 +2,48 @@
 <templates xml:space="preserve">
 
 <t t-name="web.Form.OuterGroup" owl="1">
-  <div class="o_group" t-attf-class="{{ allClasses }}" t-att-style="props.style">
-    <t t-slot="title" t-if="props.slots.title" />
-    <t t-foreach="getItems()" t-as="item" t-key="item_index" >
-      <br t-if="item.newline" />
-      <t t-slot="{{ item.name }}" className="'o_group_col_' + item.size"/>
-    </t>
-  </div>
+    <div class="o_group row g-2 gx-lg-5 align-items-start" t-attf-class="{{ allClasses }} {{ props.hasOuterTemplate and props.class ? '' : 'my-3' }}" t-att-style="props.style">
+        <t t-slot="title" t-if="props.slots.title" />
+        <t t-foreach="getItems()" t-as="item" t-key="item_index">
+            <span class="o_newline" t-if="item.newline" />
+            <t t-slot="{{ item.name }}" className="item.colspan !== props.maxCols ? 'col-lg-' + item.size : ''"/>
+        </t>
+    </div>
 </t>
 
 <t t-name="web.Form.InnerGroup" owl="1">
-  <table t-attf-class="{{ allClasses }}" class="o_inner_group o_group" t-if="props.slots" t-att-style="props.style">
-      <tbody>
-          <td t-if="props.slots.title" t-attf-colspan="{{ props.maxCols }}" style="width: 100%">
-              <t t-slot="title" />
-          </td>
-          <tr t-foreach="getRows()" t-as="row" t-key="row_index">
-            <t t-foreach="row" t-as="cell" t-key="cell_index" >
+    <div t-attf-class="{{ allClasses }}" class="o_inner_group grid" t-if="props.slots" t-att-style="props.style">
+        <div t-if="props.slots.title" t-attf-class="g-col-sm-{{ props.maxCols }}">
+            <t t-slot="title" />
+        </div>
+        <div t-foreach="getRows()" t-as="row" t-key="row_index" class="o_wrap_field d-flex d-sm-contents flex-column mb-3 mb-sm-0" t-if="row.isVisible">
+            <t t-foreach="row" t-as="cell" t-key="cell_index">
 
-              <t t-if="cell.subType === 'item_component'" >
-                <td class="o_td_label">
-                  <t t-component="cell.Component" t-if="cell.isVisible" t-props="cell.props" />
-                </td>
-                <td t-att-colspan="cell.itemSpan -1 > 1 ? cell.itemSpan - 1 : undefined" t-attf-style="{{ cell.width ? 'width: ' + cell.width + '%' : undefined }}">
-                  <t t-if="cell.isVisible" t-slot="{{ cell.name }}" />
-                </td>
-              </t>
+                <t t-if="cell.subType === 'item_component'">
+                    <div class="o_cell o_wrap_label flex-grow-1 flex-sm-grow-0 w-100 text-break text-900">
+                        <t t-component="cell.Component" t-if="cell.isVisible" t-props="cell.props"/>
+                    </div>
+                    <div
+                        class="o_cell o_wrap_input flex-grow-1 flex-sm-grow-0" 
+                        t-attf-style="{{ cell.itemSpan -1 > 1 ? 'grid-column: span ' + (cell.itemSpan -1) + ';' : '' }}{{ cell.width ? 'width: ' + cell.width + '%' + ';' : '' }}"
+                    >
+                        <t t-slot="{{ cell.name }}" />
+                    </div>
+                </t>
 
-              <t t-else="">
-                  <td t-attf-class="{{ cell.subType === 'label' ? 'o_td_label' : null }}" t-attf-colspan="{{ cell.itemSpan > 1 ? cell.itemSpan : undefined }}"
-                  t-attf-style="{{ cell.width ? 'width: ' + cell.width + '%' : undefined }}">
-                    <t t-if="cell.isVisible" t-slot="{{ cell.name }}" />
-                  </td>
-              </t>
+                <t t-else="">
+                    <div
+                        class="o_cell flex-grow-1 flex-sm-grow-0"
+                        t-attf-style="{{ cell.itemSpan > 1 ? 'grid-column: span ' + cell.itemSpan + ';' : '' }}{{ cell.width ? 'width: ' + cell.width + '%' + ';' : '' }}"
+                        t-attf-class="{{ cell.subType === 'label' ? 'o_wrap_label w-100 text-break text-900' : null }}"
+                        t-if="cell.isVisible">
+                        <t t-slot="{{ cell.name }}" />
+                    </div>
+                </t>
 
             </t>
-          </tr>
-      </tbody>
-  </table>
+        </div>
+    </div>
 </t>
 
 </templates>
