@@ -28,7 +28,7 @@
                                <label for="has_seats_limitation" string="Limit Registrations"/>
                                <field name="has_seats_limitation"/>
                                <span attrs="{'invisible': [('has_seats_limitation', '=', False)], 'required': [('has_seats_limitation', '=', False)]}">
-                                   to <field name="seats_max" class="oe_inline"/>
+                                   to <field name="seats_max" class="oe_inline" widget="input_fit_content" options="{'minSize': 1}"/>
                                    Confirmed Attendees
                                </span>
                            </div>

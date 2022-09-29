@@ -60,7 +60,7 @@
                             <div colspan="2" class="o_checkbox_optional_field">
                                 <label for="seats_limited" string="Limit Registrations"/>
                                 <field name="seats_limited"/>
-                                <span attrs="{'invisible': [('seats_limited', '=', False)], 'required': [('seats_limited', '=', False)]}">to <field name="seats_max" class="oe_inline"/> Confirmed Attendees</span>
+                                <span attrs="{'invisible': [('seats_limited', '=', False)], 'required': [('seats_limited', '=', False)]}">to <field name="seats_max" class="oe_inline" widget="input_fit_content" options="{'minSize': 1}"/> Confirmed Attendees</span>
                             </div>
                             <field name="auto_confirm"/>
                         </group>
