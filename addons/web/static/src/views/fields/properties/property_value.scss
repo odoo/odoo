@@ -55,6 +55,33 @@ input.o_field_property_input[type=number] {
     }
 }
 
-.o_form_readonly .o_field_property_many2many_value {
-    border: 0px;
+.o_field_property_many2many_value:not(.readonly):hover,
+.o_field_property_many2many_value:not(.readonly):focus-within {
+    border-bottom: 1px solid var(--o-input-border-color);
+}
+
+.o_field_property_many2many_value.avatar .o_tag{
+    img {
+        margin: -0.3em;
+        margin-right: 0.3em;
+    }
+
+    .o_tag_badge_text {
+        padding: 0px !important;
+    }
+}
+
+.o_property_field_value {
+    .o_properties_external_button,
+    .o_dropdown_button {
+        display: none;
+    }
+
+    &:hover,
+    &:focus-within {
+        .o_properties_external_button,
+        .o_dropdown_button {
+            display: block;
+        }
+    }
 }

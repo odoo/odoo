@@ -175,6 +175,8 @@ export class PropertyValue extends Component {
 
     /**
      * Return True if we need to display a avatar for the current property.
+     *
+     * @returns {boolean}
      */
     get showAvatar() {
         return ["many2one", "many2many"].includes(this.props.type)
