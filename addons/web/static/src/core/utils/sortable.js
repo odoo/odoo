@@ -27,17 +27,17 @@ import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder";
  *
  * HANDLERS (also optional)
  *
- * @property {(group: HTMLElement | null, element: HTMLElement) => any} [onStart]
+ * @property {({ element: HTMLElement, group: HTMLElement | null }) => any} [onDragStart]
  *  called when a dragging sequence is initiated.
- * @property {(element: HTMLElement) => any} [onElementEnter] called when the cursor
+ * @property {({ element: HTMLElement }) => any} [onElementEnter] called when the cursor
  *  enters another sortable element.
- * @property {(element: HTMLElement) => any} [onElementLeave] called when the cursor
+ * @property {({ element: HTMLElement }) => any} [onElementLeave] called when the cursor
  *  leaves another sortable element.
- * @property {(group: HTMLElement) => any} [onGroupEnter] (if a `groups` is specified):
+ * @property {({ group: HTMLElement }) => any} [onGroupEnter] (if a `groups` is specified):
  *  will be called when the cursor enters another group element.
- * @property {(group: HTMLElement) => any} [onGroupLeave] (if a `groups` is specified):
+ * @property {({ group: HTMLElement }) => any} [onGroupLeave] (if a `groups` is specified):
  *  will be called when the cursor leaves another group element.
- * @property {(group: HTMLElement | null, element: HTMLElement) => any} [onStop]
+ * @property {({ element: HTMLElement group: HTMLElement | null }) => any} [onDragEnd]
  *  called when the dragging sequence ends, regardless of the reason.
  * @property {(params: DropParams) => any} [onDrop] called when the dragging sequence
  *  ends on a mouseup action AND the dragged element has been moved elsewhere. The
@@ -54,6 +54,12 @@ import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder";
  * @property {HTMLElement | null} parent
  */
 
+/**
+ * @typedef SortableState
+ * @property {boolean} dragging
+ */
+
+/** @type {(params: SortableParams) => SortableState} */
 export const useSortable = makeDraggableHook({
     name: "useSortable",
     acceptedParams: {
@@ -159,11 +165,14 @@ export const useSortable = makeDraggableHook({
         // Ghost is initially added right after the current element.
         ctx.currentElement.after(ctx.ghostElement);
 
-        // Calls "onStart" handler
-        helpers.execHandler("onStart", { element: ctx.currentElement, group: ctx.currentGroup });
+        // Calls "onDragStart" handler
+        helpers.execHandler("onDragStart", {
+            element: ctx.currentElement,
+            group: ctx.currentGroup,
+        });
     },
     onDragEnd({ ctx, helpers }) {
-        helpers.execHandler("onStop", { element: ctx.currentElement, group: ctx.currentGroup });
+        helpers.execHandler("onDragEnd", { element: ctx.currentElement, group: ctx.currentGroup });
     },
     onDrop({ ctx, helpers }) {
         const previous = ctx.ghostElement.previousElementSibling;

@@ -95,7 +95,7 @@ QUnit.module("UI", ({ beforeEach }) => {
                 useSortable({
                     ref: useRef("root"),
                     elements: ".item",
-                    onStart({ element, group }) {
+                    onDragStart({ element, group }) {
                         assert.step("start");
                         assert.notOk(group);
                         assert.strictEqual(element.innerText, "1");
@@ -104,7 +104,7 @@ QUnit.module("UI", ({ beforeEach }) => {
                         assert.step("elemententer");
                         assert.strictEqual(element.innerText, "2");
                     },
-                    onStop({ element, group }) {
+                    onDragEnd({ element, group }) {
                         assert.step("stop");
                         assert.notOk(group);
                         assert.strictEqual(element.innerText, "1");
@@ -151,7 +151,7 @@ QUnit.module("UI", ({ beforeEach }) => {
                     elements: ".item",
                     groups: ".list",
                     connectGroups: true,
-                    onStart({ element, group }) {
+                    onDragStart({ element, group }) {
                         assert.step("start");
                         assert.hasClass(group, "list2");
                         assert.strictEqual(element.innerText, "2 1");
@@ -160,7 +160,7 @@ QUnit.module("UI", ({ beforeEach }) => {
                         assert.step("groupenter");
                         assert.hasClass(group, "list1");
                     },
-                    onStop({ element, group }) {
+                    onDragEnd({ element, group }) {
                         assert.step("stop");
                         assert.hasClass(group, "list2");
                         assert.strictEqual(element.innerText, "2 1");
@@ -209,7 +209,7 @@ QUnit.module("UI", ({ beforeEach }) => {
                     ref: useRef("root"),
                     elements: ".item",
                     enable: () => this.state.enableSortable,
-                    onStart() {
+                    onDragStart() {
                         assert.step("start");
                     },
                 });
@@ -251,7 +251,7 @@ QUnit.module("UI", ({ beforeEach }) => {
                 useSortable({
                     ref: useRef("root"),
                     elements: ".item",
-                    onStart() {
+                    onDragStart() {
                         throw new Error("Shouldn't start the sortable feature.");
                     },
                 });
@@ -284,7 +284,7 @@ QUnit.module("UI", ({ beforeEach }) => {
                     ref: useRef("root"),
                     elements: ".item",
                     ignore: ".ignored",
-                    onStart() {
+                    onDragStart() {
                         assert.step("drag");
                     },
                 });
