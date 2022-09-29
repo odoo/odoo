@@ -2213,6 +2213,22 @@ class TestViews(ViewCase):
             self.assertEqual(modifiers.get('readonly'), expected.get('readonly'))
             self.assertEqual(modifiers.get('required'), expected.get('required'))
 
+    def test_modifier_attribute_priority(self):
+        view = self.assertValid("""
+            <form string="View">
+                <field name="type" invisible="1"/>
+                <field name="name" invisible="context.get('foo')" attrs="{'invisible': [('type', '=', 'tree')]}"/>
+            </form>
+        """)
+        for context, expected in [
+            ({}, [['type', '=', 'tree']]),
+            ({'foo': True}, True)
+        ]:
+            arch = self.View.with_context(**context).get_view(view.id)['arch']
+            field_node = etree.fromstring(arch).xpath('//field[@name="name"]')[0]
+            modifiers = json.loads(field_node.get('modifiers') or '{}')
+            self.assertEqual(modifiers.get('invisible'), expected)
+
     @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_domain_in_filter(self):
         arch = """
