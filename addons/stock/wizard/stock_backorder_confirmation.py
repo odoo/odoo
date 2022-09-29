@@ -68,7 +68,7 @@ class StockBackorderConfirmation(models.TransientModel):
         if pickings_to_validate:
             return self.env['stock.picking']\
                 .browse(pickings_to_validate)\
-                .with_context(skip_backorder=True, picking_ids_not_to_backorder=self.pick_ids.ids)\
+                .with_context(skip_backorder=True, picking_ids_not_to_backorder=pickings_to_validate)\
                 .button_validate()
         return True
 
