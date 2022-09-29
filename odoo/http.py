@@ -1288,14 +1288,19 @@ class DisableCacheMiddleware(object):
             if req.session and req.session.debug and not 'wkhtmltopdf' in req.headers.get('User-Agent'):
 
                 if "assets" in req.session.debug and (".js" in req.base_url or ".css" in req.base_url):
-                    new_headers = [('Cache-Control', 'no-store')]
+                    new_cache_control = 'no-store'
                 else:
-                    new_headers = [('Cache-Control', 'no-cache')]
+                    new_cache_control = 'no-cache'
 
+                cache_control_value = new_cache_control
+                new_headers = []
                 for k, v in headers:
                     if k.lower() != 'cache-control':
                         new_headers.append((k, v))
+                    elif new_cache_control not in v:
+                        cache_control_value += ', %s' % v
 
+                new_headers.append(('Cache-Control', cache_control_value))
                 start_response(status, new_headers)
             else:
                 start_response(status, headers)
