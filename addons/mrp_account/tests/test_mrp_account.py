@@ -190,6 +190,63 @@ class TestMrpAccount(TestMrpCommon):
         # 1 table head at 20 + 4 table leg at 15 + 4 bolt at 10 + 10 screw at 10 + 1*20 (extra cost)
         self.assertEqual(move_value, 141, 'Thing should have the correct price')
 
+    def test_generate_analytic_account(self):
+        """
+        Suppose a workcenter with a cost and an analytic account. A MO is
+        processed and one of the components has been consumed more than
+        expected. The test ensures that the analytic account line will be
+        generated only once.
+        """
+        analytic_account = self.env['account.analytic.account'].create({'name': 'Super Analytic Account'})
+
+        cost_per_hour = 100
+        workcenter = self.env['mrp.workcenter'].create({
+            'name': 'SuperWorkcenter',
+            'costs_hour': cost_per_hour,
+            'costs_hour_account_id': analytic_account.id,
+        })
+
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product_2.product_tmpl_id.id,
+            'product_qty': 1,
+            'bom_line_ids': [(0, 0, {
+                'product_id': self.product_1.id,
+                'product_qty': 1,
+            })],
+            'operation_ids': [(0, 0, {
+                'name': 'Super Operation',
+                'workcenter_id': workcenter.id,
+            })],
+        })
+
+        mo = self.env['mrp.production'].create({
+            'name': 'Super MO',
+            'product_id': self.product_2.id,
+            'product_uom_id': self.product_2.uom_id.id,
+            'product_qty': 1,
+            'bom_id': bom.id,
+        })
+        mo._onchange_move_raw()
+        mo._onchange_move_finished()
+        mo._onchange_workorder_ids()
+        mo.action_confirm()
+
+        duration = 30
+        mo.qty_producing = 1
+        mo.workorder_ids.duration = duration
+        mo.move_raw_ids.move_line_ids.qty_done = 2
+
+        action = mo.button_mark_done()
+        self.assertNotEqual(mo.state, 'done')
+        self.assertFalse(analytic_account.line_ids)
+
+        warning = Form(self.env['mrp.consumption.warning'].with_context(**action['context']))
+        warning = warning.save()
+        warning.action_confirm()
+
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(analytic_account.line_ids.amount, - duration / 60 * cost_per_hour)
+
 
 @tagged("post_install", "-at_install")
 class TestMrpAccountMove(TestAccountMove):
