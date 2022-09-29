@@ -99,7 +99,7 @@
                     <button
                         t-if="!props.readonly &amp;&amp; propertyValue &amp;&amp; propertyValue[0] &amp;&amp; hasAccess"
                         type="button"
-                        class="btn btn-secondary fa fa-external-link o_external_button o_properties_external_button py-0"
+                        class="btn btn-secondary fa fa-arrow-right o_external_button o_properties_external_button py-0"
                         tabindex="-1"
                         draggable="false"
                         aria-label="Internal link"
@@ -109,8 +109,8 @@
                 </t>
             </div>
             <t t-elif="props.type === 'many2many'">
-                <div t-if="props.comodel" class="o_field_property_many2many_value py-1 d-flex flex-row pt-2 w-100"
-                    t-attf-class="o_field_widget o_field_many2manytags o_input {{showAvatar ? 'avatar' : ''}}">
+                <div t-if="props.comodel" class="o_field_property_many2many_value py-1 d-flex flex-row pt-2 pe-1 w-100 flex-wrap"
+                    t-attf-class="o_field_widget o_field_many2many_tags {{showAvatar ? 'avatar' : ''}} {{props.readonly ? 'readonly' : ''}}">
                     <!-- Copy many2many tags style without duplicating all CSS -->
                     <TagsList tags="propertyValue"/>
                     <Many2XAutocomplete

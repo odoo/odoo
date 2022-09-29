@@ -55,3 +55,20 @@
         display: inline-block !important;
     }
 }
+
+.o_field_property_definition {
+    .o_input_dropdown {
+        .o_properties_external_button,
+        .o_dropdown_button {
+            display: none;
+        }
+
+        &:hover,
+        &:focus-within {
+            .o_properties_external_button,
+            .o_dropdown_button {
+                display: block;
+            }
+        }
+    }
+}
