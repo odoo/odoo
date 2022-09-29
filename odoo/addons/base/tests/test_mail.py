@@ -439,6 +439,7 @@ class TestEmailTools(BaseCase):
             ('admin@example.com', ['admin@example.com']),
             ('"Admin" <admin@example.com>, Demo <malformed email>', ['admin@example.com']),
             ('admin@éxample.com', ['admin@xn--xample-9ua.com']),
+            ('"admin@éxample.com" <admin@éxample.com>', ['admin@xn--xample-9ua.com']),
         ]
 
         for (rfc2822_email, expected) in tests:

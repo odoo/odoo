@@ -75,7 +75,13 @@ def extract_rfc2822_addresses(text):
     if not text:
         return []
     candidates = address_pattern.findall(ustr(text))
-    return [formataddr(('', c), charset='ascii') for c in candidates]
+    valid_addresses = []
+    for c in candidates:
+        try:
+            valid_addresses.append(formataddr(('', c), charset='ascii'))
+        except idna.IDNAError:
+            pass
+    return valid_addresses
 
 
 class IrMailServer(models.Model):
