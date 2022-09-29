@@ -106,7 +106,7 @@
                 <div name="base_unit_price" groups="website_sale.group_show_uom_price" class="o_row">
                     <field name="base_unit_count" attrs="{'invisible': [('product_variant_count', '>', 1)]}" />
                     <field name="base_unit_id" options="{'no_open': True}" attrs="{'invisible': [('product_variant_count', '>', 1)]}" />
-                    <span attrs="{'invisible': ['|', ('base_unit_price','=', 0), ('product_variant_count', '>', 1)]}">
+                    <span class="d-flex flex-row" attrs="{'invisible': ['|', ('base_unit_price','=', 0), ('product_variant_count', '>', 1)]}">
                         (<field name="base_unit_price"/> / <field name="base_unit_name"/>)
                     </span>
                     <span class='text-muted' attrs="{'invisible': [('product_variant_count', '&lt;=', 1)]}">Based on variants</span>
