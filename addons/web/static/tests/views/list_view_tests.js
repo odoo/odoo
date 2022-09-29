@@ -5035,7 +5035,7 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([]);
     });
 
-    QUnit.test("pager, grouped, with count limit reached", async function (assert) {
+    QUnit.test("pager, grouped, with groups count limit reached", async function (assert) {
         patchWithCleanup(DynamicRecordList, { WEB_SEARCH_READ_COUNT_LIMIT: 3 });
         serverData.models.foo.records.push({ id: 398, foo: "ozfijz" }); // to have 4 groups
 
@@ -5050,6 +5050,43 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_group_header", 2);
         assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1-2");
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "4");
+    });
+
+    QUnit.test("pager, grouped, with count limit reached", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree limit="1"><field name="foo"/><field name="bar"/></tree>',
+            groupBy: ["foo"],
+        });
+
+        assert.containsN(target, ".o_group_header", 3, "should have 3 groups");
+        assert.containsOnce(
+            target,
+            ".o_group_header:first-of-type .o_group_name",
+            "first group should have a name"
+        );
+        assert.containsNone(
+            target,
+            ".o_group_header:first-of-type .o_pager",
+            "pager shouldn't be present until unfolded"
+        );
+        // unfold
+        await click(target.querySelector(".o_group_header:first-of-type"));
+        assert.containsOnce(
+            target,
+            ".o_group_header:first-of-type .o_group_name .o_pager",
+            "first group should have a pager"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_group_header:first-of-type .o_pager_value").innerText,
+            "1"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_group_header:first-of-type .o_pager_limit").innerText,
+            "2"
+        );
     });
 
     QUnit.test("list keeps offset on switchView", async (assert) => {
@@ -7063,7 +7100,7 @@ QUnit.module("Views", (hooks) => {
             "height of group header shouldn't have changed"
         );
         assert.hasClass(
-            target.querySelector(".o_group_header th > nav"),
+            target.querySelector(".o_group_header th nav"),
             "o_pager",
             "last cell of open group header should have classname 'o_pager'"
         );
@@ -10965,20 +11002,15 @@ QUnit.module("Views", (hooks) => {
 
         // open the first group
         await click(target.querySelector(".o_group_header"));
-        assert.strictEqual(
-            $(target).find("th.o_group_name").eq(1).children().length,
-            1,
-            "There should be an empty element creating the indentation for the subgroup."
+        assert.containsOnce(
+            target,
+            "tr:nth-child(1) th.o_group_name .fa",
+            "There should be an element creating the indentation for the subgroup."
         );
-        assert.hasClass(
-            $(target).find("th.o_group_name").eq(1).children().eq(0),
-            "fa",
-            "The first element of the row name should have the fa class"
-        );
-        assert.strictEqual(
-            $(target).find("th.o_group_name").eq(1).children().eq(0).is("span"),
-            true,
-            "The first element of the row name should be a span"
+        assert.notStrictEqual(
+            target.querySelector("tr:nth-child(1) th.o_group_name .fa").style.paddingLeft,
+            "",
+            "The element creating the indentation should have a padding."
         );
     });
 
@@ -12659,7 +12691,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_selected_row");
 
         // Click on last data row of first group
-        assert.equal(getGroup(1).innerText, "No (1)	-4");
+        assert.equal(getGroup(1).innerText.replace(/[\s\n]+/g, " "), "No (1) -4");
         await click(getDataRow(1).querySelector("[name=foo]"));
         assert.strictEqual(document.activeElement, getDataRow(1).querySelector("[name=foo] input"));
 
@@ -12667,13 +12699,13 @@ QUnit.module("Views", (hooks) => {
         triggerHotkey("Enter");
         await nextTick();
         assert.containsN(target, ".o_data_row", 6);
-        assert.equal(getGroup(1).innerText, "No (2)	-4");
+        assert.equal(getGroup(1).innerText.replace(/[\s\n]+/g, " "), "No (2) -4");
 
         // Enter should discard the edited row as it is pristine + get to next data row
         triggerHotkey("Enter");
         await nextTick();
         assert.containsN(target, ".o_data_row", 5);
-        assert.equal(getGroup(1).innerText, "No (1)	-4");
+        assert.equal(getGroup(1).innerText.replace(/[\s\n]+/g, " "), "No (1) -4");
         assert.strictEqual(document.activeElement, getDataRow(2).querySelector("[name=foo] input"));
 
         // Shift+Tab should focus back the last field of first row
@@ -12688,7 +12720,7 @@ QUnit.module("Views", (hooks) => {
         triggerHotkey("Enter");
         await nextTick();
         assert.containsN(target, ".o_data_row", 6);
-        assert.equal(getGroup(1).innerText, "No (2)	-4");
+        assert.equal(getGroup(1).innerText.replace(/[\s\n]+/g, " "), "No (2) -4");
 
         // Edit the row and press enter: should add a new row
         input = getDataRow(2).querySelector("[name=foo] input");
@@ -12698,7 +12730,7 @@ QUnit.module("Views", (hooks) => {
         triggerHotkey("Enter");
         await triggerEvent(input, null, "change");
         assert.containsN(target, ".o_data_row", 7);
-        assert.equal(getGroup(1).innerText, "No (3)	-4");
+        assert.equal(getGroup(1).innerText.replace(/[\s\n]+/g, " "), "No (3) -4");
         assert.strictEqual(document.activeElement, getDataRow(3).querySelector("[name=foo] input"));
     });
 
@@ -12785,7 +12817,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_selected_row");
 
         // Click on last data row of first group
-        assert.equal(getGroup(1).innerText, "No (1)	-4");
+        assert.equal(getGroup(1).innerText.replace(/[\s\n]+/g, " "), "No (1) -4");
         await click(getDataRow(1).querySelector("[name=foo]"));
         assert.strictEqual(document.activeElement, getDataRow(1).querySelector("[name=foo] input"));
 
@@ -12793,13 +12825,13 @@ QUnit.module("Views", (hooks) => {
         triggerHotkey("Enter");
         await nextTick();
         assert.containsN(target, ".o_data_row", 6);
-        assert.equal(getGroup(1).innerText, "No (2)	-4");
+        assert.equal(getGroup(1).innerText.replace(/[\s\n]+/g, " "), "No (2) -4");
 
         // Enter should discard the edited row as it is pristine + get to next data row
         triggerHotkey("Enter");
         await nextTick();
         assert.containsN(target, ".o_data_row", 5);
-        assert.equal(getGroup(1).innerText, "No (1)	-4");
+        assert.equal(getGroup(1).innerText.replace(/[\s\n]+/g, " "), "No (1) -4");
         assert.strictEqual(document.activeElement, getDataRow(2).querySelector("[name=foo] input"));
 
         // Shift+Tab should focus back the last field of first row
@@ -12814,7 +12846,7 @@ QUnit.module("Views", (hooks) => {
         triggerHotkey("Enter");
         await nextTick();
         assert.containsN(target, ".o_data_row", 6);
-        assert.equal(getGroup(1).innerText, "No (2)	-4");
+        assert.equal(getGroup(1).innerText.replace(/[\s\n]+/g, " "), "No (2) -4");
 
         // Edit the row and press enter: should add a new row
         input = getDataRow(2).querySelector("[name=foo] input");
@@ -12824,7 +12856,7 @@ QUnit.module("Views", (hooks) => {
         triggerHotkey("Enter");
         await triggerEvent(input, null, "change");
         assert.containsN(target, ".o_data_row", 7);
-        assert.equal(getGroup(1).innerText, "No (3)	-4");
+        assert.equal(getGroup(1).innerText.replace(/[\s\n]+/g, " "), "No (3) -4");
         assert.strictEqual(document.activeElement, getDataRow(3).querySelector("[name=foo] input"));
     });
 
