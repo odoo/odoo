@@ -28,53 +28,34 @@
     margin-right: -$o-horizontal-padding;
 }
 
-@mixin o-td-label-style {
-    width: 0%;
-    padding: 0 15px 0 0;
-    min-width: 150px;
-    color: $headings-color;
-}
-
 // XXS form view specific rules
 @mixin form-break-table {
-    display: block;
+    grid-template-columns: 1fr;
     margin-bottom: $o-form-spacing-unit * 4;
 
-    > tbody {
-        display: block;
+    .o_wrap_field {
+        .o_cell {
+            max-width: 100%;
 
-        > tr {
-            display: flex;
-            flex-flow: row wrap;
-            padding-bottom: map-get($spacers, 3);
+            &.o_wrap_label {
+                line-height: $o-label-font-size-factor;
+            }
 
-            > td {
-                flex: 1 0 auto;
-                display: block;
+            .o_field_widget {
+                margin-bottom: $o-form-spacing-unit * 2;
+
+                > .o_field_widget {
+                    margin-bottom: 0;
+                }
+
+                &.o_field_boolean {
+                    margin-right: 0;
+                }
+            }
+
+            .o_input_dropdown {
+                width: auto;
                 max-width: 100%;
-                padding: 0;
-
-                &.o_td_label {
-                    width: 94%!important; // The label must be on its own line except if the form field is small enough (checkbox)
-                    line-height: $o-label-font-size-factor;
-                }
-
-                .o_field_widget {
-                    margin-bottom: $o-form-spacing-unit * 2;
-
-                    > .o_field_widget {
-                        margin-bottom: 0;
-                    }
-
-                    &.o_field_boolean {
-                        margin-right: 0;
-                    }
-                }
-
-                .o_input_dropdown {
-                    width: auto;
-                    max-width: 100%;
-                }
             }
         }
     }
@@ -104,11 +85,6 @@
     }
     .oe_inline, .o_field_widget.oe_inline > * {
         width: auto!important;
-        @include media-breakpoint-up(vsm, $o-extra-grid-breakpoints) {
-            &.o_inner_group {
-                width: 1px!important;
-            }
-        }
     }
     .oe_left {
         @extend .oe_inline;
@@ -419,48 +395,6 @@
 
     // Groups
     .o_group {
-        display: inline-block;
-        width: 100%;
-        margin: 10px 0;
-
-        .o_group {
-            margin: 0;
-        }
-
-        // o_group contains nested groups
-        @for $i from 1 through $o-form-group-cols {
-            .o_group_col_#{$i} {
-                display: inline-block;
-                width: floor(100% / 12 * $i);
-                vertical-align: top;
-
-                @include media-breakpoint-down(lg) {
-                    width: 100%;
-                }
-            }
-        }
-
-        &.o_inner_group {
-            display: inline-table;
-
-            > tbody > tr > td {
-                padding: 0 $o-innergroup-rpadding 0 0;
-                vertical-align: top;
-
-                &.o_td_label {
-                    @include o-td-label-style;
-                }
-            }
-
-            .o_field_widget {
-                &.o_field_many2one_avatar {
-                    .o_field_many2one_selection {
-                        width: calc(100% - 24px);
-                    }
-                }
-            }
-        }
-
         .o_form_label {
             font-weight: $font-weight-normal;
         }
@@ -471,19 +405,6 @@
             > .btn {
                 flex: 0 0 auto;
                 padding: 0 10px;
-            }
-        }
-
-        @include media-breakpoint-up(sm) {
-            :not(.o_row):not(.o_data_cell) > .o_field_widget,
-            .o_row > .o_field_widget:last-child { // Note: this does not take care
-                                                // of an invisible last-child but
-                                                // it does not really matter
-                // Makes extra buttons (e.g. m2o external button) overflow on the
-                // right padding of the parent element
-                .o_input_dropdown {
-                    flex: 1 0 auto;
-                }
             }
         }
 
@@ -509,10 +430,26 @@
                 white-space: normal;
             }
         }
-
-        .o_td_label .o_form_label {
+        .o_wrap_label .o_form_label {
             font-weight: $font-weight-bold;
             margin-right: $o-form-label-margin-right;
+        }
+    }
+
+    .o_inner_group {
+        --columns: 1;
+        gap: map-get($spacers, 2) $o-horizontal-padding;
+
+        span, .o_field_boolean, .oe_avatar, .o_form_uri {
+            &.o_field_widget {
+                width: auto;
+            }
+        }
+    }
+
+    @include media-breakpoint-up(sm) {
+        .o_inner_group {
+            grid-template-columns: fit-content(150px) 1fr;
         }
     }
 
@@ -525,7 +462,7 @@
         }
 
         > .o_form_label {
-            @include o-td-label-style;
+            color: $headings-color;
             margin-right: $o-form-label-margin-right;
             font-weight: $font-weight-bold;
         }
@@ -715,10 +652,7 @@
             margin-bottom: 0px;
         }
     }
-    .o_td_label .o_form_label:not(.o_status), .o_checkbox_optional_field > .o_form_label {
-        min-height: 23px;
-    }
-    td:not(.o_field_cell) .o_form_uri > span:first-child {
+    .o_cell:not(.o_field_cell) .o_form_uri > span:first-child {
         display: inline-block;
         padding: 1px 0;
         margin-bottom: 1px;
@@ -783,14 +717,15 @@
     }
 
     // Specific style classes
-    .o_group.o_inner_group.oe_subtotal_footer {
+    .o_inner_group.oe_subtotal_footer {
+        grid-template-columns: 1fr auto;
         @extend .oe_right;
         border-top: 1px solid $border-color;
 
-        > tbody > tr > td {
+        .o_cell {
             padding: 0;
 
-            &.o_td_label {
+            &.o_wrap_label {
                 text-align: right;
             }
 
@@ -811,7 +746,7 @@
             }
         }
 
-        > tbody > tr:first-child > td {
+        .o_wrap_field:first-child > .o_cell {
             padding-top: 4px;
         }
         .oe_subtotal_footer_separator {
@@ -964,7 +899,7 @@
     }
 
     .oe_form_configuration {
-        .o_group .o_form_label {
+        .o_inner_group .o_form_label {
             white-space: nowrap;
         }
         h2 {
@@ -1125,7 +1060,7 @@
         }
 
         @include media-breakpoint-down(lg) {
-            .o_group.o_inner_group > tbody > tr > td.o_td_label {
+            .o_group.o_inner_group .o_wrap_label {
                 min-width: 100px;
             }
         }
@@ -1138,7 +1073,7 @@
     }
 
     &.modal-sm .o_form_view {
-        .o_group {
+        .o_inner_group {
             @include form-break-table;
         }
     }
@@ -1191,12 +1126,12 @@
         word-break: break-all;
     }
     .o_group {
-        &.o_inner_group {
-            @include form-break-table;
+        .o_inner_group {
+            margin-bottom: $o-form-spacing-unit * 4;
 
             // Target XXS form view on mobile devices in portrait mode
             @include media-breakpoint-down(md) {
-                &:not(.oe_subtotal_footer) > tbody > tr > td {
+                &:not(.oe_subtotal_footer) > .o_cell {
                     > .o_field_widget {
                         margin-bottom: $o-form-spacing-unit * 4;
                     }
