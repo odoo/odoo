@@ -2,22 +2,20 @@
 <templates xml:space="preserve">
     <t t-name="mail.ActivityListViewItem" owl="1">
         <div class="o_ActivityListViewItem d-flex flex-column border-bottom py-2">
-            <div class="d-flex align-items-baseline mx-3">
-                <i class="fa small me-2" t-attf-class="{{ activityListViewItem.activity.icon }}" role="img"/>
+            <div class="o_ActivityListViewItem_container d-flex align-items-baseline ms-3 me-1">
+                <i t-if="activityListViewItem.activity.icon" class="fa small me-2" t-attf-class="{{ activityListViewItem.activity.icon }}" role="img"/>
                 <t t-if="activityListViewItem.activity.summary">
-                    <b class="text-900 me-2 text-truncate" t-esc="activityListViewItem.activity.summary"/>
+                    <b class="text-900 me-2 text-truncate flex-grow-1 flex-basis-0" t-esc="activityListViewItem.activity.summary"/>
                 </t>
                 <t t-if="!activityListViewItem.activity.summary and activityListViewItem.activity.type">
-                    <b class="text-900 me-2 text-truncate" t-esc="activityListViewItem.activity.type.displayName"/>
+                    <b class="text-900 me-2 text-truncate flex-grow-1" t-esc="activityListViewItem.activity.type.displayName"/>
                 </t>
-                <button t-if="activityListViewItem.hasEditButton" class="btn btn-sm btn-link" t-on-click="activityListViewItem.onClickEditActivityButton">
+                <button t-if="activityListViewItem.hasEditButton" class="o_ActivityListViewItem_editButton btn btn-sm btn-link" t-on-click="activityListViewItem.onClickEditActivityButton">
                     <i class="fa fa-pencil"/>
                 </button>
-                <div class="flex-grow-1"/>
-                <t t-if="activityListViewItem.activity.canWrite" class="flex-grow-1 text-end">
-                    <a t-if="activityListViewItem.fileUploader" class="fa fa-upload" title="Upload file" role="img" t-on-click="activityListViewItem.onClickUploadDocument"/>
-                    <a t-if="activityListViewItem.hasMarkDoneButton" class="o_ActivityListViewItem_markAsDone fa fa-check-circle" t-on-click="activityListViewItem.onClickMarkAsDone" title="Mark as done" role="img" aria-label="Mark as done" t-ref="markDoneButton"/>
-                    <!-- TODO approvals override to change stuff -->
+                <t t-if="activityListViewItem.activity.canWrite">
+                    <button t-if="activityListViewItem.fileUploader" class="o_ActivityListViewItem_actionLink btn btn-link shadow-none fs-4 fa fa-upload" title="Upload file" aria-label="Upload File" t-on-click="activityListViewItem.onClickUploadDocument"/>
+                    <button t-if="activityListViewItem.hasMarkDoneButton" class="o_ActivityListViewItem_actionLink o_ActivityListViewItem_markAsDone btn btn-link shadow-none fs-4 fa fa-check-circle" title="Mark as done" aria-label="Mark as done" t-on-click="activityListViewItem.onClickMarkAsDone" t-ref="markDoneButton"/>
                 </t>
             </div>
             <div t-if="activityListViewItem.activity.state !== 'today'" class="d-flex align-items-baseline flex-wrap mx-3">
