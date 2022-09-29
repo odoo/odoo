@@ -28,7 +28,10 @@ models which only purpose is to run tests.""",
             'test_website/static/src/js/test_error.js',
         ],
         'web.assets_tests': [
-            'test_website/static/tests/**/*',
+            'test_website/static/tests/tours/*',
+        ],
+        'web.qunit_suite_tests': [
+            'test_website/static/tests/*.js',
         ],
     },
     'license': 'LGPL-3',
