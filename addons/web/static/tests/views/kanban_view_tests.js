@@ -1182,6 +1182,36 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test("click on a button type='delete' to delete a record in a column", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `<kanban limit="3">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <div><a role="menuitem" type="delete" class="dropdown-item o_delete">Delete</a></div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+        });
+        let column = getColumn();
+        assert.containsN(column, ".o_kanban_record", 2);
+        assert.containsNone(column, ".o_kanban_load_more");
+
+        await click(column.querySelector(".o_kanban_record .o_delete"));
+        assert.containsOnce(target, ".modal");
+
+        await click(target, ".modal .btn-primary");
+        column = getColumn();
+        assert.containsOnce(column, ".o_kanban_record");
+        assert.containsNone(column, ".o_kanban_load_more");
+    });
+
     QUnit.test("kanban with an action id as on_create attrs", async (assert) => {
         const actionService = {
             start() {
