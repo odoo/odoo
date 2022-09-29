@@ -5096,6 +5096,7 @@ class StockMove(TransactionCase):
         """ Changing type of an existing product will raise a user error if
             - some move are reserved
             - switching from a stockable product when qty_available is not zero
+            - switching the product type when there are already done moves
         """
         move_in = self.env['stock.move'].create({
             'name': 'test_customer',
@@ -5133,7 +5134,10 @@ class StockMove(TransactionCase):
         move_out._action_assign()
         move_out.quantity_done = self.product.qty_available
         move_out._action_done()
-        self.product.detailed_type = 'consu'
+
+        # Check raise UserError(_("You can not change the type of a product that was already used."))
+        with self.assertRaises(UserError):
+            self.product.detailed_type = 'consu'
 
         move2 = self.env['stock.move'].create({
             'name': 'test_customer',
@@ -5149,9 +5153,10 @@ class StockMove(TransactionCase):
         move2._action_assign()
 
         with self.assertRaises(UserError):
-            self.product.detailed_type = 'product'
+            self.product.detailed_type = 'consu'
         move2._action_cancel()
-        self.product.detailed_type = 'product'
+        with self.assertRaises(UserError):
+            self.product.detailed_type = 'consu'
 
     def test_edit_done_picking_1(self):
         """ Add a new move line in a done picking should generate an
