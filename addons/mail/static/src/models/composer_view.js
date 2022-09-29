@@ -1430,6 +1430,12 @@ registerModel({
          * Reference of the textarea. Useful to set height, selection and content.
          */
         textareaRef: attr(),
+        threadTextualTypingStatusView: one('ThreadTextualTypingStatusView', {
+            compute() {
+                return this.hasThreadTyping ? {} : clear();
+            },
+            inverse: 'composerViewOwner',
+        }),
         /**
          * States the thread view on which this composer allows editing (if any).
          */

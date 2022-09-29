@@ -80,7 +80,7 @@ export class ComposerTextInput extends Component {
 }
 
 Object.assign(ComposerTextInput, {
-    props: { record: Object },
+    props: { record: Object, record2: Object },
     template: 'mail.ComposerTextInput',
 });
 

@@ -123,8 +123,8 @@
                 </div>
                 <t t-if="composerView.hasFooter">
                     <div class="o_Composer_coreFooter overflow-auto" t-att-class="{ 'o-composer-is-compact': composerView.isCompact, 'ms-0': !composerView.isCompact }">
-                        <t t-if="composerView.hasThreadTyping">
-                            <ThreadTextualTypingStatus className="'o_Composer_threadTextualTypingStatus small'" thread="composerView.composer.activeThread"/>
+                        <t t-if="composerView.threadTextualTypingStatusView">
+                            <ThreadTextualTypingStatus className="'o_Composer_threadTextualTypingStatus small'" record="composerView.threadTextualTypingStatusView" thread="composerView.composer.activeThread"/>
                         </t>
                         <AttachmentList
                             t-if="composerView.attachmentList"
