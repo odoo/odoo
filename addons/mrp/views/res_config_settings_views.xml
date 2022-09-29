@@ -22,15 +22,15 @@
                                     <div class="text-muted">
                                         Process operations at specific work centers
                                     </div>
-                                    <div class="content-group" attrs="{'invisible': [('group_mrp_routings','=',False)]}">
+                                    <div id="workorder_settings_workcenters" class="content-group" attrs="{'invisible': [('group_mrp_routings','=',False)]}">
                                         <div class="mt8">
                                             <div>
                                                 <button name="%(mrp.mrp_workcenter_action)d" icon="fa-arrow-right" type="action" string="Work Centers" class="btn-link"/>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row mt-2" attrs="{'invisible': [('group_mrp_routings','=',False)]}">
-                                        <field name="group_mrp_workorder_dependencies" class="col-lg-1 ml16 mr0"/>
+                                    <div id="workorder_settings_dependencies" class="row mt-2" attrs="{'invisible': [('group_mrp_routings','=',False)]}">
+                                        <field name="group_mrp_workorder_dependencies" class="col-lg-1 mr0"/>
                                         <div class="col ps-0">
                                             <label for="group_mrp_workorder_dependencies"/>
                                             <div class="text-muted">
