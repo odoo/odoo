@@ -78,7 +78,7 @@ class IrUiMenu(models.Model):
         """ Return the ids of the menu items visible to the user. """
         # retrieve all menus, and determine which ones are visible
         context = {'ir.ui.menu.full_list': True}
-        menus = self.with_context(context).search([]).sudo()
+        menus = self.with_context(context).search_fetch([], ['action', 'parent_id']).sudo()
 
         groups = self.env.user.groups_id
         if not debug:
@@ -138,9 +138,8 @@ class IrUiMenu(models.Model):
         return self.filtered(lambda menu: menu.id in visible_ids)
 
     @api.model
-    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
-        menu_ids = super()._search(domain, order=order, access_rights_uid=access_rights_uid)
-        menus = self.browse(menu_ids)
+    def search_fetch(self, domain, field_names, offset=0, limit=None, order=None):
+        menus = super().search_fetch(domain, field_names, order=order)
         if menus:
             # menu filtering is done only on main menu tree, not other menu lists
             if not self._context.get('ir.ui.menu.full_list'):
@@ -149,7 +148,12 @@ class IrUiMenu(models.Model):
                 menus = menus[offset:]
             if limit:
                 menus = menus[:limit]
-        return menus._as_query(order)
+        return menus
+
+    @api.model
+    def search_count(self, domain, limit=None):
+        # to be consistent with search() above
+        return len(self.search(domain, limit=limit))
 
     def name_get(self):
         return [(menu.id, menu._get_full_name()) for menu in self]
