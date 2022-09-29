@@ -28,10 +28,6 @@
     margin-right: -$o-horizontal-padding;
 }
 
-@mixin o-label-style {
-    color: $headings-color;
-}
-
 // XXS form view specific rules
 @mixin form-break-table {
     grid-template-columns: 1fr;
@@ -444,10 +440,6 @@
         --columns: 1;
         gap: map-get($spacers, 2) $o-horizontal-padding;
 
-        .o_wrap_label {
-            @include o-label-style;
-        }
-
         span, .o_field_boolean, .oe_avatar, .o_form_uri {
             &.o_field_widget {
                 width: auto;
@@ -470,7 +462,7 @@
         }
 
         > .o_form_label {
-            @include o-label-style;
+            color: $headings-color;
             margin-right: $o-form-label-margin-right;
             font-weight: $font-weight-bold;
         }
