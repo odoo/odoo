@@ -96,8 +96,21 @@ class Project(models.Model):
             lazy=False)
         timesheet_time_dict = {res['project_id'][0]: res['unit_amount'] for res in timesheets_read_group}
         for project in self:
+<<<<<<< HEAD
             project.remaining_hours = project.allocated_hours - timesheet_time_dict.get(project.id, 0)
             project.is_project_overtime = project.remaining_hours < 0
+||||||| parent of e270c2923f5e... temp
+            planned_hours = planned_hours_per_project_id.get(project.id, 0.0)
+            effective_hours = effective_hours_per_project_id.get(project.id, 0.0)
+            project.remaining_hours = planned_hours - effective_hours if planned_hours else 0.0
+            project.has_planned_hours_tasks = project.id in planned_hours_per_project_id
+=======
+            planned_hours = planned_hours_per_project_id.get(project.id, 0.0)
+            effective_hours = effective_hours_per_project_id.get(project.id, 0.0)
+            project.remaining_hours = planned_hours - effective_hours if planned_hours else 0.0
+            project.has_planned_hours_tasks = project.id in planned_hours_per_project_id
+            project.is_project_overtime = project.remaining_hours < 0.0
+>>>>>>> e270c2923f5e... temp
 
     @api.model
     def _search_is_project_overtime(self, operator, value):
