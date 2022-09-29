@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="lv_account_group_0" model="account.group">
+        <field name="code_prefix_start">0</field>
+        <field name="name">Kontu plāns</field>
+    </record>
+
+    <record id="lv_account_group_1" model="account.group">
+        <field name="code_prefix_start">1</field>
+        <field name="name">Ilgtermiņa ieguldījumi</field>
+        <field name="parent_id" ref="lv_account_group_0"/>
+    </record>
+
+    <record id="lv_account_group_11" model="account.group">
+        <field name="code_prefix_start">11</field>
+        <field name="name">Nemateriālie ieguldījumi</field>
+        <field name="parent_id" ref="lv_account_group_1"/>
+    </record>
+
+    <record id="lv_account_group_119" model="account.group">
+        <field name="code_prefix_start">119</field>
+        <field name="name">Nemateriālo ieguldījumu vērtības norakstītā daļa (pasīvā)</field>
+        <field name="parent_id" ref="lv_account_group_11"/>
+    </record>
+
+    <record id="lv_account_group_12" model="account.group">
+        <field name="code_prefix_start">12</field>
+        <field name="name">Pamatlīdzekļi</field>
+        <field name="parent_id" ref="lv_account_group_1"/>
+    </record>
+
+    <record id="lv_account_group_129" model="account.group">
+        <field name="code_prefix_start">129</field>
+        <field name="name">Pamatlīdzekļu nolietojums (pasīvā)</field>
+        <field name="parent_id" ref="lv_account_group_12"/>
+    </record>
+
+    <record id="lv_account_group_13" model="account.group">
+        <field name="code_prefix_start">13</field>
+        <field name="name">Ieguldījuma īpašumi</field>
+        <field name="parent_id" ref="lv_account_group_1"/>
+    </record>
+
+    <record id="lv_account_group_14" model="account.group">
+        <field name="code_prefix_start">14</field>
+        <field name="name">Bioloģiskie aktīvi</field>
+        <field name="parent_id" ref="lv_account_group_1"/>
+    </record>
+
+    <record id="lv_account_group_15" model="account.group">
+        <field name="code_prefix_start">15</field>
+        <field name="name">Ilgtermiņa finanšu ieguldījumi</field>
+        <field name="parent_id" ref="lv_account_group_1"/>
+    </record>
+
+    <record id="lv_account_group_2" model="account.group">
+        <field name="code_prefix_start">2</field>
+        <field name="name">Apgrozāmie līdzekļi</field>
+        <field name="parent_id" ref="lv_account_group_0"/>
+    </record>
+
+    <record id="lv_account_group_21" model="account.group">
+        <field name="code_prefix_start">21</field>
+        <field name="name">Krājumi</field>
+        <field name="parent_id" ref="lv_account_group_2"/>
+    </record>
+
+    <record id="lv_account_group_22" model="account.group">
+        <field name="code_prefix_start">22</field>
+        <field name="name">Pārdošanai turēti ilgtermiņa ieguldījumi</field>
+        <field name="parent_id" ref="lv_account_group_2"/>
+    </record>
+
+    <record id="lv_account_group_23" model="account.group">
+        <field name="code_prefix_start">23</field>
+        <field name="name">Debitori</field>
+        <field name="parent_id" ref="lv_account_group_2"/>
+    </record>
+
+    <record id="lv_account_group_231" model="account.group">
+        <field name="code_prefix_start">231</field>
+        <field name="name">Norēķini ar debitoriem</field>
+        <field name="parent_id" ref="lv_account_group_23"/>
+    </record>
+
+    <record id="lv_account_group_238" model="account.group">
+        <field name="code_prefix_start">238</field>
+        <field name="name">Norēķini ar avansieriem</field>
+        <field name="parent_id" ref="lv_account_group_23"/>
+    </record>
+
+    <record id="lv_account_group_24" model="account.group">
+        <field name="code_prefix_start">24</field>
+        <field name="name">Īstermiņa finanšu ieguldījumi</field>
+        <field name="parent_id" ref="lv_account_group_2"/>
+    </record>
+
+    <record id="lv_account_group_25" model="account.group">
+        <field name="code_prefix_start">25</field>
+        <field name="name">Vērtspapīri</field>
+        <field name="parent_id" ref="lv_account_group_2"/>
+    </record>
+    
+    <record id="lv_account_group_26" model="account.group">
+        <field name="code_prefix_start">26</field>
+        <field name="name">Nauda</field>
+        <field name="parent_id" ref="lv_account_group_2"/>
+    </record>
+
+    <record id="lv_account_group_261" model="account.group">
+        <field name="code_prefix_start">261</field>
+        <field name="name">Kase</field>
+        <field name="parent_id" ref="lv_account_group_26"/>
+    </record>
+
+    <record id="lv_account_group_262" model="account.group">
+        <field name="code_prefix_start">262</field>
+        <field name="name">Banka</field>
+        <field name="parent_id" ref="lv_account_group_26"/>
+    </record>
+
+    <record id="lv_account_group_3" model="account.group">
+        <field name="code_prefix_start">3</field>
+        <field name="name">Pašu kapitāls</field>
+        <field name="parent_id" ref="lv_account_group_0"/>
+    </record>
+
+    <record id="lv_account_group_31" model="account.group">
+        <field name="code_prefix_start">31</field>
+        <field name="name">Pamatkapitāls, pārvērtēšanas rezerve</field>
+        <field name="parent_id" ref="lv_account_group_3"/>
+    </record>
+
+    <record id="lv_account_group_33" model="account.group">
+        <field name="code_prefix_start">33</field>
+        <field name="name">Rezerves</field>
+        <field name="parent_id" ref="lv_account_group_3"/>
+    </record>
+
+    <record id="lv_account_group_34" model="account.group">
+        <field name="code_prefix_start">34</field>
+        <field name="name">Nesadalītā peļņa vai nesegtie zaudējumi</field>
+        <field name="parent_id" ref="lv_account_group_3"/>
+    </record>
+
+    <record id="lv_account_group_4" model="account.group">
+        <field name="code_prefix_start">4</field>
+        <field name="name">Uzkrājumi</field>
+        <field name="parent_id" ref="lv_account_group_0"/>
+    </record>
+
+    <record id="lv_account_group_41" model="account.group">
+        <field name="code_prefix_start">41</field>
+        <field name="name">Uzkrājumi pensijām un tamlīdzīgām saistībām</field>
+        <field name="parent_id" ref="lv_account_group_4"/>
+    </record>
+
+    <record id="lv_account_group_42" model="account.group">
+        <field name="code_prefix_start">42</field>
+        <field name="name">Uzkrājumi paredzamajiem nodokļiem</field>
+        <field name="parent_id" ref="lv_account_group_4"/>
+    </record>
+
+    <record id="lv_account_group_43" model="account.group">
+        <field name="code_prefix_start">43</field>
+        <field name="name">Citi uzkrājumi</field>
+        <field name="parent_id" ref="lv_account_group_4"/>
+    </record>
+
+    <record id="lv_account_group_5" model="account.group">
+        <field name="code_prefix_start">5</field>
+        <field name="name">Kreditori</field>
+        <field name="parent_id" ref="lv_account_group_0"/>
+    </record>
+
+    <record id="lv_account_group_51" model="account.group">
+        <field name="code_prefix_start">51</field>
+        <field name="name">Norēķini par aizņēmumiem</field>
+        <field name="parent_id" ref="lv_account_group_5"/>
+    </record>
+
+    <record id="lv_account_group_513" model="account.group">
+        <field name="code_prefix_start">513</field>
+        <field name="name">Aizņēmumi no kredītiestādēm</field>
+        <field name="parent_id" ref="lv_account_group_51"/>
+    </record>
+
+    <record id="lv_account_group_52" model="account.group">
+        <field name="code_prefix_start">52</field>
+        <field name="name">No pircējiem saņemtie avansi</field>
+        <field name="parent_id" ref="lv_account_group_5"/>
+    </record>
+
+    <record id="lv_account_group_53" model="account.group">
+        <field name="code_prefix_start">53</field>
+        <field name="name">Parādi piegādātājiem un darbuzņēmējiem</field>
+        <field name="parent_id" ref="lv_account_group_5"/>
+    </record>
+
+    <record id="lv_account_group_54" model="account.group">
+        <field name="code_prefix_start">54</field>
+        <field name="name">Maksājamie vekseļi</field>
+        <field name="parent_id" ref="lv_account_group_5"/>
+    </record>
+
+    <record id="lv_account_group_55" model="account.group">
+        <field name="code_prefix_start">55</field>
+        <field name="name">Norēķini ar sabiedrībām</field>
+        <field name="parent_id" ref="lv_account_group_5"/>
+    </record>
+
+    <record id="lv_account_group_56" model="account.group">
+        <field name="code_prefix_start">56</field>
+        <field name="name">Norēķini par darba samaksu, ieturējumiem (izņemot nodokļus) un parādiem personālam</field>
+        <field name="parent_id" ref="lv_account_group_5"/>
+    </record>
+
+    <record id="lv_account_group_57" model="account.group">
+        <field name="code_prefix_start">57</field>
+        <field name="name">Nodokļi un valsts sociālās apdrošināšanas obligātās iemaksas</field>
+        <field name="parent_id" ref="lv_account_group_5"/>
+    </record>
+
+    <record id="lv_account_group_572" model="account.group">
+        <field name="code_prefix_start">572</field>
+        <field name="name">Norēķini par pievienotās vērtības nodokli</field>
+        <field name="parent_id" ref="lv_account_group_57"/>
+    </record>
+
+    <record id="lv_account_group_573" model="account.group">
+        <field name="code_prefix_start">573</field>
+        <field name="name">Norēķini par valsts sociālās apdrošināšanas obligātajām iemaksām</field>
+        <field name="parent_id" ref="lv_account_group_57"/>
+    </record>
+
+    <record id="lv_account_group_574" model="account.group">
+        <field name="code_prefix_start">574</field>
+        <field name="name">Norēķini par uzņēmējdarbības riska valsts nodevām</field>
+        <field name="parent_id" ref="lv_account_group_57"/>
+    </record>
+
+    <record id="lv_account_group_575" model="account.group">
+        <field name="code_prefix_start">575</field>
+        <field name="name">Norēķini par iedzīvotāju ienākuma nodokli</field>
+        <field name="parent_id" ref="lv_account_group_57"/>
+    </record>
+
+    <record id="lv_account_group_58" model="account.group">
+        <field name="code_prefix_start">58</field>
+        <field name="name">Norēķini par dividendēm</field>
+        <field name="parent_id" ref="lv_account_group_5"/>
+    </record>
+
+    <record id="lv_account_group_59" model="account.group">
+        <field name="code_prefix_start">59</field>
+        <field name="name">Citi kreditori</field>
+        <field name="parent_id" ref="lv_account_group_5"/>
+    </record>
+
+    <record id="lv_account_group_6" model="account.group">
+        <field name="code_prefix_start">6</field>
+        <field name="name">Ieņēmumi no uzņēmuma saimnieciskās darbības</field>
+        <field name="parent_id" ref="lv_account_group_0"/>
+    </record>
+
+    <record id="lv_account_group_61" model="account.group">
+        <field name="code_prefix_start">61</field>
+        <field name="name">Ieņēmumi no pārdošanas, kas apliekami ar nodokļiem vispārējā kārtībā</field>
+        <field name="parent_id" ref="lv_account_group_6"/>
+    </record>
+
+    <record id="lv_account_group_62" model="account.group">
+        <field name="code_prefix_start">62</field>
+        <field name="name">Ieņēmumi no pārdošanas, kas citādi apliekami ar nodokļiem</field>
+        <field name="parent_id" ref="lv_account_group_6"/>
+    </record>
+
+    <record id="lv_account_group_63" model="account.group">
+        <field name="code_prefix_start">63</field>
+        <field name="name">Komisijas, starpniecības un citi ieņēmumi</field>
+        <field name="parent_id" ref="lv_account_group_6"/>
+    </record>
+
+    <record id="lv_account_group_64" model="account.group">
+        <field name="code_prefix_start">64</field>
+        <field name="name">Ieņēmumus samazinošas atlaides</field>
+        <field name="parent_id" ref="lv_account_group_6"/>
+    </record>
+
+    <record id="lv_account_group_65" model="account.group">
+        <field name="code_prefix_start">65</field>
+        <field name="name">Pārējie uzņēmuma ieņēmumi</field>
+        <field name="parent_id" ref="lv_account_group_6"/>
+    </record>
+
+    <record id="lv_account_group_66" model="account.group">
+        <field name="code_prefix_start">66</field>
+        <field name="name">Gatavās produkcijas un nepabeigto ražojumu krājumu un vērtības izmaiņas</field>
+        <field name="parent_id" ref="lv_account_group_6"/>
+    </record>
+
+    <record id="lv_account_group_67" model="account.group">
+        <field name="code_prefix_start">67</field>
+        <field name="name">Citu periodu ieņēmumi, kas attiecas uz pārskata periodu</field>
+        <field name="parent_id" ref="lv_account_group_6"/>
+    </record>
+
+    <record id="lv_account_group_69" model="account.group">
+        <field name="code_prefix_start">69</field>
+        <field name="name">Sociālās infrastruktūras iestāžu un pasākumu ieņēmumi</field>
+        <field name="parent_id" ref="lv_account_group_6"/>
+    </record>
+
+    <record id="lv_account_group_7" model="account.group">
+        <field name="code_prefix_start">7</field>
+        <field name="name">Saimnieciskās darbības izdevumi</field>
+        <field name="parent_id" ref="lv_account_group_0"/>
+    </record>
+
+    <record id="lv_account_group_71" model="account.group">
+        <field name="code_prefix_start">71</field>
+        <field name="name">Izdevumi izejvielu, materiālu un preču iepirkšanai</field>
+        <field name="parent_id" ref="lv_account_group_7"/>
+    </record>
+
+    <record id="lv_account_group_72" model="account.group">
+        <field name="code_prefix_start">72</field>
+        <field name="name">Personāla izmaksas</field>
+        <field name="parent_id" ref="lv_account_group_7"/>
+    </record>
+
+    <record id="lv_account_group_73" model="account.group">
+        <field name="code_prefix_start">73</field>
+        <field name="name">Sociālās nodevas un izmaksas</field>
+        <field name="parent_id" ref="lv_account_group_7"/>
+    </record>
+
+    <record id="lv_account_group_74" model="account.group">
+        <field name="code_prefix_start">74</field>
+        <field name="name">Pamatlīdzekļu nolietojums un citu ieguldījumu vērtības norakstījumi</field>
+        <field name="parent_id" ref="lv_account_group_7"/>
+    </record>
+
+    <record id="lv_account_group_75" model="account.group">
+        <field name="code_prefix_start">75</field>
+        <field name="name">Pārējie saimnieciskās darbības izdevumi</field>
+        <field name="parent_id" ref="lv_account_group_7"/>
+    </record>
+
+    <record id="lv_account_group_76" model="account.group">
+        <field name="code_prefix_start">76</field>
+        <field name="name">Preču pārdošanas izdevumi</field>
+        <field name="parent_id" ref="lv_account_group_7"/>
+    </record>
+
+    <record id="lv_account_group_77" model="account.group">
+        <field name="code_prefix_start">77</field>
+        <field name="name">Administrācijas izdevumi</field>
+        <field name="parent_id" ref="lv_account_group_7"/>
+    </record>
+
+    <record id="lv_account_group_78" model="account.group">
+        <field name="code_prefix_start">78</field>
+        <field name="name">Pārskata periodā iekļaujamie iepriekšējo periodu izdevumi</field>
+        <field name="parent_id" ref="lv_account_group_7"/>
+    </record>
+
+    <record id="lv_account_group_79" model="account.group">
+        <field name="code_prefix_start">79</field>
+        <field name="name">Sociālās infrastruktūras uzturēšanas izdevumi</field>
+        <field name="parent_id" ref="lv_account_group_7"/>
+    </record>
+
+    <record id="lv_account_group_8" model="account.group">
+        <field name="code_prefix_start">8</field>
+        <field name="name">Dažādi ieņēmumi un izdevumi, peļņa un zaudējumi</field>
+        <field name="parent_id" ref="lv_account_group_0"/>
+    </record>
+
+    <record id="lv_account_group_81" model="account.group">
+        <field name="code_prefix_start">81</field>
+        <field name="name">Dažādi ieņēmumi</field>
+        <field name="parent_id" ref="lv_account_group_8"/>
+    </record>
+
+    <record id="lv_account_group_82" model="account.group">
+        <field name="code_prefix_start">82</field>
+        <field name="name">Dažādi izdevumi</field>
+        <field name="parent_id" ref="lv_account_group_8"/>
+    </record>
+
+    <record id="lv_account_group_83" model="account.group">
+        <field name="code_prefix_start">83</field>
+        <field name="name">Ārkārtas ieņēmumi</field>
+        <field name="parent_id" ref="lv_account_group_8"/>
+    </record>
+
+    <record id="lv_account_group_84" model="account.group">
+        <field name="code_prefix_start">84</field>
+        <field name="name">Ārkārtas izdevumi</field>
+        <field name="parent_id" ref="lv_account_group_8"/>
+    </record>
+
+    <record id="lv_account_group_86" model="account.group">
+        <field name="code_prefix_start">86</field>
+        <field name="name">Peļņa vai zaudējumi</field>
+        <field name="parent_id" ref="lv_account_group_8"/>
+    </record>
+
+    <record id="lv_account_group_88" model="account.group">
+        <field name="code_prefix_start">88</field>
+        <field name="name">Nodokļi no peļņas un citi saimnieciskās darbības izdevumos  neiekļaujamie nodokļi</field>
+        <field name="parent_id" ref="lv_account_group_8"/>
+    </record>
+
+</odoo>

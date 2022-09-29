@@ -1,0 +1,925 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Sub Taxes -->
+
+    <!-- Priekšnodoklis 21% -->
+
+    <record id="lv_tax_template_Pr-21" model="account.tax.template">
+        <field name="name">Priekšnodoklis 21%</field>
+        <field name="chart_template_id" ref="l10n_lv_chart_template"/>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">21.0</field>
+        <field name="description">Pr-21</field>
+    </record>
+
+    <record id="lv_tax_template_Pr-21_repart_base" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_Pr-21"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_Pr-21_repart" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_Pr-21"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="account_id" ref="lv_account_template_5721"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_62'), ref('lv_account_tax_tag_64')])]"/>
+    </record>
+
+    <record id="lv_tax_template_Pr-21_repart_base_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_Pr-21"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_Pr-21_repart_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_Pr-21"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="account_id" ref="lv_account_template_5721"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_62'), ref('lv_account_tax_tag_64')])]"/>
+    </record>
+
+    <!-- PVN 21% -->
+
+    <record id="lv_tax_template_PVN-21" model="account.tax.template">
+        <field name="name">PVN 21%</field>
+        <field name="chart_template_id" ref="l10n_lv_chart_template"/>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-21.0</field>
+        <field name="description">PVN-21</field>
+    </record>
+
+    <record id="lv_tax_template_PVN-21_repart_base" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_PVN-21"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_PVN-21_repart" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_PVN-21"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="account_id" ref="lv_account_template_5721"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_50'), ref('lv_account_tax_tag_52'), ref('lv_account_tax_tag_55')])]"/>
+    </record>
+
+    <record id="lv_tax_template_PVN-21_repart_base_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_PVN-21"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_PVN-21_repart_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_PVN-21"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="account_id" ref="lv_account_template_5721"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_50'), ref('lv_account_tax_tag_52'), ref('lv_account_tax_tag_55')])]"/>
+    </record>
+
+    <!-- Priekšnodoklis 12% -->
+
+    <record id="lv_tax_template_Pr-12" model="account.tax.template">
+        <field name="name">Priekšnodoklis 12%</field>
+        <field name="chart_template_id" ref="l10n_lv_chart_template"/>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">12.0</field>
+        <field name="description">Pr-12</field>
+    </record>
+
+    <record id="lv_tax_template_Pr-12_repart_base" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_Pr-12"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_Pr-12_repart" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_Pr-12"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="account_id" ref="lv_account_template_5721"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_64')])]"/>
+    </record>
+
+    <record id="lv_tax_template_Pr-12_repart_base_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_Pr-12"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_Pr-12_repart_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_Pr-12"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="account_id" ref="lv_account_template_5721"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_64')])]"/>
+    </record>
+
+    <!-- PVN 12% -->
+
+    <record id="lv_tax_template_PVN-12" model="account.tax.template">
+        <field name="name">PVN 12%</field>
+        <field name="chart_template_id" ref="l10n_lv_chart_template"/>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-12.0</field>
+        <field name="description">PVN-12</field>
+    </record>
+
+    <record id="lv_tax_template_PVN-12_repart_base" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_PVN-12"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_PVN-12_repart" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_PVN-12"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="account_id" ref="lv_account_template_5721"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_51'), ref('lv_account_tax_tag_56')])]"/>
+    </record>
+
+    <record id="lv_tax_template_PVN-12_repart_base_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_PVN-12"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_PVN-12_repart_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_PVN-12"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="account_id" ref="lv_account_template_5721"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_51'), ref('lv_account_tax_tag_56')])]"/>
+    </record>
+
+    <!-- PVN 21% (80%) -->
+
+    <record id="lv_tax_template_Pr-21-80" model="account.tax.template">
+        <field name="name">PVN 21% (80%)</field>
+        <field name="chart_template_id" ref="l10n_lv_chart_template"/>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">16.8</field>
+        <field name="description">Pr-21-80</field>
+    </record>
+
+    <record id="lv_tax_template_Pr-21-80_repart_base" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_Pr-21-80"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_Pr-21-80_repart" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_Pr-21-80"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="account_id" ref="lv_account_template_5721"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_57'), ref('lv_account_tax_tag_62'), ref('lv_account_tax_tag_64')])]"/>
+    </record>
+
+    <record id="lv_tax_template_Pr-21-80_repart_base_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_Pr-21-80"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_Pr-21-80_repart_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_Pr-21-80"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="account_id" ref="lv_account_template_5721"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_57'), ref('lv_account_tax_tag_62'), ref('lv_account_tax_tag_64')])]"/>
+    </record>
+
+    <!-- Izdevumi 20% -->
+
+    <record id="lv_tax_template_Izd-20" model="account.tax.template">
+        <field name="name">Izdevumi 20%</field>
+        <field name="chart_template_id" ref="l10n_lv_chart_template"/>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">4.2</field>
+        <field name="description">Izd-20</field>
+    </record>
+
+    <record id="lv_tax_template_Izd-20_repart_base" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_Izd-20"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_Izd-20_repart" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_Izd-20"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+    </record>
+
+    <record id="lv_tax_template_Izd-20_repart_base_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_Izd-20"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_Izd-20_repart_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_Izd-20"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+    </record>
+
+    <!-- PVN 21% (40%) -->
+
+    <record id="lv_tax_template_Pr-21-40" model="account.tax.template">
+        <field name="name">PVN 21% (40%)</field>
+        <field name="chart_template_id" ref="l10n_lv_chart_template"/>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">8.4</field>
+        <field name="description">Pr-21-40</field>
+    </record>
+
+    <record id="lv_tax_template_Pr-21-40_repart_base" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_Pr-21-40"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_Pr-21-40_repart" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_Pr-21-40"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="account_id" ref="lv_account_template_5721"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_57'), ref('lv_account_tax_tag_62'), ref('lv_account_tax_tag_64')])]"/>
+    </record>
+
+    <record id="lv_tax_template_Pr-21-40_repart_base_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_Pr-21-40"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_Pr-21-40_repart_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_Pr-21-40"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="account_id" ref="lv_account_template_5721"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_57'), ref('lv_account_tax_tag_62'), ref('lv_account_tax_tag_64')])]"/>
+    </record>
+
+    <!-- Izdevumi 60% -->
+
+    <record id="lv_tax_template_Izd-60" model="account.tax.template">
+        <field name="name">Izdevumi 60%</field>
+        <field name="chart_template_id" ref="l10n_lv_chart_template"/>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">12.6</field>
+        <field name="description">Izd-60</field>
+    </record>
+
+    <record id="lv_tax_template_Izd-60_repart_base" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_Izd-60"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_Izd-60_repart" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_Izd-60"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+    </record>
+
+    <record id="lv_tax_template_Izd-60_repart_base_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_Izd-60"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_Izd-60_repart_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_Izd-60"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+    </record>
+
+    <!-- PVN 21% (50%) -->
+
+    <record id="lv_tax_template_Pr-21-50" model="account.tax.template">
+        <field name="name">PVN 21% (50%)</field>
+        <field name="chart_template_id" ref="l10n_lv_chart_template"/>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">10.5</field>
+        <field name="description">Pr-21-50</field>
+    </record>
+
+    <record id="lv_tax_template_Pr-21-50_repart_base" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_Pr-21-50"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_Pr-21-50_repart" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_Pr-21-50"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="account_id" ref="lv_account_template_5721"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_57'), ref('lv_account_tax_tag_62'), ref('lv_account_tax_tag_64')])]"/>
+    </record>
+
+    <record id="lv_tax_template_Pr-21-50_repart_base_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_Pr-21-50"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_Pr-21-50_repart_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_Pr-21-50"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="account_id" ref="lv_account_template_5721"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_57'), ref('lv_account_tax_tag_62'), ref('lv_account_tax_tag_64')])]"/>
+    </record>
+
+    <!-- Izdevumi 50% -->
+
+    <record id="lv_tax_template_Izd-50" model="account.tax.template">
+        <field name="name">Izdevumi 50%</field>
+        <field name="chart_template_id" ref="l10n_lv_chart_template"/>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">10.5</field>
+        <field name="description">Izd-50</field>
+    </record>
+
+    <record id="lv_tax_template_Izd-50_repart_base" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_Izd-50"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_Izd-50_repart" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_Izd-50"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+    </record>
+
+    <record id="lv_tax_template_Izd-50_repart_base_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_Izd-50"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_Izd-50_repart_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_Izd-50"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+    </record>
+
+    <!-- Purchase Taxes -->
+
+    <!-- Priekšnodoklis standartlikme -->
+
+    <record id="lv_tax_template_Pr-SR" model="account.tax.template">
+        <field name="name">Priekšnodoklis standartlikme</field>
+        <field name="chart_template_id" ref="l10n_lv_chart_template"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">21.0</field>
+        <field name="description">Pr-SR</field>
+    </record>
+
+    <record id="lv_tax_template_Pr-SR_repart_base" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_Pr-SR"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_Pr-SR_repart" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_Pr-SR"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="account_id" ref="lv_account_template_5721"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_PVN1-I'), ref('lv_account_tax_tag_PVN1-III'), ref('lv_account_tax_tag_57'), ref('lv_account_tax_tag_62')])]"/>
+    </record>
+
+    <record id="lv_tax_template_Pr-SR_repart_base_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_Pr-SR"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_Pr-SR_repart_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_Pr-SR"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="account_id" ref="lv_account_template_5721"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_PVN1-I'), ref('lv_account_tax_tag_PVN1-III'), ref('lv_account_tax_tag_57'), ref('lv_account_tax_tag_62')])]"/>
+    </record>
+
+    <!-- Priekšnodoklis samazinātā likme -->
+
+    <record id="lv_tax_template_Pr-RR" model="account.tax.template">
+        <field name="name">Priekšnodoklis samazinātā likme</field>
+        <field name="chart_template_id" ref="l10n_lv_chart_template"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">12.0</field>
+        <field name="description">Pr-RR</field>
+    </record>
+
+    <record id="lv_tax_template_Pr-RR_repart_base" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_Pr-RR"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_Pr-RR_repart" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_Pr-RR"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="account_id" ref="lv_account_template_5721"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_PVN1-I'), ref('lv_account_tax_tag_PVN1-III'), ref('lv_account_tax_tag_57'), ref('lv_account_tax_tag_62')])]"/>
+    </record>
+
+    <record id="lv_tax_template_Pr-RR_repart_base_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_Pr-RR"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_Pr-RR_repart_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_Pr-RR"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="account_id" ref="lv_account_template_5721"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_PVN1-I'), ref('lv_account_tax_tag_PVN1-III'), ref('lv_account_tax_tag_57'), ref('lv_account_tax_tag_62')])]"/>
+    </record>
+
+    <!-- Priekšnodoklis reversā likme -->
+
+    <record id="lv_tax_template_PVN-Rev-SR" model="account.tax.template">
+        <field name="name">Priekšnodoklis reversā likme</field>
+        <field name="chart_template_id" ref="l10n_lv_chart_template"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">group</field>
+        <field name="amount">1.0</field>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('lv_tax_template_Pr-21'), ref('lv_tax_template_PVN-21')])]"/>
+        <field name="description">PVN-Rev-SR</field>
+    </record>
+
+    <record id="lv_tax_template_PVN-Rev-SR_repart_base" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_PVN-Rev-SR"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_PVN-Rev-SR_repart" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_PVN-Rev-SR"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_PVN1-I'), ref('lv_account_tax_tag_PVN1-III')])]"/>
+    </record>
+
+    <record id="lv_tax_template_PVN-Rev-SR_repart_base_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_PVN-Rev-SR"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_PVN-Rev-SR_repart_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_PVN-Rev-SR"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_PVN1-I'), ref('lv_account_tax_tag_PVN1-III')])]"/>
+    </record>
+
+    <!-- Priekšnodoklis standartlikme 80% -->
+
+    <record id="lv_tax_template_Pr-SR-80" model="account.tax.template">
+        <field name="name">Priekšnodoklis standartlikme 80%</field>
+        <field name="chart_template_id" ref="l10n_lv_chart_template"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">group</field>
+        <field name="amount">1.0</field>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('lv_tax_template_Pr-21-80'), ref('lv_tax_template_Izd-20')])]"/>
+        <field name="description">Pr-SR-80</field>
+    </record>
+
+    <record id="lv_tax_template_Pr-SR-80_repart_base" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_Pr-SR-80"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_Pr-SR-80_repart" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_Pr-SR-80"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_PVN1-I')])]"/>
+    </record>
+
+    <record id="lv_tax_template_Pr-SR-80_repart_base_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_Pr-SR-80"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_Pr-SR-80_repart_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_Pr-SR-80"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_PVN1-I')])]"/>
+    </record>
+
+    <!-- Priekšnodoklis standartlikme 40% -->
+
+    <record id="lv_tax_template_Pr-SR-40" model="account.tax.template">
+        <field name="name">Priekšnodoklis standartlikme 40%</field>
+        <field name="chart_template_id" ref="l10n_lv_chart_template"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">group</field>
+        <field name="amount">1.0</field>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('lv_tax_template_Pr-21-40'), ref('lv_tax_template_Izd-60')])]"/>
+        <field name="description">Pr-SR-40</field>
+    </record>
+
+    <record id="lv_tax_template_Pr-SR-40_repart_base" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_Pr-SR-40"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_Pr-SR-40_repart" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_Pr-SR-40"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_PVN1-I')])]"/>
+    </record>
+
+    <record id="lv_tax_template_Pr-SR-40_repart_base_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_Pr-SR-40"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_Pr-SR-40_repart_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_Pr-SR-40"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_PVN1-I')])]"/>
+    </record>
+
+    <!-- Priekšnodoklis standartlikme 50% -->
+
+    <record id="lv_tax_template_Pr-SR-50" model="account.tax.template">
+        <field name="name">Priekšnodoklis standartlikme 50%</field>
+        <field name="chart_template_id" ref="l10n_lv_chart_template"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">group</field>
+        <field name="amount">1.0</field>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('lv_tax_template_Pr-21-50'), ref('lv_tax_template_Izd-50')])]"/>
+        <field name="description">Pr-SR-50</field>
+    </record>
+
+    <record id="lv_tax_template_Pr-SR-50_repart_base" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_Pr-SR-50"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_Pr-SR-50_repart" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_Pr-SR-50"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_PVN1-I')])]"/>
+    </record>
+
+    <record id="lv_tax_template_Pr-SR-50_repart_base_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_Pr-SR-50"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_Pr-SR-50_repart_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_Pr-SR-50"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_PVN1-I')])]"/>
+    </record>
+
+    <!-- Iegāde no ES standartlikme -->
+
+    <record id="lv_tax_template_PVN-Rev-SR-EU" model="account.tax.template">
+        <field name="name">Iegāde no ES standartlikme</field>
+        <field name="chart_template_id" ref="l10n_lv_chart_template"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">group</field>
+        <field name="amount">1.0</field>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('lv_tax_template_Pr-21'), ref('lv_tax_template_PVN-21')])]"/>
+        <field name="description">PVN-Rev-SR-EU</field>
+    </record>
+
+    <record id="lv_tax_template_PVN-Rev-SR-EU_repart_base" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_PVN-Rev-SR-EU"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_PVN-Rev-SR-EU_repart" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_PVN-Rev-SR-EU"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_PVN1-II')])]"/>
+    </record>
+
+    <record id="lv_tax_template_PVN-Rev-SR-EU_repart_base_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_PVN-Rev-SR-EU"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_PVN-Rev-SR-EU_repart_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_PVN-Rev-SR-EU"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_PVN1-II')])]"/>
+    </record>
+
+    <!-- Iegāde no ES samazinātā likme -->
+
+    <record id="lv_tax_template_PVN-Rev-RR-EU" model="account.tax.template">
+        <field name="name">Iegāde no ES samazinātā likme</field>
+        <field name="chart_template_id" ref="l10n_lv_chart_template"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">group</field>
+        <field name="amount">1.0</field>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('lv_tax_template_Pr-12'), ref('lv_tax_template_PVN-12')])]"/>
+        <field name="description">PVN-Rev-RR-EU</field>
+    </record>
+
+    <record id="lv_tax_template_PVN-Rev-RR-EU_repart_base" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_PVN-Rev-RR-EU"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_PVN-Rev-RR-EU_repart" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_PVN-Rev-RR-EU"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_PVN1-II')])]"/>
+    </record>
+
+    <record id="lv_tax_template_PVN-Rev-RR-EU_repart_base_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_PVN-Rev-RR-EU"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_PVN-Rev-RR-EU_repart_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_PVN-Rev-RR-EU"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_PVN1-II')])]"/>
+    </record>
+
+    <!-- Iegāde no ES standartlikme 80% -->
+
+    <record id="lv_tax_template_PVN-Rev-SR-EU-80" model="account.tax.template">
+        <field name="name">Iegāde no ES standartlikme 80%</field>
+        <field name="chart_template_id" ref="l10n_lv_chart_template"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">group</field>
+        <field name="amount">1.0</field>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('lv_tax_template_Pr-21-80'), ref('lv_tax_template_Izd-20'), ref('lv_tax_template_PVN-21')])]"/>
+        <field name="description">PVN-Rev-SR-EU-80</field>
+    </record>
+
+    <record id="lv_tax_template_PVN-Rev-SR-EU-80_repart_base" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_PVN-Rev-SR-EU-80"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_PVN-Rev-SR-EU-80_repart" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_PVN-Rev-SR-EU-80"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_PVN1-II')])]"/>
+    </record>
+
+    <record id="lv_tax_template_PVN-Rev-SR-EU-80_repart_base_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_PVN-Rev-SR-EU-80"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_PVN-Rev-SR-EU-80_repart_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_PVN-Rev-SR-EU-80"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_PVN1-II')])]"/>
+    </record>
+
+    <!-- Iegāde no ES standartlikme 40% -->
+
+    <record id="lv_tax_template_PVN-Rev-SR-EU-40" model="account.tax.template">
+        <field name="name">Iegāde no ES standartlikme 40%</field>
+        <field name="chart_template_id" ref="l10n_lv_chart_template"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">group</field>
+        <field name="amount">1.0</field>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('lv_tax_template_Pr-21-40'), ref('lv_tax_template_Izd-60'), ref('lv_tax_template_PVN-21')])]"/>
+        <field name="description">PVN-Rev-SR-EU-40</field>
+    </record>
+
+    <record id="lv_tax_template_PVN-Rev-SR-EU-40_repart_base" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_PVN-Rev-SR-EU-40"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_PVN-Rev-SR-EU-40_repart" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_PVN-Rev-SR-EU-40"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_PVN1-II')])]"/>
+    </record>
+
+    <record id="lv_tax_template_PVN-Rev-SR-EU-40_repart_base_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_PVN-Rev-SR-EU-40"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_PVN-Rev-SR-EU-40_repart_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_PVN-Rev-SR-EU-40"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_PVN1-II')])]"/>
+    </record>
+
+    <!-- Iegāde no ES standartlikme 50% -->
+
+    <record id="lv_tax_template_PVN-Rev-SR-EU-50" model="account.tax.template">
+        <field name="name">Iegāde no ES standartlikme 50%</field>
+        <field name="chart_template_id" ref="l10n_lv_chart_template"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">group</field>
+        <field name="amount">1.0</field>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('lv_tax_template_Pr-21-50'), ref('lv_tax_template_Izd-50'), ref('lv_tax_template_PVN-21')])]"/>
+        <field name="description">PVN-Rev-SR-EU-50</field>
+    </record>
+
+    <record id="lv_tax_template_PVN-Rev-SR-EU-50_repart_base" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_PVN-Rev-SR-EU-50"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_PVN-Rev-SR-EU-50_repart" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_PVN-Rev-SR-EU-50"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_PVN1-II')])]"/>
+    </record>
+
+    <record id="lv_tax_template_PVN-Rev-SR-EU-50_repart_base_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_PVN-Rev-SR-EU-50"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_PVN-Rev-SR-EU-50_repart_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_PVN-Rev-SR-EU-50"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_PVN1-II')])]"/>
+    </record>
+
+    <!-- Sale Taxes -->
+
+    <!-- PVN standartlikme -->
+
+    <record id="lv_tax_template_PVN-SR" model="account.tax.template">
+        <field name="name">PVN standartlikme</field>
+        <field name="chart_template_id" ref="l10n_lv_chart_template"/>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">21.0</field>
+        <field name="description">PVN-SR</field>
+    </record>
+
+    <record id="lv_tax_template_PVN-SR_repart_base" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_PVN-SR"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_PVN-SR_repart" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_PVN-SR"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="account_id" ref="lv_account_template_5721"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_PVN1-I'), ref('lv_account_tax_tag_PVN1-III'), ref('lv_account_tax_tag_41'), ref('lv_account_tax_tag_52'), ref('lv_account_tax_tag_67')])]"/>
+    </record>
+
+    <record id="lv_tax_template_PVN-SR_repart_base_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_PVN-SR"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_PVN-SR_repart_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_PVN-SR"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="account_id" ref="lv_account_template_5721"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_PVN1-I'), ref('lv_account_tax_tag_PVN1-III'), ref('lv_account_tax_tag_41'), ref('lv_account_tax_tag_52'), ref('lv_account_tax_tag_67')])]"/>
+    </record>
+
+    <!-- PVN samazinātā likme -->
+
+    <record id="lv_tax_template_PVN-RR" model="account.tax.template">
+        <field name="name">PVN samazinātā likme</field>
+        <field name="chart_template_id" ref="l10n_lv_chart_template"/>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">12.0</field>
+        <field name="description">PVN-RR</field>
+    </record>
+
+    <record id="lv_tax_template_PVN-RR_repart_base" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_PVN-RR"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_PVN-RR_repart" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_PVN-RR"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="account_id" ref="lv_account_template_5721"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_PVN1-I'), ref('lv_account_tax_tag_PVN1-III'), ref('lv_account_tax_tag_42'), ref('lv_account_tax_tag_53'), ref('lv_account_tax_tag_67')])]"/>
+    </record>
+
+    <record id="lv_tax_template_PVN-RR_repart_base_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_PVN-RR"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_PVN-RR_repart_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_PVN-RR"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="account_id" ref="lv_account_template_5721"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_PVN1-I'), ref('lv_account_tax_tag_PVN1-III'), ref('lv_account_tax_tag_42'), ref('lv_account_tax_tag_53'), ref('lv_account_tax_tag_67')])]"/>
+    </record>
+
+    <!-- Piegāde ES -->
+
+    <record id="lv_tax_template_Pieg-ES" model="account.tax.template">
+        <field name="name">Piegāde ES</field>
+        <field name="chart_template_id" ref="l10n_lv_chart_template"/>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0.0</field>
+        <field name="description">Pieg-ES</field>
+    </record>
+
+    <record id="lv_tax_template_Pieg-ES_repart_base" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_Pieg-ES"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_Pieg-ES_repart" model="account.tax.repartition.line.template">
+        <field name="invoice_tax_id" ref="lv_tax_template_Pieg-ES"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="account_id" ref="lv_account_template_5721"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_PVN2'), ref('lv_account_tax_tag_45'), ref('lv_account_tax_tag_48_2')])]"/>
+    </record>
+
+    <record id="lv_tax_template_Pieg-ES_repart_base_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_Pieg-ES"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">base</field>
+    </record>
+
+    <record id="lv_tax_template_Pieg-ES_repart_ref" model="account.tax.repartition.line.template">
+        <field name="refund_tax_id" ref="lv_tax_template_Pieg-ES"/>
+        <field name="factor_percent">100.0</field>
+        <field name="repartition_type">tax</field>
+        <field name="account_id" ref="lv_account_template_5721"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('lv_account_tax_tag_PVN2'), ref('lv_account_tax_tag_45'), ref('lv_account_tax_tag_48_2')])]"/>
+    </record>
+
+</odoo>

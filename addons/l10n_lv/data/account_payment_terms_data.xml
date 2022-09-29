@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <!--
+        Payment terms
+        -->
+        
+        <record id="account_payment_term_7days" model="account.payment.term">
+            <field name="name">7 Days</field>
+            <field name="note">Payment terms: 7 Days</field>
+            <field name="line_ids" eval="[(5, 0), (0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 7, 'option': 'day_after_invoice_date'})]"/>
+        </record>
+
+        <record id="account_payment_term_10days" model="account.payment.term">
+            <field name="name">10 Days</field>
+            <field name="note">Payment terms: 10 Days</field>
+            <field name="line_ids" eval="[(5, 0), (0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 10, 'option': 'day_after_invoice_date'})]"/>
+        </record>
+        
+        <record id="account_payment_term_14days" model="account.payment.term">
+            <field name="name">14 Days</field>
+            <field name="note">Payment terms: 14 Days</field>
+            <field name="line_ids" eval="[(5, 0), (0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 14, 'option': 'day_after_invoice_date'})]"/>
+        </record>
+
+        <record id="account_payment_term_30days" model="account.payment.term">
+            <field name="name">30 Days</field>
+            <field name="note">Payment terms: 30 Days</field>
+            <field name="line_ids" eval="[(5, 0), (0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 30, 'option': 'day_after_invoice_date'})]"/>
+        </record>
+        
+</odoo>
