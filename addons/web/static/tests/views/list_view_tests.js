@@ -1979,6 +1979,7 @@ QUnit.module("Views", (hooks) => {
             "o_readonly_modifier",
             "int_field field should be readonly in edit mode"
         );
+        assert.hasClass(target.querySelectorAll(".o_data_cell")[0], "o_readonly_modifier");
     });
 
     QUnit.test("editable list view: line with no active element", async function (assert) {
