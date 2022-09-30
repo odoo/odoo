@@ -12,7 +12,7 @@ const { Component } = owl;
 
 export class FloatField extends Component {
     setup() {
-        useInputField({
+        this.inputRef = useInputField({
             getValue: () => this.formattedValue,
             refName: "numpadDecimal",
             parse: (v) => this.parse(v),

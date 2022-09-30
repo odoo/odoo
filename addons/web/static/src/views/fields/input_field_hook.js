@@ -152,4 +152,6 @@ export function useInputField(params) {
             }
         }
     }
+
+    return inputRef;
 }
