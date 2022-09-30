@@ -450,11 +450,15 @@ class HolidaysRequest(models.Model):
             else:
                 holiday.employee_ids = self.env.context.get('default_employee_id') or holiday.employee_id or self.env.user.employee_id
 
-    @api.depends('employee_id')
+    @api.depends('employee_id', 'employee_ids')
     def _compute_from_employee_id(self):
         for holiday in self:
             holiday.manager_id = holiday.employee_id.parent_id.id
-            if holiday.employee_id.user_id != self.env.user and self._origin.employee_id != holiday.employee_id:
+            if holiday.holiday_status_id.requires_allocation == 'no':
+                continue
+            if holiday.employee_ids:
+                holiday.holiday_status_id = False
+            elif holiday.employee_id.user_id != self.env.user and holiday._origin.employee_id != holiday.employee_id:
                 if holiday.employee_id and not holiday.holiday_status_id.with_context(employee_id=holiday.employee_id.id).has_valid_allocation:
                     holiday.holiday_status_id = False
 
