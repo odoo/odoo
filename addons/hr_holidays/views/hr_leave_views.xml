@@ -483,15 +483,8 @@
             </field>
             <xpath expr="//div[hasclass('col_left')]" position="after">
                 <div class="o_hr_leave_column col_right col-md-6 col-12">
-                    <group name="col_right">
-                        <field name="department_id" groups="hr_holidays.group_hr_holidays_user" invisible="1"/>
-                    </group>
-                </div>
-            </xpath>
-            <xpath expr="//group[@name='col_right']" position="replace">
-                <group>
                     <widget name="hr_leave_stats"/>
-                </group>
+                </div>
             </xpath>
         </field>
     </record>
