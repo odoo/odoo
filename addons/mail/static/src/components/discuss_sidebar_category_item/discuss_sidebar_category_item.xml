@@ -14,8 +14,8 @@
                 <div class="o_DiscussSidebarCategoryItem_item o_DiscussSidebarCategoryItem_avatar ms-4">
                     <div class="o_DiscussSidebarCategoryItem_imageContainer position-relative d-flex">
                         <img class="o_DiscussSidebarCategoryItem_image w-100 h-100 rounded-circle" t-att-src="categoryItem.avatarUrl" alt="Thread Image"/>
-                        <t t-if="categoryItem.hasThreadIcon">
-                            <ThreadIcon className="'o_DiscussSidebarCategoryItem_threadIcon position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center rounded-circle bg-100'" thread="categoryItem.thread"/>
+                        <t t-if="categoryItem.threadIconView">
+                            <ThreadIcon className="'o_DiscussSidebarCategoryItem_threadIcon position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center rounded-circle bg-100'" record="categoryItem.threadIconView"/>
                         </t>
                     </div>
                 </div>

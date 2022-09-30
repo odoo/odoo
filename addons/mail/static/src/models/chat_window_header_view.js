@@ -2,6 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { one } from '@mail/model/model_field';
+import { clear } from '@mail/model/model_field_command';
 import { isEventHandled } from '@mail/utils/utils';
 
 registerModel({
@@ -33,5 +34,14 @@ registerModel({
             identifying: true,
             inverse: 'chatWindowHeaderView',
         }),
+        threadIconView: one('ThreadIconView', {
+            compute() {
+                if (this.chatWindowOwner.thread && this.chatWindowOwner.thread.channel) {
+                    return {};
+                }
+                return clear();
+            },
+            inverse: 'chatWindowHeaderViewOwner',
+        })
     },
 });
