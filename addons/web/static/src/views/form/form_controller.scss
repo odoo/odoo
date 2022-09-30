@@ -719,6 +719,9 @@
     // Specific style classes
     .o_inner_group.oe_subtotal_footer {
         grid-template-columns: 1fr auto;
+        &.oe_right {
+            margin-left: auto;
+        }
         @extend .oe_right;
         border-top: 1px solid $border-color;
 
