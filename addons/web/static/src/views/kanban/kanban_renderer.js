@@ -217,7 +217,7 @@ export class KanbanRenderer extends Component {
                 .sort((a, b) => (a.value && !b.value ? 1 : !a.value && b.value ? -1 : 0))
                 .map((group, i) => ({
                     group,
-                    key: `group_key_${isNull(group.value) ? i : String(group.value)}`,
+                    key: isNull(group.value) ? `group_key_${i}` : String(group.value),
                 }));
         } else {
             return list.records.map((record) => ({ record, key: record.id }));
