@@ -688,6 +688,15 @@ registerModel({
          * Useful to focus it, or to know when a click is done outside of it.
          */
         threadDescriptionInputRef: attr(),
+        threadIconView: one('ThreadIconView', {
+            compute() {
+                if (this.thread) {
+                    return {};
+                }
+                return clear();
+            },
+            inverse: 'threadViewTopbarOwner',
+        }),
         /**
          * States the thread view managing this top bar.
          */

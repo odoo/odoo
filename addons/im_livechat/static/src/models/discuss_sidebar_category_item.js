@@ -32,18 +32,18 @@ registerPatch({
                 return this._super();
             },
         },
-        hasThreadIcon: {
-            compute() {
-                if (this.channel.channel_type === 'livechat') {
-                    return clear();
-                }
-                return this._super();
-            },
-        },
         hasUnpinCommand: {
             compute() {
                 if (this.channel.channel_type === 'livechat') {
                     return !this.channel.localMessageUnreadCounter;
+                }
+                return this._super();
+            },
+        },
+        threadIconView: {
+            compute() {
+                if (this.channel.channel_type === 'livechat') {
+                    return clear();
                 }
                 return this._super();
             },

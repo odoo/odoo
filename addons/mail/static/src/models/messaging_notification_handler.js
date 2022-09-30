@@ -7,7 +7,6 @@ import { htmlToTextContentInline } from '@mail/js/utils';
 import { escape, sprintf } from '@web/core/utils/strings';
 import { str_to_datetime } from 'web.time';
 import { Markup } from 'web.utils';
-import { renderToString } from "@web/core/utils/render";
 
 const PREVIEW_MSG_MAX_SIZE = 350; // optimal for native English speakers
 
@@ -651,19 +650,12 @@ registerModel({
                 notificationTitle = this.env._t("New message");
             } else {
                 if (channel.channel_type === 'channel') {
-                    // hack: notification template does not support OWL components,
-                    // so we simply use their template to make HTML as if it comes
-                    // from component
-                    const channelIcon = renderToString('mail.ThreadIcon', {
-                        env: this.env,
-                        thread: channel.thread,
-                    });
-                    const channelName = channel.thread.displayName;
-                    const channelNameWithIcon = channelIcon + channelName;
                     notificationTitle = sprintf(
-                        this.env._t("%s from %s"),
-                        author.nameOrDisplayName,
-                        channelNameWithIcon
+                        this.env._t("%(author name)s from %(channel name)s"),
+                        {
+                            'author name': author.nameOrDisplayName,
+                            'channel name': channel.displayName,
+                        }
                     );
                 } else {
                     notificationTitle = author.nameOrDisplayName;

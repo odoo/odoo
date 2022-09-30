@@ -189,24 +189,6 @@ registerModel({
             },
         }),
         /**
-         * Boolean determines whether ThreadIcon will be displayed in UI.
-         */
-        hasThreadIcon: attr({
-            compute() {
-                if (!this.thread) {
-                    return clear();
-                }
-                switch (this.channel.channel_type) {
-                    case 'channel':
-                        return !Boolean(this.thread.authorizedGroupFullName);
-                    case 'chat':
-                        return true;
-                    case 'group':
-                        return false;
-                }
-            },
-        }),
-        /**
          * Boolean determines whether the item has a "unpin" command.
          */
         hasUnpinCommand: attr({
@@ -235,6 +217,22 @@ registerModel({
          */
         thread: one('Thread', {
             related: 'channel.thread'
+        }),
+        threadIconView: one('ThreadIconView', {
+            compute() {
+                if (!this.thread) {
+                    return clear();
+                }
+                switch (this.channel.channel_type) {
+                    case 'channel':
+                        return this.thread.authorizedGroupFullName ? clear() : {};
+                    case 'chat':
+                        return {};
+                    case 'group':
+                        return clear();
+                }
+            },
+            inverse: 'discussSidebarCategoryItemOwner',
         }),
     },
 });
