@@ -5,11 +5,14 @@ import { useService } from "@web/core/utils/hooks";
 import { View } from "@web/views/view";
 import { escape } from "@web/core/utils/strings";
 
+import { FormViewDialog } from "./form_view_dialog";
+
 const { Component, markup, useState } = owl;
 
 export class SelectCreateDialog extends Component {
     setup() {
         this.viewService = useService("view");
+        this.dialogService = useService("dialog");
         this.state = useState({ resIds: [] });
         this.baseViewProps = {
             display: { searchPanel: false },
@@ -52,6 +55,15 @@ export class SelectCreateDialog extends Component {
         if (this.props.onCreateEdit) {
             await this.props.onCreateEdit();
             this.props.close();
+        } else {
+            this.dialogService.add(FormViewDialog, {
+                context: this.props.context,
+                resModel: this.props.resModel,
+                onRecordSaved: (record) => {
+                    this.props.onSelected([record.resId]);
+                    this.props.close();
+                },
+            });
         }
     }
 }
