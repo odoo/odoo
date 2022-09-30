@@ -2881,7 +2881,13 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["willUpdateProps", "read2", "willUpdateProps", "willUpdateProps"]);
 
         await click(target.querySelector(".o_form_statusbar button.p"));
-        assert.verifySteps(["willUpdateProps", "willUpdateProps", "read3", "willUpdateProps", "willUpdateProps"]);
+        assert.verifySteps([
+            "willUpdateProps",
+            "willUpdateProps",
+            "read3",
+            "willUpdateProps",
+            "willUpdateProps",
+        ]);
     });
 
     QUnit.test("buttons in form view, new record", async function (assert) {
@@ -9577,8 +9583,8 @@ QUnit.module("Views", (hooks) => {
             "widget should be present for this field"
         );
         assert.strictEqual(
-            target.querySelector('.o-tooltip--technical > li[data-item="widget"]').textContent,
-            "Widget:many2one",
+            target.querySelector(".o-tooltip--technical > li[data-item=widget]").textContent.trim(),
+            "Widget:Many2one (many2one)",
             "widget description should be correct"
         );
     });
