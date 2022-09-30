@@ -673,6 +673,9 @@ export class ListRenderer extends Component {
             if (record.isInvalid(column.name)) {
                 classNames.push("o_invalid_cell");
             }
+            if (record.isReadonly(column.name)) {
+                classNames.push("o_readonly_modifier");
+            }
             if (this.canUseFormatter(column, record)) {
                 // generate field decorations classNames (only if field-specific decorations
                 // have been defined in an attribute, e.g. decoration-danger="other_field = 5")
