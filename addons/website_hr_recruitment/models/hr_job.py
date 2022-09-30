@@ -45,3 +45,7 @@ class Job(models.Model):
 
     def get_backend_menu_id(self):
         return self.env.ref('hr_recruitment.menu_hr_recruitment_root').id
+
+    def toggle_active(self):
+        self.filtered('active').website_published = False
+        return super().toggle_active()
