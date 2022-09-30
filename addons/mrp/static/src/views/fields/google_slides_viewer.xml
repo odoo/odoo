@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mrp.SlidesViewer" t-inherit="web.CharField">
+        <xpath expr="//input" position="after">
+            <iframe class="o_embed_iframe w-100"
+                alt="Slides viewer"
+                t-att-src="url"
+                t-att-name="props.name"
+                t-on-error="onLoadFailed"
+            />
+        </xpath>
+    </t>
+
+</templates>
