@@ -1293,8 +1293,8 @@ class AccountMove(models.Model):
                 accounting_date = move._get_accounting_date(invoice_date, affects_tax_report)
                 lock_date, lock_type = lock_dates[-1]
                 tax_lock_date_message = _(
-                    "The accounting date being set prior to the %(lock_type)s lock date %(lock_date)s,"
-                    " it will be changed to %(accounting_date)s upon posting.",
+                    "The date is being set prior to the %(lock_type)s lock date %(lock_date)s. "
+                    "The Journal Entry will be accounted on %(accounting_date)s upon posting.",
                     lock_type=lock_type,
                     lock_date=format_date(move.env, lock_date),
                     accounting_date=format_date(move.env, accounting_date))
