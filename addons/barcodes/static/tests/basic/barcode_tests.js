@@ -7,33 +7,16 @@ const {barcodeRemapperService} = require("@barcodes/js/barcode_events");
 const { makeTestEnv } = require("@web/../tests/helpers/mock_env");
 const { registry } = require("@web/core/registry");
 const { mockTimeout } = require("@web/../tests/helpers/utils");
+const { simulateBarCode } = require("@barcodes/../tests/helpers");
 
 var FormController = require('web.FormController');
 var FormView = require('web.FormView');
 var testUtils = require('web.test_utils');
 
 var createView = testUtils.createView;
-var triggerEvent = testUtils.dom.triggerEvent;
 var core = require('web.core');
 
 const maxTimeBetweenKeysInMs = barcodeService.maxTimeBetweenKeysInMs;
-
-function simulateBarCode(chars, target = document.body) {
-    for (let char of chars) {
-        let keycode;
-        if (char === 'Enter') {
-            keycode = $.ui.keyCode.ENTER;
-        } else if (char === "Tab") {
-            keycode = $.ui.keyCode.TAB;
-        } else {
-            keycode = char.charCodeAt(0);
-        }
-        triggerEvent(target, 'keydown', {
-            key: char,
-            keyCode: keycode,
-        });
-    }
-}
 
 QUnit.module('Barcodes', {
     beforeEach: function () {
