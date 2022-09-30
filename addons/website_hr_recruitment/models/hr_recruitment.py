@@ -73,3 +73,7 @@ class Job(models.Model):
         action = super().open_website_url()
         action['target'] = 'new'
         return action
+
+    def toggle_active(self):
+        self.filtered('active').website_published = False
+        return super().toggle_active()
