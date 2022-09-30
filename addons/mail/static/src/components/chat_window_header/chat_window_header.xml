@@ -9,10 +9,10 @@
                         <i class="fa fa-arrow-left"/>
                     </div>
                 </t>
-                <t t-if="chatWindow.thread and chatWindow.thread.model === 'mail.channel'">
+                <t t-if="chatWindowHeaderView.threadIconView">
                     <ThreadIcon
                         className="'o_ChatWindowHeader_icon o_ChatWindowHeader_item ms-3 me-1 my-0'"
-                        thread="chatWindow.thread"
+                        record="chatWindowHeaderView.threadIconView"
                     />
                 </t>
                 <div class="o_ChatWindowHeader_item o_ChatWindowHeader_name mh-100 mx-1 my-0 text-truncate" t-att-class="{'ms-3':!chatWindow.thread or chatWindow.thread.model !== 'mail.channel'}" t-att-title="chatWindow.name">

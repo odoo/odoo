@@ -9,7 +9,7 @@
             }" t-attf-class="{{ className }}" t-on-click="discussSidebarMailboxView.mailbox.thread.onClick" t-att-data-mailbox-local-id="discussSidebarMailboxView.mailbox.localId" t-att-data-mailbox-name="discussSidebarMailboxView.mailbox.name"
             t-ref="root"
         >
-            <ThreadIcon className="'o_DiscussSidebarMailbox_item ms-4 me-2'" thread="discussSidebarMailboxView.mailbox.thread"/>
+            <ThreadIcon className="'o_DiscussSidebarMailbox_item ms-4 me-2'" record="discussSidebarMailboxView.threadIconView"/>
             <div class="o_DiscussSidebarMailbox_item o_DiscussSidebarMailbox_name me-2 text-truncate">
                 <t t-esc="discussSidebarMailboxView.mailbox.name"/>
             </div>
