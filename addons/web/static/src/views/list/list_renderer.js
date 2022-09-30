@@ -561,9 +561,8 @@ export class ListRenderer extends Component {
     }
 
     getColumnClass(column) {
-        const field = this.fields[column.name];
         const classNames = ["align-middle"];
-        if (field.sortable && column.hasLabel) {
+        if (this.isSortable(column)) {
             classNames.push("o_column_sortable", "position-relative", "cursor-pointer");
         } else {
             classNames.push("cursor-default");
@@ -594,10 +593,16 @@ export class ListRenderer extends Component {
         return ["float", "integer", "monetary"].includes(type);
     }
 
+    isSortable(column) {
+        const { hasLabel, name } = column;
+        const { sortable } = this.fields[name];
+        const { options } = this.props.list.activeFields[name];
+        return (sortable || options.allow_order) && hasLabel;
+    }
+
     getSortableIconClass(column) {
-        const { sortable } = this.fields[column.name];
         const { orderBy } = this.props.list;
-        const classNames = sortable && column.hasLabel ? ["fa", "fa-lg", "px-2"] : ["d-none"];
+        const classNames = this.isSortable(column) ? ["fa", "fa-lg", "px-2"] : ["d-none"];
         if (orderBy.length && orderBy[0].name === column.name) {
             classNames.push(orderBy[0].asc ? "fa-angle-up" : "fa-angle-down");
         } else {
@@ -829,7 +834,7 @@ export class ListRenderer extends Component {
         }
         const fieldName = column.name;
         const list = this.props.list;
-        if (this.fields[fieldName].sortable && column.hasLabel) {
+        if (this.isSortable(column)) {
             if (list.isGrouped) {
                 const isSortable =
                     list.groups[0].getAggregates(fieldName) || list.groupBy.includes(fieldName);
@@ -1583,11 +1588,7 @@ export class ListRenderer extends Component {
     onHoverSortColumn(ev, column) {
         if (this.props.list.orderBy.length && this.props.list.orderBy[0].name === column.name) {
             return;
-        } else if (
-            this.fields[column.name].sortable &&
-            column.widget !== "handle" &&
-            column.hasLabel
-        ) {
+        } else if (this.isSortable(column) && column.widget !== "handle") {
             ev.target.classList.toggle("table-active", ev.type == "mouseenter");
         }
     }
