@@ -445,9 +445,12 @@
                                     <div class="text-muted">
                                         Categorize your locations for smarter putaway rules
                                     </div>
-                                    <div class="content-group">
-                                        <div class="mt8" attrs="{'invisible': [('group_stock_storage_categories', '=', False)]}">
+                                    <div class="content-group" attrs="{'invisible': [('group_stock_storage_categories', '=', False)]}">
+                                        <div class="mt8">
                                             <button name="%(stock.action_storage_category)d" icon="fa-arrow-right" type="action" string="Storage Categories" class="btn-link"/>
+                                        </div>
+                                        <div class="mt4" groups="base.group_no_one">
+                                            <button name="%(stock.action_storage_category_capacity)d" icon="fa-arrow-right" type="action" string="Storage Category Capacity" class="btn-link"/>
                                         </div>
                                     </div>
                                 </div>
