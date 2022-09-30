@@ -7,14 +7,18 @@
                 <t t-set-slot="layout-buttons">
                     <t t-call="{{ props.buttonTemplate }}"/>
                 </t>
-                <t t-component="props.Renderer"
-                    list="model.root"
-                    archInfo="props.archInfo"
-                    readonly="true"
-                    forceGlobalClick="props.forceGlobalClick"
-                    openRecord.bind="openRecord"
-                    noContentHelp="props.info.noContentHelp"
-                />
+                <t t-set-slot="default" t-slot-scope="scope">
+                    <t t-component="props.Renderer"
+                        list="model.root"
+                        archInfo="props.archInfo"
+                        readonly="true"
+                        forceGlobalClick="props.forceGlobalClick"
+                        openRecord.bind="openRecord"
+                        noContentHelp="props.info.noContentHelp"
+                        layoutContentRef="scope.contentRef"
+                    />
+                </t>
+                
             </Layout>
         </div>
     </t>

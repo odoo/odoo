@@ -14,7 +14,7 @@
     <xpath expr="//t[@t-component='props.Renderer']" position="attributes">
         <attribute name="activeWebsite">state.activeWebsite</attribute>
     </xpath>
-    <xpath expr="//Layout" position="inside">
+    <xpath expr="//t[@t-set-slot='default']" position="inside">
         <t t-set-slot="control-panel-website-extra-actions">
             <t t-call="website.RecordFilter"/>
         </t>

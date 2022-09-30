@@ -2,7 +2,7 @@
 
 import { pick } from "@web/core/utils/objects";
 
-const { Component } = owl;
+const { Component, useRef } = owl;
 
 /**
  * @param {Object} params
@@ -15,6 +15,7 @@ export function extractLayoutComponents(params) {
 export class Layout extends Component {
     setup() {
         this.components = extractLayoutComponents(this.env.config);
+        this.contentRef = useRef("content");
     }
     get controlPanelSlots() {
         const slots = { ...this.props.slots };
