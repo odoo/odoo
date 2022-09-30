@@ -35,20 +35,17 @@ class AccountJournal(models.Model):
             company = self.env['res.company'].browse(vals['company_id']) if vals.get('company_id') else self.env.company
             random_account = self.env['account.account'].search([('company_id', '=', company.id)], limit=1)
             digits = len(random_account.code) if random_account else 6
-            user_type = self.env.ref('l10n_lv.lv_account_type_2_5')
+            user_type = self.env.ref('l10n_lv.lv_account_type_2_6')
             if journal_type == 'bank':
                 liquidity_account_prefix = company.bank_account_code_prefix or ''
-                group = self.env.ref('l10n_lv.lv_account_group_262')
             else:
                 liquidity_account_prefix = company.cash_account_code_prefix or company.bank_account_code_prefix or ''
-                group = self.env.ref('l10n_lv.lv_account_group_261')
             liquidity_account = self.env['account.account'].create({
                 'name': vals.get('name'),
                 'code': self.env['account.account']._search_new_account_code(company, digits, liquidity_account_prefix),
                 'user_type_id': user_type.id,
                 'currency_id': vals.get('currency_id'),
-                'company_id': company.id,
-                'group_id': group.id
+                'company_id': company.id
             })
             vals.update({
                 'default_account_id': liquidity_account.id,
@@ -84,6 +81,15 @@ class AccountChartTemplate(models.Model):
                 company.account_purchase_tax_id = purchase_tax.id
         return res
 
+    # Temporary function for companies using an older version of this module:
+    @api.model
+    def update_lv_account_group_xml_ids(self):
+        self._cr.execute("""UPDATE ir_model_data SET name = CONCAT(ag.company_id, '_', ir_model_data.name), noupdate=True
+            FROM account_group AS ag
+            WHERE ir_model_data.model = 'account.group'
+            AND ir_model_data.res_id = ag.id
+            AND ir_model_data.module = 'l10n_lv'""")
+
 
 class AccountTaxTemplate(models.Model):
     _inherit = "account.tax.template"
@@ -102,12 +108,6 @@ class AccountTaxTemplate(models.Model):
             self.env['ir.config_parameter'].sudo().set_param("account.default_purchase_tax_id", purchase_tax_id)
             IrDefault.set('product.template', "supplier_taxes_id", [purchase_tax_id], company_id=company.id)
         return res
-
-
-class AccountAccountTemplate(models.Model):
-    _inherit = "account.account.template"
-
-    group_id = fields.Many2one('account.group')
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
