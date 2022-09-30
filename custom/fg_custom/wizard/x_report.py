@@ -160,7 +160,6 @@ class XReport(models.TransientModel):
         tz_name = self.env.user.tz or 'UTC'
         localized_dt = timezone('UTC').localize(datetime.utcnow()).astimezone(timezone(tz_name))
         session_start_at = timezone('UTC').localize(session_id.start_at).astimezone(timezone(tz_name))
-        print('-----localized_dt, session_start_at---', localized_dt, session_start_at)
         data = {'session_name': session_id.name, 'start_at': session_start_at,
                  'start_order_id': start_order_id.pos_si_trans_reference, 'end_order_id': end_order_id.pos_si_trans_reference, 'cash_register_balance_start': session_id.cash_register_balance_start,
                  'cash_register_balance_end_real': session_id.cash_register_balance_end_real, 'stop_at': localized_dt.strftime('%m/%d/%Y'), 'stop_time': localized_dt.strftime('%H:%M:%S'),
@@ -182,7 +181,6 @@ class XReport(models.TransientModel):
                  'changes_order_count': int(changes_order_count),
                  'changes_order_total': changes_order_total,
                  }
-        print('------data----', data)
         # data = {'session_id': session_id, 'session_name': session_id.name,
         #         'start_at': session_start_at,
         #         'start_order_id': start_order_id.name,
