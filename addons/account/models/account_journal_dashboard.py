@@ -430,8 +430,8 @@ class account_journal(models.Model):
             rslt_sum += target_currency.round(amount)
         return (rslt_count, rslt_sum)
 
-    def action_create_new(self):
-        ctx = self._context.copy()
+    def _get_context_for_create_new(self, ctx=None):
+        ctx = ctx or self._context.copy()
         ctx['default_journal_id'] = self.id
         if self.type == 'sale':
             ctx['default_move_type'] = 'out_refund' if ctx.get('refund') else 'out_invoice'
@@ -440,13 +440,16 @@ class account_journal(models.Model):
         else:
             ctx['default_move_type'] = 'entry'
             ctx['view_no_maturity'] = True
+        return ctx
+
+    def action_create_new(self):
         return {
             'name': _('Create invoice/bill'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'account.move',
             'view_id': self.env.ref('account.view_move_form').id,
-            'context': ctx,
+            'context': self._get_context_for_create_new(),
         }
 
     def create_cash_statement(self):
@@ -587,6 +590,7 @@ class account_journal(models.Model):
                 for journal_id, prefix in has_sequence_holes
             ),
             'context': {
+                **self._get_context_for_create_new(),
                 'search_default_group_by_sequence_prefix': 1,
                 'expand': 1,
             }
