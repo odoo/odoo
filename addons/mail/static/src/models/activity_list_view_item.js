@@ -20,7 +20,7 @@ registerModel({
             popoverViewOwner.delete();
         },
         onClickMarkAsDone() {
-            this.update({ markDonePopoverView: this.markDonePopoverView ? clear() : {} });
+            this.update({ markDoneView: this.markDoneView ? clear() : {} });
         },
         /**
          * Handles the click on the upload document button. This open the file
@@ -98,9 +98,8 @@ registerModel({
             },
             inverse: 'activityListViewItemOwner',
         }),
-        markDoneButtonRef: attr(),
-        markDonePopoverView: one('PopoverView', {
-            inverse: 'activityListViewItemOwnerAsMarkDone',
+        markDoneView: one('ActivityMarkDonePopoverContentView', {
+            inverse: 'activityListViewItemOwner',
         }),
         webRecord: attr({
             compute() {

@@ -42,13 +42,6 @@ registerModel({
             if (this.component.root.el.contains(ev.target)) {
                 return;
             }
-            if (this.activityListView) {
-                for (const activityListViewItem of this.activityListView.activityListViewItems) {
-                    if (activityListViewItem.markDonePopoverView && activityListViewItem.markDonePopoverView.contains(ev.target)) {
-                        return;
-                    }
-                }
-            }
             this.delete();
         },
     },
@@ -63,13 +56,9 @@ registerModel({
             },
             inverse: 'popoverViewOwner',
         }),
-        activityListViewItemOwnerAsMarkDone: one('ActivityListViewItem', {
-            identifying: true,
-            inverse: 'markDonePopoverView',
-        }),
         activityMarkDonePopoverContentView: one('ActivityMarkDonePopoverContentView', {
             compute() {
-                if (this.activityViewOwnerAsMarkDone || this.activityListViewItemOwnerAsMarkDone) {
+                if (this.activityViewOwnerAsMarkDone) {
                     return {};
                 }
                 return clear();
@@ -85,9 +74,6 @@ registerModel({
          */
         anchorRef: attr({
             compute() {
-                if (this.activityListViewItemOwnerAsMarkDone) {
-                    return this.activityListViewItemOwnerAsMarkDone.markDoneButtonRef;
-                }
                 if (this.activityViewOwnerAsMarkDone) {
                     return this.activityViewOwnerAsMarkDone.markDoneButtonRef;
                 }
@@ -292,9 +278,6 @@ registerModel({
          */
         position: attr({
             compute() {
-                if (this.activityListViewItemOwnerAsMarkDone) {
-                    return 'right';
-                }
                 if (this.activityViewOwnerAsMarkDone) {
                     return 'right';
                 }
