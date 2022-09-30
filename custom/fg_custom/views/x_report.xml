@@ -5,32 +5,18 @@
         <t t-call="web.html_container">
             <div class="page" style="page-break:unset !important;page-break-inside: unset !important;">
                 <div class="report_header" style="text-align: center;">
-                    <p>
-                        THE GOOD MEAT<br/>
-                        <t t-esc="company.name"/><br/>
-                        <t t-esc="company.street"/>
-                        <t t-esc="company.street2"/><t t-if="company.street2 or company.street">, </t>
-                        <t t-esc="company.city"/><t t-if="company.city">, </t><t t-if="company.country_id" t-esc="company.country_id.code"/><br/>
-                        VAT Reg TIN: <t t-esc="company.vat"/><br/>
-                        POS01-SN:XXXXXXXXXXXXXXXXX<br/>
-                        MIN#XXXXXXXXXXXXXXXXX<br/>
-                    </p>
-<!--                    <p style="font-size: 10px;">-->
-<!--                        <t t-esc="session_name"/>-->
-<!--                    </p>-->
+                    <p class="white-space: pre-line;" t-if="session_id and session_id.config_id.is_header_or_footer" t-field="session_id.config_id.receipt_header"/>
                     <p style="font-size: 10px;">======================================</p>
                     <p style="font-size: 10px;">CASHIER READING OF TERMINAL 01</p>
                     <p style="font-size: 10px;">======================================</p>
                 </div>
                 <div class="report_body" style="margin-top: 30px;">
                     <table style="width: 100%;">
-                        <t t-set="is_open_cashier" t-value="1"/>
                         <t t-foreach="open_cashier_list" t-as="c">
                             <tr>
                                 <td style="width:28%">
                                     <div class="left_content" style="text-align: left;font-size: 15px;">
-                                        <p t-if="is_open_cashier">OPEN CASHIER:</p>
-                                        <t t-set="is_open_cashier" t-value="0"/>
+                                        <p>OPEN CASHIER:</p>
                                     </div>
                                 </td>
                                 <td style="width:40%">
@@ -47,13 +33,11 @@
                                 </td>
                             </tr>
                         </t>
-                        <t t-set="is_receipt_no" t-value="1"/>
                         <t t-foreach="receipt_start_end_order_list" t-as="c">
                             <tr>
                                 <td style="width:28%">
                                     <div class="left_content" style="text-align: left;font-size: 15px;">
-                                        <p t-if="is_receipt_no">RECEIPT NO(s):</p>
-                                        <t t-set="is_receipt_no" t-value="0"/>
+                                        <p>RECEIPT NO(s):</p>
                                     </div>
                                 </td>
                                 <td style="width:40%">
@@ -65,13 +49,11 @@
                                 </td>
                             </tr>
                         </t>
-                        <t t-set="is_trans_no" t-value="1"/>
                         <t t-foreach="start_end_order_list" t-as="c">
                             <tr>
                                 <td style="width:28%">
                                     <div class="left_content" style="text-align: left;font-size: 15px;">
-                                        <p t-if="is_trans_no">TRANS NO(s):</p>
-                                        <t t-set="is_trans_no" t-value="0"/>
+                                        <p>TRANS NO(s):</p>
                                     </div>
                                 </td>
                                 <td style="width:40%">
@@ -106,7 +88,7 @@
                             </td>
                             <td style="width:40%">
                                 <p>
-                                    <t t-esc="cash_register_balance_end_real" t-options='{"widget": "float", "precision": 2}'/>
+                                    <t t-esc="cash_register_balance_end_real + cash_register_balance_start" t-options='{"widget": "float", "precision": 2}'/>
                                     <t t-esc="company.currency_id.name"/>
                                 </p>
                             </td>
@@ -243,8 +225,6 @@
                             <td>..............................</td>
                             <td style="text-align: center;">
                                 <p>
-<!--                                    <t t-set="subtotal_count" t-value="total_qty - return_order_count - total_discount_qty"/>-->
-<!--                                    <t t-esc="subtotal_count" t-options='{"widget": "float", "precision": 2}'/>-->
                                     <t t-esc="total_qty"/>
                                 </p>
                             </td>
@@ -286,7 +266,6 @@
                                     <p>NET SALES:</p>
                                 </div>
                             </td>
-<!--                            <td colspan="2">.................................</td>-->
                             <td>..............................</td>
                             <td></td>
                             <td>
@@ -386,7 +365,6 @@
                                     <p>CASHIER TOTAL:</p>
                                 </div>
                             </td>
-<!--                            <td colspan="2">.................................</td>-->
                             <td>..............................</td>
                             <td></td>
                             <td>
@@ -569,35 +547,7 @@
         <t t-call="web.html_container">
             <div class="page" style="page-break:unset !important;page-break-inside: unset !important;">
                 <div class="report_header" style="text-align: center;">
-                    <p>
-                        THE GOOD MEAT<br/>
-                        <t t-esc="company.name"/><br/>
-                        <t t-esc="company.street"/>
-                        <t t-esc="company.street2"/><t t-if="company.street2 or company.street">, </t>
-                        <t t-esc="company.city"/><t t-if="company.city">, </t><t t-if="company.country_id" t-esc="company.country_id.code"/><br/>
-                        VAT Reg TIN: <t t-esc="company.vat"/><br/>
-                        POS01-SN:XXXXXXXXXXXXXXXXX<br/>
-                        MIN#XXXXXXXXXXXXXXXXX<br/>
-                    </p>
-<!--                    <strong>-->
-<!--                        <h4>THE GOOD MEAT</h4>-->
-<!--                    </strong>-->
-<!--                    <p style="font-size: 10px;">-->
-<!--                        <t t-esc="company.name"/>-->
-<!--                        <br/>-->
-<!--                        <t t-esc="company.street"/>-->
-<!--                        <t t-esc="company.street2"/>-->
-<!--                        <t t-esc="company.city"/>-->
-<!--                        <br/>-->
-<!--                    </p>-->
-<!--                    <t t-if="company.vat">-->
-<!--                        <p style="font-size: 10px;">VAT Reg TIN:-->
-<!--                            <t t-esc="company.vat"/>-->
-<!--                        </p>-->
-<!--                    </t>-->
-<!--                    <p style="font-size: 10px;">-->
-<!--                        <t t-esc="session_name"/>-->
-<!--                    </p>-->
+                    <p class="white-space: pre-line;" t-if="session_id and session_id.config_id.is_header_or_footer" t-field="session_id.config_id.receipt_header"/>
                     <p style="font-size: 10px;">======================================</p>
                     <p style="font-size: 10px;">CASHIER READING OF TERMINAL 01</p>
                     <p style="font-size: 10px;">======================================</p>
@@ -610,7 +560,7 @@
                                 <t t-set="is_open_cashier" t-value="0"/>
                                 <td style="width:28%">
                                     <div class="left_content" style="text-align: left;font-size: 15px;">
-                                        <p>OPEN CASHIER:</p>
+                                        <p>OPEN MANAGER:</p>
                                     </div>
                                 </td>
                                 <td style="width:40%">
@@ -709,7 +659,7 @@
                             </td>
                             <td style="width:40%">
                                 <p>
-                                    <t t-esc="cash_register_balance_end_real" t-options='{"widget": "float", "precision": 2}'/>
+                                    <t t-esc="cash_register_balance_end_real + cash_register_balance_start" t-options='{"widget": "float", "precision": 2}'/>
                                     <t t-esc="company.currency_id.name"/>
                                 </p>
                             </td>
