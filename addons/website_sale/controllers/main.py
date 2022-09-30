@@ -887,6 +887,12 @@ class WebsiteSale(http.Controller):
             return_url= '/shop/payment/validate',
             bootstrap_formatting= True
         )
+        if order.partner_id.company_id and order.partner_id.company_id.id != order.company_id.id:
+            values['errors'].append(
+                (_('Sorry, we are unable to find a Payment Method'),
+                 _('No payment method is available for your current order. '
+                   'Please contact us for more information.')))
+            return values
 
         domain = expression.AND([
             ['&', ('state', 'in', ['enabled', 'test']), ('company_id', '=', order.company_id.id)],
