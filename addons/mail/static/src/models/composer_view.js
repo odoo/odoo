@@ -1424,6 +1424,15 @@ registerModel({
             default: {},
             inverse: 'owner',
         }),
+        threadTextualTypingStatusView: one('ThreadTextualTypingStatusView', {
+            compute() {
+                if (this.hasThreadTyping) {
+                    return {};
+                }
+                return clear();
+            },
+            inverse: 'owner',
+        }),
         /**
          * States the thread view on which this composer allows editing (if any).
          */
