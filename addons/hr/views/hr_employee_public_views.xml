@@ -50,7 +50,10 @@
                                 <label for="name" string="Employee Name"/>
                                 <h1>
                                     <field name="name" placeholder="e.g. John Doe" required="True"/>
-                                    <a title="Chat" icon="fa-comments" t-on-click.prevent="() => openChat(props.record.resId)" href="#" class="ml8" invisible="not context.get('chat_icon')" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments"/></a>
+
+                                    <span invisible="not context.get('chat_icon')">
+                                        <a title="Chat" icon="fa-comments" t-on-click.prevent="() => openChat(props.record.resId)" href="#" class="ml8" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments"/></a>
+                                    </span>
                                 </h1>
                                 <h2>
                                     <field name="job_title" placeholder="Job Title" />

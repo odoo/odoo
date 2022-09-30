@@ -7,7 +7,7 @@ import { KanbanModel } from '@web/views/kanban/kanban_model';
 
 export class EmployeeKanbanRecord extends KanbanModel.Record {
     async openChat(employeeId) {
-        const messaging = await this.model.messaging.get();
+        const messaging = await this.model.messagingService.get();
         messaging.openChat({ employeeId });
     }
 }
