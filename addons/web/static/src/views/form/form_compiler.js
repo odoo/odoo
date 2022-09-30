@@ -428,7 +428,6 @@ export class FormCompiler extends ViewCompiler {
         }
         let slotId = 0;
         const statusBarButtons = createElement("StatusBarButtons");
-        statusBarButtons.setAttribute("readonly", "!props.record.isInEdition");
         for (const button of buttons) {
             const slot = createElement("t", {
                 "t-set-slot": `button_${slotId++}`,

@@ -2,7 +2,7 @@
 
 import { Popover } from "./popover";
 
-const { Component, onMounted, onWillUnmount, useExternalListener, useState, xml } = owl;
+const { EventBus, Component, onMounted, onWillUnmount, useExternalListener, useState, xml } = owl;
 
 class PopoverController extends Component {
     setup() {
@@ -44,8 +44,10 @@ class PopoverController extends Component {
         }
     }
     onClickAway(ev) {
-        if (this.target.contains(ev.target)
-            || ev.target.closest(`.o_popover[popover-id="${this.props.id}"]`)) {
+        if (
+            this.target.contains(ev.target) ||
+            ev.target.closest(`.o_popover[popover-id="${this.props.id}"]`)
+        ) {
             return;
         }
         if (this.props.preventClose && this.props.preventClose(ev)) {
@@ -80,6 +82,10 @@ export class PopoverContainer extends Component {
     }
 }
 PopoverContainer.components = { PopoverController };
+PopoverContainer.props = {
+    popovers: Object,
+    bus: EventBus,
+};
 PopoverContainer.template = xml`
     <div class="o_popover_container">
         <t t-foreach="Object.values(props.popovers)" t-as="popover" t-key="popover.id">

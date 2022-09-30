@@ -117,6 +117,7 @@ export function rpcErrorHandler(env, error, originalError) {
         return true;
     }
 }
+
 errorHandlerRegistry.add("rpcErrorHandler", rpcErrorHandler, { sequence: 97 });
 
 // -----------------------------------------------------------------------------

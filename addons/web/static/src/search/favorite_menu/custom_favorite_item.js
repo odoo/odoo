@@ -92,6 +92,7 @@ export class CustomFavoriteItem extends Component {
 
 CustomFavoriteItem.template = "web.CustomFavoriteItem";
 CustomFavoriteItem.components = { CheckBox, Dropdown };
+CustomFavoriteItem.props = {};
 favoriteMenuRegistry.add(
     "custom-favorite-item",
     { Component: CustomFavoriteItem, groupNumber: 3 },

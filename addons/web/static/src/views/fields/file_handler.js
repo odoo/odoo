@@ -75,3 +75,12 @@ export class FileUploader extends Component {
 
 FileUploader.template = "web.FileUploader";
 FileUploader.nextId = 0;
+FileUploader.props = {
+    onUploaded: Function,
+    onUploadComplete: { type: Function, optional: true },
+    multiUpload: { type: Boolean, optional: true },
+    inputName: { type: String, optional: true },
+    fileUploadClass: { type: String, optional: true },
+    acceptedFileExtensions: { type: String, optional: true },
+    slots: { type: Object, optional: true },
+};

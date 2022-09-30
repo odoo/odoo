@@ -78,7 +78,6 @@
                     position="isXAxis ? 'bottom-start' : 'bottom-end'"
                     cell="cell"
                     customGroupBys="model.metaData.customGroupBys"
-                    showActiveItems="false"
                     onItemSelected="(payload) => this.onGroupBySelected(isXAxis ? 'col' : 'row', payload)"
                     onAddCustomGroupBy="fieldName => this.onAddCustomGroupBy(isXAxis ? 'col' : 'row', cell.groupId, fieldName)"
                 />

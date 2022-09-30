@@ -400,5 +400,7 @@ View.defaultProps = {
     loadIrFilters: false,
     className: "",
 };
-
+View.props = {
+    "*": true,
+};
 View.searchMenuTypes = ["filter", "groupBy", "favorite"];

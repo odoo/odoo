@@ -41,6 +41,7 @@ export class SwitchCompanyMenu extends Component {
 SwitchCompanyMenu.template = "web.SwitchCompanyMenu";
 SwitchCompanyMenu.components = { Dropdown, DropdownItem };
 SwitchCompanyMenu.toggleDelay = 1000;
+SwitchCompanyMenu.props = {};
 
 export const systrayItem = {
     Component: SwitchCompanyMenu,

@@ -60,22 +60,24 @@ export async function makeWithSearch(params) {
     class Parent extends Component {
         setup() {
             this.withSearchProps = props;
-            this.componentProps = componentProps;
         }
-        getDisplay(display) {
-            return Object.assign({}, display, componentProps.display);
+
+        getProps(search) {
+            const props = Object.assign({}, componentProps, {
+                context: search.context,
+                domain: search.domain,
+                groupBy: search.groupBy,
+                orderBy: search.orderBy,
+                comparison: search.comparison,
+                display: Object.assign({}, search.display, componentProps.display),
+            });
+            return filterPropsForComponent(params.Component, props);
         }
     }
+
     Parent.template = xml`
         <WithSearch t-props="withSearchProps" t-slot-scope="search">
-            <Component
-                t-props="componentProps"
-                context="search.context"
-                domain="search.domain"
-                groupBy="search.groupBy"
-                orderBy="search.orderBy"
-                comparison="search.comparison"
-                display="getDisplay(search.display)"/>
+            <Component t-props="getProps(search)"/>
         </WithSearch>`;
     Parent.components = { Component: params.Component, WithSearch };
 
@@ -87,6 +89,40 @@ export async function makeWithSearch(params) {
     const componentNode = getUniqueChild(withSearchNode);
     const component = componentNode.component;
     return component;
+}
+
+/** This function is aim to be used only in the tests.
+ * It will filter the props that are needed by the Component.
+ * This is to avoid errors of props validation. This occurs for example, on ControlPanel tests.
+ * In production, View use WithSearch for the Controllers, and the Layout send only the props that
+ * need to the ControlPanel.
+ *
+ * @param {Component} Component
+ * @param {Object} props
+ * @returns {Object} filtered props
+ */
+function filterPropsForComponent(Component, props) {
+    // This if, can be removed once all the Components have the props defined
+    if (Component.props) {
+        let componentKeys = null;
+        if (Component.props instanceof Array) {
+            componentKeys = Component.props.map((x) => x.replace("?", ""));
+        } else {
+            componentKeys = Object.keys(Component.props);
+        }
+        if (componentKeys.includes("*")) {
+            return props;
+        } else {
+            return Object.keys(props)
+                .filter((k) => componentKeys.includes(k))
+                .reduce((o, k) => {
+                    o[k] = props[k];
+                    return o;
+                }, {});
+        }
+    } else {
+        return props;
+    }
 }
 
 function getUniqueChild(node) {

@@ -63,4 +63,12 @@ export class RainbowMan extends Component {
     }
 }
 RainbowMan.template = "web.RainbowMan";
+RainbowMan.props = {
+    fadeout: String,
+    close: Function,
+    message: String,
+    imgUrl: String,
+    Component: { type: Function, optional: true },
+    props: { type: Object, optional: true },
+};
 RainbowMan.rainbowFadeouts = { slow: 4500, medium: 3500, fast: 2000, no: false };

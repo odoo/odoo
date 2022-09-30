@@ -88,7 +88,7 @@ export async function makeView(params) {
     const target = getFixture();
     const viewEnv = Object.assign(Object.create(env), { config });
     const view = await mount(View, target, { env: viewEnv, props });
-    await mount(MainComponentsContainer, target, { env, props });
+    await mount(MainComponentsContainer, target, { env });
 
     const viewNode = view.__owl__;
     const withSearchNode = Object.values(viewNode.children)[0];

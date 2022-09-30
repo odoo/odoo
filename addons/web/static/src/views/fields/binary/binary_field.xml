@@ -7,7 +7,6 @@
                 <div class="w-100 d-inline-flex">
                     <FileUploader
                         acceptedFileExtensions="props.acceptedFileExtensions"
-                        file="{ data: props.value, name: fileName }"
                         onUploaded.bind="update"
                     >
                         <t t-set-slot="toggler">

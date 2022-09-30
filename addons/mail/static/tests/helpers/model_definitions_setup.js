@@ -28,7 +28,7 @@ addFakeModel('res.fake', {
 
 addFakeModel('m2x.avatar.user', {
     user_id: { type: 'many2one', relation: 'res.users' },
-    user_ids: { type: 'many2many', relation: 'res.users' },
+    user_ids: { type: 'many2many', relation: 'res.users', string: 'Users'},
 });
 
 //--------------------------------------------------------------------------

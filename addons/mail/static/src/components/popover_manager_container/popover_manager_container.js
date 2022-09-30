@@ -21,6 +21,7 @@ export class PopoverManagerContainer extends Component {
         return this.env.services.messaging.modelManager.messaging;
     }
 }
+PopoverManagerContainer.props = {};
 
 Object.assign(PopoverManagerContainer, {
     components: { PopoverManager: getMessagingComponent('PopoverManager') },

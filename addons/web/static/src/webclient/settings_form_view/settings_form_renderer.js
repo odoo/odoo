@@ -59,3 +59,8 @@ SettingsFormRenderer.components = {
     HighlightText,
     FormLabel: FormLabelHighlightText,
 };
+SettingsFormRenderer.props = {
+    ...FormRenderer.props,
+    initialApp: String,
+    slots: Object,
+};
