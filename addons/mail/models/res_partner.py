@@ -102,6 +102,80 @@ class Partner(models.Model):
             create_values['email'] = parsed_email
         return self.create(create_values)
 
+    @api.model
+    def _find_or_create_from_emails(self, emails, additional_values=None):
+        """ Based on a list of emails, find or create partners. Additional values
+        can be given to newly created partners. If an email is not unique (e.g.
+        multi-email input), only the first found email if considered.
+
+        If no valid email is found for a given item, it is used as it to try to
+        find partners with same invalid email and/or keep the value in order to
+        allow updating it afterwards. Notably with notifications resend it is
+        possible to update emails, if only a typo prevents from having a real
+        email for example.
+
+        :param list emails: list of emails that may be formatted (each input
+          will be parsed and normalized);
+        :param dict additional_values: additional values given to create if
+          the partner is not found. Typically used to propagate a company_id;
+
+        :return: res.partner records in a list, following order of emails.
+        """
+        partners, tocreate_vals_list = self.env['res.partner'], []
+        name_emails = [self._parse_partner_name(email) for email in emails]
+
+        # find valid emails_normalized, filtering out false / void values, and search
+        # for existing partners based on those emails
+        emails_normalized = {email_normalized
+                             for _name, email_normalized in name_emails
+                             if email_normalized}
+        if emails_normalized:
+            partners = self.search([('email_normalized', 'in', list(emails_normalized))])
+
+        # create partners for email without any matching partner, still excluding
+        # out false / void values. Keep only first found occurrence of each normalized email
+        seen = set()
+        notfound_emails = (emails_normalized - set(partners.mapped('email_normalized'))) if partners else emails_normalized
+        notfound_name_emails = [
+            name_email
+            for name_email in name_emails
+            if name_email[1] in notfound_emails and name_email[1] not in seen
+               and not seen.add(name_email[1])
+        ]
+        tocreate_vals_list += [
+            {
+                self._rec_name: name or email_normalized,
+                'email': email_normalized,
+                **(additional_values or {})
+            } for name, email_normalized in notfound_name_emails
+        ]
+
+        # create partners without valid email (either invalid email, either no email and a name)
+        tocreate_vals_list += [
+            {
+                self._rec_name: name,
+                'email': name,
+                **(additional_values or {})
+            } for name, email_normalized in name_emails
+              if not email_normalized and name
+        ]
+
+        # create partners once
+        if tocreate_vals_list:
+            partners += self.create(tocreate_vals_list)
+
+        return [
+            next(
+                (partner for partner in partners
+                    if (email_normalized and partner.email_normalized == email_normalized)
+                    or (not email_normalized and email and partner.email == email)
+                    or (not email_normalized and name and partner.name == name)
+                ),
+                self.env['res.partner']
+            )
+            for (name, email_normalized), email in zip(name_emails, emails)
+        ]
+
     # ------------------------------------------------------------
     # DISCUSS
     # ------------------------------------------------------------
