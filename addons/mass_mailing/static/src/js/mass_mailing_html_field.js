@@ -488,7 +488,7 @@ export class MassMailingHtmlField extends HtmlField {
                 class: 'container o_mail_wrapper o_mail_regular oe_unremovable',
             });
             $newWrapperContent = $('<div/>', {
-                class: 'col o_mail_no_options o_mail_wrapper_td bg-white oe_structure o_editable'
+                class: 'col o_mail_no_options o_mail_wrapper_td bg-white oe_structure o_editable oe_unremovable',
             });
             $newWrapper.append($('<div class="row"/>').append($newWrapperContent));
         }
