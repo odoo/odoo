@@ -28,7 +28,7 @@ CopyClipboardField.props = {
 export class CopyClipboardButtonField extends CopyClipboardField {
     get copyButtonClassName() {
         const classNames = [super.copyButtonClassName];
-        classNames.push("rounded-3");
+        classNames.push("rounded-2");
         return classNames.join(" ");
     }
 }
