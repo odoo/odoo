@@ -332,11 +332,13 @@ class MrpWorkorder(models.Model):
             self.duration_expected = self._calculate_duration_expected()
 
     def _calculate_duration_expected(self, date_planned_start=False, date_planned_finished=False):
-        interval = self.workcenter_id.resource_calendar_id.get_work_duration_data(
-            date_planned_start or self.date_planned_start, date_planned_finished or self.date_planned_finished,
-            domain=[('time_type', 'in', ['leave', 'other'])]
-        )
-        return interval['hours'] * 60
+        if date_planned_start or self.date_planned_start and date_planned_finished or self.date_planned_finished:
+            interval = self.workcenter_id.resource_calendar_id.get_work_duration_data(
+                date_planned_start or self.date_planned_start, date_planned_finished or self.date_planned_finished,
+                domain=[('time_type', 'in', ['leave', 'other'])]
+            )
+            return interval['hours'] * 60
+        return 0
 
     def write(self, values):
         if 'production_id' in values:
