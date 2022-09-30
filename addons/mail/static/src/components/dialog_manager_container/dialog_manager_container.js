@@ -21,6 +21,7 @@ export class DialogManagerContainer extends Component {
         return this.env.services.messaging.modelManager.messaging;
     }
 }
+DialogManagerContainer.props = {};
 
 Object.assign(DialogManagerContainer, {
     components: { DialogManager: getMessagingComponent('DialogManager') },

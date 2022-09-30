@@ -325,6 +325,26 @@ export class Many2XAutocomplete extends Component {
 }
 Many2XAutocomplete.template = "web.Many2XAutocomplete";
 Many2XAutocomplete.components = { AutoComplete };
+Many2XAutocomplete.props = {
+    value: { type: String, optional: true },
+    activeActions: Object,
+    context: { type: Object, optional: true },
+    nameCreateField: { type: String, optional: true },
+    setInputFloats: { type: Function, optional: true },
+    update: Function,
+    resModel: String,
+    getDomain: Function,
+    searchLimit: { type: Number, optional: true },
+    quickCreate: { type: [Function, { value: null }], optional: true },
+    noSearchMore: { type: Boolean, optional: true },
+    searchMoreLimit: { type: Number, optional: true },
+    fieldString: String,
+    id: { type: String, optional: true },
+    placeholder: { type: String, optional: true },
+    autoSelect: { type: Boolean, optional: true },
+    isToMany: { type: Boolean, optional: true },
+    autocomplete_container: { type: Function, optional: true },
+};
 Many2XAutocomplete.defaultProps = {
     searchLimit: 7,
     searchMoreLimit: 320,
@@ -332,6 +352,7 @@ Many2XAutocomplete.defaultProps = {
     value: "",
     setInputFloats: () => {},
     quickCreate: null,
+    context: {},
 };
 
 export function useOpenMany2XRecord({

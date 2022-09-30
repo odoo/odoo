@@ -76,6 +76,9 @@ export class GroupByMenu extends Component {
 GroupByMenu.components = { CustomGroupByItem, Dropdown, DropdownItem };
 GroupByMenu.template = "web.GroupByMenu";
 GroupByMenu.defaultProps = {
-    showActiveItems: true,
     showCaretDown: false,
+};
+GroupByMenu.props = {
+    ...Dropdown.props,
+    showCaretDown: { type: Boolean, optional: true },
 };

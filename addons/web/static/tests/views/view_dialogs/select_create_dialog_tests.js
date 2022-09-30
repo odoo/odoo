@@ -227,7 +227,6 @@ QUnit.module("ViewDialogs", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
         webClient.env.services.dialog.add(SelectCreateDialog, {
             noCreate: true,
-            readonly: true, //Not used
             resModel: "partner",
             domain: [["id", "=", session.user_context.uid]],
         });

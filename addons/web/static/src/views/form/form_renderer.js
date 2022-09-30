@@ -87,7 +87,21 @@ FormRenderer.components = {
     InnerGroup,
     StatusBarButtons,
 };
+FormRenderer.props = {
+    archInfo: Object,
+    Compiler: { type: Function, optional: true },
+    record: Object,
+    // Template props : added by the FormCompiler
+    class: { type: String, optional: 1 },
+    translateAlert: { type: [Object, { value: null }], optional: true },
+    enableViewButtons: { type: Function, optional: true },
+    disableViewButtons: { type: Function, optional: true },
+    onNotebookPageChange: { type: Function, optional: true },
+    activeNotebookPages: { type: Object, optional: true },
+};
 FormRenderer.defaultProps = {
     activeNotebookPages: {},
     onNotebookPageChange: () => {},
+    enableViewButtons: () => {},
+    disableViewButtons: () => {},
 };

@@ -27,3 +27,4 @@ ActionContainer.template = xml`
         <t t-if="info.Component" t-component="info.Component" className="'o_action'" t-props="info.componentProps" t-key="info.id"/>
       </div>
     </t>`;
+ActionContainer.props = {};

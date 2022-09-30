@@ -48,6 +48,12 @@ export async function clearUncommittedChanges(env) {
     return !res.includes(false);
 }
 
+export const standardActionServiceProps = {
+    action: Object, // prop added by _getActionInfo
+    actionId: { type: Number, optional: true }, // prop added by _getActionInfo
+    className: String, // prop added by the ActionContainer
+};
+
 function parseActiveIds(ids) {
     const activeIds = [];
     if (typeof ids === "string") {
@@ -734,6 +740,9 @@ function makeActionManager(env) {
         }
         ControllerComponent.template = ControllerComponentTemplate;
         ControllerComponent.Component = controller.Component;
+        ControllerComponent.props = {
+            "*": true,
+        };
 
         let nextDialog = null;
         if (action.target === "new") {

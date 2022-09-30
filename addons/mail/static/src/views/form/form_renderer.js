@@ -15,6 +15,13 @@ patch(FormRenderer.prototype, 'mail', {
     },
 });
 
+patch(FormRenderer.props, "mail", {
+    hasAttachmentViewerInArch: { type: Boolean, optional: true },
+    // Template props : added by the FormCompiler
+    hasAttachmentViewer: { type: Boolean, optional: true },
+    chatter: { type: Object, optional: true },
+});
+
 Object.assign(FormRenderer.components, {
     ChatterContainer,
     WebClientViewAttachmentViewContainer,

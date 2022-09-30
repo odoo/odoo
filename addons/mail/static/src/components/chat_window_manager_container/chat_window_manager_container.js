@@ -21,6 +21,7 @@ export class ChatWindowManagerContainer extends Component {
         return this.env.services.messaging.modelManager.messaging;
     }
 }
+ChatWindowManagerContainer.props = {};
 
 Object.assign(ChatWindowManagerContainer, {
     components: { ChatWindowManager: getMessagingComponent('ChatWindowManager') },

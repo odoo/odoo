@@ -22,6 +22,7 @@ export class CallSystrayMenuContainer extends Component {
     }
 
 }
+CallSystrayMenuContainer.props = {};
 
 Object.assign(CallSystrayMenuContainer, {
     components: { CallSystrayMenu: getMessagingComponent('CallSystrayMenu') },

@@ -197,7 +197,7 @@ export class FormController extends Component {
             getLocalState: () => {
                 // TODO: export the whole model?
                 return {
-                    activeNotebookPages: !this.model.root.isNew && activeNotebookPages,
+                    activeNotebookPages: !this.model.root.isNew ? activeNotebookPages : {},
                     resId: this.model.root.resId,
                     fieldsToTranslate: toRaw(this.fieldsToTranslate),
                 };

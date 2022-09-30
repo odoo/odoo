@@ -3,6 +3,7 @@
 import { registry } from "@web/core/registry";
 import { parseFloatTime } from "@web/views/fields/parsers";
 import { useInputField } from "@web/views/fields/input_field_hook";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 const { Component, useState, onWillUpdateProps, onWillStart, onWillDestroy } = owl;
 
@@ -73,6 +74,12 @@ export class MrpTimer extends Component {
 }
 
 MrpTimer.supportedTypes = ["float"];
+MrpTimer.props = {
+    ...standardFieldProps,
+    duration: { type: Number, optional: true },
+    ongoing: { type: Boolean, optional: true },
+    value: { optional: true },
+};
 MrpTimer.template = "mrp.MrpTimer";
 
 registry.category("fields").add("mrp_timer", MrpTimer);

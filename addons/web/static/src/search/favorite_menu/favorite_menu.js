@@ -66,3 +66,4 @@ export class FavoriteMenu extends Component {
 
 FavoriteMenu.template = "web.FavoriteMenu";
 FavoriteMenu.components = { Dropdown, DropdownItem };
+FavoriteMenu.props = {};

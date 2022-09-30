@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-const { Component, useState } = owl;
+const { EventBus, Component, useState } = owl;
 
 export class WebsiteLoader extends Component {
     setup() {
@@ -25,4 +25,7 @@ export class WebsiteLoader extends Component {
         });
     }
 }
+WebsiteLoader.props = {
+    bus: EventBus,
+};
 WebsiteLoader.template = 'website.website_loader';

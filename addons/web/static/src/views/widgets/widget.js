@@ -72,3 +72,6 @@ Widget.parseWidgetNode = function (node) {
         WidgetComponent,
     };
 };
+Widget.props = {
+    "*": true,
+};

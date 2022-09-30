@@ -58,3 +58,10 @@ export class PivotGroupByMenu extends GroupByMenu {
         });
     }
 }
+PivotGroupByMenu.props = {
+    ...GroupByMenu.props,
+    cell: Object,
+    customGroupBys: Object,
+    onAddCustomGroupBy: Function,
+    onItemSelected: Function,
+};

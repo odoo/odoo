@@ -33,6 +33,7 @@ export class UserMenu extends Component {
 }
 UserMenu.template = "web.UserMenu";
 UserMenu.components = { Dropdown, DropdownItem, CheckBox };
+UserMenu.props = {};
 
 export const systrayItem = {
     Component: UserMenu,

@@ -57,3 +57,11 @@ export class FormLabel extends Component {
     }
 }
 FormLabel.template = "web.FormLabel";
+FormLabel.props = {
+    fieldInfo: { type: Object },
+    record: { type: Object },
+    fieldName: { type: String },
+    className: { type: String, optional: true },
+    string: { type: String },
+    id: { type: String },
+};

@@ -208,3 +208,7 @@ ControlPanel.components = {
     Dropdown,
 };
 ControlPanel.template = "web.ControlPanel";
+ControlPanel.props = {
+    display: { type: Object, optional: true },
+    slots: { type: Object, optional: true },
+};

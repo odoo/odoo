@@ -40,7 +40,7 @@ export class SettingsFormController extends formView.Controller {
             }
         });
 
-        this.initialApp = "module" in this.props.context && this.props.context.module;
+        this.initialApp = "module" in this.props.context ? this.props.context.module : "";
     }
 
     /**

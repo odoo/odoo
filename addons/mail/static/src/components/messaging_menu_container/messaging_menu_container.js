@@ -21,6 +21,7 @@ export class MessagingMenuContainer extends Component {
         return this.env.services.messaging.modelManager.messaging;
     }
 }
+MessagingMenuContainer.props = {};
 
 Object.assign(MessagingMenuContainer, {
     components: { MessagingMenu: getMessagingComponent('MessagingMenu') },

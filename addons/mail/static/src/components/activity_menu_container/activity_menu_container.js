@@ -20,6 +20,7 @@ export class ActivityMenuContainer extends Component {
     }
 
 }
+ActivityMenuContainer.props = {};
 
 Object.assign(ActivityMenuContainer, {
     components: { ActivityMenuView: getMessagingComponent('ActivityMenuView') },

@@ -10,6 +10,9 @@ export class NotificationContainer extends Component {
         this.notifications = useState(this.props.notifications);
     }
 }
+NotificationContainer.props = {
+    notifications: Object,
+};
 
 NotificationContainer.template = xml`
     <div class="o_notification_manager">

@@ -184,7 +184,7 @@ QUnit.module("Form Compiler", (hooks) => {
         const expected = /*xml*/ `
             <t>
             <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ props.record.isDirty ? 'o_form_dirty' : !props.record.isVirtual ? 'o_form_saved' : '' }}" class="o_form_nosheet" t-ref="compiled_view_root">
-                <div class="o_form_statusbar position-relative d-flex justify-content-between border-bottom"><StatusBarButtons readonly="!props.record.isInEdition"/></div>
+                <div class="o_form_statusbar position-relative d-flex justify-content-between border-bottom"><StatusBarButtons/></div>
                 <div>someDiv</div>
             </div>
             </t>`;
@@ -207,7 +207,7 @@ QUnit.module("Form Compiler", (hooks) => {
             <t>
             <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-flex {{ uiService.size &lt; 6 ? &quot;flex-column&quot; : &quot;flex-nowrap h-100&quot; }} {{ props.record.isDirty ? 'o_form_dirty' : !props.record.isVirtual ? 'o_form_saved' : '' }}" t-ref="compiled_view_root">
                 <div class="o_form_sheet_bg">
-                    <div class="o_form_statusbar position-relative d-flex justify-content-between border-bottom"><StatusBarButtons readonly="!props.record.isInEdition"/></div>
+                    <div class="o_form_statusbar position-relative d-flex justify-content-between border-bottom"><StatusBarButtons/></div>
                     <div>someDiv</div>
                     <div class="o_form_sheet position-relative">
                         <div>inside sheet</div>
@@ -268,7 +268,7 @@ QUnit.module("Form Compiler", (hooks) => {
 
         const expected = /*xml*/ `
             <div class="o_form_statusbar position-relative d-flex justify-content-between border-bottom">
-               <StatusBarButtons readonly="!props.record.isInEdition">
+               <StatusBarButtons>
                   <t t-set-slot="button_0" isVisible="true">
                      <div>someDiv</div>
                   </t>
@@ -286,7 +286,7 @@ QUnit.module("Form Compiler", (hooks) => {
 
         const expected = /*xml*/ `
             <div class="o_form_statusbar position-relative d-flex justify-content-between border-bottom">
-               <StatusBarButtons readonly="!props.record.isInEdition"/>
+               <StatusBarButtons/>
             </div>`;
 
         assert.areContentEquivalent(compileTemplate(arch), expected);

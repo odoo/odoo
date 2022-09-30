@@ -15,3 +15,7 @@ export class CustomGroupByItem extends Component {
 
 CustomGroupByItem.template = "web.CustomGroupByItem";
 CustomGroupByItem.components = { Dropdown };
+CustomGroupByItem.props = {
+    fields: Array,
+    onAddCustomGroup: Function,
+};

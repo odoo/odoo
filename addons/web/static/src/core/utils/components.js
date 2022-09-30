@@ -10,7 +10,7 @@ export class ErrorHandler extends Component {
     }
 }
 ErrorHandler.template = xml`<t t-slot="default" />`;
-ErrorEvent.props = ["onError"];
+ErrorHandler.props = ["onError", "slots"];
 
 export class WithEnv extends Component {
     setup() {
@@ -18,3 +18,4 @@ export class WithEnv extends Component {
     }
 }
 WithEnv.template = xml`<t t-slot="default"/>`;
+WithEnv.props = ["env", "slots"];

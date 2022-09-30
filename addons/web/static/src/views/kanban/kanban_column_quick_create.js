@@ -73,4 +73,11 @@ export class KanbanColumnQuickCreate extends Component {
         });
     }
 }
+KanbanColumnQuickCreate.props = {
+    exampleData: [Object, { value: null }],
+    onFoldChange: Function,
+    onValidate: Function,
+    folded: Boolean,
+    groupByFieldString: String,
+};
 KanbanColumnQuickCreate.template = "web.KanbanColumnQuickCreate";
