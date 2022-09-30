@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { sprintf } from "@web/core/utils/strings";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { getNextTabableElement, getPreviousTabableElement } from "@web/core/utils/ui";
 import { usePosition } from "@web/core/position_hook";
@@ -63,6 +64,30 @@ export class AnalyticDistribution extends Component {
         this.allPlans = [];
         this.lastAccount = this.props.account_field ? this.props.record.data[this.props.account_field] : false;
         this.lastProduct = this.props.product_field ? this.props.record.data[this.props.product_field] : false;
+        this.canCreateAnalyticAccount = !!this.env.searchModel.context.create_accounts;
+        this.createEditAnalyticAccount = useOpenMany2XRecord({
+            resModel: "account.analytic.account",
+            activeActions: {
+                canCreate: true,
+                canCreateEdit: false,
+                canWrite: true,
+            },
+            isToMany: false,
+            onRecordSaved: async (record) => {
+                if (record.data.root_plan_id.length && this.list[record.data.root_plan_id[0]]) {
+                    let tag = this.newTag(record.data.root_plan_id[0]);
+                    tag.analytic_account_id = record.data.id;
+                    tag.analytic_account_name = record.data.name;
+                    this.list[record.data.root_plan_id[0]].distribution.push(tag);
+                    this.setFocusSelector(`.tag_${tag.id} .o_analytic_percentage`);
+                    if (!this.isDropdownOpen) {
+                        this.openAnalyticEditor();
+                    }
+                }
+            },
+            onClose: () => {this.openAnalyticEditor()},
+            fieldString: this.env._t("New Analytic Account"),
+        });
     }
 
     // Lifecycle
@@ -124,6 +149,13 @@ export class AnalyticDistribution extends Component {
     }
 
     // ORM
+    async createAnalyticAccount(name, group_id) {
+        const created = await this.orm.call("account.analytic.account", "name_create", [name], {
+            context: { default_plan_id: group_id },
+        });
+        return created;
+    }
+
     fetchPlansArgs(nextProps) {
         let args = {};
         if (this.props.business_domain_compute) {
@@ -198,6 +230,23 @@ export class AnalyticDistribution extends Component {
             color: result.color,
         }));
 
+        if (this.canCreateAnalyticAccount && request.length) {
+            options.push({
+                label: sprintf(this.env._t(`Create "%s"`), request),
+                classList: "o_m2o_dropdown_option o_m2o_dropdown_option_create",
+                action: async (group_id) => {
+                    return await this.createAnalyticAccount(request, group_id);
+                },
+            });
+            options.push({
+                label: this.env._t("Create and edit..."),
+                classList: "o_m2o_dropdown_option o_m2o_dropdown_option_create_edit",
+                action: (group_id) => {
+                    return this.createEditAnalyticAccount({ context: { default_name: request, default_plan_id: group_id }})
+                },
+            });
+        }
+
         if (!options.length) {
             options.push({
                 label: this.env._t("No Analytic Accounts for this plan"),
@@ -220,12 +269,23 @@ export class AnalyticDistribution extends Component {
     }
 
     // Editing Distributions
-    async onSelect(option, params, tag) {
-        const selected_option = Object.getPrototypeOf(option);
-        tag.analytic_account_id = parseInt(selected_option.value);
-        tag.analytic_account_name = selected_option.label;
-        tag.color = selected_option.color;
-        this.setFocusSelector(`.tag_${tag.id} .o_analytic_percentage`);
+    async onSelect(option, params, tagToUpdate) {
+        let selectedOption = {};
+        if (option.action) {
+            const newAnalyticAccount = await option.action(tagToUpdate.group_id);
+            if (!newAnalyticAccount) return;
+            selectedOption = {
+                value: newAnalyticAccount[0],
+                label: newAnalyticAccount[1],
+                color: tagToUpdate.color,
+            }
+        } else {
+            selectedOption = Object.getPrototypeOf(option);
+        }
+        tagToUpdate.analytic_account_id = parseInt(selectedOption.value);
+        tagToUpdate.analytic_account_name = selectedOption.label;
+        tagToUpdate.color = selectedOption.color;
+        this.setFocusSelector(`.tag_${tagToUpdate.id} .o_analytic_percentage`);
     }
 
     async percentageChanged(dist_tag, ev) {
@@ -453,7 +513,7 @@ export class AnalyticDistribution extends Component {
         }
         this.autoFill();
         const incompletePlan = this.firstIncompletePlanId;
-        this.setFocusSelector(incompletePlan ? `#plan_${incompletePlan} .incomplete`: ".analytic_json_popup");
+        this.setFocusSelector(incompletePlan ? `#plan_${incompletePlan} .incomplete`: this.focusSelector || ".analytic_json_popup");
         this.state.showDropdown = true;
     }
 

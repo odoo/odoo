@@ -33,6 +33,7 @@
                             </group>
                             <group>
                                 <field name="plan_id" options="{'no_quick_create': True}"/>
+                                <field name="root_plan_id" invisible="1"/>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                 <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                             </group>
