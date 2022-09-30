@@ -215,7 +215,7 @@ function makeActionManager(env) {
             action.target = action.target || "current";
         }
         if (action.type === "ir.actions.act_window") {
-            action.views = [...action.views]; // manipulate a copy to keep cached action unmodified
+            action.views = [...action.views.map((v) => [v[0], v[1] === "tree" ? "list" : v[1]])]; // manipulate a copy to keep cached action unmodified
             action.controllers = {};
             const target = action.target;
             if (target !== "inline" && !(target === "new" && action.views[0][1] === "form")) {
@@ -857,8 +857,7 @@ function makeActionManager(env) {
         const { views: viewDescriptions } = await keepLast.add(prom);
         const domParser = new DOMParser();
         const views = [];
-        for (let [, type] of action.views) {
-            type = type === "tree" ? "list" : type;
+        for (const [, type] of action.views) {
             if (type !== "search") {
                 const arch = viewDescriptions[type].arch;
                 const archDoc = domParser.parseFromString(arch, "text/xml").documentElement;

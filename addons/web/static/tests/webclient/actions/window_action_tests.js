@@ -2430,4 +2430,20 @@ QUnit.module("ActionManager", (hooks) => {
         // mode is "edit" because target="new"
         assert.containsOnce(target, ".o_form_view .o_form_editable");
     });
+
+    QUnit.test("load a tree", async function (assert) {
+        serverData.views = {
+            "partner,false,list": `<list><field name="name"/></list>`,
+            "partner,false,search": `<search/>`,
+        };
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, {
+            res_id: 1,
+            type: "ir.actions.act_window",
+            target: "current",
+            res_model: "partner",
+            views: [[false, "tree"]],
+        });
+        assert.containsOnce(target, ".o_list_view");
+    });
 });
