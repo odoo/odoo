@@ -11,7 +11,7 @@
                 </div>
             </t>
         </ControlPanel>
-        <div class="o-content pt-3 container-fluid o_stock_forecasted_page">
+        <div class="o-content pt-3 container-fluid overflow-auto o_stock_forecasted_page">
             <ForecastedHeader docs="docs" openView.bind="openView"/>
             <t t-if="context.warehouse">
                 <View type="'stock_forecasted_graph'"
