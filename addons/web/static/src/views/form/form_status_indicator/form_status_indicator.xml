@@ -2,19 +2,23 @@
 <templates xml:space="preserve">
 
     <t t-name="web.FormStatusIndicator" owl="1">
-        <div class="o_form_status_indicator d-flex align-self-center align-items-center ms-4 rounded-pill position-relative" t-att-class="{ o_form_status_indicator_new_record: props.model.root.isVirtual }">
+        <div class="o_form_status_indicator d-flex align-self-center align-items-center ms-2 position-relative" t-att-class="{ o_form_status_indicator_new_record: props.model.root.isVirtual }">
+            <div class="o_form_status_indicator_buttons d-flex" t-att-class="{ 'o_form_status_indicator_buttons_hidden': !(props.model.root.isVirtual or displayButtons) }">
+                <button type="button" class="o_form_button_save btn btn-link btn-sm text-muted" t-att-disabled="props.isDisabled" data-hotkey="s" t-on-click.stop="save" aria-label="Save manually" data-tooltip="Save manually">
+                    <i class="fa fa-cloud-upload fa-fw" />
+                </button>
+                <button type="button" class="o_form_button_cancel btn btn-link btn-sm text-muted" t-att-disabled="props.isDisabled" data-hotkey="j" t-on-click.stop="discard" aria-label="Discard changes" data-tooltip="Discard changes">
+                    <i class="fa fa-undo fa-fw" />
+                </button>
+            </div>
             <t t-if="!props.model.root.isVirtual">
                 <t t-if="indicatorMode === 'invalid'">
-                    <span class="position-absolute text-danger">Unable to save</span>
-                </t>
-                <t t-elif="indicatorMode === 'dirty'">
-                    <span class="position-absolute text-muted">Unsaved changes</span>
+                    <span class="text-danger" data-tooltip="Correct missing or invalid fields to save, or discard changes" aria-label="Correct missing or invalid fields to save, or discard changes">
+                        <i class="fa fa-exclamation-circle" />
+                        Unable to save
+                    </span>
                 </t>
             </t>
-            <div class="o_form_status_indicator_buttons d-flex" t-att-class="{ 'o_form_status_indicator_buttons_hidden': !(props.model.root.isVirtual or displayButtons) }">
-                <button type="button" class="o_form_button_save btn btn-secondary" t-att-disabled="props.isDisabled" data-hotkey="s" t-on-click.stop="save">Save</button>
-                <button type="button" class="o_form_button_cancel btn btn-secondary" t-att-disabled="props.isDisabled" data-hotkey="j" t-on-click.stop="discard">Discard</button>
-            </div>
         </div>
     </t>
 
