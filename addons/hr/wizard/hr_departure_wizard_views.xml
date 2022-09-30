@@ -30,10 +30,12 @@
                                 </div>
                             </group>
                         </group>
-                        <div>
-                            <span class="o_form_label o_hr_form_label cursor-default">Detailed Reason</span>
-                            <field name="departure_description"/>
-                        </div>
+                        <group>
+                            <div id="detailed_reason">
+                                <span class="o_form_label o_hr_form_label cursor-default">Detailed Reason</span>
+                                <field name="departure_description"/>
+                            </div>
+                        </group>
                     </sheet>
                     <footer>
                         <button name="action_register_departure" string="Apply" type="object" class="oe_highlight" data-hotkey="q"/>
