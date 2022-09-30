@@ -17,7 +17,7 @@
                 <t t-set-slot="control-panel-bottom-left">
                     <t t-if="props.info.actionMenus and model.root.selection.length">
                         <ActionMenus
-                            activeIds="model.root.selection.map((r) => r.resId)"
+                            getActiveIds="() => model.root.selection.map((r) => r.resId)"
                             context="props.context"
                             domain="props.domain"
                             items="getActionMenuItems()"

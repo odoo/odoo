@@ -16,13 +16,13 @@
                     <t t-set-slot="control-panel-action-menu">
                         <t t-if="props.info.actionMenus">
                             <ActionMenus
-                                activeIds="model.root.isVirtual ? [] : [model.root.resId]"
+                                getActiveIds="() => model.root.isVirtual ? [] : [model.root.resId]"
                                 context="props.context"
                                 items="getActionMenuItems()"
                                 isDomainSelected="model.root.isDomainSelected"
                                 resModel="model.root.resModel"
                                 domain="props.domain"
-                                onActionExecuted="() => model.load()"
+                                onActionExecuted="() => model.load({ resId: model.root.resId, resIds: model.root.resIds })"
                                 shouldExecuteAction.bind="shouldExecuteAction"
                         />
                         </t>
