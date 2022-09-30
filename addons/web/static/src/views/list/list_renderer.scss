@@ -150,8 +150,8 @@
         }
 
         .o_keyboard_navigation {
-            tr:hover {
-                outline-color: transparent;
+            tr:focus-within {
+                background-color: lighten($o-form-lightsecondary, 10%);
             }
 
             th:focus-within, td:focus-within {
