@@ -110,8 +110,8 @@
                 <form string="Expenses" class="o_expense_form" js_class="hr_expense_form_view">
                 <header>
                   <button name="action_submit_expenses" string="Create Report" type="object" class="oe_highlight o_expense_submit" attrs="{'invisible': ['|', ('attachment_number', '&lt;=', 0), ('sheet_id', '!=', False)]}" data-hotkey="v"/>
-                  <widget name="attach_document" string="Attach Receipt" action="attach_document" attrs="{'invisible': ['|', ('attachment_number', '&lt;', 1), ('id','=',False)]}"/>
-                  <widget name="attach_document" string="Attach Receipt" action="attach_document" highlight="1" attrs="{'invisible': ['|',('attachment_number', '&gt;=', 1), ('id','=',False)]}"/>
+                  <widget name="attach_document" string="Attach Receipt" action="attach_document" attrs="{'invisible': [('attachment_number', '&lt;', 1)]}"/>
+                  <widget name="attach_document" string="Attach Receipt" action="attach_document" highlight="1" attrs="{'invisible': [('attachment_number', '&gt;=', 1)]}"/>
                   <button name="action_submit_expenses" string="Create Report" type="object" class="o_expense_submit" attrs="{'invisible': ['|', ('attachment_number', '&gt;=', 1), ('sheet_id', '!=', False)]}" data-hotkey="v"/>
                   <field name="state" widget="statusbar" statusbar_visible="draft,reported,approved,done,refused"/>
                   <button name="action_view_sheet" type="object" string="View Report" class="oe_highlight" attrs="{'invisible': [('sheet_id', '=', False)]}" data-hotkey="w"/>
@@ -155,7 +155,7 @@
 
                             <label for="total_amount" string="Total" attrs="{'invisible': [('product_has_cost', '=', True)]}"/>
                             <div class="o_row" attrs="{'invisible': [('product_has_cost', '=', True)]}">
-                                <field name="total_amount" widget='monetary' options="{'currency_field': 'currency_id'}" attrs="{'readonly': [('sheet_is_editable', '=', False)]}"/>
+                                <field name="total_amount" widget='monetary' options="{'currency_field': 'currency_id'}" attrs="{'readonly': [('sheet_is_editable', '=', False)]}" class="oe_inline"/>
                                 <field name="currency_id" groups="base.group_multi_currency"/>
                             </div>
                             <label for="total_amount_company" attrs="{'invisible': [('product_has_cost', '=', False)]}"/>
