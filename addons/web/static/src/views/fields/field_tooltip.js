@@ -9,7 +9,7 @@ export function getTooltipInfo(params) {
             const widget = fieldRegistry.get(params.fieldInfo.widget);
             widgetDescription = widget.prototype.description;
         } else {
-            widgetDescription = params.fieldInfo.FieldComponent.description;
+            widgetDescription = params.fieldInfo.FieldComponent.displayName;
         }
     }
 
