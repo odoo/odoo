@@ -10,6 +10,7 @@ class AccountAnalyticPlan(models.Model):
     _description = 'Analytic Plans'
     _parent_store = True
     _rec_name = 'complete_name'
+    _order = 'complete_name asc'
 
     def _default_color(self):
         return randint(1, 11)
@@ -97,7 +98,7 @@ class AccountAnalyticPlan(models.Model):
     @api.depends('account_ids', 'children_ids')
     def _compute_all_analytic_account_count(self):
         for plan in self:
-            plan.all_account_count = len(plan.account_ids) + len(plan.children_ids.account_ids)
+            plan.all_account_count = self.env['account.analytic.account'].search_count([('plan_id', "child_of", plan.id)])
 
     @api.depends('children_ids')
     def _compute_children_count(self):
@@ -108,7 +109,7 @@ class AccountAnalyticPlan(models.Model):
         result = {
             "type": "ir.actions.act_window",
             "res_model": "account.analytic.account",
-            "domain": [('id', 'in', self.account_ids.ids)],
+            "domain": [('plan_id', "child_of", self.id)],
             "context": {'default_plan_id': self.id},
             "name": _("Analytical Accounts"),
             'view_mode': 'list,form',
