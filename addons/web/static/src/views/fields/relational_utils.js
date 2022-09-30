@@ -514,8 +514,8 @@ export class X2ManyFieldDialog extends Component {
     async saveAndNew() {
         const disabledButtons = this.disableButtons();
         const saved = await this.save({ saveAndNew: true });
+        this.enableButtons(disabledButtons);
         if (saved) {
-            this.enableButtons(disabledButtons);
             if (this.title) {
                 this.title = this.title.replace(this.env._t("Open:"), this.env._t("New:"));
             }
