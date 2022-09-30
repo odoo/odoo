@@ -319,6 +319,10 @@ export class FormCompiler extends ViewCompiler {
                 itemSpan = parseInt(formGroup.getAttribute("maxCols") || 2, 10);
             }
 
+            if (child.matches("div[class='clearfix']:empty")) {
+                itemSpan = parseInt(formGroup.getAttribute("maxCols") || 2, 10);
+            }
+
             let slotContent;
             if (getTag(child, true) === "field") {
                 const addLabel = child.hasAttribute("nolabel")
