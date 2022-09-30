@@ -6,6 +6,9 @@
             <div class="page" style="page-break:unset !important;page-break-inside: unset !important;">
                 <div class="report_header" style="text-align: center;">
                     <p class="white-space: pre-line;" t-if="session_id and session_id.config_id.is_header_or_footer" t-field="session_id.config_id.receipt_header"/>
+                    <p style="font-size: 10px;">
+                        <t t-esc="session_name"/>
+                    </p>
                     <p style="font-size: 10px;">======================================</p>
                     <p style="font-size: 10px;">CASHIER READING OF TERMINAL 01</p>
                     <p style="font-size: 10px;">======================================</p>
