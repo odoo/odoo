@@ -976,8 +976,12 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
                     const splitNode = splitAroundUntil(selectedTextNode, lastAncestorInlineFormat);
                     removeFormat(splitNode, formatSpec);
                 } else {
-                    if (firstBlockOrClassHasFormat && !applyStyle) {
-                        formatSpec.addNeutralStyle(getOrCreateSpan(selectedTextNode, inlineAncestors));
+                    if (firstBlockOrClassHasFormat) {
+                        if (!applyStyle && formatSpec.addNeutralStyle) {
+                            formatSpec.addNeutralStyle(getOrCreateSpan(selectedTextNode, inlineAncestors));
+                        } else {
+                            removeFormat(blockOrInlineClass, formatSpec);
+                        }
                     } else if (!firstBlockOrClassHasFormat && applyStyle) {
                         const tag = formatSpec.tagName && document.createElement(formatSpec.tagName);
                         if (tag) {
