@@ -6,6 +6,7 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ActivityMarkDonePopoverContentView',
+    identifyingMode: 'xor',
     recordMethods: {
         /**
          * Handles blur on this feedback textarea.
@@ -86,7 +87,7 @@ registerModel({
                 return;
             }
             if (this.activityListViewItemOwner) {
-                this.activityListViewItemOwner.markDonePopoverView.delete();
+                this.activityListViewItemOwner.update({ markDoneView: clear() });
                 return;
             }
         },
@@ -105,16 +106,12 @@ registerModel({
             required: true,
         }),
         activityListViewItemOwner: one('ActivityListViewItem', {
-            compute() {
-                if (this.popoverViewOwner.activityListViewItemOwnerAsMarkDone) {
-                    return this.popoverViewOwner.activityListViewItemOwnerAsMarkDone;
-                }
-                return clear();
-            },
+            identifying: true,
+            inverse: 'markDoneView',
         }),
         activityViewOwner: one('ActivityView', {
             compute() {
-                if (this.popoverViewOwner.activityViewOwnerAsMarkDone) {
+                if (this.popoverViewOwner && this.popoverViewOwner.activityViewOwnerAsMarkDone) {
                     return this.popoverViewOwner.activityViewOwnerAsMarkDone;
                 }
                 return clear();
@@ -122,6 +119,11 @@ registerModel({
         }),
         component: attr(),
         feedbackTextareaRef: attr(),
+        hasHeader: attr({
+            compute() {
+                return Boolean(this.popoverViewOwner);
+            },
+        }),
         headerText: attr({
             compute() {
                 if (this.activityViewOwner) {
