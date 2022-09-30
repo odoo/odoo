@@ -33,7 +33,7 @@ class ResPartner(models.Model):
 
     @api.model
     def _l10n_it_normalize_codice_fiscale(self, codice):
-        if re.match(r'^IT[0-9]{11}$', codice):
+        if codice and re.match(r'^IT[0-9]{11}$', codice):
             return codice[2:13]
         return codice
 
