@@ -3975,7 +3975,12 @@ QUnit.module("Views", (hooks) => {
             undefined,
             "foo div should have a default colspan (1)"
         );
-        assert.containsN(target, ".secondgroup div.o_wrap_field", 2, "int_field and qux should have same o_wrap_field");
+        assert.containsN(
+            target,
+            ".secondgroup div.o_wrap_field",
+            2,
+            "int_field and qux should have same o_wrap_field"
+        );
 
         assert.containsN(
             target,
@@ -7433,6 +7438,61 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
+    QUnit.test("execute ActionMenus actions (create)", async function (assert) {
+        const actionService = {
+            start() {
+                return {
+                    doAction(id, { additionalContext, onClose }) {
+                        assert.step(JSON.stringify({ action_id: id, context: additionalContext }));
+                        onClose(); // simulate closing of target new action's dialog
+                    },
+                };
+            },
+        };
+        registry.category("services").add("action", actionService, { force: true });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><field name="foo"/></form>`,
+            info: {
+                actionMenus: {
+                    action: [
+                        {
+                            id: 29,
+                            name: "Action partner",
+                        },
+                    ],
+                },
+            },
+            mockRPC(route, args) {
+                assert.step(args.method);
+            },
+        });
+
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name='foo'] input").value,
+            "My little Foo Value"
+        );
+        await editInput(target, ".o_field_widget[name='foo'] input", "test");
+        assert.containsOnce(target, ".o_cp_action_menus .dropdown-toggle:contains(Action)");
+
+        await toggleActionMenu(target);
+        await toggleMenuItem(target, "Action Partner");
+
+        assert.verifySteps([
+            "get_views",
+            "onchange",
+            "create",
+            "read",
+            `{"action_id":29,"context":{"lang":"en","uid":7,"tz":"taht","active_id":6,"active_ids":[6],"active_model":"partner","active_domain":[]}}`,
+            "read",
+        ]);
+
+        assert.strictEqual(target.querySelector(".o_field_widget[name='foo'] input").value, "test");
+    });
+
     QUnit.test("control panel is not present in FormViewDialogs", async function (assert) {
         serverData.models.partner.records[0].product_id = 37;
         serverData.views = {
@@ -7838,7 +7898,11 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual($group4rows.length, 3, "there should be 3 rows in .group_4");
         var $group4firstRowTd = $group4rows.eq(0).children("div.o_cell");
         assert.strictEqual($group4firstRowTd.length, 1, "there should be 1 cell in first row");
-        assert.strictEqual($group4firstRowTd.attr("style").substr(0, 19), "grid-column: span 3", "the first cell column span should be 3");
+        assert.strictEqual(
+            $group4firstRowTd.attr("style").substr(0, 19),
+            "grid-column: span 3",
+            "the first cell column span should be 3"
+        );
         assert.strictEqual(
             $group4firstRowTd.attr("style").substr(0, 19),
             "grid-column: span 3",
@@ -7888,7 +7952,11 @@ QUnit.module("Views", (hooks) => {
         var $fieldGroupRows = $fieldGroup.find("> .o_wrap_field");
         assert.strictEqual($fieldGroupRows.length, 5, "there should be 5 rows in .o_wrap_field");
         var $fieldGroupFirstRowTds = $fieldGroupRows.eq(0).children(".o_cell");
-        assert.strictEqual($fieldGroupFirstRowTds.length, 2, "there should be 2 cells in first row");
+        assert.strictEqual(
+            $fieldGroupFirstRowTds.length,
+            2,
+            "there should be 2 cells in first row"
+        );
         assert.hasClass(
             $fieldGroupFirstRowTds.eq(0),
             "o_wrap_label",
@@ -7916,7 +7984,11 @@ QUnit.module("Views", (hooks) => {
             "second cell colspan should be default one (no style) and be 33.3333%"
         );
         var $fieldGroupThirdRowTds = $fieldGroupRows.eq(2).children(".o_cell"); // new row as label/field pair colspan is greater than remaining space
-        assert.strictEqual($fieldGroupThirdRowTds.length, 2, "there should be 2 cells in third row");
+        assert.strictEqual(
+            $fieldGroupThirdRowTds.length,
+            2,
+            "there should be 2 cells in third row"
+        );
         assert.hasClass(
             $fieldGroupThirdRowTds.eq(0),
             "o_wrap_label",
@@ -7928,14 +8000,22 @@ QUnit.module("Views", (hooks) => {
             "second cell colspan should be default one (no style) and be 50% width"
         );
         var $fieldGroupFourthRowTds = $fieldGroupRows.eq(3).children(".o_cell");
-        assert.strictEqual($fieldGroupFourthRowTds.length, 1, "there should be 1 cell in fourth row");
+        assert.strictEqual(
+            $fieldGroupFourthRowTds.length,
+            1,
+            "there should be 1 cell in fourth row"
+        );
         assert.strictEqual(
             $fieldGroupFourthRowTds.attr("style").substr(0, 30),
             "grid-column: span 3;width: 100",
             "the cell should have a colspan equal to 3 and have 100% width"
         );
         var $fieldGroupFifthRowTds = $fieldGroupRows.eq(4).children(".o_cell"); // label/field pair can be put after the 1-colspan span
-        assert.strictEqual($fieldGroupFifthRowTds.length, 3, "there should be 3 cells in fourth row");
+        assert.strictEqual(
+            $fieldGroupFifthRowTds.length,
+            3,
+            "there should be 3 cells in fourth row"
+        );
         assert.strictEqual(
             $fieldGroupFifthRowTds.eq(0).attr("style").substr(0, 9),
             "width: 50",
