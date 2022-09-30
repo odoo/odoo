@@ -20,7 +20,7 @@ import { KanbanCompiler } from "./kanban_compiler";
 import { KanbanCoverImageDialog } from "./kanban_cover_image_dialog";
 import { KanbanDropdownMenuWrapper } from "./kanban_dropdown_menu_wrapper";
 
-const { Component, onMounted, onWillUpdateProps, useRef, xml } = owl;
+const { Component, onMounted, onWillUpdateProps, useRef } = owl;
 const { COLORS } = ColorList;
 
 const formatters = registry.category("formatters");
@@ -405,13 +405,5 @@ KanbanRecord.props = [
     "record",
     "templates",
 ];
-KanbanRecord.template = xml`
-    <div
-        role="article"
-        t-att-class="getRecordClasses()"
-        t-att-data-id="props.canResequence and props.record.id"
-        t-att-tabindex="props.record.model.useSampleModel ? -1 : 0"
-        t-on-click="onGlobalClick"
-        t-ref="root">
-        <t t-call="{{ templates['${KANBAN_BOX_ATTRIBUTE}'] }}"/>
-    </div>`;
+KanbanRecord.KANBAN_BOX_ATTRIBUTE = KANBAN_BOX_ATTRIBUTE;
+KanbanRecord.template = "web.KanbanRecord";
