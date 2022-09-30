@@ -20,6 +20,7 @@ import warnings
 INTEGRITY_HASH_MOVE_FIELDS = ('date', 'journal_id', 'company_id')
 INTEGRITY_HASH_LINE_FIELDS = ('debit', 'credit', 'account_id', 'partner_id')
 
+LIMIT_OUTSTANDING_PAYMENTS = 1000
 
 def calc_check_digits(number):
     """Calculate the extra digits that should be appended to the number to make it a valid number.
@@ -1580,7 +1581,11 @@ class AccountMove(models.Model):
                 domain.append(('balance', '>', 0.0))
                 payments_widget_vals['title'] = _('Outstanding debits')
 
-            for line in self.env['account.move.line'].search(domain):
+            lines = self.env['account.move.line'].search(domain, limit=LIMIT_OUTSTANDING_PAYMENTS)
+            if len(lines) == LIMIT_OUTSTANDING_PAYMENTS:
+                payments_widget_vals['title'] += _(' (only first %s are displayed)', LIMIT_OUTSTANDING_PAYMENTS)
+
+            for line in lines:
 
                 if line.currency_id == move.currency_id:
                     # Same foreign currency.
