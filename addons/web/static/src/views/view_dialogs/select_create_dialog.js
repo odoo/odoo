@@ -69,21 +69,23 @@ export class SelectCreateDialog extends Component {
 }
 SelectCreateDialog.components = { Dialog, View };
 SelectCreateDialog.template = "web.SelectCreateDialog";
-
+SelectCreateDialog.props = {
+    context: { type: Object, optional: true },
+    domain: { type: Array, optional: true },
+    dynamicFilters: { type: Array, optional: true },
+    resModel: String,
+    searchViewId: { type: [Number, { value: false }], optional: true },
+    multiSelect: { type: Boolean, optional: true },
+    onSelected: { type: Function, optional: true },
+    close: { type: Function, optional: true },
+    onCreateEdit: { type: Function, optional: true },
+    title: { type: String, optional: true },
+    noCreate: { type: Boolean, optional: true },
+};
 SelectCreateDialog.defaultProps = {
     dynamicFilters: [],
     multiSelect: true,
     searchViewId: false,
-    type: "list",
+    domain: [],
+    context: {},
 };
-
-/**
- * Props: (to complete)
- *
- * resModel
- * domain
- * context
- * title
- * onSelected
- * type
- */

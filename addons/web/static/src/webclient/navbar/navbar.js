@@ -202,3 +202,4 @@ export class NavBar extends Component {
 }
 NavBar.template = "web.NavBar";
 NavBar.components = { Dropdown, DropdownItem, MenuDropdown, ErrorHandler };
+NavBar.props = {};

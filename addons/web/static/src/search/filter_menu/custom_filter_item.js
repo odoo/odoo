@@ -317,5 +317,6 @@ export class CustomFilterItem extends Component {
     }
 }
 
+CustomFilterItem.props = {};
 CustomFilterItem.components = { DatePicker, DateTimePicker, Dropdown };
 CustomFilterItem.template = "web.CustomFilterItem";

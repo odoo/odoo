@@ -79,5 +79,12 @@ export class KanbanRecordQuickCreate extends Component {
         this.state.disabled = false;
     }
 }
+KanbanRecordQuickCreate.props = {
+    onCancel: Function,
+    onValidate: Function,
+    listIsGrouped: Boolean,
+    record: Object,
+    archInfo: Object,
+};
 KanbanRecordQuickCreate.template = "web.KanbanRecordQuickCreate";
 KanbanRecordQuickCreate.components = { FormRenderer };
