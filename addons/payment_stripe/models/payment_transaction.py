@@ -35,7 +35,7 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'stripe' or self.operation == 'online_token':
             return res
 
-        if self.operation == 'online_redirect':
+        if self.operation in ['online_redirect', 'validation']:
             checkout_session = self._stripe_create_checkout_session()
             return {
                 'publishable_key': stripe_utils.get_publishable_key(self.provider_id),
