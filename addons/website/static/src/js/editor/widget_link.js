@@ -6,7 +6,6 @@ var wUtils = require('website.utils');
 
 weWidgets.LinkTools.include({
     events: _.extend({}, weWidgets.LinkTools.prototype.events || {}, {
-        'click we-selection-items[name="link_anchor"] we-button': '_onAnchorChange',
         'input input[name="url"]': '_onURLInput',
     }),
     custom_events: _.extend({}, weWidgets.LinkTools.prototype.custom_events || {}, {
@@ -83,23 +82,27 @@ weWidgets.LinkTools.include({
         this._onURLInput();
     },
     /**
-     * @private
-     */
-    _onAnchorChange: function () {
-        const anchorValue = this.$('[name="link_anchor"] we-button.active').data('value');
-        const $urlInput = this.$('[name="url"]');
-        let urlInputValue = $urlInput.val();
-        if (urlInputValue.indexOf('#') > -1) {
-            urlInputValue = urlInputValue.substr(0, urlInputValue.indexOf('#'));
-        }
-        $urlInput.val(urlInputValue + anchorValue);
-    },
-    /**
      * @override
      */
     _onURLInput: function () {
         this._super.apply(this, arguments);
         this._adaptPageAnchor();
+    },
+    /**
+     * @override
+     * @param {Event} ev
+     */
+    _onPickSelectOption(ev) {
+        if (ev.currentTarget.closest('[name="link_anchor"]')) {
+            const anchorValue = $(ev.currentTarget).data('value');
+            const $urlInput = this.$('[name="url"]');
+            let urlInputValue = $urlInput.val();
+            if (urlInputValue.indexOf('#') > -1) {
+                urlInputValue = urlInputValue.substr(0, urlInputValue.indexOf('#'));
+            }
+            $urlInput.val(urlInputValue + anchorValue);
+        }
+        this._super(...arguments);
     },
 });
 });
