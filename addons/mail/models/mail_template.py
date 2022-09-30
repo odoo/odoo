@@ -282,6 +282,7 @@ class MailTemplate(models.Model):
         self.ensure_one()
         if render_results is None:
             render_results = {}
+        records_sudo = None
 
         # if using default recipients -> ``_message_get_default_recipients`` gives
         # values for email_to, email_cc and partner_ids
@@ -297,35 +298,60 @@ class MailTemplate(models.Model):
                 for res_id in res_ids:
                     render_results.setdefault(res_id, {})[field] = generated_field_values[res_id]
 
-        records_company = None
+        # classify records per company for partner fetch/creation
         if find_or_create_partners and self.model and 'company_id' in self.env[self.model]._fields:
-            records_dict = self.env[self.model].browse(res_ids).sudo().read(['company_id'])
-            records_company = {
-                rec['id']: rec['company_id'][0] if rec['company_id'] else False
-                for rec in records_dict
-            }
+            if not records_sudo:
+                records_sudo = self.env[self.model].browse(res_ids).sudo()
+            records_per_company = {}
+            for read_record in records_sudo.read(['company_id']):
+                company_id = read_record['company_id'][0] if read_record['company_id'] else False
+                records_per_company.setdefault(company_id, []).append(read_record['id'])
+        else:
+            records_per_company = {False: res_ids}
 
-        # consolidate partner_ids: based on partner_to + create partners if requested
-        for res_id in res_ids:
-            record_values = render_results[res_id]
+        # create partners from emails if asked to
+        if find_or_create_partners:
+            for company_id, record_ids in records_per_company.items():
+                all_emails = []
+                email_to_res_ids = {}
+                for res_id in record_ids:
+                    record_values = render_results.setdefault(res_id, {})
+                    mails = tools.email_split(record_values.pop('email_to', '')) + \
+                            tools.email_split(record_values.pop('email_cc', ''))
+                    all_emails += mails
+                    for mail in mails:
+                        email_to_res_ids.setdefault(mail, []).append(res_id)
 
-            partner_ids = record_values.get('partner_ids', [])
-            if find_or_create_partners:
-                mails = tools.email_split(record_values.pop('email_to', '')) + tools.email_split(record_values.pop('email_cc', ''))
-                Partner = self.env['res.partner']
-                if records_company:
-                    Partner = Partner.with_context(default_company_id=records_company[res_id])
-                for mail in mails:
-                    partner = Partner.find_or_create(mail)
-                    partner_ids.append(partner.id)
+                if not all_emails:
+                    continue
+                additional_values = {}
+                if company_id:
+                    additional_values['company_id'] = company_id
+                partners = self.env['res.partner']._find_or_create_from_emails(
+                    all_emails,
+                    additional_values=additional_values
+                )
+                for original_email, partner in zip(all_emails, partners):
+                    if not partner:
+                        continue
+                    for res_id in email_to_res_ids[original_email]:
+                        render_results[res_id].setdefault('partner_ids', []).append(partner.id)
 
+        # update 'partner_to' rendered value to 'partner_ids'
+        all_partner_to = {
+            int(pid)
+            for record_values in render_results.values()
+            for pid in record_values.get('partner_to', '').split(',')
+            if pid and pid.strip()
+        }
+        existing_pids = set()
+        if all_partner_to:
+            existing_pids = set(self.env['res.partner'].sudo().browse(list(all_partner_to)).exists().ids)
+        for res_id, record_values in render_results.items():
             partner_to = record_values.pop('partner_to', '')
             if partner_to:
-                # placeholders could generate '', 3, 2 due to some empty field values
-                tpl_partner_ids = [int(pid) for pid in partner_to.split(',') if pid]
-                partner_ids += self.env['res.partner'].sudo().browse(tpl_partner_ids).exists().ids
-
-            record_values['partner_ids'] = partner_ids
+                tpl_partner_ids = set(int(pid) for pid in partner_to.split(',') if pid) & existing_pids
+                record_values.setdefault('partner_ids', []).extend(tpl_partner_ids)
 
         return render_results
 
