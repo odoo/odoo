@@ -95,36 +95,17 @@ options.registry.mass_mailing_sizing_x = options.Class.extend({
 
 // Adding compatibility for the outlook compliance of mailings.
 // Commit of such compatibility : a14f89c8663c9cafecb1cc26918055e023ecbe42
-options.registry.BackgroundImage = options.registry.BackgroundImage.extend({
+options.registry.MassMailingBackgroundImage = options.registry.BackgroundImage.extend({
     start: function () {
         this._super();
-        if (this.snippets && this.snippets.split('.')[0] === "mass_mailing") {
-            var $table_target = this.$target.find('table:first');
-            if ($table_target.length) {
-                this.$target = $table_target;
-            }
+        const $table_target = this.$target.find('table:first');
+        if ($table_target.length) {
+            this.$target = $table_target;
         }
     }
 });
 
-options.registry.ImageTools.include({
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    async updateUIVisibility() {
-        await this._super(...arguments);
-
-        // Transform is _very_ badly supported in mail clients. Hide the option.
-        const transformEl = this.el.querySelector('[data-transform="true"]');
-        if (transformEl) {
-            transformEl.classList.toggle('d-none', true);
-        }
-    },
+options.registry.MassMailingImageTools = options.registry.ImageTools.extend({
 
     //--------------------------------------------------------------------------
     // Private
@@ -138,14 +119,11 @@ options.registry.ImageTools.include({
             return color;
         }
         const doc = this.options.document;
-        if (doc && doc.querySelector('.o_mass_mailing_iframe') && !ColorpickerWidget.isCSSColor(color)) {
-            const tempEl = doc.body.appendChild(doc.createElement('div'));
-            tempEl.className = `bg-${color}`;
-            const colorValue = window.getComputedStyle(tempEl).getPropertyValue("background-color").trim();
-            tempEl.parentNode.removeChild(tempEl);
-            return ColorpickerWidget.normalizeCSSColor(colorValue).replace(/"/g, "'");
-        }
-        return this._super(...arguments);
+        const tempEl = doc.body.appendChild(doc.createElement('div'));
+        tempEl.className = `bg-${color}`;
+        const colorValue = window.getComputedStyle(tempEl).getPropertyValue("background-color").trim();
+        tempEl.parentNode.removeChild(tempEl);
+        return ColorpickerWidget.normalizeCSSColor(colorValue).replace(/"/g, "'");
     },
 });
 
@@ -399,21 +377,6 @@ options.registry.DesignTab = options.Class.extend({
      */
     _getRule(selectorText) {
         return [...(this.styleSheet.cssRules || this.styleSheet.rules)].find(rule => rule.selectorText === selectorText);
-    },
-});
-
-options.registry.Parallax = options.Class.extend({
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    async _computeWidgetVisibility(widgetName, params) {
-        // Parallax is not supported in emails.
-        return false;
     },
 });
 
