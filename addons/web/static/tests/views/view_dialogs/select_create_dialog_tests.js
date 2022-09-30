@@ -475,4 +475,41 @@ QUnit.module("ViewDialogs", (hooks) => {
             await click(target, ".modal .o_select_button");
         }
     );
+
+    QUnit.test("SelectCreateDialog: default props, create a record", async function (assert) {
+        serverData.views = {
+            "partner,false,list": `<tree><field name="display_name"/></tree>`,
+            "partner,false,search": `
+                <search>
+                    <filter name="bar" help="Bar" domain="[('bar', '=', True)]"/>
+                </search>`,
+            "partner,false,form": `<form><field name="display_name"/></form>`,
+        };
+
+        const webClient = await createWebClient({ serverData });
+
+        webClient.env.services.dialog.add(SelectCreateDialog, {
+            onSelected: (resIds) => assert.step(`onSelected ${resIds}`),
+            resModel: "partner",
+        });
+        await nextTick();
+
+        assert.containsOnce(target, ".o_dialog");
+        assert.containsN(target, ".o_dialog .o_list_view .o_data_row", 3);
+        assert.containsN(target, ".o_dialog footer button", 3);
+        assert.containsOnce(target, ".o_dialog footer button.o_select_button");
+        assert.containsOnce(target, ".o_dialog footer button.o_create_button");
+        assert.containsOnce(target, ".o_dialog footer button.o_form_button_cancel");
+
+        await click(target.querySelector(".o_dialog footer button.o_create_button"));
+
+        assert.containsN(target, ".o_dialog", 2);
+        assert.containsOnce(target, ".o_dialog .o_form_view");
+
+        await editInput(target, ".o_dialog .o_form_view .o_field_widget input", "hello");
+        await click(target.querySelector(".o_dialog .o_form_button_save"));
+
+        assert.containsNone(target, ".o_dialog");
+        assert.verifySteps(["onSelected 4"]);
+    });
 });
