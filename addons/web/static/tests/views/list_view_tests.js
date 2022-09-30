@@ -15204,4 +15204,36 @@ QUnit.module("Views", (hooks) => {
             "Groups should contains correct records"
         );
     });
+
+    QUnit.test("sort on a non sortable field with allow_order option", async function (assert) {
+        serverData.models.foo.records = [{ bar: true }, { bar: false }, { bar: true }];
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <list>
+                    <field name="bar" options="{ 'allow_order': true }"/>
+                </list>
+            `,
+        });
+
+        assert.deepEqual(
+            [...target.querySelectorAll("[name=bar] input")].map((el) => el.checked),
+            [true, false, true]
+        );
+        assert.hasClass(target.querySelectorAll("th[data-name=bar]"), "o_column_sortable");
+        assert.doesNotHaveClass(target.querySelectorAll("th[data-name=bar]"), "table-active");
+
+        await click(target, "th[data-name=bar]");
+
+        assert.deepEqual(
+            [...target.querySelectorAll("[name=bar] input")].map((el) => el.checked),
+            [false, true, true]
+        );
+        assert.hasClass(target.querySelectorAll("th[data-name=bar]"), "o_column_sortable");
+        assert.hasClass(target.querySelectorAll("th[data-name=bar]"), "table-active");
+        assert.hasClass(target.querySelectorAll("th[data-name=bar] i"), "fa-angle-up");
+    });
 });
