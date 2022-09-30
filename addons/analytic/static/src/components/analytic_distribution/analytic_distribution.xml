@@ -52,7 +52,7 @@
                             <th class="o_analytic_account_name">
                                 <t t-esc="plan.name"/>
                                 <t t-if="plan.account_count === 0"> (no accounts)</t>
-                                <span t-attf-class="o_status d-inline-block o_analytic_status_{{groupStatus(plan.id)}}" t-att-title="applicabilityStatus(plan.id) + ' ' + formatPercentage(sumByGroup(plan.id))"/>
+                                <span t-if="plan.applicability === 'mandatory'" t-attf-class="o_status d-inline-block o_analytic_status_{{groupStatus(plan.id)}}" t-att-title="statusDescription(plan.id)"/>
                             </th>
                         </tr>
                         <t t-foreach="plan.distribution" t-as="dist_tag" t-key="dist_tag.id">

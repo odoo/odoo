@@ -144,7 +144,7 @@ QUnit.module("Analytic", (hooks) => {
         const input = document.activeElement;
         await editInput(input, null, "19");
 
-        assert.containsOnce(planTable, '.o_analytic_status_orange', "Mandatory plan has incomplete status");
+        assert.containsOnce(planTable, '.o_analytic_status_editing', "Mandatory plan has incomplete status");
 
         let incompleteInputName = planTable.querySelector('tr.incomplete .o_analytic_account_name input');
         assert.strictEqual(document.activeElement, incompleteInputName,
