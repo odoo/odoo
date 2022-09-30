@@ -589,6 +589,7 @@ export class OdooEditor extends EventTarget {
         this.addDomListener(this.editable, 'paste', this._onPaste);
         this.addDomListener(this.editable, 'drop', this._onDrop);
 
+        this.addDomListener(this.document, 'copy', this._onClipboardCopy);
         this.addDomListener(this.document, 'selectionchange', this._onSelectionChange);
         this.addDomListener(this.document, 'selectionchange', this._handleCommandHint);
         this.addDomListener(this.document, 'keydown', this._onDocumentKeydown);
@@ -3081,6 +3082,26 @@ export class OdooEditor extends EventTarget {
         }
     }
 
+    _onClipboardCopy(clipboardEvent) {
+        if (this.isSelectionInEditable()) {
+            clipboardEvent.preventDefault();
+            const selection = this.document.getSelection();
+            const range = selection.getRangeAt(0);
+            const rangeContent = range.cloneContents();
+
+            const dataHtmlElement = document.createElement('data');
+            dataHtmlElement.append(rangeContent);
+            const odooHtml = dataHtmlElement.innerHTML;
+            const odooText = dataHtmlElement.innerText;
+            if (!clipboardEvent.clipboardData.getData('text/plain')) {
+                clipboardEvent.clipboardData.setData('text/plain', odooText);
+            }
+            if (!clipboardEvent.clipboardData.getData('text/html')) {
+                clipboardEvent.clipboardData.setData('text/html', odooHtml);
+            }
+            clipboardEvent.clipboardData.setData('text/odoo-editor', odooHtml);
+        }
+    }
     /**
      * @private
      */
@@ -3269,6 +3290,11 @@ export class OdooEditor extends EventTarget {
      */
     _onSelectionChange() {
         const selection = this.document.getSelection();
+        const anchorNode = selection.anchorNode;
+        if (anchorNode && closestElement(anchorNode, '.oe-blackbox')) {
+            return;
+        }
+
         if (
             !this.editable.contains(selection.anchorNode) &&
             !this.editable.contains(selection.focusNode)
@@ -3478,6 +3504,12 @@ export class OdooEditor extends EventTarget {
      * @private
      */
     _handleCommandHint() {
+        const selection = this.document.getSelection();
+        const anchorNode = selection.anchorNode;
+        if (anchorNode && closestElement(anchorNode, '.oe-blackbox')) {
+            return;
+        }
+
         const selectors = {
             BLOCKQUOTE: 'Empty quote',
             H1: 'Heading 1',
@@ -3546,12 +3578,16 @@ export class OdooEditor extends EventTarget {
     }
 
     _fixSelectionOnContenteditableFalse() {
+        const selection = this.document.getSelection();
+        const anchorNode = selection.anchorNode;
+        if (anchorNode && closestElement(anchorNode, '.oe-blackbox')) {
+            return;
+        }
         // When the browser set the selection inside a node that is
         // contenteditable=false, it breaks the edition upon keystroke. Move the
         // selection so that it remain in an editable area. An example of this
         // case happend when the selection goes into a fontawesome node.
 
-        const selection = this.document.getSelection();
         if (!selection.rangeCount) {
             return;
         }
@@ -3882,8 +3918,28 @@ export class OdooEditor extends EventTarget {
         ev.preventDefault();
         const sel = this.document.getSelection();
         const files = getImageFiles(ev.clipboardData);
+        const odooEditorHtml = ev.clipboardData.getData('text/odoo-editor');
         const clipboardHtml = ev.clipboardData.getData('text/html');
-        if (clipboardHtml) {
+        if (odooEditorHtml) {
+            const fragment = parseHTML(odooEditorHtml);
+
+            // DOMPurify.sanitize remove an attribute that contains a ">" for
+            // security reasons. Make an exception for `data-behavior-props`.
+            // Encoding it hides the character ">".
+            for (const el of fragment.querySelectorAll('[data-behavior-props]')) {
+                el.setAttribute('data-behavior-props', encodeURIComponent(el.getAttribute('data-behavior-props')));
+            }
+
+            DOMPurify.sanitize(fragment, { IN_PLACE: true });
+
+            for (const el of fragment.querySelectorAll('[data-behavior-props]')) {
+                el.setAttribute('data-behavior-props', decodeURIComponent(el.getAttribute('data-behavior-props')));
+            }
+
+            if (fragment.hasChildNodes()) {
+                this.execCommand('insert', fragment);
+            }
+        } else if (clipboardHtml) {
             this.execCommand('insert', this._prepareClipboardData(clipboardHtml));
         } else if (files.length) {
             this.addImagesFiles(files);
