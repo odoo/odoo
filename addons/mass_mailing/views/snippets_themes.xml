@@ -293,7 +293,31 @@
             t-att-data-variable="radius_variable"/>
 </template>
 
+<template id="snippet_options_background_options" inherit_id="web_editor.snippet_options_background_options" primary="True">
+    <xpath expr="//div[@data-js='BackgroundImage']" position="attributes">
+        <attribute name="data-js">MassMailingBackgroundImage</attribute>
+    </xpath>
+</template>
+
 <template id="snippet_options_extra_shapes" inherit_id="web_editor.snippet_options">
+    <div><!-- TODO remove me in 16.0 post-backport --></div>
+</template>
+
+<template id="snippet_options_image_styles" inherit_id="web_editor.snippet_options">
+    <div><!-- TODO remove me in 16.0 post-backport --></div>
+</template>
+
+<!-- Mass Mailing Snippet Options -->
+<template id="snippet_options" inherit_id="web_editor.snippet_options" primary="True">
+    <!-- =================================================================== -->
+    <!-- Modify generic snippet options                                      -->
+    <!-- =================================================================== -->
+
+    <xpath expr="//t[@t-set='no_animations']" position="attributes">
+        <attribute name="t-value">True</attribute>
+    </xpath>
+
+    <!-- Extra shapes -->
     <xpath expr="//div[hasclass('o_we_image_shape')]//we-select-page[hasclass('o_we_basic_shapes')]" position="inside">
         <we-button data-set-img-shape="mass_mailing/basic/circle" data-select-label="Circle"/>
         <we-button data-set-img-shape="mass_mailing/basic/triangle" data-select-label="Triangle"/>
@@ -302,9 +326,11 @@
     <xpath expr="//div[hasclass('o_we_image_shape')]//we-select-page[hasclass('o_we_basic_shapes')]" position="attributes">
         <attribute name="t-if">True</attribute>
     </xpath>
-</template>
 
-<template id="snippet_options_image_styles" inherit_id="web_editor.snippet_options">
+    <!-- Image styles -->
+    <!-- TODO review to only modify what's really necessary and potentially -->
+    <!-- make the changes in web_editor directly so that website can benefit -->
+    <!-- from it. -->
     <xpath expr="//div[hasclass('o_we_image_options')]" position="replace">
         <div data-selector="span.fa, i.fa, img">
             <we-select string="Alignment" data-state-to-first-class="true">
@@ -333,12 +359,19 @@
             </we-row>
         </div>
     </xpath>
-</template>
-<!-- Snippet themes Options -->
-<template id="snippet_options">
-    <t t-set="no_animations" t-value="True"/>
-    <t t-call="mass_mailing.snippet_options_extra_shapes"/>
-    <t t-out="0"/>
+
+    <!-- Transform is _very_ badly supported in mail clients -->
+    <xpath expr="//we-button[@data-name='image_transform_opt']" position="replace" />
+
+    <xpath expr="//div[@data-js='ImageTools']" position="attributes">
+        <attribute name="data-js">MassMailingImageTools</attribute>
+    </xpath>
+
+    <!-- =================================================================== -->
+    <!-- Adding mass_mailing specific snippet options                        -->
+    <!-- =================================================================== -->
+
+    <xpath expr="." position="inside">
 
     <!-- Border | Columns -->
     <div data-js="Box"
@@ -471,7 +504,7 @@
     </div>
 
     <!-- Allow changing background images in Masonry and Cover -->
-    <t t-call="web_editor.snippet_options_background_options">
+    <t t-call="mass_mailing.snippet_options_background_options">
         <t t-set="selector" t-value="'.s_masonry_block .row > div, .s_cover .oe_img_bg'"/>
         <t t-set="with_images" t-value="True"/>
         <t t-set="with_videos" t-value="false"/>
@@ -793,5 +826,8 @@
             <we-button data-customize-css-property="100%">100%</we-button>
         </we-select>
     </div>
+
+    </xpath>
 </template>
+
 </odoo>
