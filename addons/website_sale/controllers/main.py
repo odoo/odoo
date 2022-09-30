@@ -1000,6 +1000,7 @@ class WebsiteSale(http.Controller):
     # ------------------------------------------------------
 
     def _get_shop_payment_values(self, order, **kwargs):
+<<<<<<< HEAD
         logged_in = not request.env.user._is_public()
         acquirers_sudo = request.env['payment.acquirer'].sudo()._get_compatible_acquirers(
             order.company_id.id,
@@ -1040,6 +1041,69 @@ class WebsiteSale(http.Controller):
             'transaction_route': f'/shop/payment/transaction/{order.id}',
             'landing_route': '/shop/payment/validate',
         }
+||||||| parent of a5896ba6a928... temp
+        values = dict(
+            website_sale_order=order,
+            errors=[],
+            partner=order.partner_id.id,
+            order=order,
+            payment_action_id=request.env.ref('payment.action_payment_acquirer').id,
+            return_url= '/shop/payment/validate',
+            bootstrap_formatting= True
+        )
+
+        domain = expression.AND([
+            ['&', ('state', 'in', ['enabled', 'test']), ('company_id', '=', order.company_id.id)],
+            ['|', ('website_id', '=', False), ('website_id', '=', request.website.id)],
+            ['|', ('country_ids', '=', False), ('country_ids', 'in', [order.partner_id.country_id.id])]
+        ])
+        acquirers = request.env['payment.acquirer'].search(domain)
+
+        values['access_token'] = order.access_token
+        values['acquirers'] = [acq for acq in acquirers if (acq.payment_flow == 'form' and acq.view_template_id) or
+                                    (acq.payment_flow == 's2s' and acq.registration_view_template_id)]
+        values['tokens'] = request.env['payment.token'].search([
+            ('acquirer_id', 'in', acquirers.ids),
+            ('partner_id', 'child_of', order.partner_id.commercial_partner_id.id)])
+
+        if order:
+            values['acq_extra_fees'] = acquirers.get_acquirer_extra_fees(order.amount_total, order.currency_id, order.partner_id.country_id.id)
+        return values
+=======
+        values = dict(
+            website_sale_order=order,
+            errors=[],
+            partner=order.partner_id.id,
+            order=order,
+            payment_action_id=request.env.ref('payment.action_payment_acquirer').id,
+            return_url= '/shop/payment/validate',
+            bootstrap_formatting= True
+        )
+        if order.partner_id.company_id and order.partner_id.company_id.id != order.company_id.id:
+            values['errors'].append(
+                (_('Sorry, we are unable to find a Payment Method'),
+                 _('No payment method is available for your current order. '
+                   'Please contact us for more information.')))
+            return values
+
+        domain = expression.AND([
+            ['&', ('state', 'in', ['enabled', 'test']), ('company_id', '=', order.company_id.id)],
+            ['|', ('website_id', '=', False), ('website_id', '=', request.website.id)],
+            ['|', ('country_ids', '=', False), ('country_ids', 'in', [order.partner_id.country_id.id])]
+        ])
+        acquirers = request.env['payment.acquirer'].search(domain)
+
+        values['access_token'] = order.access_token
+        values['acquirers'] = [acq for acq in acquirers if (acq.payment_flow == 'form' and acq.view_template_id) or
+                                    (acq.payment_flow == 's2s' and acq.registration_view_template_id)]
+        values['tokens'] = request.env['payment.token'].search([
+            ('acquirer_id', 'in', acquirers.ids),
+            ('partner_id', 'child_of', order.partner_id.commercial_partner_id.id)])
+
+        if order:
+            values['acq_extra_fees'] = acquirers.get_acquirer_extra_fees(order.amount_total, order.currency_id, order.partner_id.country_id.id)
+        return values
+>>>>>>> a5896ba6a928... temp
 
     @http.route('/shop/payment', type='http', auth='public', website=True, sitemap=False)
     def shop_payment(self, **post):
