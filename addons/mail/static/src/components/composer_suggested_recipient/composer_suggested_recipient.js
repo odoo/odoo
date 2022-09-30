@@ -3,9 +3,8 @@
 import { useUpdate } from '@mail/component_hooks/use_update';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-import { FormViewDialog } from 'web.view_dialogs';
-import { standaloneAdapter } from 'web.OwlCompatibility';
-import session from 'web.session';
+import { useService } from "@web/core/utils/hooks";
+import { FormViewDialog } from '@web/views/view_dialogs/form_view_dialog';
 
 const { Component, useRef } = owl;
 
@@ -24,6 +23,7 @@ export class ComposerSuggestedRecipient extends Component {
          * prompt the user with the partner creation dialog.
          */
         this._checkboxRef = useRef('checkbox');
+        this.dialogService = useService("dialog");
     }
 
     //--------------------------------------------------------------------------
@@ -68,10 +68,8 @@ export class ComposerSuggestedRecipient extends Component {
             // recipient that does not have a partner, the partner creation form
             // should be opened.
             if (isChecked) {
-                const adapterParent = standaloneAdapter({ Component });
-                const selectCreateDialog = new FormViewDialog(adapterParent, {
+                this.dialogService.add(FormViewDialog, {
                     context: {
-                        ...session.user_context,
                         active_id: this.composerSuggestedRecipientView.suggestedRecipientInfo.thread.id,
                         active_model: 'mail.compose.message',
                         default_email: this.composerSuggestedRecipientView.suggestedRecipientInfo.email,
@@ -80,13 +78,10 @@ export class ComposerSuggestedRecipient extends Component {
                         force_email: true,
                         ref: 'compound_context',
                     },
-                    disable_multiple_selection: true,
-                    on_saved: this._onDialogSaved.bind(this),
-                    res_id: false,
-                    res_model: 'res.partner',
+                    onRecordSaved: () => this._onDialogSaved(),
+                    resModel: "res.partner",
                     title: this.composerSuggestedRecipientView.suggestedRecipientInfo.dialogText,
                 });
-                selectCreateDialog.open();
             }
         }
     }
