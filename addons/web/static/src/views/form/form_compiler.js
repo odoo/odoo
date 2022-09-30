@@ -226,7 +226,7 @@ export class FormCompiler extends ViewCompiler {
             ? `d-flex {{ uiService.size < ${SIZES.XXL} ? "flex-column" : "flex-nowrap h-100" }}`
             : "d-block";
         const stateClasses =
-            "{{ props.record.isVirtual or props.record.isDirty ? 'o_form_dirty' : 'o_form_saved' }}";
+            "{{ props.record.isDirty ? 'o_form_dirty' : !props.record.isVirtual ? 'o_form_saved' : '' }}";
         const form = createElement("div", {
             "t-att-class": "props.class",
             "t-attf-class": `{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} ${displayClasses} ${stateClasses}`,
