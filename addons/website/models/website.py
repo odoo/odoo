@@ -976,6 +976,9 @@ class Website(models.Model):
         if website_id:
             return self.browse(website_id)
 
+        if not request and not fallback:
+            return self.browse(False)
+
         # The format of `httprequest.host` is `domain:port`
         domain_name = request and request.httprequest.host or ''
 
