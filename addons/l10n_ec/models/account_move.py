@@ -48,7 +48,7 @@ _DOCUMENTS_MAPPING = {
     "04": [
         'ec_dt_04',
         'ec_dt_05',
-        'ec_dt_18',
+        'ec_dt_18',  # TODO 18
         'ec_dt_41',
         'ec_dt_44',
         'ec_dt_47',
@@ -65,7 +65,7 @@ _DOCUMENTS_MAPPING = {
     "05": [
         'ec_dt_04',
         'ec_dt_05',
-        'ec_dt_18',
+        'ec_dt_18',  # TODO 18
         'ec_dt_41',
         'ec_dt_44',
         'ec_dt_47',
@@ -78,7 +78,7 @@ _DOCUMENTS_MAPPING = {
     "06": [
         'ec_dt_04',
         'ec_dt_05',
-        'ec_dt_18',
+        'ec_dt_18',  # TODO 18
         'ec_dt_41',
         'ec_dt_44',
         'ec_dt_47',
@@ -91,7 +91,7 @@ _DOCUMENTS_MAPPING = {
     "07": [
         'ec_dt_04',
         'ec_dt_05',
-        'ec_dt_18'
+        'ec_dt_18',  # TODO 18
     ],
     "09": [
         'ec_dt_01',
