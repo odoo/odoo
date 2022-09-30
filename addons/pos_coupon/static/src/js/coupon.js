@@ -1149,4 +1149,5 @@ odoo.define('pos_coupon.pos', function (require) {
         }
     }
     Registries.Model.extend(Orderline, PosCouponOrderline);
+    return {CouponCode, RewardsContainer, Reward};
 });
