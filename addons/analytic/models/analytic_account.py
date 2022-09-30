@@ -10,7 +10,7 @@ class AccountAnalyticAccount(models.Model):
     _name = 'account.analytic.account'
     _inherit = ['mail.thread']
     _description = 'Analytic Account'
-    _order = 'code, name asc'
+    _order = 'plan_id, name asc'
     _check_company_auto = True
     _rec_names_search = ['name', 'code', 'partner_id']
 
