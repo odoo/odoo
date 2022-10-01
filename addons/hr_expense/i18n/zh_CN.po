@@ -3,15 +3,15 @@
 # 	* hr_expense
 # 
 # Translators:
-# Martin Trigaux, 2022
 # keecome <7017511@qq.com>, 2022
+# Martin Trigaux, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:01+0000\n"
+"POT-Creation-Date: 2022-09-27 15:11+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
 "Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -263,6 +263,13 @@ msgstr "上传过程中发生错误"
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__account_id
 msgid "An expense account is expected"
 msgstr "预期费用账户"
+
+#. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/views/expense_form_view.js:0
+#, python-format
+msgid "An expense of same category, amount and date already exists."
+msgstr "已经存在一个相同类别、金额和日期的支出。"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -1046,7 +1053,7 @@ msgstr "内部说明"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__description
 msgid "Internal Notes"
-msgstr "内部备注"
+msgstr "内部说明"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0

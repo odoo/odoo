@@ -35,25 +35,25 @@ msgstr "# Enviado "
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "%(event_name)s (%(count)s seats remaining)"
-msgstr ""
+msgstr "%(event_name)s (%(count)s asientos restantes)"
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "%(event_name)s (Sold out)"
-msgstr ""
+msgstr "%(event_name)s (agotado)"
 
 #. module: event
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "%(ticket_name)s (%(count)s seats remaining)"
-msgstr ""
+msgstr "%(ticket_name)s (%(count)s asientos restantes)"
 
 #. module: event
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "%(ticket_name)s (Sold out)"
-msgstr ""
+msgstr "%(ticket_name)s (agotado)"
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
@@ -94,7 +94,7 @@ msgstr ""
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "- \"%(event_name)s\": Missing %(nb_too_many)i seats."
-msgstr ""
+msgstr "- \"%(event_name)s\": faltan %(nb_too_many)i asientos."
 
 #. module: event
 #: code:addons/event/models/event_ticket.py:0
@@ -103,6 +103,8 @@ msgid ""
 "- the ticket \"%(ticket_name)s\" (%(event_name)s): Missing %(nb_too_many)i "
 "seats."
 msgstr ""
+"- el boleto \"%(ticket_name)s\" (%(event_name)s): faltan %(nb_too_many)i "
+"asientos."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -155,6 +157,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-arrow-right me-2 o_event_fontsize_09\" title=\"End date\"/>"
 msgstr ""
+"<i class=\"fa fa-arrow-right me-2 o_event_fontsize_09\" title=\"Fecha de "
+"finalización\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -192,7 +196,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-map-marker mt-1 me-1\" title=\"Location\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-map-marker mt-1 me-1\" title=\"Ubicación\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -233,6 +237,9 @@ msgid ""
 "                                Registration statistics\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                Estadísticas de registro\n"
+"                            </span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -1205,7 +1212,7 @@ msgstr "Archivado"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_launched
 msgid "Are sales launched"
-msgstr ""
+msgstr "Se inció la venta"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_attachment_count
@@ -1676,7 +1683,7 @@ msgstr "Organización del evento"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_organizer_id
 msgid "Event Organizer"
-msgstr ""
+msgstr "Organizador del evento"
 
 #. module: event
 #: model:ir.model,name:event.model_event_registration
@@ -1689,7 +1696,7 @@ msgstr "Registro al evento"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_user_id
 msgid "Event Responsible"
-msgstr ""
+msgstr "Responsable del evento"
 
 #. module: event
 #: code:addons/event/models/event_mail.py:0
@@ -1788,6 +1795,9 @@ msgid ""
 "                usually based on the types of events you organize (e.g. \"Workshop\",\n"
 "                \"Roadshow\", \"Online Webinar\", etc)."
 msgstr ""
+"Las plantillas de evento combinan configuraciones que utiliza con frecuencia y normalmente\n"
+"                se basan en los tipos de eventos que organiza (por ejemplo, \"Taller\",\n"
+"                \"Roadshow\", \"Webinar\", etc)."
 
 #. module: event
 #: model:ir.model,name:event.model_event_event_ticket
@@ -1894,6 +1904,8 @@ msgid ""
 "Every year we invite our community, partners and end-users to come and meet us! It's the ideal event to get together and present new features, roadmap of future versions, achievements of the software, workshops, training sessions, etc...\n"
 "            This event is also an opportunity to showcase our partners' case studies, methodology or developments. Be there and see directly from the source the features of the new version!"
 msgstr ""
+"¡Cada año invitamos a nuestra comunidad, partners y usuarios finales a que vengan a conocernos! Es el evento ideal para reunirse y presentar nuevas funciones, planes para futuras versiones, logros del software, talleres, sesiones de capacitación, etc...\n"
+"            Este evento también es una oportunidad para mostrar los casos de estudio, metodologías y desarrollos de nuestros partners. ¡Asista y presencie las funciones de la nueva versión directamente desde la fuente!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -2099,7 +2111,7 @@ msgstr "Icono"
 #: code:addons/event/static/src/icon_selection_field/icon_selection_field.js:0
 #, python-format
 msgid "Icon Selection"
-msgstr ""
+msgstr "Selección de icono"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__activity_exception_icon
@@ -2581,7 +2593,7 @@ msgstr "Venta de boletos en línea"
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "Operation not supported."
-msgstr ""
+msgstr "Operación no permitida."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__organizer_id
@@ -2737,7 +2749,7 @@ msgstr "Registro abierto"
 #. module: event
 #: model:ir.actions.act_window,name:event.event_registration_action_stats_from_event
 msgid "Registration statistics"
-msgstr ""
+msgstr "Estadísticas de registro"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__registration_ids
@@ -3050,13 +3062,15 @@ msgid ""
 "The stop date cannot be earlier than the start date. Please check ticket "
 "%(ticket_name)s"
 msgstr ""
+"La fecha en la que se detiene no puede ser anterior a la fecha de inicio. "
+"Revise el boleto %(ticket_name)s"
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "There are not enough seats available for:"
-msgstr ""
+msgstr "No hay suficientes asientos disponibles para:"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__ticket_instructions
@@ -3305,12 +3319,12 @@ msgstr "Si el evento ha empezado"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__sale_available
 msgid "Whether it is possible to sell these tickets"
-msgstr ""
+msgstr "Si es posible vender estos boletos"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__is_sold_out
 msgid "Whether seats are not available for this ticket."
-msgstr ""
+msgstr "Si no hay asientos disponibles para este boleto."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form

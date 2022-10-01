@@ -35,12 +35,12 @@ msgstr "Peut être refacturé"
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_id
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense_split__sale_order_id
 msgid "Customer to Reinvoice"
-msgstr ""
+msgstr "Client à refacturer"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense
 msgid "Expense"
-msgstr "Dépense"
+msgstr "Note de frais"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_product_product__expense_policy_tooltip
@@ -70,6 +70,8 @@ msgstr "Notes de frais"
 #, python-format
 msgid "Expenses of this category may not be added to a Sales Order."
 msgstr ""
+"Les notes de frais de cette catégorie ne peuvent pas être ajoutées à un bon "
+"de commande."
 
 #. module: sale_expense
 #: code:addons/sale_expense/models/product_template.py:0
@@ -77,6 +79,8 @@ msgstr ""
 msgid ""
 "Expenses will be added to the Sales Order at their actual cost when posted."
 msgstr ""
+"Les notes de frais seront ajoutées au bon de commande à leur coût réel une "
+"fois qu'elles sont postées."
 
 #. module: sale_expense
 #: code:addons/sale_expense/models/product_template.py:0
@@ -85,6 +89,8 @@ msgid ""
 "Expenses will be added to the Sales Order at their sales price (product "
 "price, pricelist, etc.) when posted."
 msgstr ""
+"Les notes de frais seront ajoutées au bon de commande à leur prix de vente "
+"(prix du produit, liste de prix, etc.) une fois qu'elles sont postées."
 
 #. module: sale_expense
 #: model:ir.model.fields,help:sale_expense.field_hr_expense__sale_order_id
@@ -92,6 +98,8 @@ msgid ""
 "If the category has an expense policy, it will be reinvoiced on this sales "
 "order"
 msgstr ""
+"Si la catégorie a une politique concernant les notes de frais, celle-ci sera"
+" refacturée sur cette commande client"
 
 #. module: sale_expense
 #: model_terms:ir.ui.view,arch_db:sale_expense.product_product_view_form_inherit_sale_expense
@@ -112,7 +120,7 @@ msgstr "Article"
 #: code:addons/sale_expense/models/hr_expense_sheet.py:0
 #, python-format
 msgid "Reinvoiced Sales Orders"
-msgstr ""
+msgstr "Bons de commande refacturés"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense_sheet__sale_order_count

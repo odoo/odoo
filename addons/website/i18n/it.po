@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Sergio Zanchetta <primes2h@gmail.com>, 2022
-# Martin Trigaux, 2022
 # Friederike Fasterling-Nesselbosch, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:01+0000\n"
+"POT-Creation-Date: 2022-09-27 15:11+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -102,6 +102,13 @@ msgstr "9,00 €"
 #, python-format
 msgid "%s (id:%s)"
 msgstr "%s (ID:%s)"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/components/views/page_list.js:0
+#, python-format
+msgid "%s record(s) selected, are you sure you want to publish them all?"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -1657,7 +1664,7 @@ msgstr "Tutti i percorsi del sito web"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/components/views/page_list.js:0
+#: code:addons/website/static/src/components/views/page_views_mixin.js:0
 #: model_terms:ir.ui.view,arch_db:website.view_view_qweb
 #, python-format
 msgid "All Websites"
@@ -7007,6 +7014,7 @@ msgstr "Titolo pagina"
 #: model:ir.model.fields,field_description:website.field_website_page__url
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
+#: model_terms:ir.ui.view,arch_db:website.website_pages_tree_view
 msgid "Page URL"
 msgstr "URL pagina"
 
@@ -7377,9 +7385,19 @@ msgid "Public User"
 msgstr "Utente pubblico"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/components/views/page_list.js:0
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
+#, python-format
 msgid "Publish"
 msgstr "Pubblicata"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/components/views/page_list.js:0
+#, python-format
+msgid "Publish Website Content"
+msgstr ""
 
 #. module: website
 #: model:website.configurator.feature,description:website.feature_module_career
@@ -8565,6 +8583,13 @@ msgid "Switch Theme"
 msgstr "Cambia tema"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "System Fonts"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
 msgid "T-shirts"
 msgstr "Magliette"
@@ -9435,6 +9460,13 @@ msgstr "Potenza e supporto CRM illimitati"
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Unlimited customization"
 msgstr "Personalizzazione illimitata"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/components/views/page_list.js:0
+#, python-format
+msgid "Unpublish"
+msgstr "Non pubblicare"
 
 #. module: website
 #. openerp-web

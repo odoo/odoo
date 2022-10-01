@@ -1,19 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * web_unsplash
+# 	* web_unsplash
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Carles Antoli <carlesantoli@hotmail.com>, 2018
-# Manel Fernandez <manelfera@outlook.com>, 2018
+# Arnau Ros, 2022
+# jabelchi, 2022
+# Martin Trigaux, 2022
+# marcescu, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-08-24 09:33+0000\n"
-"Last-Translator: Manel Fernandez <manelfera@outlook.com>, 2018\n"
+"POT-Creation-Date: 2022-09-23 08:03+0000\n"
+"PO-Revision-Date: 2022-09-22 05:56+0000\n"
+"Last-Translator: marcescu, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,120 +25,169 @@ msgstr ""
 #. module: web_unsplash
 #: model_terms:ir.ui.view,arch_db:web_unsplash.res_config_settings_view_form
 msgid "<i class=\"fa fa-arrow-right\"/> Generate an Access Key"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> Genera una clau d'accés"
 
 #. module: web_unsplash
 #: model:ir.model.fields,field_description:web_unsplash.field_res_config_settings__unsplash_access_key
 msgid "Access Key"
-msgstr ""
+msgstr "Clau d'accés"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:36
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
 #, python-format
-msgid "Access key is not set"
-msgstr ""
+msgid "Application ID"
+msgstr "ID de l'aplicació"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:66
-#, python-format
-msgid "Add"
-msgstr "Afegir"
-
-#. module: web_unsplash
-#. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:44
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
 #, python-format
 msgid "Apply"
-msgstr "Aplicar"
+msgstr "Aplica"
 
 #. module: web_unsplash
 #: model:ir.model,name:web_unsplash.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Ajustos de configuració"
 
 #. module: web_unsplash
-#. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:40
+#: code:addons/web_unsplash/controllers/main.py:0
 #, python-format
-msgid "Generate an access key"
-msgstr ""
+msgid "ERROR: Unknown Unsplash URL!"
+msgstr "ERROR: ¡Un Enllaç de Unsplash desconeguda!"
+
+#. module: web_unsplash
+#: code:addons/web_unsplash/controllers/main.py:0
+#, python-format
+msgid "ERROR: Unknown Unsplash notify URL!"
+msgstr "ERROR: ¡El enllaç de notificació de Unsplash és desconeguda!"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:43
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:65
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
+#, python-format
+msgid "Get an Access key"
+msgstr "Obtenir una clau d'accés"
+
+#. module: web_unsplash
+#. openerp-web
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
 #, python-format
 msgid "Paste your access key here"
-msgstr ""
+msgstr "Enganxa la clau d'accés aquí"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:27
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
 #, python-format
-msgid "Photos not found"
-msgstr ""
+msgid "Paste your application ID here"
+msgstr "Enganxa l'ID de l'aplicació aquí"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:75
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
+#, python-format
+msgid "Photos (via Unsplash)"
+msgstr "Fotos (via Unsplash)"
+
+#. module: web_unsplash
+#. openerp-web
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
+#, python-format
+msgid "Please check your Unsplash access key and application ID."
+msgstr ""
+"Si us plau, comprova la teva clau d'accés a Unsplash i el ID de l'aplicació."
+
+#. module: web_unsplash
+#. openerp-web
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid "Please check your internet connection or contact administrator."
 msgstr ""
+"Si us plau, comprovi la seva connexió a Internet o posi's en contacte amb "
+"l'administrador."
+
+#. module: web_unsplash
+#: model:ir.model,name:web_unsplash.model_ir_qweb_field_image
+msgid "Qweb Field Image"
+msgstr "Camp d'imatge Qweb"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:61
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
-msgid "Please check your unsplash api key."
-msgstr ""
+msgid "Search is temporarily unavailable"
+msgstr "La cerca no està disponible temporalment"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:8
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
-msgid "Search from Unsplash"
-msgstr ""
+msgid "Setup Unsplash to access royalty free photos."
+msgstr "Configura Unsplash per a accedir a fotos lliures de drets."
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:50
-#, python-format
-msgid "Search is temporary unavailable"
-msgstr ""
-
-#. module: web_unsplash
-#. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:72
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid "Something went wrong"
-msgstr ""
+msgstr "Alguna cosa ha fallat"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:53
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid ""
 "The max number of searches is exceeded. Please retry in an hour or extend to"
 " a better account."
 msgstr ""
+"S'ha excedit el nombre màxim de cerques. Torneu-ho a provar en una hora o "
+"amplieu-ho a un compte millor."
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:58
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid "Unauthorized Key"
-msgstr ""
+msgstr "Clau no autoritzada"
+
+#. module: web_unsplash
+#. openerp-web
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
+#, python-format
+msgid "Uploading %s '%s' images."
+msgstr "S'està pujant %s '%s' imatges."
+
+#. module: web_unsplash
+#. openerp-web
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
+#, python-format
+msgid "Uploading '%s' image."
+msgstr "S'està pujant '%s' imatge."
 
 #. module: web_unsplash
 #: model:ir.model,name:web_unsplash.model_res_users
-msgid "Users"
-msgstr "Usuaris"
+msgid "User"
+msgstr "Usuari"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:7
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
 #, python-format
-msgid "— or —"
-msgstr "— o —"
+msgid "and paste"
+msgstr "i enganxar"
+
+#. module: web_unsplash
+#. openerp-web
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
+#, python-format
+msgid "and paste it here:"
+msgstr "i enganxar-ho aquí:"
+
+#. module: web_unsplash
+#. openerp-web
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
+#, python-format
+msgid "here:"
+msgstr "aquí:"

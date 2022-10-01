@@ -6,6 +6,7 @@
 # guohuadeng <guohuadeng@hotmail.com>, 2022
 # Martin Trigaux, 2022
 # keecome <7017511@qq.com>, 2022
+# Raymond Yu <cl_yu@hotmail.com>, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
@@ -3738,7 +3739,7 @@ msgstr "无效的EMail地址 %r"
 msgid ""
 "Invalid expression, it must be a literal python dictionary definition e.g. "
 "\"{'field': 'value'}\""
-msgstr "错误的表达式，必须是符合文法的python字典定义，例如： \"{'field': 'value'}\""
+msgstr "错误的表达式，必须是字面python字典定义，例如： \"{'field': 'value'}\""
 
 #. module: mail
 #: code:addons/mail/models/mail_thread_blacklist.py:0
@@ -4238,7 +4239,7 @@ msgstr "记录一个活动"
 #: code:addons/mail/static/src/models/composer.js:0
 #, python-format
 msgid "Log an internal note..."
-msgstr "记录内部备注..."
+msgstr "记录内部说明..."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__is_log
@@ -5331,7 +5332,7 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Only logged notes can have their content updated on model '%s'"
-msgstr "只有记录的笔记才能在模型“%s”上更新其内容"
+msgstr "只有记录的备注才能在模型“%s”上更新其内容"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -7336,7 +7337,7 @@ msgstr ""
 #: code:addons/mail/models/fetchmail.py:0
 #, python-format
 msgid "The server \"%s\" cannot be used because it is archived."
-msgstr ""
+msgstr "无法使用服务器“%s”，因为它已存档。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode__source
@@ -7664,6 +7665,15 @@ msgid ""
 "- 'Create Next Activity': create an activity (Discuss)\n"
 "- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
 msgstr ""
+"服务器操作的类型。 可以使用以下值：\n"
+"- “执行 Python 代码”：将执行的 Python 代码块\n"
+"- “创建新记录”：使用新值创建新记录\n"
+"- '更新记录'：更新记录的值\n"
+"- '执行几个动作'：定义一个触发其他几个服务器动作的动作\n"
+"- “发送电子邮件”：发布消息、注释或发送电子邮件（讨论）\n"
+"- “添加关注者”：将关注者添加到记录（讨论）\n"
+"- “创建下一个活动”：创建一个活动（讨论）\n"
+"- '发送 SMS 文本消息'：发送 SMS，将它们记录在文件（SMS）上"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_exception_decoration

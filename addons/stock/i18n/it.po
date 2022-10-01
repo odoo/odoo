@@ -3,16 +3,16 @@
 # 	* stock
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Friederike Fasterling-Nesselbosch, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:01+0000\n"
+"POT-Creation-Date: 2022-09-27 15:11+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1166,7 +1166,7 @@ msgstr "Automatico senza fase aggiunta"
 #. module: stock
 #. openerp-web
 #: code:addons/stock/models/stock_picking.py:0
-#: code:addons/stock/static/src/xml/forecast_widget.xml:0
+#: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__state__assigned
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__products_availability_state__available
 #, python-format
@@ -2801,7 +2801,7 @@ msgstr "Numeri di serie esistenti. Correggi i numeri di serie codificati:"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/forecast_widget.xml:0
+#: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #, python-format
 msgid "Exp"
 msgstr "Exp"
@@ -2968,7 +2968,7 @@ msgstr "Previste"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
+#: code:addons/stock/static/src/widgets/popover_widget.xml:0
 #, python-format
 msgid "Forecasted Date"
 msgstr "Data prevista"
@@ -3005,7 +3005,7 @@ msgstr "Ricezioni previste"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/forecast_widget.xml:0
+#: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #: model:ir.actions.client,name:stock.stock_replenishment_product_product_action
 #: model:ir.actions.report,name:stock.stock_replenishment_report_product_product_action
 #: model:ir.actions.report,name:stock.stock_replenishment_report_product_template_action
@@ -3867,6 +3867,13 @@ msgid "Json Lead Days"
 msgstr ""
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/widgets/popover_widget.js:0
+#, python-format
+msgid "Json Popup"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__json_replenishment_history
 msgid "Json Replenishment History"
 msgstr ""
@@ -4139,7 +4146,7 @@ msgstr "Tempo di risposta"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
+#: code:addons/stock/static/src/widgets/popover_widget.xml:0
 #, python-format
 msgid "Lead Times"
 msgstr ""
@@ -4756,6 +4763,12 @@ msgid "New Transfer"
 msgstr "Nuovo trasferimento"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_lot__activity_calendar_event_id
+#: model:ir.model.fields,field_description:stock.field_stock_picking__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Prossimo evento del calendario delle attività"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_date_deadline
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_date_deadline
 msgid "Next Activity Deadline"
@@ -4909,7 +4922,7 @@ msgstr "Normale"
 #. module: stock
 #. openerp-web
 #: code:addons/stock/models/stock_picking.py:0
-#: code:addons/stock/static/src/xml/forecast_widget.xml:0
+#: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 #, python-format
 msgid "Not Available"
@@ -5150,7 +5163,7 @@ msgstr "Opzioni"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
+#: code:addons/stock/static/src/views/stock_orderpoint_list_buttons.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.replenishment_option_warning_view
 #, python-format
 msgid "Order"
@@ -6870,7 +6883,7 @@ msgstr ""
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
+#: code:addons/stock/static/src/widgets/popover_widget.xml:0
 #, python-format
 msgid "Sales History"
 msgstr ""
@@ -7352,7 +7365,7 @@ msgstr "Dimensioni: Lunghezza × Larghezza × Altezza"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
+#: code:addons/stock/static/src/views/stock_orderpoint_list_buttons.xml:0
 #: model:ir.actions.act_window,name:stock.action_orderpoint_snooze
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_orderpoint_snooze
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
@@ -7879,7 +7892,7 @@ msgstr "Il primo della sequenza è quello predefinito."
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
+#: code:addons/stock/static/src/widgets/popover_widget.xml:0
 #, python-format
 msgid "The forecasted stock on the"
 msgstr "La giacenza prevista al"
@@ -8330,6 +8343,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_picking_tree_ready
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "To Do"
 msgstr "Da fare"
 
@@ -8353,7 +8367,7 @@ msgstr "Da riordinare"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
+#: code:addons/stock/static/src/widgets/popover_widget.xml:0
 #, python-format
 msgid "Today"
 msgstr "Oggi"
@@ -9702,7 +9716,7 @@ msgstr "]<br/>min:"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
+#: code:addons/stock/static/src/widgets/popover_widget.xml:0
 #, python-format
 msgid "below the inventory"
 msgstr ""
@@ -9780,7 +9794,7 @@ msgstr "in"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
+#: code:addons/stock/static/src/widgets/popover_widget.xml:0
 #, python-format
 msgid "is"
 msgstr "è"
@@ -9792,7 +9806,7 @@ msgstr "manualmente per attivare le regole di riordino adesso."
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
+#: code:addons/stock/static/src/widgets/popover_widget.xml:0
 #, python-format
 msgid "minimum of"
 msgstr "minimo di"
@@ -9821,7 +9835,7 @@ msgstr "report_stock_quantity_graph"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
+#: code:addons/stock/static/src/widgets/popover_widget.xml:0
 #, python-format
 msgid "should be replenished"
 msgstr "dovrebbe essere rifornito"
@@ -9835,7 +9849,7 @@ msgstr ""
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
+#: code:addons/stock/static/src/widgets/popover_widget.xml:0
 #, python-format
 msgid "to reach the maximum of"
 msgstr "per raggiungere il massimo di"

@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # Cécile Collart <cco@odoo.com>, 2022
+# Jolien De Paepe, 2022
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:01+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -271,7 +272,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "<span>into this one.</span>"
-msgstr ""
+msgstr "<span>en celle-ci.</span>"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_defaults
@@ -480,6 +481,8 @@ msgid ""
 "As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>\n"
 "                                        To work with the CRM, you should <a name=\"%d\" type=\"action\" tabindex=\"-1\">join a team.</a>"
 msgstr ""
+"Comme vous n'êtes pas membre d'une équipe commerciale, le pipeline de la <b>première équipe est affiché par défaut.</b>\n"
+"                                        Pour travailler avec le CRM, vous devriez <a name=\"%d\" type=\"action\" tabindex=\"-1\">rejoindre une équipe.</a>"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -488,6 +491,8 @@ msgid ""
 "As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>\n"
 "                                        To work with the CRM, you should join a team."
 msgstr ""
+"Comme vous n'êtes pas membre d'une équipe commerciale, le pipeline de la <b>première équipe est affiché par défaut.</b>\n"
+"                                        Pour travailler avec le CRM, vous devriez rejoindre une équipe."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -869,7 +874,7 @@ msgstr "Convertir la Piste en Opportunité (en masse)"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner
 msgid "Convert Lead to Opportunity (not in mass)"
-msgstr "Convertir la Piste en Opportunité (Pas en masse)"
+msgstr "Convertir la Piste en Opportunité (pas en masse)"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -1610,8 +1615,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
-"Si l'adresse email est sur la blacklist, le contact ne recevra plus de mass "
-"mailing d'aucune liste."
+"Si l'adresse email est sur la liste noire, le contact ne recevra plus "
+"d'envois de masse d'aucune liste."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__phone_sanitized_blacklisted
@@ -1619,8 +1624,8 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive"
 " mass mailing sms anymore, from any list"
 msgstr ""
-"Si le numéro de téléphone aseptisé est sur la blacklist, le contact ne "
-"recevra plus de campagnes de mail, d'aucunes listes."
+"Si le numéro de téléphone aseptisé est sur la liste noire, le contact ne "
+"recevra plus de SMS envoyés en masse d'aucune liste."
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_import_crm
@@ -1701,7 +1706,7 @@ msgstr "Est un abonné"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_partner_visible
 msgid "Is Partner Visible"
-msgstr ""
+msgstr "Est un partenaire visible"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__is_won
@@ -1741,7 +1746,7 @@ msgstr "KPI valeur d'une opportunité gagnée dans le CRM"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lang_active_count
 msgid "Lang Active Count"
-msgstr ""
+msgstr "Langue Compte actif"
 
 #. module: crm
 #: model:crm.lead.scoring.frequency.field,name:crm.frequency_field_lang_id
@@ -2105,7 +2110,7 @@ msgstr "Perdu"
 #: code:addons/crm/wizard/crm_lead_lost.py:0
 #, python-format
 msgid "Lost Comment"
-msgstr ""
+msgstr "Commentaire perdu"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_scoring_frequency__lost_count
@@ -2205,7 +2210,7 @@ msgstr "Medium:"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s"
-msgstr ""
+msgstr "Réunion prévue à '%s'<br> Objet : %s <br> Durée : %s"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.act_crm_opportunity_calendar_event_new
@@ -2847,12 +2852,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_pls_update__pls_fields
 msgid "Pls Fields"
-msgstr ""
+msgstr "Pls champs"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_pls_update__pls_start_date
 msgid "Pls Start Date"
-msgstr ""
+msgstr "Pls date de début"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_contact
@@ -3398,6 +3403,8 @@ msgid ""
 "The contacts below have been added as followers of this lead\n"
 "                        because they have been contacted less than 30 days ago on"
 msgstr ""
+"Les contacts ci-dessous ont été ajoutés comme abonnés de cette piste,\n"
+"                        parce qu'ils ont été contactés il y a moins de 30 jours le"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id
@@ -3518,8 +3525,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
 msgstr ""
-"Cette adresse email fait partie de la liste noire. Cliquez pour l'en "
-"retirer."
+"Cette adresse email fait partie de la liste noire pour les envois de masse. "
+"Cliquez pour l'en retirer."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__email_normalized
@@ -3564,8 +3571,8 @@ msgstr ""
 msgid ""
 "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
 msgstr ""
-"Ce numéro de téléphone est blacklisté pour le marketing par SMS. Cliquez "
-"pour le déblacklister."
+"Ce numéro de téléphone est blacklisté pour le SMS Marketing. Cliquez pour le"
+" déblacklister."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__fold

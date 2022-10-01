@@ -3,9 +3,10 @@
 # 	* mail
 # 
 # Translators:
-# Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # Martin Trigaux, 2022
 # Lucia Pacheco <lpo@odoo.com>, 2022
+# Braulio D. López Vázquez <bdl@odoo.com>, 2022
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-23 08:02+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2022\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2166,7 +2167,7 @@ msgstr "Fecha límite:"
 #: code:addons/mail/models/mail_activity.py:0
 #, python-format
 msgid "Deadline: %s"
-msgstr ""
+msgstr "Fecha límite: %s"
 
 #. module: mail
 #. openerp-web
@@ -7570,7 +7571,7 @@ msgstr ""
 #: code:addons/mail/models/fetchmail.py:0
 #, python-format
 msgid "The server \"%s\" cannot be used because it is archived."
-msgstr ""
+msgstr "El servidor \"%s\" no se puede usar porque está archivado."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode__source
@@ -7908,6 +7909,15 @@ msgid ""
 "- 'Create Next Activity': create an activity (Discuss)\n"
 "- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
 msgstr ""
+"Tipo de acción del servidor. Estos son los valores disponibles:\n"
+"- 'Ejecutar código Python': un bloque de código Python que se ejecutará\n"
+"- 'Crear un registro nuevo': crear un registro nuevo con valores nuevos\n"
+"- 'Actualizar registro': Actualizar los valores de un registro\n"
+"- 'Ejecutar varias acciones': definir una acción que active muchas otras acciones\n"
+"- 'Enviar correo electrónico': publicar un mensaje, una nota o enviar un correo (Conversaciones)\n"
+"- 'Agregar seguidores': agregar seguidores a un registro (Conversaciones)\n"
+"- 'Crear siguiente actividad': crear una actividad (Conversaciones)\n"
+"- 'Enviar mensaje SMS': enviar mensajes SMS y registrarlos en documentos (SMS)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_exception_decoration

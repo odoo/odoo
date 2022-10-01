@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# lonely落叶 <liu--qiong@hotmail.com>, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"POT-Creation-Date: 2022-09-27 15:11+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
 "Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -153,8 +154,8 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid ""
-"<span class=\"flex-shrink-0 ml8 me-2\">Minimum number of emails to sent "
-"</span>"
+"<span class=\"flex-shrink-0 ml8 me-2\">Minimum number of emails to "
+"send</span>"
 msgstr ""
 
 #. module: hr
@@ -353,6 +354,7 @@ msgid "Advanced presence of employees"
 msgstr "高级员工出席控制"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_crm_team__alias_contact
 #: model:ir.model.fields,field_description:hr.field_mail_alias__alias_contact
 msgid "Alias Contact Security"
 msgstr "安全联系人别名"
@@ -1660,6 +1662,11 @@ msgid "Nationality (Country)"
 msgstr "国籍(国家)"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "下一个活动日历事件"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "下一活动截止日期"
@@ -1694,7 +1701,7 @@ msgstr "笔记"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__notes
 msgid "Notes"
-msgstr "笔记"
+msgstr "备注"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_needaction_counter
@@ -1908,6 +1915,7 @@ msgid "Plans Count"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_crm_team__alias_contact
 #: model:ir.model.fields,help:hr.field_mail_alias__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
@@ -2431,7 +2439,7 @@ msgstr "%(employee)s的工作许可在%(date)s到期。"
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid "This employee already has an user."
-msgstr ""
+msgstr "这个员工已经有绑定用户。"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__tz
@@ -2463,7 +2471,7 @@ msgid ""
 "To avoid multi company issues (losing the access to your previous contracts,"
 " leaves, ...), you should create another employee in the new company "
 "instead."
-msgstr ""
+msgstr "为了避免多公司问题（无法访问以前的合同、休假等），您应该在新公司中创建另一名员工。"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_to_define
@@ -2628,7 +2636,7 @@ msgstr "工作地址"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__work_contact_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_contact_id
 msgid "Work Contact"
-msgstr ""
+msgstr "工作联系人"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_email

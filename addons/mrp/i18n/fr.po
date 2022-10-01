@@ -11,9 +11,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2022-09-27 15:11+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
@@ -376,7 +376,7 @@ msgstr "<strong>Article :</strong><br/>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Quantity Producing:</strong><br/>"
-msgstr ""
+msgstr "<strong>Quantité en production :</strong><br/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
@@ -577,6 +577,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allow_workorder_dependencies
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__allow_workorder_dependencies
 msgid "Allow Work Order Dependencies"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production__use_auto_consume_components_lots
+#: model:ir.model.fields,help:mrp.field_stock_picking_type__use_auto_consume_components_lots
+msgid "Allow automatic consumption of tracked components that are reserved"
 msgstr ""
 
 #. module: mrp
@@ -1292,6 +1298,12 @@ msgstr "Confirmé"
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "Consume"
 msgstr "Consommez"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__use_auto_consume_components_lots
+#: model:ir.model.fields,field_description:mrp.field_stock_picking_type__use_auto_consume_components_lots
+msgid "Consume Reserved Lots/Serial Numbers automatically"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning_line__product_consumed_qty_uom
@@ -3142,7 +3154,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:mrp.action_work_orders
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
 msgid "No work orders to do!"
-msgstr ""
+msgstr "Aucun ordre de fabrication !"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -3951,7 +3963,7 @@ msgstr "Quantité produite"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__qty_producing
 msgid "Quantity Producing"
-msgstr ""
+msgstr "Quantité en production"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_remaining
@@ -4599,7 +4611,7 @@ msgstr "Stock Rapport de Réception"
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_stock_report_product_product_replenishment
 msgid "Stock Replenishment Report"
-msgstr "Rapport de Réapprovisionnements de Stock"
+msgstr "Rapport de Réassorts de Stock"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_rule
@@ -4716,7 +4728,7 @@ msgstr ""
 #: code:addons/mrp/models/stock_orderpoint.py:0
 #, python-format
 msgid "The following replenishment order has been generated"
-msgstr "La commande de  réapprovisionnement suivante a été générée"
+msgstr "La commande de  réassort suivante a été générée"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__qty_produced

@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Eteil Jr., 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # Thomas Pot <thomas@open2bizz.nl>, 2022
 # Martin Trigaux, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0beta+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:01+0000\n"
+"POT-Creation-Date: 2022-09-30 10:54+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -274,6 +274,11 @@ msgstr "15 dagen"
 #: model:account.payment.term,name:account.account_payment_term_2months
 msgid "2 Months"
 msgstr "2 maanden"
+
+#. module: account
+#: model:account.payment.term,name:account.account_payment_term_30days_early_discount
+msgid "2/7 Net 30"
+msgstr ""
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_21days
@@ -1026,6 +1031,12 @@ msgstr "<span>5.00</span>"
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Amount</span>"
 msgstr "<span>Bedrag</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.bill_preview
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "<span>Amount In Currency</span>"
+msgstr "<span>Bedrag in valuta</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1898,6 +1909,11 @@ msgid "Accounts Mapping of Fiscal Position"
 msgstr "Boekhoudkundige mapping  - fiscale positie"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__account_prefix
+msgid "Accounts Prefix"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__account_id
 msgid "Accrual Account"
 msgstr "Overlopende rekening"
@@ -2214,11 +2230,6 @@ msgid ""
 "Adjusting Entry {link}: {percent:.2f}% of {amount} recognized from {date}"
 msgstr ""
 "Invoer aanpassen {link}: {percent:.2f}% van {amount} erkend vanaf {date}"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_tax_group__property_advance_tax_payment_account_id
-msgid "Advance Tax payment account"
-msgstr "Vooruitbetaalde BTW rekening"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_advance_tax_payment_account_id
@@ -6240,7 +6251,6 @@ msgstr "Grootboekrekening"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix
-#: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__account_prefix
 msgid "Financial Accounts Prefix"
 msgstr ""
 
@@ -7045,15 +7055,6 @@ msgid "If empty, uses the journal of the journal entry to be reversed."
 msgstr ""
 "Indien leeg wordt het dagboek gebruikt van de boeking die moet omgekeerd "
 "worden."
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_invoice_send__mass_mailing_name
-msgid ""
-"If set, a mass mailing will be created so that you can track its results in "
-"the Email Marketing app."
-msgstr ""
-"Indien ingesteld, wordt er een massamailing gemaakt, zodat je de resultaten "
-"ervan kunt volgen in de E-mailmarketing-app."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__include_base_amount
@@ -8830,11 +8831,6 @@ msgid "Mail Activity Type"
 msgstr "Mail activiteit soort"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_send__mailing_list_ids
-msgid "Mailing List"
-msgstr "Mailinglijst"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_main_attachment_id
 #: model:ir.model.fields,field_description:account.field_account_account_template__message_main_attachment_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_main_attachment_id
@@ -8957,21 +8953,6 @@ msgstr "Markeer als verzonden"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__payment_difference_handling__reconcile
 msgid "Mark as fully paid"
 msgstr "Markeer als volledig betaald"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_send__mass_mailing_id
-msgid "Mass Mailing"
-msgstr "Bulkmailing"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_send__campaign_id
-msgid "Mass Mailing Campaign"
-msgstr "Bulkmailing campagne"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_send__mass_mailing_name
-msgid "Mass Mailing Name"
-msgstr "Bulkmailing naam"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_label__match_regex
@@ -9836,6 +9817,12 @@ msgstr ""
 "door anderen gebruikt"
 
 #. module: account
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "One or more selected lines already belong to a complete statement."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
@@ -10629,6 +10616,11 @@ msgstr "Betalingsconditie: 21 dagen"
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "Payment terms: 30 Days"
 msgstr "Betalingsconditie: 30 dagen"
+
+#. module: account
+#: model_terms:account.payment.term,note:account.account_payment_term_30days_early_discount
+msgid "Payment terms: 30 Days, 2% Early Payment Discount under 7 days"
+msgstr ""
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_30_days_end_month_the_10
@@ -13000,6 +12992,16 @@ msgid "Tax Name"
 msgstr "BTW naam"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax_group__property_tax_payable_account_id
+msgid "Tax Payable Account"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax_group__property_tax_receivable_account_id
+msgid "Tax Receivable Account"
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_account_tax_repartition_line
 msgid "Tax Repartition Line"
 msgstr "BTW verdelingsregel"
@@ -13073,13 +13075,11 @@ msgstr "BTW afrondingsmethode"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_tax_payable_account_id
-#: model:ir.model.fields,field_description:account.field_account_tax_group__property_tax_payable_account_id
 msgid "Tax current account (payable)"
 msgstr "Huidige BTW rekening (crediteuren)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_tax_receivable_account_id
-#: model:ir.model.fields,field_description:account.field_account_tax_group__property_tax_receivable_account_id
 msgid "Tax current account (receivable)"
 msgstr "Huidige BTW rekening (debiteuren)"
 
@@ -13453,16 +13453,6 @@ msgstr ""
 "dient de tweede valuta op de rekening te verwijderen."
 
 #. module: account
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"The accounting date being set prior to the %(lock_type)s lock date "
-"%(lock_date)s, it will be changed to %(accounting_date)s upon posting."
-msgstr ""
-"De boekhouddatum die vóór de  %(lock_type)s blokkeerdatum van %(lock_date)s "
-"is ingesteld, wordt bij het boeken gewijzigd in %(accounting_date)s."
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__journal_id
 #: model:ir.model.fields,help:account.field_res_partner_bank__journal_id
 msgid "The accounting journal corresponding to this bank account."
@@ -13665,6 +13655,14 @@ msgstr ""
 "Het huidige totaal is %s, maar het verwachte totaal is %s. Om de "
 "factuur/aanrekening te boeken, kun je de regels of het verwachte totaal "
 "(incl. btw) aanpassen."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The date is being set prior to the %(lock_type)s lock date %(lock_date)s. "
+"The Journal Entry will be accounted on %(accounting_date)s upon posting."
+msgstr ""
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -16697,6 +16695,11 @@ msgstr ""
 #, python-format
 msgid "tax"
 msgstr "btw"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax_group__property_advance_tax_payment_account_id
+msgid "Tax Advance Account"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form

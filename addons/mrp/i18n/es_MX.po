@@ -9,9 +9,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2022-09-27 15:11+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
@@ -579,6 +579,12 @@ msgstr "Reporte de asignación para órdenes de fabricación"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allow_workorder_dependencies
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__allow_workorder_dependencies
 msgid "Allow Work Order Dependencies"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production__use_auto_consume_components_lots
+#: model:ir.model.fields,help:mrp.field_stock_picking_type__use_auto_consume_components_lots
+msgid "Allow automatic consumption of tracked components that are reserved"
 msgstr ""
 
 #. module: mrp
@@ -1301,6 +1307,12 @@ msgstr "Confirmado"
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "Consume"
 msgstr "Consumir"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__use_auto_consume_components_lots
+#: model:ir.model.fields,field_description:mrp.field_stock_picking_type__use_auto_consume_components_lots
+msgid "Consume Reserved Lots/Serial Numbers automatically"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning_line__product_consumed_qty_uom
@@ -5290,7 +5302,7 @@ msgstr "Desplegar"
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #, python-format
 msgid "Unit Cost"
-msgstr ""
+msgstr "Costo unitario"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__unit_factor

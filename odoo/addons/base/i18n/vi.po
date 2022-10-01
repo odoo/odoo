@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:25+0000\n"
+"POT-Creation-Date: 2022-09-27 15:43+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
@@ -418,6 +418,14 @@ msgstr ""
 "\n"
 "\n"
 "Module này thêm một tuỳ chỉnh Đội bán hàng vào Điểm bán hàng. Điều này cho phép bạn xem và quản lý điểm bán hàng một cách dễ dàng hơn.\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_pos_sale_margin
+msgid ""
+"\n"
+"\n"
+"This module adds enable you to view the margin of your Point of Sale orders in the Sales Margin report.\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant
@@ -21432,6 +21440,11 @@ msgid "Link module between Point of Sale and Sales"
 msgstr "Liên kết giữa Điểm bán hàng và Kinh Doanh"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_pos_sale_margin
+msgid "Link module between Point of Sale and Sales Margin"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_pos_hr_l10n_be
 msgid "Link module between Pos Blackbox Be and Pos HR"
 msgstr "Mô-đun liên kết giữa Pos Blackbox Be và Pos HR"
@@ -26971,6 +26984,11 @@ msgid "RTN"
 msgstr ""
 
 #. module: base
+#: model:res.country,vat_label:base.ec
+msgid "RUC"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__font__raleway
 msgid "Raleway"
 msgstr "Raleway"
@@ -30134,6 +30152,14 @@ msgid "The currency rate must be strictly positive."
 msgstr "Tỷ giá tiền tệ bắt buộc phải là số dương."
 
 #. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid ""
+"The date for the current rate is empty.\n"
+"Please set it."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_users__company_id
 msgid "The default company for this user."
 msgstr "Công ty mặc định cho người dùng này."
@@ -30270,6 +30296,14 @@ msgid ""
 msgstr ""
 "The menu action this filter applies to. When left empty the filter applies "
 "to all menus for this model."
+
+#. module: base
+#: code:addons/base/models/ir_module.py:0
+#, python-format
+msgid ""
+"The method _button_immediate_install cannot be called on init or non loaded "
+"registries. Please use button_install instead."
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -33861,6 +33895,11 @@ msgstr "pos_sale"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_sale_loyalty
 msgid "pos_sale_loyalty"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_sale_margin
+msgid "pos_sale_margin"
 msgstr ""
 
 #. module: base

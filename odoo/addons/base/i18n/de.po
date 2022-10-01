@@ -4,16 +4,16 @@
 # 
 # Translators:
 # f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2022
-# Friederike Fasterling-Nesselbosch, 2022
 # Martin Trigaux, 2022
+# Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:25+0000\n"
+"POT-Creation-Date: 2022-09-27 15:43+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -420,6 +420,14 @@ msgstr ""
 "Dieses Modul fügt ein individuelles Verkaufsteam für den Point of Sale hinzu. Auf diese Weise können Sie Ihre POS-Verkäufe einfacher anzeigen und verwalten.\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_pos_sale_margin
+msgid ""
+"\n"
+"\n"
+"This module adds enable you to view the margin of your Point of Sale orders in the Sales Margin report.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant
 msgid ""
 "\n"
@@ -724,6 +732,9 @@ msgid ""
 "        taking employees' contracts into account\n"
 "    "
 msgstr ""
+"\n"
+"        Bessere Planung zukünftiger Zeitpläne unter Berücksichtigung der effektiv für alte Planungen aufgewendeten Zeit\n"
+"und der Mitarbeiterverträge"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_sale_timesheet
@@ -2772,6 +2783,8 @@ msgid ""
 "\n"
 "Adds an action to sign documents attached to tasks.\n"
 msgstr ""
+"\n"
+"Fügt eine Aktion zum Unterschreiben von Dokumenten hinzu, die an Aufgaben angehängt sind.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_fleet
@@ -2799,6 +2812,8 @@ msgid ""
 "\n"
 "Adds the ability to set workspace templates on products.\n"
 msgstr ""
+"\n"
+"Fügt die Möglichkeit hinzu, Arbeitsbereichsvorlagen für Produkte festzulegen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_voip_crm
@@ -18207,7 +18222,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_binary
 msgid "File streaming helper model for controllers"
-msgstr ""
+msgstr "Hilfsmodell für Dateistreaming bei Controllern"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__filter
@@ -19483,7 +19498,7 @@ msgstr "Hauptmenü"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_homeworking
 msgid "Homeworking"
-msgstr ""
+msgstr "Homeoffice"
 
 #. module: base
 #: model:res.country,name:base.hn
@@ -21670,6 +21685,11 @@ msgstr "Verknüpfungsmodul zwischen Point of Sale und HR"
 #: model:ir.module.module,summary:base.module_pos_sale
 msgid "Link module between Point of Sale and Sales"
 msgstr "Kassensystem und Vertrieb verknüpfen"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_pos_sale_margin
+msgid "Link module between Point of Sale and Sales Margin"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_hr_l10n_be
@@ -28188,6 +28208,11 @@ msgid "RTN"
 msgstr "RTN"
 
 #. module: base
+#: model:res.country,vat_label:base.ec
+msgid "RUC"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__font__raleway
 msgid "Raleway"
 msgstr "Raleway"
@@ -31382,6 +31407,14 @@ msgid "The currency rate must be strictly positive."
 msgstr "The currency rate must be strictly positive."
 
 #. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid ""
+"The date for the current rate is empty.\n"
+"Please set it."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_users__company_id
 msgid "The default company for this user."
 msgstr "Die Standardfirma für diesen Benutzer."
@@ -31514,6 +31547,14 @@ msgid ""
 msgstr ""
 "Die Menü-Aktion auf die sich dieser Filter bezieht. Wenn leer gelassen, "
 "trifft dieser Filter auf alle Menüpunkte dieses Modells zu."
+
+#. module: base
+#: code:addons/base/models/ir_module.py:0
+#, python-format
+msgid ""
+"The method _button_immediate_install cannot be called on init or non loaded "
+"registries. Please use button_install instead."
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -31927,7 +31968,7 @@ msgstr "Dieses Fenster"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_bank__allow_out_payment
 msgid "This account can be used for outgoing payments"
-msgstr ""
+msgstr "Dieses Konto kann für ausgehende Zahlungen verwendet werden"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -35210,6 +35251,11 @@ msgstr "pos_sale"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_sale_loyalty
 msgid "pos_sale_loyalty"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_sale_margin
+msgid "pos_sale_margin"
 msgstr ""
 
 #. module: base

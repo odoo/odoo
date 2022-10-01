@@ -3,15 +3,16 @@
 # 	* website_sale_slides
 # 
 # Translators:
-# Martin Trigaux, 2019
+# Martin Trigaux, 2022
+# Marius Stedjan <marius@stedjan.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:57+0000\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2022\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,30 +21,77 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_slides
-#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_sidebar_buy_now_course
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_option_buy_course_now
 msgid "<i class=\"fa fa-bolt\"/> Buy Now"
+msgstr "<i class=\"fa fa-bolt\"/> Kjøp nå"
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_button
+msgid "<i class=\"fa fa-shopping-cart\"/> Add to Cart"
+msgstr "<i class=\"fa fa-shopping-cart\"/> Legg i handlevogn"
+
+#. module: website_sale_slides
+#: model:ir.model.fields,help:website_sale_slides.field_product_product__detailed_type
+#: model:ir.model.fields,help:website_sale_slides.field_product_template__detailed_type
+msgid ""
+"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A consumable product is a product for which stock is not managed.\n"
+"A service is a non-material product you provide."
+msgstr ""
+"En lagervare er et produkt som du sporer lagerstatus på. Lager-appen må være innstallert.\n"
+"En forbruksvare er et produkt som du ikke sporer.\n"
+"En tjeneste er et ikke-fysisk produkt som du tilbyr."
+
+#. module: website_sale_slides
+#: code:addons/website_sale_slides/models/product_product.py:0
+#, python-format
+msgid "Access to:%s%s"
 msgstr ""
 
 #. module: website_sale_slides
-#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_sidebar
-msgid "<i class=\"fa fa-shopping-cart\"/> Add to Cart"
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.snippet_options
+msgid "Buy Now Button"
 msgstr ""
 
 #. module: website_sale_slides
 #. openerp-web
 #: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
 #, python-format
-msgid "Buy the course"
+msgid "Buy the course to validate your answers!"
 msgstr ""
 
 #. module: website_sale_slides
-#: model:ir.model.fields,help:website_sale_slides.field_slide_channel__enroll
-msgid "Condition to enroll: everyone, on invite, on payment (sale bridge)."
+#. openerp-web
+#: code:addons/website_sale_slides/static/src/xml/slide_course_join.xml:0
+#, python-format
+msgid "Buy this Course"
 msgstr ""
 
 #. module: website_sale_slides
-#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_sidebar
-msgid "Course Not Buyable"
+#: model_terms:ir.actions.act_window,help:website_sale_slides.sale_report_action_slides
+msgid "Come back once your courses starts selling to report on your revenues."
+msgstr ""
+
+#. module: website_sale_slides
+#: model:ir.model,name:website_sale_slides.model_slide_channel
+#: model:ir.model.fields.selection,name:website_sale_slides.selection__product_template__detailed_type__course
+msgid "Course"
+msgstr "Kurs"
+
+#. module: website_sale_slides
+#: model:product.product,name:website_sale_slides.default_product_course
+#: model:product.template,name:website_sale_slides.default_product_course_product_template
+msgid "Course Access"
+msgstr ""
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.snippet_options
+msgid "Course Page"
+msgstr ""
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_button
+msgid "Course Unavailable"
 msgstr ""
 
 #. module: website_sale_slides
@@ -57,15 +105,24 @@ msgid "Currency"
 msgstr "Valuta"
 
 #. module: website_sale_slides
-#. openerp-web
-#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
-#, python-format
-msgid "Don't have an account ?"
+#: model:ir.model.fields,help:website_sale_slides.field_slide_channel__enroll
+msgid "Defines how people can enroll to your Course."
 msgstr ""
 
 #. module: website_sale_slides
 #: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__enroll
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.slide_channel_view_form_add_inherit_sale_slides
 msgid "Enroll Policy"
+msgstr ""
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_slides_list_slide
+msgid "Free Preview"
+msgstr ""
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_link
+msgid "Join this Course"
 msgstr ""
 
 #. module: website_sale_slides
@@ -78,15 +135,41 @@ msgid ""
 msgstr ""
 
 #. module: website_sale_slides
+#: model_terms:ir.actions.act_window,help:website_sale_slides.sale_report_action_slides
+msgid "No sales data yet!"
+msgstr ""
+
+#. module: website_sale_slides
 #: model:ir.model.fields.selection,name:website_sale_slides.selection__slide_channel__enroll__payment
 msgid "On payment"
 msgstr ""
 
 #. module: website_sale_slides
-#: model:ir.model,name:website_sale_slides.model_product_product
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message
+msgid "Once your order is paid &amp; confirmed, you will gain access to:"
+msgstr ""
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_slides_list_slide
+msgid "Preview"
+msgstr "Forhåndsvisning"
+
+#. module: website_sale_slides
+#: model:ir.model,name:website_sale_slides.model_product_template
 #: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__product_id
 msgid "Product"
 msgstr "Produkt"
+
+#. module: website_sale_slides
+#: model:ir.model.fields,field_description:website_sale_slides.field_product_product__detailed_type
+#: model:ir.model.fields,field_description:website_sale_slides.field_product_template__detailed_type
+msgid "Product Type"
+msgstr "Produkttype"
+
+#. module: website_sale_slides
+#: model:ir.model,name:website_sale_slides.model_product_product
+msgid "Product Variant"
+msgstr "Produktvariant"
 
 #. module: website_sale_slides
 #: model:ir.model.constraint,message:website_sale_slides.constraint_slide_channel_product_id_check
@@ -96,7 +179,7 @@ msgstr ""
 #. module: website_sale_slides
 #: model:ir.ui.menu,name:website_sale_slides.website_slides_menu_report_revenues
 msgid "Revenues"
-msgstr ""
+msgstr "Inntekter"
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.slide_channel_view_form
@@ -111,14 +194,7 @@ msgstr "Salgsordre"
 
 #. module: website_sale_slides
 #. openerp-web
-#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
-#, python-format
-msgid "Sign Up !"
-msgstr ""
-
-#. module: website_sale_slides
-#. openerp-web
-#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
+#: code:addons/website_sale_slides/static/src/xml/slide_course_join.xml:0
 #, python-format
 msgid "Sign in"
 msgstr "Logg på"
@@ -127,26 +203,17 @@ msgstr "Logg på"
 #. openerp-web
 #: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
 #, python-format
-msgid "Sign in and buy the course to join it and take the quiz!"
+msgid "Sign in and buy the course to take the quiz"
 msgstr ""
 
 #. module: website_sale_slides
-#: model:ir.model,name:website_sale_slides.model_slide_channel
-msgid "Slide Channel"
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message
+msgid "Start Learning"
 msgstr ""
 
 #. module: website_sale_slides
-#. openerp-web
-#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
-#, python-format
-msgid "Start Course"
-msgstr ""
-
-#. module: website_sale_slides
-#. openerp-web
-#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
-#, python-format
-msgid "Succeed and gain karma"
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_main
+msgid "This course cannot be bought because its linked product"
 msgstr ""
 
 #. module: website_sale_slides
@@ -157,15 +224,35 @@ msgid "This course is paid."
 msgstr ""
 
 #. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.slide_channel_view_tree_report
+msgid "Total Revenues"
+msgstr ""
+
+#. module: website_sale_slides
 #: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__product_sale_revenues
 msgid "Total revenues"
 msgstr ""
 
 #. module: website_sale_slides
-#. openerp-web
-#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
+#: model:product.product,uom_name:website_sale_slides.default_product_course
+#: model:product.template,uom_name:website_sale_slides.default_product_course_product_template
+msgid "Units"
+msgstr "Stk"
+
+#. module: website_sale_slides
+#: model:ir.model,name:website_sale_slides.model_website
+msgid "Website"
+msgstr "Nettsted"
+
+#. module: website_sale_slides
+#: code:addons/website_sale_slides/models/sale_order.py:0
 #, python-format
-msgid "XP"
+msgid "You can only add a course once in your cart."
+msgstr ""
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message
+msgid "You have gained access to the following course(s):"
 msgstr ""
 
 #. module: website_sale_slides
@@ -176,4 +263,19 @@ msgstr ""
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.sale_report_view_graph_slides
 msgid "eLearning Sales Analysis"
+msgstr ""
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_main
+msgid "is not published."
+msgstr ""
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message
+msgid "step(s)"
+msgstr ""
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_link
+msgid "to access resources"
 msgstr ""

@@ -10,9 +10,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0beta+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:01+0000\n"
+"POT-Creation-Date: 2022-09-30 10:54+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
@@ -269,6 +269,11 @@ msgstr "15 giorni"
 #: model:account.payment.term,name:account.account_payment_term_2months
 msgid "2 Months"
 msgstr "60 giorni"
+
+#. module: account
+#: model:account.payment.term,name:account.account_payment_term_30days_early_discount
+msgid "2/7 Net 30"
+msgstr ""
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_21days
@@ -900,6 +905,12 @@ msgstr "<span>5,00</span>"
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Amount</span>"
 msgstr "<span>Importo</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.bill_preview
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "<span>Amount In Currency</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1767,6 +1778,11 @@ msgid "Accounts Mapping of Fiscal Position"
 msgstr "Mappatura conti per la posizione fiscale"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__account_prefix
+msgid "Accounts Prefix"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__account_id
 msgid "Accrual Account"
 msgstr "Conto ratei"
@@ -2073,11 +2089,6 @@ msgstr ""
 msgid ""
 "Adjusting Entry {link}: {percent:.2f}% of {amount} recognized from {date}"
 msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_tax_group__property_advance_tax_payment_account_id
-msgid "Advance Tax payment account"
-msgstr "Conto anticipo pagamento imposta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_advance_tax_payment_account_id
@@ -6081,7 +6092,6 @@ msgstr "Conto finanziario"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix
-#: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__account_prefix
 msgid "Financial Accounts Prefix"
 msgstr ""
 
@@ -6874,13 +6884,6 @@ msgstr ""
 msgid "If empty, uses the journal of the journal entry to be reversed."
 msgstr ""
 "Se vuoto, viene usato il registro della registrazione contabile da stornare."
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_invoice_send__mass_mailing_name
-msgid ""
-"If set, a mass mailing will be created so that you can track its results in "
-"the Email Marketing app."
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__include_base_amount
@@ -8626,11 +8629,6 @@ msgid "Mail Activity Type"
 msgstr "Tipo attività e-mail"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_send__mailing_list_ids
-msgid "Mailing List"
-msgstr "Mailing list"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_main_attachment_id
 #: model:ir.model.fields,field_description:account.field_account_account_template__message_main_attachment_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_main_attachment_id
@@ -8740,21 +8738,6 @@ msgstr "Segna come inviato"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__payment_difference_handling__reconcile
 msgid "Mark as fully paid"
 msgstr "Segna come totalmente pagata"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_send__mass_mailing_id
-msgid "Mass Mailing"
-msgstr "Invio massivo e-mail"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_send__campaign_id
-msgid "Mass Mailing Campaign"
-msgstr "Campagna invio massivo e-mail"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_send__mass_mailing_name
-msgid "Mass Mailing Name"
-msgstr "Nome per invio massivo e-mail"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_label__match_regex
@@ -9608,6 +9591,12 @@ msgid "One or more Bank Accounts set on this partner are also used by other"
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "One or more selected lines already belong to a complete statement."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
@@ -10393,6 +10382,11 @@ msgstr "Termini di pagamento: 21 gg"
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "Payment terms: 30 Days"
 msgstr "Termini di pagamento: 30 giorni"
+
+#. module: account
+#: model_terms:account.payment.term,note:account.account_payment_term_30days_early_discount
+msgid "Payment terms: 30 Days, 2% Early Payment Discount under 7 days"
+msgstr ""
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_30_days_end_month_the_10
@@ -12754,6 +12748,16 @@ msgid "Tax Name"
 msgstr "Nome imposta"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax_group__property_tax_payable_account_id
+msgid "Tax Payable Account"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax_group__property_tax_receivable_account_id
+msgid "Tax Receivable Account"
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_account_tax_repartition_line
 msgid "Tax Repartition Line"
 msgstr "Riga ripartizione imposta"
@@ -12827,13 +12831,11 @@ msgstr "Metodo di arrotondamento per il calcolo imposte"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_tax_payable_account_id
-#: model:ir.model.fields,field_description:account.field_account_tax_group__property_tax_payable_account_id
 msgid "Tax current account (payable)"
 msgstr "Conto imposta attuale (debito)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_tax_receivable_account_id
-#: model:ir.model.fields,field_description:account.field_account_tax_group__property_tax_receivable_account_id
 msgid "Tax current account (receivable)"
 msgstr "Conto imposta attuale (credito)"
 
@@ -13184,17 +13186,6 @@ msgstr ""
 "valuta secondaria. È necessario rimuovere questa valuta dal conto."
 
 #. module: account
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"The accounting date being set prior to the %(lock_type)s lock date "
-"%(lock_date)s, it will be changed to %(accounting_date)s upon posting."
-msgstr ""
-"La data contabile è impostata prima della data di blocco "
-"%(lock_type)s%(lock_date)s, sarà cambiata a %(accounting_date)s al momento "
-"della registrazione."
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__journal_id
 #: model:ir.model.fields,help:account.field_res_partner_bank__journal_id
 msgid "The accounting journal corresponding to this bank account."
@@ -13387,6 +13378,14 @@ msgstr "Attualmente il numero più alto è"
 msgid ""
 "The current total is %s but the expected total is %s. In order to post the "
 "invoice/bill, you can adjust its lines or the expected Total (tax inc.)."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The date is being set prior to the %(lock_type)s lock date %(lock_date)s. "
+"The Journal Entry will be accounted on %(accounting_date)s upon posting."
 msgstr ""
 
 #. module: account
@@ -16326,6 +16325,11 @@ msgstr ""
 #, python-format
 msgid "tax"
 msgstr "tax"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax_group__property_advance_tax_payment_account_id
+msgid "Tax Advance Account"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form

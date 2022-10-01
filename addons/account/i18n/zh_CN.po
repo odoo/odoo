@@ -15,9 +15,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0beta+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:01+0000\n"
+"POT-Creation-Date: 2022-09-30 10:54+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
 "Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -275,6 +275,11 @@ msgstr "15天"
 #: model:account.payment.term,name:account.account_payment_term_2months
 msgid "2 Months"
 msgstr "2个月"
+
+#. module: account
+#: model:account.payment.term,name:account.account_payment_term_30days_early_discount
+msgid "2/7 Net 30"
+msgstr ""
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_21days
@@ -1014,6 +1019,12 @@ msgstr "<span>5.00</span>"
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Amount</span>"
 msgstr "<span>金额</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.bill_preview
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "<span>Amount In Currency</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1848,6 +1859,11 @@ msgid "Accounts Mapping of Fiscal Position"
 msgstr "会计税科目映射"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__account_prefix
+msgid "Accounts Prefix"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__account_id
 msgid "Accrual Account"
 msgstr "应计科目"
@@ -2096,7 +2112,7 @@ msgstr "添加节"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Add an internal note..."
-msgstr "添加内部备注..."
+msgstr "添加内部说明..."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -2151,11 +2167,6 @@ msgstr "调整明细 {link}: {percent:.2f}% of {amount}识别的 {new_date}"
 msgid ""
 "Adjusting Entry {link}: {percent:.2f}% of {amount} recognized from {date}"
 msgstr "调整明细 {link}: {percent:.2f}% of {amount} recognized from {date}"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_tax_group__property_advance_tax_payment_account_id
-msgid "Advance Tax payment account"
-msgstr "预付税款账户"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_advance_tax_payment_account_id
@@ -6062,7 +6073,6 @@ msgstr "财务会计"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix
-#: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__account_prefix
 msgid "Financial Accounts Prefix"
 msgstr "财务帐户前缀"
 
@@ -6843,13 +6853,6 @@ msgid "If empty, uses the journal of the journal entry to be reversed."
 msgstr "如果为空，使用预留会计凭证的日记账。"
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_invoice_send__mass_mailing_name
-msgid ""
-"If set, a mass mailing will be created so that you can track its results in "
-"the Email Marketing app."
-msgstr "如果设置，将创建群发邮件，以便您可以在电子邮件营销应用程序中跟踪其结果。"
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_tax__include_base_amount
 #: model:ir.model.fields,help:account.field_account_tax_template__include_base_amount
 msgid ""
@@ -7252,7 +7255,7 @@ msgstr "内部群组"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__note
 msgid "Internal Notes"
-msgstr "内部备注"
+msgstr "内部说明"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__internal_index
@@ -8539,11 +8542,6 @@ msgid "Mail Activity Type"
 msgstr "邮件活动类型"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_send__mailing_list_ids
-msgid "Mailing List"
-msgstr "邮件列表"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_main_attachment_id
 #: model:ir.model.fields,field_description:account.field_account_account_template__message_main_attachment_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_main_attachment_id
@@ -8664,21 +8662,6 @@ msgstr "标记为已发送"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__payment_difference_handling__reconcile
 msgid "Mark as fully paid"
 msgstr "标记为全额付款"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_send__mass_mailing_id
-msgid "Mass Mailing"
-msgstr "群发邮件"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_send__campaign_id
-msgid "Mass Mailing Campaign"
-msgstr "群发邮件营销"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_send__mass_mailing_name
-msgid "Mass Mailing Name"
-msgstr "群发邮件标题"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_label__match_regex
@@ -9296,7 +9279,7 @@ msgstr "请注意，创建供应商贷方通知单的最简单方法是直接从
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__note
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__note
 msgid "Notes"
-msgstr "笔记"
+msgstr "备注"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__notify
@@ -9507,6 +9490,12 @@ msgstr "结算单准备好后，按\"确认\"。"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "One or more Bank Accounts set on this partner are also used by other"
 msgstr "在此合作伙伴上设置的一个或多个银行账户也被其他人使用"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "One or more selected lines already belong to a complete statement."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -10286,6 +10275,11 @@ msgstr "付款条件：21天"
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "Payment terms: 30 Days"
 msgstr "付款条件：30天"
+
+#. module: account
+#: model_terms:account.payment.term,note:account.account_payment_term_30days_early_discount
+msgid "Payment terms: 30 Days, 2% Early Payment Discount under 7 days"
+msgstr ""
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_30_days_end_month_the_10
@@ -12608,6 +12602,16 @@ msgid "Tax Name"
 msgstr "税名称"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax_group__property_tax_payable_account_id
+msgid "Tax Payable Account"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax_group__property_tax_receivable_account_id
+msgid "Tax Receivable Account"
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_account_tax_repartition_line
 msgid "Tax Repartition Line"
 msgstr "税再分配线"
@@ -12681,13 +12685,11 @@ msgstr "税计算的舍入方法"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_tax_payable_account_id
-#: model:ir.model.fields,field_description:account.field_account_tax_group__property_tax_payable_account_id
 msgid "Tax current account (payable)"
 msgstr "税务流动账户（应付）"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_tax_receivable_account_id
-#: model:ir.model.fields,field_description:account.field_account_tax_group__property_tax_receivable_account_id
 msgid "Tax current account (receivable)"
 msgstr "税务流动账户（应收账款）"
 
@@ -13033,15 +13035,6 @@ msgid ""
 msgstr "在您的会计凭证中选择的科目被强制提供外币。您应该在科目上删除外币。"
 
 #. module: account
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"The accounting date being set prior to the %(lock_type)s lock date "
-"%(lock_date)s, it will be changed to %(accounting_date)s upon posting."
-msgstr ""
-"会计日期被设置在%(lock_type)s锁定日期%(lock_date)s之前，它将在发布时被更改为%(accounting_date)s。"
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__journal_id
 #: model:ir.model.fields,help:account.field_res_partner_bank__journal_id
 msgid "The accounting journal corresponding to this bank account."
@@ -13216,6 +13209,14 @@ msgid ""
 "The current total is %s but the expected total is %s. In order to post the "
 "invoice/bill, you can adjust its lines or the expected Total (tax inc.)."
 msgstr "当前总数为 %s，但预期总数为 %s。为了过帐发票/账单，您可以调整其行或预期总计（含税）。"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The date is being set prior to the %(lock_type)s lock date %(lock_date)s. "
+"The Journal Entry will be accounted on %(accounting_date)s upon posting."
+msgstr ""
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -15917,6 +15918,11 @@ msgstr "保留要求支付剩余金额10%的固定利息的权利。"
 #, python-format
 msgid "tax"
 msgstr "税"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax_group__property_advance_tax_payment_account_id
+msgid "Tax Advance Account"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
