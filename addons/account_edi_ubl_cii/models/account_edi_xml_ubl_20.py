@@ -566,10 +566,13 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         if product is not None:
             invoice_line_form.product_id = product
 
-        # Name
-        name_node = tree.find('./{*}Item/{*}Description')
-        if name_node is not None:
-            invoice_line_form.name = name_node.text
+        # Description
+        description_node = tree.find('./{*}Item/{*}Description')
+        name_node = tree.find('./{*}Item/{*}Name')
+        if description_node is not None:
+            invoice_line_form.name = description_node.text
+        elif name_node is not None:
+            invoice_line_form.name = name_node.text  # Fallback on Name if Description is not found.
 
         xpath_dict = {
             'basis_qty': [
