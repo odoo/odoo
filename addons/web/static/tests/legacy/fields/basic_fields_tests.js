@@ -18,6 +18,7 @@ const { makeLegacyCommandService } = require("@web/legacy/utils");
 const { registry } = require("@web/core/registry");
 const { getFixture, legacyExtraNextTick, triggerHotkey, nextTick, click, patchWithCleanup } = require("@web/../tests/helpers/utils");
 const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
+const { registerCleanup } = require("@web/../tests/helpers/cleanup");
 
 var createView = testUtils.createView;
 var patchDate = testUtils.mock.patchDate;
@@ -561,6 +562,9 @@ QUnit.module('Legacy basic_fields', {
     QUnit.test('use toggle_button in list view', async function (assert) {
         assert.expect(6);
 
+        field_registry.add("toggle_button", basicFields.FieldToggleBoolean);
+        registerCleanup(() => delete field_registry.map.toggle_button);
+
         var list = await createView({
             View: ListView,
             model: 'partner',
@@ -594,6 +598,9 @@ QUnit.module('Legacy basic_fields', {
 
     QUnit.test('toggle_button in form view (edit mode)', async function (assert) {
         assert.expect(6);
+
+        field_registry.add("toggle_button", basicFields.FieldToggleBoolean);
+        registerCleanup(() => delete field_registry.map.toggle_button);
 
         var form = await createView({
             View: FormView,
@@ -638,6 +645,9 @@ QUnit.module('Legacy basic_fields', {
     QUnit.test('toggle_button in form view (readonly mode)', async function (assert) {
         assert.expect(4);
 
+        field_registry.add("toggle_button", basicFields.FieldToggleBoolean);
+        registerCleanup(() => delete field_registry.map.toggle_button);
+
         var form = await createView({
             View: FormView,
             model: 'partner',
@@ -670,6 +680,9 @@ QUnit.module('Legacy basic_fields', {
 
     QUnit.test('toggle_button in form view with readonly modifiers', async function (assert) {
         assert.expect(3);
+
+        field_registry.add("toggle_button", basicFields.FieldToggleBoolean);
+        registerCleanup(() => delete field_registry.map.toggle_button);
 
         const form = await createView({
             View: FormView,

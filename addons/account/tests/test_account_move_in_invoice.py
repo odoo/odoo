@@ -6,6 +6,7 @@ from odoo.tests.common import Form
 from odoo.tests import tagged
 from odoo import fields, Command
 from odoo.exceptions import ValidationError, RedirectWarning
+from datetime import date
 
 from collections import defaultdict
 
@@ -1962,3 +1963,50 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         with self.assertRaisesRegex(ValidationError, "You cannot delete a tax line"):
             with Form(self.invoice) as invoice_form:
                 invoice_form.line_ids.remove(2)
+
+    @freeze_time('2022-06-17')
+    def test_fiduciary_mode_date_suggestion(self):
+        """Test that the fiduciary mode invoice date suggestion is correct."""
+
+        # Fiduciary mode not enabled, no date suggestion
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        self.assertFalse(move_form.invoice_date)
+
+        # Fiduciary mode enabled, date suggestion
+        self.env.company.quick_edit_mode = "out_and_in_invoices"
+
+        # We are June 17th. No Lock date. Bill Date of the most recent Vendor Bill : March 15th
+        # ==> Default New Vendor Bill date = March 31st (last day of March)
+        self.init_invoice(move_type='in_invoice', invoice_date='2022-03-15', products=self.product_a, post=True)
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        self.assertEqual(move_form.invoice_date.strftime('%Y-%m-%d'), '2022-03-31')
+
+        # We are June 17th. No Lock date. Bill Date of the most recent Vendor Bill : March 31st
+        # ==> Default New Vendor Bill date = March 31st 2022 (last day of March)
+        self.init_invoice(move_type='in_invoice', invoice_date='2022-03-31', products=self.product_b, post=True)
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        self.assertEqual(move_form.invoice_date.strftime('%Y-%m-%d'), '2022-03-31')
+
+        # We are June 17th. No Lock date. Bill Date of the most recent Vendor Bill : June 16th
+        # ==> Default New Vendor Bill date = June 17th (today is smaller than end of June)
+        move = self.init_invoice(move_type='in_invoice', invoice_date='2022-06-16', products=self.product_b, post=True)
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        self.assertEqual(move_form.invoice_date, date.today())
+        move.button_draft()
+        move.unlink()
+
+        # We are June 17th. Lock date : April 30th. Bill Date of the most recent Vendor Bill : April 30th
+        # ==> Default New Vendor Bill date = May 31st (last day of the first month not locked)
+        self.env['account.move'].search([('state', '!=', 'posted')]).unlink()
+        move = self.init_invoice(move_type='in_invoice', invoice_date='2022-04-30', products=self.product_a, post=True)
+        move.company_id.fiscalyear_lock_date = fields.Date.from_string('2022-04-30')
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        self.assertEqual(move_form.invoice_date.strftime('%Y-%m-%d'), '2022-05-31')
+
+        # If the user changes the invoice date, we should not override it
+        self.init_invoice(move_type='in_invoice', invoice_date='2022-05-01', products=self.product_b, post=True)
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        self.assertEqual(move_form.invoice_date.strftime('%Y-%m-%d'), '2022-05-31')
+        move_form.invoice_date = fields.Date.from_string('2022-05-06')
+        move = move_form.save()
+        self.assertEqual(move.invoice_date.strftime('%Y-%m-%d'), '2022-05-06')

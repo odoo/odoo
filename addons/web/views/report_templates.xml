@@ -311,7 +311,7 @@
         <div t-attf-class="o_company_#{company.id}_layout header" t-att-style="report_header_style">
             <div class="o_background_header">
             <div class="float-end">
-                <h3 class="mt0 text-end" t-field="company.report_header"/>
+                <div class="mt0 text-end h3" t-field="company.report_header"/>
             </div>
             <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" class="float-start" alt="Logo"/>
             <div class="float-start company_address">
@@ -349,7 +349,7 @@
                     <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
                 </div>
                 <div class="col-6 text-end mb4">
-                    <h4 class="mt0" t-field="company.report_header"/>
+                    <div class="mt0 h4" t-field="company.report_header"/>
                     <div name="company_address" class="float-end mb4">
                         <span t-if="company.company_details" t-field="company.company_details"></span>
                     </div>
@@ -414,7 +414,7 @@
                     <span t-if="company.company_details" t-field="company.company_details"/>
                 </div>
                 <div class="col-3">
-                    <h5 class="mt0 mb0" t-field="company.report_header"/>
+                    <div class="mt0 mb0 h5" t-field="company.report_header"/>
                 </div>
                 <div class="col-1">
                     <ul t-if="report_type == 'pdf'" class="list-inline pagenumber float-end text-center">
