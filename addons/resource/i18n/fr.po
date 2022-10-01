@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -199,7 +199,7 @@ msgstr "Premier"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "First week"
-msgstr ""
+msgstr "Première semaine"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__4
@@ -480,7 +480,7 @@ msgstr "Seconde"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Second week"
-msgstr ""
+msgstr "Deuxième semaine"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__display_type__line_section
@@ -682,7 +682,7 @@ msgstr "Mercredi Matin"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__week_type
 msgid "Week Number"
-msgstr ""
+msgstr "Numéro de la semaine"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves__time_type

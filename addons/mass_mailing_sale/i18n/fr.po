@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: mass_mailing_sale
 #: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
@@ -81,7 +81,7 @@ msgstr "Commande"
 #. module: mass_mailing_sale
 #: model:ir.model.fields,help:mass_mailing_sale.field_utm_campaign__ab_testing_winner_selection
 msgid "Selection to determine the winner mailing that will be sent."
-msgstr ""
+msgstr "Sélection pour déterminer l'envoi gagnant qui sera envoyé."
 
 #. module: mass_mailing_sale
 #: model:ir.model,name:mass_mailing_sale.model_utm_campaign
@@ -91,4 +91,4 @@ msgstr "Campagne UTM"
 #. module: mass_mailing_sale
 #: model:ir.model.fields,field_description:mass_mailing_sale.field_utm_campaign__ab_testing_winner_selection
 msgid "Winner Selection"
-msgstr ""
+msgstr "Sélection du gagnant"

@@ -70,7 +70,7 @@ msgstr "%s (copie)"
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "%s certification passed"
-msgstr ""
+msgstr "%scertification(s) réussie(s)"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
@@ -709,7 +709,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
 msgid "A problem has occurred"
-msgstr ""
+msgstr "Un problème est survenu"
 
 #. module: survey
 #: code:addons/survey/models/survey_user_input.py:0
@@ -903,7 +903,7 @@ msgstr "Délai de réponse"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__triggering_answer_id
 msgid "Answer that will trigger the display of the current question."
-msgstr ""
+msgstr "Réponse qui déclenchera l'affichage de la question en cours."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
@@ -1037,12 +1037,12 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__answer_duration_avg
 msgid "Average Duration"
-msgstr ""
+msgstr "Durée moyenne"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__answer_duration_avg
 msgid "Average duration of the survey (in hours)"
-msgstr ""
+msgstr "Durée moyenne du sondage (en heures)"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__answer_score_avg
@@ -1140,6 +1140,8 @@ msgstr "Badge de certification"
 #, python-format
 msgid "Certification Badge is not configured for the survey %(survey_name)s"
 msgstr ""
+"Le badge de certification n'est pas configuré pour le sondage "
+"%(survey_name)s"
 
 #. module: survey
 #: model:mail.template,report_name:survey.mail_template_certification
@@ -1171,7 +1173,7 @@ msgstr "Modèle de certification"
 #. module: survey
 #: model:mail.template,subject:survey.mail_template_certification
 msgid "Certification: {{ object.survey_id.display_name }}"
-msgstr ""
+msgstr "Certification: {{ object.survey_id.display_name }}"
 
 #. module: survey
 #: model:ir.actions.report,name:survey.certification_report
@@ -1359,7 +1361,7 @@ msgstr "Continuer"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
 msgid "Continue here"
-msgstr ""
+msgstr "Continuer ici"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q3_sug4
@@ -1484,6 +1486,7 @@ msgstr ""
 #, python-format
 msgid "Creating token for closed/archived surveys is not allowed."
 msgstr ""
+"La création de jetons pour les sondages fermés/archivés n'est pas autorisée."
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
@@ -1504,7 +1507,7 @@ msgstr "Question actuelle"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_question_start_time
 msgid "Current Question Start Time"
-msgstr ""
+msgstr "Heure de début de la question actuelle"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_start_time
@@ -1714,12 +1717,12 @@ msgstr "Message de fin"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__end_datetime
 msgid "End date and time"
-msgstr ""
+msgstr "Date et heure de fin"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_session_code
 msgid "Enter Session Code"
-msgstr ""
+msgstr "Entrer le code de la session"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__constr_error_msg
@@ -1764,7 +1767,7 @@ msgstr "Fanta"
 #. module: survey
 #: model:survey.survey,title:survey.survey_feedback
 msgid "Feedback Form"
-msgstr ""
+msgstr "Formulaire de retour d'expérience"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q5_row2
@@ -2090,6 +2093,8 @@ msgstr "Si actif, certains messages ont une erreur de livraison."
 msgid ""
 "If checked, this option will save the user's answer as its email address."
 msgstr ""
+"Si cochée, cette option enregistrera la réponse de l'utilisateur sous son "
+"adresse email."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__save_as_nickname
@@ -2211,6 +2216,8 @@ msgid ""
 "If randomized is selected, you can configure the number of random questions "
 "by section. This mode is ignored in live session."
 msgstr ""
+"Si aléatoire est sélectionné, vous pouvez configurer le nombre de questions "
+"aléatoires par section. Ce mode est ignoré dans la session en direct."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
@@ -2361,7 +2368,7 @@ msgstr "Japon"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_session_code
 msgid "Join Session"
-msgstr ""
+msgstr "Rejoindre la session"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p5_q1_sug2
@@ -2743,7 +2750,7 @@ msgstr "Plus aucune tentative."
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_void_content
 msgid "No question yet, come back later."
-msgstr ""
+msgstr "Pas encore de question, revenez plus tard."
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_question_form
@@ -2851,7 +2858,7 @@ msgstr "Réponse numérique"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date
 msgid "Occurrence"
-msgstr ""
+msgstr "Occurrence"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_2_choice_5
@@ -2958,7 +2965,7 @@ msgstr "Serveur courriel sortant"
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
 msgid "Overall Performance"
-msgstr ""
+msgstr "Performance globale"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q1_sug5
@@ -2996,7 +3003,7 @@ msgstr "Partiellement"
 #. module: survey
 #: model:mail.template,subject:survey.mail_template_user_input_invite
 msgid "Participate to {{ object.survey_id.display_name }} survey"
-msgstr ""
+msgstr "Participer au sonde {{ object.survey_id.display_name }}"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_user_input
@@ -3033,7 +3040,7 @@ msgstr "Pourcentage"
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
 msgid "Performance by Section"
-msgstr ""
+msgstr "Performances par section"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q6_sug3
@@ -3165,6 +3172,8 @@ msgstr "Type de question"
 msgid ""
 "Question containing the triggering answer to display the current question."
 msgstr ""
+"Question contenant la réponse déclenchante pour afficher la question en "
+"cours."
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_question_form
@@ -3353,7 +3362,7 @@ msgstr "Score pour ce choix"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__answer_score
 msgid "Score value for a correct answer to this question."
-msgstr ""
+msgstr "Valeur de score pour une réponse correcte à cette question."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__is_scored_question
@@ -3776,12 +3785,12 @@ msgstr "Enquête : effacer les réponses test"
 #. module: survey
 #: model:mail.template,name:survey.mail_template_user_input_invite
 msgid "Survey: Invite"
-msgstr ""
+msgstr "Sondage : Inviter"
 
 #. module: survey
 #: model:mail.template,name:survey.mail_template_certification
 msgid "Survey: Send certification by email"
-msgstr ""
+msgstr "Sondage : envoyer la certification par email"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_form
@@ -3991,7 +4000,7 @@ msgstr "Vous n'êtes pas autorisé à accéder à la page que vous recherchez."
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_scoring_success_min_check
 msgid "The percentage of success has to be defined between 0 and 100."
-msgstr ""
+msgstr "Le pourcentage de réussite doit être défini entre 0 et 100."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__is_time_limited
@@ -4252,6 +4261,8 @@ msgid ""
 "To take this survey, please close all other tabs on <strong class=\"text-"
 "danger\"/>."
 msgstr ""
+"Pour répondre à ce sondage, veuillez fermer tous les autres onglets sur "
+"<strong class=\"text-danger\"/>."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
@@ -4286,12 +4297,12 @@ msgstr "Arbres"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__triggering_answer_id
 msgid "Triggering Answer"
-msgstr ""
+msgstr "Réponse de déclenchement"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__triggering_question_id
 msgid "Triggering Question"
-msgstr ""
+msgstr "Question de déclenchement"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_search
@@ -4709,6 +4720,8 @@ msgid ""
 "You cannot send an invitation for a \"One page per section\" survey if the "
 "survey has no sections."
 msgstr ""
+"Vous ne pouvez pas envoyer d'invitation pour un sondage \"Une page par "
+"section\" si le sondage ne comporte aucune section."
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
@@ -4717,6 +4730,8 @@ msgid ""
 "You cannot send an invitation for a \"One page per section\" survey if the "
 "survey only contains empty sections."
 msgstr ""
+"Vous ne pouvez pas envoyer d'invitation pour un sondage \"Une page par "
+"section\" si le sondage ne contient que des sections vides."
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
@@ -4765,7 +4780,7 @@ msgstr "tentatives"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.gamification_badge_form_view_simplified
 msgid "e.g. No one can solve challenges like you do"
-msgstr ""
+msgstr "par ex. Personne ne peut résoudre les défis comme vous le faites"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.gamification_badge_form_view_simplified
@@ -4811,12 +4826,12 @@ msgstr "de réussite"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
 msgid "or press CTRL+Enter"
-msgstr ""
+msgstr "ou appuyez sur CTRL+Enter"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
 msgid "or press Enter"
-msgstr ""
+msgstr "ou appuyez sur Enter"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_progression
@@ -4836,7 +4851,7 @@ msgstr "sondage expiré"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_void_content
 msgid "survey is empty"
-msgstr ""
+msgstr "le sondage est vide"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_403_page
