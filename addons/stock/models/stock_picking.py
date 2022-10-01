@@ -340,7 +340,7 @@ class Picking(models.Model):
     picking_type_entire_packs = fields.Boolean(related='picking_type_id.show_entire_packs')
     use_create_lots = fields.Boolean(related='picking_type_id.use_create_lots')
     use_existing_lots = fields.Boolean(related='picking_type_id.use_existing_lots')
-    hide_picking_type = fields.Boolean(compute='_compute_hide_pickign_type')
+    hide_picking_type = fields.Boolean(compute='_compute_hide_picking_type')
     partner_id = fields.Many2one(
         'res.partner', 'Contact',
         check_company=True,
@@ -417,7 +417,7 @@ class Picking(models.Model):
         for picking in self:
             picking.has_deadline_issue = picking.date_deadline and picking.date_deadline < picking.scheduled_date or False
 
-    def _compute_hide_pickign_type(self):
+    def _compute_hide_picking_type(self):
         self.hide_picking_type = self.env.context.get('default_picking_type_id', False)
 
     @api.depends('move_lines.delay_alert_date')
