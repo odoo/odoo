@@ -419,6 +419,7 @@ class TestTimesheet(TestCommonTimesheet):
             timesheet1.unit_amount + timesheet2.unit_amount,
             'The total timesheet time of this project should be equal to 4.'
         )
+
     def test_create_timesheet_with_archived_employee(self):
         ''' the timesheet can be created or edited only with an active employee
         '''
@@ -438,3 +439,31 @@ class TestTimesheet(TestCommonTimesheet):
 
         with self.assertRaises(UserError):
             timesheet.employee_id = self.empl_employee2
+
+    def test_remaining_hours_on_project(self):
+        ''' Test the remaining hours on the project '''
+        self.task1.planned_hours = 4.0
+
+        self.assertEqual(self.project_customer.remaining_hours, 4.0, 'Remaining hours should be 4.0 before adding timesheet')
+
+        self.env['account.analytic.line'].create({
+            'project_id': self.project_customer.id,
+            'task_id': self.task1.id,
+            'name': 'test',
+            'unit_amount': 2,
+        })
+        self.assertEqual(self.project_customer.remaining_hours, 2.0, 'Remaining hours should be 2.0 after adding timesheet')
+
+        task_child = self.env['project.task'].create({
+            'name': 'Task Child',
+            'parent_id': self.task1.id,
+        })
+        self.assertEqual(self.project_customer.remaining_hours, 2.0, 'Remaining hours should be 2.0 after adding a child task with no timesheets')
+
+        self.env['account.analytic.line'].create({
+            'project_id': self.project_customer.id,
+            'task_id': task_child.id,
+            'name': 'test',
+            'unit_amount': 2,
+        })
+        self.assertEqual(self.project_customer.remaining_hours, 0.0, 'Remaining hours should be 0.0 after adding timesheet to child task')

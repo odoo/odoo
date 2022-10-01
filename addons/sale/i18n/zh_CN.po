@@ -4,9 +4,7 @@
 # 
 # Translators:
 # Ryan Zhang <so_happy_boy@hotmail.com>, 2021
-# ljsrzc007 <ljsrzc007@gmail.com>, 2021
 # 黎伟杰 <674416404@qq.com>, 2021
-# kfx2007@163.com, 2021
 # xu aaron, 2021
 # Benson <Benson.Dr@Gmail.com>, 2022
 # Martin Trigaux, 2022
@@ -85,7 +83,7 @@ msgstr "160X80cm，大桌腿。"
 #, python-format
 msgid ""
 "<b>Send the quote</b> to yourself and check what the customer will receive."
-msgstr "<b>发送此报价</b>给你自己先审查一遍客户将看到的内容。"
+msgstr "<b>发送此报价</b>给您自己先审查一遍客户将看到的内容。"
 
 #. module: sale
 #. openerp-web
@@ -271,7 +269,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
-"        你好,\n"
+"        您好,\n"
 "        <br/><br/>\n"
 "        <t t-set=\"transaction\" t-value=\"object.get_portal_last_transaction()\"/>\n"
 "        您的订单 <strong t-out=\"object.name or ''\">S00049</strong> 总金额为 <strong t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</strong>\n"
@@ -474,9 +472,9 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        <t t-set=\"doc_name\" t-value=\"'报价' if object.state in ('draft', 'sent') else '订单'\"/>\n"
-"        你好,\n"
+"        您好,\n"
 "        <br/><br/>\n"
-"        你的\n"
+"        您的\n"
 "        <t t-if=\"ctx.get('proforma')\">\n"
 "             形式结算单来自于 <t t-out=\"doc_name or ''\">报价</t> <strong t-out=\"object.name or ''\">S00052</strong>\n"
 "            <t t-if=\"object.origin\">\n"
@@ -568,7 +566,7 @@ msgstr "<small><b class=\"text-muted\">本报价有效期至</b></small>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
-msgstr "<small><b class=\"text-muted\">你的优势</b></small>"
+msgstr "<small><b class=\"text-muted\">您的优势</b></small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -610,7 +608,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Confirmation Email</span>"
-msgstr "<span class=\"o_form_label\">确认EMail</span>"
+msgstr "<span class=\"o_form_label\">确认电子邮件</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -918,12 +916,12 @@ msgstr "在销售订单中的地址"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allows you to send Pro-Forma Invoice to your customers"
-msgstr "允许你发送形式结算单给客户"
+msgstr "允许您发送形式结算单给客户"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__group_proforma_sales
 msgid "Allows you to send pro-forma invoice."
-msgstr "允许你发送形式结算单。"
+msgstr "允许您发送形式结算单。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_amazon
@@ -1001,7 +999,7 @@ msgstr "是否确定取消授权交易？此动作经确定后无法撤消。"
 msgid ""
 "As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
 "                to sell extra hours when all ordered hours have been consumed."
-msgstr "举个例子：假设你出售按时间计费的预付费的服务,Odoo将会在预售的时间耗尽时提示你应该出售更多的时长了."
+msgstr "举个例子：假设您出售按时间计费的预付费的服务,Odoo将会在预售的时间耗尽时提示您应该出售更多的时长了."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -1036,7 +1034,7 @@ msgstr "自动开票"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Automatic email sent after the customer has signed or paid online"
-msgstr "客户线上签名或付款后自动发送的EMail"
+msgstr "客户线上签名或付款后自动发送的电子邮件"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__journal_name
@@ -1572,7 +1570,7 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
-"你能承诺给客户的交货日期，通过服务产品的订单明细行的最小前置时间计算。一旦发货，订单的发货策略将会被考虑来决定是使用订单明细行的最小或最大前置时间。"
+"您能承诺给客户的交货日期，通过服务产品的订单明细行的最小前置时间计算。一旦发货，订单的发货策略将会被考虑来决定是使用订单明细行的最小或最大前置时间。"
 
 #. module: sale
 #: model:product.product,name:sale.advance_product_0
@@ -1755,7 +1753,7 @@ msgstr "EMail撰写向导"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__confirmation_mail_template_id
 msgid "Email sent to the customer once the order is paid."
-msgstr "订单付款后发送给客户的EMail。"
+msgstr "订单付款后发送给客户的电子邮件。"
 
 #. module: sale
 #: model_terms:product.product,website_description:sale.product_product_4e
@@ -1860,7 +1858,7 @@ msgid ""
 "From this report, you can have an overview of the amount invoiced to your "
 "customer. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
-msgstr "从此报告，你可以得到一个客户的总结算单金额的概览。搜索功能也能用来个性化你的结算单报告，并且以此匹配此分析到你的需要。"
+msgstr "从此报告，您可以得到一个客户的总结算单金额的概览。搜索功能也能用来个性化您的结算单报告，并且以此匹配此分析到您的需要。"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__invoiced
@@ -1976,7 +1974,7 @@ msgstr "如果勾选此项， 某些消息将会产生传递错误。"
 msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
-msgstr "如果一个销售订单已冻结（完成状态），你就不能手动修改它。但你仍然可以开具结算单或交付。"
+msgstr "如果一个销售订单已冻结（完成状态），您就不能手动修改它。但您仍然可以开具结算单或交付。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_packaging__sales
@@ -2220,7 +2218,7 @@ msgstr "不允许在以下状态确认订单：%s"
 #. module: sale
 #: model:ir.model,name:sale.model_account_move
 msgid "Journal Entry"
-msgstr "日记账分录"
+msgstr "会计凭证"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_move_line
@@ -2276,7 +2274,7 @@ msgstr "前置时间"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
-msgstr "让你的客户登录查看他们的证件"
+msgstr "让您的客户登录查看他们的证件"
 
 #. module: sale
 #. openerp-web
@@ -2615,7 +2613,7 @@ msgstr "应邀"
 msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales "
 "order.<br> You will be able to create an invoice and collect the payment."
-msgstr "一旦客户确认报价，报价即变为销售订单。<br>你可以创建一张收据来进行收款。"
+msgstr "一旦客户确认报价，报价即变为销售订单。<br>您可以创建一张收据来进行收款。"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders
@@ -2623,7 +2621,7 @@ msgstr "一旦客户确认报价，报价即变为销售订单。<br>你可以�
 msgid ""
 "Once the quotation is confirmed, it becomes a sales order.<br> You will be "
 "able to create an invoice and collect the payment."
-msgstr "一旦报价确认，报价即变为销售订单。<br>你可以创建一张收据来进行收款。"
+msgstr "一旦报价确认，报价即变为销售订单。<br>您可以创建一张收据来进行收款。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_pay
@@ -2763,7 +2761,7 @@ msgstr "订单"
 #: model:ir.ui.menu,name:sale.menu_sale_order_invoice
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 msgid "Orders to Invoice"
-msgstr "订单到结算单"
+msgstr "待结算订单"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
@@ -3634,7 +3632,7 @@ msgstr "发送形式结算单"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Send a product-specific email once the invoice is validated"
-msgstr "结算单验证后，发送针对特定产品的EMail"
+msgstr "结算单验证后，发送针对特定产品的电子邮件"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
@@ -3658,7 +3656,7 @@ msgid ""
 "content about a product (instructions, rules, links, media, etc.). Create "
 "and set the email template from the product detail form (in Sales tab)."
 msgstr ""
-"如果你需要分享某个产品模板的具体信息或内容（指令、规则、链接、媒体等），发送EMail是很有用的。创建EMail模板从产品模板明细表（销售标签）。"
+"如果您需要分享某个产品模板的具体信息或内容（指令、规则、链接、媒体等），发送电子邮件是很有用的。创建电子邮件模板从产品模板明细表（销售标签）。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sequence
@@ -3782,7 +3780,7 @@ msgstr "源单据"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_product_email_template
 msgid "Specific Email"
-msgstr "特定的EMail"
+msgstr "特定的电子邮件"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -3796,7 +3794,7 @@ msgstr "阶段"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Start by checking your company's data."
-msgstr "从检查你公司的数据开始。"
+msgstr "从检查您公司的数据开始。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_order_confirmation_state
@@ -3931,7 +3929,7 @@ msgstr "根据财政国家和财政状况过滤可用税金的技术字段."
 msgid ""
 "Tell us why you are refusing this quotation, this will help us improve our "
 "services."
-msgstr "请告诉我们你为什么拒绝这个报价，这将帮助我们改进我们的服务。"
+msgstr "请告诉我们您为什么拒绝这个报价，这将帮助我们改进我们的服务。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__terms_type
@@ -3971,7 +3969,7 @@ msgstr "期限和条件..."
 msgid ""
 "The Sales Order %s linked to the Analytic Account %s is cancelled. You "
 "cannot register an expense on a cancelled Sales Order."
-msgstr "销售订单%s关联的分析账户%s被取消。你不能在取消的销售订单上登记费用。"
+msgstr "销售订单%s关联的分析账户%s被取消。您不能在取消的销售订单上登记费用。"
 
 #. module: sale
 #: code:addons/sale/models/account_move_line.py:0
@@ -3980,7 +3978,7 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s is currently locked. "
 "You cannot register an expense on a locked Sales Order. Please create a new "
 "SO linked to this Analytic Account."
-msgstr "销售订单%s关联的分析账户%s当前被锁定。你不能在锁定的销售订单上登记费用。请创建新的销售订单关联这个分析账户。"
+msgstr "销售订单%s关联的分析账户%s当前被锁定。您不能在锁定的销售订单上登记费用。请创建新的销售订单关联这个分析账户。"
 
 #. module: sale
 #: code:addons/sale/models/account_move_line.py:0
@@ -4018,7 +4016,7 @@ msgid ""
 msgstr ""
 "下列产品不限于本公司%s，因为它们已在其他公司的报价或销售订单中使用:\n"
 "%s\n"
-"你可以将这些产品存档，然后根据公司的限制重新创建它们，或者将它们作为共享产品保留。"
+"您可以将这些产品存档，然后根据公司的限制重新创建它们，或者将它们作为共享产品保留。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -4091,7 +4089,7 @@ msgid ""
 "The product used to invoice a down payment should have an invoice policy set"
 " to \"Ordered quantities\". Please update your deposit product to be able to"
 " create a deposit invoice."
-msgstr "此产品用于首付开票，开票策略应该设为“订购数量”。请更新你的押金产品，以创建押金结算单。"
+msgstr "此产品用于首付开票，开票策略应该设为“订购数量”。请更新您的押金产品，以创建押金结算单。"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -4116,7 +4114,7 @@ msgstr "预付款金额的值必须为正数。"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "There are currently no orders for your account."
-msgstr "现在你的账户没有订单。"
+msgstr "现在您的账户没有订单。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -4181,7 +4179,7 @@ msgstr "这是链接源，例如，搜索引擎、其他域名或EMail列表名�
 msgid ""
 "This product is packaged by %(pack_size).2f %(pack_name)s. You should sell "
 "%(quantity).2f %(unit)s."
-msgstr "该产品被打包成 %(pack_size).2f %(pack_name)s. 你应当卖%(quantity).2f %(unit)s."
+msgstr "该产品被打包成 %(pack_size).2f %(pack_name)s. 您应当卖%(quantity).2f %(unit)s."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_all
@@ -4192,8 +4190,8 @@ msgid ""
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
-"这个报告会对你的报价和销售订单进行分析。分析检查你的销售收入，并且按照不同的标准分组（业务员，合作伙伴，产品等）。用这个报告对还没有结算的销售订单进行分析。"
-" 如果你想分析你的营业额，你应该用会计模块里的结算单分析报告。"
+"这个报告会对您的报价和销售订单进行分析。分析检查您的销售收入，并且按照不同的标准分组（业务员，合作伙伴，产品等）。用这个报告对还没有结算的销售订单进行分析。"
+" 如果您想分析您的营业额，您应该用会计模块里的结算单分析报告。"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
@@ -4204,8 +4202,8 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
-"这个报告会对你的报价和销售订单进行分析。检查你的销售收入，并且按照不同的标准排序（业务员，业务伙伴，产品等）。用这个报告对还没有结算的销售订单进行分析。"
-" 如果你想分析你的营业额，你应该用会计模块里的结算单分析报告功能。"
+"这个报告会对您的报价和销售订单进行分析。检查您的销售收入，并且按照不同的标准排序（业务员，业务伙伴，产品等）。用这个报告对还没有结算的销售订单进行分析。"
+" 如果您想分析您的营业额，您应该用会计模块里的结算单分析报告功能。"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -4216,8 +4214,8 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
-"这个报告会对你的销售订单进行分析。分析检查你的销售收入，并且按照不同的标准分组（业务员，业务伙伴，产品等）进行排序。用这个报告对还没有结算的销售订单进行分析。"
-" 如果你想分析你的营业额，你应该用会计模块里的结算单分析报告。"
+"这个报告会对您的销售订单进行分析。分析检查您的销售收入，并且按照不同的标准分组（业务员，业务伙伴，产品等）进行排序。用这个报告对还没有结算的销售订单进行分析。"
+" 如果您想分析您的营业额，您应该用会计模块里的结算单分析报告。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4528,7 +4526,7 @@ msgstr "您可以在发货前为其开具结算单。"
 msgid ""
 "You can not delete a sent quotation or a confirmed sales order. You must "
 "first cancel it."
-msgstr "您无法删除已发送的报价或已确认的销售订单。你必须先取消它。"
+msgstr "您无法删除已发送的报价或已确认的销售订单。您必须先取消它。"
 
 #. module: sale
 #: code:addons/sale/models/sale_order_line.py:0
@@ -4572,7 +4570,7 @@ msgstr "您无法更改产品的类型，因为它已在销售订单中使用。
 msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
 "the current line and create a new line of the proper type."
-msgstr "不能变更订单明细行的类型。你可以删除当前明细后再新建一行。"
+msgstr "不能变更订单明细行的类型。您可以删除当前明细后再新建一行。"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
@@ -4580,18 +4578,18 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                    whether it's a storable product, a consumable or a service."
 msgstr ""
-"你必须为你所销售或采购的东西定义一个产品，\n"
+"您必须为您所销售或采购的东西定义一个产品，\n"
 "无论是可库存的产品、消耗品还是服务。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your feedback..."
-msgstr "你的反馈..."
+msgstr "您的反馈..."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been confirmed."
-msgstr "你的订单已确认。"
+msgstr "您的订单已确认。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4601,7 +4599,7 @@ msgstr "您的订单已经签字，但仍需支付确认。"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been signed."
-msgstr "你的订单已签订。"
+msgstr "您的订单已签订。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4615,7 +4613,7 @@ msgid ""
 "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
 " Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
-"你的报价包含来自公司 %(product_company)s 的产品，而你的报价属于公司 %(quote_company)s。\n"
+"您的报价包含来自公司 %(product_company)s 的产品，而您的报价属于公司 %(quote_company)s。\n"
 "请更改报价公司或从其他公司删除产品（%(bad_products)s）。"
 
 #. module: sale

@@ -5,9 +5,9 @@
 # Translators:
 # Tivisse <yti@odoo.com>, 2021
 # Eloïse Stilmant <est@odoo.com>, 2021
-# Cécile Collart <cco@odoo.com>, 2021
 # Alexandra Jubert, 2022
 # Martin Trigaux, 2022
+# Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-02 15:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,13 +31,13 @@ msgstr "# Contrats"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_resource_calendar__contracts_count
 msgid "# Contracts using it"
-msgstr ""
+msgstr "# Contrats qui l'utilise"
 
 #. module: hr_contract
 #: code:addons/hr_contract/report/hr_contract_history.py:0
 #, python-format
 msgid "%s's Contracts History"
-msgstr ""
+msgstr "Historique des contrats de %s"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -156,6 +156,9 @@ msgid ""
 "\n"
 "Employee: %(employee_name)s"
 msgstr ""
+"Un employé ne peut avoir qu'un seul contrat à la fois. (Hors projets de contrats et contrats annulés).\n"
+"\n"
+"Employé : %(employee_name)s"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -218,6 +221,8 @@ msgid ""
 "Contract %(contract)s: start date (%(start)s) must be earlier than contract "
 "end date (%(end)s)."
 msgstr ""
+"Contrat %(contract)s: la date de début (%(start)s) doit être antérieure à la"
+" date de fin du contrat (%(end)s)."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contracts_count
@@ -702,7 +707,7 @@ msgstr "Aucun contrat"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Not Running"
-msgstr ""
+msgstr "Pas en cours d'exécution"
 
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__under_contract_state__blocked

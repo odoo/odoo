@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: microsoft_calendar
 #: code:addons/microsoft_calendar/models/calendar.py:0
@@ -57,7 +57,7 @@ msgstr ""
 #: code:addons/microsoft_calendar/models/calendar.py:0
 #, python-format
 msgid "(No title)"
-msgstr ""
+msgstr "(Pas de titre)"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__active
@@ -293,7 +293,7 @@ msgstr ""
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
 msgid "Next Sync Token"
-msgstr ""
+msgstr "Jeton de la prochaine sync"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__sync_policy

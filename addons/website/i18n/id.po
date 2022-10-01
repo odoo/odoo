@@ -66,18 +66,20 @@ msgstr "\"URL tujuan\" tidak boleh kosong."
 #, python-format
 msgid "\"URL to\" cannot contain parameter %s which is not used in \"URL from\"."
 msgstr ""
+"\"URL tujuan\" tidak boleh memiliki parameter %s karena tidak digunakan di "
+"\"URL awal\"."
 
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" is invalid: %s"
-msgstr ""
+msgstr "\"URL tujuan\" tidak valid: %s"
 
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" must contain parameter %s used in \"URL from\"."
-msgstr ""
+msgstr "\"URL tujuan\" harus memiliki parameter %s yang digunakan di \"URL awal\"."
 
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
@@ -94,7 +96,7 @@ msgstr "# Halaman Yang Dikunjungi"
 #: model:ir.model.fields,field_description:website.field_website_visitor__visit_count
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
 msgid "# Visits"
-msgstr ""
+msgstr "# Kunjungan"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
@@ -141,7 +143,7 @@ msgstr "&amp;lt;head&amp;gt;"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "&gt;"
-msgstr ""
+msgstr "&gt;"
 
 #. module: website
 #. openerp-web
@@ -159,7 +161,7 @@ msgstr "' tidak cocok dengan halaman manapun."
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_hybrid
 msgid "' did not match anything."
-msgstr ""
+msgstr "' tidak cocok dengan apapun."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_hybrid
@@ -167,6 +169,8 @@ msgid ""
 "' did not match anything.\n"
 "                        Results are displayed for '"
 msgstr ""
+"' tidak cocok dengan apapun.\n"
+"                        Hasil ditampilkan untuk '"
 
 #. module: website
 #. openerp-web
@@ -183,6 +187,8 @@ msgid ""
 "' to search a page.\n"
 "                    '"
 msgstr ""
+"' untuk mencari halaman.\n"
+"                    '"
 
 #. module: website
 #. openerp-web
@@ -204,7 +210,7 @@ msgstr "'%s' bukan tipe datetime yang benar"
 #: model_terms:ir.ui.view,arch_db:website.list_website_public_pages
 #, python-format
 msgid "'. Showing results for '"
-msgstr ""
+msgstr "'. Menunjukkan hasil untuk '"
 
 #. module: website
 #. openerp-web
@@ -227,7 +233,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "+ Field"
-msgstr ""
+msgstr "+ Field"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
@@ -241,17 +247,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.template_header_sidebar_oe_structure_header_sidebar_1
 #: model_terms:ir.ui.view,arch_db:website.template_header_vertical_oe_structure_header_vertical_2
 msgid "+1 (650) 555-0111"
-msgstr ""
+msgstr "+1 (650) 555-0111"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
 msgid ", .s_searchbar_input"
-msgstr ""
+msgstr ", .s_searchbar_input"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid ", .s_website_form"
-msgstr ""
+msgstr ", .s_website_form"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -287,12 +293,12 @@ msgstr "...dan mengganti konten linimasa agar sesuai kebutuhan anda."
 #: model_terms:ir.ui.view,arch_db:website.layout
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "/contactus"
-msgstr ""
+msgstr "/contactus"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "1 km"
-msgstr ""
+msgstr "1 km"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list_options
@@ -312,17 +318,17 @@ msgstr "1/4 - 3/4"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "10 m"
-msgstr ""
+msgstr "10 m"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "100 km"
-msgstr ""
+msgstr "100 km"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "100 m"
-msgstr ""
+msgstr "100 m"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_hr_options
@@ -333,7 +339,7 @@ msgstr "100%"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "1000 km"
-msgstr ""
+msgstr "1000 km"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -343,7 +349,7 @@ msgstr "12"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "15 km"
-msgstr ""
+msgstr "15 km"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -354,32 +360,32 @@ msgstr "2 <span class=\"sr-only\">(saat ini)</span>"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "2 km"
-msgstr ""
+msgstr "2 km"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "2.5 m"
-msgstr ""
+msgstr "2.5 m"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "20 m"
-msgstr ""
+msgstr "20 m"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "200 km"
-msgstr ""
+msgstr "200 km"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "200 m"
-msgstr ""
+msgstr "200 m"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "2000 km"
-msgstr ""
+msgstr "2000 km"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -414,7 +420,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "30 km"
-msgstr ""
+msgstr "30 km"
 
 #. module: website
 #. openerp-web
@@ -440,24 +446,24 @@ msgstr "308 Dialihkan / Ditulis ulang"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "4 km"
-msgstr ""
+msgstr "4 km"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/components/configurator/configurator.xml:0
 #, python-format
 msgid "4 steps"
-msgstr ""
+msgstr "4 langkah"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "400 km"
-msgstr ""
+msgstr "400 km"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "400 m"
-msgstr ""
+msgstr "400 m"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__404
@@ -467,17 +473,17 @@ msgstr "404 Tidak Ditemukan"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "5 m"
-msgstr ""
+msgstr "5 m"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "50 km"
-msgstr ""
+msgstr "50 km"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "50 m"
-msgstr ""
+msgstr "50 m"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_hr_options
@@ -500,7 +506,7 @@ msgstr "75%"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "8 km"
-msgstr ""
+msgstr "8 km"
 
 #. module: website
 #. openerp-web
@@ -678,6 +684,8 @@ msgid ""
 "<font style=\"font-size: 14px;\">Created in 2021, the company is young and "
 "dynamic. Discover the composition of the team and their skills.</font>"
 msgstr ""
+"<font style=\"font-size: 14px;\">Dibuat pada 2021, perusahaan ini masih "
+"mudah dan dinamis. Temui komposisi tim dan ketrampilan mereka.</font>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -734,6 +742,8 @@ msgid ""
 "<i class=\"fa fa-1x fa-fw fa-envelope "
 "mr-2\"/><span>info@yourcompany.example.com</span>"
 msgstr ""
+"<i class=\"fa fa-1x fa-fw fa-envelope "
+"mr-2\"/><span>info@yourcompany.example.com</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_call_to_action
@@ -777,16 +787,18 @@ msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                                            How to get my Measurement ID"
 msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                                            Bagaimana cara mendapatkan ID Pengukuran"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.report_viewhierarchy_children
 msgid "<i class=\"fa fa-eye ml-2 text-muted\" title=\"Go to View\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-eye ml-2 text-muted\" title=\"Go to View\"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.report_viewhierarchy_children
 msgid "<i class=\"fa fa-files-o ml-2 text-muted\" title=\"Show Arch Diff\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-files-o ml-2 text-muted\" title=\"Show Arch Diff\"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
@@ -842,6 +854,8 @@ msgid ""
 "<i class=\"fa fa-info-circle\"/> Edit the content below this line to adapt "
 "the default <strong>Page not found</strong> page."
 msgstr ""
+"<i class=\"fa fa-info-circle\"/> Edit konten dibawah kalimat ini untuk untuk"
+" mengadaptasi halaman default <strong>Halamn tidak ditemukan</strong> ."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.protected_403
@@ -858,6 +872,8 @@ msgid ""
 "<i class=\"fa fa-lock fa-2x\"/><br/>\n"
 "                            <span class=\"mt-1\">Wrong password</span>"
 msgstr ""
+"<i class=\"fa fa-lock fa-2x\"/><br/>\n"
+"                            <span class=\"mt-1\">Password salah</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
@@ -868,6 +884,8 @@ msgid ""
 "<i class=\"fa fa-map-marker fa-fw mr-2\"/><span "
 "class=\"o_force_ltr\">Chaussée de Namur 40</span>"
 msgstr ""
+"<i class=\"fa fa-map-marker fa-fw mr-2\"/><span "
+"class=\"o_force_ltr\">Chaussée de Namur 40</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
@@ -885,11 +903,13 @@ msgid ""
 "<i class=\"fa fa-plus-circle\"/>\n"
 "        <span>Add a language...</span>"
 msgstr ""
+"<i class=\"fa fa-plus-circle\"/>\n"
+"        <span>Tambahkan bahasa...</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "<i class=\"fa fa-th-large mr-2\"/> WEBSITE"
-msgstr ""
+msgstr "<i class=\"fa fa-th-large mr-2\"/> WEBSITE"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_little_icons
@@ -1357,7 +1377,7 @@ msgid ""
 "A CDN helps you serve your website’s content with high availability and high"
 " performance to any visitor wherever they are located."
 msgstr ""
-"CDN membantu situs anda menyajikan konten dengan ketersediaan tinggi dan "
+"CDN membantu website anda menyediakan konten dengan ketersediaan dan "
 "performa tinggi untuk setiap pengunjung dimanapun mereka berada."
 
 #. module: website
@@ -7128,7 +7148,7 @@ msgstr "Referensi kami"
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_images_subtitles
 msgid "Our seminars and trainings for you"
-msgstr ""
+msgstr "Seminar dan training kami untuk Anda"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
@@ -8647,6 +8667,9 @@ msgid ""
 "talks on various topics. Stay on top of the latest business management "
 "trends &amp; technologies"
 msgstr ""
+"Pembicara dari seluruh penjuru dunia akan bergabung dengan pakar kami untuk "
+"memberikan talkshow inspiratif pada beragam macam topik. Terus ikuti trend "
+"manajemen bisnis &amp; teknologi terkini"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__specific_user_account
@@ -9103,7 +9126,7 @@ msgstr ""
 #: model:ir.model.fields,help:website.field_website_published_multi_mixin__website_url
 #: model:ir.model.fields,help:website.field_website_snippet_filter__website_url
 msgid "The full URL to access the document through the website."
-msgstr "URL lengkap untuk mengakses dokumen melalui situs web."
+msgstr "URL lengkap untuk mengakses dokumen melalui website."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_url
@@ -9710,7 +9733,7 @@ msgstr "URL"
 #: model:ir.model.fields,field_description:website.field_website_rewrite__url_from
 #: model_terms:ir.ui.view,arch_db:website.view_website_rewrite_form
 msgid "URL from"
-msgstr ""
+msgstr "URL awal"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__cdn_filters
@@ -9721,7 +9744,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__url_to
 msgid "URL to"
-msgstr ""
+msgstr "URL tujuan"
 
 #. module: website
 #. openerp-web
@@ -10329,7 +10352,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
 #, python-format
 msgid "Website"
-msgstr "Situs web"
+msgstr "Website"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_company_id
@@ -10385,7 +10408,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:website.action_website_menu
 #: model:ir.model,name:website.model_website_menu
 msgid "Website Menu"
-msgstr "Situs Menu"
+msgstr "Menu Website"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_menus_form_view
@@ -10396,7 +10419,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_name
 #: model:ir.model.fields,field_description:website.field_website__name
 msgid "Website Name"
-msgstr "Nama situs"
+msgstr "Nama Website"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__first_page_id
@@ -10420,7 +10443,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_path
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_path
 msgid "Website Path"
-msgstr "Situs web jalan"
+msgstr "Website Path"
 
 #. module: website
 #: model:ir.model,name:website.model_website_published_mixin
@@ -10438,7 +10461,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.view_website_form
 #, python-format
 msgid "Website Settings"
-msgstr "Pengaturan situs"
+msgstr "Pengaturan Website"
 
 #. module: website
 #: model:ir.model,name:website.model_website_snippet_filter
@@ -10469,7 +10492,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__website_url
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__website_url
 msgid "Website URL"
-msgstr "URL Situs Web"
+msgstr "URL Website"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_url
@@ -10507,28 +10530,28 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.menu_tree
 msgid "Website menu"
-msgstr "Situs menu"
+msgstr "Menu website"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__website_meta_description
 #: model:ir.model.fields,field_description:website.field_website_page__website_meta_description
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__website_meta_description
 msgid "Website meta description"
-msgstr "Deskripsi meta situs web"
+msgstr "Deskripsi meta website"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__website_meta_keywords
 #: model:ir.model.fields,field_description:website.field_website_page__website_meta_keywords
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__website_meta_keywords
 msgid "Website meta keywords"
-msgstr "Situs meta kata kunci"
+msgstr "Kata kunci meta website"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__website_meta_title
 #: model:ir.model.fields,field_description:website.field_website_page__website_meta_title
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__website_meta_title
 msgid "Website meta title"
-msgstr "Judul meta situs"
+msgstr "Judul meta website"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__website_meta_og_img
@@ -10567,7 +10590,7 @@ msgstr ""
 #: model:ir.ui.menu,name:website.menu_website_websites_list
 #: model_terms:ir.ui.view,arch_db:website.view_website_tree
 msgid "Websites"
-msgstr "Situs web"
+msgstr "Website"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_base_language_install__website_ids

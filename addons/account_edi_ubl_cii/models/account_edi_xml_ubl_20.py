@@ -546,7 +546,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
         # ==== invoice_line_ids: InvoiceLine/CreditNoteLine ====
 
-        invoice_line_tag = 'InvoiceLine' if invoice_form.move_type == 'in_invoice' or qty_factor == -1 else 'CreditNoteLine'
+        invoice_line_tag = 'InvoiceLine' if invoice_form.move_type in ('in_invoice', 'out_invoice') or qty_factor == -1 else 'CreditNoteLine'
         for i, invl_el in enumerate(tree.findall('./{*}' + invoice_line_tag)):
             with invoice_form.invoice_line_ids.new() as invoice_line_form:
                 invoice_line_form.sequence = i
@@ -578,7 +578,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'gross_price_unit': './{*}Price/{*}AllowanceCharge/{*}BaseAmount',
             'rebate': './{*}Price/{*}AllowanceCharge/{*}Amount',
             'net_price_unit': './{*}Price/{*}PriceAmount',
-            'billed_qty':  './{*}InvoicedQuantity' if invoice_form.move_type == 'in_invoice' or qty_factor == -1 else './{*}CreditedQuantity',
+            'billed_qty':  './{*}InvoicedQuantity' if invoice_form.move_type in ('in_invoice', 'out_invoice') or qty_factor == -1 else './{*}CreditedQuantity',
             'allowance_charge': './/{*}AllowanceCharge',
             'allowance_charge_indicator': './{*}ChargeIndicator',  # below allowance_charge node
             'allowance_charge_amount': './{*}Amount',  # below allowance_charge node
@@ -604,7 +604,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 ('company_id', '=', journal.company_id.id),
                 ('amount', '=', float(tax_node.text)),
                 ('amount_type', '=', 'percent'),
-                ('type_tax_use', '=', 'purchase'),
+                ('type_tax_use', '=', journal.type),
             ], limit=1)
             if tax:
                 taxes.append(tax)
@@ -629,10 +629,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         if tree.tag == '{urn:oasis:names:specification:ubl:schema:xsd:Invoice-2}Invoice':
             amount_node = tree.find('.//{*}LegalMonetaryTotal/{*}TaxExclusiveAmount')
             if amount_node is not None and float(amount_node.text) < 0:
-                return 'in_refund', -1
-            return 'in_invoice', 1
+                return ('in_refund', 'out_refund'), -1
+            return ('in_invoice', 'out_invoice'), 1
         if tree.tag == '{urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2}CreditNote':
-            return 'in_refund', 1
+            return ('in_refund', 'out_refund'), 1
         return None, None
 
     def _import_retrieve_partner_map(self, company):

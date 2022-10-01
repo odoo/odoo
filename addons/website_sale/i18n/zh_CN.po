@@ -4,7 +4,6 @@
 # 
 # Translators:
 # 黎伟杰 <674416404@qq.com>, 2021
-# Benson <Benson.Dr@Gmail.com>, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # Martin Trigaux, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
@@ -174,8 +173,8 @@ msgid ""
 "                    "
 msgstr ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
-"        你可以在此处找到所有被遗弃的购物车，即在一个小时前由你的网站访客创建，但尚未确认的购物车。</p>\n"
-"        <p>你应该向这些客户发送EMail，鼓励他们进行确认!</p>\n"
+"        您可以在此处找到所有被遗弃的购物车，即在一个小时前由您的网站访客创建，但尚未确认的购物车。</p>\n"
+"        <p>您应该向这些客户发送EMail，鼓励他们进行确认!</p>\n"
 " "
 
 #. module: website_sale
@@ -293,7 +292,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Confirmation Email</span>"
-msgstr "<span class=\"o_form_label\">确认EMail</span>"
+msgstr "<span class=\"o_form_label\">确认电子邮件</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -313,7 +312,7 @@ msgstr "<span class=\"s_website_form_label_content\">上传文件</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "<span class=\"s_website_form_label_content\">Your Reference</span>"
-msgstr "<span class=\"s_website_form_label_content\">供你参考</span>"
+msgstr "<span class=\"s_website_form_label_content\">供您参考</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_only_website_form_view
@@ -358,6 +357,13 @@ msgid "<span>Process Checkout</span>"
 msgstr "<span>确定并支付</span>"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid ""
+"<span>Unfortunately your order can not be confirmed as the amount of your payment does not match the amount of your cart.\n"
+"                        Please contact the responsible of the shop for more information.</span>"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "<span>Video Preview</span>"
 msgstr "<span>预览影片</span>"
@@ -365,7 +371,7 @@ msgstr "<span>预览影片</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
 msgid "<span>Your payment has been authorized.</span>"
-msgstr "<span>你的付款已获授权。</span>"
+msgstr "<span>您的付款已获授权。</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form_web_terms
@@ -522,7 +528,7 @@ msgstr ""
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"                    <h1 style=\"color:#A9A9A9;\">你的购物车存在商品。</h1>\n"
+"                    <h1 style=\"color:#A9A9A9;\">您的购物车存在商品。</h1>\n"
 "                    您想完成购买吗？<br/><br/>\n"
 "                    <t t-if=\"object.order_line\">\n"
 "                        <t t-foreach=\"object.website_order_line\" t-as=\"line\">\n"
@@ -597,7 +603,7 @@ msgstr "此 URL 将提供预览。"
 msgid ""
 "A product can be either a physical product or a service that you sell to "
 "your customers."
-msgstr "一个产品可以是你卖给你的客户的实体产品或服务。"
+msgstr "一个产品可以是您卖给您的客户的实体产品或服务。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -649,7 +655,7 @@ msgid ""
 "find them in *Website > Orders > Abandoned Carts*. From there you can send "
 "recovery emails to visitors who entered their contact details."
 msgstr ""
-"废弃的购物车都是未经网站访问者确认的购物车。您可以在*网站>订单>废弃购物车*中找到它们。从那里你可以发送恢复EMail给访客输入他们的联系细节。"
+"废弃的购物车都是未经网站访问者确认的购物车。您可以在*网站>订单>废弃购物车*中找到它们。从那里您可以发送恢复电子邮件给访客输入他们的联系细节。"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_snippet_filter__product_cross_selling
@@ -947,7 +953,7 @@ msgstr "购物车数量"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__cart_recovery_mail_template
 #: model:ir.model.fields,field_description:website_sale.field_website__cart_recovery_mail_template_id
 msgid "Cart Recovery Email"
-msgstr "购物车恢复EMail"
+msgstr "购物车恢复电子邮件"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -985,7 +991,7 @@ msgid ""
 "            touchscreen interface."
 msgstr ""
 "分类是通过使用\n"
-"触摸屏界面来浏览你的产品。"
+"触摸屏界面来浏览您的产品。"
 
 #. module: website_sale
 #: code:addons/website_sale/models/product_template.py:0
@@ -1404,7 +1410,7 @@ msgstr "拖拽内容至此，自定义标题 \\"
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Drag this website block and drop it in your page."
-msgstr "拖动这个网站块，并把它拉到你的页面。"
+msgstr "拖动这个网站块，并把它拉到您的页面。"
 
 #. module: website_sale
 #: code:addons/website_sale/models/website_snippet_filter.py:0
@@ -1473,7 +1479,7 @@ msgstr "Email"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Email Template"
-msgstr "EMail模板"
+msgstr "电子邮件模板"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_mail_compose_message
@@ -1495,7 +1501,7 @@ msgstr "嵌入代码"
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Enter a name for your new product"
-msgstr "为你的新产品输入一个名称"
+msgstr "为您的新产品输入一个名称"
 
 #. module: website_sale
 #: code:addons/website_sale/models/product_misc.py:0
@@ -1576,7 +1582,7 @@ msgstr "当线上支付确认时，自动生成结算单"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_gift_card
 msgid "Gift Card"
-msgstr "礼物卡"
+msgstr "礼品卡"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category__sequence
@@ -1715,7 +1721,7 @@ msgstr "禁止修改未处于草稿状态的销售订单。"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_account_move
 msgid "Journal Entry"
-msgstr "日记账分录"
+msgstr "会计凭证"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_company__website_sale_onboarding_payment_acquirer_state__just_done
@@ -1850,7 +1856,7 @@ msgstr "登录"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Manage promotion &amp; coupon programs"
-msgstr "管理促销及优惠券方案"
+msgstr "管理促销及促销方案"
 
 #. module: website_sale
 #. openerp-web
@@ -2100,7 +2106,7 @@ msgstr "类似链接"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
 msgid "Or scan me with your banking app."
-msgstr "或者用你的银行应用扫描我。"
+msgstr "或者用您的银行应用扫描我。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -3198,7 +3204,7 @@ msgstr "此组合不存在。"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "This email template is suggested by default when you send a recovery email."
-msgstr "当您发送恢复EMail时，默认情况下建议此EMail模板。"
+msgstr "当您发送恢复电子邮件时，默认情况下建议此电子邮件模板。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -3549,19 +3555,19 @@ msgid ""
 "You are editing your <b>billing and shipping</b> addresses at the same time!<br/>\n"
 "                                            If you want to modify your shipping address, create a"
 msgstr ""
-"你正在编辑 <b>发票及送货</b> 地址！<br/>\n"
-"                                            如果你需要变更送货地址，可以新建一个"
+"您正在编辑 <b>发票及送货</b> 地址！<br/>\n"
+"                                            如果您需要变更送货地址，可以新建一个"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_dashboard
 msgid "You don't have any order from the website"
-msgstr "你没有从网站上拿到任何订单"
+msgstr "您没有从网站上拿到任何订单"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_order_action_to_invoice
 msgid "You don't have any order to invoice from the website"
-msgstr "你没有任何从网站开具结算单的订单"
+msgstr "您没有任何从网站开具结算单的订单"
 
 #. module: website_sale
 #: model:mail.template,subject:website_sale.mail_template_sale_cart_recovery
@@ -3574,13 +3580,13 @@ msgid ""
 "You'll find here all the carts abandoned by your visitors.\n"
 "                If they completed their address, you should send them a recovery email!"
 msgstr ""
-"你会在这里找到你的访客放弃的所有推车。\n"
+"您会在这里找到您的访客放弃的所有推车。\n"
 " 如果他们填写了地址，您应该向他们发送一封恢复邮件！"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Your Address"
-msgstr "你的地址"
+msgstr "您的地址"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address

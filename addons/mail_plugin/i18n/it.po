@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: mail_plugin
 #. openerp-web
@@ -662,6 +662,13 @@ msgstr "Entrate"
 #, python-format
 msgid "Save in Odoo"
 msgstr "Salva in Odoo"
+
+#. module: mail_plugin
+#. openerp-web
+#: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
+#, python-format
+msgid "Save the contact to create the company"
+msgstr "Salva il contatto per creare l'azienda"
 
 #. module: mail_plugin
 #. openerp-web

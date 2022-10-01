@@ -31,12 +31,12 @@
 # whenwesober, 2022
 # Daffi Prabowo <hammet217@gmail.com>, 2022
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2022
-# Martin Trigaux, 2022
 # Bonny Useful <bonny.useful@gmail.com>, 2022
 # PAS IRVANUS <ipankbiz@gmail.com>, 2022
 # Ryanto The <ry.the77@gmail.com>, 2022
 # Rizkya Fajar, 2022
 # Abe Manyo, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -44,7 +44,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Abe Manyo, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -872,6 +872,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Amount</span>"
 msgstr "<span>Nominal</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.bill_preview
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "<span>Amount In Currency</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -2317,7 +2323,7 @@ msgstr "Jumlah Diterima"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_signed
 msgid "Amount Signed"
-msgstr ""
+msgstr "Jumlah Ditandatangani"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_nature
@@ -5131,7 +5137,7 @@ msgstr "Penyusutan"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.cash_box_out_form
 msgid "Describe why you put/take money from the cash register:"
-msgstr "Describe why you put/take money from the cash register:"
+msgstr "Jelaskan kenapa Anda menaruh/mengambil uang dari mesin kasir."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_type__note
@@ -7197,7 +7203,7 @@ msgstr "Baris Faktur"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_report_view_tree
 msgid "Invoice Number"
-msgstr ""
+msgstr "Nomor Faktur"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_payment
@@ -9868,7 +9874,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "Payment Method:"
-msgstr ""
+msgstr "Cara Pembayaran:"
 
 #. module: account
 #: model:ir.model,name:account.model_account_payment_method
@@ -15315,7 +15321,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_payment__website_message_ids
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__website_message_ids
 msgid "Website Messages"
-msgstr "Pesan situs"
+msgstr "Pesan Website"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__website_message_ids
@@ -15327,7 +15333,7 @@ msgstr "Pesan situs"
 #: model:ir.model.fields,help:account.field_account_payment__website_message_ids
 #: model:ir.model.fields,help:account.field_account_reconcile_model__website_message_ids
 msgid "Website communication history"
-msgstr "Sejarah komunikasi situs"
+msgstr "Sejarah komunikasi website"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__sub_model_object_field
@@ -16028,8 +16034,8 @@ msgid ""
 "You have to define an 'Internal Transfer Account' in your cash register's "
 "journal."
 msgstr ""
-"You have to define an 'Internal Transfer Account' in your cash register's "
-"journal."
+"Anda harus mendefinisikan 'Akun Transfer Internal' pada jurnal mesin kasir "
+"Anda."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

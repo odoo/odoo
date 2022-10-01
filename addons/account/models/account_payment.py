@@ -367,10 +367,8 @@ class AccountPayment(models.Model):
     @api.depends('amount_total_signed', 'payment_type')
     def _compute_amount_company_currency_signed(self):
         for payment in self:
-            if payment.payment_type == 'outbound':
-                payment.amount_company_currency_signed = -payment.amount_total_signed
-            else:
-                payment.amount_company_currency_signed = payment.amount_total_signed
+            liquidity_lines = payment._seek_for_lines()[0]
+            payment.amount_company_currency_signed = sum(liquidity_lines.mapped('balance'))
 
     @api.depends('amount', 'payment_type')
     def _compute_amount_signed(self):
