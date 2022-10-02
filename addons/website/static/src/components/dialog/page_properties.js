@@ -30,8 +30,8 @@ export class PageDependencies extends Component {
     async onWillStart() {
         this.dependencies = await this.orm.call(
             'website',
-            'page_search_dependencies',
-            [this.props.pageId],
+            'search_url_dependencies',
+            [this.props.resModel, this.props.resIds],
         );
         if (this.props.mode === 'popover') {
             this.depText = Object.entries(this.dependencies)
@@ -69,13 +69,13 @@ PageDependencies.popoverTemplate = xml`
 `;
 PageDependencies.template = 'website.PageDependencies';
 PageDependencies.props = {
-    pageId: Number,
+    resIds: Array,
+    resModel: String,
     mode: String,
 };
 
 export class DeletePageDialog extends Component {
     setup() {
-        this.orm = useService('orm');
         this.website = useService('website');
         this.title = this.env._t("Delete Page");
         this.deleteButton = this.env._t("Ok");
@@ -90,11 +90,7 @@ export class DeletePageDialog extends Component {
         this.state.confirm = checked;
     }
 
-    async onClickDelete() {
-        await this.orm.unlink("website.page", [
-            this.props.pageId,
-        ]);
-        this.website.goToWebsite({path: '/'});
+    onClickDelete() {
         this.props.close();
         this.props.onDelete();
     }
@@ -106,7 +102,8 @@ DeletePageDialog.components = {
 };
 DeletePageDialog.template = 'website.DeletePageDialog';
 DeletePageDialog.props = {
-    pageId: Number,
+    resIds: Array,
+    resModel: String,
     onDelete: {type: Function, optional: true},
     close: Function,
 };
@@ -157,6 +154,7 @@ export class PagePropertiesDialog extends FormViewDialog {
     setup() {
         super.setup();
         this.dialog = useService('dialog');
+        this.orm = useService('orm');
         this.website = useService('website');
 
         this.viewProps.resId = this.resId;
@@ -177,9 +175,13 @@ export class PagePropertiesDialog extends FormViewDialog {
     }
 
     deletePage() {
+        const pageIds = [this.resId];
         this.dialog.add(DeletePageDialog, {
-            pageId: this.resId,
-            onDelete: () => {
+            resIds: pageIds,
+            resModel: 'website.page',
+            onDelete: async () => {
+                await this.orm.unlink("website.page", pageIds);
+                this.website.goToWebsite({path: '/'});
                 this.props.close();
                 this.props.onClose();
             },

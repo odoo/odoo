@@ -798,7 +798,7 @@ class Website(models.Model):
         return key_copy
 
     @api.model
-    def page_search_dependencies(self, page_id=False):
+    def search_url_dependencies(self, res_model, res_ids):
         """ Search dependencies just for information. It will not catch 100%
             of dependencies and False positive is more than possible
             Each module could add dependences in this dict
@@ -806,55 +806,56 @@ class Website(models.Model):
                 view, and the value is the list of text and link to the resource using given page
         """
         dependencies = {}
-        if not page_id:
-            return dependencies
+        current_website = self.get_current_website()
 
-        page = self.env['website.page'].browse(int(page_id))
-        website = page.website_id or self.get_current_website()
-        url = page.url
+        # search for views containing the url, including the ones linked to a
+        # website.page
+        domains = []
+        urls = []
+        for record in self.env[res_model].browse([int(res_id) for res_id in res_ids]):
+            website = getattr(record, 'website_id', current_website)
+            url = getattr(record, 'website_url', False) or record.url
+            urls.append(url)
+            domains.append(AND([
+                [('arch_db', 'ilike', url)],
+                website.website_domain()
+            ]))
+        views = self.env['ir.ui.view'].search(OR(domains))
 
-        # search for website_page with link
-        website_page_search_dom = [('view_id.arch_db', 'ilike', url)] + website.website_domain()
-        pages = self.env['website.page'].search(website_page_search_dom)
-        page_key = _('Page')
-        if len(pages) > 1:
-            page_key = _('Pages')
-        page_view_ids = []
-        for page in pages:
-            dependencies.setdefault(page_key, [])
-            dependencies[page_key].append({
+        page_views = views.filtered('page_ids')
+        views -= page_views
+
+        if views:
+            view_key = _('Template') if len(views) == 1 else _('Templates')
+            dependencies[view_key] = [{
+                'content': Markup(_('Template <b>%s (id:%s)</b> contains a link to this page')) % (view.key or view.name, view.id),
+                'item': _('%s (id:%s)') % (view.key or view.name, view.id),
+                'link': '/web#id=%s&view_type=form&model=ir.ui.view' % view.id,
+            } for view in views]
+
+        if page_views:
+            page_key = _('Page') if len(page_views) == 1 else _('Pages')
+            dependencies[page_key] = [{
                 'content': Markup(_("Page <b>%s</b> contains a link to this page")) % page.url,
                 'item': page.name,
                 'link': page.url,
-            })
-            page_view_ids.append(page.view_id.id)
+            } for page in page_views.page_ids]
 
-        # search for ir_ui_view (not from a website_page) with link
-        page_search_dom = [('arch_db', 'ilike', url), ('id', 'not in', page_view_ids)] + website.website_domain()
-        views = self.env['ir.ui.view'].search(page_search_dom)
-        view_key = _('Template')
-        if len(views) > 1:
-            view_key = _('Templates')
-        for view in views:
-            dependencies.setdefault(view_key, [])
-            dependencies[view_key].append({
-                'content': Markup(_('Template <b>%s (id:%s)</b> contains a link to this page')) % (view.key or view.name, view.id),
-                'link': '/web#id=%s&view_type=form&model=ir.ui.view' % view.id,
-                'item': _('%s (id:%s)') % (view.key or view.name, view.id),
-            })
-        # search for menu with link
-        menu_search_dom = [('url', 'ilike', '%s' % url)] + website.website_domain()
-
-        menus = self.env['website.menu'].search(menu_search_dom)
-        menu_key = _('Menu')
-        if len(menus) > 1:
-            menu_key = _('Menus')
-        for menu in menus:
-            dependencies.setdefault(menu_key, []).append({
+        # search for menu containing the url
+        domains = []
+        for url in urls:
+            domains.append(AND([
+                [('url', 'ilike', url)],
+                website.website_domain(),
+            ]))
+        menus = self.env['website.menu'].search(OR(domains))
+        if menus:
+            menu_key = _('Menu') if len(menus) == 1 else _('Menus')
+            dependencies[menu_key] = [{
                 'content': Markup(_('This page is in the menu <b>%s</b>')) % menu.name,
                 'link': '/web#id=%s&view_type=form&model=website.menu' % menu.id,
                 'item': menu.name,
-            })
+            } for menu in menus]
 
         return dependencies
 
