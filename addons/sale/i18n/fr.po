@@ -37,7 +37,7 @@ msgstr "Données Récupérées"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sale_order_count
 msgid "# Sale Orders"
-msgstr ""
+msgstr "# Bon de commande"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__nbr
@@ -641,6 +641,8 @@ msgid ""
 "<span class=\"o_stat_text\">Customer</span>\n"
 "                            <span class=\"o_stat_text\">Preview</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Aperçu</span>\n"
+"                            <span class=\"o_stat_text\">Client</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -651,7 +653,7 @@ msgstr "<span class=\"o_stat_text\">Vendu</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
 msgid "<span class=\"oe_read_only\">/ Month</span>"
-msgstr ""
+msgstr "<span class=\"oe_read_only\">/ Mois</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -714,6 +716,9 @@ msgid ""
 "                            Shipping Address:\n"
 "                        </strong>"
 msgstr ""
+"<strong class=\"d-block mb-1\">\n"
+"                            Adresse de livraison :\n"
+"                        </strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -752,6 +757,8 @@ msgid ""
 "<strong>No suitable payment option could be found.</strong><br/>\n"
 "                                        If you believe that it is an error, please contact the website administrator."
 msgstr ""
+"<strong>Aucune option de paiement appropriée n'a pu être trouvée.</strong><br/>\n"
+"Si vous pensez qu'il s'agit d'une erreur, veuillez contacter l'administrateur du site web."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -833,13 +840,13 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Pay Quotation"
-msgstr ""
+msgstr "Accepter et payer le devis"
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Sign Quotation"
-msgstr ""
+msgstr "Accepter & Payer le devis"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1026,6 +1033,8 @@ msgid ""
 "As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
 "            to sell extra hours when all ordered hours have been consumed."
 msgstr ""
+"Par exemple, si vous vendez des heures de services prépayées, Odoo vous recommande\n"
+"de vendre des heures supplémentaires lorsque toutes les heures commandées ont été consommées."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -1255,7 +1264,7 @@ msgstr "Confirmer"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__confirmation_mail_template_id
 msgid "Confirmation Email Template"
-msgstr ""
+msgstr "Modèle d'email de confirmation"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1369,7 +1378,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__stripe
 msgid "Credit & Debit card (via Stripe)"
-msgstr ""
+msgstr "Carte de crédit et de débit (via Stripe)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__currency_id
@@ -2733,7 +2742,7 @@ msgstr "Date de la commande"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Order Date:"
-msgstr ""
+msgstr "Date de commande : "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
@@ -2975,7 +2984,7 @@ msgstr "Facture pro forma"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Pro-Forma Invoice #"
-msgstr ""
+msgstr "Facture Pro-Format #"
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
@@ -3475,12 +3484,12 @@ msgstr "Bon(s) de commande"
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_confirmation
 msgid "Sales Order: Confirmation Email"
-msgstr ""
+msgstr "Bon de commande : Email de confirmation"
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
 msgid "Sales Order: Send by email"
-msgstr ""
+msgstr "Bon de commande : Envoyer par email"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders
@@ -3927,6 +3936,8 @@ msgid ""
 "Team %(team_name)s has %(sale_order_count)s active sale orders. Consider "
 "canceling them or archiving the team instead."
 msgstr ""
+"L'équipe %(team_name)s a %(sale_order_count)s bons de commande actifs. "
+"Envisagez de les annuler ou d'archiver l'équipe à la place."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__pricelist_item_id
@@ -3974,7 +3985,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__terms_type
 msgid "Terms & Conditions format"
-msgstr ""
+msgstr "Format des conditions générales"
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
@@ -4146,7 +4157,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The provided parameters are invalid."
-msgstr ""
+msgstr "Les paramètres fournis ne sont pas valides."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__currency_rate
@@ -4183,6 +4194,11 @@ msgid ""
 "- You should deliver your products before invoicing them: Click on the \"truck\" icon (top-right of your screen) and follow instructions.\n"
 "- You should modify the invoicing policy of your product: Open the product, go to the \"Sales\" tab and modify invoicing policy from \"delivered quantities\" to \"ordered quantities\". For Services, you should modify the Service Invoicing Policy to 'Prepaid'."
 msgstr ""
+"Il n'y a rien à facturer !\n"
+"\n"
+"La ou les raisons de ce comportement peuvent être :\n"
+"- Vous devez livrer vos produits avant de les facturer : Cliquez sur l'icône \"camion\" (en haut à droite de votre écran) et suivez les instructions.\n"
+"- Vous devez modifier la politique de facturation de votre produit : Ouvrez le produit, allez dans l'onglet \"Ventes\" et modifiez la politique de facturation de \"quantités livrées\" à \"quantités commandées\". Pour les services, vous devez modifier la politique de facturation des services en \"prépayé\"."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4505,7 +4521,7 @@ msgstr "Mettre à jour les prix"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Taxes"
-msgstr ""
+msgstr "Mettre à jour les taxes"
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
@@ -4538,7 +4554,7 @@ msgstr "Grille d'entrée des variantes"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "View Order"
-msgstr ""
+msgstr "Voir la commande"
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
@@ -4606,7 +4622,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 msgid "You can invoice them before they are delivered."
-msgstr ""
+msgstr "Vous pouvez les facturer avant qu'ils ne soient livrés."
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
@@ -4634,6 +4650,8 @@ msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "            or check every order and invoice them one by one."
 msgstr ""
+"Vous pouvez sélectionner toutes les commandes et les facturer par lot,<br>\n"
+"ou vérifiez chaque commande et facturez-les une par une."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_acquirer__so_reference_type
