@@ -6,6 +6,7 @@ import {listView} from '@web/views/list/list_view';
 import {ConfirmationDialog} from "@web/core/confirmation_dialog/confirmation_dialog";
 import {useService} from "@web/core/utils/hooks";
 import {sprintf} from "@web/core/utils/strings";
+import {DeletePageDialog} from '@website/components/dialog/page_properties';
 
 
 export class PageListController extends PageControllerMixin(listView.Controller) {
@@ -51,6 +52,16 @@ export class PageListController extends PageControllerMixin(listView.Controller)
             callback: async () => this.togglePublished(false),
         });
         return actionMenuItems;
+    }
+
+    onDeleteSelectedRecords() {
+        this.dialogService.add(DeletePageDialog, {
+            resIds: this.model.root.selection.map((record) => record.resId),
+            resModel: this.props.resModel,
+            onDelete: () => {
+                this.model.root.deleteRecords();
+            },
+        });
     }
 
     async togglePublished(publish) {

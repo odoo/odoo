@@ -29,7 +29,7 @@
                     value="state.redirect_old_url"
                     onChange="(value) => this.onChangeRedirectOldUrl(value)"
                 />
-                <PageDependencies pageId="props.record.resId" mode="'popover'"/>
+                <PageDependencies resIds="[props.record.resId]" resModel="'website.page'" mode="'popover'"/>
             </div>
             <div t-if="state.redirect_old_url" class="d-flex mt-4">
                 <label class="my-0 me-4 fw-bold" for="redirect_type">Type</label>
