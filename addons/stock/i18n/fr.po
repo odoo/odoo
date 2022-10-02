@@ -14,7 +14,7 @@
 # Léonie Bouchat <lbo@odoo.com>, 2020
 # Simon CARRIER <carrier.sim@gmail.com>, 2020
 # Guilhaume Bordiau <github@guilhaume.fr>, 2020
-# Alexandra Jubert <aju@odoo.com>, 2020
+# Alexandra Jubert, 2020
 # Nathan Grognet <ngr@odoo.com>, 2020
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2020
 # Clo <clo@odoo.com>, 2020
@@ -54,12 +54,12 @@
 # guillaume bauer <guillaume.bauer@syentys.fr>, 2020
 # Arnaud Willem <contact@arnaud-willem.eu>, 2020
 # Yael Terrettaz <yael.terrettaz@camptocamp.com>, 2021
-# Anthony Chaussin <chaussin.anthony@gmail.com>, 2021
+# anthony chaussin <chaussin.anthony@gmail.com>, 2021
 # Christophe Ricevuto <cri@nalios.be>, 2021
 # Alexis de Lattre <alexis@via.ecp.fr>, 2021
 # qdelcourte <delcourte.quentin@hotmail.com>, 2021
-# Cécile Collart <cco@odoo.com>, 2021
 # Thomas Deleval <thd@odoo.com>, 2021
+# Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -67,13 +67,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-16 09:00+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Thomas Deleval <thd@odoo.com>, 2021\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -6856,10 +6856,8 @@ msgstr "Ce produit n'est pas disponible en quantité suffisante"
 #, python-format
 msgid ""
 "The quantity done for the product \"%s\" doesn't respect the rounding "
-"precision                                   defined on the unit of measure "
-"\"%s\". Please change the quantity done or the"
-"                                   rounding precision of your unit of "
-"measure."
+"precision defined on the unit of measure \"%s\". Please change the quantity "
+"done or the rounding precision of your unit of measure."
 msgstr ""
 "La quantité renseignée pour l' article \"%s\" ne respecte pas les règles "
 "d'arrondissement définies dans l'unité de mesure \"%s\". Veuillez changer la"
