@@ -6,10 +6,10 @@
 # Igor Krizanovic <krizanovic.igor@gmail.com>, 2020
 # Bojan Vrućinić <bojan.vrucinic@gmail.com>, 2020
 # Bole <bole@dajmi5.com>, 2020
-# Boško Stojaković <bluesoft83@gmail.com>, 2020
 # Ranko Bojic <bojicr.bl@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Ervin Cerović, 2022
+# Boško Stojaković <bluesoft83@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Ervin Cerović, 2022\n"
+"Last-Translator: Boško Stojaković <bluesoft83@gmail.com>, 2022\n"
 "Language-Team: Bosnian (https://www.transifex.com/odoo/teams/41243/bs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -711,6 +711,11 @@ msgstr "<strong>Kompanija:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Credit Note Date:</strong>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code:</strong>"
 msgstr "<strong>Kod kupca:</strong>"
 
@@ -718,6 +723,11 @@ msgstr "<strong>Kod kupca:</strong>"
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<strong>Customer: </strong>"
 msgstr "<strong>Kupac: </strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Date:</strong>"
+msgstr "<strong>Datum:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -6095,6 +6105,16 @@ msgstr ""
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid ""
+"Invoice and credit note repartition should have at least one tax repartition"
+" line."
+msgstr ""
+"Račun i knjižna odobrenja koja se dijele moraju imati najmanje jednu stavku "
+"dijeljenja poreza."
+
+#. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
 "Invoice and credit note repartition should have the same number of lines."
 msgstr ""
 "Faktura i cijepanje knjižne obavijesti trebaju imati isti broj stavki."
@@ -8936,6 +8956,12 @@ msgstr "Dijelovi zatvaranja"
 #: model:ir.actions.client,name:account.action_bank_reconcile
 msgid "Reconciliation on Bank Statements"
 msgstr "Zatvaranje na izvodima iz banke"
+
+#. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Record cannot be deleted. Partner used in Accounting"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form

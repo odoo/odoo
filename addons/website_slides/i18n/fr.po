@@ -35,10 +35,11 @@
 # Fabien Pinckaers <fp@openerp.com>, 2020
 # Laura Piraux <lap@odoo.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
-# Priscilla Sanchez <prs@odoo.com>, 2020
+# Priscilla (prs) Odoo <prs@odoo.com>, 2020
 # Martin Trigaux, 2020
 # William Olhasque <william.olhasque@scopea.fr>, 2020
 # Vallen Delobel <edv@odoo.com>, 2020
+# Jolien De Paepe, 2022
 # 
 msgid ""
 msgstr ""
@@ -46,13 +47,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Vallen Delobel <edv@odoo.com>, 2020\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__completion
@@ -662,6 +663,7 @@ msgstr "<span>XP</span>"
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_fullscreen_player.js:0
+#: code:addons/website_slides/static/src/js/slides_share.js:0
 #, python-format
 msgid "<strong>Thank you!</strong> Mail has been sent."
 msgstr "<strong>Merci!</strong> L'email a été envoyé."
@@ -3391,6 +3393,12 @@ msgstr "Nom de la section"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__access_token
 msgid "Security Token"
 msgstr "Jeton de sécurité"
+
+#. module: website_slides
+#: code:addons/website_slides/models/res_users.py:0
+#, python-format
+msgid "See our eLearning"
+msgstr "Voyez notre eLearning"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_embed

@@ -7,7 +7,7 @@
 # Martin Trigaux, 2019
 # Bohdan Lisnenko, 2019
 # ТАрас <tratatuta@i.ua>, 2019
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1019,6 +1019,17 @@ msgid ""
 "\n"
 "In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
+"Люди, яким буде видно цей проект і його завдання.\n"
+"\n"
+"- Запрошені внутрішні користувачі: стежачи за проектом, внутрішні користувачі отримають доступ до всіх його завдань без різниці. В іншому випадку вони отримають доступ лише до конкретних завдань, які виконують.\n"
+" Користувач із правами доступу «проект > адміністратор» все ще може отримати доступ до цього проекту та його завдань, навіть якщо він явно не є частиною підписників.\n"
+"\n"
+"- Усі внутрішні користувачі: усі внутрішні користувачі можуть отримати доступ до проекту та всіх його завдань без жодних відмінностей.\n"
+"\n"
+"- Запрошені користувачі порталу та всі внутрішні користувачі: усі внутрішні користувачі можуть отримати доступ до проекту та всіх його завдань без різниці.\n"
+"Слідкуючи за проектом, користувачі порталу отримають доступ до всіх його завдань без різниці. В іншому випадку вони отримають доступ лише до конкретних завдань, які виконують.\n"
+"\n"
+"У будь-якому випадку внутрішній користувач без прав доступу до проекту може отримати доступ до завдання за умови, що йому надано відповідну URL-адресу (і що він є частиною підписників, якщо проект приватний)."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban

@@ -6,10 +6,10 @@
 # JanisJanis <jbojars@gmail.com>, 2019
 # InfernalLV <karlisdreizis@gmail.com>, 2019
 # ievaputnina <ievai.putninai@gmail.com>, 2019
-# Konstantins Zabogonskis <inculin4ik@gmail.com>, 2019
 # Artjoms Ustinovs <artyom.ustinov2010@yandex.ru>, 2019
 # Martin Trigaux, 2020
 # Arnis Putniņš <arnis@allegro.lv>, 2020
+# Konstantins Zabogonskis <inculin4ik@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Arnis Putniņš <arnis@allegro.lv>, 2020\n"
+"Last-Translator: Konstantins Zabogonskis <inculin4ik@gmail.com>, 2022\n"
 "Language-Team: Latvian (https://www.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -637,6 +637,11 @@ msgstr "<strong>Uzņēmums:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Credit Note Date:</strong>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code:</strong>"
 msgstr "<strong>Klienta kods:</strong>"
 
@@ -644,6 +649,11 @@ msgstr "<strong>Klienta kods:</strong>"
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<strong>Customer: </strong>"
 msgstr "<strong>Klients: </strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Date:</strong>"
+msgstr "Datums:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -5818,6 +5828,14 @@ msgstr ""
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid ""
+"Invoice and credit note repartition should have at least one tax repartition"
+" line."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
 "Invoice and credit note repartition should have the same number of lines."
 msgstr ""
 
@@ -8578,6 +8596,12 @@ msgstr ""
 #. module: account
 #: model:ir.actions.client,name:account.action_bank_reconcile
 msgid "Reconciliation on Bank Statements"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Record cannot be deleted. Partner used in Accounting"
 msgstr ""
 
 #. module: account

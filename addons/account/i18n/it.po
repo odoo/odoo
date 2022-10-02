@@ -15,7 +15,7 @@
 # Davide Corio <enlightx@gmail.com>, 2019
 # Marco Calcagni <mcalcagni@dinamicheaziendali.it>, 2019
 # Paolo Caruccio <paolo.caruccio66@gmail.com>, 2019
-# maiolif <maiolif@mgftools.com>, 2019
+# neveroils <maiolif@mgftools.com>, 2019
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2019
 # David Minneci <david@numeko.it>, 2019
 # efraimbiffi <eab@odoo.com>, 2019
@@ -26,7 +26,6 @@
 # Luigi Di Naro <gigidn@gmail.com>, 2019
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2019
 # Davide Speranza <dsp@odoo.com>, 2019
-# Martin Trigaux, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # Luana Andronico <andronicoluana@gmail.com>, 2019
 # Simone Sanfilippo <s.sanfilippo@hinge16.eu>, 2020
@@ -35,6 +34,7 @@
 # BigBlu <paolo.moroni@air-srl.com>, 2021
 # Sergio Zanchetta <primes2h@gmail.com>, 2022
 # Friederike Fasterling-Nesselbosch, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -42,13 +42,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -747,6 +747,11 @@ msgstr "<strong>Azienda:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Credit Note Date:</strong>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code:</strong>"
 msgstr "<strong>Codice cliente:</strong>"
 
@@ -754,6 +759,11 @@ msgstr "<strong>Codice cliente:</strong>"
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<strong>Customer: </strong>"
 msgstr "<strong>Cliente: </strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Date:</strong>"
+msgstr "<strong>Data:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -9021,6 +9031,12 @@ msgstr "Parti della riconciliazione"
 #: model:ir.actions.client,name:account.action_bank_reconcile
 msgid "Reconciliation on Bank Statements"
 msgstr "Riconciliazione su estratti conto bancari"
+
+#. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Record cannot be deleted. Partner used in Accounting"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form

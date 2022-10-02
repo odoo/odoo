@@ -28,7 +28,6 @@
 # Tommi Rintala <tommi.rintala@gmail.com>, 2019
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2019
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2019
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2019
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2019
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2020
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020
@@ -37,6 +36,7 @@
 # Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2021
 # Pekka Ikonen, 2021
 # Joakim Weckman, 2022
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -44,7 +44,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Joakim Weckman, 2022\n"
+"Last-Translator: Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -718,6 +718,11 @@ msgstr "<strong>Yritys:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Credit Note Date:</strong>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code:</strong>"
 msgstr "<strong>Asiakasnumero:</strong>"
 
@@ -725,6 +730,11 @@ msgstr "<strong>Asiakasnumero:</strong>"
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<strong>Customer: </strong>"
 msgstr "<strong>Asiakas: </strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Date:</strong>"
+msgstr "<strong>Pvm:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -8908,6 +8918,12 @@ msgstr "Täsmäytetyt osat"
 #: model:ir.actions.client,name:account.action_bank_reconcile
 msgid "Reconciliation on Bank Statements"
 msgstr "Pankin tiliotteiden täsmäytys"
+
+#. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Record cannot be deleted. Partner used in Accounting"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form

@@ -13,7 +13,6 @@
 # Phuc Tran Thanh <phuctran.odoo@gmail.com>, 2019
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2019
 # Manh Vu <vuducmanh96vp@gmail.com>, 2020
-# Martin Trigaux, 2020
 # Nguyen Duc Hoang <ndhdldt1@gmail.com>, 2020
 # Duy BQ <duybq86@gmail.com>, 2020
 # fanha99 <fanha99@hotmail.com>, 2020
@@ -21,6 +20,7 @@
 # Mountain Tran <mountain.tran@viindoo.com>, 2021
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2021
 # Thinh Doan <thinh.t.doan@gmail.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Thinh Doan <thinh.t.doan@gmail.com>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -666,6 +666,11 @@ msgstr "<strong>Công ty:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Credit Note Date:</strong>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code:</strong>"
 msgstr "<strong>Mã khách hàng:</strong>"
 
@@ -673,6 +678,11 @@ msgstr "<strong>Mã khách hàng:</strong>"
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<strong>Customer: </strong>"
 msgstr "<strong>Khách hàng: </strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Date:</strong>"
+msgstr "<strong>Ngày:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -8895,6 +8905,12 @@ msgstr "Đối soát các phần"
 #: model:ir.actions.client,name:account.action_bank_reconcile
 msgid "Reconciliation on Bank Statements"
 msgstr "Đối soát trên Sổ phụ ngân hàng"
+
+#. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Record cannot be deleted. Partner used in Accounting"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
