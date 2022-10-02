@@ -11,6 +11,7 @@ export const PosLoyaltyTicketScreen = (TicketScreen) =>
     class PosLoyaltyTicketScreen extends TicketScreen {
         _onUpdateSelectedOrderline() {
             const order = this.getSelectedSyncedOrder();
+            if (!order) return NumberBuffer.reset();
             const selectedOrderlineId = this.getSelectedOrderlineId();
             const orderline = order.orderlines.find((line) => line.id == selectedOrderlineId);
             if (orderline && this._isEWalletGiftCard(orderline)) {
