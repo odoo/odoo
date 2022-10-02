@@ -112,6 +112,7 @@ class FgXReport(models.AbstractModel):
             cash_register_balance_end_real += session_id.total_payments_amount
             open_cashier_list.append([session_id.user_id.name, session_start_at.strftime('%m/%d/%Y %H:%M:%S')])
         data = {
+                'session_name': ', '.join(s.name for s in session_ids),
                 'session_id': session_ids[0] if session_ids else False,
                 'open_cashier_list': open_cashier_list,
                  'start_end_order_list': start_end_order_list,

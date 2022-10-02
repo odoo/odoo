@@ -72,16 +72,15 @@
                     <t t-if="!receipt.header_html and receipt.header">
                         <div style="white-space:pre-line"><t t-esc="receipt.header" /></div>
                     </t>
-                    <t t-if="receipt.company.vat">
-<!--                        <div><t t-esc="receipt.company.vat_label"/>:<t t-esc="receipt.company.vat" /></div>-->
-                        <div><b>VAT Reg TIN:</b>  <t t-esc="receipt.company.vat" /></div>
-                    </t>
-                    <t t-if="receipt.company.vat">
-                        <div><b>POS01-SN:</b>  SVINLE01EG8210520087</div>
-                    </t>
-                    <t t-if="receipt.company.vat">
-                        <div><b>MIN#</b> 22032812370298632</div>
-                    </t>
+<!--                    <t t-if="receipt.company.vat">-->
+<!--                        <div><b>VAT Reg TIN:</b>  <t t-esc="receipt.company.vat" /></div>-->
+<!--                    </t>-->
+<!--                    <t t-if="receipt.company.vat">-->
+<!--                        <div><b>POS01-SN:</b>  SVINLE01EG8210520087</div>-->
+<!--                    </t>-->
+<!--                    <t t-if="receipt.company.vat">-->
+<!--                        <div><b>MIN#</b> 22032812370298632</div>-->
+<!--                    </t>-->
 <!--                    <t t-if="receipt.company.phone">-->
 <!--                        <div>Tel:<t t-esc="receipt.company.phone" /></div>-->
 <!--                    </t>-->
