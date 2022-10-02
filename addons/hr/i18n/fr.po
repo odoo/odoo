@@ -46,6 +46,7 @@
 # Geoffrey_GMF <gmf@odoo.com>, 2022
 # Martin Trigaux, 2022
 # Tivisse <yti@odoo.com>, 2022
+# Jolien De Paepe, 2022
 # Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
@@ -317,7 +318,7 @@ msgstr "Ajouter un nouveau plan"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_plan_activity_type_action
 msgid "Add a new plan activity"
-msgstr ""
+msgstr "Ajouter une nouvelle activité de planning"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_description
@@ -1140,6 +1141,8 @@ msgid ""
 "For %(channels)s, channel_type should be 'channel' to have the department "
 "auto-subscription."
 msgstr ""
+"Pour %(channels)s, chanel_type devrait être 'canal' afin d'avoir une auto-"
+"adhésion du département"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__freelance
@@ -1378,7 +1381,7 @@ msgstr "Postes"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Job Summary"
-msgstr ""
+msgstr "Résumé du poste"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__job_title
@@ -1745,7 +1748,7 @@ msgstr "Responsable"
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_config_plan_plan
 msgid "On/Offboarding Plans"
-msgstr ""
+msgstr "Plans d'intégration/de gestion des départs"
 
 #. module: hr
 #: code:addons/hr/models/hr_employee_base.py:0
@@ -1763,7 +1766,7 @@ msgstr "Autre"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__responsible_id
 msgid "Other Responsible"
-msgstr ""
+msgstr "Autre responsable"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__pin
@@ -2191,7 +2194,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_plan__steps_count
 msgid "Steps Count"
-msgstr ""
+msgstr "Nombre d'étapes"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -2240,12 +2243,12 @@ msgstr "Objectif"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__create_employee_id
 msgid "Technical field, bind user to this employee on create"
-msgstr ""
+msgstr "Champ technique, lier l'utilisateur à cet employé lors de la création"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__create_employee
 msgid "Technical field, whether to create an employee"
-msgstr ""
+msgstr "Domaine technique, s'il faut créer un employé"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
@@ -2505,6 +2508,8 @@ msgid ""
 "Whether the employee is a member of the active user's department or one of "
 "it's child department."
 msgstr ""
+"Si l'employé est membre du département de l'utilisateur actif ou d'un de ses"
+" sous-départements."
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__widower

@@ -5,24 +5,28 @@
 # Translators:
 # Martin Trigaux, 2019
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2019
-# Fabrice Henrion, 2019
 # Eloïse Stilmant <est@odoo.com>, 2019
 # Laura Piraux <lap@odoo.com>, 2019
 # Marie Willemyns <mwi@odoo.com>, 2019
+# omaodoo <oma@odoo.com>, 2019
+# Yann Papouin <ypa@decgroupe.com>, 2021
+# Mathieu Germain <mgm@odoo.com>, 2021
+# Thomas Deleval <thd@odoo.com>, 2021
+# Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Marie Willemyns <mwi@odoo.com>, 2019\n"
+"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"PO-Revision-Date: 2019-03-20 14:59+0000\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
@@ -33,6 +37,16 @@ msgid ""
 msgstr ""
 ".\n"
 "            Des actions manuelles pourraient être requises."
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_inherited_form_purchase
+msgid "<span class=\"o_stat_text\">Purchase</span>"
+msgstr "<span class=\"o_stat_text\">Achat</span>"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.purchase_order_inherited_form_sale
+msgid "<span class=\"o_stat_text\">Sale</span>"
+msgstr "<span class=\"o_stat_text\">Vente</span>"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
@@ -55,7 +69,7 @@ msgstr "Exception(s):"
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__purchase_line_ids
 msgid "Generated Purchase Lines"
-msgstr ""
+msgstr "Lignes d'achat générées"
 
 #. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_product_product__service_to_purchase
@@ -65,6 +79,9 @@ msgid ""
 "automatically created to buy the product. Tip: don't forget to set a vendor "
 "on the product."
 msgstr ""
+"Si coché, à chaque fois que vous vendez cet article via un devis, une "
+"demande de prix est automatiquement créée pour acheter cet article. Conseil:"
+" n'oubliez pas d'indiquer un fournisseur sur l'article."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
@@ -73,13 +90,18 @@ msgstr "Des actions manuelles pourraient être requises. "
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order__purchase_order_count
-msgid "Number of Purchase Order"
-msgstr "Nb. de commandes d'achat"
+msgid "Number of Purchase Order Generated"
+msgstr "Nb. de Commandes Fournisseur Générées"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__sale_order_count
+msgid "Number of Source Sale"
+msgstr "Nombre de Vente d'Origine"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__purchase_line_count
 msgid "Number of generated purchase items"
-msgstr ""
+msgstr "Nombre d'objets d'achat générés"
 
 #. module: sale_purchase
 #: code:addons/sale_purchase/models/sale_order.py:0
@@ -90,7 +112,17 @@ msgstr "Quantité commandée diminuée!"
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_line_id
 msgid "Origin Sale Item"
+msgstr "Objet de vente d'origine"
+
+#. module: sale_purchase
+#: code:addons/sale_purchase/models/product_template.py:0
+#, python-format
+msgid ""
+"Please define the vendor from whom you would like to purchase this service "
+"automatically."
 msgstr ""
+"Veuillez définir le fournisseur auprès duquel vous souhaitez acheter ce "
+"service automatiquement."
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_product_template
@@ -104,12 +136,6 @@ msgstr ""
 "Un article qui n'est pas un service ne peut pas créer de demande de devis."
 
 #. module: sale_purchase
-#: model:ir.model.fields,field_description:sale_purchase.field_product_product__service_to_purchase
-#: model:ir.model.fields,field_description:sale_purchase.field_product_template__service_to_purchase
-msgid "Purchase Automatically"
-msgstr "Acheter Automatiquement"
-
-#. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order
 msgid "Purchase Order"
 msgstr "Commande fournisseur"
@@ -120,9 +146,10 @@ msgid "Purchase Order Line"
 msgstr "Ligne de commande d'achat"
 
 #. module: sale_purchase
-#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_form_view_inherit
-msgid "Purchase Orders"
-msgstr "Bons de commande"
+#: code:addons/sale_purchase/models/sale_order.py:0
+#, python-format
+msgid "Purchase Order generated from %s"
+msgstr "Commande fournisseur généré de %s"
 
 #. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_sale_order_line__purchase_line_ids
@@ -130,6 +157,8 @@ msgid ""
 "Purchase line generated by this Sales item on order confirmation, or when "
 "the quantity was increased."
 msgstr ""
+"Ligne d'achat générée par la confirmation de l'ordre de vente pour cet "
+"article, ou quand la quantité a été augmentée."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
@@ -150,6 +179,18 @@ msgstr "Bon de commande"
 #: model:ir.model,name:sale_purchase.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "Ligne de bons de commande"
+
+#. module: sale_purchase
+#: code:addons/sale_purchase/models/purchase_order.py:0
+#, python-format
+msgid "Sources Sale Orders %s"
+msgstr "Bons de commande d'origine %s"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_product_product__service_to_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_product_template__service_to_purchase
+msgid "Subcontract Service"
+msgstr "Service Sous-Traité"
 
 #. module: sale_purchase
 #: code:addons/sale_purchase/models/sale_order.py:0

@@ -128,7 +128,7 @@ msgstr "<strong>HS-Code</strong>"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
 msgid "<strong>Shipping Weight: </strong>"
-msgstr ""
+msgstr "<strong>Versandgewicht: </strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
@@ -136,6 +136,8 @@ msgid ""
 "<strong>Shipping Weight:</strong>\n"
 "                    <br/>"
 msgstr ""
+"<strong>Versandgewicht:</strong>\n"
+"                    <br/>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -154,7 +156,7 @@ msgstr "<strong>Tracking-Nummer:</strong>"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
 msgid "<strong>Weight: </strong>"
-msgstr ""
+msgstr "<strong>Gewicht: </strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_shipping2
@@ -252,17 +254,17 @@ msgstr "Frachtführer"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_package_type__shipper_package_code
 msgid "Carrier Code"
-msgstr ""
+msgstr "Versandcode"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_move_line__carrier_name
 msgid "Carrier Name"
-msgstr ""
+msgstr "Transporteur Name"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.stock_move_line_view_search_delivery
 msgid "Carrier name"
-msgstr ""
+msgstr "Transporteur Name"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_choose_delivery_carrier__carrier_id
@@ -577,7 +579,7 @@ msgstr "Mehr Provider installieren"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__shipping_insurance
 msgid "Insurance Percentage"
-msgstr ""
+msgstr "Versicherung Prozensatz"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__integration_level
@@ -690,7 +692,7 @@ msgstr "Auftrag"
 #: model:ir.model.fields,field_description:delivery.field_product_product__country_of_origin
 #: model:ir.model.fields,field_description:delivery.field_product_template__country_of_origin
 msgid "Origin of Goods"
-msgstr ""
+msgstr "Herkunft Güter"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
@@ -804,6 +806,8 @@ msgid ""
 "Rules of origin determine where goods originate, i.e. not where they have been shipped from, but where they have been produced or manufactured.\n"
 "As such, the ‘origin’ is the 'economic nationality' of goods traded in commerce."
 msgstr ""
+"Die Herkunftsregeln bestimmen, woher die Waren stammen, d.h. nicht, woher sie verschifft wurden, sondern wo sie produziert oder hergestellt wurden.\n"
+"Der 'Ursprung' ist somit die 'wirtschaftliche Nationalität' der im Handel befindlichen Waren."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_base_price
@@ -906,6 +910,9 @@ msgid ""
 "Shipping insurance is a service which may reimburse senders whose parcels "
 "are lost, stolen, and/or damaged in transit."
 msgstr ""
+"Die Versandversicherung ist ein Service, der Absender entschädigen kann, "
+"deren Pakete während des Transports verloren gehen, gestohlen werden oder "
+"beschädigt werden."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_product__hs_code
@@ -935,17 +942,20 @@ msgstr "Typ des Lagerpakets"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__supports_shipping_insurance
 msgid "Supports Shipping Insurance"
-msgstr ""
+msgstr "Unterstützt Versandversicherung"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package__weight_uom_rounding
 msgid "Technical field indicating weight's number of decimal places"
 msgstr ""
+"Technisches Feld zur Angabe der Anzahl der Dezimalstellen des Gewichts"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package__weight_is_kg
 msgid "Technical field indicating whether weight uom is kg or not (i.e. lb)"
 msgstr ""
+"Technisches Feld, das angibt, ob die Gewichtseinheit kg ist oder nicht (d.h."
+" lb)"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_move_line__destination_country_code
@@ -973,7 +983,7 @@ msgstr "Der Rücksendeetikett wird bei der Lieferung automatisch generiert."
 #. module: delivery
 #: model:ir.model.constraint,message:delivery.constraint_delivery_carrier_shipping_insurance_is_percentage
 msgid "The shipping insurance must be a percentage between 0 and 100."
-msgstr ""
+msgstr "Die Versandversicherung muss ein Prozentsatz zwischen 0 und 100 sein."
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:0
@@ -1195,17 +1205,17 @@ msgstr "bis PLZ"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.label_package_template_view_delivery
 msgid "^A0N,44,33^FDShipping Weight:"
-msgstr ""
+msgstr "^A0N,44,33^FDVersandgewicht:"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.label_package_template_view_delivery
 msgid "^A0N,44,33^FDWeight:"
-msgstr ""
+msgstr "^A0N,44,33^FDGewicht:"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.label_package_template_view_delivery
 msgid "^FO310,200"
-msgstr ""
+msgstr "^FO310,200"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.label_package_template_view_delivery

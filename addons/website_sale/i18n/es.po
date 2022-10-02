@@ -46,6 +46,7 @@
 # Jonatan Gk, 2022
 # marcescu, 2022
 # Martin Trigaux, 2022
+# Michael Epstein, 2022
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2022
 # 
 msgid ""
@@ -381,6 +382,15 @@ msgid "<span>Process Checkout</span>"
 msgstr "<span>Pagar ahora</span>"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid ""
+"<span>Unfortunately your order can not be confirmed as the amount of your payment does not match the amount of your cart.\n"
+"                        Please contact the responsible of the shop for more information.</span>"
+msgstr ""
+"<span>Lamentablemente, su pedido no se puede confirmar ya que el monto de su pago no coincide con el monto de su carrito.\n"
+"                        Por favor, póngase en contacto con el responsable de la tienda para obtener más información.</span>"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "<span>Video Preview</span>"
 msgstr "<span>Previsualizar en Video</span>"
@@ -554,7 +564,7 @@ msgstr "Tamaño de archivo aceptable"
 #. module: website_sale
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_cross_selling_accessories
 msgid "Accessories for Product"
-msgstr ""
+msgstr "Accesorios para el producto"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__accessory_product_ids
@@ -2470,7 +2480,7 @@ msgstr "Productos vendidos recientemente con"
 #. module: website_sale
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_cross_selling_recently_sold_with
 msgid "Products Recently Sold With Product"
-msgstr ""
+msgstr "Productos vendidos recientemente con el producto"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_view_tree
@@ -2670,7 +2680,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
 msgid "Review Order"
-msgstr "Revisar orden"
+msgstr "Revisar pedido"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_ribbon_id
@@ -3178,7 +3188,7 @@ msgstr ""
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "The order has been canceled."
-msgstr ""
+msgstr "El pedido ha sido cancelado."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__public_categ_ids

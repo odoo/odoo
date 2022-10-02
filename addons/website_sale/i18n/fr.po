@@ -52,6 +52,7 @@
 # RHTodoo, 2022
 # Martin Trigaux, 2022
 # Cécile Collart <cco@odoo.com>, 2022
+# Jolien De Paepe, 2022
 # 
 msgid ""
 msgstr ""
@@ -59,7 +60,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-02 08:11+0000\n"
 "PO-Revision-Date: 2016-08-05 13:14+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -111,7 +112,7 @@ msgstr "<b>Communication : </b>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_products_price
 msgid "<b>Price Range</b>"
-msgstr ""
+msgstr "<b>Fourchette de prix</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
@@ -307,7 +308,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Assignment</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Tâche</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -381,6 +382,15 @@ msgstr "<span>Commande</span>"
 #: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
 msgid "<span>Process Checkout</span>"
 msgstr "Passer au paiement"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid ""
+"<span>Unfortunately your order can not be confirmed as the amount of your payment does not match the amount of your cart.\n"
+"                        Please contact the responsible of the shop for more information.</span>"
+msgstr ""
+"<span>Malheureusement, il est impossible de confirmer votre commande, puisque votre paiement ne couvre pas le montant total de votre panier.\n"
+"                        Veuillez contacter le responsable du magasin pour avoir plus d'informations.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -468,6 +478,48 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 0px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 0px 0px 0px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <h1 style=\"color:#A9A9A9;\">DES ARTICLES SE TROUVENT DANS VOTRE PANIER.</h1>\n"
+"                    Souhaitez-vous achever vos achats ?<br/><br/>\n"
+"                    <t t-if=\"object.order_line\">\n"
+"                        <t t-foreach=\"object.website_order_line\" t-as=\"line\">\n"
+"                            <hr/>\n"
+"                            <table width=\"100%\">\n"
+"                                <tr>\n"
+"                                    <td style=\"padding: 10px; width:150px;\">\n"
+"                                        <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
+"                                    </td>\n"
+"                                    <td>\n"
+"                                        <strong t-out=\"line.product_id.display_name or ''\">[FURN_7800] Desk Combination</strong><br/><t t-out=\"line.name or ''\">[FURN_7800] Desk Combination Desk combination, black-brown: chair + desk + drawer.</t>\n"
+"                                    </td>\n"
+"                                    <td width=\"100px\" align=\"right\">\n"
+"                                        <t t-out=\"int(line.product_uom_qty) or ''\">10000</t> <t t-out=\"line.product_uom.name or ''\">Unités</t>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </t>\n"
+"                        <hr/>\n"
+"                    </t>\n"
+"                    <div style=\"text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;\">\n"
+"                        <a t-attf-href=\"{{ object.get_base_url() }}/shop/cart?access_token={{ object.access_token }}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                            Résumé de votre commande\n"
+"                        </a>\n"
+"                    </div>\n"
+"                    <t t-set=\"company\" t-value=\"object.company_id or object.user_id.company_id or user.company_id\"/>\n"
+"                    <div style=\"text-align: center;\"><strong>Merci de votre commande chez <t t-out=\"company.name or ''\">My Company (San Francisco)</t>!</strong></div>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"            "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
@@ -750,7 +802,7 @@ msgstr "Nombre d'unités de base"
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_name
 #: model:ir.model.fields,field_description:website_sale.field_product_template__base_unit_name
 msgid "Base Unit Name"
-msgstr ""
+msgstr "Nom de l'unité de base"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_show_uom_price
@@ -761,7 +813,7 @@ msgstr "Prix unitaire de base"
 #: model:ir.actions.act_window,name:website_sale.base_unit_action
 #: model:ir.ui.menu,name:website_sale.website_base_unit_menu
 msgid "Base Units"
-msgstr ""
+msgstr "Unités de bse"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -1024,13 +1076,13 @@ msgstr "Nom de la société"
 #: model:ir.model.fields,field_description:website_sale.field_product_product__compare_list_price
 #: model:ir.model.fields,field_description:website_sale.field_product_template__compare_list_price
 msgid "Compare to Price"
-msgstr ""
+msgstr "Comparer au prix"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_product_price_comparison
 #: model:res.groups,name:website_sale.group_product_price_comparison
 msgid "Comparison Price"
-msgstr ""
+msgstr "Comparaison de prix"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1221,7 +1273,7 @@ msgstr "Par défaut"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Default (1/1)"
-msgstr ""
+msgstr "Par défaut (1/1)"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__currency_id
@@ -1256,7 +1308,7 @@ msgstr "Définir une nouvelle catégorie"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Delete Badge"
-msgstr ""
+msgstr "Supprimer le badge"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_delivery
@@ -1344,6 +1396,8 @@ msgid ""
 "Display base unit price on your eCommerce pages. Set to 0 to hide it for "
 "this product."
 msgstr ""
+"Afficher le prix unitaire de base sur vos pages d'eCommerce. Configurez le "
+"prix sur 0 pour le cacher pour ce produit."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -1401,12 +1455,13 @@ msgstr "Tiroir"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_extra_field_ids
 msgid "E-Commerce Extra Fields"
-msgstr ""
+msgstr "Champs supplémentaires d'eCommerce"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_sale_extra_field
 msgid "E-Commerce Extra Info Shown on product page"
 msgstr ""
+"Informations supplémentaires d'eCommerce affichées sur la page produit"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist__code
@@ -1849,7 +1904,7 @@ msgstr "Moyen"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_delivery
 msgid "Module Website Sale Delivery"
-msgstr ""
+msgstr "Module Site web Livraison de la Vente"
 
 #. module: website_sale
 #. openerp-web
@@ -2038,12 +2093,14 @@ msgid ""
 "Only the company's websites are allowed.\n"
 "Leave the Company field empty or select a website from that company."
 msgstr ""
+"Seuls les sites web de l'entreprise sont autorisés.\n"
+"Laissez le champ d'entreprise vide ou sélectionnez un site web de cette entreprise."
 
 #. module: website_sale
 #: code:addons/website_sale/models/res_partner.py:0
 #, python-format
 msgid "Open Sale Orders"
-msgstr ""
+msgstr "Ouvrir les bons de commande"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
@@ -2222,7 +2279,7 @@ msgstr "Paiements à récupérer"
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Pedal-based opening system"
-msgstr ""
+msgstr "Système d'ouverture avec une pédale"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -2343,7 +2400,7 @@ msgstr "Article"
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_accessories_action
 msgid "Product Accessories"
-msgstr ""
+msgstr "Accessoires de produit"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_attribute
@@ -2388,7 +2445,7 @@ msgstr "Nom de l'article"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_website_sale_website_form
 msgid "Product Page Extra Fields"
-msgstr ""
+msgstr "Champs supplémentaires de la page produit"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_public_category_tree_view
@@ -2398,12 +2455,12 @@ msgstr "Catégories publiques du produit"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Product Reference Price"
-msgstr ""
+msgstr "Prix de référence du produit"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_tag
 msgid "Product Tag"
-msgstr ""
+msgstr "Étiquette du produit"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__product_tag_ids
@@ -2647,7 +2704,7 @@ msgstr "Email de relance à envoyer"
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Reinforced for heavy loads"
-msgstr ""
+msgstr "Renforcé pour des charges lourdes"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -2677,7 +2734,7 @@ msgstr "Limiter la publication sur ce site web."
 #: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid "Resume Order"
-msgstr ""
+msgstr "Reprendre la commande"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
@@ -2953,7 +3010,7 @@ msgstr "Boutique – Sélectionner l'acquéreur de paiement"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_default_sort
 msgid "Shop Default Sort"
-msgstr ""
+msgstr "Boutique Tri par défaut"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_add_to_cart
@@ -2963,7 +3020,7 @@ msgstr "Panier"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Show Empty Cart"
-msgstr ""
+msgstr "Afficher le panier vide"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_categories
@@ -3011,7 +3068,7 @@ msgstr "Taille Y"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Slanted"
-msgstr ""
+msgstr "Incliné"
 
 #. module: website_sale
 #. openerp-web
@@ -3156,6 +3213,8 @@ msgid ""
 "The company of the website you are trying to sale from (%s) is different "
 "than the one you want to use (%s)"
 msgstr ""
+"Le site web de l'entreprise depuis lequel vous essayez de vendre (%s) est "
+"différent de celui que vous voulez utiliser (%s)"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_url
@@ -3320,11 +3379,13 @@ msgid ""
 "True only for product filters that require a product_id because they relate "
 "to cross selling"
 msgstr ""
+"Seulement vrai pour des filtres de produit qui requièrent un product_id "
+"parce qu'ils concernent la vente croisée"
 
 #. module: website_sale
 #: model:res.groups,name:website_sale.group_show_uom_price
 msgid "UOM Price Display for eCommerce"
-msgstr ""
+msgstr "Afficher l'unité de mesure du prix pour l'eCommerce"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3495,7 +3556,7 @@ msgstr "Boutique en ligne"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_snippet_filter
 msgid "Website Snippet Filter"
-msgstr ""
+msgstr "Filtre des snippets du site web"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_url
@@ -3593,7 +3654,7 @@ msgstr ""
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "With three feet"
-msgstr ""
+msgstr "Avec trois pieds"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -3683,7 +3744,7 @@ msgstr "Catégories d'e-commerce"
 #: model_terms:ir.ui.view,arch_db:website_sale.attribute_tree_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_attribute_view_form
 msgid "eCommerce Filter Visibility"
-msgstr ""
+msgstr "Visibilité du filtre d'eCommerce"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total
