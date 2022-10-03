@@ -174,12 +174,6 @@ class AccountMove(models.Model):
                 documents_allowed |= document_allowed
         return documents_allowed
 
-    def _get_l10n_ec_internal_type(self):
-        self.ensure_one()
-        internal_type = self.env.context.get("internal_type", "invoice")
-        if self.l10n_latam_document_type_id:
-            internal_type = self.l10n_latam_document_type_id.internal_type
-
     def _get_l10n_latam_documents_domain(self):
         self.ensure_one()
         if self.journal_id.company_id.account_fiscal_country_id != self.env.ref('base.ec') or not \
@@ -189,7 +183,7 @@ class AccountMove(models.Model):
             ('country_id.code', '=', 'EC'),
             ('internal_type', 'in', ['invoice', 'debit_note', 'credit_note', 'invoice_in'])
         ]
-        internal_type = self._get_l10n_ec_internal_type()
+        internal_type = self.l10n_latam_document_type_id.internal_type
         allowed_documents = self._get_l10n_ec_documents_allowed(self._get_l10n_ec_identification_type())
         if internal_type and allowed_documents:
             domain.append(("id", "in", allowed_documents.filtered(lambda x: x.internal_type == internal_type).ids))
@@ -217,7 +211,7 @@ class AccountMove(models.Model):
     def _get_last_sequence_domain(self, relaxed=False):
         where_string, param = super(AccountMove, self)._get_last_sequence_domain(relaxed)
         if self.country_code == "EC" and self.l10n_latam_use_documents:
-            internal_type = self._get_l10n_ec_internal_type()
+            internal_type = self.l10n_latam_document_type_id.internal_type
             document_types = self.env['l10n_latam.document.type'].search([
                 ('internal_type', '=', internal_type),
                 ('country_id.code', '=', 'EC'),
