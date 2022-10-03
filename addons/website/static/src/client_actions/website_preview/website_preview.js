@@ -35,6 +35,10 @@ export class WebsitePreview extends Component {
             isBlocked: false,
             showLoader: false,
         });
+        // The params used to configure the context should be ignored when the
+        // action is restored (example: click on the breadcrumb).
+        this.isRestored = this.props.action.jsId === this.websiteService.actionJsId;
+        this.websiteService.actionJsId = this.props.action.jsId;
 
         useBus(this.websiteService.bus, 'BLOCK', (event) => this.block(event.detail));
         useBus(this.websiteService.bus, 'UNBLOCK', () => this.unblock());
@@ -57,12 +61,7 @@ export class WebsitePreview extends Component {
 
         useEffect(() => {
             this.websiteService.currentWebsiteId = this.websiteId;
-
-            // The params used to configure the context should be ignored when
-            // the action is restored (example: click on the breadcrumb).
-            const isRestored = this.props.action.jsId === this.websiteService.actionJsId;
-            this.websiteService.actionJsId = this.props.action.jsId;
-            if (isRestored) {
+            if (this.isRestored) {
                 return;
             }
             this.websiteService.context.showNewContentModal = this.props.action.context.params && this.props.action.context.params.display_new_content;
@@ -95,6 +94,8 @@ export class WebsitePreview extends Component {
             this.env.services.messaging.modelManager.messagingCreatedPromise.then(() => {
                 this.env.services.messaging.modelManager.messaging.update({ isWebsitePreviewOpen: false });
             });
+            const { pathname, search, hash } = this.iframe.el.contentWindow.location;
+            this.websiteService.lastUrl = `${pathname}${search}${hash}`;
             this.websiteService.currentWebsiteId = null;
             this.websiteService.websiteRootInstance = undefined;
             this.websiteService.pageDocument = null;
@@ -189,28 +190,27 @@ export class WebsitePreview extends Component {
     }
 
     get path() {
-        let path = this.websiteService.editedObjectPath;
-        if (!path) {
-            path = this.props.action.context.params && this.props.action.context.params.path;
-            if (path) {
-                const url = new URL(path, window.location.origin);
-                if (this._isTopWindowURL(url)) {
-                    // If the client action is initialized with a path that
-                    // should not be opened inside the iframe (= something we
-                    // would want to open on the top window), we consider that
-                    // this is not a valid flow. Instead of trying to open it on
-                    // the top window, we initialize the iframe with the
-                    // website homepage...
-                    path = '/';
-                } else {
-                    // ... otherwise, the path still needs to be normalized (as
-                    // it would be if the given path was used as an href of a
-                    // <a/> element).
-                    path = url.pathname + url.search + url.hash;
-                }
-            } else {
+        let path = this.isRestored
+            ? this.websiteService.lastUrl
+            : this.props.action.context.params && this.props.action.context.params.path;
+
+        if (path) {
+            const url = new URL(path, window.location.origin);
+            if (this._isTopWindowURL(url)) {
+                // If the client action is initialized with a path that should
+                // not be opened inside the iframe (= something we would want to
+                // open on the top window), we consider that this is not a valid
+                // flow. Instead of trying to open it on the top window, we
+                // initialize the iframe with the website homepage...
                 path = '/';
+            } else {
+                // ... otherwise, the path still needs to be normalized (as it
+                // would be if the given path was used as an href of a  <a/>
+                // element).
+                path = url.pathname + url.search + url.hash;
             }
+        } else {
+            path = '/';
         }
         return path;
     }
