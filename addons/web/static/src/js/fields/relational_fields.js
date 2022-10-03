@@ -2157,8 +2157,6 @@ var FieldMany2ManyBinaryMultiFiles = AbstractField.extend({
     fieldsToFetch: {
         name: {type: 'char'},
         mimetype: {type: 'char'},
-        res_id: {type: 'number'},
-        access_token: {type: 'char'},
     },
     events: {
         'click .o_attach': '_onAttach',

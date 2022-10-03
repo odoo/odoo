@@ -246,7 +246,8 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @param {Object} event the event containing attachment data
      */
     _onAttachmentChange: function (event) {
-        if (!this.fieldNameAttachment) {
+        // This only needs to happen for the composer for now
+        if (!this.fieldNameAttachment || this.model !== 'mail.compose.message') {
             return;
         }
         this.trigger_up('field_changed', {

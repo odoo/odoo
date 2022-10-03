@@ -2536,14 +2536,11 @@ QUnit.module('relational_fields', {
             fields: {
                 name: {string:"Name", type: "char"},
                 mimetype: {string: "Mimetype", type: "char"},
-                res_id: {type: "number"},
-                access_token: {type: "char"},
             },
             records: [{
                 id: 17,
                 name: 'Marley&Me.jpg',
                 mimetype: 'jpg',
-                res_id: 1,
             }],
         };
         this.data.turtle.fields.picture_ids = {
@@ -2567,7 +2564,7 @@ QUnit.module('relational_fields', {
             mockRPC: function (route, args) {
                 assert.step(route);
                 if (route === '/web/dataset/call_kw/ir.attachment/read') {
-                    assert.deepEqual(args.args[1], ['name', 'mimetype', 'res_id', 'access_token']);
+                    assert.deepEqual(args.args[1], ['name', 'mimetype']);
                 }
                 return this._super.apply(this, arguments);
             },
