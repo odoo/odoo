@@ -247,12 +247,6 @@
                             <strong class="text-center">Scan me with your banking app.</strong><br/><br/>
                             <img class="border border-dark rounded" t-att-src="qr_code_urls[o.id]"/>
                         </p>
-                        <p t-if="o.invoice_payment_term_id" name="payment_term">
-                            <span t-field="o.invoice_payment_term_id.note"/>
-                        </p>
-                        <div t-if="not is_html_empty(o.narration)" name="comment">
-                            <span t-field="o.narration"/>
-                        </div>
                         <p t-if="not is_html_empty(o.fiscal_position_id.note)" name="note">
                             <span t-field="o.fiscal_position_id.note"/>
                         </p>
