@@ -671,16 +671,16 @@ class TestAPI(SavepointCaseWithUserDemo):
 
         with self.subTest("Should work with mixes of db and new records"):
             self.assertEqual(
-                (p0 | p1 | p2 | pn)._group_on('function'),
+                (p0 | p1 | p2 | pn).grouped('function'),
                 {'guest': p0 | p2, 'host': p1 | pn}
             )
             self.assertEqual(
-                (p0 | p1 | p2 | pn)._group_on(lambda r: len(r.name)),
+                (p0 | p1 | p2 | pn).grouped(lambda r: len(r.name)),
                 {3: p0, 4: p2 | pn, 5: p1},
             )
 
         with self.subTest("Should allow cross-group prefetching"):
-            byfn = (p0 | p1 | p2)._group_on('function')
+            byfn = (p0 | p1 | p2).grouped('function')
             self.env.invalidate_all(flush=False)
             self.assertFalse(self.env.cache._data, "ensure the cache is empty")
             self.assertEqual(byfn['guest'].mapped('name'), ['bob', 'rhod'])

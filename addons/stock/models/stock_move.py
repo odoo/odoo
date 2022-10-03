@@ -2125,13 +2125,9 @@ Please change the quantity done or the rounding precision of your unit of measur
 
         currents = product_ids.with_context(warehouse=warehouse.id)._get_only_qty_available()
 
-        outs_per_product = defaultdict(list)
-        reserved_outs_per_product = defaultdict(list)
+        outs_per_product = outs.grouped('product_id')
+        reserved_outs_per_product = reserved_outs.grouped('product_id')
         ins_per_product = defaultdict(list)
-        for out in outs:
-            outs_per_product[out.product_id.id].append(out)
-        for out in reserved_outs:
-            reserved_outs_per_product[out.product_id.id].append(out)
         for in_ in ins:
             ins_per_product[in_.product_id.id].append({
                 'qty': in_.product_qty,
@@ -2142,16 +2138,15 @@ Please change the quantity done or the rounding precision of your unit of measur
         result = defaultdict(lambda: (0.0, False))
         for product in product_ids:
             product_rounding = product.uom_id.rounding
-            for out in reserved_outs_per_product[product.id]:
+            for out in reserved_outs_per_product.get(product, []):
                 # Reconcile with reserved stock.
-                current = currents[product.id]
                 reserved = out.product_uom._compute_quantity(out.reserved_availability, product.uom_id)
                 currents[product.id] -= reserved
                 if out.id in ids_in_self:
                     result[out] = (result[out][0] + reserved, False)
 
             unreconciled_outs = []
-            for out in outs_per_product[product.id]:
+            for out in outs_per_product.get(product, []):
                 # Reconcile with the current stock.
                 reserved = 0.0
                 if out.state in ('partially_available', 'assigned'):

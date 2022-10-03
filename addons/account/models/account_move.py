@@ -3225,12 +3225,12 @@ class AccountMove(models.Model):
         if cancel:
             reverse_moves.with_context(move_reverse_cancel=cancel)._post(soft=False)
             for move, reverse_move in zip(self, reverse_moves):
-                group = defaultdict(list)
-                for line in (move.line_ids + reverse_move.line_ids).filtered(lambda l: not l.reconciled):
-                    group[(line.account_id, line.currency_id)].append(line.id)
-                for (account, dummy), line_ids in group.items():
+                group = (move.line_ids + reverse_move.line_ids)\
+                    .filtered(lambda l: not l.reconciled)\
+                    .grouped(lambda l: (l.account_id, l.currency_id))
+                for (account, _currency), lines in group.items():
                     if account.reconcile or account.account_type in ('asset_cash', 'liability_credit_card'):
-                        self.env['account.move.line'].browse(line_ids).with_context(move_reverse_cancel=cancel).reconcile()
+                        lines.with_context(move_reverse_cancel=cancel).reconcile()
 
         return reverse_moves
 
