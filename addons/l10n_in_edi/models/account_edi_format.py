@@ -427,19 +427,19 @@ class AccountEdiFormat(models.Model):
             tags = tax_values['tax_repartition_line'].tag_ids
             line_code = "other"
             if not invl.currency_id.is_zero(tax_values['tax_amount_currency']):
-                if any(tag in tags for tag in self.env.ref("l10n_in.tax_report_line_cess").sudo().tag_ids):
+                if any(tag in tags for tag in self.env.ref("l10n_in.tax_tag_cess")):
                     if tax.amount_type != "percent":
                         line_code = "cess_non_advol"
                     else:
                         line_code = "cess"
-                elif any(tag in tags for tag in self.env.ref("l10n_in.tax_report_line_state_cess").sudo().tag_ids):
+                elif any(tag in tags for tag in self.env.ref("l10n_in.tax_tag_state_cess")):
                     if tax.amount_type != "percent":
                         line_code = "state_cess_non_advol"
                     else:
                         line_code = "state_cess"
                 else:
                     for gst in ["cgst", "sgst", "igst"]:
-                        if any(tag in tags for tag in self.env.ref("l10n_in.tax_report_line_%s"%(gst)).sudo().tag_ids):
+                        if any(tag in tags for tag in self.env.ref("l10n_in.tax_tag_%s"%(gst))):
                             line_code = gst
             return {
                 "tax": tax,
