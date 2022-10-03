@@ -9324,14 +9324,14 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            assert.hasClass(target.querySelector('button[data-value="4"]'), "btn-primary");
+            assert.hasClass(target.querySelector('button[data-value="4"]'), "o_arrow_button_current");
             assert.hasClass(target.querySelector('button[data-value="4"]'), "disabled");
 
             failFlag = true;
             await click(target.querySelector('button[data-value="1"]'));
             assert.hasClass(
                 target.querySelector('button[data-value="4"]'),
-                "btn-primary",
+                "o_arrow_button_current",
                 "initial status should still be active as save failed"
             );
 
@@ -9339,7 +9339,7 @@ QUnit.module("Views", (hooks) => {
             await click(target.querySelector('button[data-value="1"]'));
             assert.hasClass(
                 target.querySelector('button[data-value="1"]'),
-                "btn-primary",
+                "o_arrow_button_current",
                 "last clicked status should be active"
             );
 

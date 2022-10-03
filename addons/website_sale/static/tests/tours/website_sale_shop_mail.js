@@ -64,7 +64,7 @@ tour.register('shop_mail', {
     {
         content: "click send by email",
         trigger: '.btn[name="action_quotation_send"]',
-        extra_trigger: '.o_statusbar_status .btn-primary:contains("Sales Order")',
+        extra_trigger: '.o_statusbar_status .o_arrow_button_current:contains("Sales Order")',
     },
     {
         content: "Open recipients dropdown",

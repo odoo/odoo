@@ -165,7 +165,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsN(target, ".o_statusbar_status button:disabled", 2);
         assert.hasClass(
             target.querySelector('.o_statusbar_status button[data-value="4"]'),
-            "btn-primary"
+            "o_arrow_button_current"
         );
     });
 
@@ -245,7 +245,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.hasClass(
             target.querySelector(".o_statusbar_status button[data-value='4']"),
-            "btn-primary"
+            "o_arrow_button_current"
         );
         assert.hasClass(
             target.querySelector(".o_statusbar_status button[data-value='4']"),
@@ -253,7 +253,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         const clickableButtons = target.querySelectorAll(
-            ".o_statusbar_status button.btn-secondary:not(.dropdown-toggle):not(:disabled)"
+            ".o_statusbar_status button.btn:not(.dropdown-toggle):not(:disabled):not(.o_arrow_button_current)"
         );
         assert.strictEqual(clickableButtons.length, 2);
 
@@ -261,7 +261,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.hasClass(
             target.querySelector(".o_statusbar_status button[data-value='1']"),
-            "btn-primary"
+            "o_arrow_button_current"
         );
         assert.hasClass(
             target.querySelector(".o_statusbar_status button[data-value='1']"),
