@@ -79,7 +79,7 @@ export class YearPicker extends DatePicker {
      */
     updateInput({ useStatic } = {}) {
         const [formattedValue] = this.formatValue(this.date, this.getOptions(useStatic));
-        this.inputRef.el.value = formattedValue || "";
+        this.inputRef.el.value = formattedValue || this.props.placeholder;
     }
 
     /**
