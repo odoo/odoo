@@ -64,16 +64,38 @@ export const busService = {
             bus.trigger(type, data);
         }
 
+        /**
+         * Initialize the connection to the worker by sending it usefull
+         * initial informations (last notification id, debug mode,
+         * ...).
+         */
+        function initializeConnection() {
+            // User_id has different values according to its origin:
+            //     - frontend: number or false,
+            //     - backend: array with only one number
+            //     - guest page: array containing null or number
+            //     - public pages: undefined
+            // Let's format it in order to ease its usage:
+            //     - number if user is logged, false otherwise, keep
+            //       undefined to indicate session_info is not available.
+            let uid = Array.isArray(session.user_id) ? session.user_id[0] : session.user_id;
+            if (!uid && uid !== undefined) {
+                uid = false;
+            }
+            send('initialize_connection', {
+                debug: odoo.debug,
+                lastNotificationId: multiTab.getSharedValue('last_notification_id', 0),
+                uid,
+            });
+        }
+
         if ('SharedWorker' in window) {
             worker.port.start();
             worker.port.addEventListener('message', handleMessage);
         } else {
             worker.addEventListener('message', handleMessage);
         }
-        send('initialize_connection', {
-            debug: odoo.debug,
-            lastNotificationId: multiTab.getSharedValue('last_notification_id', 0),
-        });
+        initializeConnection();
         browser.addEventListener('pagehide', ({ persisted }) => {
             if (!persisted) {
                 // Page is gonna be unloaded, disconnect this client
