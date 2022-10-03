@@ -86,9 +86,8 @@ export class DomainSelectorLeafNode extends Component {
         const changes = { operator: operatorInfo.value };
         Object.assign(
             changes,
-            operatorInfo.onDidChange(
-                this.getOperatorInfo(this.props.node.operator),
-                component.onDidTypeChange
+            operatorInfo.onDidChange(this.getOperatorInfo(this.props.node.operator), () =>
+                component.onDidTypeChange(this.fieldInfo)
             )
         );
         this.props.node.update(changes);
