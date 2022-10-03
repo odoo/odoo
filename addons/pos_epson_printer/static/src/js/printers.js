@@ -48,13 +48,16 @@ class EpsonPrintResultGenerator extends PrintResultGenerator {
     }
 }
 
-var EpsonPrinter = core.Class.extend(PrinterMixin, {
-    init(ip, pos) {
-        PrinterMixin.init.call(this, pos);
-        var url = window.location.protocol + '//' + ip;
+class EpsonPrinter extends PrinterMixin(class {}) {
+    /**
+     * @param {{ ip: string, pos: PosGlobalState }} params
+     */
+    constructor(params) {
+        super(params);
+        const url = window.location.protocol + '//' + params.ip;
         this.address = url + '/cgi-bin/epos/service.cgi?devid=local_printer';
         this.printResultGenerator = new EpsonPrintResultGenerator(url);
-    },
+    }
 
 
     /**
@@ -118,7 +121,7 @@ var EpsonPrinter = core.Class.extend(PrinterMixin, {
         }
 
         return rasterData.join('');
-    },
+    }
 
     /**
      * Base 64 encode a raster image
@@ -130,7 +133,7 @@ var EpsonPrinter = core.Class.extend(PrinterMixin, {
             encodedData += String.fromCharCode(parseInt(sub, 2));
         }
         return btoa(encodedData);
-    },
+    }
 
     /**
      * Create the raster data from a canvas
@@ -145,7 +148,7 @@ var EpsonPrinter = core.Class.extend(PrinterMixin, {
             width: canvas.width,
             height: canvas.height,
         });
-    },
+    }
 
     /**
      * @override
@@ -153,7 +156,7 @@ var EpsonPrinter = core.Class.extend(PrinterMixin, {
     open_cashbox() {
         var pulse = QWeb.render('ePOSDrawer');
         this.send_printing_job(pulse);
-    },
+    }
 
     /**
      * @override
@@ -165,8 +168,8 @@ var EpsonPrinter = core.Class.extend(PrinterMixin, {
             data: img,
         });
         return $(res).find('response').attr('success') === 'true';
-    },
-});
+    }
+}
 
 return EpsonPrinter;
 

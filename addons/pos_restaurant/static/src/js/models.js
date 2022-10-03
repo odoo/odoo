@@ -9,11 +9,9 @@ const Printer = require('point_of_sale.Printer').Printer;
 const { batched } = require('point_of_sale.utils')
 const QWeb = core.qweb;
 
-const TIMEOUT = 7500;
-
 const PosRestaurantPosGlobalState = (PosGlobalState) => class PosRestaurantPosGlobalState extends PosGlobalState {
-    constructor(obj) {
-        super(obj);
+    constructor() {
+        super(...arguments);
         this.orderToTransfer = null; // table transfer feature
         this.ordersToUpdateSet = new Set(); // used to know which orders need to be sent to the back end when syncing
     }
@@ -100,14 +98,7 @@ const PosRestaurantPosGlobalState = (PosGlobalState) => class PosRestaurantPosGl
     async _getTableOrdersFromServer(tableId) {
         this.set_synch('connecting', 1);
         try {
-            const orders = await this.env.services.rpc({
-                model: 'pos.order',
-                method: 'get_table_draft_orders',
-                args: [tableId],
-            }, {
-                timeout: TIMEOUT,
-                shadow: true,
-            });
+            const orders = await this.orm.silent.call('pos.order', 'get_table_draft_orders', [tableId]);
             this.set_synch('connected');
             return orders;
         } catch (error) {
@@ -152,17 +143,9 @@ const PosRestaurantPosGlobalState = (PosGlobalState) => class PosRestaurantPosGl
             return;
         }
 
-        const timeout = TIMEOUT * removedOrdersIds.length;
         this.set_synch('connecting', removedOrdersIds.length);
         try {
-            const removeOrdersResponseData = await this.env.services.rpc({
-                model: 'pos.order',
-                method: 'remove_from_ui',
-                args: [removedOrdersIds],
-            }, {
-                timeout: timeout,
-                shadow: true,
-            });
+            const removeOrdersResponseData = await this.orm.silent.call('pos.order', 'remove_from_ui', [removedOrdersIds]);
             this.set_synch('connected');
             this._postRemoveFromServer(removedOrdersIds, removeOrdersResponseData);
         } catch (reason) {
@@ -276,14 +259,14 @@ const PosRestaurantPosGlobalState = (PosGlobalState) => class PosRestaurantPosGl
         if(url.indexOf(':', url.indexOf('//') + 2) < 0 && window.location.protocol !== 'https:') {
             url = url + ':8069';
         }
-        return new Printer(url, this);
+        return new Printer({ url, pos: this });
     }
 }
 Registries.Model.extend(PosGlobalState, PosRestaurantPosGlobalState);
 
 // New orders are now associated with the current table, if any.
 const PosRestaurantOrder = (Order) => class PosRestaurantOrder extends Order {
-    constructor(obj, options) {
+    constructor(env, obj, options) {
         super(...arguments);
         if (this.pos.config.module_pos_restaurant) {
             if (this.pos.config.iface_floorplan && !this.tableId && !options.json) {

@@ -3,7 +3,6 @@ odoo.define('pos_stripe.payment', function (require) {
 "use strict";
 
 const core = require('web.core');
-const rpc = require('web.rpc');
 const PaymentInterface = require('point_of_sale.PaymentInterface');
 const { Gui } = require('point_of_sale.Gui');
 
@@ -26,12 +25,7 @@ let PaymentStripe = PaymentInterface.extend({
 
     stripeFetchConnectionToken: function () {
         // Do not cache or hardcode the ConnectionToken.
-        return rpc.query({
-            model: 'pos.payment.method',
-            method: 'stripe_connection_token',
-        }, {
-            silent: true,
-        }).catch(function (error) {
+        return this.pos.orm.silent.call('pos.payment.method', 'stripe_connection_token').catch(function (error) {
             this._showError(_t('error'));
         }).then(function (data) {
             return data.secret;
@@ -125,26 +119,14 @@ let PaymentStripe = PaymentInterface.extend({
 
     capturePayment: function (paymentIntentId) {
         let self = this;
-        return rpc.query({
-            model: 'pos.payment.method',
-            method: 'stripe_capture_payment',
-            args: [paymentIntentId],
-        }, {
-            silent: true,
-        }).catch(function (error) {
+        return this.pos.orm.silent.call('pos.payment.method', 'stripe_capture_payment', [paymentIntentId]).catch(function (error) {
             self._showError(_t('error'));
         });
     },
 
     fetchPaymentIntentClientSecret: function (payment_method, amount) {
         let self = this;
-        return rpc.query({
-            model: 'pos.payment.method',
-            method: 'stripe_payment_intent',
-            args: [[payment_method.id], amount],
-        }, {
-            silent: true,
-        }).catch(function (error) {
+        return this.pos.orm.silent.call('pos.payment.method', 'stripe_payment_intent', [[payment_method.id], amount]).catch(function (error) {
             self._showError(_t('error'));
         }).then(function (data) {
             return data.client_secret;

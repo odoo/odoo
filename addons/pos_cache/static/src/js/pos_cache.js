@@ -7,20 +7,11 @@ const Registries = require('point_of_sale.Registries');
 
 const PosCachePosGlobalState = (PosGlobalState) => class PosCachePosGlobalState extends PosGlobalState {
     async _getTotalProductsCount() {
-        return this.env.services.rpc({
-            model: 'pos.session',
-            method: 'get_total_products_count',
-            args: [[odoo.pos_session_id]],
-            context: this.env.session.user_context,
-        });
+        return this.orm.call('pos.session', 'get_total_products_count', [[odoo.pos_session_id]]);
     }
     async _loadCachedProducts(start, end) {
-        const products = await this.env.services.rpc({
-            model: 'pos.session',
-            method: 'get_cached_products',
-            args: [[odoo.pos_session_id], start, end],
-            context: this.env.session.user_context,
-        });
+        const args = [[odoo.pos_session_id], start, end];
+        const products = await this.orm.silent.call('pos.session', 'get_cached_products', args);
         this._loadProductProduct(products);
     }
 }

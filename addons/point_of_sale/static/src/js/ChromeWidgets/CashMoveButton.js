@@ -25,11 +25,8 @@ odoo.define('point_of_sale.CashMoveButton', function (require) {
                 );
             }
             const extras = { formattedAmount, translatedType };
-            await this.rpc({
-                model: 'pos.session',
-                method: 'try_cash_in_out',
-                args: [[this.env.pos.pos_session.id], type, amount, reason, extras],
-            });
+            const args = [[this.env.pos.pos_session.id], type, amount, reason, extras];
+            await this.orm.call('pos.session', 'try_cash_in_out', args);
             if (this.env.proxy.printer) {
                 const renderedReceipt = renderToString('point_of_sale.CashMoveReceipt', {
                     _receipt: this._getReceiptInfo({ ...payload, translatedType, formattedAmount }),

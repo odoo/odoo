@@ -26,15 +26,11 @@ odoo.define('point_of_sale.InvoiceButton', function (require) {
         }
         async _downloadInvoice(orderId) {
             try {
-                const [orderWithInvoice] = await this.rpc({
-                    method: 'read',
-                    model: 'pos.order',
-                    args: [orderId, ['account_move']],
-                    kwargs: { load: false },
-                });
+                // IMPROVEMENT: Use orm.read, but need a way to pass "load = false" as kwargs.
+                const [orderWithInvoice] = await this.orm.call('pos.order', 'read', [orderId, ['account_move']], { load: false });
                 if (orderWithInvoice && orderWithInvoice.account_move) {
-                    await this.env.legacyActionManager.do_action('account.account_invoices', {
-                        additional_context: {
+                    await this.env.services.action.doAction('account.account_invoices', {
+                        additionalContext: {
                             active_ids: [orderWithInvoice.account_move],
                         },
                     });
@@ -77,27 +73,11 @@ odoo.define('point_of_sale.InvoiceButton', function (require) {
                 );
                 if (!confirmedTempScreen) return;
 
-                await this.rpc({
-                    model: 'pos.order',
-                    method: 'write',
-                    args: [[orderId], { partner_id: newPartner.id }],
-                    kwargs: { context: this.env.session.user_context },
-                });
+                await this.orm.write('pos.order', [orderId], { partner_id: newPartner.id });
             }
 
             // Part 2: Invoice the order.
-            await this.rpc(
-                {
-                    model: 'pos.order',
-                    method: 'action_pos_order_invoice',
-                    args: [orderId],
-                    kwargs: { context: this.env.session.user_context },
-                },
-                {
-                    timeout: 30000,
-                    shadow: true,
-                }
-            );
+            await this.orm.silent.call('pos.order', 'action_pos_order_invoice', [orderId]);
 
             // Part 3: Download invoice.
             await this._downloadInvoice(orderId);

@@ -602,27 +602,18 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
             const domain = this._computeSyncedOrdersDomain();
             const limit = this._state.syncedOrders.nPerPage;
             const offset = (this._state.syncedOrders.currentPage - 1) * this._state.syncedOrders.nPerPage;
-            const { ids, totalCount } = await this.rpc({
-                model: 'pos.order',
-                method: 'search_paid_order_ids',
-                kwargs: { config_id: this.env.pos.config.id, domain, limit, offset },
-                context: this.env.session.user_context,
-            });
+            const kwargs = { config_id: this.env.pos.config.id, domain, limit, offset };
+            const { ids, totalCount } = await this.orm.call('pos.order', 'search_paid_order_ids', [], kwargs);
             const idsNotInCache = ids.filter((id) => !(id in this._state.syncedOrders.cache));
             if (idsNotInCache.length > 0) {
-                const fetchedOrders = await this.rpc({
-                    model: 'pos.order',
-                    method: 'export_for_ui',
-                    args: [idsNotInCache],
-                    context: this.env.session.user_context,
-                });
+                const fetchedOrders = await this.orm.call('pos.order', 'export_for_ui', [idsNotInCache]);
                 // Check for missing products and partners and load them in the PoS
                 await this.env.pos._loadMissingProducts(fetchedOrders);
                 await this.env.pos._loadMissingPartners(fetchedOrders);
                 // Cache these fetched orders so that next time, no need to fetch
                 // them again, unless invalidated. See `_onInvoiceOrder`.
                 fetchedOrders.forEach((order) => {
-                    this._state.syncedOrders.cache[order.id] = Order.create({}, { pos: this.env.pos, json: order });
+                    this._state.syncedOrders.cache[order.id] = Order.create(this.env, {}, { pos: this.env.pos, json: order });
                 });
             }
             this._state.syncedOrders.totalCount = totalCount;

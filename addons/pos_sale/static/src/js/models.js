@@ -23,7 +23,7 @@ const PosSaleOrder = (Order) => class PosSaleOrder extends Order {
 Registries.Model.extend(Order, PosSaleOrder);
 
 const PosSaleOrderline = (Orderline) => class PosSaleOrderline extends Orderline {
-  constructor(obj, options) {
+  constructor(env, obj, options) {
       super(...arguments);
       // It is possible that this orderline is initialized using `init_from_JSON`,
       // meaning, it is loaded from localStorage or from export_for_ui. This means

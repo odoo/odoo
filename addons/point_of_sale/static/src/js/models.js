@@ -59,12 +59,13 @@ class PosModel {
      * don't want this default calculation of cid.
      * @param {Object?} defaultObj its props copied to this instance.
      */
-    constructor(defaultObj) {
+    constructor(env, defaultObj) {
         defaultObj = defaultObj || {};
         if (!defaultObj.cid) {
             defaultObj.cid = this._getCID(defaultObj);
         }
         Object.assign(this, defaultObj);
+        this.env = env;
     }
     /**
      * Default cid getter. Used as local identity of this object.
@@ -80,11 +81,20 @@ class PosModel {
         }
         return `c${nextId++}`;
     }
+    /**
+     * Make orm service available to all PosModel instances.
+     */
+    get orm() {
+        if (this.env && this.env.services.orm) {
+            return this.env.services.orm;
+        }
+        throw new Error('orm service is not available');
+    }
 }
 
 class PosGlobalState extends PosModel {
-    constructor(obj) {
-        super(obj);
+    constructor(env, obj) {
+        super(env, obj);
 
         this.db = new PosDB();                       // a local database used to search trough products and categories & store pending orders
         this.debug = config.isDebug(); //debug mode
@@ -151,13 +161,7 @@ class PosGlobalState extends PosModel {
         };
     }
     async load_product_uom_unit() {
-        const params = {
-            model: 'ir.model.data',
-            method:'check_object_reference',
-            args: ['uom', 'product_uom_unit'],
-        };
-
-        const uom_id = await this.env.services.rpc(params);
+        const uom_id = await this.orm.call('ir.model.data', 'check_object_reference', ['uom', 'product_uom_unit']);
         this.uom_unit_id = uom_id[1];
     }
 
@@ -168,11 +172,7 @@ class PosGlobalState extends PosModel {
     }
 
     async load_server_data(){
-        const loadedData = await this.env.services.rpc({
-            model: 'pos.session',
-            method: 'load_pos_data',
-            args: [[odoo.pos_session_id]],
-        });
+        const loadedData = await this.orm.call('pos.session', 'load_pos_data', [[odoo.pos_session_id]]);
         await this._processData(loadedData);
         return this.after_load_server_data();
     }
@@ -240,7 +240,7 @@ class PosGlobalState extends PosModel {
             product.applicablePricelistItems = {};
             productMap[product.id] = product;
             productTemplateMap[product.product_tmpl_id[0]] = (productTemplateMap[product.product_tmpl_id[0]] || []).concat(product);
-            return Product.create(product);
+            return Product.create(this.env, product);
         });
 
         for (let pricelist of this.pricelists) {
@@ -321,7 +321,7 @@ class PosGlobalState extends PosModel {
                 reject();
             };
             this.company_logo.crossOrigin = "anonymous";
-            this.company_logo.src = '/web/binary/company_logo' + '?dbname=' + this.env.session.db + '&company=' + this.company.id + '&_' + Math.random();
+            this.company_logo.src = '/web/binary/company_logo' + '?dbname=' + this.env.services.user.db.name + '&company=' + this.company.id + '&_' + Math.random();
         });
 
     }
@@ -332,41 +332,29 @@ class PosGlobalState extends PosModel {
     // reload the list of partner, returns as a promise that resolves if there were
     // updated partners, and fails if not
     load_new_partners(){
-        return new Promise((resolve, reject)  => {
-            var domain = this.prepare_new_partners_domain();
-            this.env.services.rpc({
-                model: 'pos.session',
-                method: 'get_pos_ui_res_partner_by_params',
-                args: [[odoo.pos_session_id], {domain}],
-            }, {
-                timeout: 3000,
-                shadow: true,
-            })
-            .then(partners => {
-                if (this.addPartners(partners)) {   // check if the partners we got were real updates
+        return new Promise(async (resolve, reject)  => {
+            try {
+                const domain = this.prepare_new_partners_domain();
+                const partners = await this.orm.silent.call('pos.session', 'get_pos_ui_res_partner_by_params', [[odoo.pos_session_id], { domain }]);
+                if (this.addPartners(partners)) {
+                    // check if the partners we got were real updates
                     resolve();
                 } else {
                     reject('Failed in updating partners.');
                 }
-            }, function (type, err) { reject(); });
+            } catch {
+                reject();
+            }
         });
     }
 
     async updateIsEveryPartnerLoaded() {
-        let partnersCount = await this.env.services.rpc({
-            model: 'res.partner',
-            method: 'search_count',
-            args: [[]],
-        });
+        let partnersCount = await this.orm.call('res.partner', 'search_count', [[]]);
         this.isEveryPartnerLoaded = partnersCount === this.db.partner_sorted.length;
     }
 
     async updateIsEveryProductLoaded() {
-        let productsCount = await this.env.services.rpc({
-            model: 'product.product',
-            method: 'search_count',
-            args: [[['available_in_pos', '=', true]]],
-        });
+        let productsCount = await this.orm.call('product.product', 'search_count', [[['available_in_pos', '=', true]]]);
         this.isEveryProductLoaded = productsCount === this.db.get_product_by_category(this.db.root_category_id).length;
     }
 
@@ -409,7 +397,7 @@ class PosGlobalState extends PosModel {
         if (json) {
             options.json = json;
         }
-        let order = Order.create({}, options);
+        let order = Order.create(this.env, {}, options);
         const batchedCallback = batched(() => {
             this._onReactiveOrderUpdated(order)
         });
@@ -473,25 +461,15 @@ class PosGlobalState extends PosModel {
                 }
             }
         }
-        const products = await this.env.services.rpc({
-            model: 'pos.session',
-            method: 'get_pos_ui_product_product_by_params',
-            args: [odoo.pos_session_id, {domain: [['id', 'in', [...missingProductIds]]]}],
-        });
+        const args = [odoo.pos_session_id, { domain: [['id', 'in', [...missingProductIds]]] }];
+        const products = await this.orm.call('pos.session', 'get_pos_ui_product_product_by_params', args);
         this._loadProductProduct(products);
     }
     // load the partners based on the ids
     async _loadPartners(partnerIds) {
         if (partnerIds.length > 0) {
             var domain = [['id','in', partnerIds]];
-            const fetchedPartners = await this.env.services.rpc({
-                model: 'pos.session',
-                method: 'get_pos_ui_res_partner_by_params',
-                args: [[odoo.pos_session_id], {domain}],
-            }, {
-                timeout: 3000,
-                shadow: true,
-            });
+            const fetchedPartners = await this.orm.silent.call('pos.session', 'get_pos_ui_res_partner_by_params', [[odoo.pos_session_id], { domain }]);
             this.addPartners(fetchedPartners);
         }
     }
@@ -510,14 +488,14 @@ class PosGlobalState extends PosModel {
         let page = 0;
         let products = [];
         do {
-            products = await this.env.services.rpc({
-                model: 'pos.session',
-                method: 'get_pos_ui_product_product_by_params',
-                args: [odoo.pos_session_id, {
+            // Background loading should be silent, should not show the block ui.
+            products = await this.orm.silent.call('pos.session', 'get_pos_ui_product_product_by_params', [
+                odoo.pos_session_id,
+                {
                     offset: page * this.config.limited_products_amount,
                     limit: this.config.limited_products_amount,
-                }],
-            }, { shadow: true });
+                },
+            ]);
             this._loadProductProduct(products);
             page += 1;
         } while(products.length == this.config.limited_products_amount);
@@ -528,94 +506,89 @@ class PosGlobalState extends PosModel {
         let i = 0;
         let partners = [];
         do {
-            partners = await this.env.services.rpc({
-                model: 'pos.session',
-                method: 'get_pos_ui_res_partner_by_params',
-                args: [
-                    [odoo.pos_session_id],
-                    {
-                        limit: this.config.limited_partners_amount,
-                        offset: this.config.limited_partners_amount * i,
-                    },
-                ],
-                context: this.env.session.user_context,
-            }, { shadow: true });
+            // Background loading should be silent, should not show the block ui.
+            partners = await this.orm.silent.call('pos.session', 'get_pos_ui_res_partner_by_params', [
+                [odoo.pos_session_id],
+                {
+                    limit: this.config.limited_partners_amount,
+                    offset: this.config.limited_partners_amount * i,
+                },
+            ]);
             this.addPartners(partners);
             i += 1;
         } while(partners.length);
     }
     async getProductInfo(product, quantity) {
         const order = this.get_order();
-        try {
-            // check back-end method `get_product_info_pos` to see what it returns
-            // We do this so it's easier to override the value returned and use it in the component template later
-            const productInfo = await this.env.services.rpc({
-                model: 'product.product',
-                method: 'get_product_info_pos',
-                args: [[product.id],
-                    product.get_price(order.pricelist, quantity),
-                    quantity,
-                    this.config.id],
-                kwargs: {context: this.env.session.user_context},
-            });
+        // check back-end method `get_product_info_pos` to see what it returns
+        // We do this so it's easier to override the value returned and use it in the component template later
+        const productInfo = await this.env.services.orm.call('product.product', 'get_product_info_pos', [
+            [product.id],
+            product.get_price(order.pricelist, quantity),
+            quantity,
+            this.config.id,
+        ]);
 
-            const priceWithoutTax = productInfo['all_prices']['price_without_tax'];
-            const margin = priceWithoutTax - product.standard_price;
-            const orderPriceWithoutTax = order.get_total_without_tax();
-            const orderCost = order.get_total_cost();
-            const orderMargin = orderPriceWithoutTax - orderCost;
+        const priceWithoutTax = productInfo['all_prices']['price_without_tax'];
+        const margin = priceWithoutTax - product.standard_price;
+        const orderPriceWithoutTax = order.get_total_without_tax();
+        const orderCost = order.get_total_cost();
+        const orderMargin = orderPriceWithoutTax - orderCost;
 
-            const costCurrency = this.format_currency(product.standard_price);
-            const marginCurrency = this.format_currency(margin);
-            const marginPercent = priceWithoutTax ? Math.round(margin/priceWithoutTax * 10000) / 100 : 0;
-            const orderPriceWithoutTaxCurrency = this.format_currency(orderPriceWithoutTax);
-            const orderCostCurrency = this.format_currency(orderCost);
-            const orderMarginCurrency = this.format_currency(orderMargin);
-            const orderMarginPercent = orderPriceWithoutTax ? Math.round(orderMargin/orderPriceWithoutTax * 10000) / 100 : 0;
-            return {
-            costCurrency, marginCurrency, marginPercent, orderPriceWithoutTaxCurrency,
-            orderCostCurrency, orderMarginCurrency, orderMarginPercent,productInfo
-            }
-        } catch (error) {
-            return { error }
-        }
+        const costCurrency = this.format_currency(product.standard_price);
+        const marginCurrency = this.format_currency(margin);
+        const marginPercent = priceWithoutTax ? Math.round(margin/priceWithoutTax * 10000) / 100 : 0;
+        const orderPriceWithoutTaxCurrency = this.format_currency(orderPriceWithoutTax);
+        const orderCostCurrency = this.format_currency(orderCost);
+        const orderMarginCurrency = this.format_currency(orderMargin);
+        const orderMarginPercent = orderPriceWithoutTax ? Math.round(orderMargin/orderPriceWithoutTax * 10000) / 100 : 0;
+        return {
+            costCurrency,
+            marginCurrency,
+            marginPercent,
+            orderPriceWithoutTaxCurrency,
+            orderCostCurrency,
+            orderMarginCurrency,
+            orderMarginPercent,
+            productInfo,
+        };
     }
     async getClosePosInfo() {
-        try {
-            const closingData = await this.env.services.rpc({
-                model: 'pos.session',
-                method: 'get_closing_control_data',
-                args: [[this.pos_session.id]]
-            });
-            const ordersDetails = closingData.orders_details;
-            const paymentsAmount = closingData.payments_amount;
-            const payLaterAmount = closingData.pay_later_amount;
-            const openingNotes = closingData.opening_notes;
-            const defaultCashDetails = closingData.default_cash_details;
-            const otherPaymentMethods = closingData.other_payment_methods;
-            const isManager = closingData.is_manager;
-            const amountAuthorizedDiff = closingData.amount_authorized_diff;
-            const cashControl = this.config.cash_control;
+        const closingData = await this.env.services.orm.call('pos.session', 'get_closing_control_data', [[this.pos_session.id]]);
+        const ordersDetails = closingData.orders_details;
+        const paymentsAmount = closingData.payments_amount;
+        const payLaterAmount = closingData.pay_later_amount;
+        const openingNotes = closingData.opening_notes;
+        const defaultCashDetails = closingData.default_cash_details;
+        const otherPaymentMethods = closingData.other_payment_methods;
+        const isManager = closingData.is_manager;
+        const amountAuthorizedDiff = closingData.amount_authorized_diff;
+        const cashControl = this.config.cash_control;
 
-            // component state and refs definition
-            const state = {notes: '', payments: {}};
-            if (cashControl) {
-                state.payments[defaultCashDetails.id] = {counted: 0, difference: -defaultCashDetails.amount, number: 0};
-            }
-            if (otherPaymentMethods.length > 0) {
-                otherPaymentMethods.forEach(pm => {
-                    if (pm.type === 'bank') {
-                        state.payments[pm.id] = {counted: this.round_decimals_currency(pm.amount), difference: 0, number: pm.number}
-                    }
-                })
-            }
-            return {
-            ordersDetails, paymentsAmount, payLaterAmount, openingNotes, defaultCashDetails, otherPaymentMethods,
-            isManager, amountAuthorizedDiff, state, cashControl
-            }
-        } catch (error) {
-            return { error }
+        // component state and refs definition
+        const state = {notes: '', payments: {}};
+        if (cashControl) {
+            state.payments[defaultCashDetails.id] = {counted: 0, difference: -defaultCashDetails.amount, number: 0};
         }
+        if (otherPaymentMethods.length > 0) {
+            otherPaymentMethods.forEach(pm => {
+                if (pm.type === 'bank') {
+                    state.payments[pm.id] = {counted: this.round_decimals_currency(pm.amount), difference: 0, number: pm.number}
+                }
+            })
+        }
+        return {
+            ordersDetails,
+            paymentsAmount,
+            payLaterAmount,
+            openingNotes,
+            defaultCashDetails,
+            otherPaymentMethods,
+            isManager,
+            amountAuthorizedDiff,
+            state,
+            cashControl,
+        };
     }
     set_start_order(){
         if (this.orders.length && !this.selectedOrder) {
@@ -817,8 +790,6 @@ class PosGlobalState extends PosModel {
     }
 
     // send an array of orders to the server
-    // available options:
-    // - timeout: timeout for the rpc call in ms
     // returns a promise that resolves with the list of
     // server generated ids for the sent orders
     _save_to_server (orders, options) {
@@ -829,7 +800,6 @@ class PosGlobalState extends PosModel {
         options = options || {};
 
         var self = this;
-        var timeout = typeof options.timeout === 'number' ? options.timeout : 30000 * orders.length;
 
         // Keep the order ids that are about to be sent to the
         // backend. In between create_from_ui and the success callback
@@ -843,15 +813,7 @@ class PosGlobalState extends PosModel {
                 return order;
             })];
         args.push(options.draft || false);
-        return this.env.services.rpc({
-                model: 'pos.order',
-                method: 'create_from_ui',
-                args: args,
-                kwargs: {context: this.env.session.user_context},
-            }, {
-                timeout: timeout,
-                shadow: !options.to_invoice
-            })
+        return this.orm.call('pos.order', 'create_from_ui', args)
             .then(function (server_ids) {
                 _.each(order_ids_to_sync, function (order_id) {
                     self.db.remove_order(order_id);
@@ -859,9 +821,11 @@ class PosGlobalState extends PosModel {
                 self.failed = false;
                 self.set_synch('connected');
                 return server_ids;
-            }).catch(function (error){
+            })
+            .catch(function (error) {
                 console.warn('Failed to send orders:', orders);
-                if(error.code === 200 ){    // Business Logic Error, not a connection problem
+                if (error.code === 200) {
+                    // Business Logic Error, not a connection problem
                     // Hide error if already shown before ...
                     if ((!self.failed || options.show_error) && !options.to_invoice) {
                         self.failed = error;
@@ -1202,31 +1166,6 @@ class PosGlobalState extends PosModel {
         return _.uniq(mappedTaxes, (tax) => tax.id);
       }
 
-    /**
-     * TODO: We can probably remove this here and put it somewhere else.
-     * And that somewhere else becomes the parent of the proxy.
-     * Directly calls the requested service, instead of triggering a
-     * 'call_service' event up, which wouldn't work as services have no parent
-     *
-     * @param {OdooEvent} ev
-     */
-    _trigger_up (ev) {
-        if (ev.is_stopped()) {
-            return;
-        }
-        const payload = ev.data;
-        if (ev.name === 'call_service') {
-            let args = payload.args || [];
-            if (payload.service === 'ajax' && payload.method === 'rpc') {
-                // ajax service uses an extra 'target' argument for rpc
-                args = args.concat(ev.target);
-            }
-            const service = this.env.services[payload.service];
-            const result = service[payload.method].apply(service, args);
-            payload.callback(result);
-        }
-    }
-
     isProductQtyZero(qty) {
         return utils.float_is_zero(qty, this.dp['Product Unit of Measure']);
     }
@@ -1301,27 +1240,16 @@ class PosGlobalState extends PosModel {
      */
     async _addProducts(ids, setAvailable=true){
         if(setAvailable){
-            await this.env.services.rpc({
-                model: 'product.product',
-                method: 'write',
-                args: [ids, {'available_in_pos': true}],
-                context: this.env.session.user_context,
-            });
+            await this.orm.write('product.product', ids, { available_in_pos: true });
         }
-        let product = await this.env.services.rpc({
-            model: 'pos.session',
-            method: 'get_pos_ui_product_product_by_params',
-            args: [odoo.pos_session_id, {domain: [['id', 'in', ids]]}],
-        });
+        let product = await this.orm.call('pos.session', 'get_pos_ui_product_product_by_params', [
+            odoo.pos_session_id,
+            { domain: [['id', 'in', ids]] },
+        ]);
         this._loadProductProduct(product);
     }
     async refreshTotalDueOfPartner(partner) {
-        const partnerWithUpdatedTotalDue = await this.env.services.rpc({
-            model: 'res.partner',
-            method: 'search_read',
-            fields: ['total_due'],
-            domain: [['id', '=', partner.id]],
-        });
+        const partnerWithUpdatedTotalDue = await this.orm.searchRead('res.partner', [['id', '=', partner.id]], ['total_due']);
         this.db.update_partners(partnerWithUpdatedTotalDue);
         return partnerWithUpdatedTotalDue;
     }
@@ -1469,8 +1397,8 @@ var orderline_id = 1;
 // An orderline contains a product, its quantity, its price, discount. etc.
 // An Order contains zero or more Orderlines.
 class Orderline extends PosModel {
-    constructor(obj, options) {
-        super(obj);
+    constructor(env, obj, options) {
+        super(env, obj);
         this.pos   = options.pos;
         this.order = options.order;
         this.price_manually_set = options.price_manually_set || false;
@@ -1517,7 +1445,7 @@ class Orderline extends PosModel {
         var pack_lot_lines = json.pack_lot_ids;
         for (var i = 0; i < pack_lot_lines.length; i++) {
             var packlotline = pack_lot_lines[i][2];
-            var pack_lot_line = Packlotline.create({}, {'json': _.extend(packlotline, {'order_line':this})});
+            var pack_lot_line = Packlotline.create(this.env, {}, {'json': _.extend(packlotline, {'order_line':this})});
             this.pack_lot_lines.add(pack_lot_line);
         }
         this.tax_ids = json.tax_ids && json.tax_ids.length !== 0 ? json.tax_ids[0][2] : undefined;
@@ -1526,7 +1454,7 @@ class Orderline extends PosModel {
         this.refunded_orderline_id = json.refunded_orderline_id;
     }
     clone(){
-        var orderline = Orderline.create({},{
+        var orderline = Orderline.create(this.env, {}, {
             pos: this.pos,
             order: this.order,
             product: this.product,
@@ -1586,7 +1514,7 @@ class Orderline extends PosModel {
         // Create new pack lot lines.
         let newPackLotLine;
         for (let newLotLine of newPackLotLines) {
-            newPackLotLine = Packlotline.create({}, { order_line: this });
+            newPackLotLine = Packlotline.create(this.env, {}, { order_line: this });
             newPackLotLine.lot_name = newLotLine.lot_name;
             this.pack_lot_lines.add(newPackLotLine);
         }
@@ -2096,8 +2024,8 @@ class Orderline extends PosModel {
 Registries.Model.add(Orderline);
 
 class Packlotline extends PosModel {
-    constructor(obj, options){
-        super(obj);
+    constructor(env, obj, options){
+        super(env, obj);
         this.lot_name = null;
         this.order_line = options.order_line;
         if (options.json) {
@@ -2129,8 +2057,8 @@ Registries.Model.add(Packlotline);
 
 // Every Paymentline contains a cashregister and an amount of money.
 class Payment extends PosModel {
-    constructor(obj, options) {
-        super(obj);
+    constructor(env, obj, options) {
+        super(env, obj);
         this.pos = options.pos;
         this.order = options.order;
         this.amount = 0;
@@ -2263,8 +2191,8 @@ Registries.Model.add(Payment);
 // there is always an active ('selected') order in the Pos, a new one is created
 // automaticaly once an order is completed and sent to the server.
 class Order extends PosModel {
-    constructor(obj, options) {
-        super(obj);
+    constructor(env, obj, options) {
+        super(env, obj);
         var self = this;
         options  = options || {};
 
@@ -2382,14 +2310,14 @@ class Order extends PosModel {
         for (var i = 0; i < orderlines.length; i++) {
             var orderline = orderlines[i][2];
             if (this.pos.db.get_product_by_id(orderline.product_id)) {
-                this.add_orderline(Orderline.create({}, { pos: this.pos, order: this, json: orderline }));
+                this.add_orderline(Orderline.create(this.env, {}, { pos: this.pos, order: this, json: orderline }));
             }
         }
 
         var paymentlines = json.statement_ids;
         for (var i = 0; i < paymentlines.length; i++) {
             var paymentline = paymentlines[i][2];
-            var newpaymentline = Payment.create({},{pos: this.pos, order: this, json: paymentline});
+            var newpaymentline = Payment.create(this.env, {},{pos: this.pos, order: this, json: paymentline});
             this.paymentlines.add(newpaymentline);
 
             if (i === paymentlines.length - 1) {
@@ -2734,7 +2662,7 @@ class Order extends PosModel {
         }
         this.assert_editable();
         options = options || {};
-        var line = Orderline.create({}, {pos: this.pos, order: this, product: product});
+        var line = Orderline.create(this.env, {}, {pos: this.pos, order: this, product: product});
         this.fix_tax_included_price(line);
 
         this.set_orderline_options(line, options);
@@ -2835,7 +2763,7 @@ class Order extends PosModel {
         if (this.electronic_payment_in_progress()) {
             return false;
         } else {
-            var newPaymentline = Payment.create({},{order: this, payment_method:payment_method, pos: this.pos});
+            var newPaymentline = Payment.create(this.env, {},{order: this, payment_method:payment_method, pos: this.pos});
             this.paymentlines.add(newPaymentline);
             this.select_paymentline(newPaymentline);
             if(this.pos.config.cash_rounding){

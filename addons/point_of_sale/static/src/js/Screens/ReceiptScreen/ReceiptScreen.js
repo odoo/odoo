@@ -114,7 +114,7 @@ odoo.define('point_of_sale.ReceiptScreen', function (require) {
                 return this.env.proxy.printer && this.env.pos.config.iface_print_skip_screen && invoiced_finalized;
             }
             async _sendReceiptToCustomer() {
-                const printer = new Printer(null, this.env.pos);
+                const printer = new Printer({ url: null, pos: this.env.pos });
                 const receiptString = this.orderReceipt.el.innerHTML;
                 const ticketImage = await printer.htmlToImg(receiptString);
                 const order = this.currentOrder;
@@ -122,11 +122,8 @@ odoo.define('point_of_sale.ReceiptScreen', function (require) {
                 const orderName = order.get_name();
                 const orderPartner = { email: this.orderUiState.inputEmail, name: partner ? partner.name : this.orderUiState.inputEmail };
                 const order_server_id = this.env.pos.validated_orders_name_server_id_map[orderName];
-                await this.rpc({
-                    model: 'pos.order',
-                    method: 'action_receipt_to_customer',
-                    args: [[order_server_id], orderName, orderPartner, ticketImage],
-                });
+                const args = [[order_server_id], orderName, orderPartner, ticketImage];
+                await this.orm.call('pos.order', 'action_receipt_to_customer', args);
             }
         }
         ReceiptScreen.template = 'ReceiptScreen';

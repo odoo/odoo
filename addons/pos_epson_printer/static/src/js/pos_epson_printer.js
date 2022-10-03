@@ -11,7 +11,7 @@ const PosEpsonPosGlobalState = (PosGlobalState) => class PosEpsonPosGlobalState 
         var self = this;
         return super.after_load_server_data(...arguments).then(function () {
             if (self.config.other_devices && self.config.epson_printer_ip) {
-                self.env.proxy.printer = new EpsonPrinter(self.config.epson_printer_ip , self);
+                self.env.proxy.printer = new EpsonPrinter({ ip: self.config.epson_printer_ip, pos: self });
             }
         });
     }

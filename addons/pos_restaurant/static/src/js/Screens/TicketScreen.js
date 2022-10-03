@@ -113,11 +113,7 @@ odoo.define('pos_restaurant.TicketScreen', function (require) {
                         order.set_tip(amount);
                         order.finalized = true;
                         const tip_line = order.selected_orderline;
-                        await this.rpc({
-                            method: 'set_tip',
-                            model: 'pos.order',
-                            args: [serverId, tip_line.export_as_JSON()],
-                        });
+                        await this.orm.call('pos.order', 'set_tip', [serverId, tip_line.export_as_JSON()]);
                     }
                     if (order === this.env.pos.get_order()) {
                         this._selectNextOrder(order);
@@ -133,11 +129,7 @@ odoo.define('pos_restaurant.TicketScreen', function (require) {
                 }
             }
             async setNoTip(serverId) {
-                await this.rpc({
-                    method: 'set_no_tip',
-                    model: 'pos.order',
-                    args: [serverId],
-                });
+                await this.orm.call('pos.order', 'set_no_tip', [serverId]);
             }
             _getOrderStates() {
                 const result = super._getOrderStates();

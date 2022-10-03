@@ -1,8 +1,7 @@
 odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
     'use strict';
 
-    const { identifyError } = require('point_of_sale.utils');
-    const { ConnectionLostError, ConnectionAbortedError } = require('@web/core/network/rpc_service');
+    const { isConnectionError } = require('point_of_sale.utils');
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
     const { debounce } = require("@web/core/utils/timing");
@@ -63,21 +62,15 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
                 return;
 
             try {
-                let ProductIds = await this.rpc({
-                    model: 'product.product',
-                    method: 'search',
-                    args: [['&', ['name', 'ilike', this.searchWordInput.el.value + "%"], ['available_in_pos', '=', true]]],
-                    context: this.env.session.user_context,
-                });
-                if(ProductIds.length) {
+                let productIds = await this.orm.search('product.product', ['&', ['name', 'ilike', this.searchWordInput.el.value + "%"], ['available_in_pos', '=', true]]);
+                if(productIds.length) {
                     if (!this.env.pos.isEveryProductLoaded) await this.env.pos.updateIsEveryProductLoaded();
-                    await this.env.pos._addProducts(ProductIds, false);
+                    await this.env.pos._addProducts(productIds, false);
                 }
                 this.trigger('update-product-list');
-                return ProductIds;
+                return productIds;
             } catch (error) {
-                const identifiedError = identifyError(error)
-                if (identifiedError instanceof ConnectionLostError || identifiedError instanceof ConnectionAbortedError) {
+                if (isConnectionError(error)) {
                     return this.showPopup('OfflineErrorPopup', {
                         title: this.env._t('Network Error'),
                         body: this.env._t("Product is not loaded. Tried loading the product from the server but there is a network error."),

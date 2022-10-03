@@ -59,14 +59,8 @@ export const PosLoyaltyProductScreen = (ProductScreen) =>
                 if (trimmedCode && trimmedCode.startsWith('044')) {
                     // check if the code exist in the database
                     // if so, use its balance, otherwise, use the unit price of the gift card product
-                    const fetchedGiftCard = await this.rpc({
-                        model: 'loyalty.card',
-                        method: 'search_read',
-                        args: [
-                            [['code', '=', trimmedCode], ['program_id', '=', program.id]],
-                            ['points', 'source_pos_order_id'],
-                        ],
-                    });
+                    const domain = [['code', '=', trimmedCode], ['program_id', '=', program.id]];
+                    const fetchedGiftCard = await this.orm.searchRead('loyalty.card', domain, ['points', 'source_pos_order_id']);
                     // There should be maximum one gift card for a given code.
                     const giftCard = fetchedGiftCard[0];
                     if (giftCard && giftCard.source_pos_order_id) {

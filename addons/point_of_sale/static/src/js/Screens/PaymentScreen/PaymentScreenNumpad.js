@@ -3,11 +3,12 @@ odoo.define('point_of_sale.PaymentScreenNumpad', function(require) {
 
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
+    const { localization } = require('@web/core/l10n/localization');
 
     class PaymentScreenNumpad extends PosComponent {
         setup() {
             super.setup();
-            this.decimalPoint = this.env._t.database.parameters.decimal_point;
+            this.decimalPoint = localization.decimalPoint;
         }
     }
     PaymentScreenNumpad.template = 'PaymentScreenNumpad';

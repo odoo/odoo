@@ -52,11 +52,7 @@ odoo.define('pos_restaurant.TipScreen', function (require) {
             }
 
             if (!amount) {
-                await this.rpc({
-                    method: 'set_no_tip',
-                    model: 'pos.order',
-                    args: [serverId],
-                });
+                await this.orm.call('pos.order', 'set_no_tip', [serverId]);
                 this.goNextScreen();
                 return;
             }
@@ -84,11 +80,7 @@ odoo.define('pos_restaurant.TipScreen', function (require) {
 
             // set_tip calls add_product which sets the new line as the selected_orderline
             const tip_line = order.selected_orderline;
-            await this.rpc({
-                method: 'set_tip',
-                model: 'pos.order',
-                args: [serverId, tip_line.export_as_JSON()],
-            });
+            await this.orm.call('pos.order', 'set_tip', [serverId, tip_line.export_as_JSON()]);
             this.goNextScreen();
         }
         goNextScreen() {

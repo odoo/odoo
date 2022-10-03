@@ -3,6 +3,7 @@ odoo.define('point_of_sale.NumpadWidget', function (require) {
 
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
+    const { localization } = require('@web/core/l10n/localization');
 
     /**
      * @prop {'quantity' | 'price' | 'discount'} activeMode
@@ -34,7 +35,7 @@ odoo.define('point_of_sale.NumpadWidget', function (require) {
             this.trigger('numpad-click-input', { key });
         }
         get decimalSeparator() {
-            return this.env._t.database.parameters.decimal_point;
+            return localization.decimalPoint;
         }
     }
     NumpadWidget.template = 'NumpadWidget';

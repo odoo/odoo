@@ -7,6 +7,7 @@ odoo.define('point_of_sale.NumberPopup', function(require) {
     const NumberBuffer = require('point_of_sale.NumberBuffer');
     const { useListener } = require("@web/core/utils/hooks");
     const Registries = require('point_of_sale.Registries');
+    const { localization } = require('@web/core/l10n/localization');
 
     const { useState } = owl;
 
@@ -39,7 +40,7 @@ odoo.define('point_of_sale.NumberPopup', function(require) {
             });
         }
         get decimalSeparator() {
-            return this.env._t.database.parameters.decimal_point;
+            return localization.decimalPoint;
         }
         get inputBuffer() {
             if (this.state.buffer === null) {

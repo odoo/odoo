@@ -3,8 +3,7 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
 
     const AbstractAwaitablePopup = require('point_of_sale.AbstractAwaitablePopup');
     const Registries = require('point_of_sale.Registries');
-    const { identifyError } = require('point_of_sale.utils');
-    const { ConnectionLostError, ConnectionAbortedError} = require('@web/core/network/rpc_service')
+    const { isConnectionError } = require('point_of_sale.utils');
 
     const { useState } = owl;
 
@@ -64,8 +63,8 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
             this.state.displayMoneyDetailsPopup = false;
         }
         async downloadSalesReport() {
-            await this.env.legacyActionManager.do_action('point_of_sale.sale_details_report', {
-                additional_context: {
+            await this.env.services.action.doAction('point_of_sale.sale_details_report', {
+                additionalContext: {
                     active_ids: [this.env.pos.pos_session.id],
                 },
             });
@@ -111,39 +110,24 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
                 this.closeSessionClicked = true;
                 let response;
                 if (this.cashControl) {
-                     response = await this.rpc({
-                        model: 'pos.session',
-                        method: 'post_closing_cash_details',
-                        args: [this.env.pos.pos_session.id],
-                        kwargs: {
-                            counted_cash: this.state.payments[this.defaultCashDetails.id].counted,
-                        }
-                    })
+                    const kwargs = { counted_cash: this.state.payments[this.defaultCashDetails.id].counted };
+                    response = await this.orm.call('pos.session', 'post_closing_cash_details', [this.env.pos.pos_session.id], kwargs);
                     if (!response.successful) {
                         return this.handleClosingError(response);
                     }
                 }
-                await this.rpc({
-                    model: 'pos.session',
-                    method: 'update_closing_control_state_session',
-                    args: [this.env.pos.pos_session.id, this.state.notes]
-                })
+                await this.orm.call('pos.session', 'update_closing_control_state_session', [this.env.pos.pos_session.id, this.state.notes]);
                 try {
                     const bankPaymentMethodDiffPairs = this.otherPaymentMethods
                         .filter((pm) => pm.type == 'bank')
                         .map((pm) => [pm.id, this.state.payments[pm.id].difference]);
-                    response = await this.rpc({
-                        model: 'pos.session',
-                        method: 'close_session_from_ui',
-                        args: [this.env.pos.pos_session.id, bankPaymentMethodDiffPairs],
-                    });
+                    response = await this.orm.call('pos.session', 'close_session_from_ui', [this.env.pos.pos_session.id, bankPaymentMethodDiffPairs]);
                     if (!response.successful) {
                         return this.handleClosingError(response);
                     }
                     window.location = '/web#action=point_of_sale.action_client_pos_menu';
                 } catch (error) {
-                    const iError = identifyError(error);
-                    if (iError instanceof ConnectionLostError || iError instanceof ConnectionAbortedError) {
+                    if (isConnectionError(error)) {
                         await this.showPopup('ErrorPopup', {
                             title: this.env._t('Network Error'),
                             body: this.env._t('Cannot close the session when offline.'),

@@ -8,7 +8,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
     const NumberBuffer = require('point_of_sale.NumberBuffer');
     const Registries = require('point_of_sale.Registries');
     const IndependentToOrderScreen = require('point_of_sale.IndependentToOrderScreen');
-    const { identifyError, batched } = require('point_of_sale.utils');
+    const { batched } = require('point_of_sale.utils');
     const { odooExceptionTitleMap } = require("@web/core/errors/error_dialogs");
     const { ConnectionLostError, ConnectionAbortedError, RPCError } = require('@web/core/network/rpc_service');
     const { useBus } = require("@web/core/utils/hooks");
@@ -172,6 +172,9 @@ odoo.define('point_of_sale.Chrome', function(require) {
                     title = error.message;
                     body = error.stack;
                 }
+
+                // Log the error so that developers can see it from the console.
+                console.error(error);
 
                 await this.showPopup('ErrorTracebackPopup', {
                     title,
@@ -467,10 +470,9 @@ odoo.define('point_of_sale.Chrome', function(require) {
          */
         errorHandler(env, error, originalError) {
             if (!env.pos) return false;
-            const errorToHandle = identifyError(originalError);
             // Assume that the unhandled falsey rejections can be ignored.
-            if (errorToHandle) {
-                this._errorHandler(error, errorToHandle);
+            if (originalError) {
+                this._errorHandler(error, originalError);
             }
             return true;
         }

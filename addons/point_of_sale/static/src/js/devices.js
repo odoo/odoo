@@ -186,7 +186,7 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
     },
 
     connect_to_printer: function () {
-        this.printer = new Printer(this.host, this.pos);
+        this.printer = new Printer({ url: this.host, pos: this.pos });
     },
 
     /**

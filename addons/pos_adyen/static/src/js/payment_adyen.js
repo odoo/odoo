@@ -2,7 +2,6 @@ odoo.define('pos_adyen.payment', function (require) {
 "use strict";
 
 var core = require('web.core');
-var rpc = require('web.rpc');
 var PaymentInterface = require('point_of_sale.PaymentInterface');
 const { Gui } = require('point_of_sale.Gui');
 
@@ -52,17 +51,8 @@ var PaymentAdyen = PaymentInterface.extend({
     },
 
     _call_adyen: function (data, operation) {
-        return rpc.query({
-            model: 'pos.payment.method',
-            method: 'proxy_adyen_request',
-            args: [[this.payment_method.id], data, operation],
-        }, {
-            // When a payment terminal is disconnected it takes Adyen
-            // a while to return an error (~6s). So wait 10 seconds
-            // before concluding Odoo is unreachable.
-            timeout: 10000,
-            shadow: true,
-        }).catch(this._handle_odoo_connection_failure.bind(this));
+        return this.pos.orm.silent.call('pos.payment.method', 'proxy_adyen_request', [[this.payment_method.id], data, operation])
+            .catch(this._handle_odoo_connection_failure.bind(this));
     },
 
     _adyen_get_sale_id: function () {
@@ -191,14 +181,8 @@ var PaymentAdyen = PaymentInterface.extend({
             return Promise.resolve();
         }
 
-        return rpc.query({
-            model: 'pos.payment.method',
-            method: 'get_latest_adyen_status',
-            args: [[this.payment_method.id], this._adyen_get_sale_id()],
-        }, {
-            timeout: 5000,
-            shadow: true,
-        }).catch(function (data) {
+        return this.pos.orm.silent.call('pos.payment.method', 'get_latest_adyen_status', [[this.payment_method.id], this._adyen_get_sale_id()])
+        .catch(function (data) {
             if (self.remaining_polls != 0) {
                 self.remaining_polls--;
             } else {

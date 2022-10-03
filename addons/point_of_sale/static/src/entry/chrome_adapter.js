@@ -1,50 +1,60 @@
 /** @odoo-module */
 
-import { useService } from "@web/core/utils/hooks";
-
 import Chrome from "point_of_sale.Chrome";
 import ProductScreen from "point_of_sale.ProductScreen";
 import Registries from "point_of_sale.Registries";
 import { PosGlobalState } from "point_of_sale.models";
 import { configureGui } from "point_of_sale.Gui";
 import { registry } from "@web/core/registry";
-import env from "point_of_sale.env";
 import { debounce } from "@web/core/utils/timing";
 import { batched } from "point_of_sale.utils";
 
-const { Component, reactive, markRaw, useExternalListener, useSubEnv, onWillUnmount, xml } = owl;
+import concurrency from 'web.concurrency';
+import devices from 'point_of_sale.devices';
+import BarcodeReader from 'point_of_sale.BarcodeReader';
+
+const { Component, reactive, markRaw, useExternalListener, onWillUnmount, xml } = owl;
 
 export class ChromeAdapter extends Component {
     setup() {
         this.PosChrome = Registries.Component.get(Chrome);
         ProductScreen.sortControlButtons();
-        const legacyActionManager = useService("legacy_action_manager");
+
+        // Augment the default env.
+        const pos_env = Object.assign(Object.create(this.env), {
+            get isMobile() {
+                return window.innerWidth <= 768;
+            },
+            isDebug() {
+                return this.debug;
+            },
+        });
+        pos_env.proxy_queue = new devices.JobQueue(); // used to prevent parallels communications to the proxy
+        pos_env.proxy = new devices.ProxyDevice({ env: pos_env }); // used to communicate to the hardware devices via a local proxy
+        pos_env.barcode_reader = new BarcodeReader({ env: pos_env, proxy: pos_env.proxy });
+        pos_env.posbus = new owl.EventBus();
+        pos_env.posMutex = new concurrency.Mutex();
 
         // Instantiate PosGlobalState here to ensure that every extension
         // (or class overloads) is taken into consideration.
-        const pos = PosGlobalState.create({ env: markRaw(env) });
+        const pos = PosGlobalState.create(markRaw(pos_env));
 
         this.batchedCustomerDisplayRender = batched(() => {
             reactivePos.send_current_order_to_customer_facing_display();
         });
         const reactivePos = reactive(pos, this.batchedCustomerDisplayRender);
-        env.pos = reactivePos;
-        env.legacyActionManager = legacyActionManager;
+        pos_env.pos = reactivePos;
 
         // The proxy requires the instance of PosGlobalState to function properly.
-        env.proxy.set_pos(reactivePos);
+        pos_env.proxy.set_pos(reactivePos);
 
         // TODO: Should we continue on exposing posmodel as global variable?
         // Expose only the reactive version of `pos` when in debug mode.
         window.posmodel = pos.debug ? reactivePos : pos;
 
-        this.env = env;
-        this.__owl__.childEnv = env;
-        useSubEnv({
-            get isMobile() {
-                return window.innerWidth <= 768;
-            },
-        });
+        this.env = pos_env;
+        this.__owl__.childEnv = pos_env;
+
         let currentIsMobile = this.env.isMobile;
         const updateUI = debounce(() => {
             if (this.env.isMobile !== currentIsMobile) {

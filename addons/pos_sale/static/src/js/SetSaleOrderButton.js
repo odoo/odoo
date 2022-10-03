@@ -21,12 +21,7 @@ odoo.define('pos_sale.SetSaleOrderButton', function(require) {
               // ping the server, if no error, show the screen
               // Use rpc from services which resolves even when this
               // component is destroyed (removed together with the popup).
-              await this.env.services.rpc({
-                  model: 'sale.order',
-                  method: 'browse',
-                  args: [[]],
-                  kwargs: { context: this.env.session.user_context },
-              });
+              await this.orm.call('sale.order', 'browse', [[]]);
               // LegacyComponent doesn't work the same way as before.
               // We need to use Gui here to show the screen. This will work
               // because ui methods in Gui is bound to the root component.

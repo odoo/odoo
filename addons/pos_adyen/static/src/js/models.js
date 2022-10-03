@@ -6,7 +6,7 @@ const Registries = require('point_of_sale.Registries');
 register_payment_method('adyen', PaymentAdyen);
 
 const PosAdyenPayment = (Payment) => class PosAdyenPayment extends Payment {
-    constructor(obj, options) {
+    constructor() {
         super(...arguments);
         this.terminalServiceId = this.terminalServiceId || null;
     }
