@@ -51,6 +51,12 @@ export class FormViewDialog extends Component {
                 }
             },
         };
+        if (this.props.removeRecord) {
+            this.viewProps.removeRecord = async () => {
+                await this.props.removeRecord();
+                this.props.close();
+            };
+        }
 
         onMounted(() => {
             if (
@@ -112,6 +118,7 @@ FormViewDialog.props = {
         validate: (m) => ["edit", "readonly"].includes(m),
     },
     onRecordSaved: { type: Function, optional: true },
+    removeRecord: { type: Function, optional: true },
     resId: { type: [Number, Boolean], optional: true },
     title: { type: String, optional: true },
     viewId: { type: [Number, Boolean], optional: true },
