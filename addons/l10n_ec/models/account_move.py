@@ -46,9 +46,9 @@ _DOCUMENTS_MAPPING = {
         'ec_dt_344'
     ],
     "04": [
+        'ec_dt_01',
         'ec_dt_04',
         'ec_dt_05',
-        'ec_dt_18',  # TODO 18
         'ec_dt_41',
         'ec_dt_44',
         'ec_dt_47',
@@ -63,9 +63,9 @@ _DOCUMENTS_MAPPING = {
         'ec_dt_373'
     ],
     "05": [
+        'ec_dt_01',
         'ec_dt_04',
         'ec_dt_05',
-        'ec_dt_18',  # TODO 18
         'ec_dt_41',
         'ec_dt_44',
         'ec_dt_47',
@@ -76,9 +76,9 @@ _DOCUMENTS_MAPPING = {
         'ec_dt_373'
     ],
     "06": [
+        'ec_dt_01',
         'ec_dt_04',
         'ec_dt_05',
-        'ec_dt_18',  # TODO 18
         'ec_dt_41',
         'ec_dt_44',
         'ec_dt_47',
@@ -89,9 +89,9 @@ _DOCUMENTS_MAPPING = {
         'ec_dt_373'
     ],
     "07": [
+        'ec_dt_01',
         'ec_dt_04',
         'ec_dt_05',
-        'ec_dt_18',  # TODO 18
     ],
     "09": [
         'ec_dt_01',
@@ -175,17 +175,15 @@ class AccountMove(models.Model):
 
     def _get_l10n_latam_documents_domain(self):
         self.ensure_one()
-        if self.journal_id.company_id.account_fiscal_country_id != self.env.ref('base.ec') or not \
-                self.journal_id.l10n_latam_use_documents:
-            return super()._get_l10n_latam_documents_domain()
-        domain = [
-            ('country_id.code', '=', 'EC'),
-            ('internal_type', 'in', ['invoice', 'debit_note', 'credit_note', 'invoice_in'])
-        ]
-        internal_type = self.l10n_latam_document_type_id.internal_type
-        allowed_documents = self._get_l10n_ec_documents_allowed(self._get_l10n_ec_ats_identification_type())
-        if internal_type and allowed_documents:
-            domain.append(("id", "in", allowed_documents.filtered(lambda x: x.internal_type == internal_type).ids))
+        domain = super(AccountMove, self)._get_l10n_latam_documents_domain()
+        if self.country_code == 'EC' and self.journal_id.l10n_latam_use_documents:
+            if self.debit_origin_id: # show/hide the debit note document type
+                domain.extend([("internal_type", "=", 'debit_note')])
+            elif self.move_type in ('out_invoice','in_invoice'):
+                domain.extend([("internal_type", "=", 'invoice')])
+            allowed_documents = self._get_l10n_ec_documents_allowed(self._get_l10n_ec_ats_identification_type())
+            if allowed_documents:
+                domain.extend([("id", "in", allowed_documents.ids)])
         return domain
 
     def _get_ec_formatted_sequence(self, number=0):
