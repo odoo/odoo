@@ -37,7 +37,7 @@
                                 </div>
                                 <div class="content-group">
                                     <div class="mt16">
-                                        <field name="attendance_kiosk_delay" required="1" class="text-center oe_inline"/> seconds
+                                        <field name="attendance_kiosk_delay" required="1" class="text-center" style="width: 10%; min-width: 4rem;"/> seconds
                                     </div>
                                 </div>
                             </div>
@@ -97,8 +97,8 @@
                                     <div class="text-muted">
                                         Allow a period of time (around working hours) where extra time will not be counted, in benefit of the company
                                     </div>
-                                    <span>Time Period </span><field name="overtime_company_threshold" class="text-center oe_inline"
-                                        attrs="{'required': [('hr_attendance_overtime', '=', True)]}"/><span> Minutes</span>
+                                    <span>Time Period </span><field name="overtime_company_threshold" class="text-center"
+                                        attrs="{'required': [('hr_attendance_overtime', '=', True)]}" style="width: 10%; min-width: 4rem;"/><span> Minutes</span>
                                     <br/>
                                     <br/>
                                     <label for="overtime_employee_threshold" class="o_form_label">
@@ -107,8 +107,8 @@
                                     <div class="text-muted">
                                         Allow a period of time (around working hours) where extra time will not be deducted, in benefit of the employee
                                     </div>
-                                    <span>Time Period </span><field name="overtime_employee_threshold" class="text-center oe_inline"
-                                        attrs="{'required': [('hr_attendance_overtime', '=', True)]}"/><span> Minutes</span>
+                                    <span>Time Period </span><field name="overtime_employee_threshold" class="text-center"
+                                        attrs="{'required': [('hr_attendance_overtime', '=', True)]}" style="width: 10%; min-width: 4rem;"/><span> Minutes</span>
                                 </div>
                             </div>
                         </div>
