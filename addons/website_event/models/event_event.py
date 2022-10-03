@@ -495,11 +495,8 @@ class Event(models.Model):
             # Doing it this way allows to only get events who are tagged "age: 10-12" AND "activity: football".
             # Add another tag "age: 12-15" to the search and it would fetch the ones who are tagged:
             # ("age: 10-12" OR "age: 12-15") AND "activity: football
-            grouped_tags = defaultdict(list)
-            for tag in search_tags:
-                grouped_tags[tag.category_id].append(tag)
-            for group in grouped_tags:
-                domain.append([('tag_ids', 'in', [tag.id for tag in grouped_tags[group]])])
+            for tags in search_tags.grouped('category_id').values():
+                domain.append([('tag_ids', 'in', tags.ids)])
 
         no_country_domain = domain.copy()
         if country:

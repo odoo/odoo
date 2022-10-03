@@ -957,12 +957,9 @@ class Channel(models.Model):
             except Exception:
                 tags = ChannelTag
             # Group by group_id
-            grouped_tags = defaultdict(list)
-            for tag in tags:
-                grouped_tags[tag.group_id].append(tag)
             # OR inside a group, AND between groups.
-            for group in grouped_tags:
-                domain.append([('tag_ids', 'in', [tag.id for tag in grouped_tags[group]])])
+            for tags in tags.grouped('group_id').values():
+                domain.append([('tag_ids', 'in', tags.ids)])
         if slide_category and 'nbr_%s' % slide_category in self:
             domain.append([('nbr_%s' % slide_category, '>', 0)])
         search_fields = ['name']
