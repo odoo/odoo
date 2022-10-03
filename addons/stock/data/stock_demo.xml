@@ -81,11 +81,6 @@
             <field name="inventory_quantity">55.0</field>
             <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
-        <record id="stock_inventory_7d" model="stock.quant">
-            <field name="product_id" ref="product.product_product_4d"/>
-            <field name="inventory_quantity">60.0</field>
-            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
-        </record>
         <record id="stock_inventory_11" model="stock.quant">
             <field name="product_id" ref="product.product_product_12"/>
             <field name="inventory_quantity">10.0</field>
@@ -124,7 +119,6 @@
                                             ref('stock_inventory_7'),
                                             ref('stock_inventory_7b'),
                                             ref('stock_inventory_7c'),
-                                            ref('stock_inventory_7d'),
                                             ref('stock_inventory_11'),
                                             ref('stock_inventory_12'),
                                             ref('stock_inventory_13'),
