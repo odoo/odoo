@@ -82,7 +82,7 @@
                             </td>
                             <td t-else=""/>
                         </t>
-                        <td t-if="props.activeActions and props.activeActions.onDelete"/>
+                        <td t-if="displayOptionalFields or (props.activeActions and props.activeActions.onDelete)"/>
                     </tr>
                 </tfoot>
             </table>
