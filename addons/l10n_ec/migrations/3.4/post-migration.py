@@ -33,14 +33,16 @@ def update_type_tax_use(env):
         WHERE tax_group_id IN (SELECT id FROM account_tax_group WHERE l10n_ec_type IN ('withhold_income_purchase','withhold_vat_purchase','withhold_income_sale','withhold_vat_sale'))
     ''')
 
-def unlink_old_withhold_group(env):
+def deprecate_old_withhold_group(env):
     deprecated_withhold_vat_group = env.ref('l10n_ec.tax_group_withhold_vat', False)
     deprecated_withhold_profit_group = env.ref('l10n_ec.tax_group_withhold_income', False)
-    deprecated_withhold_vat_group and deprecated_withhold_vat_group.unlink()
-    deprecated_withhold_profit_group and deprecated_withhold_profit_group.unlink()
+    if deprecated_withhold_vat_group:
+        deprecated_withhold_vat_group.name += ' (Deprecated)'
+    if deprecated_withhold_profit_group:
+        deprecated_withhold_profit_group += ' (Deprecated)'
 
 def migrate(cr, version):
     env = api.Environment(cr, SUPERUSER_ID, {})
     update_withhold_type(env)
     update_type_tax_use(env)
-    unlink_old_withhold_group(env)
+    deprecate_old_withhold_group(env)
