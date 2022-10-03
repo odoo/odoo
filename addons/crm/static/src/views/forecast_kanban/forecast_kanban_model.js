@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { KanbanModel } from "@web/views/kanban/kanban_model";
+import { CrmKanbanModel, CrmKanbanGroup } from "@crm/views/crm_kanban/crm_kanban_model";
 
-export class ForecastKanbanModel extends KanbanModel {
+export class ForecastKanbanModel extends CrmKanbanModel {
     setup(params, { fillTemporalService }) {
         super.setup(...arguments);
         this.fillTemporalService = fillTemporalService;
@@ -100,5 +100,6 @@ export class ForecastKanbanDynamicGroupList extends ForecastKanbanModel.DynamicG
     }
 }
 
-ForecastKanbanModel.services = [...KanbanModel.services, "fillTemporalService"];
+ForecastKanbanModel.services = [...CrmKanbanModel.services, "fillTemporalService"];
 ForecastKanbanModel.DynamicGroupList = ForecastKanbanDynamicGroupList;
+ForecastKanbanModel.group = CrmKanbanGroup;

@@ -579,7 +579,7 @@
                                             <span t-if="record.recurring_revenue and record.recurring_revenue.raw_value" groups="crm.group_use_recurring_revenues"> + </span>
                                         </t>
                                         <t t-if="record.recurring_revenue and record.recurring_revenue.raw_value">
-                                            <field name="recurring_revenue" widget="monetary" options="{'currency_field': 'company_currency'}" groups="crm.group_use_recurring_revenues"/>
+                                            <field class="me-1" name="recurring_revenue" widget="monetary" options="{'currency_field': 'company_currency'}" groups="crm.group_use_recurring_revenues"/>
                                             <field name="recurring_plan" groups="crm.group_use_recurring_revenues"/>
                                         </t>
                                     </div>
@@ -625,9 +625,14 @@
                 </xpath>
                 <xpath expr="//field[@name='expected_revenue']" position="replace">
                     <field name="prorated_revenue"/>
+                    <field name="recurring_revenue"/>
+                </xpath>
+                <xpath expr="//field[@name='recurring_revenue_monthly']" position="replace">
+                    <field name="recurring_revenue_monthly_prorated"/>
                 </xpath>
                 <xpath expr="//progressbar" position="attributes">
                     <attribute name="sum_field">prorated_revenue</attribute>
+                    <attribute name="recurring_revenue_sum_field">recurring_revenue_monthly_prorated</attribute>
                 </xpath>
                 <xpath expr="//t[@t-set='lost_ribbon']" position="after">
                     <t t-set="won_ribbon" t-value="record.active.raw_value and record.probability and record.probability.raw_value == 100"/>
@@ -654,7 +659,7 @@
                             <span t-if="record.recurring_revenue and record.recurring_revenue.raw_value" groups="crm.group_use_recurring_revenues"> + </span>
                         </t>
                         <t t-if="record.recurring_revenue and record.recurring_revenue.raw_value">
-                            <field name="recurring_revenue" widget="monetary" options="{'currency_field': 'company_currency'}" groups="crm.group_use_recurring_revenues"/>
+                            <field class="me-1" name="recurring_revenue_prorated" widget="monetary" options="{'currency_field': 'company_currency'}" groups="crm.group_use_recurring_revenues"/>
                             <field name="recurring_plan" groups="crm.group_use_recurring_revenues"/>
                         </t>
                     </div>
