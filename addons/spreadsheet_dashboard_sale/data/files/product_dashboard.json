@@ -492,7 +492,7 @@
                             "groupBy": [
                                 "product_id"
                             ],
-                            "measure": "__count",
+                            "measure": "product_uom_qty",
                             "order": "DESC",
                             "resModel": "sale.report"
                         },
@@ -595,12 +595,12 @@
                 "C2": {
                     "style": 6,
                     "format": 2,
-                    "content": "=ODOO.PIVOT(1,\"__count\",\"#product_id\",1)"
+                    "content": "=ODOO.PIVOT(1,\"product_uom_qty\",\"#product_id\",1)"
                 },
                 "C3": {
                     "style": 6,
                     "format": 2,
-                    "content": "=ODOO.PIVOT(2,\"__count\",\"#categ_id\",1)"
+                    "content": "=ODOO.PIVOT(2,\"product_uom_qty\",\"#categ_id\",1)"
                 },
                 "D1": {
                     "style": 6,
@@ -696,7 +696,7 @@
             "id": "1",
             "measures": [
                 {
-                    "field": "__count"
+                    "field": "product_uom_qty"
                 },
                 {
                     "field": "price_subtotal"
@@ -726,7 +726,7 @@
             "id": "2",
             "measures": [
                 {
-                    "field": "__count"
+                    "field": "product_uom_qty"
                 },
                 {
                     "field": "price_subtotal"

@@ -43,10 +43,10 @@
             },
             "cols": {
                 "0": {
-                    "size": 100
+                    "size": 175
                 },
                 "1": {
-                    "size": 175
+                    "size": 100
                 },
                 "2": {
                     "size": 100
@@ -58,10 +58,10 @@
                     "size": 50
                 },
                 "5": {
-                    "size": 100
+                    "size": 175
                 },
                 "6": {
-                    "size": 175
+                    "size": 100
                 },
                 "7": {
                     "size": 100
@@ -2442,7 +2442,19 @@
                 "user_id",
                 "amount_untaxed"
             ],
-            "domain": [],
+            "domain": [
+                "|",
+                [
+                    "state",
+                    "=",
+                    "draft"
+                ],
+                [
+                    "state",
+                    "=",
+                    "sent"
+                ]
+            ],
             "model": "sale.order",
             "context": {},
             "orderBy": [
