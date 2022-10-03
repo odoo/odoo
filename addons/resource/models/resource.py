@@ -983,7 +983,7 @@ class ResourceResource(models.Model):
             calendar_mapping[resource.calendar_id] |= resource
 
         for calendar, resources in calendar_mapping.items():
-            resources_unavailable_intervals = calendar._unavailable_intervals_batch(start_datetime, end_datetime, resources)
+            resources_unavailable_intervals = calendar._unavailable_intervals_batch(start_datetime, end_datetime, resources, tz=timezone(calendar.tz))
             resource_mapping.update(resources_unavailable_intervals)
         return resource_mapping
 
