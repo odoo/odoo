@@ -196,6 +196,7 @@ export function processButton(node) {
         options: JSON.parse(node.getAttribute("options") || "{}"),
         modifiers: JSON.parse(node.getAttribute("modifiers") || "{}"),
         clickParams: {
+            close: archParseBoolean(node.getAttribute("close"), false),
             context: node.getAttribute("context") || "{}",
             name: node.getAttribute("name"),
             type: node.getAttribute("type"),
