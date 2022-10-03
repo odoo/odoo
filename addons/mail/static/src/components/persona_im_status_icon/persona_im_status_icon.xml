@@ -6,16 +6,16 @@
                 t-att-class="{
                     'o-away': personaImStatusIconView.persona.im_status === 'away',
                     'o-bot': messaging.partnerRoot.persona === personaImStatusIconView.persona,
-                    'o-has-open-chat cursor-pointer': props.hasOpenChat,
+                    'o-has-open-chat cursor-pointer': personaImStatusIconView.hasOpenChat,
                     'o-offline': personaImStatusIconView.persona.im_status === 'offline',
                     'o-online': personaImStatusIconView.persona.im_status === 'online',
                 }"
                 t-attf-class="{{ className }}"
-                t-on-click="_onClick"
+                t-on-click="personaImStatusIconView.onClick"
                 t-ref="root"
                 name="root"
             >
-                <t t-if="props.hasBackground">
+                <t t-if="personaImStatusIconView.hasBackground">
                     <i class="o_PersonaImStatusIcon_outerBackground fa fa-circle fa-stack-1x"/>
                     <i class="o_PersonaImStatusIcon_innerBackground fa fa-circle fa-stack-1x text-white"/>
                 </t>
