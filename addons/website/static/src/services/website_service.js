@@ -32,7 +32,7 @@ export const websiteService = {
         let fullscreen;
         let pageDocument;
         let contentWindow;
-        let editedObjectPath;
+        let lastUrl;
         let websiteRootInstance;
         let Wysiwyg;
         let isRestrictedEditor;
@@ -145,11 +145,11 @@ export const websiteService = {
                 websiteRootInstance = rootInstance;
                 context.isPublicRootReady = !!rootInstance;
             },
-            set editedObjectPath(path) {
-                editedObjectPath = path;
+            set lastUrl(url) {
+                lastUrl = url;
             },
-            get editedObjectPath() {
-                return editedObjectPath;
+            get lastUrl() {
+                return lastUrl;
             },
             get isRestrictedEditor() {
                 return isRestrictedEditor === true;
