@@ -134,7 +134,8 @@ class AccountMove(models.Model):
         string="Payment Method (SRI)",
     )
 
-    def _get_l10n_ec_identification_type(self):
+    def _get_l10n_ec_ats_identification_type(self):
+        # Helps filter out document types based on subset of Table 2 of SRI's ATS specification
         self.ensure_one()
         move = self
         it_ruc = self.env.ref("l10n_ec.ec_ruc", False)
@@ -149,20 +150,18 @@ class AccountMove(models.Model):
             if is_ruc:
                 identification_code = "01"
             elif is_dni:
-                identification_code = "05"  # TODO revert to "02" (test purposes only)
-            elif self.l10n_latam_document_type_id.internal_type == 'purchase_liquidation':  # TODO review (this made the govt/XSD accept purchase liquidation XMLs)
-                identification_code = "08"
-            else:
+                identification_code = "02"
+            else: #passport or foreign ID
                 identification_code = "03"
-        elif move.move_type in ("out_invoice", "out_refund", "entry"): #entry for withholds
-            if is_final_consumer:
-                identification_code = "07"
-            elif is_ruc:
+        elif move.move_type in ("out_invoice", "out_refund"):
+            if is_ruc:
                 identification_code = "04"
             elif is_dni:
                 identification_code = "05"
-            elif is_passport:
+            elif is_passport: #passport or foreign ID
                 identification_code = "06"
+            elif is_final_consumer:
+                identification_code = "07"
         return identification_code
 
     @api.model
@@ -184,7 +183,7 @@ class AccountMove(models.Model):
             ('internal_type', 'in', ['invoice', 'debit_note', 'credit_note', 'invoice_in'])
         ]
         internal_type = self.l10n_latam_document_type_id.internal_type
-        allowed_documents = self._get_l10n_ec_documents_allowed(self._get_l10n_ec_identification_type())
+        allowed_documents = self._get_l10n_ec_documents_allowed(self._get_l10n_ec_ats_identification_type())
         if internal_type and allowed_documents:
             domain.append(("id", "in", allowed_documents.filtered(lambda x: x.internal_type == internal_type).ids))
         return domain
