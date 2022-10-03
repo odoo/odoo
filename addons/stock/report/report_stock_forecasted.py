@@ -166,12 +166,8 @@ class ReplenishmentReport(models.AbstractModel):
         reserved_outs = self.env['stock.move'].search(
             out_domain + [('state', 'in', ('partially_available', 'assigned'))],
             order='priority desc, date, id')
-        outs_per_product = defaultdict(list)
-        reserved_outs_per_product = defaultdict(list)
-        for out in outs:
-            outs_per_product[out.product_id.id].append(out)
-        for out in reserved_outs:
-            reserved_outs_per_product[out.product_id.id].append(out)
+        outs_per_product = outs.grouped('product_id')
+        reserved_outs_per_product = reserved_outs.grouped('product_id')
         ins = self.env['stock.move'].search(in_domain, order='priority desc, date, id')
         ins_per_product = defaultdict(list)
         for in_ in ins:
@@ -185,15 +181,14 @@ class ReplenishmentReport(models.AbstractModel):
         lines = []
         for product in (ins | outs).product_id:
             product_rounding = product.uom_id.rounding
-            for out in reserved_outs_per_product[product.id]:
+            for out in reserved_outs_per_product.get(product, []):
                 # Reconcile with reserved stock.
-                current = currents[product.id]
                 reserved = out.product_uom._compute_quantity(out.reserved_availability, product.uom_id)
                 currents[product.id] -= reserved
                 lines.append(self._prepare_report_line(reserved, move_out=out, reservation=True))
 
             unreconciled_outs = []
-            for out in outs_per_product[product.id]:
+            for out in outs_per_product.get(product, []):
                 # Reconcile with the current stock.
                 reserved = 0.0
                 if out.state in ('partially_available', 'assigned'):
