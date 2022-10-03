@@ -56,6 +56,11 @@ registerModel({
             identifying: true,
             inverse: 'followButtonView',
         }),
+        followingText: attr({
+            compute() {
+                return this.env._t("Following");
+            },
+        }),
         isDisabled: attr({
             compute() {
                 if (!this.chatterOwner) {
@@ -66,6 +71,11 @@ registerModel({
         }),
         isUnfollowButtonHighlighted: attr({
             default: false,
+        }),
+        unfollowingText: attr({
+            compute() {
+                return this.env._t("Unfollow");
+            },
         }),
     },
 });
