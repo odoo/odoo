@@ -38,7 +38,7 @@ tour.register('sale_timesheet_tour', {
     content: 'Click on Confirm button to create a sale order with this quotation.',
 }, {
     trigger: 'button.o_form_button_save',
-    extra_trigger: '.o_field_widget[name=state] button[data-value=sale].btn-primary',
+    extra_trigger: '.o_field_widget[name=state] button[data-value=sale].o_arrow_button_current',
     content: 'Click on Save button to save the Sales Order.',
 }, {
     trigger: '.o_form_status_indicator_buttons_hidden',
