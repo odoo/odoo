@@ -774,7 +774,7 @@
                                 <field name="partner_shipping_id"
                                        groups="account.group_delivery_invoice_address"
                                        attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))], 'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="quick_edit_total_amount"
+                                <field name="quick_edit_total_amount" class="w-50"
                                        attrs="{'invisible': ['|', ('move_type', '=', 'entry'), ('quick_edit_mode', '=', False)], 'readonly': [('state', '!=', 'draft')]}"/>
                                 <label for="ref" string="Bill Reference"
                                        attrs="{'invisible':[('move_type', 'not in', ('in_invoice', 'in_receipt', 'in_refund'))]}" />
@@ -1009,7 +1009,7 @@
                                 </field>
                                 <group col="12" class="oe_invoice_lines_tab">
                                     <group colspan="8">
-                                        <field name="narration" placeholder="Terms and Conditions" class="oe_inline" nolabel="1"/>
+                                        <field name="narration" placeholder="Terms and Conditions" colspan="2" nolabel="1"/>
                                     </group>
                                     <!-- Totals (only invoices / receipts) -->
                                     <group colspan="4">
