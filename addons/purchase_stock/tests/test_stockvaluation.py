@@ -692,8 +692,8 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             patch('odoo.fields.Date.context_today', _today),
         ]
 
-        for p in patchers:
-            p.start()
+        for patcher in patchers:
+            self.startPatcher(patcher)
 
         # Proceed
         po = self.env['purchase.order'].create({
@@ -754,9 +754,6 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         })
 
         inv.action_post()
-
-        for p in patchers:
-            p.stop()
 
         move_lines = inv.line_ids
         self.assertEqual(len(move_lines), 3)
@@ -867,8 +864,8 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             patch('odoo.fields.Datetime.now', _now),
         ]
 
-        for p in patchers:
-            p.start()
+        for patcher in patchers:
+            self.startPatcher(patcher)
 
         # Proceed
         po = self.env['purchase.order'].create({
@@ -920,9 +917,6 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         })
 
         inv.action_post()
-
-        for p in patchers:
-            p.stop()
 
         self.assertRecordValues(inv.line_ids, [
             # pylint: disable=C0326
