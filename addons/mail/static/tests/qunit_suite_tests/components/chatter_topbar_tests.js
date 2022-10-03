@@ -9,7 +9,7 @@ QUnit.module('components', {}, function () {
 QUnit.module('chatter_topbar_tests.js');
 
 QUnit.test('base rendering', async function (assert) {
-    assert.expect(8);
+    assert.expect(7);
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({});
@@ -51,11 +51,6 @@ QUnit.test('base rendering', async function (assert) {
         "attachments button should not have a loader"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_ChatterTopbar_buttonAddAttachmentsText`).length,
-        1,
-        "attachments button should have a text"
-    );
-    assert.strictEqual(
         document.querySelectorAll(`.o_ChatterTopbar_followerListMenu`).length,
         1,
         "should have a follower menu"
@@ -63,7 +58,7 @@ QUnit.test('base rendering', async function (assert) {
 });
 
 QUnit.test('base disabled rendering', async function (assert) {
-    assert.expect(8);
+    assert.expect(6);
 
     const { openView } = await start();
     await openView({
@@ -95,16 +90,6 @@ QUnit.test('base disabled rendering', async function (assert) {
         document.querySelectorAll(`.o_ChatterTopbar_buttonAttachmentsCountLoader`).length,
         0,
         "attachments button should not have a loader"
-    );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_ChatterTopbar_buttonAddAttachmentsText`).length,
-        1,
-        "attachments button should have a text"
-    );
-    assert.strictEqual(
-        document.querySelector(`.o_ChatterTopbar_buttonAddAttachmentsText`).textContent,
-        'Attach files',
-        "Add attachments button content should be 'Attach files'"
     );
 });
 
@@ -193,7 +178,7 @@ QUnit.test('attachment counter while loading attachments', async function (asser
 });
 
 QUnit.test('attachment counter transition when attachments become loaded)', async function (assert) {
-    assert.expect(7);
+    assert.expect(6);
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({});
@@ -243,15 +228,10 @@ QUnit.test('attachment counter transition when attachments become loaded)', asyn
         0,
         "attachments button should not have a loader"
     );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_ChatterTopbar_buttonAddAttachmentsText`).length,
-        1,
-        "attachments button should have a counter"
-    );
 });
 
 QUnit.test('attachment counter without attachments', async function (assert) {
-    assert.expect(4);
+    assert.expect(2);
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({});
@@ -271,16 +251,6 @@ QUnit.test('attachment counter without attachments', async function (assert) {
         document.querySelectorAll(`.o_ChatterTopbar_buttonAddAttachments`).length,
         1,
         "should have an attachments button in chatter menu"
-    );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_ChatterTopbar_buttonAddAttachmentsText`).length,
-        1,
-        "attachments button should have a counter"
-    );
-    assert.strictEqual(
-        document.querySelector(`.o_ChatterTopbar_buttonAddAttachmentsText`).textContent,
-        'Attach files',
-        'attachment counter content should contain "Attach files"'
     );
 });
 
@@ -327,7 +297,7 @@ QUnit.test('attachment counter with attachments', async function (assert) {
     );
     assert.strictEqual(
         document.querySelector(`.o_ChatterTopbar_buttonAttachmentsCount`).textContent,
-        '2 files',
+        '2',
         'attachment counter content should contain "2 files"'
     );
 });

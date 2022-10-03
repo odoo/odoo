@@ -3,15 +3,31 @@
 // ------------------------------------------------------------------
 
 .o_FormRenderer_chatterContainer {
-    flex: 1 0 auto;
+    --ChatterTopbar-padding-v: #{map-get($spacers, 2)};
+
+    @include media-breakpoint-down(md) {
+        --ChatterTopbar-padding-left: #{$o-horizontal-padding};
+        --ChatterTopbar-padding-right: #{$o-horizontal-padding};
+    }
 
     &.o-aside {
+        --Chatter-max-width: #{$o-chatter-min-width};
+        --ChatterTopbar-padding-left: #{$o-horizontal-padding};
+        --ChatterTopbar-padding-right: #{$o-horizontal-padding};
+
+        flex-shrink: 0;
+        flex-grow: 0;
         border-left: $border-width solid;
         padding: map-get($spacers, 0);
-        width: $o-chatter-min-width;
+        min-width: $o-chatter-min-width;
+        width: auto;
 
         .o_Message.o-not-discussion {
             border-width: $border-width 0;
+        }
+
+        .o_ChatterContainer {
+            width: auto;
         }
     }
 
@@ -21,11 +37,11 @@
         border-top: 1px solid $border-color;
     }
 
-    .o_ChatterContainer {
-        @include make-container-max-widths();
+    &:not(.o-aside) .o_ChatterContainer {
+            @include make-container-max-widths();
 
-        margin-left: auto;
-        margin-right: auto;
+            margin-left: auto;
+            margin-right: auto;
     }
 }
 
