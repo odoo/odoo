@@ -942,6 +942,89 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector('.o_field_widget[name="product_id"] .o_external_button'));
     });
 
+    QUnit.test("Form and subsubview with default_ or _view_ref contexts", async function (assert) {
+        serverData.models.partner_type.fields.company_ids = {
+            string: "one2many field",
+            type: "one2many",
+            relation: "res.company",
+        };
+        serverData.views = {
+            "res.company,false,search": "<search></search>",
+            "res.company,false,list": `<tree><field name="name"/></tree>`,
+            "res.company,bar_rescompany_form_view,form": `<form><field name="name"/></form>`,
+            "partner_type,false,search": "<search></search>",
+            "partner_type,false,list": `<tree><field name="name"/></tree>`,
+            "partner_type,foo_partner_type_form_view,form": `
+                <form>
+                    <field name="color"/>
+                    <field name="company_ids" context="{
+                        'default_color': 2,
+                        'form_view_ref': 'bar_rescompany_form_view'
+                    }"/>
+                </form>`,
+        };
+
+        const userContext = {
+            lang: "en",
+            tz: "taht",
+            uid: 7,
+        };
+        const expectedContexts = new Map();
+
+        // Make main form view
+        expectedContexts.set("partner", { ...userContext });
+        expectedContexts.set("partner_type", {
+            ...userContext,
+            base_model_name: "partner",
+            form_view_ref: "foo_partner_type_form_view",
+        });
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field string="Partner Types" name="timmy" widget="one2many" context="{
+                        'default_partner_id': active_id,
+                        'form_view_ref': 'foo_partner_type_form_view'
+                    }"/>
+                </form>`,
+            resId: 2,
+            mockRPC: (route, { method, model, kwargs }) => {
+                if (["get_views", "onchange"].includes(method)) {
+                    const { context } = kwargs;
+                    assert.step(`${method} (${model})`);
+                    assert.deepEqual(context, expectedContexts.get(model));
+                }
+            },
+        });
+        assert.verifySteps(["get_views (partner)", "get_views (partner_type)"]);
+
+        // Add a line in the x2many timmy field
+        expectedContexts.clear();
+        expectedContexts.set("partner_type", {
+            ...userContext,
+            default_partner_id: 2,
+            form_view_ref: "foo_partner_type_form_view",
+        });
+        await click(target, "[name=timmy] .o_field_x2many_list_row_add a");
+        assert.verifySteps(["get_views (partner_type)"]);
+
+        // Create a new timmy
+        await click(target, ".modal .o_create_button");
+        assert.verifySteps(["get_views (partner_type)", "onchange (partner_type)"]);
+
+        // Create a new company
+        expectedContexts.clear();
+        expectedContexts.set("res.company", {
+            ...userContext,
+            default_color: 2,
+            form_view_ref: "bar_rescompany_form_view",
+        });
+        await click(target, ".modal [name=company_ids] .o_field_x2many_list_row_add a");
+        assert.verifySteps(["get_views (res.company)", "onchange (res.company)"]);
+    });
+
     QUnit.test("invisible fields are properly hidden", async function (assert) {
         await makeView({
             type: "form",
