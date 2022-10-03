@@ -1,12 +1,11 @@
 .o_control_panel {
     border-bottom: 1px solid $border-color;
-    @include o-webclient-padding($top: 5px, $bottom: 5px);
+    @include o-webclient-padding($top: map-get($spacers, 2), $bottom: map-get($spacers, 2));
     background-color: $o-control-panel-background-color;
 
     > div {
         display: flex;
-        min-height: 30px;
-        margin: 5px 0px;
+        min-height: $o-statusbar-height;
     }
 
     @include media-breakpoint-up(md) {
