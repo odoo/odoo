@@ -11,7 +11,7 @@ import { debounce } from '@bus/workers/websocket_worker_utils';
 /**
  * Type of action that can be sent from the client to the worker.
  *
- * @typedef {'add_channel' | 'delete_channel' | 'force_update_channels' | 'initialize_connection', 'send' | 'leave' } WorkerAction
+ * @typedef {'add_channel' | 'delete_channel' | 'force_update_channels' | 'initialize_connection' | 'send' | 'leave' } WorkerAction
  */
 
 export const WEBSOCKET_CLOSE_CODES = Object.freeze({
@@ -30,6 +30,7 @@ export const WEBSOCKET_CLOSE_CODES = Object.freeze({
     BAD_GATEWAY: 1014,
     SESSION_EXPIRED: 4001,
     KEEP_ALIVE_TIMEOUT: 4002,
+    RECONNECTING: 4003,
 });
 
 /**
@@ -42,6 +43,8 @@ export const WEBSOCKET_CLOSE_CODES = Object.freeze({
 export class WebsocketWorker {
     constructor(websocketURL) {
         this.websocketURL = websocketURL;
+        this.currentUID = null;
+        this.isWaitingForNewUID = true;
         this.channelsByClient = new Map();
         this.connectRetryDelay = 1000;
         this.connectTimeout = null;
@@ -193,12 +196,26 @@ export class WebsocketWorker {
      * given client.
      * @param {Number} [param0.lastNotificationId] Last notification id
      * known by the client.
+     * @param {Number|false|undefined} [param0.uid] Current user id
+     *     - Number: user is logged whether on the frontend/backend.
+     *     - false: user is not logged.
+     *     - undefined: not available (e.g. livechat support page)
      */
-    _initializeConnection(client, { debug, lastNotificationId }) {
+    _initializeConnection(client, { debug, lastNotificationId, uid }) {
         this.lastNotificationId = lastNotificationId;
         this.debugModeByClient[client] = debug;
         this.isDebug = Object.values(this.debugModeByClient).some(debugValue => debugValue !== '');
-        this._updateChannels();
+        const isCurrentUserKnown = uid !== undefined;
+        if (this.isWaitingForNewUID && isCurrentUserKnown) {
+            this.isWaitingForNewUID = false;
+            this.currentUID = uid;
+        }
+        if (this.currentUID === uid || !isCurrentUserKnown) {
+            this._updateChannels();
+        } else if (this._isWebsocketConnected()) {
+            this.currentUID = uid;
+            this.websocket.close(WEBSOCKET_CLOSE_CODES.RECONNECTING);
+        }
     }
 
     /**
@@ -243,6 +260,9 @@ export class WebsocketWorker {
         if (code === WEBSOCKET_CLOSE_CODES.KEEP_ALIVE_TIMEOUT) {
             // Don't wait to reconnect on keep alive timeout.
             this.connectRetryDelay = 0;
+        }
+        if (code === WEBSOCKET_CLOSE_CODES.SESSION_EXPIRED) {
+            this.isWaitingForNewUID = true;
         }
         this._retryConnectionWithDelay();
     }
