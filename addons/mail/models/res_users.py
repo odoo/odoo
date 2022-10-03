@@ -183,7 +183,6 @@ class Users(models.Model):
         self.ensure_one()
         partner_root = self.env.ref('base.partner_root')
         values = {
-            'channels': self.partner_id._get_channels_as_member().channel_info(),
             'companyName': self.env.company.name,
             'currentGuest': False,
             'current_partner': self.partner_id.mail_partner_format().get(self.partner_id),

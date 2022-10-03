@@ -53,7 +53,6 @@ registerModel({
          * @param {integer} [param0.starred_counter=0]
          */
         async _init({
-            channels,
             commands = [],
             companyName,
             current_partner,
@@ -93,9 +92,7 @@ registerModel({
                 this._initCommands();
             }
             // channels when the rest of messaging is ready
-            if (channels) {
-                await this._initChannels(channels);
-            }
+            this._initChannels();
             if (!this.exists()) {
                 return;
             }
@@ -116,21 +113,31 @@ registerModel({
          * @private
          * @param {Object[]} channelsData
          */
-        async _initChannels(channelsData) {
-            return this.messaging.executeGracefully(channelsData.map(channelData => () => {
-                if (!this.exists()) {
+        _initChannels() {
+            this.messaging.rpc(
+                { route: 'mail/init_channels' },
+                { shadow: true },
+            ).then((channelsData) => {
+                if (!channelsData) {
                     return;
                 }
-                const convertedData = this.messaging.models['Thread'].convertData(channelData);
-                const channel = this.messaging.models['Thread'].insert(
-                    Object.assign({ model: 'mail.channel' }, convertedData)
+                this.messaging.executeGracefully(
+                    channelsData.map(channelData => () => {
+                        if (!this.exists()) {
+                            return;
+                        }
+                        const convertedData = this.messaging.models['Thread'].convertData(channelData);
+                        const channel = this.messaging.models['Thread'].insert(
+                            Object.assign({ model: 'mail.channel' }, convertedData)
+                        );
+                        // flux specific: channels received at init have to be
+                        // considered pinned. task-2284357
+                        if (!channel.isPinned) {
+                            channel.pin();
+                        }
+                    })
                 );
-                // flux specific: channels received at init have to be
-                // considered pinned. task-2284357
-                if (!channel.isPinned) {
-                    channel.pin();
-                }
-            }));
+            });
         },
         /**
          * @private
