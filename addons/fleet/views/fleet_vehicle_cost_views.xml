@@ -35,10 +35,12 @@
                     </group>
                     <group col="2">
                         <group>
-                            <field name="amount" string="Activation Cost" help="Cost that is paid only once at the creation of the contract" widget="monetary"/>
+                            <field name="amount" string="Activation Cost" help="Cost that is paid only once at the creation of the contract" widget="monetary" class="w-25"/>
                             <label for="cost_generated"/>
                             <div class="o_row">
-                                <field name="cost_generated" attrs="{'invisible': [('cost_frequency','=','no')]}" widget="monetary"/>
+                                <span class="w-25">
+                                    <field name="cost_generated" attrs="{'invisible': [('cost_frequency','=','no')]}" widget="monetary"/>
+                                </span>
                                 <field name="cost_frequency"/>
                             </div>
                         </group>
@@ -48,12 +50,10 @@
                             <field name="expiration_date" attrs="{'required': [('cost_frequency', '!=', 'no')]}"/>
                         </group>
                     </group>
-                    <group string="Included Services">
-                        <field name="service_ids" widget="many2many_tags" nolabel="1"/>
-                    </group>
-                    <group string="Terms and Conditions">
-                        <field name="notes" nolabel="1" placeholder="Write here all other information relative to this contract" />
-                    </group>
+                    <separator string="Included Services"/>
+                    <field name="service_ids" widget="many2many_tags" nolabel="1"/>
+                    <separator string="Terms and Conditions"/>
+                    <field name="notes" nolabel="1" placeholder="Write here all other information relative to this contract" />
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids"/>
@@ -238,14 +238,13 @@
                             <field name="purchaser_id"/>
                             <label for="odometer"/>
                             <div class="o_row">
-                                <field name="odometer" class="oe_inline"/>
+                                <field name="odometer" class="w-25"/>
                                 <field name="odometer_unit" class="ps-1 ps-sm-0"/>
                             </div>
                         </group>
                     </group>
-                    <group string="Notes">
-                        <field nolabel="1" name="notes" placeholder="Write here any other information related to the service completed."/>
-                    </group>
+                    <separator string="Notes"/>
+                    <field nolabel="1" name="notes" placeholder="Write here any other information related to the service completed."/>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids"/>
