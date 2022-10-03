@@ -45,12 +45,10 @@ class TestConfiguratorCommon(odoo.tests.HttpCase):
             iap_jsonrpc_mocked()
 
         iap_patch = patch('odoo.addons.iap.tools.iap_tools.iap_jsonrpc', iap_jsonrpc_mocked_configurator)
-        iap_patch.start()
-        self.addCleanup(iap_patch.stop)
+        self.startPatcher(iap_patch)
 
         patcher = patch('odoo.addons.website.models.ir_module_module.IrModuleModule._theme_upgrade_upstream', wraps=self._theme_upgrade_upstream)
-        patcher.start()
-        self.addCleanup(patcher.stop)
+        self.startPatcher(patcher)
 
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestConfiguratorTranslation(TestConfiguratorCommon):
