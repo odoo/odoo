@@ -24,12 +24,6 @@ registerModel({
         /**
          * @param {MouseEvent} ev
          */
-        onClickDesktopTabButton(ev) {
-            this.update({ activeTabId: ev.currentTarget.dataset.tabId });
-        },
-        /**
-         * @param {MouseEvent} ev
-         */
         onClickNewMessage(ev) {
             if (!this.messaging.device.isSmall) {
                 this.messaging.chatWindowManager.openNewMessage();
@@ -124,12 +118,51 @@ registerModel({
         },
     },
     fields: {
+        activeTab: one('MessagingMenuTabView', {
+            compute() {
+                switch (this.activeTabId) {
+                    case 'all':
+                        return this.allTab;
+                    case 'channel':
+                        return this.channelTab;
+                    case 'chat':
+                        return this.chatTab;
+                }
+            },
+        }),
         /**
          * Tab selected in the messaging menu.
          * Either 'all', 'chat' or 'channel'.
          */
         activeTabId: attr({
             default: 'all',
+        }),
+        allTab: one('MessagingMenuTabView', {
+            compute() {
+                if (this.isOpen && this.messaging.isInitialized && !this.messaging.device.isSmall) {
+                    return {};
+                }
+                return clear();
+            },
+            inverse: 'ownerAsAll',
+        }),
+        channelTab: one('MessagingMenuTabView', {
+            compute() {
+                if (this.isOpen && this.messaging.isInitialized && !this.messaging.device.isSmall) {
+                    return {};
+                }
+                return clear();
+            },
+            inverse: 'ownerAsChannel',
+        }),
+        chatTab: one('MessagingMenuTabView', {
+            compute() {
+                if (this.isOpen && this.messaging.isInitialized && !this.messaging.device.isSmall) {
+                    return {};
+                }
+                return clear();
+            },
+            inverse: 'ownerAsChat',
         }),
         component: attr(),
         /**
