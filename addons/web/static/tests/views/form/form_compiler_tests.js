@@ -115,7 +115,7 @@ QUnit.module("Form Compiler", (hooks) => {
                 </form>`;
 
         const expected = /*xml*/ `
-            <Notebook>
+            <Notebook defaultPage="props.record.isNew ? undefined : props.activeNotebookPages[0]" onPageUpdate="(page) =&gt; this.props.onPageUpdate(0, page)">
                 <t t-set-slot="page_1" title="\`Page1\`" name="\`p1\`" isVisible="true">
                     <Field id="'charfield'" name="'charfield'" record="props.record" fieldInfo="props.archInfo.fieldNodes['charfield']"/>
                 </t>

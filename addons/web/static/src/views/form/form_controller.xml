@@ -37,7 +37,7 @@
                             <button type="button" class="btn btn-outline-primary o_form_button_create" data-hotkey="c" t-on-click.stop="create" t-att-disabled="state.isDisabled">Create</button>
                         </t>
                     </t>
-                    <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="archInfo" translateAlert="translateAlert" enableViewButtons.bind="enableButtons" disableViewButtons.bind="disableButtons"/>
+                    <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="archInfo" translateAlert="translateAlert" enableViewButtons.bind="enableButtons" disableViewButtons.bind="disableButtons" onPageUpdate.bind="onPageUpdate" activeNotebookPages="activeNotebookPages"/>
                 </Layout>
             </div>
         </div>

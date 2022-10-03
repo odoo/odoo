@@ -3975,7 +3975,12 @@ QUnit.module("Views", (hooks) => {
             undefined,
             "foo div should have a default colspan (1)"
         );
-        assert.containsN(target, ".secondgroup div.o_wrap_field", 2, "int_field and qux should have same o_wrap_field");
+        assert.containsN(
+            target,
+            ".secondgroup div.o_wrap_field",
+            2,
+            "int_field and qux should have same o_wrap_field"
+        );
 
         assert.containsN(
             target,
@@ -4758,6 +4763,172 @@ QUnit.module("Views", (hooks) => {
         assert.doesNotHaveClass(target.querySelector(".o_notebook .nav-link"), "active");
         assert.hasClass(target.querySelectorAll(".o_notebook .nav-link")[1], "active");
     });
+
+    QUnit.test(
+        "restore the open notebook page when switching to another view",
+        async function (assert) {
+            serverData.actions = {
+                1: {
+                    id: 1,
+                    name: "test",
+                    res_model: "partner",
+                    type: "ir.actions.act_window",
+                    views: [[false, "list"]],
+                },
+                2: {
+                    id: 2,
+                    name: "test2",
+                    res_model: "partner",
+                    res_id: 1,
+                    type: "ir.actions.act_window",
+                    views: [[false, "form"]],
+                },
+            };
+            serverData.views = {
+                "partner,false,list": `<tree><field name="foo"/></tree>`,
+                "partner,false,search": `<search></search>`,
+                "partner,false,form": `
+                    <form>
+                        <notebook>
+                            <page string="First Page" name="first">
+                                <field name="foo"/>
+                            </page>
+                            <page string="Second page" name="second">
+                                <field name="bar"/>
+                            </page>
+                        </notebook>
+                        <notebook>
+                            <page string="Page1" name="p1">
+                                <field name="foo"/>
+                            </page>
+                            <page string="Page2" name="p2" autofocus="autofocus">
+                                <field name="bar"/>
+                            </page>
+                            <page string="Page3" name="p3">
+                                <field name="bar"/>
+                            </page>
+                        </notebook>
+                    </form>`,
+            };
+
+            const webClient = await createWebClient({ serverData });
+            await doAction(webClient, 2);
+
+            let notebooks = target.querySelectorAll(".o_notebook");
+            assert.hasClass(notebooks[0].querySelector(".nav-link"), "active");
+            assert.doesNotHaveClass(notebooks[0].querySelectorAll(".nav-link")[1], "active");
+
+            assert.doesNotHaveClass(notebooks[1].querySelector(".nav-link"), "active");
+            assert.hasClass(notebooks[1].querySelectorAll(".nav-link")[1], "active");
+            assert.doesNotHaveClass(notebooks[1].querySelectorAll(".nav-link")[2], "active");
+
+            // click on second page tab of the first notebook
+            await click(notebooks[0].querySelectorAll(".nav-link")[1]);
+            // click on third page tab of the second notebook
+            await click(notebooks[1].querySelectorAll(".nav-link")[2]);
+            notebooks = target.querySelectorAll(".o_notebook");
+            assert.doesNotHaveClass(notebooks[0].querySelector(".nav-link"), "active");
+            assert.hasClass(notebooks[0].querySelectorAll(".nav-link")[1], "active");
+
+            assert.doesNotHaveClass(notebooks[1].querySelector(".nav-link"), "active");
+            assert.doesNotHaveClass(notebooks[1].querySelectorAll(".nav-link")[1], "active");
+            assert.hasClass(notebooks[1].querySelectorAll(".nav-link")[2], "active");
+
+            // switch to a list view
+            await doAction(webClient, 1);
+
+            // back to the form view
+            await click(target, ".o_back_button");
+            notebooks = target.querySelectorAll(".o_notebook");
+            assert.doesNotHaveClass(notebooks[0].querySelector(".nav-link"), "active");
+            assert.hasClass(notebooks[0].querySelectorAll(".nav-link")[1], "active");
+
+            assert.doesNotHaveClass(notebooks[1].querySelector(".nav-link"), "active");
+            assert.doesNotHaveClass(notebooks[1].querySelectorAll(".nav-link")[1], "active");
+            assert.hasClass(notebooks[1].querySelectorAll(".nav-link")[2], "active");
+        }
+    );
+
+    QUnit.test(
+        "don't restore the open notebook page when we create a new record",
+        async function (assert) {
+            serverData.actions = {
+                1: {
+                    id: 1,
+                    name: "test",
+                    res_model: "partner",
+                    type: "ir.actions.act_window",
+                    views: [
+                        [false, "list"],
+                        [false, "form"],
+                    ],
+                },
+            };
+            serverData.views = {
+                "partner,false,list": `<tree><field name="foo"/></tree>`,
+                "partner,false,search": `<search></search>`,
+                "partner,false,form": `
+                    <form>
+                        <notebook>
+                            <page string="First Page" name="first">
+                                <field name="foo"/>
+                            </page>
+                            <page string="Second page" name="second">
+                                <field name="bar"/>
+                            </page>
+                        </notebook>
+                        <notebook>
+                            <page string="Page1" name="p1">
+                                <field name="foo"/>
+                            </page>
+                            <page string="Page2" name="p2" autofocus="autofocus">
+                                <field name="bar"/>
+                            </page>
+                            <page string="Page3" name="p3">
+                                <field name="bar"/>
+                            </page>
+                        </notebook>
+                    </form>`,
+            };
+
+            const webClient = await createWebClient({ serverData });
+            await doAction(webClient, 1);
+            await click(target.querySelector(".o_data_cell"));
+
+            let notebooks = target.querySelectorAll(".o_notebook");
+            assert.hasClass(notebooks[0].querySelector(".nav-link"), "active");
+            assert.doesNotHaveClass(notebooks[0].querySelectorAll(".nav-link")[1], "active");
+
+            assert.doesNotHaveClass(notebooks[1].querySelector(".nav-link"), "active");
+            assert.hasClass(notebooks[1].querySelectorAll(".nav-link")[1], "active");
+            assert.doesNotHaveClass(notebooks[1].querySelectorAll(".nav-link")[2], "active");
+
+            // click on second page tab of the first notebook
+            await click(notebooks[0].querySelectorAll(".nav-link")[1]);
+            // click on third page tab of the second notebook
+            await click(notebooks[1].querySelectorAll(".nav-link")[2]);
+            notebooks = target.querySelectorAll(".o_notebook");
+            assert.doesNotHaveClass(notebooks[0].querySelector(".nav-link"), "active");
+            assert.hasClass(notebooks[0].querySelectorAll(".nav-link")[1], "active");
+
+            assert.doesNotHaveClass(notebooks[1].querySelector(".nav-link"), "active");
+            assert.doesNotHaveClass(notebooks[1].querySelectorAll(".nav-link")[1], "active");
+            assert.hasClass(notebooks[1].querySelectorAll(".nav-link")[2], "active");
+
+            // back to the list view
+            await click(target, ".o_back_button");
+
+            // Create a new record
+            await click(target, ".o_list_button_add");
+            notebooks = target.querySelectorAll(".o_notebook");
+            assert.hasClass(notebooks[0].querySelector(".nav-link"), "active");
+            assert.doesNotHaveClass(notebooks[0].querySelectorAll(".nav-link")[1], "active");
+
+            assert.doesNotHaveClass(notebooks[1].querySelector(".nav-link"), "active");
+            assert.hasClass(notebooks[1].querySelectorAll(".nav-link")[1], "active");
+            assert.doesNotHaveClass(notebooks[1].querySelectorAll(".nav-link")[2], "active");
+        }
+    );
 
     QUnit.test("pager is hidden in create mode", async function (assert) {
         await makeView({
@@ -7838,7 +8009,11 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual($group4rows.length, 3, "there should be 3 rows in .group_4");
         var $group4firstRowTd = $group4rows.eq(0).children("div.o_cell");
         assert.strictEqual($group4firstRowTd.length, 1, "there should be 1 cell in first row");
-        assert.strictEqual($group4firstRowTd.attr("style").substr(0, 19), "grid-column: span 3", "the first cell column span should be 3");
+        assert.strictEqual(
+            $group4firstRowTd.attr("style").substr(0, 19),
+            "grid-column: span 3",
+            "the first cell column span should be 3"
+        );
         assert.strictEqual(
             $group4firstRowTd.attr("style").substr(0, 19),
             "grid-column: span 3",
@@ -7888,7 +8063,11 @@ QUnit.module("Views", (hooks) => {
         var $fieldGroupRows = $fieldGroup.find("> .o_wrap_field");
         assert.strictEqual($fieldGroupRows.length, 5, "there should be 5 rows in .o_wrap_field");
         var $fieldGroupFirstRowTds = $fieldGroupRows.eq(0).children(".o_cell");
-        assert.strictEqual($fieldGroupFirstRowTds.length, 2, "there should be 2 cells in first row");
+        assert.strictEqual(
+            $fieldGroupFirstRowTds.length,
+            2,
+            "there should be 2 cells in first row"
+        );
         assert.hasClass(
             $fieldGroupFirstRowTds.eq(0),
             "o_wrap_label",
@@ -7916,7 +8095,11 @@ QUnit.module("Views", (hooks) => {
             "second cell colspan should be default one (no style) and be 33.3333%"
         );
         var $fieldGroupThirdRowTds = $fieldGroupRows.eq(2).children(".o_cell"); // new row as label/field pair colspan is greater than remaining space
-        assert.strictEqual($fieldGroupThirdRowTds.length, 2, "there should be 2 cells in third row");
+        assert.strictEqual(
+            $fieldGroupThirdRowTds.length,
+            2,
+            "there should be 2 cells in third row"
+        );
         assert.hasClass(
             $fieldGroupThirdRowTds.eq(0),
             "o_wrap_label",
@@ -7928,14 +8111,22 @@ QUnit.module("Views", (hooks) => {
             "second cell colspan should be default one (no style) and be 50% width"
         );
         var $fieldGroupFourthRowTds = $fieldGroupRows.eq(3).children(".o_cell");
-        assert.strictEqual($fieldGroupFourthRowTds.length, 1, "there should be 1 cell in fourth row");
+        assert.strictEqual(
+            $fieldGroupFourthRowTds.length,
+            1,
+            "there should be 1 cell in fourth row"
+        );
         assert.strictEqual(
             $fieldGroupFourthRowTds.attr("style").substr(0, 30),
             "grid-column: span 3;width: 100",
             "the cell should have a colspan equal to 3 and have 100% width"
         );
         var $fieldGroupFifthRowTds = $fieldGroupRows.eq(4).children(".o_cell"); // label/field pair can be put after the 1-colspan span
-        assert.strictEqual($fieldGroupFifthRowTds.length, 3, "there should be 3 cells in fourth row");
+        assert.strictEqual(
+            $fieldGroupFifthRowTds.length,
+            3,
+            "there should be 3 cells in fourth row"
+        );
         assert.strictEqual(
             $fieldGroupFifthRowTds.eq(0).attr("style").substr(0, 9),
             "width: 50",
