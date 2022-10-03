@@ -179,7 +179,7 @@ class AccountMove(models.Model):
         if self.country_code == 'EC' and self.journal_id.l10n_latam_use_documents:
             if self.debit_origin_id: # show/hide the debit note document type
                 domain.extend([("internal_type", "=", 'debit_note')])
-            elif self.move_type in ('out_invoice','in_invoice'):
+            elif self.move_type in ('out_invoice', 'in_invoice'):
                 domain.extend([("internal_type", "=", 'invoice')])
             allowed_documents = self._get_l10n_ec_documents_allowed(self._get_l10n_ec_ats_identification_type())
             if allowed_documents:
