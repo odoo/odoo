@@ -2,6 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { one } from '@mail/model/model_field';
+import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ThreadIconView',
@@ -35,6 +36,20 @@ registerModel({
                 }
             },
             required: true,
+        }),
+        threadTypingIconView: one('ThreadTypingIconView', {
+            compute() {
+                if (
+                    this.thread.channel &&
+                    this.thread.channel.channel_type === 'chat' &&
+                    this.thread.channel.correspondent &&
+                    this.thread.orderedOtherTypingMembers.length > 0
+                ) {
+                    return {};
+                }
+                return clear();
+            },
+            inverse: 'threadIconViewOwner'
         }),
         threadViewTopbarOwner: one('ThreadViewTopbar', {
             identifying: true,

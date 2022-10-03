@@ -3,11 +3,10 @@
     <t t-inherit="mail.ThreadIcon" t-inherit-mode="extension">
         <xpath expr="//*[@name='root']" position="inside">
             <t t-elif="threadIconView.thread.channel and threadIconView.thread.channel.channel_type === 'livechat'">
-                <t t-if="threadIconView.thread.orderedOtherTypingMembers.length > 0">
+                <t t-if="threadIconView.threadTypingIconView">
                     <ThreadTypingIcon
                         className="'o_ThreadIcon_typing'"
-                        animation="'pulse'"
-                        title="threadIconView.thread.typingStatusText"
+                        record="threadIconView.threadTypingIconView"
                     />
                 </t>
                 <t t-else="">
