@@ -552,6 +552,9 @@ class MailComposer(models.TransientModel):
         """
         if template_id and composition_mode == 'mass_mail':
             template = self.env['mail.template'].browse(template_id)
+            lang = template._render_lang([res_id])[res_id]
+            if lang:
+                template = template.with_context(lang=lang)
             values = dict(
                 (field, template[field])
                 for field in ['subject', 'body_html',
