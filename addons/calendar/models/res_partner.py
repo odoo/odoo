@@ -35,3 +35,9 @@ class Partner(models.Model):
     def _set_calendar_last_notif_ack(self):
         partner = self.env['res.users'].browse(self.env.context.get('uid', self.env.uid)).partner_id
         partner.write({'calendar_last_notif_ack': datetime.now()})
+ 
+    def toggle_active(self):
+        res = super(Partner,self).toggle_active()
+        attendee_achived = self.env['calendar.attendee'].search([('partner_id','=',self.id)])
+        if self.active == False:
+            attendee_achived.unlink()
