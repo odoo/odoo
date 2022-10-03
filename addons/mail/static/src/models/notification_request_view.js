@@ -8,6 +8,14 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'NotificationRequestView',
+    recordMethods: {
+        onClick() {
+            this.messaging.requestNotificationPermission();
+            if (!this.messaging.device.isSmall) {
+                this.messaging.messagingMenu.close();
+            }
+        },
+    },
     fields: {
         headerText: attr({
             compute() {
