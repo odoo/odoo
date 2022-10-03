@@ -285,6 +285,7 @@ class Job(models.Model):
             'default_job_id': self.id,
             'search_default_job_id': self.id,
             'search_default_activities_overdue': True,
+            'search_default_running_applicant_activities': True,
         }
         return action
 
