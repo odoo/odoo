@@ -16,7 +16,7 @@
                     <t t-set-slot="control-panel-action-menu">
                         <t t-if="props.info.actionMenus">
                             <ActionMenus
-                                activeIds="model.root.isVirtual ? [] : [model.root.resId]"
+                                activeIds="() => model.root.isVirtual ? [] : [model.root.resId]"
                                 context="props.context"
                                 items="getActionMenuItems()"
                                 isDomainSelected="model.root.isDomainSelected"

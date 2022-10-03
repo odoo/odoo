@@ -78,7 +78,7 @@ export class ActionMenus extends Component {
     //---------------------------------------------------------------------
 
     async executeAction(action) {
-        let activeIds = this.props.activeIds;
+        let activeIds = this.props.activeIds();
         if (this.props.isDomainSelected) {
             activeIds = await this.orm.search(this.props.resModel, this.props.domain, {
                 limit: session.active_ids_limit,
@@ -131,7 +131,7 @@ ActionMenus.components = {
     DropdownItem,
 };
 ActionMenus.props = {
-    activeIds: { type: Array, element: [Number, String] }, // virtual IDs are strings.
+    activeIds: { type: Function },
     context: Object,
     resModel: String,
     domain: { type: Array, optional: true },
