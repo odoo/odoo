@@ -343,6 +343,8 @@ class AccountReportLine(models.Model):
 
             if engine == 'domain' and report_line.domain_formula:
                 subformula, formula = DOMAIN_REGEX.match(report_line.domain_formula or '').groups()
+                # Resolve the calls to ref(), to mimic the fact those formulas are normally given with an eval="..." in XML
+                formula = re.sub(r'''\bref\((?P<quote>['"])(?P<xmlid>.+?)(?P=quote)\)''', lambda m: str(self.env.ref(m['xmlid']).id), formula)
             elif engine == 'account_codes' and report_line.account_codes_formula:
                 subformula, formula = None, report_line.account_codes_formula
             elif engine == 'aggregation' and report_line.aggregation_formula:
