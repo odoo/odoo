@@ -19,8 +19,7 @@ class ProfilingHttpCase(HttpCase):
         # its actual cursor), which prevents the profiling data from being
         # committed for real.
         cls.patcher = patch('odoo.sql_db.db_connect', return_value=cls.registry)
-        cls.patcher.start()
-        cls.addClassCleanup(cls.patcher.stop)
+        cls.startClassPatcher(cls.patcher)
 
     def profile_rpc(self, params=None):
         params = params or {}
@@ -36,7 +35,6 @@ class ProfilingHttpCase(HttpCase):
         )
         req.raise_for_status()
         return req.json()
-
 
 @tagged('post_install', '-at_install', 'profiling')
 class TestProfilingWeb(ProfilingHttpCase):

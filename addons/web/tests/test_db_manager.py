@@ -39,8 +39,7 @@ class TestDatabaseOperations(BaseCase):
         self.verify_admin_password_patcher = patch(
             'odoo.tools.config.verify_admin_password', self.password.__eq__,
         )
-        self.verify_admin_password_patcher.start()
-        self.addCleanup(self.verify_admin_password_patcher.stop)
+        self.startPatcher(self.verify_admin_password_patcher)
 
         self.db_name = config['db_name']
         self.assertTrue(self.db_name)

@@ -34,8 +34,7 @@ class TestPartnerAssign(TransactionCase):
             }.get(addr)
 
         patcher = patch('odoo.addons.base_geolocalize.models.base_geocoder.GeoCoder.geo_find', wraps=geo_find)
-        patcher.start()
-        self.addCleanup(patcher.stop)
+        self.startPatcher(patcher)
 
     def test_opportunity_count(self):
         self.customer_uk.write({
