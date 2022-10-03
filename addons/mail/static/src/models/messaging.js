@@ -59,6 +59,21 @@ registerPatch({
             }
         },
         /**
+         * Handles the response of the user when prompted whether push
+         * notifications are granted or denied.
+         *
+         * @param {string} value
+         */
+        handleResponseNotificationPermission(value) {
+            this.refreshIsNotificationPermissionDefault();
+            if (value !== 'granted') {
+                this.userNotificationManager.sendNotification({
+                    message: this.env._t("Odoo will not have the permission to send native notifications on this device."),
+                    title: this.env._t("Permission denied"),
+                });
+            }
+        },
+        /**
          * Display a notification to the user.
          *
          * @param {Object} params
@@ -199,6 +214,13 @@ registerPatch({
             this.update({
                 isNotificationPermissionDefault: Boolean(browserNotification) && browserNotification.permission === 'default',
             });
+        },
+        requestNotificationPermission() {
+            const windowNotification = this.messaging.browser.Notification;
+            const def = windowNotification && windowNotification.requestPermission();
+            if (def) {
+                def.then((permission) => this.messaging.handleResponseNotificationPermission(permission));
+            }
         },
         /**
          * Starts messaging and related records.
