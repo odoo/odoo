@@ -132,8 +132,8 @@
             covers the price-included taxes in e-commerce flows.
             (See the override of `_get_combination_info`)
         -->
-        <span class="sign_badge_price_extra" t-esc="combination_info_variant['price_extra'] > 0 and '+' or '-'"/>
-        <span t-esc="abs(combination_info_variant['price_extra'])" class="variant_price_extra text-muted fst-italic" style="white-space: nowrap;"
+        <span class="sign_badge_price_extra" t-out="combination_info_variant['price_extra'] > 0 and '+' or '-'"/>
+        <span t-out="abs(combination_info_variant['price_extra'])" class="variant_price_extra text-muted fst-italic" style="white-space: nowrap;"
             t-options='{
                 "widget": "monetary",
                 "display_currency": (pricelist or product).currency_id

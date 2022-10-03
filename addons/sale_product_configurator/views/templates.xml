@@ -38,14 +38,14 @@
                         </t>
                         <h2>
                             <span t-attf-class="text-danger oe_default_price oe_striked_price {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
-                                t-esc="combination_info['list_price']"
+                                t-out="combination_info['list_price']"
                                 t-options='{
                                     "widget": "monetary",
                                     "display_currency": (pricelist or product).currency_id
                                 }'/>
                             <span class="oe_price product_id mt-3" style="white-space: nowrap;"
                                 t-att-data-product-id="product.id"
-                                t-esc="combination_info['price']"
+                                t-out="combination_info['price']"
                                 t-options='{
                                     "widget": "monetary",
                                     "display_currency": (pricelist or product).currency_id
@@ -95,7 +95,7 @@
                     <img class="product_detail_img" t-else="" t-att-src="'/web/image/product.template/%s/image_128' % product.id" alt="Product Image"/>
                 </td>
                 <td class='td-product_name'>
-                    <strong class="product-name product_display_name" t-esc="combination_info['display_name']"/>
+                    <strong class="product-name product_display_name" t-out="combination_info['display_name']"/>
                     <div class="text-muted small">
                         <div t-field="product.description_sale"/>
                         <div class="js_attributes"/>
@@ -119,7 +119,7 @@
                 </td>
                 <td class="text-center td-price" name="price">
                     <div t-attf-class="text-danger oe_default_price oe_striked_price {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
-                        t-esc="combination_info['list_price']"
+                        t-out="combination_info['list_price']"
                         t-options='{
                             "widget": "monetary",
                             "display_currency": (pricelist or product).currency_id
@@ -127,12 +127,12 @@
                     />
                     <span class="oe_price product_id" style="white-space: nowrap;"
                         t-att-data-product-id="product.id"
-                        t-esc="combination_info['price']"
+                        t-out="combination_info['price']"
                         t-options='{
                             "widget": "monetary",
                             "display_currency": (pricelist or product).currency_id
                         }'/>
-                    <span class="js_raw_price d-none" t-esc="product._get_contextual_price()"/>
+                    <span class="js_raw_price d-none" t-out="product._get_contextual_price()"/>
                     <p class="css_not_available_msg alert alert-warning">Option not available</p>
                 </td>
             </tr>
@@ -141,7 +141,7 @@
                     <strong>Total:</strong>
                     <span class="js_price_total fw-bold" style="white-space: nowrap;"
                         t-att-data-product-id="product.id"
-                        t-esc="combination_info['price'] * (add_qty or 1)"
+                        t-out="combination_info['price'] * (add_qty or 1)"
                         t-options='{
                             "widget": "monetary",
                             "display_currency": (pricelist or product).currency_id
@@ -176,7 +176,7 @@
                     </td>
                     <td class='td-product_name' colspan="2">
                         <div class="mb-3">
-                            <strong class="product-name product_display_name" t-esc="combination_info['display_name']"/>
+                            <strong class="product-name product_display_name" t-out="combination_info['display_name']"/>
                             <div class="text-muted small" t-field="product.description_sale"/>
                         </div>
                         <t t-call="sale.variants">
@@ -188,18 +188,18 @@
                     </td>
                     <td class="text-center td-price">
                         <div t-attf-class="text-danger oe_default_price oe_optional oe_striked_price {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
-                            t-esc="combination_info['list_price']"
+                            t-out="combination_info['list_price']"
                             t-options='{
                                 "widget": "monetary",
                                 "display_currency": (pricelist or product).currency_id
                             }'/>
                         <div class="oe_price" style="white-space: nowrap;"
-                            t-esc="combination_info['price']"
+                            t-out="combination_info['price']"
                             t-options='{
                                 "widget": "monetary",
                                 "display_currency": (pricelist or product).currency_id
                             }'/>
-                        <span class="js_raw_price d-none" t-esc="combination_info['price']" />
+                        <span class="js_raw_price d-none" t-out="combination_info['price']" />
                         <p class="css_not_available_msg alert alert-warning">Option not available</p>
 
                         <a role="button" href="#" class="js_add btn btn-primary btn-sm"><i class="fa fa-shopping-cart add-optionnal-item"></i> Add to cart</a>
