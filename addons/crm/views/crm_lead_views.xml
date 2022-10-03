@@ -624,6 +624,7 @@
                 </xpath>
                 <xpath expr="//field[@name='expected_revenue']" position="replace">
                     <field name="prorated_revenue"/>
+                    <field name="recurring_revenue"/>
                 </xpath>
                 <xpath expr="//progressbar" position="attributes">
                     <attribute name="sum_field">prorated_revenue</attribute>
@@ -653,7 +654,7 @@
                             <span t-if="record.recurring_revenue and record.recurring_revenue.raw_value" groups="crm.group_use_recurring_revenues"> + </span>
                         </t>
                         <t t-if="record.recurring_revenue and record.recurring_revenue.raw_value">
-                            <field name="recurring_revenue" widget="monetary" options="{'currency_field': 'company_currency'}" groups="crm.group_use_recurring_revenues"/>
+                            <field name="recurring_revenue_prorated" widget="monetary" options="{'currency_field': 'company_currency'}" groups="crm.group_use_recurring_revenues"/>
                             <field name="recurring_plan" groups="crm.group_use_recurring_revenues"/>
                         </t>
                     </div>

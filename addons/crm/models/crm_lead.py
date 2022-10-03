@@ -154,6 +154,8 @@ class Lead(models.Model):
                                                 compute="_compute_recurring_revenue_monthly")
     recurring_revenue_monthly_prorated = fields.Monetary('Prorated MRR', currency_field='company_currency', store=True,
                                                          compute="_compute_recurring_revenue_monthly_prorated")
+    recurring_revenue_prorated = fields.Monetary('Prorated Recurring Revenues', currency_field='company_currency',
+                                                 compute="_compute_recurring_revenue_prorated", store=True)
     company_currency = fields.Many2one("res.currency", string='Currency', compute="_compute_company_currency", compute_sudo=True)
     # Dates
     date_closed = fields.Datetime('Closed Date', readonly=True, copy=False)
@@ -505,6 +507,11 @@ class Lead(models.Model):
     def _compute_recurring_revenue_monthly(self):
         for lead in self:
             lead.recurring_revenue_monthly = (lead.recurring_revenue or 0.0) / (lead.recurring_plan.number_of_months or 1)
+
+    @api.depends('recurring_revenue', 'probability')
+    def _compute_recurring_revenue_prorated(self):
+        for lead in self:
+            lead.recurring_revenue_prorated = (lead.recurring_revenue or 0.0) * (lead.probability or 0) / 100.0
 
     @api.depends('recurring_revenue_monthly', 'probability')
     def _compute_recurring_revenue_monthly_prorated(self):
