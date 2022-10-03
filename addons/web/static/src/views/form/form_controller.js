@@ -471,6 +471,7 @@ FormController.props = {
         validate: (m) => ["edit", "readonly"].includes(m),
     },
     saveRecord: { type: Function, optional: true },
+    removeRecord: { type: Function, optional: true },
     Model: Function,
     Renderer: Function,
     Compiler: Function,
