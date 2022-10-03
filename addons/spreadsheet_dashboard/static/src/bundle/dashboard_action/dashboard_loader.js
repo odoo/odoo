@@ -185,6 +185,22 @@ export class DashboardLoader {
     }
 
     /**
+     * Activate the first sheet of a model
+     *
+     * @param {Model} model
+     */
+    _activateFirstSheet(model) {
+        const sheetId = model.getters.getActiveSheetId();
+        const firstSheetId = model.getters.getSheetIds()[0];
+        if (firstSheetId !== sheetId) {
+            model.dispatch("ACTIVATE_SHEET", {
+                sheetIdFrom: sheetId,
+                sheetIdTo: firstSheetId,
+            });
+        }
+    }
+
+    /**
      * @private
      * @param {string} data
      * @param {object[]} revisions
@@ -201,7 +217,7 @@ export class DashboardLoader {
             },
             revisions
         );
-
+        this._activateFirstSheet(model);
         dataSources.addEventListener("data-source-updated", () => model.dispatch("EVALUATE_CELLS"));
         return model;
     }

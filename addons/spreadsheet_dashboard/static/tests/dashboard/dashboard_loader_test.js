@@ -7,7 +7,7 @@ import {
     DashboardLoader,
     Status,
 } from "@spreadsheet_dashboard/bundle/dashboard_action/dashboard_loader";
-import { nextTick } from "@web/../tests/helpers/utils";
+import { nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { getDashboardServerData } from "../utils/data";
 
 import { waitForDataSourcesLoaded } from "@spreadsheet/../tests/utils/model";
@@ -239,4 +239,17 @@ QUnit.test("Model is in dashboard mode", async (assert) => {
     await nextTick();
     const { model } = loader.getDashboard(3);
     assert.strictEqual(model.config.mode, "dashboard");
+});
+
+QUnit.test("Model is in dashboard mode", async (assert) => {
+    patchWithCleanup(DashboardLoader.prototype, {
+        _activateFirstSheet: () => {
+            assert.step("activate sheet");
+        },
+    });
+    const loader = await createDashboardLoader();
+    await loader.load();
+    loader.getDashboard(3);
+    await nextTick();
+    assert.verifySteps(["activate sheet"]);
 });
