@@ -3290,7 +3290,7 @@ class AccountMove(models.Model):
                 move.date = move._get_accounting_date(move.invoice_date or move.date, affects_tax_report)
 
         # Create the analytic lines in batch is faster as it leads to less cache invalidation.
-        to_post.mapped('line_ids')._create_analytic_lines()
+        to_post.line_ids._create_analytic_lines()
         to_post.write({
             'state': 'posted',
             'posted_before': True,
