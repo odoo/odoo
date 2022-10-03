@@ -16,7 +16,7 @@ def odoo_charts(data):
     figures = []
     for sheet in data["sheets"]:
         figures += [
-            figure["data"]
+            dict(figure["data"], id=figure["id"])
             for figure in sheet["figures"]
             if figure["tag"] == "chart" and figure["data"]["type"].startswith("odoo_")
         ]
