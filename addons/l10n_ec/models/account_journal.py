@@ -4,7 +4,7 @@ from odoo import api, fields, models
 class AccountJournal(models.Model):
     _inherit = "account.journal"
 
-    @api.depends('type','l10n_latam_use_documents')
+    @api.depends('type', 'l10n_latam_use_documents')
     def _compute_l10n_ec_require_emission(self):
         # True when there should be an entity and emission point
         l10n_ec_require_emission = False

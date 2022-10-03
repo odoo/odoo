@@ -46,9 +46,9 @@ _DOCUMENTS_MAPPING = {
         'ec_dt_344'
     ],
     "04": [
+        'ec_dt_01',
         'ec_dt_04',
         'ec_dt_05',
-        'ec_dt_18',  # TODO 18
         'ec_dt_41',
         'ec_dt_44',
         'ec_dt_47',
@@ -63,9 +63,9 @@ _DOCUMENTS_MAPPING = {
         'ec_dt_373'
     ],
     "05": [
+        'ec_dt_01',
         'ec_dt_04',
         'ec_dt_05',
-        'ec_dt_18',  # TODO 18
         'ec_dt_41',
         'ec_dt_44',
         'ec_dt_47',
@@ -76,9 +76,9 @@ _DOCUMENTS_MAPPING = {
         'ec_dt_373'
     ],
     "06": [
+        'ec_dt_01',
         'ec_dt_04',
         'ec_dt_05',
-        'ec_dt_18',  # TODO 18
         'ec_dt_41',
         'ec_dt_44',
         'ec_dt_47',
@@ -89,9 +89,9 @@ _DOCUMENTS_MAPPING = {
         'ec_dt_373'
     ],
     "07": [
+        'ec_dt_01',
         'ec_dt_04',
         'ec_dt_05',
-        'ec_dt_18',  # TODO 18
     ],
     "09": [
         'ec_dt_01',
@@ -134,7 +134,8 @@ class AccountMove(models.Model):
         string="Payment Method (SRI)",
     )
 
-    def _get_l10n_ec_identification_type(self):
+    def _get_l10n_ec_ats_identification_type(self):
+        # Helps filter out document types based on subset of Table 2 of SRI's ATS specification
         self.ensure_one()
         move = self
         it_ruc = self.env.ref("l10n_ec.ec_ruc", False)
@@ -149,20 +150,18 @@ class AccountMove(models.Model):
             if is_ruc:
                 identification_code = "01"
             elif is_dni:
-                identification_code = "05"  # TODO revert to "02" (test purposes only)
-            elif self.l10n_latam_document_type_id.internal_type == 'purchase_liquidation':  # TODO review (this made the govt/XSD accept purchase liquidation XMLs)
-                identification_code = "08"
-            else:
+                identification_code = "02"
+            else: #passport or foreign ID
                 identification_code = "03"
-        elif move.move_type in ("out_invoice", "out_refund", "entry"): #entry for withholds
-            if is_final_consumer:
-                identification_code = "07"
-            elif is_ruc:
+        elif move.move_type in ("out_invoice", "out_refund"):
+            if is_ruc:
                 identification_code = "04"
             elif is_dni:
                 identification_code = "05"
-            elif is_passport:
+            elif is_passport: #passport or foreign ID
                 identification_code = "06"
+            elif is_final_consumer:
+                identification_code = "07"
         return identification_code
 
     @api.model
@@ -174,25 +173,17 @@ class AccountMove(models.Model):
                 documents_allowed |= document_allowed
         return documents_allowed
 
-    def _get_l10n_ec_internal_type(self):
-        self.ensure_one()
-        internal_type = self.env.context.get("internal_type", "invoice")
-        if self.l10n_latam_document_type_id:
-            internal_type = self.l10n_latam_document_type_id.internal_type
-
     def _get_l10n_latam_documents_domain(self):
         self.ensure_one()
-        if self.journal_id.company_id.account_fiscal_country_id != self.env.ref('base.ec') or not \
-                self.journal_id.l10n_latam_use_documents:
-            return super()._get_l10n_latam_documents_domain()
-        domain = [
-            ('country_id.code', '=', 'EC'),
-            ('internal_type', 'in', ['invoice', 'debit_note', 'credit_note', 'invoice_in'])
-        ]
-        internal_type = self._get_l10n_ec_internal_type()
-        allowed_documents = self._get_l10n_ec_documents_allowed(self._get_l10n_ec_identification_type())
-        if internal_type and allowed_documents:
-            domain.append(("id", "in", allowed_documents.filtered(lambda x: x.internal_type == internal_type).ids))
+        domain = super(AccountMove, self)._get_l10n_latam_documents_domain()
+        if self.country_code == 'EC' and self.journal_id.l10n_latam_use_documents:
+            if self.debit_origin_id: # show/hide the debit note document type
+                domain.extend([("internal_type", "=", 'debit_note')])
+            elif self.move_type in ('out_invoice', 'in_invoice'):
+                domain.extend([("internal_type", "=", 'invoice')])
+            allowed_documents = self._get_l10n_ec_documents_allowed(self._get_l10n_ec_ats_identification_type())
+            if allowed_documents:
+                domain.extend([("id", "in", allowed_documents.ids)])
         return domain
 
     def _get_ec_formatted_sequence(self, number=0):
@@ -215,17 +206,10 @@ class AccountMove(models.Model):
         return super()._get_starting_sequence()
 
     def _get_last_sequence_domain(self, relaxed=False):
-        l10n_latam_document_type_model = self.env['l10n_latam.document.type']
         where_string, param = super(AccountMove, self)._get_last_sequence_domain(relaxed)
-        if self.country_code == "EC" and self.l10n_latam_use_documents and self.move_type in (
-            "out_invoice",
-            "out_refund",
-            "in_invoice",
-            "in_refund",
-        ):
-            where_string, param = super(AccountMove, self)._get_last_sequence_domain(False) #seems duplicated code
-            internal_type = self._get_l10n_ec_internal_type()
-            document_types = l10n_latam_document_type_model.search([
+        if self.country_code == "EC" and self.l10n_latam_use_documents:
+            internal_type = self.l10n_latam_document_type_id.internal_type
+            document_types = self.env['l10n_latam.document.type'].search([
                 ('internal_type', '=', internal_type),
                 ('country_id.code', '=', 'EC'),
             ])

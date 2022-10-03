@@ -154,7 +154,7 @@ class AccountMove(models.Model):
         return self.l10n_latam_document_type_id.code in ['39', '41', '110', '111', '112', '34']
 
     def _should_check_unique_number_by_partner(self):
-        # EXTEND l10n_latam_invoice_document to exclude purchase liquidations 
+        # EXTEND l10n_latam_invoice_document to exclude purchase liquidations
         self.ensure_one()
         if self.journal_id.company_id.country_id.code == 'CL':
             return self.journal_id.type == 'purchase' and not self.l10n_latam_document_type_id._is_doc_type_vendor()
