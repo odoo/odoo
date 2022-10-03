@@ -9,6 +9,8 @@
 # Paul Andrawes, 2021
 # Cécile Collart <cco@odoo.com>, 2022
 # Martin Trigaux, 2022
+# Samer Ali, 2022
+# Jinjiu Liu, 2022
 # Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
@@ -161,7 +163,7 @@ msgstr "'عدد الصفحات'"
 msgid ""
 "'Delivery Slip - %s - %s' % (object.partner_id.name or '', object.name)"
 msgstr ""
-"'إيصال التوصيل - %s - %s' % (object.partner_id.name أو '', object.name) "
+"'إيصال التوصيل - %s - %s' % (object.partner_id.name or '', object.name) "
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_location_barcode
@@ -887,7 +889,7 @@ msgstr "الكل"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_action_picking_type
 msgid "All Transfers"
-msgstr "كافة عمليات النقل"
+msgstr "كافة الشحنات "
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__procurement_group__move_type__one
@@ -1426,7 +1428,7 @@ msgstr "تحقق من وجود الطرود المستهدفة في بنود ا�
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_line_exist
 msgid "Check the existence of pack operation on the picking"
-msgstr ""
+msgstr "تحقق من وجود عملية على النقل"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__return_location
@@ -1683,27 +1685,27 @@ msgstr "عدد الاستلامات"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_backorders
 msgid "Count Picking Backorders"
-msgstr ""
+msgstr "عدد طلبات الانتقاء المؤجلة "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_draft
 msgid "Count Picking Draft"
-msgstr ""
+msgstr "عدد مسودات عمليات الانتقاء "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_late
 msgid "Count Picking Late"
-msgstr ""
+msgstr "عدد عمليات الانتقاء المتأخرة "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_ready
 msgid "Count Picking Ready"
-msgstr ""
+msgstr "عدد عمليات الانتقاء الجاهزة "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_waiting
 msgid "Count Picking Waiting"
-msgstr ""
+msgstr "عدد عمليات الانتقاء المنتظرة "
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_inventory
@@ -3493,7 +3495,7 @@ msgstr ""
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain left operand %s"
-msgstr ""
+msgstr "Invalid domain left operand %s"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -3505,7 +3507,7 @@ msgstr "مشغّل النطاق غير صالح %s "
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain right operand %s"
-msgstr ""
+msgstr "Invalid domain right operand %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
@@ -9474,4 +9476,5 @@ msgstr "{{ (object.name or '').replace('/','_') }}"
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} أمر توصيل (المرجع {{ object.name أو 'n/a' }}) "
+"{{ object.company_id.name }} أمر توصيل (المرجع {{ object.name or 'غير "
+"متاح'}}) "

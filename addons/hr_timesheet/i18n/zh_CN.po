@@ -6,6 +6,7 @@
 # 黎伟杰 <674416404@qq.com>, 2021
 # Martin Trigaux, 2021
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Raymond Yu <cl_yu@hotmail.com>, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
@@ -43,7 +44,7 @@ msgstr "(%s 剩余天数)"
 #. module: hr_timesheet
 #: model_terms:digest.tip,tip_description:hr_timesheet.digest_tip_hr_timesheet_0
 msgid "<b class=\"tip_title\">Tip: Record your Timesheets faster</b>"
-msgstr "<b class=\"tip_title\">提示。更快地记录你的工时表</b>"
+msgstr "<b class=\"tip_title\">提示。更快地记录您的工时表</b>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -68,7 +69,7 @@ msgstr "<em class=\"font-weight-normal text-muted\">时间表上 </em>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
 msgid "<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
-msgstr "<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+msgstr "<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"日期\" title=\"日期\"/>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -299,7 +300,7 @@ msgstr "配置设置"
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.hr_timesheet_menu_configuration
 msgid "Configuration"
-msgstr "基础配置"
+msgstr "配置"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_task_create_timesheet
@@ -341,7 +342,7 @@ msgstr "花费的天数"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "Days recorded on sub-tasks:"
-msgstr "在子任务上记录的天数。"
+msgstr "在子任务上记录的天数："
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_res_company__internal_project_id
@@ -509,7 +510,7 @@ msgstr "耗时"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "Hours recorded on sub-tasks:"
-msgstr "在子任务上记录的小时数。"
+msgstr "在子任务上记录的小时数:"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_create_timesheet__id
@@ -519,13 +520,13 @@ msgstr "ID"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_res_config_settings__reminder_manager_allow
 msgid "If checked, send an email to all manager"
-msgstr "如果检查完毕，请向所有的经理发送EMail"
+msgstr "如果检查完毕，请向所有的经理发送电子邮件"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_res_config_settings__reminder_user_allow
 msgid ""
 "If checked, send an email to all users who have not recorded their timesheet"
-msgstr "如果检查完毕，请向那些尚未记录时间表的用户发送EMail"
+msgstr "如果检查完毕，请向那些尚未记录时间表的用户发送电子邮件"
 
 #. module: hr_timesheet
 #: model:project.task.type,legend_normal:hr_timesheet.internal_project_default_stage
@@ -609,7 +610,7 @@ msgstr "记录任务时间"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__reminder_manager_allow
 msgid "Manager Reminder"
-msgstr "经历提醒"
+msgstr "经理提醒"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/res_company.py:0
@@ -652,7 +653,7 @@ msgstr "最新"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
 msgid "No activities found"
-msgstr "找不到活动！"
+msgstr "找不到活动"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
@@ -733,7 +734,7 @@ msgstr "记录新活动"
 msgid ""
 "Record your timesheets in an instant by pressing Shift + the corresponding "
 "hotkey to add 15min to your projects."
-msgstr "按Shift+相应的热键，瞬间记录你的时间表，为你的项目增加15分钟。"
+msgstr "按Shift+相应的热键，瞬间记录您的时间表，为您的项目增加15分钟。"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
@@ -770,7 +771,7 @@ msgstr "剩余小时数:"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__remaining_hours
 msgid "Remaining Invoiced Time"
-msgstr "剩余的开票时间"
+msgstr "剩余的结算时间"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_timesheets_reports
@@ -1157,9 +1158,15 @@ msgid "Timesheets can be logged on this task."
 msgstr "可以在这个任务上记录工时表。"
 
 #. module: hr_timesheet
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#, python-format
+msgid "Timesheets must be created with an active employee."
+msgstr "在职员工才能创建时间表."
+
+#. module: hr_timesheet
 #: model:digest.tip,name:hr_timesheet.digest_tip_hr_timesheet_0
 msgid "Tip: Record your Timesheets faster"
-msgstr "提示:更快地记录你的工时表"
+msgstr "提示:更快地记录您的工时表"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
@@ -1224,7 +1231,7 @@ msgstr "使用我们的 Web/移动应用，随时随地（甚至离线）跟踪�
 msgid ""
 "Track your working hours by projects every day and invoice this time to your"
 " customers."
-msgstr "每天按项目跟踪您的工作时间，这次会向您的客户开具发票。"
+msgstr "每天按项目跟踪您的工作时间，这次会向您的客户开具结算单。"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/res_company.py:0
@@ -1235,7 +1242,7 @@ msgstr "培训"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__has_planned_hours_tasks
 msgid "True if any of the project's task has a set planned hours"
-msgstr "如果项目的任何任务有设定的计划时间，则为真。"
+msgstr "如果项目的任何任务有设定的计划时间，则为真"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__user_id
@@ -1257,7 +1264,7 @@ msgstr "用户：只有自己的工时表"
 #: code:addons/hr_timesheet/static/src/js/timesheet_config_form_view.js:0
 #, python-format
 msgid "View App"
-msgstr "视图APP"
+msgstr "查看APP"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_uom_uom__timesheet_widget
@@ -1283,7 +1290,7 @@ msgstr "您不能访问不属于您的时间表。"
 msgid ""
 "You cannot add timesheets to a project linked to an inactive analytic "
 "account."
-msgstr "你不能把工时表添加到与不活动的分析帐户相连的项目中。"
+msgstr "您不能把工时表添加到与未启用分析帐户相连的项目中。"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
@@ -1291,7 +1298,7 @@ msgstr "你不能把工时表添加到与不活动的分析帐户相连的项目
 msgid ""
 "You cannot add timesheets to a project or a task linked to an inactive "
 "analytic account."
-msgstr "你不能把工时表添加到与非活动分析帐户相连的项目或任务。"
+msgstr "您不能把工时表添加到与未启用分析帐户相连的项目或任务。"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
@@ -1300,6 +1307,12 @@ msgid ""
 "analytic account. Please change this account, or reactivate the current one "
 "to timesheet on the project."
 msgstr "由于关联到未启用分析账户，无法在该项目上记录工时表。请修正后再试，或重新启用当前项目的工时表。"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#, python-format
+msgid "You cannot set an archived employee to the existing timesheets."
+msgstr "您不能将已归档员工设置到现有时间表."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0

@@ -193,7 +193,7 @@ class SaleOrder(models.Model):
         'res.partner', string='Customer', readonly=True,
         states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
         required=True, change_default=True, index=True, tracking=1,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
+        domain="[('type', '!=', 'private'), ('company_id', 'in', (False, company_id))]",)
     partner_invoice_id = fields.Many2one(
         'res.partner', string='Invoice Address',
         readonly=True, required=True,
@@ -872,7 +872,7 @@ class SaleOrder(models.Model):
     def _action_cancel(self):
         inv = self.invoice_ids.filtered(lambda inv: inv.state == 'draft')
         inv.button_cancel()
-        return self.write({'state': 'cancel'})
+        return self.write({'state': 'cancel', 'show_update_pricelist': False})
 
     def _show_cancel_wizard(self):
         for order in self:

@@ -32,7 +32,7 @@ class AccountMove(models.Model):
         if self.state == 'draft' or not self.invoice_date or self.move_type not in ('out_invoice', 'out_refund'):
             return res
 
-        current_invoice_amls = self.invoice_line_ids.filtered(lambda aml: not aml.display_type and aml.product_id and aml.quantity)
+        current_invoice_amls = self.invoice_line_ids.filtered(lambda aml: not aml.display_type and aml.product_id and aml.product_id.type in ('consu', 'product') and aml.quantity)
         all_invoices_amls = current_invoice_amls.sale_line_ids.invoice_lines.filtered(lambda aml: aml.move_id.state == 'posted').sorted(lambda aml: (aml.date, aml.move_name, aml.id))
         index = all_invoices_amls.ids.index(current_invoice_amls[:1].id) if current_invoice_amls[:1] in all_invoices_amls else 0
         previous_amls = all_invoices_amls[:index]
@@ -45,7 +45,7 @@ class AccountMove(models.Model):
         previous_qties_delivered = defaultdict(float)
         stock_move_lines = current_invoice_amls.sale_line_ids.move_ids.move_line_ids.filtered(lambda sml: sml.state == 'done' and sml.lot_id).sorted(lambda sml: (sml.date, sml.id))
         for sml in stock_move_lines:
-            if sml.product_id not in invoiced_products:
+            if sml.product_id not in invoiced_products or 'customer' not in {sml.location_id.usage, sml.location_dest_id.usage}:
                 continue
             product = sml.product_id
             product_uom = product.uom_id

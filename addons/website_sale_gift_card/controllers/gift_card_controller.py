@@ -13,13 +13,14 @@ class GiftCardController(main.WebsiteSale):
         gift_card = request.env["gift.card"].sudo().search([('code', '=', gift_card_code.strip())], limit=1)
         order = request.env['website'].get_current_website().sale_get_order()
         gift_card_status = order._pay_with_gift_card(gift_card)
-        return request.redirect('/shop/payment' + ('?gift_card_error=%s' % gift_card_status if gift_card_status else ''))
+        return request.redirect('/shop/payment' + '?keep_carrier=1' + ('&gift_card_error=%s' % gift_card_status if gift_card_status else ''))
 
     @http.route()
     def shop_payment(self, **post):
         order = request.website.sale_get_order()
+        res = super().shop_payment(**post)
         order._recompute_gift_card_lines()
-        return super().shop_payment(**post)
+        return res
 
     @http.route(['/shop/cart'], type='http', auth="public", website=True)
     def cart(self, **post):

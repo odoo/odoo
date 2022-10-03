@@ -389,15 +389,6 @@ class MrpWorkorder(models.Model):
         for workorder in self:
             workorder.scrap_count = count_data.get(workorder.id, 0)
 
-    @api.onchange('date_planned_finished')
-    def _onchange_date_planned_finished(self):
-        if self.date_planned_start and self.date_planned_finished:
-            interval = self.workcenter_id.resource_calendar_id.get_work_duration_data(
-                self.date_planned_start, self.date_planned_finished,
-                domain=[('time_type', 'in', ['leave', 'other'])]
-            )
-            self.duration_expected = interval['hours'] * 60
-
     @api.onchange('operation_id')
     def _onchange_operation_id(self):
         if self.operation_id:
@@ -407,10 +398,25 @@ class MrpWorkorder(models.Model):
     @api.onchange('date_planned_start', 'duration_expected', 'workcenter_id')
     def _onchange_date_planned_start(self):
         if self.date_planned_start and self.duration_expected and self.workcenter_id:
-            self.date_planned_finished = self.workcenter_id.resource_calendar_id.plan_hours(
-                self.duration_expected / 60.0, self.date_planned_start,
-                compute_leaves=True, domain=[('time_type', 'in', ['leave', 'other'])]
-            )
+            self.date_planned_finished = self._calculate_date_planned_finished()
+
+    def _calculate_date_planned_finished(self, date_planned_start=False):
+        return self.workcenter_id.resource_calendar_id.plan_hours(
+            self.duration_expected / 60.0, date_planned_start or self.date_planned_start,
+            compute_leaves=True, domain=[('time_type', 'in', ['leave', 'other'])]
+        )
+
+    @api.onchange('date_planned_finished')
+    def _onchange_date_planned_finished(self):
+        if self.date_planned_start and self.date_planned_finished:
+            self.duration_expected = self._calculate_duration_expected()
+
+    def _calculate_duration_expected(self, date_planned_start=False, date_planned_finished=False):
+        interval = self.workcenter_id.resource_calendar_id.get_work_duration_data(
+            date_planned_start or self.date_planned_start, date_planned_finished or self.date_planned_finished,
+            domain=[('time_type', 'in', ['leave', 'other'])]
+        )
+        return interval['hours'] * 60
 
     @api.onchange('operation_id', 'workcenter_id', 'qty_production')
     def _onchange_expected_duration(self):
@@ -431,6 +437,16 @@ class MrpWorkorder(models.Model):
                 end_date = fields.Datetime.to_datetime(values.get('date_planned_finished')) or workorder.date_planned_finished
                 if start_date and end_date and start_date > end_date:
                     raise UserError(_('The planned end date of the work order cannot be prior to the planned start date, please correct this to save the work order.'))
+                if 'duration_expected' not in values and not self.env.context.get('bypass_duration_calculation'):
+                    if values.get('date_planned_start') and values.get('date_planned_finished'):
+                        computed_finished_time = workorder._calculate_date_planned_finished(start_date)
+                        values['date_planned_finished'] = computed_finished_time
+                    elif values.get('date_planned_start'):
+                        computed_duration = workorder._calculate_duration_expected(date_planned_start=start_date)
+                        values['duration_expected'] = computed_duration
+                    elif values.get('date_planned_finished'):
+                        computed_duration = workorder._calculate_duration_expected(date_planned_finished=end_date)
+                        values['duration_expected'] = computed_duration
                 # Update MO dates if the start date of the first WO or the
                 # finished date of the last WO is update.
                 if workorder == workorder.production_id.workorder_ids[0] and 'date_planned_start' in values:
@@ -596,7 +612,7 @@ class MrpWorkorder(models.Model):
                 vals['date_planned_start'] = start_date
             if self.date_planned_finished and self.date_planned_finished < start_date:
                 vals['date_planned_finished'] = start_date
-            return self.write(vals)
+            return self.with_context(bypass_duration_calculation=True).write(vals)
 
     def button_finish(self):
         end_date = datetime.now()

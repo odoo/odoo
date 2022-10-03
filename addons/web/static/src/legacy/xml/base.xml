@@ -1354,19 +1354,19 @@
 <t t-name="FieldBinaryFileUploader.attachment_preview">
     <t t-set="url" t-value="widget.metadata[file.id] ? widget.metadata[file.id].url : false"/>
     <t t-if="file.data" t-set="file" t-value="file.data"/>
-    <t t-set="editable" t-value="widget.mode === 'edit'"/>
+    <t t-set="editable" t-value="widget.mode === 'edit' and !(file.res_id === 0 and file.access_token)"/>
     <t t-if="file.mimetype" t-set="mimetype" t-value="file.mimetype"/>
     <div t-attf-class="o_attachment o_attachment_many2many #{ editable ? 'o_attachment_editable' : '' } #{upload ? 'o_attachment_uploading' : ''}" t-att-title="file.name">
         <div class="o_attachment_wrap">
             <t t-set="ext" t-value="file.name.replace(/^.*\./, '')"/>
             <div class="o_image_box float-left" t-att-data-id="file.id">
-                <a t-att-href="url" t-att-title="'Download ' + file.name" aria-label="Download">
+                <a t-att-href="url" t-att-title="'Download ' + file.name" aria-label="Download" target="_blank">
                     <span class="o_image o_hover" t-att-data-mimetype="mimetype" t-att-data-ext="ext" role="img"/>
                 </a>
             </div>
 
             <div class="caption">
-                <a class="ml4" t-att-href="url" t-att-title="'Download ' + file.name"><t t-esc='file.name'/></a>
+                <a class="ml4" t-att-href="url" t-att-title="'Download ' + file.name" target="_blank"><t t-esc='file.name'/></a>
             </div>
             <div class="caption small">
                 <a class="ml4 small text-uppercase" t-att-href="url" t-att-title="'Download ' + file.name"><b><t t-esc='ext'/></b></a>

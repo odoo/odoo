@@ -288,7 +288,7 @@ class SaleOrderLine(models.Model):
                 ], limit=1)
             if not purchase_order:
                 values = line._purchase_service_prepare_order_values(supplierinfo)
-                purchase_order = PurchaseOrder.create(values)
+                purchase_order = PurchaseOrder.with_context(mail_create_nosubscribe=True).create(values)
             else:  # update origin of existing PO
                 so_name = line.order_id.name
                 origins = []

@@ -5,7 +5,7 @@
 # Translators:
 # Melanie Bernard <mbe@odoo.com>, 2021
 # Xavier Belmere <Info@cartmeleon.com>, 2021
-# SBO-Sebastien <sebastien@sbo-solutions.fr>, 2021
+# SBO-Sebastien <sbo@irokoo.fr>, 2021
 # Sebastien LANGE, 2021
 # Martin Trigaux, 2021
 # Grégory Schreiner <gregory@mokatourisme.fr>, 2022
@@ -683,6 +683,16 @@ msgid ""
 msgstr ""
 "Un collaborateur ne peut pas être sélectionné plus d'une fois dans les accès"
 " de partage du projet. Veuillez supprimer les doublons et réessayer."
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"A personal stage cannot be linked to a project because it is only visible to"
+" its corresponding user."
+msgstr ""
+"Une étape personnelle ne peut pas être liée à un projet car elle n'est "
+"visible que par son utilisateur correspondant."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
@@ -3312,7 +3322,7 @@ msgstr "Ouvert"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
 msgid "Open Tasks"
-msgstr "Ouvrir la tâche"
+msgstr "Tâches ouvertes"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search

@@ -11,6 +11,7 @@
 # Bole <bole@dajmi5.com>, 2022
 # Martin Trigaux, 2022
 # Tina Milas, 2022
+# Vladimir Vrgoč, 2022
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Tina Milas, 2022\n"
+"Last-Translator: Vladimir Vrgoč, 2022\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -230,12 +231,12 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_policy__delivered_manual
 msgid "Based on Milestones"
-msgstr ""
+msgstr "Temeljem Prekretnica"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_policy__delivered_timesheet
 msgid "Based on Timesheets"
-msgstr ""
+msgstr "Temeljem Kontrolnih kartica"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__allow_billable
@@ -599,6 +600,8 @@ msgid ""
 "Invoice based on timesheets (delivered quantity) on projects or tasks you'll"
 " create later on."
 msgstr ""
+"Račun temeljem kontrolnih kartica (isporučene količine) na projektima ili "
+"zadacima koje ćete kreirati kasnije."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -607,6 +610,9 @@ msgid ""
 "Invoice based on timesheets (delivered quantity), and create a project for "
 "the order with a task for each sales order line to track the time spent."
 msgstr ""
+"Kreiraj račun temeljem kontrolnih kartica (isporučene količine), i kreira "
+"projekt za narudžbu sa zadatkom za stavke prodajnog naloga kako biste "
+"pratili utrošeno vrijeme."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -615,6 +621,8 @@ msgid ""
 "Invoice based on timesheets (delivered quantity), and create a task in an "
 "existing project to track the time spent."
 msgstr ""
+"Kreiraj račun temeljen kontrolnih kartica (isporučene količine), i kreiraj "
+"zadataka u postojećem projektu kako biste pratili utrošeno vrijeme."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -623,6 +631,8 @@ msgid ""
 "Invoice based on timesheets (delivered quantity), and create an empty "
 "project for the order to track the time spent."
 msgstr ""
+"Kreiraj fakturu temeljem kontrolnih kartica (isporučena količina), i kreira "
+"prazan projekt za narudžbu kako biste pratili utrošeno vrijeme."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
@@ -851,7 +861,7 @@ msgstr "Planirano"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_policy__ordered_timesheet
 msgid "Prepaid/Fixed Price"
-msgstr ""
+msgstr "Pretplata / Fiksna cijena"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__pricing_type
@@ -1093,6 +1103,8 @@ msgid ""
 "Sales order lines define milestones of the project to invoice by setting the"
 " delivered quantity."
 msgstr ""
+"Stavke prodajnog naloga definiraju prekretnice projekta za kreiranje račun "
+"postavljanjem isporučenih količina."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -1102,6 +1114,9 @@ msgid ""
 " delivered quantity. Create a project for the order with a task for each "
 "sales order line to track the time spent."
 msgstr ""
+"Stavke prodajnog naloga definiraju prekretnice projekta za kreiranje račun "
+"postavljanjem isporučenih količina. Kreiraj projekt za narudžbu sa zadatkom "
+"za svaku stavku prodajnog naloga kako biste pratili utrošeno vrijeme."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -1111,6 +1126,9 @@ msgid ""
 " delivered quantity. Create a task in an existing project to track the time "
 "spent."
 msgstr ""
+"Stavke prodajnog naloga definiraju prekretnice projekta za kreiranje račun "
+"postavljanjem isporučenih količina. Kreiraj zadatak u postojećem projektu "
+"kako biste pratili utrošeno vrijeme."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -1120,6 +1138,9 @@ msgid ""
 " delivered quantity. Create an empty project for the order to track the time"
 " spent."
 msgstr ""
+"Stavke prodajnog naloga definiraju prekretnice projekta za kreiranje račun "
+"postavljanjem isporučenih količina. Kreiraj prazan projekt za narudžbu kako "
+"biste pratili utrošeno vrijeme."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__sale_order_id
@@ -1552,6 +1573,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_product_timesheet_form
 msgid "Warn the salesperson for an upsell when work done exceeds"
 msgstr ""
+"Upozori prodavača na priliku za proširenje ponude kada izvršeni posao predje"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__warning_employee_rate
@@ -1625,4 +1647,4 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_product_timesheet_form
 msgid "of hours sold. ("
-msgstr ""
+msgstr "prodanih sati ("

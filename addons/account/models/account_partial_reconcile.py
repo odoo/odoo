@@ -117,12 +117,12 @@ class AccountPartialReconcile(models.Model):
         res = super().unlink()
 
         # Reverse CABA entries.
-        today = fields.Date.context_today(self)
-        default_values_list = [{
-            'date': move.date if move.date > (move.company_id.period_lock_date or date.min) else today,
-            'ref': _('Reversal of: %s') % move.name,
-        } for move in moves_to_reverse]
-        moves_to_reverse._reverse_moves(default_values_list, cancel=True)
+        if moves_to_reverse:
+            default_values_list = [{
+                'date': move._get_accounting_date(move.date, move._affect_tax_report()),
+                'ref': _('Reversal of: %s') % move.name,
+            } for move in moves_to_reverse]
+            moves_to_reverse._reverse_moves(default_values_list, cancel=True)
 
         # Remove the matching numbers.
         full_to_unlink.unlink()
@@ -383,6 +383,7 @@ class AccountPartialReconcile(models.Model):
         :return: The newly created journal entries.
         '''
         tax_cash_basis_values_per_move = self._collect_tax_cash_basis_values()
+        today = fields.Date.context_today(self)
 
         moves_to_create = []
         to_reconcile_after = []
@@ -394,9 +395,10 @@ class AccountPartialReconcile(models.Model):
                 partial = partial_values['partial']
 
                 # Init the journal entry.
+                move_date = partial.max_date if partial.max_date > (move.company_id.period_lock_date or date.min) else today
                 move_vals = {
                     'move_type': 'entry',
-                    'date': partial.max_date,
+                    'date': move_date,
                     'ref': move.name,
                     'journal_id': partial.company_id.tax_cash_basis_journal_id.id,
                     'line_ids': [],

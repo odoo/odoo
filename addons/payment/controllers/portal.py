@@ -103,9 +103,6 @@ class PaymentPortal(portal.CustomerPortal):
         company = request.env['res.company'].sudo().browse(company_id)
         currency_id = currency_id or company.currency_id.id
 
-        # Make sure that the company passed as parameter matches the partner's company.
-        PaymentPortal._ensure_matching_companies(partner_sudo, company)
-
         # Make sure that the currency exists and is active
         currency = request.env['res.currency'].browse(currency_id).exists()
         if not currency or not currency.active:
@@ -120,6 +117,11 @@ class PaymentPortal(portal.CustomerPortal):
         payment_tokens = request.env['payment.token'].search(
             [('acquirer_id', 'in', acquirers_sudo.ids), ('partner_id', '=', partner_sudo.id)]
         ) if logged_in else request.env['payment.token']
+
+        # Make sure that the partner's company matches the company passed as parameter.
+        if not PaymentPortal._can_partner_pay_in_company(partner_sudo, company):
+            acquirers_sudo = request.env['payment.acquirer'].sudo()
+            payment_tokens = request.env['payment.token']
 
         # Compute the fees taken by acquirers supporting the feature
         fees_by_acquirer = {
@@ -430,20 +432,16 @@ class PaymentPortal(portal.CustomerPortal):
             return None
 
     @staticmethod
-    def _ensure_matching_companies(partner, document_company):
-        """ Check that the partner's company is the same as the document's company.
+    def _can_partner_pay_in_company(partner, document_company):
+        """ Return whether the provided partner can pay in the provided company.
 
-        If the partner company is not set, the check passes. If the companies don't match, a
-        `UserError` is raised.
+        The payment is allowed either if the partner's company is not set or if the companies match.
 
         :param recordset partner: The partner on behalf on which the payment is made, as a
                                   `res.partner` record.
         :param recordset document_company: The company of the document being paid, as a
                                            `res.company` record.
-        :return: None
-        :raise UserError: If the companies don't match.
+        :return: Whether the payment is allowed.
+        :rtype: str
         """
-        if partner.company_id and partner.company_id != document_company:
-            raise UserError(
-                _("Please switch to company '%s' to make this payment.", document_company.name)
-            )
+        return not partner.company_id or partner.company_id == document_company

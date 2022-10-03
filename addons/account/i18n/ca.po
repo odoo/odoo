@@ -27,6 +27,7 @@
 # eriiikgt, 2022
 # marcescu, 2022
 # oscaryuu, 2022
+# Mohamed Sallam, 2022
 # jabelchi, 2022
 # 
 msgid ""
@@ -803,6 +804,11 @@ msgid "<span class=\"o_stat_text\">Invoiced</span>"
 msgstr "<span class=\"o_stat_text\">Facturat</span>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
+msgid "<span class=\"o_stat_text\">Journal Entry</span>"
+msgstr "<span class=\"o_stat_text\">Apunt comptable</span>"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 "<span class=\"oe_inline o_form_label mr-3 ml-5 oe_edit_only\" "
@@ -950,6 +956,12 @@ msgstr "<span>5.00</span>"
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Amount</span>"
 msgstr "<span>Import</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.bill_preview
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "<span>Amount In Currency</span>"
+msgstr "<span>Import en divisa</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -6350,7 +6362,7 @@ msgstr "Fórmula"
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__email_from
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
 msgid "From"
-msgstr "De"
+msgstr "Des de"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
@@ -7808,7 +7820,6 @@ msgstr "Entrades de Diari per Data"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
-#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #, python-format
 msgid "Journal Entry"
 msgstr "Assentament comptable"
@@ -9647,7 +9658,7 @@ msgstr ""
 "Idioma opcional de traducció (ISO codi) per a seleccionar en enviar un "
 "correu electrònic. Si no està establerta, s' usarà la versió anglesa. Això "
 "normalment hauria de ser una expressió de substitució que proveeix el "
-"llenguatge apropiat, p. ex. {{ objecte. partner_ id. Lang }}."
+"llenguatge apropiat, p. ex. {{ object.partner_id.lang }}."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__code
@@ -15051,7 +15062,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__destination_account_id
 msgid "To"
-msgstr "Per"
+msgstr "Fins a"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal

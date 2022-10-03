@@ -3,8 +3,8 @@
 # 	* project
 # 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
 # Martin Trigaux, 2021
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
@@ -684,6 +684,16 @@ msgstr ""
 "opnieuw."
 
 #. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"A personal stage cannot be linked to a project because it is only visible to"
+" its corresponding user."
+msgstr ""
+"Een persoonlijke fase kan niet gekoppeld worden aan een project omdat het "
+"enkel zichtbaar is voor de corresponderende gebruiker."
+
+#. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
 msgid "A task can only have a single personal stage per user."
 msgstr "Een taak kan slechts één persoonlijke fase per gebruiker hebben."
@@ -961,7 +971,7 @@ msgstr "Weet je zeker dat je door wilt gaan?"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid "Are you sure you want to delete those stages ?"
-msgstr "Weet je zeker dat je deze fasen wilt verwijderen?"
+msgstr "Weet je zeker dat je deze fase wilt verwijderen?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban

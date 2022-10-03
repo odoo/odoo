@@ -80,21 +80,23 @@ class Project(models.Model):
             operator_new = 'not inselect'
         return [('id', operator_new, (query, ()))]
 
-    @api.depends('allow_timesheets', 'task_ids.planned_hours', 'task_ids.remaining_hours')
+    @api.depends('allow_timesheets', 'task_ids.planned_hours', 'timesheet_ids')
     def _compute_remaining_hours(self):
-        group_read = self.env['project.task'].read_group(
-            domain=[('planned_hours', '!=', False), ('project_id', 'in', self.filtered('allow_timesheets').ids),
-                     '|', ('stage_id.fold', '=', False), ('stage_id', '=', False)],
-            fields=['planned_hours:sum', 'remaining_hours:sum'], groupby='project_id')
-        group_per_project_id = {group['project_id'][0]: group for group in group_read}
+        timesheet_read_group = self.env['account.analytic.line'].read_group(
+            domain=[('project_id', 'in', self.filtered('allow_timesheets').ids), ('task_id', '!=', False),
+                    '|', ('task_id.stage_id.fold', '=', False), ('task_id.stage_id', '=', False)],
+            fields=['effective_hours:sum(unit_amount)'], groupby='project_id')
+        task_read_group = self.env['project.task'].read_group(
+            domain=[('planned_hours', '!=', 0.0), ('project_id', 'in', self.filtered('allow_timesheets').ids),
+                    ('parent_id', '=', False), '|', ('stage_id.fold', '=', False), ('stage_id', '=', False)],
+            fields=['planned_hours:sum', ], groupby='project_id')
+        effective_hours_per_project_id = {res['project_id'][0]: res['effective_hours'] for res in timesheet_read_group}
+        planned_hours_per_project_id = {res['project_id'][0]: res['planned_hours'] for res in task_read_group}
         for project in self:
-            group = group_per_project_id.get(project.id)
-            if group:
-                project.remaining_hours = group.get('remaining_hours')
-                project.has_planned_hours_tasks = bool(group.get('planned_hours'))
-            else:
-                project.remaining_hours = 0
-                project.has_planned_hours_tasks = False
+            planned_hours = planned_hours_per_project_id.get(project.id, 0.0)
+            effective_hours = effective_hours_per_project_id.get(project.id, 0.0)
+            project.remaining_hours = planned_hours - effective_hours if planned_hours else 0.0
+            project.has_planned_hours_tasks = project.id in planned_hours_per_project_id
 
     @api.constrains('allow_timesheets', 'analytic_account_id')
     def _check_allow_timesheet(self):
@@ -264,8 +266,14 @@ class Task(models.Model):
 
     @api.depends('timesheet_ids.unit_amount')
     def _compute_effective_hours(self):
+        if not any(self._ids):
+            for task in self:
+                task.effective_hours = round(sum(task.timesheet_ids.mapped('unit_amount')), 2)
+            return
+        timesheet_read_group = self.env['account.analytic.line'].read_group([('task_id', 'in', self.ids)], ['unit_amount', 'task_id'], ['task_id'])
+        timesheets_per_task = {res['task_id'][0]: res['unit_amount'] for res in timesheet_read_group}
         for task in self:
-            task.effective_hours = round(sum(task.timesheet_ids.mapped('unit_amount')), 2)
+            task.effective_hours = round(timesheets_per_task.get(task.id, 0.0), 2)
 
     @api.depends('effective_hours', 'subtask_effective_hours', 'planned_hours')
     def _compute_progress_hours(self):
@@ -367,15 +375,20 @@ class Task(models.Model):
         In this case, a warning message is displayed through a RedirectWarning
         and allows the user to see timesheets entries to unlink.
         """
-        tasks_with_timesheets = self.filtered(lambda t: t.timesheet_ids)
-        if tasks_with_timesheets:
-            if len(tasks_with_timesheets) > 1:
+        timesheet_data = self.env['account.analytic.line'].sudo().read_group(
+            [('task_id', 'in', self.ids)],
+            ['task_id'],
+            ['task_id'],
+        )
+        task_with_timesheets_ids = [res['task_id'][0] for res in timesheet_data]
+        if task_with_timesheets_ids:
+            if len(task_with_timesheets_ids) > 1:
                 warning_msg = _("These tasks have some timesheet entries referencing them. Before removing these tasks, you have to remove these timesheet entries.")
             else:
                 warning_msg = _("This task has some timesheet entries referencing it. Before removing this task, you have to remove these timesheet entries.")
             raise RedirectWarning(
                 warning_msg, self.env.ref('hr_timesheet.timesheet_action_task').id,
-                _('See timesheet entries'), {'active_ids': tasks_with_timesheets.ids})
+                _('See timesheet entries'), {'active_ids': task_with_timesheets_ids})
 
     @api.model
     def _convert_hours_to_days(self, time):

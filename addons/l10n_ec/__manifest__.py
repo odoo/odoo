@@ -46,8 +46,6 @@ Master Data:
         "l10n_latam_base",
     ],
     "data": [
-        # Security
-        "security/ir.model.access.csv",
         # Chart of Accounts
         "data/account_chart_template_data.xml",
         "data/account_group_template_data.xml",
@@ -74,6 +72,8 @@ Master Data:
         "views/l10n_latam_document_type_view.xml",
         "views/l10n_ec_sri_payment.xml",
         "views/account_journal_view.xml",
+        # Security
+        "security/ir.model.access.csv",
     ],
     "demo": [
         "demo/demo_company.xml",

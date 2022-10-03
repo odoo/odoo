@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard___data_fetched
@@ -1503,7 +1503,7 @@ msgstr "Impostare un importo più piccolo di %s."
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "Please switch to company '%s' to make this payment."
-msgstr ""
+msgstr "Passa all'azienda '%s' per effettuare questo pagamento."
 
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
@@ -2273,7 +2273,7 @@ msgstr "Non puoi eliminare una vista usata da un'acquirente di pagamento."
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "You do not have access to this payment token."
-msgstr ""
+msgstr "Non hai accesso a questo token di pagamento."
 
 #. module: payment
 #. openerp-web

@@ -9,8 +9,8 @@
 # Sandra Franch <sandra.franch@upc.edu>, 2021
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2021
 # José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
-# jabelchi, 2021
 # marcescu, 2022
+# jabelchi, 2022
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: marcescu, 2022\n"
+"Last-Translator: jabelchi, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,6 +53,8 @@ msgstr ""
 #: model:ir.model.fields,help:event_booth_sale.field_event_booth_configurator__event_booth_category_available_ids
 msgid "Booth Category for which booths are still available. Used in frontend"
 msgstr ""
+"Categoria d'estands per a la qual encara hi ha estands disponibles. Es fa "
+"servir al frontend"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_sale_order__event_booth_count
@@ -74,12 +76,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_booth_sale.field_sale_order__event_booth_ids
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.sale_order_view_form
 msgid "Booths"
-msgstr ""
+msgstr "Estands"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_line__event_booth_category_id
 msgid "Booths Category"
-msgstr ""
+msgstr "Categoria d'estands"
 
 #. module: event_booth_sale
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_configurator_view_form
@@ -93,7 +95,7 @@ msgstr ""
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_line__event_booth_ids
 msgid "Confirmed Booths"
-msgstr ""
+msgstr "Estands confirmats"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_line__event_booth_registration_ids
@@ -265,7 +267,7 @@ msgstr "Pagat"
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_line__event_booth_pending_ids
 msgid "Pending Booths"
-msgstr ""
+msgstr "Estands pendents"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__price
@@ -348,6 +350,8 @@ msgid ""
 "The following booths are unavailable, please remove them to continue : "
 "%(booth_names)s"
 msgstr ""
+"Els estands següents no estan disponibles. Si us plau, treieu-los per a "
+"continuar : %(booth_names)s"
 
 #. module: event_booth_sale
 #: model:ir.model.constraint,message:event_booth_sale.constraint_event_booth_registration_unique_registration
@@ -371,6 +375,8 @@ msgid ""
 "You can't delete the following booths as they are linked to sales orders: "
 "%(booths)s"
 msgstr ""
+"No podeu eliminar aquests stands perquè estan enllaçats a comandes de venda:"
+" %(booths)s"
 
 #. module: event_booth_sale
 #: code:addons/event_booth_sale/wizard/event_booth_configurator.py:0
@@ -385,3 +391,4 @@ msgid ""
 "Your order has been cancelled because the following booths have been "
 "reserved"
 msgstr ""
+"S'ha cancel·lat la comanda, perquè els següents estands han estat reservats"

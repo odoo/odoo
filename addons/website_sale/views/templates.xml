@@ -481,6 +481,7 @@
                 <form class="js_attributes mb-2" method="get">
                     <input t-if="category" type="hidden" name="category" t-att-value="category.id" />
                     <input type="hidden" name="search" t-att-value="search" />
+                    <input type="hidden" name="order" t-att-value="order"/>
                     <a t-if="attrib_values" t-att-href="keep('/shop'+ ('/category/'+slug(category)) if category else None, attrib=0)" class="btn btn-link p-0">
                         <i class="fa fa-eraser mr-1"/><u>Clear filters</u>
                     </a>
@@ -602,8 +603,10 @@
                             <t t-call="website_sale.shop_product_carousel"/>
                         </div>
                         <div class="col-md-6 mt-md-4" id="product_details">
+                            <t t-set="base_url" t-value="product.get_base_url()"/>
                             <h1 itemprop="name" t-field="product.name">Product Name</h1>
-                            <span itemprop="url" style="display:none;" t-esc="product.website_url"/>
+                            <span itemprop="url" style="display:none;" t-esc="base_url + product.website_url"/>
+                            <span itemprop="image" style="display:none;" t-esc="base_url + website.image_url(product, 'image_1920')" />
                             <t t-if="is_view_active('website_sale.product_comment')">
                                 <a href="#o_product_page_reviews" class="o_product_page_reviews_link text-decoration-none">
                                     <t t-call="portal_rating.rating_widget_stars_static">
@@ -1174,7 +1177,7 @@
         </t>
     </template>
 
-    <template id="suggested_products_list" inherit_id="website_sale.cart_lines" customize_show="True" name="Alternative Products in my cart">
+    <template id="suggested_products_list" inherit_id="website_sale.cart_lines" customize_show="True" name="Accessory Products in my cart">
         <xpath expr="//table[@id='cart_products']" position="after">
             <h5 class='text-muted js_cart_lines' t-if="suggested_products">Suggested Accessories:</h5>
             <table t-if="suggested_products" id="suggested_products" class="js_cart_lines table table-striped table-sm">
@@ -1727,17 +1730,18 @@
                                 <h3 class="text-left mt-3">
                                     <strong>Payment Information:</strong>
                                 </h3>
+                                <t t-set="payment_tx_id" t-value="order.get_portal_last_transaction()"/>
                                 <table class="table">
                                     <tbody>
                                         <tr>
                                             <td colspan="2">
-                                                <t t-esc="order.get_portal_last_transaction().acquirer_id.sudo().name" />
+                                                <t t-esc="payment_tx_id.acquirer_id.sudo().name" />
                                             </td>
                                             <td class="text-right" width="100">
                                                 <strong>Total:</strong>
                                             </td>
                                             <td class="text-right" width="100">
-                                                <strong t-field="order.amount_total" t-options="{'widget': 'monetary', 'display_currency': order.pricelist_id.currency_id}" />
+                                                <strong t-field="payment_tx_id.amount" t-options="{'widget': 'monetary', 'display_currency': order.pricelist_id.currency_id}" />
                                             </td>
                                         </tr>
                                     </tbody>
@@ -1820,7 +1824,8 @@
             <t t-set="payment_tx_id" t-value="order.get_portal_last_transaction()"/>
             <div t-attf-class="card #{
                 (payment_tx_id.state == 'pending' and 'bg-info') or
-                (payment_tx_id.state == 'done' and 'alert-success') or
+                (payment_tx_id.state == 'done' and order.amount_total == payment_tx_id.amount and 'alert-success') or
+                (payment_tx_id.state == 'done' and order.amount_total != payment_tx_id.amount and 'bg-warning') or
                 (payment_tx_id.state == 'authorized' and 'alert-success') or
                 'bg-danger'}">
                 <div class="card-header">
@@ -1834,11 +1839,16 @@
                     <t t-if="payment_tx_id.state == 'done'">
                         <span t-if='payment_tx_id.acquirer_id.sudo().done_msg' t-out="payment_tx_id.acquirer_id.sudo().done_msg"/>
                     </t>
+                    <t t-if="payment_tx_id.state == 'done' and order.amount_total != payment_tx_id.amount">
+                        <span>Unfortunately your order can not be confirmed as the amount of your payment does not match the amount of your cart.
+                        Please contact the responsible of the shop for more information.</span>
+                    </t>
                     <t t-if="payment_tx_id.state == 'cancel'">
                         <t t-out="payment_tx_id.acquirer_id.sudo().cancel_msg"/>
                     </t>
                     <t t-if="payment_tx_id.state == 'authorized'">
-                        <span>Your payment has been authorized.</span>
+                        <t t-if="payment_tx_id.acquirer_id.sudo().auth_msg" t-out="payment_tx_id.acquirer_id.sudo().auth_msg"/>
+                        <span t-else="">Your payment has been authorized.</span>
                     </t>
                     <t t-if="payment_tx_id.state == 'error'">
                         <span t-esc="payment_tx_id.state_message"/>
@@ -1902,7 +1912,7 @@
                             <div t-if="product_image._name == 'product.image' and product_image.embed_code" class="d-flex align-items-center justify-content-center h-100 embed-responsive embed-responsive-16by9">
                                 <t t-out="product_image.embed_code"/>
                             </div>
-                            <div  t-else="" t-field="product_image.image_1920" class="d-flex align-items-center justify-content-center h-100" t-options='{"widget": "image", "preview_image": "image_1024", "class": "product_detail_img mh-100", "alt-field": "name", "zoom": product_image.can_image_1024_be_zoomed and "image_1920", "itemprop": "image"}'/>
+                            <div  t-else="" t-field="product_image.image_1920" class="d-flex align-items-center justify-content-center h-100" t-options='{"widget": "image", "preview_image": "image_1024", "class": "product_detail_img mh-100", "alt-field": "name", "zoom": product_image.can_image_1024_be_zoomed and "image_1920"}'/>
                         </div>
                     </t>
                 </div>
@@ -1959,7 +1969,7 @@
                     <field name="shop_extra_field_ids" context="{'default_website_id': active_id}">
                         <tree editable="bottom">
                             <field name="sequence" widget="handle"/>
-                            <field name="field_id"/>
+                            <field name="field_id" required="1"/>
                         </tree>
                     </field>
                 </page>

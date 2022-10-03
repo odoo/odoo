@@ -142,6 +142,11 @@ class ProjectTaskType(models.Model):
             else:
                 stage.disabled_rating_warning = False
 
+    @api.constrains('user_id', 'project_ids')
+    def _check_personal_stage_not_linked_to_projects(self):
+        if any(stage.user_id and stage.project_ids for stage in self):
+            raise UserError(_('A personal stage cannot be linked to a project because it is only visible to its corresponding user.'))
+
     def remove_personal_stage(self):
         """
         Remove a personal stage, tasks using that stage will move to the first
@@ -490,7 +495,7 @@ class Project(models.Model):
                 # set the parent to the duplicated task
                 parent_id = old_to_new_tasks.get(task.parent_id.id, False)
                 defaults['parent_id'] = parent_id
-                if not parent_id:
+                if not parent_id or task.display_project_id:
                     defaults['project_id'] = project.id if task.display_project_id == self else False
                     defaults['display_project_id'] = project.id if task.display_project_id == self else False
             elif task.display_project_id == self:
@@ -1532,7 +1537,7 @@ class Task(models.Model):
     # Case management
     # ----------------------------------------
 
-    def stage_find(self, section_id, domain=[], order='sequence'):
+    def stage_find(self, section_id, domain=[], order='sequence, id'):
         """ Override of the base.stage method
             Parameter of the stage search taken from the lead:
             - section_id: if set, stages must belong to this section or
@@ -1630,7 +1635,9 @@ class Task(models.Model):
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         fields_list = ([f.split(':')[0] for f in fields] or [])
         if groupby:
-            fields_list += [groupby] if isinstance(groupby, str) else groupby
+            fields_groupby = [groupby] if isinstance(groupby, str) else groupby
+            # only take field name when having ':' e.g 'date_deadline:week' => 'date_deadline'
+            fields_list += [f.split(':')[0] for f in fields_groupby]
         if domain:
             fields_list += [term[0].split('.')[0] for term in domain if isinstance(term, (tuple, list))]
         self._ensure_fields_are_accessible(fields_list)
@@ -1817,7 +1824,7 @@ class Task(models.Model):
 
         # rating on stage
         if 'stage_id' in vals and vals.get('stage_id'):
-            self.filtered(lambda x: x.project_id.rating_active and x.project_id.rating_status == 'stage')._send_task_rating_mail(force_send=True)
+            tasks.filtered(lambda x: x.project_id.rating_active and x.project_id.rating_status == 'stage')._send_task_rating_mail(force_send=True)
         for task in self:
             if task.display_project_id != task.project_id and not task.parent_id:
                 # We must make the display_project_id follow the project_id if no parent_id set

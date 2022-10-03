@@ -3,16 +3,16 @@
 # 	* pos_hr
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Marius Stedjan <marius@stedjan.com>, 2019
+# Marius Stedjan <marius@stedjan.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-09-14 12:25+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +23,7 @@ msgstr ""
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 msgid "<span class=\"o_form_label oe_edit_only\">Allowed Employees </span>"
-msgstr ""
+msgstr "<span class=\"o_form_label oe_edit_only\">Tillatte Ansatte</span>"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__cashier
@@ -34,18 +34,10 @@ msgstr "Ekspeditør"
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/js/chrome.js:0
-#: code:addons/pos_hr/static/src/js/screens.js:0
+#: code:addons/pos_hr/static/src/js/useSelectEmployee.js:0
 #, python-format
 msgid "Change Cashier"
-msgstr "Bytt selger"
-
-#. module: pos_hr
-#. openerp-web
-#: code:addons/pos_hr/static/src/xml/pos.xml:0
-#, python-format
-msgid "Close session"
-msgstr ""
+msgstr "Bytt ekspeditør"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_hr_employee
@@ -59,51 +51,35 @@ msgstr "Ansatt"
 #: code:addons/pos_hr/models/hr_employee.py:0
 #, python-format
 msgid "Employee: %s - PoS Config(s): %s \n"
-msgstr ""
+msgstr "Ansatt: %s - Kassapunkt(er): %s\n"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__employee_ids
 msgid "Employees with access"
-msgstr ""
+msgstr "Ansatte med tilgang"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__employee_ids
 msgid "If left empty, all employees can log in to the PoS session"
-msgstr ""
+msgstr "Hvis denne er tom, kan alle ansatte logge inn i kassaøkten"
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/js/gui.js:0
+#: code:addons/pos_hr/static/src/js/useSelectEmployee.js:0
 #, python-format
 msgid "Incorrect Password"
 msgstr "Feil passord"
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/js/chrome.js:0
-#, python-format
-msgid "Lock"
-msgstr "Lås"
-
-#. module: pos_hr
-#. openerp-web
-#: code:addons/pos_hr/static/src/xml/pos.xml:0
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Log in to"
-msgstr ""
-
-#. module: pos_hr
-#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
-msgid ""
-"Only users with Manager access rights for PoS app can modify the product "
-"prices on orders."
-msgstr ""
-"Kun brukere med lederrettigheter for kassasystemet kan endre priser på "
-"produkter."
+msgstr "Logg inn i"
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/js/gui.js:0
+#: code:addons/pos_hr/static/src/js/useSelectEmployee.js:0
 #, python-format
 msgid "Password ?"
 msgstr "Passord?"
@@ -120,12 +96,12 @@ msgstr ""
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr "Kasseoppsett"
+msgstr "Kassapunkt"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_pos_order
 msgid "Point of Sale Orders"
-msgstr "Kasseordrer"
+msgstr "Kassaordrer"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_report_pos_order
@@ -133,35 +109,18 @@ msgid "Point of Sale Orders Report"
 msgstr "Ordrerapport for kasse"
 
 #. module: pos_hr
-#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
-msgid "Price Control"
-msgstr "Priskontroll"
-
-#. module: pos_hr
-#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
-msgid "Restrict price modification to managers"
-msgstr "Gjør prisendringer mulig kun for ledere"
-
-#. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/xml/pos.xml:0
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Scan your badge"
 msgstr "Skann kortet ditt"
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/xml/pos.xml:0
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Select Cashier"
-msgstr ""
-
-#. module: pos_hr
-#. openerp-web
-#: code:addons/pos_hr/static/src/js/gui.js:0
-#, python-format
-msgid "Select User"
-msgstr "Velg bruker"
+msgstr "Velg ekspeditør"
 
 #. module: pos_hr
 #: code:addons/pos_hr/models/hr_employee.py:0
@@ -170,10 +129,19 @@ msgid ""
 "You cannot delete an employee that may be used in an active PoS session, "
 "close the session(s) first: \n"
 msgstr ""
+"Du kan ikke slette en ansatt som kan brukes i en aktiv kassaøkt. Lukk "
+"økten(e) først:\n"
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/xml/pos.xml:0
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "or"
 msgstr "eller"
+
+#. module: pos_hr
+#. openerp-web
+#: code:addons/pos_hr/static/src/xml/CashierName.xml:0
+#, python-format
+msgid "selectCashier"
+msgstr ""

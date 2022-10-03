@@ -213,6 +213,31 @@ class TestVariants(common.TestProductCommon):
         self.assertEqual(variant_copy.name, 'Test Copy (copy) (copy)')
         self.assertEqual(len(variant_copy.product_variant_ids), 2)
 
+    def test_dynamic_variants_copy(self):
+        self.color_attr = self.env['product.attribute'].create({'name': 'Color', 'create_variant': 'dynamic'})
+        self.color_attr_value_r = self.env['product.attribute.value'].create({'name': 'Red', 'attribute_id': self.color_attr.id})
+        self.color_attr_value_b = self.env['product.attribute.value'].create({'name': 'Blue', 'attribute_id': self.color_attr.id})
+
+        # test copy of variant with dynamic attribute
+        template_dyn = self.env['product.template'].create({
+            'name': 'Test Dynamical',
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': self.color_attr.id,
+                'value_ids': [(4, self.color_attr_value_r.id), (4, self.color_attr_value_b.id)],
+            })]
+        })
+
+        self.assertEqual(len(template_dyn.product_variant_ids), 0)
+        self.assertEqual(template_dyn.name, 'Test Dynamical')
+
+        variant_dyn = template_dyn._create_product_variant(template_dyn._get_first_possible_combination())
+        self.assertEqual(len(template_dyn.product_variant_ids), 1)
+
+        variant_dyn_copy = variant_dyn.copy()
+        template_dyn_copy = variant_dyn_copy.product_tmpl_id
+        self.assertEqual(len(template_dyn_copy.product_variant_ids), 1)
+        self.assertEqual(template_dyn_copy.name, 'Test Dynamical (copy)')
+
     def test_standard_price(self):
         """ Ensure template values are correctly (re)computed depending on the context """
         one_variant_product = self.product_1
@@ -667,7 +692,7 @@ class TestVariantsImages(common.TestProductCommon):
         """
         # Pretend setup happened in an older transaction by updating on the SQL layer and making sure it gets reloaded
         # Using _write() instead of write() because write() only allows updating log access fields at boot time
-        before = datetime.now() - timedelta(seconds=1)
+        before = self.env.cr.now() - timedelta(seconds=1)
         self.template._write({
             'create_date': before,
             'write_date': before,

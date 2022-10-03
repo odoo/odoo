@@ -15,6 +15,8 @@
 # Cécile Collart <cco@odoo.com>, 2022
 # vur1, 2022
 # Sebastien LANGE, 2022
+# Camille Dantinne <cmd@odoo.com>, 2022
+# Moka Tourisme <hello@mokatourisme.fr>, 2022
 # 
 msgid ""
 msgstr ""
@@ -22,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-10 07:16+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Sebastien LANGE, 2022\n"
+"Last-Translator: Moka Tourisme <hello@mokatourisme.fr>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -126,7 +128,7 @@ msgstr ""
 #, python-format
 msgid "<p>Dear %s,<br/>Here is your electronic ticket for the %s. </p>"
 msgstr ""
-"<p>Cher/Chère %s,<br/>Voici votre ticket électronique pour le %s. </p>"
+"<p>Cher/Chère %s,<br/>Voici votre ticket électronique pour la %s. </p>"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2654,7 +2656,7 @@ msgid ""
 "                methods automatically."
 msgstr ""
 "Installer un plan comptable depuis les paramètres généraux \n"
-"                de l'application comptabilité/facturation créera des méthodes de paiements\n"
+"                de l'application comptabilité/facturation créera des méthodes de paiement\n"
 "                banque et cash automatiquement."
 
 #. module: point_of_sale
@@ -2958,7 +2960,9 @@ msgstr "Cuir"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
 msgid "Leave empty to use the default account from the company setting"
-msgstr "Laisser vide pour utiliser le compte par défaut défini sur la société"
+msgstr ""
+"Laisser vide pour utiliser le compte par défaut défini dans les paramètres "
+"de la société"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__outstanding_account_id
@@ -2966,6 +2970,8 @@ msgid ""
 "Leave empty to use the default account from the company setting.\n"
 "Account used as outstanding account when creating accounting payment records for bank payments."
 msgstr ""
+"Laisser vide pour utiliser le compte par défaut défini dans les paramètres de la société.\n"
+"Compte utilisé comme compte débiteur lors de la création des lignes comptables pour les paiements."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__receivable_account_id
@@ -2973,6 +2979,8 @@ msgid ""
 "Leave empty to use the default account from the company setting.\n"
 "Overrides the company's receivable account (for Point of Sale) used in the journal entries."
 msgstr ""
+"Laisser vide pour utiliser le compte par défaut défini dans les paramètres de la société.\n"
+"Remplace le compte de paiement entrant de la société (pour le point de vente) utilisé dans le journal."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
@@ -3217,7 +3225,7 @@ msgstr "Messages"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__name
 msgid "Method"
-msgstr "Méthode"
+msgstr "Nom de la méthode"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_miscellaneous
@@ -3592,7 +3600,7 @@ msgstr "Ne charger que les articles communs à l'ouverture du PdV"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Only on cash methods"
-msgstr "Uniquement sur les méthodes de paiements en espèces"
+msgstr "Uniquement sur les méthodes de paiement en espèces"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__restrict_price_control
@@ -3999,7 +4007,7 @@ msgstr "Moyen de paiement"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_search
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_tree
 msgid "Payment Methods"
-msgstr "Méthodes de paiements"
+msgstr "Méthodes de paiement"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__ticket

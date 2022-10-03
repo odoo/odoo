@@ -565,7 +565,7 @@ odoo.define('pos_coupon.pos', function (require) {
                 return this._getOnOrderDiscountRewards(program, coupon_id, freeProducts);
             };
             globalDiscounts.push(...collectRewards(onOrderPrograms, onOrderDiscountGetter));
-            globalDiscounts.push(...collectRewards(onCheapestPrograms, this._getOnCheapestProductDiscount.bind(this)));
+            globalDiscounts.push(...collectRewards(onCheapestPrograms, (program, coupon_id) => this._getOnCheapestProductDiscount(program, coupon_id, freeProducts)));
 
             // - Group the discounts by program id.
             const groupedGlobalDiscounts = {};
@@ -761,6 +761,9 @@ odoo.define('pos_coupon.pos', function (require) {
                     return program.promo_applicability === 'on_next_order';
                 });
         },
+        _convertToDate: function (stringDate) {
+            return new Date(stringDate.replace(/ /g, 'T').concat('Z'))
+        },
         /**
          * @param {coupon.program} program
          * @returns {{ successful: boolean, reason: string | undefined }}
@@ -806,7 +809,8 @@ odoo.define('pos_coupon.pos', function (require) {
 
             // Check if valid customer
             const customer = this.get_client();
-            if (program.rule_partners_domain && !program.valid_partner_ids.has(customer ? customer.id : 0)) {
+            const partnersDomain = program.rule_partners_domain || '[]';
+            if (partnersDomain !== '[]' && !program.valid_partner_ids.has(customer ? customer.id : 0)) {
                 return {
                     successful: false,
                     reason: "Current customer can't avail this program.",
@@ -814,8 +818,8 @@ odoo.define('pos_coupon.pos', function (require) {
             }
 
             // Check rule date
-            const ruleFrom = program.rule_date_from ? new Date(program.rule_date_from) : new Date(-8640000000000000);
-            const ruleTo = program.rule_date_to ? new Date(program.rule_date_to) : new Date(8640000000000000);
+            const ruleFrom = program.rule_date_from ? this._convertToDate(program.rule_date_from) : new Date(-8640000000000000);
+            const ruleTo = program.rule_date_to ? this._convertToDate(program.rule_date_to) : new Date(8640000000000000);
             const orderDate = new Date();
             if (!(orderDate >= ruleFrom && orderDate <= ruleTo)) {
                 return {
@@ -862,21 +866,75 @@ odoo.define('pos_coupon.pos', function (require) {
          * @returns {[Reward[], string | null]}
          */
         _getProductRewards: function (program, coupon_id) {
-            const totalQuantity = this._getRegularOrderlines()
-                .filter((line) => {
-                    return program.valid_product_ids.has(line.product.id);
-                })
-                .reduce((quantity, line) => quantity + line.quantity, 0);
-
-            const freeQuantity = computeFreeQuantity(
-                totalQuantity,
-                program.rule_min_quantity,
-                program.reward_product_quantity
+            const rewardProduct = this.pos.db.get_product_by_id(program.reward_product_id[0]);
+            const countedOrderlines = this._getRegularOrderlines().filter((line) =>
+                program.valid_product_ids.has(line.product.id)
             );
+            const totalQuantity = countedOrderlines.reduce((quantity, line) => quantity + line.quantity, 0);
+            const totalAmount = countedOrderlines.reduce((amount, line) => {
+                const { priceWithTax, priceWithoutTax } = line.get_all_prices();
+                if (program.rule_minimum_amount_tax_inclusion == 'tax_included') {
+                    amount += priceWithTax;
+                } else {
+                    amount += priceWithoutTax;
+                }
+                return amount;
+            }, 0);
+
+            // Compute the free quantities based on rule_min_amount and rule_min_quantity.
+            let freeQuantityFromMinAmount = Math.Infinity;
+            let freeQuantityFromMinQuantity;
+            const existingRewardQty = this._getRegularOrderlines()
+                .filter((line) => line.product.id == rewardProduct.id)
+                .reduce((total, line) => total + line.quantity, 0);
+            if (program.valid_product_ids.has(rewardProduct.id)) {
+                if (existingRewardQty) {
+                    freeQuantityFromMinQuantity = Math.min(
+                        computeFreeQuantity(totalQuantity, program.rule_min_quantity, program.reward_product_quantity),
+                        existingRewardQty
+                    );
+                    if (program.rule_minimum_amount !== 0) {
+                        // Normalize the values based on amount to be able to utilize computeFreeQuantity.
+                        const rewardProductAmount = program.reward_product_quantity * rewardProduct.lst_price;
+                        const freeAmount = computeFreeQuantity(
+                            totalAmount,
+                            program.rule_minimum_amount,
+                            rewardProductAmount
+                        );
+                        freeQuantityFromMinAmount = Math.min(
+                            Math.trunc(freeAmount / rewardProduct.lst_price),
+                            existingRewardQty
+                        );
+                    }
+                } else {
+                    // No free quantity if the reward product is not among the orderlines.
+                    freeQuantityFromMinQuantity = 0;
+                    freeQuantityFromMinAmount = 0;
+                }
+            } else {
+                freeQuantityFromMinQuantity = Math.min(
+                    Math.trunc((totalQuantity * program.reward_product_quantity) / program.rule_min_quantity),
+                    existingRewardQty
+                );
+                if (program.rule_minimum_amount !== 0) {
+                    freeQuantityFromMinAmount = Math.min(
+                        Math.trunc((totalAmount * program.reward_product_quantity) / program.rule_minimum_amount),
+                        existingRewardQty
+                    );
+                }
+            }
+
+            // Based on freeQuantityFromMinAmount and freeQuantityFromMinQuantity, compute the actual free quantity.
+            let freeQuantity = 0;
+            if (freeQuantityFromMinAmount < freeQuantityFromMinQuantity) {
+                freeQuantity = freeQuantityFromMinAmount;
+            } else {
+                freeQuantity = freeQuantityFromMinQuantity;
+            }
+
             if (freeQuantity === 0) {
                 return [[], 'Zero free product quantity.'];
             } else {
-                const rewardProduct = this.pos.db.get_product_by_id(program.reward_product_id[0]);
                 const discountLineProduct = this.pos.db.get_product_by_id(program.discount_line_product_id[0]);
                 return [
                     [
@@ -953,21 +1011,60 @@ odoo.define('pos_coupon.pos', function (require) {
          * @param {number} coupon_id
          * @returns {[Reward[], string | null]}
          */
-        _getOnCheapestProductDiscount: function (program, coupon_id) {
+        _getOnCheapestProductDiscount: function (program, coupon_id, productRewards) {
             const amountsToDiscount = {};
             const orderlines = this._getRegularOrderlines();
             if (orderlines.length > 0) {
-                const cheapestLine = orderlines.reduce((min_line, line) => {
-                    if (line.price < min_line.price) {
-                        return line;
-                    } else {
-                        return min_line;
-                    }
-                }, orderlines[0]);
-                const key = this._getGroupKey(cheapestLine);
-                amountsToDiscount[key] = cheapestLine.price;
+                const cheapestLine = this._findCheapestLine(orderlines, productRewards);
+                if (cheapestLine) {
+                    const key = this._getGroupKey(cheapestLine);
+                    amountsToDiscount[key] = cheapestLine.price;
+                }
             }
             return this._createDiscountRewards(program, coupon_id, amountsToDiscount);
+        },
+        /**
+         * Returns the cheapest line from the given orderlines considering the rewarded products.
+         * @param {models.Orderline[]} orderlines
+         * @param {Reward[]} productRewards
+         * @returns {models.Orderline}
+         */
+        _findCheapestLine: function (orderlines, productRewards) {
+            // Compute free quantity per product.
+            const freeQuantityPerProduct = {};
+            for (const productReward of productRewards) {
+                const productId = productReward.rewardedProductId;
+                if (!(productId in freeQuantityPerProduct)) {
+                    freeQuantityPerProduct[productId] = 0;
+                }
+                freeQuantityPerProduct[productId] += productReward.quantity;
+            }
+            // Map each line to its remaining free quantity.
+            // Important to loop over the lines in decreasing price.
+            const remainingQtyOfLine = new Map();
+            for (const line of [...orderlines].sort((a, b) => b.price - a.price)) {
+                const productId = line.product.id;
+                let freeQuantity = freeQuantityPerProduct[productId] || 0;
+                remainingQtyOfLine.set(line, line.get_quantity());
+                if (float_is_zero(freeQuantity, this.pos.dp['Product Unit of Measure'])) {
+                    continue;
+                }
+                const lineQty = remainingQtyOfLine.get(line);
+                if (lineQty < freeQuantity) {
+                    remainingQtyOfLine.set(line, 0);
+                    freeQuantity -= lineQty;
+                } else {
+                    remainingQtyOfLine.set(line, lineQty - freeQuantity);
+                    freeQuantity = 0;
+                }
+                freeQuantityPerProduct[productId] = freeQuantity;
+            }
+            // Among the lines with remaining quantity, return the one with the lowest price.
+            const linesWithoutRewards = [...remainingQtyOfLine.entries()]
+                .filter(([_, remainingQty]) => !float_is_zero(remainingQty, this.pos.currency.decimals))
+                .map(([line, _]) => line)
+                .sort((a, b) => a.price - b.price);
+            return linesWithoutRewards[0];
         },
         /**
          * This method is called via `collectRewards` inside `_calculateRewards`.
@@ -1017,20 +1114,23 @@ odoo.define('pos_coupon.pos', function (require) {
                 .join(',');
         },
         _createDiscountRewards: function (program, coupon_id, amountsToDiscount) {
-            const discountRewards = Object.entries(amountsToDiscount).map(([tax_keys, amount]) => {
+            const rewards = [];
+            const totalAmountsToDiscount = Object.values(amountsToDiscount).reduce((a, b) => a + b, 0);
+            for (let [tax_keys, amount] of Object.entries(amountsToDiscount)) {
                 let discountAmount = (amount * program.discount_percentage) / 100.0;
-                discountAmount = Math.min(discountAmount, program.discount_max_amount || Infinity);
-                return new Reward({
+                let maxDiscount = amount / totalAmountsToDiscount * (program.discount_max_amount || Infinity);
+                discountAmount = Math.min(discountAmount, maxDiscount);
+                rewards.push(new Reward({
                     product: this.pos.db.get_product_by_id(program.discount_line_product_id[0]),
                     unit_price: -discountAmount,
                     quantity: 1,
                     program: program,
                     tax_ids: tax_keys !== '' ? tax_keys.split(',').map((val) => parseInt(val, 10)) : [],
                     coupon_id: coupon_id,
-                });
-            });
-            return [discountRewards, discountRewards.length > 0 ? null : 'No items to discount.'];
-        },
+                }));
+            }
+            return [rewards, rewards.length > 0 ? null : 'No items to discount.'];
+        }
     });
 
     var _orderline_super = models.Orderline.prototype;

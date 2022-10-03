@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_temaki
@@ -53,7 +53,7 @@ msgid ""
 "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Receive button\" "
 "title=\"Receive button\"/>"
 msgstr ""
-"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Botón de recibir\" "
+"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Receive button\" "
 "title=\"Botón de recibir\"/>"
 
 #. module: lunch
@@ -61,18 +61,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:lunch.view_lunch_cashmove_kanban
 #: model_terms:ir.ui.view,arch_db:lunch.view_lunch_cashmove_report_kanban
 msgid "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
-msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Fecha\" title=\"Fecha\"/>"
+msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Fecha\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.view_lunch_cashmove_kanban
 #: model_terms:ir.ui.view,arch_db:lunch.view_lunch_cashmove_report_kanban
 msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Amount\" title=\"Amount\"/>"
-msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Importe\" title=\"Importe\"/>"
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Amount\" title=\"Importe\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
 msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Money\" title=\"Money\"/>"
-msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Dinero\" title=\"Dinero\"/>"
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Money\" title=\"Dinero\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
@@ -80,7 +80,7 @@ msgid ""
 "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Order button\" "
 "title=\"Order button\"/>"
 msgstr ""
-"<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Botón de ordenar\" "
+"<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Order button\" "
 "title=\"Botón de ordenar\"/>"
 
 #. module: lunch
@@ -89,7 +89,7 @@ msgid ""
 "<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" "
 "title=\"Cancel button\"/>"
 msgstr ""
-"<i class=\"fa fa-times\" role=\"img\" aria-label=\"Botón de cancelar\" "
+"<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" "
 "title=\"Botón de cancelar\"/>"
 
 #. module: lunch
@@ -261,7 +261,7 @@ msgstr ""
 "        <t t-set=\"order\" t-value=\"ctx.get('order')\"/>\n"
 "        <t t-set=\"currency\" t-value=\"user.env['res.currency'].browse(order.get('currency_id'))\"/>\n"
 "        <p>\n"
-"        Estimado <t t-out=\"order.get('supplier_name', '')\">Laurie Poiret</t>,\n"
+"        Apreciable <t t-out=\"order.get('supplier_name', '')\">Laurie Poiret</t>,\n"
 "        </p><p>\n"
 "        Aquí está su orden para <t t-out=\"order.get('company_name', '')\">LunchCompany</t>:\n"
 "        </p>\n"
@@ -637,8 +637,8 @@ msgid ""
 "            Click on the <span class=\"fa fa-check text-success\" title=\"Receive button\"></span> to announce that the order is received.<br>\n"
 "            Click on the <span class=\"fa fa-times-circle text-danger\" title=\"Cancel button\"></span> red X to announce that the order isn't available."
 msgstr ""
-"Haga clic en <span class=\"fa fa-phone text-success\" title=\"Botón de ordenar\"></span> para anunciar que la orden fue realizada.<br>\n"
-"            Haga clic en <span class=\"fa fa-check text-success\" title=\"Botón de recibir\"></span> para anunciar que la orden ha sido recibida.<br>\n"
+"Haga clic en <span class=\"fa fa-phone text-success\" title=\"Botón de ordenar\"></span> para anunciar que se realizó la orden.<br>\n"
+"            Haga clic en <span class=\"fa fa-check text-success\" title=\"Botón de recibir\"></span> para anunciar que se recibió la orden.<br>\n"
 "            Haga clic en la <span class=\"fa fa-times-circle text-danger\" title=\"Botón de cancelar\"></span>  X roja para anunciar que la orden no está disponible."
 
 #. module: lunch
@@ -721,7 +721,7 @@ msgstr "Crear una nueva categoría de producto"
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_statbutton
 msgid "Create a new product for lunch"
-msgstr "Crear un nuevo producto para el almuerzo"
+msgstr "Crear un nuevo producto de almuerzo"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_alert_action
@@ -802,7 +802,7 @@ msgstr "Descartar"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__mode
 msgid "Display"
-msgstr "Mostrar en pantalla"
+msgstr "Mostrar"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__display_name
@@ -942,7 +942,7 @@ msgstr "Dirección de correo electrónico con formato \"Nombre <email@domain>\""
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__email_formatted
 msgid "Formatted Email"
-msgstr "Correo electrónico formateado"
+msgstr "Correo electrónico con formato"
 
 #. module: lunch
 #: model_terms:lunch.order,product_description:lunch.order_line_2
@@ -1012,7 +1012,7 @@ msgid ""
 "            An expense is automatically created when an order is received while a payment is a reimbursement to the company encoded by the manager."
 msgstr ""
 "Aquí puede ver sus movimientos de efectivo.<br>Un movimiento de efectivo puede ser un gasto o un pago.\n"
-"            Un gasto se crea automáticamente cuando se recibe una orden, mientras que un pago es un reembolso a la empresa codificado por el gerente."
+"            Un gasto se crea de forma automática cuando se recibe una orden, mientras que un pago es un reembolso a la empresa codificado por el gerente."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__id
@@ -1226,7 +1226,7 @@ msgstr "Ubicación de almuerzo"
 #: model:ir.actions.act_window,name:lunch.lunch_location_action
 #: model:ir.model,name:lunch.model_lunch_location
 msgid "Lunch Locations"
-msgstr "Ubicaciones para almorzar"
+msgstr "Ubicaciones de almuerzo"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_maki
@@ -1317,7 +1317,7 @@ msgstr "Almuerzo: enviar correo electrónico automático a The Corner"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "Archivos adjuntos principales"
+msgstr "Archivo adjunto principal"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_res_config_settings__currency_id
@@ -1897,8 +1897,8 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Estado basado en actividades\n"
-"Vencida: la fecha límite ya ha pasado\n"
-"Hoy: La fecha límite es hoy\n"
+"Vencida: la fecha límite ya pasó\n"
+"Hoy: la fecha límite es hoy\n"
 "Planeada: futuras actividades."
 
 #. module: lunch
@@ -2027,7 +2027,7 @@ msgstr "Este campo se utiliza para"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__available_today
 msgid "This is True when if the supplier is available today"
-msgstr "Esto es verdadero si el proveedor está disponible hoy"
+msgstr "Es True si el proveedor está disponible hoy"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__thu
@@ -2057,8 +2057,7 @@ msgstr "Por ordenar"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_payment_dialog
 msgid "To add some money to your wallet, please contact your lunch manager."
-msgstr ""
-"Contacte a su gerente de almuerzo para agregar algo de dinero a su cartera."
+msgstr "Contacte a su gerente de almuerzo para agregar dinero a su cartera."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_location_action
@@ -2326,12 +2325,12 @@ msgstr "árbol de movimientos de efectivo"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_form
 msgid "e.g. Order before 11am"
-msgstr "ej. Ordenar antes de las 11 AM"
+msgstr "Por ejemplo, ordenar antes de las 11 AM"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
 msgid "e.g. The Pizzeria Inn"
-msgstr "ej. The Pizzeria Inn"
+msgstr "Por ejemplo, The Pizzeria Inn"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search_2

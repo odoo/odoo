@@ -45,7 +45,14 @@ var DateTimePicker = function ($, moment) {
         EVENT_KEY = '.' + DATA_KEY,
         DATA_API_KEY = '.data-api',
         Selector = {
-        DATA_TOGGLE: '[data-toggle="' + DATA_KEY + '"]'
+        // /!\ ODOO PATCH: ensure the datetimepickers can be toggled only after
+        // the Odoo lazy loader finished loading all lazy scripts. Another
+        // solution could have been to temporarily removing the data-toggle
+        // attributes during lazyloading but that would not have been stable as
+        // custom code could search for data-toggle elements while the lazy
+        // loading is being performed. Without this, clicking too soon on a
+        // datetimepicker would not use the right format and UI options.
+        DATA_TOGGLE: 'body:not(.o_lazy_js_waiting) [data-toggle="' + DATA_KEY + '"]'
     },
         ClassName = {
         INPUT: NAME + '-input'

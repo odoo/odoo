@@ -57,10 +57,9 @@ function factory(dependencies) {
             const employeesData = await this.env.services.rpc({
                 model: 'hr.employee.public',
                 method: 'read',
-                args: [ids],
+                args: [ids, fields],
                 kwargs: {
                     context,
-                    fields,
                 },
             });
             this.messaging.models['hr.employee'].insert(employeesData.map(employeeData =>

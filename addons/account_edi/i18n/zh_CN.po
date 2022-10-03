@@ -8,6 +8,7 @@
 # 深圳市耀影科技有限公司_QQ1006399173, 2021
 # Martin Trigaux, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:19+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,19 +28,19 @@ msgstr ""
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing error(s)"
-msgstr "电子发票错误"
+msgstr "电子开票错误"
 
 #. module: account_edi
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing info(s)"
-msgstr "电子发票信息"
+msgstr "电子开票信息"
 
 #. module: account_edi
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing warning(s)"
-msgstr "电子发票警告"
+msgstr "电子开票警告"
 
 #. module: account_edi
 #: code:addons/account_edi/models/account_move.py:0
@@ -74,8 +75,8 @@ msgid ""
 msgstr ""
 "根据错误的严重程度，阻断文档的当前操作。\n"
 "  * 信息：文档没有被封锁，一切都在正常工作。\n"
-"  * 警告：存在一个错误，但不妨碍当前电子发票操作的成功。\n"
-"  * 错误：存在一个错误，阻止了当前的电子发票操作。"
+"  * 警告：存在一个错误，但不妨碍当前电子开票操作的成功。\n"
+"  * 错误：存在一个错误，阻止了当前的电子开票操作。"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
@@ -94,7 +95,7 @@ msgstr "已取消"
 msgid ""
 "Cannot deactivate (%s) on this journal because not all documents are "
 "synchronized"
-msgstr "无法在此日志上停用  (%s)，因为并非所有文档都同步"
+msgstr "无法在此日记账上停用  (%s)，因为并非所有文档都同步"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_format__code
@@ -135,7 +136,7 @@ msgstr "下载"
 #: model:ir.cron,cron_name:account_edi.ir_cron_edi_network
 #: model:ir.cron,name:account_edi.ir_cron_edi_network
 msgid "EDI : Perform web services operations"
-msgstr "EDI ： 执行 Web 服务操作"
+msgstr "EDI ： 执行 网络 服务操作"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
@@ -151,7 +152,7 @@ msgstr "EDI 格式"
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_journal__compatible_edi_ids
 msgid "EDI format that support moves in this journal"
-msgstr "支持在此日志中凭证的 EDI 格式"
+msgstr "支持在此日记账中凭证的 EDI 格式"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_blocking_level
@@ -210,7 +211,7 @@ msgstr "Edi 显示取消按钮"
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_web_services_to_process
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_web_services_to_process
 msgid "Edi Web Services To Process"
-msgstr "要处理的 Edi Web 服务"
+msgstr "要处理的 Edi 网络 服务"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_account_journal_form_inherited
@@ -235,7 +236,7 @@ msgstr "电子开票"
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_account_invoice_filter
 msgid "Electronic invoicing state"
-msgstr "电子发票状态"
+msgstr "电子开票状态"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_mail_template
@@ -281,7 +282,7 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"无效的发票配置:\n"
+"无效的结算单配置:\n"
 "\n"
 "%s"
 
@@ -293,7 +294,7 @@ msgstr "日记账"
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_move
 msgid "Journal Entry"
-msgstr "日记账分录"
+msgstr "会计凭证"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_move_line
@@ -404,21 +405,21 @@ msgstr "过帐结算单时edi_format_id生成的文件（并处理此单据）�
 msgid ""
 "The invoice will be processed asynchronously by the following E-invoicing "
 "service :"
-msgstr "发票将由以下电子发票服务异步处理。"
+msgstr "开票单将由以下电子开票单服务异步处理。"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
 msgid ""
 "The payment will be processed asynchronously by the following E-invoicing "
 "service :"
-msgstr "该付款将由以下电子发票服务异步处理。"
+msgstr "该付款将由以下电子开票服务异步处理。"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__error
 msgid ""
 "The text of the last error that happened during Electronic Invoice "
 "operation."
-msgstr "电子发票操作期间最后一个错误的文本。"
+msgstr "电子结算单操作期间最后一个错误的文本。"
 
 #. module: account_edi
 #: model:ir.model.constraint,message:account_edi.constraint_account_edi_format_unique_code
@@ -456,7 +457,7 @@ msgid ""
 "You can't edit the following journal entry %s because an electronic document"
 " has already been sent. Please use the 'Request EDI Cancellation' button "
 "instead."
-msgstr "您无法编辑以下日记帐分录 %s，因为已发送电子文档。请改为使用\"请求 EDI 取消\"按钮。"
+msgstr "您无法编辑以下会计凭证 %s，因为已发送电子文档。请改为使用\"请求 EDI 取消\"按钮。"
 
 #. module: account_edi
 #: code:addons/account_edi/models/ir_attachment.py:0

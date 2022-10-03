@@ -64,12 +64,12 @@ const UrlPickerUserValueWidget = InputUserValueWidget.extend({
         this.inputEl.classList.add('text-left');
         const options = {
             position: {
-                collision: 'flip fit',
+                collision: 'flip flipfit',
             },
             classes: {
                 "ui-autocomplete": 'o_website_ui_autocomplete'
             },
-        }
+        };
         wUtils.autocompleteWithPages(this, $(this.inputEl), options);
     },
 
@@ -2051,7 +2051,7 @@ options.registry.HeaderNavbar = options.Class.extend({
     async _computeWidgetVisibility(widgetName, params) {
         switch (widgetName) {
             case 'option_logo_height_scrolled': {
-                return !this.$('.navbar-brand').hasClass('d-none');
+                return !!this.$('.navbar-brand').length;
             }
             case 'no_hamburger_opt': {
                 return !weUtils.getCSSVariableValue('header-template').includes('hamburger');

@@ -3,7 +3,7 @@
 from odoo.exceptions import UserError
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
-
+from odoo import fields
 
 @tagged('post_install', '-at_install')
 class TestSEPAQRCode(AccountTestInvoicingCommon):
@@ -62,3 +62,17 @@ class TestSEPAQRCode(AccountTestInvoicingCommon):
         """
         self.sepa_qr_invoice.generate_qr_code()
         self.assertEqual(self.sepa_qr_invoice.qr_code_method, 'sct_qr', "SEPA QR-code generator should have been chosen for this invoice.")
+
+    def test_out_invoice_create_refund_qr_code(self):
+        self.sepa_qr_invoice.generate_qr_code()
+        self.sepa_qr_invoice.action_post()
+        move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=self.sepa_qr_invoice.ids).create({
+            'date': fields.Date.from_string('2019-02-01'),
+            'reason': 'no reason',
+            'refund_method': 'refund',
+            'journal_id': self.sepa_qr_invoice.journal_id.id,
+        })
+        reversal = move_reversal.reverse_moves()
+        reverse_move = self.env['account.move'].browse(reversal['res_id'])
+
+        self.assertFalse(reverse_move.qr_code_method, "qr_code_method for credit note should be None")

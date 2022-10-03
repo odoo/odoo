@@ -40,6 +40,7 @@ class SaleOrderLine(models.Model):
             elif not float_is_zero(line.qty_to_invoice, precision_digits=precision):
                 line.invoice_status = 'to invoice'
             elif line.state == 'sale' and line.product_id.invoice_policy == 'order' and\
+                    line.product_uom_qty >= 0.0 and\
                     float_compare(line.qty_delivered, line.product_uom_qty, precision_digits=precision) == 1:
                 line.invoice_status = 'upselling'
             elif float_compare(line.qty_invoiced, line.product_uom_qty, precision_digits=precision) >= 0:
@@ -103,7 +104,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             qty_invoiced = 0.0
             for invoice_line in line._get_invoice_lines():
-                if invoice_line.move_id.state != 'cancel':
+                if invoice_line.move_id.state != 'cancel' or invoice_line.move_id.payment_state == 'invoicing_legacy':
                     if invoice_line.move_id.move_type == 'out_invoice':
                         qty_invoiced += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
                     elif invoice_line.move_id.move_type == 'out_refund':
@@ -520,7 +521,7 @@ class SaleOrderLine(models.Model):
     @api.depends('product_id', 'order_id.date_order', 'order_id.partner_id')
     def _compute_analytic_tag_ids(self):
         for line in self:
-            if not line.analytic_tag_ids:
+            if not line.display_type and line.state == 'draft':
                 default_analytic_account = line.env['account.analytic.default'].sudo().account_get(
                     product_id=line.product_id.id,
                     partner_id=line.order_id.partner_id.id,
@@ -563,7 +564,7 @@ class SaleOrderLine(models.Model):
             'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
             'sale_line_ids': [(4, self.id)],
         }
-        if self.order_id.analytic_account_id:
+        if self.order_id.analytic_account_id and not self.display_type:
             res['analytic_account_id'] = self.order_id.analytic_account_id.id
         if optional_values:
             res.update(optional_values)

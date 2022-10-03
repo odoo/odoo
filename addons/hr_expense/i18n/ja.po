@@ -61,6 +61,8 @@ msgid ""
 "<i class=\"text-muted oe_edit_only\">Use this reference as a subject prefix "
 "when submitting by email.</i>"
 msgstr ""
+"<i class=\"text-muted "
+"oe_edit_only\">Eメールで提出する場合は、この参照を件名のプレフィックスとして使用してください。</i>"
 
 #. module: hr_expense
 #. openerp-web
@@ -70,6 +72,7 @@ msgid ""
 "<p>Approve the report here.</p><p>Tip: if you refuse, don’t forget to give "
 "the reason thanks to the hereunder message tool</p>"
 msgstr ""
+"<p>ここでレポートを承認してください。</p><p>Tip：もし否認する場合は、以下のメッセージツールで理由を伝えることを忘れないでください。</p>"
 
 #. module: hr_expense
 #. openerp-web
@@ -471,7 +474,7 @@ msgstr "受信メールから経費を作成"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 msgid "Create new expenses to get statistics."
-msgstr ""
+msgstr "統計データを得るためには新しい経費を作成しましょう。"
 
 #. module: hr_expense
 #. openerp-web
@@ -568,6 +571,7 @@ msgid ""
 "picture of your receipt and let Odoo digitalizes it for you. The OCR and "
 "Artificial Intelligence will fill the data automatically."
 msgstr ""
+"ポケットの中に経費チケットをしまっておく必要はありません。領収書の写真を撮るだけで、Odooがあなたに代わってデジタル化します。OCRと人工知能が自動的にデータを埋めてくれます。"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -684,7 +688,7 @@ msgstr "経費プロダクト"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
 msgid "Expense Refuse Reason Wizard"
-msgstr ""
+msgstr "費用否認理由ウィザード"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_sheet
@@ -746,7 +750,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "Expense refuse reason"
-msgstr "費用却下の理由"
+msgstr "費用否認の理由"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_approved
@@ -761,7 +765,7 @@ msgstr "支払済経費報告書"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_refused
 msgid "Expense report refused"
-msgstr "経費報告拒否"
+msgstr "経費報告否認"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all
@@ -971,7 +975,7 @@ msgstr "支払中"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Included in price taxes"
-msgstr ""
+msgstr "税は価格に含まれます"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1107,7 +1111,7 @@ msgstr "メッセージ"
 #: model:product.product,name:hr_expense.mileage_expense_product
 #: model:product.template,name:hr_expense.mileage_expense_product_product_template
 msgid "Mileage"
-msgstr ""
+msgstr "走行距離"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__my_activity_date_deadline
@@ -1364,7 +1368,7 @@ msgstr "仕訳を記帳"
 msgid ""
 "Post the journal entries of the new expense reports approved by the "
 "employees' manager."
-msgstr ""
+msgstr "従業員のマネジャーによって承認された新しい経費報告書の仕訳を記帳しましょう。"
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__state__post
@@ -1439,7 +1443,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "Reason to refuse Expense"
-msgstr ""
+msgstr "経費否認の理由"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -1461,7 +1465,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Refuse"
-msgstr "不採用"
+msgstr "否認"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_refuse_wizard_action
@@ -1475,12 +1479,12 @@ msgstr "承認不可"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Refused"
-msgstr "却下済"
+msgstr "否認"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Refused Expenses"
-msgstr "拒否済経費"
+msgstr "否認経費"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -1774,7 +1778,7 @@ msgstr "会社が費用を支払う際に使用される支払方法。"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__tax_ids
 msgid "The taxes should be \"Included In Price\""
-msgstr ""
+msgstr "税は「価格に含まれる」でなければなりません。"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -1786,7 +1790,7 @@ msgstr ""
 #: model:digest.tip,name:hr_expense.digest_tip_hr_expense_0
 #: model_terms:digest.tip,tip_description:hr_expense.digest_tip_hr_expense_0
 msgid "Tip: Snap pictures of your receipts with the remote app"
-msgstr ""
+msgstr "Tip: リモートアプリで領収書の写真を撮りましょう"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1956,6 +1960,7 @@ msgid ""
 "company at fixed cost like allowances for mileage, per diem, accomodation or"
 " meal."
 msgstr ""
+"費用プロダクトの原価が0でない場合、そのプロダクトを使用するユーザは費用の金額を変更することができず、数量のみを変更することができます。走行距離、日当、宿泊費、食事代など、会社から固定費として支給される経費項目には0以外のコストを設定してください。"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -1996,7 +2001,7 @@ msgstr "承認の経費のみ会計仕訳生成できます。"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You can only refuse your department expenses"
-msgstr ""
+msgstr "部署経費のみ否認できます"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -2032,7 +2037,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot refuse your own expenses"
-msgstr ""
+msgstr "自分自身の経費を否認できません"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -2082,7 +2087,7 @@ msgstr "例. ニューヨークへの旅行"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "has been refused"
-msgstr "が拒否されました。"
+msgstr "が否認されました。"
 
 #. module: hr_expense
 #: model:product.product,uom_name:hr_expense.mileage_expense_product

@@ -482,6 +482,9 @@ const Link = Widget.extend({
         let isLink = value.indexOf('@') < 0;
         this.$('input[name="is_new_window"]').closest('.form-group').toggleClass('d-none', !isLink);
         this.$('.o_strip_domain').toggleClass('d-none', value.indexOf(window.location.origin) !== 0);
+        this.options.wysiwyg && this.options.wysiwyg.odooEditor.historyPauseSteps('_onURLInput');
+        this._adaptPreview();
+        this.options.wysiwyg && this.options.wysiwyg.odooEditor.historyUnpauseSteps('_onURLInput');
     },
     _onURLInputChange: function () {
         this._adaptPreview();
@@ -499,9 +502,13 @@ const Link = Widget.extend({
  */
 Link.getOrCreateLink = ({ containerNode, startNode } = {})  => {
 
-    if (startNode && !$(startNode).is('a')) {
-        $(startNode).wrap('<a href="#"/>');
-        return { link: startNode.parentElement, needLabel: false };
+    if (startNode) {
+        if ($(startNode).is('a')) {
+            return { link: startNode, needLabel: false };
+        } else {
+            $(startNode).wrap('<a href="#"/>');
+            return { link: startNode.parentElement, needLabel: false };
+        }
     }
 
     const doc = containerNode && containerNode.ownerDocument || document;

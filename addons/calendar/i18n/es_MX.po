@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Cécile Collart <cco@odoo.com>, 2021
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
 # Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # 
@@ -194,7 +193,7 @@ msgstr ""
 "            <t t-else=\"\">\n"
 "                Se actualizó su cita.\n"
 "            </t>\n"
-"            La cita <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Programar un demo</strong> ahora está programada para el\n"
+"            La cita <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Programar una demostración</strong> ahora está programada para el\n"
 "            <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">05/04/2021 (de 11:00:00 a 11:30:00) (Europa/Bruselas)</t>\n"
 "        </t>\n"
 "        <t t-elif=\"is_online and target_customer\">\n"
@@ -225,7 +224,7 @@ msgstr ""
 "                <t t-out=\"str(object.event_id.start.day) or ''\">4</t>\n"
 "            </div>\n"
 "            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
-"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format=&quot;MMMM y&quot;, lang_code=object.env.lang) or &quot;&quot;\">Mayy 2021</t>\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format=&quot;MMMM y&quot;, lang_code=object.env.lang) or &quot;&quot;\">Mayo 2021</t>\n"
 "            </div>\n"
 "            <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-right-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-left-radius: 3px;\">\n"
 "                 <t t-if=\"not object.event_id.allday\">\n"
@@ -245,7 +244,7 @@ msgstr ""
 "            <p><strong>Detalles del evento</strong></p>\n"
 "            <ul>\n"
 "                <t t-if=\"object.event_id.location\">\n"
-"                    <li>Ubicación: <t t-out=\"object.event_id.location or ''\">Bruxelles</t>\n"
+"                    <li>Ubicación: <t t-out=\"object.event_id.location or ''\">Bruselas</t>\n"
 "                        (<a target=\"_blank\" t-attf-href=\"http://maps.google.com/maps?oi=map&amp;q={{ object.event_id.location }}\">Ver mapa</a>)\n"
 "                    </li>\n"
 "                </t>\n"
@@ -802,7 +801,7 @@ msgstr ""
 "            <p><strong>Detalles del evento</strong></p>\n"
 "            <ul>\n"
 "                <t t-if=\"object.event_id.location\">\n"
-"                    <li>Ubicación: <t t-out=\"object.event_id.location or ''\">Bruxelles</t>\n"
+"                    <li>Ubicación: <t t-out=\"object.event_id.location or ''\">Bruselas</t>\n"
 "                        (<a target=\"_blank\" t-attf-href=\"http://maps.google.com/maps?oi=map&amp;q={{ object.event_id.location }}\">Ver mapa</a>)\n"
 "                    </li>\n"
 "                </t>\n"
@@ -849,7 +848,7 @@ msgid ""
 "<i class=\"fa fa-fw fa-calendar\" aria-label=\"Meetings\" role=\"img\" "
 "title=\"Meetings\"/>"
 msgstr ""
-"<i class=\"fa fa-fw fa-calendar\" aria-label=\"Reuniones\" role=\"img\" "
+"<i class=\"fa fa-fw fa-calendar\" aria-label=\"Meetings\" role=\"img\" "
 "title=\"Reuniones\"/>"
 
 #. module: calendar
@@ -915,7 +914,7 @@ msgstr "Actividad"
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_mixin
 msgid "Activity Mixin"
-msgstr "Actividades mixin"
+msgstr "Mixin de actividades"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_type
@@ -1076,7 +1075,7 @@ msgstr "Reunión de calendario"
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_changedate
 msgid "Calendar: Date updated"
-msgstr "Calendario: Fecha actualizada"
+msgstr "Calendario: fecha actualizada"
 
 #. module: calendar
 #: model:ir.actions.server,name:calendar.ir_cron_scheduler_alarm_ir_actions_server
@@ -1088,17 +1087,17 @@ msgstr "Calendario: recordatorio de evento"
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_update
 msgid "Calendar: Event Update"
-msgstr "Calendario: Actualización de evento"
+msgstr "Calendario: actualización de evento"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_invitation
 msgid "Calendar: Meeting Invitation"
-msgstr "Calendario: Invitación a junta"
+msgstr "Calendario: nvitación a junta"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_reminder
 msgid "Calendar: Reminder"
-msgstr "Calendario: Recordatorio"
+msgstr "Calendario: recordatorio"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__is_organizer_alone
@@ -1353,7 +1352,7 @@ msgstr "Fecha de finalización"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__end_type
 msgid "End Type"
-msgstr "Tipo final"
+msgstr "Tipo de finalización"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__end_date
@@ -1518,7 +1517,7 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
 msgstr ""
-"Si el campo activo es falso, le permitirá ocultar la notificación de aviso "
+"Si el campo activo es False, le permitirá ocultar la notificación de aviso "
 "del evento sin eliminarlo."
 
 #. module: calendar
@@ -1905,7 +1904,7 @@ msgstr "Participante"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__partner_id
 msgid "Partner-related data of the user"
-msgstr "Datos de usuario relacionados al partner"
+msgstr "Datos de usuario relacionados con el partner"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__privacy
@@ -2174,7 +2173,8 @@ msgstr "Etiquetas"
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__mail_template_id
 msgid "Template used to render mail reminder content."
 msgstr ""
-"Plantilla utilizada para visualizar el contenido del correo de recordatorio."
+"Plantilla que se utiliza para visualizar el contenido del correo de "
+"recordatorio."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -2195,7 +2195,7 @@ msgid ""
 "well. Do you want to proceed ?"
 msgstr ""
 "La actividad está vinculada a una reunión. Al eliminarla también se "
-"eliminará la reunión ¿Desea continuar?"
+"eliminará la reunión. ¿Desea continuar?"
 
 #. module: calendar
 #: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
@@ -2205,8 +2205,8 @@ msgid ""
 "            opportunities."
 msgstr ""
 "El calendario se comparte entre los empleados y se integra por completo con\n"
-"                otras aplicaciones como las asistencias del empleado las oportunidades\n"
-"                de la empresa."
+"                otras aplicaciones como las asistencias del empleado o las oportunidades\n"
+"                empresariales."
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_recurrence_month_day
@@ -2299,7 +2299,7 @@ msgstr "Zona horaria"
 #: model:ir.model.fields,help:calendar.field_calendar_attendee__mail_tz
 msgid "Timezone used for displaying time in the mail template"
 msgstr ""
-"Zona horaria utilizada para mostrar la hora en la plantilla de correo "
+"Zona horaria que se utiliza para mostrar la hora en la plantilla de correo "
 "electrónico"
 
 #. module: calendar
@@ -2423,7 +2423,7 @@ msgstr "día %s"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g. Business Lunch"
-msgstr "ej. Almuerzo de trabajo"
+msgstr "Por ejemplo, almuerzo de trabajo"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_recurrence.py:0

@@ -22,11 +22,11 @@
 # Diogo Fonseca <dsf@thinkopensolutions.pt>, 2021
 # Pedro Filipe <pedro2.10@hotmail.com>, 2021
 # João Carvalho <jpldcarvalho+github@gmail.com>, 2021
-# Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2021
 # Nuno Silva <nuno.silva@arxi.pt>, 2022
 # luisfreitasarxi, 2022
 # Marcelo Pereira <marcelo.pereira@arxi.pt>, 2022
 # Luiz Fernando <lfpsgs@outlook.com>, 2022
+# Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2022
 # 
 msgid ""
 msgstr ""
@@ -34,7 +34,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Luiz Fernando <lfpsgs@outlook.com>, 2022\n"
+"Last-Translator: Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2022\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -706,6 +706,11 @@ msgid "<span class=\"o_stat_text\">Invoiced</span>"
 msgstr "<span class=\"o_stat_text\">Faturado</span>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
+msgid "<span class=\"o_stat_text\">Journal Entry</span>"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 "<span class=\"oe_inline o_form_label mr-3 ml-5 oe_edit_only\" "
@@ -847,6 +852,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Amount</span>"
 msgstr "<span>Montante</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.bill_preview
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "<span>Amount In Currency</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1138,7 +1149,7 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
-"Um lançamento em diário é composto por vários itens de diário, \n"
+"Um lançamento de diário é composto por vários itens de diário, \n"
 "               que podem ser uma transação a débito ou a crédito."
 
 #. module: account
@@ -1730,7 +1741,7 @@ msgstr ""
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Accrued %s entry as of %s"
-msgstr ""
+msgstr "Lançamento de Acréscimo de %s à data de %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -4016,7 +4027,7 @@ msgstr "Conecte com suas contas bancárias em segundos."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__reply_to_force_new
 msgid "Considers answers as new thread"
-msgstr "Considere respostas como um novo registro"
+msgstr "Considere respostas como um novo registo"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_template__tax_scope__consu
@@ -4073,7 +4084,7 @@ msgstr ""
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Corrupted data on journal entry with id %s."
-msgstr "Dados corrompidos na entrada do diário com a id. %s."
+msgstr "Dados corrompidos ao introduzir lançamento de diário com o ID %s."
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_direct_costs
@@ -4101,7 +4112,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Counterpart Entries"
-msgstr "Registro de Contrapartida"
+msgstr "Registo de Contrapartida"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
@@ -4173,7 +4184,7 @@ msgstr "Criar Lançamentos Automáticos para os Itens do Diário selecionados"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
 msgid "Create Entry"
-msgstr "Criar Registro"
+msgstr "Criar Registo"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
@@ -4219,7 +4230,7 @@ msgstr "Crie uma Fatura de Cliente"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
 msgid "Create a journal entry"
-msgstr "Criar uma entrada no diário"
+msgstr "Criar um lançamento de diário"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -5664,7 +5675,7 @@ msgstr "Lançamentos"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__entries_count
 msgid "Entries Count"
-msgstr "Número de Registros"
+msgstr "Número de Registos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_print_journal__sort_selection
@@ -6597,7 +6608,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_reversal__journal_id
 msgid "If empty, uses the journal of the journal entry to be reversed."
-msgstr "Se vazio, usa o diário do lançamento em diário a ser revertido."
+msgstr "Se vazio, usa o diário do lançamento de diário a ser revertido."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__include_base_amount
@@ -7580,7 +7591,6 @@ msgstr "Movimentos diários por data"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
-#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #, python-format
 msgid "Journal Entry"
 msgstr "Lançamento de Diário"
@@ -7642,7 +7652,7 @@ msgstr "Informações do Lançamento de Diário"
 #: model:ir.model.fields.selection,name:account.selection__account_print_journal__sort_selection__move_name
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "Journal Entry Number"
-msgstr "Número do Lançamento em Diário"
+msgstr "Número do Lançamento de Diário"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group__name
@@ -7738,7 +7748,7 @@ msgstr "Itens de diário onde não está definido o número correspondente"
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "Journal should be the same type as the reversed entry."
-msgstr "O Diário deveria ser do mesmo tipo do diário do lançamento reverso."
+msgstr "O Diário deve ser do mesmo tipo do diário do lançamento inverso."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__automatic_entry_default_journal_id
@@ -8528,7 +8538,7 @@ msgstr "Erro de Envio de Mensagem"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__record_name
 msgid "Message Record Name"
-msgstr "Nome do Registro da Mensagem"
+msgstr "Nome do Registo da Mensagem"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_warn_msg
@@ -9289,7 +9299,7 @@ msgstr "Diário de Abertura"
 #: model:ir.model.fields,field_description:account.field_res_company__account_opening_move_id
 #, python-format
 msgid "Opening Journal Entry"
-msgstr "Primeira Entrada do Diário"
+msgstr "Primeiro Lançamento do Diário"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__opening_move_posted
@@ -12150,6 +12160,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Estados baseados nas atividades\n"
+"Vencida: Ultrapassada a data planeada\n"
+"Hoje: Data da atividade é a de hoje\n"
+"Planeada: Atividades futuras."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_bank_account_step
@@ -13570,7 +13584,7 @@ msgid ""
 "The journal entry containing the initial balance of all this company's "
 "accounts."
 msgstr ""
-"A entrada do diário que contém o saldo inicial de todas as contas desta "
+"O lançamento do diário que contém o saldo inicial de todas as contas desta "
 "empresa."
 
 #. module: account
@@ -14071,6 +14085,8 @@ msgid ""
 "There doesn't appear to be anything to invoice for the selected order. "
 "However, you can use the amount field to force an accrual entry."
 msgstr ""
+"Não parece haver nada a faturar para a ordem selecionada. No entanto pode "
+"usar o campo \"valor\" para criar um acréscimo de proveitos."
 
 #. module: account
 #: code:addons/account/models/account_partial_reconcile.py:0
@@ -14705,7 +14721,7 @@ msgstr "Unidade de medida"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Unmark as Sent"
-msgstr ""
+msgstr "Desmarcar como Enviado"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter

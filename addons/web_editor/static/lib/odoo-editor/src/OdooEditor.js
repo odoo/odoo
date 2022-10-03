@@ -102,7 +102,9 @@ export const CLIPBOARD_WHITELISTS = {
         'I',
         'B',
         'U',
+        'S',
         'EM',
+        'FONT',
         'STRONG',
         // Table
         'TABLE',
@@ -141,7 +143,8 @@ export const CLIPBOARD_WHITELISTS = {
         /^fa/,
     ],
     attributes: ['class', 'href', 'src'],
-    spanStyle: {
+    styledTags: ['SPAN', 'B', 'STRONG', 'I', 'S', 'U', 'FONT'],
+    styles: {
         'text-decoration': { defaultValues: ['', 'none'] },
         'font-weight': { defaultValues: ['', '400'] },
         'background-color': { defaultValues: ['', '#fff', '#ffffff', 'rgb(255, 255, 255)', 'rgba(255, 255, 255, 1)'] },
@@ -201,6 +204,7 @@ export class OdooEditor extends EventTarget {
                 showEmptyElementHint: true,
                 defaultLinkAttributes: {},
                 plugins: [],
+                getUnremovableElements: () => [],
                 getReadOnlyAreas: () => [],
                 getContentEditableAreas: () => [],
                 getPowerboxElement: () => {
@@ -492,7 +496,7 @@ export class OdooEditor extends EventTarget {
         }
     }
     observerFlush() {
-        this.observerApply(this.observer.takeRecords());
+        this.observerApply(this.filterMutationRecords(this.observer.takeRecords()));
     }
     observerActive(label) {
         this._observerUnactiveLabels.delete(label);
@@ -502,6 +506,7 @@ export class OdooEditor extends EventTarget {
             this.observer = new MutationObserver(records => {
                 records = this.filterMutationRecords(records);
                 if (!records.length) return;
+                this.dispatchEvent(new Event('contentChanged'));
                 clearTimeout(this.observerTimeout);
                 if (this._observerTimeoutUnactive.size === 0) {
                     this.observerTimeout = setTimeout(() => {
@@ -992,6 +997,26 @@ export class OdooEditor extends EventTarget {
     historyUnpauseSteps() {
         this._historyStepsActive = true;
     }
+    /**
+     * Stash the mutations of the current step to re-apply them later.
+     */
+    historyStash() {
+        if (!this._historyStashedMutations) {
+            this._historyStashedMutations = [];
+        }
+        this._historyStashedMutations.push(...this._currentStep.mutations);
+        this._currentStep.mutations = [];
+    }
+    /**
+     * Unstash the previously stashed mutations into the current step.
+     */
+    historyUnstash() {
+        if (!this._currentStep.mutations) {
+            this._currentStep.mutations = [];
+        }
+        this._currentStep.mutations.unshift(...this._historyStashedMutations);
+        this._historyStashedMutations = [];
+    }
     _historyClean() {
         this._historySteps = [];
         this._currentStep = {
@@ -1295,12 +1320,12 @@ export class OdooEditor extends EventTarget {
 
     /**
      * Find all descendants of `element` with a `data-call` attribute and bind
-     * them on mousedown to the execution of the command matching that
+     * them on click to the execution of the command matching that
      * attribute.
      */
     bindExecCommand(element) {
         for (const buttonEl of element.querySelectorAll('[data-call]')) {
-            buttonEl.addEventListener('mousedown', ev => {
+            buttonEl.addEventListener('click', ev => {
                 const sel = this.document.getSelection();
                 if (sel.anchorNode && ancestors(sel.anchorNode).includes(this.editable)) {
                     this.execCommand(buttonEl.dataset.call, buttonEl.dataset.arg1);
@@ -1639,6 +1664,9 @@ export class OdooEditor extends EventTarget {
         for (const node of this.options.getReadOnlyAreas()) {
             node.setAttribute('contenteditable', false);
         }
+        for (const element of this.options.getUnremovableElements()) {
+            element.classList.add("oe_unremovable");
+        }
         this.observerActive('_activateContenteditable');
     }
     _stopContenteditable() {
@@ -1762,6 +1790,7 @@ export class OdooEditor extends EventTarget {
         this.commandbarTablePicker = new TablePicker({
             document: this.document,
             floating: true,
+            getContextFromParentRect: this.options.getContextFromParentRect,
         });
 
         document.body.appendChild(this.commandbarTablePicker.el);
@@ -2192,18 +2221,18 @@ export class OdooEditor extends EventTarget {
             // Remove all illegal attributes and classes from the node, then
             // clean its children.
             for (const attribute of [...node.attributes]) {
-                // we kee some style on span to be able to paste text styled in the editor
-                if (node.nodeName === 'SPAN' && attribute.name === 'style') {
-                    const spanInlineStyles = attribute.value.split(';');
+                // Keep allowed styles on nodes with allowed tags.
+                if (CLIPBOARD_WHITELISTS.styledTags.includes(node.nodeName) && attribute.name === 'style') {
+                    const spanInlineStyles = attribute.value.split(';').map(x => x.trim());
                     const allowedSpanInlineStyles = spanInlineStyles.filter(rawStyle => {
                         const [styleName, styleValue] = rawStyle.split(':');
-                        const style = CLIPBOARD_WHITELISTS.spanStyle[styleName.trim()];
+                        const style = CLIPBOARD_WHITELISTS.styles[styleName.trim()];
                         return style && !style.defaultValues.includes(styleValue.trim());
                     });
                     node.removeAttribute(attribute.name);
                     if (allowedSpanInlineStyles.length > 0) {
                         node.setAttribute(attribute.name, allowedSpanInlineStyles.join(';'));
-                    } else {
+                    } else if (['SPAN', 'FONT'].includes(node.tagName)) {
                         for (const unwrappedNode of unwrapContents(node)) {
                             this._cleanForPaste(unwrappedNode);
                         }
@@ -2239,7 +2268,7 @@ export class OdooEditor extends EventTarget {
                 okClass instanceof RegExp ? okClass.test(item) : okClass === item,
             );
         } else {
-            const allowedSpanStyles = Object.keys(CLIPBOARD_WHITELISTS.spanStyle).map(s => `span[style*="${s}"]`);
+            const allowedSpanStyles = Object.keys(CLIPBOARD_WHITELISTS.styles).map(s => `span[style*="${s}"]`);
             return (
                 item.nodeType === Node.TEXT_NODE ||
                 (
@@ -2456,6 +2485,9 @@ export class OdooEditor extends EventTarget {
             }
             ev.preventDefault();
             ev.stopPropagation();
+        } else if (ev.shiftKey && ev.key === "Enter") {
+            ev.preventDefault();
+            this._applyCommand('oShiftEnter');
         } else if (IS_KEYBOARD_EVENT_UNDO(ev)) {
             // Ctrl-Z
             ev.preventDefault();
@@ -2536,11 +2568,27 @@ export class OdooEditor extends EventTarget {
      * @private
      */
     _onSelectionChange() {
+        const selection = this.document.getSelection();
+        // When CTRL+A in the editor, sometimes the browser use the editable
+        // element as an anchor & focus node. This is an issue for the commands
+        // and the toolbar so we need to fix the selection to be based on the
+        // editable children. Calling `getDeepRange` ensure the selection is
+        // limited to the editable.
+        if (selection.anchorNode === this.editable && selection.focusNode === this.editable) {
+            getDeepRange(
+                this.editable,
+                {
+                    correctTripleClick: true,
+                    select: true,
+                });
+            // The selection is changed in `getDeepRange` and will therefore
+            // re-trigger the _onSelectionChange.
+            return;
+        }
         // Compute the current selection on selectionchange but do not record it. Leave
         // that to the command execution or the 'input' event handler.
         this._computeHistorySelection();
 
-        const selection = this.document.getSelection();
         this._updateToolbar(!selection.isCollapsed && this.isSelectionInEditable(selection));
 
         if (this._currentMouseState === 'mouseup') {
@@ -2563,8 +2611,9 @@ export class OdooEditor extends EventTarget {
      */
     isSelectionInEditable(selection) {
         selection = selection || this.document.getSelection()
-        return selection && selection.anchorNode && this.editable.contains(selection.anchorNode) &&
-            this.editable.contains(selection.focusNode);
+        return selection && selection.anchorNode &&
+            closestElement(selection.anchorNode).isContentEditable && closestElement(selection.focusNode).isContentEditable &&
+            this.editable.contains(selection.anchorNode) && this.editable.contains(selection.focusNode);
     }
 
     /**
@@ -2666,8 +2715,6 @@ export class OdooEditor extends EventTarget {
     }
 
     cleanForSave(element = this.editable) {
-        sanitize(element);
-
         this._pluginCall('cleanForSave', [element]);
         // Clean the remaining ZeroWidthspaces added by the `fillEmpty` function
         // ( contain "oe-zws-empty-inline" attr)
@@ -2688,6 +2735,8 @@ export class OdooEditor extends EventTarget {
                 emptyElement.removeAttribute('oe-zws-empty-inline');
             }
         }
+        sanitize(element);
+
         // Remove contenteditable=false on elements
         for (const el of element.querySelectorAll('[contenteditable="false"]')) {
             if (!el.hasAttribute('oe-keep-contenteditable')) {

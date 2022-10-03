@@ -249,6 +249,7 @@
             <field name="res_model">project.task.type</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="task_type_tree"/>
+            <field name="domain">[('user_id', '=', False)]</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 No stages found. Let's create one!

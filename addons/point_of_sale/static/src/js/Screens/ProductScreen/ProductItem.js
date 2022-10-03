@@ -41,8 +41,9 @@ odoo.define('point_of_sale.ProductItem', function(require) {
                 return formattedUnitPrice;
             }
         }
-        onProductInfoClick() {
-            this.showPopup('ProductInfoPopup', { product: this.props.product, quantity: 1 });
+        async onProductInfoClick() {
+            const info = await this.env.pos.getProductInfo(this.props.product, 1);
+            this.showPopup('ProductInfoPopup', { info: info , product: this.props.product });
         }
     }
     ProductItem.template = 'ProductItem';

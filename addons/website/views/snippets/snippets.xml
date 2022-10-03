@@ -834,6 +834,8 @@
             <t t-set="dependencies" t-valuef="option_header_brand_none"/>
         </t>
     </div>
+    <!-- TODO adapt in master, the logo image options related to type and -->
+    <!-- height are moved back in the navbar section in JS -->
     <div data-selector="#wrapwrap > header nav.navbar .navbar-brand img" data-no-check="true">
         <t t-call="website.snippet_options_header_brand">
             <t t-set="label">Type</t>

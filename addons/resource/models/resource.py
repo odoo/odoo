@@ -387,6 +387,7 @@ class ResourceCalendar(models.Model):
         assert start_dt.tzinfo and end_dt.tzinfo
         self.ensure_one()
         combine = datetime.combine
+        required_tz = tz
 
         resources_list = list(resources) + [self.env['resource.resource']]
         resource_ids = [r.id for r in resources_list]
@@ -404,7 +405,7 @@ class ResourceCalendar(models.Model):
         for attendance in self.env['resource.calendar.attendance'].search(domain):
             for resource in resources_list:
                 # express all dates and times in specified tz or in the resource's timezone
-                tz = tz if tz else timezone((resource or self).tz)
+                tz = required_tz if required_tz else timezone((resource or self).tz)
                 if (tz, start_dt) in cache_dates:
                     start = cache_dates[(tz, start_dt)]
                 else:

@@ -179,8 +179,9 @@ class StockQuant(models.Model):
             if any(field for field in vals.keys() if field not in allowed_fields):
                 raise UserError(_("Quant's creation is restricted, you can't do this operation."))
 
-            inventory_quantity = vals.pop('inventory_quantity', False) or vals.pop(
-                'inventory_quantity_auto_apply', False) or 0
+            auto_apply = 'inventory_quantity_auto_apply' in vals
+            inventory_quantity = vals.pop('inventory_quantity_auto_apply', False) or vals.pop(
+                'inventory_quantity', False) or 0
             # Create an empty quant or write on a similar one.
             product = self.env['product.product'].browse(vals['product_id'])
             location = self.env['stock.location'].browse(vals['location_id'])
@@ -195,10 +196,13 @@ class StockQuant(models.Model):
                 quant = quant[0].sudo()
             else:
                 quant = self.sudo().create(vals)
-            # Set the `inventory_quantity` field to create the necessary move.
-            quant.inventory_quantity = inventory_quantity
-            quant.user_id = vals.get('user_id', self.env.user.id)
-            quant.inventory_date = fields.Date.today()
+            if auto_apply:
+                quant.write({'inventory_quantity_auto_apply': inventory_quantity})
+            else:
+                # Set the `inventory_quantity` field to create the necessary move.
+                quant.inventory_quantity = inventory_quantity
+                quant.user_id = vals.get('user_id', self.env.user.id)
+                quant.inventory_date = fields.Date.today()
 
             return quant
         res = super(StockQuant, self).create(vals)

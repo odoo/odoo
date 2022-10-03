@@ -340,10 +340,10 @@ class MassMailing(models.Model):
             else:
                 mailing.calendar_date = False
 
-    @api.depends('body_html')
+    @api.depends('body_arch')
     def _compute_is_body_empty(self):
         for mailing in self:
-            mailing.is_body_empty = tools.is_html_empty(mailing.body_html)
+            mailing.is_body_empty = tools.is_html_empty(mailing.body_arch)
 
     def _compute_mail_server_available(self):
         self.mail_server_available = self.env['ir.config_parameter'].sudo().get_param('mass_mailing.outgoing_mail_server')
