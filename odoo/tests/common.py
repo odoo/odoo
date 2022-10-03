@@ -465,6 +465,17 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
         patcher.start()
         cls.addClassCleanup(patcher.stop)
 
+    def startPatcher(self, patcher):
+        mock = patcher.start()
+        self.addCleanup(patcher.stop)
+        return mock
+
+    @classmethod
+    def startClassPatcher(cls, patcher):
+        mock = patcher.start()
+        cls.addClassCleanup(patcher.stop)
+        return mock
+
     @contextmanager
     def with_user(self, login):
         """ Change user for a given test, like with self.with_user() ... """

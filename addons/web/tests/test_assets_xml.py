@@ -58,11 +58,7 @@ class TestStaticInheritanceCommon(odoo.tests.TransactionCase):
             """,
         }
         self._patch = patch.object(WebAsset, '_fetch_content', lambda asset: self.template_files[asset.url])
-        self._patch.start()
-
-    def tearDown(self):
-        super().tearDown()
-        self._patch.stop()
+        self.startPatcher(self._patch)
 
     def renderBundle(self, debug=False):
         files = []
