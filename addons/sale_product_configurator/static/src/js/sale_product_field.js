@@ -26,11 +26,14 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
             'product.template',
             'get_single_product_variant',
             [this.props.record.data.product_template_id[0]],
+            {
+                context: this.context,
+            }
         );
         if(result && result.product_id) {
             if (this.props.record.data.product_id != result.product_id.id) {
                 await this.props.record.update({
-                    product_id: [result.product_id, 'whatever'],
+                    product_id: [result.product_id, result.product_name],
                 });
                 if (result.has_optional_products) {
                     this._openProductConfigurator('options');
@@ -76,7 +79,7 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
                     product_no_variant_attribute_value_ids: this.props.record.data.product_no_variant_attribute_value_ids.records.map(
                         record => record.data.id
                     ),
-                    context: this.props.record.context,
+                    context: this.context,
                 },
             )
         );
@@ -120,7 +123,7 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
             okButtonText: this.env._t("Confirm"),
             cancelButtonText: this.env._t("Back"),
             title: this.env._t("Configure"),
-            context: this.props.record.context,
+            context: this.context,
             mode: mode,
         });
         let modalEl;
@@ -143,7 +146,7 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
                 ...optionalProducts
             ] = await optionalProductsModal.getAndCreateSelectedProducts();
 
-            await this.props.record.update(this._convertConfiguratorDataToUpdateData(mainProduct));
+            await this.props.record.update(await this._convertConfiguratorDataToUpdateData(mainProduct));
             this._onProductUpdate();
             const optionalProductLinesCreationContext = this._convertConfiguratorDataToLinesCreationContext(optionalProducts);
             for (let optionalProductLineCreationContext of optionalProductLinesCreationContext) {
@@ -172,11 +175,14 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
         });
     },
 
-    _convertConfiguratorDataToUpdateData(mainProduct) {
+    async _convertConfiguratorDataToUpdateData(mainProduct) {
+        const nameGet = await this.orm.nameGet(
+            'product.product',
+            [mainProduct.product_id],
+            { context: this.context }
+        );
         let result = {
-            // TODO find a way to get the real product name
-            // bc 'whatever' is really displayed when showing the 'Product Variant' column
-            product_id: [mainProduct.product_id, 'whatever'],
+            product_id: nameGet[0],
             product_uom_qty: mainProduct.quantity,
         };
         var customAttributeValues = mainProduct.product_custom_attribute_values;
