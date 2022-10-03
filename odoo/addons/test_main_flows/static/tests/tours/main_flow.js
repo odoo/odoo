@@ -530,8 +530,8 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_saved'),
     trigger: ".ui-menu-item > a:contains('the_flow.product')",
 }, {
     mobile: false,
-    trigger: ".o_field_widget[name=order_line] .o_external_button",
-    run: () => {},
+    trigger: "td[name='name'][data-tooltip*='the_flow.product']",
+    run: () => {}, // check
 }, {
     mobile: true,
     trigger: ".o_field_widget[name=product_id] input",
@@ -568,8 +568,8 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_saved'),
     trigger: ".ui-menu-item > a:contains('the_flow.service')",
 }, {
     mobile: false,
-    trigger: ".o_field_widget[name=order_line] .o_external_button",
-    run: () => {},
+    trigger: "td[name='name'][data-tooltip*='the_flow.service']",
+    run: () => {}, // check
 }, {
     mobile: false,
     trigger: 'label:contains("Untaxed Amount")',
