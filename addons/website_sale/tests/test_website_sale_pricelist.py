@@ -103,8 +103,7 @@ class TestWebsitePriceList(TransactionCase):
             'current_pl': False,
         }
         patcher = patch('odoo.addons.website_sale.models.website.Website.get_pricelist_available', wraps=self._get_pricelist_available)
-        patcher.start()
-        self.addCleanup(patcher.stop)
+        self.startPatcher(patcher)
 
     # Mock nedded because request.session doesn't exist during test
     def _get_pricelist_available(self, show_visible=False):
@@ -284,8 +283,7 @@ def simulate_frontend_context(self, website_id=1):
     def get_request_website():
         return self.env['website'].browse(website_id)
     patcher = patch('odoo.addons.website.models.ir_http.get_request_website', wraps=get_request_website)
-    patcher.start()
-    self.addCleanup(patcher.stop)
+    self.startPatcher(patcher)
 
 
 @tagged('post_install', '-at_install')
