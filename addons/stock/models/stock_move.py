@@ -156,7 +156,9 @@ class StockMove(models.Model):
         check_company=True)
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', help="the warehouse to consider for the route selection on the next procurement (if any).")
     has_tracking = fields.Selection(related='product_id.tracking', string='Product with Tracking')
-    quantity_done = fields.Float('Quantity Done', compute='_quantity_done_compute', digits='Product Unit of Measure', inverse='_quantity_done_set')
+    quantity_done = fields.Float(
+        'Quantity Done', compute='_quantity_done_compute', digits='Product Unit of Measure',
+        inverse='_quantity_done_set', store=True)
     show_operations = fields.Boolean(related='picking_id.picking_type_id.show_operations')
     picking_code = fields.Selection(related='picking_id.picking_type_id.code', readonly=True)
     show_details_visible = fields.Boolean('Details Visible', compute='_compute_show_details_visible')
