@@ -68,13 +68,13 @@ export const fileUploadService = {
                 upload.state = "loading";
             });
             // Load listener
-            xhr.upload.addEventListener("load", async () => {
+            xhr.addEventListener("load", () => {
                 delete uploads[upload.id];
                 upload.state = "loaded";
                 bus.trigger("FILE_UPLOAD_LOADED", { upload });
             });
             // Error listener
-            xhr.upload.addEventListener("error", async () => {
+            xhr.addEventListener("error", async () => {
                 delete uploads[upload.id];
                 upload.state = "error";
                 // Disable this option if you need more explicit error handling.
@@ -87,7 +87,7 @@ export const fileUploadService = {
                 bus.trigger("FILE_UPLOAD_ERROR", { upload });
             });
             // Abort listener, considered as error
-            xhr.upload.addEventListener("abort", async () => {
+            xhr.addEventListener("abort", async () => {
                 delete uploads[upload.id];
                 upload.state = "abort";
                 bus.trigger("FILE_UPLOAD_ERROR", { upload });

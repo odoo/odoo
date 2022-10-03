@@ -49,13 +49,12 @@ QUnit.module("Components", ({ beforeEach }) => {
         patchUpload = (customSend) => {
             patchWithCleanup(fileUploadService, {
                 createXhr() {
-                    const xhr = {
+                    const xhr = new window.EventTarget();
+                    Object.assign(xhr, {
                         upload: new window.EventTarget(),
                         open() {},
-                        send(data) {
-                            customSend && customSend(data);
-                        },
-                    };
+                        send(data) { customSend && customSend(data); },
+                    });
                     return xhr;
                 },
             });
@@ -92,7 +91,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         const fileUploadService = env.services.file_upload;
         fileUploadService.upload("/test/", []);
         await nextTick();
-        fileUploadService.uploads[1].xhr.upload.dispatchEvent(new Event("load"));
+        fileUploadService.uploads[1].xhr.dispatchEvent(new Event("load"));
         await nextTick();
         assert.containsNone(target, ".file_upload");
     });
@@ -104,7 +103,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         const fileUploadService = env.services.file_upload;
         fileUploadService.upload("/test/", []);
         await nextTick();
-        fileUploadService.uploads[1].xhr.upload.dispatchEvent(new Event("error"));
+        fileUploadService.uploads[1].xhr.dispatchEvent(new Event("error"));
         await nextTick();
         assert.containsNone(target, ".file_upload");
     });
@@ -116,7 +115,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         const fileUploadService = env.services.file_upload;
         fileUploadService.upload("/test/", []);
         await nextTick();
-        fileUploadService.uploads[1].xhr.upload.dispatchEvent(new Event("abort"));
+        fileUploadService.uploads[1].xhr.dispatchEvent(new Event("abort"));
         await nextTick();
         assert.containsNone(target, ".file_upload");
     });
@@ -130,7 +129,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         await nextTick();
         patchWithCleanup(env.services.dialog, {
             add: () => {
-                fileUploadService.uploads[1].xhr.upload.dispatchEvent(new Event("abort"));
+                fileUploadService.uploads[1].xhr.dispatchEvent(new Event("abort"));
             },
         });
         await click(target, ".o-file-upload-progress-bar-abort", true);
