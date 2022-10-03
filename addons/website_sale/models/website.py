@@ -274,7 +274,7 @@ class Website(models.Model):
 
         if sale_order_id:
             sale_order_sudo = SaleOrder.browse(sale_order_id).exists()
-        elif not self.env.user._is_public():
+        elif self.env.user and not self.env.user._is_public():
             sale_order_sudo = partner_sudo.last_website_so_id
             if sale_order_sudo:
                 available_pricelists = self.get_pricelist_available()
