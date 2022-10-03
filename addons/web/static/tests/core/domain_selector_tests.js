@@ -9,7 +9,7 @@ import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
 import { viewService } from "@web/views/view_service";
 import { makeTestEnv } from "../helpers/mock_env";
-import { click, getFixture, mount, triggerEvent } from "../helpers/utils";
+import { click, editSelect, getFixture, mount, triggerEvent } from "../helpers/utils";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
 
 const { Component, xml } = owl;
@@ -499,5 +499,48 @@ QUnit.module("Components", (hooks) => {
         });
 
         assert.verifySteps(["fields_get"]);
+    });
+
+    QUnit.test("selection field with operator change from 'is set' to '='", async (assert) => {
+        serverData.models.partner.fields.state = {
+            string: "State",
+            type: "selection",
+            selection: [
+                ["abc", "ABC"],
+                ["def", "DEF"],
+                ["ghi", "GHI"],
+            ],
+        };
+
+        class Parent extends Component {
+            setup() {
+                this.value = `[['state', '!=', false]]`;
+            }
+            onUpdate(newValue) {
+                this.value = newValue;
+                this.render();
+            }
+        }
+        Parent.components = { DomainSelector };
+        Parent.template = xml`
+            <DomainSelector
+                resModel="'partner'"
+                value="value"
+                readonly="false"
+                update="(newValue) => this.onUpdate(newValue)"
+            />
+        `;
+
+        // Create the domain selector and its mock environment
+        await mountComponent(Parent);
+
+        assert.strictEqual(target.querySelector(".o_field_selector_chain_part").innerText, "State");
+        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "2"); // option "!="
+
+        await editSelect(target, ".o_domain_leaf_operator_select", 0);
+
+        assert.strictEqual(target.querySelector(".o_field_selector_chain_part").innerText, "State");
+        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "0"); // option "="
+        assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, "abc");
     });
 });
