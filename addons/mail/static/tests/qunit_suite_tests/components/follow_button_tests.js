@@ -62,7 +62,7 @@ QUnit.test('hover following button', async function (assert) {
         "should have 'Unfollow' button"
     );
     assert.strictEqual(
-        document.querySelector('.o_FollowButton_unfollow').textContent.trim(),
+        document.querySelector('.o_FollowButton_text').textContent.trim(),
         'Following',
         "'unfollow' button should display 'Following' as text when not hovered"
     );
@@ -84,7 +84,7 @@ QUnit.test('hover following button', async function (assert) {
         }
     );
     assert.strictEqual(
-        document.querySelector('.o_FollowButton_unfollow').textContent.trim(),
+        document.querySelector('.o_FollowButton_text').textContent.trim(),
         'Unfollow',
         "'unfollow' button should display 'Unfollow' as text when hovered"
     );
