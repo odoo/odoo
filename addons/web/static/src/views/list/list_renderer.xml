@@ -82,7 +82,7 @@
                             </td>
                             <td t-else=""/>
                         </t>
-                        <td t-if="activeActions.onDelete" />
+                        <td t-if="displayOptionalFields or activeActions.onDelete"/>
                     </tr>
                 </tfoot>
             </table>
