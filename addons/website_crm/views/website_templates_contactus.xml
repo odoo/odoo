@@ -14,6 +14,9 @@
                     'description': request.params.get('description', ''),
                 })"/>
             </xpath>
+            <xpath expr="//form[@id='contactus_form']" position="attributes">
+              <attribute name="data-model_name">crm.lead</attribute>
+            </xpath>
 		</template>
     </data>
 </odoo>
