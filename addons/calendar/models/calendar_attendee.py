@@ -111,8 +111,9 @@ class Attendee(models.Model):
         self._notify_attendees(ics_files, invitation_template, rendering_context, force_send)
 
     def _notify_attendees(self, ics_files, mail_template, rendering_context, force_send):
+        partner_achived = self.env['res.partner'].search([('active', '=', False)])
         for attendee in self:
-            if attendee.email and attendee.partner_id != self.env.user.partner_id:
+            if attendee.email and attendee.partner_id != self.env.user.partner_id and attendee.partner_id not in partner_achived:
                 # FIXME: is ics_file text or bytes?
                 event_id = attendee.event_id.id
                 ics_file = ics_files.get(event_id)
