@@ -1002,3 +1002,25 @@ section, .oe_img_bg, [data-oe-shape-data] {
         }
     }
 }
+
+// Autocomplete dropdowns
+.ui-autocomplete {
+    max-height: 50vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    .ui-menu-item {
+        padding: 0;
+        > .ui-state-active {
+            border: none;
+            font-weight: normal;
+            margin: 0;
+        }
+    }
+    .fw-bold {
+        // Needed because the font-family is not "system fonts everywhere" as
+        // elements around it. TODO: use "system fonts everywhere" for
+        // the 'ui-autocomplete' and remove this line.
+        font-weight: 700 !important;
+    }
+}
