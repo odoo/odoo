@@ -6,7 +6,7 @@ import { registry } from '@web/core/registry';
 import { Many2OneField } from '@web/views/fields/many2one/many2one_field';
 import { formatMonetary } from "@web/views/fields/formatters";
 
-const { onWillUpdateProps } = owl;
+const { markup, onWillUpdateProps } = owl;
 
 
 export class PurchaseOrderLineProductField extends Many2OneField {
@@ -105,9 +105,14 @@ export class PurchaseOrderLineProductField extends Many2OneField {
                     rows: infos.matrix,
                     format({price, currency_id}) {
                         if (!price) { return ""; }
-                        return formatMonetary(price, {
-                            currencyId: currency_id,
-                        });
+                        const sign = price < 0 ? '-' : '+';
+                        const formatted = formatMonetary(
+                            Math.abs(price),
+                            {
+                                currencyId: currency_id,
+                            },
+                        );
+                        return markup(`${sign}&nbsp;${formatted}`);
                     }
                 }
             )),

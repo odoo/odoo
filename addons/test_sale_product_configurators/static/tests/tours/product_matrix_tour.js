@@ -3,14 +3,14 @@
 import tour from 'web_tour.tour';
 
 let EXPECTED = [
-    "Matrix", "PAV11", "PAV12 $ 50.00",
-]
+    "Matrix", "PAV11", "PAV12 + $ 50.00",
+];
 for (let no of ['PAV41', 'PAV42']) {
     for (let dyn of ['PAV31', 'PAV32']) {
         for (let al of ['PAV21', 'PAV22']) {
             let row_label = [al, dyn, no].join(' • ');
             if (dyn === 'PAV31') {
-                row_label += ' $ -25.00';
+                row_label += ' - $ 25.00';
             }
             EXPECTED.push(row_label, "", "");
         }

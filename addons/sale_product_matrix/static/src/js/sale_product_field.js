@@ -5,6 +5,7 @@ import { qweb } from "web.core";
 import { patch } from "@web/core/utils/patch";
 import { SaleOrderLineProductField } from '@sale/js/sale_product_field';
 import { formatMonetary } from "@web/views/fields/formatters";
+const { markup } = owl;
 
 
 patch(SaleOrderLineProductField.prototype, 'sale_product_matrix', {
@@ -71,9 +72,14 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_matrix', {
                     rows: infos.matrix,
                     format({price, currency_id}) {
                         if (!price) { return ""; }
-                        return formatMonetary(price, {
-                            currencyId: currency_id,
-                        });
+                        const sign = price < 0 ? '-' : '+';
+                        const formatted = formatMonetary(
+                            Math.abs(price),
+                            {
+                                currencyId: currency_id,
+                            },
+                        );
+                        return markup(`${sign}&nbsp;${formatted}`);
                     }
                 }
             )),
