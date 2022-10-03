@@ -402,21 +402,10 @@ export class AnalyticDistribution extends Component {
         }
     }
 
-    validate() {
-        for (const group_id in this.list) {
-            if (this.groupStatus(group_id) === 'invalid') {
-                this.props.record.setInvalidField(this.props.name);
-                return false;
-            }
-        }
-        return true;
-    }
-
     async save() {
         const currentDistribution = this.listForJson;
         const dataToSave = currentDistribution;
         await this.props.update(dataToSave);
-        this.validate();
     }
 
     onSaveNew() {
