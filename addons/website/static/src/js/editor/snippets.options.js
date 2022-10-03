@@ -2910,7 +2910,7 @@ options.registry.ScrollButton = options.Class.extend({
     },
 });
 
-options.registry.ConditionalVisibility = options.Class.extend({
+options.registry.ConditionalVisibility = options.registry.DeviceVisibility.extend({
     /**
      * @constructor
      */
@@ -2942,6 +2942,7 @@ options.registry.ConditionalVisibility = options.Class.extend({
      * @override
      */
     async onTargetHide() {
+        await this._super(...arguments);
         if (this.$target[0].classList.contains('o_snippet_invisible')) {
             this.$target[0].classList.add('o_conditional_hidden');
         }
@@ -2950,12 +2951,14 @@ options.registry.ConditionalVisibility = options.Class.extend({
      * @override
      */
     async onTargetShow() {
+        await this._super(...arguments);
         this.$target[0].classList.remove('o_conditional_hidden');
     },
     /**
      * @override
      */
-    cleanForSave() {
+    async cleanForSave() {
+        await this._super(...arguments);
         // Kinda hacky: the snippet is forced hidden via onTargetHide on save
         // but should be marked as visible as when entering edit mode later, the
         // snippet will be shown naturally (as the CSS rules won't apply).
