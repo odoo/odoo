@@ -64,7 +64,7 @@ export class ModelFieldSelectorPopover extends Component {
     }
     onPreviousBtnClick() {
         this.searchValue = "";
-        if (this.chain.length > 1) {
+        if (this.currentNode.field === null) {
             this.chain.pop();
         }
         this.currentNode.field = null;
