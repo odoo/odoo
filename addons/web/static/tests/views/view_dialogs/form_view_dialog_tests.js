@@ -325,4 +325,24 @@ QUnit.module("ViewDialogs", (hooks) => {
             assert.containsNone(target, ".modal", "modal should be closed");
         }
     );
+
+    QUnit.test("FormViewDialog with remove button", async function (assert) {
+        serverData.views = {
+            "partner,false,form": `<form><field name="foo"/></form>`,
+        };
+
+        const webClient = await createWebClient({ serverData });
+        webClient.env.services.dialog.add(FormViewDialog, {
+            resModel: "partner",
+            resId: 1,
+            removeRecord: () => assert.step("remove"),
+        });
+        await nextTick();
+
+        assert.containsOnce(target, ".o_dialog .o_form_view");
+        assert.containsOnce(target, ".o_dialog .modal-footer .o_form_button_remove");
+        await click(target.querySelector(".o_dialog .modal-footer .o_form_button_remove"));
+        assert.verifySteps(["remove"]);
+        assert.containsNone(target, ".o_dialog .o_form_view");
+    });
 });
