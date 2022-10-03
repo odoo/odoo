@@ -226,7 +226,7 @@ class AccountMove(models.Model):
                 ('state', '!=', 'cancel'),
             ]
             if rec.search(domain):
-                raise ValidationError(_('Document %s must be unique per partner and company.', rec.name))            
+                raise ValidationError(_('Document %s must be unique per partner and company.', rec.name))
 
     def _check_unique_vendor_number(self):
         # for backward compatibility in custom modules in stable, should be removed in master
