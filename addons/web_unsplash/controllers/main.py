@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import base64
+
 import logging
 import mimetypes
 import requests
@@ -18,6 +18,10 @@ logger = logging.getLogger(__name__)
 
 class Web_Unsplash(http.Controller):
 
+    def _get_access_key(self):
+        """ Use this method to get the key, needed for internal reason """
+        return request.env['ir.config_parameter'].sudo().get_param('unsplash.access_key')
+
     def _notify_download(self, url):
         ''' Notifies Unsplash from an image download. (API requirement)
             :param url: the download_url of the image to be notified
@@ -29,7 +33,7 @@ class Web_Unsplash(http.Controller):
         try:
             if not url.startswith('https://api.unsplash.com/photos/') and not request.env.registry.in_test_mode():
                 raise Exception(_("ERROR: Unknown Unsplash notify URL!"))
-            access_key = request.env['ir.config_parameter'].sudo().get_param('unsplash.access_key')
+            access_key = self._get_access_key()
             requests.get(url, params=url_encode({'client_id': access_key}))
         except Exception as e:
             logger.exception("Unsplash download notification failed: " + str(e))
@@ -64,7 +68,6 @@ class Web_Unsplash(http.Controller):
             return []
 
         uploads = []
-        Attachments = request.env['ir.attachment']
 
         query = kwargs.get('query', '')
         query = slugify(query)
@@ -123,7 +126,7 @@ class Web_Unsplash(http.Controller):
 
     @http.route("/web_unsplash/fetch_images", type='json', auth="user")
     def fetch_unsplash_images(self, **post):
-        access_key = request.env['ir.config_parameter'].sudo().get_param('unsplash.access_key')
+        access_key = self._get_access_key()
         app_id = self.get_unsplash_app_id()
         if not access_key or not app_id:
             if not request.env.user._can_manage_unsplash_settings():
