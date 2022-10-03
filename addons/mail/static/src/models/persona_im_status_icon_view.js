@@ -1,12 +1,25 @@
 /** @odoo-module **/
 
-import { one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { registerModel } from '@mail/model/model_core';
 import { clear } from '@mail/model/model_field_command';
+import { markEventHandled } from '@mail/utils/utils';
 
 registerModel({
     name: 'PersonaImStatusIconView',
     identifyingMode: 'xor',
+    recordMethods: {
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClick(ev) {
+            markEventHandled(ev, 'PersonaImStatusIcon.Click');
+            if (!this.hasOpenChat || !this.persona.partner) {
+                return;
+            }
+            this.persona.partner.openChat();
+        },
+    },
     fields: {
         channelInvitationFormSelectablePartnerViewOwner: one('ChannelInvitationFormSelectablePartnerView', {
             identifying: true,
@@ -23,6 +36,31 @@ registerModel({
         composerSuggestionViewOwner: one('ComposerSuggestionView', {
             identifying: true,
             inverse: 'personaImStatusIconView',
+        }),
+        hasBackground: attr({
+            compute() {
+                if (this.composerSuggestionViewOwner) {
+                    return false;
+                }
+                return clear();
+            },
+            default: true,
+        }),
+        /**
+         * Determines whether a click on this view should open a chat with the
+         * corresponding persona.
+         */
+        hasOpenChat: attr({
+            compute() {
+                if (this.channelMemberViewOwner) {
+                    return this.channelMemberViewOwner.hasOpenChat;
+                }
+                if (this.messageViewOwner) {
+                    return this.messageViewOwner.hasAuthorOpenChat;
+                }
+                return clear();
+            },
+            default: false,
         }),
         messageViewOwner: one('MessageView', {
             identifying: true,
