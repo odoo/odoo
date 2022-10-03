@@ -217,7 +217,7 @@
             <t t-foreach="getColumns(record)" t-as="column" t-key="column.id">
                 <t t-if="column.type === 'field'">
                     <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)"
-                        class="o_data_cell cursor-pointer"
+                        class="o_data_cell cursor-pointer text-wrap"
                         t-att-class="getCellClass(column, record)"
                         t-att-name="column.name"
                         t-att-colspan="column.colspan"
