@@ -52,6 +52,9 @@
                 <button type="button" class="btn btn-secondary o_form_button_cancel" data-hotkey="j" t-on-click.stop="discard">
                     Discard
                 </button>
+                <button t-if="props.removeRecord" class="btn btn-secondary o_form_button_remove" t-on-click="props.removeRecord" data-hotkey="x">
+                    Remove
+                </button>
             </div>
             <div t-elif="canCreate" class="o_form_buttons_view">
                 <button type="button" class="btn btn-secondary o_form_button_create" data-hotkey="c" t-on-click.stop="create">
