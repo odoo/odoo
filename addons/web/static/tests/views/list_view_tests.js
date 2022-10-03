@@ -43,6 +43,7 @@ import {
     groupByMenu,
     pagerNext,
     pagerPrevious,
+    removeFacet,
     saveFavorite,
     toggleActionMenu,
     toggleFavoriteMenu,
@@ -15240,4 +15241,65 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(target.querySelectorAll("th[data-name=bar]"), "table-active");
         assert.hasClass(target.querySelectorAll("th[data-name=bar] i"), "fa-angle-up");
     });
+
+    QUnit.test(
+        "have some records, then go to next page in pager then group by some field: at least one group should be visible",
+        async function (assert) {
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: `
+                    <list limit="2">
+                        <field name="foo"/>
+                        <field name="bar"/>
+                    </list>
+                `,
+                searchViewArch: `
+                    <search>
+                        <filter name="group_by_bar" string="Bar" context="{ 'group_by': 'bar' }"/>
+                    </search>
+                `,
+            });
+            assert.containsN(target, "tbody .o_data_row", 2);
+            assert.deepEqual(
+                [...target.querySelectorAll("tbody .o_data_row")].map((el) => el.innerText.trim()),
+                ["yop", "blip"]
+            );
+
+            await toggleGroupByMenu(target);
+            await toggleMenuItem(target, "Bar");
+            assert.containsN(target, "tbody .o_group_header", 2);
+            assert.deepEqual(
+                [...target.querySelectorAll("tbody .o_group_header")].map((el) =>
+                    el.innerText.trim()
+                ),
+                ["No (1)", "Yes (3)"]
+            );
+
+            await removeFacet(target);
+            assert.containsN(target, "tbody .o_data_row", 2);
+            assert.deepEqual(
+                [...target.querySelectorAll("tbody .o_data_row")].map((el) => el.innerText.trim()),
+                ["yop", "blip"]
+            );
+
+            await pagerNext(target);
+            assert.containsN(target, "tbody .o_data_row", 2);
+            assert.deepEqual(
+                [...target.querySelectorAll("tbody .o_data_row")].map((el) => el.innerText.trim()),
+                ["gnap", "blip"]
+            );
+
+            await toggleGroupByMenu(target);
+            await toggleMenuItem(target, "Bar");
+            assert.containsN(target, "tbody .o_group_header", 2);
+            assert.deepEqual(
+                [...target.querySelectorAll("tbody .o_group_header")].map((el) =>
+                    el.innerText.trim()
+                ),
+                ["No (1)", "Yes (3)"]
+            );
+        }
+    );
 });
