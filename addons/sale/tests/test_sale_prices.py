@@ -124,17 +124,18 @@ class TestSalePrices(SaleCommon):
         self.assertEqual(order_line.discount, 0.0)
 
         self.empty_order.date_order = False
+
         with freeze_time(today):
             order_line = self.env['sale.order.line'].create({
                 'order_id': self.empty_order.id,
                 'product_id': self.product.id,
             })
 
-        self.assertEqual(order_line.pricelist_item_id, pricelist_rule)
-        self.assertEqual(
-            order_line.price_unit,
-            self.product.lst_price * (1 - self.discount / 100.0))
-        self.assertEqual(order_line.discount, 0.0)
+            self.assertEqual(order_line.pricelist_item_id, pricelist_rule)
+            self.assertEqual(
+                order_line.price_unit,
+                self.product.lst_price * (1 - self.discount / 100.0))
+            self.assertEqual(order_line.discount, 0.0)
 
         with freeze_time(tomorrow):
             order_line = self.env['sale.order.line'].create({
@@ -142,15 +143,15 @@ class TestSalePrices(SaleCommon):
                 'product_id': self.product.id,
             })
 
-        self.assertEqual(order_line.pricelist_item_id, pricelist_rule)
-        self.assertEqual(
-            order_line.price_unit,
-            self.product.lst_price)
-        self.assertEqual(order_line.discount, 0.0)
+            self.assertEqual(order_line.pricelist_item_id, pricelist_rule)
+            self.assertEqual(
+                order_line.price_unit,
+                self.product.lst_price)
+            self.assertEqual(order_line.discount, 0.0)
 
-        self.assertEqual(
-            self.empty_order.amount_untaxed,
-            self.product.lst_price * 3.8)
+            self.assertEqual(
+                self.empty_order.amount_untaxed,
+                self.product.lst_price * 3.8)
 
     def test_pricelist_product_context(self):
         """ Verify that the product attributes extra prices are correctly considered """
