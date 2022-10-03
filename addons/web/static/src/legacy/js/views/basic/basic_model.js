@@ -3096,9 +3096,18 @@ var BasicModel = AbstractModel.extend({
                 var view = fieldInfo.views && fieldInfo.views[fieldInfo.mode];
                 var fieldsInfo = view ? view.fieldsInfo : (fieldInfo.fieldsInfo || {});
                 var ids = record.data[fieldName] || [];
+
+                // remove default_* & *_view_ref keys from record context
+                const recordContext = { ...record.context };
+                for (const key in recordContext) {
+                    if (key.startsWith("default_") || key.endsWith("_view_ref")) {
+                        delete recordContext[key];
+                    }
+                }
+
                 var list = self._makeDataPoint({
                     count: ids.length,
-                    context: _.extend({}, record.context, field.context),
+                    context: Object.assign({}, recordContext, field.context),
                     fieldsInfo: fieldsInfo,
                     fields: view ? view.fields : fieldInfo.relatedFields,
                     limit: fieldInfo.limit,
@@ -4599,12 +4608,16 @@ var BasicModel = AbstractModel.extend({
         var fields = view ? view.fields : fieldInfo.relatedFields;
         var viewType = view ? view.type : fieldInfo.viewType;
 
-        // remove default_* keys from parent context to avoid issue of same field name in x2m
-        var parentContext = _.omit(record.context, function (val, key) {
-            return _.str.startsWith(key, 'default_');
-        });
+        // remove default_* & *_view_ref keys from record context
+        const recordContext = { ...record.context };
+        for (const key in recordContext) {
+            if (key.startsWith("default_") || key.endsWith("_view_ref")) {
+                delete recordContext[key];
+            }
+        }
+
         var x2manyList = self._makeDataPoint({
-            context: parentContext,
+            context: recordContext,
             fieldsInfo: fieldsInfo,
             fields: fields,
             limit: fieldInfo.limit,
