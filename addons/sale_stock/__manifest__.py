@@ -46,8 +46,7 @@ Preferences
     'auto_install': True,
     'assets': {
         'web.assets_backend': [
-            'sale_stock/static/src/js/**/*',
-            'sale_stock/static/src/xml/**/*',
+            'sale_stock/static/src/**/*',
         ],
     },
     'license': 'LGPL-3',
