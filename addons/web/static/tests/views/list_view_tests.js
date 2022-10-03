@@ -13565,6 +13565,13 @@ QUnit.module("Views", (hooks) => {
             "should have 4 th, 1 for selector, 2 for columns and 1 for optional columns"
         );
 
+        assert.containsN(
+            target,
+            "tfoot td",
+            4,
+            "should have 4 td, 1 for selector, 2 for columns and 1 for optional columns"
+        );
+
         assert.containsOnce(
             target,
             "table .o_optional_columns_dropdown",
@@ -13590,6 +13597,7 @@ QUnit.module("Views", (hooks) => {
         await click(target, "div.o_optional_columns_dropdown span.dropdown-item:first-child");
         // 5 th (1 for checkbox, 3 for columns, 1 for optional columns)
         assert.containsN(target, "th", 5, "should have 5 th");
+        assert.containsN(target, "tfoot td", 5, "should have 5 td");
         assert.ok(
             $(target).find("th:not(.o_list_actions_header):contains(M2O field)").is(":visible"),
             "should have a visible m2o field"
@@ -13608,6 +13616,7 @@ QUnit.module("Views", (hooks) => {
         await click(target, "div.o_optional_columns_dropdown span.dropdown-item:first-child");
         // 4 th (1 for checkbox, 2 for columns, 1 for optional columns)
         assert.containsN(target, "th", 4, "should have 4 th");
+        assert.containsN(target, "tfoot td", 4, "should have 4 td");
         assert.notOk(
             $(target).find("th:not(.o_list_actions_header):contains(M2O field)").is(":visible"),
             "should not have a visible m2o field"
