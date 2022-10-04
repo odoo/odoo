@@ -117,10 +117,10 @@ QUnit.module("Views", ({ beforeEach }) => {
                             type: "many2one",
                             relation: "event_type",
                         },
-                        color: {
+                        color_event: {
                             string: "Color",
                             type: "integer",
-                            related: "event_type_id.color",
+                            related: "event_type_id.color_event_type",
                         },
                         is_hatched: { string: "Hatched", type: "boolean" },
                         is_striked: { string: "Striked", type: "boolean" },
@@ -251,12 +251,12 @@ QUnit.module("Views", ({ beforeEach }) => {
                     fields: {
                         id: { string: "ID", type: "integer" },
                         display_name: { string: "Displayed name", type: "char" },
-                        color: { string: "Color", type: "integer" },
+                        color_event_type: { string: "Color", type: "integer" },
                     },
                     records: [
-                        { id: 1, display_name: "Event Type 1", color: 1 },
-                        { id: 2, display_name: "Event Type 2", color: 2 },
-                        { id: 3, display_name: "Event Type 3 (color 4)", color: 4 },
+                        { id: 1, display_name: "Event Type 1", color_event_type: 1 },
+                        { id: 2, display_name: "Event Type 2", color_event_type: 2 },
+                        { id: 3, display_name: "Event Type 3 (color 4)", color_event_type: 4 },
                     ],
                 },
                 filter_partner: {
@@ -2234,7 +2234,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         serverData.models.event_type.records.push({
             id: 4,
             display_name: "Event Type no color",
-            color: 0,
+            color_event_type: 0,
         });
         serverData.models.event.records.push(
             {
@@ -2247,7 +2247,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                 allday: false,
                 partner_ids: [1, 2, 3],
                 event_type_id: 3,
-                color: 4,
+                color_event: 4, // related is not managed by the mock server
             },
             {
                 id: 9,
@@ -2259,7 +2259,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                 allday: false,
                 partner_ids: [1, 2, 3],
                 event_type_id: 1,
-                color: 1,
+                color_event: 1, // related is not managed by the mock server
             },
             {
                 id: 10,
@@ -2271,7 +2271,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                 allday: false,
                 partner_ids: [1, 2, 3],
                 event_type_id: 4,
-                color: 0,
+                color_event: 0, // related is not managed by the mock server
             }
         );
 
@@ -2280,9 +2280,9 @@ QUnit.module("Views", ({ beforeEach }) => {
             resModel: "event",
             serverData,
             arch: `
-                <calendar date_start="start" date_stop="stop" all_day="allday" mode="week" color="color" event_open_popup="1">
+                <calendar date_start="start" date_stop="stop" all_day="allday" mode="week" color="color_event" event_open_popup="1">
                     <field name="partner_ids" write_model="filter_partner" write_field="partner_id" />
-                    <field name="event_type_id" filters="1" color="color" />
+                    <field name="event_type_id" filters="1" color="color_event_type" />
                 </calendar>
             `,
             mockRPC(route, { method, model, kwargs }) {
@@ -2300,21 +2300,19 @@ QUnit.module("Views", ({ beforeEach }) => {
             "get_views (event)",
             "check_access_rights (event)",
             "search_read (filter_partner) [partner_id]",
-            "search_read (event) [display_name, start, stop, allday, color, partner_ids, event_type_id]",
+            "search_read (event) [display_name, start, stop, allday, color_event, partner_ids, event_type_id]",
         ]);
 
         // By default no filter is selected. We check before continuing.
         await toggleFilter(target, "partner_ids", 1);
         assert.verifySteps([
             "search_read (filter_partner) [partner_id]",
-            "search_read (event) [display_name, start, stop, allday, color, partner_ids, event_type_id]",
-            "search_read (event_type) [color]", // color search read
+            "search_read (event) [display_name, start, stop, allday, color_event, partner_ids, event_type_id]",
         ]);
         await toggleFilter(target, "partner_ids", 2);
         assert.verifySteps([
             "search_read (filter_partner) [partner_id]",
-            "search_read (event) [display_name, start, stop, allday, color, partner_ids, event_type_id]",
-            "search_read (event_type) [color]", // color search read
+            "search_read (event) [display_name, start, stop, allday, color_event, partner_ids, event_type_id]",
         ]);
 
         assert.containsN(target, ".o_calendar_filter", 2, "should display 2 sections");
@@ -2325,6 +2323,9 @@ QUnit.module("Views", ({ beforeEach }) => {
             "Event Type",
             "should display 'Event Type' filter"
         );
+        assert.hasClass(findEvent(target, 8), "o_calendar_color_4");
+        assert.hasClass(findEvent(target, 9), "o_calendar_color_1");
+        assert.hasClass(findEvent(target, 10), "o_calendar_color_0");
         assert.containsN(
             typeSection,
             ".o_calendar_filter_item",
@@ -2343,9 +2344,303 @@ QUnit.module("Views", ({ beforeEach }) => {
         );
         assert.containsOnce(
             target,
-            `.fc-event[data-event-id="10"].o_calendar_color_1`,
+            `.fc-event[data-event-id="10"].o_calendar_color_0`,
             "The first color is used when none is provided (default int field value being 0)"
         );
+    });
+
+    QUnit.test(`Colors: dynamic filters without color attr (related)`, async (assert) => {
+        serverData.models.event.records = [
+            {
+                id: 8,
+                user_id: 4,
+                partner_id: 1,
+                name: "event 8",
+                start: "2016-12-11 09:00:00",
+                stop: "2016-12-11 10:00:00",
+                allday: false,
+                partner_ids: [1, 2, 3],
+                event_type_id: 3,
+                color_event: 4, // related is not managed by the mock server
+            },
+            {
+                id: 9,
+                user_id: 4,
+                partner_id: 1,
+                name: "event 9",
+                start: "2016-12-11 19:00:00",
+                stop: "2016-12-11 20:00:00",
+                allday: false,
+                partner_ids: [1, 2, 3],
+                event_type_id: 1,
+                color_event: 1, // related is not managed by the mock server
+            },
+            {
+                id: 10,
+                user_id: 4,
+                partner_id: 1,
+                name: "event 10",
+                start: "2016-12-11 12:00:00",
+                stop: "2016-12-11 13:00:00",
+                allday: false,
+                partner_ids: [1, 2, 3],
+                event_type_id: 2,
+                color_event: 2, // related is not managed by the mock server
+            },
+        ];
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" date_stop="stop" color="color_event">
+                    <field name="partner_ids" write_model="filter_partner" write_field="partner_id" />
+                    <field name="event_type_id" filters="1" />
+                </calendar>
+            `,
+            mockRPC(route, { method, model }) {
+                if (method === "search_read" && model === "event_type") {
+                    throw new Error("should not fetch event_type filter colors");
+                }
+            },
+        });
+        await toggleSectionFilter(target, "partner_ids");
+        assert.hasClass(findEvent(target, 8), "o_calendar_color_4");
+        assert.hasClass(findEvent(target, 9), "o_calendar_color_1");
+        assert.hasClass(findEvent(target, 10), "o_calendar_color_2");
+        assert.containsNone(
+            findFilterPanelSection(target, "partner_ids"),
+            "[class*='o_cw_filter_color_']"
+        );
+        assert.containsN(
+            findFilterPanelSection(target, "event_type_id"),
+            "[class*='o_cw_filter_color_']",
+            3
+        );
+    });
+
+    QUnit.test(`Colors: dynamic filters without color attr (direct)`, async (assert) => {
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" date_stop="stop" color="user_id">
+                    <field name="partner_id" avatar_field="image"/>
+                    <field name="user_id" filters="1" invisible="1"/>
+                </calendar>
+            `,
+            mockRPC(route, { method, model }) {
+                if (method === "search_read" && model === "event_type") {
+                    throw new Error("should not fetch event_type filter colors");
+                }
+            },
+        });
+        assert.hasClass(findEvent(target, 1), "o_calendar_color_-1"); // uid = -1 ...
+        assert.hasClass(findEvent(target, 2), "o_calendar_color_-1"); // uid = -1 ...
+        assert.hasClass(findEvent(target, 3), "o_calendar_color_4");
+        assert.hasClass(findEvent(target, 4), "o_calendar_color_-1"); // uid = -1 ...
+        assert.hasClass(findEvent(target, 5), "o_calendar_color_4");
+        assert.containsNone(
+            findFilterPanelSection(target, "partner_id"),
+            "[class*='o_cw_filter_color_']"
+        );
+        assert.containsN(
+            findFilterPanelSection(target, "user_id"),
+            "[class*='o_cw_filter_color_']",
+            2
+        );
+    });
+
+    QUnit.test(`makeFilterUser: color for current user`, async (assert) => {
+        serverData.models["res.partner"] = {
+            fields: {
+                id: { string: "ID", type: "integer" },
+                display_name: { string: "Displayed name", type: "char" },
+                image: { string: "image", type: "integer" },
+            },
+            records: [
+                { id: 1, display_name: "partner 1", image: "AAA" },
+                { id: 2, display_name: "partner 2", image: "BBB" },
+                { id: 3, display_name: "partner 3", image: "CCC" },
+                { id: 4, display_name: "partner 4", image: "DDD" },
+            ],
+        };
+        serverData.models.event.fields.partner_id.relation = "res.partner";
+        serverData.models.event.fields.partner_ids.relation = "res.partner";
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" date_stop="stop" color="partner_ids">
+                    <field name="partner_ids" write_model="filter_partner" write_field="partner_id" />
+                </calendar>
+            `,
+        });
+
+        const partnerSection = findFilterPanelSection(target, "partner_ids");
+        assert.containsN(partnerSection, "[class*='o_cw_filter_color_']", 3);
+        assert.strictEqual(
+            partnerSection.querySelector(".o_cw_filter_label").textContent,
+            "attendees"
+        );
+        assert.containsN(partnerSection, ".o_calendar_filter_item", 4);
+        assert.strictEqual(
+            partnerSection.querySelector(".o_calendar_filter_item[data-value='7']").textContent,
+            "Mitchell"
+        );
+        assert.containsOnce(
+            partnerSection,
+            `.o_calendar_filter_item[data-value="7"].o_cw_filter_color_7`
+        );
+        assert.containsOnce(
+            partnerSection,
+            `.o_calendar_filter_item[data-value="2"].o_cw_filter_color_2`
+        );
+        assert.containsOnce(
+            partnerSection,
+            `.o_calendar_filter_item[data-value="1"].o_cw_filter_color_1`
+        );
+        assert.strictEqual(
+            partnerSection.querySelector(".o_calendar_filter_item[data-value='all']").textContent,
+            "Everybody's calendars"
+        );
+    });
+
+    QUnit.test(`Colors: dynamic filters with same color as events`, async (assert) => {
+        serverData.models.event.records = [
+            {
+                id: 8,
+                user_id: 4,
+                partner_id: 1,
+                name: "event 8",
+                start: "2016-12-11 09:00:00",
+                stop: "2016-12-11 10:00:00",
+                allday: false,
+                partner_ids: [1, 2, 3],
+                event_type_id: 3,
+                color_event: 4, // related is not managed by the mock server
+            },
+            {
+                id: 9,
+                user_id: 4,
+                partner_id: 1,
+                name: "event 9",
+                start: "2016-12-11 19:00:00",
+                stop: "2016-12-11 20:00:00",
+                allday: false,
+                partner_ids: [1, 2, 3],
+                event_type_id: 1,
+                color_event: 1, // related is not managed by the mock server
+            },
+            {
+                id: 10,
+                user_id: 4,
+                partner_id: 1,
+                name: "event 10",
+                start: "2016-12-11 12:00:00",
+                stop: "2016-12-11 13:00:00",
+                allday: false,
+                partner_ids: [1, 2, 3],
+                event_type_id: 2,
+                color_event: 2, // related is not managed by the mock server
+            },
+        ];
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" date_stop="stop" color="color_event">
+                    <field name="partner_ids" write_model="filter_partner" write_field="partner_id" />
+                    <field name="event_type_id" filters="1" color="color_event_type" />
+                </calendar>
+            `,
+            mockRPC(route, { method, model }) {
+                if (method === "search_read" && model === "event_type") {
+                    throw new Error("should not fetch event_type filter colors");
+                }
+            },
+        });
+        await toggleSectionFilter(target, "partner_ids");
+        assert.hasClass(findEvent(target, 8), "o_calendar_color_4");
+        assert.hasClass(findEvent(target, 9), "o_calendar_color_1");
+        assert.hasClass(findEvent(target, 10), "o_calendar_color_2");
+        assert.containsN(
+            findFilterPanelSection(target, "event_type_id"),
+            "[class*='o_cw_filter_color_']",
+            3
+        );
+        assert.hasClass(findFilterPanelFilter(target, "event_type_id", 1), "o_cw_filter_color_1");
+        assert.hasClass(findFilterPanelFilter(target, "event_type_id", 2), "o_cw_filter_color_2");
+        assert.hasClass(findFilterPanelFilter(target, "event_type_id", 3), "o_cw_filter_color_4");
+    });
+
+    QUnit.test(`Colors: dynamic filters with another color source`, async (assert) => {
+        serverData.models.event.records = [
+            {
+                id: 8,
+                user_id: 4,
+                partner_id: 3,
+                name: "event 8",
+                start: "2016-12-11 09:00:00",
+                stop: "2016-12-11 10:00:00",
+                allday: false,
+                partner_ids: [1, 2, 3],
+                event_type_id: 3,
+                color_event: 4, // related is not managed by the mock server
+            },
+            {
+                id: 9,
+                user_id: 4,
+                partner_id: 3,
+                name: "event 9",
+                start: "2016-12-11 19:00:00",
+                stop: "2016-12-11 20:00:00",
+                allday: false,
+                partner_ids: [1, 2, 3],
+                event_type_id: 1,
+                color_event: 1, // related is not managed by the mock server
+            },
+            {
+                id: 10,
+                user_id: 4,
+                partner_id: 3,
+                name: "event 10",
+                start: "2016-12-11 12:00:00",
+                stop: "2016-12-11 13:00:00",
+                allday: false,
+                partner_ids: [1, 2, 3],
+                event_type_id: 2,
+                color_event: 2, // related is not managed by the mock server
+            },
+        ];
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" date_stop="stop" color="partner_id">
+                    <field name="partner_ids" write_model="filter_partner" write_field="partner_id" />
+                    <field name="event_type_id" filters="1" color="color_event_type" />
+                </calendar>
+            `,
+            mockRPC(route, { method, model }) {
+                if (method === "search_read" && model === "event_type") {
+                    assert.step("fetching event_type filter colors");
+                }
+            },
+        });
+        assert.verifySteps([]);
+        await toggleSectionFilter(target, "partner_ids");
+        assert.verifySteps(["fetching event_type filter colors"]);
+        assert.hasClass(findEvent(target, 8), "o_calendar_color_3");
+        assert.hasClass(findEvent(target, 9), "o_calendar_color_3");
+        assert.hasClass(findEvent(target, 10), "o_calendar_color_3");
+        assert.hasClass(findFilterPanelFilter(target, "event_type_id", 1), "o_cw_filter_color_1");
+        assert.hasClass(findFilterPanelFilter(target, "event_type_id", 2), "o_cw_filter_color_2");
+        assert.hasClass(findFilterPanelFilter(target, "event_type_id", 3), "o_cw_filter_color_4");
     });
 
     QUnit.test(`create event with filters`, async (assert) => {
