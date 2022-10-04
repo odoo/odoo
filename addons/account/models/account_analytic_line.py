@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, _
-
+from odoo.exceptions import ValidationError
 
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
@@ -17,10 +17,7 @@ class AccountAnalyticLine(models.Model):
         string='Financial Account',
         ondelete='restrict',
         domain="[('deprecated', '=', False), ('company_id', '=', company_id)]",
-        readonly=True,
-        related='move_line_id.account_id',
-        store=True,
-        compute_sudo=True,
+        compute='_compute_general_account_id', store=True, readonly=False
     )
     journal_id = fields.Many2one(
         'account.journal',
@@ -45,6 +42,17 @@ class AccountAnalyticLine(models.Model):
     code = fields.Char(size=8)
     ref = fields.Char(string='Ref.')
     category = fields.Selection(selection_add=[('invoice', 'Customer Invoice'), ('vendor_bill', 'Vendor Bill')])
+
+    @api.depends('move_line_id')
+    def _compute_general_account_id(self):
+        for line in self:
+            line.general_account_id = line.move_line_id.account_id
+
+    @api.constrains('move_line_id', 'general_account_id')
+    def _check_general_account_id(self):
+        for line in self:
+            if line.move_line_id and line.general_account_id != line.move_line_id.account_id:
+                raise ValidationError(_('The journal item is not linked to the correct financial account'))
 
     @api.depends('move_line_id')
     def _compute_partner_id(self):
