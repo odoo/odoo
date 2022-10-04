@@ -603,6 +603,7 @@ class PaymentProvider(models.Model):
         return {
             'code': 'none',
             'state': 'disabled',
+            'custom_mode': False,
             'is_published': False,
             'redirect_form_view_id': None,
             'inline_form_view_id': None,
