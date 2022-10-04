@@ -452,6 +452,9 @@ export const editorCommands = {
         // before we apply the unlink, otherwise the command is not performed
         // because the content editable root is the link
         const closestEl = closestElement(sel.focusNode, 'a');
+        if(closestEl) {
+            closestEl.removeAttribute('class'); // To prevent firefox from adding unnecessary <span>.
+        }
         if (closestEl && closestEl.getAttribute('contenteditable') === 'true') {
             editor._activateContenteditable();
         }
