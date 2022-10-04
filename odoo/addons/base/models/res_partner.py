@@ -243,6 +243,11 @@ class Partner(models.Model):
     commercial_company_name = fields.Char('Company Name Entity', compute='_compute_commercial_company_name',
                                           store=True)
     company_name = fields.Char('Company Name')
+
+    # show well placed warning when data is modified in "nearly related" fields
+    address_field_changed = fields.Char(compute="_compute_address_field_changed")
+    commercial_field_changed = fields.Char(compute="_compute_commercial_field_changed")
+
     barcode = fields.Char(help="Use a barcode to identify this contact.", copy=False, company_dependent=True)
 
     # hack to allow using plain browse record in qweb views, and used in ir.qweb.field.contact
@@ -297,6 +302,20 @@ class Partner(models.Model):
         names = dict(self.with_context({}).name_get())
         for partner in self:
             partner.display_name = names.get(partner.id)
+
+    @api.depends(lambda p: p._address_fields())
+    def _compute_address_field_changed(self):
+        self.address_field_changed = ''
+        for partner in self.filtered(lambda p: p.type == 'contact' and p.parent_id):
+            modified_fields = [f for f in self._address_fields() if partner[f] != partner.parent_id[f]]
+            partner.address_field_changed = ','.join(modified_fields)
+
+    @api.depends(lambda p: p._commercial_fields())
+    def _compute_commercial_field_changed(self):
+        self.commercial_field_changed = ''
+        for partner in self.filtered(lambda p: p.type == 'contact' and p.parent_id):
+            modified_fields = [f for f in self._commercial_fields() if partner[f] != partner.parent_id[f]]
+            partner.commercial_field_changed = ','.join(modified_fields)
 
     @api.depends('lang')
     def _compute_active_lang_count(self):

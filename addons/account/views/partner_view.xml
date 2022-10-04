@@ -221,10 +221,10 @@
                                 />
                             </group>
                             <group string="Accounting Entries" name="accounting_entries" groups="account.group_account_readonly">
-                                <p colspan="2" class="text-info" attrs="{'invisible': [('parent_id', '=', False), ('is_company', '=', False)]}">Accounting-related changes will also be applied on <a role="button" name="open_commercial_entity" type="object" string="the parent company" class="oe_link"/>.</p>
                                 <field name="currency_id" invisible="1"/>
                                 <field name="property_account_receivable_id"/>
                                 <field name="property_account_payable_id"/>
+                                <p colspan="2" class="text-info" attrs="{'invisible': ['!', '|', ('commercial_field_changed', 'ilike', 'property_account_receivable_id'), ('commercial_field_changed', 'ilike', 'property_account_payable_id')]}"><i class="fa fa-info-circle"/> Accounting-related changes will also be applied on <a role="button" name="open_commercial_entity" type="object" string="the parent company" class="oe_link"/>.</p>
                             </group>
                             <group string="Credit Limits"
                                    name="credit_limits"

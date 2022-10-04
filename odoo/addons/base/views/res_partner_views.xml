@@ -171,6 +171,8 @@
                         <field name="active" invisible="1"/>
                         <field name="company_id" invisible="1"/>
                         <field name="country_code" invisible="1"/>
+                        <field name="address_field_changed" invisible="1"/>
+                        <field name="commercial_field_changed" invisible="1"/>
                         <field name="company_type" widget="radio" options="{'horizontal': true}"/>
                         <h1>
                             <field id="company" class="text-break" name="name" default_focus="1" placeholder="e.g. Lumber Inc" attrs="{'required' : [('type', '=', 'contact'),('is_company', '=', True)], 'invisible': [('is_company','=', False)]}"/>
@@ -196,7 +198,16 @@
                                 <b attrs="{'invisible': [('is_company', '=', False)]}">Address</b>
                             </span>
                             <div class="o_address_format">
-                                <field name="street" placeholder="Street..." class="o_address_street"/>
+                                <div class="o_row">
+                                    <field name="street" placeholder="Street..." class="o_address_street"/>
+                                    <span class="text-info"
+                                          data-tooltip="By saving this change, the address of this contact's parent will also be updated."
+                                          aria-label="By saving this change, the address of this contact's parent will also be updated."
+                                          attrs="{'invisible': [('address_field_changed', '=', '')]}">
+                                        <i class="fa fa-info-circle" />
+                                        Address updated
+                                    </span>
+                                </div>
                                 <field name="street2" placeholder="Street 2..." class="o_address_street"/>
                                 <field name="city" placeholder="City" class="o_address_city"/>
                                 <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
@@ -205,7 +216,17 @@
                                     <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                 </div>
                             </div>
-                            <field name="vat" placeholder="e.g. BE0477472701"/>
+                            <label for="vat"/>
+                            <div class="o_row o_row_readonly">
+                                <field name="vat" placeholder="e.g. BE0477472701" nolabel="1"/>
+                                <span class="text-info"
+                                      data-tooltip="Tax ID changes will be applied on the parent company."
+                                      aria-label="Tax ID changes will be applied on the parent company."
+                                      attrs="{'invisible': ['!', ('commercial_field_changed', 'ilike', 'vat')]}">
+                                    <i class="fa fa-info-circle" />
+                                    Tax ID Updated
+                                </span>
+                            </div>
                         </group>
                         <group>
                             <field name="function" placeholder="e.g. Sales Director"
