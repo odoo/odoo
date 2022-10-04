@@ -62,6 +62,7 @@ export class X2ManyField extends Component {
             getList: () => this.list,
             saveRecord,
             updateRecord,
+            withParentId: this.activeField.widget !== "many2many",
         });
         this._openRecord = (params) => {
             const activeElement = document.activeElement;

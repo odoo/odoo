@@ -561,6 +561,7 @@ export function useOpenX2ManyRecord({
     getList,
     updateRecord,
     saveRecord,
+    withParentId,
 }) {
     const viewService = useService("view");
     const userService = useService("user");
@@ -601,7 +602,7 @@ export function useOpenX2ManyRecord({
                 mode: "edit",
                 viewType: "form",
             };
-            record = await model.addNewRecord(list, recordParams);
+            record = await model.addNewRecord(list, recordParams, withParentId);
         }
 
         addDialog(
@@ -617,15 +618,19 @@ export function useOpenX2ManyRecord({
                         await saveRecord(rec);
                     }
                     if (saveAndNew) {
-                        return model.addNewRecord(list, {
-                            context: list.context,
-                            resModel: resModel,
-                            activeFields: form.activeFields,
-                            fields: { ...form.fields },
-                            views: { form },
-                            mode: "edit",
-                            viewType: "form",
-                        });
+                        return model.addNewRecord(
+                            list,
+                            {
+                                context: list.context,
+                                resModel: resModel,
+                                activeFields: form.activeFields,
+                                fields: { ...form.fields },
+                                views: { form },
+                                mode: "edit",
+                                viewType: "form",
+                            },
+                            withParentId
+                        );
                     }
                 },
                 title,

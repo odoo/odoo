@@ -1379,14 +1379,16 @@ export class RelationalModel extends Model {
 
         return newRecord;
     }
-    async addNewRecord(list, params) {
+    async addNewRecord(list, params, withParentId = true) {
         const parentId = this.__bm__.localData[list.__bm_handle__].parentID;
         const fieldName = list.__fieldName__;
         const context = this.__bm__._getContext(this.__bm__.localData[parentId], { fieldName });
         params.context = makeContext([context, params.context]);
         params.__syncParent = () => list.__syncData();
         const newRecord = this.createDataPoint("record", params);
-        newRecord.__bm_load_params__.parentID = list.__bm_handle__;
+        if (withParentId) {
+            newRecord.__bm_load_params__.parentID = list.__bm_handle__;
+        }
         await newRecord.load();
         return newRecord;
     }
