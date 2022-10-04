@@ -580,7 +580,7 @@
                         </field>
                         <group name="note_group" col="6" class="mt-2 mt-md-0">
                             <group colspan="4">
-                                <field name="note" nolabel="1" placeholder="Terms and conditions..."/>
+                                <field  colspan="2" name="note" nolabel="1" placeholder="Terms and conditions..."/>
                             </group>
                             <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
                                 <field name="tax_totals" widget="account-tax-totals-field" nolabel="1" colspan="2" readonly="1"/>
@@ -629,7 +629,7 @@
                                 <label for="commitment_date" string="Delivery Date"/>
                                 <div name="commitment_date_div" class="o_row">
                                     <field name="commitment_date"/>
-                                    <span name="expected_date_span" class="text-muted">Expected: <field name="expected_date" widget="date"/></span>
+                                    <span name="expected_date_span" class="text-muted">Expected: <field name="expected_date" class="oe_inline" widget="date"/></span>
                                 </div>
                             </group>
                             <group string="Tracking" name="sale_reporting">
