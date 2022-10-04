@@ -388,12 +388,13 @@ export class ListRenderer extends Component {
     focus(el) {
         el.focus();
         if (["INPUT", "TEXTAREA"].includes(el.tagName)) {
-            if (el.selectionStart) {
-                //bad
+            if (el.selectionStart === null) {
+                return;
+            }
+            if (el.selectionStart === el.selectionEnd) {
                 el.selectionStart = 0;
                 el.selectionEnd = el.value.length;
             }
-            el.select();
         }
     }
 
