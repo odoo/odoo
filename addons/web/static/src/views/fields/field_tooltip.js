@@ -1,16 +1,9 @@
 /** @odoo-module **/
 
-import fieldRegistry from "web.field_registry";
-
 export function getTooltipInfo(params) {
     let widgetDescription = undefined;
     if (params.fieldInfo.widget) {
-        if (params.fieldInfo.FieldComponent.name === "LegacyField") {
-            const widget = fieldRegistry.get(params.fieldInfo.widget);
-            widgetDescription = widget.prototype.description;
-        } else {
-            widgetDescription = params.fieldInfo.FieldComponent.displayName;
-        }
+        widgetDescription = params.fieldInfo.FieldComponent.displayName;
     }
 
     const info = {
