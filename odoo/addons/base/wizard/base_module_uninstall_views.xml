@@ -44,14 +44,12 @@
                         </kanban>
                     </field>
                     <h3>Documents to Delete</h3>
-                    <group>
-                        <field name="model_ids" string="Models" nolabel="1">
-                            <tree string="Models">
-                                <field name="name" string="Document"/>
-                                <field name="count"/>
-                            </tree>
-                        </field>
-                    </group>
+                    <field name="model_ids" string="Models" nolabel="1">
+                        <tree string="Models">
+                            <field name="name" string="Document"/>
+                            <field name="count"/>
+                        </tree>
+                    </field>
                     <footer>
                         <button string="Uninstall" class="btn-secondary" type="object" name="action_uninstall" data-hotkey="q"/>
                         <button string="Discard" class="btn-primary" special="cancel" data-hotkey="z"/>
