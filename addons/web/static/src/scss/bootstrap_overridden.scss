@@ -108,9 +108,13 @@ $component-active-bg: $gray-200 !default;
 
 $caret-width: 4px !default;
 
-// Fonts
+// Typography
 //
 // Font, line-height, and color for body text, headings, and more.
+
+$font-weight-normal: 400 !default;
+$font-weight-bold: 500 !default;
+$font-weight-bolder: 700 !default;
 
 $font-family-sans-serif: $o-font-family-sans-serif !default;
 
@@ -124,7 +128,7 @@ $h4-font-size: $font-size-base * 1.2 !default;
 $h5-font-size: $font-size-base * 1.1 !default;
 
 $headings-font-family: $o-headings-font-family !default;
-$headings-font-weight: bold !default;
+$headings-font-weight: $font-weight-bold !default;
 $headings-color: $o-main-headings-color !default;
 
 // Tables
@@ -147,6 +151,8 @@ $table-th-font-weight: $headings-font-weight !default;
 
 // Buttons
 //
+
+$btn-font-weight: $font-weight-bold !default;
 $btn-border-radius-lg: $border-radius !default;
 
 // Dropdowns
