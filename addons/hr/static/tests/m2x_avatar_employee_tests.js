@@ -55,9 +55,9 @@ QUnit.module('hr', {}, function () {
             views: [[false, 'list']],
         });
 
-        assert.strictEqual(document.querySelector('.o_data_cell span:not(.o_m2o_avatar)').innerText, 'Mario');
-        assert.strictEqual(document.querySelectorAll('.o_data_cell span:not(.o_m2o_avatar)')[1].innerText, 'Luigi');
-        assert.strictEqual(document.querySelectorAll('.o_data_cell span:not(.o_m2o_avatar)')[2].innerText, 'Mario');
+        assert.strictEqual(document.querySelector('.o_data_cell span:not(.o_m2o_avatar) span').innerText, 'Mario');
+        assert.strictEqual(document.querySelectorAll('.o_data_cell span:not(.o_m2o_avatar) span')[1].innerText, 'Luigi');
+        assert.strictEqual(document.querySelectorAll('.o_data_cell span:not(.o_m2o_avatar) span')[2].innerText, 'Mario');
 
         // click on first employee
         await afterNextRender(() =>
