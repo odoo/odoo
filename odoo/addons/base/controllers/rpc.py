@@ -1,18 +1,14 @@
 import re
 import sys
 import traceback
-import xmlrpc.client
-from datetime import date, datetime
 
-from markupsafe import Markup
 from werkzeug.wrappers import Response
+import xmlrpc.client
 
 import odoo
 from odoo.http import Controller, request, route
-from odoo.fields import Date, Datetime, Command
 from odoo.service import dispatch_rpc
-from odoo.tools import lazy, ustr
-from odoo.tools.misc import frozendict
+
 
 # ==========================================================
 # XML-RPC helpers
@@ -69,53 +65,6 @@ def xmlrpc_handle_exception_string(e):
 
     return xmlrpc.client.dumps(fault, allow_none=None, encoding=None)
 
-
-class OdooMarshaller(xmlrpc.client.Marshaller):
-    dispatch = dict(xmlrpc.client.Marshaller.dispatch)
-
-    def dump_frozen_dict(self, value, write):
-        value = dict(value)
-        self.dump_struct(value, write)
-
-    # By default, in xmlrpc, bytes are converted to xmlrpc.client.Binary object.
-    # Historically, odoo is sending binary as base64 string.
-    # In python 3, base64.b64{de,en}code() methods now works on bytes.
-    # Convert them to str to have a consistent behavior between python 2 and python 3.
-    def dump_bytes(self, value, write):
-        # XML 1.0 disallows control characters, check for them immediately to
-        # see if this is a "real" binary (rather than base64 or somesuch) and
-        # blank it out, otherwise they get embedded in the output and break
-        # client-side parsers
-        if XML_INVALID.search(value):
-            self.dump_unicode('', write)
-        else:
-            self.dump_unicode(ustr(value), write)
-
-    def dump_datetime(self, value, write):
-        # override to marshall as a string for backwards compatibility
-        value = Datetime.to_string(value)
-        self.dump_unicode(value, write)
-
-    # convert date objects to strings in iso8061 format.
-    def dump_date(self, value, write):
-        value = Date.to_string(value)
-        self.dump_unicode(value, write)
-
-    def dump_lazy(self, value, write):
-        v = value._value
-        return self.dispatch[type(v)](self, v, write)
-
-    dispatch[frozendict] = dump_frozen_dict
-    dispatch[bytes] = dump_bytes
-    dispatch[datetime] = dump_datetime
-    dispatch[date] = dump_date
-    dispatch[lazy] = dump_lazy
-    dispatch[Command] = dispatch[int]
-    dispatch[Markup] = lambda self, value, write: self.dispatch[str](self, str(value), write)
-
-
-# monkey-patch xmlrpc.client's marshaller
-xmlrpc.client.Marshaller = OdooMarshaller
 
 # ==========================================================
 # RPC Controller
