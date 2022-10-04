@@ -75,7 +75,7 @@ class IrModuleModule(models.Model):
 
                     -> We want to upgrade every website using this theme.
         """
-        if request and request.context.get('apply_new_theme'):
+        if request and request.db and request.context.get('apply_new_theme'):
             self = self.with_context(apply_new_theme=True)
 
         for module in self:
