@@ -732,11 +732,20 @@ class SaleOrder(models.Model):
             'context': ctx,
         }
 
+<<<<<<< HEAD
     def _find_mail_template(self):
         """ Get the appropriate mail template for the current sales order based on its state.
 
         If the SO is confirmed, we return the mail template for the sale confirmation.
         Otherwise, we return the quotation email template.
+||||||| parent of c432299b084a... temp
+    def _find_mail_template(self, force_confirmation_template=False):
+        template_id = False
+=======
+    def _find_mail_template(self, force_confirmation_template=False):
+        self.ensure_one()
+        template_id = False
+>>>>>>> c432299b084a... temp
 
         :return: The correct mail template based on the current status
         :rtype: record of `mail.template` or `None` if not found
@@ -811,6 +820,7 @@ class SaleOrder(models.Model):
         if self.env.su:
             # sending mail in sudo was meant for it being sent from superuser
             self = self.with_user(SUPERUSER_ID)
+<<<<<<< HEAD
 
         for sale_order in self:
             mail_template = sale_order._get_confirmation_template()
@@ -821,6 +831,17 @@ class SaleOrder(models.Model):
                 composition_mode='comment',
                 email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
             )
+||||||| parent of c432299b084a... temp
+        template_id = self._find_mail_template(force_confirmation_template=True)
+        if template_id:
+            for order in self:
+                order.with_context(force_send=True).message_post_with_template(template_id, composition_mode='comment', email_layout_xmlid="mail.mail_notification_paynow")
+=======
+        for order in self:
+            template_id = order._find_mail_template(force_confirmation_template=True)
+            if template_id:
+                order.with_context(force_send=True).message_post_with_template(template_id, composition_mode='comment', email_layout_xmlid="mail.mail_notification_paynow")
+>>>>>>> c432299b084a... temp
 
     def action_done(self):
         for order in self:
