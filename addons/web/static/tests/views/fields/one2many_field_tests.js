@@ -9018,6 +9018,33 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["do_something"]);
     });
 
+    QUnit.test("o2m button with parent in context", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            resId: 1,
+            arch: `
+                <form>
+                    <field name="turtles">
+                        <tree>
+                            <field name="display_name"/>
+                            <button string="Action Button" name="test_button" type="object" context="{'parent_name': parent.display_name}"/>
+                        </tree>
+                    </field>
+                </form>`,
+            mockRPC(route, args) {
+                if (args.method === "test_button") {
+                    assert.step("test_button");
+                    assert.strictEqual(args.kwargs.context.parent_name, 'first record');
+                    return true;
+                }
+            },
+        });
+        await click(target, 'button[name="test_button"]');
+        assert.verifySteps(["test_button"]);
+    });
+
     QUnit.test("o2m add a line custom control create align with handle", async function (assert) {
         await makeView({
             type: "form",
