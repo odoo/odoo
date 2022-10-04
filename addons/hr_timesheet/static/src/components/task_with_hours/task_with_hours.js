@@ -6,14 +6,6 @@ import { Many2OneField } from "@web/views/fields/many2one/many2one_field";
 
 class TaskWithHours extends Many2OneField {
 
-    setup() {
-        super.setup();
-        const activeActions = this.state.activeActions;
-        activeActions.canCreate = activeActions.canCreate && this.canCreate;
-        activeActions.canQuickCreate = activeActions.canQuickCreate || this.canCreate;
-        activeActions.canCreateEdit = activeActions.canCreate;
-    }
-
     get canCreate() {
         return Boolean(this.context.default_project_id);
     }
@@ -42,6 +34,16 @@ class TaskWithHours extends Many2OneField {
             props.quickCreate = null;
         }
         return props;
+    }
+
+    /**
+     * @override
+     */
+    computeActiveActions(props) {
+        super.computeActiveActions(props);
+        const activeActions = this.state.activeActions;
+        activeActions.create = activeActions.create && this.canCreate;
+        activeActions.createEdit = activeActions.create;
     }
 
 }
