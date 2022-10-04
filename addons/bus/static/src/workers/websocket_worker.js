@@ -198,7 +198,9 @@ export class WebsocketWorker {
         this.lastNotificationId = lastNotificationId;
         this.debugModeByClient[client] = debug;
         this.isDebug = Object.values(this.debugModeByClient).some(debugValue => debugValue !== '');
-        this._updateChannels();
+        // update the channels whatever happens in order to ensure the
+        // current websocket session is up to date.
+        this._updateChannels({ force: true });
     }
 
     /**

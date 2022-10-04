@@ -246,7 +246,7 @@ QUnit.module('Bus', {
     });
 
     QUnit.test('channel management from multiple tabs', async function (assert) {
-        assert.expect(4);
+        assert.expect(5);
 
         patchWebsocketWorkerWithCleanup({
             _sendToServer({ event_name, data }) {
@@ -273,6 +273,7 @@ QUnit.module('Bus', {
         await nextTick();
 
         assert.verifySteps([
+            'subscribe - []',
             'subscribe - []',
             'subscribe - [channel1]',
             'subscribe - [channel1,channel2]',
