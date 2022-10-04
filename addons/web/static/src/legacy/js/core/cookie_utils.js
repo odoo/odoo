@@ -39,15 +39,13 @@ const utils = {
      * @param {string} type the type of the cookies ('required' as default value)
      */
     setCookie(name, value, ttl = 31536000, type = 'required') {
-        ttl = ttl || 24 * 60 * 60 * 365;
-        if (utils.isAllowedCookie(type)) {
-            document.cookie = [
-                `${name}=${value}`,
-                'path=/',
-                `max-age=${ttl}`,
-                `expires=${new Date(new Date().getTime() + ttl * 1000).toGMTString()}`,
-            ].join(';');
-        }
+        ttl = utils.isAllowedCookie(type) ? ttl || 24 * 60 * 60 * 365 : -1;
+        document.cookie = [
+            `${name}=${value}`,
+            'path=/',
+            `max-age=${ttl}`,
+            `expires=${new Date(new Date().getTime() + ttl * 1000).toGMTString()}`,
+        ].join(';');
     },
     /**
      * Deletes a cookie.
