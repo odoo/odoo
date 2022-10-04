@@ -60,5 +60,15 @@ Widget.template = xml/*xml*/ `
 Widget.parseWidgetNode = function (node) {
     const name = node.getAttribute("name");
     const WidgetComponent = findWidgetComponent(name);
-    return { WidgetComponent };
+    const attrs = Object.fromEntries(
+        [...node.attributes].map(({ name, value }) => {
+            return [name, name === "modifiers" ? JSON.parse(value || "{}") : value];
+        })
+    );
+    return {
+        options: evaluateExpr(node.getAttribute("options") || "{}"),
+        name,
+        rawAttrs: attrs,
+        WidgetComponent,
+    };
 };

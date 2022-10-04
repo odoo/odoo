@@ -17,6 +17,7 @@ import { getTooltipInfo } from "@web/views/fields/field_tooltip";
 import { getClassNameFromDecoration } from "@web/views/utils";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useBounceButton } from "@web/views/view_hook";
+import { Widget } from "@web/views/widgets/widget";
 
 const {
     Component,
@@ -1747,7 +1748,7 @@ ListRenderer.rowsTemplate = "web.ListRenderer.Rows";
 ListRenderer.recordRowTemplate = "web.ListRenderer.RecordRow";
 ListRenderer.groupRowTemplate = "web.ListRenderer.GroupRow";
 
-ListRenderer.components = { DropdownItem, Field, ViewButton, CheckBox, Dropdown, Pager };
+ListRenderer.components = { DropdownItem, Field, ViewButton, CheckBox, Dropdown, Pager, Widget };
 ListRenderer.props = [
     "activeActions?",
     "list",
