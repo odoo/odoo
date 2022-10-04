@@ -51,18 +51,10 @@ export class Many2OneField extends Component {
             this.autocompleteContainerRef.el.querySelector("input").focus();
         };
 
-        const computeActiveActions = (props) => {
-            this.state.activeActions = {
-                create: props.canCreate,
-                createEdit: props.canCreateEdit,
-                write: props.canWrite,
-            };
-        };
-
         this.state = useState({
             isFloating: !this.props.value,
         });
-        computeActiveActions(this.props);
+        this.computeActiveActions(this.props);
 
         this.openMany2X = useOpenMany2XRecord({
             resModel: this.relation,
@@ -102,7 +94,7 @@ export class Many2OneField extends Component {
 
         onWillUpdateProps(async (nextProps) => {
             this.state.isFloating = !nextProps.value;
-            computeActiveActions(nextProps);
+            this.computeActiveActions(nextProps);
         });
     }
 
@@ -149,6 +141,13 @@ export class Many2OneField extends Component {
             nameCreateField: this.props.nameCreateField,
             setInputFloats: this.setFloating,
             autocomplete_container: this.autocompleteContainerRef,
+        };
+    }
+    computeActiveActions(props) {
+        this.state.activeActions = {
+            create: props.canCreate,
+            createEdit: props.canCreateEdit,
+            write: props.canWrite,
         };
     }
     getDomain() {
