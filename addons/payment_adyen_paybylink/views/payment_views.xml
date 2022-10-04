@@ -19,6 +19,16 @@
                 </xpath>
                 <xpath expr="//field[@name='adyen_skin_code']" position='replace'></xpath>
                 <xpath expr="//field[@name='adyen_skin_hmac_key']" position='replace'></xpath>
+                <notebook attrs="{'invisible': ['&amp;', ('module_id', '!=', False), ('module_state', '!=', 'installed')]}" position="inside">
+                    <page string="Reporting">
+                        <group>
+                            <field name="adyen_report_user"/>
+                            <field name="adyen_report_password"
+                                   password="True"/>
+                        </group>
+
+                    </page>
+                </notebook>
             </field>
         </record>
 

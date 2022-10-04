@@ -37,7 +37,7 @@ class AdyenPayByLinkController(AdyenController):
         )
         try:
             # Check the integrity of the notification
-            tx_sudo = request.env['payment.transaction'].sudo().\
+            tx_sudo = request.env['payment.transaction'].sudo(). \
                 _adyen_form_get_tx_from_data(post)
             self._verify_notification_signature(post, tx_sudo)
 
@@ -50,6 +50,9 @@ class AdyenPayByLinkController(AdyenController):
                 # Handle the notification data
                 request.env['payment.transaction'].sudo().form_feedback(
                     post, 'adyen')
+            elif event_code == 'REPORT_AVAILABLE' and post['success'] == 'true':
+                tx_sudo.process_report(post)
+
         # Acknowledge the notification to avoid getting spammed
         except ValidationError:
             _logger.exception(
@@ -101,6 +104,7 @@ class AdyenPayByLinkController(AdyenController):
         :return: The computed signature
         :rtype: str
         """
+
         def _flatten_dict(_value, _path_base='', _separator='.'):
             """ Recursively generate a flat representation of a dict.
 

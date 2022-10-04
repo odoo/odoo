@@ -3,6 +3,7 @@
 import logging
 import re
 import requests
+import subprocess
 
 from werkzeug import urls
 
@@ -11,8 +12,21 @@ from odoo.exceptions import ValidationError
 
 from odoo.addons.payment_adyen_paybylink.const import API_ENDPOINT_VERSIONS
 
-
 _logger = logging.getLogger(__name__)
+
+
+def runcmd(cmd, verbose=False, *args, **kwargs):
+    process = subprocess.Popen(
+        cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        shell=True
+    )
+    std_out, std_err = process.communicate()
+    if verbose:
+        print(std_out.strip(), std_err)
+    pass
 
 
 class PaymentAcquirer(models.Model):
@@ -40,6 +54,8 @@ class PaymentAcquirer(models.Model):
     # the 'NOT NULL' constraint on those fields.
     adyen_skin_code = fields.Char(default="Do not use this field")
     adyen_skin_hmac_key = fields.Char(default="Do not use this field")
+    adyen_report_user = fields.Char(string="Report User")
+    adyen_report_password = fields.Char(string="Reporting Password")
 
     @api.model_create_multi
     def create(self, values_list):
@@ -101,6 +117,25 @@ class PaymentAcquirer(models.Model):
             return self._adyen_get_paybylink(
                 form_action_url_values['adyen_paybylink_data'])
         return False
+
+    def process_report(self, post):
+        """ Handle the report available webhook
+        """
+        acquirer = self.search([("adyen_merchant_account", "=", post['merchantAccountCode'])])
+        if acquirer:
+            try:
+                cmd = f"$ wget -O temp.csv\
+                                --http-user='{acquirer.adyen_report_user}@Company.VANMOOF' \
+                                --http-password='{acquirer.adyen_report_password}' \
+                                --quiet --no-check-certificate \
+                                {post['reason']}"
+                runcmd(cmd, verbose=True)
+            except Exception as e:
+                message = f" Download Failed for Ayden Report notification {post} \n " \
+                          f"with the exception: {str(e)}."
+                _logger.error(message)
+        else:
+            _logger.error("No Merchant Account Was Found.")
 
     def _adyen_get_paybylink(self, data):
         paybylink_response = self._adyen_make_request(
@@ -173,3 +208,4 @@ class PaymentAcquirer(models.Model):
             raise ValidationError(
                 "Adyen: " + _("The communication with the API failed."))
         return response.json()
+
