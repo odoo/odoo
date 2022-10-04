@@ -20,9 +20,6 @@ import {
     triggerEvent,
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
-import { FieldOne2Many } from "web.relational_fields";
-import { FieldChar as LegacyFieldChar } from "web.basic_fields";
-import * as legacyFieldRegistry from "web.field_registry";
 import { toggleActionMenu, toggleGroupByMenu, toggleMenuItem } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
@@ -39,8 +36,6 @@ import { localization } from "@web/core/l10n/localization";
 import { SIZES } from "@web/core/ui/ui_service";
 import { errorService } from "@web/core/errors/error_service";
 import { RPCError } from "@web/core/network/rpc_service";
-
-import * as legacyCore from "web.core";
 
 const fieldRegistry = registry.category("fields");
 const serviceRegistry = registry.category("services");
@@ -8601,66 +8596,6 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(target.querySelector(".modal-title").textContent, "Translate: foo");
     });
 
-    QUnit.test("legacy field support translation dialog", async (assert) => {
-        serverData.models.partner.fields.foo.translate = true;
-
-        patchWithCleanup(legacyCore._t.database, {
-            multi_lang: true,
-            parameters: {
-                code: "CUST",
-            },
-        });
-
-        const myChar = LegacyFieldChar.extend({
-            async _render() {
-                // DIY because the compatibility layer doesn't support
-                // legacy widget having multiple nodes in their this.$el.
-                await this._super(...arguments);
-                const div = document.createElement("div");
-                const $div = $(div).append(this.$el);
-                this.setElement($div);
-            },
-        });
-
-        legacyFieldRegistry.add("legacy_char", myChar);
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            resId: 1,
-            arch: `
-                <form>
-                    <field name="foo" widget="legacy_char"/>
-                </form>`,
-            mockRPC(route, args) {
-                assert.step(args.method);
-                if (route === "/web/dataset/call_button") {
-                    return { context: {}, domain: [] };
-                }
-                if (args.method === "get_installed") {
-                    return [
-                        ["CUST", "custom lang"],
-                        ["CUST2", "second custom"],
-                    ];
-                }
-                if (route === "/web/dataset/call_kw/partner/get_field_translations") {
-                    return Promise.resolve([
-                        [
-                            { lang: "CUST", source: "yop", value: "yop" },
-                            { lang: "CUST2", source: "yop", value: "valeur français" },
-                        ],
-                        { translation_type: "char", translation_show_source: false },
-                    ]);
-                }
-            },
-        });
-        assert.verifySteps(["get_views", "read"]);
-        await click(target, ".o_field_legacy_char .o_field_translate.btn-link");
-        assert.verifySteps(["get_installed", "get_field_translations"]);
-        assert.containsOnce(target, ".modal");
-        assert.strictEqual(target.querySelector(".modal-title").textContent, "Translate: foo");
-    });
-
     QUnit.test("translation alerts are preserved on pager change", async function (assert) {
         serverData.models.partner.fields.foo.translate = true;
 
@@ -11967,133 +11902,6 @@ QUnit.module("Views", (hooks) => {
             assert.verifySteps(["get_views", "read"]);
         }
     );
-
-    QUnit.test("legacy one2many view mode", async function (assert) {
-        serverData.models.partner.records[0].p = [1];
-        legacyFieldRegistry.add("legacy_one2many", FieldOne2Many);
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            resId: 1,
-            serverData,
-            arch: `
-                    <form>
-                        <field name="p" mode="tree,kanban" widget="legacy_one2many">
-                            <form><field name="display_name"/></form>
-                            <tree><field name="foo"/></tree>
-                            <kanban>
-                                <field name="display_name"/>
-                                <templates>
-                                    <t t-name="kanban-box">
-                                        <div><t t-esc="record.display_name"/></div>
-                                    </t>
-                                </templates>
-                            </kanban>
-                        </field>
-                    </form>`,
-        });
-        assert.containsOnce(target, ".o_field_legacy_one2many .o_legacy_list_view");
-    });
-
-    QUnit.test("legacy one2many view mode in small env", async function (assert) {
-        serverData.models.partner.records[0].p = [1];
-        legacyFieldRegistry.add("legacy_one2many", FieldOne2Many);
-        const fakeUIService = {
-            start(env) {
-                const ui = { bus: new EventBus() };
-                Object.defineProperty(env, "isSmall", {
-                    get() {
-                        return true;
-                    },
-                });
-
-                return ui;
-            },
-        };
-        registry.category("services").add("ui", fakeUIService);
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            resId: 1,
-            serverData,
-            arch: `
-                    <form>
-                        <field name="p" mode="tree,kanban" widget="legacy_one2many">
-                            <form><field name="display_name"/></form>
-                            <tree><field name="foo"/></tree>
-                            <kanban>
-                                <field name="display_name"/>
-                                <templates>
-                                    <t t-name="kanban-box">
-                                        <div><t t-esc="record.display_name"/></div>
-                                    </t>
-                                </templates>
-                            </kanban>
-                        </field>
-                    </form>`,
-        });
-        assert.containsOnce(target, ".o_field_legacy_one2many .o_legacy_kanban_view");
-    });
-
-    QUnit.test("legacy one2many view mode in small env (2)", async function (assert) {
-        serverData.models.partner.records[0].p = [1];
-        legacyFieldRegistry.add("legacy_one2many", FieldOne2Many);
-        const fakeUIService = {
-            start(env) {
-                const ui = { bus: new EventBus() };
-                Object.defineProperty(env, "isSmall", {
-                    get() {
-                        return true;
-                    },
-                });
-
-                return ui;
-            },
-        };
-        registry.category("services").add("ui", fakeUIService);
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            resId: 1,
-            serverData,
-            arch: `
-                    <form>
-                        <field name="p" widget="legacy_one2many">
-                            <form><field name="display_name"/></form>
-                            <tree><field name="foo"/></tree>
-                            <kanban>
-                                <field name="display_name"/>
-                                <templates>
-                                    <t t-name="kanban-box">
-                                        <div><t t-esc="record.display_name"/></div>
-                                    </t>
-                                </templates>
-                            </kanban>
-                        </field>
-                    </form>`,
-        });
-        assert.containsOnce(target, ".o_field_legacy_one2many .o_legacy_kanban_view");
-    });
-
-    QUnit.test("legacy one2many with no inlive view", async function (assert) {
-        serverData.models.partner.records[0].p = [1];
-        serverData.views = {
-            "partner,false,list": `<tree><field name="foo"/></tree>`,
-        };
-        legacyFieldRegistry.add("legacy_one2many", FieldOne2Many);
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            resId: 1,
-            serverData,
-            arch: `
-                    <form>
-                        <field name="p" mode="tree" class="o_my_legacy_class" widget="legacy_one2many"/>
-                    </form>`,
-        });
-        assert.containsOnce(target, ".o_field_legacy_one2many .o_legacy_list_view");
-        assert.containsOnce(target, ".o_field_widget.o_legacy_field_widget.o_my_legacy_class");
-    });
 
     QUnit.test("Action Button clicked with failing action", async function (assert) {
         const handler = (ev) => {
