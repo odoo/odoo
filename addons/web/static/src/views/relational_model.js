@@ -2216,6 +2216,11 @@ export class DynamicGroupList extends DynamicList {
         return false;
     }
 
+    hasAggregate(fieldName) {
+        const group = this.groups[0];
+        return group && fieldName in group.aggregates;
+    }
+
     async load(params = {}) {
         this.limit = params.limit === undefined ? this.limit : params.limit;
         this.offset = params.offset === undefined ? this.offset : params.offset;
@@ -2290,6 +2295,20 @@ export class DynamicGroupList extends DynamicList {
         this.model.notify();
     }
 
+    async sortBy(fieldName) {
+        if (!this.groups.length) {
+            return;
+        }
+        const everyGroupIsClosed = this.groups.every((group) => group.isFolded);
+        if (
+            everyGroupIsClosed &&
+            !(this.groupBy.includes(fieldName) || this.hasAggregate(fieldName))
+        ) {
+            return;
+        }
+        super.sortBy(fieldName);
+    }
+
     // ------------------------------------------------------------------------
     // Protected
     // ------------------------------------------------------------------------
@@ -2361,6 +2380,7 @@ export class DynamicGroupList extends DynamicList {
                 orderby,
                 lazy: true,
                 expand: this.expand,
+                expand_orderby: this.expand ? orderByToString(this.orderBy) : null,
                 offset: this.offset,
                 limit: this.limit,
                 context: this.context,

@@ -3082,6 +3082,33 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test(
+        "groups can't be sorted on aggregates if there is no record",
+        async function (assert) {
+            serverData.models.foo.records = [];
+
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                groupBy: ["foo"],
+                arch: `
+                <tree editable="bottom">
+                    <field name="foo"/>
+                    <field name="int_field" sum="Sum"/>
+                </tree>`,
+                mockRPC(route, args) {
+                    if (args.method === "web_read_group") {
+                        assert.step(args.kwargs.orderby || "default order");
+                    }
+                },
+            });
+
+            await click(target, ".o_column_sortable");
+            assert.verifySteps(["default order"]);
+        }
+    );
+
     QUnit.test("groups can be sorted on aggregates", async function (assert) {
         await makeView({
             type: "list",
@@ -3134,48 +3161,159 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["default order", "int_field ASC", "int_field DESC"]);
     });
 
-    QUnit.test("groups cannot be sorted on non-aggregable fields", async function (assert) {
-        serverData.models.foo.fields.sort_field = {
-            string: "sortable_field",
-            type: "sting",
-            sortable: true,
-            default: "value",
-        };
-        _.each(serverData.models.records, function (elem) {
-            elem.sort_field = "value" + elem.id;
-        });
-        serverData.models.foo.fields.foo.sortable = true;
-        await makeView({
-            type: "list",
-            resModel: "foo",
-            serverData,
-            groupBy: ["foo"],
-            arch: `
+    QUnit.test(
+        "groups cannot be sorted on non-aggregable fields if every group is folded",
+        async function (assert) {
+            serverData.models.foo.fields.sort_field = {
+                string: "sortable_field",
+                type: "sting",
+                sortable: true,
+                default: "value",
+            };
+            serverData.models.foo.records.forEach((elem) => {
+                elem.sort_field = "value" + elem.id;
+            });
+            serverData.models.foo.fields.foo.sortable = true;
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                groupBy: ["foo"],
+                arch: `
                 <tree editable="bottom">
                     <field name="foo"/>
                     <field name="int_field"/>
                     <field name="sort_field"/>
                 </tree>`,
-            mockRPC(route, args) {
-                if (args.method === "web_read_group") {
-                    assert.step(args.kwargs.orderby || "default order");
-                }
-            },
-        });
-        assert.verifySteps(["default order"]);
-        //we cannot sort by sort_field since it doesn't have a group_operator
-        await click(target.querySelectorAll(".o_column_sortable")[2]);
-        assert.verifySteps([]);
-        //we can sort by int_field since it has a group_operator
-        await click(target.querySelectorAll(".o_column_sortable")[1]);
-        assert.verifySteps(["int_field ASC"]);
-        //we keep previous order
-        await click(target.querySelectorAll(".o_column_sortable")[2]);
-        assert.verifySteps([]);
-        //we can sort on foo since we are groupped by foo + previous order
-        await click(target.querySelectorAll(".o_column_sortable")[0]);
-        assert.verifySteps(["foo ASC, int_field ASC"]);
-    });
+                mockRPC(route, args) {
+                    if (args.method === "web_read_group") {
+                        assert.step(args.kwargs.orderby || "default order");
+                    }
+                },
+            });
+            assert.verifySteps(["default order"]);
+
+            // we cannot sort by sort_field since it doesn't have a group_operator
+            await click(target.querySelector(".o_column_sortable[data-name='sort_field']"));
+            assert.verifySteps([]);
+
+            // we can sort by int_field since it has a group_operator
+            await click(target.querySelector(".o_column_sortable[data-name='int_field']"));
+            assert.verifySteps(["int_field ASC"]);
+
+            // we keep previous order
+            await click(target.querySelector(".o_column_sortable[data-name='sort_field']"));
+            assert.verifySteps([]);
+
+            // we can sort on foo since we are groupped by foo + previous order
+            await click(target.querySelector(".o_column_sortable[data-name='foo']"));
+            assert.verifySteps(["foo ASC, int_field ASC"]);
+        }
+    );
+
+    QUnit.test(
+        "groups can be sorted on non-aggregable fields if a group isn't folded",
+        async function (assert) {
+            serverData.models.foo.fields.foo.sortable = true;
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                groupBy: ["bar"],
+                arch: `
+                <tree editable="bottom">
+                    <field name="foo"/>
+                </tree>`,
+                mockRPC(route, args) {
+                    const { method } = args;
+                    if (method === "web_read_group") {
+                        assert.step(
+                            `web_read_group.orderby: ${args.kwargs.orderby || "default order"}`
+                        );
+                        assert.step(
+                            `web_read_group.expand_orderby: ${
+                                args.kwargs.expand_orderby || "default order"
+                            }`
+                        );
+                    }
+                    if (method === "web_search_read") {
+                        assert.step(
+                            `web_search_read.order: ${args.kwargs.order || "default order"}`
+                        );
+                    }
+                },
+            });
+            await click(target.querySelectorAll(".o_group_header")[1]);
+            assert.deepEqual(
+                getNodesTextContent(target.querySelectorAll(".o_data_cell[name='foo']")),
+                ["yop", "blip", "gnap"]
+            );
+            assert.verifySteps([
+                "web_read_group.orderby: default order",
+                "web_read_group.expand_orderby: default order",
+                "web_search_read.order: default order",
+            ]);
+
+            await click(target.querySelector(".o_column_sortable[data-name='foo']"));
+            assert.deepEqual(
+                getNodesTextContent(target.querySelectorAll(".o_data_cell[name='foo']")),
+                ["blip", "gnap", "yop"]
+            );
+            assert.verifySteps([
+                "web_read_group.orderby: default order",
+                "web_read_group.expand_orderby: default order",
+                "web_search_read.order: foo ASC",
+            ]);
+        }
+    );
+
+    QUnit.test(
+        "groups can be sorted on non-aggregable fields if a group isn't folded with expand='1'",
+        async function (assert) {
+            serverData.models.foo.fields.foo.sortable = true;
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                groupBy: ["bar"],
+                arch: `
+                <tree editable="bottom" expand="1">
+                    <field name="foo"/>
+                </tree>`,
+                mockRPC(route, args) {
+                    const { method } = args;
+                    if (method === "web_read_group") {
+                        assert.step(
+                            `web_read_group.orderby: ${args.kwargs.orderby || "default order"}`
+                        );
+                        assert.step(
+                            `web_read_group.expand_orderby: ${
+                                args.kwargs.expand_orderby || "default order"
+                            }`
+                        );
+                    }
+                },
+            });
+            assert.deepEqual(
+                getNodesTextContent(target.querySelectorAll(".o_data_cell[name='foo']")),
+                ["blip", "yop", "blip", "gnap"]
+            );
+            assert.verifySteps([
+                "web_read_group.orderby: default order",
+                "web_read_group.expand_orderby: default order",
+            ]);
+
+            await click(target.querySelector(".o_column_sortable[data-name='foo']"));
+            assert.deepEqual(
+                getNodesTextContent(target.querySelectorAll(".o_data_cell[name='foo']")),
+                ["blip", "blip", "gnap", "yop"]
+            );
+            assert.verifySteps([
+                "web_read_group.orderby: default order",
+                "web_read_group.expand_orderby: foo ASC",
+            ]);
+        }
+    );
 
     QUnit.test("properly apply onchange in simple case", async function (assert) {
         serverData.models.foo.onchanges = {
