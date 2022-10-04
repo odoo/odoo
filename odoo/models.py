@@ -3144,13 +3144,32 @@ class BaseModel(metaclass=MetaModel):
         The output format is the one expected from the `read` method, which uses
         this method as its implementation for formatting values.
 
+        For the properties fields, call convert_to_read_multi instead of convert_to_read
+        to prepare everything (record existences, display name, etc) in batch.
+
         The current method is different from `read` because it retrieves its
         values from the cache without doing a query when it is avoidable.
         """
         data = [(record, {'id': record._ids[0]}) for record in self]
         use_name_get = (load == '_classic_read')
         for name in fnames:
-            convert = self._fields[name].convert_to_read
+            field = self._fields[name]
+            if field.type == 'properties':
+                values_list = []
+                records = []
+                for record, vals in data:
+                    try:
+                        values_list.append(record[name])
+                        records.append(record.id)
+                    except MissingError:
+                        vals.clear()
+
+                results = field.convert_to_read_multi(values_list, self.browse(records), use_name_get)
+                for record_read_vals, convert_result in zip(data, results):
+                    record_read_vals[1][name] = convert_result
+                continue
+
+            convert = field.convert_to_read
             for record, vals in data:
                 # missing records have their vals empty
                 if not vals:
