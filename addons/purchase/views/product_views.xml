@@ -19,9 +19,6 @@
                     <attribute name="readonly">0</attribute>
                     <attribute name="optional">hide</attribute>
                 </xpath>
-                <xpath expr="//field[@name='min_qty']" position="attributes">
-                    <attribute name="optional">show</attribute>
-                </xpath>
                 <xpath expr="//field[@name='partner_id']" position="attributes">
                     <attribute name="readonly">0</attribute>
                 </xpath>
@@ -53,8 +50,8 @@
                 <group name="bill" position="inside">
                     <field name="purchase_method" widget="radio"/>
                 </group>
-                <page name="purchase" position="inside">
-                    <group>
+                <group name="purchase" position="inside">
+                    <group col="1">
                         <group string="Purchase Description">
                            <field name="description_purchase" nolabel="1" colspan="2"
                                 placeholder="This note is added to purchase orders."/>
@@ -65,7 +62,7 @@
                                 attrs="{'required':[('purchase_line_warn','!=','no-message')],'readonly':[('purchase_line_warn','=','no-message')], 'invisible':[('purchase_line_warn','=','no-message')]}"/>
                         </group>
                     </group>
-                </page>
+                </group>
             </field>
         </record>
 
