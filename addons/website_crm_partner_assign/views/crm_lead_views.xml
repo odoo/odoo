@@ -19,7 +19,9 @@
                                 <span class="oe_grey" attrs="{'invisible':[('partner_longitude','&gt;=',0)]}">W </span>
                                 <span class="oe_grey">) </span>
                             </div>
-                            <button string="Automatic Assignment" name="action_assign_partner" type="object" class="btn-link"/>
+                            <div colspan="2">
+                                <button string="Automatic Assignment" name="action_assign_partner" type="object" class="btn-link"/>
+                            </div>
 
                             <field name="partner_assigned_id" domain="[('grade_id','!=',False)]" context="{'partner_set_default_grade_activation': 1}"/>
                             <button string="Send Email" type="action" class="btn-link"

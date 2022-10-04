@@ -16,13 +16,13 @@
                             <field name="refund_method" widget="radio" attrs="{'readonly': [('residual', '=', 0)]}"/>
                          </group>
                          <group attrs="{'invisible': ['|', ('move_type', 'not in', ('out_invoice', 'in_invoice', 'some_invoice')), ('residual', '=', 0)]}">
-                            <div attrs="{'invisible':[('refund_method', '!=', 'refund')]}" class="oe_grey" colspan="4">
+                            <div attrs="{'invisible':[('refund_method', '!=', 'refund')]}" class="oe_grey" colspan="2">
                                The credit note is created in draft and can be edited before being issued.
                             </div>
-                            <div attrs="{'invisible':[('refund_method', '!=', 'cancel')]}" class="oe_grey" colspan="4">
+                            <div attrs="{'invisible':[('refund_method', '!=', 'cancel')]}" class="oe_grey" colspan="2">
                                The credit note is auto-validated and reconciled with the invoice.
                             </div>
-                            <div attrs="{'invisible':[('refund_method', '!=', 'modify')]}" class="oe_grey" colspan="4">
+                            <div attrs="{'invisible':[('refund_method', '!=', 'modify')]}" class="oe_grey" colspan="2">
                                The credit note is auto-validated and reconciled with the invoice.
                                The original invoice is duplicated as a new draft.
                             </div>

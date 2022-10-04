@@ -485,14 +485,16 @@
                         </page>
                         <page string="Account Security">
                             <group name="auth" string="Password Management">
-                                <div>
+                                <div colspan="2">
                                     <button name="preference_change_password" type="object" string="Change password" class="btn btn-secondary"/>
                                 </div>
                             </group>
-                            <group groups="base.group_no_one">
-                                <div class="o_horizontal_separator">Developer API Keys
+                            <group string="API Keys">
+                                <div class="text-muted" colspan="2">
+                                    API Keys are used to connect to Odoo from external tools without the need for a password or Two-factor Authentication.
                                     <a href="https://www.odoo.com/documentation/master/developer/misc/api/external_api.html#api-keys" target="_blank">
                                         <i title="Documentation" class="fa fa-fw o_button_icon fa-info-circle"></i>
+                                        Learn more
                                     </a>
                                 </div>
                                 <div colspan="2" attrs="{'invisible': [('api_key_ids', '=', [])]}">
