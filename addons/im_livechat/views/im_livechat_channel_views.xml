@@ -236,10 +236,10 @@
                             <div attrs="{'invisible': [('action', '=', 'hide_button')]}">
                                 <field name="chatbot_script_id" class="oe_inline" style="width: 60% !important;"
                                        options="{'no_create': True, 'no_open': True}"/>
-                                <span attrs="{'invisible': [('chatbot_script_id', '=', False)]}" class="oe_inline ms-3">
-                                    <label for="chatbot_only_if_no_operator" string="Enabled only if no operator"/>
-                                    <field name="chatbot_only_if_no_operator"/>
-                                </span>
+                            </div>
+                            <label for="chatbot_only_if_no_operator" class="oe_inline" string="Enabled only if no operator"/>
+                            <div class="oe_inline" attrs="{'invisible': [('chatbot_script_id', '=', False)]}">
+                                <field name="chatbot_only_if_no_operator"/>
                             </div>
                             <field name="regex_url" placeholder="e.g. /contactus"/>
                             <label for="auto_popup_timer" class="oe_inline" attrs="{'invisible': [('action', '!=', 'auto_popup')]}"/>
