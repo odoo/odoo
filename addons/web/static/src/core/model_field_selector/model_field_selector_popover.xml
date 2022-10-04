@@ -35,7 +35,7 @@
                         <t t-if="field.searchable and props.filter(field)">
                             <li class="o_field_selector_item" t-on-click="() => this.onFieldSelected({ ...field, name: fieldKey })">
                                 <t t-esc="field.string" />
-                                <t t-if="field.relation">
+                                <t t-if="field.relation and props.followRelations">
                                     <i
                                         class="fa fa-chevron-right o_field_selector_relation_icon"
                                         role="img"
