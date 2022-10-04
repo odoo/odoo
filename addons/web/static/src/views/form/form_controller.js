@@ -187,7 +187,6 @@ export class FormController extends Component {
             getLocalState: () => {
                 // TODO: export the whole model?
                 return {
-                    activeNotebookPages: !this.model.root.isNew && this.activeNotebookPages,
                     resId: this.model.root.resId,
                     fieldsToTranslate: toRaw(this.fieldsToTranslate),
                 };
@@ -256,9 +255,8 @@ export class FormController extends Component {
             );
         }
 
-        const { activeNotebookPages, fieldsToTranslate } = this.props.state || {};
+        const { fieldsToTranslate } = this.props.state || {};
         this.fieldsToTranslate = useState(fieldsToTranslate || {});
-        this.activeNotebookPages = activeNotebookPages || {};
     }
 
     displayName() {
@@ -315,10 +313,6 @@ export class FormController extends Component {
             });
         }
         return Object.assign({}, this.props.info.actionMenus, { other: otherActionItems });
-    }
-
-    onPageUpdate(notebookId, page) {
-        this.activeNotebookPages[notebookId] = page;
     }
 
     async shouldExecuteAction(item) {
