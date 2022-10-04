@@ -49,7 +49,7 @@ export class DocumentSelector extends FileSelector {
     static async createElements(selectedMedia, { orm }) {
         return Promise.all(selectedMedia.map(async attachment => {
             const linkEl = document.createElement('a');
-            let href = `/web/content/${attachment.id}?unique=${attachment.checksum}&download=true`;
+            let href = `/web/content/${attachment.id}?unique=${attachment.checksum}`;
             if (!attachment.public) {
                 let accessToken = attachment.access_token;
                 if (!accessToken) {
@@ -64,11 +64,16 @@ export class DocumentSelector extends FileSelector {
             linkEl.href = href;
             linkEl.title = attachment.name;
             linkEl.dataset.mimetype = attachment.mimetype;
+            linkEl.dataset.fileName = attachment.name;
+            linkEl.textContent = attachment.name;
+            // The document behaviour is by default set to open in a new tab.
+            // This behaviour is configurable with an option in the Link Tools.
+            linkEl.target = '_blank';
             return linkEl;
         }));
     }
 }
-DocumentSelector.mediaSpecificClasses = ['o_image'];
+DocumentSelector.mediaSpecificClasses = [];
 DocumentSelector.mediaSpecificStyles = [];
 DocumentSelector.mediaExtraClasses = [];
 DocumentSelector.tagNames = ['A'];

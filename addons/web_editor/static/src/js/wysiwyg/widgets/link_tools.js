@@ -40,6 +40,7 @@ const LinkTools = Link.extend({
         this.customColors = {};
         this.colorpickers = {};
         this.colorpickersPromises = {};
+        this.fileName = this.linkEl.dataset.fileName;
     },
     /**
      * @override
