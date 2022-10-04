@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
-"PO-Revision-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"PO-Revision-Date: 2022-10-04 09:24+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -346,26 +346,6 @@ msgid "Another user is already registered using this email address."
 msgstr ""
 
 #. module: auth_signup
-#: model:mail.template,name:auth_signup.mail_template_user_signup_account_created
-msgid "Auth Signup: Odoo Account Created"
-msgstr ""
-
-#. module: auth_signup
-#: model:mail.template,name:auth_signup.set_password_email
-msgid "Auth Signup: Odoo Connection"
-msgstr ""
-
-#. module: auth_signup
-#: model:mail.template,name:auth_signup.reset_password_email
-msgid "Auth Signup: Reset Password"
-msgstr ""
-
-#. module: auth_signup
-#: model:mail.template,name:auth_signup.mail_template_data_unregistered_users
-msgid "Auth Signup: Unregistered Users"
-msgstr ""
-
-#. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Authentication Failed."
@@ -535,6 +515,47 @@ msgstr ""
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Send an Invitation Email"
+msgstr ""
+
+#. module: auth_signup
+#: model:mail.template,description:auth_signup.mail_template_data_unregistered_users
+msgid ""
+"Sent automatically to admin if new user haven't responded to the invitation"
+msgstr ""
+
+#. module: auth_signup
+#: model:mail.template,description:auth_signup.set_password_email
+msgid "Sent to new user after you invited them"
+msgstr ""
+
+#. module: auth_signup
+#: model:mail.template,description:auth_signup.mail_template_user_signup_account_created
+msgid "Sent to portal user who registered themselves"
+msgstr ""
+
+#. module: auth_signup
+#: model:mail.template,description:auth_signup.reset_password_email
+msgid "Sent to user who requested a password reset"
+msgstr ""
+
+#. module: auth_signup
+#: model:mail.template,name:auth_signup.set_password_email
+msgid "Settings: New Portal Signup"
+msgstr ""
+
+#. module: auth_signup
+#: model:mail.template,name:auth_signup.mail_template_user_signup_account_created
+msgid "Settings: New User Invite"
+msgstr ""
+
+#. module: auth_signup
+#: model:mail.template,name:auth_signup.mail_template_data_unregistered_users
+msgid "Settings: Unregistered User Reminder"
+msgstr ""
+
+#. module: auth_signup
+#: model:mail.template,name:auth_signup.reset_password_email
+msgid "Settings: User Reset Password"
 msgstr ""
 
 #. module: auth_signup
