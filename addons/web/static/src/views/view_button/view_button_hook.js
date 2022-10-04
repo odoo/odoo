@@ -71,8 +71,7 @@ export function useViewButtons(model, ref, options = {}) {
                 let buttonContext = {};
                 if (clickParams.context) {
                     if (typeof clickParams.context === "string") {
-                        const valuesForEval = Object.assign({}, params.evalContext);
-                        buttonContext = evaluateExpr(clickParams.context, valuesForEval);
+                        buttonContext = evaluateExpr(clickParams.context, params.evalContext);
                     } else {
                         buttonContext = clickParams.context;
                     }
