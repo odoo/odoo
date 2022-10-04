@@ -173,7 +173,7 @@ export class CalendarModel extends Model {
         if (section) {
             for (const value in filters) {
                 const active = filters[value];
-                const filter = section.filters.find((filter) => filter.value == value);
+                const filter = section.filters.find((filter) => `${filter.value}` === value);
                 if (filter) {
                     filter.active = active;
                     const info = this.meta.filtersInfo[fieldName];
@@ -479,7 +479,7 @@ export class CalendarModel extends Model {
      * @param {Record<string, any>} rawRecord
      */
     normalizeRecord(rawRecord) {
-        const { fields, fieldMapping, filtersInfo, isTimeHidden, scale } = this.meta;
+        const { fields, fieldMapping, isTimeHidden, scale } = this.meta;
 
         const startType = fields[fieldMapping.date_start].type;
         let start =
@@ -518,13 +518,8 @@ export class CalendarModel extends Model {
             startType !== "date" &&
             start.day === end.day;
 
-        let colorValue = rawRecord[fieldMapping.color];
-        let colorIndex = Array.isArray(colorValue) ? colorValue[0] : colorValue;
-        const filterInfo = Object.values(filtersInfo).find((info) => info.colorFieldName);
-        if (filterInfo && filterInfo.colorFieldName) {
-            colorValue = rawRecord[filterInfo.colorFieldName];
-            colorIndex = Array.isArray(colorValue) ? colorValue[0] : colorValue;
-        }
+        const colorValue = rawRecord[fieldMapping.color];
+        const colorIndex = Array.isArray(colorValue) ? colorValue[0] : colorValue;
 
         const title = rawRecord[fieldMapping.create_name_field || "display_name"];
 
@@ -547,30 +542,6 @@ export class CalendarModel extends Model {
 
     //--------------------------------------------------------------------------
 
-    /**
-     * @protected
-     */
-    loadFilterColor(filterInfo, fieldName, rawRecord, color) {
-        const { fields, fieldMapping } = this.meta;
-        const field = fields[fieldName];
-        const colorField = fields[fieldMapping.color];
-        const relatedField = `${fieldName}.${filterInfo.colorFieldName}`;
-        let rawValue = null;
-        if (
-            !!colorField &&
-            (field.relation === colorField.relation || colorField.related === relatedField)
-        ) {
-            if (rawRecord[fieldName]) {
-                // The color field is a related field of the current field.
-                rawValue = color ? color[fieldMapping.color] : rawRecord[fieldName][0];
-            } else {
-                // Re use the color of the record
-                rawValue = rawRecord[fieldMapping.color];
-            }
-        }
-        const value = Array.isArray(rawValue) ? rawValue[0] : rawValue;
-        return value || null;
-    }
     /**
      * @protected
      */
@@ -602,20 +573,16 @@ export class CalendarModel extends Model {
      * @protected
      */
     async loadFilterSection(fieldName, filterInfo, previousSection) {
-        const fields = [filterInfo.writeFieldName, filterInfo.filterFieldName].filter(Boolean);
-        const rawRecords = await this.fetchFilters(filterInfo.writeResModel, fields);
+        const { filterFieldName, writeFieldName, writeResModel } = filterInfo;
+        const fields = [writeFieldName, filterFieldName].filter(Boolean);
+        const rawFilters = await this.fetchFilters(writeResModel, fields);
         const previousFilters = previousSection ? previousSection.filters : [];
-        const filters = rawRecords.map((r) => {
+
+        const filters = rawFilters.map((rawFilter) => {
             const previousRecordFilter = previousFilters.find(
-                (f) => f.type === "record" && f.recordId === r.id
+                (f) => f.type === "record" && f.recordId === rawFilter.id
             );
-            return this.makeFilterRecord(
-                filterInfo,
-                previousRecordFilter,
-                r,
-                filterInfo.writeFieldName,
-                filterInfo.filterFieldName
-            );
+            return this.makeFilterRecord(filterInfo, previousRecordFilter, rawFilter);
         });
 
         const field = this.meta.fields[fieldName];
@@ -623,9 +590,10 @@ export class CalendarModel extends Model {
         if (isUserOrPartner) {
             const previousUserFilter = previousFilters.find((f) => f.type === "user");
             filters.push(
-                this.makeFilterUser(filterInfo, previousUserFilter, fieldName, rawRecords)
+                this.makeFilterUser(filterInfo, previousUserFilter, fieldName, rawFilters)
             );
         }
+
         const previousAllFilter = previousFilters.find((f) => f.type === "all");
         filters.push(this.makeFilterAll(previousAllFilter, isUserOrPartner));
 
@@ -639,8 +607,8 @@ export class CalendarModel extends Model {
             },
             hasAvatar: !!filterInfo.avatarFieldName,
             write: {
-                field: filterInfo.writeFieldName,
-                model: filterInfo.writeResModel,
+                field: writeFieldName,
+                model: writeResModel,
             },
             canCollapse: filters.length > 2,
             canAddFilter: !!filterInfo.writeResModel,
@@ -650,11 +618,6 @@ export class CalendarModel extends Model {
      * @protected
      */
     async loadDynamicFilters(data, filtersInfo) {
-        const fieldNames = Object.keys(filtersInfo);
-        if (this.meta.fieldMapping.color) {
-            fieldNames.push(this.meta.fieldMapping.color);
-        }
-
         const sections = {};
         for (const [fieldName, { filterInfo, previousSection }] of Object.entries(filtersInfo)) {
             sections[fieldName] = await this.loadDynamicFilterSection(
@@ -664,7 +627,6 @@ export class CalendarModel extends Model {
                 previousSection
             );
         }
-
         return sections;
     }
     /**
@@ -675,49 +637,50 @@ export class CalendarModel extends Model {
         const field = fields[fieldName];
         const previousFilters = previousSection ? previousSection.filters : [];
 
-        const treatedValues = new Map();
-        const relatedIds = new Set();
-
-        for (const record of Object.values(data.records)) {
-            if (record.rawRecord[fieldName]) {
-                relatedIds.add(record.rawRecord[fieldName][0]);
-            }
-
+        const rawFilters = Object.values(data.records).reduce((filters, record) => {
             const rawValues = ["many2many", "one2many"].includes(field.type)
                 ? record.rawRecord[fieldName]
                 : [record.rawRecord[fieldName]];
 
             for (const rawValue of rawValues) {
                 const value = Array.isArray(rawValue) ? rawValue[0] : rawValue;
-                if (!treatedValues.has(value)) {
-                    treatedValues.set(value, { record, rawValue });
+                if (!filters.find((f) => f.id === value)) {
+                    filters.push({
+                        id: value,
+                        [fieldName]: rawValue,
+                        colorIndex: record.colorIndex,
+                    });
                 }
+            }
+            return filters;
+        }, []);
+
+        const { colorFieldName } = filterInfo;
+        const shouldFetchColor =
+            colorFieldName &&
+            `${fieldName}.${colorFieldName}` !== fields[fieldMapping.color].related;
+        let rawColors = [];
+        if (shouldFetchColor) {
+            const relatedIds = rawFilters.map(({ id }) => id);
+            if (relatedIds.length) {
+                rawColors = await this.orm.searchRead(
+                    field.relation,
+                    [["id", "in", relatedIds]],
+                    [colorFieldName]
+                );
             }
         }
 
-        // TODO: refactor this and merge in with loadFilterColor
-        //       in order to simplify makeFilterDynamic
-        const rawColors =
-            filterInfo.colorFieldName && relatedIds.size
-                ? await this.orm.searchRead(
-                      fields[fieldName].relation,
-                      [["id", "in", Array.from(relatedIds)]],
-                      [fieldMapping.color]
-                  )
-                : [];
-
-        const filters = Array.from(treatedValues).map(([value, { record, rawValue }]) => {
-            const color = rawColors.find((r) => r.id === value);
+        const filters = rawFilters.map((rawFilter) => {
             const previousDynamicFilter = previousFilters.find(
-                (f) => f.type === "dynamic" && f.value === value
+                (f) => f.type === "dynamic" && f.value === rawFilter.id
             );
             return this.makeFilterDynamic(
                 filterInfo,
                 previousDynamicFilter,
-                rawValue,
                 fieldName,
-                record,
-                color
+                rawFilter,
+                rawColors
             );
         });
 
@@ -741,10 +704,28 @@ export class CalendarModel extends Model {
     /**
      * @protected
      */
-    makeFilterDynamic(filterInfo, previousFilter, rawValue, fieldName, record, color) {
-        const field = this.meta.fields[fieldName];
-        const formatter = registry.category("formatters").get(field.type);
+    makeFilterDynamic(filterInfo, previousFilter, fieldName, rawFilter, rawColors) {
+        const { fieldMapping, fields } = this.meta;
+        const rawValue = rawFilter[fieldName];
         const value = Array.isArray(rawValue) ? rawValue[0] : rawValue;
+        const field = fields[fieldName];
+        const formatter = registry.category("formatters").get(field.type);
+
+        const { colorFieldName } = filterInfo;
+        const colorField = fields[fieldMapping.color];
+        const hasFilterColorAttr = !!colorFieldName;
+        const sameRelatedModel =
+            colorField.relation === field.relation ||
+            (colorField.related && colorField.related.startsWith(`${fieldName}.`));
+        let colorIndex = null;
+        if (hasFilterColorAttr || sameRelatedModel) {
+            colorIndex = rawFilter.colorIndex;
+        }
+        if (rawColors.length) {
+            const rawColor = rawColors.find(({ id }) => id === value);
+            colorIndex = rawColor ? rawColor[colorFieldName] : 0;
+        }
+
         return {
             type: "dynamic",
             recordId: null,
@@ -752,33 +733,49 @@ export class CalendarModel extends Model {
             label: formatter(rawValue) || _t("Undefined"),
             active: previousFilter ? previousFilter.active : true,
             canRemove: false,
-            colorIndex: this.loadFilterColor(filterInfo, fieldName, record.rawRecord, color),
+            colorIndex,
             hasAvatar: !!value,
         };
     }
     /**
      * @protected
      */
-    makeFilterRecord(filterInfo, previousFilter, record, fieldName, filterFieldName) {
-        const raw = record[fieldName];
+    makeFilterRecord(filterInfo, previousFilter, rawRecord) {
+        const { colorFieldName, filterFieldName, writeFieldName } = filterInfo;
+        const { fields, fieldMapping } = this.meta;
+        const raw = rawRecord[writeFieldName];
         const value = Array.isArray(raw) ? raw[0] : raw;
-        const field = this.meta.fields[fieldName];
+        const field = fields[writeFieldName];
         const isX2Many = ["many2many", "one2many"].includes(field.type);
         const formatter = registry.category("formatters").get(isX2Many ? "many2one" : field.type);
+
+        const colorField = fields[fieldMapping.color];
+        const colorValue =
+            colorField &&
+            (() => {
+                const sameRelatedModel = colorField.relation === field.relation;
+                const sameRelatedField =
+                    colorField.related === `${writeFieldName}.${colorFieldName}`;
+                const shouldHaveColor = sameRelatedModel || sameRelatedField;
+                const colorToUse = raw ? value : rawRecord[fieldMapping.color];
+                return shouldHaveColor ? colorToUse : null;
+            })();
+        const colorIndex = Array.isArray(colorValue) ? colorValue[0] : colorValue;
+
         let active = false;
         if (previousFilter) {
             active = previousFilter.active;
         } else if (filterFieldName) {
-            active = record[filterFieldName];
+            active = rawRecord[filterFieldName];
         }
         return {
             type: "record",
-            recordId: record.id,
+            recordId: rawRecord.id,
             value,
             label: formatter(raw),
             active,
             canRemove: true,
-            colorIndex: this.loadFilterColor(filterInfo, fieldName, record),
+            colorIndex,
             hasAvatar: !!value,
         };
     }
@@ -789,6 +786,14 @@ export class CalendarModel extends Model {
         const field = this.meta.fields[fieldName];
         const userFieldName = field.relation === "res.partner" ? "partnerId" : "userId";
         const value = this.user[userFieldName];
+
+        let colorIndex = value;
+        const rawRecord = rawRecords.find((r) => r[filterInfo.writeFieldName][0] === value);
+        if (filterInfo.colorFieldName && rawRecord) {
+            const colorValue = rawRecord[filterInfo.colorFieldName];
+            colorIndex = Array.isArray(colorValue) ? colorValue[0] : colorValue;
+        }
+
         return {
             type: "user",
             recordId: null,
@@ -796,11 +801,7 @@ export class CalendarModel extends Model {
             label: this.user.name,
             active: previousFilter ? previousFilter.active : true,
             canRemove: false,
-            colorIndex: this.loadFilterColor(
-                filterInfo,
-                fieldName,
-                rawRecords.find((r) => r.id === value) || {}
-            ),
+            colorIndex,
             hasAvatar: !!value,
         };
     }

@@ -213,7 +213,7 @@ export class CalendarCommonRenderer extends Component {
             } else if (typeof color === "number") {
                 el.classList.add(`o_calendar_color_${color}`);
             } else {
-                el.classList.add("o_calendar_color_1");
+                el.classList.add("o_calendar_color_0");
             }
 
             if (record.isHatched) {
