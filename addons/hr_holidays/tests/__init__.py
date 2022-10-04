@@ -12,3 +12,4 @@ from . import test_leave_requests
 from . import test_out_of_office
 from . import test_company_leave
 from . import test_res_partner
+from . import test_uninstall
