@@ -59,6 +59,7 @@
 
     > * {
         width: 100%;
+        min-width: 0;
         margin: 0 !important;
         padding: var(--grid-item-padding-y) var(--grid-item-padding-x) !important;
     }
@@ -68,12 +69,8 @@
     --gutter-x: 30px;
 }
 
-.o_grid_item {
-    word-break: break-word;
-
-    &.o_grid_item_image > img:not([data-shape]) {
-        width: 100% !important;
-        height: 100% !important;
-        object-fit: cover !important;
-    }
+.o_grid_item_image > img:not([data-shape]) {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
 }
