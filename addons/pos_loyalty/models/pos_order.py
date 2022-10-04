@@ -74,7 +74,7 @@ class PosOrder(models.Model):
         } for p in coupons_to_create.values()]
 
         # Pos users don't have the create permission
-        new_coupons = self.env['loyalty.card'].sudo().create(coupon_create_vals)
+        new_coupons = self.env['loyalty.card'].with_context(action_no_send_mail=True).sudo().create(coupon_create_vals)
 
         # We update the gift card that we sold when the gift_card_settings = 'scan_use'.
         gift_cards_to_update = [v for v in coupon_data.values() if v.get('giftCardId')]
@@ -104,6 +104,8 @@ class PosOrder(models.Model):
                 coupon.points += coupon_data[coupon_new_id_map[coupon.id]]['points']
             for reward_code in coupon_data[coupon_new_id_map[coupon.id]].get('line_codes', []):
                 lines_per_reward_code[reward_code].coupon_id = coupon
+        # Send creation email
+        new_coupons.with_context(action_no_send_mail=False)._send_creation_communication()
         # Reports per program
         report_per_program = {}
         coupon_per_report = defaultdict(list)
