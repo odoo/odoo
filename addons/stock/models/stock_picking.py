@@ -33,7 +33,7 @@ class PickingType(models.Model):
     sequence_id = fields.Many2one(
         'ir.sequence', 'Reference Sequence',
         check_company=True, copy=False)
-    sequence_code = fields.Char('Code', required=True)
+    sequence_code = fields.Char('Sequence Prefix', required=True)
     default_location_src_id = fields.Many2one(
         'stock.location', 'Default Source Location',
         check_company=True,
