@@ -1406,22 +1406,22 @@ export class OdooEditor extends EventTarget {
             end = parent;
         }
         // Same with the start container
+        if (
+            next &&
+            next.parentNode &&
+            start.parentNode &&
+            !start.parentNode.textContent &&
+            start.parentNode.tagName !== next.parentNode.tagName &&
+            ['P', 'PRE', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'BLOCKQUOTE'].includes(start.parentNode.tagName)
+        ) {
+            const nextChildNode = document.createElement(next.parentNode.tagName);
+            start.parentNode.replaceWith(nextChildNode);
+        }
         while (
             start &&
             isRemovableInvisible(start) &&
             !(endIsStart && start.contains(range.startContainer))
         ) {
-            if (
-                next &&
-                next.parentNode &&
-                start.parentNode &&
-                !start.parentNode.textContent &&
-                start.parentNode.tagName !== next.parentNode.tagName &&
-                ['P', 'PRE', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'BLOCKQUOTE'].includes(start.parentNode.tagName)
-            ) {
-                const nextChildNode = document.createElement(next.parentNode.tagName);
-                start.parentNode.replaceWith(nextChildNode);
-            }
             const parent = start.parentNode;
             start.remove();
             start = parent;
