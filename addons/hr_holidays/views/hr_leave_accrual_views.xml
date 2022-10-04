@@ -39,7 +39,7 @@
                                 <label for="first_month_day_display" string="on the"/><field name="first_month_day_display" required="1"/> of <field name="first_month"/> and on the <field name="second_month_day_display" required="1"/> of <field name="second_month"/>
                             </div>
                             <div class="o_row" attrs="{'invisible': [('frequency', '!=', 'yearly')]}">
-                                <label for="yearly_day_display" string="on the"/><field name="yearly_day_display" required="1"/> of <field name="yearly_month"/>
+                                <label for="yearly_day_display" string="on the"/><field name="yearly_day_display" required="1"/> of <field name="yearly_month" class="w-25"/>
                             </div>
                         </div>
                         <label for="maximum_leave"/>
@@ -51,7 +51,7 @@
                                 <field name="added_value_type" nolabel="1" readonly="1" force_save="1"/>
                             </div>
                         </div>
-                        <field name="action_with_unused_accruals"/>
+                        <field name="action_with_unused_accruals" style="width: 40%"/>
                         <field name="postpone_max_days" attrs="{'invisible': [('action_with_unused_accruals', '!=', 'postponed')]}"/>
                     </group>
                 </sheet>
