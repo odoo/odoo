@@ -629,13 +629,13 @@ class WebsiteSale(http.Controller):
         product = request.env['product.product'].browse(product_id)
         return product._is_add_to_cart_allowed()
 
-    def _product_get_query_url_kwargs(self, category, search, min_price, max_price, attrib=None, **kwargs):
+    def _product_get_query_url_kwargs(self, category, search, attrib=None, **kwargs):
         return {
             'category': category,
             'search': search,
             'attrib': attrib,
-            'min_price': min_price,
-            'max_price': max_price,
+            'min_price': kwargs.get('min_price'),
+            'max_price': kwargs.get('max_price'),
         }
 
     def _prepare_product_values(self, product, category, search, **kwargs):
@@ -653,8 +653,6 @@ class WebsiteSale(http.Controller):
             **self._product_get_query_url_kwargs(
                 category=category and category.id,
                 search=search,
-                min_price=request.params.get('min_price'),
-                max_price=request.params.get('max_price'),
                 **kwargs,
             ),
         )
