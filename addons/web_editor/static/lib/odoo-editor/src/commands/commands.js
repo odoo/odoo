@@ -445,6 +445,9 @@ export const editorCommands = {
         if (closestEl && closestEl.getAttribute('contenteditable') === 'true') {
             editor._activateContenteditable();
         }
+        if (editor.isFirefox) {
+            closestEl.removeAttribute('class');
+        }
         if (sel.isCollapsed) {
             const cr = preserveCursor(editor.document);
             const node = closestElement(sel.focusNode, 'a');
