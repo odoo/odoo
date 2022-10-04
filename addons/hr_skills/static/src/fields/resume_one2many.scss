@@ -2,6 +2,10 @@
     $o-hrs-timeline-entry-padding: .5rem;
     $o-hrs-timeline-dot-size: .6rem;
 
+    .o_data_row {
+        border-bottom: none;
+    }
+
     .o_data_row td {
         padding: $o-hrs-timeline-entry-padding;
 
@@ -15,7 +19,7 @@
                 @include o-position-absolute(0, $left: ($o-hrs-timeline-dot-size * .5 + $o-hrs-timeline-entry-padding));
                 width: 1px;
                 height: 100%;
-                margin-left: -.01rem;
+                margin-left: 2.1rem;
                 background-color: $border-color;
                 content: "";
             }
