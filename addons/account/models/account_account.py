@@ -296,6 +296,21 @@ class AccountAccount(models.Model):
                     "The account code can only contain alphanumeric characters and dots."
                 ))
 
+    @api.constrains('account_type')
+    def _check_account_is_bank_journal_bank_account(self):
+        self.env['account.account'].flush_model(['account_type'])
+        self.env['account.journal'].flush_model(['type', 'default_account_id'])
+        self._cr.execute('''
+            SELECT journal.id
+              FROM account_journal journal
+              JOIN account_account account ON journal.default_account_id = account.id
+             WHERE account.account_type IN ('asset_receivable', 'liability_payable')
+             LIMIT 1;
+        ''', [tuple(self.ids)])
+
+        if self._cr.fetchone():
+            raise ValidationError(_("You cannot change the type of an account set as Bank Account on a journal to Receivable or Payable."))
+
     @api.depends('code')
     def _compute_account_root(self):
         # this computes the first 2 digits of the account.
