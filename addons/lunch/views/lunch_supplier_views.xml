@@ -46,13 +46,10 @@
                     </group>
                     <group>
                         <group string="Availability">
-                            <label for="tz" groups="base.group_no_one"/>
-                            <div class="o_col">
-                                <div class="o_row">
-                                    <field name="tz" groups="base.group_no_one"/>
-                                </div>
-                                <widget name="week_days"/>
-                            </div>
+                            <field name="tz" groups="base.group_no_one"/>
+                            <label for="sun" class="d-none"/>
+                            <field name="sun" invisible="1"/>
+                            <widget name="week_days"/>
                             <field name="recurrency_end_date" groups="base.group_no_one"/>
                         </group>
                         <group string="Orders">
@@ -67,7 +64,7 @@
                         <group>
                             <field name="active" invisible="1"/>
                             <field name="topping_label_1"/>
-                            <field name="topping_quantity_1"/>
+                            <field name="topping_quantity_1" class="w-50"/>
                         </group>
                         <div>
                             <field name="topping_ids_1" nolabel="1">
@@ -81,7 +78,7 @@
                         </div>
                         <group>
                             <field name="topping_label_2"/>
-                            <field name="topping_quantity_2"/>
+                            <field name="topping_quantity_2" class="w-50"/>
                         </group>
                         <div>
                             <field name="topping_ids_2" nolabel="1">
@@ -95,7 +92,7 @@
                         </div>
                         <group>
                             <field name="topping_label_3"/>
-                            <field name="topping_quantity_3"/>
+                            <field name="topping_quantity_3" class="w-50"/>
                         </group>
                         <div>
                             <field name="topping_ids_3" nolabel="1">
