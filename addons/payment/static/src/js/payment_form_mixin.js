@@ -395,6 +395,8 @@ odoo.define('payment.payment_form_mixin', require => {
             const $redirectForm = $(processingValues.redirect_form_html).attr(
                 'id', 'o_payment_redirect_form'
             );
+            // Ensures external redirections when in an iframe.
+            $redirectForm[0].setAttribute('target', '_top');
             $(document.getElementsByTagName('body')[0]).append($redirectForm);
 
             // Submit the form
@@ -433,7 +435,7 @@ odoo.define('payment.payment_form_mixin', require => {
         _setPaymentFlow: function (flow = 'redirect') {
             if (flow !== 'redirect' && flow !== 'direct' && flow !== 'token') {
                 console.warn(
-                    `payment_form_mixin: method '_setPaymentFlow' was called with invalid flow: 
+                    `payment_form_mixin: method '_setPaymentFlow' was called with invalid flow:
                     ${flow}. Falling back to 'redirect'.`
                 );
                 this.txContext.flow = 'redirect';
