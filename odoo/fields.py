@@ -1829,6 +1829,8 @@ class Char(_String):
         super()._setup_attrs(model_class, name)
         assert self.size is None or isinstance(self.size, int), \
             "Char field %s with non-integer size %r" % (self, self.size)
+        assert not(self.translate and self.size), \
+            "Translated field %s cannot have size %r" % (self, self.size)
 
     @property
     def column_type(self):
