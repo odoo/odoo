@@ -2599,11 +2599,13 @@ options.registry.topMenuColor = options.Class.extend({
      */
     async selectStyle(previewMode, widgetValue, params) {
         await this._super(...arguments);
-        const className = widgetValue ? (params.colorPrefix + widgetValue) : '';
+        if (widgetValue && !isCSSColor(widgetValue)) {
+            widgetValue = params.colorPrefix + widgetValue;
+        }
         await new Promise((resolve, reject) => {
             this.trigger_up('action_demand', {
                 actionName: 'toggle_page_option',
-                params: [{name: 'header_color', value: className}],
+                params: [{name: 'header_color', value: widgetValue}],
                 onSuccess: resolve,
                 onFailure: reject,
             });
