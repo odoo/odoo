@@ -111,7 +111,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         self.assertTaxTotals(document, {
             'amount_total': 3600,
             'amount_untaxed': 3000,
-            'display_tax_base': False,
+            'display_tax_base': True,
             'groups_by_subtotal': {
                 'Untaxed Amount': [
                     {
@@ -226,7 +226,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         self.assertTaxTotals(document, {
             'amount_total': 3620,
             'amount_untaxed': 3000,
-            'display_tax_base': False,
+            'display_tax_base': True,
             'groups_by_subtotal': {
                 'Untaxed Amount': [
                     {
@@ -313,7 +313,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         self.assertTaxTotals(document, {
             'amount_total': 2750,
             'amount_untaxed': 2000,
-            'display_tax_base': False,
+            'display_tax_base': True,
             'groups_by_subtotal': {
                 'Untaxed Amount': [
                     {
@@ -400,7 +400,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         self.assertTaxTotals(document, {
             'amount_total': 2846,
             'amount_untaxed': 2300,
-            'display_tax_base': False,
+            'display_tax_base': True,
             'groups_by_subtotal': {
                 'Untaxed Amount': [
                     {
@@ -486,7 +486,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         self.assertTaxTotals(document, {
             'amount_total': 1867,
             'amount_untaxed': 1500,
-            'display_tax_base': False,
+            'display_tax_base': True,
             'groups_by_subtotal': {
                 'Untaxed Amount': [
                     {
@@ -584,7 +584,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         self.assertTaxTotals(document, {
             'amount_total': 1230.41,
             'amount_untaxed': 1020.41,
-            'display_tax_base': False,
+            'display_tax_base': True,
             'groups_by_subtotal': {
                 "Reapply amount": [{
                     'tax_group_name': self.tax_group_sub3.name,
