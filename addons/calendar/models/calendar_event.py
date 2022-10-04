@@ -477,17 +477,15 @@ class Meeting(models.Model):
 
     def _read(self, fields):
         if self.env.is_system():
-            super()._read(fields)
-            return
+            return super()._read(fields)
 
         fields = set(fields)
         private_fields = fields - self._get_public_fields()
         if not private_fields:
-            super()._read(fields)
-            return
+            return super()._read(fields)
 
         private_fields.add('partner_ids')
-        super()._read(fields | {'privacy', 'user_id', 'partner_ids'})
+        self = super()._read(fields | {'privacy', 'user_id', 'partner_ids'})
         current_partner_id = self.env.user.partner_id
         others_private_events = self.filtered(
             lambda e: e.privacy == 'private' \
@@ -503,6 +501,7 @@ class Meeting(models.Model):
                 _('Busy') if field_name == 'name' else False,
                 others_private_events)
             self.env.cache.update(others_private_events, field, repeat(replacement))
+        return self
 
     def write(self, values):
         detached_events = self.env['calendar.event']

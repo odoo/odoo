@@ -196,6 +196,7 @@ class HrEmployeePrivate(models.Model):
             if self._fields[fname].translate:
                 values = [(value.copy() if value else None) for value in values]
             self.env.cache.update_raw(self, self._fields[fname], values)
+        return self
 
     @api.model
     def _cron_check_work_permit_validity(self):

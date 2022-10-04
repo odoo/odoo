@@ -3478,9 +3478,9 @@ class BaseModel(metaclass=MetaModel):
                     f = self._fields[dotname.split('.')[0]]
                     if f.prefetch is True and (not f.groups or self.user_has_groups(f.groups)):
                         stored_fields.add(f.name)
-        self._read(stored_fields)
 
-        return self._read_format(fnames=fields, load=load)
+        existing_records = self._read(stored_fields)
+        return existing_records._read_format(fnames=fields, load=load)
 
     def update_field_translations(self, field_name, translations):
         """ Update the values of a translated field.
@@ -3611,21 +3611,13 @@ class BaseModel(metaclass=MetaModel):
         The current method is different from `read` because it retrieves its
         values from the cache without doing a query when it is avoidable.
         """
-        data = [(record, {'id': record._ids[0]}) for record in self]
+        data = [{'id': rec_id} for rec_id in self._ids]
         use_name_get = (load == '_classic_read')
         for name in fnames:
             convert = self._fields[name].convert_to_read
-            for record, vals in data:
-                # missing records have their vals empty
-                if not vals:
-                    continue
-                try:
-                    vals[name] = convert(record[name], record, use_name_get)
-                except MissingError:
-                    vals.clear()
-        result = [vals for record, vals in data if vals]
-
-        return result
+            for record, vals in zip(self, data):
+                vals[name] = convert(record[name], record, use_name_get)
+        return data
 
     def _fetch_field(self, field):
         """ Read from the database in order to fetch ``field`` (:class:`Field`
@@ -3655,7 +3647,7 @@ class BaseModel(metaclass=MetaModel):
             :param field_names: list of field names to read
         """
         if not self:
-            return
+            return self
         self.check_access_rights('read')
 
         # determine columns fields and those with their own read() method
@@ -3764,6 +3756,8 @@ class BaseModel(metaclass=MetaModel):
             forbidden = missing.exists()
             if forbidden:
                 raise self.env['ir.rule']._make_access_error('read', forbidden)
+            return self - missing
+        return self
 
     def get_metadata(self):
         """Return some metadata about the given records.

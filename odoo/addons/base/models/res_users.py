@@ -459,7 +459,7 @@ class Users(models.Model):
         return self.partner_id.onchange_parent_id()
 
     def _read(self, fields):
-        super(Users, self)._read(fields)
+        res = super(Users, self)._read(fields)
         if set(USER_PRIVATE_FIELDS).intersection(fields):
             if self.check_access_rights('write', raise_exception=False):
                 return
@@ -471,6 +471,7 @@ class Users(models.Model):
                     except Exception:
                         # skip SpecialValue (e.g. for missing record or access right)
                         pass
+        return res
 
     @api.constrains('company_id', 'company_ids')
     def _check_company(self):
