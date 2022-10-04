@@ -285,20 +285,22 @@ const Wysiwyg = Widget.extend({
         this.$editable.on('click', '.o_image, .media_iframe_video', e => e.preventDefault());
         this.showTooltip = true;
         this.$editable.on('dblclick', mediaSelector, function () {
-            self.showTooltip = false;
+            if (this.isContentEditable || (this.parentElement && this.parentElement.isContentEditable)) {
+                self.showTooltip = false;
 
-            const selection = self.odooEditor.document.getSelection();
-            const anchorNode = selection.anchorNode;
-            if (anchorNode && closestElement(anchorNode, '.oe-blackbox')) {
-                return;
-            }
+                const selection = self.odooEditor.document.getSelection();
+                const anchorNode = selection.anchorNode;
+                if (anchorNode && closestElement(anchorNode, '.oe-blackbox')) {
+                    return;
+                }
 
-            const $el = $(this);
-            let params = {node: this};
-            $el.selectElement();
+                const $el = $(this);
+                let params = {node: this};
+                $el.selectElement();
 
-            if (!$el.parent().hasClass('o_stars')) {
-                self.openMediaDialog(params);
+                if (!$el.parent().hasClass('o_stars')) {
+                    self.openMediaDialog(params);
+                }
             }
         });
 
@@ -1762,7 +1764,8 @@ const Wysiwyg = Widget.extend({
         this.toolbar.$el.find('#mediaParagraphDropdownButton').attr('id', 'paragraphDropdownButton');
         // Only show the media tools in the toolbar if the current selected
         // snippet is a media.
-        const isInMedia = $target.is(mediaSelector) && !$target.parent().hasClass('o_stars');
+        const isInMedia = $target.is(mediaSelector) && !$target.parent().hasClass('o_stars') && e.target &&
+            (e.target.isContentEditable || (e.target.parentElement && e.target.parentElement.isContentEditable));
         this.toolbar.$el.find([
             '#image-shape',
             '#image-width',
