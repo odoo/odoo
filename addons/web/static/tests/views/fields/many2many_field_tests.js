@@ -12,6 +12,7 @@ import {
     getNodesTextContent,
     nextTick,
     patchWithCleanup,
+    addRow,
 } from "@web/../tests/helpers/utils";
 import { editSearch, validateSearch } from "@web/../tests/search/helpers";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
@@ -1563,6 +1564,59 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
         assert.verifySteps([]);
     });
+
+    QUnit.test(
+        "many2many widget: creates a new record with a context containing the parentID",
+        async function (assert) {
+            serverData.views = {
+                "turtle,false,list": '<tree><field name="display_name"/></tree>',
+                "turtle,false,search": '<search><field name="display_name"/></search>',
+                "turtle,false,form":
+                    '<form string="Turtle Power"><field name="turtle_trululu"/></form>',
+            };
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="turtles" widget="many2many" context="{'default_turtle_trululu': id}" >
+                        <tree>
+                            <field name="turtle_foo"/>
+                        </tree>
+                    </field>
+                </form>`,
+                resId: 1,
+                mockRPC(route, args) {
+                    const { method, kwargs } = args;
+                    assert.step(method);
+                    if (method === "onchange") {
+                        assert.strictEqual(kwargs.context.default_turtle_trululu, 1);
+                        assert.deepEqual(args.args, [
+                            [],
+                            {},
+                            [],
+                            {
+                                turtle_trululu: "",
+                            },
+                        ]);
+                    }
+                },
+            });
+            assert.verifySteps(["get_views", "read", "read"]);
+
+            await addRow(target);
+            assert.verifySteps(["get_views", "web_search_read"]);
+
+            await click(target, ".o_create_button");
+            assert.strictEqual(
+                target.querySelector("[name='turtle_trululu'] input").value,
+                "first record"
+            );
+            assert.verifySteps(["get_views", "onchange"]);
+        }
+    );
 
     QUnit.test("onchange with 40+ commands for a many2many", async function (assert) {
         // this test ensures that the basic_model correctly handles more LINK_TO
