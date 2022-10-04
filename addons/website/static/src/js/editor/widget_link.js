@@ -54,6 +54,11 @@ weWidgets.LinkTools.include({
         const isFromWebsite = urlInputValue[0] === '/';
         const $selectMenu = this.$('we-selection-items[name="link_anchor"]');
 
+        if (this.fileName) {
+            $pageAnchor[0].classList.add('d-none');
+            return;
+        }
+
         if ($selectMenu.data("anchor-for") !== urlInputValue) { // avoid useless query
             $pageAnchor.toggleClass('d-none', !isFromWebsite);
             $selectMenu.empty();
