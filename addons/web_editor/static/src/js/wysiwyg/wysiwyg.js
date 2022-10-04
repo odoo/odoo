@@ -1387,6 +1387,8 @@ const Wysiwyg = Widget.extend({
             this.snippetsMenu.activateSnippet($(element)).then(() => {
                 if (element.tagName === 'IMG') {
                     $(element).trigger('image_changed');
+                } else if (element.tagName === 'A') {
+                    this.toggleLinkTools({ link: element });
                 }
             });
         }
