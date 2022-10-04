@@ -1188,7 +1188,8 @@ class AccountTax(models.Model):
 
         amount_total = amount_untaxed + amount_tax
 
-        display_tax_base = len(global_tax_details['tax_details']) == 1 and tax_group_vals['base_amount'] != amount_untaxed
+        display_tax_base = (len(global_tax_details['tax_details']) == 1 and tax_group_vals_list[0]['base_amount'] != amount_untaxed) \
+            or len(global_tax_details['tax_details']) > 1
 
         return {
             'amount_untaxed': currency.round(amount_untaxed) if currency else amount_untaxed,
