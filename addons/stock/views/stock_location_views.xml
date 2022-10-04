@@ -214,12 +214,12 @@
                         <group>
                             <field name="warehouse_selectable" string="Warehouses"/>
                             <field name="warehouse_domain_ids" invisible="1"/>
-                            <field name="warehouse_ids"  widget="many2many_tags" nolabel="1"
+                            <field name="warehouse_ids"  widget="many2many_tags" nolabel="1" colspan="2"
                                    attrs="{'invisible': [('warehouse_selectable', '=', False)]}"/>
                         </group>
                     </group>
-                    <group string="Rules" colspan="4" >
-                        <field name="rule_ids" colspan="4" nolabel="1" context="{'default_company_id': company_id, 'form_view_ref':'stock.view_route_rule_form'}">
+                    <group string="Rules">
+                        <field name="rule_ids" colspan="2" nolabel="1" context="{'default_company_id': company_id, 'form_view_ref':'stock.view_route_rule_form'}">
                             <tree>
                                 <field name="sequence" widget="handle"/>
                                 <field name="action"/>
