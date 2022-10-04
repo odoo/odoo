@@ -28,6 +28,11 @@ tour.register("sale_tour", {
     position: "bottom",
     skip_trigger: 'a[data-method=action_open_base_onboarding_company].o_onboarding_step_action__done',
 }, {
+    trigger: 'input[id=street]',
+    content: _t("Complete your company's data"),
+    position: "bottom",
+    skip_trigger: 'a[data-method=action_open_base_onboarding_company].o_onboarding_step_action__done',
+}, {
     trigger: ".modal-content button[name='action_save_onboarding_company_step']",
     content: _t("Looks good. Let's continue."),
     position: "left",
