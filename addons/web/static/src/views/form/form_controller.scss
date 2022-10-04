@@ -223,7 +223,7 @@
             --notebook-margin-x: -#{$o-horizontal-padding};
             --notebook-padding-x: #{$o-horizontal-padding};
 
-            > .tab-content > .tab-pane > :first-child {
+            > .tab-content > .tab-pane > :first-child:not(.o_group) {
                 // These elements will appear attached to the tabs
                 &.o_field_x2many.o_field_x2many_list {
                     @include o-form-nosheet-negative-margin;
@@ -530,7 +530,7 @@
                     }
 
                     // Full width on first x2many or on second x2many if first is invisible
-                    .o_field_x2many.o_field_x2many_list,
+                    &:not(.o_group) .o_field_x2many.o_field_x2many_list,
                     &.o_invisible_modifier + .o_field_widget .o_field_x2many.o_field_x2many_list  {
                         display: block;
                         width: auto;
