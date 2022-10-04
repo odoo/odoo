@@ -82,13 +82,19 @@ export class MailFormCompiler extends ViewCompiler {
         if (chatterContainerHookXml) {
             setAttributes(chatterContainerHookXml, {
                 "t-if": `!hasAttachmentViewer() and uiService.size >= ${SIZES.XXL}`,
-                "t-attf-class": `{{ uiService.size >= ${SIZES.XXL} ? "o-aside" : "" }}`,
+                "t-attf-class": "o-aside",
+            });
+            const chatterContainerXml = chatterContainerHookXml.querySelector('ChatterContainer');
+            setAttributes(chatterContainerXml, {
+                "hasExternalBorder": "false",
+                "hasMessageListScrollAdjust": "true",
+                "isInFormSheetBg": "false",
             });
         }
         const attachmentViewHookXml = res.querySelector(".o_attachment_preview");
         if (attachmentViewHookXml) {
             setAttributes(attachmentViewHookXml, {
-                "t-if": `hasAttachmentViewer() and uiService.size >= ${SIZES.XXL}`,
+                "t-if": `hasAttachmentViewer()`,
             });
         }
         return res;
@@ -152,11 +158,12 @@ patch(FormCompiler.prototype, 'mail', {
             return res; // no chatter, keep the result as it is
         }
         const chatterContainerXml = chatterContainerHookXml.querySelector('ChatterContainer');
+        setAttributes(chatterContainerXml, {
+            "hasExternalBorder": "true",
+            "hasMessageListScrollAdjust": "false",
+            "isInFormSheetBg": "false",
+        });
         if (chatterContainerHookXml.parentNode.classList.contains('o_form_sheet')) {
-            setAttributes(chatterContainerXml, {
-                "hasExternalBorder": 'true',
-                "hasMessageListScrollAdjust": 'false',
-            });
             return res; // if chatter is inside sheet, keep it there
         }
         const formSheetBgXml = res.querySelector('.o_form_sheet_bg');
@@ -164,33 +171,24 @@ patch(FormCompiler.prototype, 'mail', {
         if (!parentXml) {
             return res; // miss-config: a sheet-bg is required for the rest
         }
-        if (params.hasAttachmentViewer) {
+        if (params.hasAttachmentViewerInArch) {
             // in sheet bg (attachment viewer present)
-            const sheetBgChatterContainerHookXml = chatterContainerHookXml;
+            const sheetBgChatterContainerHookXml = chatterContainerHookXml.cloneNode(true);
             sheetBgChatterContainerHookXml.classList.add('o-isInFormSheetBg');
             setAttributes(sheetBgChatterContainerHookXml, {
-                't-if': `uiService.size < ${SIZES.XXL} or hasAttachmentViewer()`,
+                't-if': `this.props.hasAttachmentViewer`,
             });
             append(formSheetBgXml, sheetBgChatterContainerHookXml);
             const sheetBgChatterContainerXml = sheetBgChatterContainerHookXml.querySelector('ChatterContainer');
             setAttributes(sheetBgChatterContainerXml, {
                 "isInFormSheetBg": "true",
-                "hasExternalBorder": "true",
-                "hasMessageListScrollAdjust": "false",
             });
-        } else {
-            // after sheet bg (standard position, either aside or below)
-            setAttributes(chatterContainerXml, {
-                "isInFormSheetBg": "false",
-                "hasExternalBorder": `uiService.size < ${SIZES.XXL}`,
-                "hasMessageListScrollAdjust": `uiService.size >= ${SIZES.XXL}`,
-            });
-            setAttributes(chatterContainerHookXml, {
-                't-if': `uiService.size < ${SIZES.XXL}`,
-                't-attf-class': `{{ uiService.size >= ${SIZES.XXL} ? "o-aside" : "" }}`,
-            });
-            append(parentXml, chatterContainerHookXml);
         }
+        // after sheet bg (standard position, below form)
+        setAttributes(chatterContainerHookXml, {
+            't-if': `!this.props.hasAttachmentViewer and uiService.size < ${SIZES.XXL}`,
+        });
+        append(parentXml, chatterContainerHookXml);
         return res;
     },
 });

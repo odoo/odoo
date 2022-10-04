@@ -6,6 +6,7 @@ import { WebClientViewAttachmentViewContainer } from "@mail/components/web_clien
 
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
+import { SIZES } from "@web/core/ui/ui_service";
 import { patch } from "@web/core/utils/patch";
 import { useDebounced } from "@web/core/utils/timing";
 import { FormController } from "@web/views/form/form_controller";
@@ -59,7 +60,12 @@ patch(FormController.prototype, "mail", {
      * @returns {boolean}
      */
     hasAttachmentViewer() {
-        if (!this.getMessaging() || !this.model.root.resId) {
+        if (
+            this.uiService.size < SIZES.XXL ||
+            !this.hasAttachmentViewerInArch ||
+            !this.getMessaging() ||
+            !this.model.root.resId
+        ) {
             return false;
         }
         const thread = this.getMessaging().models['Thread'].insert({
