@@ -12,7 +12,7 @@ registerPatch({
          */
         _initCommands() {
             this._super();
-            this.messaging.update({
+            this.global.Messaging.update({
                 commands: insert({
                     channel_types: ['livechat'],
                     help: this.env._t("See 15 last visited pages"),

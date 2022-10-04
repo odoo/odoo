@@ -12,7 +12,7 @@ registerModel({
             this.update({
                 widget: new PublicLivechatWindow(
                     this.global.PublicLivechatGlobal.livechatButtonView.widget,
-                    this.messaging,
+                    this.global.Messaging,
                     this.global.PublicLivechatGlobal.publicLivechat.widget,
                 ),
             });

@@ -14,7 +14,7 @@ registerPatch({
             const data2 = this._super(data);
             if ('visitor' in data) {
                 if (data.visitor) {
-                    data2.visitor = insert(this.messaging.models['Visitor'].convertData(data.visitor));
+                    data2.visitor = insert(this.global.Messaging.models['Visitor'].convertData(data.visitor));
                 } else {
                     data2.visitor = clear();
                 }

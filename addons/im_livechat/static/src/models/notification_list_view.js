@@ -8,7 +8,7 @@ registerPatch({
         filteredChannels: {
             compute() {
                 if (this.filter === 'livechat') {
-                    return this.messaging.models['Channel'].all(channel =>
+                    return this.global.Messaging.models['Channel'].all(channel =>
                         channel.channel_type === 'livechat' &&
                         channel.thread.isPinned
                     );

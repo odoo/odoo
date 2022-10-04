@@ -23,7 +23,7 @@ registerModel({
             if (isNonPublicChannel) {
                 kwargs.channel_id = thread.id;
             }
-            const suggestedPartners = await this.messaging.rpc(
+            const suggestedPartners = await this.global.Messaging.rpc(
                 {
                     model: 'res.partner',
                     method: 'get_mention_suggestions',
@@ -31,7 +31,7 @@ registerModel({
                 },
                 { shadow: true },
             );
-            this.messaging.models['Partner'].insert(suggestedPartners);
+            this.global.Messaging.models['Partner'].insert(suggestedPartners);
         },
         /**
          * Returns a sort function to determine the order of display of partners
@@ -129,7 +129,7 @@ registerModel({
                 }
             }
             if (!partners.length) {
-                const partnersData = await this.messaging.rpc(
+                const partnersData = await this.global.Messaging.rpc(
                     {
                         model: 'res.partner',
                         method: 'im_search',
@@ -162,14 +162,14 @@ registerModel({
                 // mentioned partner.
                 partners = thread.channel.channelMembers.filter(member => member.persona && member.persona.partner).map(member => member.persona.partner);
             } else {
-                partners = this.messaging.models['Partner'].all();
+                partners = this.global.Messaging.models['Partner'].all();
             }
             const cleanedSearchTerm = cleanSearchTerm(searchTerm);
             const mainSuggestionList = [];
             const extraSuggestionList = [];
             for (const partner of partners) {
                 if (
-                    (!partner.active && partner !== this.messaging.partnerRoot) ||
+                    (!partner.active && partner !== this.global.Messaging.partnerRoot) ||
                     partner.is_public
                 ) {
                     // ignore archived partners (except OdooBot), public partners (technical)
@@ -198,7 +198,7 @@ registerModel({
          * applicable.
          */
         async checkIsUser() {
-            const userIds = await this.messaging.rpc({
+            const userIds = await this.global.Messaging.rpc({
                 model: 'res.users',
                 method: 'search',
                 args: [[['partner_id', '=', this.id]]],
@@ -230,7 +230,7 @@ registerModel({
             }
             // prevent chatting with non-users
             if (!this.user) {
-                this.messaging.notify({
+                this.global.Messaging.notify({
                     message: this.env._t("You can only chat with partners that have a dedicated user."),
                     type: 'info',
                 });
@@ -260,7 +260,7 @@ registerModel({
          * Opens the most appropriate view that is a profile for this partner.
          */
         async openProfile() {
-            return this.messaging.openDocument({
+            return this.global.Messaging.openDocument({
                 id: this.id,
                 model: 'res.partner',
             });

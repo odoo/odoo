@@ -32,13 +32,13 @@ registerModel({
             const name = this.discussView.addingChannelValue;
             this.discussView.clearIsAddingItem();
             if (ui.item.create) {
-                const channel = await this.messaging.models['Thread'].performRpcCreateChannel({
+                const channel = await this.global.Messaging.models['Thread'].performRpcCreateChannel({
                     name,
-                    group_id: this.messaging.internalUserGroupId,
+                    group_id: this.global.Messaging.internalUserGroupId,
                 });
                 channel.open();
             } else {
-                const channel = this.messaging.models['Thread'].insert({
+                const channel = this.global.Messaging.models['Thread'].insert({
                     id: ui.item.id,
                     model: 'mail.channel',
                 });
@@ -56,7 +56,7 @@ registerModel({
          */
         async handleAddChannelAutocompleteSource(req, res) {
             this.discussView.update({ addingChannelValue: req.term });
-            const threads = await this.messaging.models['Thread'].searchChannelsToOpen({ limit: 10, searchTerm: req.term });
+            const threads = await this.global.Messaging.models['Thread'].searchChannelsToOpen({ limit: 10, searchTerm: req.term });
             const items = threads.map((thread) => {
                 const escapedName = escape(thread.name);
                 return {
@@ -85,7 +85,7 @@ registerModel({
          * @param {integer} ui.item.id
          */
         handleAddChatAutocompleteSelect(ev, ui) {
-            this.messaging.openChat({ partnerId: ui.item.id });
+            this.global.Messaging.openChat({ partnerId: ui.item.id });
             this.discussView.clearIsAddingItem();
         },
         /**
@@ -95,7 +95,7 @@ registerModel({
          */
         handleAddChatAutocompleteSource(req, res) {
             const value = escape(req.term);
-            this.messaging.models['Partner'].imSearch({
+            this.global.Messaging.models['Partner'].imSearch({
                 callback: partners => {
                     const suggestions = partners.map(partner => {
                         return {
@@ -120,7 +120,7 @@ registerModel({
             const [model, id] = typeof this.initActiveId === 'number'
                 ? ['mail.channel', this.initActiveId]
                 : this.initActiveId.split('_');
-            const thread = this.messaging.models['Thread'].findFromIdentifyingData({
+            const thread = this.global.Messaging.models['Thread'].findFromIdentifyingData({
                 id: model !== 'mail.box' ? Number(id) : id,
                 model,
             });

@@ -8,7 +8,7 @@ registerModel({
     name: 'LinkPreview',
     recordMethods: {
         async remove() {
-            await this.messaging.rpc({
+            await this.global.Messaging.rpc({
                 route: '/mail/link_preview/delete',
                 params: { link_preview_id: this.id },
             }, { shadow: true });
@@ -30,8 +30,8 @@ registerModel({
                     return false;
                 }
                 return (
-                    (this.message.author && this.message.author === this.messaging.currentPartner) ||
-                    (this.message.guestAuthor && this.message.guestAuthor === this.messaging.currentGuest)
+                    (this.message.author && this.message.author === this.global.Messaging.currentPartner) ||
+                    (this.message.guestAuthor && this.message.guestAuthor === this.global.Messaging.currentGuest)
                 );
             },
         }),

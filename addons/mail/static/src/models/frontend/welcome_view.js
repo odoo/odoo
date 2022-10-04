@@ -18,8 +18,8 @@ registerModel({
          */
         async joinChannel() {
             if (this.hasGuestNameChanged) {
-                await this.messaging.models['Guest'].performRpcGuestUpdateName({
-                    id: this.messaging.currentGuest.id,
+                await this.global.Messaging.models['Guest'].performRpcGuestUpdateName({
+                    id: this.global.Messaging.currentGuest.id,
                     name: this.pendingGuestName.trim(),
                 });
             }
@@ -59,7 +59,7 @@ registerModel({
          * welcome view.
          */
         async performRpcAddGuestAsMember() {
-            await this.messaging.rpc({
+            await this.global.Messaging.rpc({
                 route: '/mail/channel/add_guest_as_member',
                 params: {
                     channel_id: this.channel.id,
@@ -132,7 +132,7 @@ registerModel({
          */
         hasGuestNameChanged: attr({
             compute() {
-                return Boolean(this.messaging.currentGuest && this.originalGuestName !== this.pendingGuestName);
+                return Boolean(this.global.Messaging.currentGuest && this.originalGuestName !== this.pendingGuestName);
             },
         }),
         /**
@@ -148,7 +148,7 @@ registerModel({
          */
         isJoinButtonDisabled: attr({
             compute() {
-                return Boolean(this.messaging.currentGuest && this.pendingGuestName.trim() === '');
+                return Boolean(this.global.Messaging.currentGuest && this.pendingGuestName.trim() === '');
             },
         }),
         /**

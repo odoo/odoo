@@ -10,7 +10,7 @@ registerPatch({
          */
         async onGrantAccess(ev) {
             const { chatter } = this.activityBoxView; // save value before deleting activity
-            await this.messaging.rpc({
+            await this.global.Messaging.rpc({
                 model: 'slide.channel',
                 method: 'action_grant_access',
                 args: [[this.activity.thread.id]],
@@ -26,7 +26,7 @@ registerPatch({
          */
         async onRefuseAccess(ev) {
             const { chatter } = this.activityBoxView; // save value before deleting activity
-            await this.messaging.rpc({
+            await this.global.Messaging.rpc({
                 model: 'slide.channel',
                 method: 'action_refuse_access',
                 args: [[this.activity.thread.id]],

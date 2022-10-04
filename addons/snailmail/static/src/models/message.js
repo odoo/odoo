@@ -12,7 +12,7 @@ registerPatch({
          */
         async cancelLetter() {
             // the result will come from the bus: message_notification_update
-            await this.messaging.rpc({
+            await this.global.Messaging.rpc({
                 model: 'mail.message',
                 method: 'cancel_letter',
                 args: [[this.id]],
@@ -35,7 +35,7 @@ registerPatch({
          * Opens the action about 'snailmail.letter' missing fields.
          */
         async openMissingFieldsLetterAction() {
-            const letterIds = await this.messaging.rpc({
+            const letterIds = await this.global.Messaging.rpc({
                 model: 'snailmail.letter',
                 method: 'search',
                 args: [[['message_id', '=', this.id]]],
@@ -54,7 +54,7 @@ registerPatch({
          */
         async resendLetter() {
             // the result will come from the bus: message_notification_update
-            await this.messaging.rpc({
+            await this.global.Messaging.rpc({
                 model: 'mail.message',
                 method: 'send_letter',
                 args: [[this.id]],

@@ -20,8 +20,8 @@ registerModel({
                 this.discussViewOwnerAsMobileAddItemHeader.onHideMobileAddItemHeader();
                 return;
             }
-            if (this.messagingMenuOwnerAsMobileNewMessageInput) {
-                this.messagingMenuOwnerAsMobileNewMessageInput.onHideMobileNewMessage();
+            if (this.global.MessagingMenuOwnerAsMobileNewMessageInput) {
+                this.global.MessagingMenuOwnerAsMobileNewMessageInput.onHideMobileNewMessage();
                 return;
             }
         },
@@ -67,8 +67,8 @@ registerModel({
                 this.discussViewOwnerAsMobileAddItemHeader.onMobileAddItemHeaderInputSelect(ev, ui);
                 return;
             }
-            if (this.messagingMenuOwnerAsMobileNewMessageInput) {
-                this.messagingMenuOwnerAsMobileNewMessageInput.onMobileNewMessageInputSelect(ev, ui);
+            if (this.global.MessagingMenuOwnerAsMobileNewMessageInput) {
+                this.global.MessagingMenuOwnerAsMobileNewMessageInput.onMobileNewMessageInputSelect(ev, ui);
                 return;
             }
         },
@@ -92,8 +92,8 @@ registerModel({
                 this.discussViewOwnerAsMobileAddItemHeader.onMobileAddItemHeaderInputSource(req, res);
                 return;
             }
-            if (this.messagingMenuOwnerAsMobileNewMessageInput) {
-                this.messagingMenuOwnerAsMobileNewMessageInput.onMobileNewMessageInputSource(req, res);
+            if (this.global.MessagingMenuOwnerAsMobileNewMessageInput) {
+                this.global.MessagingMenuOwnerAsMobileNewMessageInput.onMobileNewMessageInputSource(req, res);
                 return;
             }
         },
@@ -111,8 +111,8 @@ registerModel({
                         return 'o_DiscussSidebarCategory_newChannelAutocompleteSuggestions';
                     }
                 }
-                if (this.messagingMenuOwnerAsMobileNewMessageInput) {
-                    return this.messagingMenuOwnerAsMobileNewMessageInput.viewId + '_mobileNewMessageInputAutocomplete';
+                if (this.global.MessagingMenuOwnerAsMobileNewMessageInput) {
+                    return this.global.MessagingMenuOwnerAsMobileNewMessageInput.viewId + '_mobileNewMessageInputAutocomplete';
                 }
                 return clear();
             },
@@ -134,7 +134,7 @@ registerModel({
                 if (this.discussSidebarCategoryOwnerAsAddingItem) {
                     return true;
                 }
-                if (this.messagingMenuOwnerAsMobileNewMessageInput) {
+                if (this.global.MessagingMenuOwnerAsMobileNewMessageInput) {
                     return true;
                 }
                 return clear();
@@ -172,8 +172,8 @@ registerModel({
                 if (this.discussSidebarCategoryOwnerAsAddingItem) {
                     return this.discussSidebarCategoryOwnerAsAddingItem.newItemPlaceholderText;
                 }
-                if (this.messagingMenuOwnerAsMobileNewMessageInput) {
-                    return this.messagingMenuOwnerAsMobileNewMessageInput.mobileNewMessageInputPlaceholder;
+                if (this.global.MessagingMenuOwnerAsMobileNewMessageInput) {
+                    return this.global.MessagingMenuOwnerAsMobileNewMessageInput.mobileNewMessageInputPlaceholder;
                 }
                 return clear();
             },

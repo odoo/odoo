@@ -21,7 +21,7 @@ registerModel({
                     this.discuss.activeMobileNavbarTabId === 'mailbox' &&
                     (!this.discuss.activeThread || !this.discuss.activeThread.mailbox)
                 ) {
-                    this.discuss.update({ thread: this.messaging.inbox.thread });
+                    this.discuss.update({ thread: this.global.Messaging.inbox.thread });
                 }
                 if (this.discuss.activeMobileNavbarTabId !== 'mailbox') {
                     this.discuss.update({ thread: clear() });
@@ -33,8 +33,8 @@ registerModel({
                     this.discuss.discussView.update({ isAddingChannel: false });
                 }
             }
-            if (this.messagingMenu) {
-                this.messagingMenu.update({ activeTabId: tabId });
+            if (this.global.MessagingMenu) {
+                this.global.MessagingMenu.update({ activeTabId: tabId });
             }
         },
     },
@@ -48,8 +48,8 @@ registerModel({
                 if (this.discuss) {
                     return this.discuss.activeMobileNavbarTabId;
                 }
-                if (this.messagingMenu) {
-                    return this.messagingMenu.activeTabId;
+                if (this.global.MessagingMenu) {
+                    return this.global.MessagingMenu.activeTabId;
                 }
                 return clear();
             },
@@ -88,7 +88,7 @@ registerModel({
                         label: this.env._t("Channel"),
                     }];
                 }
-                if (this.messagingMenu) {
+                if (this.global.MessagingMenu) {
                     return [{
                         icon: 'fa fa-envelope',
                         id: 'all',

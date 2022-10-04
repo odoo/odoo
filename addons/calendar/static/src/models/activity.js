@@ -25,7 +25,7 @@ registerPatch({
             if (!this.calendar_event_id){
                 await this._super();
             } else {
-                await this.messaging.rpc({
+                await this.global.Messaging.rpc({
                     model: 'mail.activity',
                     method: 'unlink_w_meeting',
                     args: [[this.id]],
@@ -46,7 +46,7 @@ registerPatch({
             if (!this.calendar_event_id){
                 await this._super();
             } else {
-                const action = await this.messaging.rpc({
+                const action = await this.global.Messaging.rpc({
                     model: 'mail.activity',
                     method: 'action_create_calendar_event',
                     args: [[this.id]],

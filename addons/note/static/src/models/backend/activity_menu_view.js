@@ -61,7 +61,7 @@ registerPatch({
                 return;
             }
             this.update({ isAddingNote: false });
-            await this.messaging.rpc({
+            await this.global.Messaging.rpc({
                 route: '/note/new',
                 params: {
                     'note': note,

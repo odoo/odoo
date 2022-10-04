@@ -58,7 +58,7 @@ registerModel({
             const partner_ids = [];
             partner_ids.push(this.partner.id);
             const followedThread = this.followedThread;
-            await this.messaging.rpc({
+            await this.global.Messaging.rpc({
                 model: this.followedThread.model,
                 method: 'message_unsubscribe',
                 args: [[this.followedThread.id], partner_ids]
@@ -83,7 +83,7 @@ registerModel({
          * Show (editable) list of subtypes of this follower.
          */
         async showSubtypes() {
-            const subtypesData = await this.messaging.rpc({
+            const subtypesData = await this.global.Messaging.rpc({
                 route: '/mail/read_subscription_data',
                 params: { follower_id: this.id },
             });
@@ -92,8 +92,8 @@ registerModel({
             }
             this.update({ subtypes: clear() });
             for (const data of subtypesData) {
-                const subtype = this.messaging.models['FollowerSubtype'].insert(
-                    this.messaging.models['FollowerSubtype'].convertData(data)
+                const subtype = this.global.Messaging.models['FollowerSubtype'].insert(
+                    this.global.Messaging.models['FollowerSubtype'].convertData(data)
                 );
                 this.update({ subtypes: link(subtype) });
                 if (data.followed) {
@@ -125,7 +125,7 @@ registerModel({
                 if (this.partner) {
                     kwargs.partner_ids = [this.partner.id];
                 }
-                await this.messaging.rpc({
+                await this.global.Messaging.rpc({
                     model: this.followedThread.model,
                     method: 'message_subscribe',
                     args: [[this.followedThread.id]],
@@ -134,7 +134,7 @@ registerModel({
                 if (!this.exists()) {
                     return;
                 }
-                this.messaging.notify({
+                this.global.Messaging.notify({
                     type: 'success',
                     message: this.env._t("The subscription preferences were successfully applied."),
                 });
@@ -151,10 +151,10 @@ registerModel({
                 if (!this.followedThread) {
                     return clear();
                 }
-                if (!this.messaging.currentPartner) {
+                if (!this.global.Messaging.currentPartner) {
                     return clear();
                 }
-                if (this.partner === this.messaging.currentPartner) {
+                if (this.partner === this.global.Messaging.currentPartner) {
                     return this.followedThread;
                 }
                 return clear();
@@ -179,7 +179,7 @@ registerModel({
         isEditable: attr({
             compute() {
                 const hasWriteAccess = this.followedThread ? this.followedThread.hasWriteAccess : false;
-                return this.messaging.currentPartner === this.partner ? this.followedThread.hasReadAccess : hasWriteAccess;
+                return this.global.Messaging.currentPartner === this.partner ? this.followedThread.hasReadAccess : hasWriteAccess;
             },
         }),
         partner: one('Partner', {

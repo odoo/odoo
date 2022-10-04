@@ -62,7 +62,7 @@ registerModel({
          */
         searchSuggestions(searchTerm, { thread } = {}) {
             const cleanedSearchTerm = cleanSearchTerm(searchTerm);
-            return [this.messaging.cannedResponses.filter(cannedResponse =>
+            return [this.global.Messaging.cannedResponses.filter(cannedResponse =>
                 cleanSearchTerm(cannedResponse.source).includes(cleanedSearchTerm)
             )];
         },

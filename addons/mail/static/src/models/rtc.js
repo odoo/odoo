@@ -29,7 +29,7 @@ registerModel({
             browser.removeEventListener('beforeunload', this._onBeforeUnload);
             browser.removeEventListener('keydown', this._onKeyDown);
             browser.removeEventListener('keyup', this._onKeyUp);
-            this.messaging.browser.clearInterval(this.pingInterval);
+            this.global.Messaging.browser.clearInterval(this.pingInterval);
         },
     },
     recordMethods: {
@@ -61,7 +61,7 @@ registerModel({
          */
         async handleNotification(sender, content) {
             const { event, channelId, payload } = JSON.parse(content);
-            const rtcSession = this.messaging.models['RtcSession'].findFromIdentifyingData({ id: sender });
+            const rtcSession = this.global.Messaging.models['RtcSession'].findFromIdentifyingData({ id: sender });
             if (!rtcSession || rtcSession.channel !== this.channel) {
                 // does handle notifications targeting a different session
                 return;
@@ -147,7 +147,7 @@ registerModel({
             }
             if (type === 'peerToPeer') {
                 for (const token of targetTokens) {
-                    const rtcSession = this.messaging.models['RtcSession'].findFromIdentifyingData({ id: token });
+                    const rtcSession = this.global.Messaging.models['RtcSession'].findFromIdentifyingData({ id: token });
                     if (!rtcSession) {
                         continue;
                     }
@@ -185,8 +185,8 @@ registerModel({
             this.audioTrack && this.audioTrack.stop();
             this.videoTrack && this.videoTrack.stop();
 
-            for (const rtcSession of this.messaging.models['RtcSession'].all()) {
-                this.messaging.browser.clearTimeout(rtcSession.connectionRecoveryTimeout);
+            for (const rtcSession of this.global.Messaging.models['RtcSession'].all()) {
+                this.global.Messaging.browser.clearTimeout(rtcSession.connectionRecoveryTimeout);
                 rtcSession.update({
                     connectionRecoveryTimeout: clear(),
                     isCurrentUserInitiatorOfConnectionOffer: clear(),
@@ -258,7 +258,7 @@ registerModel({
                     const audioStream = await browser.navigator.mediaDevices.getUserMedia({ audio: this.global.UserSetting.getAudioConstraints() });
                     audioTrack = audioStream.getAudioTracks()[0];
                 } catch (_e) {
-                    this.messaging.notify({
+                    this.global.Messaging.notify({
                         message: sprintf(
                             this.env._t(`"%s" requires microphone access`),
                             window.location.host,
@@ -337,7 +337,7 @@ registerModel({
                  * in that case, voice activation is not enabled
                  * and the microphone is always 'on'.
                  */
-                this.messaging.notify({
+                this.global.Messaging.notify({
                     message: this.env._t("Your browser does not support voice activation"),
                     type: 'warning',
                 });
@@ -490,7 +490,7 @@ registerModel({
                 }
             };
             rtcSession.update({ rtcPeerConnection: { peerConnection } });
-            this.messaging.models['RtcDataChannel'].insert({
+            this.global.Messaging.models['RtcDataChannel'].insert({
                 dataChannel,
                 rtcSession,
             });
@@ -648,7 +648,7 @@ registerModel({
          */
         async _pingServer() {
             const channel = this.channel;
-            const { rtcSessions } = await this.messaging.rpc({
+            const { rtcSessions } = await this.global.Messaging.rpc({
                 route: '/mail/channel/ping',
                 params: {
                     'channel_id': channel.id,
@@ -675,7 +675,7 @@ registerModel({
                 return;
             }
             rtcSession.update({
-                connectionRecoveryTimeout: this.messaging.browser.setTimeout(
+                connectionRecoveryTimeout: this.global.Messaging.browser.setTimeout(
                     this._onRecoverConnectionTimeout.bind(this, rtcSession, reason),
                     delay,
                 ),
@@ -688,7 +688,7 @@ registerModel({
          * @param {number} sessionId
          */
         _removePeer(sessionId) {
-            const rtcSession = this.messaging.models['RtcSession'].findFromIdentifyingData({ id: sessionId });
+            const rtcSession = this.global.Messaging.models['RtcSession'].findFromIdentifyingData({ id: sessionId });
             if (rtcSession) {
                 rtcSession.reset();
                 const rtcDataChannel = rtcSession.rtcDataChannel;
@@ -701,7 +701,7 @@ registerModel({
                 this._removeRemoteTracks(rtcPeerConnection.peerConnection);
                 rtcPeerConnection.delete();
             }
-            this.messaging.models['RtcSession'].insert({
+            this.global.Messaging.models['RtcSession'].insert({
                 id: sessionId,
                 isCurrentUserInitiatorOfConnectionOffer: clear(),
             });
@@ -744,7 +744,7 @@ registerModel({
             await new Promise(resolve => setTimeout(resolve, this.peerNotificationWaitDelay));
             const peerNotifications = this.peerNotificationsToSend;
             try {
-                await this.messaging.rpc({
+                await this.global.Messaging.rpc({
                     route: '/mail/rtc/session/notify_call_members',
                     params: {
                         'peer_notifications': peerNotifications.map(peerNotification =>
@@ -802,7 +802,7 @@ registerModel({
          */
         async _setDeafState(isDeaf) {
             this.currentRtcSession.updateAndBroadcast({ isDeaf });
-            for (const session of this.messaging.models['RtcSession'].all()) {
+            for (const session of this.global.Messaging.models['RtcSession'].all()) {
                 if (!session.audioElement) {
                     continue;
                 }
@@ -949,7 +949,7 @@ registerModel({
                     this.global.SoundEffects.screenSharing.play();
                 }
             } catch (_e) {
-                this.messaging.notify({
+                this.global.Messaging.notify({
                     message: sprintf(
                         this.env._t(`"%s" requires "%s" access`),
                         window.location.host,
@@ -967,7 +967,7 @@ registerModel({
                     const mediaStream = await this.blurManager.stream;
                     videoStream = mediaStream.webMediaStream;
                 } catch (_e) {
-                    this.messaging.notify({
+                    this.global.Messaging.notify({
                         message: sprintf(
                             this.env._t('To %(name)s: %(message)s)'), {
                                 name: _e.name,
@@ -1061,7 +1061,7 @@ registerModel({
             if (this.global.UserSetting.isRegisteringKey) {
                 return;
             }
-            this.messaging.browser.clearTimeout(this.pushToTalkTimeout);
+            this.global.Messaging.browser.clearTimeout(this.pushToTalkTimeout);
             if (!this.currentRtcSession.isTalking) {
                 this.global.SoundEffects.pushToTalkOn.play();
                 this._setSoundBroadcast(true);
@@ -1085,7 +1085,7 @@ registerModel({
                 this.global.SoundEffects.pushToTalkOff.play();
             }
             this.update({
-                pushToTalkTimeout: this.messaging.browser.setTimeout(
+                pushToTalkTimeout: this.global.Messaging.browser.setTimeout(
                     this._onPushToTalkTimeout,
                     this.global.UserSetting.voiceActiveDuration,
                 ),
@@ -1218,7 +1218,7 @@ registerModel({
          */
         pingInterval: attr({
             compute() {
-                return this.messaging.browser.setInterval(this._onPingInterval, 30000); // 30 seconds
+                return this.global.Messaging.browser.setInterval(this._onPingInterval, 30000); // 30 seconds
             },
         }),
         /**

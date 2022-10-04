@@ -7,7 +7,7 @@ registerPatch({
     name: 'Messaging',
     recordMethods: {
         async fetchSnailmailCreditsUrl() {
-            const snailmail_credits_url = await this.messaging.rpc({
+            const snailmail_credits_url = await this.global.Messaging.rpc({
                 model: 'iap.account',
                 method: 'get_credits_url',
                 args: ['snailmail'],
@@ -20,7 +20,7 @@ registerPatch({
             });
         },
         async fetchSnailmailCreditsUrlTrial() {
-            const snailmail_credits_url_trial = await this.messaging.rpc({
+            const snailmail_credits_url_trial = await this.global.Messaging.rpc({
                 model: 'iap.account',
                 method: 'get_credits_url',
                 args: ['snailmail', '', 0, true],

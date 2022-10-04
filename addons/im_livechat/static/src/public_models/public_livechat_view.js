@@ -10,7 +10,7 @@ registerModel({
     lifecycleHooks: {
         _created() {
             this.update({
-                widget: new PublicLivechatView(this, this.messaging, { displayMarkAsRead: false }),
+                widget: new PublicLivechatView(this, this.global.Messaging, { displayMarkAsRead: false }),
             });
         },
         _willDelete() {

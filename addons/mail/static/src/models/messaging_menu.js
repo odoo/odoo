@@ -60,7 +60,7 @@ registerModel({
          * @param {integer} ui.item.id
          */
         onMobileNewMessageInputSelect(ev, ui) {
-            this.messaging.openChat({ partnerId: ui.item.id });
+            this.global.Messaging.openChat({ partnerId: ui.item.id });
         },
         /**
          * @param {Object} req
@@ -69,7 +69,7 @@ registerModel({
          */
         onMobileNewMessageInputSource(req, res) {
             const value = _.escape(req.term);
-            this.messaging.models['Partner'].imSearch({
+            this.global.Messaging.models['Partner'].imSearch({
                 callback: partners => {
                     const suggestions = partners.map(partner => {
                         return {
@@ -96,10 +96,10 @@ registerModel({
          */
         toggleOpen() {
             this.update({ isOpen: !this.isOpen });
-            this.messaging.refreshIsNotificationPermissionDefault();
+            this.global.Messaging.refreshIsNotificationPermissionDefault();
             if (this.isOpen) {
                 // populate some needaction messages on threads.
-                this.messaging.inbox.thread.cache.update({ isCacheRefreshRequested: true });
+                this.global.Messaging.inbox.thread.cache.update({ isCacheRefreshRequested: true });
             }
         },
         /**
@@ -139,16 +139,16 @@ registerModel({
          */
         counter: attr({
             compute() {
-                if (!this.messaging) {
+                if (!this.global.Messaging) {
                     return 0;
                 }
-                const inboxCounter = this.messaging.inbox ? this.messaging.inbox.counter : 0;
+                const inboxCounter = this.global.Messaging.inbox ? this.global.Messaging.inbox.counter : 0;
                 const unreadChannelsCounter = this.pinnedAndUnreadChannels.length;
-                const notificationGroupsCounter = this.messaging.models['NotificationGroup'].all().reduce(
+                const notificationGroupsCounter = this.global.Messaging.models['NotificationGroup'].all().reduce(
                     (total, group) => total + group.notifications.length,
                     0
                 );
-                const notificationPemissionCounter = this.messaging.isNotificationPermissionDefault ? 1 : 0;
+                const notificationPemissionCounter = this.global.Messaging.isNotificationPermissionDefault ? 1 : 0;
                 return inboxCounter + unreadChannelsCounter + notificationGroupsCounter + notificationPemissionCounter;
             },
         }),
@@ -184,7 +184,7 @@ registerModel({
         }),
         mobileNewMessageAutocompleteInputView: one('AutocompleteInputView', {
             compute() {
-                if (this.isOpen && this.messaging.isInitialized && this.global.Device.isSmall && this.isMobileNewMessageToggled) {
+                if (this.isOpen && this.global.Messaging.isInitialized && this.global.Device.isSmall && this.isMobileNewMessageToggled) {
                     return {};
                 }
                 return clear();

@@ -16,11 +16,11 @@ registerModel({
          * @param {boolean} [resUsersSettings.is_category_chat_open]
          */
         async performRpcSetResUsersSettings(resUsersSettings) {
-            return this.messaging.rpc(
+            return this.global.Messaging.rpc(
                 {
                     model: 'res.users.settings',
                     method: 'set_res_users_settings',
-                    args: [[this.messaging.currentUser.res_users_settings_id.id]],
+                    args: [[this.global.Messaging.currentUser.res_users_settings_id.id]],
                     kwargs: {
                         new_settings: resUsersSettings,
                     },
@@ -35,7 +35,7 @@ registerModel({
          */
         async close() {
             this.update({ isPendingOpen: false });
-            await this.messaging.models['DiscussSidebarCategory'].performRpcSetResUsersSettings({
+            await this.global.Messaging.models['DiscussSidebarCategory'].performRpcSetResUsersSettings({
                 [this.serverStateKey]: false,
             });
         },
@@ -44,7 +44,7 @@ registerModel({
          */
         async open() {
             this.update({ isPendingOpen: true });
-            await this.messaging.models['DiscussSidebarCategory'].performRpcSetResUsersSettings({
+            await this.global.Messaging.models['DiscussSidebarCategory'].performRpcSetResUsersSettings({
                 [this.serverStateKey]: true,
             });
         },
@@ -327,17 +327,17 @@ registerModel({
         isServerOpen: attr({
             compute() {
                 // there is no server state for non-users (guests)
-                if (!this.messaging.currentUser) {
+                if (!this.global.Messaging.currentUser) {
                     return clear();
                 }
-                if (!this.messaging.currentUser.res_users_settings_id) {
+                if (!this.global.Messaging.currentUser.res_users_settings_id) {
                     return clear();
                 }
                 if (this.discussAsChannel) {
-                    return this.messaging.currentUser.res_users_settings_id.is_discuss_sidebar_category_channel_open;
+                    return this.global.Messaging.currentUser.res_users_settings_id.is_discuss_sidebar_category_channel_open;
                 }
                 if (this.discussAsChat) {
-                    return this.messaging.currentUser.res_users_settings_id.is_discuss_sidebar_category_chat_open;
+                    return this.global.Messaging.currentUser.res_users_settings_id.is_discuss_sidebar_category_chat_open;
                 }
                 return clear();
             },

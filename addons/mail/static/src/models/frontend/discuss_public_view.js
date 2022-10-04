@@ -39,8 +39,8 @@ registerModel({
                 welcomeView: {
                     channel: this.channel,
                     isDoFocusGuestNameInput: true,
-                    originalGuestName: this.messaging.currentGuest && this.messaging.currentGuest.name,
-                    pendingGuestName: this.messaging.currentGuest && this.messaging.currentGuest.name,
+                    originalGuestName: this.global.Messaging.currentGuest && this.global.Messaging.currentGuest.name,
+                    pendingGuestName: this.global.Messaging.currentGuest && this.global.Messaging.currentGuest.name,
                 },
             });
             if (this.welcomeView.callDemoView) {

@@ -30,7 +30,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickMarkAsRead(ev) {
-            this.messaging.models['Message'].markAllAsRead([
+            this.global.Messaging.models['Message'].markAllAsRead([
                 ['model', '=', this.thread.model],
                 ['res_id', '=', this.thread.id],
             ]);

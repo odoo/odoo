@@ -22,7 +22,7 @@ registerModel({
         async _loadPreviews() {
             const threads = this.channelPreviewViews
                 .map(channelPreviewView => channelPreviewView.thread);
-            this.messaging.models['Thread'].loadPreviews(threads);
+            this.global.Messaging.models['Thread'].loadPreviews(threads);
         },
     },
     fields: {
@@ -60,8 +60,8 @@ registerModel({
                 if (this.discussOwner) {
                     return this.discussOwner.activeMobileNavbarTabId;
                 }
-                if (this.messagingMenuOwner) {
-                    return this.messagingMenuOwner.activeTabId;
+                if (this.global.MessagingMenuOwner) {
+                    return this.global.MessagingMenuOwner.activeTabId;
                 }
                 return clear();
             },
@@ -70,7 +70,7 @@ registerModel({
             compute() {
                 switch (this.filter) {
                     case 'channel': {
-                        return this.messaging.models['Channel']
+                        return this.global.Messaging.models['Channel']
                             .all(channel =>
                                 channel.channel_type === 'channel' &&
                                 channel.thread.isPinned
@@ -78,7 +78,7 @@ registerModel({
                             .sort((c1, c2) => c1.displayName < c2.displayName ? -1 : 1);
                     }
                     case 'chat': {
-                        return this.messaging.models['Channel']
+                        return this.global.Messaging.models['Channel']
                             .all(channel =>
                                 channel.thread.isChatChannel &&
                                 channel.thread.isPinned
@@ -87,7 +87,7 @@ registerModel({
                     }
                     case 'all': {
                         // "All" filter is for channels and chats
-                        return this.messaging.models['Channel']
+                        return this.global.Messaging.models['Channel']
                             .all(channel => channel.thread.isPinned)
                             .sort((c1, c2) => c1.displayName < c2.displayName ? -1 : 1);
                     }
@@ -113,7 +113,7 @@ registerModel({
         }),
         notificationRequestView: one('NotificationRequestView', {
             compute() {
-                return (this.filter === 'all' && this.messaging.isNotificationPermissionDefault) ? {} : clear();
+                return (this.filter === 'all' && this.global.Messaging.isNotificationPermissionDefault) ? {} : clear();
             },
             inverse: 'notificationListViewOwner',
         }),
@@ -135,7 +135,7 @@ registerModel({
                 if (this.filter !== 'all') {
                     return clear();
                 }
-                return this.messaging.models['Thread']
+                return this.global.Messaging.models['Thread']
                     .all(t => !t.mailbox && t.needactionMessagesAsOriginThread.length > 0)
                     .sort((t1, t2) => {
                         if (t1.needactionMessagesAsOriginThread.length > 0 && t2.needactionMessagesAsOriginThread.length === 0) {

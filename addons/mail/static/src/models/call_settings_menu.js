@@ -13,7 +13,7 @@ registerModel({
         async _created() {
             browser.addEventListener('keydown', this._onKeyDown);
             browser.addEventListener('keyup', this._onKeyUp);
-            this.update({ userDevices: await this.messaging.browser.navigator.mediaDevices.enumerateDevices() });
+            this.update({ userDevices: await this.global.Messaging.browser.navigator.mediaDevices.enumerateDevices() });
         },
         _willDelete() {
             browser.removeEventListener('keydown', this._onKeyDown);

@@ -65,11 +65,11 @@ registerModel({
         }),
         isMemberOfCurrentUser: attr({
             compute() {
-                if (this.messaging.currentPartner) {
-                    return this.messaging.currentPartner.persona === this.persona;
+                if (this.global.Messaging.currentPartner) {
+                    return this.global.Messaging.currentPartner.persona === this.persona;
                 }
-                if (this.messaging.currentGuest) {
-                    return this.messaging.currentGuest.persona === this.persona;
+                if (this.global.Messaging.currentGuest) {
+                    return this.global.Messaging.currentGuest.persona === this.persona;
                 }
                 return clear();
             },

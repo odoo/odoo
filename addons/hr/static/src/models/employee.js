@@ -46,7 +46,7 @@ registerModel({
          * @param {integer[]} param0.ids
          */
         async performRpcRead({ context, fields, ids }) {
-            const employeesData = await this.messaging.rpc({
+            const employeesData = await this.global.Messaging.rpc({
                 model: 'hr.employee.public',
                 method: 'read',
                 args: [ids, fields],
@@ -54,8 +54,8 @@ registerModel({
                     context,
                 },
             });
-            this.messaging.models['Employee'].insert(employeesData.map(employeeData =>
-                this.messaging.models['Employee'].convertData(employeeData)
+            this.global.Messaging.models['Employee'].insert(employeesData.map(employeeData =>
+                this.global.Messaging.models['Employee'].convertData(employeeData)
             ));
         },
         /**
@@ -67,7 +67,7 @@ registerModel({
          * @param {string[]} param0.fields
          */
         async performRpcSearchRead({ context, domain, fields }) {
-            const employeesData = await this.messaging.rpc({
+            const employeesData = await this.global.Messaging.rpc({
                 model: 'hr.employee.public',
                 method: 'search_read',
                 kwargs: {
@@ -76,8 +76,8 @@ registerModel({
                     fields,
                 },
             });
-            this.messaging.models['Employee'].insert(employeesData.map(employeeData =>
-                this.messaging.models['Employee'].convertData(employeeData)
+            this.global.Messaging.models['Employee'].insert(employeesData.map(employeeData =>
+                this.global.Messaging.models['Employee'].convertData(employeeData)
             ));
         },
     },
@@ -87,7 +87,7 @@ registerModel({
          * them if applicable.
          */
         async checkIsUser() {
-            return this.messaging.models['Employee'].performRpcRead({
+            return this.global.Messaging.models['Employee'].performRpcRead({
                 ids: [this.id],
                 fields: ['user_id', 'user_partner_id'],
                 context: { active_test: false },
@@ -109,7 +109,7 @@ registerModel({
             }
             // prevent chatting with non-users
             if (!this.user) {
-                this.messaging.notify({
+                this.global.Messaging.notify({
                     message: this.env._t("You can only chat with employees that have a dedicated user."),
                     type: 'info',
                 });
@@ -142,7 +142,7 @@ registerModel({
          * Opens the most appropriate view that is a profile for this employee.
          */
         async openProfile() {
-            return this.messaging.openDocument({
+            return this.global.Messaging.openDocument({
                 id: this.id,
                 model: 'hr.employee.public',
             });

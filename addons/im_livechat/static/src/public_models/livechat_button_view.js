@@ -29,7 +29,7 @@ registerModel({
             if (hasAlreadyMessage) {
                 return;
             }
-            const message = this.messaging.models['PublicLivechatMessage'].insert({
+            const message = this.global.Messaging.models['PublicLivechatMessage'].insert({
                 data,
                 id: data.id,
             });
@@ -84,7 +84,7 @@ registerModel({
                 clearTimeout(this.global.PublicLivechatGlobal.chatbot.welcomeMessageTimeout);
             }
 
-            const postedMessage = await this.messaging.rpc({
+            const postedMessage = await this.global.Messaging.rpc({
                 route: '/chatbot/restart',
                 params: {
                     channel_uuid: this.global.PublicLivechatGlobal.publicLivechat.uuid,
@@ -117,7 +117,7 @@ registerModel({
             const cookie = getCookie('im_livechat_session');
             if (cookie) {
                 const channel = JSON.parse(cookie);
-                this.messaging.rpc({ route: '/im_livechat/visitor_leave_session', params: { uuid: channel.uuid } });
+                this.global.Messaging.rpc({ route: '/im_livechat/visitor_leave_session', params: { uuid: channel.uuid } });
                 deleteCookie('im_livechat_session');
             }
         },
@@ -192,7 +192,7 @@ registerModel({
             } else {
                 // re-initialize messages cache
                 this.global.PublicLivechatGlobal.update({ messages: clear() });
-                def = this.messaging.rpc({
+                def = this.global.Messaging.rpc({
                     route: '/im_livechat/get_session',
                     params: this.widget._prepareGetSessionParameters(),
                 }, { silent: true });
@@ -226,10 +226,10 @@ registerModel({
                         this.global.PublicLivechatGlobal.update({ notificationHandler: {} });
 
 <<<<<<< HEAD
-                        setCookie('im_livechat_session', unaccent(JSON.stringify(this.messaging.publicLivechatGlobal.publicLivechat.widget.toData()), true), 60 * 60, 'required');
+                        setCookie('im_livechat_session', unaccent(JSON.stringify(this.global.Messaging.publicLivechatGlobal.publicLivechat.widget.toData()), true), 60 * 60, 'required');
                         setCookie('im_livechat_auto_popup', JSON.stringify(false), 60 * 60, 'optional');
-                        if (this.messaging.publicLivechatGlobal.publicLivechat.operator) {
-                            const operatorPidId = this.messaging.publicLivechatGlobal.publicLivechat.operator.id;
+                        if (this.global.Messaging.publicLivechatGlobal.publicLivechat.operator) {
+                            const operatorPidId = this.global.Messaging.publicLivechatGlobal.publicLivechat.operator.id;
 =======
                         set_cookie('im_livechat_session', unaccent(JSON.stringify(this.global.PublicLivechatGlobal.publicLivechat.widget.toData()), true), 60 * 60);
                         set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60 * 60);
@@ -280,7 +280,7 @@ registerModel({
          */
         async _sendMessage(message) {
             this.global.PublicLivechatGlobal.publicLivechat.widget._notifyMyselfTyping({ typing: false });
-            const messageId = await this.messaging.rpc({
+            const messageId = await this.global.Messaging.rpc({
                 route: '/mail/chat_post',
                 params: { uuid: this.global.PublicLivechatGlobal.publicLivechat.uuid, message_content: message.content },
             });

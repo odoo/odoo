@@ -15,7 +15,7 @@ registerModel({
     recordMethods: {
         onBroadcastTimeout() {
             this.update({ broadcastTimer: clear() });
-            this.messaging.rpc(
+            this.global.Messaging.rpc(
                 {
                     route: '/mail/rtc/session/update_and_broadcast',
                     params: {
@@ -35,7 +35,7 @@ registerModel({
          * restores the session to its default values
          */
         reset() {
-            this.messaging.browser.clearTimeout(this.connectionRecoveryTimeout);
+            this.global.Messaging.browser.clearTimeout(this.connectionRecoveryTimeout);
             this.removeVideo();
             this._removeAudio();
             this.update({
@@ -71,7 +71,7 @@ registerModel({
             if (this.isOwnSession) {
                 return;
             }
-            if (this.messaging.isCurrentUserGuest) {
+            if (this.global.Messaging.isCurrentUserGuest) {
                 return;
             }
             if (this.channelMember.persona.volumeSetting) {
@@ -395,11 +395,11 @@ registerModel({
          */
         isOwnSession: attr({
             compute() {
-                if (!this.messaging || !this.channelMember) {
+                if (!this.global.Messaging || !this.channelMember) {
                     return;
                 }
-                return (this.channelMember.persona.partner && this.messaging.currentPartner === this.channelMember.persona.partner) ||
-                    (this.channelMember.persona.guest && this.messaging.currentGuest === this.channelMember.persona.guest);
+                return (this.channelMember.persona.partner && this.global.Messaging.currentPartner === this.channelMember.persona.partner) ||
+                    (this.channelMember.persona.guest && this.global.Messaging.currentGuest === this.channelMember.persona.guest);
             },
         }),
         /**
@@ -444,7 +444,7 @@ registerModel({
         }),
         rtcAsConnectedSession: one('Rtc', {
             compute() {
-                if (!this.messaging || !this.global.Rtc) {
+                if (!this.global.Messaging || !this.global.Rtc) {
                     return clear();
                 }
                 if (this.rtcPeerConnection) {

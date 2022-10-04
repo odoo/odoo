@@ -90,12 +90,12 @@ registerModel({
             return this.modelManager.env;
         },
         /**
-         * Returns the messaging singleton.
+         * Returns the global singleton.
          *
-         * @returns {Messaging}
+         * @returns {Global}
          */
         messaging() {
-            return this.modelManager && this.modelManager.messaging;
+            return this.modelManager && this.modelManager.global;
         },
         /**
          * Returns all existing models.

@@ -22,14 +22,14 @@ registerPatch({
         isServerOpen: {
             compute() {
                 // there is no server state for non-users (guests)
-                if (!this.messaging.currentUser) {
+                if (!this.global.Messaging.currentUser) {
                     return clear();
                 }
-                if (!this.messaging.currentUser.res_users_settings_id) {
+                if (!this.global.Messaging.currentUser.res_users_settings_id) {
                     return clear();
                 }
                 if (this.discussAsLivechat) {
-                    return this.messaging.currentUser.res_users_settings_id.is_discuss_sidebar_category_livechat_open;
+                    return this.global.Messaging.currentUser.res_users_settings_id.is_discuss_sidebar_category_livechat_open;
                 }
                 return this._super();
             },

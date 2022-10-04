@@ -29,7 +29,7 @@ registerModel({
             // Flux specific: 'closed' fold state should only be saved on the
             // server when manually closing the chat window. Delete at destroy
             // or sync from server value for example should not save the value.
-            if (this.thread && notifyServer && !this.messaging.currentGuest) {
+            if (this.thread && notifyServer && !this.global.Messaging.currentGuest) {
                 this.thread.notifyFoldStateToServer('closed');
             }
             if (this.exists()) {
@@ -76,7 +76,7 @@ registerModel({
             this.update({ isFolded: true });
             // Flux specific: manually folding the chat window should save the
             // new state on the server.
-            if (this.thread && notifyServer && !this.messaging.currentGuest) {
+            if (this.thread && notifyServer && !this.global.Messaging.currentGuest) {
                 this.thread.notifyFoldStateToServer('folded');
             }
         },
@@ -114,7 +114,7 @@ registerModel({
          * @param {integer} ui.item.id
          */
         async onAutocompleteSelect(ev, ui) {
-            const chat = await this.messaging.getChat({ partnerId: ui.item.id });
+            const chat = await this.global.Messaging.getChat({ partnerId: ui.item.id });
             if (!chat) {
                 return;
             }
@@ -132,7 +132,7 @@ registerModel({
          * @param {function} res
          */
         onAutocompleteSource(req, res) {
-            this.messaging.models['Partner'].imSearch({
+            this.global.Messaging.models['Partner'].imSearch({
                 callback: (partners) => {
                     const suggestions = partners.map(partner => {
                         return {
@@ -246,7 +246,7 @@ registerModel({
                 },
                 isMemberListOpened: false,
             });
-            if (!this.messaging.isCurrentUserGuest) {
+            if (!this.global.Messaging.isCurrentUserGuest) {
                 this.channelInvitationForm.searchPartnersToInvite();
             }
         },
@@ -359,7 +359,7 @@ registerModel({
             this.update({ isFolded: false });
             // Flux specific: manually opening the chat window should save the
             // new state on the server.
-            if (this.thread && notifyServer && !this.messaging.currentGuest) {
+            if (this.thread && notifyServer && !this.global.Messaging.currentGuest) {
                 this.thread.notifyFoldStateToServer('open');
             }
         },
@@ -475,7 +475,7 @@ registerModel({
             compute() {
                 return Boolean(
                     this.thread && this.thread.hasInviteFeature &&
-                    this.messaging && this.global.Device && this.global.Device.isSmall
+                    this.global.Messaging && this.global.Device && this.global.Device.isSmall
                 );
             },
         }),

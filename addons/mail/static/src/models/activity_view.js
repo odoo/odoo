@@ -21,7 +21,7 @@ registerModel({
                 ev.target.dataset.oeId &&
                 ev.target.dataset.oeModel
             ) {
-                this.messaging.openProfile({
+                this.global.Messaging.openProfile({
                     id: Number(ev.target.dataset.oeId),
                     model: ev.target.dataset.oeModel,
                 });

@@ -48,11 +48,11 @@ registerPatch({
          */
         async getChat({ partnerId, userId }) {
             if (userId) {
-                const user = this.messaging.models['User'].insert({ id: userId });
+                const user = this.global.Messaging.models['User'].insert({ id: userId });
                 return user.getChat();
             }
             if (partnerId) {
-                const partner = this.messaging.models['Partner'].insert({ id: partnerId });
+                const partner = this.global.Messaging.models['Partner'].insert({ id: partnerId });
                 return partner.getChat();
             }
         },
@@ -159,24 +159,24 @@ registerPatch({
          */
         async openProfile({ id, model }) {
             if (model === 'res.partner') {
-                const partner = this.messaging.models['Partner'].insert({ id });
+                const partner = this.global.Messaging.models['Partner'].insert({ id });
                 return partner.openProfile();
             }
             if (model === 'res.users') {
-                const user = this.messaging.models['User'].insert({ id });
+                const user = this.global.Messaging.models['User'].insert({ id });
                 return user.openProfile();
             }
             if (model === 'mail.channel') {
-                let channel = this.messaging.models['Thread'].findFromIdentifyingData({ id, model: 'mail.channel' });
+                let channel = this.global.Messaging.models['Thread'].findFromIdentifyingData({ id, model: 'mail.channel' });
                 if (!channel) {
-                    const res = await this.messaging.models['Thread'].performRpcChannelInfo({ ids: [id] });
+                    const res = await this.global.Messaging.models['Thread'].performRpcChannelInfo({ ids: [id] });
                     if (!this.exists()) {
                         return;
                     }
                     channel = res[0];
                 }
                 if (!channel) {
-                    this.messaging.notify({
+                    this.global.Messaging.notify({
                         message: this.env._t("You can only open the profile of existing channels."),
                         type: 'warning',
                     });
@@ -184,7 +184,7 @@ registerPatch({
                 }
                 return channel.openProfile();
             }
-            return this.messaging.openDocument({ id, model });
+            return this.global.Messaging.openDocument({ id, model });
         },
         /**
          * Refreshes the value of `isNotificationPermissionDefault`.
@@ -193,7 +193,7 @@ registerPatch({
          * provide an API to detect when this value changes.
          */
         refreshIsNotificationPermissionDefault() {
-            const browserNotification = this.messaging.browser.Notification;
+            const browserNotification = this.global.Messaging.browser.Notification;
             this.update({
                 isNotificationPermissionDefault: Boolean(browserNotification) && browserNotification.permission === 'default',
             });

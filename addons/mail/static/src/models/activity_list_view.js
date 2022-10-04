@@ -12,8 +12,8 @@ registerModel({
             if (this.activities.length === 0) {
                 return;
             }
-            const messaging = this.messaging;
-            const activitiesData = await this.messaging.rpc({
+            const messaging = this.global.Messaging;
+            const activitiesData = await this.global.Messaging.rpc({
                 model: 'mail.activity',
                 method: 'activity_format',
                 args: [this.activities.map(activity => activity.id)],
@@ -31,7 +31,7 @@ registerModel({
         onClickAddActivityButton() {
             const thread = this.thread;
             const webRecord = this.webRecord;
-            this.messaging.openActivityForm({
+            this.global.Messaging.openActivityForm({
                 thread,
             }).then(() => {
                 thread.fetchData(['activities']);

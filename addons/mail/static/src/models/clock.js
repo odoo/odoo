@@ -16,7 +16,7 @@ registerModel({
             this.update({ date: new Date() });
         },
         _willDelete() {
-            this.messaging.browser.clearInterval(this.tickInterval);
+            this.global.Messaging.browser.clearInterval(this.tickInterval);
         },
     },
     recordMethods: {
@@ -50,7 +50,7 @@ registerModel({
         }),
         tickInterval: attr({
             compute() {
-                return this.messaging.browser.setInterval(this._onInterval, this.frequency);
+                return this.global.Messaging.browser.setInterval(this._onInterval, this.frequency);
             },
         }),
         /**

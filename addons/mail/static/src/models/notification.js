@@ -90,10 +90,10 @@ registerModel({
         }),
         isFromCurrentUser: attr({
             compute() {
-                if (!this.messaging || !this.messaging.currentPartner || !this.message || !this.message.author) {
+                if (!this.global.Messaging || !this.global.Messaging.currentPartner || !this.message || !this.message.author) {
                     return clear();
                 }
-                return this.messaging.currentPartner === this.message.author;
+                return this.global.Messaging.currentPartner === this.message.author;
             },
         }),
         message: one('Message', {

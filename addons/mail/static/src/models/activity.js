@@ -105,7 +105,7 @@ registerModel({
          * Delete the record from database and locally.
          */
         async deleteServerRecord() {
-            await this.messaging.rpc({
+            await this.global.Messaging.rpc({
                 model: 'mail.activity',
                 method: 'unlink',
                 args: [[this.id]],
@@ -122,13 +122,13 @@ registerModel({
          * @return {Promise} promise that is fulfilled when the form has been closed
          */
         async edit() {
-            await this.messaging.openActivityForm({ activity: this });
+            await this.global.Messaging.openActivityForm({ activity: this });
             if (this.exists()) {
                 this.fetchAndUpdate();
             }
         },
         async fetchAndUpdate() {
-            const [data] = await this.messaging.rpc({
+            const [data] = await this.global.Messaging.rpc({
                 model: 'mail.activity',
                 method: 'activity_format',
                 args: [this.id],
@@ -159,7 +159,7 @@ registerModel({
         async markAsDone({ attachments = [], feedback = false }) {
             const attachmentIds = attachments.map(attachment => attachment.id);
             const thread = this.thread;
-            await this.messaging.rpc({
+            await this.global.Messaging.rpc({
                 model: 'mail.activity',
                 method: 'action_feedback',
                 args: [[this.id]],
@@ -183,7 +183,7 @@ registerModel({
          */
         async markAsDoneAndScheduleNext({ feedback }) {
             const thread = this.thread;
-            const action = await this.messaging.rpc({
+            const action = await this.global.Messaging.rpc({
                 model: 'mail.activity',
                 method: 'action_feedback_schedule_next',
                 args: [[this.id]],
@@ -243,10 +243,10 @@ registerModel({
         }),
         isCurrentPartnerAssignee: attr({
             compute() {
-                if (!this.assignee || !this.assignee.partner || !this.messaging.currentPartner) {
+                if (!this.assignee || !this.assignee.partner || !this.global.Messaging.currentPartner) {
                     return false;
                 }
-                return this.assignee.partner === this.messaging.currentPartner;
+                return this.assignee.partner === this.global.Messaging.currentPartner;
             },
             default: false,
         }),

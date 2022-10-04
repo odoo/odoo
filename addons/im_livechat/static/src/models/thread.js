@@ -50,10 +50,10 @@ registerPatch({
          */
         messagingAsPinnedLivechat: one('Messaging', {
             compute() {
-                if (!this.messaging || !this.channel || this.channel.channel_type !== 'livechat' || !this.isPinned) {
+                if (!this.global.Messaging || !this.channel || this.channel.channel_type !== 'livechat' || !this.isPinned) {
                     return clear();
                 }
-                return this.messaging;
+                return this.global.Messaging;
             },
             inverse: 'pinnedLivechats',
         }),

@@ -65,7 +65,7 @@ registerModel({
         }),
         emojiRegistry: one('EmojiRegistry', {
             compute() {
-                if (!this.messaging) {
+                if (!this.global.Messaging) {
                     return clear();
                 }
                 return this.global.EmojiRegistry;

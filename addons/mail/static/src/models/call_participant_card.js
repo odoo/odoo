@@ -25,7 +25,7 @@ registerModel({
                 return;
             }
             const channel = this.channelMember.channel.thread;
-            const channelData = await this.messaging.rpc(({
+            const channelData = await this.global.Messaging.rpc(({
                 route: '/mail/rtc/channel/cancel_call_invitation',
                 params: {
                     channel_id: channel.id,

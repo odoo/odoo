@@ -46,7 +46,7 @@ registerModel({
             if (this.chatterOwner && !this.chatterOwner.attachmentBoxView) {
                 this.chatterOwner.openAttachmentBoxView();
             }
-            this.messaging.messagingBus.trigger('o-file-uploader-upload', { files });
+            this.global.Messaging.messagingBus.trigger('o-file-uploader-upload', { files });
         },
         /**
          * @private
@@ -75,7 +75,7 @@ registerModel({
          */
         _onAttachmentUploaded({ attachmentData, composer, thread }) {
             if (attachmentData.error || !attachmentData.id) {
-                this.messaging.notify({
+                this.global.Messaging.notify({
                     type: 'danger',
                     message: attachmentData.error,
                 });
@@ -108,7 +108,7 @@ registerModel({
             ); // save before async
             const uploadingAttachments = new Map();
             for (const file of files) {
-                uploadingAttachments.set(file, this.messaging.models['Attachment'].insert({
+                uploadingAttachments.set(file, this.global.Messaging.models['Attachment'].insert({
                     composer,
                     filename: file.name,
                     id: getAttachmentNextTemporaryId(),

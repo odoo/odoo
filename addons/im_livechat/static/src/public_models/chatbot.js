@@ -76,7 +76,7 @@ registerModel({
                 return;
             }
 
-            const postedWelcomeMessages = await this.messaging.rpc({
+            const postedWelcomeMessages = await this.global.Messaging.rpc({
                 route: '/chatbot/post_welcome_steps',
                 params: {
                     channel_uuid: this.global.PublicLivechatGlobal.publicLivechat.uuid,
@@ -266,7 +266,7 @@ registerModel({
                 return;
             }
 
-            const nextStep = await this.messaging.rpc({
+            const nextStep = await this.global.Messaging.rpc({
                 route: '/chatbot/step/trigger',
                 params: {
                     channel_uuid: this.global.PublicLivechatGlobal.publicLivechat.uuid,
@@ -303,7 +303,7 @@ registerModel({
          * Returns a boolean stating whether the email was valid or not.
          */
         async validateEmail() {
-            let emailValidResult = await this.messaging.rpc({
+            let emailValidResult = await this.global.Messaging.rpc({
                 route: '/chatbot/step/validate_email',
                 params: { channel_uuid: this.global.PublicLivechatGlobal.publicLivechat.uuid },
             });

@@ -9,7 +9,7 @@ registerModel({
     identifyingMode: 'xor',
     recordMethods: {
         _onChangeCounter() {
-            if (this !== this.messaging.inbox) {
+            if (this !== this.global.Messaging.inbox) {
                 return;
             }
             if (
@@ -31,11 +31,11 @@ registerModel({
         fetchMessagesUrl: attr({
             compute() {
                 switch (this) {
-                    case this.messaging.history:
+                    case this.global.Messaging.history:
                         return '/mail/history/messages';
-                    case this.messaging.inbox:
+                    case this.global.Messaging.inbox:
                         return '/mail/inbox/messages';
-                    case this.messaging.starred:
+                    case this.global.Messaging.starred:
                         return '/mail/starred/messages';
                     default:
                         return clear();
@@ -47,10 +47,10 @@ registerModel({
          */
         messagingAsAnyMailbox: one('Messaging', {
             compute() {
-                if (!this.messaging) {
+                if (!this.global.Messaging) {
                     return clear();
                 }
-                return this.messaging;
+                return this.global.Messaging;
             },
             inverse: 'allMailboxes',
         }),
@@ -69,11 +69,11 @@ registerModel({
         name: attr({
             compute() {
                 switch (this) {
-                    case this.messaging.history:
+                    case this.global.Messaging.history:
                         return this.env._t("History");
-                    case this.messaging.inbox:
+                    case this.global.Messaging.inbox:
                         return this.env._t("Inbox");
-                    case this.messaging.starred:
+                    case this.global.Messaging.starred:
                         return this.env._t("Starred");
                     default:
                         return clear();
@@ -89,11 +89,11 @@ registerModel({
         sequence: attr({
             compute() {
                 switch (this) {
-                    case this.messaging.history:
+                    case this.global.Messaging.history:
                         return 2;
-                    case this.messaging.inbox:
+                    case this.global.Messaging.inbox:
                         return 0;
-                    case this.messaging.starred:
+                    case this.global.Messaging.starred:
                         return 1;
                     default:
                         return clear();
@@ -104,11 +104,11 @@ registerModel({
             compute() {
                 const threadId = (() => {
                     switch (this) {
-                        case this.messaging.history:
+                        case this.global.Messaging.history:
                             return 'history';
-                        case this.messaging.inbox:
+                        case this.global.Messaging.inbox:
                             return 'inbox';
-                        case this.messaging.starred:
+                        case this.global.Messaging.starred:
                             return 'starred';
                     }
                 })();

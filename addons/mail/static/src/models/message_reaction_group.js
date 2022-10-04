@@ -36,8 +36,8 @@ registerModel({
         hasUserReacted: attr({
             compute() {
                 return Boolean(
-                    (this.messaging.currentPartner && this.partners.includes(this.messaging.currentPartner)) ||
-                    (this.messaging.currentGuest && this.guests.includes(this.messaging.currentGuest))
+                    (this.global.Messaging.currentPartner && this.partners.includes(this.global.Messaging.currentPartner)) ||
+                    (this.global.Messaging.currentGuest && this.guests.includes(this.global.Messaging.currentGuest))
                 );
             },
             default: false,

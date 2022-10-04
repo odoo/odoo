@@ -18,7 +18,7 @@ registerModel({
             if (!messageListViewItem || !parentMessage) {
                 return;
             }
-            const parentMessageListViewItem = this.messaging.models['MessageListViewItem'].findFromIdentifyingData({
+            const parentMessageListViewItem = this.global.Messaging.models['MessageListViewItem'].findFromIdentifyingData({
                 message: parentMessage,
                 messageListViewOwner: messageListViewItem.messageListViewOwner,
             });

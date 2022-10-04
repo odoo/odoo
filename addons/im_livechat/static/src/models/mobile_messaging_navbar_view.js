@@ -8,7 +8,7 @@ registerPatch({
         tabs: {
             compute() {
                 const res = this._super();
-                if (this.messaging.pinnedLivechats.length > 0) {
+                if (this.global.Messaging.pinnedLivechats.length > 0) {
                     return [...res, {
                         icon: 'fa fa-comments',
                         id: 'livechat',

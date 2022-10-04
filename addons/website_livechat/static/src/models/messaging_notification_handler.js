@@ -10,11 +10,11 @@ registerPatch({
          */
         async _handleNotification(message) {
             if (message.type === 'website_livechat.send_chat_request') {
-                const convertedData = this.messaging.models['Thread'].convertData(
+                const convertedData = this.global.Messaging.models['Thread'].convertData(
                     Object.assign({ model: 'mail.channel' }, message.payload)
                 );
-                this.messaging.models['Thread'].insert(convertedData);
-                const channel = this.messaging.models['Thread'].findFromIdentifyingData({
+                this.global.Messaging.models['Thread'].insert(convertedData);
+                const channel = this.global.Messaging.models['Thread'].findFromIdentifyingData({
                     id: message.payload.id,
                     model: 'mail.channel',
                 });

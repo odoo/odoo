@@ -111,7 +111,7 @@ registerModel({
             }
             let chatWindow = thread.chatWindow;
             if (!chatWindow) {
-                chatWindow = this.messaging.models['ChatWindow'].insert({
+                chatWindow = this.global.Messaging.models['ChatWindow'].insert({
                     isFolded,
                     manager: this,
                     thread,
@@ -129,7 +129,7 @@ registerModel({
                 chatWindow.makeActive({ focus, notifyServer: false });
             }
             // Flux specific: notify server of chat window being opened.
-            if (notifyServer && !this.messaging.currentGuest) {
+            if (notifyServer && !this.global.Messaging.currentGuest) {
                 const foldState = chatWindow.isFolded ? 'folded' : 'open';
                 thread.notifyFoldStateToServer(foldState);
             }
@@ -249,7 +249,7 @@ registerModel({
         visual: attr({
             compute() {
                 let visual = JSON.parse(JSON.stringify(BASE_VISUAL));
-                if (!this.messaging || !this.global.Device) {
+                if (!this.global.Messaging || !this.global.Device) {
                     return visual;
                 }
                 if (!this.global.Device.isSmall && this.global.Discuss.discussView) {

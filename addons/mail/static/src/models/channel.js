@@ -20,7 +20,7 @@ registerModel({
          */
         async performRpcCreateChat({ partnerIds, pinForCurrentPartner }) {
             // TODO FIX: potential duplicate chat task-2276490
-            const data = await this.messaging.rpc({
+            const data = await this.global.Messaging.rpc({
                 model: 'mail.channel',
                 method: 'channel_get',
                 kwargs: {
@@ -31,15 +31,15 @@ registerModel({
             if (!data) {
                 return;
             }
-            const { channel } = this.messaging.models['Thread'].insert(
-                this.messaging.models['Thread'].convertData(data)
+            const { channel } = this.global.Messaging.models['Thread'].insert(
+                this.global.Messaging.models['Thread'].convertData(data)
             );
             return channel;
         },
     },
     recordMethods: {
         async fetchChannelMembers() {
-            const channelData = await this.messaging.rpc({
+            const channelData = await this.global.Messaging.rpc({
                 model: 'mail.channel',
                 method: 'load_more_members',
                 args: [[this.id]],

@@ -9,10 +9,10 @@ registerModel({
     identifyingMode: 'xor',
     lifecycleHooks: {
         _created() {
-            this.update({ timeoutId: this.messaging.browser.setTimeout(this._onTimeout, this.duration) });
+            this.update({ timeoutId: this.global.Messaging.browser.setTimeout(this._onTimeout, this.duration) });
         },
         _willDelete() {
-            this.messaging.browser.clearTimeout(this.timeoutId);
+            this.global.Messaging.browser.clearTimeout(this.timeoutId);
         },
     },
     recordMethods: {
@@ -62,10 +62,10 @@ registerModel({
             if (!this.doReset) {
                 return;
             }
-            this.messaging.browser.clearTimeout(this.timeoutId);
+            this.global.Messaging.browser.clearTimeout(this.timeoutId);
             this.update({
                 doReset: clear(),
-                timeoutId: this.messaging.browser.setTimeout(this._onTimeout, this.duration),
+                timeoutId: this.global.Messaging.browser.setTimeout(this._onTimeout, this.duration),
             });
         },
     },
@@ -98,7 +98,7 @@ registerModel({
                     return 3 * 1000;
                 }
                 if (this.chatterOwnerAsAttachmentsLoader) {
-                    return this.messaging.loadingBaseDelayDuration;
+                    return this.global.Messaging.loadingBaseDelayDuration;
                 }
                 if (this.messageViewOwnerAsHighlight) {
                     return 2 * 1000;

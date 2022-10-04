@@ -20,7 +20,7 @@ registerModel({
          */
         async onClickCommandLeave(ev) {
             ev.stopPropagation();
-            if (this.channel.channel_type !== 'group' && this.thread.creator === this.messaging.currentUser) {
+            if (this.channel.channel_type !== 'group' && this.thread.creator === this.global.Messaging.currentUser) {
                 await this._askAdminConfirmation();
             }
             if (this.channel.channel_type === 'group') {

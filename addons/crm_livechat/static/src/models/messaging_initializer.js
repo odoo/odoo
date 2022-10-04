@@ -11,7 +11,7 @@ registerPatch({
          */
         _initCommands() {
             this._super();
-            this.messaging.update({
+            this.global.Messaging.update({
                 commands: insert({
                     help: this.env._t("Create a new lead (/lead lead title)"),
                     methodName: 'execute_command_lead',

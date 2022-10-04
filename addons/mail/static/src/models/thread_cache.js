@@ -116,7 +116,7 @@ registerModel({
             this.update({ isLoading: true });
             let messages;
             try {
-                messages = await this.messaging.models['Message'].performRpcMessageFetch(this.thread.fetchMessagesUrl, {
+                messages = await this.global.Messaging.models['Message'].performRpcMessageFetch(this.thread.fetchMessagesUrl, {
                     ...this.thread.fetchMessagesParams,
                     limit,
                     'max_id': maxId,
@@ -143,7 +143,7 @@ registerModel({
             if (!minId && messages.length < limit) {
                 this.update({ isAllHistoryLoaded: true });
             }
-            this.messaging.messagingBus.trigger('o-thread-cache-loaded-messages', {
+            this.global.Messaging.messagingBus.trigger('o-thread-cache-loaded-messages', {
                 fetchedMessages: messages,
                 threadCache: this,
             });
@@ -175,7 +175,7 @@ registerModel({
             for (const threadView of this.threadViews) {
                 threadView.addComponentHint('messages-loaded', { fetchedMessages });
             }
-            this.messaging.messagingBus.trigger('o-thread-loaded-messages', { thread: this.thread });
+            this.global.Messaging.messagingBus.trigger('o-thread-loaded-messages', { thread: this.thread });
         },
     },
     fields: {

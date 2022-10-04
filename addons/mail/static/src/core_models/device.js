@@ -29,8 +29,8 @@ registerModel({
          */
         _refresh() {
             this.update({
-                globalWindowInnerHeight: this.messaging.browser.innerHeight,
-                globalWindowInnerWidth: this.messaging.browser.innerWidth,
+                globalWindowInnerHeight: this.global.Messaging.browser.innerHeight,
+                globalWindowInnerWidth: this.global.Messaging.browser.innerWidth,
                 isMobileDevice: isMobileOS(),
                 isSmall: this.env.isSmall,
                 sizeClass: this.env.services.ui.size,

@@ -47,7 +47,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickInboxMarkAllAsRead(ev) {
-            this.messaging.models['Message'].markAllAsRead();
+            this.global.Messaging.models['Message'].markAllAsRead();
         },
         /**
          * Handles click on the "invite" button.
@@ -101,7 +101,7 @@ registerModel({
                 return;
             }
             // Guests cannot edit thread name
-            if (this.messaging.isCurrentUserGuest) {
+            if (this.global.Messaging.isCurrentUserGuest) {
                 return;
             }
             const selection = window.getSelection();
@@ -141,7 +141,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickUnstarAll(ev) {
-            this.messaging.models['Message'].unstarAll();
+            this.global.Messaging.models['Message'].unstarAll();
         },
         /**
          * Handles click on the guest name.
@@ -149,7 +149,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickUserName(ev) {
-            if (!this.messaging.isCurrentUserGuest) {
+            if (!this.global.Messaging.isCurrentUserGuest) {
                 return;
             }
             const selection = window.getSelection();
@@ -160,7 +160,7 @@ registerModel({
                 doSetSelectionStartOnGuestNameInput: Math.min(selection.focusOffset, selection.anchorOffset),
                 isEditingGuestName: true,
                 isMouseOverUserName: false,
-                pendingGuestName: this.messaging.currentGuest.name,
+                pendingGuestName: this.global.Messaging.currentGuest.name,
             });
         },
         /**
@@ -356,7 +356,7 @@ registerModel({
          */
         openInvitePopoverView() {
             this.update({ invitePopoverView: {} });
-            if (this.messaging.isCurrentUserGuest) {
+            if (this.global.Messaging.isCurrentUserGuest) {
                 return;
             }
             this.invitePopoverView.channelInvitationForm.update({ doFocusOnSearchInput: true });
@@ -367,8 +367,8 @@ registerModel({
          */
         _applyGuestRename() {
             if (this.hasGuestNameChanged) {
-                this.messaging.models['Guest'].performRpcGuestUpdateName({
-                    id: this.messaging.currentGuest.id,
+                this.global.Messaging.models['Guest'].performRpcGuestUpdateName({
+                    id: this.global.Messaging.currentGuest.id,
                     name: this.pendingGuestName.trim(),
                 });
             }
@@ -459,14 +459,14 @@ registerModel({
          */
         avatarUrl: attr({
             compute() {
-                if (this.messaging.isCurrentUserGuest) {
+                if (this.global.Messaging.isCurrentUserGuest) {
                     if (!this.thread) {
                         return '';
                     }
-                    return `/mail/channel/${this.thread.id}/guest/${this.messaging.currentGuest.id}/avatar_128?unique=${this.messaging.currentGuest.name}`;
+                    return `/mail/channel/${this.thread.id}/guest/${this.global.Messaging.currentGuest.id}/avatar_128?unique=${this.global.Messaging.currentGuest.name}`;
                 }
-                if (this.messaging.currentPartner) {
-                    return this.messaging.currentPartner.avatarUrl;
+                if (this.global.Messaging.currentPartner) {
+                    return this.global.Messaging.currentPartner.avatarUrl;
                 }
                 return clear();
             },
@@ -570,8 +570,8 @@ registerModel({
         hasGuestNameChanged: attr({
             compute() {
                 return Boolean(
-                    this.messaging.currentGuest &&
-                    this.pendingGuestName !== this.messaging.currentGuest.name
+                    this.global.Messaging.currentGuest &&
+                    this.pendingGuestName !== this.global.Messaging.currentGuest.name
                 );
             },
         }),

@@ -34,7 +34,7 @@ registerModel({
          */
         async send(activity) {
             const thread = activity.thread;
-            await this.messaging.rpc({
+            await this.global.Messaging.rpc({
                 model: activity.thread.model,
                 method: 'activity_send_mail',
                 args: [[activity.thread.id], this.id],

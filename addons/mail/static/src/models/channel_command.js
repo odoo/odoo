@@ -73,7 +73,7 @@ registerModel({
                 return [[]];
             }
             const cleanedSearchTerm = cleanSearchTerm(searchTerm);
-            return [this.messaging.commands.filter(command => {
+            return [this.global.Messaging.commands.filter(command => {
                 if (!cleanSearchTerm(command.name).includes(cleanedSearchTerm)) {
                     return false;
                 }
@@ -93,7 +93,7 @@ registerModel({
          * @param {Object} [param0.body='']
          */
         async execute({ channel, body = '' }) {
-            return this.messaging.rpc({
+            return this.global.Messaging.rpc({
                 model: 'mail.channel',
                 method: this.methodName,
                 args: [[channel.id]],

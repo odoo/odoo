@@ -38,9 +38,9 @@ registerModel({
         actionMarkAsRead: one('MessageAction', {
             compute() {
                 if (
-                    this.messaging && this.messaging.inbox &&
+                    this.global.Messaging && this.global.Messaging.inbox &&
                     this.messageView && this.messageView.messageListViewItemOwner && this.messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread &&
-                    this.messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread === this.messaging.inbox.thread
+                    this.messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread === this.global.Messaging.inbox.thread
                 ) {
                     return {};
                 }
@@ -60,10 +60,10 @@ registerModel({
         actionReplyTo: one('MessageAction', {
             compute() {
                 if (
-                    this.messaging && this.messaging.inbox &&
+                    this.global.Messaging && this.global.Messaging.inbox &&
                     this.message && !this.message.isTemporary && !this.message.isTransient &&
                     this.messageView && this.messageView.messageListViewItemOwner && this.messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread && (
-                        this.messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread === this.messaging.inbox.thread ||
+                        this.messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread === this.global.Messaging.inbox.thread ||
                         this.messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread.channel
                     )
                 ) {

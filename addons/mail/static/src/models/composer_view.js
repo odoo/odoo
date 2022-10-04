@@ -53,7 +53,7 @@ registerModel({
             }
             if (this.threadView && this.threadView.replyingToMessageView) {
                 const { threadView } = this;
-                if (this.threadView.thread === this.messaging.inbox.thread) {
+                if (this.threadView.thread === this.global.Messaging.inbox.thread) {
                     this.delete();
                 }
                 threadView.update({ replyingToMessageView: clear() });
@@ -192,7 +192,7 @@ registerModel({
                 return;
             }
             // Let event be handled by bubbling handlers first
-            await new Promise(this.messaging.browser.setTimeout);
+            await new Promise(this.global.Messaging.browser.setTimeout);
             if (isEventHandled(ev, 'MessageActionList.replyTo')) {
                 return;
             }
@@ -555,7 +555,7 @@ registerModel({
                         params.context = { mail_post_autofollow: this.composer.activeThread.hasWriteAccess };
                     }
                 }
-                if (this.threadView && this.threadView.replyingToMessageView && this.threadView.thread !== this.messaging.inbox.thread) {
+                if (this.threadView && this.threadView.replyingToMessageView && this.threadView.thread !== this.global.Messaging.inbox.thread) {
                     postData.parent_id = this.threadView.replyingToMessageView.message.id;
                 }
                 const { threadView = {} } = this;
@@ -565,16 +565,16 @@ registerModel({
                 // Keep a reference to messaging: composer could be
                 // unmounted while awaiting the prc promise. In this
                 // case, this would be undefined.
-                const messaging = this.messaging;
-                const messageData = await this.messaging.rpc({ route: `/mail/message/post`, params });
+                const messaging = this.global.Messaging;
+                const messageData = await this.global.Messaging.rpc({ route: `/mail/message/post`, params });
                 if (!messaging.exists()) {
                     return;
                 }
                 const message = messaging.models['Message'].insert(
                     messaging.models['Message'].convertData(messageData)
                 );
-                if (this.messaging.hasLinkPreviewFeature && !message.isBodyEmpty) {
-                    this.messaging.rpc({
+                if (this.global.Messaging.hasLinkPreviewFeature && !message.isBodyEmpty) {
+                    this.global.Messaging.rpc({
                         route: `/mail/link_preview`,
                         params: {
                             message_id: message.id
@@ -641,7 +641,7 @@ registerModel({
         async sendMessage() {
             if (!this.composer.canPostMessage) {
                 if (this.composer.hasUploadingAttachment) {
-                    this.messaging.notify({
+                    this.global.Messaging.notify({
                         message: this.env._t("Please wait while the file is uploading."),
                         type: 'warning',
                     });
@@ -724,7 +724,7 @@ registerModel({
          * @returns {string}
          */
         _generateEmojisOnHtml(htmlString) {
-            for (const emoji of this.messaging.emojiRegistry.allEmojis) {
+            for (const emoji of this.global.Messaging.emojiRegistry.allEmojis) {
                 for (const source of emoji.sources) {
                     const escapedSource = String(source).replace(
                         /([.*+?=^!:${}()|[\]/\\])/g,
@@ -808,7 +808,7 @@ registerModel({
         _getCommandFromText(content) {
             if (content.startsWith('/')) {
                 const firstWord = content.substring(1).split(/\s/)[0];
-                return this.messaging.commands.find(command => {
+                return this.global.Messaging.commands.find(command => {
                     if (command.name !== firstWord) {
                         return false;
                     }
@@ -896,7 +896,7 @@ registerModel({
          * @private
          */
         _onChangeUpdateSuggestionList() {
-            if (this.messaging.isCurrentUserGuest) {
+            if (this.global.Messaging.isCurrentUserGuest) {
                 return;
             }
             // Update the suggestion list immediately for a reactive UX...
@@ -911,7 +911,7 @@ registerModel({
                 ) {
                     return; // ignore obsolete call
                 }
-                const model = this.messaging.models[this.suggestionModelName];
+                const model = this.global.Messaging.models[this.suggestionModelName];
                 const searchTerm = this.suggestionSearchTerm;
                 await model.fetchSuggestions(searchTerm, { thread: this.composer.activeThread });
                 if (!this.exists()) {
@@ -922,7 +922,7 @@ registerModel({
                     this.suggestionSearchTerm &&
                     this.suggestionSearchTerm === searchTerm &&
                     this.suggestionModelName &&
-                    this.messaging.models[this.suggestionModelName] === model &&
+                    this.global.Messaging.models[this.suggestionModelName] === model &&
                     !this.hasSuggestions
                 ) {
                     this.closeSuggestions();
@@ -947,7 +947,7 @@ registerModel({
             ) {
                 return;
             }
-            const model = this.messaging.models[this.suggestionModelName];
+            const model = this.global.Messaging.models[this.suggestionModelName];
             const [
                 mainSuggestedRecords,
                 extraSuggestedRecords = [],
@@ -1055,10 +1055,10 @@ registerModel({
          */
         currentPartnerAvatar: attr({
             compute() {
-                if (this.messaging.currentUser) {
+                if (this.global.Messaging.currentUser) {
                     return url('/web/image', {
                         field: 'avatar_128',
-                        id: this.messaging.currentUser.id,
+                        id: this.global.Messaging.currentUser.id,
                         model: 'res.users',
                     });
                 }
@@ -1121,7 +1121,7 @@ registerModel({
                     return clear();
                 }
                 if (this.threadView.threadViewer.discuss) {
-                    return this.threadView.threadViewer.discuss.activeThread === this.messaging.inbox.thread;
+                    return this.threadView.threadViewer.discuss.activeThread === this.global.Messaging.inbox.thread;
                 }
                 return clear();
             },
@@ -1353,8 +1353,8 @@ registerModel({
                     if (
                         this.global.Device.isSmall ||
                         (
-                            this.messaging.discuss.threadView === this.threadView &&
-                            this.messaging.discuss.activeThread === this.messaging.inbox.thread
+                            this.global.Messaging.discuss.threadView === this.threadView &&
+                            this.global.Messaging.discuss.activeThread === this.global.Messaging.inbox.thread
                         )
                     ) {
                         return ['ctrl-enter', 'meta-enter'];

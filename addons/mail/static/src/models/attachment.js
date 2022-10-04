@@ -73,7 +73,7 @@ registerModel({
             if (!this.isUploading) {
                 this.update({ isUnlinkPending: true });
                 try {
-                    await this.messaging.rpc({
+                    await this.global.Messaging.rpc({
                         route: `/mail/attachment/delete`,
                         params: {
                             access_token: this.accessToken,
@@ -91,7 +91,7 @@ registerModel({
             if (!this.exists()) {
                 return;
             }
-            this.messaging.messagingBus.trigger('o-attachment-deleted', { attachment: this });
+            this.global.Messaging.messagingBus.trigger('o-attachment-deleted', { attachment: this });
             this.delete();
         },
     },
@@ -192,15 +192,15 @@ registerModel({
          */
         isDeletable: attr({
             compute() {
-                if (!this.messaging) {
+                if (!this.global.Messaging) {
                     return false;
                 }
 
                 if (this.messages.length && this.originThread && this.originThread.model === 'mail.channel') {
                     return this.messages.some(message => (
                         message.canBeDeleted ||
-                        (message.author && message.author === this.messaging.currentPartner) ||
-                        (message.guestAuthor && message.guestAuthor === this.messaging.currentGuest)
+                        (message.author && message.author === this.global.Messaging.currentPartner) ||
+                        (message.guestAuthor && message.guestAuthor === this.global.Messaging.currentGuest)
                     ));
                 }
                 return true;
@@ -329,7 +329,7 @@ registerModel({
                     if (!this.uploadingAbortController) {
                         const abortController = new AbortController();
                         abortController.signal.onabort = () => {
-                            this.messaging.messagingBus.trigger('o-attachment-upload-abort', {
+                            this.global.Messaging.messagingBus.trigger('o-attachment-upload-abort', {
                                 attachment: this
                             });
                         };

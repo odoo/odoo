@@ -10,7 +10,7 @@ registerModel({
          * @returns {Object}
          */
         async performInitRpc() {
-            return await this.messaging.rpc({
+            return await this.global.Messaging.rpc({
                 route: '/mail/init_messaging',
             }, { shadow: true });
         },
@@ -32,8 +32,8 @@ registerModel({
             if (discuss.discussView) {
                 discuss.openInitThread();
             }
-            if (this.messaging.currentUser) {
-                this.messaging.updateImStatusRegistration();
+            if (this.global.Messaging.currentUser) {
+                this.global.Messaging.updateImStatusRegistration();
                 this._loadMessageFailures();
             }
         },
@@ -84,12 +84,12 @@ registerModel({
             });
             // init mail user settings
             if (current_user_settings) {
-                this.messaging.models['res.users.settings'].insert(current_user_settings);
+                this.global.Messaging.models['res.users.settings'].insert(current_user_settings);
             }
             // various suggestions in no particular order
             this._initCannedResponses(shortcodes);
             // FIXME: guests should have (at least some) commands available
-            if (!this.messaging.isCurrentUserGuest) {
+            if (!this.global.Messaging.isCurrentUserGuest) {
                 this._initCommands();
             }
             // channels when the rest of messaging is ready
@@ -101,14 +101,14 @@ registerModel({
             }
             discuss.update({ menu_id });
             // company related data
-            this.messaging.update({ companyName, hasLinkPreviewFeature, internalUserGroupId });
+            this.global.Messaging.update({ companyName, hasLinkPreviewFeature, internalUserGroupId });
         },
         /**
          * @private
          * @param {Object[]} cannedResponsesData
          */
         _initCannedResponses(cannedResponsesData) {
-            this.messaging.update({
+            this.global.Messaging.update({
                 cannedResponses: insert(cannedResponsesData),
             });
         },
@@ -117,12 +117,12 @@ registerModel({
          * @param {Object[]} channelsData
          */
         async _initChannels(channelsData) {
-            return this.messaging.executeGracefully(channelsData.map(channelData => () => {
+            return this.global.Messaging.executeGracefully(channelsData.map(channelData => () => {
                 if (!this.exists()) {
                     return;
                 }
-                const convertedData = this.messaging.models['Thread'].convertData(channelData);
-                const channel = this.messaging.models['Thread'].insert(
+                const convertedData = this.global.Messaging.models['Thread'].convertData(channelData);
+                const channel = this.global.Messaging.models['Thread'].insert(
                     Object.assign({ model: 'mail.channel' }, convertedData)
                 );
                 // flux specific: channels received at init have to be
@@ -136,7 +136,7 @@ registerModel({
          * @private
          */
         _initCommands() {
-            this.messaging.update({
+            this.global.Messaging.update({
                 commands: insert([
                     {
                         help: this.env._t("Show a helper message"),
@@ -167,25 +167,25 @@ registerModel({
             needaction_inbox_counter,
             starred_counter,
         }) {
-            this.messaging.inbox.update({ counter: needaction_inbox_counter });
-            this.messaging.starred.update({ counter: starred_counter });
+            this.global.Messaging.inbox.update({ counter: needaction_inbox_counter });
+            this.global.Messaging.starred.update({ counter: starred_counter });
         },
         /**
          * @private
          * @param {Object[]} mailFailuresData
          */
         async _initMailFailures(mailFailuresData) {
-            await this.messaging.executeGracefully(mailFailuresData.map(messageData => () => {
+            await this.global.Messaging.executeGracefully(mailFailuresData.map(messageData => () => {
                 if (!this.exists()) {
                     return;
                 }
-                const message = this.messaging.models['Message'].insert(
-                    this.messaging.models['Message'].convertData(messageData)
+                const message = this.global.Messaging.models['Message'].insert(
+                    this.global.Messaging.models['Message'].convertData(messageData)
                 );
                 // implicit: failures are sent by the server at initialization
                 // only if the current partner is author of the message
-                if (!message.author && this.messaging.currentPartner) {
-                    message.update({ author: this.messaging.currentPartner });
+                if (!message.author && this.global.Messaging.currentPartner) {
+                    message.update({ author: this.global.Messaging.currentPartner });
                 }
             }));
         },
@@ -203,16 +203,16 @@ registerModel({
             partner_root,
         }) {
             if (currentGuest) {
-                this.messaging.update({ currentGuest: insert(currentGuest) });
+                this.global.Messaging.update({ currentGuest: insert(currentGuest) });
             }
             if (current_partner) {
-                this.messaging.update({
+                this.global.Messaging.update({
                     currentPartner: current_partner,
                     currentUser: insert({ id: currentUserId }),
                 });
             }
             if (partner_root) {
-                this.messaging.update({
+                this.global.Messaging.update({
                     partnerRoot: partner_root,
                 });
             }
@@ -221,7 +221,7 @@ registerModel({
          * @private
          */
         async _loadMessageFailures() {
-            const data = await this.messaging.rpc({
+            const data = await this.global.Messaging.rpc({
                 route: '/mail/load_message_failures',
             }, { shadow: true });
             this._initMailFailures(data);

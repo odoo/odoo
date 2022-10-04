@@ -11,12 +11,12 @@ registerModel({
     fields: {
         headerText: attr({
             compute() {
-                if (!this.messaging.partnerRoot) {
+                if (!this.global.Messaging.partnerRoot) {
                     return clear();
                 }
                 return sprintf(
                     this.env._t("%(odoobotName)s has a request"),
-                    { odoobotName: this.messaging.partnerRoot.nameOrDisplayName },
+                    { odoobotName: this.global.Messaging.partnerRoot.nameOrDisplayName },
                 );
             },
         }),
@@ -26,7 +26,7 @@ registerModel({
         }),
         personaImStatusIconView: one('PersonaImStatusIconView', {
             compute() {
-                return this.messaging.partnerRoot && this.messaging.partnerRoot.isImStatusSet ? {} : clear();
+                return this.global.Messaging.partnerRoot && this.global.Messaging.partnerRoot.isImStatusSet ? {} : clear();
             },
             inverse: 'notificationRequestViewOwner',
         }),

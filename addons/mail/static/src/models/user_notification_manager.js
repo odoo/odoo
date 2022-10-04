@@ -27,7 +27,7 @@ registerModel({
                 this._sendOdooNotification(message, { title, type });
                 return;
             }
-            if (!this.messaging.env.services['multi_tab'].isOnMainTab()) {
+            if (!this.global.Messaging.env.services['multi_tab'].isOnMainTab()) {
                 return;
             }
             try {
@@ -80,8 +80,8 @@ registerModel({
          * @param {Object} options
          */
         async _sendOdooNotification(message, options) {
-            this.messaging.env.services['notification'].add(message, options);
-            if (this.canPlayAudio && this.messaging.env.services['multi_tab'].isOnMainTab()) {
+            this.global.Messaging.env.services['notification'].add(message, options);
+            if (this.canPlayAudio && this.global.Messaging.env.services['multi_tab'].isOnMainTab()) {
                 try {
                     await this.audio.play();
                 } catch {
@@ -118,8 +118,8 @@ registerModel({
              */
             compute() {
                 return Boolean(
-                    this.messaging.browser.Notification &&
-                    this.messaging.browser.Notification.permission === 'granted'
+                    this.global.Messaging.browser.Notification &&
+                    this.global.Messaging.browser.Notification.permission === 'granted'
                 );
             },
         }),

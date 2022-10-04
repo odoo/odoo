@@ -39,7 +39,7 @@ registerModel({
          * @param {integer[]} param0.ids
          */
         async performRpcRead({ context, fields, ids }) {
-            const usersData = await this.messaging.rpc({
+            const usersData = await this.global.Messaging.rpc({
                 model: 'res.users',
                 method: 'read',
                 args: [ids, fields],
@@ -47,8 +47,8 @@ registerModel({
                     context,
                 },
             }, { shadow: true });
-            return this.messaging.models['User'].insert(usersData.map(userData =>
-                this.messaging.models['User'].convertData(userData)
+            return this.global.Messaging.models['User'].insert(usersData.map(userData =>
+                this.global.Messaging.models['User'].convertData(userData)
             ));
         },
     },
@@ -57,7 +57,7 @@ registerModel({
          * Fetches the partner of this user.
          */
         async fetchPartner() {
-            return this.messaging.models['User'].performRpcRead({
+            return this.global.Messaging.models['User'].performRpcRead({
                 ids: [this.id],
                 fields: ['partner_id'],
                 context: { active_test: false },
@@ -82,7 +82,7 @@ registerModel({
                 // - Validity of id is not verified at insert.
                 // - There is no bus notification in case of user delete from
                 //   another tab or by another user.
-                this.messaging.notify({
+                this.global.Messaging.notify({
                     message: this.env._t("You can only chat with existing users."),
                     type: 'warning',
                 });
@@ -93,7 +93,7 @@ registerModel({
             if (!chat || !chat.thread.isPinned) {
                 // if chat is not pinned then it has to be pinned client-side
                 // and server-side, which is a side effect of following rpc
-                chat = await this.messaging.models['Channel'].performRpcCreateChat({
+                chat = await this.global.Messaging.models['Channel'].performRpcCreateChat({
                     partnerIds: [this.partner.id],
                 });
                 if (!this.exists()) {
@@ -101,7 +101,7 @@ registerModel({
                 }
             }
             if (!chat) {
-                this.messaging.notify({
+                this.global.Messaging.notify({
                     message: this.env._t("An unexpected error occurred during the creation of the chat."),
                     type: 'warning',
                 });
@@ -145,7 +145,7 @@ registerModel({
                 // - Validity of id is not verified at insert.
                 // - There is no bus notification in case of user delete from
                 //   another tab or by another user.
-                this.messaging.notify({
+                this.global.Messaging.notify({
                     message: this.env._t("You can only open the profile of existing users."),
                     type: 'warning',
                 });

@@ -8,7 +8,7 @@ registerModel({
     name: 'ThreadView',
     lifecycleHooks: {
         _willDelete() {
-            this.messaging.browser.clearTimeout(this.loaderTimeout);
+            this.global.Messaging.browser.clearTimeout(this.loaderTimeout);
         },
     },
     recordMethods: {
@@ -45,7 +45,7 @@ registerModel({
             this.update({
                 componentHintList: this.componentHintList.filter(h => h !== hint),
             });
-            this.messaging.messagingBus.trigger('o-thread-view-hint-processed', {
+            this.global.Messaging.messagingBus.trigger('o-thread-view-hint-processed', {
                 hint,
                 threadViewer: this.threadViewer,
             });
@@ -107,7 +107,7 @@ registerModel({
                 // See task-2277543
                 return;
             }
-            if (this.messaging.currentGuest) {
+            if (this.global.Messaging.currentGuest) {
                 return;
             }
             this.thread.markAsSeen(this.thread.lastNonTransientMessage);
@@ -134,7 +134,7 @@ registerModel({
                 if (!this.isLoading && !this.isPreparingLoading) {
                     this.update({ isPreparingLoading: true });
                     (new Promise(resolve => {
-                            this.update({ loaderTimeout: this.messaging.browser.setTimeout(resolve, this.messaging.loadingBaseDelayDuration) });
+                            this.update({ loaderTimeout: this.global.Messaging.browser.setTimeout(resolve, this.global.Messaging.loadingBaseDelayDuration) });
                         }
                     )).then(() => {
                         if (!this.exists()) {
@@ -148,7 +148,7 @@ registerModel({
                 }
                 return;
             }
-            this.messaging.browser.clearTimeout(this.loaderTimeout);
+            this.global.Messaging.browser.clearTimeout(this.loaderTimeout);
             this.update({ isLoading: false, isPreparingLoading: false });
         },
         /**
@@ -344,7 +344,7 @@ registerModel({
         hasComposerThreadName: attr({
             compute() {
                 if (this.threadViewer.discuss) {
-                    return this.threadViewer.discuss.activeThread === this.messaging.inbox.thread;
+                    return this.threadViewer.discuss.activeThread === this.global.Messaging.inbox.thread;
                 }
                 return clear();
             },

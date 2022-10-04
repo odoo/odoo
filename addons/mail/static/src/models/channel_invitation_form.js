@@ -18,7 +18,7 @@ registerModel({
          */
         async onClickCopy(ev) {
             await navigator.clipboard.writeText(this.thread.invitationLink);
-            this.messaging.notify({
+            this.global.Messaging.notify({
                 message: this.env._t('Link copied!'),
                 type: 'success',
             });
@@ -31,11 +31,11 @@ registerModel({
         async onClickInvite(ev) {
             if (this.thread.channel.channel_type === 'chat') {
                 const partners_to = [...new Set([
-                    this.messaging.currentPartner.id,
+                    this.global.Messaging.currentPartner.id,
                     ...this.thread.channel.channelMembers.filter(member => member.persona && member.persona.partner).map(member => member.persona.partner.id),
                     ...this.selectedPartners.map(partner => partner.id),
                 ])];
-                const channel = await this.messaging.models['Thread'].createGroupChat({ partners_to });
+                const channel = await this.global.Messaging.models['Thread'].createGroupChat({ partners_to });
                 if (this.thread.rtc) {
                     /**
                      * if we were in a RTC call on the current thread, we move to the new group chat.
@@ -51,7 +51,7 @@ registerModel({
                     channel.open();
                 }
             } else {
-                await this.messaging.rpc(({
+                await this.global.Messaging.rpc(({
                     model: 'mail.channel',
                     method: 'add_members',
                     args: [[this.thread.id]],
@@ -131,7 +131,7 @@ registerModel({
             });
             try {
                 const channelId = (this.thread && this.thread.model === 'mail.channel') ? this.thread.id : undefined;
-                const { count, partners: partnersData } = await this.messaging.rpc(
+                const { count, partners: partnersData } = await this.global.Messaging.rpc(
                     {
                         model: 'res.partner',
                         method: 'search_for_channel_invite',

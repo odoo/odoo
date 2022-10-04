@@ -40,7 +40,7 @@ registerPatch({
                 if (currentDate.getFullYear() !== date.getFullYear()) {
                     options.year = 'numeric';
                 }
-                let localeCode = this.messaging.locale.language.replace(/_/g, '-');
+                let localeCode = this.global.Messaging.locale.language.replace(/_/g, '-');
                 if (localeCode === "sr@latin") {
                     localeCode = "sr-Latn-RS";
                 }

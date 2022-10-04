@@ -14,7 +14,7 @@ registerModel({
     },
     recordMethods: {
         async _populateFromEmojiData(dataCategories, dataEmojis) {
-            await this.messaging.executeGracefully(dataCategories.map(category => () => {
+            await this.global.Messaging.executeGracefully(dataCategories.map(category => () => {
                 if (!this.exists()) {
                     return;
                 }
@@ -31,7 +31,7 @@ registerModel({
             if (!this.exists()) {
                 return;
             }
-            await this.messaging.executeGracefully(dataEmojis.map(emojiData => () => {
+            await this.global.Messaging.executeGracefully(dataEmojis.map(emojiData => () => {
                 if (!this.exists()) {
                     return;
                 }

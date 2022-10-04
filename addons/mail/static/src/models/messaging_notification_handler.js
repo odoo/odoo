@@ -72,10 +72,10 @@ registerModel({
                             }
                             return this._handleNotificationChannelMessage(message.payload);
                         case 'mail.link.preview/insert':
-                            this.messaging.models['LinkPreview'].insert(message.payload);
+                            this.global.Messaging.models['LinkPreview'].insert(message.payload);
                             return;
                         case 'mail.link.preview/delete': {
-                            const linkPreview = this.messaging.models['LinkPreview'].findFromIdentifyingData(message.payload);
+                            const linkPreview = this.global.Messaging.models['LinkPreview'].findFromIdentifyingData(message.payload);
                             if (linkPreview) {
                                 linkPreview.delete();
                             }
@@ -100,7 +100,7 @@ registerModel({
                         case 'res.users/connection':
                             return this._handleNotificationPartnerUserConnection(message.payload);
                         case 'mail.activity/updated': {
-                            for (const activityMenuView of this.messaging.models['ActivityMenuView'].all()) {
+                            for (const activityMenuView of this.global.Messaging.models['ActivityMenuView'].all()) {
                                 if (message.payload.activity_created) {
                                     activityMenuView.update({ extraCount: increment() });
                                 }
@@ -117,15 +117,15 @@ registerModel({
                         case 'mail.channel/last_interest_dt_changed':
                             return this._handleNotificationChannelLastInterestDateTimeChanged(message.payload);
                         case 'mail.channel/legacy_insert':
-                            return this.messaging.models['Thread'].insert(this.messaging.models['Thread'].convertData({ model: 'mail.channel', ...message.payload }));
+                            return this.global.Messaging.models['Thread'].insert(this.global.Messaging.models['Thread'].convertData({ model: 'mail.channel', ...message.payload }));
                         case 'mail.channel/insert':
-                            return this.messaging.models['Channel'].insert(message.payload);
+                            return this.global.Messaging.models['Channel'].insert(message.payload);
                         case 'mail.guest/insert':
-                            return this.messaging.models['Guest'].insert(message.payload);
+                            return this.global.Messaging.models['Guest'].insert(message.payload);
                         case 'mail.message/insert':
-                            return this.messaging.models['Message'].insert(message.payload);
+                            return this.global.Messaging.models['Message'].insert(message.payload);
                         case 'mail.channel.rtc.session/insert':
-                            return this.messaging.models['RtcSession'].insert(message.payload);
+                            return this.global.Messaging.models['RtcSession'].insert(message.payload);
                         case 'mail.channel.rtc.session/peer_notification':
                             return this._handleNotificationRtcPeerToPeer(message.payload);
                         case 'mail.channel/rtc_sessions_update':
@@ -133,11 +133,11 @@ registerModel({
                         case 'mail.channel.rtc.session/ended':
                             return this._handleNotificationRtcSessionEnded(message.payload);
                         case 'mail.thread/insert':
-                            return this.messaging.models['Thread'].insert(message.payload);
+                            return this.global.Messaging.models['Thread'].insert(message.payload);
                         case 'res.users.settings/insert':
-                            return this.messaging.models['res.users.settings'].insert(message.payload);
+                            return this.global.Messaging.models['res.users.settings'].insert(message.payload);
                         case 'res.users.settings.volumes/insert':
-                            return this.messaging.models['res.users.settings.volumes'].insert(message.payload);
+                            return this.global.Messaging.models['res.users.settings.volumes'].insert(message.payload);
                         default:
                             return this._handleNotification(message);
                     }
@@ -171,9 +171,9 @@ registerModel({
          * @param {integer} [payload.id]
          */
         _handleNotificationAttachmentDelete(payload) {
-            const attachment = this.messaging.models['Attachment'].findFromIdentifyingData(payload);
+            const attachment = this.global.Messaging.models['Attachment'].findFromIdentifyingData(payload);
             if (attachment) {
-                this.messaging.messagingBus.trigger('o-attachment-deleted', { attachment });
+                this.global.Messaging.messagingBus.trigger('o-attachment-deleted', { attachment });
                 attachment.delete();
             }
         },
@@ -189,7 +189,7 @@ registerModel({
             last_message_id,
             partner_id,
         }) {
-            const channel = this.messaging.models['Channel'].findFromIdentifyingData({ id: channelId });
+            const channel = this.global.Messaging.models['Channel'].findFromIdentifyingData({ id: channelId });
             if (!channel) {
                 // for example seen from another browser, the current one has no
                 // knowledge of the channel
@@ -199,12 +199,12 @@ registerModel({
                 // disabled on `channel` channels for performance reasons
                 return;
             }
-            this.messaging.models['ThreadPartnerSeenInfo'].insert({
+            this.global.Messaging.models['ThreadPartnerSeenInfo'].insert({
                 lastFetchedMessage: insert({ id: last_message_id }),
                 partner: { id: partner_id },
                 thread: channel.thread,
             });
-            this.messaging.models['MessageSeenIndicator'].insert({
+            this.global.Messaging.models['MessageSeenIndicator'].insert({
                 message: { id: last_message_id },
                 thread: channel.thread,
             });
@@ -217,10 +217,10 @@ registerModel({
          * @param {boolean} [payload.open_chat_window] if true, will pin the channel
          */
         _handleNotificationChannelJoined({ channel: channelData, invited_by_user_id: invitedByUserId, open_chat_window: openChatWindow }) {
-            const thread = this.messaging.models['Thread'].insert(this.messaging.models['Thread'].convertData(channelData));
-            if (this.messaging.currentUser && invitedByUserId !== this.messaging.currentUser.id) {
+            const thread = this.global.Messaging.models['Thread'].insert(this.global.Messaging.models['Thread'].convertData(channelData));
+            if (this.global.Messaging.currentUser && invitedByUserId !== this.global.Messaging.currentUser.id) {
                 // Current user was invited by someone else.
-                this.messaging.notify({
+                this.global.Messaging.notify({
                     message: sprintf(
                         this.env._t("You have been invited to #%s"),
                         thread.displayName
@@ -244,7 +244,7 @@ registerModel({
          * @param {string} payload.last_interest_dt
          */
         _handleNotificationChannelLastInterestDateTimeChanged({ id, isServerPinned, last_interest_dt }) {
-            const channel = this.messaging.models['Thread'].findFromIdentifyingData({
+            const channel = this.global.Messaging.models['Thread'].findFromIdentifyingData({
                 id: id,
                 model: 'mail.channel',
             });
@@ -262,11 +262,11 @@ registerModel({
          * @param {Object} payload.messageData
          */
         async _handleNotificationChannelMessage({ id: channelId, message: messageData }) {
-            let channel = this.messaging.models['Channel'].findFromIdentifyingData({ id: channelId });
-            if (!channel && this.messaging.isCurrentUserGuest) {
+            let channel = this.global.Messaging.models['Channel'].findFromIdentifyingData({ id: channelId });
+            if (!channel && this.global.Messaging.isCurrentUserGuest) {
                 return; // guests should not receive messages for channels they don't know, and they can't make the channel_info RPC
             }
-            const convertedData = this.messaging.models['Message'].convertData(messageData);
+            const convertedData = this.global.Messaging.models['Message'].convertData(messageData);
 
             // Fetch missing info from channel before going further. Inserting
             // a channel with incomplete info can lead to issues. This is in
@@ -274,7 +274,7 @@ registerModel({
             // "required" by the rest of the code and is necessary for some
             // features such as chat windows.
             if (!channel) {
-                const res = await this.messaging.models['Thread'].performRpcChannelInfo({ ids: [channelId] });
+                const res = await this.global.Messaging.models['Thread'].performRpcChannelInfo({ ids: [channelId] });
                 if (!this.exists()) {
                     return;
                 }
@@ -284,11 +284,11 @@ registerModel({
                 channel.thread.pin();
             }
 
-            const message = this.messaging.models['Message'].insert(convertedData);
+            const message = this.global.Messaging.models['Message'].insert(convertedData);
             this._notifyThreadViewsMessageReceived(message);
 
             // If the current partner is author, do nothing else.
-            if (message.author === this.messaging.currentPartner) {
+            if (message.author === this.global.Messaging.currentPartner) {
                 return;
             }
 
@@ -296,7 +296,7 @@ registerModel({
             // shown on the menu, but no notification and no thread open.
             const isChatWithOdooBot = (
                 channel.correspondent &&
-                channel.correspondent === this.messaging.partnerRoot
+                channel.correspondent === this.global.Messaging.partnerRoot
             );
             if (!isChatWithOdooBot) {
                 const isOdooFocused = this.env.services['presence'].isOdooFocused();
@@ -307,7 +307,7 @@ registerModel({
                         message,
                     });
                 }
-                if (channel.channel_type !== 'channel' && !this.messaging.currentGuest) {
+                if (channel.channel_type !== 'channel' && !this.global.Messaging.currentGuest) {
                     // disabled on non-channel threads and
                     // on `channel` channels for performance reasons
                     channel.thread.markAsFetched();
@@ -333,28 +333,28 @@ registerModel({
             last_message_id,
             partner_id,
         }) {
-            const channel = this.messaging.models['Channel'].findFromIdentifyingData({ id: channelId });
+            const channel = this.global.Messaging.models['Channel'].findFromIdentifyingData({ id: channelId });
             if (!channel) {
                 // for example seen from another browser, the current one has no
                 // knowledge of the channel
                 return;
             }
-            const lastMessage = this.messaging.models['Message'].insert({ id: last_message_id });
+            const lastMessage = this.global.Messaging.models['Message'].insert({ id: last_message_id });
             // restrict computation of seen indicator for "non-channel" channels
             // for performance reasons
             const shouldComputeSeenIndicators = channel.channel_type !== 'channel';
             if (shouldComputeSeenIndicators) {
-                this.messaging.models['ThreadPartnerSeenInfo'].insert({
+                this.global.Messaging.models['ThreadPartnerSeenInfo'].insert({
                     lastSeenMessage: lastMessage,
                     partner: { id: partner_id },
                     thread: channel.thread,
                 });
-                this.messaging.models['MessageSeenIndicator'].insert({
+                this.global.Messaging.models['MessageSeenIndicator'].insert({
                     message: lastMessage,
                     thread: channel.thread,
                 });
             }
-            if (this.messaging.currentPartner && this.messaging.currentPartner.id === partner_id) {
+            if (this.global.Messaging.currentPartner && this.global.Messaging.currentPartner.id === partner_id) {
                 channel.thread.update({
                     pendingSeenMessageId: undefined,
                     rawLastSeenByCurrentPartnerMessageId: last_message_id,
@@ -366,7 +366,7 @@ registerModel({
          * @param {Object} channelMemberData
          */
         _handleNotificationChannelMemberTypingStatus(channelMemberData) {
-            const member = this.messaging.models['ChannelMember'].insert(channelMemberData);
+            const member = this.global.Messaging.models['ChannelMember'].insert(channelMemberData);
             if (member.isMemberOfCurrentUser) {
                 // Ignore management of current persona is typing notification.
                 return;
@@ -391,10 +391,10 @@ registerModel({
          * @param {Object} data
          */
         _handleNotificationNeedaction(data) {
-            const message = this.messaging.models['Message'].insert(
-                this.messaging.models['Message'].convertData(data)
+            const message = this.global.Messaging.models['Message'].insert(
+                this.global.Messaging.models['Message'].convertData(data)
             );
-            this.messaging.inbox.update({ counter: increment() });
+            this.global.Messaging.inbox.update({ counter: increment() });
             const originThread = message.originThread;
             if (originThread && message.isNeedaction) {
                 originThread.update({ message_needaction_counter: increment() });
@@ -421,7 +421,7 @@ registerModel({
          * @param {boolean} param1.warning
          */
         _handleNotificationSimpleNotification({ message, message_is_html, sticky, title, warning }) {
-            this.messaging.notify({
+            this.global.Messaging.notify({
                 message: message_is_html ? Markup(message) : message,
                 sticky,
                 title,
@@ -437,7 +437,7 @@ registerModel({
             const currentSession = this.global.Rtc.currentRtcSession;
             if (currentSession && currentSession.id === sessionId) {
                 this.global.Rtc.channel.endCall();
-                this.messaging.notify({
+                this.global.Messaging.notify({
                     message: this.env._t("Disconnected from the RTC call by the server"),
                     type: 'warning',
                 });
@@ -450,7 +450,7 @@ registerModel({
          * @param {Object} [data.rtcSessions]
          */
         async _handleNotificationRtcSessionUpdate({ id, rtcSessions }) {
-            const channel = this.messaging.models['Thread'].findFromIdentifyingData({ id, model: 'mail.channel' });
+            const channel = this.global.Messaging.models['Thread'].findFromIdentifyingData({ id, model: 'mail.channel' });
             if (!channel) {
                 return;
             }
@@ -463,7 +463,7 @@ registerModel({
          */
         _handleNotificationMessageDelete({ message_ids }) {
             for (const id of message_ids) {
-                const message = this.messaging.models['Message'].findFromIdentifyingData({ id });
+                const message = this.global.Messaging.models['Message'].findFromIdentifyingData({ id });
                 if (message) {
                     message.delete();
                 }
@@ -475,13 +475,13 @@ registerModel({
          */
         _handleNotificationPartnerMessageNotificationUpdate({ elements }) {
             for (const messageData of elements) {
-                const message = this.messaging.models['Message'].insert(
-                    this.messaging.models['Message'].convertData(messageData)
+                const message = this.global.Messaging.models['Message'].insert(
+                    this.global.Messaging.models['Message'].convertData(messageData)
                 );
                 // implicit: failures are sent by the server as notification
                 // only if the current partner is author of the message
-                if (!message.author && this.messaging.currentPartner) {
-                    message.update({ author: this.messaging.currentPartner });
+                if (!message.author && this.global.Messaging.currentPartner) {
+                    message.update({ author: this.global.Messaging.currentPartner });
                 }
             }
         },
@@ -498,7 +498,7 @@ registerModel({
                 // Furthermore, server should not send back all message_ids marked as read
                 // but something like last read message_id or something like that.
                 // (just imagine you mark 1000 messages as read ... )
-                const message = this.messaging.models['Message'].findFromIdentifyingData({ id: message_id });
+                const message = this.global.Messaging.models['Message'].findFromIdentifyingData({ id: message_id });
                 if (!message) {
                     continue;
                 }
@@ -513,7 +513,7 @@ registerModel({
                     isNeedaction: false,
                 });
             }
-            const inbox = this.messaging.inbox;
+            const inbox = this.global.Messaging.inbox;
             if (needaction_inbox_counter !== undefined) {
                 inbox.update({ counter: needaction_inbox_counter });
             } else {
@@ -534,9 +534,9 @@ registerModel({
          * @param {boolean} param0.starred
          */
         _handleNotificationPartnerToggleStar({ message_ids = [], starred }) {
-            const starredMailbox = this.messaging.starred;
+            const starredMailbox = this.global.Messaging.starred;
             for (const messageId of message_ids) {
-                const message = this.messaging.models['Message'].findFromIdentifyingData({
+                const message = this.global.Messaging.models['Message'].findFromIdentifyingData({
                     id: messageId,
                 });
                 if (!message) {
@@ -557,13 +557,13 @@ registerModel({
          * @param {Object} data
          */
         _handleNotificationPartnerTransientMessage(data) {
-            const convertedData = this.messaging.models['Message'].convertData(data);
-            const lastMessageId = this.messaging.models['Message'].all().reduce(
+            const convertedData = this.global.Messaging.models['Message'].convertData(data);
+            const lastMessageId = this.global.Messaging.models['Message'].all().reduce(
                 (lastMessageId, message) => Math.max(lastMessageId, message.id),
                 0
             );
-            const partnerRoot = this.messaging.partnerRoot;
-            const message = this.messaging.models['Message'].insert(Object.assign(convertedData, {
+            const partnerRoot = this.global.Messaging.partnerRoot;
+            const message = this.global.Messaging.models['Message'].insert(Object.assign(convertedData, {
                 author: partnerRoot,
                 id: lastMessageId + 0.01,
                 isTransient: true,
@@ -576,7 +576,7 @@ registerModel({
          * @param {integer} payload.id
          */
         _handleNotificationChannelLeave({ id }) {
-            const thread = this.messaging.models['Thread'].findFromIdentifyingData({
+            const thread = this.global.Messaging.models['Thread'].findFromIdentifyingData({
                 id,
                 model: 'mail.channel',
             });
@@ -584,7 +584,7 @@ registerModel({
                 return;
             }
             const message = sprintf(this.env._t("You unsubscribed from %s."), thread.displayName);
-            this.messaging.notify({ message, type: 'info' });
+            this.global.Messaging.notify({ message, type: 'info' });
             // We assume that arriving here the server has effectively
             // unpinned the channel
             thread.update({
@@ -600,7 +600,7 @@ registerModel({
          * @param {integer} payload.id
          */
         _handleNotificationChannelUnpin({ id }) {
-            const thread = this.messaging.models['Thread'].findFromIdentifyingData({
+            const thread = this.global.Messaging.models['Thread'].findFromIdentifyingData({
                 id,
                 model: 'mail.channel',
             });
@@ -608,7 +608,7 @@ registerModel({
                 return;
             }
             const message = sprintf(this.env._t("You unpinned your conversation with %s."), thread.displayName);
-            this.messaging.notify({ message, type: 'info' });
+            this.global.Messaging.notify({ message, type: 'info' });
             // We assume that arriving here the server has effectively
             // unpinned the channel
             thread.update({
@@ -631,7 +631,7 @@ registerModel({
             const message = sprintf(this.env._t('%s connected'), username);
             const title = this.env._t("This is their first connection. Wish them luck.");
             this.global.UserNotificationManager.sendNotification({ message, title, type: 'info' });
-            const chat = await this.messaging.getChat({ partnerId });
+            const chat = await this.global.Messaging.getChat({ partnerId });
             if (!this.exists() || !chat || this.global.Device.isSmall) {
                 return;
             }
@@ -645,7 +645,7 @@ registerModel({
          */
         _notifyNewChannelMessageWhileOutOfFocus({ channel, message }) {
             const author = message.author;
-            const messaging = this.messaging;
+            const messaging = this.global.Messaging;
             let notificationTitle;
             if (!author) {
                 notificationTitle = this.env._t("New message");

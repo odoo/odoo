@@ -22,9 +22,9 @@ registerModel({
         _willDelete() {
             browser.removeEventListener('storage', this._onStorage);
             for (const timeout of Object.values(this.volumeSettingsTimeouts)) {
-                this.messaging.browser.clearTimeout(timeout);
+                this.global.Messaging.browser.clearTimeout(timeout);
             }
-            this.messaging.browser.clearTimeout(this.globalSettingsTimeout);
+            this.global.Messaging.browser.clearTimeout(this.globalSettingsTimeout);
         },
     },
     recordMethods: {
@@ -93,7 +93,7 @@ registerModel({
          */
         setDelayValue(value) {
             this.update({ localVoiceActiveDuration: parseInt(value, 10) });
-            if (this.messaging.currentUser) {
+            if (this.global.Messaging.currentUser) {
                 this._saveSettings();
             }
         },
@@ -103,7 +103,7 @@ registerModel({
         async setPushToTalkKey(ev) {
             const pushToTalkKey = `${ev.shiftKey || ''}.${ev.ctrlKey || ev.metaKey || ''}.${ev.altKey || ''}.${ev.key}`;
             this.update({ localPushToTalkKey: pushToTalkKey });
-            if (this.messaging.currentUser) {
+            if (this.global.Messaging.currentUser) {
                 this._saveSettings();
             }
         },
@@ -115,12 +115,12 @@ registerModel({
          */
         async saveVolumeSetting({ guestId, partnerId, volume }) {
             if (this.volumeSettingsTimeouts[partnerId]) {
-                this.messaging.browser.clearTimeout(this.volumeSettingsTimeouts[partnerId]);
+                this.global.Messaging.browser.clearTimeout(this.volumeSettingsTimeouts[partnerId]);
             }
             this.update({
                 volumeSettingsTimeouts: {
                     ...this.volumeSettingsTimeouts,
-                    [partnerId]: this.messaging.browser.setTimeout(
+                    [partnerId]: this.global.Messaging.browser.setTimeout(
                         this._onSaveVolumeSettingTimeout.bind(this, { guestId, partnerId, volume }),
                         5000,
                     ),
@@ -138,7 +138,7 @@ registerModel({
         async togglePushToTalk() {
             this.update({ localUsePushToTalk: !this.usePushToTalk });
             await this.global.Rtc.updateVoiceActivation();
-            if (this.messaging.currentUser) {
+            if (this.global.Messaging.currentUser) {
                 this._saveSettings();
             }
         },
@@ -187,11 +187,11 @@ registerModel({
                 return;
             }
             this.update({ globalSettingsTimeout: clear() });
-            await this.messaging.rpc(
+            await this.global.Messaging.rpc(
                 {
                     model: 'res.users.settings',
                     method: 'set_res_users_settings',
-                    args: [[this.messaging.currentUser.res_users_settings_id.id], {
+                    args: [[this.global.Messaging.currentUser.res_users_settings_id.id], {
                         push_to_talk_key: this.pushToTalkKey,
                         use_push_to_talk: this.usePushToTalk,
                         voice_active_duration: this.voiceActiveDuration,
@@ -213,12 +213,12 @@ registerModel({
             const newVolumeSettingsTimeouts = { ...this.volumeSettingsTimeouts };
             delete newVolumeSettingsTimeouts[partnerId];
             this.update({ volumeSettingsTimeouts: newVolumeSettingsTimeouts });
-            await this.messaging.rpc(
+            await this.global.Messaging.rpc(
                 {
                     model: 'res.users.settings',
                     method: 'set_volume_setting',
                     args: [
-                        [this.messaging.currentUser.res_users_settings_id.id],
+                        [this.global.Messaging.currentUser.res_users_settings_id.id],
                         partnerId,
                         volume,
                     ],
@@ -233,9 +233,9 @@ registerModel({
          * @private
          */
         async _saveSettings() {
-            this.messaging.browser.clearTimeout(this.globalSettingsTimeout);
+            this.global.Messaging.browser.clearTimeout(this.globalSettingsTimeout);
             this.update({
-                globalSettingsTimeout: this.messaging.browser.setTimeout(
+                globalSettingsTimeout: this.global.Messaging.browser.setTimeout(
                     this._onSaveGlobalSettingsTimeout,
                     2000,
                 ),
@@ -273,13 +273,13 @@ registerModel({
                 if (this.localPushToTalkKey !== undefined) {
                     return this.localPushToTalkKey;
                 }
-                if (!this.messaging.currentUser) {
+                if (!this.global.Messaging.currentUser) {
                     return clear();
                 }
-                if (!this.messaging.currentUser.res_users_settings_id) {
+                if (!this.global.Messaging.currentUser.res_users_settings_id) {
                     return clear();
                 }
-                return this.messaging.currentUser.res_users_settings_id.push_to_talk_key;
+                return this.global.Messaging.currentUser.res_users_settings_id.push_to_talk_key;
             },
             default: '',
         }),
@@ -294,13 +294,13 @@ registerModel({
                 if (this.localUsePushToTalk !== undefined) {
                     return this.localUsePushToTalk;
                 }
-                if (!this.messaging.currentUser) {
+                if (!this.global.Messaging.currentUser) {
                     return clear();
                 }
-                if (!this.messaging.currentUser.res_users_settings_id) {
+                if (!this.global.Messaging.currentUser.res_users_settings_id) {
                     return clear();
                 }
-                return this.messaging.currentUser.res_users_settings_id.use_push_to_talk;
+                return this.global.Messaging.currentUser.res_users_settings_id.use_push_to_talk;
             },
             default: false,
         }),
@@ -319,13 +319,13 @@ registerModel({
                 if (this.localVoiceActiveDuration !== undefined) {
                     return this.localVoiceActiveDuration;
                 }
-                if (!this.messaging.currentUser) {
+                if (!this.global.Messaging.currentUser) {
                     return clear();
                 }
-                if (!this.messaging.currentUser.res_users_settings_id) {
+                if (!this.global.Messaging.currentUser.res_users_settings_id) {
                     return clear();
                 }
-                return this.messaging.currentUser.res_users_settings_id.voice_active_duration;
+                return this.global.Messaging.currentUser.res_users_settings_id.voice_active_duration;
             },
             default: 0,
         }),

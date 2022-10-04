@@ -21,14 +21,14 @@ registerModel({
             this.update({ isOpen: false });
         },
         async fetchData() {
-            const data = await this.messaging.rpc({
+            const data = await this.global.Messaging.rpc({
                 model: 'res.users',
                 method: 'systray_get_activities',
                 args: [],
                 kwargs: { context: session.user_context },
             });
             this.update({
-                activityGroups: data.map(vals => this.messaging.models['ActivityGroup'].convertData(vals)),
+                activityGroups: data.map(vals => this.global.Messaging.models['ActivityGroup'].convertData(vals)),
                 extraCount: 0,
             });
         },

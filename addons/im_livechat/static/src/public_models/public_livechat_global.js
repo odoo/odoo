@@ -33,7 +33,7 @@ registerModel({
     },
     recordMethods: {
         async loadQWebTemplate() {
-            const templates = await this.messaging.rpc({ route: '/im_livechat/load_templates' });
+            const templates = await this.global.Messaging.rpc({ route: '/im_livechat/load_templates' });
             for (const template of templates) {
                 qweb.add_template(template);
             }
@@ -47,7 +47,7 @@ registerModel({
             const cookie = getCookie('im_livechat_session');
             if (cookie) {
                 const channel = JSON.parse(cookie);
-                const history = await this.messaging.rpc({
+                const history = await this.global.Messaging.rpc({
                     route: '/mail/chat_history',
                     params: { uuid: channel.uuid, limit: 100 },
                 });
@@ -58,7 +58,7 @@ registerModel({
                 }
                 this.update({ isAvailableForMe: true });
             } else {
-                const result = await this.messaging.rpc({
+                const result = await this.global.Messaging.rpc({
                     route: '/im_livechat/init',
                     params: { channel_id: this.channelId },
                 });
@@ -92,7 +92,7 @@ registerModel({
                 // noop
             } else if (this.history !== null && this.history.length === 0) {
                 this.update({
-                    livechatInit: await this.messaging.rpc({
+                    livechatInit: await this.global.Messaging.rpc({
                         route: '/im_livechat/init',
                         params: { channel_id: this.channelId },
                     }),

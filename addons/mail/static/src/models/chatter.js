@@ -72,7 +72,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         async onClickScheduleActivity(ev) {
-            await this.messaging.openActivityForm({ thread: this.thread });
+            await this.global.Messaging.openActivityForm({ thread: this.thread });
             if (this.exists()) {
                 this.reloadParentView();
             }
@@ -187,8 +187,8 @@ registerModel({
                     }),
                 });
             } else if (!this.thread || !this.thread.isTemporary) {
-                const currentPartner = this.messaging.currentPartner;
-                const message = this.messaging.models['Message'].insert({
+                const currentPartner = this.global.Messaging.currentPartner;
+                const message = this.global.Messaging.models['Message'].insert({
                     author: currentPartner,
                     body: this.env._t("Creating a new record..."),
                     id: getMessageNextTemporaryId(),

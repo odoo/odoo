@@ -55,7 +55,7 @@ registerModel({
                     }
                 }
                 if (this.notificationRequestViewOwner) {
-                    return this.messaging.partnerRoot.persona;
+                    return this.global.Messaging.partnerRoot.persona;
                 }
                 if (this.threadNeedactionPreviewViewOwner) {
                     return this.threadNeedactionPreviewViewOwner.thread.channel.correspondent.persona;

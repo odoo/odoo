@@ -86,7 +86,7 @@ registerModel({
          */
         messagingBus: attr({
             compute() {
-                if (this.messagingBus) {
+                if (this.global.MessagingBus) {
                     return; // avoid overwrite if already provided (example in tests)
                 }
                 return new EventBus();

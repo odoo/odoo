@@ -25,7 +25,7 @@ registerModel({
             if (ev.target.closest('.o_channel_redirect')) {
                 // avoid following dummy href
                 ev.preventDefault();
-                const channel = this.messaging.models['Thread'].insert({
+                const channel = this.global.Messaging.models['Thread'].insert({
                     id: Number(ev.target.dataset.oeId),
                     model: 'mail.channel',
                 });
@@ -37,7 +37,7 @@ registerModel({
                 return;
             } else if (ev.target.closest('.o_mail_redirect')) {
                 ev.preventDefault();
-                this.messaging.openChat({
+                this.global.Messaging.openChat({
                     partnerId: Number(ev.target.dataset.oeId)
                 });
                 return;
@@ -46,7 +46,7 @@ registerModel({
                 if (ev.target.dataset.oeId && ev.target.dataset.oeModel) {
                     // avoid following dummy href
                     ev.preventDefault();
-                    this.messaging.openProfile({
+                    this.global.Messaging.openProfile({
                         id: Number(ev.target.dataset.oeId),
                         model: ev.target.dataset.oeModel,
                     });
@@ -63,9 +63,9 @@ registerModel({
                 !isEventHandled(ev, 'PersonaImStatusIcon.Click')
             ) {
                 if (this.messagingAsClickedMessageView) {
-                    this.messaging.update({ clickedMessageView: clear() });
+                    this.global.Messaging.update({ clickedMessageView: clear() });
                 } else {
-                    this.messaging.update({ clickedMessageView: this });
+                    this.global.Messaging.update({ clickedMessageView: this });
                 }
             }
         },
@@ -297,7 +297,7 @@ registerModel({
          */
         hasAuthorOpenChat: attr({
             compute() {
-                if (this.messaging.currentGuest) {
+                if (this.global.Messaging.currentGuest) {
                     return false;
                 }
                 if (!this.message) {

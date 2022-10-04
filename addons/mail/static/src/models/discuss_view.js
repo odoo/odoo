@@ -36,9 +36,9 @@ registerModel({
          * @param {MouseEvent} ev
          */
         async onClickStartAMeetingButton(ev) {
-            const meetingChannel = await this.messaging.models['Thread'].createGroupChat({
+            const meetingChannel = await this.global.Messaging.models['Thread'].createGroupChat({
                 default_display_mode: 'video_full_screen',
-                partners_to: [this.messaging.currentPartner.id],
+                partners_to: [this.global.Messaging.currentPartner.id],
             });
             meetingChannel.toggleCall({ startWithVideo: true });
             await meetingChannel.open({ focus: false });

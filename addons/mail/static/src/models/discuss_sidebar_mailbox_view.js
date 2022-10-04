@@ -23,13 +23,13 @@ registerModel({
         mailbox: one('Mailbox', {
             compute() {
                 if (this.discussViewOwnerAsHistory) {
-                    return this.messaging.history;
+                    return this.global.Messaging.history;
                 }
                 if (this.discussViewOwnerAsInbox) {
-                    return this.messaging.inbox;
+                    return this.global.Messaging.inbox;
                 }
                 if (this.discussViewOwnerAsStarred) {
-                    return this.messaging.starred;
+                    return this.global.Messaging.starred;
                 }
                 return clear();
             },

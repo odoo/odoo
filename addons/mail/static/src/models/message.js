@@ -36,8 +36,8 @@ registerModel({
             if ('guestAuthor' in data) {
                 data2.guestAuthor = data.guestAuthor;
             }
-            if ('history_partner_ids' in data && this.messaging.currentPartner) {
-                data2.isHistory = data.history_partner_ids.includes(this.messaging.currentPartner.id);
+            if ('history_partner_ids' in data && this.global.Messaging.currentPartner) {
+                data2.isHistory = data.history_partner_ids.includes(this.global.Messaging.currentPartner.id);
             }
             if ('id' in data) {
                 data2.id = data.id;
@@ -74,12 +74,12 @@ registerModel({
                 }
                 data2.originThread = originThreadData;
             }
-            if ('needaction_partner_ids' in data && this.messaging.currentPartner) {
-                data2.isNeedaction = data.needaction_partner_ids.includes(this.messaging.currentPartner.id);
+            if ('needaction_partner_ids' in data && this.global.Messaging.currentPartner) {
+                data2.isNeedaction = data.needaction_partner_ids.includes(this.global.Messaging.currentPartner.id);
             }
             if ('notifications' in data) {
                 data2.notifications = insert(data.notifications.map(notificationData =>
-                    this.messaging.models['Notification'].convertData(notificationData)
+                    this.global.Messaging.models['Notification'].convertData(notificationData)
                 ));
             }
             if ('parentMessage' in data) {
@@ -92,8 +92,8 @@ registerModel({
             if ('recipients' in data) {
                 data2.recipients = data.recipients;
             }
-            if ('starred_partner_ids' in data && this.messaging.currentPartner) {
-                data2.isStarred = data.starred_partner_ids.includes(this.messaging.currentPartner.id);
+            if ('starred_partner_ids' in data && this.global.Messaging.currentPartner) {
+                data2.isStarred = data.starred_partner_ids.includes(this.global.Messaging.currentPartner.id);
             }
             if ('subject' in data) {
                 data2.subject = data.subject;
@@ -116,7 +116,7 @@ registerModel({
          * @param {Array[]} domain
          */
         async markAllAsRead(domain) {
-            await this.messaging.rpc({
+            await this.global.Messaging.rpc({
                 model: 'mail.message',
                 method: 'mark_all_as_read',
                 kwargs: { domain },
@@ -134,7 +134,7 @@ registerModel({
          * @param {Message[]} messages
          */
         async markAsRead(messages) {
-            await this.messaging.rpc({
+            await this.global.Messaging.rpc({
                 model: 'mail.message',
                 method: 'set_message_done',
                 args: [messages.map(message => message.id)]
@@ -148,12 +148,12 @@ registerModel({
          * @returns {Message[]}
          */
         async performRpcMessageFetch(route, params) {
-            const messagesData = await this.messaging.rpc({ route, params }, { shadow: true });
-            if (!this.messaging) {
+            const messagesData = await this.global.Messaging.rpc({ route, params }, { shadow: true });
+            if (!this.global.Messaging) {
                 return;
             }
-            const messages = this.messaging.models['Message'].insert(messagesData.map(
-                messageData => this.messaging.models['Message'].convertData(messageData)
+            const messages = this.global.Messaging.models['Message'].insert(messagesData.map(
+                messageData => this.global.Messaging.models['Message'].convertData(messageData)
             ));
             // compute seen indicators (if applicable)
             for (const message of messages) {
@@ -163,7 +163,7 @@ registerModel({
                         // on `channel` channels for performance reasons
                         continue;
                     }
-                    this.messaging.models['MessageSeenIndicator'].insert({
+                    this.global.Messaging.models['MessageSeenIndicator'].insert({
                         thread,
                         message,
                     });
@@ -175,7 +175,7 @@ registerModel({
          * Unstar all starred messages of current user.
          */
         async unstarAll() {
-            await this.messaging.rpc({
+            await this.global.Messaging.rpc({
                 model: 'mail.message',
                 method: 'unstar_all',
             });
@@ -188,7 +188,7 @@ registerModel({
          * @param {string} content
          */
         async addReaction(content) {
-            const messageData = await this.messaging.rpc({
+            const messageData = await this.global.Messaging.rpc({
                 route: '/mail/message/add_reaction',
                 params: { content, message_id: this.id },
             });
@@ -202,7 +202,7 @@ registerModel({
          * partner Inbox.
          */
         async markAsRead() {
-            await this.messaging.rpc({
+            await this.global.Messaging.rpc({
                 model: 'mail.message',
                 method: 'set_message_done',
                 args: [[this.id]]
@@ -227,7 +227,7 @@ registerModel({
          * @param {string} content
          */
         async removeReaction(content) {
-            const messageData = await this.messaging.rpc({
+            const messageData = await this.global.Messaging.rpc({
                 route: '/mail/message/remove_reaction',
                 params: { content, message_id: this.id },
             });
@@ -240,7 +240,7 @@ registerModel({
          * Toggle the starred status of the provided message.
          */
         async toggleStar() {
-            await this.messaging.rpc({
+            await this.global.Messaging.rpc({
                 model: 'mail.message',
                 method: 'toggle_message_starred',
                 args: [[this.id]]
@@ -253,7 +253,7 @@ registerModel({
          * @param {string} param0.body the new body of the message
          */
         async updateContent({ body, attachment_ids }) {
-            const messageData = await this.messaging.rpc({
+            const messageData = await this.global.Messaging.rpc({
                 route: '/mail/message/update_content',
                 params: {
                     body,
@@ -261,10 +261,10 @@ registerModel({
                     message_id: this.id,
                 },
             });
-            if (!this.messaging) {
+            if (!this.global.Messaging) {
                 return;
             }
-            this.messaging.models['Message'].insert(messageData);
+            this.global.Messaging.models['Message'].insert(messageData);
         },
     },
     fields: {
@@ -342,7 +342,7 @@ registerModel({
          */
         canStarBeToggled: attr({
             compute() {
-                return !this.messaging.isCurrentUserGuest && !this.isTemporary && !this.isTransient;
+                return !this.global.Messaging.isCurrentUserGuest && !this.isTemporary && !this.isTransient;
             },
         }),
         /**
@@ -416,12 +416,12 @@ registerModel({
             compute() {
                 return !!(
                     this.author &&
-                    this.messaging.currentPartner &&
-                    this.messaging.currentPartner === this.author
+                    this.global.Messaging.currentPartner &&
+                    this.global.Messaging.currentPartner === this.author
                 ) || !!(
                     this.guestAuthor &&
-                    this.messaging.currentGuest &&
-                    this.messaging.currentGuest === this.guestAuthor
+                    this.global.Messaging.currentGuest &&
+                    this.global.Messaging.currentGuest === this.guestAuthor
                 );
             },
             default: false,
@@ -583,7 +583,7 @@ registerModel({
          */
         isCurrentPartnerMentioned: attr({
             compute() {
-                return this.recipients.includes(this.messaging.currentPartner);
+                return this.recipients.includes(this.global.Messaging.currentPartner);
             },
             default: false,
         }),
@@ -720,14 +720,14 @@ registerModel({
         threads: many('Thread', {
             compute() {
                 const threads = [];
-                if (this.isHistory && this.messaging.history) {
-                    threads.push(this.messaging.history.thread);
+                if (this.isHistory && this.global.Messaging.history) {
+                    threads.push(this.global.Messaging.history.thread);
                 }
-                if (this.isNeedaction && this.messaging.inbox) {
-                    threads.push(this.messaging.inbox.thread);
+                if (this.isNeedaction && this.global.Messaging.inbox) {
+                    threads.push(this.global.Messaging.inbox.thread);
                 }
-                if (this.isStarred && this.messaging.starred) {
-                    threads.push(this.messaging.starred.thread);
+                if (this.isStarred && this.global.Messaging.starred) {
+                    threads.push(this.global.Messaging.starred.thread);
                 }
                 if (this.originThread) {
                     threads.push(this.originThread);

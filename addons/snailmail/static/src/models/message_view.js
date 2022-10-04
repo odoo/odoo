@@ -21,7 +21,7 @@ registerPatch({
                 switch (this.message.notifications[0].failure_type) {
                     case 'sn_credit':
                         // URL only used in this component, not received at init
-                        this.messaging.fetchSnailmailCreditsUrl();
+                        this.global.Messaging.fetchSnailmailCreditsUrl();
                         this.update({ snailmailErrorDialog: {} });
                         break;
                     case 'sn_error':
@@ -38,7 +38,7 @@ registerPatch({
                         break;
                     case 'sn_trial':
                         // URL only used in this component, not received at init
-                        this.messaging.fetchSnailmailCreditsUrlTrial();
+                        this.global.Messaging.fetchSnailmailCreditsUrlTrial();
                         this.update({ snailmailErrorDialog: {} });
                         break;
                 }

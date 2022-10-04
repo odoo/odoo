@@ -11,7 +11,7 @@ registerPatch({
          * applicable.
          */
         async checkIsEmployee() {
-            await this.messaging.models['Employee'].performRpcSearchRead({
+            await this.global.Messaging.models['Employee'].performRpcSearchRead({
                 context: { active_test: false },
                 domain: [['user_partner_id', '=', this.id]],
                 fields: ['user_id', 'user_partner_id'],
