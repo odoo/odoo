@@ -15514,4 +15514,27 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, "div[name=text] textarea:focus");
         assert.containsOnce(target, ".o_selected_row div[name=text]");
     });
+
+    QUnit.test("view widgets are rendered in list view", async function (assert) {
+        class TestWidget extends Component {}
+        TestWidget.template = xml`<div class="test_widget" t-esc="props.record.data.bar"/>`;
+        registry.category("view_widgets").add("test_widget", TestWidget);
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <list>
+                    <field name="bar" invisible="1"/>
+                    <widget name="test_widget"/>
+                </list>
+            `,
+        });
+        assert.containsN(target, ".test_widget", 4, "there should be one widget per record");
+        assert.deepEqual(
+            [...target.querySelectorAll(".test_widget")].map((w) => w.textContent),
+            ["true", "true", "true", "false"],
+            "the widget has access to the record's data"
+        );
+    });
 });
