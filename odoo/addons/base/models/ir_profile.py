@@ -34,6 +34,7 @@ class IrProfile(models.Model):
     sql = fields.Text('Sql', prefetch=False)
     sql_count = fields.Integer('Queries Count')
     traces_async = fields.Text('Traces Async', prefetch=False)
+    #memory = fields.Text('Memory', prefetch=False)
     traces_sync = fields.Text('Traces Sync', prefetch=False)
     qweb = fields.Text('Qweb', prefetch=False)
     entry_count = fields.Integer('Entry count')

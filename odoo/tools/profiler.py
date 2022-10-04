@@ -5,6 +5,8 @@ from datetime import datetime
 import gc
 import json
 import logging
+import os
+import psutil
 import sys
 import time
 import threading
@@ -87,6 +89,7 @@ class Collector:
     It defines default behaviors for creating an entry in the collector.
     """
     name = None                 # symbolic name of the collector
+    database = True             # can be saved to database
     _registry = {}              # map collector names to their class
 
     @classmethod
@@ -178,6 +181,7 @@ class PeriodicCollector(Collector):
         self.frame_interval = interval
         self.thread = threading.Thread(target=self.run)
         self.last_frame = None
+        self.last_entry = None
 
     def run(self):
         self.active = True
@@ -218,11 +222,43 @@ class PeriodicCollector(Collector):
     def add(self, entry=None, frame=None):
         """ Add an entry (dict) to this collector. """
         frame = frame or get_current_frame(self.profiler.init_thread)
-        if frame == self.last_frame:
+        if frame == self.last_frame and self.last_entry == entry:
             # don't save if the frame is exactly the same as the previous one.
             # maybe modify the last entry to add a last seen?
             return
         self.last_frame = frame
+        self.last_entry = entry
+        super().add(entry=entry, frame=frame)
+
+
+class MemoryCollector(PeriodicCollector):
+    name = 'memory'
+    database = False
+
+    def __init__(self, interval=0.1, pid=None):  # check duration. dynamic?
+        super().__init__()
+        self.last_memory = 0
+        self.pid = pid or os.getpid()
+        self.process = psutil.Process(self.pid)
+
+    def add(self, entry=None, frame=None):
+        processes = [self.process] + self.process.children(recursive=True)
+        memory_per_pid = {process.pid: process.memory_info().rss for process in processes}
+        name_per_pid = {process.pid: process.name() for process in processes}
+        memory = sum(memory_per_pid.values())
+        if abs(memory - self.last_memory) < self.last_memory / 20:
+            return  # save every 5% increase/decrease
+        self.last_memory = memory
+        _logger.info(
+            '##### Memory for %s: %s Mo \n%s', 
+            self.pid, 
+            int(memory/(1024**2)), 
+            '\n'.join(f'pid: {pid} Mo ->\t{int(memory/(1024**2))} \t {name_per_pid[pid]}' for pid, memory in memory_per_pid.items())
+        )
+        entry = entry or {}
+        entry['memory'] = memory
+        entry['memory_per_pid'] = memory_per_pid
+        entry['name_per_pid'] = name_per_pid
         super().add(entry=entry, frame=frame)
 
 
@@ -602,7 +638,7 @@ class Profiler:
                         "sql_count": sum(len(collector.entries) for collector in self.collectors if collector.name == 'sql')
                     }
                     for collector in self.collectors:
-                        if collector.entries:
+                        if collector.entries and collector.database:
                             values[collector.name] = json.dumps(collector.entries)
                     query = sql.SQL("INSERT INTO {}({}) VALUES %s RETURNING id").format(
                         sql.Identifier("ir_profile"),
