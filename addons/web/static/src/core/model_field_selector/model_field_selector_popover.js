@@ -85,12 +85,13 @@ export class ModelFieldSelectorPopover extends Component {
     }
     async onFieldNameChange(ev) {
         this.fullFieldName = ev.target.value.replace(/\s+/g, "");
+        const { resModel } = this.props.chain[0];
         try {
-            this.chain = await this.props.loadChain(this.fullFieldName);
+            this.chain = await this.props.loadChain(resModel, this.fullFieldName);
             this.update();
         } catch (_error) {
             // WOWL TODO: rethrow error when not the expected type
-            this.chain = [{ resModel: this.props.chain[0], field: null }];
+            this.chain = [{ resModel, field: null }];
             await this.props.update([]);
             this.render();
         }
