@@ -1014,15 +1014,15 @@ class Message(models.Model):
         return vals_list
 
     def message_fetch_failed(self):
-        """Returns all messages, sent by the current user, that have errors, in
-        the format expected by the web client."""
+        """Returns first 100 messages, sent by the current user, that have
+        errors, in the format expected by the web client."""
         messages = self.search([
             ('has_error', '=', True),
             ('author_id', '=', self.env.user.partner_id.id),
             ('res_id', '!=', 0),
             ('model', '!=', False),
             ('message_type', '!=', 'user_notification')
-        ])
+        ], limit=100)
         return messages._message_notification_format()
 
     @api.model
