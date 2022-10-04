@@ -64,6 +64,9 @@ export class DocumentSelector extends FileSelector {
             linkEl.href = href;
             linkEl.title = attachment.name;
             linkEl.dataset.mimetype = attachment.mimetype;
+            if (attachment.type === 'url') {
+                linkEl.target = '_blank';
+            }
             return linkEl;
         }));
     }
