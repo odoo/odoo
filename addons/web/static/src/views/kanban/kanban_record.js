@@ -165,7 +165,7 @@ export class KanbanRecord extends Component {
         const { arch } = archInfo;
         const ViewCompiler = Compiler || KanbanCompiler;
 
-        this.templates = useViewCompiler(ViewCompiler, arch, templates, KANBAN_BOX_ATTRIBUTE);
+        this.templates = useViewCompiler(ViewCompiler, arch, templates);
 
         if (KANBAN_TOOLTIP_ATTRIBUTE in templates) {
             useTooltip("root", {
