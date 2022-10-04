@@ -643,7 +643,7 @@ class ConnectionPool(object):
             raise
         result._original_dsn = connection_info
         self._connections.append((result, True))
-        self._debug('Create new connection backend PID %d', result.get_backend_pid())
+        _logger_conn.info('Create new connection backend PID %d from worker %d', result.get_backend_pid(), os.getpid(), stack_info=True)
         return result
 
     @locked
