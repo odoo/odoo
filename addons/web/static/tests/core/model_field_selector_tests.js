@@ -477,4 +477,45 @@ QUnit.module("Components", (hooks) => {
 
         assert.containsNone(target, ".o_field_selector_popover");
     });
+
+    QUnit.test("can follow relations", async (assert) => {
+        await mountComponent(ModelFieldSelector, {
+            props: {
+                readonly: false,
+                fieldName: "",
+                resModel: "partner",
+                followRelations: true, // default
+                update(value) {
+                    assert.strictEqual(value, "product_id");
+                },
+            },
+        });
+
+        await click(target, ".o_field_selector");
+        assert.containsOnce(
+            target,
+            ".o_field_selector_item:last-child .o_field_selector_relation_icon"
+        );
+        await click(target, ".o_field_selector_item:last-child .o_field_selector_relation_icon");
+        assert.containsOnce(target, ".o_popover");
+    });
+
+    QUnit.test("cannot follow relations", async (assert) => {
+        await mountComponent(ModelFieldSelector, {
+            props: {
+                readonly: false,
+                fieldName: "",
+                resModel: "partner",
+                followRelations: false,
+                update(value) {
+                    assert.strictEqual(value, "product_id");
+                },
+            },
+        });
+
+        await click(target, ".o_field_selector");
+        assert.containsNone(target, ".o_field_selector_relation_icon");
+        await click(target, ".o_field_selector_item:last-child");
+        assert.containsNone(target, ".o_popover");
+    });
 });

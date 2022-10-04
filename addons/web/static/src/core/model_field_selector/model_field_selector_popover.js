@@ -73,13 +73,13 @@ export class ModelFieldSelectorPopover extends Component {
     onFieldSelected(field) {
         this.searchValue = "";
         this.currentNode.field = field;
-        if (!field.relation) {
-            this.props.close();
-        } else {
+        if (field.relation && this.props.followRelations) {
             this.chain.push({
                 resModel: field.relation,
                 field: null,
             });
+        } else {
+            this.props.close();
         }
         this.update();
     }
@@ -107,5 +107,9 @@ Object.assign(ModelFieldSelectorPopover, {
         loadChain: Function,
         filter: Function,
         close: Function,
+        followRelations: { type: Boolean, optional: true },
+    },
+    defaultProps: {
+        followRelations: true,
     },
 });
