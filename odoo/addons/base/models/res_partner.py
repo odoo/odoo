@@ -420,6 +420,7 @@ class Partner(models.Model):
                              'company then a new contact should be created under that new '
                              'company. You can use the "Discard" button to abandon this change.')}
         if partner.type == 'contact' or self.type == 'contact':
+            parent_values = dict()
             # for contacts: copy the parent address, if set (aka, at least one
             # value is set in the address: otherwise, keep the one from the
             # contact)
@@ -427,7 +428,15 @@ class Partner(models.Model):
             if any(self.parent_id[key] for key in address_fields):
                 def convert(value):
                     return value.id if isinstance(value, models.BaseModel) else value
-                result['value'] = {key: convert(self.parent_id[key]) for key in address_fields}
+                parent_values.update({key: convert(self.parent_id[key]) for key in address_fields})
+            # aslo include commercial fields, as they can be written on and propagated
+            # they should be similar to the parent by default
+            commercial_fields = self._commercial_fields()
+            if any(self.parent_id[key] for key in commercial_fields):
+                def convert(value):
+                    return value.id if isinstance(value, models.BaseModel) else value
+                parent_values.update({key: convert(self.parent_id[key]) for key in commercial_fields})
+            result['value'] = parent_values
         return result
 
     @api.onchange('parent_id')
@@ -541,9 +550,15 @@ class Partner(models.Model):
         sync_children._compute_commercial_partner()
         return res
 
+    def update_commercial_fields(self, values):
+        comm_vals = {key: values[key] for key in self._commercial_fields() if key in values}
+        if comm_vals:
+            return super(Partner, self).write(comm_vals)
+
     def _fields_sync(self, values):
         """ Sync commercial fields and address fields from company and to children after create/update,
         just as if those were all modeled as fields.related to the parent """
+        self.ensure_one()
         # 1. From UPSTREAM: sync from parent
         if values.get('parent_id') or values.get('type') == 'contact':
             # 1a. Commercial fields: sync if parent changed
@@ -554,8 +569,32 @@ class Partner(models.Model):
                 onchange_vals = self.onchange_parent_id().get('value', {})
                 self.update_address(onchange_vals)
 
-        # 2. To DOWNSTREAM: sync children
-        self._children_sync(values)
+        # 2. From DOWNSTREAM
+        # sync if new type is contact (or already was and was unchanged) and if
+        # there is a parent (new or existing)
+        contact_type = values.get('type', self.type)
+        parent = values.get('parent_id', self.parent_id.id)
+        if parent and contact_type == 'contact':
+            # note that the parent sync will trigger the parent's child sync
+            # (hence context key to avoid recursion)
+            self.with_context(_partners_skip_fields_sync=True)._parent_sync(values)
+
+        # 3. To DOWNSTREAM: sync children without causing the sync to bounce back upstream
+        self.with_context(_partners_skip_fields_sync=True)._children_sync(values)
+
+    def _parent_sync(self, values):
+        """ Propagate changes from children to the parent and siblings,
+        acting like a manual inverse method for a stored related field."""
+        parent = self.browse(values.get('parent_id')) or self.parent_id
+        # Commercial fields
+        if parent.commercial_partner_id == parent:
+            parent.update_commercial_fields(values)
+            parent._commercial_sync_to_children()
+        # Address fields
+        address_fields = self._address_fields()
+        if any(field in values for field in address_fields):
+            parent.update_address(values)
+            parent._children_sync(values)
 
     def _children_sync(self, values):
         if not self.child_ids:
@@ -647,6 +686,8 @@ class Partner(models.Model):
             result = super(Partner, self.sudo()).write({'is_company': vals.get('is_company')})
             del vals['is_company']
         result = result and super(Partner, self).write(vals)
+        if self.env.context.get('_partners_skip_fields_sync'):
+            return result
         for partner in self:
             if any(u._is_internal() for u in partner.user_ids if u != self.env.user):
                 self.env['res.users'].check_access_rights('write')

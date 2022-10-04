@@ -199,7 +199,7 @@
                     </div>
                 </xpath>
                 <page name="sales_purchases" position="after">
-                    <page string="Invoicing" name="accounting" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}" groups="account.group_account_invoice,account.group_account_readonly">
+                    <page string="Invoicing" name="accounting" groups="account.group_account_invoice,account.group_account_readonly">
                         <field name="duplicated_bank_account_partners_count" invisible="1"/>
                         <field name="show_credit_limit" invisible="1"/>
                         <group>
@@ -221,6 +221,7 @@
                                 />
                             </group>
                             <group string="Accounting Entries" name="accounting_entries" groups="account.group_account_readonly">
+                                <p colspan="2" class="text-info" attrs="{'invisible': [('parent_id', '=', False), ('is_company', '=', False)]}">Accounting-related changes will also be applied on <a role="button" name="open_commercial_entity" type="object" string="the parent company" class="oe_link"/>.</p>
                                 <field name="currency_id" invisible="1"/>
                                 <field name="property_account_receivable_id"/>
                                 <field name="property_account_payable_id"/>
@@ -237,11 +238,6 @@
                                 </div>
                             </group>
                         </group>
-                    </page>
-                    <page string="Invoicing" name="accounting_disabled" attrs="{'invisible': ['|',('is_company','=',True),('parent_id','=',False)]}" groups="account.group_account_invoice,account.group_account_readonly">
-                        <div>
-                            <p>Accounting-related settings are managed on <button name="open_commercial_entity" type="object" string="the parent company" class="oe_link"/></p>
-                        </div>
                     </page>
                 </page>
                 <xpath expr="//group[@name='misc']" position="before">
