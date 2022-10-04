@@ -2587,18 +2587,19 @@ class Selection(Field):
                     "%s: selection_add=%r on non-list selection %r" % (self, selection_add, self.selection)
 
                 ondelete = field.args.get('ondelete') or {}
-                new_values = [kv[0] for kv in selection_add if kv[0] not in values]
-                for key in new_values:
-                    ondelete.setdefault(key, 'set null')
-                if self.required and new_values and 'set null' in ondelete.values():
-                    raise ValueError(
-                        "%r: required selection fields must define an ondelete policy that "
-                        "implements the proper cleanup of the corresponding records upon "
-                        "module uninstallation. Please use one or more of the following "
-                        "policies: 'set default' (if the field has a default defined), 'cascade', "
-                        "or a single-argument callable where the argument is the recordset "
-                        "containing the specified option." % self
-                    )
+                if model_class._auto:
+                    new_values = [kv[0] for kv in selection_add if kv[0] not in values]
+                    for key in new_values:
+                        ondelete.setdefault(key, 'set null')
+                    if self.required and new_values and 'set null' in ondelete.values():
+                        raise ValueError(
+                            "%r: required selection fields must define an ondelete policy that "
+                            "implements the proper cleanup of the corresponding records upon "
+                            "module uninstallation. Please use one or more of the following "
+                            "policies: 'set default' (if the field has a default defined), 'cascade', "
+                            "or a single-argument callable where the argument is the recordset "
+                            "containing the specified option." % self
+                        )
 
                 # check ondelete values
                 for key, val in ondelete.items():
