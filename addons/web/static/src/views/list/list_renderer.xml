@@ -247,6 +247,9 @@
                         </t>
                     </td>
                 </t>
+                <t t-if="column.type === 'widget'">
+                    <Widget t-props="column.props" record="record"/>
+                </t>
             </t>
 
             <t t-set="activeActions" t-value="props.activeActions" />
