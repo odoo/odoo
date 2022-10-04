@@ -551,7 +551,7 @@ class PropertiesCase(TransactionCase):
             # 1 query to read the field
             # 1 query to read the definition
             # 2 queries to check if the many2one still exists / name_get
-            self.assertFalse(self.message_2.attributes[0]['value'])
+            self.assertFalse(self.message_2.read(['attributes'])[0]['attributes'][0]['value'])
 
         # remove the partner, and use the read method
         self.message_2.attributes = [{
@@ -803,9 +803,9 @@ class PropertiesCase(TransactionCase):
 
         # the value must remain in the database until the next write on the child
         self.assertEqual(self._get_sql_properties(message), {'my_tags': ['be', 'de']})
-
+        attributes = message.read(['attributes'])[0]['attributes']
         self.assertEqual(
-            message.attributes[0]['value'],
+            attributes[0]['value'],
             ['be'],
             msg='The tag has been removed on the definition, should be removed when reading the child')
         self.assertEqual(
@@ -813,7 +813,7 @@ class PropertiesCase(TransactionCase):
             [['be', 'BE', 1], ['fr', 'FR', 2], ['it', 'IT', 1]])
 
         # next write on the child must update the value
-        message.attributes = message.attributes
+        message.attributes = message.read(['attributes'])[0]['attributes']
 
         self.assertEqual(self._get_sql_properties(message), {'my_tags': ['be']})
 
@@ -849,7 +849,7 @@ class PropertiesCase(TransactionCase):
             'comodel': 'test_new_api.partner',
         }]
 
-        with self.assertQueryCount(2):
+        with self.assertQueryCount(5):
             self.message_1.attributes = [
                 {
                     "name": "moderator_partner_ids",
@@ -859,11 +859,13 @@ class PropertiesCase(TransactionCase):
                     "value": partners[:10].name_get(),
                 }
             ]
-            self.assertEqual(self.message_1.attributes[0]['value'], partners[:10].ids)
+            attributes = self.message_1.read(['attributes'], load=None)[0]['attributes']
+            self.assertEqual(attributes[0]['value'], partners[:10].ids)
 
         partners[:5].unlink()
-        with self.assertQueryCount(5):
-            self.assertEqual(self.message_1.attributes[0]['value'], partners[5:10].ids)
+        with self.assertQueryCount(4):
+            attributes = self.message_1.read(['attributes'], load=None)[0]['attributes']
+            self.assertEqual(attributes[0]['value'], partners[5:10].ids)
 
         partners[5].unlink()
         with self.assertQueryCount(5):
@@ -1003,6 +1005,11 @@ class PropertiesCase(TransactionCase):
                 },
             ]
             self.message_1.flush_recordset()
+
+        # based on batch optimization, _read_format should not crash on non existing records
+        values = self.env['test_new_api.message'].browse((self.message_1.id, 133337))._read_format(['attributes'])
+        self.assertEqual(len(values), 1)
+        self.assertEqual(values[0]['id'], self.message_1.id)
 
     def test_properties_field_change_definition(self):
         """Test the behavior of the field when changing the definition."""
