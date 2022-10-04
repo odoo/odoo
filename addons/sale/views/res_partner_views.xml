@@ -51,14 +51,16 @@
                     <field string="Sales" name="sale_order_count" widget="statinfo"/>
                 </button>
             </div>
-            <page name="internal_notes" position="inside">
-                <group colspan="2" col="2" groups="sale.group_warning_sale,sales_team.group_sale_salesman">
-                    <separator string="Warning on the Sales Order" colspan="4" />
-                    <field name="sale_warn" nolabel="1" />
-                    <field name="sale_warn_msg" colspan="3" nolabel="1"
-                            attrs="{'required':[('sale_warn','!=', False), ('sale_warn','!=','no-message')], 'invisible':[('sale_warn','in',(False,'no-message'))]}"/>
+            <xpath expr="//page[@name='internal_notes']//field[@name='comment']" position="before">
+                <group groups="sale.group_warning_sale,sales_team.group_sale_salesman">
+                    <group>
+                        <separator string="Warning on the Sales Order" />
+                        <field name="sale_warn" string="Warning" />
+                        <field name="sale_warn_msg" string="Message" placeholder="Type a message..."
+                                attrs="{'required':[('sale_warn','!=', False), ('sale_warn','!=','no-message')], 'invisible':[('sale_warn','in',(False,'no-message'))]}"/>
+                    </group>
                 </group>
-            </page>
+            </xpath>
         </field>
     </record>
 
