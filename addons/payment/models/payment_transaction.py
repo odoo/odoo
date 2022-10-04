@@ -666,7 +666,7 @@ class PaymentTransaction(models.Model):
         :return: The updated transactions.
         :rtype: recordset of `payment.transaction`
         """
-        allowed_states = ('draft', 'pending', 'authorized', 'error')
+        allowed_states = ('draft', 'pending', 'authorized', 'error', 'cancel')  # 'cancel' for Payulatam
         target_state = 'done'
         txs_to_process = self._update_state(allowed_states, target_state, state_message)
         txs_to_process._log_received_message()
