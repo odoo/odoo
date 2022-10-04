@@ -120,9 +120,9 @@
                                     attrs="{'readonly': [('allocation_type', '=', 'accrual'), ('state', 'not in', ('draft', 'confirm'))]}"/>
                             </div>
                             <div name="duration_display">
-                                <field name="number_of_days_display" class="oe_inline" nolabel="1"
+                                <field name="number_of_days_display" nolabel="1" style="width: 5rem;"
                                     attrs="{'readonly': ['|', '|', ('type_request_unit', '=', 'hour'), ('state', 'not in', ('draft', 'confirm')), ('allocation_type', '=', 'accrual')], 'invisible': [('type_request_unit', '=', 'hour')]}"/>
-                                <field name="number_of_hours_display" class="oe_inline" nolabel="1"
+                                <field name="number_of_hours_display" nolabel="1" style="width: 5rem;"
                                     attrs="{'readonly': ['|', '|', ('type_request_unit', '!=', 'hour'), ('state', 'not in', ('draft', 'confirm')), ('allocation_type', '=', 'accrual')], 'invisible': [('type_request_unit', '!=', 'hour')]}"/>
                                 <span class="ml8" attrs="{'invisible': [('type_request_unit', '=', 'hour')]}">Days</span>
                                 <span class="ml8" attrs="{'invisible': [('type_request_unit', '!=', 'hour')]}">Hours</span>

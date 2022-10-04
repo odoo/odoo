@@ -336,14 +336,12 @@
 
                             <label for="number_of_days_display" string="Duration" attrs="{'invisible': [('request_unit_half', '=', True), ('leave_type_request_unit', '!=', 'hour')]}"/>
                             <div name="duration_display">
-                                <div class="o_row">
-                                    <div attrs="{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}" class="o_row">
-                                        <field name="number_of_days_display" nolabel="1" class="oe_inline"/>
-                                        <span>Days</span>
-                                    </div>
-                                    <div attrs="{'invisible': [('leave_type_request_unit', '!=', 'hour')]}" class="o_row">
-                                        <field name="number_of_hours_text" nolabel="1" class="oe_inline"/>
-                                    </div>
+                                <div attrs="{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}" class="o_row">
+                                    <field name="number_of_days_display" nolabel="1" style="width: 5rem !important;" class="flex-shrink-1 flex-grow-0"/>
+                                    <span>Days</span>
+                                </div>
+                                <div attrs="{'invisible': [('leave_type_request_unit', '!=', 'hour')]}" class="o_row">
+                                    <field name="number_of_hours_text" nolabel="1"/>
                                 </div>
                             </div>
                             <field name="name" attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))]}" widget="text"/>
