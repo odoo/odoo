@@ -954,7 +954,7 @@ class ProductTemplate(models.Model):
 
     def action_product_tmpl_forecast_report(self):
         self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id('stock.stock_replenishment_product_product_action')
+        action = self.env["ir.actions.actions"]._for_xml_id('stock.stock_replenishment_product_template_action')
         return action
 
 

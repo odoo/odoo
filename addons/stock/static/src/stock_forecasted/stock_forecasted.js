@@ -3,7 +3,6 @@
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { View } from "@web/views/view";
-import { useSetupAction } from "@web/webclient/actions/action_hook";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 
 import { ForecastedButtons } from "./forecasted_buttons";
@@ -13,29 +12,31 @@ import { ForecastedWarehouseFilter } from "./forecasted_warehouse_filter";
 
 const { Component, onWillStart, useState, useSubEnv} = owl;
 
-class StockForecasted extends Component{
-    setup(){
-        useSetupAction();
+class StockForecasted extends Component {
+    setup() {
         useSubEnv({
             //ControlPanel trick : Allow the use of ControlPanel's bottom-right while disabling search to avoid errors
-            searchModel:{
-                searchMenuTypes : [],
+            searchModel: {
+                searchMenuTypes: [],
             },
+            //Cannot use 'control-panel-bottom-right' slot without the following, as viewSwitcherEntries doesn't exist in this.env.config here.
+            //Remove of the following lines leads to a "TypeError: Cannot read properties of undefined (reading 'length')" in ControlPanel
+            config: {
+                ...this.env.config,
+                viewSwitcherEntries: [],
+            }
         });
-        this.env.config.viewSwitcherEntries = [];
 
         this.orm = useService("orm");
         this.action = useService("action");
 
         this.context = useState(this.props.action.context);
         this.productId = this.context.active_id;
-        this.resModel = this.context.active_model || this.context.params.active_model || 'product.template';
+        this.resModel = this.context.active_model;
         const isTemplate = this.resModel === 'product.template';
         this.reportModelName = `report.stock.report_product_${isTemplate ? 'template' : 'product'}_replenishment`;
         this.title = this.props.action.name;
 
-        this.docs = useState({});
-        
         onWillStart(this._getReportValues);
     }
 

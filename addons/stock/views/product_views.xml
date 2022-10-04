@@ -271,7 +271,7 @@
                             <button type="object"
                                 name="action_product_forecast_report"
                                 attrs="{'invisible':[('show_forecasted_qty_status_button', '=', False)]}"
-                                context="{'default_product_id': id}"
+                                context="{'default_product_id': id, 'context': 'product.template'}"
                                 class="oe_stat_button" icon="fa-cubes">
                                 <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_value">
