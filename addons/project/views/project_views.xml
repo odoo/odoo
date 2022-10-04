@@ -546,7 +546,7 @@
                                 </group>
                             </group>
                             <group>
-                                <group name="group_tasks_managment" string="Tasks Managment" class="row mt16 o_settings_container" groups="project.group_subtask_project,project.group_project_task_dependencies,project.group_project_milestone,project.group_project_recurring_tasks">
+                                <group name="group_tasks_managment" string="Tasks Management" col="1" class="row mt16 o_settings_container" groups="project.group_subtask_project,project.group_project_task_dependencies,project.group_project_milestone,project.group_project_recurring_tasks">
                                     <div>
                                         <div class="o_setting_box" id="subtask_settings" groups="project.group_subtask_project">
                                             <div class="o_setting_left_pane">
@@ -594,8 +594,8 @@
                                         </div>
                                     </div>
                                 </group>
-                                <group name="group_time_managment" string="Time Managment" invisible="1" class="row mt16 o_settings_container"/>
-                                <group name="group_documents_analytics" string="Analytics" class="row mt16 o_settings_container" attrs="{'invisible': [('allow_rating', '=', False)]}">
+                                <group name="group_time_managment" string="Time Management" invisible="1" col="1" class="row mt16 o_settings_container"/>
+                                <group name="group_documents_analytics" string="Analytics" col="1" class="row mt16 o_settings_container" attrs="{'invisible': [('allow_rating', '=', False)]}">
                                     <div>
                                         <field name="allow_rating" invisible="1"/>
                                         <div class="o_setting_box" name="analytic_div" groups="project.group_project_rating">
