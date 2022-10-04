@@ -172,10 +172,16 @@ class AccountReport(models.Model):
             default = {}
         default['name'] = self._get_copied_name()
         copied_report = super().copy(default=default)
-        code_mapping = {}
         for line in self.line_ids.filtered(lambda x: not x.parent_id):
-            line._copy_hierarchy(code_mapping, report=self, copied_report=copied_report)
+            line._copy_hierarchy(copied_report)
+        for column in self.column_ids:
+            column.copy({'report_id': copied_report.id})
         return copied_report
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_no_variant(self):
+        if self.variant_report_ids:
+            raise UserError(_("You can't delete a report that has variants."))
 
     def _get_copied_name(self):
         '''Return a copied name of the account.report record by adding the suffix (copy) at the end
@@ -270,36 +276,31 @@ class AccountReportLine(models.Model):
                     expression.report_line_id.display_name,
                 ))
 
-    def _copy_hierarchy(self, code_mapping, report=None, copied_report=None, parent=None):
+    def _copy_hierarchy(self, copied_report, parent=None, code_mapping=None):
         ''' Copy the whole hierarchy from this line by copying each line children recursively and adapting the
         formulas with the new copied codes.
 
-        :param report: The financial report that triggered the duplicate.
         :param copied_report: The copy of the report.
         :param parent: The parent line in the hierarchy (a copy of the original parent line).
         :param code_mapping: A dictionary keeping track of mapping old_code -> new_code
         '''
         self.ensure_one()
 
-        # If the line points to the old report, replace with the new one.
-        # Otherwise, cut the link to another financial report.
-        report_id = None
-        if report and copied_report and self.report_id.id == report.id:
-            report_id = copied_report.id
-
         copied_line = self.copy({
-            'report_id': report_id,
+            'report_id': copied_report.id,
             'parent_id': parent and parent.id,
             'code': self.code and self._get_copied_code(),
         })
 
         # Keep track of old_code -> new_code in a mutable dict
+        if not code_mapping:
+            code_mapping = {}
         if self.code:
             code_mapping[self.code] = copied_line.code
 
         # Copy children
         for line in self.children_ids:
-            line._copy_hierarchy(parent=copied_line, code_mapping=code_mapping)
+            line._copy_hierarchy(copied_report, parent=copied_line, code_mapping=code_mapping)
 
         # Update aggregation expressions, so that they use the copied lines
         for expression in self.expression_ids:
