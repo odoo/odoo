@@ -8,7 +8,7 @@ import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
 import { viewService } from "@web/views/view_service";
 import { makeTestEnv } from "../helpers/mock_env";
-import { click, getFixture, triggerEvent, mount } from "../helpers/utils";
+import { click, getFixture, triggerEvent, mount, editInput } from "../helpers/utils";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
 
 const { Component, xml } = owl;
@@ -517,5 +517,54 @@ QUnit.module("Components", (hooks) => {
         assert.containsNone(target, ".o_field_selector_relation_icon");
         await click(target, ".o_field_selector_item:last-child");
         assert.containsNone(target, ".o_popover");
+    });
+
+    QUnit.test("Edit path in popover debug input", async (assert) => {
+        serverData.models.partner.fields.partner_id = {
+            string: "Partner",
+            type: "many2one",
+            relation: "partner",
+            searchable: true,
+        };
+
+        class Parent extends Component {
+            setup() {
+                this.fieldName = "foo";
+            }
+            onUpdate(value) {
+                this.fieldName = value;
+                this.render();
+            }
+        }
+        Parent.components = { ModelFieldSelector };
+        Parent.template = xml`
+                    <ModelFieldSelector
+                        readonly="false"
+                        resModel="'partner'"
+                        fieldName="fieldName"
+                        isDebugMode="true"
+                        update="(value) => this.onUpdate(value)"
+                    />
+                `;
+
+        await mountComponent(Parent);
+
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_field_selector_value span")].map((el) => el.innerText),
+            ["Foo"]
+        );
+
+        await click(target, ".o_field_selector");
+
+        await editInput(
+            target,
+            ".o_field_selector_popover .o_field_selector_debug",
+            "partner_id.bar"
+        );
+
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_field_selector_value span")].map((el) => el.innerText),
+            ["Partner", "Bar"]
+        );
     });
 });
