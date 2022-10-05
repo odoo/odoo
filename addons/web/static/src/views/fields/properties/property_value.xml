@@ -70,14 +70,19 @@
                     <img t-if="showAvatar &amp;&amp; propertyValue[0] &amp;&amp; hasAccess"
                         t-attf-src="/web/image/{{props.comodel}}/{{propertyValue[0]}}/avatar_128"
                         class="rounded-circle me-1"/>
-                    <a
-                        t-if="props.readonly || !hasAccess"
-                        t-attf-class="o_form_uri {{propertyValue &amp;&amp; propertyValue[1] ? '' : 'disabled'}}"
-                        t-att-href="propertyValue[0] ? `#id=${propertyValue[0]}&amp;model=${props.comodel}` : '#'"
-                        t-on-click.prevent="onMany2oneClick">
-                        <t t-if="hasAccess" t-out="propertyValue[1]"/>
-                        <t t-else="">No Access</t>
-                    </a>
+                    <t t-if="props.readonly || !hasAccess">
+                        <a
+                            t-if="clickableRelational || !hasAccess"
+                            t-attf-class="o_form_uri {{propertyValue &amp;&amp; propertyValue[1] ? '' : 'disabled'}}"
+                            t-att-href="propertyValue[0] ? `#id=${propertyValue[0]}&amp;model=${props.comodel}` : '#'"
+                            t-on-click.prevent="onMany2oneClick">
+                            <t t-if="hasAccess" t-out="propertyValue[1]"/>
+                            <t t-else="">No Access</t>
+                        </a>
+                        <span
+                            t-else=""
+                            t-out="propertyValue &amp;&amp; propertyValue[1] || ''" />
+                    </t>
                     <Many2XAutocomplete
                         t-else=""
                         value="propertyValue[1] || ''"
@@ -94,7 +99,7 @@
                     <button
                         t-if="!props.readonly &amp;&amp; propertyValue &amp;&amp; propertyValue[0] &amp;&amp; hasAccess"
                         type="button"
-                        class="btn btn-secondary fa fa-external-link o_external_button o_properties_external_button py-0"
+                        class="btn btn-secondary fa fa-arrow-right o_external_button o_properties_external_button py-0"
                         tabindex="-1"
                         draggable="false"
                         aria-label="External link"
@@ -104,8 +109,8 @@
                 </t>
             </div>
             <t t-elif="props.type === 'many2many'">
-                <div t-if="props.comodel" class="o_field_property_many2many_value py-1 d-flex flex-row pt-2 w-100"
-                    t-attf-class="o_field_widget o_field_many2manytags o_input {{showAvatar ? 'avatar' : ''}}">
+                <div t-if="props.comodel" class="o_field_property_many2many_value d-flex flex-row ms-0 pe-1 w-100 flex-wrap"
+                    t-attf-class="o_field_widget o_field_many2many_tags {{showAvatar ? 'avatar' : ''}} {{props.readonly ? 'readonly' : ''}}">
                     <!-- Copy many2many tags style without duplicating all CSS -->
                     <TagsList tags="propertyValue"/>
                     <Many2XAutocomplete
