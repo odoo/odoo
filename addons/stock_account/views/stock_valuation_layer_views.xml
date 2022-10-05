@@ -118,7 +118,7 @@
             <field name="unit_cost" position="after">
                 <field name="remaining_qty" sum="Total Remaining Quantity"/>
             </field>
-            <field name="value" position="replace">
+            <field name="value" position="before">
                 <field name="remaining_value" sum="Total Remaining Value"/>
             </field>
         </field>
@@ -139,7 +139,7 @@
         </field>
     </record>
 
-    <menuitem id="menu_valuation" name="Valuation" parent="stock.menu_warehouse_report" sequence="250" action="stock_valuation_layer_report_action" groups="base.group_no_one"/>
+    <menuitem id="menu_valuation" name="Valuation" parent="stock.menu_warehouse_report" sequence="250" action="stock_valuation_layer_action" groups="base.group_no_one"/>
 
     <record id="stock_valuation_layer_picking" model="ir.ui.view">
         <field name="name">stock.valuation.layer.picking</field>
@@ -154,5 +154,5 @@
             </xpath>
         </field>
     </record>
-    
+
 </odoo>
