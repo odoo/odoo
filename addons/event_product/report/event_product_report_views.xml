@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="event_sale_report_view_graph" model="ir.ui.view">
-        <field name="name">event.sale.report.view.graph</field>
-        <field name="model">event.sale.report</field>
+    <record id="event_product_report_view_graph" model="ir.ui.view">
+        <field name="name">event.product.report.view.graph</field>
+        <field name="model">event.product.report</field>
         <field name="arch" type="xml">
             <graph string="Revenues" sample="1" type="line">
-                <field name="sale_price" type="measure"/>
+                <field name="total" type="measure"/>
                 <field name="event_registration_create_date" interval="day"/>
                 <field name="event_ticket_price" type="measure" invisible="True"/>
             </graph>
         </field>
     </record>
 
-    <record id="event_sale_report_view_form" model="ir.ui.view">
-        <field name="name">event.sale.report.view.form</field>
-        <field name="model">event.sale.report</field>
+    <record id="event_product_report_view_form" model="ir.ui.view">
+        <field name="name">event.product.report.view.form</field>
+        <field name="model">event.product.report</field>
         <field name="arch" type="xml">
             <form string="Registration revenues" edit="false" create="false">
                 <sheet>
@@ -33,15 +33,14 @@
                         </group>
                     </group>
                     <group col="2">
-                        <group string="Sale Order">
-                            <field name="sale_order_partner_id"/>
-                            <field name="sale_order_id"/>
+                        <group string="Order">
+                            <field name="partner_id"/>
                             <field name="product_id"/>
                         </group>
                         <group string="Revenues">
                             <field name="event_ticket_price"/>
-                            <field name="sale_price_untaxed"/>
-                            <field name="sale_price"/>
+                            <field name="total_untaxed"/>
+                            <field name="total"/>
                         </group>
                     </group>
                 </sheet>
@@ -49,13 +48,13 @@
         </field>
     </record>
 
-    <record id="event_sale_report_view_pivot" model="ir.ui.view">
-        <field name="name">event.sale.report.view.pivot</field>
-        <field name="model">event.sale.report</field>
+    <record id="event_product_report_view_pivot" model="ir.ui.view">
+        <field name="name">event.product.report.view.pivot</field>
+        <field name="model">event.product.report</field>
         <field name="arch" type="xml">
             <pivot string="Revenues" sample="1">
-                <field name="sale_price_untaxed" type="measure"/>
-                <field name="sale_price" type="measure"/>
+                <field name="total_untaxed" type="measure"/>
+                <field name="total" type="measure"/>
                 <field name="event_id" type="row"/>
                 <field name="product_id" type="row"/>
                 <field name="event_ticket_price" invisible="True"/>
@@ -63,36 +62,35 @@
         </field>
     </record>
 
-    <record id="event_sale_report_view_tree" model="ir.ui.view">
-        <field name="name">event.sale.report.view.tree</field>
-        <field name="model">event.sale.report</field>
+    <record id="event_product_report_view_tree" model="ir.ui.view">
+        <field name="name">event.product.report.view.tree</field>
+        <field name="model">event.product.report</field>
         <field name="arch" type="xml">
             <tree string="Revenues" edit="false" create="false">
                 <field name="event_id"/>
                 <field name="event_ticket_id"/>
                 <field name="product_id" optional="hide"/>
                 <field name="event_ticket_price"/>
-                <field name="sale_price_untaxed" optional="hide"/>
-                <field name="sale_price" optional="hide"/>
+                <field name="total_untaxed" optional="hide"/>
+                <field name="total" optional="hide"/>
                 <field name="event_registration_state" optional="hide"/>
-                <field name="sale_order_partner_id"/>
-                <field name="invoice_partner_id" optional="hide"/>
+                <field name="partner_id"/>
                 <field name="event_registration_name" optional="hide"/>
-                <field name="sale_order_state" widget="badge"
-                       decoration-success="sale_order_state == 'sale' or sale_order_state == 'done'"
-                       decoration-info="sale_order_state == 'draft' or sale_order_state == 'sent'"/>
+                <field name="order_state" widget="badge"
+                       decoration-success="0"
+                       decoration-info="0"/>
             </tree>
         </field>
     </record>
 
-    <record id="event_sale_report_view_search" model="ir.ui.view">
-        <field name="name">event.sale.report.view.search</field>
-        <field name="model">event.sale.report</field>
+    <record id="event_product_report_view_search" model="ir.ui.view">
+        <field name="name">event.product.report.view.search</field>
+        <field name="model">event.product.report</field>
         <field name="arch" type="xml">
             <search string="Event Sales Analysis">
                 <field name="event_id"/>
                 <field name="event_registration_name" string="Participant"/>
-                <field name="sale_order_partner_id" string="Booked by"/>
+                <field name="partner_id" string="Booked by"/>
                 <field name="company_id"/>
                 <filter string="Non-free tickets" name="priced_tickets" domain="[('event_ticket_price', '!=', 0)]"/>
                 <separator/>
@@ -117,17 +115,17 @@
                     <separator/>
                     <filter string="Registration Status" name="group_by_registration_state"
                             context="{'group_by': 'event_registration_state'}"/>
-                    <filter string="Sale Order Status" name="group_by_sale_order_state"
-                            context="{'group_by': 'sale_order_state'}"/>
-                    <filter string="Customer" name="group_by_customer" context="{'group_by': 'sale_order_partner_id'}"/>
+                    <filter string="Order Status" name="group_by_order_state"
+                            context="{'group_by': 'order_state'}"/>
+                    <filter string="Customer" name="group_by_customer" context="{'group_by': 'partner_id'}"/>
                 </group>
             </search>
         </field>
     </record>
 
-    <record id="event_sale_report_action" model="ir.actions.act_window">
+    <record id="event_product_report_action" model="ir.actions.act_window">
         <field name="name">Revenues</field>
-        <field name="res_model">event.sale.report</field>
+        <field name="res_model">event.product.report</field>
         <field name="view_mode">graph,pivot</field>
         <field name="context">{
             'search_default_priced_tickets': 1,
@@ -145,7 +143,7 @@
 
     <menuitem name="Revenues"
         id="menu_action_show_revenues"
-        action="event_sale_report_action"
+        action="event_product_report_action"
         sequence="5"
         parent="event.menu_reporting_events"
         groups="event.group_event_user"/>

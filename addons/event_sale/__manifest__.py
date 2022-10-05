@@ -18,29 +18,26 @@ that product, you will be able to choose an existing event of that category and
 when you confirm your sales order it will automatically create a registration for
 this event.
 """,
-    'depends': ['event', 'sale_management'],
+    'depends': ['event', 'event_product', 'sale_management'],
     'data': [
-        'views/event_ticket_views.xml',
         'views/event_registration_views.xml',
         'views/event_views.xml',
         'views/sale_order_views.xml',
         'data/event_sale_data.xml',
         'data/mail_templates.xml',
         'report/event_event_templates.xml',
-        'report/event_sale_report_views.xml',
+        'report/event_product_report_views.xml',
         'security/ir.model.access.csv',
-        'security/ir_rule.xml',
         'security/event_security.xml',
         'wizard/event_edit_registration.xml',
         'wizard/event_configurator_views.xml',
     ],
     'demo': [
         'data/event_sale_demo.xml',
-        'data/event_demo.xml',  # needs event_sale_demo
         'data/event_registration_demo.xml',  # needs event_sale_demo
     ],
     'installable': True,
-    'auto_install': True,
+    'auto_install': ['event', 'sale_management'],
     'assets': {
         'web.assets_backend': [
             'event_sale/static/src/**/*',

@@ -1,28 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo><data>
     <!-- ****** Products ****** -->
-    <record id="product_product_event_standard" model="product.product">
-        <field name="list_price">30.0</field>
-        <field name="standard_price">10.0</field>
-        <field name="uom_id" ref="uom.product_uom_unit"/>
-        <field name="uom_po_id" ref="uom.product_uom_unit"/>
-        <field name="name">Event Registration - Standard</field>
-        <field name="description_sale" eval="False"/>
+    <record id="event_product.product_product_event_standard" model="product.product">
         <field name="invoice_policy">order</field>
-        <field name="categ_id" ref="event_sale.product_category_events"/>
-        <field name="detailed_type">event</field>
     </record>
 
-    <record id="product_product_event_vip" model="product.product">
-        <field name="list_price">100.0</field>
-        <field name="standard_price">50.0</field>
-        <field name="uom_id" ref="uom.product_uom_unit"/>
-        <field name="uom_po_id" ref="uom.product_uom_unit"/>
-        <field name="name">Event Registration - VIP</field>
-        <field name="description_sale" eval="False"/>
+    <record id="event_product.product_product_event_vip" model="product.product">
         <field name="invoice_policy">order</field>
-        <field name="categ_id" ref="event_sale.product_category_events"/>
-        <field name="detailed_type">event</field>
     </record>
 
     <!-- ****** Registrations ****** -->
@@ -36,7 +20,7 @@
     <record id="event_0_sale_order_0_line_0" model="sale.order.line">
         <field name="order_id" ref="event_0_sale_order_0"/>
         <field name="name">Event Registration - Standard</field>
-        <field name="product_id" ref="event_sale.product_product_event_standard"/>
+        <field name="product_id" ref="event_product.product_product_event_standard"/>
         <field name="price_unit">1000</field>
         <field name="product_uom_qty">2</field>
         <field name="event_id" ref="event.event_0"/>
@@ -45,7 +29,7 @@
     <record id="event_0_sale_order_0_line_1" model="sale.order.line">
         <field name="order_id" ref="event_0_sale_order_0"/>
         <field name="name">Event Registration</field>
-        <field name="product_id" ref="event_sale.product_product_event"/>
+        <field name="product_id" ref="event_product.product_product_event"/>
         <field name="price_unit">0</field>
         <field name="product_uom_qty">1</field>
         <field name="event_id" ref="event.event_0"/>
@@ -62,7 +46,7 @@
     <record id="event_2_sale_order_0_line_0" model="sale.order.line">
         <field name="order_id" ref="event_2_sale_order_0"/>
         <field name="name">Event Registration - Standard</field>
-        <field name="product_id" ref="event_sale.product_product_event_standard"/>
+        <field name="product_id" ref="event_product.product_product_event_standard"/>
         <field name="price_unit">1000</field>
         <field name="product_uom_qty">2</field>
         <field name="event_id" ref="event.event_2"/>
@@ -71,7 +55,7 @@
     <record id="event_2_sale_order_0_line_1" model="sale.order.line">
         <field name="order_id" ref="event_2_sale_order_0"/>
         <field name="name">Event Registration - VIP</field>
-        <field name="product_id" ref="event_sale.product_product_event_vip"/>
+        <field name="product_id" ref="event_product.product_product_event_vip"/>
         <field name="price_unit">1500</field>
         <field name="product_uom_qty">1</field>
         <field name="event_id" ref="event.event_2"/>
@@ -87,7 +71,7 @@
     <record id="event_2_sale_order_1_line_0" model="sale.order.line">
         <field name="order_id" ref="event_2_sale_order_1"/>
         <field name="name">Event Registration - Standard</field>
-        <field name="product_id" ref="event_sale.product_product_event_standard"/>
+        <field name="product_id" ref="event_product.product_product_event_standard"/>
         <field name="price_unit">1000</field>
         <field name="product_uom_qty">2</field>
         <field name="event_id" ref="event.event_2"/>
@@ -104,7 +88,7 @@
     <record id="event_4_sale_order_0_line_0" model="sale.order.line">
         <field name="order_id" ref="event_4_sale_order_0"/>
         <field name="name">Event Registration - Standard</field>
-        <field name="product_id" ref="event_sale.product_product_event_standard"/>
+        <field name="product_id" ref="event_product.product_product_event_standard"/>
         <field name="price_unit">499</field>
         <field name="product_uom_qty">1</field>
         <field name="event_id" ref="event.event_4"/>
@@ -120,7 +104,7 @@
     <record id="event_4_sale_order_1_line_0" model="sale.order.line">
         <field name="order_id" ref="event_4_sale_order_1"/>
         <field name="name">Event Registration - Standard</field>
-        <field name="product_id" ref="event_sale.product_product_event_standard"/>
+        <field name="product_id" ref="event_product.product_product_event_standard"/>
         <field name="price_unit">499</field>
         <field name="product_uom_qty">1</field>
         <field name="event_id" ref="event.event_4"/>
@@ -136,7 +120,7 @@
     <record id="event_4_sale_order_2_line_0" model="sale.order.line">
         <field name="order_id" ref="event_4_sale_order_2"/>
         <field name="name">Event Registration - Standard</field>
-        <field name="product_id" ref="event_sale.product_product_event_standard"/>
+        <field name="product_id" ref="event_product.product_product_event_standard"/>
         <field name="price_unit">499</field>
         <field name="product_uom_qty">1</field>
         <field name="event_id" ref="event.event_4"/>
@@ -152,7 +136,7 @@
     <record id="event_7_sale_order_0_line_0" model="sale.order.line">
         <field name="order_id" ref="event_7_sale_order_0"/>
         <field name="name">Event Registration - Standard</field>
-        <field name="product_id" ref="event_sale.product_product_event_standard"/>
+        <field name="product_id" ref="event_product.product_product_event_standard"/>
         <field name="price_unit">0</field>
         <field name="product_uom_qty">1</field>
         <field name="event_id" ref="event.event_7"/>
@@ -161,7 +145,7 @@
     <record id="event_7_sale_order_0_line_1" model="sale.order.line">
         <field name="order_id" ref="event_7_sale_order_0"/>
         <field name="name">Event Registration - VIP</field>
-        <field name="product_id" ref="event_sale.product_product_event_vip"/>
+        <field name="product_id" ref="event_product.product_product_event_vip"/>
         <field name="price_unit">0</field>
         <field name="product_uom_qty">1</field>
         <field name="event_id" ref="event.event_7"/>
@@ -176,7 +160,7 @@
     <record id="event_7_sale_order_1_line_0" model="sale.order.line">
         <field name="order_id" ref="event_7_sale_order_1"/>
         <field name="name">Event Registration - Standard</field>
-        <field name="product_id" ref="event_sale.product_product_event_standard"/>
+        <field name="product_id" ref="event_product.product_product_event_standard"/>
         <field name="price_unit">0</field>
         <field name="product_uom_qty">1</field>
         <field name="event_id" ref="event.event_7"/>
@@ -185,7 +169,7 @@
     <record id="event_7_sale_order_1_line_1" model="sale.order.line">
         <field name="order_id" ref="event_7_sale_order_1"/>
         <field name="name">Event Registration - VIP</field>
-        <field name="product_id" ref="event_sale.product_product_event_vip"/>
+        <field name="product_id" ref="event_product.product_product_event_vip"/>
         <field name="price_unit">0</field>
         <field name="product_uom_qty">1</field>
         <field name="event_id" ref="event.event_7"/>

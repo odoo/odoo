@@ -88,7 +88,7 @@ class EventBoothCategory(models.Model):
         else:
             product_id = self.env['product.product'].create({
                 'name': 'Generic Event Booth Product',
-                'categ_id': self.env.ref('event_sale.product_category_events').id,
+                'categ_id': self.env.ref('event_product.product_category_events').id,
                 'list_price': 100,
                 'standard_price': 0,
                 'detailed_type': 'event_booth',

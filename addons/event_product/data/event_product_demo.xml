@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- ****** Products ****** -->
+        <record id="product_product_event_standard" model="product.product">
+            <field name="list_price">30.0</field>
+            <field name="standard_price">10.0</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="name">Event Registration - Standard</field>
+            <field name="description_sale" eval="False"/>
+            <field name="categ_id" ref="event_product.product_category_events"/>
+            <field name="detailed_type">event</field>
+        </record>
+
+        <record id="product_product_event_vip" model="product.product">
+            <field name="list_price">100.0</field>
+            <field name="standard_price">50.0</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="name">Event Registration - VIP</field>
+            <field name="description_sale" eval="False"/>
+            <field name="categ_id" ref="event_product.product_category_events"/>
+            <field name="detailed_type">event</field>
+        </record>
+
+        <record id="event.event_0_ticket_0" model="event.event.ticket">
+            <field name="product_id" ref="product_product_event"/>
+            <field name="price">0</field>
+        </record>
+        <record id="event.event_0_ticket_1" model="event.event.ticket">
+            <field name="product_id" ref="product_product_event_standard"/>
+            <field name="price">1000.0</field>
+        </record>
+        <record id="event.event_0_ticket_2" model="event.event.ticket">
+            <field name="product_id" ref="product_product_event_vip"/>
+            <field name="price">1500.0</field>
+        </record>
+
+        <record id="event.event_2_ticket_1" model="event.event.ticket">
+            <field name="product_id" ref="product_product_event_standard"/>
+            <field name="price">1000.0</field>
+        </record>
+        <record id="event.event_2_ticket_2" model="event.event.ticket">
+            <field name="product_id" ref="product_product_event_vip"/>
+            <field name="price">1500.0</field>
+        </record>
+
+        <record id="event.event_4_ticket_0" model="event.event.ticket">
+            <field name="product_id" ref="product_product_event_standard"/>
+            <field name="price">99.0</field>
+        </record>
+
+        <record id="event.event_7_ticket_1" model="event.event.ticket">
+            <field name="product_id" ref="product_product_event_standard"/>
+            <field name="price">0.0</field>
+        </record>
+        <record id="event.event_7_ticket_2" model="event.event.ticket">
+            <field name="product_id" ref="product_product_event_vip"/>
+            <field name="price">0.0</field>
+        </record>
+    </data>
+</odoo>

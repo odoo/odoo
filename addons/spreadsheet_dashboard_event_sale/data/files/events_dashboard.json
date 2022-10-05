@@ -773,7 +773,7 @@
                     "content": "=ODOO.PIVOT(9,\"__count\")"
                 },
                 "B4": {
-                    "content": "=ODOO.PIVOT(7,\"sale_price_untaxed\")"
+                    "content": "=ODOO.PIVOT(7,\"total_untaxed\")"
                 },
                 "C1": {
                     "style": 2,
@@ -786,7 +786,7 @@
                     "content": "=ODOO.PIVOT(10,\"__count\")"
                 },
                 "C4": {
-                    "content": "=ODOO.PIVOT(8,\"sale_price_untaxed\")"
+                    "content": "=ODOO.PIVOT(8,\"total_untaxed\")"
                 },
                 "D1": {
                     "style": 10,
@@ -951,7 +951,7 @@
         "d9898682-9b91-4fe2-9900-a4b2583eb459": "event.event_main_menu",
         "092dd971-dc10-41c5-96c4-d760820e9cf2": "event.event_main_menu",
         "18361546-49c2-4212-88eb-b2ee50127d41": "event.menu_event_event",
-        "98d2b15d-9117-4ecf-9732-dc62df949dc1": "event_sale.menu_action_show_revenues",
+        "98d2b15d-9117-4ecf-9732-dc62df949dc1": "event_product.menu_action_show_revenues",
         "6510bff8-7b28-42c6-af4b-c750bed2205c": "event.menu_action_registration"
     },
     "odooVersion": 4,
@@ -1117,18 +1117,18 @@
             "context": {
                 "pivot_measures": [
                     "__count__",
-                    "sale_price_untaxed",
-                    "sale_price"
+                    "total_untaxed",
+                    "total"
                 ]
             },
             "domain": [],
             "id": "7",
             "measures": [
                 {
-                    "field": "sale_price_untaxed"
+                    "field": "total_untaxed"
                 }
             ],
-            "model": "event.sale.report",
+            "model": "event.product.report",
             "rowGroupBys": [],
             "name": "untaxed revenue - current",
             "sortedColumn": null
@@ -1138,8 +1138,8 @@
             "context": {
                 "pivot_measures": [
                     "__count__",
-                    "sale_price_untaxed",
-                    "sale_price"
+                    "total_untaxed",
+                    "total"
                 ]
             },
             "domain": [],
@@ -1149,13 +1149,13 @@
                     "field": "__count"
                 },
                 {
-                    "field": "sale_price_untaxed"
+                    "field": "total_untaxed"
                 },
                 {
-                    "field": "sale_price"
+                    "field": "total"
                 }
             ],
-            "model": "event.sale.report",
+            "model": "event.product.report",
             "rowGroupBys": [],
             "name": "untaxed revenue - previous",
             "sortedColumn": null

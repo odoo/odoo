@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="event_product_report_view_form_inherit_event_sale" model="ir.ui.view">
+        <field name="name">event.product.report.view.form.inherit.event.sale</field>
+        <field name="model">event.product.report</field>
+        <field name="inherit_id" ref="event_product.event_product_report_view_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="sale_order_id" attrs="{'invisible': [('sale_order_id', '=', False)]}"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="event_product_report_view_tree_inherit_event_sale" model="ir.ui.view">
+        <field name="name">event.product.report.view.tree.inherit.event.sale</field>
+        <field name="model">event.product.report</field>
+        <field name="inherit_id" ref="event_product.event_product_report_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="invoice_partner_id" optional="hide"/>
+            </field>
+            <field name="order_state" position="attributes">
+                <attribute name="decoration-success" add="order_state == 'sale' or order_state == 'done'" separator=" or "/>
+                <attribute name="decoration-info" add="order_state == 'draft' or order_state == 'sent'" separator=" or "/>
+            </field>
+        </field>
+    </record>
+</odoo>
