@@ -1,12 +1,9 @@
 /** @odoo-module */
 
-import { getFixture, click, triggerEvent, legacyExtraNextTick } from "@web/../tests/helpers/utils";
-import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
+import { getFixture, click, legacyExtraNextTick } from "@web/../tests/helpers/utils";
 import { getDashboardServerData } from "../utils/data";
 import { getBasicData, getBasicListArchs } from "@spreadsheet/../tests/utils/data";
 import { createSpreadsheetDashboard } from "../utils/dashboard_action";
-
-const { dashboardMenuRegistry } = spreadsheet.registries;
 
 QUnit.module("spreadsheet_dashboard > Dashboard > Dashboard action");
 
@@ -90,15 +87,6 @@ QUnit.test("display error message", async (assert) => {
     assert.containsNone(fixture, ".o_renderer .error", "It should not display an error");
 });
 
-QUnit.test("Dashboard registry contains see records of pivots and lists", (assert) => {
-    const records = dashboardMenuRegistry.getAll();
-    assert.strictEqual(records.length, 2);
-    assert.strictEqual(records[0].id, "see_records_pivot");
-    assert.ok(records[0].isReadonlyAllowed);
-    assert.strictEqual(records[1].id, "see_records_list");
-    assert.ok(records[1].isReadonlyAllowed);
-});
-
 QUnit.test(
     "Last selected spreadsheet is kept when go back from breadcrumb",
     async function (assert) {
@@ -145,14 +133,7 @@ QUnit.test(
         const fixture = getFixture();
         await createSpreadsheetDashboard({ serverData });
         await click(fixture, ".o_search_panel li:last-child");
-        const rect = fixture
-            .querySelector(".o-spreadsheet .o-grid-overlay")
-            .getBoundingClientRect();
-        await triggerEvent(fixture, ".o-spreadsheet .o-grid-overlay", "contextmenu", {
-            pageX: 5 + rect.left,
-            pageY: 5 + rect.top,
-        });
-        await click(fixture, ".o-menu-item[data-name='see_records_pivot']");
+        await click(fixture, ".o-dashboard-clickable-cell");
         await legacyExtraNextTick();
         assert.containsOnce(fixture, ".o_list_view");
         await click(document.body.querySelector(".o_back_button"));
