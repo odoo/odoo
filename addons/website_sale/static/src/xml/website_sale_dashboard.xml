@@ -159,4 +159,11 @@
             </div>
         </div>
     </t>
+
+    <!-- Show the date range buttons related to the 'community' Sales Dashboard -->
+    <t t-extend="website.DateRangeButtons">
+        <t t-jquery="t[t-set='show_range_buttons']" t-operation="attributes">
+            <attribute name="t-value" value="1" />
+        </t>
+    </t>
 </templates>
