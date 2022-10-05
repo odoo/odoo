@@ -48,12 +48,14 @@
                             </group>
                         </group>
                         <group attrs="{'invisible': [('num_journals_without_account', '=', 0)]}">
-                           <group>
-                            <field name="linked_journal_id" options="{'no_create': True}"/>
-                          </group>
-                          <group>
-                               <span class="text-muted">Leave empty to create a new journal for this bank account, or select a journal to link it with the bank account.</span>
-                           </group>
+                            <group>
+                                <field name="linked_journal_id" options="{'no_create': True}"/>
+                            </group>
+                            <group>
+                                <span class="text-muted" colspan="2">
+                                    Leave empty to create a new journal for this bank account, or select a journal to link it with the bank account.
+                                </span>
+                            </group>
                         </group>
                     </sheet>
                     <footer>
