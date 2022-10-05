@@ -1028,6 +1028,8 @@ var SnippetEditor = Widget.extend({
                 this.dragState.startingGrid = rowEl;
                 this.dragState.prevGridArea = self.$target[0].style.gridArea;
 
+                this.dragState.startingZIndex = self.$target[0].style.zIndex;
+
                 // Reload the images.
                 gridUtils._reloadLazyImages(this.$target[0]);
             } else {
@@ -1172,11 +1174,16 @@ var SnippetEditor = Widget.extend({
                     const rowCount = Math.max(rowEl.dataset.rowCount, columnRowCount);
                     $dropzone[0].style.gridRowEnd = rowCount + 1;
 
-                    // Setting the background grid, the moving grid item and
-                    // the drag helper z-indexes so they are in front of the
-                    // other elements and in this order.
+                    // Setting the moving grid item, the background grid and
+                    // the drag helper z-indexes. The grid item z-index is set
+                    // to its original one if we are in its starting grid, or
+                    // to the maximum z-index of the grid otherwise.
+                    if (rowEl === self.dragState.startingGrid) {
+                        self.$target[0].style.zIndex = self.dragState.startingZIndex;
+                    } else {
+                        gridUtils._setElementToMaxZindex(self.$target[0], rowEl);
+                    }
                     gridUtils._setElementToMaxZindex(backgroundGridEl, rowEl);
-                    gridUtils._setElementToMaxZindex(self.$target[0], rowEl);
                     gridUtils._setElementToMaxZindex(dragHelperEl, rowEl);
 
                     // Setting the column height and width to keep its size
@@ -1283,9 +1290,6 @@ var SnippetEditor = Widget.extend({
             this.dragState.dragHelperEl.remove();
             this.dragState.backgroundGridEl.remove();
             gridUtils._resizeGrid(rowEl);
-
-            // Setting the z-index to the maximum of the grid.
-            gridUtils._setElementToMaxZindex(this.$target[0], rowEl);
         } else if (this.$target[0].classList.contains('o_grid_item') && this.dropped) {
             // Case when dropping a grid item in a non-grid dropzone.
             this.$target[0].classList.remove('o_grid_item');
@@ -1322,8 +1326,12 @@ var SnippetEditor = Widget.extend({
                     const rowCount = Math.max(rowEl.dataset.rowCount, 1 + this.dragState.columnRowCount);
                     rowEl.dataset.rowCount = rowCount;
 
-                    // Setting the z-index to the maximum of the grid.
-                    gridUtils._setElementToMaxZindex(this.$target[0], rowEl);
+                    // Setting the grid item z-index.
+                    if (rowEl === this.dragState.startingGrid) {
+                        this.$target[0].style.zIndex = this.dragState.startingZIndex;
+                    } else {
+                        gridUtils._setElementToMaxZindex(this.$target[0], rowEl);
+                    }
                 } else {
                     if (this.$target[0].classList.contains('o_grid_item')) {
                         // Case when a grid column is dropped near a non-grid
