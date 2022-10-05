@@ -98,9 +98,10 @@
                                 <group string="Participants" name="participants">
                                     <field name="access_mode"/>
                                     <field name="users_login_required"/>
-                                    <div colspan="2" class="o_checkbox_optional_field"
+                                    <label for="is_attempts_limited" string="Limit Attempts"
+                                           attrs="{'invisible': ['|', ('has_conditional_questions', '=', True), '&amp;', ('access_mode', '=', 'public'), ('users_login_required', '=', False)]}"/>
+                                    <div class="o_checkbox_optional_field"
                                         attrs="{'invisible': ['|', ('has_conditional_questions', '=', True), '&amp;', ('access_mode', '=', 'public'), ('users_login_required', '=', False)]}">
-                                        <label for="is_attempts_limited" string="Limit Attempts"/>
                                         <field name="is_attempts_limited" nolabel="1"/>
                                         <div attrs="{'invisible': [('is_attempts_limited', '=', False)]}">
                                             to <field name="attempts_limit" nolabel="1" class="oe_inline"/> attempts
@@ -108,8 +109,8 @@
                                     </div>
                                 </group>
                                 <group string="Time &amp; Scoring" name="scoring">
-                                    <div colspan="2" class="o_checkbox_optional_field">
-                                        <label for="is_time_limited" string="Survey Time Limit"/>
+                                    <label for="is_time_limited" string="Survey Time Limit"/>
+                                    <div class="o_checkbox_optional_field">
                                         <field name="is_time_limited" nolabel="1"/>
                                         <div attrs="{'invisible': [('is_time_limited', '=', False)]}">
                                             <field name="time_limit" widget="float_time" nolabel="1" class="oe_inline"/> minutes
@@ -117,8 +118,8 @@
                                     </div>  
                                     <field name="scoring_type" widget="radio" />
                                     <field name="scoring_success_min" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}" />
-                                    <div colspan="2" class="o_checkbox_optional_field">
-                                        <label for="certification"/>
+                                    <label for="certification"/>
+                                    <div class="o_checkbox_optional_field">
                                         <field name="certification" nolabel="1"/>
                                         <div attrs="{'invisible': [('certification', '=', False)]}" class="w-100">
                                             <field name="certification_report_layout" class="w-50"/>
@@ -128,9 +129,10 @@
                                         </div>
                                     </div> 
                                     <field name="certification_mail_template_id" attrs="{'invisible': [('certification', '=', False)]}"/>
-                                    <div colspan="2" class="float-start o_checkbox_optional_field"
+                                    <label for="certification_give_badge"
+                                           attrs="{'invisible': ['|', ('certification', '=', False), ('users_login_required', '=', False)]}"/>
+                                    <div class="float-start o_checkbox_optional_field"
                                         attrs="{'invisible': ['|', ('certification', '=', False), ('users_login_required', '=', False)]}">
-                                        <label for="certification_give_badge"/>
                                         <field name="certification_give_badge"/>
                                         <div attrs="{'invisible': [('certification_give_badge', '=', False)]}">
                                             <field name="certification_badge_id"
