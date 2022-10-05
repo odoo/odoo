@@ -589,7 +589,23 @@ class PaymentProvider(models.Model):
         :return: None
         """
         providers = self.search([('code', '=', provider_code)])
-        providers.write({
+        providers.write(self._get_removal_values())
+
+    def _get_removal_values(self):
+        """ Return the values to update a provider with when its module is uninstalled.
+
+        For a module to specify additional removal values, it must override this method and complete
+        the generic values with its specific values.
+
+        :return: The removal values to update the removed provider with.
+        :rtype: dict
+        """
+        return {
             'code': 'none',
             'state': 'disabled',
-        })
+            'is_published': False,
+            'redirect_form_view_id': None,
+            'inline_form_view_id': None,
+            'token_inline_form_view_id': None,
+            'express_checkout_form_view_id': None,
+        }
