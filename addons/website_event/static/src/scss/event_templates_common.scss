@@ -150,17 +150,11 @@ $o-wevent-color: mix(map-get($theme-colors, 'primary'), $body-color, $o-wevent-c
 
         .o_wevent_online_page_container {
 
-            // Main panel
-            .o_wevent_online_page_main {
-                border: 1px solid $border-color;
-                margin-top: map-get($spacers, 3);
-
-                .o_wevent_online_page_avatar {
-                    min-width: 64px;
-
-                    img {
-                        max-width: 96px;
-                    }
+            // Sponsor Avatar
+            .o_wevent_online_page_avatar {
+                min-width: 64px;
+                img {
+                    max-width: 96px;
                 }
             }
 
@@ -169,9 +163,6 @@ $o-wevent-color: mix(map-get($theme-colors, 'primary'), $body-color, $o-wevent-c
                 @extend .o_wevent_theme_bg_base;
                 // Left panel: content display
                 .o_wevent_online_page_aside_content {
-                    border: 1px solid $border-color;
-                    margin-top: map-get($spacers, 3);
-
                     li:not(.nav-item) {
                         border-bottom: 1px solid $border-color;
                         &:first-child {

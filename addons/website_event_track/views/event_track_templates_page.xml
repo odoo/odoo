@@ -48,7 +48,7 @@
 
 <template id="event_track_content" name="Track: Main Description">
     <div name="o_wesession_track_main"
-         t-att-class="'col-12 o_wevent_online_page_main o_wesession_track_main o_wevent_theme_bg_base p-0 %s' % ('col-md-9 col-lg-10' if option_widescreen else 'col-md-8 col-lg-9')">
+         t-att-class="'col-12 o_wesession_track_main o_wevent_theme_bg_base border mt-3 p-0 %s' % ('col-md-9 col-lg-10' if option_widescreen else 'col-md-8 col-lg-9')">
         <!-- LIVE INFORMATIONS -->
         <div t-if="not track.event_id.is_ongoing and track.event_id.start_remaining" class="pt-3">
             <div class="mx-3 alert alert-warning">
@@ -166,11 +166,11 @@
 <!-- ============================================================ -->
 
 <template id="event_track_aside" name="Track: Aside">
-    <div t-att-class="'col-12 ps-0 pe-0 o_wevent_online_page_aside o_wesession_track_aside %s' % ('col-md-3 col-lg-2' if option_widescreen else 'col-md-4 col-lg-3')">
-        <div class="o_wevent_theme_bg_base pt-0 pt-md-3 o_wevent_online_page_aside_content">
+    <div t-att-class="'col-12 ps-0 pe-0 mt-3 border o_wevent_online_page_aside o_wesession_track_aside %s' % ('col-md-3 col-lg-2' if option_widescreen else 'col-md-4 col-lg-3')">
+        <div class="o_wevent_theme_bg_base o_wevent_online_page_aside_content">
             <div class="mx-2" t-if="track.date and track.website_cta">
                 <t t-set="cta_coundown" t-value="bool(track.website_cta_start_remaining)"/>
-                <div t-if="cta_coundown" class="text-center mt-2 mt-md-0 w-100 btn btn-primary d-none">
+                <div t-if="cta_coundown" class="text-center w-100 btn btn-primary d-none">
                     <t t-call="website_event.display_timer_widget">
                         <t t-set="pre_remaining_time" t-value="int(track.track_start_remaining)"/>
                         <!--<t t-set="pre_countdown_text" t-value="'Talk starts in'"/>-->
@@ -184,12 +184,12 @@
                 <div t-att-class="'o_event_cta_action %s' % ('d-none' if cta_coundown else '')">
                     <a t-att-href="track.website_cta_url"
                         target="_blank"
-                        class="btn btn-primary w-100 mb-3 mt-2 mt-md-0">
+                        class="btn btn-primary w-100 my-3">
                         <span t-out="track.website_cta_title"/>
                     </a>
                 </div>
             </div>
-            <div class="d-flex align-items-center justify-content-between mx-2">
+            <div class="d-flex align-items-center justify-content-between my-2 me-2">
                 <ul class="nav nav-tabs o_wesession_track_aside_nav d-flex border-0" role="tablist">
                     <li class="nav-item flex-grow-1">
                         <a href="#track_list" aria-controls="track_list" class="nav-link active" role="tab" data-bs-toggle="tab">
