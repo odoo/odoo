@@ -27,6 +27,7 @@ export const browser = {
     clearTimeout: window.clearTimeout.bind(window),
     setInterval: window.setInterval.bind(window),
     clearInterval: window.clearInterval.bind(window),
+    performance: window.performance,
     requestAnimationFrame: window.requestAnimationFrame.bind(window),
     cancelAnimationFrame: window.cancelAnimationFrame.bind(window),
     console: window.console,

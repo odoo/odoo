@@ -120,3 +120,27 @@ export function useDebounced(callback, delay) {
     onWillUnmount(() => debounced.cancel());
     return debounced;
 }
+
+/**
+ * Function that calls recursively a request to an animation frame.
+ * Useful to call a function repetitively, until asked to stop, that needs constant rerendering.
+ * The provided callback gets as argument the time the last frame took.
+ * @param {(deltaTime: number) => any} callback
+ * @returns {() => void} stop function
+ */
+export function setRecurringAnimationFrame(callback) {
+    const handler = (timestamp) => {
+        callback(timestamp - lastTimestamp);
+        lastTimestamp = timestamp;
+        handle = browser.requestAnimationFrame(handler);
+    };
+
+    const stop = () => {
+        browser.cancelAnimationFrame(handle);
+    };
+
+    let lastTimestamp = browser.performance.now();
+    let handle = browser.requestAnimationFrame(handler);
+
+    return stop;
+}
