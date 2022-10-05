@@ -4836,8 +4836,11 @@ class AccountMoveLine(models.Model):
 
         # Fix cash basis entries, only if not coming from the move reversal wizard.
         is_cash_basis_needed = self[0].account_internal_type in ('receivable', 'payable')
+
+        lines_to_exclude = self.env.context.get('exclude_from_cash_basis', self.env['account.move.line'])
+
         if is_cash_basis_needed and not self._context.get('move_reverse_cancel'):
-            _add_cash_basis_lines_to_exchange_difference_vals(self, exchange_diff_move_vals)
+            _add_cash_basis_lines_to_exchange_difference_vals(self - lines_to_exclude, exchange_diff_move_vals)
 
         # ==========================================================================
         # Create move and reconcile.
@@ -4953,7 +4956,16 @@ class AccountMoveLine(models.Model):
 
         is_cash_basis_needed = account.company_id.tax_exigibility and account.user_type_id.type in ('receivable', 'payable')
         if is_cash_basis_needed and not self._context.get('move_reverse_cancel'):
-            tax_cash_basis_moves = partials._create_tax_cash_basis_moves()
+            # exclude reversed lines from cash basis creation
+            lines_to_exclude = self.env['account.move.line']
+            partials_to_exclude = self.env['account.partial.reconcile']
+            for partial in partials:
+                if partial.credit_move_id.move_id == partial.debit_move_id.move_id.reversed_entry_id \
+                    or partial.debit_move_id.move_id == partial.credit_move_id.move_id.reversed_entry_id:
+                    lines_to_exclude += partial.credit_move_id | partial.debit_move_id
+                    partials_to_exclude += partial
+            involved_lines = involved_lines.with_context(exclude_from_cash_basis=lines_to_exclude)
+            tax_cash_basis_moves = (partials - partials_to_exclude)._create_tax_cash_basis_moves()
             results['tax_cash_basis_moves'] = tax_cash_basis_moves
 
         # ==== Check if a full reconcile is needed ====

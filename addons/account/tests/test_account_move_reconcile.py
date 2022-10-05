@@ -2674,3 +2674,49 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             ._create_payments()
 
         bill.button_draft()
+
+    def test_caba_reconcile_partial_credit_note(self):
+        self.env.company.tax_exigibility = True
+        self.cash_basis_transfer_account.reconcile = True
+        rate_a = 0.55
+        rate_b = 0.6
+        currency = self.setup_multi_currency_data(default_values={
+            'name': 'XXX',
+            'symbol': 'XXX',
+            'currency_unit_label': 'XX',
+            'currency_subunit_label': 'X',
+            'rounding': 0.01,
+        }, rate2016=rate_a, rate2017=rate_b)['currency']
+
+        # Create an invoice 26.45 XXX = 40.43 USD
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'currency_id': currency.id,
+            'date': '2016-01-01',
+            'invoice_date': '2016-01-01',
+            'invoice_line_ids': [(0, 0, {
+                'product_id': self.product_a.id,
+                'price_unit': 23.0,
+                'tax_ids': [(6, 0, self.cash_basis_tax_a_third_amount.ids)],
+            })],
+        })
+        invoice.action_post()
+
+        # Create a partial credit note
+        move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=invoice.ids).create({
+            'date': '2017-01-01',
+            'reason': 'no reason',
+            'refund_method': 'refund',
+        })
+        reversal = move_reversal.reverse_moves()
+        reverse_move = self.env['account.move'].browse(reversal['res_id'])
+        reverse_move.action_post()
+        to_reconcile = invoice.line_ids.filtered(lambda l: l.account_id.user_type_id.type in ('receivable', 'payable'))
+        to_reconcile += reverse_move.line_ids.filtered(lambda line: line.account_id == to_reconcile[0].account_id)
+        to_reconcile.reconcile()
+        partial_rec = to_reconcile.matched_credit_ids
+        full_rec = to_reconcile.full_reconcile_id
+        caba_move = self.env['account.move'].search([('tax_cash_basis_rec_id', 'in', partial_rec.ids)])
+        self.assertEqual(len(caba_move), 0, "No CABA moves should be generated")
+        self.assertEqual(len(full_rec.exchange_move_id.line_ids), 2, "Too much exchange rate created")
