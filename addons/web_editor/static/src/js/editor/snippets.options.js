@@ -4272,7 +4272,6 @@ registry.sizing = SnippetOptionWidget.extend({
                 backgroundGridEl = gridUtils._addBackgroundGrid(rowEl, 0);
                 self.options.wysiwyg.odooEditor.observerActive('displayBackgroundGrid');
                 gridUtils._setElementToMaxZindex(backgroundGridEl, rowEl);
-                gridUtils._setElementToMaxZindex(self.$target[0], rowEl);
             }
 
             // For loop to handle the cases where it is ne, nw, se or sw. Since
@@ -4364,7 +4363,6 @@ registry.sizing = SnippetOptionWidget.extend({
                     backgroundGridEl.remove();
                     self.options.wysiwyg.odooEditor.observerActive('displayBackgroundGrid');
                     gridUtils._resizeGrid(rowEl);
-                    gridUtils._setElementToMaxZindex(self.$target[0], rowEl);
 
                     const colClass = [...self.$target[0].classList].find(c => /^col-/.test(c));
                     const gColClass = [...self.$target[0].classList].find(c => /^g-col-/.test(c));
