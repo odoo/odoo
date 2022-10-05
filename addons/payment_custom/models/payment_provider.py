@@ -61,3 +61,9 @@ class PaymentProvider(models.Model):
                 f'<h4>{_("Communication")}</h4>' \
                 f'<p>{_("Please use the order name as communication reference.")}</p>' \
                 f'</div>'
+
+    def _get_removal_values(self):
+        """ Override of `payment` to nullify the `custom_mode` field. """
+        res = super()._get_removal_values()
+        res['custom_mode'] = None
+        return res
