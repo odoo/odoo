@@ -31,7 +31,7 @@
                             <field name="question_type" widget="radio" attrs="{'required': [('is_page', '=', False)]}" />
                         </group>
                         <group>
-                            <div class="mx-lg-auto w-lg-50 d-none d-sm-block o_preview_questions">
+                            <div class="mx-lg-auto w-lg-50 d-none d-sm-block o_preview_questions" colspan="2">
                                 <!-- Multiple choice: only one answer -->
                                 <div attrs="{'invisible': [('question_type', '!=', 'simple_choice')]}" role="img" aria-label="Multiple choice with one answer"
                                     title="Multiple choice with one answer">
@@ -137,7 +137,7 @@
                                 </group>
                             </group>
                             <group attrs="{'invisible': [('question_type', 'not in', ['simple_choice', 'multiple_choice', 'matrix'])]}">
-                                <field name="suggested_answer_ids" context="{'default_question_id': active_id}" nolabel="1">
+                                <field name="suggested_answer_ids" context="{'default_question_id': active_id}" nolabel="1" colspan="2">
                                     <tree editable="bottom">
                                         <field name="sequence" widget="handle"/>
                                         <field name="value" string="Choices"/>
@@ -154,7 +154,7 @@
 
                             <group attrs="{'invisible': [('question_type', '!=', 'matrix')]}">
                                 <field name="matrix_row_ids" context="{'default_matrix_question_id': active_id}"
-                                    attrs="{'invisible': [('question_type', '!=', 'matrix')]}" nolabel="1">
+                                    attrs="{'invisible': [('question_type', '!=', 'matrix')]}" nolabel="1" colspan="2">
                                     <tree editable="bottom">
                                         <field name="sequence" widget="handle"/>
                                         <field name="value" string="Rows"/>
