@@ -41,7 +41,7 @@
                 line-height: $o-label-font-size-factor;
             }
 
-            .o_field_widget {
+            .o_field_widget:not(.oe_inline) {
                 width: 100%;
                 margin-bottom: $o-form-spacing-unit * 2;
 
@@ -1097,12 +1097,12 @@
                 }
             }
         }
+    }
 
-        .o_form_label {
-            font-size: $o-label-font-size-factor * $o-font-size-base-touch;
-            font-weight: $font-weight-normal;
-            color: $o-brand-secondary;
-        }
+    .o_form_label {
+        font-size: $o-label-font-size-factor * $o-font-size-base-touch;
+        font-weight: $font-weight-normal;
+        color: $o-brand-secondary;
     }
 }
 
