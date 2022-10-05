@@ -45,16 +45,18 @@
                             <field name="subject" placeholder="Subject..."/>
                         </group>
                         <field name="can_edit_body" invisible="1"/>
-                        <field name="body" class="oe-bordered-editor" options="{'style-inline': true, 'height': 380}" attrs="{'readonly': [('can_edit_body', '=', False)]}" force_save="1"/>
-                        <group>
+                        <div>
+                            <field name="body" class="oe-bordered-editor" options="{'style-inline': true, 'height': 380}" attrs="{'readonly': [('can_edit_body', '=', False)]}" force_save="1"/>
                             <group>
-                                <field name="attachment_ids" widget="many2many_binary"/>
+                                <group>
+                                    <field name="attachment_ids" widget="many2many_binary"/>
+                                </group>
+                                <group>
+                                    <field name="deadline"/>
+                                    <field name="template_id" label="Use template"/>
+                                </group>
                             </group>
-                            <group>
-                                <field name="deadline"/>
-                                <field name="template_id" label="Use template"/>
-                            </group>
-                        </group>
+                        </div>
                     </group>
                     <footer>
                         <button string="Send" name="action_invite" type="object" class="btn-primary" data-hotkey="q"/>

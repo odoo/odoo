@@ -62,8 +62,11 @@
 }
 
 .o_mail_composer_form {
-    .oe-bordered-editor[name=body] .o_readonly {
+    .oe-bordered-editor[name=body] {
         border: 1px solid $o-gray-300;
         padding: 4px;
+    }
+    .o_field_widget {
+        width: 100%;
     }
 }
