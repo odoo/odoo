@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
-import { useUpdate } from '@mail/component_hooks/use_update';
+import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
@@ -13,32 +13,15 @@ export class DiscussSidebar extends Component {
      */
     setup() {
         super.setup();
-        useUpdate({ func: () => this._update() });
         useRefToModel({ fieldName: 'quickSearchInputRef', refName: 'quickSearchInput' });
+        useUpdateToModel({ methodName: 'onComponentUpdate' });
     }
 
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
     /**
-     * @returns {DiscussView}
+     * @returns {DiscussSidebarView}
      */
-    get discussView() {
+    get discussSidebarView() {
         return this.props.record;
-    }
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _update() {
-        if (this.discussView.quickSearchInputRef.el) {
-            this.discussView.quickSearchInputRef.el.value = this.discussView.discuss.sidebarQuickSearchValue;
-        }
     }
 
 }
