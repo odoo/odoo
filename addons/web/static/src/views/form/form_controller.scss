@@ -208,6 +208,33 @@
         flex: 1 1 auto;
     }
 
+    &.o_form_with_borderless_input {
+        .o_input {
+            border-color: transparent;
+            padding: $o-input-padding-y $o-input-padding-x;
+
+            &:hover, &:focus {
+                border-color: var(--o-input-border-color);
+            }
+        }
+
+        &.o_field_invalid .o_input {
+            border-color: var(--o-input-border-color);
+        }
+
+        .o_datepicker {
+            .o_datepicker_button {
+                visibility: hidden;
+            }
+
+            &:hover, &:focus-within {
+                .o_datepicker_button {
+                    visibility: visible;
+                }
+            }
+        }
+    }
+
     // No sheet
     &.o_form_nosheet, .o_form_nosheet {
         @include o-webclient-padding($top: $o-sheet-vpadding, $bottom: $o-sheet-vpadding);

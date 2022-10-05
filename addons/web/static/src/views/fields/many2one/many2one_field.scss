@@ -1,0 +1,13 @@
+.o_form_view.o_form_with_borderless_input {
+    .o_field_many2one_selection {
+        .o_external_button, .o_dropdown_button {
+            visibility: hidden;
+        }
+
+        &:hover, &:focus-within {
+            .o_external_button, .o_dropdown_button {
+                visibility: visible;
+            }
+        }
+    }
+}
