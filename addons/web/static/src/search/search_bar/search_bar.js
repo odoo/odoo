@@ -35,7 +35,7 @@ export class SearchBar extends Component {
 
         this.keepLast = new KeepLast();
 
-        this.inputRef = useAutofocus();
+        this.inputRef = this.env.config.disableSearchBarAutofocus ? useRef("autofocus") : useAutofocus();
 
         useBus(this.env.searchModel, "focus-search", () => {
             this.inputRef.el.focus();
