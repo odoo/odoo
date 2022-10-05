@@ -1037,6 +1037,7 @@ class Website(models.Model):
             raise ValueError('No record found for unique ID %s. It may have been deleted.' % (view_id))
         return view
 
+    @api.model
     @tools.ormcache_context('key', keys=('website_id',))
     def is_view_active(self, key):
         """
