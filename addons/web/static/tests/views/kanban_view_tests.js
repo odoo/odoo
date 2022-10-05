@@ -12077,4 +12077,89 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(target.querySelectorAll(".o_kanban_group").length, 3);
         assert.strictEqual(target.querySelectorAll(".o_kanban_record").length, 1);
     });
+
+    QUnit.test("drag & drop: content scrolls when reaching the edges", async (assert) => {
+        const nextAnimationFrame = async (timeDelta) => {
+            timeStamp += timeDelta;
+            animationFrameDef.resolve();
+            animationFrameDef = makeDeferred();
+            await Promise.resolve();
+        };
+
+        let animationFrameDef = makeDeferred();
+        let timeStamp = 0;
+
+        patchWithCleanup(browser, {
+            async requestAnimationFrame(handler) {
+                await animationFrameDef;
+                handler(timeStamp);
+            },
+            performance: { now: () => timeStamp },
+        });
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <kanban>
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="id" />
+                        </div>
+                    </templates>
+                </kanban>
+            `,
+            groupBy: ["state"],
+        });
+
+        const content = target.querySelector(".o_content");
+        content.setAttribute("style", "max-width:600px;overflow:auto;");
+
+        assert.strictEqual(content.scrollLeft, 0);
+        assert.strictEqual(content.getBoundingClientRect().width, 600);
+        assert.containsNone(target, ".o_kanban_record.o_dragged");
+
+        // Drag first record of first group to the right
+        await drag(".o_kanban_record", ".o_kanban_group:nth-child(3) .o_kanban_record");
+
+        assert.strictEqual(content.scrollLeft, 0);
+
+        // next frame (normal time delta)
+        await nextAnimationFrame(16);
+
+        // Default kanban speed is 20px per tick
+        assert.strictEqual(content.scrollLeft, 20);
+        assert.containsOnce(target, ".o_kanban_record.o_dragged");
+
+        // next frame (time delta x20)
+        await nextAnimationFrame(16 * 20);
+
+        // Should be at the end of the content
+        assert.strictEqual(content.clientWidth + content.scrollLeft, content.scrollWidth);
+
+        // Cancel drag: press "Escape"
+        triggerHotkey("Escape");
+        await nextTick();
+
+        assert.containsNone(target, ".o_kanban_record.o_dragged");
+
+        // Drag first record of last group to the left
+        await drag(".o_kanban_group:nth-child(3) .o_kanban_record", ".o_kanban_record");
+
+        // next frame (normal time delta)
+        await nextAnimationFrame(16);
+
+        assert.containsOnce(target, ".o_kanban_record.o_dragged");
+
+        // next frame (time delta x20)
+        await nextAnimationFrame(16 * 20);
+
+        assert.strictEqual(content.scrollLeft, 0);
+
+        // Cancel drag: click outside
+        await triggerEvent(content, null, "mousedown");
+
+        assert.containsNone(target, ".o_kanban_record.o_dragged");
+    });
 });

@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { clamp } from "@web/core/utils/numbers";
-import { debounce } from "@web/core/utils/timing";
+import { debounce, setRecurringAnimationFrame } from "@web/core/utils/timing";
 
 /**
  * @typedef Position
@@ -10,14 +10,22 @@ import { debounce } from "@web/core/utils/timing";
  */
 
 /**
+ * @typedef EdgeScrollingOptions
+ * @property {boolean} [enabled=true]
+ * @property {number} [speed=10]
+ * @property {number} [threshold=20]
+ */
+
+/**
  * @typedef DraggableBuilderParams
  *
  * Hook params
  * @property {string} [name="useAnonymousDraggable"]
+ * @property {EdgeScrollingOptions} [edgeScrolling]
  * @property {Record<string, string[]>} [acceptedParams]
+ * @property {Record<string, any>} [defaultParams]
  *
  * Build handlers
- * @property {(params: DraggableBuilderHookParams) => any} onBuildSetup
  * @property {(params: DraggableBuilderHookParams) => any} onComputeParams
  *
  * Runtime handlers
@@ -43,6 +51,7 @@ import { debounce } from "@web/core/utils/timing";
  * @property {boolean} [enabled=false]
  * @property {Position} [mouse={ x: 0, y: 0 }]
  * @property {Position} [offset={ x: 0, y: 0 }]
+ * @property {EdgeScrollingOptions} [edgeScrolling]
  */
 
 /**
@@ -63,6 +72,14 @@ const DEFAULT_ACCEPTED_PARAMS = {
     handle: ["string", "function"],
     ignore: ["string", "function"],
     cursor: ["string"],
+    edgeScrolling: ["object", "function"],
+};
+const DEFAULT_DEFAULT_PARAMS = {
+    enable: true,
+    edgeScrolling: {
+        speed: 10,
+        threshold: 30,
+    },
 };
 const LEFT_CLICK = 0;
 const MANDATORY_PARAMS = ["ref", "elements"];
@@ -93,6 +110,7 @@ function cssValueToNumber(val) {
 export function makeDraggableHook(hookParams = {}) {
     const hookName = hookParams.name || "useAnonymousDraggable";
     const allAcceptedParams = { ...DEFAULT_ACCEPTED_PARAMS, ...hookParams.acceptedParams };
+    const defaultParams = { ...DEFAULT_DEFAULT_PARAMS, ...hookParams.defaultParams };
 
     /**
      * @param {SortableParams} params
@@ -209,6 +227,11 @@ export function makeDraggableHook(hookParams = {}) {
 
                 addStyle(document.body, bodyStyle);
 
+                if (ctx.edgeScrolling.enabled) {
+                    const cleanupFn = setRecurringAnimationFrame(handleEdgeScrolling);
+                    cleanups.push(cleanupFn);
+                }
+
                 execBuildHandler("onDragStart");
             };
 
@@ -272,6 +295,48 @@ export function makeDraggableHook(hookParams = {}) {
                         dragEnd(true, true);
                         throw err;
                     }
+                }
+            };
+
+            /**
+             * Applies scroll to the container if the current element is near
+             * the edge of the container.
+             */
+            const handleEdgeScrolling = (deltaTime) => {
+                ctx.currentElementRect = ctx.currentElement.getBoundingClientRect();
+
+                const { speed, threshold } = ctx.edgeScrolling;
+                const correctedSpeed = (speed / 16) * deltaTime;
+                const { currentContainerRect: cRect, currentElementRect: eRect } = ctx;
+
+                const maxWidth = cRect.x + cRect.width;
+                const maxHeight = cRect.y + cRect.height;
+
+                const diff = {};
+
+                if (eRect.x - cRect.x < threshold) {
+                    diff.x = [eRect.x - cRect.x, -1];
+                } else if (maxWidth - eRect.x - eRect.width < threshold) {
+                    diff.x = [maxWidth - eRect.x - eRect.width, 1];
+                }
+
+                if (eRect.y - cRect.y < threshold) {
+                    diff.y = [eRect.y - cRect.y, -1];
+                } else if (maxHeight - eRect.y - eRect.height < threshold) {
+                    diff.y = [maxHeight - eRect.y - eRect.height, 1];
+                }
+
+                if (diff.x || diff.y) {
+                    const diffToScroll = ([delta, sign]) =>
+                        (1 - clamp(delta, 0, threshold) / threshold) * correctedSpeed * sign;
+                    const scrollParams = {};
+                    if (diff.x) {
+                        scrollParams.left = diffToScroll(diff.x);
+                    }
+                    if (diff.y) {
+                        scrollParams.top = diffToScroll(diff.y);
+                    }
+                    ctx.currentContainerEl.scrollBy(scrollParams);
                 }
             };
 
@@ -404,14 +469,13 @@ export function makeDraggableHook(hookParams = {}) {
                 enabled: false,
                 mouse: { x: 0, y: 0 },
                 offset: { x: 0, y: 0 },
+                edgeScrolling: { enabled: true },
             };
-
-            execBuildHandler("onBuildSetup");
 
             // Effect depending on the params to update them.
             useEffect(
                 (...deps) => {
-                    const actualParams = Object.fromEntries(deps);
+                    const actualParams = { ...defaultParams, ...Object.fromEntries(deps) };
                     ctx.enabled = Boolean(ctx.ref.el && !env.isSmall && actualParams.enable);
                     if (!ctx.enabled) {
                         return;
@@ -434,6 +498,8 @@ export function makeDraggableHook(hookParams = {}) {
                     }
                     ctx.fullSelector = allSelectors.join(" ");
 
+                    Object.assign(ctx.edgeScrolling, actualParams.edgeScrolling);
+
                     execBuildHandler("onComputeParams", { params: actualParams });
                 },
                 () => computeParams(params)
@@ -449,8 +515,8 @@ export function makeDraggableHook(hookParams = {}) {
                 () => [ctx.ref.el]
             );
             // Other global mouse event listeners.
-            const debouncedMousemove = debounce(onMousemove, "animationFrame", true);
-            useExternalListener(window, "mousemove", debouncedMousemove);
+            const debouncedOnMouseMove = debounce(onMousemove, "animationFrame", true);
+            useExternalListener(window, "mousemove", debouncedOnMouseMove);
             useExternalListener(window, "mouseup", onMouseup);
             useExternalListener(window, "keydown", onKeydown, true);
             onWillUnmount(() => dragEnd(true));
