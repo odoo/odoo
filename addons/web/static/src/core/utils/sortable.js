@@ -66,16 +66,15 @@ export const useSortable = makeDraggableHook({
         groups: ["string", "function"],
         connectGroups: ["boolean", "function"],
     },
+    defaultParams: {
+        connectGroups: false,
+        currentGroup: null,
+        edgeScrolling: { speed: 20, threshold: 60 },
+        ghostElement: null,
+        groupSelector: null,
+    },
 
     // Build steps
-    onBuildSetup({ ctx }) {
-        Object.assign(ctx, {
-            connectGroups: false,
-            currentGroup: null,
-            ghostElement: null,
-            groupSelector: null,
-        });
-    },
     onComputeParams({ ctx, params }) {
         // Group selector
         ctx.groupSelector = params.groups || null;

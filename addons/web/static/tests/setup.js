@@ -121,6 +121,8 @@ function patchBrowserWithCleanup() {
     const originalClearInterval = browser.clearInterval;
 
     let hasHashChangeListeners = false;
+    let nextAnimationFrameHandle = 1;
+    const animationFrameHandles = new Set();
     const mockLocation = makeMockLocation(() => hasHashChangeListeners);
     patchWithCleanup(
         browser,
@@ -171,8 +173,21 @@ function patchBrowserWithCleanup() {
             localStorage: makeRAMLocalStorage(),
             sessionStorage: makeRAMLocalStorage(),
             // Don't want original animation frames in tests
-            requestAnimationFrame: (fn) => fn(),
-            cancelAnimationFrame: () => {},
+            requestAnimationFrame: (fn) => {
+                const handle = nextAnimationFrameHandle++;
+                animationFrameHandles.add(handle);
+
+                Promise.resolve().then(() => {
+                    if (animationFrameHandles.has(handle)) {
+                        fn(16);
+                    }
+                });
+
+                return handle;
+            },
+            cancelAnimationFrame: (handle) => {
+                animationFrameHandles.delete(handle);
+            },
         },
         { pure: true }
     );
@@ -288,34 +303,49 @@ function removeUnwantedAttrsFromTemplates(attrs) {
 // server.
 
 // Clean up templates that have already been added.
-removeUnwantedAttrsFromTemplates(['alt', 'src']);
+removeUnwantedAttrsFromTemplates(["alt", "src"]);
 
 const { loadXML, getBundle, loadJS, loadCSS } = assets;
-patch(assets, 'TestAssetsLoadXML', {
+patch(assets, "TestAssetsLoadXML", {
     loadXML: function (templates) {
         console.log("%c[assets] fetch XML ressource", "color: #66e; font-weight: bold;");
         // Clean up new templates that might be added later.
         loadXML(templates);
-        removeUnwantedAttrsFromTemplates(['alt', 'src']);
+        removeUnwantedAttrsFromTemplates(["alt", "src"]);
     },
     getBundle: memoize(async function (xmlID) {
-        console.log("%c[assets] fetch libs from xmlID: " + xmlID, "color: #66e; font-weight: bold;");
+        console.log(
+            "%c[assets] fetch libs from xmlID: " + xmlID,
+            "color: #66e; font-weight: bold;"
+        );
         return getBundle(xmlID);
     }),
     loadJS: memoize(async function (ressource) {
         if (ressource.match(/\/static(\/\S+\/|\/)libs?/)) {
-            console.log("%c[assets] fetch (mock) JS ressource: " + ressource, "color: #66e; font-weight: bold;");
+            console.log(
+                "%c[assets] fetch (mock) JS ressource: " + ressource,
+                "color: #66e; font-weight: bold;"
+            );
             return nextTick();
         }
-        console.log("%c[assets] fetch JS ressource: " + ressource, "color: #66e; font-weight: bold;");
+        console.log(
+            "%c[assets] fetch JS ressource: " + ressource,
+            "color: #66e; font-weight: bold;"
+        );
         return loadJS(ressource);
     }),
     loadCSS: memoize(async function (ressource) {
         if (ressource.match(/\/static(\/\S+\/|\/)libs?/)) {
-            console.log("%c[assets] fetch (mock) CSS ressource: " + ressource, "color: #66e; font-weight: bold;");
+            console.log(
+                "%c[assets] fetch (mock) CSS ressource: " + ressource,
+                "color: #66e; font-weight: bold;"
+            );
             return nextTick();
         }
-        console.log("%c[assets] fetch CSS ressource: " + ressource, "color: #66e; font-weight: bold;");
+        console.log(
+            "%c[assets] fetch CSS ressource: " + ressource,
+            "color: #66e; font-weight: bold;"
+        );
         return loadCSS(ressource);
     }),
 });
