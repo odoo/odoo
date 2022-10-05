@@ -36,7 +36,7 @@ const BUTTON_CLICK_PARAMS = [
     // This should be refactor someday
     "noSaveDialog",
 ];
-const BUTTON_STRING_PROPS = ["string", "size", "title", "icon", "id"];
+export const BUTTON_STRING_PROPS = ["string", "size", "title", "icon", "id"];
 const INTERP_REGEXP = /(\{\{|#\{)(.*?)(\}{1,2})/g;
 
 /**
