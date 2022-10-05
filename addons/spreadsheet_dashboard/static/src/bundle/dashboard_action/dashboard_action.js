@@ -76,13 +76,6 @@ export class SpreadsheetDashboardAction extends Component {
         this.state = useState({ activeDashboard: undefined });
     }
 
-    getStyle(model) {
-        const sheetId = model.getters.getActiveSheetId();
-        const { right } = model.getters.getSheetZone(sheetId);
-        const { end } = model.getters.getColDimensions(sheetId, right);
-        return `max-width: ${end}px;`;
-    }
-
     /**
      * @returns {number | undefined}
      */

@@ -36,8 +36,14 @@ readonlyAllowedCommands.add("ADD_PIVOT_DOMAIN");
 cellMenuRegistry.add("pivot_see_records", {
     name: _lt("See records"),
     sequence: 175,
-    action: SEE_RECORDS_PIVOT,
-    isVisible: SEE_RECORDS_PIVOT_VISIBLE,
+    action: (env) => {
+        const cell = env.getters.getActiveCell();
+        SEE_RECORDS_PIVOT(cell, env);
+    },
+    isVisible: (env) => {
+        const cell = env.getters.getActiveCell();
+        SEE_RECORDS_PIVOT_VISIBLE(cell);
+    },
 });
 
 inverseCommandRegistry

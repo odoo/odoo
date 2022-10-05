@@ -33931,7 +33931,7 @@
         }
         getClickableAction(cell) {
             for (const items of clickableCellRegistry.getAll().sort((a, b) => a.sequence - b.sequence)) {
-                if (items.condition(cell)) {
+                if (items.condition(cell, this.env)) {
                     return items.action;
                 }
             }
