@@ -78,7 +78,7 @@ class ProductTemplate(models.Model):
         action['domain'] = [('state', '=', 'done'), ('product_tmpl_id', 'in', self.ids)]
         action['context'] = {
             'graph_measure': 'product_uom_qty',
-            'time_ranges': {'field': 'date_planned_start', 'range': 'last_365_days'}
+            'search_default_filter_plan_date': 1,
         }
         return action
 
