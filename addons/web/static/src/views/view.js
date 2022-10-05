@@ -48,6 +48,7 @@ export function getDefaultConfig() {
                 },
             },
         ]),
+        disableSearchBarAutofocus: false,
         getDisplayName: () => displayName,
         historyBack: () => {},
         pagerProps: {},
