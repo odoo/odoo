@@ -10062,6 +10062,7 @@
     }
 
     // HELPERS
+    const SORT_TYPES_ORDER = ["number", "string", "boolean", "undefined"];
     function assert(condition, message) {
         if (!condition()) {
             throw new Error(message);
@@ -10107,6 +10108,20 @@
             default:
                 return "";
         }
+    }
+    /** Normalize string by setting it to lowercase and replacing accent letters with plain letters */
+    function normalizeString(str) {
+        return str
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
+    }
+    /**
+     * Normalize a value.
+     * If the cell value is a string, this will set it to lowercase and replacing accent letters with plain letters
+     */
+    function normalizeValue(value) {
+        return typeof value === "string" ? normalizeString(value) : value;
     }
     const expectBooleanValueError = (value) => _lt("The function [[FUNCTION_NAME]] expects a boolean value, but '%s' is a text, and cannot be coerced to a number.", value);
     function toBoolean(value) {
@@ -10429,62 +10444,81 @@
     // -----------------------------------------------------------------------------
     // COMMON FUNCTIONS
     // -----------------------------------------------------------------------------
+    function getNormalizedValueFromColumnRange(range, index) {
+        return normalizeValue(range[0][index]);
+    }
+    function getNormalizedValueFromRowRange(range, index) {
+        return normalizeValue(range[index][0]);
+    }
     /**
-     * Perform a dichotomic search and return the index of the nearest match less than
-     * or equal to the target. If all values in the range are greater than the target,
-     * -1 is returned.
-     * If the range is not in sorted order, an incorrect value might be returned.
+     * Perform a dichotomic search on an array and return the index of the nearest match.
      *
-     * Example:
-     * - [3, 6, 10], 3 => 0
-     * - [3, 6, 10], 6 => 1
-     * - [3, 6, 10], 9 => 1
-     * - [3, 6, 10], 42 => 2
-     * - [3, 6, 10], 2 => -1
-     * - [3, undefined, 6, undefined, 10], 9 => 2
-     * - [3, 6, undefined, undefined, undefined, 10], 2 => -1
+     * The array should be sorted, if not an incorrect value might be returned. In the case where multiple
+     * element of the array match the target, the method will return the first match if the array is sorted
+     * in descending order, and the last match if the array is in ascending order.
+     *
+     *
+     * @param data the array in which to search.
+     * @param target the value to search.
+     * @param mode "nextGreater/nextSmaller" : return next greater/smaller value if no exact match is found.
+     * @param sortOrder whether the array is sorted in ascending or descending order.
+     * @param rangeLength the number of elements to consider in the search array.
+     * @param getValueInData function returning the element at index i in the search array.
      */
-    function dichotomicPredecessorSearch(range, target) {
-        if (target === null) {
+    function dichotomicSearch(data, target, mode, sortOrder, rangeLength, getValueInData) {
+        if (target === null || target === undefined) {
             return -1;
         }
         const targetType = typeof target;
-        let valMin = undefined;
-        let valMinIndex = undefined;
+        let matchVal = undefined;
+        let matchValIndex = undefined;
         let indexLeft = 0;
-        let indexRight = range.length - 1;
-        if (typeof range[indexLeft] === targetType && target < range[indexLeft]) {
-            return -1;
-        }
-        if (typeof range[indexRight] === targetType && range[indexRight] <= target) {
-            return indexRight;
-        }
+        let indexRight = rangeLength - 1;
         let indexMedian;
         let currentIndex;
         let currentVal;
         let currentType;
         while (indexRight - indexLeft >= 0) {
-            indexMedian = Math.ceil((indexLeft + indexRight) / 2);
+            indexMedian = Math.floor((indexLeft + indexRight) / 2);
             currentIndex = indexMedian;
-            currentVal = range[currentIndex];
+            currentVal = getValueInData(data, currentIndex);
             currentType = typeof currentVal;
             // 1 - linear search to find value with the same type
             while (indexLeft <= currentIndex && targetType !== currentType) {
                 currentIndex--;
-                currentVal = range[currentIndex];
+                currentVal = getValueInData(data, currentIndex);
                 currentType = typeof currentVal;
             }
+            if (currentType !== targetType || currentVal === undefined) {
+                indexLeft = indexMedian + 1;
+                continue;
+            }
             // 2 - check if value match
-            if (currentType === targetType && currentVal <= target) {
-                if (valMin === undefined ||
-                    valMin < currentVal ||
-                    (valMin === currentVal && valMinIndex < currentIndex)) {
-                    valMin = currentVal;
-                    valMinIndex = currentIndex;
+            if (mode === "strict" && currentVal === target) {
+                matchVal = currentVal;
+                matchValIndex = currentIndex;
+            }
+            else if (mode === "nextSmaller" && currentVal <= target) {
+                if (matchVal === undefined ||
+                    matchVal < currentVal ||
+                    (matchVal === currentVal && sortOrder === "asc" && matchValIndex < currentIndex) ||
+                    (matchVal === currentVal && sortOrder === "desc" && matchValIndex > currentIndex)) {
+                    matchVal = currentVal;
+                    matchValIndex = currentIndex;
                 }
             }
-            // 3 - give new indexs for the Binary search
-            if (currentType === targetType && currentVal > target) {
+            else if (mode === "nextGreater" && currentVal >= target) {
+                if (matchVal === undefined ||
+                    matchVal > currentVal ||
+                    (matchVal === currentVal && sortOrder === "asc" && matchValIndex < currentIndex) ||
+                    (matchVal === currentVal && sortOrder === "desc" && matchValIndex > currentIndex)) {
+                    matchVal = currentVal;
+                    matchValIndex = currentIndex;
+                }
+            }
+            // 3 - give new indexes for the Binary search
+            if ((sortOrder === "asc" && currentVal > target) ||
+                (sortOrder === "desc" && currentVal <= target)) {
                 indexRight = currentIndex - 1;
             }
             else {
@@ -10492,69 +10526,71 @@
             }
         }
         // note that valMinIndex could be 0
-        return valMinIndex !== undefined ? valMinIndex : -1;
+        return matchValIndex !== undefined ? matchValIndex : -1;
     }
     /**
-     * Perform a dichotomic search and return the index of the nearest match more than
-     * or equal to the target. If all values in the range are smaller than the target,
-     * -1 is returned.
-     * If the range is not in sorted order, an incorrect value might be returned.
+     * Perform a linear search and return the index of the match.
+     * -1 is returned if no value is found.
      *
      * Example:
-     * - [10, 6, 3], 3 => 2
-     * - [10, 6, 3], 6 => 1
-     * - [10, 6, 3], 9 => 0
-     * - [10, 6, 3], 42 => -1
-     * - [10, 6, 3], 2 => 2
-     * - [10, undefined, 6, undefined, 3], 9 => 0
-     * - [10, 6, undefined, undefined, undefined, 3], 2 => 5
+     * - [3, 6, 10], 3 => 0
+     * - [3, 6, 10], 6 => 1
+     * - [3, 6, 10], 9 => -1
+     * - [3, 6, 10], 2 => -1
+     *
+     * @param data the array to search in.
+     * @param target the value to search in the array.
+     * @param mode if "strict" return exact match index. "nextGreater" returns the next greater
+     * element from the target and "nextSmaller" the next smaller
+     * @param numberOfValues the number of elements to consider in the search array.
+     * @param getValueInData function returning the element at index i in the search array.
+     * @param reverseSearch if true, search in the array starting from the end.
+
      */
-    function dichotomicSuccessorSearch(range, target) {
-        const targetType = typeof target;
-        let valMax;
-        let valMaxIndex = undefined;
-        let indexLeft = 0;
-        let indexRight = range.length - 1;
-        if (typeof range[indexLeft] === targetType && target > range[indexLeft]) {
+    function linearSearch(data, target, mode, numberOfValues, getValueInData, reverseSearch = false) {
+        if (target === null || target === undefined)
             return -1;
-        }
-        if (typeof range[indexRight] === targetType && range[indexRight] > target) {
-            return indexRight;
-        }
-        let indexMedian;
-        let currentIndex;
-        let currentVal;
-        let currentType;
-        while (indexRight - indexLeft >= 0) {
-            indexMedian = Math.ceil((indexLeft + indexRight) / 2);
-            currentIndex = indexMedian;
-            currentVal = range[currentIndex];
-            currentType = typeof currentVal;
-            // 1 - linear search to find value with the same type
-            while (indexLeft <= currentIndex && targetType !== currentType) {
-                currentIndex--;
-                currentVal = range[currentIndex];
-                currentType = typeof currentVal;
+        const getValue = reverseSearch
+            ? (data, i) => getValueInData(data, numberOfValues - i - 1)
+            : getValueInData;
+        let closestMatch = undefined;
+        let closestMatchIndex = -1;
+        for (let i = 0; i < numberOfValues; i++) {
+            const value = getValue(data, i);
+            if (value === target) {
+                return reverseSearch ? numberOfValues - i - 1 : i;
             }
-            // 2 - check if value match
-            if (currentType === targetType && currentVal >= target) {
-                if (valMax === undefined ||
-                    valMax > currentVal ||
-                    (valMax === currentVal && valMaxIndex > currentIndex)) {
-                    valMax = currentVal;
-                    valMaxIndex = currentIndex;
+            if (mode === "nextSmaller") {
+                if ((!closestMatch && compareCellValues(target, value) >= 0) ||
+                    (compareCellValues(target, value) >= 0 && compareCellValues(value, closestMatch) > 0)) {
+                    closestMatch = value;
+                    closestMatchIndex = i;
                 }
             }
-            // 3 - give new indexs for the Binary search
-            if (currentType === targetType && currentVal <= target) {
-                indexRight = currentIndex - 1;
-            }
-            else {
-                indexLeft = indexMedian + 1;
+            else if (mode === "nextGreater") {
+                if ((!closestMatch && compareCellValues(target, value) <= 0) ||
+                    (compareCellValues(target, value) <= 0 && compareCellValues(value, closestMatch) < 0)) {
+                    closestMatch = value;
+                    closestMatchIndex = i;
+                }
             }
         }
-        // note that valMaxIndex could be 0
-        return valMaxIndex !== undefined ? valMaxIndex : -1;
+        return reverseSearch ? numberOfValues - closestMatchIndex - 1 : closestMatchIndex;
+    }
+    function compareCellValues(left, right) {
+        let typeOrder = SORT_TYPES_ORDER.indexOf(typeof left) - SORT_TYPES_ORDER.indexOf(typeof right);
+        if (typeOrder === 0) {
+            if (typeof left === "string" && typeof right === "string") {
+                typeOrder = left.localeCompare(right);
+            }
+            else if (typeof left === "number" && typeof right === "number") {
+                typeOrder = left - right;
+            }
+            else if (typeof left === "boolean" && typeof right === "boolean") {
+                typeOrder = Number(left) - Number(right);
+            }
+        }
+        return typeOrder;
     }
 
     // -----------------------------------------------------------------------------
@@ -11767,7 +11803,7 @@
         let count = 0;
         visitAny(data, (d) => {
             if (typeof d === "number") {
-                index = dichotomicPredecessorSearch(sortedArray, d);
+                index = dichotomicSearch(sortedArray, d, "nextSmaller", "asc", sortedArray.length, (array, i) => array[i]);
                 sortedArray.splice(index + 1, 0, d);
                 count++;
             }
@@ -12084,7 +12120,7 @@
             let count = 0;
             visitAny([data], (d) => {
                 if (typeof d === "number") {
-                    index = dichotomicPredecessorSearch(largests, d);
+                    index = dichotomicSearch(largests, d, "nextSmaller", "asc", largests.length, (array, i) => array[i]);
                     largests.splice(index + 1, 0, d);
                     count++;
                     if (count > _n) {
@@ -12394,7 +12430,7 @@
             let count = 0;
             visitAny([data], (d) => {
                 if (typeof d === "number") {
-                    index = dichotomicPredecessorSearch(largests, d);
+                    index = dichotomicSearch(largests, d, "nextSmaller", "asc", largests.length, (array, i) => array[i]);
                     largests.splice(index + 1, 0, d);
                     count++;
                     if (count > _n) {
@@ -14373,6 +14409,24 @@
         isExported: true,
     };
     // -----------------------------------------------------------------------------
+    // ISBLANK
+    // -----------------------------------------------------------------------------
+    const ISBLANK = {
+        description: _lt("Whether the referenced cell is empty"),
+        args: args(`value (any, lazy) ${_lt("Reference to the cell that will be checked for emptiness.")}`),
+        returns: ["BOOLEAN"],
+        compute: function (value) {
+            try {
+                const val = value();
+                return val === null;
+            }
+            catch (e) {
+                return false;
+            }
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
     // NA
     // -----------------------------------------------------------------------------
     const NA = {
@@ -14394,6 +14448,7 @@
         ISNONTEXT: ISNONTEXT,
         ISNUMBER: ISNUMBER,
         ISTEXT: ISTEXT,
+        ISBLANK: ISBLANK,
         NA: NA
     });
 
@@ -14463,6 +14518,33 @@
             }
             catch (e) {
                 result = valueIfError();
+            }
+            return result === null || result === undefined ? "" : result;
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // IFNA
+    // -----------------------------------------------------------------------------
+    const IFNA = {
+        description: _lt("Value if it is not an #N/A error, otherwise 2nd argument."),
+        args: args(`
+    value (any, lazy) ${_lt("The value to return if value itself is not #N/A an error.")}
+    value_if_error (any, lazy, default=${_lt("An empty value")}) ${_lt("The value the function returns if value is an #N/A error.")}
+  `),
+        returns: ["ANY"],
+        compute: function (value, valueIfError = () => "") {
+            let result;
+            try {
+                result = value();
+            }
+            catch (e) {
+                if (e.errorType === CellErrorType.NotAvailable) {
+                    result = valueIfError();
+                }
+                else {
+                    result = value();
+                }
             }
             return result === null || result === undefined ? "" : result;
         },
@@ -14557,6 +14639,7 @@
         AND: AND,
         IF: IF,
         IFERROR: IFERROR,
+        IFNA: IFNA,
         IFS: IFS,
         NOT: NOT,
         OR: OR,
@@ -14564,25 +14647,8 @@
     });
 
     const DEFAULT_IS_SORTED = true;
-    /**
-     * Perform a linear search and return the index of the perfect match.
-     * -1 is returned if no value is found.
-     *
-     * Example:
-     * - [3, 6, 10], 3 => 0
-     * - [3, 6, 10], 6 => 1
-     * - [3, 6, 10], 9 => -1
-     * - [3, 6, 10], 2 => -1
-     */
-    function linearSearch(range, target) {
-        for (let i = 0; i < range.length; i++) {
-            if (range[i] === target) {
-                return i;
-            }
-        }
-        // no value is found, -1 is returned
-        return -1;
-    }
+    const DEFAULT_MATCH_MODE = 0;
+    const DEFAULT_SEARCH_MODE = 1;
     // -----------------------------------------------------------------------------
     // COLUMN
     // -----------------------------------------------------------------------------
@@ -14627,15 +14693,15 @@
         returns: ["ANY"],
         compute: function (searchKey, range, index, isSorted = DEFAULT_IS_SORTED) {
             const _index = Math.trunc(toNumber(index));
+            const _searchKey = normalizeValue(searchKey);
             assert(() => 1 <= _index && _index <= range[0].length, _lt("[[FUNCTION_NAME]] evaluates to an out of bounds range."));
             const _isSorted = toBoolean(isSorted);
-            const firstRow = range.map((col) => col[0]);
             let colIndex;
             if (_isSorted) {
-                colIndex = dichotomicPredecessorSearch(firstRow, searchKey);
+                colIndex = dichotomicSearch(range, _searchKey, "nextSmaller", "asc", range.length, getNormalizedValueFromRowRange);
             }
             else {
-                colIndex = linearSearch(firstRow, searchKey);
+                colIndex = linearSearch(range, _searchKey, "strict", range.length, getNormalizedValueFromRowRange);
             }
             assert(() => colIndex > -1, _lt("Did not find value '%s' in [[FUNCTION_NAME]] evaluation.", toString(searchKey)));
             return range[colIndex][_index - 1];
@@ -14656,9 +14722,13 @@
         compute: function (searchKey, searchArray, resultRange) {
             let nbCol = searchArray.length;
             let nbRow = searchArray[0].length;
+            const _searchKey = normalizeValue(searchKey);
             const verticalSearch = nbRow >= nbCol;
-            const searchRange = verticalSearch ? searchArray[0] : searchArray.map((c) => c[0]);
-            const index = dichotomicPredecessorSearch(searchRange, searchKey);
+            const getElement = verticalSearch
+                ? getNormalizedValueFromColumnRange
+                : getNormalizedValueFromRowRange;
+            const rangeLength = verticalSearch ? nbRow : nbCol;
+            const index = dichotomicSearch(searchArray, _searchKey, "nextSmaller", "asc", rangeLength, getElement);
             assert(() => index >= 0, _lt("Did not find value '%s' in [[FUNCTION_NAME]] evaluation.", toString(searchKey)));
             if (resultRange === undefined) {
                 return (verticalSearch ? searchArray[nbCol - 1][index] : searchArray[index][nbRow - 1]);
@@ -14689,21 +14759,23 @@
         returns: ["NUMBER"],
         compute: function (searchKey, range, searchType = DEFAULT_SEARCH_TYPE) {
             let _searchType = toNumber(searchType);
+            const _searchKey = normalizeValue(searchKey);
             const nbCol = range.length;
             const nbRow = range[0].length;
             assert(() => nbCol === 1 || nbRow === 1, _lt("The range must be a single row or a single column."));
             let index = -1;
-            const _range = range.flat();
+            const getElement = nbCol === 1 ? getNormalizedValueFromColumnRange : getNormalizedValueFromRowRange;
+            const rangeLen = nbCol === 1 ? range[0].length : range.length;
             _searchType = Math.sign(_searchType);
             switch (_searchType) {
                 case 1:
-                    index = dichotomicPredecessorSearch(_range, searchKey);
+                    index = dichotomicSearch(range, _searchKey, "nextSmaller", "asc", rangeLen, getElement);
                     break;
                 case 0:
-                    index = linearSearch(_range, searchKey);
+                    index = linearSearch(range, _searchKey, "strict", rangeLen, getElement);
                     break;
                 case -1:
-                    index = dichotomicSuccessorSearch(_range, searchKey);
+                    index = dichotomicSearch(range, _searchKey, "nextGreater", "desc", rangeLen, getElement);
                     break;
             }
             assert(() => index >= 0, _lt("Did not find value '%s' in [[FUNCTION_NAME]] evaluation.", toString(searchKey)));
@@ -14754,18 +14826,68 @@
         returns: ["ANY"],
         compute: function (searchKey, range, index, isSorted = DEFAULT_IS_SORTED) {
             const _index = Math.trunc(toNumber(index));
+            const _searchKey = normalizeValue(searchKey);
             assert(() => 1 <= _index && _index <= range.length, _lt("[[FUNCTION_NAME]] evaluates to an out of bounds range."));
             const _isSorted = toBoolean(isSorted);
-            const firstCol = range[0];
             let rowIndex;
             if (_isSorted) {
-                rowIndex = dichotomicPredecessorSearch(firstCol, searchKey);
+                rowIndex = dichotomicSearch(range, _searchKey, "nextSmaller", "asc", range[0].length, getNormalizedValueFromColumnRange);
             }
             else {
-                rowIndex = linearSearch(firstCol, searchKey);
+                rowIndex = linearSearch(range, _searchKey, "strict", range[0].length, getNormalizedValueFromColumnRange);
             }
             assert(() => rowIndex > -1, _lt("Did not find value '%s' in [[FUNCTION_NAME]] evaluation.", toString(searchKey)));
             return range[_index - 1][rowIndex];
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // XLOOKUP
+    // -----------------------------------------------------------------------------
+    const XLOOKUP = {
+        description: _lt(`Search a range for a match and return the corresponding item from a second range.`),
+        args: args(`
+      search_key (any) ${_lt("The value to search for.")}
+      lookup_range (any, range) ${_lt("The range to consider for the search. Should be a single column or a single row.")}
+      return_range (any, range) ${_lt("The range containing the return value. Should have the same dimensions as lookup_range.")}
+      if_not_found (any, lazy, optional) ${_lt("If a valid match is not found, return this value.")}
+      match_mode (any, default=${DEFAULT_MATCH_MODE}) ${_lt("(0) Exact match. (-1) Return next smaller item if no match. (1) Return next greater item if no match.")}
+      search_mode (any, default=${DEFAULT_SEARCH_MODE}) ${_lt("(1) Search starting at first item. \
+    (-1) Search starting at last item. \
+    (2) Perform a binary search that relies on lookup_array being sorted in ascending order. If not sorted, invalid results will be returned. \
+    (-2) Perform a binary search that relies on lookup_array being sorted in descending order. If not sorted, invalid results will be returned.\
+    ")}
+
+  `),
+        returns: ["ANY"],
+        compute: function (searchKey, lookupRange, returnRange, defaultValue, matchMode = DEFAULT_MATCH_MODE, searchMode = DEFAULT_SEARCH_MODE) {
+            const _matchMode = Math.trunc(toNumber(matchMode));
+            const _searchMode = Math.trunc(toNumber(searchMode));
+            const _searchKey = normalizeValue(searchKey);
+            assert(() => lookupRange.length === 1 || lookupRange[0].length === 1, _lt("lookup_range should be either a single row or single column."));
+            assert(() => returnRange.length === 1 || returnRange[0].length === 1, _lt("return_range should be either a single row or single column."));
+            assert(() => returnRange.length === lookupRange.length &&
+                returnRange[0].length === lookupRange[0].length, _lt("return_range should have the same dimensions as lookup_range."));
+            assert(() => [-1, 1, -2, 2].includes(_searchMode), _lt("searchMode should be a value in [-1, 1, -2, 2]."));
+            assert(() => [-1, 0, 1].includes(_matchMode), _lt("matchMode should be a value in [-1, 0, 1]."));
+            const getElement = lookupRange.length === 1 ? getNormalizedValueFromColumnRange : getNormalizedValueFromRowRange;
+            const rangeLen = lookupRange.length === 1 ? lookupRange[0].length : lookupRange.length;
+            const mode = _matchMode === 0 ? "strict" : _matchMode === 1 ? "nextGreater" : "nextSmaller";
+            const reverseSearch = _searchMode === -1;
+            let index;
+            if (_searchMode === 2 || _searchMode === -2) {
+                const sortOrder = _searchMode === 2 ? "asc" : "desc";
+                index = dichotomicSearch(lookupRange, _searchKey, mode, sortOrder, rangeLen, getElement);
+            }
+            else {
+                index = linearSearch(lookupRange, _searchKey, mode, rangeLen, getElement, reverseSearch);
+            }
+            if (index !== -1) {
+                return (lookupRange.length === 1 ? returnRange[0][index] : returnRange[index][0]);
+            }
+            const _defaultValue = defaultValue === null || defaultValue === void 0 ? void 0 : defaultValue();
+            assert(() => !!_defaultValue, _lt("Did not find value '%s' in [[FUNCTION_NAME]] evaluation.", toString(searchKey)));
+            return _defaultValue;
         },
         isExported: true,
     };
@@ -14779,7 +14901,8 @@
         MATCH: MATCH,
         ROW: ROW,
         ROWS: ROWS,
-        VLOOKUP: VLOOKUP
+        VLOOKUP: VLOOKUP,
+        XLOOKUP: XLOOKUP
     });
 
     // -----------------------------------------------------------------------------
@@ -15054,6 +15177,8 @@
     });
 
     const DEFAULT_STARTING_AT = 1;
+    /** Regex matching all the words in a string */
+    const wordRegex = /[A-Za-zÀ-ÖØ-öø-ÿ]+/g;
     // -----------------------------------------------------------------------------
     // CHAR
     // -----------------------------------------------------------------------------
@@ -15067,6 +15192,27 @@
             const _tableNumber = Math.trunc(toNumber(tableNumber));
             assert(() => _tableNumber >= 1, _lt("The table_number (%s) is out of range.", _tableNumber.toString()));
             return String.fromCharCode(_tableNumber);
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // CLEAN
+    // -----------------------------------------------------------------------------
+    const CLEAN = {
+        description: _lt("Remove non-printable characters from a piece of text."),
+        args: args(`
+      text (string) ${_lt("The text whose non-printable characters are to be removed.")}
+  `),
+        returns: ["STRING"],
+        compute: function (text) {
+            const _text = toString(text);
+            let cleanedStr = "";
+            for (const char of _text) {
+                if (char && char.charCodeAt(0) > 31) {
+                    cleanedStr += char;
+                }
+            }
+            return cleanedStr;
         },
         isExported: true,
     };
@@ -15181,6 +15327,44 @@
         returns: ["STRING"],
         compute: function (text) {
             return toString(text).toLowerCase();
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // MID
+    // -----------------------------------------------------------------------------
+    const MID = {
+        description: _lt("A segment of a string."),
+        args: args(`
+      text (string) ${_lt("The string to extract a segment from.")}
+      starting_at  (number) ${_lt("The index from the left of string from which to begin extracting. The first character in string has the index 1.")}
+      extract_length  (number) ${_lt("The length of the segment to extract.")}
+  `),
+        returns: ["STRING"],
+        compute: function (text, starting_at, extract_length) {
+            const _text = toString(text);
+            const _starting_at = toNumber(starting_at);
+            const _extract_length = toNumber(extract_length);
+            assert(() => _starting_at >= 1, _lt("The starting_at argument (%s) must be positive greater than one.", _starting_at.toString()));
+            assert(() => _extract_length >= 0, _lt("The extract_length argument (%s) must be positive or null.", _extract_length.toString()));
+            return _text.slice(_starting_at - 1, _starting_at + _extract_length - 1);
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // PROPER
+    // -----------------------------------------------------------------------------
+    const PROPER = {
+        description: _lt("Capitalizes each word in a specified string."),
+        args: args(`
+  text_to_capitalize (string) ${_lt("The text which will be returned with the first letter of each word in uppercase and all other letters in lowercase.")}
+  `),
+        returns: ["STRING"],
+        compute: function (text) {
+            const _text = toString(text);
+            return _text.replace(wordRegex, (word) => {
+                return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+            });
         },
         isExported: true,
     };
@@ -15346,6 +15530,7 @@
     var text = /*#__PURE__*/Object.freeze({
         __proto__: null,
         CHAR: CHAR,
+        CLEAN: CLEAN,
         CONCATENATE: CONCATENATE,
         EXACT: EXACT,
         FIND: FIND,
@@ -15353,6 +15538,8 @@
         LEFT: LEFT,
         LEN: LEN,
         LOWER: LOWER,
+        MID: MID,
+        PROPER: PROPER,
         REPLACE: REPLACE,
         RIGHT: RIGHT,
         SEARCH: SEARCH,
@@ -16287,7 +16474,9 @@
      * the compiled formula does not depend on their actual value.
      * Both `=A1+1+"2"` and `=A2+2+"3"` are compiled to the exact same function.
      *
-     * A formula `=A1+A2+SUM(2, 2, "2")` have the cache key `=|0|+|1|+SUM(|N0|, |N0|, |S0|)`
+     * Spaces are also ignored to compute the cache key.
+     *
+     * A formula `=A1+A2+SUM(2, 2, "2")` have the cache key `=|0|+|1|+SUM(|N0|,|N0|,|S0|)`
      */
     function compilationCacheKey(tokens, dependencies, constantValues) {
         return concat(tokens.map((token) => {
@@ -16300,6 +16489,8 @@
                 case "REFERENCE":
                 case "INVALID_REFERENCE":
                     return `|${dependencies.indexOf(token.value)}|`;
+                case "SPACE":
+                    return "";
                 default:
                     return token.value;
             }
@@ -19744,10 +19935,7 @@
          * Get the coordinates in pixels, with 0,0 being the top left of the grid itself
          */
         getCoordinates(ev) {
-            const rect = this.gridOverlay.el.getBoundingClientRect();
-            const x = ev.pageX - rect.left;
-            const y = ev.pageY - rect.top;
-            return [x, y];
+            return [ev.offsetX, ev.offsetY];
         }
         getCartesianCoordinates(ev) {
             const [x, y] = this.getCoordinates(ev);
@@ -34280,7 +34468,7 @@
     display: grid;
     grid-template-columns: auto 350px;
     * {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      font-family: "Roboto", "RobotoDraft", Helvetica, Arial, sans-serif;
     }
     &,
     *,
@@ -38434,6 +38622,7 @@
         getFillingMode,
         rgbaToHex,
         colorToRGBA,
+        positionToZone,
     };
     const components = {
         ChartPanel,
@@ -38483,8 +38672,8 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
     exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2022-09-28T11:18:35.407Z';
-    exports.__info__.hash = '758a22f';
+    exports.__info__.date = '2022-10-05T08:18:25.092Z';
+    exports.__info__.hash = '011aa0d';
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map
