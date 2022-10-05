@@ -14,45 +14,7 @@ export default class ListUIPlugin extends spreadsheet.UIPlugin {
         super(getters, history, dispatch, config, selection);
         /** @type {string} */
         this.selectedListId = undefined;
-        this.selection.observe(this, {
-            handleEvent: this.handleEvent.bind(this),
-        });
         this.env = config.evalContext.env;
-    }
-
-    handleEvent(event) {
-        switch (event.type) {
-            case "ZonesSelected":
-                if (this.getters.isDashboard()) {
-                    const sheetId = this.getters.getActiveSheetId();
-                    const { col, row } = event.anchor.cell;
-                    const cell = this.getters.getCell(sheetId, col, row);
-                    if (cell && cell.content.startsWith("=ODOO.LIST(")) {
-                        const { args } = getFirstListFunction(cell.content);
-                        const evaluatedArgs = args
-                            .map(astToFormula)
-                            .map((arg) => this.getters.evaluateFormula(arg));
-                        if (evaluatedArgs.length < 3) {
-                            return;
-                        }
-                        const listId = this.getters.getListIdFromPosition(sheetId, col, row);
-                        const { model } = this.getters.getListDefinition(listId);
-                        const dataSource = this.getters.getListDataSource(listId);
-                        const recordId = dataSource.getIdFromPosition(evaluatedArgs[1] - 1);
-                        if (!recordId) {
-                            return;
-                        }
-                        this.env.services.action.doAction({
-                            type: "ir.actions.act_window",
-                            res_model: model,
-                            res_id: recordId,
-                            views: [[false, "form"]],
-                            view_mode: "form",
-                        });
-                    }
-                }
-                break;
-        }
     }
 
     /**

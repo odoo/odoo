@@ -415,25 +415,6 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         assert.deepEqual(model.exportData().lists["1"].domain, [["foo", "in", [55]]]);
     });
 
-    QUnit.test("Can see record of a list in dashboard mode", async function (assert) {
-        const fakeActionService = {
-            dependencies: [],
-            start: (env) => ({
-                doAction: (params) => {
-                    assert.step(params.res_model);
-                    assert.step(params.res_id.toString());
-                },
-            }),
-        };
-        registry.category("services").add("action", fakeActionService);
-        const { model } = await createSpreadsheetWithList();
-        model.updateMode("dashboard");
-        const listId = model.getters.getListIds()[0];
-        const dataSource = model.getters.getListDataSource(listId);
-        selectCell(model, "A2");
-        assert.verifySteps(["partner", dataSource.getIdFromPosition(0).toString()]);
-    });
-
     QUnit.test(
         "Cannot see record of a list in dashboard mode if wrong list formula",
         async function (assert) {

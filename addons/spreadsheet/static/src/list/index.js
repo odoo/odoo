@@ -37,8 +37,14 @@ readonlyAllowedCommands.add("ADD_LIST_DOMAIN");
 cellMenuRegistry.add("list_see_record", {
     name: _lt("See record"),
     sequence: 200,
-    action: SEE_RECORD_LIST,
-    isVisible: SEE_RECORD_LIST_VISIBLE,
+    action: async (env) => {
+        const cell = env.model.getters.getActiveCell();
+        await SEE_RECORD_LIST(cell, env);
+    },
+    isVisible: (env) => {
+        const cell = env.model.getters.getActiveCell();
+        return SEE_RECORD_LIST_VISIBLE(cell);
+    },
 });
 
 inverseCommandRegistry

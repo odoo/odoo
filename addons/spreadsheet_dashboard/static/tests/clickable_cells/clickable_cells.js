@@ -24,7 +24,7 @@ async function createDashboardWithModel(model) {
     return getFixture();
 }
 
-QUnit.module("spreadsheet_dashboard > grid cursor");
+QUnit.module("spreadsheet_dashboard > clickable cells");
 
 QUnit.test("A link in a dashboard should be clickable", async (assert) => {
     const data = {

@@ -4,8 +4,7 @@ import { getFirstPivotFunction, getNumberOfPivotFormulas } from "./pivot_helpers
 
 const { astToFormula } = spreadsheet;
 
-export const SEE_RECORDS_PIVOT = async (env) => {
-    const cell = env.model.getters.getActiveCell();
+export const SEE_RECORDS_PIVOT = async (cell, env) => {
     const { col, row, sheetId } = env.model.getters.getCellPosition(cell.id);
     const { args, functionName } = getFirstPivotFunction(cell.content);
     const evaluatedArgs = args
@@ -36,8 +35,7 @@ export const SEE_RECORDS_PIVOT = async (env) => {
     });
 };
 
-export const SEE_RECORDS_PIVOT_VISIBLE = (env) => {
-    const cell = env.model.getters.getActiveCell();
+export const SEE_RECORDS_PIVOT_VISIBLE = (cell) => {
     return (
         cell &&
         cell.evaluated.value !== "" &&
