@@ -147,7 +147,7 @@ export function _toggleGridMode(containerEl) {
 function _placeColumns(columnEls, rowSize, rowGap, columnSize, columnGap) {
     let maxRowEnd = 0;
     const columnSpans = [];
-    const columnCount = columnEls.length; // number of column in the grid.
+    let zIndex = 1;
     const imageColumns = []; // array of boolean telling if it is a column with only an image.
 
     // Checking if all the columns have a background color to take that into
@@ -199,8 +199,8 @@ function _placeColumns(columnEls, rowSize, rowGap, columnSize, columnGap) {
         columnEl.classList.remove(...toRemove);
         columnEl.classList.add('g-col-lg-' + columnSpan, 'g-height-' + rowSpan);
 
-        // Setting the initial z-index to the number of columns.
-        columnEl.style.zIndex = columnCount;
+        // Setting the initial z-index.
+        columnEl.style.zIndex = zIndex++;
 
         // Reload the images.
         _reloadLazyImages(columnEl);
