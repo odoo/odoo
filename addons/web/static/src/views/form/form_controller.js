@@ -15,6 +15,7 @@ import { standardViewProps } from "@web/views/standard_view_props";
 import { isX2Many } from "@web/views/utils";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { useSetupView } from "@web/views/view_hook";
+import { hasTouch } from "@web/core/browser/feature_detection";
 import { FormStatusIndicator } from "./form_status_indicator/form_status_indicator";
 
 const { Component, onWillStart, useEffect, useRef, onRendered, useState, toRaw } = owl;
@@ -466,6 +467,7 @@ export class FormController extends Component {
         if (this.props.className) {
             result[this.props.className] = true;
         }
+        result["o_form_with_borderless_input"] = size > SIZES.SM && !hasTouch();
         return result;
     }
 }
