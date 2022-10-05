@@ -48,3 +48,23 @@
 .o_kanban_quick_create .o_field_widget .o_input {
     border-color: var(--o-input-border-color);
 }
+
+body:not(.o_touch_device) .o_field_widget {
+    // Phone, Email
+    &.o_field_phone, &.o_field_email {
+        &:not(:hover):not(:focus-within) {
+            & input:not(:hover) ~ a {
+                display: none !important;
+            }
+        }
+    }
+
+    // Selection
+    &.o_field_selection {
+        &:not(:hover):not(:focus-within) {
+            & select:not(:hover) {
+                background: none !important;
+            }
+        }
+    }
+}
