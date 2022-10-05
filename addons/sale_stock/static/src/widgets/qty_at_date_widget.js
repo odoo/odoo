@@ -6,7 +6,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 
-const { Component, EventBus } = owl;
+const { Component, EventBus, onWillRender } = owl;
 
 export class QtyAtDatePopover extends Component {
     setup() {
@@ -26,7 +26,7 @@ export class QtyAtDatePopover extends Component {
     }
 }
 
-QtyAtDatePopover.template = "sale_stock.QtyAtDatePopup";
+QtyAtDatePopover.template = "sale_stock.QtyDetailPopOver";
 
 export class QtyAtDateWidget extends Component {
     setup() {
@@ -34,7 +34,9 @@ export class QtyAtDateWidget extends Component {
         this.popover = usePopover();
         this.closePopover = null;
         this.calcData = {};
-        this.initCalcData();
+        onWillRender(() => {
+            this.initCalcData();
+        })
     }
 
     initCalcData() {
@@ -85,6 +87,6 @@ export class QtyAtDateWidget extends Component {
 }
 
 QtyAtDateWidget.components = { Popover: QtyAtDatePopover };
-QtyAtDateWidget.template = "sale_stock.QtyAtDate";
+QtyAtDateWidget.template = "sale_stock.qtyAtDate";
 
 registry.category("view_widgets").add("qty_at_date_widget", QtyAtDateWidget);
