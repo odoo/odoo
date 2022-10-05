@@ -92,6 +92,7 @@ export class Field extends Component {
         );
         const classNames = {
             o_field_widget: true,
+            "w-100": !`${_class}`.includes("oe_inline"),
             o_readonly_modifier: readonly,
             o_required_modifier: required,
             o_field_invalid: invalid,
