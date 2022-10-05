@@ -67,7 +67,10 @@ export class CalendarDatePicker extends Component {
         const { year, month, day } = DateTime.local();
         this.$el.find(".ui-datepicker-today").removeClass("ui-datepicker-today");
         this.$el
-            .find(`td[data-year="${year}"][data-month="${month - 1}"]:contains("${day}")`)
+            .find(`td[data-year="${year}"][data-month="${month - 1}"]`)
+            .filter((i, e) => {
+                return e.textContent.trim() === day.toString();
+            })
             .addClass("ui-datepicker-today");
     }
 

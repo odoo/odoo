@@ -114,4 +114,11 @@ QUnit.module("CalendarView - DatePicker", ({ beforeEach }) => {
 
         await click(target, ".ui-state-active");
     });
+
+    QUnit.test("Scale: today is correctly highlighted", async (assert) => {
+        patchDate(2021, 6, 4, 8, 0, 0);
+        await start({ model: { scale: "month" } });
+        assert.containsOnce(target, ".ui-datepicker-today");
+        assert.strictEqual(target.querySelector(".ui-datepicker-today").textContent, "4");
+    });
 });
