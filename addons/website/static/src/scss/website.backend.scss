@@ -1,8 +1,37 @@
 .o_dashboards {
     background-color: #ececec;
 
+    &:has(iframe[src*='plausible']) {
+        background-color: #f9fafb; // Copied from iframe.
+    }
+
     .o_website_dashboard {
         background-color: #ececec;
+
+        &:has(iframe[src*='plausible']) {
+            background-color: #f9fafb; // Copied from iframe.
+
+            iframe {
+                // TODO: Find another way to set the height, not robust enough,
+                // especially if plausible change those values later.
+                height: 2350px; // Copied from iframe.
+                top: 2px; // Do not cover eCommerce dashboard border.
+
+                @include media-breakpoint-only(md) {
+                    height: 2500px; // Copied from iframe.
+                }
+                @include media-breakpoint-only(lg) {
+                    height: 1600px; // Copied from iframe.
+                }
+                @include media-breakpoint-only(xl) {
+                    height: 1570px; // Copied from iframe.
+                }
+                @include media-breakpoint-only(xxl) {
+                    height: 1650px; // Copied from iframe.
+                }
+            }
+        }
+
         div.o_box {
             @include clearfix;
             color: $o-main-color-muted;
