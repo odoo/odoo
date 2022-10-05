@@ -5,8 +5,7 @@ import { getFirstListFunction, getNumberOfListFormulas } from "./list_helpers";
 
 const { astToFormula } = spreadsheet;
 
-export const SEE_RECORD_LIST = async (env) => {
-    const cell = env.model.getters.getActiveCell();
+export const SEE_RECORD_LIST = async (cell, env) => {
     const { col, row, sheetId } = env.model.getters.getCellPosition(cell.id);
     if (!cell) {
         return;
@@ -31,7 +30,12 @@ export const SEE_RECORD_LIST = async (env) => {
     });
 };
 
-export const SEE_RECORD_LIST_VISIBLE = (env) => {
-    const cell = env.model.getters.getActiveCell();
-    return cell && getNumberOfListFormulas(cell.content) === 1;
+export const SEE_RECORD_LIST_VISIBLE = (cell) => {
+    return (
+        cell &&
+        cell.evaluated.value !== "" &&
+        !cell.evaluated.error &&
+        getNumberOfListFormulas(cell.content) === 1 &&
+        getFirstListFunction(cell.content).functionName === "ODOO.LIST"
+    );
 };
