@@ -2478,6 +2478,8 @@ class AccountMove(models.Model):
         Returns the most used accounts and taxes for a given partner and company,
         eventually filtered according to the move type.
         """
+        if not partner_id:
+            return 0, False, False
         where_internal_group = ""
         if move_type in self.env['account.move'].get_inbound_types(include_receipts=True):
             where_internal_group = "AND account.internal_group = 'income'"
@@ -2566,8 +2568,7 @@ class AccountMove(models.Model):
         and the tax) such that the total amount matches the quick total amount.
         """
         if (
-            not self.partner_id
-            or not self.quick_edit_total_amount
+            not self.quick_edit_total_amount
             or not self.quick_edit_mode
             or len(self.invoice_line_ids) > 0
         ):
