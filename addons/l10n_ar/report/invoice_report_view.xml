@@ -9,6 +9,7 @@
             <search>
                 <field name="l10n_ar_state_id"/>
                 <filter name="with_document" string="With Document" domain="[('l10n_latam_document_type_id', '!=', False)]"/>
+                <filter name="filter_accounting_date_this_year" invisible="1" string="Accounting Date: This Year" domain="[('date', '&lt;', (context_today() + relativedelta(years=1, month=1, day=1)).strftime('%Y-%m-%d')), ('date', '&gt;=', (context_today() + relativedelta(month=1, day=1)).strftime('%Y-%m-%d'))]"/>
             </search>
             <filter name="user" position="after">
                 <filter string="State" name="groupby_l10n_ar_state_id" context="{'group_by': 'l10n_ar_state_id'}"/>
@@ -21,7 +22,7 @@
         <field name="name">IIBB - Sales by jurisdiction</field>
         <field name="res_model">account.invoice.report</field>
         <field name="view_mode">pivot</field>
-        <field name="context">{'search_default_current': 1, 'search_default_customer': 1, 'search_default_with_document': 1, 'search_default_company': 1, 'search_default_groupby_l10n_ar_state_id': 2, 'search_default_groupby_account_id': 3, 'time_ranges': {'field': 'date', 'range': 'this_year'}}</field>
+        <field name="context">{'search_default_current': 1, 'search_default_customer': 1, 'search_default_with_document': 1, 'search_default_company': 1, 'search_default_groupby_l10n_ar_state_id': 2, 'search_default_groupby_account_id': 3, 'search_default_filter_accounting_date_this_year': 1}</field>
     </record>
 
     <menuitem
@@ -34,7 +35,7 @@
         <field name="name">IIBB - Purchases by jurisdiction</field>
         <field name="res_model">account.invoice.report</field>
         <field name="view_mode">pivot</field>
-        <field name="context">{'search_default_current': 1, 'search_default_supplier': 1, 'search_default_with_document': 1, 'search_default_company': 1, 'search_default_groupby_l10n_ar_state_id': 2, 'search_default_groupby_account_id': 3, 'time_ranges': {'field': 'date', 'range': 'this_year'}}</field>
+        <field name="context">{'search_default_current': 1, 'search_default_supplier': 1, 'search_default_with_document': 1, 'search_default_company': 1, 'search_default_groupby_l10n_ar_state_id': 2, 'search_default_groupby_account_id': 3, 'search_default_filter_accounting_date_this_year': 1}</field>
     </record>
 
     <menuitem
