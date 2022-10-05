@@ -80,7 +80,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/boot.js',
             'web/static/src/session.js',
             'web/static/src/legacy/js/core/cookie_utils.js',
-            'web/static/src/legacy/js/core/menu.js',
 
             'web/static/lib/underscore/underscore.js',
             'web/static/lib/underscore.string/lib/underscore.string.js',
@@ -411,6 +410,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/core/popover.js',
             'web/static/src/legacy/js/core/dom.js',
             'web/static/src/legacy/js/core/local_storage.js',
+            'web/static/src/legacy/js/core/menu.js',
             'web/static/src/legacy/js/core/mixins.js',
             'web/static/src/legacy/js/core/qweb.js',
             'web/static/src/legacy/js/core/ram_storage.js',
