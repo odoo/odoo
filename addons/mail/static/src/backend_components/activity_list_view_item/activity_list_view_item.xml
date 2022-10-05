@@ -10,7 +10,7 @@
                 <t t-if="!activityListViewItem.activity.summary and activityListViewItem.activity.type">
                     <b class="text-900 me-2 text-truncate" t-esc="activityListViewItem.activity.type.displayName"/>
                 </t>
-                <button t-if="activityListViewItem.activity.chaining_type === 'suggest' and activityListViewItem.activity.canWrite" class="btn btn-sm btn-link" t-on-click="activityListViewItem.onClickEditActivityButton">
+                <button t-if="activityListViewItem.hasEditButton" class="btn btn-sm btn-link" t-on-click="activityListViewItem.onClickEditActivityButton">
                     <i class="fa fa-pencil"/>
                 </button>
                 <div class="flex-grow-1"/>

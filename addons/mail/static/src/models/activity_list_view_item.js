@@ -98,6 +98,11 @@ registerModel({
             },
             inverse: 'activityListViewItemOwner',
         }),
+        hasEditButton: attr({
+            compute() {
+                return this.activity.chaining_type === 'suggest' && this.activity.canWrite;
+            },
+        }),
         hasMarkDoneButton: attr({
             compute() {
                 return !this.fileUploader;
