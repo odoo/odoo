@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api, _
+from odoo import models, fields, api, Command, _
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -822,7 +822,7 @@ class AccountPayment(models.Model):
 
         if not any(field_name in changed_fields for field_name in (
             'date', 'amount', 'payment_type', 'partner_type', 'payment_reference', 'is_internal_transfer',
-            'currency_id', 'partner_id', 'destination_account_id', 'partner_bank_id',
+            'currency_id', 'partner_id', 'destination_account_id', 'partner_bank_id', 'journal_id'
         )):
             return
 
@@ -832,7 +832,7 @@ class AccountPayment(models.Model):
             # Make sure to preserve the write-off amount.
             # This allows to create a new payment with custom 'line_ids'.
 
-            if writeoff_lines:
+            if liquidity_lines and counterpart_lines and writeoff_lines:
                 counterpart_amount = sum(counterpart_lines.mapped('amount_currency'))
                 writeoff_amount = sum(writeoff_lines.mapped('amount_currency'))
 
@@ -856,8 +856,8 @@ class AccountPayment(models.Model):
             line_vals_list = pay._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)
 
             line_ids_commands = [
-                (1, liquidity_lines.id, line_vals_list[0]),
-                (1, counterpart_lines.id, line_vals_list[1]),
+                Command.update(liquidity_lines.id, line_vals_list[0]) if liquidity_lines else Command.create(line_vals_list[0]),
+                Command.update(counterpart_lines.id, line_vals_list[1]) if counterpart_lines else Command.create(line_vals_list[1])
             ]
 
             for line in writeoff_lines:
