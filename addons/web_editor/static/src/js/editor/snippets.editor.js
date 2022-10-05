@@ -4050,24 +4050,12 @@ var SnippetsMenu = Widget.extend({
      */
     _onUndo: async function () {
         this.options.wysiwyg.undo();
-        // Resizing all the grids.
-        // TODO maybe to remove when history will be fixed.
-        const $gridModeRows = this.getEditableArea().find('.row.o_grid_mode');
-        for (const rowEl of $gridModeRows) {
-            gridUtils._resizeGrid(rowEl);
-        }
     },
     /**
      * Redo.
      */
     _onRedo: async function () {
         this.options.wysiwyg.redo();
-        // Resizing all the grids.
-        // TODO maybe to remove when history will be fixed.
-        const $gridModeRows = this.getEditableArea().find('.row.o_grid_mode');
-        for (const rowEl of $gridModeRows) {
-            gridUtils._resizeGrid(rowEl);
-        }
     },
     /**
      * @private
