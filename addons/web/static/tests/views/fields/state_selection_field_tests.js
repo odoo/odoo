@@ -188,7 +188,6 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.hasClass(target.querySelector(".o_field_state_selection"), "o_readonly_modifier");
-        assert.hasClass(target.querySelector(".o_field_state_selection button"), "disabled");
         assert.isNotVisible(target.querySelector(".dropdown-menu"));
         await click(target, ".o_field_state_selection span.o_status");
         assert.isNotVisible(target.querySelector(".dropdown-menu"));
