@@ -1405,7 +1405,7 @@ class AccountMove(models.Model):
         for move in self:
             move.duplicated_ref_ids = move_to_duplicate_move.get(move, self.env['account.move'])
 
-    def _fetch_duplicate_supplier_reference(self, only_posted=False):
+    def _fetch_duplicate_supplier_reference(self, only_posted=False, only_same_invoice_date=False):
         moves = self.filtered(lambda m: m.is_purchase_document() and m.ref)
         if not moves:
             return {}
@@ -1438,13 +1438,14 @@ class AccountMove(models.Model):
                AND move.ref = duplicate_move.ref
                AND move.move_type = duplicate_move.move_type
                AND move.id != duplicate_move.id
-               AND (move.invoice_date = duplicate_move.invoice_date OR NOT %(only_posted)s)
+               AND (move.invoice_date = duplicate_move.invoice_date OR NOT %(only_same_invoice_date)s)
                AND duplicate_move.state != 'cancel'
                AND (duplicate_move.state = 'posted' OR NOT %(only_posted)s)
              WHERE move.id IN %(moves)s
              GROUP BY move.id
         """, {
             "only_posted": only_posted,
+            "only_same_invoice_date": only_same_invoice_date,
             "moves": tuple(moves.ids or [0]),
             **place_holders
         })
@@ -1733,7 +1734,7 @@ class AccountMove(models.Model):
     @api.constrains('ref', 'move_type', 'partner_id', 'journal_id', 'invoice_date', 'state')
     def _check_duplicate_supplier_reference(self):
         """ Assert the move which is about to be posted isn't a duplicated move from another posted entry"""
-        move_to_duplicate_moves = self.filtered(lambda m: m.state == 'posted')._fetch_duplicate_supplier_reference(only_posted=True)
+        move_to_duplicate_moves = self.filtered(lambda m: m.state == 'posted')._fetch_duplicate_supplier_reference(only_posted=True, only_same_invoice_date=True)
         if any(duplicate_move for duplicate_move in move_to_duplicate_moves.values()):
             duplicate_move_ids = list(set(
                 move_id
