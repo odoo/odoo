@@ -52,12 +52,21 @@ class StockScrap(models.Model):
     scrap_location_id = fields.Many2one(
         'stock.location', 'Scrap Location', default=_get_default_scrap_location_id,
         domain="[('scrap_location', '=', True), ('company_id', 'in', [company_id, False])]", required=True, states={'done': [('readonly', True)]}, check_company=True)
-    scrap_qty = fields.Float('Quantity', default=1.0, required=True, states={'done': [('readonly', True)]}, digits='Product Unit of Measure')
+    scrap_qty = fields.Float(
+        'Quantity', required=True, states={'done': [('readonly', True)]}, digits='Product Unit of Measure',
+        compute='_compute_scrap_qty', precompute=True, store=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('done', 'Done')],
         string='Status', default="draft", readonly=True, tracking=True)
     date_done = fields.Datetime('Date', readonly=True)
+
+    @api.depends('move_id', 'move_id.move_line_ids.qty_done')
+    def _compute_scrap_qty(self):
+        self.scrap_qty = 1
+        for scrap in self:
+            if scrap.move_id:
+                scrap.scrap_qty = scrap.move_id.quantity_done
 
     @api.onchange('picking_id')
     def _onchange_picking_id(self):

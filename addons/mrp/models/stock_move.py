@@ -302,8 +302,8 @@ class StockMove(models.Model):
             super().write({'move_line_ids': move_line_vals})
         return super().write(vals)
 
-    def _action_assign(self):
-        res = super(StockMove, self)._action_assign()
+    def _action_assign(self, force_qty=False):
+        res = super(StockMove, self)._action_assign(force_qty=force_qty)
         for move in self.filtered(lambda x: x.production_id or x.raw_material_production_id):
             if move.move_line_ids:
                 move.move_line_ids.write({'production_id': move.raw_material_production_id.id,
