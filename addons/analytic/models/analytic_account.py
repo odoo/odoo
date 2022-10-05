@@ -120,9 +120,9 @@ class AccountAnalyticAccount(models.Model):
         for analytic in self:
             name = analytic.name
             if analytic.code:
-                name = f'[{analytic.code}]{name}'
+                name = f'[{analytic.code}] {name}'
             if analytic.partner_id.commercial_partner_id.name:
-                name = f'{name} - {analytic.partner_id.commercial_partner_id.name} - '
+                name = f'{name} - {analytic.partner_id.commercial_partner_id.name}'
             res.append((analytic.id, name))
         return res
 
