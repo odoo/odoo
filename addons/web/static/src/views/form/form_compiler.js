@@ -235,6 +235,8 @@ export class FormCompiler extends ViewCompiler {
                 append(form, this.compileNode(child, params));
             }
             form.className = "o_form_nosheet";
+            // Compensate for negative margins introduced by gutters on OuterGroups (avoids overflow)
+            form.className += " p-2 px-lg-5";
         } else {
             let compiledList = [];
             for (const child of el.childNodes) {
