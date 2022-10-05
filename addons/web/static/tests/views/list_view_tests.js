@@ -2,12 +2,17 @@
 
 import { browser } from "@web/core/browser/browser";
 import { Domain } from "@web/core/domain";
+import { errorService } from "@web/core/errors/error_service";
 import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
-import { uiService } from "@web/core/ui/ui_service";
-import { session } from "@web/session";
-import { ListController } from "@web/views/list/list_controller";
 import { tooltipService } from "@web/core/tooltip/tooltip_service";
+import { uiService } from "@web/core/ui/ui_service";
+import { getNextTabableElement } from "@web/core/utils/ui";
+import { session } from "@web/session";
+import { FloatField } from "@web/views/fields/float/float_field";
+import { TextField } from "@web/views/fields/text/text_field";
+import { ListController } from "@web/views/list/list_controller";
+import { DynamicRecordList } from "@web/views/relational_model";
 import { actionService } from "@web/webclient/actions/action_service";
 import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
 import {
@@ -55,10 +60,6 @@ import {
 } from "../search/helpers";
 import { createWebClient, doAction, loadState } from "../webclient/helpers";
 import { makeView, setupViewRegistries } from "./helpers";
-import { getNextTabableElement } from "@web/core/utils/ui";
-import { FloatField } from "@web/views/fields/float/float_field";
-import { TextField } from "@web/views/fields/text/text_field";
-import { DynamicRecordList } from "@web/views/relational_model";
 
 const { Component, onWillStart, xml } = owl;
 
@@ -15537,4 +15538,44 @@ QUnit.module("Views", (hooks) => {
             "the widget has access to the record's data"
         );
     });
+
+    QUnit.test(
+        "edit a record then select another record with a throw error when saving",
+        async function (assert) {
+            serviceRegistry.add("error", errorService);
+
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: `
+                    <tree editable="bottom">
+                        <field name="foo"/>
+                    </tree>`,
+                mockRPC(route, args) {
+                    if (args.method === "write") {
+                        throw new Error("Can't write");
+                    }
+                },
+            });
+
+            await click(target.querySelectorAll(".o_data_cell")[1]);
+            await editInput(target, "[name='foo'] input", "plop");
+            assert.containsOnce(target, "[name='foo'] input");
+
+            await click(target.querySelectorAll(".o_data_cell")[0]);
+            assert.containsOnce(target, ".o_dialog_error");
+
+            await click(target, ".o_dialog_error .btn-primary.o-default-button");
+            assert.containsOnce(target, ".o_selected_row");
+            assert.hasClass(target.querySelectorAll(".o_data_row")[1], "o_selected_row");
+
+            await click(target.querySelectorAll(".o_data_cell")[0]);
+            assert.containsOnce(target, ".o_dialog_error");
+
+            await click(target, ".o_dialog_error .btn-primary.o-default-button");
+            assert.containsOnce(target, ".o_selected_row");
+            assert.hasClass(target.querySelectorAll(".o_data_row")[1], "o_selected_row");
+        }
+    );
 });

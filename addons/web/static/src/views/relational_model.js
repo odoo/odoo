@@ -1424,7 +1424,13 @@ class DynamicList extends DataPoint {
                 if (editedRecord !== record && editedRecord.canBeAbandoned) {
                     this.abandonRecord(editedRecord.id);
                 } else {
-                    const isSaved = await editedRecord.save();
+                    let isSaved;
+                    try {
+                        isSaved = await editedRecord.save();
+                    } catch (e) {
+                        this.editedRecord = editedRecord;
+                        throw e;
+                    }
                     if (!isSaved) {
                         this.editedRecord = editedRecord;
                         return false;
