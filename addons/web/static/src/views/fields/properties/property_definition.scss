@@ -44,6 +44,7 @@
     td {
         padding-bottom: 15px;
     }
+    .o_field_property_definition_kanban,
     .o_field_property_definition_value {
         .form-check-input {
             margin-left: 3px;
@@ -53,5 +54,22 @@
     .o_domain_debug_container {
         width: 100%;
         display: inline-block !important;
+    }
+}
+
+.o_field_property_definition {
+    .o_input_dropdown {
+        .o_properties_external_button,
+        .o_dropdown_button {
+            display: none;
+        }
+
+        &:hover,
+        &:focus-within {
+            .o_properties_external_button,
+            .o_dropdown_button {
+                display: block;
+            }
+        }
     }
 }

@@ -5,8 +5,6 @@
 }
 
 .o_field_property_tag {
-    border: 1px solid var(--o-input-border-color);
-
     .o_tag {
         margin: 1px 2px 1px 0;
     }
@@ -32,4 +30,9 @@
             color: $primary !important;
         }
     }
+}
+
+.o_field_property_tag:not(.readonly):hover,
+.o_field_property_tag:not(.readonly):focus-within {
+    border-bottom: 1px solid var(--o-input-border-color);
 }

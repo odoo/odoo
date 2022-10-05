@@ -154,9 +154,10 @@ export class PropertiesField extends Component {
         propertiesValues[targetIndex] = propertiesValues[propertyIndex];
         propertiesValues[propertyIndex] = prop;
         propertiesValues[propertyIndex].definition_changed = true;
-        this.props.update(propertiesValues);
-        // move the popover once the DOM is updated
-        this.shouldUpdatePopoverPosition = true;
+        this.props.update(propertiesValues).then(() => {
+            // move the popover once the DOM is updated
+            this.shouldUpdatePopoverPosition = true;
+        });
     }
 
     /**
@@ -320,6 +321,11 @@ export class PropertiesField extends Component {
             popover,
             { position: "top", margin: 10 },
         );
+
+        const arrow = popover.querySelector(".popover-arrow");
+        if (arrow) {
+            arrow.classList.add("d-none");
+        }
     }
 
     /**

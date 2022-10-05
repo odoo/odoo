@@ -16,6 +16,10 @@ PropertyTagsColorListPopover.components = {
     ColorList,
 };
 
+// property tags does not really need timeout because it does not make RPC calls
+export class PropertyTagAutoComplete extends AutoComplete { };
+Object.assign(PropertyTagAutoComplete, { timeout: 0 });
+
 export class PropertyTags extends Component {
     setup() {
         this.notification = useService("notification");
@@ -25,6 +29,15 @@ export class PropertyTags extends Component {
     /* --------------------------------------------------------
      * Public methods / Getters
      * -------------------------------------------------------- */
+
+    /**
+     * Return true if we should display the badges or just the tag label.
+     *
+     * @returns {array}
+     */
+    get displayBadge() {
+        return !this.env.config || this.env.config.viewType !== "kanban";
+    }
 
     /**
      * Return the list containing tags values and actions for the TagsList component.
@@ -38,7 +51,12 @@ export class PropertyTags extends Component {
 
         // Retrieve the tags label and color
         // ['a', 'b'] =>  [['a', 'A', 5], ['b', 'B', 6]]
-        const value = this.props.tags.filter((tag) => this.props.selectedTags.indexOf(tag[0]) >= 0);
+        let value = this.props.tags.filter((tag) => this.props.selectedTags.indexOf(tag[0]) >= 0);
+
+        if (!this.displayBadge) {
+            // in kanban view e.g. to not show tag without color
+            value = value.filter(tag => tag[2]);
+        }
 
         const canDeleteTag = !this.props.readonly && this.props.canChangeTags;
 
@@ -262,7 +280,7 @@ export class PropertyTags extends Component {
 
 PropertyTags.template = "web.PropertyTags";
 PropertyTags.components = {
-    AutoComplete,
+    AutoComplete: PropertyTagAutoComplete,
     TagsList,
     ColorList,
     Popover: PropertyTagsColorListPopover,

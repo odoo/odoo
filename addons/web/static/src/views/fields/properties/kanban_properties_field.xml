@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.KanbanPropertiesField" owl="1">
+        <div t-ref="properties" class="w-100">
+            <div class="o_kanban_property_field d-inline-flex flex-column justify-content-center align-items-start w-100 my-1"
+                t-foreach="propertiesList"
+                t-as="propertyConfiguration"
+                t-key="propertyConfiguration.name"
+                t-if="propertyConfiguration.value &amp;&amp; propertyConfiguration.view_in_kanban">
+                <div class="mw-100 text-truncate">
+                    <PropertyValue
+                        canChangeDefinition="state.canChangeDefinition"
+                        comodel="propertyConfiguration.comodel || ''"
+                        context="context"
+                        domain="propertyConfiguration.domain || '[]'"
+                        readonly="props.readonly"
+                        selection="propertyConfiguration.selection"
+                        string="propertyConfiguration.string"
+                        tags="propertyConfiguration.tags"
+                        type="propertyConfiguration.type"
+                        value="propertyConfiguration.value"
+                        onChange.bind="() => {}"
+                        onTagsChange.bind="() => {}"
+                    />
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
