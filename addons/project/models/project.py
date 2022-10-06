@@ -366,7 +366,7 @@ class Project(models.Model):
     allow_task_dependencies = fields.Boolean('Task Dependencies', default=lambda self: self.env.user.has_group('project.group_project_task_dependencies'))
     allow_milestones = fields.Boolean('Milestones', default=lambda self: self.env.user.has_group('project.group_project_milestone'))
     tag_ids = fields.Many2many('project.tags', relation='project_project_project_tags_rel', string='Tags')
-    task_properties_definition = fields.PropertiesDefinition('Task Properties')
+    properties_definition = fields.PropertiesDefinition('Task Properties')
 
     # Project Sharing fields
     collaborator_ids = fields.One2many('project.collaborator', 'project_id', string='Collaborators', copy=False)
@@ -1130,7 +1130,7 @@ class Task(models.Model):
     project_id = fields.Many2one('project.project', string='Project', recursive=True,
         compute='_compute_project_id', store=True, readonly=False, precompute=True,
         index=True, tracking=True, check_company=True, change_default=True)
-    task_properties = fields.Properties('Properties', definition='project_id.task_properties_definition', copy=True)
+    custom_properties = fields.Properties('Properties', definition='project_id.properties_definition', copy=True)
     # Defines in which project the task will be displayed / taken into account in statistics.
     # Example: 1 task A with 1 subtask B in project P
     # A -> project_id=P, display_project_id=P

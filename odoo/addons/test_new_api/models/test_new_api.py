@@ -97,7 +97,7 @@ class Discussion(models.Model):
     important_emails = fields.One2many('test_new_api.emailmessage', 'discussion',
                                        domain=[('important', '=', True)])
 
-    attributes_definition = fields.PropertiesDefinition('Message Properties')  # see message@attributes
+    properties_definition = fields.PropertiesDefinition('Message Properties')  # see message@attributes
 
     def _domain_very_important(self):
         """Ensure computed O2M domains work as expected."""
@@ -145,9 +145,9 @@ class Message(models.Model):
     label = fields.Char(translate=True)
     priority = fields.Integer()
 
-    attributes = fields.Properties(
+    custom_properties = fields.Properties(
         string='Properties',
-        definition='discussion.attributes_definition',
+        definition='discussion.properties_definition',
     )
 
     @api.constrains('author', 'discussion')

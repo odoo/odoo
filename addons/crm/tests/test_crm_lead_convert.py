@@ -367,7 +367,7 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
     def test_lead_convert_properties_preserve(self):
         """Verify that the properties are preserved when converting."""
         initial_team = self.lead_1.with_env(self.env).team_id
-        self.lead_1.lead_properties = [{
+        self.lead_1.custom_properties = [{
             'name': 'test',
             'type': 'char',
             'value': 'test value',
@@ -375,7 +375,7 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         }]
         self.lead_1.convert_opportunity(False)
         self.assertEqual(self.lead_1.team_id, initial_team)
-        self.assertEqual(self.lead_1.lead_properties, [{
+        self.assertEqual(self.lead_1.custom_properties, [{
             'name': 'test',
             'type': 'char',
             'value': 'test value',
@@ -383,7 +383,7 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
 
         # re-writing the team, but keeping the same value should not reset the properties
         self.lead_1.write({'team_id': self.lead_1.team_id.id})
-        self.assertEqual(self.lead_1.lead_properties, [{
+        self.assertEqual(self.lead_1.custom_properties, [{
             'name': 'test',
             'type': 'char',
             'value': 'test value',
@@ -393,7 +393,7 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
     def test_lead_convert_properties_reset(self):
         """Verify that the properties are reset when converting if the team changed."""
         initial_team = self.lead_1.with_env(self.env).team_id
-        self.lead_1.lead_properties = [{
+        self.lead_1.custom_properties = [{
             'name': 'test',
             'type': 'char',
             'value': 'test value',
@@ -401,7 +401,7 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         }]
         self.lead_1.convert_opportunity(False, user_ids=self.user_sales_salesman.ids)
         self.assertNotEqual(self.lead_1.team_id, initial_team)
-        self.assertFalse(self.lead_1.lead_properties)
+        self.assertFalse(self.lead_1.custom_properties)
 
     @users('user_sales_manager')
     def test_lead_merge(self):

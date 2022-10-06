@@ -3161,7 +3161,7 @@ class Properties(Field):
     the value of the child. That way the web client has access to the full
     field definition (property type, ...).
     """
-    type = 'properties'
+    type = 'json'
     column_type = ('jsonb', 'jsonb')
     copy = False
     prefetch = False

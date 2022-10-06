@@ -115,8 +115,8 @@ class Lead(models.Model):
         'crm.team', string='Sales Team', check_company=True, index=True, tracking=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         compute='_compute_team_id', ondelete="set null", readonly=False, store=True, precompute=True)
-    lead_properties = fields.Properties(
-        'Properties', definition='team_id.lead_properties_definition',
+    custom_properties = fields.Properties(
+        'Properties', definition='team_id.properties_definition',
         copy=True)
     company_id = fields.Many2one(
         'res.company', string='Company', index=True,
@@ -1586,7 +1586,7 @@ class Lead(models.Model):
         """
         self.ensure_one()
         # read to have the display names already in the value
-        properties = self.read(['lead_properties'])[0]['lead_properties']
+        properties = self.read(['custom_properties'])[0]['custom_properties']
 
         formatted = []
         for definition in properties:

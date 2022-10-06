@@ -342,7 +342,7 @@ class TestLeadMerge(TestLeadMergeCommon):
         lead = self.lead_1
         partners = self.env['res.partner'].create([{'name': 'Alice'}, {'name': 'Bob'}])
 
-        lead.lead_properties = [{
+        lead.custom_properties = [{
             'type': 'many2one',
             'comodel': 'res.partner',
             'name': 'test_many2one',

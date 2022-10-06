@@ -27,7 +27,7 @@ class PropertiesCase(TransactionCase):
             'company_id': cls.env.company.id,
         })
 
-        attributes_definition_1 = [{
+        properties_definition_1 = [{
             'name': 'discussion_color_code',
             'string': 'Color Code',
             'type': 'char',
@@ -39,7 +39,7 @@ class PropertiesCase(TransactionCase):
             'comodel': 'test_new_api.partner',
         }]
 
-        attributes_definition_2 = [{
+        properties_definition_2 = [{
             'name': 'state',
             'type': 'selection',
             'string': 'Status',
@@ -49,12 +49,12 @@ class PropertiesCase(TransactionCase):
 
         cls.discussion_1 = cls.env['test_new_api.discussion'].create({
             'name': 'Test Discussion',
-            'attributes_definition': attributes_definition_1,
+            'properties_definition': properties_definition_1,
             'participants': [Command.link(cls.user.id)],
         })
         cls.discussion_2 = cls.env['test_new_api.discussion'].create({
             'name': 'Test Discussion',
-            'attributes_definition': attributes_definition_2,
+            'properties_definition': properties_definition_2,
             'participants': [Command.link(cls.user.id)],
         })
 
@@ -62,7 +62,7 @@ class PropertiesCase(TransactionCase):
             'name': 'Test Message',
             'discussion': cls.discussion_1.id,
             'author': cls.user.id,
-            'attributes': {
+            'custom_properties': {
                 'discussion_color_code': 'Test',
                 'moderator_partner_id': cls.partner.id,
             },
@@ -80,9 +80,9 @@ class PropertiesCase(TransactionCase):
         })
 
     def test_properties_field(self):
-        self.assertTrue(isinstance(self.message_1.attributes, list))
+        self.assertTrue(isinstance(self.message_1.custom_properties, list))
         # testing assigned value
-        self.assertEqual(self.message_1.attributes, [{
+        self.assertEqual(self.message_1.custom_properties, [{
             'name': 'discussion_color_code',
             'string': 'Color Code',
             'type': 'char',
@@ -96,23 +96,23 @@ class PropertiesCase(TransactionCase):
             'value': self.partner.id,
         }])
 
-        self.assertEqual(self.message_2.attributes[0]['value'], 'blue')
-        self.assertFalse(self.message_2.attributes[1]['value'])
+        self.assertEqual(self.message_2.custom_properties[0]['value'], 'blue')
+        self.assertFalse(self.message_2.custom_properties[1]['value'])
         # testing default value
         self.assertEqual(
-            self.message_3.attributes[0]['value'], 'draft',
+            self.message_3.custom_properties[0]['value'], 'draft',
             msg='Should have taken the default value')
 
-        self.message_1.attributes = [
+        self.message_1.custom_properties = [
             {'name': 'discussion_color_code', 'value': 'red'},
             {'name': 'moderator_partner_id', 'value': self.partner_2.id},
         ]
-        self.assertEqual(self.message_1.attributes[0]['value'], 'red')
+        self.assertEqual(self.message_1.custom_properties[0]['value'], 'red')
 
         self.env.invalidate_all()
 
-        self.assertEqual(self.message_1.attributes[0]['value'], 'red')
-        self.assertEqual(self.message_1.attributes[1]['value'], self.partner_2.id)
+        self.assertEqual(self.message_1.custom_properties[0]['value'], 'red')
+        self.assertEqual(self.message_1.custom_properties[1]['value'], self.partner_2.id)
 
         # check that the value has been updated in the database
         database_values = self._get_sql_properties(self.message_1)
@@ -123,15 +123,15 @@ class PropertiesCase(TransactionCase):
 
         # if we write False on the field, it should still
         # return the properties definition for the web client
-        self.message_3.attributes = False
+        self.message_3.custom_properties = False
         self.env.invalidate_all()
 
-        expected = self.discussion_2.attributes_definition
+        expected = self.discussion_2.properties_definition
         for property_definition in expected:
             property_definition['value'] = False
 
-        self.assertEqual(self.message_3.read(['attributes'])[0]['attributes'], expected)
-        self.assertEqual(self.message_3.attributes, expected)
+        self.assertEqual(self.message_3.read(['custom_properties'])[0]['custom_properties'], expected)
+        self.assertEqual(self.message_3.custom_properties, expected)
 
     @mute_logger('odoo.fields')
     def test_properties_field_write_batch(self):
@@ -140,8 +140,8 @@ class PropertiesCase(TransactionCase):
         Simulate a write operation done by the web client.
         """
         # mix both properties
-        properties_values = (self.message_1 | self.message_3).read(['attributes'])
-        properties_values = properties_values[0]['attributes'] + properties_values[1]['attributes']
+        properties_values = (self.message_1 | self.message_3).read(['custom_properties'])
+        properties_values = properties_values[0]['custom_properties'] + properties_values[1]['custom_properties']
 
         for properties in properties_values:
             if properties['name'] == 'discussion_color_code':
@@ -152,7 +152,7 @@ class PropertiesCase(TransactionCase):
                 properties['value'] = self.partner_2.id
             properties['definition_changed'] = True
 
-        (self.message_1 | self.message_3).write({'attributes': properties_values})
+        (self.message_1 | self.message_3).write({'custom_properties': properties_values})
 
         sql_values_1 = self._get_sql_properties(self.message_1)
         sql_values_3 = self._get_sql_properties(self.message_3)
@@ -163,21 +163,21 @@ class PropertiesCase(TransactionCase):
 
     @mute_logger('odoo.models.unlink', 'odoo.fields')
     def test_properties_field_read_batch(self):
-        values = self.message_1.read(['attributes'])[0]['attributes']
+        values = self.message_1.read(['custom_properties'])[0]['custom_properties']
         self.assertEqual(len(values), 2)
         self.assertEqual(values[0]['type'], 'char')
         self.assertEqual(values[1]['type'], 'many2one')
 
-        message_2_values = self.message_1.attributes
+        message_2_values = self.message_1.custom_properties
         message_2_values[1]['value'] = [self.partner_2.id, "Bob"]
-        self.message_2.attributes = message_2_values
+        self.message_2.custom_properties = message_2_values
 
         expected_queries = [
             # read the properties field value
-            'SELECT "test_new_api_message"."id" AS "id", "test_new_api_message"."attributes" AS "attributes" FROM "test_new_api_message" WHERE "test_new_api_message".id IN %s',
+            'SELECT "test_new_api_message"."id" AS "id", "test_new_api_message"."custom_properties" AS "custom_properties" FROM "test_new_api_message" WHERE "test_new_api_message".id IN %s',
             'SELECT "test_new_api_message"."id" AS "id", "test_new_api_message"."discussion" AS "discussion", "test_new_api_message"."body" AS "body", "test_new_api_message"."author" AS "author", "test_new_api_message"."name" AS "name", "test_new_api_message"."important" AS "important", "test_new_api_message"."label"->>\'en_US\' AS "label", "test_new_api_message"."priority" AS "priority", "test_new_api_message"."create_uid" AS "create_uid", "test_new_api_message"."create_date" AS "create_date", "test_new_api_message"."write_uid" AS "write_uid", "test_new_api_message"."write_date" AS "write_date" FROM "test_new_api_message" WHERE "test_new_api_message".id IN %s',
             # read the definition on the definition record
-            'SELECT "test_new_api_discussion"."id" AS "id", "test_new_api_discussion"."name" AS "name", "test_new_api_discussion"."moderator" AS "moderator", "test_new_api_discussion"."message_concat" AS "message_concat", "test_new_api_discussion"."attributes_definition" AS "attributes_definition", "test_new_api_discussion"."create_uid" AS "create_uid", "test_new_api_discussion"."create_date" AS "create_date", "test_new_api_discussion"."write_uid" AS "write_uid", "test_new_api_discussion"."write_date" AS "write_date" FROM "test_new_api_discussion" WHERE "test_new_api_discussion".id IN %s',
+            'SELECT "test_new_api_discussion"."id" AS "id", "test_new_api_discussion"."name" AS "name", "test_new_api_discussion"."moderator" AS "moderator", "test_new_api_discussion"."message_concat" AS "message_concat", "test_new_api_discussion"."properties_definition" AS "properties_definition", "test_new_api_discussion"."create_uid" AS "create_uid", "test_new_api_discussion"."create_date" AS "create_date", "test_new_api_discussion"."write_uid" AS "write_uid", "test_new_api_discussion"."write_date" AS "write_date" FROM "test_new_api_discussion" WHERE "test_new_api_discussion".id IN %s',
             # check the many2one existence
             'SELECT "test_new_api_partner".id FROM "test_new_api_partner" WHERE "test_new_api_partner".id IN %s',
             'SELECT "test_new_api_partner"."id" AS "id", "test_new_api_partner"."name" AS "name", "test_new_api_partner"."create_uid" AS "create_uid", "test_new_api_partner"."create_date" AS "create_date", "test_new_api_partner"."write_uid" AS "write_uid", "test_new_api_partner"."write_date" AS "write_date" FROM "test_new_api_partner" WHERE "test_new_api_partner".id IN %s',
@@ -185,7 +185,7 @@ class PropertiesCase(TransactionCase):
 
         self.env.invalidate_all()
         with self.assertQueryCount(5), self.assertQueries(expected_queries):
-            self.message_1.read(['attributes'])
+            self.message_1.read(['custom_properties'])
 
         # read in batch a lot of records
         discussions = [self.discussion_1, self.discussion_2]
@@ -194,7 +194,7 @@ class PropertiesCase(TransactionCase):
             'name': f'Test Message {i}',
             'discussion': discussions[i % 2].id,
             'author': self.user.id,
-            'attributes': [{
+            'custom_properties': [{
                 'name': 'partner_id',
                 'type': 'many2one',
                 'comodel': 'test_new_api.partner',
@@ -206,7 +206,7 @@ class PropertiesCase(TransactionCase):
         self.env.invalidate_all()
 
         with self.assertQueryCount(5), self.assertQueries(expected_queries):
-            values = messages.read(['attributes'])
+            values = messages.read(['custom_properties'])
 
         # remove some partners in the list
         partners[:20].unlink()
@@ -215,12 +215,12 @@ class PropertiesCase(TransactionCase):
         # cleaned (the properties field can trust the cached value, the deleted ids
         # are not in the cache even if they still exists in the database)
         with self.assertQueryCount(5):
-            values = messages.read(['attributes'])
+            values = messages.read(['custom_properties'])
 
     @mute_logger('odoo.fields')
     def test_properties_field_delete(self):
         """Test to delete a property using the flag "definition_deleted"."""
-        self.message_1.attributes = [{
+        self.message_1.custom_properties = [{
             'name': 'discussion_color_code',
             'string': 'Test color code',
             'type': 'char',
@@ -244,8 +244,8 @@ class PropertiesCase(TransactionCase):
                 'default': 'blue',
             }])
 
-        self.assertEqual(len(self.message_1.attributes), 1)
-        self.assertEqual(self.message_1.attributes[0]['value'], 'purple')
+        self.assertEqual(len(self.message_1.custom_properties), 1)
+        self.assertEqual(self.message_1.custom_properties[0]['value'], 'purple')
 
     @mute_logger('odoo.fields')
     def test_properties_field_create_batch(self):
@@ -269,7 +269,7 @@ class PropertiesCase(TransactionCase):
                 'name': 'Test Message',
                 'discussion': self.discussion_1.id,
                 'author': self.user.id,
-                'attributes': [{
+                'custom_properties': [{
                     # no name, should be automatically generated
                     'string': 'Discussion Color code',
                     'type': 'char',
@@ -289,7 +289,7 @@ class PropertiesCase(TransactionCase):
                 'name': 'Test Message',
                 'discussion': self.discussion_2.id,
                 'author': self.user.id,
-                'attributes': [{
+                'custom_properties': [{
                     'type': 'selection',
                     'string': 'Status',
                     'selection': [
@@ -325,7 +325,7 @@ class PropertiesCase(TransactionCase):
         ])
 
         self.assertEqual(
-            self.discussion_1.attributes_definition[0]['string'], 'Discussion Color code',
+            self.discussion_1.properties_definition[0]['string'], 'Discussion Color code',
             msg='Should have updated the definition record')
 
         self.assertEqual(len(messages), 2)
@@ -336,13 +336,13 @@ class PropertiesCase(TransactionCase):
             {'moderator_partner_id': self.partner.id,
              property_color_name: 'purple'})
         sql_properties_2 = self._get_sql_properties(messages[1])
-        status_name = self.discussion_2.attributes_definition[0]['name']
+        status_name = self.discussion_2.properties_definition[0]['name']
         self.assertEqual(
             sql_properties_2,
             {status_name: 'draft'})
 
-        properties_values_1 = messages[0].attributes
-        properties_values_2 = messages[1].attributes
+        properties_values_1 = messages[0].custom_properties
+        properties_values_2 = messages[1].custom_properties
 
         self.assertEqual(len(properties_values_1), 2, msg='Discussion 1 has 2 properties')
         self.assertEqual(len(properties_values_2), 1, msg='Discussion 2 has 1 property')
@@ -359,13 +359,13 @@ class PropertiesCase(TransactionCase):
             'author': self.user.id,
         })
         self.assertEqual(
-            message.attributes[0]['value'],
+            message.custom_properties[0]['value'],
             'draft',
             msg='Should have taken the default value')
 
-        message.attributes = [{'name': 'state', 'value': None}]
+        message.custom_properties = [{'name': 'state', 'value': None}]
         self.assertFalse(
-            message.attributes[0]['value'],
+            message.custom_properties[0]['value'],
             msg='Writing None should not reset to the default value')
 
         # test the case where the definition record come from a default as well
@@ -379,12 +379,12 @@ class PropertiesCase(TransactionCase):
             })
             self.assertEqual(message.discussion, self.discussion_2)
             self.assertEqual(
-                message.attributes[0]['value'],
+                message.custom_properties[0]['value'],
                 'draft',
                 msg='Should have taken the default value')
 
             # the definition record come from a default value
-            self.discussion_2.attributes_definition = [{
+            self.discussion_2.properties_definition = [{
                 'name': 'test',
                 'type': 'char',
                 'default': 'default char',
@@ -393,7 +393,7 @@ class PropertiesCase(TransactionCase):
                 .with_context(default_discussion=self.discussion_2) \
                 .create({'name': 'Test Message', 'author': self.user.id})
             self.assertEqual(message.discussion, self.discussion_2)
-            self.assertEqual(message.attributes, [{
+            self.assertEqual(message.custom_properties, [{
                 'name': 'test',
                 'type': 'char',
                 'default': 'default char',
@@ -401,7 +401,7 @@ class PropertiesCase(TransactionCase):
             }])
 
         # test a default many2one
-        self.discussion_1.attributes_definition = [
+        self.discussion_1.properties_definition = [
             {
                 'name': 'my_many2one',
                 'string': 'Partner',
@@ -414,7 +414,7 @@ class PropertiesCase(TransactionCase):
         sql_definition = self._get_sql_definition(self.discussion_1)
         self.assertEqual(sql_definition[0]['default'], self.partner.id)
 
-        read_values = self.discussion_1.read(['attributes_definition'])[0]['attributes_definition']
+        read_values = self.discussion_1.read(['properties_definition'])[0]['properties_definition']
         self.assertEqual(
             read_values[0]['default'],
             (self.partner.id, self.partner.display_name),
@@ -422,7 +422,7 @@ class PropertiesCase(TransactionCase):
         )
 
         # read the default many2one and deactivate the name_get
-        read_values = self.discussion_1.read(['attributes_definition'], load=None)[0]['attributes_definition']
+        read_values = self.discussion_1.read(['properties_definition'], load=None)[0]['properties_definition']
         self.assertEqual(
             read_values[0]['default'],
             self.partner.id,
@@ -435,23 +435,23 @@ class PropertiesCase(TransactionCase):
             'discussion': self.discussion_1.id,
         })
 
-        properties = message.read(['attributes'])[0]['attributes']
+        properties = message.read(['custom_properties'])[0]['custom_properties']
         self.assertEqual(properties[0]['value'], (self.partner.id, self.partner.display_name))
 
-        self.assertEqual(message.attributes[0]['value'], self.partner.id)
+        self.assertEqual(message.custom_properties[0]['value'], self.partner.id)
 
         # give a default value and a value for a many2one
         # the default value must be ignored
-        property_definition = self.discussion_1.read(['attributes_definition'])[0]['attributes_definition']
+        property_definition = self.discussion_1.read(['properties_definition'])[0]['properties_definition']
         property_definition[0]['value'] = (self.partner_2.id, 'Alice')
         message = self.env['test_new_api.message'].create({
             'name': 'Test Message',
             'author': self.user.id,
             'discussion': self.discussion_1.id,
-            'attributes': property_definition,
+            'custom_properties': property_definition,
         })
         self.assertEqual(
-            message.attributes[0]['value'],
+            message.custom_properties[0]['value'],
             self.partner_2.id,
             msg='Should not take the default value',
         )
@@ -463,12 +463,12 @@ class PropertiesCase(TransactionCase):
         record a recordset for the many2one, but a tuple with the record id and
         the record name_get.
         """
-        properties_values = (self.message_1 | self.message_3).read(['attributes'])
+        properties_values = (self.message_1 | self.message_3).read(['custom_properties'])
 
         self.assertEqual(len(properties_values), 2)
 
-        properties_message_1 = properties_values[0]['attributes']
-        properties_message_3 = properties_values[1]['attributes']
+        properties_message_1 = properties_values[0]['custom_properties']
+        properties_message_3 = properties_values[1]['custom_properties']
 
         self.assertTrue(isinstance(properties_message_1, list))
         self.assertTrue(isinstance(properties_message_3, list))
@@ -499,8 +499,8 @@ class PropertiesCase(TransactionCase):
         self.assertEqual(many2one_property['value'], (self.partner.id, self.partner.display_name))
 
         # disable the name_get
-        properties_values = (self.message_1 | self.message_3).read(['attributes'], load=None)
-        many2one_property = properties_values[0]['attributes'][1]
+        properties_values = (self.message_1 | self.message_3).read(['custom_properties'], load=None)
+        many2one_property = properties_values[0]['custom_properties'][1]
 
         self.assertEqual(
             many2one_property['value'], self.partner.id,
@@ -508,7 +508,7 @@ class PropertiesCase(TransactionCase):
 
     def test_properties_field_many2one_basic(self):
         """Test the basic (read, write...) of the many2one property."""
-        self.message_2.attributes = [
+        self.message_2.custom_properties = [
             {
                 "name": "discussion_color_code",
                 "type": "char",
@@ -524,8 +524,8 @@ class PropertiesCase(TransactionCase):
             },
         ]
 
-        self.assertFalse(self.message_2.attributes[0]['value'])
-        self.assertEqual(self.message_2.attributes[1]['value'], self.partner_2.id)
+        self.assertFalse(self.message_2.custom_properties[0]['value'])
+        self.assertEqual(self.message_2.custom_properties[1]['value'], self.partner_2.id)
         sql_values = self._get_sql_properties(self.message_2)
         self.assertEqual(
             sql_values,
@@ -533,14 +533,14 @@ class PropertiesCase(TransactionCase):
              'discussion_color_code': False})
 
         # read the many2one
-        properties = self.message_2.read(['attributes'])[0]['attributes']
+        properties = self.message_2.read(['custom_properties'])[0]['custom_properties']
         self.assertEqual(properties[1]['value'], (self.partner_2.id, self.partner_2.display_name))
         self.assertEqual(properties[1]['comodel'], 'test_new_api.partner')
 
     @mute_logger('odoo.models.unlink', 'odoo.fields')
     def test_properties_field_many2one_unlink(self):
         """Test the case where we unlink the many2one record."""
-        self.message_2.attributes = [{
+        self.message_2.custom_properties = [{
             'name': 'moderator_partner_id',
             'value': self.partner.id,
         }]
@@ -551,24 +551,24 @@ class PropertiesCase(TransactionCase):
             # 1 query to read the field
             # 1 query to read the definition
             # 2 queries to check if the many2one still exists / name_get
-            self.assertFalse(self.message_2.attributes[0]['value'])
+            self.assertFalse(self.message_2.custom_properties[0]['value'])
 
         # remove the partner, and use the read method
-        self.message_2.attributes = [{
+        self.message_2.custom_properties = [{
             'name': 'moderator_partner_id',
             'value': self.partner_2.id,
         }]
         self.partner_2.unlink()
 
         with self.assertQueryCount(4):
-            value = self.message_2.read(['attributes'])
-            value = value[0]['attributes']
+            value = self.message_2.read(['custom_properties'])
+            value = value[0]['custom_properties']
             self.assertFalse(value[1]['value'])
             self.assertEqual(value[1]['comodel'], 'test_new_api.partner')
 
         # many2one properties in a default value
         partner = self.env['res.partner'].create({'name': 'test unlink'})
-        self.message_2.attributes = [{
+        self.message_2.custom_properties = [{
             'name': 'moderator_partner_id',
             'type': 'many2one',
             'comodel': 'res.partner',
@@ -576,7 +576,7 @@ class PropertiesCase(TransactionCase):
             'definition_changed': True,
         }]
         self.assertEqual(
-            self.message_2.read(['attributes'])[0]['attributes'],
+            self.message_2.read(['custom_properties'])[0]['custom_properties'],
             [{
                 'name': 'moderator_partner_id',
                 'type': 'many2one',
@@ -587,7 +587,7 @@ class PropertiesCase(TransactionCase):
         )
         partner.unlink()
         self.assertEqual(
-            self.message_2.read(['attributes'])[0]['attributes'],
+            self.message_2.read(['custom_properties'])[0]['custom_properties'],
             [{
                 'name': 'moderator_partner_id',
                 'type': 'many2one',
@@ -601,7 +601,7 @@ class PropertiesCase(TransactionCase):
         """Test the case where we uninstall a module, and the model does not exist anymore."""
         # simulate a module uninstall, the model is not available now
         # when reading the model / many2one, it should return False
-        self.message_1.attributes = [{
+        self.message_1.custom_properties = [{
             'name': 'message',
             'value': self.message_3.id,
         }]
@@ -610,26 +610,26 @@ class PropertiesCase(TransactionCase):
         self.env.cr.execute(
             """
             UPDATE test_new_api_discussion
-               SET attributes_definition = '[{"name": "message", "comodel": "wrong_model", "type": "many2one"}]'
+               SET properties_definition = '[{"name": "message", "comodel": "wrong_model", "type": "many2one"}]'
              WHERE id = %s
             """, (self.discussion_1.id, ),
         )
         self.env.invalidate_all()
 
-        values = self.discussion_1.read(['attributes_definition'])[0]
-        self.assertFalse(values['attributes_definition'][0]['comodel'])
+        values = self.discussion_1.read(['properties_definition'])[0]
+        self.assertFalse(values['properties_definition'][0]['comodel'])
 
-        attributes_definition = self.discussion_1.attributes_definition
+        properties_definition = self.discussion_1.properties_definition
         self.assertEqual(
-            attributes_definition,
+            properties_definition,
             [{'name': 'message', 'comodel': False, 'type': 'many2one'}],
             msg='The model does not exist anymore, it should return false',
         )
 
         # read the many2one on the child, should return False as well
-        self.assertFalse(self.message_1.attributes[0]['value'])
+        self.assertFalse(self.message_1.custom_properties[0]['value'])
 
-        values = self.message_1.read(['attributes'])[0]['attributes']
+        values = self.message_1.read(['custom_properties'])[0]['custom_properties']
         self.assertEqual(values[0]['type'], 'many2one', msg='Property type should be preserved')
         self.assertFalse(values[0]['value'])
         self.assertFalse(values[0]['comodel'])
@@ -642,7 +642,7 @@ class PropertiesCase(TransactionCase):
         )
 
         # write on the properties definition must clean the wrong model name
-        self.discussion_1.attributes_definition = self.discussion_1.attributes_definition
+        self.discussion_1.properties_definition = self.discussion_1.properties_definition
 
         sql_definition = self._get_sql_definition(self.discussion_1)
         self.assertEqual(
@@ -652,14 +652,14 @@ class PropertiesCase(TransactionCase):
         )
 
     def test_properties_field_domain(self):
-        self.discussion_1.attributes_definition = [{
+        self.discussion_1.properties_definition = [{
             'name': 'message',
             'comodel': 'test_new_api.message',
             'type': 'many2one',
             'domain': "[('name', 'ilike', 'message')]",
         }]
 
-        domain = self.message_1.attributes[0]['domain']
+        domain = self.message_1.custom_properties[0]['domain']
         self.assertEqual(domain, "[('name', 'ilike', 'message')]")
 
         # set a wrong domain, it can happen if we uninstall a module
@@ -674,17 +674,17 @@ class PropertiesCase(TransactionCase):
         self.env.cr.execute(
             """
             UPDATE test_new_api_discussion
-               SET attributes_definition = %s
+               SET properties_definition = %s
              WHERE id = %s
             """, (new_properties, self.discussion_1.id, ),
         )
         self.env.flush_all()
         self.env.invalidate_all()
 
-        definition = self.discussion_1.read(['attributes_definition'])[0]['attributes_definition']
+        definition = self.discussion_1.read(['properties_definition'])[0]['properties_definition']
         self.assertNotIn('domain', definition)
 
-        properties = self.message_1.read(['attributes'])[0]['attributes']
+        properties = self.message_1.read(['custom_properties'])[0]['custom_properties']
         self.assertNotIn('domain', properties)
 
         sql_definition = self._get_sql_definition(self.discussion_1)
@@ -695,7 +695,7 @@ class PropertiesCase(TransactionCase):
         )
 
     def test_properties_field_integer_float_boolean(self):
-        self.discussion_1.attributes_definition = [
+        self.discussion_1.properties_definition = [
             {
                 'name': 'int_value',
                 'string': 'Int Value',
@@ -711,7 +711,7 @@ class PropertiesCase(TransactionCase):
             },
         ]
 
-        self.message_1.attributes = [{
+        self.message_1.custom_properties = [{
             'name': 'int_value',
             'value': 55555555555,
         }, {
@@ -724,29 +724,29 @@ class PropertiesCase(TransactionCase):
 
         self.env.invalidate_all()
 
-        self.assertEqual(len(self.message_1.attributes), 3)
-        self.assertEqual(self.message_1.attributes[0]['value'], 55555555555)
-        self.assertEqual(self.message_1.attributes[1]['value'], 1.337)
-        self.assertEqual(self.message_1.attributes[2]['value'], True)
+        self.assertEqual(len(self.message_1.custom_properties), 3)
+        self.assertEqual(self.message_1.custom_properties[0]['value'], 55555555555)
+        self.assertEqual(self.message_1.custom_properties[1]['value'], 1.337)
+        self.assertEqual(self.message_1.custom_properties[2]['value'], True)
 
-        self.message_1.attributes = [{'name': 'boolean_value', 'value': 0}]
+        self.message_1.custom_properties = [{'name': 'boolean_value', 'value': 0}]
         self.assertEqual(
-            self.message_1.attributes[2]['value'], False,
+            self.message_1.custom_properties[2]['value'], False,
             msg='Boolean value must have been converted to False')
 
     def test_properties_field_selection(self):
-        self.message_3.attributes = [{'name': 'state', 'value': 'done'}]
+        self.message_3.custom_properties = [{'name': 'state', 'value': 'done'}]
         self.env.invalidate_all()
-        self.assertEqual(self.message_3.attributes[0]['value'], 'done')
+        self.assertEqual(self.message_3.custom_properties[0]['value'], 'done')
 
         # the option might have been removed on the definition, write False
-        self.message_3.attributes = [{'name': 'state', 'value': 'unknown_selection'}]
+        self.message_3.custom_properties = [{'name': 'state', 'value': 'unknown_selection'}]
         self.env.invalidate_all()
-        self.assertFalse(self.message_3.attributes[0]['value'])
+        self.assertFalse(self.message_3.custom_properties[0]['value'])
 
         with self.assertRaises(ValueError):
             # check that 2 options can not have the same id
-            self.discussion_1.attributes_definition = [
+            self.discussion_1.properties_definition = [
                 {
                     'name': 'option',
                     'type': 'selection',
@@ -764,7 +764,7 @@ class PropertiesCase(TransactionCase):
 
         Each tags has a color index defined on the definition record.
         """
-        self.discussion_1.attributes_definition = [
+        self.discussion_1.properties_definition = [
             {
                 'name': 'my_tags',
                 'string': 'My Tags',
@@ -781,13 +781,13 @@ class PropertiesCase(TransactionCase):
         message = self.env['test_new_api.message'].create(
             {'discussion': self.discussion_1.id, 'author': self.user.id})
 
-        self.assertEqual(message.attributes[0]['value'], ['be', 'de'])
+        self.assertEqual(message.custom_properties[0]['value'], ['be', 'de'])
         self.assertEqual(self._get_sql_properties(message), {'my_tags': ['be', 'de']})
 
         self.env.invalidate_all()
 
         # remove the DE tags on the definition
-        self.discussion_1.attributes_definition = [
+        self.discussion_1.properties_definition = [
             {
                 'name': 'my_tags',
                 'string': 'My Tags',
@@ -805,21 +805,21 @@ class PropertiesCase(TransactionCase):
         self.assertEqual(self._get_sql_properties(message), {'my_tags': ['be', 'de']})
 
         self.assertEqual(
-            message.attributes[0]['value'],
+            message.custom_properties[0]['value'],
             ['be'],
             msg='The tag has been removed on the definition, should be removed when reading the child')
         self.assertEqual(
-            message.attributes[0]['tags'],
+            message.custom_properties[0]['tags'],
             [['be', 'BE', 1], ['fr', 'FR', 2], ['it', 'IT', 1]])
 
         # next write on the child must update the value
-        message.attributes = message.attributes
+        message.custom_properties = message.custom_properties
 
         self.assertEqual(self._get_sql_properties(message), {'my_tags': ['be']})
 
         with self.assertRaises(ValueError):
             # it should detect that the tag is duplicated
-            self.discussion_1.attributes_definition = [
+            self.discussion_1.properties_definition = [
                 {
                     'name': 'my_tags',
                     'type': 'tags',
@@ -842,7 +842,7 @@ class PropertiesCase(TransactionCase):
             for i in range(20)
         ])
 
-        self.discussion_1.attributes_definition = [{
+        self.discussion_1.properties_definition = [{
             'name': 'moderator_partner_ids',
             'string': 'Partners',
             'type': 'many2many',
@@ -850,7 +850,7 @@ class PropertiesCase(TransactionCase):
         }]
 
         with self.assertQueryCount(2):
-            self.message_1.attributes = [
+            self.message_1.custom_properties = [
                 {
                     "name": "moderator_partner_ids",
                     "string": "Partners",
@@ -859,28 +859,28 @@ class PropertiesCase(TransactionCase):
                     "value": partners[:10].name_get(),
                 }
             ]
-            self.assertEqual(self.message_1.attributes[0]['value'], partners[:10].ids)
+            self.assertEqual(self.message_1.custom_properties[0]['value'], partners[:10].ids)
 
         partners[:5].unlink()
         with self.assertQueryCount(5):
-            self.assertEqual(self.message_1.attributes[0]['value'], partners[5:10].ids)
+            self.assertEqual(self.message_1.custom_properties[0]['value'], partners[5:10].ids)
 
         partners[5].unlink()
         with self.assertQueryCount(5):
-            properties = self.message_1.read(['attributes'])[0]['attributes']
+            properties = self.message_1.read(['custom_properties'])[0]['custom_properties']
         self.assertEqual(properties[0]['value'], partners[6:10].name_get())
 
         # need to wait next write to clean data in database
         # a single read won't clean the removed many2many
-        attributes = self.message_1.read(['attributes'])[0]['attributes']
+        custom_properties = self.message_1.read(['custom_properties'])[0]['custom_properties']
         self.message_1.invalidate_recordset()
-        self.message_1.attributes = attributes
+        self.message_1.custom_properties = custom_properties
 
         sql_values = self._get_sql_properties(self.message_1)
         self.assertEqual(sql_values, {'moderator_partner_ids': partners[6:10].ids})
 
         # read and disable name_get
-        properties = self.message_1.read(['attributes'], load=None)[0]['attributes']
+        properties = self.message_1.read(['custom_properties'], load=None)[0]['custom_properties']
         self.assertEqual(
             properties[0]['value'],
             partners[6:10].ids,
@@ -895,13 +895,13 @@ class PropertiesCase(TransactionCase):
         self.env.cr.execute(
             """
             UPDATE test_new_api_message
-               SET attributes = %s
+               SET custom_properties = %s
              WHERE id = %s
             """, (new_value, self.message_1.id, ),
         )
         self.env.invalidate_all()
 
-        properties = self.message_1.read(['attributes'], load=None)[0]['attributes']
+        properties = self.message_1.read(['custom_properties'], load=None)[0]['custom_properties']
         self.assertEqual(
             properties[0]['value'],
             partners[6:10].ids,
@@ -909,7 +909,7 @@ class PropertiesCase(TransactionCase):
         )
 
         # write a list with many2many values
-        self.message_1.attributes = [{
+        self.message_1.custom_properties = [{
             'name': 'partner_ids',
             'string': 'Partners',
             'type': 'many2many',
@@ -929,7 +929,7 @@ class PropertiesCase(TransactionCase):
             'default': [partners[8].id],
         }])
 
-        properties = self.message_1.read(['attributes'])[0]['attributes']
+        properties = self.message_1.read(['custom_properties'])[0]['custom_properties']
         self.assertEqual(
             properties,
             [{
@@ -952,7 +952,7 @@ class PropertiesCase(TransactionCase):
             'name': 'Test Message',
             'discussion': self.discussion_1.id,
             'author': self.user.id,
-            'attributes': [{
+            'custom_properties': [{
                 'name': 'My Tags',
                 'type': 'many2many',
                 'comodel': 'test_new_api.multi.tag',
@@ -972,21 +972,21 @@ class PropertiesCase(TransactionCase):
 
         self.env.invalidate_all()
 
-        values = message.read(['attributes'])[0]['attributes'][0]['value']
+        values = message.read(['custom_properties'])[0]['custom_properties'][0]['value']
         self.assertEqual(values, [(tag.id, None if i >= 5 else tag.name) for i, tag in enumerate(tags.sudo())])
 
     def test_properties_field_performance(self):
         self.env.invalidate_all()
         with self.assertQueryCount(5):
             # read to put the partner name in cache
-            self.message_1.read(['attributes'])
+            self.message_1.read(['custom_properties'])
 
         with self.assertQueryCount(0, msg='Must read value from cache'):
-            self.message_1.attributes
+            self.message_1.custom_properties
 
-        expected = ['UPDATE "test_new_api_message" SET "attributes" = %s, "write_date" = %s, "write_uid" = %s WHERE id IN %s']
+        expected = ['UPDATE "test_new_api_message" SET "custom_properties" = %s, "write_date" = %s, "write_uid" = %s WHERE id IN %s']
         with self.assertQueryCount(1), self.assertQueries(expected):
-            self.message_1.attributes = [
+            self.message_1.custom_properties = [
                 {
                     "name": "discussion_color_code",
                     "type": "char",
@@ -1007,8 +1007,8 @@ class PropertiesCase(TransactionCase):
     def test_properties_field_change_definition(self):
         """Test the behavior of the field when changing the definition."""
 
-        attributes_definition = self.discussion_1.attributes_definition
-        self.message_1.attributes = [
+        properties_definition = self.discussion_1.properties_definition
+        self.message_1.custom_properties = [
             {
                 "name": "discussion_color_code",
                 "value": None,
@@ -1019,28 +1019,28 @@ class PropertiesCase(TransactionCase):
             }
         ]
         self.env.invalidate_all()
-        self.assertFalse(self.message_1.attributes[0]['value'])
+        self.assertFalse(self.message_1.custom_properties[0]['value'])
 
         # add a property on the definition record
-        attributes_definition += [{'name': 'state', 'string': 'State', 'type': 'char'}]
-        self.discussion_1.attributes_definition = attributes_definition
-        self.message_1.attributes = [{'name': 'state', 'value': 'ready'}]
+        properties_definition += [{'name': 'state', 'string': 'State', 'type': 'char'}]
+        self.discussion_1.properties_definition = properties_definition
+        self.message_1.custom_properties = [{'name': 'state', 'value': 'ready'}]
 
         self.env.invalidate_all()
 
-        self.assertEqual(self.message_1.attributes[2]['value'], 'ready')
+        self.assertEqual(self.message_1.custom_properties[2]['value'], 'ready')
 
         # remove a property from the definition
         # the properties on the child should remain, until we write on it
         # when reading, the removed property must be filtered
-        self.discussion_1.attributes_definition = attributes_definition[:-1]  # remove the state field
+        self.discussion_1.properties_definition = properties_definition[:-1]  # remove the state field
 
-        self.assertFalse(self.message_1.attributes[0]['value'])
+        self.assertFalse(self.message_1.custom_properties[0]['value'])
 
         value = self._get_sql_properties(self.message_1)
         self.assertEqual(value.get('state'), 'ready', msg='The field should be in database')
 
-        self.message_1.attributes = [{'name': 'name', 'value': 'Test name'}]
+        self.message_1.custom_properties = [{'name': 'name', 'value': 'Test name'}]
         value = self._get_sql_properties(self.message_1)
         self.assertFalse(
             value.get('state'),
@@ -1048,11 +1048,11 @@ class PropertiesCase(TransactionCase):
 
         # check that we can only set a allowed list of properties type
         with self.assertRaises(ValueError):
-            self.discussion_1.attributes_definition = [{'name': 'state', 'type': 'wrong_type'}]
+            self.discussion_1.properties_definition = [{'name': 'state', 'type': 'wrong_type'}]
 
         # check the property ID unicity
         with self.assertRaises(ValueError):
-            self.discussion_1.attributes_definition = [
+            self.discussion_1.properties_definition = [
                 {'name': 'state', 'type': 'char'},
                 {'name': 'state', 'type': 'datetime'},
             ]
@@ -1067,7 +1067,7 @@ class PropertiesCase(TransactionCase):
             message_form.author = self.user
 
             self.assertEqual(
-                message_form.attributes,
+                message_form.custom_properties,
                 [{
                     'name': 'discussion_color_code',
                     'string': 'Color Code',
@@ -1087,7 +1087,7 @@ class PropertiesCase(TransactionCase):
             # change the discussion field
             message_form.discussion = self.discussion_2
 
-            properties = message_form.attributes
+            properties = message_form.custom_properties
 
             self.assertEqual(len(properties), 1)
             self.assertEqual(
@@ -1100,13 +1100,13 @@ class PropertiesCase(TransactionCase):
             message = message_form.save()
 
         self.assertEqual(
-            message.attributes[0]['value'],
+            message.custom_properties[0]['value'],
             'draft',
             msg='Should take the default value',
         )
 
         # check cached value
-        cached_value = self.env.cache.get(message, message._fields['attributes'])
+        cached_value = self.env.cache.get(message, message._fields['custom_properties'])
         self.assertEqual(cached_value, {'state': 'draft'})
 
         # change the definition record, change the definition and add default values
@@ -1115,7 +1115,7 @@ class PropertiesCase(TransactionCase):
         with self.assertQueryCount(4):
             message.discussion = self.discussion_1
         self.assertEqual(
-            self.discussion_1.attributes_definition,
+            self.discussion_1.properties_definition,
             [{
                 'name': 'discussion_color_code',
                 'type': 'char',
@@ -1129,7 +1129,7 @@ class PropertiesCase(TransactionCase):
                 }],
             )
         self.assertEqual(
-            message.attributes,
+            message.custom_properties,
             [{
                 'name': 'discussion_color_code',
                 'type': 'char',
@@ -1145,8 +1145,8 @@ class PropertiesCase(TransactionCase):
             }],
         )
 
-        self.discussion_1.attributes_definition = False
-        self.discussion_2.attributes_definition = [{
+        self.discussion_1.properties_definition = False
+        self.discussion_2.properties_definition = [{
             'name': 'test',
             'type': 'char',
             'default': 'Default',
@@ -1155,11 +1155,11 @@ class PropertiesCase(TransactionCase):
         # change the message discussion to remove the properties
         # discussion 1 -> discussion 2
         message.discussion = self.discussion_2
-        message.attributes = [{'name': 'test', 'value': 'Test'}]
+        message.custom_properties = [{'name': 'test', 'value': 'Test'}]
         onchange_values = message.onchange(
             values={
                 'discussion': self.discussion_1.id,
-                'attributes': [{
+                'custom_properties': [{
                     'name': 'test',
                     'type': 'char',
                     'default': 'Default',
@@ -1167,13 +1167,13 @@ class PropertiesCase(TransactionCase):
                 }],
             },
             field_name=['discussion'],
-            field_onchange={'attributes': '1'},
+            field_onchange={'custom_properties': '1'},
         )
         self.assertTrue(
-            'attributes' in onchange_values['value'],
+            'custom_properties' in onchange_values['value'],
             msg='Should have detected the definition record change')
         self.assertEqual(
-            onchange_values['value']['attributes'], [],
+            onchange_values['value']['custom_properties'], [],
             msg='Should have reset the properties definition')
 
         # change the message discussion to add new properties
@@ -1182,23 +1182,23 @@ class PropertiesCase(TransactionCase):
         onchange_values = message.onchange(
             values={
                 'discussion': self.discussion_2.id,
-                'attributes': [],
+                'custom_properties': [],
             },
             field_name=['discussion'],
-            field_onchange={'attributes': '1'},
+            field_onchange={'custom_properties': '1'},
         )
         self.assertTrue(
-            'attributes' in onchange_values['value'],
+            'custom_properties' in onchange_values['value'],
             msg='Should have detected the definition record change')
         self.assertEqual(
-            onchange_values['value']['attributes'],
+            onchange_values['value']['custom_properties'],
             [{'name': 'test', 'type': 'char', 'default': 'Default', 'value': 'Default'}],
             msg='Should have reset the properties definition to the discussion 1 definition')
 
         # change the definition record and the definition at the same time
         message_form = Form(message)
         message_form.discussion = self.discussion_2
-        message_form.attributes = [{
+        message_form.custom_properties = [{
             'name': 'new_property',
             'type': 'char',
             'value': 'test value',
@@ -1206,23 +1206,23 @@ class PropertiesCase(TransactionCase):
         }]
         message = message_form.save()
         self.assertEqual(
-            self.discussion_2.attributes_definition,
+            self.discussion_2.properties_definition,
             [{'name': 'new_property', 'type': 'char'}])
         self.assertEqual(
-            message.attributes,
+            message.custom_properties,
             [{'name': 'new_property', 'type': 'char', 'value': 'test value'}])
 
         # re-write the same parent again and check that value are not reset
         message.discussion = message.discussion
         self.assertEqual(
-            message.attributes,
+            message.custom_properties,
             [{'name': 'new_property', 'type': 'char', 'value': 'test value'}])
 
         # trigger a other onchange after setting the properties
         # and check that it does not impact the properties
-        message.discussion.attributes_definition = []
+        message.discussion.properties_definition = []
         message_form = Form(message)
-        message.attributes = [{
+        message.custom_properties = [{
             'name': 'new_property',
             'type': 'char',
             'value': 'test value',
@@ -1231,15 +1231,15 @@ class PropertiesCase(TransactionCase):
         message_form.body = "a" * 42
         message = message_form.save()
         self.assertEqual(
-            message.attributes,
+            message.custom_properties,
             [{'name': 'new_property', 'type': 'char', 'value': 'test value'}])
 
     @mute_logger('odoo.fields')
     def test_properties_field_definition_update(self):
         """Test the definition update from the child."""
-        self.discussion_1.attributes_definition = []
+        self.discussion_1.properties_definition = []
 
-        self.message_1.attributes = [
+        self.message_1.custom_properties = [
             {
                 'name': 'my_many2one',
                 'string': 'Partner',
@@ -1298,18 +1298,18 @@ class PropertiesCase(TransactionCase):
 
         # a user read a properties with a many2one to a record he doesn't have access to
         tag = self.env['test_new_api.multi.tag'].create({'name': 'Test Tag'})
-        self.message_1.attributes = [{
+        self.message_1.custom_properties = [{
             'name': 'test',
             'type': 'many2one',
             'comodel': 'test_new_api.multi.tag',
             'value': [tag.id, 'Tag'],
             'definition_changed': True,
         }]
-        values = self.message_1.read(['attributes'])[0]['attributes'][0]
+        values = self.message_1.read(['custom_properties'])[0]['custom_properties'][0]
         self.assertEqual(values['value'], (tag.id, 'Test Tag'))
         self.env.invalidate_all()
         with patch.object(MultiTag, 'check_access_rights', side_effect=_mocked_check_access_rights):
-            values = self.message_1.read(['attributes'])[0]['attributes'][0]
+            values = self.message_1.read(['custom_properties'])[0]['custom_properties'][0]
         self.assertEqual(values['value'], (tag.id, None))
 
     def _get_sql_properties(self, message):
@@ -1317,7 +1317,7 @@ class PropertiesCase(TransactionCase):
 
         self.env.cr.execute(
             """
-            SELECT attributes
+            SELECT custom_properties
               FROM test_new_api_message
              WHERE id = %s
             """, (message.id, ),
@@ -1331,7 +1331,7 @@ class PropertiesCase(TransactionCase):
 
         self.env.cr.execute(
             """
-            SELECT attributes_definition
+            SELECT properties_definition
               FROM test_new_api_discussion
              WHERE id = %s
             """, (discussion.id, ),

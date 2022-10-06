@@ -478,6 +478,6 @@ PropertiesField.extractProps = ({ attrs, field }) => {
 };
 
 PropertiesField.displayName = _lt("Properties");
-PropertiesField.supportedTypes = ["properties"];
+PropertiesField.supportedTypes = ["properties", "json"];  // TODO: we should remove the Properties type
 
 registry.category("fields").add("properties", PropertiesField);
