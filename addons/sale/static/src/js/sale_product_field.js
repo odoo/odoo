@@ -47,6 +47,12 @@ export class SaleOrderLineProductField extends Many2OneField {
         }
     }
 
+    get hasExternalButton() {
+        // Keep external button, even if field is specified as 'no_open' so that the user is not
+        // redirected to the product when clicking on the field content
+        const res = super.hasExternalButton;
+        return res || (!!this.props.value && !this.state.isFloating);
+    }
     get hasConfigurationButton() {
         return this.isConfigurableLine || this.isConfigurableTemplate;
     }
