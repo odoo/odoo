@@ -16,6 +16,8 @@ const PosRestaurantPosGlobalState = (PosGlobalState) => class PosRestaurantPosGl
         super(obj);
         this.orderToTransfer = null; // table transfer feature
         this.ordersToUpdateSet = new Set(); // used to know which orders need to be sent to the back end when syncing
+        this.transferredOrdersSet = new Set(); // used to know which orders has been transferred but not sent to the back end yet
+        this.loadingOrderState = false; // used to prevent orders fetched to be put in the update set during the reactive change
     }
     //@override
     async _processData(loadedData) {
@@ -31,7 +33,7 @@ const PosRestaurantPosGlobalState = (PosGlobalState) => class PosRestaurantPosGl
     //@override
     _onReactiveOrderUpdated(order) {
         super._onReactiveOrderUpdated(...arguments)
-        if (this.config.iface_floorplan) {
+        if (this.config.iface_floorplan && !this.loadingOrderState) {
             this.ordersToUpdateSet.add(order);
         }
     }
@@ -83,6 +85,12 @@ const PosRestaurantPosGlobalState = (PosGlobalState) => class PosRestaurantPosGl
         }
         return reactiveOrder;
     }
+    //@override
+    async load_orders() {
+        this.loadingOrderState = true;
+        await super.load_orders();
+        this.loadingOrderState = false;
+    }
     _loadRestaurantPrinter(printers) {
         this.unwatched.printers = [];
         // list of product categories that belong to one or more order printer
@@ -124,6 +132,7 @@ const PosRestaurantPosGlobalState = (PosGlobalState) => class PosRestaurantPosGl
         await this._removeOrdersFromServer();
         // This need to be called here otherwise _onReactiveOrderUpdated() will be called after the set is being cleared
         this.ordersToUpdateSet.clear();
+        this.transferredOrdersSet.clear();
     }
     /**
      * Send the orders to be saved to the back end
@@ -196,15 +205,20 @@ const PosRestaurantPosGlobalState = (PosGlobalState) => class PosRestaurantPosGl
         tableOrders.forEach(order => {
             // We don't remove the validated orders because we still want to see them in the ticket screen.
             // Orders in 'ReceiptScreen' or 'TipScreen' are validated orders.
-            if (order.server_id && !order.finalized){
+            if (order.server_id && !order.finalized && !this.transferredOrdersSet.has(order)){
                 this.removeOrder(order, false);
             }
         });
         ordersJsons.forEach(json => {
             // Because of the offline feature, some draft orders fetched from the backend will appear
             // to belong in different table, but in fact they are already moved.
-            const potentiallyTransferredOrder = [...this.ordersToUpdateSet].find(order => order.uid === json.uid)
-            if (!potentiallyTransferredOrder || potentiallyTransferredOrder.tableId === tableId) {
+            const transferredOrder = [...this.transferredOrdersSet].find(order => order.uid === json.uid)
+            const isSameTable = transferredOrder && transferredOrder.tableId === tableId;
+            if (isSameTable) {
+                // this means we transferred back to the original table, we'll prioritize the server state
+                this.removeOrder(transferredOrder, false);
+            }
+            if (!transferredOrder || isSameTable) {
                 const order = this.createReactiveOrder(json);
                 this.orders.add(order);
             }
@@ -229,10 +243,12 @@ const PosRestaurantPosGlobalState = (PosGlobalState) => class PosRestaurantPosGl
     async setTable(table, orderUid=null) {
         this.table = table;
         try {
+            this.loadingOrderState = true;
             await this._syncTableOrdersFromServer(table.id);
         } catch (error) {
             throw error;
         } finally {
+            this.loadingOrderState = false;
             const currentOrder = this.getTableOrders(table.id).find(order => orderUid ? order.uid === orderUid : !order.finalized);
             if (currentOrder) {
                 this.set_order(currentOrder);
@@ -255,12 +271,15 @@ const PosRestaurantPosGlobalState = (PosGlobalState) => class PosRestaurantPosGl
     async transferTable(table) {
         this.table = table;
         try {
+            this.loadingOrderState = true;
             await this._syncTableOrdersFromServer(table.id);
         } catch (error) {
             throw error;
         } finally {
+            this.loadingOrderState = false;
             this.orderToTransfer.tableId = table.id;
             this.set_order(this.orderToTransfer);
+            this.transferredOrdersSet.add(this.orderToTransfer);
             this.orderToTransfer = null;
         }
     }
