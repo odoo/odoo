@@ -1,9 +1,10 @@
 /** @odoo-module **/
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
-import { LegacyComponent } from '@web/legacy/legacy_component';
 
-export class Discuss extends LegacyComponent {
+const { Component } = owl;
+
+export class Discuss extends Component {
 
     //--------------------------------------------------------------------------
     // Public
