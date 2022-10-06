@@ -598,4 +598,25 @@ QUnit.module("Fields", (hooks) => {
             assert.strictEqual(target.querySelector(".o_field_widget input").value, "01/08/2022");
         }
     );
+
+    QUnit.test("DateTimeField with label opens datepicker on click", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <label for="datetime" string="When is it" />
+                    <field name="datetime" />
+                </form>`,
+        });
+
+        await click(target.querySelector("label.o_form_label"));
+        assert.containsOnce(
+            document.body,
+            ".bootstrap-datetimepicker-widget",
+            "datepicker should be opened"
+        );
+    });
 });
