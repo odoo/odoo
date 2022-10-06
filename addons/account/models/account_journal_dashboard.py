@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.release import version
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
-from odoo.tools.misc import formatLang, format_date as odoo_format_date, get_lang
+from odoo.tools.misc import formatLang, format_date as odoo_format_date, get_lang, profile
 import random
 
 import ast
@@ -83,7 +83,7 @@ class account_journal(models.Model):
               JOIN res_company company ON company.id = move.company_id
              WHERE move.journal_id = ANY(%(journal_ids)s)
                AND move.state = 'posted'
-               AND (company.fiscalyear_lock_date IS NULL OR move.date >= company.fiscalyear_lock_date) 
+               AND (company.fiscalyear_lock_date IS NULL OR move.date >= company.fiscalyear_lock_date)
           GROUP BY move.journal_id, move.sequence_prefix
             HAVING COUNT(*) != MAX(move.sequence_number) - MIN(move.sequence_number) + 1
         """, {
@@ -117,6 +117,7 @@ class account_journal(models.Model):
             return ['', _('Bank: Balance')]
 
     # Below method is used to get data of bank and cash statemens
+    @profile('/temp/dashboard_line_graph.profile')
     def get_line_graph_datas(self):
         """Computes the data used to display the graph for bank and cash journals in the accounting dashboard"""
         currency = self.currency_id or self.company_id.currency_id
@@ -177,6 +178,7 @@ class account_journal(models.Model):
 
         return [{'values': data, 'title': graph_title, 'key': graph_key, 'area': True, 'color': color, 'is_sample_data': is_sample_data}]
 
+    @profile('/temp/dashboard_bar_graph.profile')
     def get_bar_graph_datas(self):
         data = []
         today = fields.Date.today()
@@ -257,6 +259,7 @@ class account_journal(models.Model):
             'journal_id': self.id
         })
 
+    @profile('/temp/dashboard_data.profile')
     def get_journal_dashboard_datas(self):
         currency = self.currency_id or self.company_id.currency_id
         number_to_reconcile = number_to_check = last_balance = 0

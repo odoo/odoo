@@ -23,7 +23,7 @@ class AccountMove(models.Model):
     _populate_sizes = {
         'small': 1000,
         'medium': 10000,
-        'large': 500000,
+        'large': 100000,
     }
 
     _populate_dependencies = ['res.partner', 'account.journal', 'product.product']
@@ -214,7 +214,7 @@ class AccountMove(models.Model):
                 ['entry', 'in_invoice', 'out_invoice', 'in_refund', 'out_refund', 'in_receipt', 'out_receipt'],
                 [0.2, 0.3, 0.3, 0.07, 0.07, 0.03, 0.03],
             )),
-            ('company_id', populate.randomize(company_ids.ids)),
+            ('company_id', populate.randomize([company_ids.ids[0]])),
             ('currency_id', populate.randomize(currencies.ids)),
             ('journal_id', populate.compute(get_journal)),
             ('date', populate.randdatetime(relative_before=relativedelta(years=-4), relative_after=relativedelta(years=1))),
@@ -225,9 +225,9 @@ class AccountMove(models.Model):
 
     def _populate(self, size):
         records = super()._populate(size)
-        _logger.info('Posting Journal Entries')
-        to_post = records.filtered(lambda r: r.date < fields.Date.today())
-        to_post.action_post()
+        # _logger.info('Posting Journal Entries')
+        # to_post = records.filtered(lambda r: r.date < fields.Date.today())
+        # to_post.action_post()
 
         # TODO add some reconciliations. Not done initially because of perfs.
         # _logger.info('Registering Payments for Invoices and Bills')

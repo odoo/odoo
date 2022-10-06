@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="account.AccountAsynchronousDashboard" owl="1">
+        <t t-if='Object.keys(dashboard).length != 0'>
+            <t t-slot="default" t-props="dashboard"/>
+        </t>
+    </t>
+
+</templates>
