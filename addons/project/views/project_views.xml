@@ -18,7 +18,7 @@
                <search string="Tasks">
                     <field name="name" string="Task"/>
                     <field name="tag_ids"/>
-                    <field name="user_ids" filter_domain="[('user_ids', 'ilike', self), ('user_ids.active', 'in', [True, False])]"/>
+                    <field name="user_ids" filter_domain="[('user_ids.name', 'ilike', self), ('user_ids.active', 'in', [True, False])]"/>
                     <field string="Project" name="display_project_id"/>
                     <field name="stage_id"/>
                     <field name="partner_id" operator="child_of"/>
