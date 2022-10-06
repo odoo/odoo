@@ -862,8 +862,10 @@
                                     <t t-set="_form_classes" t-valuef="mb-2 mb-lg-0"/>
                                     <t t-set="_classes" t-value="'me-sm-2'"/>
                                 </t>
+                                <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
+                                <t t-set="hasPricelistDropdown" t-value="website_sale_pricelists and len(website_sale_pricelists)&gt;1"/>
                                 <t t-call="website_sale.pricelist_list">
-                                    <t t-set="_classes" t-valuef="ms-2 float-end"/>
+                                    <t t-set="_classes" t-valuef="d-lg-inline ms-2"/>
                                 </t>
                             </div>
                         </div>
