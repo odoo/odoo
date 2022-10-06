@@ -1,29 +1,25 @@
 /** @odoo-module */
 
-import { registry } from '@web/core/registry';
-import { useService } from "@web/core/utils/hooks";
+import { registry } from "@web/core/registry";
 
-import { formView } from '@web/views/form/form_view';
-import { FormController } from '@web/views/form/form_controller';
+import { formView } from "@web/views/form/form_view";
+import { Record, RelationalModel } from "@web/views/basic_relational_model";
 
-
-export class EmployeeProfileFormController extends FormController {
-    setup() {
-        super.setup();
-        this.action = useService('action');
-    }
-
-    async save(params = {}) {
-        const dirtyFields = this.model.root.dirtyFields.map((f) => f.name);
-        super.save(params);
-
-        if (dirtyFields.includes('lang')) {
-            this.action.doAction("reload_context");
+export class EmployeeProfileRecord extends Record {
+    async save() {
+        const dirtyFields = this.dirtyFields.map((f) => f.name);
+        const res = await super.save(...arguments);
+        if (dirtyFields.includes("lang")) {
+            this.model.actionService.doAction("reload_context");
         }
+        return res;
     }
 }
 
-registry.category('views').add('hr_employee_profile_form', {
+class EmployeeProfileModel extends RelationalModel {}
+EmployeeProfileModel.Record = EmployeeProfileRecord;
+
+registry.category("views").add("hr_employee_profile_form", {
     ...formView,
-    Controller: EmployeeProfileFormController,
+    Model: EmployeeProfileModel,
 });
