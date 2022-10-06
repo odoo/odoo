@@ -59,7 +59,7 @@ function parseGroupField(allFields, groupFieldString) {
 }
 
 const UNSUPPORTED_FIELD_TYPES = ["one2many", "binary", "html"];
-const NO_RECORD_AT_THIS_POSITION = Symbol("NO_RECORD_AT_THIS_POSITION");
+export const NO_RECORD_AT_THIS_POSITION = Symbol("NO_RECORD_AT_THIS_POSITION");
 
 function isNotSupported(fieldType) {
     return UNSUPPORTED_FIELD_TYPES.includes(fieldType);
