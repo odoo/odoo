@@ -472,7 +472,9 @@
         <t t-set="_activeClasses">border-primary</t>
         <div t-attf-class="o_wsale_apply_layout btn-group ms-3 {{_classes}}" t-att-data-active-classes="_activeClasses">
             <input type="radio" class="btn-check" name="wsale_products_layout" id="o_wsale_apply_grid"  t-att-checked="'checked' if layout_mode != 'list' else None" value="grid"/>
-            <label t-attf-class="btn btn-{{navClass}} #{_activeClasses if layout_mode != 'list' else None} fa fa-th-large o_wsale_apply_grid" title="Grid" for="o_wsale_apply_grid"/>
+            <label t-attf-class="btn btn-{{navClass}} #{_activeClasses if layout_mode != 'list' else None} o_wsale_apply_grid" title="Grid" for="o_wsale_apply_grid">
+                <i class="fa fa-th-large"/>
+            </label>
             <input type="radio" class="btn-check" name="wsale_products_layout" id="o_wsale_apply_list" t-att-checked="'checked' if layout_mode == 'list' else None" value="list"/>
             <label t-attf-class="btn btn-{{navClass}} #{_activeClasses if layout_mode == 'list' else None} o_wsale_apply_list" title="List" for="o_wsale_apply_list">
                 <i class="oi oi-view-list"/>
