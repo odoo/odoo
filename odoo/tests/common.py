@@ -1194,12 +1194,13 @@ class ChromeBrowser:
                 self._logger.debug('\n<- %s', msg)
             except websocket.WebSocketTimeoutException:
                 continue
-            except Exception:
+            except Exception as e:
                 # if the socket is still connected something bad happened,
                 # otherwise the client was just shut down
-                self._result.cancel()
                 if self.ws.connected:
+                    self._result.set_exception(e)
                     raise
+                self._result.cancel()
                 return
 
             res = json.loads(msg)
@@ -1486,15 +1487,27 @@ which leads to stray network requests and inconsistencies."""))
         }, timeout=timeout)['result']
         if res.get('subtype') == 'error':
             raise ChromeBrowserException("Running code returned an error: %s" % res)
-        # if the runcode was a promise which took some time to execute, discount
-        # that from the timeout
-        if self._result.result(time.time() - start + timeout) and not self.had_failure:
+
+        err = ChromeBrowserException("failed")
+        try:
+            # if the runcode was a promise which took some time to execute,
+            # discount that from the timeout
+            if self._result.result(time.time() - start + timeout) and not self.had_failure:
+                return
+        except CancelledError:
+            # regular-ish shutdown
             return
+        except Exception as e:
+            err = e
 
         self.take_screenshot()
         self._save_screencast()
-        raise ChromeBrowserException('Script timeout exceeded')
+        if isinstance(err, ChromeBrowserException):
+            raise err
 
+        if isinstance(err, concurrent.futures.TimeoutError):
+            raise ChromeBrowserException('Script timeout exceeded') from err
+        raise ChromeBrowserException("Unknown error") from err
 
     def navigate_to(self, url, wait_stop=False):
         self._logger.info('Navigating to: "%s"', url)
