@@ -21,21 +21,7 @@ const WidgetWrapper = require("web.WidgetWrapper");
 var _t = core._t;
 var QWeb = core.qweb;
 
-// var KANBAN_RECORD_COLORS = require('web.basic_fields').FieldColorPicker.prototype.RECORD_COLORS;
-var KANBAN_RECORD_COLORS = [
-    _t('No color'),
-    _t('Red'),
-    _t('Orange'),
-    _t('Yellow'),
-    _t('Light blue'),
-    _t('Dark purple'),
-    _t('Salmon pink'),
-    _t('Medium blue'),
-    _t('Dark blue'),
-    _t('Fushia'),
-    _t('Green'),
-    _t('Purple'),
-];
+var KANBAN_RECORD_COLORS = require('web.basic_fields').FieldColorPicker.prototype.RECORD_COLORS;
 var NB_KANBAN_RECORD_COLORS = KANBAN_RECORD_COLORS.length;
 
 const { Component } = owl;
