@@ -443,6 +443,9 @@
                 <xpath expr="//div[hasclass('oe_chatter')]" position="attributes">
                     <attribute name="class" remove="o-aside"/>
                 </xpath>
+                <xpath expr="//notebook/page[@name='mail_body']//field[@name='body_arch']" position="attributes">
+                    <attribute name="iframeHtmlClass">o_mass_mailing_iframe</attribute>
+                </xpath>
                 <xpath expr="//notebook/page[@name='mail_body']" position="after">
                     <!-- test_01_mass_mailing_editor_tour -->
                     <field name="body_html" invisible="1"/>
