@@ -52,6 +52,7 @@ export class FormCompiler extends ViewCompiler {
         this.encounteredFields = {};
         /** @type {Record<string, Element[]>} */
         this.labels = {};
+        this.noteBookId = 0;
         this.compilers.push(
             ...compilersRegistry.getAll(),
             { selector: "div[name='button_box']", fn: this.compileButtonBox },
@@ -483,6 +484,7 @@ export class FormCompiler extends ViewCompiler {
      * @returns {Element}
      */
     compileNotebook(el, params) {
+        const noteBookId = this.noteBookId++;
         const noteBook = createElement("Notebook");
         const pageAnchors = [...document.querySelectorAll("[href^=\\#]")]
             .map((a) => CSS.escape(a.getAttribute("href").substring(1)))
@@ -493,6 +495,15 @@ export class FormCompiler extends ViewCompiler {
             noteBook.setAttribute("className", toStringExpression(el.getAttribute("class")));
             el.removeAttribute("class");
         }
+
+        noteBook.setAttribute(
+            "defaultPage",
+            `props.record.isNew ? undefined : props.activeNotebookPages[${noteBookId}]`
+        );
+        noteBook.setAttribute(
+            "onPageUpdate",
+            `(page) => this.props.onNotebookPageChange(${noteBookId}, page)`
+        );
 
         for (const child of el.children) {
             if (getTag(child, true) !== "page") {
@@ -520,7 +531,10 @@ export class FormCompiler extends ViewCompiler {
             }
 
             if (child.getAttribute("autofocus") === "autofocus") {
-                noteBook.setAttribute("defaultPage", `"${pageId}"`);
+                noteBook.setAttribute(
+                    "defaultPage",
+                    `props.record.isNew ? "${pageId}" : (props.activeNotebookPages[${noteBookId}] || "${pageId}")`
+                );
             }
 
             for (const anchor of child.querySelectorAll("[href^=\\#]")) {
