@@ -2,6 +2,7 @@ odoo.define('utm.campaing_kanban_examples', function (require) {
 'use strict';
 
 var core = require('web.core');
+var kanbanExamplesRegistry = require('web.kanban_examples_registry');
 const { registry } = require("@web/core/registry");
 
 var _lt = core._lt;
@@ -32,6 +33,6 @@ const exampleData = {
     }],
 };
 
+kanbanExamplesRegistry.add('utm_campaign', exampleData);
 registry.category("kanban_examples").add("utm_campaign", exampleData);
-
 });

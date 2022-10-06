@@ -1,10 +1,12 @@
 /** @odoo-module **/
 
+import basic_fields from 'web.basic_fields';
 import { patch } from "@web/core/utils/patch";
 import { EmojisTextField} from '@mail/views/fields/emojis_text_field/emojis_text_field';
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 
+const DynamicPlaceholderFieldMixin = basic_fields.DynamicPlaceholderFieldMixin;
 /**
  * SmsWidget is a widget to display a textarea (the body) and a text representing
  * the number of SMS and the number of characters. This text is computed every
@@ -117,5 +119,5 @@ export class SmsWidget extends EmojisTextField {
 };
 SmsWidget.template = 'sms.SmsWidget';
 SmsWidget.additionalClasses = [...(EmojisTextField.additionalClasses || []), 'o_field_text'];
-
+patch(SmsWidget.prototype, 'sms_widget_dynamic_placeholder_field_mixin', DynamicPlaceholderFieldMixin);
 registry.category("fields").add("sms_widget", SmsWidget);

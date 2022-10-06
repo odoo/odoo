@@ -41,3 +41,8 @@ registry.category("preloadedData").add("crm_statusbar", {
     },
     preload: preloadStatusBar,
 });
+
+import { FieldStatus } from "web.relational_fields";
+import field_registry from "web.field_registry";
+
+field_registry.add("crm_statusbar", FieldStatus);

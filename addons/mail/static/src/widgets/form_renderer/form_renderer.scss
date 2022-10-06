@@ -1,0 +1,48 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_FormRenderer_chatterContainer {
+    flex: 1 0 auto;
+
+    &.o-aside {
+        border-left: $border-width solid;
+        padding: map-get($spacers, 0);
+        width: $o-chatter-min-width;
+
+        .o_Message.o-not-discussion {
+            border-width: $border-width 0;
+        }
+    }
+
+    &.o-isInFormSheetBg {
+        max-width: none;
+        background-color: $white;
+        margin-left: -$o-horizontal-padding;
+        margin-right: -$o-horizontal-padding;
+        width: auto;
+        border-top: 1px solid $border-color;
+    }
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_FormRenderer_chatterContainer.o-aside {
+    border-left-color: $border-color;
+}
+
+
+.o_FormRenderer_chatterContainer {
+    display: flex;
+    margin: 0 auto;
+    max-width: $o-form-view-sheet-max-width;
+    padding: map-get($spacers, 3) map-get($spacers, 3) map-get($spacers, 5);
+    width: 100%;
+}
+
+// FIX to hide chatter in dialogs when they are opened from an action returned by python code
+.modal .modal-dialog .o_form_view .o_FormRenderer_chatterContainer {
+    display: none;
+}
