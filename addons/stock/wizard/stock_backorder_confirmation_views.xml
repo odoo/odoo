@@ -6,13 +6,18 @@
         <field name="arch" type="xml">
             <form string="Backorder creation">
                 <group>
-                    <div><p name="explanation-text">
-                        You have processed less products than the initial demand.
-                    </p></div><div class="text-muted">
-                        Create a backorder if you expect to process the remaining
-                        products later. Do not create a backorder if you will not
-                        process the remaining products.
-                    </div>
+                    <group>
+                        <div colspan="2"><p name="explanation-text">
+                            You have processed less products than the initial demand.
+                        </p></div>
+                    </group>
+                    <group>
+                        <div colspan="2" class="text-muted">
+                            Create a backorder if you expect to process the remaining
+                            products later. Do not create a backorder if you will not
+                            process the remaining products.
+                        </div>
+                    </group>
                 </group>
 
                 <!-- Added to ensure a correct default_get behavior
