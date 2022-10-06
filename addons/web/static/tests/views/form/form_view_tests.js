@@ -1525,6 +1525,32 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test(
+        "modifiers pointing to empty x2manys are correctly evaluated",
+        async function (assert) {
+            const rec = serverData.models.partner.records.find((rec) => rec.id === 1);
+            rec.p = [];
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <div class="invisibleIfEmptyX2M" attrs='{"invisible": [ ["p", "==", []] ] }' />
+                        <field name="p">
+                            <tree><field name="display_name" /></tree>
+                        </field>
+                    </form>`,
+            });
+
+            assert.containsNone(target, "div.invisibleIfEmptyX2M");
+            await click(target.querySelector(".o_field_x2many_list_row_add a"));
+            await clickSave(document.querySelector(".modal"));
+            assert.containsOnce(target, "div.invisibleIfEmptyX2M");
+        }
+    );
+
     QUnit.test("reset local state when switching to another view", async function (assert) {
         serverData.views = {
             "partner,false,form": `

@@ -139,6 +139,10 @@ var x2ManyCommands = {
     }
 };
 
+const JsonParse = JSON.parse;
+const JsonStringify = JSON.stringify;
+const hasOwnProperty = Object.prototype.hasOwnProperty;
+
 var BasicModel = AbstractModel.extend({
     // constants
     OPEN_GROUP_LIMIT: 10, // after this limit, groups are automatically folded
@@ -3765,14 +3769,22 @@ var BasicModel = AbstractModel.extend({
                     return key in target || key in evalContext || key in fallbackContext;
                 },
                 get (target, key) {
+                    let value;
                     switch (true) {
                         case key in target:
-                            return target[key];
+                            value = target[key];
+                            break;
                         case key in evalContext:
-                            return evalContext[key];
+                            value = evalContext[key];
+                            break;
                         default:
-                            return fallbackContext[key];;
+                            value = fallbackContext[key];
+                            break;
                     }
+                    if (hasOwnProperty.call(value, "toJSON")) {
+                        value = JsonParse(JsonStringify(value))
+                    }
+                    return value;
                 },
                 ownKeys(target) {
                     return [...new Set([...Reflect.ownKeys(target), ...Object.keys(fallbackContext), ...Object.keys(evalContext)])];
