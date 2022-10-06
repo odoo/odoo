@@ -563,7 +563,7 @@ export class Record extends DataPoint {
     async urgentSave() {
         this._urgentSave = true;
         this.model.env.bus.trigger("RELATIONAL_MODEL:WILL_SAVE_URGENTLY");
-        this._save({ stayInEdition: true, noReload: true });
+        return this._save({ stayInEdition: true, noReload: true });
     }
 
     async archive() {

@@ -11454,7 +11454,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("Auto save: save on closing tab/browser", async function (assert) {
-        assert.expect(2);
+        assert.expect(4);
 
         await makeView({
             type: "form",
@@ -11469,6 +11469,7 @@ QUnit.module("Views", (hooks) => {
             resId: 1,
             mockRPC(route, { args, method, model }) {
                 if (method === "write" && model === "partner") {
+                    assert.step("save"); // should be called
                     assert.deepEqual(args, [[1], { display_name: "test" }]);
                 }
             },
@@ -11480,11 +11481,16 @@ QUnit.module("Views", (hooks) => {
         );
 
         await editInput(target, '.o_field_widget[name="display_name"] input', "test");
-        window.dispatchEvent(new Event("beforeunload"));
+        const evnt = new Event("beforeunload");
+        evnt.preventDefault = () => assert.step("prevented");
+        window.dispatchEvent(evnt);
         await nextTick();
+        assert.verifySteps(["save"], "should not prevent unload");
     });
 
     QUnit.test("Auto save: save on closing tab/browser (invalid field)", async function (assert) {
+        assert.expect(2);
+
         await makeView({
             type: "form",
             resModel: "partner",
@@ -11504,10 +11510,12 @@ QUnit.module("Views", (hooks) => {
         });
 
         await editInput(target, '.o_field_widget[name="display_name"] input', "");
-        window.dispatchEvent(new Event("beforeunload"));
+        const evnt = new Event("beforeunload");
+        evnt.preventDefault = () => assert.step("prevented");
+        window.dispatchEvent(evnt);
         await nextTick();
 
-        assert.verifySteps([], "should not save because of invalid field");
+        assert.verifySteps(["prevented"], "should not save because of invalid field");
     });
 
     QUnit.test("Auto save: save on closing tab/browser (not dirty)", async function (assert) {

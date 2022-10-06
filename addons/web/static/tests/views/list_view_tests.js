@@ -14731,7 +14731,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("Auto save: save on closing tab/browser", async function (assert) {
-        assert.expect(1);
+        assert.expect(3);
 
         await makeView({
             type: "list",
@@ -14743,6 +14743,7 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
             mockRPC(route, { args, method, model }) {
                 if (model === "foo" && method === "write") {
+                    assert.step("save"); // should be called
                     assert.deepEqual(args, [[1], { foo: "test" }]);
                 }
             },
@@ -14750,8 +14751,11 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_data_cell"));
         await editInput(target, '.o_data_cell [name="foo"] input', "test");
 
-        window.dispatchEvent(new Event("beforeunload"));
+        const evnt = new Event("beforeunload");
+        evnt.preventDefault = () => assert.step("prevented");
+        window.dispatchEvent(evnt);
         await nextTick();
+        assert.verifySteps(["save"]);
     });
 
     QUnit.test("Auto save: save on closing tab/browser (pending changes)", async function (assert) {
@@ -14781,6 +14785,8 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("Auto save: save on closing tab/browser (invalid field)", async function (assert) {
+        assert.expect(2);
+
         await makeView({
             type: "list",
             resModel: "foo",
@@ -14799,10 +14805,12 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_data_cell"));
         await editInput(target, '.o_data_cell [name="foo"] input', "");
 
-        window.dispatchEvent(new Event("beforeunload"));
+        const evnt = new Event("beforeunload");
+        evnt.preventDefault = () => assert.step("prevented");
+        window.dispatchEvent(evnt);
         await nextTick();
 
-        assert.verifySteps([], "should not save because of invalid field");
+        assert.verifySteps(["prevented"], "should not save because of invalid field");
     });
 
     QUnit.test(

@@ -250,7 +250,7 @@ export class Record extends DataPoint {
                     break;
                 case "one2many":
                 case "many2many":
-                    if (!(await this.checkX2ManyValidity(fieldName))) {
+                    if (!(await this.checkX2ManyValidity(fieldName, urgent))) {
                         this._setInvalidField(fieldName);
                     }
                     break;
@@ -313,10 +313,10 @@ export class Record extends DataPoint {
         return evalDomain(required, this.evalContext);
     }
 
-    async checkX2ManyValidity(fieldName) {
+    async checkX2ManyValidity(fieldName, urgent = false) {
         const list = this.data[fieldName];
         const record = list.editedRecord;
-        if (record && !(await record.checkValidity())) {
+        if (record && !(await record.checkValidity(urgent))) {
             if (record.canBeAbandoned && !record.isDirty) {
                 list.abandonRecord(record.id);
             } else {
@@ -505,10 +505,14 @@ export class Record extends DataPoint {
             data[fieldName] = mapWowlValueToLegacy(value, fieldType);
         }
         if (this._urgentSave) {
-            return this.model.__bm__.notifyChanges(this.__bm_handle__, data, {
+            const fieldNames = await this.model.__bm__.notifyChanges(this.__bm_handle__, data, {
                 viewType: this.__viewType,
                 notifyChange: false,
             });
+            resolveUpdatePromise();
+            this._removeInvalidFields(fieldNames);
+            this.__syncData();
+            return;
         }
 
         const parentID = this.model.__bm__.localData[this.__bm_handle__].parentID;
@@ -653,10 +657,15 @@ export class Record extends DataPoint {
         this.model.env.bus.trigger("RELATIONAL_MODEL:WILL_SAVE_URGENTLY");
         await Promise.resolve();
         this.__syncData();
-        if (this.isDirty && (await this.checkValidity(true))) {
-            this.model.__bm__.save(this.__bm_handle__, { reload: false });
+        let isValid = true;
+        if (this.isDirty) {
+            isValid = await this.checkValidity(true);
+            if (isValid) {
+                this.model.__bm__.save(this.__bm_handle__, { reload: false });
+            }
         }
         this.model.__bm__.bypassMutex = false;
+        return isValid;
     }
 
     async archive() {
