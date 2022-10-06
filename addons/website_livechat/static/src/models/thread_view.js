@@ -1,18 +1,20 @@
 /** @odoo-module **/
 
 import { registerPatch } from '@mail/model/model_core';
-import { attr } from '@mail/model/model_field';
+import { one } from '@mail/model/model_field';
+import { clear } from '@mail/model/model_field_command';
 
 registerPatch({
     name: 'ThreadView',
     fields: {
-        /**
-         * Determines whether visitor banner should be displayed.
-         */
-        hasVisitorBanner: attr({
+        visitorBanner: one('VisitorBannerView', {
             compute() {
-                return Boolean(this.thread && this.thread.visitor && this.threadViewer && this.threadViewer.discuss);
+                if (this.thread && this.thread.visitor && this.threadViewer && this.threadViewer.discuss) {
+                    return {};
+                }
+                return clear();
             },
+            inverse: 'owner',
         }),
     },
 });
