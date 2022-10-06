@@ -9,7 +9,7 @@
                 <t t-if="line.product_id.product_tmpl_id.id not in product_tmpl_ids">
                     <t t-set="product_tmpl_ids" t-value="product_tmpl_ids + [line.product_id.product_tmpl_id.id]"/>
                     <a t-att-id="line.id"/>
-                    <div class="alert alert-info alert-dismissable mt16 css_non_editable_mode_hidden o_not_editable" t-ignore="True" role="status">
+                    <div class="alert alert-info alert-dismissible mt16 css_non_editable_mode_hidden o_not_editable" t-ignore="True" role="status">
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         Product: <strong t-out="line.product_id.name"/>:
                         the content below will disappear if this

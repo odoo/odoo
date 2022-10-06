@@ -293,7 +293,7 @@
                     </div>
 
                     <!-- status messages -->
-                    <div t-if="message == 'sign_ok'" class="alert alert-success alert-dismissable d-print-none" role="status">
+                    <div t-if="message == 'sign_ok'" class="alert alert-success alert-dismissible d-print-none" role="status">
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         <strong>Thank You!</strong><br/>
                         <t t-if="message == 'sign_ok' and sale_order.state in ['sale', 'done']">
@@ -305,7 +305,7 @@
                         <t t-else="">Your order has been signed.</t>
                     </div>
 
-                    <div t-if="message == 'cant_reject'" class="alert alert-danger alert-dismissable d-print-none" role="alert">
+                    <div t-if="message == 'cant_reject'" class="alert alert-danger alert-dismissible d-print-none" role="alert">
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         Your order is not in a state to be rejected.
                     </div>
@@ -316,12 +316,12 @@
                         </t>
                     </t>
 
-                    <div t-if="sale_order.state == 'cancel'" class="alert alert-danger alert-dismissable d-print-none" role="alert">
+                    <div t-if="sale_order.state == 'cancel'" class="alert alert-danger alert-dismissible d-print-none" role="alert">
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
                         <strong>This quotation has been canceled.</strong> <a role="button" href="#discussion"><i class="fa fa-comment"/> Contact us to get a new quotation.</a>
                     </div>
 
-                    <div t-if="sale_order.is_expired" class="alert alert-warning alert-dismissable d-print-none" role="alert">
+                    <div t-if="sale_order.is_expired" class="alert alert-warning alert-dismissible d-print-none" role="alert">
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
                         <strong>This offer expired!</strong> <a role="button" href="#discussion"><i class="fa fa-comment"/> Contact us to get a new quotation.</a>
                     </div>
