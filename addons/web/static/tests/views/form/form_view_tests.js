@@ -2643,6 +2643,41 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_dialog .o_form_view .o_control_panel");
     });
 
+    QUnit.test("form views in dialogs closes on save", async function (assert) {
+        serverData.models.partner.records[0].foo = undefined;
+        delete serverData.models.partner.fields.foo.default;
+        serverData.views = {
+            "partner,false,form": `
+                <form>
+                    <field name="foo" required="1"/>
+                </form>`,
+        };
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "Partner",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [[false, "form"]],
+                target: "new",
+            },
+        };
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, 1);
+        assert.containsOnce(target, ".o_dialog .o_form_view", "the dialog has been opened");
+
+        await click(target.querySelector(".o_dialog .o_form_button_save"));
+        assert.containsOnce(
+            target,
+            ".o_dialog .o_form_view",
+            "the dialog is still opened as save failed"
+        );
+
+        editInput(target, "[name='foo'] input", "Gizmo");
+        await click(target.querySelector(".o_dialog .o_form_button_save"));
+        assert.containsNone(target, ".o_dialog .o_form_view", "the dialog has been closed");
+    });
+
     QUnit.test("form views in dialogs do not have class o_xxl_form_view", async function (assert) {
         const bus = new EventBus();
         registry.category("services").add("ui", {
