@@ -5,7 +5,7 @@ import { registerPatch } from '@mail/model/model_core';
 registerPatch({
     name: 'EmojiRegistry',
     recordMethods: {
-        async _populateFromEmojiData() {
+        async loadEmojiData() {
             const dataEmojiCategories = [
             {
                 "name": "Smileys & Emotion",
@@ -95,7 +95,7 @@ registerPatch({
                     ]
                 },
             ];
-            this._super(dataEmojiCategories, dataEmojis);
+            this._populateFromEmojiData(dataEmojiCategories, dataEmojis);
         },
     },
 });
