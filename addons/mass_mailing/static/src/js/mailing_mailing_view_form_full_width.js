@@ -105,12 +105,10 @@ export class MassMailingFullWidthViewController extends formView.Controller {
      */
     _onToggleFullscreen() {
         const $iframeDoc = this.$iframe.contents();
-        const iframeTarget = $iframeDoc.find('#iframe_target');
+        const html = $iframeDoc.find('html').get(0);
+        html.scrollTop = 0;
+        html.classList.toggle('o_fullscreen');
         const isFullscreen = this._isFullScreen();
-        iframeTarget.css({
-            display: isFullscreen ? '' : 'flex',
-            'flex-direction': isFullscreen ? '' : 'column',
-        });
         const wysiwyg = $iframeDoc.find('.note-editable').data('wysiwyg');
         if (wysiwyg && wysiwyg.snippetsMenu) {
             // Restore the appropriate scrollable depending on the mode.
@@ -118,6 +116,7 @@ export class MassMailingFullWidthViewController extends formView.Controller {
             wysiwyg.snippetsMenu.$scrollable = isFullscreen ? $iframeDoc.find('.note-editable') : this._$scrollable;
         }
         this._repositionMailingEditorSidebar();
+        this._resizeMailingEditorIframe();
     }
     /**
      * Return true if the mailing editor is in full screen mode, false
@@ -138,19 +137,18 @@ export class MassMailingFullWidthViewController extends formView.Controller {
      * @private
      */
     _resizeMailingEditorIframe() {
-        const VERTICAL_OFFSET = 12; // Vertical offset picked for visual design purposes.
-        const minHeight = $(window).height() - Math.abs(this.$iframe.offset().top) - (VERTICAL_OFFSET / 2);
+        const minHeight = $(window).height() - Math.abs(this.$iframe.offset().top);
         const $iframeDoc = this.$iframe.contents();
         const $themeSelectorNew = $iframeDoc.find('.o_mail_theme_selector_new');
         if ($themeSelectorNew.length) {
-            this.$iframe.height(Math.max($themeSelectorNew[0].scrollHeight + VERTICAL_OFFSET, minHeight));
+            this.$iframe.height(Math.max($themeSelectorNew[0].scrollHeight, minHeight));
         } else {
             const ref = $iframeDoc.find('#iframe_target')[0];
             if (ref) {
                 this.$iframe.css({
                     height: this._isFullScreen()
                         ? $(window).height()
-                        : Math.max(ref.scrollHeight + VERTICAL_OFFSET, minHeight),
+                        : Math.max(ref.scrollHeight, minHeight),
                 });
             }
         }

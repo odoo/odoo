@@ -562,6 +562,7 @@ MassMailingHtmlField.props = {
     ...HtmlField.props,
     filterTemplates: { type: Boolean, optional: true },
     inlineField: { type: String, optional: true },
+    iframeHtmlClass: { type: String, optional: true },
 };
 
 MassMailingHtmlField.displayName = _lt("Email");
@@ -572,6 +573,7 @@ MassMailingHtmlField.extractProps = (...args) => {
         ...htmlProps,
         filterTemplates: attrs.options.filterTemplates,
         inlineField: attrs.options['inline-field'],
+        iframeHtmlClass: attrs['iframeHtmlClass'],
     };
 };
 

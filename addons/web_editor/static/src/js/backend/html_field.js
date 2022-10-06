@@ -603,6 +603,7 @@ HtmlField.extractProps = ({ attrs, field }) => {
             noAttachment: attrs.options['no-attachment'],
             inIframe: Boolean(attrs.options.cssEdit),
             iframeCssAssets: attrs.options.cssEdit,
+            iframeHtmlClass: attrs.iframeHtmlClass,
             snippets: attrs.options.snippets,
             allowCommandVideo: Boolean(attrs.options.allowCommandVideo) && (!field.sanitize || !field.sanitize_tags),
             mediaModalParams: {
