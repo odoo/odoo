@@ -250,102 +250,6 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("with currency symbol after - float field", async function (assert) {
-        serverData.models.partner.records = [
-            {
-                id: 1,
-                float_field: 0,
-                monetary_field: 0,
-                currency_id: 2,
-            },
-        ];
-
-        await makeView({
-            type: "form",
-            serverData,
-            resModel: "partner",
-            resId: 1,
-            arch: `
-                <form>
-                    <field name="float_field" widget="monetary"/>
-                    <field name="currency_id" invisible="1"/>
-                </form>`,
-        });
-
-        assert.strictEqual(
-            target.querySelector(".o_field_widget input").value,
-            "0.00",
-            "The input should be rendered without the currency symbol."
-        );
-        assert.strictEqual(
-            target.querySelector(".o_field_widget input").parentNode.children[1].textContent,
-            "€",
-            "The input should be followed by a span containing the currency symbol."
-        );
-
-        await editInput(target, ".o_field_widget input", "108.2458938598598");
-        assert.strictEqual(
-            target.querySelector(".o_field_widget input").value,
-            "108.25",
-            "The value should be formatted on blur."
-        );
-
-        await clickSave(target);
-        assert.strictEqual(
-            target.querySelector(".o_field_widget input").value,
-            "108.25",
-            "The new value should be rounded properly."
-        );
-    });
-
-    QUnit.test("with currency symbol after - monetary field", async function (assert) {
-        serverData.models.partner.records = [
-            {
-                id: 1,
-                float_field: 0,
-                monetary_field: 0,
-                currency_id: 2,
-            },
-        ];
-
-        await makeView({
-            type: "form",
-            serverData,
-            resModel: "partner",
-            resId: 1,
-            arch: `
-                <form>
-                    <field name="monetary_field"/>
-                    <field name="currency_id" invisible="1"/>
-                </form>`,
-        });
-
-        assert.strictEqual(
-            target.querySelector(".o_field_widget input").value,
-            "0.00",
-            "The input should be rendered without the currency symbol."
-        );
-        assert.strictEqual(
-            target.querySelector(".o_field_widget input").parentNode.children[1].textContent,
-            "€",
-            "The input should be followed by a span containing the currency symbol."
-        );
-
-        await editInput(target, ".o_field_widget input", "108.2458938598598");
-        assert.strictEqual(
-            target.querySelector(".o_field_widget input").value,
-            "108.25",
-            "The value should be formatted on blur."
-        );
-
-        await clickSave(target);
-        assert.strictEqual(
-            target.querySelector(".o_field_widget input").value,
-            "108.25",
-            "The new value should be rounded properly."
-        );
-    });
-
     QUnit.test("with currency digits != 2 - float field", async function (assert) {
         // need to also add it to the session (as currencies are loaded there)
         patchWithCleanup(session, {
@@ -387,9 +291,9 @@ QUnit.module("Fields", (hooks) => {
             "The input should be rendered without the currency symbol."
         );
         assert.strictEqual(
-            target.querySelector(".o_field_widget input").parentNode.children[1].textContent,
+            target.querySelector(".o_field_widget input").parentNode.children[0].textContent,
             "Bs.F",
-            "The input should be followed by a span containing the currency symbol."
+            "The input should be preceded by a span containing the currency symbol."
         );
 
         await editInput(target, ".o_field_widget input", "99.111111111");
@@ -448,9 +352,9 @@ QUnit.module("Fields", (hooks) => {
             "The input should be rendered without the currency symbol."
         );
         assert.strictEqual(
-            target.querySelector(".o_field_widget input").parentNode.children[1].textContent,
+            target.querySelector(".o_field_widget input").parentNode.children[0].textContent,
             "Bs.F",
-            "The input should be followed by a span containing the currency symbol."
+            "The input should be preceded by a span containing the currency symbol."
         );
 
         await editInput(target, ".o_field_widget input", "99.111111111");
@@ -688,9 +592,9 @@ QUnit.module("Fields", (hooks) => {
         await click(euroM2OListItem);
 
         assert.strictEqual(
-            target.querySelector(".o_field_monetary div :first-child").value +
-                target.querySelector(".o_field_monetary div :last-child").textContent,
-            "4.20€",
+            target.querySelector(".o_field_monetary div :first-child").textContent +
+                target.querySelector(".o_field_monetary div :last-child").value,
+            "€4.20",
             "The value should be formatted with new currency on blur."
         );
 
@@ -732,9 +636,9 @@ QUnit.module("Fields", (hooks) => {
         await click(euroM2OListItem);
 
         assert.strictEqual(
-            target.querySelector(".o_field_monetary div :first-child").value +
-                target.querySelector(".o_field_monetary div :last-child").textContent,
-            "4.20€",
+            target.querySelector(".o_field_monetary div :first-child").textContent +
+                target.querySelector(".o_field_monetary div :last-child").value,
+            "€4.20",
             "The value should be formatted with new currency on blur."
         );
 
