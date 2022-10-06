@@ -107,7 +107,7 @@ QUnit.module("Record Component", (hooks) => {
         await mount(Parent, target, { env });
         assert.strictEqual(
             target.innerHTML,
-            '<span>hello</span><div name="foo" class="o_field_widget o_field_char"><span>yop</span></div>'
+            '<span>hello</span><div name="foo" class="o_field_widget w-100 o_field_char"><span>yop</span></div>'
         );
         assert.verifySteps([
             "/web/dataset/call_kw/partner/fields_get",
