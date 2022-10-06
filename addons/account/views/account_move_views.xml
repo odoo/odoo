@@ -184,7 +184,6 @@
                     <field name="tax_line_id" string="Originator Tax" optional="hide" readonly="1"/>
                     <field name="date_maturity" readonly="1" optional="hide"/>
                     <field name="balance" sum="Total Balance" optional="hide" readonly="1"/>
-                    <field name="cumulated_balance" readonly="1" optional="hide"/>
                     <field name="matching_number" readonly="1" optional="show"/>
                     <field name="amount_residual" sum="Total Residual" string="Residual" readonly="1" optional="hide" attrs="{'invisible':[('is_account_reconcile', '=', False)]}"/>
                     <field name="amount_residual_currency" sum="Total Residual in Currency" string="Residual in Currency" readonly="1" optional="hide" attrs="{'invisible':['|', ('is_same_currency', '=', True), ('is_account_reconcile', '=', False)]}"/>
@@ -248,7 +247,6 @@
             <field name="arch" type="xml">
                 <field name="account_id" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="balance" position="attributes"><attribute name="optional">show</attribute></field>
-                <field name="cumulated_balance" position="attributes"><attribute name="optional">show</attribute></field>
             </field>
         </record>
 
@@ -262,7 +260,6 @@
                 <field name="partner_id" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="date_maturity" position="attributes"><attribute name="optional">show</attribute></field>
                 <field name="balance" position="attributes"><attribute name="optional">show</attribute></field>
-                <field name="cumulated_balance" position="attributes"><attribute name="optional">show</attribute></field>
             </field>
         </record>
 
