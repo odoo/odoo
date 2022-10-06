@@ -381,6 +381,30 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.test("DateRangeField with label opens datepicker on click", async function (assert) {
+        serverData.models.partner.fields.date_end = { string: "Date End", type: "date" };
+        serverData.models.partner.records[0].date_end = "2017-02-08";
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <label for="date" string="Daterange" />
+                    <field name="date" widget="daterange" options="{'related_end_date': 'date_end'}"/>
+                    <field name="date_end" widget="daterange" options="{'related_start_date': 'date'}"/>
+                </form>`,
+        });
+
+        await click(target.querySelector("label.o_form_label"));
+        assert.isVisible(
+            document.querySelector(".daterangepicker[data-name='date']"),
+            "date range picker should be opened"
+        );
+    });
+
     QUnit.test(
         "Datetime field manually input value should send utc value to server",
         async function (assert) {
