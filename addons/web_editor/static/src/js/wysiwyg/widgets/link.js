@@ -105,13 +105,19 @@ const Link = Widget.extend({
             this.data.isNewWindow = this.data.isNewWindow || this.linkEl.target === '_blank';
         }
 
+        const classesToKeep = [
+            'text-wrap', 'text-nowrap', 'text-start', 'text-center', 'text-end',
+            'text-truncate',
+        ];
+        const keptClasses = this.data.iniClassName.split(' ').filter(className => classesToKeep.includes(className));
         const allBtnColorPrefixes = /(^|\s+)(bg|text|border)(-[a-z0-9_-]*)?/gi;
-        const allBtnClassSuffixes = /(^|\s+)btn(?!-block)(-[a-z0-9_-]*)?/gi;
+        const allBtnClassSuffixes = /(^|\s+)btn(-[a-z0-9_-]*)?/gi;
         const allBtnShapes = /\s*(rounded-circle|flat)\s*/gi;
         this.data.className = this.data.iniClassName
             .replace(allBtnColorPrefixes, ' ')
             .replace(allBtnClassSuffixes, ' ')
             .replace(allBtnShapes, ' ');
+        this.data.className += ' ' + keptClasses.join(' ');
         // 'o_submit' class will force anchor to be handled as a button in linkdialog.
         if (/(?:s_website_form_send|o_submit)/.test(this.data.className)) {
             this.isButton = true;
