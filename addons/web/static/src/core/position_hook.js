@@ -139,11 +139,11 @@ function getBestPosition(reference, popper, { container, margin, position }) {
 
             // Abort if outside container boundaries
             const directionOverflow =
-                Math.ceil(directionValue) < Math.ceil(directionMin) ||
-                Math.ceil(directionValue + directionSize) > Math.ceil(directionMax);
+                Math.ceil(directionValue) < Math.floor(directionMin) ||
+                Math.floor(directionValue + directionSize) > Math.ceil(directionMax);
             const variantOverflow =
-                Math.ceil(variantValue) < Math.ceil(variantMin) ||
-                Math.ceil(variantValue + variantSize) > Math.ceil(variantMax);
+                Math.ceil(variantValue) < Math.floor(variantMin) ||
+                Math.floor(variantValue + variantSize) > Math.ceil(variantMax);
             if (directionOverflow || variantOverflow) {
                 return null;
             }
