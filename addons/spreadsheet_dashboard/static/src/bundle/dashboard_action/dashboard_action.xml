@@ -50,7 +50,7 @@
                 </div>
                 <t t-else="">
                     <MobileFigureContainer t-if="env.isSmall" spreadsheetModel="dashboard.model" t-key="dashboard.id"/>
-                    <div t-else="" class="o_renderer" t-att-style="getStyle(dashboard.model)">
+                    <div t-else="" class="o_renderer">
                         <Spreadsheet
                             model="dashboard.model"
                             t-key="dashboard.id"/>
