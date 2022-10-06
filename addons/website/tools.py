@@ -48,7 +48,7 @@ def MockRequest(
             website_sale_current_pl=website_sale_current_pl,
         ),
         geoip={},
-        db=None,
+        db=env.registry.db_name,
         env=env,
         registry=env.registry,
         cr=env.cr,
