@@ -1,0 +1,285 @@
+<?xml version="1.0"  encoding="utf-8"?>
+<odoo>
+	<record id="account_fiscal_position_template_rrif_r1" model="account.fiscal.position.template">
+		<field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
+		<field name="sequence">1</field>
+		<field name="name">R1 partneri</field>
+		<field name="auto_apply" eval="True"/>
+		<field name="vat_required" eval="True"/>
+		<field name="country_id" ref="base.hr"/>
+		<field name="note"></field>
+	</record>
+
+	<record id="account_fiscal_position_template_rrif_eu" model="account.fiscal.position.template">
+		<field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
+		<field name="sequence">2</field>
+		<field name="name">EU Partneri</field>
+		<field name="note">- REVERSE CHARGE - Oslobođeno PDV-a temeljem čl.17. st.1 i čl.26.st.3. Zakona o PDV-u</field>
+		<field name="vat_required" eval="True"/>
+		<field name="auto_apply" eval="True"/>
+		<field name="country_group_id" ref="country_group_rrif_europe-hr"/>
+		<field name="tax_ids">
+			<!-- sales -->
+			<record id="fp_EU_tax_PDV25D_->_EUD" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pdv_25d"/>
+				<field name="tax_dest_id" ref="rrif_pdv_eud"/>
+			</record>
+			<record id="fp_EU_tax_PDV25U_->_EUU" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pdv_25u"/>
+				<field name="tax_dest_id" ref="rrif_pdv_euu"/>
+			</record>
+			<record id="fp_EU_tax_PDV13D_->_EUD" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pdv_13d"/>
+				<field name="tax_dest_id" ref="rrif_pdv_eud"/>
+			</record>
+			<record id="fp_EU_tax_PDV5D_->_EUD" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pdv_5d"/>
+				<field name="tax_dest_id" ref="rrif_pdv_eud"/>
+			</record>
+			<!-- purchases -->
+			<record id="fp_EU_tax_PP25D_->_EUD25" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pp_25d"/>
+				<field name="tax_dest_id" ref="rrif_eu_dobra_25"/>
+			</record>
+			<record id="fp_EU_tax_PP25U_->_EUU25" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pp_25u"/>
+				<field name="tax_dest_id" ref="rrif_eu_usluge_25"/>
+			</record>
+			<record id="fp_EU_tax_PP13D_->_EUD13" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pp_13d"/>
+				<field name="tax_dest_id" ref="rrif_eu_dobra_13"/>
+			</record>
+			<record id="fp_EU_tax_PP5D_->_EUD5" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pp_5d"/>
+				<field name="tax_dest_id" ref="rrif_eu_dobra_5"/>
+			</record>
+		</field>
+		<field name="account_ids">
+			<record id="fp_EU_account_1200_->_1210" model="account.fiscal.position.account.template">
+				<field name="account_src_id" ref="kp_rrif1200"/>
+				<field name="account_dest_id" ref="kp_rrif1210"/>
+			</record>
+			<record id="fp_EU_account_1201_->_1212" model="account.fiscal.position.account.template">
+				<field name="account_src_id" ref="kp_rrif1201"/>
+				<field name="account_dest_id" ref="kp_rrif1212"/>
+			</record>
+			<record id="fp_EU_account_1203_->_1214" model="account.fiscal.position.account.template">
+				<field name="account_src_id" ref="kp_rrif1202"/>
+				<field name="account_dest_id" ref="kp_rrif1214"/>
+			</record>
+			<!-- 22xx -->
+			<record id="fp_EU_account_2200_->_2210" model="account.fiscal.position.account.template">
+				<field name="account_src_id" ref="kp_rrif2200"/>
+				<field name="account_dest_id" ref="kp_rrif2210"/>
+			</record>
+			<record id="fp_EU_account_2201_->_2212" model="account.fiscal.position.account.template">
+				<field name="account_src_id" ref="kp_rrif2201"/>
+				<field name="account_dest_id" ref="kp_rrif2212"/>
+			</record>
+			<record id="fp_EU_account_2203_->_2214" model="account.fiscal.position.account.template">
+				<field name="account_src_id" ref="kp_rrif2202"/>
+				<field name="account_dest_id" ref="kp_rrif2214"/>
+			</record>
+
+			<record id="fp_EU_account_7500_->_7530" model="account.fiscal.position.account.template">
+				<field name="account_src_id" ref="kp_rrif7500"/>
+				<field name="account_dest_id" ref="kp_rrif7530"/>
+			</record>
+		</field>
+	</record>
+
+	<record id="account_fiscal_position_template_rrif_ino" model="account.fiscal.position.template">
+		<field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
+		<field name="sequence">3</field>
+		<field name="name">INO (nonEU) Partneri</field>
+		<field name="note">- REVERSE CHARGE - Oslobođeno PDV-a temeljem čl.17. st.1 i st.5. Zakona o PDV-u</field>
+		<field name="vat_required" eval="True"/>
+		<field name="auto_apply" eval="True"/>
+<!--		<field name="country_group_id" ref="country_group_rrif_europe-hr"/>-->
+		<field name="tax_ids">
+			<!-- sales -->
+			<record id="fp_EU_tax_PDV25D_->_IZV" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pdv_25d"/>
+				<field name="tax_dest_id" ref="rrif_pdv_izv"/>
+			</record>
+			<record id="fp_EU_tax_PDV25U_->_IZV" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pdv_25u"/>
+				<field name="tax_dest_id" ref="rrif_pdv_izv"/>
+			</record>
+			<record id="fp_EU_tax_PDV13D_->_IZV" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pdv_13d"/>
+				<field name="tax_dest_id" ref="rrif_pdv_izv"/>
+			</record>
+			<record id="fp_EU_tax_PDV5D_->_IZV" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pdv_5d"/>
+				<field name="tax_dest_id" ref="rrif_pdv_izv"/>
+			</record>
+			<!-- purchases -->
+			<record id="fp_EU_tax_PP25D_->_IN25" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pp_25d"/>
+				<field name="tax_dest_id" ref="rrif_import_25"/>
+			</record>
+			<record id="fp_EU_tax_PP25U_->_IN25" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pp_25u"/>
+				<field name="tax_dest_id" ref="rrif_import_25"/>
+			</record>
+			<record id="fp_EU_tax_PP13D_->_IN13" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pp_13d"/>
+				<field name="tax_dest_id" ref="rrif_import_13"/>
+			</record>
+			<record id="fp_EU_tax_PP5U_->_IN5" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pp_5d"/>
+				<field name="tax_dest_id" ref="rrif_import_5"/>
+			</record>
+		</field>
+		<field name="account_ids">
+			<record id="fp_INO_account_1200_->_1211" model="account.fiscal.position.account.template">
+				<field name="account_src_id" ref="kp_rrif1200"/>
+				<field name="account_dest_id" ref="kp_rrif1211"/>
+			</record>
+			<record id="fp_INO_account_1201_->_1213" model="account.fiscal.position.account.template">
+				<field name="account_src_id" ref="kp_rrif1201"/>
+				<field name="account_dest_id" ref="kp_rrif1213"/>
+			</record>
+			<record id="fp_INO_account_1203_->_1214" model="account.fiscal.position.account.template">
+				<field name="account_src_id" ref="kp_rrif1202"/>
+				<field name="account_dest_id" ref="kp_rrif1215"/>
+			</record>
+			<!-- 22xx -->
+			<record id="fp_INO_account_2200_->_2211" model="account.fiscal.position.account.template">
+				<field name="account_src_id" ref="kp_rrif2200"/>
+				<field name="account_dest_id" ref="kp_rrif2211"/>
+			</record>
+			<record id="fp_INO_account_2201_->_2213" model="account.fiscal.position.account.template">
+				<field name="account_src_id" ref="kp_rrif2201"/>
+				<field name="account_dest_id" ref="kp_rrif2213"/>
+			</record>
+			<record id="fp_INO_account_2203_->_2215" model="account.fiscal.position.account.template">
+				<field name="account_src_id" ref="kp_rrif2202"/>
+				<field name="account_dest_id" ref="kp_rrif2215"/>
+			</record>
+			<record id="fp_INO_account_7500_->_7531" model="account.fiscal.position.account.template">
+				<field name="account_src_id" ref="kp_rrif7500"/>
+				<field name="account_dest_id" ref="kp_rrif7531"/>
+			</record>
+		</field>
+	</record>
+
+	<record id="account_fiscal_position_template_rrif_avans" model="account.fiscal.position.template">
+		<field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
+		<field name="sequence">10</field>
+		<field name="name">AVANS</field>
+		<field name="note">AVANS / PREDUJAM</field>
+		<field name="vat_required" eval="True"/>
+<!--		<field name="auto_apply" eval="True"/>-->
+		<field name="country_id" ref="base.hr"/>
+<!--		<field name="country_group_id" ref="country_group_rrif_europe-hr"/>-->
+		<field name="tax_ids">
+			<!-- sale only -->
+			<record id="fp_EU_tax_PDV25D_->_PDV25A" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pdv_25d"/>
+				<field name="tax_dest_id" ref="rrif_pdv_25a"/>
+			</record>
+			<record id="fp_EU_tax_PDV25U_->_PDV25A" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pdv_25u"/>
+				<field name="tax_dest_id" ref="rrif_pdv_25a"/>
+			</record>
+			<record id="fp_EU_tax_PDV13D_->_PDV13A" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pdv_13u"/>
+				<field name="tax_dest_id" ref="rrif_pdv_13a"/>
+			</record>
+			<record id="fp_EU_tax_PDV5D_->_PDV5A" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pdv_5d"/>
+				<field name="tax_dest_id" ref="rrif_pdv_5a"/>
+			</record>
+		</field>
+<!--		<field name="account_ids"></field>-->
+	</record>
+
+	<record id="account_fiscal_position_template_rrif_ppo" model="account.fiscal.position.template">
+		<field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
+		<field name="sequence">10</field>
+		<field name="name">Tuzemni PPO</field>
+		<field name="note">- REVERSE CHARGE - Oslobođeno PDV-a temeljem čl.75. st.2. st.3. Zakona o PDV-u</field>
+		<field name="vat_required" eval="True"/>
+		<field name="country_id" ref="base.hr"/>
+<!--		<field name="country_group_id" ref="country_group_rrif_europe-hr"/>-->
+		<field name="tax_ids">
+			<!-- sales -->
+			<record id="fp_EU_tax_PDV25D_->_TPPO" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pdv_25d"/>
+				<field name="tax_dest_id" ref="rrif_pdv_tppo"/>
+			</record>
+			<record id="fp_EU_tax_PDV25U_->_TPPO" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pdv_25u"/>
+				<field name="tax_dest_id" ref="rrif_pdv_tppo"/>
+			</record>
+			<record id="fp_EU_tax_PDV13D_->_TPPO" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pdv_13u"/>
+				<field name="tax_dest_id" ref="rrif_pdv_tppo"/>
+			</record>
+			<record id="fp_EU_tax_PDV5D_->_TPPO" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pdv_5d"/>
+				<field name="tax_dest_id" ref="rrif_pdv_tppo"/>
+			</record>
+			<!-- purchases -->
+			<record id="fp_EU_tax_PP25D_->_PP_PPO25" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pp_25d"/>
+				<field name="tax_dest_id" ref="rrif_pp_tppo25"/>
+			</record>
+			<record id="fp_EU_tax_PP25U_->_PP_PPO25" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pp_25u"/>
+				<field name="tax_dest_id" ref="rrif_pp_tppo25"/>
+			</record>
+		</field>
+<!--		<field name="account_ids"></field>-->
+	</record>
+
+	<record id="account_fiscal_position_template_rrif_bs" model="account.fiscal.position.template">
+		<field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
+		<field name="sequence">5</field>
+		<field name="name">Bez sjedišta</field>
+		<field name="note">- REVERSE CHARGE - Oslobođeno PDV-a temeljem čl 17. stavka 1</field>
+		<field name="vat_required" eval="True"/>
+		<field name="auto_apply" eval="False"/>
+		<field name="country_group_id" ref="country_group_rrif_europe-hr"/>
+		<field name="tax_ids">
+			<!-- sales -->
+			<record id="fp_BS_tax_PDV25D_->_BS" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pdv_25d"/>
+				<field name="tax_dest_id" ref="rrif_pdv_bs"/>
+			</record>
+			<record id="fp_BS_tax_PDV25U_->_BS" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pdv_25u"/>
+				<field name="tax_dest_id" ref="rrif_pdv_bs"/>
+			</record>
+			<record id="fp_BS_tax_PDV13D_->_BS" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pdv_13d"/>
+				<field name="tax_dest_id" ref="rrif_pdv_bs"/>
+			</record>
+			<record id="fp_BS_tax_PDV5D_->_BS" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pdv_5d"/>
+				<field name="tax_dest_id" ref="rrif_pdv_bs"/>
+			</record>
+			<!-- purchases -->
+			<record id="fp_BS_tax_PP25D_->_PP_BS25" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pp_25d"/>
+				<field name="tax_dest_id" ref="rrif_non_resident_25"/>
+			</record>
+			<record id="fp_BS_tax_PP25U_->_PP_BS25" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pp_25u"/>
+				<field name="tax_dest_id" ref="rrif_non_resident_25"/>
+			</record>
+			<record id="fp_BS_tax_PP13D_->_PP_BS13" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pp_13d"/>
+				<field name="tax_dest_id" ref="rrif_non_resident_13"/>
+			</record>
+			<record id="fp_BS_tax_PP5D_->_PP_BS5" model="account.fiscal.position.tax.template">
+				<field name="tax_src_id" ref="rrif_pp_5d"/>
+				<field name="tax_dest_id" ref="rrif_non_resident_5"/>
+			</record>
+		</field>
+<!--		<field name="account_ids"></field>-->
+	</record>
+
+</odoo>
