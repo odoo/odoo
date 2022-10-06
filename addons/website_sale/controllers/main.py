@@ -466,6 +466,7 @@ class WebsiteSale(http.Controller):
             'layout_mode': layout_mode,
             'products_prices': products_prices,
             'get_product_prices': lambda product: lazy(lambda: products_prices[product.id]),
+            'float_round': tools.float_round,
         }
         if filter_by_price_enabled:
             values['min_price'] = min_price or available_min_price
