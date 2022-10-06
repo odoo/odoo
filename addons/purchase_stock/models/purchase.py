@@ -245,7 +245,9 @@ class PurchaseOrder(models.Model):
                     seq += 5
                     move.sequence = seq
                 moves._action_assign()
-                pickings.action_confirm()
+                # Get following pickings (created by push rules) to confirm them as well.
+                forward_pickings = self.env['stock.picking']._get_impacted_pickings(moves)
+                (pickings | forward_pickings).action_confirm()
                 picking.message_post_with_view('mail.message_origin_link',
                     values={'self': picking, 'origin': order},
                     subtype_id=self.env.ref('mail.mt_note').id)
@@ -331,6 +333,7 @@ class PurchaseOrderLine(models.Model):
                         elif (
                             move.location_dest_id.usage == "internal"
                             and move.location_id.usage != "supplier"
+                            and move.warehouse_id
                             and move.location_dest_id
                             not in self.env["stock.location"].search(
                                 [("id", "child_of", move.warehouse_id.view_location_id.id)]

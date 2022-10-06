@@ -8,16 +8,16 @@
 # Shaima Safar <shaima.safar@open-inside.com>, 2022
 # Samer Ali, 2022
 # Mustafa Rawi <mustafa@cubexco.com>, 2022
-# Martin Trigaux, 2022
 # Malaz Abuidris <msea@odoo.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:01+0000\n"
+"POT-Creation-Date: 2022-09-27 15:11+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1159,7 +1159,7 @@ msgstr "تمت إضافة رقم الخطة التلقائي "
 #. module: stock
 #. openerp-web
 #: code:addons/stock/models/stock_picking.py:0
-#: code:addons/stock/static/src/xml/forecast_widget.xml:0
+#: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__state__assigned
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__products_availability_state__available
 #, python-format
@@ -2787,7 +2787,7 @@ msgstr ""
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/forecast_widget.xml:0
+#: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #, python-format
 msgid "Exp"
 msgstr "المتوقع "
@@ -2954,7 +2954,7 @@ msgstr "المتوقعة "
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
+#: code:addons/stock/static/src/widgets/popover_widget.xml:0
 #, python-format
 msgid "Forecasted Date"
 msgstr "التاريخ المتوقع "
@@ -2991,7 +2991,7 @@ msgstr "الإيصالات المتوقعة "
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/forecast_widget.xml:0
+#: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #: model:ir.actions.client,name:stock.stock_replenishment_product_product_action
 #: model:ir.actions.report,name:stock.stock_replenishment_report_product_product_action
 #: model:ir.actions.report,name:stock.stock_replenishment_report_product_template_action
@@ -3838,6 +3838,13 @@ msgid "Json Lead Days"
 msgstr "مهلة توصيل Json "
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/widgets/popover_widget.js:0
+#, python-format
+msgid "Json Popup"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__json_replenishment_history
 msgid "Json Replenishment History"
 msgstr "سجل تجديد المخزون Json "
@@ -4108,7 +4115,7 @@ msgstr "مهلة التسليم "
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
+#: code:addons/stock/static/src/widgets/popover_widget.xml:0
 #, python-format
 msgid "Lead Times"
 msgstr "مهلة التسليمات "
@@ -4722,6 +4729,12 @@ msgid "New Transfer"
 msgstr "شحنة جديدة"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_lot__activity_calendar_event_id
+#: model:ir.model.fields,field_description:stock.field_stock_picking__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "الفعالية التالية في تقويم الأنشطة "
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_date_deadline
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_date_deadline
 msgid "Next Activity Deadline"
@@ -4874,7 +4887,7 @@ msgstr "عادي"
 #. module: stock
 #. openerp-web
 #: code:addons/stock/models/stock_picking.py:0
-#: code:addons/stock/static/src/xml/forecast_widget.xml:0
+#: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 #, python-format
 msgid "Not Available"
@@ -5111,7 +5124,7 @@ msgstr "الخيارات "
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
+#: code:addons/stock/static/src/views/stock_orderpoint_list_buttons.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.replenishment_option_warning_view
 #, python-format
 msgid "Order"
@@ -6830,7 +6843,7 @@ msgstr ""
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
+#: code:addons/stock/static/src/widgets/popover_widget.xml:0
 #, python-format
 msgid "Sales History"
 msgstr "سجل المبيعات "
@@ -7311,7 +7324,7 @@ msgstr "الحجم: الطول × العرض × الارتفاع "
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
+#: code:addons/stock/static/src/views/stock_orderpoint_list_buttons.xml:0
 #: model:ir.actions.act_window,name:stock.action_orderpoint_snooze
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_orderpoint_snooze
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
@@ -7823,7 +7836,7 @@ msgstr "أول قيمة في التسلسل هي القيمة الافتراضي
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
+#: code:addons/stock/static/src/widgets/popover_widget.xml:0
 #, python-format
 msgid "The forecasted stock on the"
 msgstr "المخزون المتوقع في "
@@ -8257,6 +8270,7 @@ msgstr "لعده "
 #: model:ir.actions.act_window,name:stock.action_picking_tree_ready
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "To Do"
 msgstr "المهام المراد تنفيذها"
 
@@ -8280,7 +8294,7 @@ msgstr "بانتظار إعادة الطلب "
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
+#: code:addons/stock/static/src/widgets/popover_widget.xml:0
 #, python-format
 msgid "Today"
 msgstr "اليوم"
@@ -9592,7 +9606,7 @@ msgstr "]<br/>الحد الأدنى:"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
+#: code:addons/stock/static/src/widgets/popover_widget.xml:0
 #, python-format
 msgid "below the inventory"
 msgstr "تحت المخزون "
@@ -9670,7 +9684,7 @@ msgstr "في"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
+#: code:addons/stock/static/src/widgets/popover_widget.xml:0
 #, python-format
 msgid "is"
 msgstr "هو "
@@ -9682,7 +9696,7 @@ msgstr "يدوياً لتشغيل قواعد إعادة الطلب الآن. "
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
+#: code:addons/stock/static/src/widgets/popover_widget.xml:0
 #, python-format
 msgid "minimum of"
 msgstr "حد أدنى "
@@ -9711,7 +9725,7 @@ msgstr "report_stock_quantity_graph"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
+#: code:addons/stock/static/src/widgets/popover_widget.xml:0
 #, python-format
 msgid "should be replenished"
 msgstr "يجب تجديده "
@@ -9725,7 +9739,7 @@ msgstr ""
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
+#: code:addons/stock/static/src/widgets/popover_widget.xml:0
 #, python-format
 msgid "to reach the maximum of"
 msgstr "للوصول إلى الحد الأقصى لـ"

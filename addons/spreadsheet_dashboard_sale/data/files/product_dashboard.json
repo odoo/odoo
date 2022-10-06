@@ -448,7 +448,6 @@
                     "tag": "chart",
                     "data": {
                         "title": "",
-                        "id": "e35856cf-9090-489b-b055-2d441380d954",
                         "background": "#FFFFFF",
                         "legendPosition": "none",
                         "metaData": {
@@ -485,14 +484,13 @@
                     "tag": "chart",
                     "data": {
                         "title": "",
-                        "id": "d0171069-d2cd-4c2c-a686-cd7515e93bb5",
                         "background": "#FFFFFF",
                         "legendPosition": "none",
                         "metaData": {
                             "groupBy": [
                                 "product_id"
                             ],
-                            "measure": "__count",
+                            "measure": "product_uom_qty",
                             "order": "DESC",
                             "resModel": "sale.report"
                         },
@@ -528,7 +526,7 @@
                         "type": "scorecard",
                         "background": "",
                         "baseline": "Data!C2",
-                        "baselineDescr": "units sold",
+                        "baselineDescr": "sold",
                         "keyValue": "Data!B2"
                     }
                 },
@@ -595,12 +593,12 @@
                 "C2": {
                     "style": 6,
                     "format": 2,
-                    "content": "=ODOO.PIVOT(1,\"__count\",\"#product_id\",1)"
+                    "content": "=ODOO.PIVOT(1,\"product_uom_qty\",\"#product_id\",1)"
                 },
                 "C3": {
                     "style": 6,
                     "format": 2,
-                    "content": "=ODOO.PIVOT(2,\"__count\",\"#categ_id\",1)"
+                    "content": "=ODOO.PIVOT(2,\"product_uom_qty\",\"#categ_id\",1)"
                 },
                 "D1": {
                     "style": 6,
@@ -696,6 +694,9 @@
             "id": "1",
             "measures": [
                 {
+                    "field": "product_uom_qty"
+                },
+                {
                     "field": "__count"
                 },
                 {
@@ -725,6 +726,9 @@
             "domain": [],
             "id": "2",
             "measures": [
+                {
+                    "field": "product_uom_qty"
+                },
                 {
                     "field": "__count"
                 },

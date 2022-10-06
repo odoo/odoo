@@ -35,7 +35,12 @@ export class X2ManyField extends Component {
             this.isMany2Many
         );
 
-        const archInfo = this.activeField.views[this.viewMode];
+        let archInfo;
+        if (this.viewMode) {
+            archInfo = this.activeField.views[this.viewMode];
+        } else {
+            archInfo = {};
+        }
         const subViewActiveActions = archInfo.activeActions;
         this.activeActions = useActiveActions({
             crudOptions: Object.assign({}, this.activeField.options, {
@@ -62,6 +67,7 @@ export class X2ManyField extends Component {
             getList: () => this.list,
             saveRecord,
             updateRecord,
+            withParentId: this.activeField.widget !== "many2many",
         });
         this._openRecord = (params) => {
             const activeElement = document.activeElement;
@@ -89,10 +95,9 @@ export class X2ManyField extends Component {
     }
 
     get displayAddButton() {
-        const { canCreate, canLink } = this.activeActions;
         return (
             this.viewMode === "kanban" &&
-            (canLink !== undefined ? canLink : canCreate) &&
+            ("link" in this.activeActions ? this.activeActions.link : this.activeActions.create) &&
             !this.props.readonly
         );
     }

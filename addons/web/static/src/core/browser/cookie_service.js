@@ -36,6 +36,8 @@ function makeCookieService() {
     }
     let cookie = getCurrent();
     function setCookie(key, value, ttl) {
+        // TODO When this will be used from website pages, recover the
+        // optional cookie mechanism.
         document.cookie = cookieToString(key, value, ttl);
         cookie = getCurrent();
     }

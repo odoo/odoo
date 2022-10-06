@@ -207,7 +207,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             this.userService.context,
             {
                 website_id: this.websiteService.currentWebsite.id,
-                lang: (this.websiteService.pageDocument.documentElement.getAttribute('lang') || 'en_US').replace('-', '_'),
+                lang: this.websiteService.currentWebsite.metadata.lang,
             },
         );
     }
@@ -279,6 +279,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             showEmptyElementHint: false,
             getReadOnlyAreas: this._getReadOnlyAreas.bind(this),
             getUnremovableElements: this._getUnremovableElements.bind(this),
+            direction: this.websiteService.currentWebsite.metadata.direction,
             ...this.props.wysiwygOptions,
         };
     }

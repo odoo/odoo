@@ -54,5 +54,5 @@ registerModel({
         emojiGridViewAsHovered: one('EmojiGridView', {
             inverse: 'hoveredEmojiView',
         }),
-    }
+    },
 });

@@ -1789,10 +1789,6 @@ export class DynamicRecordList extends DynamicList {
         return this.records.find((r) => r.isInQuickCreation);
     }
 
-    get quickCreateRecordIndex() {
-        return this.records.findIndex((r) => r.isInQuickCreation);
-    }
-
     // -------------------------------------------------------------------------
     // Public
     // -------------------------------------------------------------------------
@@ -1943,7 +1939,7 @@ export class DynamicRecordList extends DynamicList {
         }
     }
 
-    async quickCreate(activeFields, context, atFirstPosition = true) {
+    async quickCreate(activeFields, context) {
         await this.model.mutex.getUnlockedDef();
         const record = this.quickCreateRecord;
         if (record) {
@@ -1953,10 +1949,7 @@ export class DynamicRecordList extends DynamicList {
             parent: this.rawContext,
             make: () => makeContext([context, {}]),
         };
-        return this.createRecord(
-            { activeFields, rawContext, isInQuickCreation: true },
-            atFirstPosition
-        );
+        return this.createRecord({ activeFields, rawContext, isInQuickCreation: true }, true);
     }
 
     /**
@@ -2223,6 +2216,11 @@ export class DynamicGroupList extends DynamicList {
         return false;
     }
 
+    hasAggregate(fieldName) {
+        const group = this.groups[0];
+        return group && fieldName in group.aggregates;
+    }
+
     async load(params = {}) {
         this.limit = params.limit === undefined ? this.limit : params.limit;
         this.offset = params.offset === undefined ? this.offset : params.offset;
@@ -2245,7 +2243,7 @@ export class DynamicGroupList extends DynamicList {
         return this.groups.reduce((acc, group) => acc + group.count, 0);
     }
 
-    async quickCreate(group, atFirstPosition = true) {
+    async quickCreate(group) {
         group = group || this.groups[0];
         if (this.model.useSampleModel) {
             // Empty the groups because they contain sample data
@@ -2261,7 +2259,7 @@ export class DynamicGroupList extends DynamicList {
         if (isFolded) {
             await group.toggle();
         }
-        await group.quickCreate(this.quickCreateInfo.activeFields, this.context, atFirstPosition);
+        await group.quickCreate(this.quickCreateInfo.activeFields, this.context);
     }
 
     /**
@@ -2295,6 +2293,20 @@ export class DynamicGroupList extends DynamicList {
             : this.resModel;
         this.groups = await this._resequence(this.groups, resModel, ...arguments);
         this.model.notify();
+    }
+
+    async sortBy(fieldName) {
+        if (!this.groups.length) {
+            return;
+        }
+        const everyGroupIsClosed = this.groups.every((group) => group.isFolded);
+        if (
+            everyGroupIsClosed &&
+            !(this.groupBy.includes(fieldName) || this.hasAggregate(fieldName))
+        ) {
+            return;
+        }
+        super.sortBy(fieldName);
     }
 
     // ------------------------------------------------------------------------
@@ -2368,6 +2380,7 @@ export class DynamicGroupList extends DynamicList {
                 orderby,
                 lazy: true,
                 expand: this.expand,
+                expand_orderby: this.expand ? orderByToString(this.orderBy) : null,
                 offset: this.offset,
                 limit: this.limit,
                 context: this.context,
@@ -2579,8 +2592,9 @@ export class Group extends DataPoint {
     /**
      * @see DynamicRecordList.deleteRecords
      */
-    async deleteRecords() {
-        return this.list.deleteRecords(...arguments);
+    async deleteRecords(records) {
+        this.count = this.count - records.length;
+        return this.list.deleteRecords(records);
     }
 
     empty() {
@@ -2655,12 +2669,12 @@ export class Group extends DataPoint {
         });
     }
 
-    quickCreate(activeFields, context, atFirstPosition = false) {
+    quickCreate(activeFields, context) {
         const ctx = {
             ...context,
             [`default_${this.groupByField.name}`]: this.getServerValue(),
         };
-        return this.list.quickCreate(activeFields, ctx, atFirstPosition);
+        return this.list.quickCreate(activeFields, ctx);
     }
 
     /**
@@ -3426,7 +3440,10 @@ export class RelationalModel extends Model {
                 return makeContext([rootParams.context], {});
             },
         };
-        const state = this.root ? this.root.exportState() : this.initialRootState;
+        const state = this.root
+            ? Object.assign(this.root.exportState(), { offset: 0 })
+            : this.initialRootState;
+
         const newRoot = this.createDataPoint(this.rootType, rootParams, state);
         await this.keepLast.add(newRoot.load({ values: this.initialValues }));
         this.root = newRoot;

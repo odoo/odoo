@@ -129,6 +129,7 @@
             'website/static/src/js/post_link.js',
             'website/static/src/js/plausible.js',
             'website/static/src/js/user_custom_javascript.js',
+            'website/static/src/js/http_cookie.js',
             'website/static/src/xml/website.xml',
             'website/static/src/xml/website.background.video.xml',
             'website/static/src/xml/website.share.xml',

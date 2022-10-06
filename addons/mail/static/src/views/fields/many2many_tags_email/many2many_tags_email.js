@@ -21,9 +21,9 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
         this.openMany2xRecord = useOpenMany2XRecord({
             resModel: this.props.relation,
             activeActions: {
-                canCreate: false,
-                canCreateEdit: false,
-                canWrite: true,
+                create: false,
+                createEdit: false,
+                write: true,
             },
             isToMany: true,
             onRecordSaved: async (record) => {
@@ -39,7 +39,7 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
         onMounted(this.checkEmails.bind(this, this.props));
         onWillUpdateProps(this.checkEmails.bind(this));
     }
-    
+
     async checkEmails(props) {
         const invalidRecords = props.value.records.filter((record) => !record.data.email);
         // Remove records with invalid data, open form view to edit those and readd them if they are updated correctly.
@@ -87,18 +87,8 @@ FieldMany2ManyTagsEmail.fieldsToFetch = Object.assign({},
     Many2ManyTagsField.fieldsToFetch,
     {email: {name: 'email', type: 'char'}}
 );
+
+FieldMany2ManyTagsEmail.additionalClasses = ["o_field_many2many_tags"];
+
 registry.category("fields").add("many2many_tags_email", FieldMany2ManyTagsEmail);
 
-/* fieldsToFetch are retrieved from legacy widget.. */
-import field_registry from 'web.field_registry';
-import relational_fields from 'web.relational_fields';
-
-var M2MTags = relational_fields.FieldMany2ManyTags;
-
-var FieldMany2ManyTagsEmailLegacy = M2MTags.extend({
-    fieldsToFetch: _.extend({}, M2MTags.prototype.fieldsToFetch, {
-        email: {type: 'char'},
-    }),
-});
-
-field_registry.add('many2many_tags_email', FieldMany2ManyTagsEmailLegacy);

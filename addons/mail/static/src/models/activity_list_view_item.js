@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
 import { auto_str_to_date } from 'web.time';
@@ -20,7 +20,7 @@ registerModel({
             popoverViewOwner.delete();
         },
         onClickMarkAsDone() {
-            this.update({ markDonePopoverView: this.markDonePopoverView ? clear() : {} });
+            this.update({ markDoneView: this.markDoneView ? clear() : {} });
         },
         /**
          * Handles the click on the upload document button. This open the file
@@ -98,9 +98,24 @@ registerModel({
             },
             inverse: 'activityListViewItemOwner',
         }),
-        markDoneButtonRef: attr(),
-        markDonePopoverView: one('PopoverView', {
-            inverse: 'activityListViewItemOwnerAsMarkDone',
+        hasEditButton: attr({
+            compute() {
+                return this.activity.chaining_type === 'suggest' && this.activity.canWrite;
+            },
+        }),
+        hasMarkDoneButton: attr({
+            compute() {
+                return !this.fileUploader;
+            },
+        }),
+        mailTemplateViews: many('MailTemplateView', {
+            compute() {
+                return this.activity.mailTemplates.map(mailTemplate => ({ mailTemplate }));
+            },
+            inverse: 'activityListViewItemOwner',
+        }),
+        markDoneView: one('ActivityMarkDonePopoverContentView', {
+            inverse: 'activityListViewItemOwner',
         }),
         webRecord: attr({
             compute() {

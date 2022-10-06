@@ -84,7 +84,7 @@
                 <field name="date_start" optional="hide" readonly="1"/>
                 <field name="date_finished" optional="hide" readonly="1"/>
                 <field name="duration_expected" widget="float_time" sum="expected duration"/>
-                <field name="duration" widget="mrp_time_counter"
+                <field name="duration" widget="mrp_timer"
                   attrs="{'invisible': [('production_state','=', 'draft')], 'readonly': [('is_user_working', '=', True)]}" sum="real duration"/>
                 <field name="state" widget="badge" decoration-warning="state == 'progress'" decoration-success="state == 'done'" decoration-danger="state == 'cancel'" decoration-info="state not in ('progress', 'done', 'cancel')"
                   attrs="{'invisible': [('production_state', '=', 'draft')], 'column_invisible': [('parent.state', '=', 'draft')]}"/>
@@ -420,7 +420,7 @@
                                 <div class="o_kanban_workorder_date">
                                     <h5><span class="d-flex" t-esc="record.date_planned_start.value or record.production_date.value"/></h5>
                                 </div>
-                                <div class="o_kanban_manage_button_section">
+                                <div>
                                     <h2 class="ml8">
                                         <span t-attf-class="badge #{['progress'].indexOf(record.state.raw_value) > -1 ? 'text-bg-warning' : ['ready', 'waiting', 'pending'].indexOf(record.state.raw_value) > -1 ? 'text-bg-primary' : ['done'].indexOf(record.state.raw_value) > -1 ? 'text-bg-success' : 'text-bg-danger'}">
                                             <t t-out="record.state.value"/>

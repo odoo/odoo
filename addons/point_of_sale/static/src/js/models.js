@@ -409,7 +409,9 @@ class PosGlobalState extends PosModel {
         if (json) {
             options.json = json;
         }
-        let order = Order.create({}, options);
+        return this.makeOrderReactive(Order.create({}, options));
+    }
+    makeOrderReactive(order) {
         const batchedCallback = batched(() => {
             this._onReactiveOrderUpdated(order)
         });

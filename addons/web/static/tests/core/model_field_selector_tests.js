@@ -68,8 +68,6 @@ QUnit.module("Components", (hooks) => {
     QUnit.module("ModelFieldSelector");
 
     QUnit.test("creating a field chain from scratch", async (assert) => {
-        assert.expect(15);
-
         function getValueFromDOM(el) {
             return [...el.querySelectorAll(".o_field_selector_chain_part")]
                 .map((part) => part.textContent.trim())
@@ -187,6 +185,7 @@ QUnit.module("Components", (hooks) => {
 
         // Remove the current selection and recreate it again
         await click(target, ".o_field_selector");
+        await click(target, ".o_field_selector_prev_page");
         await click(target, ".o_field_selector_prev_page");
         await click(target, ".o_field_selector_close");
 
@@ -415,5 +414,108 @@ QUnit.module("Components", (hooks) => {
         });
 
         assert.verifySteps(["fields_get"]);
+    });
+
+    QUnit.test("Using back button in popover", async (assert) => {
+        serverData.models.partner.fields.partner_id = {
+            string: "Partner",
+            type: "many2one",
+            relation: "partner",
+            searchable: true,
+        };
+
+        class Parent extends Component {
+            setup() {
+                this.fieldName = "partner_id.foo";
+            }
+            onUpdate(value) {
+                this.fieldName = value;
+                this.render();
+            }
+        }
+        Parent.components = { ModelFieldSelector };
+        Parent.template = xml`
+            <ModelFieldSelector
+                readonly="false"
+                resModel="'partner'"
+                fieldName="fieldName"
+                update="(value) => this.onUpdate(value)"
+            />
+        `;
+
+        await mountComponent(Parent);
+
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_field_selector_value span")].map((el) => el.innerText),
+            ["Partner", "Foo"]
+        );
+        assert.containsNone(target, ".o_field_selector i.o_field_selector_warning");
+
+        await click(target, ".o_field_selector");
+        await click(target, ".o_field_selector_prev_page");
+
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_field_selector_value span")].map((el) => el.innerText),
+            ["Partner"]
+        );
+        assert.containsNone(target, ".o_field_selector i.o_field_selector_warning");
+
+        await click(target, ".o_field_selector_prev_page");
+
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_field_selector_value span")].map((el) => el.innerText),
+            [""]
+        );
+        assert.containsOnce(target, ".o_field_selector i.o_field_selector_warning");
+
+        await click(target, ".o_field_selector_popover .o_field_selector_item:nth-child(1)");
+
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_field_selector_value span")].map((el) => el.innerText),
+            ["Bar"]
+        );
+
+        assert.containsNone(target, ".o_field_selector_popover");
+    });
+
+    QUnit.test("can follow relations", async (assert) => {
+        await mountComponent(ModelFieldSelector, {
+            props: {
+                readonly: false,
+                fieldName: "",
+                resModel: "partner",
+                followRelations: true, // default
+                update(value) {
+                    assert.strictEqual(value, "product_id");
+                },
+            },
+        });
+
+        await click(target, ".o_field_selector");
+        assert.containsOnce(
+            target,
+            ".o_field_selector_item:last-child .o_field_selector_relation_icon"
+        );
+        await click(target, ".o_field_selector_item:last-child .o_field_selector_relation_icon");
+        assert.containsOnce(target, ".o_popover");
+    });
+
+    QUnit.test("cannot follow relations", async (assert) => {
+        await mountComponent(ModelFieldSelector, {
+            props: {
+                readonly: false,
+                fieldName: "",
+                resModel: "partner",
+                followRelations: false,
+                update(value) {
+                    assert.strictEqual(value, "product_id");
+                },
+            },
+        });
+
+        await click(target, ".o_field_selector");
+        assert.containsNone(target, ".o_field_selector_relation_icon");
+        await click(target, ".o_field_selector_item:last-child");
+        assert.containsNone(target, ".o_popover");
     });
 });

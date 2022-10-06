@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"POT-Creation-Date: 2022-09-27 15:12+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -41,7 +41,7 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"        Beheer waar uw programma beschikbaar moet zijn voor gebruik.\n"
+"        Beheer waar je programma beschikbaar moet zijn voor gebruik.\n"
 "        "
 
 #. module: loyalty
@@ -256,7 +256,7 @@ msgid ""
 "<span class=\"fw-bold text-decoration-underline\">Grant</span>\n"
 "                                    <br/>"
 msgstr ""
-"<span class=\"fw-bold text-decoration-underline\">Grant</span>\n"
+"<span class=\"fw-bold text-decoration-underline\">Toekennen</span>\n"
 "                                    <br/>"
 
 #. module: loyalty
@@ -266,7 +266,7 @@ msgid ""
 "                                    <br/>\n"
 "                                    the value of the coupon"
 msgstr ""
-"<span class=\"fw-bold text-decoration-underline\">Grant</span>\n"
+"<span class=\"fw-bold text-decoration-underline\">Toekennen</span>\n"
 "                                    <br/>\n"
 "                                    de waarde van de coupon"
 
@@ -309,12 +309,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_form
 msgid ""
 "<span colspan=\"2\" attrs=\"{'invisible': [('program_type', '!=', "
-"'coupons')]}\">Grant the amount of coupon popints defined as the coupon "
+"'coupons')]}\">Grant the amount of coupon points defined as the coupon "
 "value</span>"
 msgstr ""
-"<span colspan=\"2\" attrs=\"{'invisible': [('program_type', '!=', "
-"'coupons')]}\">Verleen het aantal couponpopints gedefinieerd als de "
-"couponwaarde</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -410,7 +407,7 @@ msgstr ""
 "            Gefeliciteerd <t t-out=\"object._get_mail_partner().name of ''\">Brandon Freeman</t>,<br/>\n"
 "        </t>\n"
 "\n"
-"        Hier is uw beloning van <t t-out=\"object.program_id.company_id.name of ''\">Uw Bedrijf</t>.<br/>\n"
+"        Hier is je beloning van <t t-out=\"object.program_id.company_id.name of ''\">Jouw bedrijf</t>.<br/>\n"
 "\n"
 "        <t t-foreach=\"object.program_id.reward_ids\" t-as=\"beloning\">\n"
 "            <t t-if=\"beloning.required_points &lt;= object.points\">\n"
@@ -473,7 +470,7 @@ msgstr "Een programma moet minimaal één beloning hebben."
 #: code:addons/loyalty/models/loyalty_card.py:0
 #, python-format
 msgid "A trigger with the same code as one of your coupon already exists."
-msgstr "Er bestaat al een trigger met dezelfde code als een van uw coupons."
+msgstr "Er bestaat al een trigger met dezelfde code als een van je coupons."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_needaction
@@ -800,7 +797,7 @@ msgid ""
 " for rewards."
 msgstr ""
 "Definieer kortingscodes op voorwaardelijke regels en deel deze vervolgens "
-"met uw klanten voor beloningen."
+"met je klanten voor beloningen."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__description
@@ -907,7 +904,7 @@ msgid ""
 "next purchase when a customer buys something in your store."
 msgstr ""
 "Stimuleer herhalingsaankopen door een unieke couponcode voor eenmalig "
-"gebruik te sturen voor de volgende aankoop wanneer een klant iets in uw "
+"gebruik te sturen voor de volgende aankoop wanneer een klant iets in je "
 "winkel koopt."
 
 #. module: loyalty
@@ -951,7 +948,7 @@ msgstr "Trouwkaarten"
 #, python-format
 msgid "Fill in your eWallet, and use it to pay future orders"
 msgstr ""
-"Vul uw eWallet in en gebruik deze om toekomstige bestellingen te betalen"
+"Vul je eWallet in en gebruik deze om toekomstige bestellingen te betalen"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_follower_ids
@@ -1138,7 +1135,7 @@ msgstr "ID"
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Indien aangevinkt, vragen nieuwe berichten uw aandacht."
+msgstr "Indien aangevinkt, vragen nieuwe berichten je aandacht."
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_has_error
@@ -1380,7 +1377,7 @@ msgstr "Order"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__partner_id
 msgid "Partner"
-msgstr "Partner"
+msgstr "Relatie"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_form
@@ -1845,22 +1842,22 @@ msgstr "Je kunt een programma in een actieve staat niet verwijderen"
 #. module: loyalty
 #: model:mail.template,report_name:loyalty.mail_template_loyalty_card
 msgid "Your Coupon Code"
-msgstr "Uw couponcode"
+msgstr "Je couponcode"
 
 #. module: loyalty
 #: model:mail.template,report_name:loyalty.mail_template_gift_card
 msgid "Your Gift Card"
-msgstr "Uw cadeaukaart"
+msgstr "Je cadeaukaart"
 
 #. module: loyalty
 #: model:mail.template,subject:loyalty.mail_template_gift_card
 msgid "Your Gift Card at {{ object.company_id.name }}"
-msgstr "Uw cadeaukaart bij {{ object.company_id.name }}"
+msgstr "Je cadeaukaart bij {{ object.company_id.name }}"
 
 #. module: loyalty
 #: model:mail.template,subject:loyalty.mail_template_loyalty_card
 msgid "Your reward coupon from {{ object.program_id.company_id.name }} "
-msgstr "Uw beloningscoupon van {{ object.program_id.company_id.name }} "
+msgstr "Je beloningscoupon van {{ object.program_id.company_id.name }} "
 
 #. module: loyalty
 #: model:mail.template,name:loyalty.mail_template_loyalty_card
@@ -1944,7 +1941,7 @@ msgid ""
 "on your order\n"
 "                                        <br/>"
 msgstr ""
-"op uw bestelling\n"
+"op je bestelling\n"
 "                                        <br/>"
 
 #. module: loyalty
@@ -1996,4 +1993,4 @@ msgstr "gebruik"
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "your order"
-msgstr "jouw bestelling"
+msgstr "je bestelling"

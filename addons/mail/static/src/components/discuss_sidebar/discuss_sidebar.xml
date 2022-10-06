@@ -3,7 +3,7 @@
 
     <t t-name="mail.DiscussSidebar" owl="1">
         <t t-if="discussView">
-            <div name="root" class="o_DiscussSidebar d-flex flex-column" t-attf-class="{{ className }}" t-ref="root">
+            <div name="root" class="o_DiscussSidebar d-flex flex-column overflow-auto" t-attf-class="{{ className }}" t-ref="root">
                 <div class="d-flex justify-content-center">
                     <button class="o_DiscussSidebar_startAMeetingButton btn btn-primary rounded" title="Start a meeting" t-on-click="discussView.onClickStartAMeetingButton">
                         Start a meeting

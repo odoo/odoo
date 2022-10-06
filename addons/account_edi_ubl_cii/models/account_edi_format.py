@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, _
-from odoo.tools import str2bool
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import COUNTRY_EAS
 
 import logging
@@ -48,7 +47,9 @@ class AccountEdiFormat(models.Model):
     def _get_xml_builder(self, company):
         # see https://communaute.chorus-pro.gouv.fr/wp-content/uploads/2017/08/20170630_Solution-portail_Dossier_Specifications_Fournisseurs_Chorus_Facture_V.1.pdf
         # page 45 -> ubl 2.1 for France seems also supported
-        if self.code == 'facturx_1_0_05':
+        # Only show the Factur-X option for DE and FR companies. When generating the PDF, add a Factur-X xml if there
+        # isn't an existing one. So there's always a Factur-X in the PDF, even without the option.
+        if self.code == 'facturx_1_0_05' and company.country_id.code in ['DE', 'FR']:
             return self.env['account.edi.xml.cii']
         # if the company's country is not in the EAS mapping, nothing is generated
         # 'NO' has to be present in COUNTRY_EAS
@@ -74,14 +75,6 @@ class AccountEdiFormat(models.Model):
     # Export: Account.edi.format override
     ####################################################
 
-    def _is_required_for_invoice(self, invoice):
-        # EXTENDS account_edi
-        self.ensure_one()
-        if self.code not in FORMAT_CODES:
-            return super()._is_required_for_invoice(invoice)
-
-        return self._is_ubl_cii_available(invoice.company_id) and invoice.move_type in ('out_invoice', 'out_refund')
-
     def _is_compatible_with_journal(self, journal):
         # EXTENDS account_edi
         # the formats appear on the journal only if they are compatible (e.g. NLCIUS only appear for dutch companies)
@@ -92,45 +85,55 @@ class AccountEdiFormat(models.Model):
 
     def _is_enabled_by_default_on_journal(self, journal):
         # EXTENDS account_edi
-        # only facturx is enabled by default, the other formats aren't
         self.ensure_one()
         if self.code not in FORMAT_CODES:
             return super()._is_enabled_by_default_on_journal(journal)
-        return self.code == 'facturx_1_0_05'
+        return False
 
-    def _post_invoice_edi(self, invoices):
+    def _ubl_cii_post_invoice(self, invoice):
         # EXTENDS account_edi
         self.ensure_one()
 
-        if self.code not in FORMAT_CODES:
-            return super()._post_invoice_edi(invoices)
+        builder = self._get_xml_builder(invoice.company_id)
+        # For now, the errors are not displayed anywhere, don't want to annoy the user
+        xml_content, errors = builder._export_invoice(invoice)
 
-        res = {}
-        for invoice in invoices:
-            builder = self._get_xml_builder(invoice.company_id)
-            # For now, the errors are not displayed anywhere, don't want to annoy the user
-            xml_content, errors = builder._export_invoice(invoice)
+        # DEBUG: send directly to the test platform (the one used by ecosio)
+        #response = self.env['account.edi.common']._check_xml_ecosio(invoice, xml_content, builder._export_invoice_ecosio_schematrons())
 
-            # DEBUG: send directly to the test platform (the one used by ecosio)
-            #response = self.env['account.edi.common']._check_xml_ecosio(invoice, xml_content, builder._export_invoice_ecosio_schematrons())
+        attachment_create_vals = {
+            'name': builder._export_invoice_filename(invoice),
+            'raw': xml_content,
+            'mimetype': 'application/xml',
+        }
+        # we don't want the Factur-X and E-FFF xml to appear in the attachment of the invoice when confirming it
+        # E-FFF will appear after the pdf is generated, Factur-X will never appear (it's contained in the PDF)
+        if self.code not in ['facturx_1_0_05', 'efff_1']:
+            attachment_create_vals.update({'res_id': invoice.id, 'res_model': 'account.move'})
 
-            attachment_create_vals = {
-                'name': builder._export_invoice_filename(invoice),
-                'raw': xml_content,
-                'mimetype': 'application/xml',
-            }
-            # we don't want the Factur-X, E-FFF and NLCIUS xml to appear in the attachment of the invoice when confirming it
-            # E-FFF and NLCIUS will appear after the pdf is generated, Factur-X will never appear (it's contained in the PDF)
-            if self.code not in ['facturx_1_0_05', 'efff_1', 'nlcius_1']:
-                attachment_create_vals.update({'res_id': invoice.id, 'res_model': 'account.move'})
+        attachment = self.env['ir.attachment'].create(attachment_create_vals)
 
-            attachment = self.env['ir.attachment'].create(attachment_create_vals)
-            res[invoice] = {
-                'success': True,
-                'attachment': attachment,
-            }
-
+        res = {invoice: {'attachment': attachment}}
+        if errors and self.code == 'facturx_1_0_05':
+            res[invoice].update({
+                'success': False,
+                'error': _("Errors occured while creating the EDI document (format: %s). The receiver "
+                           "might refuse it.", builder._description)
+                         + '<p> <li>' + "</li> <li>".join(errors) + '</li> </p>',
+                'blocking_level': 'info',
+            })
+        else:
+            res[invoice]['success'] = True
         return res
+
+    def _get_move_applicability(self, move):
+        # EXTENDS account_edi
+        self.ensure_one()
+        if self.code not in FORMAT_CODES:
+            return super()._get_move_applicability(move)
+
+        if self._is_ubl_cii_available(move.company_id) and move.move_type in ('out_invoice', 'out_refund'):
+            return {'post': self._ubl_cii_post_invoice}
 
     def _is_embedding_to_invoice_pdf_needed(self):
         # EXTENDS account_edi
@@ -149,8 +152,7 @@ class AccountEdiFormat(models.Model):
             return
 
         pdf_writer.embed_odoo_attachment(edi_document.attachment_id, subtype='text/xml')
-        if not pdf_writer.is_pdfa and str2bool(
-                self.env['ir.config_parameter'].sudo().get_param('edi.use_pdfa', 'False')):
+        if not pdf_writer.is_pdfa:
             try:
                 pdf_writer.convert_to_pdfa()
             except Exception as e:

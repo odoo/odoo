@@ -88,10 +88,11 @@ export class ModelFieldSelector extends Component {
                 isDebugMode: this.props.isDebugMode,
                 loadChain: this.loadChain.bind(this),
                 filter: this.props.filter,
+                followRelations: this.props.followRelations,
             },
             {
                 closeOnClickAway: true,
-                popoverClass: "o-popover-no-arrow",
+                popoverClass: "o_popover_field_selector",
             }
         );
     }
@@ -110,6 +111,7 @@ Object.assign(ModelFieldSelector, {
         isDebugMode: { type: Boolean, optional: true },
         update: { type: Function, optional: true },
         filter: { type: Function, optional: true },
+        followRelations: { type: Boolean, optional: true },
     },
     defaultProps: {
         readonly: true,
@@ -117,5 +119,6 @@ Object.assign(ModelFieldSelector, {
         showSearchInput: true,
         update: () => {},
         filter: () => true,
+        followRelations: true,
     },
 });

@@ -3257,7 +3257,7 @@ class Properties(Field):
         if not value or not definition:
             return definition or []
 
-        assert isinstance(value, dict)
+        assert isinstance(value, dict), f"Wrong type {value!r}"
         value = self._dict_to_list(value, definition)
         self._parse_json_types(value, record.env)
 
@@ -3298,6 +3298,79 @@ class Properties(Field):
     def convert_to_onchange(self, value, record, names):
         self._add_display_name(value, record.env)
         return value
+
+    def read(self, records):
+        """Read everything needed in batch for the given records.
+
+        To retrieve relational properties names, or to check their existence,
+        we need to do some SQL queries. To reduce the number of queries when we read
+        in batch, we put in cache everything needed before calling
+        convert_to_record / convert_to_read.
+        """
+        definition_records_map = {
+            record: record[self.definition_record][self.definition_record_field]
+            for record in records
+        }
+
+        # ids per model we need to fetch in batch to put in cache
+        ids_per_model = defaultdict(OrderedSet)
+
+        records_cached_values = list(records.env.cache.get_values(records, self))
+
+        for record, record_values in zip(records, records_cached_values):
+            definition = definition_records_map.get(record)
+            if not record_values or not definition:
+                continue
+            for property_definition in definition:
+                comodel = property_definition.get('comodel')
+                type_ = property_definition.get('type')
+                name = property_definition.get('name')
+                if not comodel or type_ not in ('many2one', 'many2many') or name not in record_values:
+                    continue
+
+                default = property_definition.get('default') or []
+                property_value = record_values[name] or []
+
+                if type_ == 'many2one':
+                    default = [default] if default else []
+                    property_value = [property_value] if property_value else []
+
+                ids_per_model[comodel].update(default)
+                ids_per_model[comodel].update(property_value)
+
+        # check existence and pre-fetch in batch
+        existing_ids_per_model = {}
+        for model, ids in ids_per_model.items():
+            recs = records.env[model].browse(ids).exists()
+            existing_ids_per_model[model] = set(recs.ids)
+            for record in recs:
+                # read a field to pre-fetch the recordset
+                try:
+                    record.display_name
+                except AccessError:
+                    pass
+
+        # update the cache and remove non-existing ids
+        for record, record_values in zip(records, records_cached_values):
+            definition = definition_records_map.get(record)
+            if not record_values or not definition:
+                continue
+
+            for property_definition in definition:
+                comodel = property_definition.get('comodel')
+                type_ = property_definition.get('type')
+                name = property_definition.get('name')
+                if not comodel or type_ not in ('many2one', 'many2many') or not record_values.get(name):
+                    continue
+
+                property_value = record_values[name]
+
+                if type_ == 'many2one':
+                    record_values[name] = property_value if property_value in existing_ids_per_model[comodel] else False
+                else:
+                    record_values[name] = [id_ for id_ in property_value if id_ in existing_ids_per_model[comodel]]
+
+            records.env.cache.update(record, self, [record_values], check_dirty=False)
 
     def write(self, records, value):
         """Check if the properties definition has been changed.
@@ -3487,7 +3560,7 @@ class Properties(Field):
                 definition['name'] = str(uuid.uuid4()).replace('-', '')[:16]
 
     @classmethod
-    def _parse_json_types(cls, values_list, env, check_existence=True):
+    def _parse_json_types(cls, values_list, env):
         """Parse the value stored in the JSON.
 
         Check for records existence, if we removed a selection option, ...
@@ -3529,10 +3602,6 @@ class Properties(Field):
                 if not isinstance(property_value, int):
                     raise ValueError(f'Wrong many2one value: {property_value!r}.')
 
-                if check_existence and property_value:
-                    # many2one might have been deleted
-                    property_value = env[res_model].browse(property_value).exists().id
-
             elif property_type == 'many2many' and property_value and res_model in env:
                 if not is_list_of(property_value, int):
                     raise ValueError(f'Wrong many2many value: {property_value!r}.')
@@ -3540,10 +3609,6 @@ class Properties(Field):
                 if len(property_value) != len(set(property_value)):
                     # remove duplicated value and preserve order
                     property_value = list(dict.fromkeys(property_value))
-
-                elif check_existence and property_value:
-                    # many2many might have been deleted
-                    property_value = env[res_model].browse(property_value).exists().ids
 
             property_definition['value'] = property_value
 
@@ -3634,7 +3699,7 @@ class PropertiesDefinition(Field):
     REQUIRED_KEYS = ('name', 'type')
     ALLOWED_KEYS = (
         'name', 'string', 'type', 'comodel', 'default',
-        'selection', 'tags', 'domain',
+        'selection', 'tags', 'domain', 'view_in_kanban',
     )
 
     def convert_to_column(self, value, record, values=None, validate=True):

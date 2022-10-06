@@ -4106,4 +4106,25 @@ QUnit.module("Views", (hooks) => {
             label: "Count",
         });
     });
+
+    QUnit.test("renders banner_route", async (assert) => {
+        await makeView({
+            type: "graph",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <graph banner_route="/mybody/isacage">
+                    <field name="foo"/>
+                </graph>`,
+            async mockRPC(route) {
+                if (route === "/mybody/isacage") {
+                    assert.step(route);
+                    return { html: `<div class="setmybodyfree">myBanner</div>` };
+                }
+            },
+        });
+
+        assert.verifySteps(["/mybody/isacage"]);
+        assert.containsOnce(target, ".setmybodyfree");
+    });
 });

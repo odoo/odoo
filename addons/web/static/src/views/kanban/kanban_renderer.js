@@ -11,7 +11,7 @@ import { useSortable } from "@web/core/utils/sortable";
 import { sprintf } from "@web/core/utils/strings";
 import { session } from "@web/session";
 import { isAllowedDateField } from "@web/views/relational_model";
-import { isRelational } from "@web/views/utils";
+import { isNull, isRelational } from "@web/views/utils";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { useBounceButton } from "@web/views/view_hook";
 import { KanbanAnimatedNumber } from "./kanban_animated_number";
@@ -20,10 +20,6 @@ import { KanbanRecord } from "./kanban_record";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
 
 const { Component, useState, useRef, onWillDestroy } = owl;
-
-function isNull(value) {
-    return [null, undefined].includes(value);
-}
 
 const DRAGGABLE_GROUP_TYPES = ["many2one"];
 const MOVABLE_RECORD_TYPES = ["char", "boolean", "integer", "selection", "many2one"];
@@ -56,13 +52,13 @@ export class KanbanRenderer extends Component {
                 connectGroups: () => this.canMoveRecords,
                 cursor: "move",
                 // Hooks
-                onStart: (params) => {
+                onDragStart: (params) => {
                     const { element, group } = params;
                     dataRecordId = element.dataset.id;
                     dataGroupId = group && group.dataset.id;
                     return this.sortStart(params);
                 },
-                onStop: (params) => this.sortStop(params),
+                onDragEnd: (params) => this.sortStop(params),
                 onGroupEnter: (params) => this.sortRecordGroupEnter(params),
                 onGroupLeave: (params) => this.sortRecordGroupLeave(params),
                 onDrop: (params) => this.sortRecordDrop(dataRecordId, dataGroupId, params),
@@ -75,12 +71,12 @@ export class KanbanRenderer extends Component {
                 handle: ".o_column_title",
                 cursor: "move",
                 // Hooks
-                onStart: (params) => {
+                onDragStart: (params) => {
                     const { element } = params;
                     dataGroupId = element.dataset.id;
                     return this.sortStart(params);
                 },
-                onStop: (params) => this.sortStop(params),
+                onDragEnd: (params) => this.sortStop(params),
                 onDrop: (params) => this.sortGroupDrop(dataGroupId, params),
             });
         }
@@ -161,7 +157,7 @@ export class KanbanRenderer extends Component {
         const { groupByField, fields } = this.props.list;
         const { modifiers, type } = groupByField;
         return Boolean(
-            !(modifiers ? modifiers.readonly : fields[groupByField.name].readonly) &&
+            !(modifiers && "readonly" in modifiers ? modifiers.readonly : fields[groupByField.name].readonly) &&
                 (isAllowedDateField(groupByField) || MOVABLE_RECORD_TYPES.includes(type))
         );
     }
@@ -175,7 +171,7 @@ export class KanbanRenderer extends Component {
         const { groupsDraggable } = this.props.archInfo;
         return (
             groupsDraggable &&
-            !(modifiers ? modifiers.readonly : fields[groupByField.name].readonly) &&
+            !(modifiers && "readonly" in modifiers ? modifiers.readonly : fields[groupByField.name].readonly) &&
             DRAGGABLE_GROUP_TYPES.includes(type)
         );
     }
@@ -217,7 +213,7 @@ export class KanbanRenderer extends Component {
                 .sort((a, b) => (a.value && !b.value ? 1 : !a.value && b.value ? -1 : 0))
                 .map((group, i) => ({
                     group,
-                    key: `group_key_${isNull(group.value) ? i : String(group.value)}`,
+                    key: isNull(group.value) ? `group_key_${i}` : String(group.value),
                 }));
         } else {
             return list.records.map((record) => ({ record, key: record.id }));
@@ -307,18 +303,18 @@ export class KanbanRenderer extends Component {
     canArchiveGroup(group) {
         const { activeActions } = this.props.archInfo;
         const hasActiveField = "active" in group.fields;
-        return activeActions.groupArchive && hasActiveField && !this.props.list.groupedBy("m2m");
+        return activeActions.archiveGroup && hasActiveField && !this.props.list.groupedBy("m2m");
     }
 
     canCreateGroup() {
         const { activeActions } = this.props.archInfo;
-        return activeActions.groupCreate && this.props.list.groupedBy("m2o");
+        return activeActions.createGroup && this.props.list.groupedBy("m2o");
     }
 
     canDeleteGroup(group) {
         const { activeActions } = this.props.archInfo;
         const { groupByField } = this.props.list;
-        return activeActions.groupDelete && isRelational(groupByField) && group.value;
+        return activeActions.deleteGroup && isRelational(groupByField) && group.value;
     }
 
     canDeleteRecord() {
@@ -332,7 +328,7 @@ export class KanbanRenderer extends Component {
     canEditGroup(group) {
         const { activeActions } = this.props.archInfo;
         const { groupByField } = this.props.list;
-        return activeActions.groupEdit && isRelational(groupByField) && group.value;
+        return activeActions.editGroup && isRelational(groupByField) && group.value;
     }
 
     canEditRecord() {
@@ -347,16 +343,15 @@ export class KanbanRenderer extends Component {
     // Edition methods
     // ------------------------------------------------------------------------
 
-    quickCreate(group, atFirstPosition = true) {
-        return this.props.list.quickCreate(group, atFirstPosition);
+    quickCreate(group) {
+        return this.props.list.quickCreate(group);
     }
 
     async validateQuickCreate(mode, group) {
         const values = group.list.quickCreateRecord.data;
-        const quickCreateRecordIndex = group.list.quickCreateRecordIndex;
         let record;
         try {
-            record = await group.validateQuickCreate(quickCreateRecordIndex);
+            record = await group.validateQuickCreate();
         } catch (e) {
             // TODO: filter RPC errors more specifically (eg, for access denied, there is no point in opening a dialog)
             if (!(e instanceof RPCError)) {
@@ -389,7 +384,7 @@ export class KanbanRenderer extends Component {
             if (mode === "edit") {
                 await this.props.openRecord(record, "edit");
             } else {
-                await this.quickCreate(group, quickCreateRecordIndex === 0);
+                await this.quickCreate(group);
             }
         }
     }

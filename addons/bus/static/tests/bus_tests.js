@@ -370,6 +370,82 @@ QUnit.module('Bus', {
         await updateLastNotificationDeferred;
         assert.verifySteps([`initialize_connection - 0`]);
     });
+
+    QUnit.test('Websocket reconnects upon user log out', async function (assert) {
+        // first tab connects to the worker with user logged.
+        patchWithCleanup(session, {
+            user_id: 1,
+        });
+        const connectionInitializedDeferred = makeDeferred();
+        const connectionRefreshedDeferred = makeDeferred();
+        patchWebsocketWorkerWithCleanup({
+            _initializeConnection(client, data) {
+                this._super(client, data);
+                connectionInitializedDeferred.resolve();
+            },
+        });
+
+        const firstTabEnv = await makeTestEnv();
+        firstTabEnv.services['bus_service'].addEventListener('reconnect', () => {
+            assert.step('reconnect');
+            connectionRefreshedDeferred.resolve();
+        });
+        firstTabEnv.services['bus_service'].addEventListener('disconnect', () => {
+            assert.step('disconnect');
+        });
+        await connectionInitializedDeferred;
+
+        // second tab connects to the worker after disconnection: user_id
+        // is now false.
+        patchWithCleanup(session, {
+            user_id: false,
+        });
+        await makeTestEnv();
+        await connectionRefreshedDeferred;
+
+        assert.verifySteps([
+            'disconnect',
+            'reconnect',
+        ]);
+    });
+
+    QUnit.test('Websocket reconnects upon user log in', async function (assert) {
+        // first tab connects to the worker with no user logged.
+        patchWithCleanup(session, {
+            user_id: false,
+        });
+        const connectionInitializedDeferred = makeDeferred();
+        const connectionRefreshedDeferred = makeDeferred();
+        patchWebsocketWorkerWithCleanup({
+            _initializeConnection(client, data) {
+                this._super(client, data);
+                connectionInitializedDeferred.resolve();
+            },
+        });
+
+        const firstTabEnv = await makeTestEnv();
+        firstTabEnv.services['bus_service'].addEventListener('reconnect', () => {
+            assert.step('reconnect');
+            connectionRefreshedDeferred.resolve();
+        });
+        firstTabEnv.services['bus_service'].addEventListener('disconnect', () => {
+            assert.step('disconnect');
+        });
+        await connectionInitializedDeferred;
+
+        // second tab connects to the worker after connection: user_id
+        // is now set.
+        patchWithCleanup(session, {
+            user_id: 1,
+        });
+        await makeTestEnv();
+        await connectionRefreshedDeferred;
+
+        assert.verifySteps([
+            'disconnect',
+            'reconnect',
+        ]);
+    });
+});
 });
 
-});

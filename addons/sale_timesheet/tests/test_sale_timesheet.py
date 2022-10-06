@@ -5,6 +5,7 @@ from datetime import date, timedelta
 from odoo.fields import Date
 from odoo.tools import float_is_zero
 from odoo.exceptions import UserError
+from odoo.addons.hr_timesheet.tests.test_timesheet import TestCommonTimesheet
 from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
 from odoo.tests import tagged
 
@@ -724,3 +725,11 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
 
         move.with_context(check_move_validity=False).line_ids[0].unlink()
         self.assertFalse(analytic_line.timesheet_invoice_id, "The timesheet should have been unlinked from move")
+
+
+class TestSaleTimesheetView(TestCommonTimesheet):
+    def test_get_view_timesheet_encode_uom(self):
+        """ Test the label of timesheet time spent fields according to the company encoding timesheet uom """
+        self.assert_get_view_timesheet_encode_uom([
+            ('sale_timesheet.project_project_view_form', '//field[@name="display_cost"]', [None, 'Daily Cost']),
+        ])

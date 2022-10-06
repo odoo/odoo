@@ -186,7 +186,7 @@
     </xpath>
 </template>
 
-<template id="snippet_options_background_options" inherit_id="web_editor.snippet_options_background_options">
+<template id="snippet_options_background_options" inherit_id="web_editor.snippet_options_background_options" primary="True">
     <xpath expr="//we-button[@data-toggle-bg-image]" position="after">
         <t t-if="with_videos">
             <we-button title="Video" class="fa fa-fw fa-film"
@@ -335,10 +335,20 @@
         data-allow-delete="true" data-fakem2m="true"/>
 </template>
 
-<template id="snippet_options">
-    <t t-call="web_editor.snippet_options">
-        <t t-set="image_transform_dependencies" t-valuef="no_animation_opt"/>
-    </t>
+<template id="snippet_options" inherit_id="web_editor.snippet_options" primary="True">
+    <!-- =================================================================== -->
+    <!-- Modify generic snippet options                                      -->
+    <!-- =================================================================== -->
+
+    <xpath expr="//we-button[@data-name='image_transform_opt']" position="attributes">
+        <attribute name="data-dependencies">no_animation_opt</attribute>
+    </xpath>
+
+    <!-- =================================================================== -->
+    <!-- Adding website specific snippet options                             -->
+    <!-- =================================================================== -->
+
+    <xpath expr="." position="inside">
 
     <!-- COLOR, BORDER, SHADOW | .s_three_columns | .s_comparisons -->
     <div data-js="Box"
@@ -412,7 +422,7 @@
     <!-- Carousel | .s_carousel | .s_quotes_carousel -->
     <!-- Dedicated colorpicker so that there is not 3 level of
          o_colored_level. Use inline-style color for the same reason. -->
-    <t t-call="web_editor.snippet_options_background_options">
+    <t t-call="website.snippet_options_background_options">
         <t t-set="selector" t-value="'section'"/>
         <t t-set="target" t-value="'> .carousel'"/>
         <t t-set="with_colors" t-value="True"/>
@@ -552,7 +562,7 @@
     <t t-set="both_bg_color_image_selector" t-value="'section, .carousel-item, .s_masonry_block .row > div, .s_color_blocks_2 .row > div, .parallax'"/>
     <t t-set="both_bg_color_image_exclude" t-value="base_only_bg_image_selector + ', .s_carousel_wrapper, .s_color_blocks_2, .s_image_gallery .carousel-item, .s_google_map, .s_map, [data-snippet] :not(.oe_structure) > [data-snippet], .s_masonry_block, .s_masonry_block .s_col_no_resize'"/>
 
-    <t t-call="web_editor.snippet_options_background_options">
+    <t t-call="website.snippet_options_background_options">
         <t t-set="selector" t-value="both_bg_color_image_selector"/>
         <t t-set="exclude" t-value="both_bg_color_image_exclude"/>
         <t t-set="with_colors" t-value="True"/>
@@ -563,7 +573,7 @@
         <t t-set="with_gradients" t-value="True"/>
     </t>
 
-    <t t-call="web_editor.snippet_options_background_options">
+    <t t-call="website.snippet_options_background_options">
         <t t-set="selector" t-value="only_bg_color_selector"/>
         <t t-set="exclude" t-value="only_bg_color_exclude"/>
         <t t-set="with_colors" t-value="True"/>
@@ -572,7 +582,7 @@
         <t t-set="with_gradients" t-value="True"/>
     </t>
 
-    <t t-call="web_editor.snippet_options_background_options">
+    <t t-call="website.snippet_options_background_options">
         <t t-set="selector" t-value="only_bg_image_selector"/>
         <t t-set="exclude" t-value="only_bg_image_exclude"/>
         <t t-set="with_colors" t-value="False"/>
@@ -1200,13 +1210,26 @@
         </we-select>
     </div>
 
+    <t t-set="_device_visibility_widgets">
+        <we-button class="o_we_device" data-toggle-device-visibility="no_desktop" title="Show/Hide on Desktop"
+            data-no-preview="true"
+            data-img="/website/static/src/img/snippets_options/desktop_invisible.svg"
+        />
+        <we-button class="o_we_device" data-toggle-device-visibility="no_mobile" title="Show/Hide on Mobile"
+            data-no-preview="true"
+            data-img="/website/static/src/img/snippets_options/mobile_invisible.svg"
+        />
+    </t>
     <div data-js="ConditionalVisibility" data-selector="section">
         <t t-set="current_website" t-value="request.env['website'].get_current_website()"/>
         <we-collapse>
-            <we-select string="Visibility" data-attribute-name="visibility" data-no-preview="true">
-                <we-button data-select-data-attribute="">Always visible</we-button>
-                <we-button data-select-data-attribute="conditional" data-select-class="o_snippet_invisible" data-name="visibility_conditional">Conditionally</we-button>
-            </we-select>
+            <we-row string="Visibility">
+                <t t-out="_device_visibility_widgets"/>
+                <we-select data-attribute-name="visibility" data-no-preview="true">
+                    <we-button data-select-data-attribute="">No condition</we-button>
+                    <we-button data-select-data-attribute="conditional" data-select-class="o_snippet_invisible" data-name="visibility_conditional">Conditionally</we-button>
+                </we-select>
+            </we-row>
 
             <t t-if="request.geoip.get('country_code')">
                 <t t-call="website.snippet_options_conditional_visibility">
@@ -1270,17 +1293,10 @@
     </div>
 
     <!-- Mobile/Desktop display options -->
-    <div data-js="DeviceVisibility" data-selector="section, section .row > div"
+    <div data-js="DeviceVisibility" data-selector="section .row > div"
             data-exclude=".s_col_no_resize.row > div, .s_masonry_block .s_col_no_resize">
-        <we-row string="Device">
-            <we-button class="o_we_device" data-toggle-device-visibility="no_desktop" title="Show/Hide on Desktop"
-                data-no-preview="true"
-                data-img="/website/static/src/img/snippets_options/desktop_invisible.svg"
-            />
-            <we-button class="o_we_device" data-toggle-device-visibility="no_mobile" title="Show/Hide on Mobile"
-                data-no-preview="true"
-                data-img="/website/static/src/img/snippets_options/mobile_invisible.svg"
-            />
+        <we-row string="Visibility">
+            <t t-out="_device_visibility_widgets"/>
         </we-row>
     </div>
 
@@ -1591,5 +1607,7 @@
     <div data-selector="#wrapwrap > main" data-no-check="true" data-js="SwitchableViews">
             <!-- Options will be populated by JS -->
     </div>
+
+    </xpath>
 </template>
 </odoo>

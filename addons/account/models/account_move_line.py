@@ -76,6 +76,7 @@ class AccountMoveLine(models.Model):
         comodel_name='account.account',
         string='Account',
         compute='_compute_account_id', store=True, readonly=False, precompute=True,
+        inverse='_inverse_account_id',
         index=True,
         ondelete="cascade",
         domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('is_off_balance', '=', False)]",
@@ -89,12 +90,12 @@ class AccountMoveLine(models.Model):
     )
     debit = fields.Monetary(
         string='Debit',
-        compute='_compute_debit_credit', inverse='_inverse_debit_credit', store=True,
+        compute='_compute_debit_credit', inverse='_inverse_debit', store=True, precompute=True,
         currency_field='company_currency_id',
     )
     credit = fields.Monetary(
         string='Credit',
-        compute='_compute_debit_credit', inverse='_inverse_debit_credit', store=True,
+        compute='_compute_debit_credit', inverse='_inverse_credit', store=True, precompute=True,
         currency_field='company_currency_id',
     )
     balance = fields.Monetary(
@@ -545,7 +546,7 @@ class AccountMoveLine(models.Model):
                 for model, id, account_type, account_id in self.env.cr.fetchall()
             }
             for line in term_lines:
-                account_type = 'asset_receivable' if line.move_id.is_sale_document() else 'liability_payable'
+                account_type = 'asset_receivable' if line.move_id.is_sale_document(include_receipts=True) else 'liability_payable'
                 move = line.move_id
                 account_id = (
                     accounts.get(('account.move', move.id, None))
@@ -568,27 +569,32 @@ class AccountMoveLine(models.Model):
                 elif line.move_id.is_purchase_document(include_receipts=True):
                     line.account_id = accounts['expense'] or line.account_id
             elif line.partner_id:
-                line.account_id = self.env['account.account']._order_by_frequency_per_partner(
+                line.account_id = self.env['account.account']._get_most_frequent_account_for_partner(
                     company_id=line.company_id.id,
                     partner_id=line.partner_id.id,
                     move_type=line.move_id.move_type,
-                    limit=1,
-                )[0]
+                )
         for line in self:
             if not line.account_id and line.display_type not in ('line_section', 'line_note'):
-                line.account_id = line.company_id.account_journal_suspense_account_id
+                previous_two_accounts = line.move_id.line_ids.filtered(
+                    lambda l: l.account_id and l.display_type == line.display_type
+                )[-2:].account_id
+                if len(previous_two_accounts) == 1:
+                    line.account_id = previous_two_accounts
+                else:
+                    line.account_id = line.move_id.journal_id.default_account_id
 
     @api.depends('move_id')
     def _compute_balance(self):
         for line in self:
-            if line.display_type not in ('line_section', 'line_note'):
-                line.balance = (
-                    line.balance
-                    or line.debit - line.credit
-                    or -sum((line.move_id.line_ids - line).mapped('balance'))
-                )
-            else:
+            if line.display_type in ('line_section', 'line_note'):
                 line.balance = False
+            elif not line.move_id.is_invoice(include_receipts=True):
+                # Only act as a default value when none of balance/debit/credit is specified
+                # balance is always the written field because of `_sanitize_vals`
+                line.balance = -sum((line.move_id.line_ids - line).mapped('balance'))
+            else:
+                line.balance = 0
 
     @api.depends('balance', 'move_id.is_storno')
     def _compute_debit_credit(self):
@@ -1101,9 +1107,18 @@ class AccountMoveLine(models.Model):
             if line.currency_id == line.company_id.currency_id and line.balance != line.amount_currency:
                 line.balance = line.amount_currency
 
-    @api.onchange('debit', 'credit')
-    def _inverse_debit_credit(self):
+    @api.onchange('debit')
+    def _inverse_debit(self):
         for line in self:
+            if line.debit:
+                line.credit = 0
+            line.balance = line.debit - line.credit
+
+    @api.onchange('credit')
+    def _inverse_credit(self):
+        for line in self:
+            if line.credit:
+                line.debit = 0
             line.balance = line.debit - line.credit
 
     @api.onchange('analytic_distribution')
@@ -1115,6 +1130,13 @@ class AccountMoveLine(models.Model):
         ])
         lines_to_modify.analytic_line_ids.unlink()
         lines_to_modify._create_analytic_lines()
+
+    @api.onchange('account_id')
+    def _inverse_account_id(self):
+        self._conditional_add_to_compute('tax_ids', lambda line: (
+            line.account_id.tax_ids
+            and not line.product_id.taxes_id.filtered(lambda tax: tax.company_id == line.company_id)
+        ))
 
     # -------------------------------------------------------------------------
     # ONCHANGE METHODS
@@ -1170,6 +1192,17 @@ class AccountMoveLine(models.Model):
                     raise UserError(_('You cannot use taxes on lines with an Off-Balance account'))
                 if line.reconciled:
                     raise UserError(_('Lines from "Off-Balance Sheet" accounts cannot be reconciled'))
+
+    @api.constrains('account_id', 'display_type')
+    def _check_payable_receivable(self):
+        for line in self:
+            account_type = line.account_id.account_type
+            if line.move_id.is_sale_document(include_receipts=True):
+                if (line.display_type == 'payment_term') ^ (account_type == 'asset_receivable'):
+                    raise UserError(_("Any journal item on a receivable account must have a due date and vice versa."))
+            if line.move_id.is_purchase_document(include_receipts=True):
+                if (line.display_type == 'payment_term') ^ (account_type == 'liability_payable'):
+                    raise UserError(_("Any journal item on a payable account must have a due date and vice versa."))
 
     def _affect_tax_report(self):
         self.ensure_one()
@@ -1277,6 +1310,7 @@ class AccountMoveLine(models.Model):
 
     def _sanitize_vals(self, vals):
         if 'debit' in vals or 'credit' in vals:
+            vals = vals.copy()
             if 'balance' in vals:
                 vals.pop('debit', None)
                 vals.pop('credit', None)
@@ -1329,6 +1363,11 @@ class AccountMoveLine(models.Model):
                 and (not changed('balance') or (line not in before and not line.balance))
             ):
                 line.balance = balance
+        # Since this method is called during the sync, inside of `create`/`write`, these fields
+        # already have been computed and marked as so. But this method should re-trigger it since
+        # it changes the dependencies.
+        self.env.add_to_compute(self._fields['debit'], container['records'])
+        self.env.add_to_compute(self._fields['credit'], container['records'])
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -1349,7 +1388,7 @@ class AccountMoveLine(models.Model):
         return lines
 
     def new(self, values=None, origin=None, ref=None):
-        record = super().new(values, origin, ref)
+        record = super().new(self._sanitize_vals(values), origin, ref)
         if record.move_id.quick_edit_total_amount and record.move_id.quick_edit_mode:
             record.move_id._check_total_amount(record.move_id.quick_edit_total_amount)
         return record
@@ -1365,7 +1404,7 @@ class AccountMoveLine(models.Model):
             raise UserError(_('You cannot use a deprecated account.'))
 
         line_to_write = self
-        self._sanitize_vals(vals)
+        vals = self._sanitize_vals(vals)
         for line in self:
             if not any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in vals):
                 line_to_write -= line
@@ -1388,18 +1427,6 @@ class AccountMoveLine(models.Model):
             # Check the reconciliation.
             if any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in protected_fields['reconciliation']):
                 line._check_reconciliation()
-
-            # Check switching receivable / payable accounts.
-            if account_to_write:
-                account_type = line.account_id.account_type
-                if line.move_id.is_sale_document(include_receipts=True):
-                    if (account_type == 'asset_receivable' and account_to_write.account_type != account_type) \
-                            or (account_type != 'asset_receivable' and account_to_write.account_type == 'asset_receivable'):
-                        raise UserError(_("You can only set an account having the receivable type on payment terms lines for customer invoice."))
-                if line.move_id.is_purchase_document(include_receipts=True):
-                    if (account_type == 'liability_payable' and account_to_write.account_type != account_type) \
-                            or (account_type != 'liability_payable' and account_to_write.account_type == 'liability_payable'):
-                        raise UserError(_("You can only set an account having the payable type on payment terms lines for vendor bill."))
 
         move_container = {'records': self.move_id, 'self': self, 'line_to_write': line_to_write}
         with self.move_id._check_balanced(move_container),\

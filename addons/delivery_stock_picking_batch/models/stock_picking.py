@@ -47,6 +47,8 @@ class StockPicking(models.Model):
         """ Verifies if a picking can be put in a batch with another picking without violating auto_batch constrains.
         """
         res = super()._is_auto_batchable(picking)
+        if not picking:
+            picking = self.env['stock.picking']
         if self.picking_type_id.batch_max_weight:
             res = res and (self.weight + picking.weight <= self.picking_type_id.batch_max_weight)
         return res

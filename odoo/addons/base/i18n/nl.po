@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:25+0000\n"
+"POT-Creation-Date: 2022-09-27 15:43+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -548,6 +548,14 @@ msgstr ""
 "\n"
 "\n"
 "Deze module voegt een extra verkoopteam toe voor de Kassa om de verkopen aan de kassa beter inzichtelijk te hebben en makkelijker te beheren.\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_pos_sale_margin
+msgid ""
+"\n"
+"\n"
+"This module adds enable you to view the margin of your Point of Sale orders in the Sales Margin report.\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant
@@ -12267,7 +12275,7 @@ msgstr "Toegangsrechten"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Access Rights Mismatch"
-msgstr ""
+msgstr "Toegangsrechten komen niet overeen"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__access_token
@@ -12856,6 +12864,8 @@ msgid ""
 "Add support for itsme® identification when signing documents (Belgium and "
 "Netherlands only)"
 msgstr ""
+"Ondersteuning toevoegen voor itsme®-identificatie bij het ondertekenen van "
+"documenten (alleen België en Nederland)"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode_picking_batch
@@ -22892,6 +22902,11 @@ msgid "Link module between Point of Sale and Sales"
 msgstr "Link module tussen Kassa en Verkopen"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_pos_sale_margin
+msgid "Link module between Point of Sale and Sales Margin"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_pos_hr_l10n_be
 msgid "Link module between Pos Blackbox Be and Pos HR"
 msgstr "Link module tussen Pos Blackbox Be en Pos HR"
@@ -29507,6 +29522,11 @@ msgid "RTN"
 msgstr "RTN"
 
 #. module: base
+#: model:res.country,vat_label:base.ec
+msgid "RUC"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__font__raleway
 msgid "Raleway"
 msgstr "Raleway"
@@ -31199,7 +31219,7 @@ msgstr "Onderteken documenten die aan taken zijn gekoppeld"
 #. module: base
 #: model:ir.module.module,summary:base.module_sign_itsme
 msgid "Sign documents with itsme® identification"
-msgstr ""
+msgstr "Onderteken documenten met itsme® identificatie"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sign_itsme
@@ -31228,6 +31248,8 @@ msgid ""
 "Since %(user)s is a/an \"%(category)s: %(group)s\", they will at least "
 "obtain the right %(missing_group_message)s"
 msgstr ""
+"Aangezien %(user)seen/een \"%(category)s: %(group)s\" is, zullen ze in ieder"
+" geval het recht verkrijgenc%(missing_group_message)s"
 
 #. module: base
 #: model:res.country,name:base.sg
@@ -32689,6 +32711,14 @@ msgid "The currency rate must be strictly positive."
 msgstr "De valuta ratio moet positief zijn."
 
 #. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid ""
+"The date for the current rate is empty.\n"
+"Please set it."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_users__company_id
 msgid "The default company for this user."
 msgstr "Het standaard bedrijf voor deze gebruiker."
@@ -32827,6 +32857,14 @@ msgid ""
 msgstr ""
 "De menu actie waarop dit filter van toepassing is. Wanneer deze wordt leeg "
 "gelaten zal het het filter gelden voor alle menu's in dit model."
+
+#. module: base
+#: code:addons/base/models/ir_module.py:0
+#, python-format
+msgid ""
+"The method _button_immediate_install cannot be called on init or non loaded "
+"registries. Please use button_install instead."
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -34747,7 +34785,7 @@ msgstr "Gebruiker"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__user_group_warning
 msgid "User Group Warning"
-msgstr ""
+msgstr "Waarschuwing gebruikersgroep"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_deletion__user_id_int
@@ -36580,6 +36618,11 @@ msgstr "pos_sale"
 #: model:ir.module.module,shortdesc:base.module_pos_sale_loyalty
 msgid "pos_sale_loyalty"
 msgstr "pos_sale_loyalty"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_sale_margin
+msgid "pos_sale_margin"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_sale_product_configurator

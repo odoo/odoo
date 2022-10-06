@@ -5,8 +5,8 @@ import { attr, many, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
 import { qweb } from 'web.core';
-
-import { get_cookie, Markup, set_cookie } from 'web.utils';
+import { Markup } from 'web.utils';
+import {getCookie, setCookie, deleteCookie} from 'web.utils.cookies';
 
 registerModel({
     name: 'PublicLivechatGlobal',
@@ -14,7 +14,7 @@ registerModel({
         _created() {
             // History tracking
             const page = window.location.href.replace(/^.*\/\/[^/]+/, '');
-            const pageHistory = get_cookie(this.LIVECHAT_COOKIE_HISTORY);
+            const pageHistory = getCookie(this.LIVECHAT_COOKIE_HISTORY);
             let urlHistory = [];
             if (pageHistory) {
                 urlHistory = JSON.parse(pageHistory) || [];
@@ -24,7 +24,7 @@ registerModel({
                 while (urlHistory.length > this.HISTORY_LIMIT) {
                     urlHistory.shift();
                 }
-                set_cookie(this.LIVECHAT_COOKIE_HISTORY, JSON.stringify(urlHistory), 60 * 60 * 24); // 1 day cookie
+                setCookie(this.LIVECHAT_COOKIE_HISTORY, JSON.stringify(urlHistory), 60 * 60 * 24, 'optional'); // 1 day cookie
             }
             if (this.isAvailable) {
                 this.willStart();
@@ -44,7 +44,7 @@ registerModel({
             await this._willStartChatbot();
         },
         async _willStart() {
-            const cookie = get_cookie('im_livechat_session');
+            const cookie = getCookie('im_livechat_session');
             if (cookie) {
                 const channel = JSON.parse(cookie);
                 const history = await this.messaging.rpc({
@@ -98,7 +98,7 @@ registerModel({
                     }),
                 });
             } else if (this.history !== null && this.history.length !== 0) {
-                const sessionCookie = get_cookie('im_livechat_session');
+                const sessionCookie = getCookie('im_livechat_session');
                 if (sessionCookie) {
                     this.update({ sessionCookie });
                 }
@@ -120,7 +120,7 @@ registerModel({
                 // -> remove cookie to force opening the popup again
                 // -> initialize necessary state
                 // -> batch welcome message (see '_sendWelcomeChatbotMessage')
-                set_cookie('im_livechat_auto_popup', '', -1);
+                deleteCookie('im_livechat_auto_popup');
                 this.update({ history: clear() });
                 this.update({ rule: this.livechatInit.rule });
             } else if (this.chatbot.state === 'restore_session') {

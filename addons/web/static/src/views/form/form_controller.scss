@@ -42,6 +42,7 @@
             }
 
             .o_field_widget {
+                width: 100%;
                 margin-bottom: $o-form-spacing-unit * 2;
 
                 > .o_field_widget {
@@ -219,13 +220,10 @@
         }
 
         .o_notebook {
-            > .o_notebook_headers {
-                @include o-form-nosheet-negative-margin;
-                > .nav.nav-tabs {
-                    @include o-form-nosheet-inner-left-padding;
-                }
-            }
-            > .tab-content > .tab-pane > :first-child {
+            --notebook-margin-x: -#{$o-horizontal-padding};
+            --notebook-padding-x: #{$o-horizontal-padding};
+
+            > .tab-content > .tab-pane > :first-child:not(.o_group) {
                 // These elements will appear attached to the tabs
                 &.o_field_x2many.o_field_x2many_list {
                     @include o-form-nosheet-negative-margin;
@@ -400,8 +398,6 @@
         }
 
         .o_field_widget {
-            width: 100%;
-
             > .btn {
                 flex: 0 0 auto;
                 padding: 0 10px;
@@ -484,55 +480,12 @@
         clear: both; // For the notebook not to have alongside floating elements
         margin-top: $o-form-spacing-unit * 2;
 
-        > .o_notebook_headers {
-            @include o-form-sheet-negative-margin;
+        --notebook-margin-x: -#{$o-horizontal-padding};
+        --notebook-padding-x: #{$o-horizontal-padding};
 
-            @include media-breakpoint-down(md) {
-                overflow-x: auto;
-                &::-webkit-scrollbar {
-                    display: none;
-                }
-                .nav.nav-tabs {
-                    flex-flow: row nowrap;
-                }
-            }
-
-            > .nav.nav-tabs {
-                @include o-form-sheet-inner-left-padding;
-                border-bottom-color: $border-color;
-
-                > .nav-item {
-                    white-space: nowrap;
-
-                    > .nav-link {
-                        color: $body-color;
-                        border-color: $border-color;
-                        background-color: white;
-
-                        &:hover, &:focus, &:active {
-                            outline: none;
-                            color: $link-color;
-                        }
-
-                        &.active {
-                            border-bottom-color: white;
-
-                            &, &:hover, &:focus, &:active {
-                                color: $headings-color;
-                                border-top-color: $o-brand-odoo;
-                            }
-                        }
-
-                        &.disabled {
-                            color: $text-muted;
-                        }
-                    }
-
-                    + .nav-item {
-                        margin-left: -1px;
-                    }
-                }
-            }
+        @include media-breakpoint-up(lg, $o-extra-grid-breakpoints) {
+            --notebook-margin-x: -#{$o-horizontal-padding * 2};
+            --notebook-padding-x: #{$o-horizontal-padding * 2};
         }
 
         > .tab-content {
@@ -541,6 +494,9 @@
             > .tab-pane {
                 padding: $o-horizontal-padding 0;
 
+                > .o_field_html > .note-editable {
+                    min-height: 180px;
+                }
                 > :first-child {
                     // Reset margin to 0 and use tab-pane's padding
                     // to define the distance between panel and content
@@ -577,7 +533,7 @@
                     }
 
                     // Full width on first x2many or on second x2many if first is invisible
-                    .o_field_x2many.o_field_x2many_list,
+                    &:not(.o_group) .o_field_x2many.o_field_x2many_list,
                     &.o_invisible_modifier + .o_field_widget .o_field_x2many.o_field_x2many_list  {
                         display: block;
                         width: auto;
@@ -615,8 +571,8 @@
             font-size: $o-font-size-base-touch;
         }
 
-        &.o_form_label_empty, &.o_form_label_false {
-            opacity: 0.5;
+        &.o_form_label_empty, &.o_form_label_false, &.o_form_label_readonly {
+            opacity: 0.66;
             font-weight: $font-weight-normal;
         }
     }
@@ -719,6 +675,9 @@
     // Specific style classes
     .o_inner_group.oe_subtotal_footer {
         grid-template-columns: 1fr auto;
+        &.oe_right {
+            margin-left: auto;
+        }
         @extend .oe_right;
         border-top: 1px solid $border-color;
 
@@ -1116,7 +1075,7 @@
 
         > .o_form_sheet {
             width: 100%;
-            max-width: map-get($container-max-widths, xl);
+            max-width: map-get($container-max-widths, xxl);
         }
     }
 }
@@ -1147,6 +1106,12 @@
     }
 }
 
+.o_form_view.o_xxs_form_view {
+    .o_inner_group {
+        @include form-break-table;
+    }
+}
+
 // Settings form views
 .o_settings_container {
     display: flex;
@@ -1172,4 +1137,9 @@
         left: 0 !important;
         overflow-y: auto;
     }
+}
+
+.o_field_section_and_note_one2many ~ .row.o_group {
+    clear: both;
+    justify-content: space-between;
 }

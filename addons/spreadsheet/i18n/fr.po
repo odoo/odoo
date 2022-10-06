@@ -5,16 +5,16 @@
 # Translators:
 # Alexandra Jubert, 2022
 # Nathan Grognet <ngr@odoo.com>, 2022
-# Cécile Collart <cco@odoo.com>, 2022
 # Martin Trigaux, 2022
+# Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:03+0000\n"
+"POT-Creation-Date: 2022-09-27 15:12+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1572,6 +1572,13 @@ msgstr "Obtenez l'en-tête d'une table pivot."
 
 #. module: spreadsheet
 #. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/translation.js:0
+#, python-format
+msgid "Get the translated value of the given string"
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
 #: code:addons/spreadsheet/static/src/list/list_functions.js:0
 #, python-format
 msgid "Get the value from a list."
@@ -1930,7 +1937,7 @@ msgstr "Formule invalide"
 #, python-format
 msgid ""
 "Invalid function name %s. Function names can exclusively contain "
-"alphanumerical values separated by dots (.)"
+"alphanumerical values separated by dots (.) or underscore (_)"
 msgstr ""
 
 #. module: spreadsheet
@@ -2938,7 +2945,7 @@ msgstr "Plage"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Readonly Access"
-msgstr ""
+msgstr "Accès en lecture seule"
 
 #. module: spreadsheet
 #. openerp-web
@@ -3040,7 +3047,7 @@ msgstr "Résultat de la multiplication d'une série de nombres entre eux."
 #: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 #, python-format
 msgid "Return the current value of a spreadsheet filter."
-msgstr ""
+msgstr "Renvoie la valeur actuelle d'un filtre de feuille de calcul."
 
 #. module: spreadsheet
 #. openerp-web
@@ -3061,7 +3068,7 @@ msgstr "Renvoie l'opposé de la valeur logique fournie."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Returns the error value #N/A."
-msgstr ""
+msgstr "Renvoie la valeur d'erreur #N/A."
 
 #. module: spreadsheet
 #. openerp-web
@@ -3325,6 +3332,8 @@ msgid ""
 "Some used characters are not allowed in a sheet name (Forbidden characters "
 "are %s)."
 msgstr ""
+"Certains caractères utilisés ne sont pas autorisés dans un nom de feuille "
+"(les caractères interdits sont %s)."
 
 #. module: spreadsheet
 #. openerp-web
@@ -3352,7 +3361,7 @@ msgstr "Trier l'intervalle"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Stacked barchart"
-msgstr ""
+msgstr "Graphique à barres empilées"
 
 #. module: spreadsheet
 #. openerp-web
@@ -3524,7 +3533,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The anchor must be part of the provided zone"
-msgstr ""
+msgstr "L'ancre doit faire partie de la zone prévue"
 
 #. module: spreadsheet
 #. openerp-web
@@ -3538,14 +3547,14 @@ msgstr "L'argument %s n'est pas une mesure valide. Voici les mesures: %s"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The argument is missing. Please provide a value"
-msgstr ""
+msgstr "L'argument manque. Veuillez fournir une valeur"
 
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The base (%s) must be between 2 and 36 inclusive."
-msgstr ""
+msgstr "La base (%s) doit être comprise entre 2 et 36 inclus."
 
 #. module: spreadsheet
 #. openerp-web
@@ -3597,13 +3606,15 @@ msgstr "La covariance d'un jeu de données"
 #, python-format
 msgid "The criteria range contains %s row, it must be at least 2 rows."
 msgstr ""
+"La plage de critères contient %s ligne, elle doit comporter au moins 2 "
+"lignes."
 
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The data range is invalid"
-msgstr ""
+msgstr "La plage de données n'est pas valide"
 
 #. module: spreadsheet
 #. openerp-web
@@ -3617,7 +3628,7 @@ msgstr "Jeu de données invalide"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The date_string (%s) cannot be parsed to date/time."
-msgstr ""
+msgstr "Le date_string (%s) ne peut pas être analysée en date/heure."
 
 #. module: spreadsheet
 #. openerp-web
@@ -3627,14 +3638,14 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The day_count_convention (%s) must be between 0 and 4 inclusive."
-msgstr ""
+msgstr "Le day_count_convention (%s) doit être compris entre 0 et 4 inclus."
 
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The day_count_convention (%s) must between 0 and 4 inclusive."
-msgstr ""
+msgstr "Le day_count_convention (%s) doit être compris entre 0 et 4 inclus."
 
 #. module: spreadsheet
 #. openerp-web
@@ -3669,7 +3680,7 @@ msgstr "La end_date (%s) doit être positive ou nulle."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The exponent (%s) must be an integer when the base is negative."
-msgstr ""
+msgstr "L'exposant (%s) doit être un entier lorsque la base est négative."
 
 #. module: spreadsheet
 #. openerp-web
@@ -3678,6 +3689,7 @@ msgstr ""
 #, python-format
 msgid "The factor (%s) must be positive when the value (%s) is positive."
 msgstr ""
+"Le facteur (%s) doit être positif lorsque la valeur (%s) est positive."
 
 #. module: spreadsheet
 #. openerp-web
@@ -3694,13 +3706,15 @@ msgid ""
 "The field (%s) must be one of %s or must be a number between 1 and %s "
 "inclusive."
 msgstr ""
+"Le champ (%s) doit être l'un des %s ou doit être un nombre compris entre 1 "
+"et %s inclus."
 
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The field (%s) must be one of %s."
-msgstr ""
+msgstr "Le champ (%s) doit être l'un de %s."
 
 #. module: spreadsheet
 #. openerp-web
@@ -3721,14 +3735,14 @@ msgstr "La première valeur doit être un nombre"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The formatting unit should be 'k', 'm' or 'b'."
-msgstr ""
+msgstr "L'unité de formatage doit être 'k', 'm' ou 'b'."
 
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The frequency (%s) must be one of %s"
-msgstr ""
+msgstr "La fréquence (%s) doit être l'une de %s"
 
 #. module: spreadsheet
 #. openerp-web
@@ -3736,7 +3750,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The frequency (%s) must be one of %s."
-msgstr ""
+msgstr "La fréquence (%s) doit être l'une des %s."
 
 #. module: spreadsheet
 #. openerp-web
@@ -3765,7 +3779,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The function [[FUNCTION_NAME]] result cannot be negative"
-msgstr ""
+msgstr "Le résultat de la fonction [[FUNCTION_NAME]] ne peut pas être négatif"
 
 #. module: spreadsheet
 #. openerp-web
@@ -3775,34 +3789,36 @@ msgid ""
 "The function [[FUNCTION_NAME]] result must be greater than or equal "
 "01/01/1900."
 msgstr ""
+"Le résultat de la fonction [[FUNCTION_NAME]] doit être supérieur ou égal au "
+"01/01/1900."
 
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The future_value (%s) must be strictly positive."
-msgstr ""
+msgstr "La future_value (%s) doit être strictement positive."
 
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The high (%s) must be greater than or equal to the low (%s)."
-msgstr ""
+msgstr "Le haut (%s) doit être supérieur ou égal au bas (%s)."
 
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The key value is invalid"
-msgstr ""
+msgstr "La valeur clé n'est pas valide"
 
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The life (%s) must be strictly positive."
-msgstr ""
+msgstr "La vie (%s) doit être strictement positive."
 
 #. module: spreadsheet
 #. openerp-web
@@ -3816,7 +3832,7 @@ msgstr "Le logarithme d'un nombre, base e (nombre d'Euler)."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The lower inflection point value must be a number"
-msgstr ""
+msgstr "La valeur du point d'inflexion inférieur doit être un nombre"
 
 #. module: spreadsheet
 #. openerp-web
@@ -3826,42 +3842,42 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The maturity (%s) must be strictly greater than the settlement (%s)."
-msgstr ""
+msgstr "L'échéance (%s) doit être strictement supérieure au règlement (%s)."
 
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The maximum range limit value must be a number"
-msgstr ""
+msgstr "La valeur limite maximale de la plage doit être un nombre"
 
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The maxpoint must be a number"
-msgstr ""
+msgstr "Le maxpoint doit être un nombre"
 
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The midpoint must be a number"
-msgstr ""
+msgstr "Le point médian doit être un nombre"
 
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The minimum range limit value must be a number"
-msgstr ""
+msgstr "La valeur limite minimale de la plage doit être un nombre"
 
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The minpoint must be a number"
-msgstr ""
+msgstr "Le point minimum doit être un nombre"
 
 #. module: spreadsheet
 #. openerp-web
@@ -3957,6 +3973,7 @@ msgstr "Le prix (%s) doit être strictement positif."
 #, python-format
 msgid "The provided anchor is invalid. The cell must be part of the zone."
 msgstr ""
+"L'ancre fournie n'est pas valide. La cellule doit faire partie de la zone."
 
 #. module: spreadsheet
 #. openerp-web
@@ -3995,7 +4012,7 @@ msgstr "Le taux (%s) doit être strictement positif."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The rate_guess (%s) must be strictly greater than -1."
-msgstr ""
+msgstr "Le rate_guess (%s) doit être strictement supérieur à -1."
 
 #. module: spreadsheet
 #. openerp-web
@@ -4010,7 +4027,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The result_range must be a single row or a single column."
-msgstr ""
+msgstr "Le result_range doit être une seule ligne ou une seule colonne."
 
 #. module: spreadsheet
 #. openerp-web
@@ -4059,7 +4076,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The sheet name cannot be empty."
-msgstr ""
+msgstr "Le nom de la feuille ne peut pas être vide."
 
 #. module: spreadsheet
 #. openerp-web
@@ -4074,14 +4091,14 @@ msgstr "La start_date (%s) doit être positive ou nulle."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The starting_at (%s) must be greater than or equal to 1."
-msgstr ""
+msgstr "Le starting_at (%s) doit être supérieur ou égal à 1."
 
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The table_number (%s) is out of range."
-msgstr ""
+msgstr "Le table_number (%s) est hors plage."
 
 #. module: spreadsheet
 #. openerp-web
@@ -4089,21 +4106,21 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The text_to_search must be non-empty."
-msgstr ""
+msgstr "Le text_to_search doit être non vide."
 
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The time_string (%s) cannot be parsed to date/time."
-msgstr ""
+msgstr "La time_string (%s) ne peut pas être analysée en date/heure."
 
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The type (%s) is out of range."
-msgstr ""
+msgstr "Le type (%s) est hors de la sélection."
 
 #. module: spreadsheet
 #. openerp-web
@@ -4117,7 +4134,7 @@ msgstr "Le type (%s) doit être 1, 2 ou 3."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The upper inflection point value must be a number"
-msgstr ""
+msgstr "La valeur du point d'inflexion supérieur doit être un nombre"
 
 #. module: spreadsheet
 #. openerp-web
@@ -4192,7 +4209,7 @@ msgstr "Le week-end (%s) doit être différent de '1111111'."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The weekend must be a number or a string."
-msgstr ""
+msgstr "Le week-end doit être un nombre ou une chaîne."
 
 #. module: spreadsheet
 #. openerp-web
@@ -4214,7 +4231,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/list/list_functions.js:0
 #, python-format
 msgid "There is no list with id \"%s\""
-msgstr ""
+msgstr "Il n'y a pas de liste avec l'identifiant \"%s\""
 
 #. module: spreadsheet
 #. openerp-web
@@ -4249,6 +4266,8 @@ msgid ""
 "This function takes in two currency codes as arguments, and returns the "
 "exchange rate from the first currency to the second as float."
 msgstr ""
+"Cette fonction prend deux codes de devise comme arguments et renvoie le taux"
+" de change de la première devise à la seconde sous forme flottante."
 
 #. module: spreadsheet
 #. openerp-web
@@ -4274,7 +4293,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Thresholds"
-msgstr ""
+msgstr "Seuil"
 
 #. module: spreadsheet
 #. openerp-web
@@ -4315,7 +4334,7 @@ msgstr "Total"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Treat labels as text"
-msgstr ""
+msgstr "Traiter les étiquettes comme du texte"
 
 #. module: spreadsheet
 #. openerp-web
@@ -4360,7 +4379,7 @@ msgstr "Annuler"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Unexpected token: %s"
-msgstr ""
+msgstr "Jeton inattendu : %s"
 
 #. module: spreadsheet
 #. openerp-web
@@ -4380,15 +4399,22 @@ msgstr "Afficher toutes les lignes"
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid "Unknown token: %s"
+msgid "Unknown function: \"%s\""
 msgstr ""
 
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "Unknown token: %s"
+msgstr "Jeton inconnu : %s"
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "Unmatched left parenthesis"
-msgstr ""
+msgstr "Parenthèse gauche non appariée"
 
 #. module: spreadsheet
 #. openerp-web
@@ -4412,6 +4438,7 @@ msgstr "Valeur"
 #, python-format
 msgid "Value at a given percentile of a dataset exclusive of 0 and 1."
 msgstr ""
+"Valeur à un centile donné d'un ensemble de données à l'exclusion de 0 et 1."
 
 #. module: spreadsheet
 #. openerp-web
@@ -4419,14 +4446,14 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Value at a given percentile of a dataset."
-msgstr ""
+msgstr "Valeur à un centile donné d'un ensemble de données."
 
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Value change from key value"
-msgstr ""
+msgstr "Changement de valeur à partir de la valeur clé"
 
 #. module: spreadsheet
 #. openerp-web
@@ -4449,6 +4476,8 @@ msgstr "Valeur interprétée comme un pourcentage."
 msgid ""
 "Value nearest to a specific quartile of a dataset exclusive of 0 and 4."
 msgstr ""
+"Valeur la plus proche d'un quartile spécifique d'un ensemble de données à "
+"l'exclusion de 0 et 4."
 
 #. module: spreadsheet
 #. openerp-web
@@ -4509,7 +4538,7 @@ msgstr "Variance."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Vertical axis position"
-msgstr ""
+msgstr "Position de l'axe vertical"
 
 #. module: spreadsheet
 #. openerp-web
@@ -4533,6 +4562,9 @@ msgid ""
 "We found data next to your selection. Since this data was not selected, it "
 "will not be sorted. Do you want to extend your selection?"
 msgstr ""
+"Nous avons trouvé des données à côté de votre sélection. Comme ces données "
+"n'ont pas été sélectionnées, elles ne seront pas triées. Vous souhaitez "
+"étendre votre sélection ?"
 
 #. module: spreadsheet
 #. openerp-web
@@ -4560,7 +4592,7 @@ msgstr "quand la valeur est égale à"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "When value is below"
-msgstr ""
+msgstr "Quand la valeur est sous"
 
 #. module: spreadsheet
 #. openerp-web
@@ -4590,7 +4622,7 @@ msgstr "Si une valeur est un nombre."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Whether a value is an error other than #N/A."
-msgstr ""
+msgstr "Si une valeur est une erreur autre que #N/A."
 
 #. module: spreadsheet
 #. openerp-web
@@ -4618,7 +4650,7 @@ msgstr "Si une valeur est textuelle."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Whether a value is the error #N/A."
-msgstr ""
+msgstr "Si une valeur est l'erreur #N/A."
 
 #. module: spreadsheet
 #. openerp-web
@@ -4631,10 +4663,17 @@ msgstr "Si la valeur fournie est paire."
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "Wrapping"
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Wrong function call"
-msgstr ""
+msgstr "Appel de fonction erroné"
 
 #. module: spreadsheet
 #. openerp-web
@@ -4642,6 +4681,7 @@ msgstr ""
 #, python-format
 msgid "Wrong number of Argument[]. Expected an even number of Argument[]."
 msgstr ""
+"Mauvais nombre d'arguments[]. Un nombre pair d'arguments[] est attendu."
 
 #. module: spreadsheet
 #. openerp-web
@@ -4671,35 +4711,35 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "[[FUNCTION_NAME]] evaluates to an out of bounds range."
-msgstr ""
+msgstr "[[FUNCTION_NAME]] est évalué sur une plage hors limites."
 
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "[[FUNCTION_NAME]] evaluates to an out of range column value %s."
-msgstr ""
+msgstr "[[FUNCTION_NAME]] donne une valeur de colonne hors limites %s."
 
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "[[FUNCTION_NAME]] evaluates to an out of range row value %s."
-msgstr ""
+msgstr "[[FUNCTION_NAME]] donne une valeur de ligne hors limites %s."
 
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "[[FUNCTION_NAME]] expects number values."
-msgstr ""
+msgstr "[[FUNCTION_NAME]] attend des valeurs numériques."
 
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "[[FUNCTION_NAME]] expects the weight to be positive or equal to 0."
-msgstr ""
+msgstr "[[FUNCTION_NAME]] attend un poids positif ou égal à 0."
 
 #. module: spreadsheet
 #. openerp-web
@@ -4713,7 +4753,7 @@ msgstr "[[FUNCTION_NAME]] n'a pas le bon nombre d'arguments %s vs %s."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "[[FUNCTION_NAME]] has mismatched range sizes."
-msgstr ""
+msgstr "[[FUNCTION_NAME]] a des plages de longueur différente."
 
 #. module: spreadsheet
 #. openerp-web
@@ -4725,7 +4765,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "[[FUNCTION_NAME]] has no valid input data."
-msgstr ""
+msgstr "[[FUNCTION_NAME]] n'a pas de données d'entrée valides."
 
 #. module: spreadsheet
 #. openerp-web

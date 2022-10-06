@@ -1535,6 +1535,111 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         }
     );
 
+    QUnit.test(
+        "getFiltersMatchingPivot return correctly matching filter according to cell formula with __count and positional argument",
+        async function (assert) {
+            const { model } = await createSpreadsheetWithPivot({
+                arch: /*xml*/ `
+                <pivot>
+                    <field name="product_id" type="row"/>
+                    <field name="__count" type="measure"/>
+                </pivot>`,
+            });
+            setCellContent(model, "B3", '=ODOO.PIVOT(1, "__count", "#product_id", 1)');
+            await addGlobalFilter(model, {
+                filter: {
+                    id: "42",
+                    type: "relation",
+                    defaultValue: [],
+                    pivotFields: { 1: { field: "product_id", type: "many2one" } },
+                },
+            });
+            const filters = model.getters.getFiltersMatchingPivot(getCellFormula(model, "B3"));
+            assert.deepEqual(filters, [
+                {
+                    filterId: "42",
+                    value: [37],
+                },
+            ]);
+        }
+    );
+
+    QUnit.test(
+        "getFiltersMatchingPivot return correctly matching filter according to cell formula with positional argument",
+        async function (assert) {
+            const { model } = await createSpreadsheetWithPivot({
+                arch: /*xml*/ `
+                    <pivot>
+                        <field name="product_id" type="row"/>
+                        <field name="probability" type="measure"/>
+                    </pivot>`,
+            });
+            setCellContent(model, "B3", '=ODOO.PIVOT(1, "probability", "#product_id", 1)');
+            await addGlobalFilter(model, {
+                filter: {
+                    id: "42",
+                    type: "relation",
+                    defaultValue: [],
+                    pivotFields: { 1: { field: "product_id", type: "many2one" } },
+                },
+            });
+            const filters = model.getters.getFiltersMatchingPivot(getCellFormula(model, "B3"));
+            assert.deepEqual(filters, [
+                {
+                    filterId: "42",
+                    value: [37],
+                },
+            ]);
+        }
+    );
+
+    QUnit.test(
+        "getFiltersMatchingPivot return correctly matching filter when there is a filter with no field defined",
+        async function (assert) {
+            const { model } = await createSpreadsheetWithPivot({
+                arch: /*xml*/ `
+                <pivot>
+                    <field name="product_id" type="row"/>
+                    <field name="probability" type="measure"/>
+                </pivot>`,
+            });
+            await addGlobalFilter(model, {
+                filter: {
+                    id: "42",
+                    type: "relation",
+                    defaultValue: [],
+                    pivotFields: {},
+                },
+            });
+            const filters = model.getters.getFiltersMatchingPivot(getCellFormula(model, "B3"));
+            assert.deepEqual(filters, []);
+        }
+    );
+
+    QUnit.test(
+        "getFiltersMatchingPivot return empty filter for cell formula without any argument",
+        async function (assert) {
+            const { model } = await createSpreadsheetWithPivot({
+                arch: /*xml*/ `
+                    <pivot>
+                        <field name="product_id" type="row"/>
+                        <field name="probability" type="measure"/>
+                    </pivot>`,
+            });
+            setCellContent(model, "B3", '=ODOO.PIVOT(1, "probability")');
+            await addGlobalFilter(model, {
+                filter: {
+                    id: "42",
+                    type: "relation",
+                    defaultValue: [],
+                    pivotFields: { 1: { field: "product_id", type: "many2one" } },
+                },
+            });
+            const filters = model.getters.getFiltersMatchingPivot(getCellFormula(model, "B3"));
+            assert.deepEqual(filters, []);
+        }
+    );
+
     QUnit.test("field matching is removed when pivot is deleted", async function (assert) {
         const { model } = await createSpreadsheetWithPivot();
         await addGlobalFilter(model, LAST_YEAR_FILTER);

@@ -56,7 +56,7 @@ function getFieldClassFromRegistry(fieldType, widget, viewType, jsClass) {
 export function fieldVisualFeedback(FieldComponent, record, fieldName, fieldInfo) {
     const modifiers = fieldInfo.modifiers || {};
     const readonly = evalDomain(modifiers.readonly, record.evalContext);
-    const inEdit = record.mode !== "readonly";
+    const inEdit = record.isInEdition;
 
     let empty = !record.isVirtual;
     if ("isEmpty" in FieldComponent) {
@@ -196,10 +196,7 @@ export class Field extends Component {
         return false;
     }
 }
-Field.template = xml/* xml */ `
-    <div t-att-name="props.name" t-att-class="classNames" t-att-style="props.style" t-att-data-tooltip-template="tooltip and 'web.FieldTooltip'" t-att-data-tooltip-info="tooltip">
-        <t t-component="FieldComponent" t-props="fieldComponentProps"/>
-    </div>`;
+Field.template = "web.Field";
 
 Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
     const name = node.getAttribute("name");
@@ -275,7 +272,7 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
                 viewMode = "list";
             } else if (!views.list && views.kanban) {
                 viewMode = "kanban";
-            } else {
+            } else if (views.list && views.kanban) {
                 viewMode = "list,kanban";
             }
         } else {

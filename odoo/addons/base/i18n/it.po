@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:25+0000\n"
+"POT-Creation-Date: 2022-09-27 15:43+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
@@ -498,6 +498,14 @@ msgstr ""
 "\n"
 "\n"
 "Questo modulo aggiunge un team personalizzato per il punto vendita in modo da visualizzare e gestire le vendite con più facilità.\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_pos_sale_margin
+msgid ""
+"\n"
+"\n"
+"This module adds enable you to view the margin of your Point of Sale orders in the Sales Margin report.\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant
@@ -21011,6 +21019,11 @@ msgid "Link module between Point of Sale and Sales"
 msgstr "Modulo di collegamento tra punto vendita e vendite"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_pos_sale_margin
+msgid "Link module between Point of Sale and Sales Margin"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_pos_hr_l10n_be
 msgid "Link module between Pos Blackbox Be and Pos HR"
 msgstr "Modulo di collegamento tra Pos Blackbox Be e Pos HR"
@@ -26749,6 +26762,11 @@ msgid "RTN"
 msgstr "RTN"
 
 #. module: base
+#: model:res.country,vat_label:base.ec
+msgid "RUC"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__font__raleway
 msgid "Raleway"
 msgstr "Raleway"
@@ -29916,6 +29934,14 @@ msgid "The currency rate must be strictly positive."
 msgstr "Il tasso di cambio deve essere strettamente positivo."
 
 #. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid ""
+"The date for the current rate is empty.\n"
+"Please set it."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_users__company_id
 msgid "The default company for this user."
 msgstr "L'azienda predefinita per questo utente."
@@ -30051,6 +30077,14 @@ msgid ""
 msgstr ""
 "Il menu azione a cui si applica questo filtro. Se è lasciato vuoto, il "
 "filtro è applicato a tutti i menu di questo modello."
+
+#. module: base
+#: code:addons/base/models/ir_module.py:0
+#, python-format
+msgid ""
+"The method _button_immediate_install cannot be called on init or non loaded "
+"registries. Please use button_install instead."
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -33699,6 +33733,11 @@ msgstr "pos_sale"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_sale_loyalty
 msgid "pos_sale_loyalty"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_sale_margin
+msgid "pos_sale_margin"
 msgstr ""
 
 #. module: base

@@ -6,16 +6,16 @@
 # Ryoko Tsuda <ryoko@quartile.co>, 2022
 # 森岡広道 <hiromichi.morioka@pro-spire.co.jp>, 2022
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
-# Noma Yuki, 2022
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # Tim Siu Lai <tl@roomsfor.hk>, 2022
+# Noma Yuki, 2022
 # Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:03+0000\n"
+"POT-Creation-Date: 2022-09-27 15:13+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
@@ -230,6 +230,24 @@ msgid "(nolabel)"
 msgstr "（ラベルなし）"
 
 #. module: web
+#. openerp-web
+#: code:addons/web/static/src/core/signature/name_and_signature.xml:0
+#, python-format
+msgid ""
+") format(\"woff\");\n"
+"                        font-weight: normal;\n"
+"                        font-style: normal;\n"
+"                    }"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
+#, python-format
+msgid "+ KEY"
+msgstr ""
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "07/08/2020"
 msgstr ""
@@ -402,6 +420,16 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/core/signature/name_and_signature.xml:0
+#, python-format
+msgid ""
+"@font-face {\n"
+"                        font-family: \"font\";\n"
+"                        src: url(data:font/ttf;base64,"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/search/favorite_menu/custom_favorite_item.js:0
 #, python-format
 msgid "A filter with same name already exists."
@@ -430,6 +458,13 @@ msgstr "ポップアップウィンドウがブロックされています。こ
 #, python-format
 msgid "ALL"
 msgstr "すべて"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
+#, python-format
+msgid "ALT"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -690,6 +725,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/core/signature/signature_dialog.xml:0
 #: code:addons/web/static/src/legacy/js/views/signature_dialog.js:0
 #, python-format
 msgid "Adopt & Sign"
@@ -697,6 +733,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/core/signature/signature_dialog.js:0
 #: code:addons/web/static/src/legacy/js/views/signature_dialog.js:0
 #, python-format
 msgid "Adopt Your Signature"
@@ -727,6 +764,8 @@ msgstr "全て"
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/views/calendar/calendar_model.js:0
 #: code:addons/web/static/src/legacy/js/views/calendar/calendar_renderer.js:0
+#: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_popover.js:0
+#: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_renderer.js:0
 #, python-format
 msgid "All day"
 msgstr "終日"
@@ -738,20 +777,6 @@ msgstr "終日"
 #, python-format
 msgid "All users"
 msgstr "全ユーザ"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#, python-format
-msgid "Alt"
-msgstr "Alt"
 
 #. module: web
 #. openerp-web
@@ -905,6 +930,7 @@ msgstr ""
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/views/calendar/calendar_controller.js:0
+#: code:addons/web/static/src/views/calendar/calendar_controller.js:0
 #, python-format
 msgid "Are you sure you want to delete this record ?"
 msgstr "このレコードを本当に削除しますか？"
@@ -969,6 +995,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/core/signature/name_and_signature.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/name_and_signature.xml:0
 #, python-format
@@ -990,6 +1017,9 @@ msgstr "利用可能な項目"
 #: code:addons/web/static/src/legacy/xml/web_calendar.xml:0
 #: code:addons/web/static/src/legacy/xml/web_calendar.xml:0
 #: code:addons/web/static/src/legacy/xml/web_calendar.xml:0
+#: code:addons/web/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
+#: code:addons/web/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
+#: code:addons/web/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
 #, python-format
 msgid "Avatar"
@@ -1050,6 +1080,7 @@ msgstr "バイナリ項目はbase64でエンコードされていない限りExc
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/fields/image/image_field.xml:0
+#: code:addons/web/static/src/views/fields/signature/signature_field.xml:0
 #, python-format
 msgid "Binary file"
 msgstr "バイナリファイル"
@@ -1080,6 +1111,7 @@ msgstr "ボタンタイプ:"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/core/signature/signature_dialog.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/name_and_signature.xml:0
 #, python-format
@@ -1143,6 +1175,7 @@ msgstr "カレンダービューで 'date_start'属性が定義されていま�
 #. openerp-web
 #: code:addons/web/static/src/core/confirmation_dialog/confirmation_dialog.js:0
 #: code:addons/web/static/src/core/errors/error_dialogs.xml:0
+#: code:addons/web/static/src/core/signature/signature_dialog.xml:0
 #: code:addons/web/static/src/legacy/js/core/dialog.js:0
 #: code:addons/web/static/src/legacy/js/core/dialog.js:0
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
@@ -1152,10 +1185,10 @@ msgstr "カレンダービューで 'date_start'属性が定義されていま�
 #: code:addons/web/static/src/legacy/js/views/signature_dialog.js:0
 #: code:addons/web/static/src/legacy/js/views/view_dialogs.js:0
 #: code:addons/web/static/src/legacy/xml/control_panel.xml:0
+#: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.xml:0
 #: code:addons/web/static/src/views/fields/daterange/daterange_field.js:0
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.xml:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
-#: code:addons/web/static/src/views/view_dialogs/select_create_dialog.xml:0
 #: code:addons/web/static/src/webclient/barcode/barcode_scanner.xml:0
 #: code:addons/web/static/src/webclient/settings_form_view/fields/upgrade_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
@@ -1239,6 +1272,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/core/signature/name_and_signature.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
@@ -1283,6 +1317,7 @@ msgstr ""
 #: code:addons/web/static/src/views/kanban/kanban_column_examples_dialog.xml:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #: code:addons/web/static/src/views/view_dialogs/form_view_dialog.xml:0
+#: code:addons/web/static/src/views/view_dialogs/select_create_dialog.xml:0
 #, python-format
 msgid "Close"
 msgstr "閉じる"
@@ -1306,13 +1341,6 @@ msgstr "色"
 #: code:addons/web/static/src/views/kanban/kanban_renderer.js:0
 #, python-format
 msgid "Column %s"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#, python-format
-msgid "Command"
 msgstr ""
 
 #. module: web
@@ -1385,6 +1413,7 @@ msgstr "ドキュメントレイアウトを設定"
 #: code:addons/web/static/src/legacy/js/core/dialog.js:0
 #: code:addons/web/static/src/legacy/js/core/dialog.js:0
 #: code:addons/web/static/src/legacy/js/views/list/list_confirm_dialog.js:0
+#: code:addons/web/static/src/views/calendar/calendar_controller.js:0
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.js:0
 #, python-format
 msgid "Confirmation"
@@ -1413,21 +1442,6 @@ msgstr "接続が復活しました。オンラインです。"
 #, python-format
 msgid "Context:"
 msgstr "コンテキスト:"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#, python-format
-msgid "Control"
-msgstr "後続処理"
 
 #. module: web
 #. openerp-web
@@ -1525,6 +1539,7 @@ msgstr "サーバに接続できませんでした"
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/legacy/js/fields/signature.js:0
 #: code:addons/web/static/src/views/fields/image/image_field.js:0
+#: code:addons/web/static/src/views/fields/signature/signature_field.js:0
 #, python-format
 msgid "Could not display the selected image"
 msgstr ""
@@ -1592,8 +1607,11 @@ msgstr "国"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/web_calendar.xml:0
+#: code:addons/web/static/src/views/calendar/calendar_year/calendar_year_popover.xml:0
+#: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
+#: code:addons/web/static/src/views/form/form_controller.xml:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_controller.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.js:0
@@ -1633,13 +1651,6 @@ msgstr "\"<strong>%s</strong>\" を作成"
 #, python-format
 msgid "Create %s"
 msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#, python-format
-msgid "Create a new record"
-msgstr "レコードを新規作成"
 
 #. module: web
 #. openerp-web
@@ -1764,6 +1775,7 @@ msgstr "日時"
 #: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
 #: code:addons/web/static/src/legacy/xml/web_calendar.xml:0
 #: code:addons/web/static/src/search/utils/dates.js:0
+#: code:addons/web/static/src/views/calendar/calendar_controller.js:0
 #, python-format
 msgid "Day"
 msgstr "日"
@@ -1853,6 +1865,7 @@ msgstr "デフォルト値："
 #: code:addons/web/static/src/legacy/xml/web_calendar.xml:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.xml:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.xml:0
+#: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_popover.xml:0
 #: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
 #: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
 #: code:addons/web/static/src/views/fields/many2many_tags/tags_list.xml:0
@@ -1916,13 +1929,6 @@ msgstr "降順"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#, python-format
-msgid "Description"
-msgstr "説明"
-
-#. module: web
-#. openerp-web
 #: code:addons/web/static/src/core/domain_selector_dialog/domain_selector_dialog.xml:0
 #: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/legacy/js/views/kanban/kanban_record.js:0
@@ -1937,6 +1943,7 @@ msgstr "説明"
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
 #: code:addons/web/static/src/views/fields/translation_dialog.xml:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
+#: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_cover_image_dialog.xml:0
 #: code:addons/web/static/src/views/list/list_controller.xml:0
 #: code:addons/web/static/src/webclient/settings_form_view/settings_confirmation_dialog.xml:0
@@ -1946,10 +1953,10 @@ msgstr "破棄"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
+#: code:addons/web/static/src/views/form/form_error_dialog/form_error_dialog.xml:0
 #, python-format
-msgid "Discard a record modification"
-msgstr "レコード修正の破棄"
+msgid "Discard changes"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -2074,6 +2081,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/core/signature/name_and_signature.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/name_and_signature.xml:0
 #, python-format
@@ -2103,10 +2111,11 @@ msgstr "複製"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/kanban.xml:0
 #: code:addons/web/static/src/legacy/xml/web_calendar.xml:0
+#: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_popover.xml:0
+#: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.xml:0
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
 #: code:addons/web/static/src/views/fields/image/image_field.xml:0
 #: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
-#: code:addons/web/static/src/views/form/form_controller.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_record_quick_create.xml:0
 #, python-format
 msgid "Edit"
@@ -2155,13 +2164,6 @@ msgstr "ステージ編集"
 #, python-format
 msgid "Edit View: "
 msgstr "ビュー編集："
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#, python-format
-msgid "Edit a record"
-msgstr "レコードを編集"
 
 #. module: web
 #. openerp-web
@@ -2233,6 +2235,7 @@ msgstr "Escで破棄"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/views/calendar/calendar_model.js:0
+#: code:addons/web/static/src/views/calendar/calendar_model.js:0
 #, python-format
 msgid "Everybody's calendars"
 msgstr "全員のカレンダー"
@@ -2240,6 +2243,7 @@ msgstr "全員のカレンダー"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/views/calendar/calendar_model.js:0
+#: code:addons/web/static/src/views/calendar/calendar_model.js:0
 #, python-format
 msgid "Everything"
 msgstr "すべて"
@@ -2308,8 +2312,6 @@ msgstr "外部ID"
 #. openerp-web
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
-#: code:addons/web/static/src/views/fields/properties/property_value.xml:0
 #, python-format
 msgid "External link"
 msgstr "外部リンク"
@@ -2332,7 +2334,6 @@ msgstr ""
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/fields/field_utils.js:0
-#: code:addons/web/static/src/views/fields/formatters.js:0
 #, python-format
 msgid "False"
 msgstr "False"
@@ -2501,6 +2502,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/core/signature/name_and_signature.xml:0
 #: code:addons/web/static/src/legacy/xml/name_and_signature.xml:0
 #, python-format
 msgid "Full Name"
@@ -2704,6 +2706,14 @@ msgstr "整数"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
+#: code:addons/web/static/src/views/fields/properties/property_value.xml:0
+#, python-format
+msgid "Internal link"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/core/debug/profiling/profiling_item.xml:0
 #, python-format
 msgid "Interval"
@@ -2751,6 +2761,13 @@ msgid ""
 "Invalid field chain. You may have used a non-existing field name or followed"
 " a non-relational field."
 msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.js:0
+#, python-format
+msgid "Invalid fields"
+msgstr "無効なフィールド"
 
 #. module: web
 #. openerp-web
@@ -2913,6 +2930,7 @@ msgstr "リスト"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/core/signature/name_and_signature.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/name_and_signature.xml:0
 #, python-format
@@ -2962,6 +2980,7 @@ msgstr "ロード中です。お待ちください..."
 #: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/views/calendar/filter_panel/calendar_filter_panel.js:0
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "Loading..."
@@ -3004,13 +3023,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:web.field_base_document_layout__logo_secondary_color
 msgid "Logo Secondary Color"
 msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#, python-format
-msgid "Mac"
-msgstr "Mac"
 
 #. module: web
 #. openerp-web
@@ -3132,6 +3144,7 @@ msgstr "中くらいの青"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/views/calendar/calendar_quick_create.js:0
+#: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.js:0
 #, python-format
 msgid "Meeting Subject"
 msgstr "打ち合わせ議題"
@@ -3139,6 +3152,7 @@ msgstr "打ち合わせ議題"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/xml/web_calendar.xml:0
+#: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.xml:0
 #, python-format
 msgid "Meeting Subject:"
 msgstr ""
@@ -3222,6 +3236,7 @@ msgstr "金銭"
 #: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
 #: code:addons/web/static/src/legacy/xml/web_calendar.xml:0
 #: code:addons/web/static/src/search/utils/dates.js:0
+#: code:addons/web/static/src/views/calendar/calendar_controller.js:0
 #, python-format
 msgid "Month"
 msgstr "月"
@@ -3286,6 +3301,8 @@ msgstr ""
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/views/calendar/calendar_controller.js:0
+#: code:addons/web/static/src/views/calendar/calendar_controller.js:0
+#: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.js:0
 #, python-format
 msgid "New Event"
 msgstr "新しいイベント"
@@ -3333,6 +3350,8 @@ msgstr ""
 #: code:addons/web/static/src/core/pager/pager.xml:0
 #: code:addons/web/static/src/legacy/xml/web_calendar.xml:0
 #: code:addons/web/static/src/legacy/xml/web_calendar.xml:0
+#: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
+#: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #, python-format
 msgid "Next"
 msgstr "次"
@@ -3615,6 +3634,13 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/views/form/form_error_dialog/form_error_dialog.xml:0
+#, python-format
+msgid "Oh snap!"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/core/confirmation_dialog/confirmation_dialog.js:0
 #: code:addons/web/static/src/core/dialog/dialog.xml:0
 #: code:addons/web/static/src/core/errors/error_dialogs.xml:0
@@ -3627,6 +3653,7 @@ msgstr ""
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/control_panel.xml:0
 #: code:addons/web/static/src/public/error_notifications.js:0
+#: code:addons/web/static/src/views/calendar/calendar_year/calendar_year_popover.xml:0
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.xml:0
 #: code:addons/web/static/src/views/view_dialogs/form_view_dialog.xml:0
 #: code:addons/web/static/src/webclient/actions/action_dialog.xml:0
@@ -3695,45 +3722,10 @@ msgstr "自分のみ"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#, python-format
-msgid "Open Command Palette"
-msgstr ""
-
-#. module: web
-#. openerp-web
 #: code:addons/web/static/src/webclient/debug_items.js:0
 #, python-format
 msgid "Open View"
 msgstr "ビューを開く"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#, python-format
-msgid "Open the next record"
-msgstr "次のレコードを開く"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#, python-format
-msgid "Open the previous record"
-msgstr "前のレコードを開く"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#, python-format
-msgid "Open to kanban view"
-msgstr "かんばんビューを開く"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#, python-format
-msgid "Open to list view"
-msgstr "リストビューを開く"
 
 #. module: web
 #. openerp-web
@@ -4076,6 +4068,8 @@ msgstr ""
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/web_calendar.xml:0
 #: code:addons/web/static/src/legacy/xml/web_calendar.xml:0
+#: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
+#: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #, python-format
 msgid "Previous"
 msgstr "前"
@@ -4250,6 +4244,7 @@ msgstr "クイック追加"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
+#: code:addons/web/static/src/views/calendar/filter_panel/calendar_filter_panel.js:0
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "Quick search: %s"
@@ -4436,6 +4431,8 @@ msgstr "タグを削除"
 #. openerp-web
 #: code:addons/web/static/src/legacy/xml/web_calendar.xml:0
 #: code:addons/web/static/src/legacy/xml/web_calendar.xml:0
+#: code:addons/web/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
+#: code:addons/web/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
 #, python-format
 msgid "Remove this favorite from the list"
 msgstr "このリストからこのお気に入りを削除"
@@ -4509,6 +4506,7 @@ msgstr "結果を見る"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/fields/signature.js:0
+#: code:addons/web/static/src/views/fields/signature/signature_field.xml:0
 #, python-format
 msgid "SIGNATURE"
 msgstr ""
@@ -4535,6 +4533,7 @@ msgstr "サーモンピンク"
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
 #: code:addons/web/static/src/views/fields/translation_dialog.xml:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
+#: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 #: code:addons/web/static/src/views/list/list_controller.xml:0
 #: code:addons/web/static/src/webclient/settings_form_view/settings_confirmation_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
@@ -4560,13 +4559,6 @@ msgstr "保存して閉じる"
 #, python-format
 msgid "Save & New"
 msgstr "保存して新規"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#, python-format
-msgid "Save a record"
-msgstr "レコードを保存"
 
 #. module: web
 #. openerp-web
@@ -4628,6 +4620,7 @@ msgstr "検索"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
+#: code:addons/web/static/src/views/calendar/filter_panel/calendar_filter_panel.js:0
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "Search More..."
@@ -4688,6 +4681,7 @@ msgstr "検索..."
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
+#: code:addons/web/static/src/views/calendar/filter_panel/calendar_filter_panel.js:0
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "Search: %s"
@@ -4785,6 +4779,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/views/calendar/filter_panel/calendar_filter_panel.js:0
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "Select records"
@@ -4890,7 +4885,6 @@ msgstr "全ユーザと共有"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.js:0
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.js:0
 #, python-format
 msgid "Shortcuts"
@@ -5000,6 +4994,13 @@ msgstr "このページに留まる"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/views/form/form_error_dialog/form_error_dialog.xml:0
+#, python-format
+msgid "Stay here"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/core/ui/block_ui.js:0
 #: code:addons/web/static/src/core/ui/block_ui.js:0
 #: code:addons/web/static/src/legacy/js/core/misc.js:0
@@ -5016,6 +5017,7 @@ msgstr "引き続き読込中...<br />今しばらくお待ちください。"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/core/signature/name_and_signature.xml:0
 #: code:addons/web/static/src/legacy/xml/name_and_signature.xml:0
 #, python-format
 msgid "Style"
@@ -5042,6 +5044,13 @@ msgstr "サポート"
 #, python-format
 msgid "Syntax error"
 msgstr "構文エラー"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
+#, python-format
+msgid "TIP"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -5211,6 +5220,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/core/signature/name_and_signature.xml:0
 #: code:addons/web/static/src/legacy/xml/name_and_signature.xml:0
 #, python-format
 msgid "This file is invalid. Please select an image."
@@ -5271,6 +5281,9 @@ msgstr ""
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/legacy/xml/web_calendar.xml:0
+#: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
+#: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
+#: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
 #, python-format
 msgid "Today"
@@ -5327,7 +5340,6 @@ msgstr ""
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/fields/field_utils.js:0
-#: code:addons/web/static/src/views/fields/formatters.js:0
 #, python-format
 msgid "True"
 msgstr "True"
@@ -5343,6 +5355,7 @@ msgstr "レコードを追加するか、または、検索バーのフィルタ
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/core/signature/name_and_signature.xml:0
 #: code:addons/web/static/src/legacy/xml/name_and_signature.xml:0
 #, python-format
 msgid "Type your name to sign"
@@ -5371,6 +5384,13 @@ msgstr "URL"
 msgid ""
 "Unable to find Wkhtmltopdf on this system. The report will be shown in html."
 msgstr "システムにWkhtmltopdfが見つかりません。レポートはHTMLで表示されます。"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
+#, python-format
+msgid "Unable to save"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -5415,6 +5435,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/static/src/legacy/js/views/calendar/calendar_model.js:0
+#: code:addons/web/static/src/views/calendar/calendar_model.js:0
 #: code:addons/web/static/src/views/graph/graph_model.js:0
 #: code:addons/web/static/src/views/graph/graph_model.js:0
 #, python-format
@@ -5471,6 +5492,7 @@ msgstr "無名"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 #: code:addons/web/static/src/webclient/settings_form_view/settings_confirmation_dialog.js:0
 #: code:addons/web/static/src/webclient/settings_form_view/settings_form_view.xml:0
 #, python-format
@@ -5733,6 +5755,8 @@ msgstr "ウェブサイトリンク"
 #: code:addons/web/static/src/legacy/js/views/calendar/calendar_model.js:0
 #: code:addons/web/static/src/legacy/xml/web_calendar.xml:0
 #: code:addons/web/static/src/search/utils/dates.js:0
+#: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_renderer.js:0
+#: code:addons/web/static/src/views/calendar/calendar_controller.js:0
 #, python-format
 msgid "Week"
 msgstr "週"
@@ -5751,13 +5775,6 @@ msgstr "よくできました！"
 #, python-format
 msgid "Widget:"
 msgstr "ウィジェット:"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#, python-format
-msgid "Windows/Linux"
-msgstr "Windows/Linux"
 
 #. module: web
 #. openerp-web
@@ -5791,6 +5808,7 @@ msgstr "XML ID:"
 #: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
 #: code:addons/web/static/src/legacy/xml/web_calendar.xml:0
 #: code:addons/web/static/src/search/utils/dates.js:0
+#: code:addons/web/static/src/views/calendar/calendar_controller.js:0
 #, python-format
 msgid "Year"
 msgstr "年"
@@ -6131,6 +6149,20 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_popover.js:0
+#, python-format
+msgid "hour"
+msgstr "時間"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_popover.js:0
+#, python-format
+msgid "hours"
+msgstr "時間"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/core/domain_selector/domain_selector_operators.js:0
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
 #, python-format
@@ -6357,6 +6389,20 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_popover.js:0
+#, python-format
+msgid "minute"
+msgstr "分"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_popover.js:0
+#, python-format
+msgid "minutes"
+msgstr "分"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_invite_users.xml:0
 #, python-format
 msgid "more"
@@ -6435,6 +6481,13 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
+#, python-format
+msgid "on any screen to show shortcut overlays and"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/core/domain_selector/domain_selector_leaf_node.xml:0
 #: code:addons/web/static/src/legacy/js/views/action_model.js:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
@@ -6450,6 +6503,13 @@ msgstr "または"
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
 #, python-format
 msgid "parent of"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/views/fields/relational_utils.xml:0
+#, python-format
+msgid "props.placeholder"
 msgstr ""
 
 #. module: web
@@ -6545,7 +6605,21 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
+#, python-format
+msgid "to trigger a shortcut."
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "type a default text or press ENTER"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
+#, python-format
+msgid "— press"
 msgstr ""

@@ -23,7 +23,8 @@ export class EditInBackendSystray extends Component {
 
     editInBackend() {
         const { metadata: { mainObject } } = this.websiteService.currentWebsite;
-        this.websiteService.editedObjectPath = this.websiteService.contentWindow.location.pathname;
+        const location = this.websiteService.contentWindow.location;
+        this.websiteService.editedObjectPath = location.pathname + location.search + location.hash;
         this.actionService.doAction({
             res_model: mainObject.model,
             res_id: mainObject.id,

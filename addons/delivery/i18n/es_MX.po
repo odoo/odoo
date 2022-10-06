@@ -34,7 +34,7 @@ msgstr "(calculado:"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
 msgid "<i class=\"fa fa-arrow-right me-1\"/>Get rate"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right me-1\"/>Obtener tarifa"
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:0
@@ -106,7 +106,7 @@ msgstr "<strong>Código HS</strong>"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
 msgid "<strong>Shipping Description:</strong>"
-msgstr ""
+msgstr "<strong>Descripción de envío:</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
@@ -157,6 +157,9 @@ msgid ""
 "customers on the Sales Order and sales confirmation email.E.g. instructions "
 "for customers to follow."
 msgstr ""
+"Una descripción del método de entrega que desea comunicar a sus clientes en "
+"la orden de venta y en el correo electrónico de confirmación de venta. Por "
+"ejemplo, instrucciones que el cliente debe seguir."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
@@ -236,6 +239,8 @@ msgid ""
 "Cancelling a delivery may not be undoable. Are you sure you want to "
 "continue?"
 msgstr ""
+"Puede que no pueda deshacer la cancelación de un envío. ¿Está seguro de que "
+"desea continuar?"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__carrier_id
@@ -257,7 +262,7 @@ msgstr "Código de transportista"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
 msgid "Carrier Description"
-msgstr ""
+msgstr "Descripción del transportista"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_move_line__carrier_name
@@ -408,7 +413,7 @@ msgstr "Envío establecido"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_zip_prefix
 msgid "Delivery Zip Prefix"
-msgstr ""
+msgstr "Prefijo de C.P. de envío"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__recompute_delivery_price
@@ -422,6 +427,8 @@ msgid ""
 "Delivery zip prefixes are assigned to delivery carriers to restrict\n"
 "                which zips it is available to."
 msgstr ""
+"Los prefijos de C.P. de envío se asignan a transportistas para restringir\n"
+"                los C.P. en los que están disponibles."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -660,7 +667,7 @@ msgstr "Solicitudes de registro para facilitar la solución de bugs"
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_zip_prefix_list
 msgid "Manage delivery zip prefixes"
-msgstr ""
+msgstr "Gestionar prefijos de C.P. de envío"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
@@ -757,7 +764,7 @@ msgstr "Prefijo"
 #. module: delivery
 #: model:ir.model.constraint,message:delivery.constraint_delivery_zip_prefix_name_uniq
 msgid "Prefix already exists!"
-msgstr ""
+msgstr "¡Este prefijo ya existe!"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -892,8 +899,8 @@ msgstr "Producto de servicio"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__prod_environment
 msgid "Set to True if your credentials are certified for production."
 msgstr ""
-"Establezca como \"Verdadero\" si sus credenciales están certificadas para la"
-" producción."
+"Establezca como \"True\" si sus credenciales están certificadas para la "
+"producción."
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:0
@@ -956,6 +963,9 @@ msgid ""
 "Shipping method details to be included at bottom sales orders and their "
 "confirmation emails. E.g. Instructions for customers to follow."
 msgstr ""
+"Detalles del método de envío que se incluirán en la parte inferior de las "
+"órdenes de venta y sus correos electrónicos de confirmación. Por ejemplo, "
+"instrucciones que los clientes deben seguir."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_product__hs_code
@@ -1004,7 +1014,7 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
-"EL código ISO del país en dos caracteres.\n"
+"El código ISO del país en dos caracteres.\n"
 "Puede utilizar este campo para una búsqueda rápida."
 
 #. module: delivery
@@ -1063,7 +1073,7 @@ msgid ""
 "                quotation) or the invoice (based on the delivery orders)."
 msgstr ""
 "Estos métodos permiten calcular automáticamente el precio de la entrega\n"
-"                de acuerdo a su configuración; en la orden de venta (basada en la\n"
+"                de acuerdo a sus ajustes; en la orden de venta (basada en la\n"
 "                cotización) o la factura (basada en las órdenes de entrega)."
 
 #. module: delivery
@@ -1106,7 +1116,7 @@ msgstr "Peso total de los productos en la recolección."
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "Trackers URL"
-msgstr "Rastreadores de URL"
+msgstr "URL de rastreo"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -1239,12 +1249,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list
 #: model:ir.ui.menu,name:delivery.menu_delivery_zip_prefix
 msgid "Zip Prefix"
-msgstr ""
+msgstr "Prefijo de C.P."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_prefix_ids
 msgid "Zip Prefixes"
-msgstr ""
+msgstr "Prefijos de C.P."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.label_package_template_view_delivery

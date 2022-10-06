@@ -360,7 +360,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         return [('active', '=', True), ('program_id.sale_ok', '=', True),
                 ('company_id', 'in', (self.company_id.id, False)),
-                '|', ('program_id.date_to', '=', False), ('program_id.date_to', '<=', fields.Date.context_today(self))]
+                '|', ('program_id.date_to', '=', False), ('program_id.date_to', '>=', fields.Date.context_today(self))]
 
     def _get_applicable_program_points(self, domain=None):
         """

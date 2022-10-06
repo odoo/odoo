@@ -10,6 +10,8 @@ import {
 } from "@web/views/utils";
 import { Field } from "@web/views/fields/field";
 import { XMLParser } from "@web/core/utils/xml";
+import { Widget } from "@web/views/widgets/widget";
+import { encodeObjectForTemplate } from "@web/views/view_compiler";
 
 export class GroupListArchParser extends XMLParser {
     parse(arch, models, modelName, jsClass) {
@@ -104,6 +106,27 @@ export class ListArchParser extends XMLParser {
                     });
                 }
                 return false;
+            } else if (node.tagName === "widget") {
+                const widgetInfo = Widget.parseWidgetNode(node);
+                addFieldDependencies(
+                    activeFields,
+                    models[modelName],
+                    widgetInfo.WidgetComponent.fieldDependencies
+                );
+
+                const widgetProps = {
+                    ...widgetInfo,
+                    // FIXME: this is dumb, we encode it into a weird object so that the widget
+                    // can decode it later...
+                    node: encodeObjectForTemplate({ attrs: widgetInfo.rawAttrs }).slice(1, -1),
+                    className: node.getAttribute("class"),
+                };
+                columns.push({
+                    ...widgetInfo,
+                    props: widgetProps,
+                    id: `column_${nextId++}`,
+                    type: "widget",
+                });
             } else if (node.tagName === "groupby" && node.getAttribute("name")) {
                 const fieldName = node.getAttribute("name");
                 const xmlSerializer = new XMLSerializer();

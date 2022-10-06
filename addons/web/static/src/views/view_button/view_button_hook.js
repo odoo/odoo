@@ -39,9 +39,7 @@ export function useViewButtons(model, ref, options = {}) {
         (() => {
             return true;
         });
-    const afterExecuteAction =
-        options.afterExecuteAction ||
-        (() => {});
+    const afterExecuteAction = options.afterExecuteAction || (() => {});
     useSubEnv({
         async onClickViewButton({
             clickParams,
@@ -66,14 +64,14 @@ export function useViewButtons(model, ref, options = {}) {
                     enableButtons(getEl(), manuallyDisabledButtons, enableAction);
                     return;
                 }
+                const closeDialog = clickParams.close && env.closeDialog;
                 const params = getResParams();
                 const resId = params.resId;
                 const resIds = params.resIds || model.resIds;
                 let buttonContext = {};
                 if (clickParams.context) {
                     if (typeof clickParams.context === "string") {
-                        const valuesForEval = Object.assign({}, params.evalContext);
-                        buttonContext = evaluateExpr(clickParams.context, valuesForEval);
+                        buttonContext = evaluateExpr(clickParams.context, params.evalContext);
                     } else {
                         buttonContext = clickParams.context;
                     }
@@ -88,9 +86,11 @@ export function useViewButtons(model, ref, options = {}) {
                     context: params.context || {}, //LPE FIXME new Context(payload.env.context).eval();
                     buttonContext,
                     onClose: async () => {
-                        const reload = options.reload || (() => model.root.load());
-                        await reload();
-                        comp.render(true); // FIXME WOWL reactivity
+                        if (!closeDialog) {
+                            const reload = options.reload || (() => model.root.load());
+                            await reload();
+                            comp.render(true); // FIXME WOWL reactivity
+                        }
                     },
                 });
                 let error;
@@ -101,6 +101,9 @@ export function useViewButtons(model, ref, options = {}) {
                     await doActionParams.onClose();
                 }
                 await afterExecuteAction(clickParams);
+                if (closeDialog) {
+                    closeDialog();
+                }
                 enableButtons(getEl(), manuallyDisabledButtons, enableAction);
                 if (error) {
                     return Promise.reject(error);

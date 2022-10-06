@@ -39,7 +39,8 @@ export const barcodeService = {
         function handleBarcode(barcode, target) {
             bus.trigger('barcode_scanned', {barcode,target});
             if (target.getAttribute('barcode_events') === "true") {
-                $(target).trigger('barcode_scanned', barcode);
+                const barcodeScannedEvent = new CustomEvent("barcode_scanned", { detail: { barcode, target } });
+                target.dispatchEvent(barcodeScannedEvent);
             }
         }
 

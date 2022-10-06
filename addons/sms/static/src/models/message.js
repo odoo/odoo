@@ -1,25 +1,26 @@
 /** @odoo-module **/
 
-import { patchRecordMethods } from '@mail/model/model_core';
-// ensure that the model definition is loaded before the patch
-import '@mail/models/message';
+import { registerPatch } from '@mail/model/model_core';
 
-patchRecordMethods('Message', {
-    /**
-     * @override
-     */
-    openResendAction() {
-        if (this.message_type === 'sms') {
-            this.env.services.action.doAction(
-                'sms.sms_resend_action',
-                {
-                    additionalContext: {
-                        default_mail_message_id: this.id,
+registerPatch({
+    name: 'Message',
+    recordMethods: {
+        /**
+         * @override
+         */
+        openResendAction() {
+            if (this.message_type === 'sms') {
+                this.env.services.action.doAction(
+                    'sms.sms_resend_action',
+                    {
+                        additionalContext: {
+                            default_mail_message_id: this.id,
+                        },
                     },
-                },
-            );
-        } else {
-            this._super(...arguments);
-        }
+                );
+            } else {
+                this._super(...arguments);
+            }
+        },
     },
 });

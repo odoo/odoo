@@ -150,7 +150,7 @@
                             <label for="quantity" attrs="{'invisible': [('product_has_cost', '=', False)]}"/>
                             <div class="o_row" attrs="{'invisible': [('product_has_cost', '=', False)]}">
                                 <field name="quantity" class="oe_inline" attrs="{'readonly': [('sheet_is_editable', '=', False)]}" style="width: auto !important;"/>
-                                <field name="product_uom_id" required="1" options="{'no_open': True, 'no_create': True}" class="oe_inline" groups="uom.group_uom"/>
+                                <field name="product_uom_id" required="1" force_save="1" options="{'no_open': True, 'no_create': True}" class="oe_inline" groups="uom.group_uom"/>
                             </div>
 
                             <label for="total_amount" string="Total" attrs="{'invisible': [('product_has_cost', '=', True)]}"/>
@@ -159,9 +159,10 @@
                                 <field name="currency_id" groups="base.group_multi_currency"/>
                             </div>
                             <label for="total_amount_company" attrs="{'invisible': [('product_has_cost', '=', False)]}"/>
-                            <div class="o_row d-flex" attrs="{'invisible': [('same_currency', '=', True), ('product_has_cost', '=', False)]}">
-                                <field name="total_amount_company" style="vertical-align: top;" widget='monetary' options="{'currency_field': 'company_currency_id'}"/>
-                                <field name="label_convert_rate"/>
+                            <label for="label_convert_rate" string="" attrs="{'invisible': [('same_currency', '=', True), ('product_has_cost', '=', False)]}"/>
+                            <div colspan="1" class="o_row" name="currency_exchange_div" attrs="{'invisible': [('same_currency', '=', True), ('product_has_cost', '=', False)]}">
+                                <field name="total_amount_company" class="oe_inline" widget='monetary' options="{'currency_field': 'company_currency_id'}"/>
+                                <field name="label_convert_rate" class=""/>
                             </div>
                             <label for="tax_ids" attrs="{'invisible': [('product_has_tax', '=', False)]}"/>
                             <div class="d-flex o_row">

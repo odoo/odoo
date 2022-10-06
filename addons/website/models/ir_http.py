@@ -17,6 +17,7 @@ from odoo import api, models
 from odoo import SUPERUSER_ID
 from odoo.exceptions import AccessError
 from odoo.http import request
+from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.safe_eval import safe_eval
 from odoo.osv.expression import FALSE_DOMAIN
 from odoo.addons.http_routing.models import ir_http
@@ -379,6 +380,22 @@ class Http(models.AbstractModel):
             })
         session_info['bundle_params']['website_id'] = request.website.id
         return session_info
+
+    @classmethod
+    def _is_allowed_cookie(cls, cookie_type):
+        result = super()._is_allowed_cookie(cookie_type)
+        if result and cookie_type == 'optional':
+            if not request.env['website'].get_current_website().cookies_bar:
+                # Cookies bar is disabled on this website
+                return True
+            accepted_cookie_types = json_scriptsafe.loads(request.httprequest.cookies.get('website_cookies_bar', '{}'))
+            if 'optional' in accepted_cookie_types:
+                return accepted_cookie_types['optional']
+            return False
+
+        # Pass-through if already forbidden for another reason or a type that
+        # is not restricted by the website module.
+        return result
 
 
 class ModelConverter(ir_http.ModelConverter):

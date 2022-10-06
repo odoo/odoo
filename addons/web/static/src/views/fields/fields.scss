@@ -3,8 +3,9 @@
 }
 
 .o_field_widget:not(.o_legacy_field_widget) {
-    .o_input {
+    .o_input, .note-editable {
         border: $input-border-width solid transparent;
+        border-width: 0 0 $input-border-width 0;
         padding: $o-input-padding-y $o-input-padding-x;
 
         &:hover, &:focus {

@@ -31,7 +31,7 @@
             }
         }
 
-        thead, tfoot {
+        :not(.o_field_x2many_list) > & thead, tfoot {
             tr > :not(:empty) {
                 padding-top: var(--ListRenderer-thead-padding-v);
                 padding-bottom: var(--ListRenderer-thead-padding-v);
@@ -144,22 +144,14 @@
                 --table-accent-bg: none;
 
                 background-color: $o-view-background-color;
-                outline: 1px solid $info;
-                outline-offset: -1px;
             }
         }
 
         .o_keyboard_navigation {
-            tr:hover {
-                outline-color: transparent;
-            }
-
             th:focus-within, td:focus-within {
                 --table-accent-bg: none;
 
                 background-color: $o-view-background-color;
-                outline-offset: -1px;
-                outline: 1px solid $primary;
             }
         }
 

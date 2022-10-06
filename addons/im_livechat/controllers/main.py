@@ -104,7 +104,7 @@ class LivechatController(http.Controller):
             ]))
 
         return request.env['ir.binary']._get_image_stream_from(
-            operator if is_livechat_member else None,
+            operator if is_livechat_member else request.env['res.partner'],
             field_name='avatar_128',
             placeholder='mail/static/src/img/smiley/avatar.jpg',
         ).get_response()

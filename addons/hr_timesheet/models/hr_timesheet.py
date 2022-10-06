@@ -59,7 +59,8 @@ class AccountAnalyticLine(models.Model):
         'project.project', 'Project', domain=_domain_project_id, index=True,
         compute='_compute_project_id', store=True, readonly=False)
     user_id = fields.Many2one(compute='_compute_user_id', store=True, readonly=False)
-    employee_id = fields.Many2one('hr.employee', "Employee", domain=_domain_employee_id, context={'active_test': False})
+    employee_id = fields.Many2one('hr.employee', "Employee", domain=_domain_employee_id, context={'active_test': False},
+        help="Define an 'hourly cost' on the employee to track the cost of their time.")
     job_title = fields.Char(related='employee_id.job_title')
     department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True, compute_sudo=True)
     manager_id = fields.Many2one('hr.employee', "Manager", related='employee_id.parent_id', store=True)
@@ -213,6 +214,13 @@ class AccountAnalyticLine(models.Model):
         # applied only for timesheet
         self.filtered(lambda t: t.project_id)._timesheet_postprocess(values)
         return result
+
+    @api.model
+    def _get_view_cache_key(self, view_id=None, view_type='form', **options):
+        """The override of _get_view changing the time field labels according to the company timesheet encoding UOM
+        makes the view cache dependent on the company timesheet encoding uom"""
+        key = super()._get_view_cache_key(view_id, view_type, **options)
+        return key + (self.env.company.timesheet_encode_uom_id,)
 
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):

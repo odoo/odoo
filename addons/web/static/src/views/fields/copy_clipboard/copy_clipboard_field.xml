@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.CopyClipboardField" owl="1">
-        <div t-if="props.value" class="d-grid rounded-3 overflow-hidden">
+        <div t-if="props.value" class="d-grid rounded-2 overflow-hidden">
             <Field t-props="props"/>
             <CopyButton className="copyButtonClassName" content="props.value" copyText="copyText" successText="successText"/>
         </div>

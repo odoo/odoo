@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { browser } from "@web/core/browser/browser";
 import {
     click,
     clickSave,
@@ -11,6 +10,8 @@ import {
     selectDropdownItem,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { browser } from "@web/core/browser/browser";
+import { registry } from "@web/core/registry";
 
 let serverData;
 let target;
@@ -182,8 +183,8 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.deepEqual(
-            getNodesTextContent(target.querySelectorAll(".o_data_cell .o_form_uri span")),
-            ["Aline", "Christine", "Aline"]
+            getNodesTextContent(target.querySelectorAll(".o_data_cell[name='user_id'] span span")),
+            ["Aline", "Christine", "Aline", ""]
         );
         const imgs = target.querySelectorAll(".o_m2o_avatar > img");
         assert.strictEqual(imgs[0].dataset.src, "/web/image/user/17/avatar_128");
@@ -200,8 +201,8 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.deepEqual(
-            getNodesTextContent(target.querySelectorAll(".o_data_cell .o_form_uri span")),
-            ["Aline", "Christine", "Aline"]
+            getNodesTextContent(target.querySelectorAll(".o_data_cell[name='user_id'] span span")),
+            ["Aline", "Christine", "Aline", ""]
         );
 
         const imgs = target.querySelectorAll(".o_m2o_avatar > img");
@@ -230,5 +231,79 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(".o_field_widget[name='user_id'] input").placeholder,
             "Placeholder"
         );
+    });
+
+    QUnit.test("click on many2one_avatar in a list view (multi_edit='1')", async function (assert) {
+        const listView = registry.category("views").get("list");
+        patchWithCleanup(listView.Controller.prototype, {
+            openRecord() {
+                assert.step("openRecord");
+            },
+        });
+
+        await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <tree multi_edit="1">
+                    <field name="user_id" widget="many2one_avatar"/>
+                </tree>`,
+        });
+
+        await click(target.querySelectorAll(".o_data_row")[0], ".o_list_record_selector input");
+        await click(target.querySelector(".o_data_row .o_data_cell [name='user_id'] span span"));
+        assert.hasClass(target.querySelector(".o_data_row"), "o_selected_row");
+
+        assert.verifySteps([]);
+    });
+
+    QUnit.test("click on many2one_avatar in an editable list view", async function (assert) {
+        const listView = registry.category("views").get("list");
+        patchWithCleanup(listView.Controller.prototype, {
+            openRecord() {
+                assert.step("openRecord");
+            },
+        });
+
+        await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <tree editable="top">
+                    <field name="user_id" widget="many2one_avatar"/>
+                </tree>`,
+        });
+
+        await click(target.querySelectorAll(".o_data_row")[0], ".o_list_record_selector input");
+        await click(target.querySelector(".o_data_row .o_data_cell [name='user_id'] span span"));
+        assert.hasClass(target.querySelector(".o_data_row"), "o_selected_row");
+
+        assert.verifySteps([]);
+    });
+
+    QUnit.test("click on many2one_avatar in an editable list view", async function (assert) {
+        const listView = registry.category("views").get("list");
+        patchWithCleanup(listView.Controller.prototype, {
+            openRecord() {
+                assert.step("openRecord");
+            },
+        });
+
+        await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="user_id" widget="many2one_avatar"/>
+                </tree>`,
+        });
+
+        await click(target.querySelector(".o_data_row .o_data_cell [name='user_id'] span span"));
+        assert.containsNone(target, ".o_selected_row");
+
+        assert.verifySteps(["openRecord"]);
     });
 });

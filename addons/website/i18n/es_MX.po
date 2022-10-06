@@ -5,13 +5,14 @@
 # Translators:
 # Cécile Collart <cco@odoo.com>, 2022
 # Martin Trigaux, 2022
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022
 # Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:01+0000\n"
+"POT-Creation-Date: 2022-09-27 15:11+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
 "Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
@@ -100,6 +101,13 @@ msgstr "$9.00"
 #, python-format
 msgid "%s (id:%s)"
 msgstr "%s (id:%s)"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/components/views/page_list.js:0
+#, python-format
+msgid "%s record(s) selected, are you sure you want to publish them all?"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -1657,7 +1665,7 @@ msgstr "Toda la ruta del sitio web"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/components/views/page_list.js:0
+#: code:addons/website/static/src/components/views/page_views_mixin.js:0
 #: model_terms:ir.ui.view,arch_db:website.view_view_qweb
 #, python-format
 msgid "All Websites"
@@ -4185,7 +4193,7 @@ msgstr ""
 #. module: website
 #: model:ir.model,name:website.model_ir_binary
 msgid "File streaming helper model for controllers"
-msgstr ""
+msgstr "Modelo de ayuda para la transmisión de archivos para controladores"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
@@ -7010,6 +7018,7 @@ msgstr "Título de la página"
 #: model:ir.model.fields,field_description:website.field_website_page__url
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
+#: model_terms:ir.ui.view,arch_db:website.website_pages_tree_view
 msgid "Page URL"
 msgstr "URL de la página"
 
@@ -7382,9 +7391,19 @@ msgid "Public User"
 msgstr "Usuario público"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/components/views/page_list.js:0
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
+#, python-format
 msgid "Publish"
 msgstr "Publicar"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/components/views/page_list.js:0
+#, python-format
+msgid "Publish Website Content"
+msgstr ""
 
 #. module: website
 #: model:website.configurator.feature,description:website.feature_module_career
@@ -8570,6 +8589,13 @@ msgid "Switch Theme"
 msgstr "Cambiar tema"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "System Fonts"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
 msgid "T-shirts"
 msgstr "Playeras"
@@ -9446,6 +9472,13 @@ msgstr "Un poderoso CRM ilimitado y soporte"
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Unlimited customization"
 msgstr "Personalización ilimitada"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/components/views/page_list.js:0
+#, python-format
+msgid "Unpublish"
+msgstr "Anular publicación"
 
 #. module: website
 #. openerp-web

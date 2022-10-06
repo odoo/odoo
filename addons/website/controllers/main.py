@@ -339,7 +339,7 @@ class Website(Home):
         for name, url, mod in current_website.get_suggested_controllers():
             if needle.lower() in name.lower() or needle.lower() in url.lower():
                 module_sudo = mod and request.env.ref('base.module_%s' % mod, False).sudo()
-                icon = mod and "<img src='%s' width='24px' class='mr-2 rounded' /> " % (module_sudo and module_sudo.icon or mod) or ''
+                icon = mod and "<img src='%s' width='24px' height='24px' class='mr-2 rounded' /> " % (module_sudo and module_sudo.icon or mod) or ''
                 suggested_controllers.append({
                     'value': url,
                     'label': '%s%s (%s)' % (icon, url, name),
@@ -398,6 +398,10 @@ class Website(Home):
             t['numOfEl'] = attribs.get('data-number-of-elements')
             t['numOfElSm'] = attribs.get('data-number-of-elements-sm')
             t['numOfElFetch'] = attribs.get('data-number-of-elements-fetch')
+            t['rowPerSlide'] = attribs.get('data-row-per-slide')
+            t['arrowPosition'] = attribs.get('data-arrow-position')
+            t['extraClasses'] = attribs.get('data-extra-classes')
+            t['thumb'] = attribs.get('data-thumb')
         return templates
 
     @http.route('/website/get_current_currency', type='json', auth="public", website=True)

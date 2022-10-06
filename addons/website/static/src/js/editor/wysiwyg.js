@@ -17,15 +17,14 @@ var snippetsEditor = require('website.snippet.editor');
  */
 function toggleDropdown($toggles, show) {
     return Promise.all(_.map($toggles, toggle => {
-        var $toggle = $(toggle);
-        var $dropdown = $toggle.parent();
-        var shown = $dropdown.hasClass('show');
+        const $toggle = $(toggle);
+        const shown = toggle.classList.contains('show');
         if (shown === show) {
             return;
         }
-        var toShow = !shown;
+        const toShow = !shown;
         return new Promise(resolve => {
-            $dropdown.one(
+            $toggle.parent().one(
                 toShow ? 'shown.bs.dropdown' : 'hidden.bs.dropdown',
                 () => resolve()
             );
@@ -271,6 +270,9 @@ snippetsEditor.SnippetsMenu.include({
      */
     start() {
         const _super = this._super(...arguments);
+        if (this.options.enableTranslation) {
+            return _super;
+        }
         if (this.$body[0].ownerDocument !== this.ownerDocument) {
             this.$body.on('click.snippets_menu', '*', this._onClick);
         }

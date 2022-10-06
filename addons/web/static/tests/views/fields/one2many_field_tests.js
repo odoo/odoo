@@ -6666,8 +6666,8 @@ QUnit.module("Fields", (hooks) => {
         assert.notOk(target.querySelector(btn2Warn).disabled);
         assert.strictEqual(
             target.querySelector(btn2Warn).getAttribute("warn"),
-            null,
-            "the warn attribute is not copied onto the button"
+            "warn",
+            "Should have a button type object with warn attr in area 2"
         );
 
         // click all buttons
@@ -9051,6 +9051,33 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["do_something"]);
     });
 
+    QUnit.test("o2m button with parent in context", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            resId: 1,
+            arch: `
+                <form>
+                    <field name="turtles">
+                        <tree>
+                            <field name="display_name"/>
+                            <button string="Action Button" name="test_button" type="object" context="{'parent_name': parent.display_name}"/>
+                        </tree>
+                    </field>
+                </form>`,
+            mockRPC(route, args) {
+                if (args.method === "test_button") {
+                    assert.step("test_button");
+                    assert.strictEqual(args.kwargs.context.parent_name, 'first record');
+                    return true;
+                }
+            },
+        });
+        await click(target, 'button[name="test_button"]');
+        assert.verifySteps(["test_button"]);
+    });
+
     QUnit.test("o2m add a line custom control create align with handle", async function (assert) {
         await makeView({
             type: "form",
@@ -11103,7 +11130,7 @@ QUnit.module("Fields", (hooks) => {
         // the next line should be displayed below the newly added one
         assert.containsN(target, ".o_data_row", 2, "should have 2 records");
         assert.deepEqual(
-            [...target.querySelectorAll(".o_data_cell")].map(el => el.textContent.trim()),
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent.trim()),
             ["pi", "", "kawa", ""],
             "should display the correct records on page 1"
         );
@@ -11470,10 +11497,10 @@ QUnit.module("Fields", (hooks) => {
 
             await click(target.querySelector(".o_optional_columns_dropdown .dropdown-toggle"));
             await click(target.querySelector(".o_optional_columns_dropdown .dropdown-item"));
-            assert.containsNone(
+            assert.containsOnce(
                 target.querySelector(".o_field_one2many"),
                 "tr.o_selected_row",
-                "current edition mode discarded when selecting advanced field"
+                "current edition mode kept when selecting advanced field"
             );
             assert.containsN(
                 target.querySelector(".o_field_one2many"),
@@ -12480,5 +12507,72 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(serverData.models.partner.records[0].int_field, 5);
         assert.strictEqual(serverData.models.turtle.records[1].turtle_int, 5);
         assert.strictEqual(serverData.models.turtle.records[0].turtle_int, 5);
+    });
+
+    QUnit.test("active actions are passed to o2m field", async (assert) => {
+        serverData.models.partner.records[0].turtles = [1, 2, 3];
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <form>
+                    <field name="turtles">
+                        <tree editable="bottom" create="false" delete="false">
+                            <field name="display_name" />
+                            <field name="turtle_foo" />
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 1,
+            mode: "edit",
+        });
+
+        assert.containsN(target, ".o_data_row", 3);
+        assert.containsNone(target, ".o_list_record_remove");
+
+        await click(target, ".o_data_row:nth-child(3) .o_data_cell:nth-child(2)");
+
+        assert.hasClass(target.querySelector(".o_data_row:nth-child(3)"), "o_selected_row");
+
+        triggerHotkey("Enter");
+        await nextTick();
+
+        assert.containsN(target, ".o_data_row", 3);
+        assert.containsNone(target, ".o_list_record_remove");
+        assert.hasClass(target.querySelector(".o_data_row:first-child"), "o_selected_row");
+    });
+
+    QUnit.test('Add a line, click on "Save & New" with an invalid form', async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                        <form>
+                            <field name="display_name" required="1"/>
+                        </form>
+                    </field>
+                </form>`,
+        });
+
+        assert.containsNone(target, ".o_data_row");
+        // Add a new record
+        await addRow(target);
+        assert.containsOnce(target, ".o_dialog .o_form_view");
+
+        // Click on "Save & New" with an invalid form 
+        await click(target, ".o_dialog .o_form_button_save_new");
+        assert.containsOnce(target, ".o_dialog .o_form_view");
+
+        // Check that no buttons are disabled
+        assert.hasAttrValue(target.querySelector(".o_dialog .o_form_button_save_new"), "disabled", undefined);
+        assert.hasAttrValue(target.querySelector(".o_dialog .o_form_button_cancel"), "disabled", undefined);
     });
 });

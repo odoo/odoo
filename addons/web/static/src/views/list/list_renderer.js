@@ -17,6 +17,7 @@ import { getTooltipInfo } from "@web/views/fields/field_tooltip";
 import { getClassNameFromDecoration } from "@web/views/utils";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useBounceButton } from "@web/views/view_hook";
+import { Widget } from "@web/views/widgets/widget";
 
 const {
     Component,
@@ -116,12 +117,12 @@ export class ListRenderer extends Component {
             handle: ".o_handle_cell",
             cursor: "grabbing",
             // Hooks
-            onStart: (params) => {
+            onDragStart: (params) => {
                 const { element } = params;
                 dataRowId = element.dataset.id;
                 return this.sortStart(params);
             },
-            onStop: (params) => this.sortStop(params),
+            onDragEnd: (params) => this.sortStop(params),
             onDrop: (params) => this.sortDrop(dataRowId, params),
         });
 
@@ -189,7 +190,9 @@ export class ListRenderer extends Component {
     }
 
     add(params) {
-        this.props.onAdd(params);
+        if (this.canCreate) {
+            this.props.onAdd(params);
+        }
     }
 
     // The following code manipulates the DOM directly to avoid having to wait for a
@@ -313,6 +316,10 @@ export class ListRenderer extends Component {
         return columnWidths;
     }
 
+    get activeActions() {
+        return this.props.activeActions || {};
+    }
+
     get canResequenceRows() {
         if (!this.props.list.canResequence()) {
             return false;
@@ -338,10 +345,7 @@ export class ListRenderer extends Component {
         if (this.hasSelectors) {
             nbCols++;
         }
-        if (
-            (this.props.activeActions && this.props.activeActions.onDelete) ||
-            this.displayOptionalFields
-        ) {
+        if (this.activeActions.onDelete || this.displayOptionalFields) {
             nbCols++;
         }
         return nbCols;
@@ -388,12 +392,13 @@ export class ListRenderer extends Component {
     focus(el) {
         el.focus();
         if (["INPUT", "TEXTAREA"].includes(el.tagName)) {
-            if (el.selectionStart) {
-                //bad
+            if (el.selectionStart === null) {
+                return;
+            }
+            if (el.selectionStart === el.selectionEnd) {
                 el.selectionStart = 0;
                 el.selectionEnd = el.value.length;
             }
-            el.select();
         }
     }
 
@@ -559,9 +564,8 @@ export class ListRenderer extends Component {
     }
 
     getColumnClass(column) {
-        const field = this.fields[column.name];
         const classNames = ["align-middle"];
-        if (field.sortable && column.hasLabel) {
+        if (this.isSortable(column)) {
             classNames.push("o_column_sortable", "position-relative", "cursor-pointer");
         } else {
             classNames.push("cursor-default");
@@ -592,10 +596,16 @@ export class ListRenderer extends Component {
         return ["float", "integer", "monetary"].includes(type);
     }
 
+    isSortable(column) {
+        const { hasLabel, name } = column;
+        const { sortable } = this.fields[name];
+        const { options } = this.props.list.activeFields[name];
+        return (sortable || options.allow_order) && hasLabel;
+    }
+
     getSortableIconClass(column) {
-        const { sortable } = this.fields[column.name];
         const { orderBy } = this.props.list;
-        const classNames = sortable && column.hasLabel ? ["fa", "fa-lg", "px-2"] : ["d-none"];
+        const classNames = this.isSortable(column) ? ["fa", "fa-lg", "px-2"] : ["d-none"];
         if (orderBy.length && orderBy[0].name === column.name) {
             classNames.push(orderBy[0].asc ? "fa-angle-up" : "fa-angle-down");
         } else {
@@ -732,6 +742,14 @@ export class ListRenderer extends Component {
         }
     }
 
+    get canCreate() {
+        return "link" in this.activeActions ? this.activeActions.link : this.activeActions.create;
+    }
+
+    get isX2Many() {
+        return this.activeActions.type !== "view";
+    }
+
     get getEmptyRowIds() {
         let nbEmptyRow = Math.max(0, 4 - this.props.list.records.length);
         if (nbEmptyRow > 0 && this.displayRowCreates) {
@@ -741,11 +759,7 @@ export class ListRenderer extends Component {
     }
 
     get displayRowCreates() {
-        const activeActions = this.props.activeActions;
-        return (
-            activeActions &&
-            ("canLink" in activeActions ? activeActions.canLink : activeActions.canCreate)
-        );
+        return this.isX2Many && this.canCreate;
     }
 
     // Group headers logic:
@@ -780,16 +794,22 @@ export class ListRenderer extends Component {
         if (firstAggregateIndex > -1) {
             colspan = firstAggregateIndex;
         } else {
-            colspan = Math.max(1, this.allColumns.length - DEFAULT_GROUP_PAGER_COLSPAN);
+            colspan = Math.max(1, this.state.columns.length - DEFAULT_GROUP_PAGER_COLSPAN);
         }
-        return this.hasSelectors ? colspan + 1 : colspan;
+        if (this.hasSelectors) {
+            colspan++;
+        }
+        if (this.displayOptionalFields) {
+            colspan++;
+        }
+        return colspan;
     }
     getGroupPagerCellColspan(group) {
         const lastAggregateIndex = this.getLastAggregateIndex(group);
         if (lastAggregateIndex > -1) {
-            return this.allColumns.length - lastAggregateIndex - 1;
+            return this.state.columns.length - lastAggregateIndex - 1;
         } else {
-            return this.allColumns.length > 1 ? DEFAULT_GROUP_PAGER_COLSPAN : 0;
+            return this.state.columns.length > 1 ? DEFAULT_GROUP_PAGER_COLSPAN : 0;
         }
     }
 
@@ -827,16 +847,8 @@ export class ListRenderer extends Component {
         }
         const fieldName = column.name;
         const list = this.props.list;
-        if (this.fields[fieldName].sortable && column.hasLabel) {
-            if (list.isGrouped) {
-                const isSortable =
-                    list.groups[0].getAggregates(fieldName) || list.groupBy.includes(fieldName);
-                if (isSortable) {
-                    list.sortBy(fieldName);
-                }
-            } else {
-                list.sortBy(fieldName);
-            }
+        if (this.isSortable(column)) {
+            list.sortBy(fieldName);
         }
     }
 
@@ -886,7 +898,9 @@ export class ListRenderer extends Component {
                 return;
             }
         }
-        this.props.activeActions.onDelete(record);
+        if (this.activeActions.onDelete) {
+            this.activeActions.onDelete(record);
+        }
     }
 
     /**
@@ -1095,8 +1109,8 @@ export class ListRenderer extends Component {
         return false;
     }
 
-    applyCellKeydownEditModeGroup(hotkey, cell, group, record) {
-        const { activeActions, editable } = this.props;
+    applyCellKeydownEditModeGroup(hotkey, _cell, group, record) {
+        const { editable } = this.props;
         const groupIndex = group.list.records.indexOf(record);
         const isLastOfGroup = groupIndex === group.list.records.length - 1;
         const isDirty = record.isDirty || this.lastIsDirty;
@@ -1107,7 +1121,7 @@ export class ListRenderer extends Component {
         }
         if (
             isLastOfGroup &&
-            activeActions.create &&
+            this.canCreate &&
             editable === "bottom" &&
             record.checkValidity() &&
             (isEnterBehavior || isTabBehavior)
@@ -1150,7 +1164,7 @@ export class ListRenderer extends Component {
      * @returns {boolean} true if some behavior has been taken
      */
     onCellKeydownEditMode(hotkey, cell, group, record) {
-        const { activeActions, cycleOnTab, list } = this.props;
+        const { cycleOnTab, list } = this.props;
         const row = cell.parentElement;
         const applyMultiEditBehavior = record && record.selected && list.model.multiEdit;
         const topReCreate = this.props.editable === "top" && record.isNew;
@@ -1186,7 +1200,7 @@ export class ListRenderer extends Component {
                             this.add({ context });
                         }
                     } else if (
-                        activeActions.create &&
+                        this.canCreate &&
                         !record.canBeAbandoned &&
                         (record.isDirty || this.lastIsDirty)
                     ) {
@@ -1245,10 +1259,8 @@ export class ListRenderer extends Component {
                     futureRecord = null;
                 }
 
-                if (!futureRecord) {
-                    if (activeActions && activeActions.create === false) {
-                        futureRecord = list.records[0];
-                    }
+                if (!futureRecord && !this.canCreate) {
+                    futureRecord = list.records[0];
                 }
 
                 if (futureRecord) {
@@ -1507,7 +1519,6 @@ export class ListRenderer extends Component {
     }
 
     async toggleOptionalField(fieldName) {
-        await this.props.list.unselectRecord(true);
         this.optionalActiveFields[fieldName] = !this.optionalActiveFields[fieldName];
         this.state.columns = this.getActiveColumns(this.props.list);
         this.saveOptionalActiveFields(
@@ -1581,11 +1592,7 @@ export class ListRenderer extends Component {
     onHoverSortColumn(ev, column) {
         if (this.props.list.orderBy.length && this.props.list.orderBy[0].name === column.name) {
             return;
-        } else if (
-            this.fields[column.name].sortable &&
-            column.widget !== "handle" &&
-            column.hasLabel
-        ) {
+        } else if (this.isSortable(column) && column.widget !== "handle") {
             ev.target.classList.toggle("table-active", ev.type == "mouseenter");
         }
     }
@@ -1754,7 +1761,7 @@ ListRenderer.rowsTemplate = "web.ListRenderer.Rows";
 ListRenderer.recordRowTemplate = "web.ListRenderer.RecordRow";
 ListRenderer.groupRowTemplate = "web.ListRenderer.GroupRow";
 
-ListRenderer.components = { DropdownItem, Field, ViewButton, CheckBox, Dropdown, Pager };
+ListRenderer.components = { DropdownItem, Field, ViewButton, CheckBox, Dropdown, Pager, Widget };
 ListRenderer.props = [
     "activeActions?",
     "list",

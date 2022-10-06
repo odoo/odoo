@@ -201,19 +201,7 @@ export class FormController extends Component {
                     offset: resIds.indexOf(this.model.root.resId),
                     limit: 1,
                     total: resIds.length,
-                    onUpdate: async ({ offset }) => {
-                        await this.model.root.askChanges(); // ensures that isDirty is correct
-                        let canProceed = true;
-                        if (this.model.root.isDirty) {
-                            canProceed = await this.model.root.save({
-                                stayInEdition: true,
-                                useSaveErrorDialog: true,
-                            });
-                        }
-                        if (canProceed) {
-                            return this.model.load({ resId: resIds[offset] });
-                        }
-                    },
+                    onUpdate: ({ offset }) => this.onPagerUpdate({ offset, resIds }),
                 };
             }
         });
@@ -261,6 +249,20 @@ export class FormController extends Component {
 
     displayName() {
         return this.model.root.data.display_name || this.env._t("New");
+    }
+
+    async onPagerUpdate({ offset, resIds }) {
+        await this.model.root.askChanges(); // ensures that isDirty is correct
+        let canProceed = true;
+        if (this.model.root.isDirty) {
+            canProceed = await this.model.root.save({
+                stayInEdition: true,
+                useSaveErrorDialog: true,
+            });
+        }
+        if (canProceed) {
+            return this.model.load({ resId: resIds[offset] });
+        }
     }
 
     beforeUnload() {
@@ -471,6 +473,7 @@ FormController.props = {
         validate: (m) => ["edit", "readonly"].includes(m),
     },
     saveRecord: { type: Function, optional: true },
+    removeRecord: { type: Function, optional: true },
     Model: Function,
     Renderer: Function,
     Compiler: Function,

@@ -3,6 +3,7 @@
 // ------------------------------------------------------------------
 
 .o_FormRenderer_chatterContainer {
+    flex: 1 0 auto;
 
     &.o-aside {
         border-left: $border-width solid;
@@ -17,7 +18,8 @@
     &.o-isInFormSheetBg {
         max-width: none;
         background-color: $white;
-        @include o-form-sheet-negative-margin;
+        margin-left: -$o-horizontal-padding;
+        margin-right: -$o-horizontal-padding;
         width: auto;
         border-top: 1px solid $border-color;
     }

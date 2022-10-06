@@ -862,8 +862,10 @@
                                     <t t-set="_form_classes" t-valuef="mb-2 mb-lg-0"/>
                                     <t t-set="_classes" t-value="'me-sm-2'"/>
                                 </t>
+                                <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
+                                <t t-set="hasPricelistDropdown" t-value="website_sale_pricelists and len(website_sale_pricelists)&gt;1"/>
                                 <t t-call="website_sale.pricelist_list">
-                                    <t t-set="_classes" t-valuef="ms-2 float-end"/>
+                                    <t t-set="_classes" t-valuef="d-lg-inline ms-2"/>
                                 </t>
                             </div>
                         </div>
@@ -2224,7 +2226,8 @@
                         <t t-out="payment_tx_id.provider_id.sudo().cancel_msg"/>
                     </t>
                     <t t-if="payment_tx_id.state == 'authorized'">
-                        <span>Your payment has been authorized.</span>
+                        <t t-if="payment_tx_id.acquirer_id.sudo().auth_msg" t-out="payment_tx_id.acquirer_id.sudo().auth_msg"/>
+                        <span t-else="">Your payment has been authorized.</span>
                     </t>
                     <t t-if="payment_tx_id.state == 'error'">
                         <span t-esc="payment_tx_id.state_message"/>

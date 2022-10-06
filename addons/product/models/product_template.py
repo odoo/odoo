@@ -1278,6 +1278,7 @@ class ProductTemplate(models.Model):
         if self.product_variant_count == 1 and not self.has_configurable_attributes:
             return {
                 'product_id': self.product_variant_id.id,
+                'product_name': self.product_variant_id.display_name,
             }
         return {}
 

@@ -6,6 +6,7 @@ import { increment } from '@mail/model/model_field_command';
 
 import session from 'web.session';
 import utils from 'web.utils';
+import {getCookie} from 'web.utils.cookies';
 
 registerModel({
     name: 'PublicLivechatGlobalNotificationHandler',
@@ -28,7 +29,7 @@ registerModel({
                     if (payload.id !== this.messaging.publicLivechatGlobal.publicLivechat.id) {
                         return;
                     }
-                    const cookie = utils.get_cookie(this.messaging.publicLivechatGlobal.LIVECHAT_COOKIE_HISTORY);
+                    const cookie = getCookie(this.messaging.publicLivechatGlobal.LIVECHAT_COOKIE_HISTORY);
                     const history = cookie ? JSON.parse(cookie) : [];
                     session.rpc('/im_livechat/history', {
                         pid: this.messaging.publicLivechatGlobal.publicLivechat.operator.id,
