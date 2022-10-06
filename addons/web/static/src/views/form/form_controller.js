@@ -192,7 +192,7 @@ export class FormController extends Component {
                     });
                 }
             },
-            beforeUnload: () => this.beforeUnload(),
+            beforeUnload: (ev) => this.beforeUnload(ev),
             getLocalState: () => {
                 // TODO: export the whole model?
                 return {
@@ -272,8 +272,12 @@ export class FormController extends Component {
         }
     }
 
-    beforeUnload() {
-        return this.model.root.urgentSave();
+    async beforeUnload(ev) {
+        const isValid = await this.model.root.urgentSave();
+        if (!isValid) {
+            ev.preventDefault();
+            ev.returnValue = "Unsaved changes";
+        }
     }
 
     updateURL() {
