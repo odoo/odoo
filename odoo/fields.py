@@ -627,6 +627,9 @@ class Field(MetaField('DummyField', (object,), {})):
             delegate_field = model._fields[self.related.split('.')[0]]
             self._modules = tuple({*self._modules, *delegate_field._modules, *field._modules})
 
+        if self.store and self.translate:
+            _logger.warning("Translated stored related field (%s) will not be computed correctly in all languages", self)
+
     def traverse_related(self, record):
         """ Traverse the fields of the related field `self` except for the last
         one, and return it as a pair `(last_record, last_field)`. """
