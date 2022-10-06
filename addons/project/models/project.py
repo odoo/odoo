@@ -393,10 +393,7 @@ class Project(models.Model):
 
     # Not `required` since this is an option to enable in project settings.
     stage_id = fields.Many2one('project.project.stage', string='Stage', ondelete='restrict', groups="project.group_project_stages",
-        tracking=True, index=True, copy=False, default=_default_stage_id, group_expand='_read_group_stage_ids',
-        help="The step, or stage, that your project is in. You can add, remove, and move stages around to adapt the pipeline to your own needs.\n"
-            "Via the stage configuration you can set up email templates and automate the sending of emails when a project moves into the stage.\n"
-            "Projects in a folded stage are considered as closed.")
+        tracking=True, index=True, copy=False, default=_default_stage_id, group_expand='_read_group_stage_ids')
 
     update_ids = fields.One2many('project.update', 'project_id')
     last_update_id = fields.Many2one('project.update', string='Last Update', copy=False)
