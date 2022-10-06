@@ -1266,7 +1266,7 @@
                             </field>
                         </page>
                         <page name="recurrence" string="Recurrent"  groups="project.group_project_recurring_tasks">
-                            <span class="o_form_label"> Recurrent </span>
+                            <label for="recurring_task" />
                             <field name="recurring_task" attrs="{'invisible': ['|', ('allow_recurring_tasks', '=', False), ('active', '=', False)]}"/>
                             <group attrs="{'invisible': [('recurring_task', '=', False)]}">
                                 <group>
@@ -1280,7 +1280,7 @@
                                     </div>
 
                                     <label for="repeat_on_month" string="Repeat On" attrs="{'invisible': [('repeat_unit', 'not in', ('month', 'year'))]}" />
-                                    <div class="o_row">
+                                    <div class="o_row" attrs="{'invisible': [('repeat_unit', 'not in', ('month', 'year'))]}">
                                         <field name="repeat_on_month" attrs="{'invisible': [('repeat_unit', '!=', 'month')], 'required': [('repeat_unit', '=', 'month')]}" />
                                         <field name="repeat_on_year" attrs="{'invisible': [('repeat_unit', '!=', 'year')], 'required': [('repeat_unit', '=', 'year')]}" />
 
@@ -1308,7 +1308,7 @@
                                 </group>
                             </group>
                             <group attrs="{'invisible': ['|', ('recurring_task', '=', False), ('recurrence_message', '=', False)]}">
-                                <div class="alert alert-success o_form_project_recurrence_message" role="status">
+                                <div class="alert alert-success o_form_project_recurrence_message" role="status" colspan="2">
                                     <field name="recurrence_message" widget="html" class="mb-0" />
                                 </div>
                             </group>
