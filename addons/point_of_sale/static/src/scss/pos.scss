@@ -1341,7 +1341,7 @@ td {
 }
 
 .screen .center-content{
-    flex-grow: 1;
+    flex-grow: 2;
     display: flex;
     flex-direction: column;
 }
@@ -1413,8 +1413,7 @@ td {
 /* b) The payment screen */
 
 .payment-screen .main-content {
-    display: grid;
-    grid-template-columns: 300px 1fr auto;
+    display: flex;
 }
 .payment-screen .left-content {
     display: flex;
@@ -1422,6 +1421,7 @@ td {
     justify-content: space-between;
     max-width: inherit;
     border: none;
+    max-height: 100%;
 }
 .payment-screen .center-content {
     display: grid;
@@ -1494,9 +1494,9 @@ td {
     border-top-width: 0px;
     cursor: pointer;
     display: flex;
-    padding: map-get($spacers, 3) map-get($spacers, 2);
     flex-grow: 1;
     flex-basis: 100%;
+    min-height: 60px;
 }
 .paymentline:active {
     background: black;
@@ -1511,14 +1511,18 @@ td {
     white-space: nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
+    padding: map-get($spacers, 3);
 }
 .paymentline .payment-amount {
     margin-left: 10px;
     margin-right: 10px;
+    padding: map-get($spacers, 3);
 }
 .paymentline .delete-button {
   margin-left: 10px;
   margin-right: 10px;
+  padding: map-get($spacers, 3);
+  font-size: x-large;
 }
 .paymentline.selected{
   background: $gray-200;
@@ -1540,10 +1544,10 @@ td {
     text-overflow: ellipsis;
     white-space: nowrap;
     position: relative;
-    max-width: 300px;
     width: 100%;
     transition: background-color, border-color, color 150ms linear;
     box-sizing: border-box;
+    height: 60px;
 }
 .payment-screen .payment-buttons .button:hover {
     background-color: $gray-200;
@@ -1624,7 +1628,7 @@ td {
     .payment-screen .main-content {
         grid-template-columns: 300px 1fr;
         grid-template-rows: 1fr auto;
-    } 
+    }
     .screen .center-content {
         border-bottom: none;
     }
@@ -1662,7 +1666,7 @@ td {
     .payment-screen .main-content {
         grid-template-columns: 1fr;
         grid-template-rows: 1fr 1fr;
-    } 
+    }
     .payment-screen .center-content {
         grid-template-rows: 1fr;
     }
@@ -1695,7 +1699,7 @@ td {
       .payment-status-container {
           font-size: 22px;
       }
-      
+
 }
 
 @media screen and (max-width: 576px) {
@@ -2321,12 +2325,16 @@ td {
     font-size: 24px;
     vertical-align: top;
 }
+.paymentmethods-container {
+    overflow: scroll;
+}
 .paymentmethods .button {
     background: #fff;
     font-size: 16px;
     border-bottom: solid 1px $gray-300;
     border-top-width: 0px;
     cursor: pointer;
+    min-height: 60px;
 }
 .paymentmethods .button:first-child {
     border-top-width: 1px;
