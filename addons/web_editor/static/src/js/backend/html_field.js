@@ -58,6 +58,7 @@ export class HtmlFieldWysiwygAdapterComponent extends ComponentAdapter {
             this.widget.resetEditor(newValue, {
                 collaborationChannel: newCollaborationChannel,
             });
+            this.env.onWysiwygReset && this.env.onWysiwygReset();
         }
     }
     renderWidget() {}
