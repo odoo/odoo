@@ -498,10 +498,46 @@
                 </t>
             </div>
             <div id="o_wsale_offcanvas_content" class="accordion accordion-flush flex-grow-1 overflow-auto">
+                <div class="d-block d-lg-none accordion-item" t-if="hasPricelistDropdown">
+                    <h2 id="o_wsale_offcanvas_orderby_header" class="accordion-header mb-0">
+                        <button class="o_wsale_offcanvas_title accordion-button border-top rounded-0 collapsed"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#o_wsale_offcanvas_pricelist"
+                            aria-expanded="false"
+                            aria-controls="o_wsale_offcanvas_pricelist">
+                            <b>Pricelist</b>
+                        </button>
+                    </h2>
+                    <t t-set="curr_pl" t-value="website.pricelist_id"/>
+                    <div id="o_wsale_offcanvas_pricelist"
+                        class="accordion-collapse collapse"
+                        aria-labelledby="o_wsale_offcanvas_orderby_header">
+                        <div class="accordion-body pt-0">
+                            <div class="list-group list-group-flush">
+                                <a t-foreach="website_sale_pricelists" t-as="pl"
+                                    role="menuitem"
+                                    rel="noindex,nofollow"
+                                    t-att-href="'/shop/change_pricelist/%s' % pl.id"
+                                    class="list-group-item border-0 ps-0 pb-0"
+                                    >
+                                    <div class="form-check d-inline-block">
+                                        <input type="radio"
+                                            t-attf-onclick="location.href='/shop/change_pricelist/#{pl.id}';"
+                                            class="form-check-input o_not_editable"
+                                            name="wsale_pricelist_radios_offcanvas"
+                                            t-att-checked="curr_pl == pl">
+                                            <label class="form-check-label fw-normal" t-out="pl.name"/>
+                                        </input>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div t-if="is_view_active('website_sale.sort')" class="accordion-item">
                     <t t-if="isSortingBy" t-set="isSortingBy" t-value="isSortingBy[0][1]"/>
                     <t t-else="" t-set="isSortingBy" t-value="website.shop_default_sort"/>
-
                     <h2 id="o_wsale_offcanvas_orderby_header" class="accordion-header mb-0">
                         <button class="o_wsale_offcanvas_title accordion-button border-top rounded-0 collapsed"
                                 type="button"
