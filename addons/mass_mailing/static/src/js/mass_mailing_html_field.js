@@ -17,6 +17,7 @@ import { getRangePosition } from '@web_editor/js/editor/odoo-editor/src/utils/ut
 
 const {
     useEffect,
+    useSubEnv,
     onWillUpdateProps,
 } = owl;
 
@@ -24,6 +25,9 @@ export class MassMailingHtmlField extends HtmlField {
     setup() {
         super.setup();
 
+        useSubEnv({
+            onWysiwygReset: this._resetIframe.bind(this),
+        });
         this.action = useService('action');
         this.rpc = useService('rpc');
         this.dialog = useService('dialog');
@@ -120,6 +124,11 @@ export class MassMailingHtmlField extends HtmlField {
                 '/mass_mailing/static/src/snippets/s_rating/options.js',
             ],
         });
+
+        await this._resetIframe();
+    }
+
+    async _resetIframe() {
         await this._onSnippetsLoaded();
 
         // Data is removed on save but we need the mailing and its body to be
@@ -224,43 +233,47 @@ export class MassMailingHtmlField extends HtmlField {
             });
         });
 
-        if ($themes.length === 0) {
+        if (!this._themeParams) {
+            // Initialize theme parameters.
+            this._themeClassNames = "";
+            this._themeParams = _.map($themes, (theme) => {
+                const $theme = $(theme);
+                const name = $theme.data("name");
+                const classname = "o_" + name + "_theme";
+                this._themeClassNames += " " + classname;
+                const imagesInfo = _.defaults($theme.data("imagesInfo") || {}, {
+                    all: {}
+                });
+                for (const info of Object.values(imagesInfo)) {
+                    _.defaults(info, imagesInfo.all, {
+                        module: "mass_mailing",
+                        format: "jpg"
+                    });
+                }
+                return {
+                    name: name,
+                    title: $theme.attr("title") || "",
+                    className: classname || "",
+                    img: $theme.data("img") || "",
+                    template: $theme.html().trim(),
+                    nowrap: !!$theme.data('nowrap'),
+                    get_image_info: function (filename) {
+                        if (imagesInfo[filename]) {
+                            return imagesInfo[filename];
+                        }
+                        return imagesInfo.all;
+                    },
+                    layoutStyles: $theme.data('layout-styles'),
+                };
+            });
+            $themes.parent().remove();
+        }
+
+        if (!this._themeParams.length) {
             return;
         }
 
-        // Initialize theme parameters.
-        this._themeClassNames = "";
-        const themesParams = _.map($themes, (theme) => {
-            const $theme = $(theme);
-            const name = $theme.data("name");
-            const classname = "o_" + name + "_theme";
-            this._themeClassNames += " " + classname;
-            const imagesInfo = _.defaults($theme.data("imagesInfo") || {}, {
-                all: {}
-            });
-            for (const info of Object.values(imagesInfo)) {
-                _.defaults(info, imagesInfo.all, {
-                    module: "mass_mailing",
-                    format: "jpg"
-                });
-            }
-            return {
-                name: name,
-                title: $theme.attr("title") || "",
-                className: classname || "",
-                img: $theme.data("img") || "",
-                template: $theme.html().trim(),
-                nowrap: !!$theme.data('nowrap'),
-                get_image_info: function (filename) {
-                    if (imagesInfo[filename]) {
-                        return imagesInfo[filename];
-                    }
-                    return imagesInfo.all;
-                },
-                layoutStyles: $theme.data('layout-styles'),
-            };
-        });
-        $themes.parent().remove();
+        const themesParams = [...this._themeParams];
 
         // Create theme selection screen and check if it must be forced opened.
         // Reforce it opened if the last snippet is removed.
