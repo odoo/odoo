@@ -128,6 +128,8 @@
                                          t-options="{'widget': 'monetary', 'display_currency': currency}"/>
                                     Fees
                             </span>
+                            <!-- === "Test token" badge === -->
+                            <t t-call="payment.test_token_badge"/>
                             <!-- === "Unpublished" badge === -->
                             <span t-if="not token.provider_id.is_published" class="badge rounded-pill text-bg-danger ms-1">
                                 Unpublished
@@ -261,6 +263,8 @@
                             <span class="payment_option_name" t-esc="token.display_name"/>
                             <!-- === "V" check mark === -->
                             <t t-call="payment.verified_token_checkmark"/>
+                            <!-- === "Test token" badge === -->
+                            <t t-call="payment.test_token_badge"/>
                             <!-- === "Unpublished" badge === -->
                             <span t-if="not token.provider_id.is_published and token.env.user._is_internal()"
                                   class="badge rounded-pill text-bg-danger ms-1">
@@ -380,17 +384,21 @@
 
     <!-- Verified token checkmark -->
     <template id="verified_token_checkmark" name="Payment Verified Token Checkmark">
-        <t t-if="0" name="payment_demo_hook"/>
-        <t t-else="">
-            <i t-if="token.verified" class="fa fa-check text-success"
-                title="This payment method has been verified by our system."
-                role="img"
-                aria-label="Ok"/>
-            <i t-else="" class="fa fa-check text-muted"
-                title="This payment method has not been verified by our system."
-                role="img"
-                aria-label="Not verified"/>
-        </t>
+        <i t-if="token.verified" class="fa fa-check text-success"
+            title="This payment method has been verified by our system."
+            role="img"
+            aria-label="Ok"/>
+        <i t-else="" class="fa fa-check text-muted"
+            title="This payment method has not been verified by our system."
+            role="img"
+            aria-label="Not verified"/>
+    </template>
+
+    <!-- Test token badge -->
+    <template id="test_token_badge" name="Test Token Badge">
+        <span t-if="provider.state == 'test'" class="badge rounded-pill test-bg-warning">
+            Test Token
+        </span>
     </template>
 
     <!-- Generic footer for payment forms -->
