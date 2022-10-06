@@ -4,7 +4,7 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
-const BASE_VISUAL = {
+export const BASE_VISUAL = {
     /**
      * @deprecated, should use ChatWindowManager/availableVisibleSlots instead
      * Amount of visible slots available for chat windows.
