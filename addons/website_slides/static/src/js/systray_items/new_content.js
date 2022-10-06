@@ -8,7 +8,7 @@ patch(NewContentModal.prototype, 'website_slides_new_content', {
         this._super();
 
         const newSlidesChannelElement = this.state.newContentElements.find(element => element.moduleXmlId === 'base.module_website_slides');
-        newSlidesChannelElement.createNewContent = () => this.createNewSlidesChannel();
+        newSlidesChannelElement.createNewContent = () => this.onAddContent('website_slides.slide_channel_action_add');
         newSlidesChannelElement.status = MODULE_STATUS.INSTALLED;
     },
     /**
@@ -26,14 +26,4 @@ patch(NewContentModal.prototype, 'website_slides_new_content', {
             });
         }
     },
-
-    createNewSlidesChannel() {
-        this.action.doAction('website_slides.slide_channel_action_add', {
-            onClose: (data) => {
-                if (data) {
-                    this.website.goToWebsite({path: data.path});
-                }
-            },
-        });
-    }
 });

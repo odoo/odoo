@@ -8,17 +8,7 @@ patch(NewContentModal.prototype, 'website_sale_new_content', {
         this._super();
 
         const newProductElement = this.state.newContentElements.find(element => element.moduleXmlId === 'base.module_website_sale');
-        newProductElement.createNewContent = () => this.createNewProduct();
+        newProductElement.createNewContent = () => this.onAddContent('website_sale.product_product_action_add', true);
         newProductElement.status = MODULE_STATUS.INSTALLED;
     },
-
-    createNewProduct() {
-        this.action.doAction('website_sale.product_product_action_add', {
-            onClose: (data) => {
-                if (data) {
-                    this.website.goToWebsite({path: data.path, edition: true});
-                }
-            },
-        });
-    }
 });

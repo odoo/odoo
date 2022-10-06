@@ -205,6 +205,33 @@ export class NewContentModal extends Component {
         };
         this.dialogs.add(InstallModuleDialog, dialogProps);
     }
+
+    /**
+     * This method registers the action to perform when a new content is
+     * saved. The path must be computed once the record is saved, to
+     * perform the 'ir.act_window_close' action, which will be used when
+     * the dialog is closed to go to the correct website page.
+     */
+    async onAddContent(action, edition = false) {
+        this.action.doAction(action, {
+            onClose: (infos) => {
+                if (infos) {
+                    this.website.goToWebsite({ path: infos.path, edition: edition });
+                }
+            },
+            props: {
+                onSave: (record, params) => {
+                    if (record.resId) {
+                        const path = params.computePath();
+                        this.action.doAction({
+                            type: "ir.actions.act_window_close",
+                            infos: { path }
+                        });
+                    }
+                }
+            }
+        });
+    }
 }
 NewContentModal.template = "website.NewContentModal";
 NewContentModal.components = { NewContentElement };
