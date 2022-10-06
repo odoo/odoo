@@ -124,7 +124,7 @@ QUnit.module("Analytic", (hooks) => {
             },
         });
 
-        assert.containsOnce(target, ".analytic_distribution", "widget should be visible");
+        assert.containsOnce(target, ".o_field_analytic_distribution", "widget should be visible");
         assert.containsN(target, ".badge", 2, "should contain 2 tags");
         assert.strictEqual(target.querySelector(".badge .o_tag_badge_text").textContent, "RD 30.3%",
             "should have rendered 'RD 30.3%'"

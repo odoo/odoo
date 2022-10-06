@@ -569,7 +569,7 @@ export class AnalyticDistribution extends Component {
 
     }
 }
-AnalyticDistribution.template = "analytic_distribution";
+AnalyticDistribution.template = "analytic.AnalyticDistribution";
 AnalyticDistribution.supportedTypes = ["char", "text"];
 AnalyticDistribution.components = {
     AnalyticAutoComplete,
@@ -595,8 +595,4 @@ AnalyticDistribution.extractProps = ({ field, attrs }) => {
     };
 };
 
-export class AnalyticDistributionForm extends AnalyticDistribution {}
-AnalyticDistributionForm.template = "analytic_distribution_form";
-
 registry.category("fields").add("analytic_distribution", AnalyticDistribution);
-registry.category("fields").add("form.analytic_distribution", AnalyticDistributionForm);
