@@ -24,6 +24,17 @@ class PaymentProvider(models.Model):
     qr_code = fields.Boolean(
         string="Enable QR Codes", help="Enable the use of QR-codes when paying by wire transfer.")
 
+    @api.model_create_multi
+    def create(self, values_list):
+        providers = super().create(values_list)
+
+        for provider in providers.filtered(
+            lambda p: p.code == 'custom' and p.custom_mode == 'wire_transfer'
+        ):
+            provider.pending_msg = False
+
+        return providers
+
     @api.depends('code')
     def _compute_view_configuration_fields(self):
         """ Override of payment to hide the credentials page.
@@ -39,27 +50,15 @@ class PaymentProvider(models.Model):
             'show_cancel_msg': False,
         })
 
-    def _transfer_ensure_pending_msg_is_set(self):
-        transfer_providers_without_msg = self.filtered(
-            lambda p: p.code == 'custom'
-            and p.custom_mode == 'wire_transfer'
-            and is_html_empty(p.pending_msg)
-        )
-
-        if not transfer_providers_without_msg:
-            return  # Don't bother translating the messages.
-
-        account_payment_module = self.env['ir.module.module']._get('account_payment')
-        if account_payment_module.state != 'installed':
-            transfer_providers_without_msg.pending_msg = f'<div>' \
-                f'<h3>{_("Please use the following transfer details")}</h3>' \
-                f'<h4>{_("Bank Account")}</h4>' \
-                f'<h4>{_("Communication")}</h4>' \
-                f'<p>{_("Please use the order name as communication reference.")}</p>' \
-                f'</div>'
+    def action_recompute_pending_msg(self, providers=None):
+        account_payment = self.env['ir.module.module']._get('account_payment')
+        if account_payment.state != 'installed':
             return
 
-        for provider in transfer_providers_without_msg:
+        if providers is None:
+            providers = self.filtered(lambda p: p.code == 'custom')
+
+        for provider in providers:
             company_id = provider.company_id.id
             accounts = self.env['account.journal'].search([
                 ('type', '=', 'bank'), ('company_id', '=', company_id)
@@ -77,3 +76,10 @@ class PaymentProvider(models.Model):
         res = super()._get_removal_values()
         res['custom_mode'] = None
         return res
+
+    def _transfer_ensure_pending_msg_is_set(self):
+        transfer_providers_without_msg = self.filtered(
+            lambda p: p.code == 'custom' and not p.pending_msg)
+        if not transfer_providers_without_msg:
+            return
+        self.action_recompute_pending_msg(providers=transfer_providers_without_msg)

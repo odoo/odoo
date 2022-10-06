@@ -6,6 +6,16 @@
         <field name="model">payment.provider</field>
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
+            <div class="oe_title" position="inside">
+                <field name="custom_mode" invisible="1"/>
+                <div class="alert alert-warning alert-link"
+                     attrs="{'invisible': [
+                                '|', ('pending_msg', '!=', False), 
+                                '|', ('code', '!=', 'custom'), ('custom_mode', '!=', 'wire_transfer')
+                            ]}">
+                    The pending message is not set.
+                </div>
+            </div>
             <field name="capture_manually" position="after">
                 <field name="qr_code" attrs="{'invisible': [('code', '!=', 'custom')]}" />
             </field>
@@ -14,6 +24,22 @@
                     {'invisible': [('code', '=', 'custom')]}
                 </attribute>
             </group>
+            <field name="pending_msg" position="replace">
+                <div class="o_row" colspan="2"
+                     attrs="{'invisible': ['|', ('code', '!=', 'custom'), ('custom_mode', '!=', 'wire_transfer')]}">
+                    <button class="fa fa-refresh fa-fw btn-link"
+                            data-tooltip-touch-tap-to-show="true"
+                            data-tooltip-template="web.FieldTooltip"
+                            data-tooltip-info="{&quot;field&quot;:{&quot;help&quot;:&quot;Reset pending message&quot;}}"
+                            title="Reset Pending Message"
+                            name="action_recompute_pending_msg"
+                            type="object"/>
+                    <label for="pending_msg" string="Pending Message"/>
+                    <field name="pending_msg"/>
+               </div>
+                <field name="pending_msg"
+                       attrs="{'invisible': [('code', '=', 'custom'), ('custom_mode', '=', 'wire_transfer')]}"/>
+          </field>
         </field>
     </record>
 
