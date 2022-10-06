@@ -23,7 +23,7 @@
                             <field name="company_id" readonly="1" groups="base.group_multi_company" />
                         </group>
                         <group attrs="{'invisible': ['|', ('hide_use_payment_terminal', '=', False), ('type', 'in', ['cash', 'pay_later'])]}">
-                            <div>
+                            <div colspan="2">
                                 <h2>Tips:</h2>
                                 <p>
                                     Go to <a href="#" name="%(action_pos_configuration)d" type="action" class="btn-link o_form_uri" role="button">Configurations > Settings</a>
