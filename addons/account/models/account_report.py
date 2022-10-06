@@ -511,7 +511,7 @@ class AccountReportExpression(models.Model):
 
             expression_terms = re.split('[-+/*]', re.sub(r'[\s()]', '', expression.formula))
             for term in expression_terms:
-                if term: # term might be empty if the formula contains a negative term
+                if term and not re.match(r'^([0-9]*[.])?[0-9]*$', term): # term might be empty if the formula contains a negative term
                     line_code, total_name = term.split('.')
                     totals_by_code[line_code].add(total_name)
 
