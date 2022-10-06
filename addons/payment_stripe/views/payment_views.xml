@@ -7,16 +7,16 @@
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='code']" position="before">
-                <group invisible="context.get('stripe_onboarding', False)"
-                       name="stripe_onboarding_group"
-                       attrs="{'invisible': ['|', '|', ('code', '!=', 'stripe'), ('stripe_secret_key', '!=', False), ('stripe_publishable_key', '!=', False)]}">
+                <div invisible="context.get('stripe_onboarding', False)"
+                     name="stripe_onboarding_group"
+                     attrs="{'invisible': ['|', '|', ('code', '!=', 'stripe'), ('stripe_secret_key', '!=', False), ('stripe_publishable_key', '!=', False)]}">
                     <button string="Connect Stripe"
                             type="object"
                             name="action_stripe_connect_account"
                             class="btn-primary"
                             colspan="2"
                             attrs="{'invisible': [('state', '=', 'enabled')]}"/>
-                </group>
+                </div>
             </xpath>
             <xpath expr="//group[@name='code']" position="inside">
                 <group attrs="{'invisible': [('code', '!=', 'stripe')]}" name="stripe_credentials">
