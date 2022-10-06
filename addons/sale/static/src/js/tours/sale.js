@@ -26,30 +26,36 @@ tour.register("sale_tour", {
     extra_trigger: ".o_sale_order",
     content: _t("Start by checking your company's data."),
     position: "bottom",
+    skip_trigger: 'a[data-method=action_open_base_onboarding_company].o_onboarding_step_action__done',
 }, {
     trigger: ".modal-content button[name='action_save_onboarding_company_step']",
     content: _t("Looks good. Let's continue."),
     position: "left",
+    skip_trigger: 'a[data-method=action_open_base_onboarding_company].o_onboarding_step_action__done',
 }, {
     trigger: 'a.o_onboarding_step_action.btn[data-method=action_open_base_document_layout]',
     extra_trigger: ".o_sale_order",
     content: _t("Customize your quotes and orders."),
     position: "bottom",
+    skip_trigger: 'a[data-method=action_open_base_document_layout].o_onboarding_step_action__done',
 }, {
     trigger: "button[name='document_layout_save']",
     extra_trigger: ".o_sale_order",
     content: _t("Good job, let's continue."),
     position: "top", // dot NOT move to bottom, it would cause a resize flicker
+    skip_trigger: 'a[data-method=action_open_base_document_layout].o_onboarding_step_action__done',
 }, {
     trigger: 'a.o_onboarding_step_action.btn[data-method=action_open_sale_onboarding_payment_provider]',
     extra_trigger: ".o_sale_order",
     content: _t("To speed up order confirmation, we can activate electronic signatures or payments."),
     position: "bottom",
+    skip_trigger: 'a[data-method=action_open_sale_onboarding_payment_provider].o_onboarding_step_action__done',
 }, {
     trigger: "button[name='add_payment_methods']",
     extra_trigger: ".o_sale_order",
     content: _t("Lets keep electronic signature for now."),
     position: "bottom",
+    skip_trigger: 'a[data-method=action_open_sale_onboarding_payment_provider].o_onboarding_step_action__done',
 }, {
     trigger: 'a.o_onboarding_step_action.btn[data-method=action_open_sale_onboarding_sample_quotation]',
     extra_trigger: ".o_sale_order",
