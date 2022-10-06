@@ -8,17 +8,7 @@ patch(NewContentModal.prototype, 'website_livechat_new_content', {
         this._super();
 
         const newChannelElement = this.state.newContentElements.find(element => element.moduleXmlId === 'base.module_website_livechat');
-        newChannelElement.createNewContent = () => this.createNewChannel();
+        newChannelElement.createNewContent = () => this.onAddContent('website_livechat.im_livechat_channel_action_add');
         newChannelElement.status = MODULE_STATUS.INSTALLED;
     },
-
-    createNewChannel() {
-        this.action.doAction('website_livechat.im_livechat_channel_action_add', {
-            onClose: (data) => {
-                if (data) {
-                    this.website.goToWebsite({path: data.path});
-                }
-            },
-        });
-    }
 });
