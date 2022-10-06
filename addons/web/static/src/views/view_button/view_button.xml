@@ -3,6 +3,7 @@
 
   <t t-name="views.ViewButton" owl="1">
     <t t-tag="props.tag"
+        t-att="props.attrs"
         t-att-id="props.id"
         t-att-class="getClassName()"
         t-att-disabled="disabled"
@@ -11,7 +12,6 @@
         t-att-href="props.tag === 'a' and '#'"
         t-att-style="props.style"
         t-att-type="clickParams.type"
-        t-att-data-hotkey="props.hotkey"
         t-att-data-tooltip-template="hasBigTooltip ? 'views.ViewButtonTooltip' : false"
         t-att-data-tooltip-info="hasBigTooltip ? tooltip : false"
         t-att-data-tooltip="hasSmallToolTip ? props.title : false"

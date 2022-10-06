@@ -6666,8 +6666,8 @@ QUnit.module("Fields", (hooks) => {
         assert.notOk(target.querySelector(btn2Warn).disabled);
         assert.strictEqual(
             target.querySelector(btn2Warn).getAttribute("warn"),
-            null,
-            "the warn attribute is not copied onto the button"
+            "warn",
+            "Should have a button type object with warn attr in area 2"
         );
 
         // click all buttons

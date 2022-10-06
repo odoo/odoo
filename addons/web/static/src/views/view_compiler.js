@@ -323,19 +323,6 @@ export class ViewCompiler {
 
         assignOwlDirectives(button, el);
 
-        const clickParams = {};
-        for (const { name, value } of el.attributes) {
-            if (BUTTON_CLICK_PARAMS.includes(name)) {
-                clickParams[name] = value;
-            } else if (BUTTON_STRING_PROPS.includes(name)) {
-                button.setAttribute(name, toStringExpression(value));
-            }
-        }
-        if (el.hasAttribute("data-hotkey")) {
-            button.setAttribute("hotkey", toStringExpression(el.getAttribute("data-hotkey")));
-        }
-
-        button.setAttribute("clickParams", JSON.stringify(clickParams));
         combineAttributes(
             button,
             "className",
@@ -344,6 +331,21 @@ export class ViewCompiler {
         );
         el.removeAttribute("class");
         button.removeAttribute("class");
+
+        const clickParams = {};
+        const attrs = {};
+        for (const { name, value } of el.attributes) {
+            if (BUTTON_CLICK_PARAMS.includes(name)) {
+                clickParams[name] = value;
+            } else if (BUTTON_STRING_PROPS.includes(name)) {
+                button.setAttribute(name, toStringExpression(value));
+            } else if (!name.startsWith("t-")) {
+                attrs[name] = value;
+            }
+        }
+
+        button.setAttribute("clickParams", JSON.stringify(clickParams));
+        button.setAttribute("attrs", JSON.stringify(attrs));
 
         // Button's body
         const buttonContent = [];
