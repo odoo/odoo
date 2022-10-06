@@ -8431,6 +8431,37 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("inner group with invisible cells", async (assert) => {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+            <form>
+                <field name="foo" />
+                <group>
+                    <div class="cell1" attrs='{"invisible": [["foo", "=", "1"]]}' />
+                    <div class="cell2" attrs='{"invisible": [["foo", "=", "2"]]}' />
+                </group>
+            </form>`,
+        });
+
+        await editInput(target, "[name='foo'] input", 1);
+        assert.containsOnce(target, ".o_wrap_field");
+        assert.containsNone(target, ".o_wrap_field .cell1");
+        assert.containsOnce(target, ".o_wrap_field .cell2");
+
+        await editInput(target, "[name='foo'] input", 2);
+        assert.containsOnce(target, ".o_wrap_field");
+        assert.containsOnce(target, ".o_wrap_field .cell1");
+        assert.containsNone(target, ".o_wrap_field .cell2");
+
+        await editInput(target, "[name='foo'] input", 3);
+        assert.containsOnce(target, ".o_wrap_field");
+        assert.containsOnce(target, ".o_wrap_field .cell1");
+        assert.containsOnce(target, ".o_wrap_field .cell2");
+    });
+
     QUnit.test("form group with newline tag inside", async function (assert) {
         await makeView({
             type: "form",

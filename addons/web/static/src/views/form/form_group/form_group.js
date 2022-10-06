@@ -81,7 +81,7 @@ export class InnerGroup extends Group {
             reservedSpace += itemSpan || 1;
 
             // Allows to remove the line if the content is not visible instead of leaving an empty line.
-            currentRow.isVisible = isVisible;
+            currentRow.isVisible = currentRow.isVisible || isVisible;
         }
         rows.push(currentRow);
 
