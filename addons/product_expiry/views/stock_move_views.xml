@@ -19,9 +19,10 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='lot_name']" position="after" >
                 <field name="picking_type_use_existing_lots" invisible="1"/>
+                <field name="picking_type_use_create_lots" invisible="1"/>
                 <field name="expiration_date" force_save="1" attrs="{
                     'column_invisible': ['|', ('parent.use_expiration_date', '!=', True), ('parent.picking_code', '!=', 'incoming')],
-                    'readonly': [('picking_type_use_existing_lots', '=', True)],
+                    'readonly': [('picking_type_use_existing_lots', '=', True), ('picking_type_use_create_lots', '=', False)],
                 }"/>
             </xpath>
         </field>
@@ -34,9 +35,10 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='lot_name']" position="after">
                 <field name="picking_type_use_existing_lots" invisible="1"/>
+                <field name="picking_type_use_create_lots" invisible="1"/>
                 <field name="expiration_date" force_save="1" attrs="{
                     'column_invisible': [('parent.picking_type_code', '!=', 'incoming')],
-                    'readonly': [('picking_type_use_existing_lots', '=', True)],
+                    'readonly': [('picking_type_use_existing_lots', '=', True), ('picking_type_use_create_lots', '=', False)],
                 }"/>
             </xpath>
         </field>
