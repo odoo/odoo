@@ -6,6 +6,14 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'EmojiPickerView',
+    lifecycleHooks: {
+        _created() {
+            if (this.messaging.emojiRegistry.isLoaded || this.messaging.emojiRegistry.isLoading) {
+                return;
+            }
+            this.messaging.emojiRegistry.loadEmojiData();
+        },
+    },
     fields: {
         activeCategoryByGridViewScroll: one('EmojiPickerView.Category'),
         activeCategory: one('EmojiPickerView.Category', {
