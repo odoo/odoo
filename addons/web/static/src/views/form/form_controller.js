@@ -408,7 +408,7 @@ export class FormController extends Component {
         }
         this.enableButtons();
         if (saved && this.props.onSave) {
-            this.props.onSave(record);
+            this.props.onSave(record, params);
         }
 
         // After we saved, we show the previously computed data in the alert (if there is any).
