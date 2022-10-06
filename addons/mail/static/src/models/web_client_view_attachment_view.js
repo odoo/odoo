@@ -28,7 +28,6 @@ registerModel({
             if (this.iframeViewerPdfRef.el) {
                 hidePDFJSButtons(this.iframeViewerPdfRef.el);
             }
-            this.component.trigger('preview_attachment_validation');
         },
         async setMainAttachmentFromIndex(index) {
             await this.thread.setMainAttachment(this.thread.attachmentsInWebClientView[index]);
@@ -48,7 +47,6 @@ registerModel({
         },
     },
     fields: {
-        component: attr(),
         id: attr({
             identifying: true,
         }),
