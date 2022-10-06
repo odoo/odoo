@@ -2,11 +2,8 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.ThreadView" t-inherit-mode="extension">
         <xpath expr="//t[@t-if='threadView.topbar']" position="after">
-            <t t-if="threadView.hasVisitorBanner">
-                <VisitorBanner
-                    className="'border-bottom'"
-                    visitor="threadView.thread.visitor"
-                />
+            <t t-if="threadView.visitorBanner">
+                <VisitorBanner className="'border-bottom'" record="threadView.visitorBanner"/>
             </t>
         </xpath>
     </t>

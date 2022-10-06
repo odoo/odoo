@@ -4,26 +4,20 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-class VisitorBanner extends Component {
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
+export class VisitorBanner extends Component {
 
     /**
-     * @returns {Visitor}
+     * @returns {VisitorBannerView}
      */
-    get visitor() {
-        return this.props.visitor;
+    get visitorBannerView() {
+        return this.props.record;
     }
 
 }
 
 Object.assign(VisitorBanner, {
-    props: { visitor: Object },
+    props: { record: Object },
     template: 'website_livechat.VisitorBanner',
 });
 
 registerMessagingComponent(VisitorBanner);
-
-export default VisitorBanner;
