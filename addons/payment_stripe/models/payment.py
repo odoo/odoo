@@ -61,7 +61,7 @@ class PaymentAcquirerStripe(models.Model):
             'success_url': urls.url_join(base_url, StripeController._success_url) + '?reference=%s' % urls.url_quote_plus(tx_values['reference']),
             'cancel_url': urls.url_join(base_url, StripeController._cancel_url) + '?reference=%s' % urls.url_quote_plus(tx_values['reference']),
             'payment_intent_data[description]': tx_values['reference'],
-            'customer_email': tx_values.get('partner_email') or tx_values.get('billing_partner_email'),
+            'customer_email': tx_values.get('partner_email') or tx_values.get('billing_partner_email') or None,
         }
         if tx_values['type'] == 'form_save':
             stripe_session_data['payment_intent_data[setup_future_usage]'] = 'off_session'
