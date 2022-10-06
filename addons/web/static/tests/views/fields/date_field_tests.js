@@ -349,6 +349,27 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test("DateField with label opens datepicker on click", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <label for="date" string="What date is it" />
+                    <field name="date" />
+                </form>`,
+        });
+
+        await click(target.querySelector("label.o_form_label"));
+        assert.containsOnce(
+            document.body,
+            ".bootstrap-datetimepicker-widget",
+            "datepicker should be opened"
+        );
+    });
+
     QUnit.test("DateField with warn_future option", async function (assert) {
         await makeView({
             type: "form",
