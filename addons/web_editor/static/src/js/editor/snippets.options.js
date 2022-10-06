@@ -2465,6 +2465,7 @@ const SelectPagerUserValueWidget = SelectUserValueWidget.extend({
     },
 });
 
+const m2oRpcCache = {};
 const Many2oneUserValueWidget = SelectUserValueWidget.extend({
     className: (SelectUserValueWidget.prototype.className || '') + ' o_we_many2one',
     events: Object.assign({}, SelectUserValueWidget.prototype.events, {
@@ -2482,7 +2483,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
     init(parent, title, options, $target) {
         this.afterSearch = [];
         this.displayNameCache = {};
-        this._rpcCache = {};
+        this._rpcCache = m2oRpcCache;
         const {dataAttributes} = options;
         Object.assign(options, {
             limit: '5',
