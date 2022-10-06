@@ -208,7 +208,7 @@
                             <page string="Contract Details" name="other" groups="hr_contract.group_hr_contract_manager">
                                 <group><group name="contract_details"/></group>
                                 <group name="notes_group" string="Notes">
-                                    <field name="notes" nolabel="1"/>
+                                    <field name="notes" nolabel="1" colspan="2" placeholder="Type in notes about this contract..."/>
                                 </group>
                             </page>
                             <page string="Salary Information" name="information" class="o_hr_contract_salary_information">
@@ -216,8 +216,8 @@
                                     <group name="salary">
                                         <label for="wage"/>
                                         <div class="o_row" name="wage">
-                                            <field name="wage" nolabel="1"/>
-                                            <span>/ month</span>
+                                            <field name="wage" class="oe_inline" nolabel="1"/>
+                                            <div>/ month</div>
                                         </div>
                                     </group>
                                     <group name="yearly_advantages"/>
