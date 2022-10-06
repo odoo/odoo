@@ -1982,8 +1982,11 @@ export function setTagName(el, newTagName) {
     while (el.firstChild) {
         n.append(el.firstChild);
     }
-    if (el.tagName === 'LI') {
+    const closestLi = el.closest('li');
+    if (el.tagName === 'LI' && newTagName !== 'p') {
         el.append(n);
+    } else if (closestLi && newTagName === 'p') {
+        closestLi.replaceChildren(...n.childNodes);
     } else {
         el.parentNode.replaceChild(n, el);
     }
