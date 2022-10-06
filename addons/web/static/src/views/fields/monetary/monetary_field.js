@@ -38,10 +38,6 @@ export class MonetaryField extends Component {
         return this.currency ? this.currency.symbol : "";
     }
 
-    get currencyPosition() {
-        return this.currency && this.currency.position;
-    }
-
     get currencyDigits() {
         if (this.props.digits) {
             return this.props.digits;
