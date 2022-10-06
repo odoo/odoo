@@ -159,6 +159,8 @@ function highlightElement(el) {
 function compileForm() {
     const res = this.compileForm(...arguments);
     res.classList.remove("o_form_nosheet");
+    res.classList.remove("p-2");
+    res.classList.remove("px-lg-5");
     return res;
 }
 
