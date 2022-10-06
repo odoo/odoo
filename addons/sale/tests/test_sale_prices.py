@@ -143,7 +143,7 @@ class TestSalePrices(SaleCommon):
                 'product_id': self.product.id,
             })
 
-            self.assertEqual(order_line.pricelist_item_id, pricelist_rule)
+            self.assertFalse(order_line.pricelist_item_id)
             self.assertEqual(
                 order_line.price_unit,
                 self.product.lst_price)
