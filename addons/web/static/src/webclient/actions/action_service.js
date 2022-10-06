@@ -452,6 +452,13 @@ function makeActionManager(env) {
         if (view.type === "form") {
             if (action.target === "new") {
                 viewProps.mode = "edit";
+                if (!viewProps.onSave) {
+                    viewProps.onSave = (record, params) => {
+                        if (params && params.closable) {
+                            doAction({ type: "ir.actions.act_window_close" });
+                        }
+                    };
+                }
             } else if (context.form_view_initial_mode) {
                 viewProps.mode = context.form_view_initial_mode;
             }
