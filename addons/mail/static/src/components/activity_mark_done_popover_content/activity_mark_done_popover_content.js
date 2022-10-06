@@ -1,20 +1,17 @@
 /** @odoo-module **/
 
-import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
-import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { onMounted, useRef } = owl;
+const { Component, onMounted, useRef } = owl;
 
-export class ActivityMarkDonePopoverContent extends LegacyComponent {
+export class ActivityMarkDonePopoverContent extends Component {
 
     /**
      * @override
      */
     setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'component' });
         useRefToModel({ fieldName: 'feedbackTextareaRef', refName: 'feedbackTextarea' });
         this._feedbackTextareaRef = useRef('feedbackTextarea');
         onMounted(() => this._mounted());
