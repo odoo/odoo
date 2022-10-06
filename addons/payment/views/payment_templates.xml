@@ -61,17 +61,17 @@
                             </span>
                             <!-- === "Test Mode" badge === -->
                             <span t-if="provider.state == 'test'"
-                                  class="rounded-pill text-bg-warning ms-1">
+                                  class="badge rounded-pill text-bg-warning ms-1">
                                 Test Mode
                             </span>
                             <!-- === "Unpublished" badge === -->
                             <span t-if="not provider.is_published"
-                                  class="badge text-bg-danger ms-1">
+                                  class="badge rounded-pill text-bg-danger ms-1">
                                 Unpublished
                             </span>
                             <!-- === Extra fees badge === -->
                             <t t-if="fees_by_provider.get(provider)">
-                                <span class="rounded-pill text-bg-secondary ms-1">
+                                <span class="badge rounded-pill text-bg-secondary ms-1">
                                     + <t t-esc="fees_by_provider.get(provider)"
                                          t-options="{'widget': 'monetary', 'display_currency': currency}"/>
                                     Fees
@@ -122,7 +122,7 @@
                             <!-- === "V" check mark === -->
                             <t t-call="payment.verified_token_checkmark"/>
                             <!-- === "Unpublished" badge === -->
-                            <span t-if="not token.provider_id.is_published" class="badge text-bg-danger ms-1">
+                            <span t-if="not token.provider_id.is_published" class="badge rounded-pill text-bg-danger ms-1">
                                 Unpublished
                             </span>
                         </label>
@@ -205,12 +205,12 @@
                             </span>
                             <!-- === "Test Mode" badge === -->
                             <span t-if="provider.state == 'test'"
-                                  class="rounded-pill text-bg-warning"
+                                  class="badge rounded-pill text-bg-warning"
                                   style="margin-left:5px">
                                 Test Mode
                             </span>
                             <!-- === "Unpublished" badge === -->
-                            <span t-if="not provider.is_published" class="badge text-bg-danger">
+                            <span t-if="not provider.is_published" class="badge rounded-pill text-bg-danger">
                                 Unpublished
                             </span>
                         </label>
@@ -256,7 +256,7 @@
                             <t t-call="payment.verified_token_checkmark"/>
                             <!-- === "Unpublished" badge === -->
                             <span t-if="not token.provider_id.is_published and token.env.user._is_internal()"
-                                  class="badge text-bg-danger ms-1">
+                                  class="badge rounded-pill text-bg-danger ms-1">
                                 Unpublished
                             </span>
                         </label>
