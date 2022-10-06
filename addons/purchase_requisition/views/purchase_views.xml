@@ -17,12 +17,12 @@
                 <page string="Alternatives" name="alternative_pos">
                     <group>
                         <group>
-                            <p>Create a call for tender by adding alternative request for quotations to different vendors.
+                            <p colspan="2">Create a call for tender by adding alternative request for quotations to different vendors.
                             Make your choice by selecting the best combination of lead time, OTD and/or total amount.
                             By comparing product lines you can also decide to order some products from one vendor and others from another vendor.</p>
                         </group>
                         <group>
-                            <p>
+                            <p colspan="2">
                                 <button name="action_create_alternative" type="object" class="btn-link d-block" string="Create Alternative" icon="fa-copy" attrs="{'invisible': [('id', '=', False)]}" />
                                 <button name="action_compare_alternative_lines" type="object" class="btn-link d-block" string="Compare Product Lines" icon="fa-bar-chart" attrs="{'invisible': [('alternative_po_ids', '=', [])]}"/>
                             </p>
