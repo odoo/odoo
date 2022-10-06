@@ -83,3 +83,7 @@ FormRenderer.components = {
     InnerGroup,
     StatusBarButtons,
 };
+FormRenderer.defaultProps = {
+    activeNotebookPages: {},
+    onNotebookPageChange: () => {},
+};

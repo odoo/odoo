@@ -6426,6 +6426,46 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.test(
+        "open a record in a one2many list (mode 'readonly') with a notebook",
+        async function (assert) {
+            serverData.views = {
+                "turtle,false,form": `
+                    <form>
+                        <notebook>
+                            <page string="Yop">
+                                <field name="display_name">
+                                </field>
+                            </page>
+                    </notebook>
+                    </form>`,
+            };
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <field name="turtles">
+                            <tree>
+                                <field name="turtle_foo"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                resId: 1,
+            });
+
+            await click(target, ".o_data_cell");
+            assert.containsOnce(target, ".modal .o_form_view");
+            assert.containsOnce(target, ".modal .o_form_view .o_notebook_headers");
+            assert.strictEqual(
+                target.querySelector(".modal .o_form_view .o_notebook_headers").textContent,
+                "Yop"
+            );
+        }
+    );
+
     QUnit.test("one2many field with virtual ids", async function (assert) {
         serverData.views = {
             "partner,false,form": '<form><field name="foo"/></form>',

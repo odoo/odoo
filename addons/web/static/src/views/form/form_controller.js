@@ -172,6 +172,15 @@ export class FormController extends Component {
             beforeExecuteAction: this.beforeExecuteActionButton.bind(this),
             afterExecuteAction: this.afterExecuteActionButton.bind(this),
         });
+
+        const state = this.props.state || {};
+        const { fieldsToTranslate } = state;
+        this.fieldsToTranslate = useState(fieldsToTranslate || {});
+        const activeNotebookPages = { ...state.activeNotebookPages };
+        this.onNotebookPageChange = (notebookId, page) => {
+            activeNotebookPages[notebookId] = page;
+        };
+
         useSetupView({
             rootRef,
             beforeLeave: () => {
@@ -187,6 +196,7 @@ export class FormController extends Component {
             getLocalState: () => {
                 // TODO: export the whole model?
                 return {
+                    activeNotebookPages: !this.model.root.isNew && activeNotebookPages,
                     resId: this.model.root.resId,
                     fieldsToTranslate: toRaw(this.fieldsToTranslate),
                 };
@@ -242,9 +252,6 @@ export class FormController extends Component {
                 () => [this.model.root.isInEdition]
             );
         }
-
-        const { fieldsToTranslate } = this.props.state || {};
-        this.fieldsToTranslate = useState(fieldsToTranslate || {});
     }
 
     displayName() {
