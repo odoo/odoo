@@ -297,6 +297,8 @@ function patchFields(patch) {
                             originalFieldDefinition.sort = attributeData;
                         }
                         break;
+                    case 'fieldType':
+                        throw new Error(`Cannot patch field ${patch.name}/${fieldName}: patches do not need field type (attr, one, many).`);
                     default:
                         throw new Error(`Cannot patch field ${patch.name}/${fieldName}: unsupported field attribute "${attributeName}".`);
                 }
