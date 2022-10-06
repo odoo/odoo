@@ -117,13 +117,12 @@ class ReportBomStructure(models.AbstractModel):
         else:
             product = bom.product_id or bom.product_tmpl_id.product_variant_id
         if product:
-            price = product.uom_id._compute_price(product.with_company(company).standard_price, bom.product_uom_id) * bom_quantity
             attachments = self.env['mrp.document'].search(['|', '&', ('res_model', '=', 'product.product'),
             ('res_id', '=', product.id), '&', ('res_model', '=', 'product.template'), ('res_id', '=', product.product_tmpl_id.id)])
         else:
             # Use the product template instead of the variant
-            price = bom.product_tmpl_id.uom_id._compute_price(bom.product_tmpl_id.with_company(company).standard_price, bom.product_uom_id) * bom_quantity
-            attachments = self.env['mrp.document'].search([('res_model', '=', 'product.template'), ('res_id', '=', bom.product_tmpl_id.id)])
+            product = bom.product_tmpl_id
+            attachments = self.env['mrp.document'].search([('res_model', '=', 'product.template'), ('res_id', '=', product.id)])
         operations = self._get_operation_line(product, bom, float_round(bom_quantity, precision_rounding=1, rounding_method='UP'), 0)
         lines = {
             'bom': bom,
@@ -132,7 +131,7 @@ class ReportBomStructure(models.AbstractModel):
             'currency': company.currency_id,
             'product': product,
             'code': bom and bom.display_name or '',
-            'price': price,
+            'price': product.uom_id._compute_price(product.with_company(company).standard_price, bom.product_uom_id) * bom_quantity,
             'total': sum([op['total'] for op in operations]),
             'level': level or 0,
             'operations': operations,
