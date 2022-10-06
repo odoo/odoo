@@ -4,7 +4,7 @@
     <template id="verified_token_checkmark" inherit_id="payment.verified_token_checkmark">
         <xpath expr="//t[@name='payment_demo_hook']" position="replace">
             <t t-if="token.provider_code=='demo'">
-                <span class="badge text-bg-warning">Demo Token</span>
+                <span class="badge rounded-pill text-bg-warning">Demo Token</span>
             </t>
         </xpath>
     </template>
