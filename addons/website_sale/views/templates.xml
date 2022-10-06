@@ -283,7 +283,7 @@
 
             <t t-set="hasLeftColumn" t-value="opt_wsale_categories or opt_wsale_attributes"/>
 
-            <t t-set="isFilteringByPrice" t-if="opt_wsale_filter_price" t-value="available_min_price != min_price or available_max_price != max_price"/>
+            <t t-set="isFilteringByPrice" t-if="opt_wsale_filter_price" t-value="float_round(available_min_price, 2) != float_round(min_price, 2) or float_round(available_max_price, 2) != float_round(max_price, 2)"/>
             <t t-set="hasPricelistDropdown" t-value="website_sale_pricelists and len(website_sale_pricelists)&gt;1"/>
             <t t-set="isSortingBy" t-value="[sort for sort in website_sale_sortable if sort[0]==request.params.get('order', '')]"/>
 
