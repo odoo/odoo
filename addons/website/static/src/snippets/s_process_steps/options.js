@@ -4,6 +4,20 @@ import options from 'web_editor.snippets.options';
 import weUtils from 'web_editor.utils';
 
 options.registry.StepsConnector = options.Class.extend({
+    /**
+     * @override
+     */
+    start() {
+        this.$target.on('content_changed.StepsConnector', () => this._reloadConnectors());
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        this.$target.off('.StepsConnector');
+    },
 
     //--------------------------------------------------------------------------
     // Options
