@@ -49,8 +49,9 @@
                 <group name="ab_test_group" groups="mass_mailing.group_mass_mailing_campaign" attrs="{'invisible': [('ab_testing_mailings_count', '=', 0)]}">
                     <group string="A/B Test">
                         <field name="ab_testing_completed" invisible="1"/>
-                        <field name="ab_testing_winner_selection" attrs="{'readonly': [('ab_testing_completed', '=', True)]}"/>
-                        <field name="ab_testing_schedule_datetime"
+                        <field name="ab_testing_winner_selection" class="w-100"
+                               attrs="{'readonly': [('ab_testing_completed', '=', True)]}"/>
+                        <field name="ab_testing_schedule_datetime" class="w-100"
                             attrs="{'invisible': [('ab_testing_winner_selection', '=', 'manual')], 'readonly': [('ab_testing_completed', '=', True)]}"/>
                     </group>
                 </group>

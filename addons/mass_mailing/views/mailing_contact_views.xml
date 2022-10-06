@@ -112,7 +112,7 @@
                     <div class="oe_title">
                         <label for="name" string="Contact Name"/>
                         <h1>
-                            <field class="text-break" name="name" placeholder="e.g. John Smith"/>
+                            <field class="text-break w-100" name="name" placeholder="e.g. John Smith"/>
                         </h1>
                         <div>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" placeholder="Tags" style="width: 100%"/>
@@ -129,9 +129,9 @@
                                 <field name="email" widget="email"/>
                                 <field name="is_blacklisted" invisible="1"/>
                             </div>
-                            <field name="title_id"/>
-                            <field name="company_name"/>
-                            <field name="country_id" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="title_id" class="w-100"/>
+                            <field name="company_name" class="w-100"/>
+                            <field name="country_id" class="w-100" options="{'no_open': True, 'no_create': True}"/>
                         </group>
                         <group>
                             <field name="create_date" attrs="{'invisible': [('id', '=', False)]}" readonly="1"/>

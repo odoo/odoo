@@ -266,9 +266,9 @@
                                                     attrs="{'readonly': [('state', '!=', 'draft')]}"/> %
                                             </span>
                                         </span>
-                                        <field name="ab_testing_winner_selection"
+                                        <field name="ab_testing_winner_selection" class="w-100"
                                             attrs="{'required': [('ab_testing_enabled', '=', True), ('mailing_type', '=', 'mail')], 'invisible': ['|', ('ab_testing_enabled', '=', False), ('mailing_type', '!=', 'mail')], 'readonly': [('state', '!=', 'draft')]}"/>
-                                        <field name="ab_testing_schedule_datetime"
+                                        <field name="ab_testing_schedule_datetime" class="w-100"
                                             attrs="{'required': [('ab_testing_enabled', '=', True), ('ab_testing_winner_selection', '!=', 'manual')], 'readonly': ['|', ('ab_testing_enabled', '=', False), ('state', '!=', 'draft')], 'invisible': ['|', ('ab_testing_enabled', '=', False), ('ab_testing_winner_selection', '=', 'manual')]}"/>
                                     </group>
                                     <div>
@@ -308,7 +308,8 @@
                                             options="{'dynamic_placeholder': true}"
                                             attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"
                                             widget="char_emojis" placeholder="e.g. Check it out before it's too late!"/>
-                                        <field name="email_from" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
+                                        <field name="email_from" class="w-100"
+                                               attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                         <label for="reply_to"/>
                                         <div name="reply_to_details">
                                             <field name="reply_to_mode" widget="radio"
@@ -316,7 +317,7 @@
                                                     'invisible': [('mailing_model_name', 'in', ['mailing.contact', 'res.partner', 'mailing.list'])],
                                                     'readonly': [('state', 'in', ('sending', 'done'))]
                                             }"/>
-                                            <field name="reply_to"
+                                            <field name="reply_to" class="w-100"
                                                 attrs="{
                                                     'required': [('reply_to_mode', '=', 'new')],
                                                     'invisible': [('reply_to_mode', '=', 'update')],
@@ -338,6 +339,7 @@
                                     </group>
                                     <group string="Tracking">
                                         <field name="campaign_id"
+                                            class="w-100"
                                             string="Campaign"
                                             groups="mass_mailing.group_mass_mailing_campaign"
                                             attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
@@ -345,6 +347,7 @@
                                              string="Medium"
                                              required="True"
                                              groups="base.group_no_one"
+                                             class="w-100"
                                              attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                         <field name="source_id"
                                             string="Source"
@@ -353,12 +356,13 @@
                                             class="o_text_overflow"
                                             groups="base.group_no_one"
                                             attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
-                                        <field name="user_id" widget="many2one_avatar_user"
+                                        <field name="user_id" widget="many2one_avatar_user" class="w-100"
                                             domain="[('share', '=', False)]"/>
                                     </group>
                                     <group string="Advanced" groups="base.group_no_one">
                                         <field name="mail_server_available" invisible="1"/>
-                                        <field name="name" required="False" string="Name" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
+                                        <field name="name" required="False" string="Name" class="w-100"
+                                               attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                         <field name="mail_server_id" attrs="{'readonly': [('state', 'in', ('sending', 'done'))],
                                          'invisible': [('mail_server_available', '=', False)]}"/>
                                         <field name="keep_archives" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>

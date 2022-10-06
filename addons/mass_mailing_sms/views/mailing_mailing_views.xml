@@ -102,7 +102,7 @@
                     For an SMS Text Message, internal Title of the Message.</attribute>
             </xpath>
             <xpath expr="//field[@name='subject']" position="after">
-                <field class="text-break" name="sms_subject" string="Title" placeholder="e.g. Black Friday SMS coupon" attrs="{'invisible': [('mailing_type', '!=', 'sms')], 'readonly': [('state', 'in', ('sending', 'done'))], 'required': [('mailing_type', '=', 'sms')]}"/>
+                <field class="text-break w-100" name="sms_subject" string="Title" placeholder="e.g. Black Friday SMS coupon" attrs="{'invisible': [('mailing_type', '!=', 'sms')], 'readonly': [('state', 'in', ('sending', 'done'))], 'required': [('mailing_type', '=', 'sms')]}"/>
             </xpath>
             <xpath expr="//button[@name='action_set_favorite']" position="attributes">
                 <attribute name="attrs">{'invisible': ['|', ('mailing_type', '!=', 'mail'), ('favorite', '=', True)]}</attribute>
@@ -162,11 +162,11 @@
             <xpath expr="//field[@name='ab_testing_winner_selection']" position="after">
                 <label for="ab_testing_sms_winner_selection" string="Winner Selection"
                     attrs="{'invisible': ['|', ('ab_testing_enabled', '=', False), ('mailing_type', '!=', 'sms')]}"/>
-                <field name="ab_testing_sms_winner_selection" nolabel="1"
+                <field name="ab_testing_sms_winner_selection" nolabel="1" class="w-100"
                     attrs="{'required': [('ab_testing_enabled', '=', True), ('mailing_type', '=', 'sms')], 'invisible': ['|', ('ab_testing_enabled', '=', False), ('mailing_type', '!=', 'sms')], 'readonly': [('state', '!=', 'draft')]}"/>
             </xpath>
             <xpath expr="//field[@name='ab_testing_schedule_datetime']" position="replace">
-                 <field name="ab_testing_schedule_datetime"
+                 <field name="ab_testing_schedule_datetime" class="w-100"
                         attrs="{'required': [('ab_testing_enabled', '=', True), ('ab_testing_winner_selection', '!=', 'manual'), ('ab_testing_sms_winner_selection', '!=', 'manual')], 'readonly': ['|', ('ab_testing_enabled', '=', False), ('state', '!=', 'draft')], 'invisible': ['|', '|', ('ab_testing_enabled', '=', False), ('ab_testing_winner_selection', '=', 'manual'), ('ab_testing_sms_winner_selection', '=', 'manual')]}"/>
             </xpath>
             <xpath expr="//span[@name='ab_test_manual']" position="attributes">
