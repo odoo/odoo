@@ -1,7 +1,5 @@
 /** @odoo-module **/
 
-import '@mail/js/activity';
-
 import BasicController from 'web.BasicController';
 import core from 'web.core';
 import { sprintf } from '@web/core/utils/strings';

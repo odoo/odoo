@@ -185,6 +185,9 @@ For more specific needs, you may also assign custom-defined actions
             # defines mixins and variables used by multiple components
             'mail/static/src/components/notification_list/notification_list_item.scss',
             'mail/static/src/js/**/*.js',
+            ('remove', 'mail/static/src/js/activity.js'),
+            ('remove', 'mail/static/src/js/field_char.js'),
+            ('remove', 'mail/static/src/js/m2x_avatar_user.js'),
             'mail/static/src/utils/*.js',
             'mail/static/src/scss/*.scss',
             'mail/static/src/xml/*.xml',
@@ -201,7 +204,14 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/views/**/*.scss',
             'mail/static/src/webclient/commands/*.js',
             'mail/static/src/widgets/*/*.js',
+            ('remove', 'mail/static/src/widgets/form_renderer/form_renderer.js'),
             'mail/static/src/widgets/*/*.scss',
+        ],
+        "web.assets_backend_legacy_lazy": [
+            'mail/static/src/js/activity.js',
+            'mail/static/src/js/field_char.js',
+            'mail/static/src/js/m2x_avatar_user.js',
+            'mail/static/src/widgets/form_renderer/form_renderer.js'
         ],
         'web.assets_backend_prod_only': [
             'mail/static/src/main.js',

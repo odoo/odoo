@@ -23,6 +23,10 @@ associated to every resource. It also manages the leaves of every resource.
     'assets': {
         'web.assets_backend': [
             'resource/static/src/**/*',
+            ('remove', 'resource/static/src/js/section_fields_backend.js'),
+        ],
+        "web.assets_backend_legacy_lazy": [
+            'resource/static/src/js/section_fields_backend.js',
         ],
         'web.qunit_suite_tests': [
             'resource/static/tests/components/*.js',

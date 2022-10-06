@@ -60,10 +60,10 @@ function registerClientAction(name, action) {
         Action.components = { ClientActionAdapter };
         Action.isLegacy = true;
         Action.target = action.prototype.target;
-        actionRegistry.add(name, Action);
+        actionRegistry.add(name, Action, { force: true });
     } else {
         // the action is either a Component or a function, register it directly
-        actionRegistry.add(name, action);
+        actionRegistry.add(name, action, { force: true });
     }
 }
 

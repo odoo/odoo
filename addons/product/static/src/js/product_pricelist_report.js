@@ -307,7 +307,7 @@ var GeneratePriceList = AbstractAction.extend(StandaloneFieldManagerMixin, {
     },
 });
 
-core.action_registry.add('generate_pricelist', GeneratePriceList);
+core.action_registry.add('generate_pricelist', GeneratePriceList, { force: true }); // replace loader
 
 return {
     GeneratePriceList,

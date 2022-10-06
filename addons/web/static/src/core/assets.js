@@ -267,3 +267,8 @@ LazyComponent.props = {
     bundle: String,
     props: { type: Object, optional: true },
 };
+
+export async function loadLegacyAssets() {
+    const assets = await getBundle("web.assets_backend_legacy_lazy");
+    await loadBundle(assets);
+}

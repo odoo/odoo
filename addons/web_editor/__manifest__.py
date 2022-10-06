@@ -112,7 +112,11 @@ Odoo Web Editor widget.
             'web_editor/static/src/js/wysiwyg/dialog.js',
             'web_editor/static/src/js/frontend/loader.js',
             'web_editor/static/src/js/backend/**/*',
+            ('remove', 'web_editor/static/src/js/backend/field_html.js'),
             'web_editor/static/src/xml/backend.xml',
+        ],
+        "web.assets_backend_legacy_lazy": [
+            'web_editor/static/src/js/backend/field_html.js',
         ],
         'web.assets_frontend_minimal': [
             'web_editor/static/src/js/frontend/loader_loading.js',

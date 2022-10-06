@@ -44,10 +44,12 @@ If you need to manage your meetings, you should install the CRM module.
         ],
         'web.assets_backend': [
             'calendar/static/src/scss/calendar.scss',
-            'calendar/static/src/js/base_calendar.js',
             'calendar/static/src/js/services/calendar_notification_service.js',
             'calendar/static/src/views/**/*',
             'calendar/static/src/components/*/*.xml',
+        ],
+        "web.assets_backend_legacy_lazy": [
+            'calendar/static/src/js/base_calendar.js',
         ],
         'web.qunit_suite_tests': [
             'calendar/static/tests/**/*',
