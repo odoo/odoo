@@ -524,6 +524,7 @@
                                    class="list-group-item border-0 ps-0 pb-0">
                                     <div class="form-check d-inline-block">
                                         <input type="radio"
+                                               t-attf-onclick="location.href='#{keep('/shop', order=sortby[0])}';"
                                                class="form-check-input o_not_editable"
                                                name="wsale_sortby_radios_offcanvas"
                                                t-att-checked="isSortingBy and isSortingBy == sortby[1]">
