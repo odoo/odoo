@@ -647,26 +647,31 @@ class AccountBankStatementLine(models.Model):
             sub_queries.append(rf'''
                 {unaccent("%s")} ~* ('^' || (
                    SELECT STRING_AGG(CONCAT('(?=.*\m', chunk[1], '\M)'), '')
-                   FROM regexp_matches({unaccent('name')}, '\w{{3,}}', 'g') AS chunk
+                   FROM regexp_matches({unaccent('partner.name')}, '\w{{3,}}', 'g') AS chunk
                 ))
             ''')
             params.append(text_value)
 
         if sub_queries:
             self.env['res.partner'].flush_model(['company_id', 'name'])
+            self.env['account.move.line'].flush_model(['partner_id', 'company_id'])
             self._cr.execute(
                 '''
-                    SELECT id
-                    FROM res_partner
-                    WHERE (company_id IS NULL OR company_id = %s)
-                        AND name IS NOT NULL
+                    SELECT aml.partner_id
+                    FROM account_move_line aml
+                    JOIN res_partner partner ON
+                        aml.partner_id = partner.id
+                        AND partner.name IS NOT NULL
+                        AND partner.active
                         AND (''' + ') OR ('.join(sub_queries) + ''')
+                    WHERE aml.company_id = %s
+                    LIMIT 1
                 ''',
-                [self.company_id.id] + params,
+                params + [self.company_id.id],
             )
-            rows = self._cr.fetchall()
-            if len(rows) == 1:
-                return self.env['res.partner'].browse(rows[0][0])
+            row = self._cr.fetchone()
+            if row:
+                return self.env['res.partner'].browse(row[0])
 
         return self.env['res.partner']
 
