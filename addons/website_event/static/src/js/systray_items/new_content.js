@@ -8,17 +8,7 @@ patch(NewContentModal.prototype, 'website_event_new_content', {
         this._super();
 
         const newEventElement = this.state.newContentElements.find(element => element.moduleXmlId === 'base.module_website_event');
-        newEventElement.createNewContent = () => this.createNewEvent();
+        newEventElement.createNewContent = () => this.onAddContent('website_event.event_event_action_add', true);
         newEventElement.status = MODULE_STATUS.INSTALLED;
     },
-
-    createNewEvent() {
-        this.action.doAction('website_event.event_event_action_add', {
-            onClose: (data) => {
-                if (data) {
-                    this.website.goToWebsite({path: data.path, edition: true});
-                }
-            },
-        });
-    }
 });
