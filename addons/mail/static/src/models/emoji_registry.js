@@ -1,23 +1,24 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { many } from '@mail/model/model_field';
+import { attr, many } from '@mail/model/model_field';
 import { insert } from '@mail/model/model_field_command';
-import { emojiCategoriesData, emojisData } from '@mail/models_data/emoji_data';
+import { getBundle, loadBundle } from '@web/core/assets';
 
 registerModel({
     name: 'EmojiRegistry',
-    lifecycleHooks: {
-        _created() {
+    recordMethods: {
+        async loadEmojiData() {
+            this.update({ isLoading: true });
+            await getBundle('mail.assets_model_data').then(loadBundle);
+            const { emojiCategoriesData, emojisData } = await odoo.runtimeImport("@mail/models_data/emoji_data");
+            if (!this.exists()) {
+                return;
+            }
             this._populateFromEmojiData(emojiCategoriesData, emojisData);
         },
-    },
-    recordMethods: {
         async _populateFromEmojiData(dataCategories, dataEmojis) {
-            await this.messaging.executeGracefully(dataCategories.map(category => () => {
-                if (!this.exists()) {
-                    return;
-                }
+            dataCategories.map(category => {
                 const emojiCount = dataEmojis.reduce((acc, emoji) => emoji.category === category.name ? acc + 1 : acc, 0);
                 this.update({
                     dataCategories: insert({
@@ -27,23 +28,19 @@ registerModel({
                         emojiCount,
                     }),
                 });
-            }));
-            if (!this.exists()) {
-                return;
-            }
-            await this.messaging.executeGracefully(dataEmojis.map(emojiData => () => {
-                if (!this.exists()) {
-                    return;
-                }
-                this.models['Emoji'].insert({
-                    codepoints: emojiData.codepoints,
-                    shortcodes: emojiData.shortcodes,
-                    emoticons: emojiData.emoticons,
-                    name: emojiData.name,
-                    keywords: emojiData.keywords,
-                    emojiDataCategory: { name: emojiData.category },
-                });
-            }));
+            });
+            this.models['Emoji'].insert(dataEmojis.map(emojiData => ({
+                codepoints: emojiData.codepoints,
+                shortcodes: emojiData.shortcodes,
+                emoticons: emojiData.emoticons,
+                name: emojiData.name,
+                keywords: emojiData.keywords,
+                emojiDataCategory: { name: emojiData.category },
+            })));
+            this.update({
+                isLoaded: true,
+                isLoading: false,
+            });
         },
     },
     fields: {
@@ -59,5 +56,11 @@ registerModel({
             sort: [['smaller-first', 'codepoints']],
         }),
         dataCategories: many('EmojiCategory'),
+        isLoaded: attr({
+            default: false,
+        }),
+        isLoading: attr({
+            default: false,
+        }),
     },
 });

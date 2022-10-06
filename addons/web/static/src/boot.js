@@ -235,7 +235,9 @@
         factories[name] = factory;
 
         let promiseResolve;
-        const promise = new Promise(resolve => {promiseResolve = resolve;});
+        const promise = new Promise((resolve) => {
+            promiseResolve = resolve;
+        });
         jobs.push({
             name: name,
             factory: factory,
@@ -372,11 +374,18 @@
      *      loaded. The value is equal to the number of services found.
      */
     odoo.ready = async function (serviceName) {
-        function match (name) {
-            return typeof serviceName === 'string' ? name === serviceName : serviceName.test(name);
+        function match(name) {
+            return typeof serviceName === "string" ? name === serviceName : serviceName.test(name);
         }
-        await Promise.all(jobs.filter(job => match(job.name)).map(job => job.promise));
+        await Promise.all(jobs.filter((job) => match(job.name)).map((job) => job.promise));
         return Object.keys(factories).filter(match).length;
+    };
+
+    odoo.runtimeImport = function (moduleName) {
+        if (!(moduleName in services)) {
+            throw new Error(`Service "${moduleName} is not defined or isn't finished loading."`);
+        }
+        return services[moduleName];
     };
 
     // Automatically log errors detected when loading modules

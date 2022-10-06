@@ -121,8 +121,10 @@ For more specific needs, you may also assign custom-defined actions
         'mail.assets_messaging': [
             ('include', 'mail.assets_core_messaging'),
             'mail/static/src/models/*.js',
-            'mail/static/src/models_data/*.js',
             'mail/static/lib/selfie_segmentation/selfie_segmentation.js',
+        ],
+        'mail.assets_model_data': [
+            'mail/static/src/models_data/*.js',
         ],
         # Custom bundle in case we want to remove things that are later added to web.assets_common
         'mail.assets_common_discuss_public': [
