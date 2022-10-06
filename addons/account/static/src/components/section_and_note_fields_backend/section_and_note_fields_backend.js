@@ -3,7 +3,7 @@
 import { registry } from "@web/core/registry";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { X2ManyField } from "@web/views/fields/x2many/x2many_field";
-import { TextField } from "@web/views/fields/text/text_field";
+import { TextField, ListTextField } from "@web/views/fields/text/text_field";
 import { CharField } from "@web/views/fields/char/char_field";
 
 const { Component, useEffect } = owl;
@@ -82,6 +82,16 @@ export class SectionAndNoteText extends Component {
     }
 }
 SectionAndNoteText.template = "account.SectionAndNoteText";
+SectionAndNoteText.additionalClasses = ["o_field_text"];
+
+export class ListSectionAndNoteText extends SectionAndNoteText {
+    get componentToUse() {
+        return this.props.record.data.display_type !== "line_section"
+            ? ListTextField
+            : super.componentToUse;
+    }
+}
 
 registry.category("fields").add("section_and_note_one2many", SectionAndNoteFieldOne2Many);
 registry.category("fields").add("section_and_note_text", SectionAndNoteText);
+registry.category("fields").add("list.section_and_note_text", ListSectionAndNoteText);
