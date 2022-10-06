@@ -775,6 +775,20 @@ describe('setTagName', () => {
                 contentAfter: '<div><p>[ab]</p></div>',
             });
         });
+        it('should not add paragraph tag when selection is changed to normal in list', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<ul><li><h1>[abcd]</h1></li></ul>',
+                stepFunction: editor => editor.execCommand('setTag', "p"),
+                contentAfter: `<ul><li>[abcd]</li></ul>`
+            });
+        });
+        it('should not add paragraph tag to normal text in list', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<ul><li>[abcd]</li></ul>',
+                stepFunction: editor => editor.execCommand('setTag', "p"),
+                contentAfter: `<ul><li>[abcd]</li></ul>`
+            });
+        });
     });
     describe('to heading 1', () => {
         it('should turn a paragraph into a heading 1', async () => {
