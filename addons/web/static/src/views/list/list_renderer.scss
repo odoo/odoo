@@ -263,10 +263,14 @@
         .o_data_row:not(.o_selected_row) {
             .o_list_many2one,
             .o_list_char,
+            .o_list_activity_cell,
             .o_list_number {
                 white-space: nowrap;
-                .o_field_widget:not(.o_row_handle):not(.o_field_badge) {
+                .o_field_widget:not(.o_row_handle):not(.o_field_handle):not(.o_field_badge) {
                     display: inline;
+                    span:not(.o_m2o_avatar) {
+                        @include o-text-overflow(inline);
+                    }
                 }
             }
         }
