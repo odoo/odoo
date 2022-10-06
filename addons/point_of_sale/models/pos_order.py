@@ -1423,13 +1423,13 @@ class ReportSaleDetails(models.AbstractModel):
         payment_ids = self.env["pos.payment"].search([('pos_order_id', 'in', orders.ids)]).ids
         if payment_ids:
             self.env.cr.execute("""
-                SELECT method.name, sum(amount) total
+                SELECT COALESCE(method.name->>%s, method.name->>'en_US') as name, sum(amount) total
                 FROM pos_payment AS payment,
                      pos_payment_method AS method
                 WHERE payment.payment_method_id = method.id
                     AND payment.id IN %s
                 GROUP BY method.name
-            """, (tuple(payment_ids),))
+            """, (self.env.lang, tuple(payment_ids),))
             payments = self.env.cr.dictfetchall()
         else:
             payments = []

@@ -40,8 +40,8 @@
                 Payments:
             </div>
             <div t-foreach="payments" t-as="payment" t-key="payment_index">
-                <t t-esc="payment.name" />
-                <span t-esc="pos.format_currency_no_symbol(payment.total)" class="pos-receipt-right-align"/>
+                <t t-esc="payment['name']" />
+                <span t-esc="pos.format_currency_no_symbol(payment['total'])" class="pos-receipt-right-align"/>
             </div>
 
             <br/>
