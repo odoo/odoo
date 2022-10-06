@@ -1639,6 +1639,30 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         }
     );
 
+    QUnit.test(
+        "getFiltersMatchingPivot return empty filter when no records is related to the pivot cell",
+        async function (assert) {
+            const { model } = await createSpreadsheetWithPivot({
+                arch: /*xml*/ `
+                    <pivot>
+                        <field name="product_id" type="row"/>
+                        <field name="probability" type="measure"/>
+                    </pivot>`,
+            });
+            setCellContent(model, "B3", '=ODOO.PIVOT(1, "probability", "#product_id", 1)');
+            await addGlobalFilter(model, {
+                filter: {
+                    id: "42",
+                    type: "relation",
+                    defaultValue: [1],
+                    pivotFields: { 1: { field: "product_id", type: "many2one" } },
+                },
+            });
+            const filters = model.getters.getFiltersMatchingPivot(getCellFormula(model, "B3"));
+            assert.deepEqual(filters, []);
+        }
+    );
+
     QUnit.test("field matching is removed when pivot is deleted", async function (assert) {
         const { model } = await createSpreadsheetWithPivot();
         await addGlobalFilter(model, LAST_YEAR_FILTER, { pivot: DEFAULT_FIELD_MATCHINGS });
