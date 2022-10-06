@@ -243,10 +243,12 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             var tour = this.tours[tour_name];
             if (!tour || !tour.ready) return;
 
+            let self = this;
+            self._check_for_skipping_step(self.active_tooltips[tour_name], tour_name);
+
             if (this.running_tour && this.running_tour_timeout === undefined) {
                 this._set_running_tour_timeout(this.running_tour, this.active_tooltips[this.running_tour]);
             }
-            var self = this;
             setTimeout(function () {
                 self._check_for_tooltip(self.active_tooltips[tour_name], tour_name);
             });
@@ -257,8 +259,26 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             let visibleTip = false;
             for (const tourName of sortedTooltips) {
                 var tip = this.active_tooltips[tourName];
+                this._check_for_skipping_step(tip, tourName)
                 tip.hidden = visibleTip;
                 visibleTip = this._check_for_tooltip(tip, tourName) || visibleTip;
+            }
+        }
+    },
+    /**
+     *  Check if the current step of a tour needs to be skipped. If so, skip the step and update
+     *
+     * @param {Object} step
+     * @param {string} tour_name
+     */
+    _check_for_skipping_step: function (step, tour_name) {
+        if (step && step.skip_trigger) {
+            let $skip_trigger;
+            $skip_trigger = get_jquery_element_from_selector(step.skip_trigger);
+            let skipping = get_first_visible_element($skip_trigger).length;
+            if (skipping) {
+                this._to_next_step(tour_name);
+                this.update(tour_name);
             }
         }
     },
