@@ -18,7 +18,7 @@
         <meta itemprop="name" t-att-content="button_access['title']"/>
     </div>
 </div>
-<div t-if="subtitles or has_button_access or len(actions) &gt; 0 or not is_discussion"
+<div t-if="subtitles or has_button_access or actions or not is_discussion"
         summary="o_mail_notification" style="padding: 0px;">
     <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="width: 100%; margin-top: 5px;">
         <tbody>
