@@ -80,7 +80,7 @@ TextField.extractProps = ({ attrs, field }) => {
 
 registry.category("fields").add("text", TextField);
 
-class ListTextField extends TextField {
+export class ListTextField extends TextField {
     get minimumHeight() {
         return 0;
     }
