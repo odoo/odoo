@@ -117,7 +117,6 @@ registerModel({
                 return clear();
             },
         }),
-        component: attr(),
         feedbackTextareaRef: attr(),
         hasHeader: attr({
             compute() {
