@@ -139,18 +139,20 @@
             cursor: pointer;
         }
 
-        .o_selected_row {
-            th:focus-within, td:focus-within {
-                --table-accent-bg: none;
-
-                background-color: $o-view-background-color;
-            }
-        }
-
         .o_keyboard_navigation {
             th:focus-within, td:focus-within {
                 --table-accent-bg: none;
+                background-color: $o-form-lightsecondary;
+                outline: none;
+            }
+        }
 
+        // It's important that this appears after the keyboard navigation.
+        // Otherwise, o_keyboard_navigation will override the background color
+        // of the focused cell.
+        .o_selected_row {
+            th:focus-within, td:focus-within {
+                --table-accent-bg: none;
                 background-color: $o-view-background-color;
             }
         }
@@ -388,7 +390,13 @@
     // 1. we set the global separator (gray line) of the table on the row (bottom) and not on the cell (bottom)
     .o_data_row {
         border-bottom-width: 1px;
+        &:not(.o_selected_row) {
+            &:hover, &:focus-within {
+                background-color: lighten($o-form-lightsecondary, 10%);
+            }
+        }
     }
+
     // 2. we remove the bottom border (added by BS5) on all cells (this force to show the top border of selected cell)
     .o_data_row > .o_data_cell {
         border-bottom-width: 0;
