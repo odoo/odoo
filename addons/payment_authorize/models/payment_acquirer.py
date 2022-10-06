@@ -65,6 +65,11 @@ class PaymentAcquirer(models.Model):
                 'payment.payment_icon_cc_visa',
             )])]
 
+    @api.onchange('authorize_currency_id', 'state')
+    def _onchange_state(self):
+        if not self.authorize_currency_id and self.state in ['enabled', 'test']:
+            raise UserError(_("You must set a Currency to enable this payment acquirer."))
+
     def action_update_merchant_details(self):
         """ Fetch the merchant details to update the client key and the account currency. """
         self.ensure_one()
