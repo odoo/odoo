@@ -8,7 +8,11 @@ const parsers = registry.category("parsers");
 export class DomainSelectorFieldInput extends Component {
     parseValue(value) {
         const parser = parsers.get(this.props.field.type, (value) => value);
-        return parser(value);
+        try {
+            return parser(value);
+        } catch (_) {
+            return value;
+        }
     }
 
     onChange(ev) {
