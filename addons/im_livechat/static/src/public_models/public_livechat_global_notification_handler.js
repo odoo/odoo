@@ -39,6 +39,9 @@ registerModel({
                     return;
                 }
                 case 'mail.channel.member/typing_status': {
+                    if (!this.messaging.publicLivechatGlobal.chatWindow || !this.messaging.publicLivechatGlobal.chatWindow.exists()) {
+                        return;
+                    }
                     const channelMemberData = payload;
                     if (channelMemberData.channel.id !== this.messaging.publicLivechatGlobal.publicLivechat.id) {
                         return;
@@ -58,6 +61,9 @@ registerModel({
                     return;
                 }
                 case 'mail.channel/new_message': {
+                    if (!this.messaging.publicLivechatGlobal.chatWindow || !this.messaging.publicLivechatGlobal.chatWindow.exists()) {
+                        return;
+                    }
                     if (payload.id !== this.messaging.publicLivechatGlobal.publicLivechat.id) {
                         return;
                     }
@@ -75,6 +81,9 @@ registerModel({
                     return;
                 }
                 case 'mail.message/insert': {
+                    if (!this.messaging.publicLivechatGlobal.chatWindow || !this.messaging.publicLivechatGlobal.chatWindow.exists()) {
+                        return;
+                    }
                     const message = this.messaging.publicLivechatGlobal.messages.find(message => message.id === payload.id);
                     if (!message) {
                         return;
