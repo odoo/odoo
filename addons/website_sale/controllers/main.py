@@ -905,6 +905,8 @@ class WebsiteSale(http.Controller):
 
         assert order.partner_id.id != request.website.partner_id.id
 
+        order.validate_taxes_on_sales_order()
+
         # Create transaction
         vals = {'acquirer_id': acquirer_id,
                 'return_url': '/shop/payment/validate'}
