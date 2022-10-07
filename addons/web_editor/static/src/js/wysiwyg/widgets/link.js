@@ -54,6 +54,11 @@ const Link = Widget.extend({
             // all btn-* classes anyway.
         ];
 
+        // The classes in the following array should not be in editable areas
+        // but as there are still some (e.g. in the "newsletter block" snippet)
+        // we make sure the options system works with them.
+        this.toleratedClasses = ['btn-link', 'btn-success'];
+
         this.editable = editable;
         this.$editable = $(editable);
 
@@ -129,8 +134,8 @@ const Link = Widget.extend({
     start: async function () {
         for (const option of this._getLinkOptions()) {
             const $option = $(option);
-            const value = $option.is('input') ? $option.val() : $option.data('value');
-            let active = true;
+            const value = $option.is('input') ? $option.val() : $option.data('value') || option.getAttribute('value');
+            let active = false;
             if (value) {
                 const subValues = value.split(',');
                 let subActive = true;
@@ -139,6 +144,10 @@ const Link = Widget.extend({
                     subActive = subActive && classPrefix.test(this.data.iniClassName);
                 }
                 active = subActive;
+            } else {
+                active = !this.data.iniClassName
+                         || this.toleratedClasses.some(val => this.data.iniClassName.split(' ').includes(val))
+                         || !this.data.iniClassName.includes('btn-');
             }
             this._setSelectOption($option, active);
         }
@@ -182,8 +191,15 @@ const Link = Widget.extend({
     applyLinkToDom: function (data) {
         // Some mass mailing template use <a class="btn btn-link"> instead of just a simple <a>.
         // And we need to keep the classes because the a.btn.btn-link have some special css rules.
-        if (!data.classes.includes('btn') && this.data.iniClassName.includes("btn-link")) {
-            data.classes += " btn btn-link";
+        // Same thing for the "btn-success" class, this class cannot be added
+        // by the options but we still have to ensure that it is not removed if
+        // it exists in a template (e.g. "Newsletter Block" snippet).
+        if (!data.classes.split(' ').includes('btn')) {
+            for (const linkClass of this.toleratedClasses) {
+                if (this.data.iniClassName && this.data.iniClassName.split(' ').includes(linkClass)) {
+                    data.classes += " btn " + linkClass;
+                }
+            }
         }
         if (['btn-custom', 'btn-outline-custom', 'btn-fill-custom'].some(className =>
             data.classes.includes(className)
