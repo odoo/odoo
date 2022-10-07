@@ -8,7 +8,7 @@ import { getMessagingComponent } from "@mail/utils/messaging_component";
 
 const { Component, onWillDestroy, onWillUpdateProps } = owl;
 
-const getChatterNextTemporaryId = (function () {
+export const getChatterNextTemporaryId = (function () {
     let tmpId = 0;
     return () => {
         tmpId += 1;
@@ -32,23 +32,21 @@ export class ChatterContainer extends Component {
     setup() {
         useModels();
         super.setup();
-        this.chatter = undefined;
-        this.chatterId = getChatterNextTemporaryId();
+        this.localChatter = undefined;
         this._insertFromProps(this.props);
-        onWillUpdateProps(nextProps => this._willUpdateProps(nextProps));
-        onWillDestroy(() => this._onWillDestroy());
+        onWillUpdateProps(nextProps => {
+            this._insertFromProps(nextProps);
+        });
+        onWillDestroy(() => this.deleteLocalChatter());
     }
 
-    _willUpdateProps(nextProps) {
-        this._insertFromProps(nextProps);
+    get chatter() {
+        return this.props.chatter || this.localChatter;
     }
 
-    /**
-     * @override
-     */
-    _onWillDestroy() {
-        if (this.chatter && this.chatter.exists()) {
-            this.chatter.delete();
+    deleteLocalChatter() {
+        if (this.localChatter && this.localChatter.exists()) {
+            this.localChatter.delete();
         }
     }
 
@@ -64,15 +62,23 @@ export class ChatterContainer extends Component {
         if (owl.status(this) === "destroyed") {
             return;
         }
-        const values = { id: this.chatterId, ...props };
+        const values = { ...props };
+        delete values.chatter;
         delete values.className;
         if (values.threadId === undefined) {
             values.threadId = clear();
         }
-        this.chatter = messaging.models['Chatter'].insert(values);
+        const hasToCreateChatter = !props.chatter && !this.localChatter;
+        if (hasToCreateChatter) {
+            this.localChatter = messaging.models['Chatter'].insert({ id: getChatterNextTemporaryId(), ...values });
+        }
+        const chatter = props.chatter || this.localChatter;
+        if (!hasToCreateChatter) {
+            chatter.update(values);
+        }
         if (owl.status(this) === "destroyed") {
             // insert might trigger a re-render which might destroy the current component
-            this.chatter.delete();
+            this.deleteLocalChatter();
             return;
         }
         /**
@@ -90,7 +96,9 @@ export class ChatterContainer extends Component {
          * calling the props change method but it is in general not a good
          * assumption to make.
          */
-        this.chatter.refresh();
+        if (chatter.thread) {
+            chatter.refresh();
+        }
         this.render();
     }
 
@@ -99,6 +107,10 @@ export class ChatterContainer extends Component {
 Object.assign(ChatterContainer, {
     components: { Chatter: getMessagingComponent('Chatter') },
     props: {
+        chatter: {
+            type: Object,
+            optional: true,
+        },
         className: {
             type: String,
             optional: true,
