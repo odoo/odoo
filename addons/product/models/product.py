@@ -29,7 +29,7 @@ class ProductCategory(models.Model):
         store=True)
     parent_id = fields.Many2one('product.category', 'Parent Category', index=True, ondelete='cascade')
     parent_path = fields.Char(index=True)
-    child_id = fields.One2many('product.category', 'parent_id', 'Child Categories')
+    child_ids = fields.One2many('product.category', 'parent_id', 'Child Categories')
     product_count = fields.Integer(
         '# Products', compute='_compute_product_count',
         help="The number of products under this category (Does not consider the children categories)")
