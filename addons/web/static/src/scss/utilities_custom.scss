@@ -77,9 +77,10 @@ $utilities: map-merge(
         "background-color": map-merge(
             map-get($utilities, "background-color"),
             (
-                values: map-merge($utilities-bg-colors,
+                values: map-merge(
+                    map-get(map-get($utilities, "background-color"), "values"),
                     (
-                      "view": $o-view-background-color,
+                        "view": $o-view-background-color,
                     )
                 )
             )
