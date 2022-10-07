@@ -173,7 +173,7 @@ class ResConfigSettings(models.TransientModel):
 
     def pos_open_ui(self):
         if self._context.get('pos_config_id'):
-            pos_config_id = self._context['pos_config_id'][0]
+            pos_config_id = self._context['pos_config_id']
             pos_config = self.env['pos.config'].browse(pos_config_id)
             return pos_config.open_ui()
 
