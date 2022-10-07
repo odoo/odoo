@@ -1450,6 +1450,45 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test(
+        "basic grouped list rendering 7 cols with aggregates, selector and optional",
+        async function (assert) {
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: `
+                    <tree>
+                        <field name="datetime"/>
+                        <field name="foo"/>
+                        <field name="int_field" sum="Sum1"/>
+                        <field name="bar"/>
+                        <field name="qux" sum="Sum2"/>
+                        <field name="date"/>
+                        <field name="text" optional="show"/>
+                    </tree>`,
+                groupBy: ["bar"],
+            });
+
+            assert.containsN(target.querySelector(".o_group_header"), "th,td", 5);
+            assert.strictEqual(
+                target.querySelector(".o_group_header th").getAttribute("colspan"),
+                "3"
+            );
+            assert.containsN(
+                target.querySelector(".o_group_header"),
+                "td",
+                3,
+                "there should be 3 tds (aggregates + fields in between)"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_group_header th:last-child").getAttribute("colspan"),
+                "3",
+                "header last cell should span on the two last fields (to give space for the pager) (colspan 2)"
+            );
+        }
+    );
+
     QUnit.test("basic grouped list rendering with groupby m2m field", async function (assert) {
         await makeView({
             type: "list",

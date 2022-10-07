@@ -795,11 +795,11 @@ export class ListRenderer extends Component {
             colspan = firstAggregateIndex;
         } else {
             colspan = Math.max(1, this.state.columns.length - DEFAULT_GROUP_PAGER_COLSPAN);
+            if (this.displayOptionalFields) {
+                colspan++;
+            }
         }
         if (this.hasSelectors) {
-            colspan++;
-        }
-        if (this.displayOptionalFields) {
             colspan++;
         }
         return colspan;
@@ -807,7 +807,11 @@ export class ListRenderer extends Component {
     getGroupPagerCellColspan(group) {
         const lastAggregateIndex = this.getLastAggregateIndex(group);
         if (lastAggregateIndex > -1) {
-            return this.state.columns.length - lastAggregateIndex - 1;
+            let colspan = this.state.columns.length - lastAggregateIndex - 1;
+            if (this.displayOptionalFields) {
+                colspan++;
+            }
+            return colspan;
         } else {
             return this.state.columns.length > 1 ? DEFAULT_GROUP_PAGER_COLSPAN : 0;
         }
