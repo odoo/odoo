@@ -204,7 +204,7 @@
                             </div>
                             <label for="product_qty" string="Quantity"/>
                             <div class="o_row g-0 d-flex">
-                                <div attrs="{'invisible': [('state', '=', 'draft')]}" class="o_row">
+                                <div attrs="{'invisible': [('state', '=', 'draft')]}" class="o_row flex-grow-0">
                                     <field name="qty_producing" class="text-start" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}"/>
                                     /
                                 </div>
