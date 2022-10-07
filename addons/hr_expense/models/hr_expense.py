@@ -129,7 +129,7 @@ class HrExpense(models.Model):
         date_today = fields.Date.context_today(self.env.user)
         for expense in self:
             target_currency = expense.currency_id or self.env.company.currency_id
-            expense.currency_rate = self.env['res.currency']._get_conversion_rate(
+            expense.currency_rate = expense.company_id and self.env['res.currency']._get_conversion_rate(
                 from_currency=target_currency,
                 to_currency=expense.company_currency_id,
                 company=expense.company_id,
