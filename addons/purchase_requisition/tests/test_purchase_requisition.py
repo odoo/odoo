@@ -217,3 +217,35 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         groups = self.env['purchase.order.group'].search([('order_ids', 'in', pos.ids)])
         self.assertEqual(len(po_5.alternative_po_ids), 0, "Last PO should auto unlink from itself since group should have auto-deleted")
         self.assertEqual(len(groups), 0, "The group should have auto-deleted")
+
+    def test_09_alternative_po_line_price_unit(self):
+        """Checks PO line's `price_unit` is keep even if a line from an
+        alternative is chosen and thus the PO line's quantity was set to 0. """
+        # Creates a first Purchase Order.
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.res_partner_1
+        with po_form.order_line.new() as line:
+            line.product_id = self.product_09
+            line.product_qty = 1
+            line.price_unit = 16
+        po_1 = po_form.save()
+
+        # Creates an alternative PO.
+        action = po_1.action_create_alternative()
+        alt_po_wizard_form = Form(self.env['purchase.requisition.create.alternative'].with_context(**action['context']))
+        alt_po_wizard_form.partner_id = self.res_partner_1
+        alt_po_wizard_form.copy_products = True
+        alt_po_wizard = alt_po_wizard_form.save()
+        alt_po_wizard.action_create_alternative()
+
+        # Set a lower price on the alternative and choses this PO line.
+        po_2 = po_1.alternative_po_ids - po_1
+        po_2.order_line.price_unit = 12
+        po_2.order_line.action_choose()
+
+        self.assertEqual(
+            po_1.order_line.product_uom_qty, 0,
+            "Line's quantity from the original PO should be reset to 0")
+        self.assertEqual(
+            po_1.order_line.price_unit, 16,
+            "Line's unit price from the original PO shouldn't be changed")
