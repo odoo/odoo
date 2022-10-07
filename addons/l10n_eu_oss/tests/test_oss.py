@@ -6,17 +6,24 @@ from odoo.tests import tagged
 
 
 @tagged('post_install', 'post_install_l10n', '-at_install')
-class TestOSSBelgium(AccountTestInvoicingCommon):
+class OssTemplateTestCase(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref='l10n_be.l10nbe_chart_template'):
+    def load_specific_chart_template(cls, chart_template_ref):
         try:
             super().setUpClass(chart_template_ref=chart_template_ref)
         except ValueError as e:
-            if e.args[0] == "External ID not found in the system: l10n_be.l10nbe_chart_template":
-                cls.skipTest(cls, reason="Belgian CoA is required for this testSuite but l10n_be isn't installed")
+            if e.args[0] == f"External ID not found in the system: {chart_template_ref}":
+                cls.skipTest(cls, reason=f"The {chart_template_ref} CoA is required for this testSuite but the corresponding localization module isn't installed")
             else:
                 raise e
+
+@tagged('post_install', 'post_install_l10n', '-at_install')
+class TestOSSBelgium(OssTemplateTestCase):
+
+    @classmethod
+    def setUpClass(cls, chart_template_ref='l10n_be.l10nbe_chart_template'):
+        cls.load_specific_chart_template(chart_template_ref)
         cls.company_data['company'].country_id = cls.env.ref('base.be')
         cls.company_data['company']._map_eu_taxes()
 
@@ -46,17 +53,11 @@ class TestOSSBelgium(AccountTestInvoicingCommon):
 
 
 @tagged('post_install', 'post_install_l10n', '-at_install')
-class TestOSSSpain(AccountTestInvoicingCommon):
+class TestOSSSpain(OssTemplateTestCase):
 
     @classmethod
     def setUpClass(cls, chart_template_ref='l10n_es.account_chart_template_common'):
-        try:
-            super().setUpClass(chart_template_ref=chart_template_ref)
-        except ValueError as e:
-            if e.args[0] == "External ID not found in the system: l10n_es.account_chart_template_data":
-                cls.skipTest(cls, reason="Spanish CoA is required for this testSuite but l10n_es isn't installed")
-            else:
-                raise e
+        cls.load_specific_chart_template(chart_template_ref)
         cls.company_data['company'].country_id = cls.env.ref('base.es')
         cls.company_data['company']._map_eu_taxes()
 
@@ -83,11 +84,11 @@ class TestOSSSpain(AccountTestInvoicingCommon):
 
 
 @tagged('post_install', 'post_install_l10n', '-at_install')
-class TestOSSUSA(AccountTestInvoicingCommon):
+class TestOSSUSA(OssTemplateTestCase):
 
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+        cls.load_specific_chart_template(chart_template_ref)
         cls.company_data['company'].country_id = cls.env.ref('base.us')
         cls.company_data['company']._map_eu_taxes()
 
@@ -100,7 +101,7 @@ class TestOSSUSA(AccountTestInvoicingCommon):
 
 
 @tagged('post_install', 'post_install_l10n', '-at_install')
-class TestOSSMap(AccountTestInvoicingCommon):
+class TestOSSMap(OssTemplateTestCase):
 
     def test_oss_eu_tag_map(self):
         """ Checks that the xml_id referenced in the map are correct.
