@@ -26,6 +26,7 @@ export const popoverService = {
          * @param {function(): void}        [options.onClose]
          * @param {string}                  [options.popoverClass]
          * @param {string}                  [options.position]
+         * @param {function}                [options.onPositioned]
          * @returns {function(): void}
          */
         function add(target, Component, props, options = {}) {
@@ -39,6 +40,7 @@ export const popoverService = {
                 close: closeFn,
                 onClose: options.onClose,
                 position: options.position,
+                onPositioned: options.onPositioned,
                 popoverClass: options.popoverClass,
                 closeOnClickAway: options.closeOnClickAway,
                 preventClose: options.preventClose,
