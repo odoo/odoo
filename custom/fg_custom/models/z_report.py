@@ -35,6 +35,7 @@ class FgZReport(models.AbstractModel):
         close_cashier_list = []
         start_end_order_list = []
         receipt_start_end_order_list = []
+        total_entry_encoding = 0
 
         asc_start_end_order_id = self.env['pos.order'].search([('session_id', 'in', session_ids.ids)], limit=1, order='pos_si_trans_reference asc')
         desc_start_end_order_id = self.env['pos.order'].search([('session_id', 'in', session_ids.ids)], limit=1, order='pos_si_trans_reference desc')
@@ -42,6 +43,7 @@ class FgZReport(models.AbstractModel):
             start_end_order_list.append(asc_start_end_order_id.pos_si_trans_reference + ' - ' + desc_start_end_order_id.pos_si_trans_reference)
             receipt_start_end_order_list.append(asc_start_end_order_id.pos_si_trans_reference + ' - ' + desc_start_end_order_id.pos_si_trans_reference)
         for session_id in session_ids:
+            return_order_ids |= session_id.order_ids.filtered(lambda x: x.is_refunded)
             for order in session_id.order_ids.filtered(lambda x: not x.is_refunded and x.amount_total > 0):
                 total_qty += 1
                 is_total_discount_qty = False
@@ -107,6 +109,9 @@ class FgZReport(models.AbstractModel):
                     changes_order_count += len(order)
                     changes_order_total += order.amount_return
 
+            for i in session_id.statement_ids:
+                total_entry_encoding += abs(i.total_entry_encoding)
+
             session_start_at = timezone('UTC').localize(session_id.start_at).astimezone(timezone(tz_name))
             session_stop_at = timezone('UTC').localize(session_id.stop_at).astimezone(timezone(tz_name))
             cash_register_balance_start += session_id.cash_register_balance_start
@@ -135,11 +140,13 @@ class FgZReport(models.AbstractModel):
                 'total_product_v': total_product_v,
                 'total_product_e': total_product_e,
                 'total_product_z': total_product_z,
+                'total_entry_encoding': total_entry_encoding,
                 'transactions_history': transactions_history,
                 'tender_history': tender_history,
                 'changes_order_count': int(changes_order_count),
                 'changes_order_total': changes_order_total,
                 }
+        print('---------data--z--', data)
         return data
 
     @api.model

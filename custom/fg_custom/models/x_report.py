@@ -34,6 +34,7 @@ class FgXReport(models.AbstractModel):
         open_cashier_list = []
         start_end_order_list = []
         receipt_start_end_order_list = []
+        total_entry_encoding = 0
 
         for session_id in session_ids:
             start_order_id = self.env['pos.order'].search([('session_id', '=', session_id.id)], limit=1, order='pos_si_trans_reference asc')
@@ -106,7 +107,8 @@ class FgXReport(models.AbstractModel):
                 if order.amount_return:
                     changes_order_count += len(order)
                     changes_order_total += order.amount_return
-
+            for i in session_id.statement_ids:
+                total_entry_encoding += abs(i.total_entry_encoding)
             session_start_at = timezone('UTC').localize(session_id.start_at).astimezone(timezone(tz_name))
             cash_register_balance_start += session_id.cash_register_balance_start
             cash_register_balance_end_real += session_id.total_payments_amount
@@ -118,7 +120,8 @@ class FgXReport(models.AbstractModel):
                  'start_end_order_list': start_end_order_list,
                  'receipt_start_end_order_list': receipt_start_end_order_list,
                  'cash_register_balance_start': cash_register_balance_start,
-                 'cash_register_balance_end_real': cash_register_balance_end_real, 'stop_at': localized_dt.strftime('%m/%d/%Y'), 'stop_time': localized_dt.strftime('%H:%M:%S'),
+                 'cash_register_balance_end_real': cash_register_balance_end_real,
+                 'stop_at': localized_dt.strftime('%m/%d/%Y'), 'stop_time': localized_dt.strftime('%H:%M:%S'),
                  'total_amt': total_amt,
                  'total_qty': int(total_qty),
                  'return_order_count': len(return_order_ids),
@@ -132,6 +135,7 @@ class FgXReport(models.AbstractModel):
                  'total_product_v': total_product_v,
                  'total_product_e': total_product_e,
                  'total_product_z': total_product_z,
+                 'total_entry_encoding': total_entry_encoding,
                  'transactions_history': transactions_history,
                  'tender_history': tender_history,
                  'changes_order_count': int(changes_order_count),

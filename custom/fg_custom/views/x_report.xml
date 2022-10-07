@@ -91,7 +91,7 @@
                             </td>
                             <td style="width:40%">
                                 <p>
-                                    <t t-esc="cash_register_balance_end_real + cash_register_balance_start" t-options='{"widget": "float", "precision": 2}'/>
+                                    <t t-esc="cash_register_balance_end_real + cash_register_balance_start - return_order_total" t-options='{"widget": "float", "precision": 2}'/>
                                     <t t-esc="company.currency_id.name"/>
                                 </p>
                             </td>
@@ -349,7 +349,7 @@
                             <td>
                                 <div class="right_content" style="text-align: right;font-size: 15px;">
                                     <p>
-                                        <span>0.00</span>
+                                        <span t-esc="total_entry_encoding" t-options='{"widget": "float", "precision": 2}'/>
                                         <t t-esc="company.currency_id.name"/>
                                     </p>
                                 </div>
@@ -662,7 +662,7 @@
                             </td>
                             <td style="width:40%">
                                 <p>
-                                    <t t-esc="cash_register_balance_end_real + cash_register_balance_start" t-options='{"widget": "float", "precision": 2}'/>
+                                    <t t-esc="cash_register_balance_end_real + cash_register_balance_start - return_order_total" t-options='{"widget": "float", "precision": 2}'/>
                                     <t t-esc="company.currency_id.name"/>
                                 </p>
                             </td>
@@ -923,7 +923,7 @@
                             <td>
                                 <div class="right_content" style="text-align: right;font-size: 15px;">
                                     <p>
-                                        <span>0.00</span>
+                                        <span t-esc="total_entry_encoding" t-options='{"widget": "float", "precision": 2}'/>
                                         <t t-esc="company.currency_id.name"/>
                                     </p>
                                 </div>
