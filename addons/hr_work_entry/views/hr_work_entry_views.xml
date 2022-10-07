@@ -42,7 +42,7 @@
                 <header>
                     <field name="state" widget="statusbar" options="{'clickable': '1'}" statusbar_visible="draft,validated,conflict"/>
                 </header>
-                 <div class="alert alert-warning text-center" role="alert" attrs="{'invisible': [('state', '!=', 'validated')]}">
+                <div class="alert alert-warning text-center" role="alert" attrs="{'invisible': [('state', '!=', 'validated')]}">
                     Note: Validated work entries cannot be modified.
                 </div>
                 <sheet>
@@ -60,8 +60,13 @@
                             <field name="date_start" attrs="{'readonly': [('state', '!=', 'draft')]}" />
                             <field name="date_stop" attrs="{'readonly': [('state', '!=', 'draft')]}" />
                             <label for="duration" string="Period"/>
-                            <div class="o_row">
-                                <field name="duration" nolabel="1" widget="float_time" attrs="{'readonly': [('state', '!=', 'draft')]}" /><span class="ml8">Hours</span>
+                            <div class="o_row mw-50 mw-sm-25">
+                                <field name="duration"
+                                    nolabel="1"
+                                    widget="float_time"
+                                    class="o_hr_narrow_field"
+                                    attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                                <span class="ml8">Hours</span>
                             </div>
                             <field name="company_id" invisible="1"/>
                         </group>
@@ -168,15 +173,15 @@
                         </h1>
                     </div>
                     <group name="main_group">
-                        <group name="identification">
-                            <field name="code"/>
+                        <group name="identification" class="o_form_fw_labels">
                             <field name="active" invisible="1"/>
-                            <field name="sequence" groups="base.group_no_one"/>
+                            <field name="code"/>
+                            <field name="sequence"/>
                             <field name="color" widget="color_picker"/>
                         </group>
                     </group>
                     <group name="other">
-                        <group name="time_off" string="Time Off Options"/>
+                        <group name="time_off" string="Time Off Options" class="o_form_fw_labels"/>
                     </group>
                 </sheet>
             </form>
