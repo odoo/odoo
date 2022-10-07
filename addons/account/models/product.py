@@ -2,18 +2,18 @@
 
 from odoo import api, fields, models, _
 
-ACCOUNT_DOMAIN = "['&', '&', '&', ('deprecated', '=', False), ('internal_type','=','other'), ('company_id', '=', current_company_id), ('is_off_balance', '=', False)]"
+ACCOUNT_DOMAIN = "[('deprecated', '=', False), ('internal_type','=','other'), ('company_id', '=', current_company_id), ('is_off_balance', '=', False), ('internal_group', '=', '%s')]"
 
 class ProductCategory(models.Model):
     _inherit = "product.category"
 
     property_account_income_categ_id = fields.Many2one('account.account', company_dependent=True,
         string="Income Account",
-        domain=ACCOUNT_DOMAIN,
+        domain=ACCOUNT_DOMAIN % "income",
         help="This account will be used when validating a customer invoice.")
     property_account_expense_categ_id = fields.Many2one('account.account', company_dependent=True,
         string="Expense Account",
-        domain=ACCOUNT_DOMAIN,
+        domain=ACCOUNT_DOMAIN % "expense",
         help="The expense is accounted for when a vendor bill is validated, except in anglo-saxon accounting with perpetual inventory valuation in which case the expense (Cost of Goods Sold account) is recognized at the customer invoice validation.")
 
 #----------------------------------------------------------
@@ -28,11 +28,11 @@ class ProductTemplate(models.Model):
         domain=[('type_tax_use', '=', 'purchase')], default=lambda self: self.env.company.account_purchase_tax_id)
     property_account_income_id = fields.Many2one('account.account', company_dependent=True,
         string="Income Account",
-        domain=ACCOUNT_DOMAIN,
+        domain=ACCOUNT_DOMAIN % "income",
         help="Keep this field empty to use the default value from the product category.")
     property_account_expense_id = fields.Many2one('account.account', company_dependent=True,
         string="Expense Account",
-        domain=ACCOUNT_DOMAIN,
+        domain=ACCOUNT_DOMAIN % "expense",
         help="Keep this field empty to use the default value from the product category. If anglo-saxon accounting with automated valuation method is configured, the expense account on the product category will be used.")
 
     def _get_product_accounts(self):
