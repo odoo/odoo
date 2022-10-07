@@ -63,6 +63,12 @@ class PosConfig(models.Model):
                 reward = gc_program.reward_ids
                 if reward.reward_type != 'discount' or reward.discount_mode != 'per_point' or reward.discount != 1:
                     raise UserError(_('Invalid gift card program reward. Use 1 currency per point discount.'))
+                if self.gift_card_settings == "create_set":
+                    if not gc_program.mail_template_id:
+                        raise UserError(_('There is no email template on the gift card program and your pos is set to print them.'))
+                    if not gc_program.pos_report_print_id:
+                        raise UserError(_('There is no print report on the gift card program and your pos is set to print them.'))
+
         return super()._check_before_creating_new_session()
 
     def use_coupon_code(self, code, creation_date, partner_id):
