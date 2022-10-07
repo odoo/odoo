@@ -1238,8 +1238,10 @@ export class OdooEditor extends EventTarget {
                     focusNode,
                     computedSelection.focusOffset,
                 );
+                return true;
             }
         }
+        return false;
     }
     historySetSelection(step) {
         this.deselectTable();
@@ -2400,7 +2402,7 @@ export class OdooEditor extends EventTarget {
             focusNode: sel.focusNode,
             focusOffset: sel.focusOffset,
         };
-        if (!sel.isCollapsed && this.isSelectionInEditable(sel)) {
+        if (this.isSelectionInEditable(sel)) {
             this._latestComputedSelectionInEditable = this._latestComputedSelection;
         }
         return this._latestComputedSelection;
