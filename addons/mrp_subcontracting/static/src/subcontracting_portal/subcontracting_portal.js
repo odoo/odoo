@@ -45,6 +45,8 @@ export class SubcontractingPortalWebClient extends LegacyComponent {
             {
                 props: {
                     resId: picking_id,
+                    preventEdit: true,
+                    preventCreate: true,
                 },
                 additionalContext: {
                     no_breadcrumbs: true,
