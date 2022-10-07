@@ -10,7 +10,7 @@
                     'o-discussion': messageView.message.isDiscussionOrNotification,
                     'o-has-message-selection': messageView.messageListViewItemOwner and messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner.replyingToMessageView,
                     'o-highlighted': messageView.message.isHighlighted or messageView.isHighlighted,
-                    'o-isReplyHighlighted bg-white shadow-lg': messageView.isHighlighted,
+                    'o-isReplyHighlighted bg-view shadow-lg': messageView.isHighlighted,
                     'o-isDeviceSmall': messaging.device.isSmall,
                     'o-not-discussion': !messageView.message.isDiscussionOrNotification,
                     'o-notification': messageView.message.message_type === 'notification',
