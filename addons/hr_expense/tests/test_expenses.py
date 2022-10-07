@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.tests import tagged, Form
-from odoo import fields
+from odoo import fields, Command
 
 
 @tagged('-at_install', 'post_install')
@@ -437,3 +437,117 @@ class TestExpenses(TestExpenseCommon):
         self.assertEqual(expense.product_uom_id, product.uom_id)
         self.assertEqual(expense.tax_ids, product.supplier_taxes_id)
         self.assertEqual(expense.account_id, product._get_product_accounts()['expense'])
+
+    def test_expense_account(self):
+        """ Checking accounting move entries for the accounts set on the expenses """
+
+        account_expense_1 = self.env['account.account'].create({
+            'code': '610010',
+            'name': 'Expense Account 1'
+        })
+        account_expense_2 = self.env['account.account'].create({
+            'code': '610020',
+            'name': 'Expense Account 2'
+        })
+
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'First Expense for employee',
+            'employee_id': self.expense_employee.id,
+            'journal_id': self.company_data['default_journal_purchase'].id,
+            'accounting_date': '2022-01-20',
+            'expense_line_ids': [
+                Command.create({
+                    # Expense on Expense Account 1
+                    'name': 'expense_1',
+                    'date': '2022-01-05',
+                    'account_id': account_expense_1.id,
+                    'product_id': self.product_a.id,
+                    'unit_amount': 115.0,
+                    'employee_id': self.expense_employee.id,
+                }),
+                Command.create({
+                    # Expense on Expense Account 2
+                    'name': 'expense_2',
+                    'date': '2022-01-08',
+                    'account_id': account_expense_2.id,
+                    'product_id': self.product_a.id,
+                    'unit_amount': 230.0,
+                    'employee_id': self.expense_employee.id,
+                }),
+            ],
+        })
+
+        self.assertRecordValues(expense_sheet, [{'state': 'draft', 'total_amount': 345.0}])
+
+        expense_sheet.action_submit_sheet()
+        expense_sheet.approve_expense_sheets()
+        expense_sheet.action_sheet_move_create()
+
+        # Check expense sheet journal entry values.
+        self.assertRecordValues(expense_sheet.account_move_id.line_ids.sorted('balance'), [
+            # Receivable lines:
+            {
+                'balance': -230.0,
+                'account_id': self.company_data['default_account_payable'].id,
+            },
+            {
+                'balance': -115.0,
+                'account_id': self.company_data['default_account_payable'].id,
+            },
+            # Tax lines:
+            {
+                'balance': 15.0,
+                'account_id': self.company_data['default_account_tax_purchase'].id,
+            },
+            {
+                'balance': 30.0,
+                'account_id': self.company_data['default_account_tax_purchase'].id,
+            },
+            # Expense line 1:
+            {
+                'balance': 100.0,
+                'account_id': account_expense_1.id,
+            },
+            # Expense line 2:
+            {
+                'balance': 200.0,
+                'account_id': account_expense_2.id,
+            },
+        ])
+
+    def test_employee_supplier(self):
+        """ Checking accounting move entries for the supplier set to the employee """
+
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'First Expense for employee',
+            'employee_id': self.expense_employee.id,
+            'journal_id': self.company_data['default_journal_purchase'].id,
+            'accounting_date': '2022-01-20',
+            'expense_line_ids': [
+                Command.create({
+                    # Expense on Expense Account 1
+                    'name': 'expense_1',
+                    'date': '2022-01-05',
+                    'product_id': self.product_a.id,
+                    'unit_amount': 115.0,
+                    'employee_id': self.expense_employee.id,
+                }),
+                Command.create({
+                    # Expense on Expense Account 2
+                    'name': 'expense_2',
+                    'date': '2022-01-08',
+                    'product_id': self.product_a.id,
+                    'unit_amount': 230.0,
+                    'employee_id': self.expense_employee.id,
+                }),
+            ],
+        })
+
+        expense_sheet.action_submit_sheet()
+        expense_sheet.approve_expense_sheets()
+        expense_sheet.action_sheet_move_create()
+
+        # Check whether employee is set as supplier on the receipt
+        self.assertRecordValues(expense_sheet.account_move_id, [{
+            'partner_id': self.expense_user_employee.partner_id.id,
+        }])

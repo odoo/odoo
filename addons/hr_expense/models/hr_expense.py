@@ -591,6 +591,7 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
                 ).id,
                 'move_type': 'in_receipt',
                 'company_id': sheet.company_id.id,
+                'partner_id': sheet.employee_id.sudo().address_home_id.commercial_partner_id.id,
                 'date': sheet.accounting_date or fields.Date.context_today(sheet),
                 'invoice_date': sheet.accounting_date or fields.Date.context_today(sheet),
                 'ref': sheet.name,
@@ -601,6 +602,7 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
                 'line_ids':[
                     Command.create({
                         'name': expense.employee_id.name + ': ' + expense.name.split('\n')[0][:64],
+                        'account_id': expense.account_id.id,
                         'quantity': expense.quantity or 1,
                         'price_unit': expense.unit_amount if expense.unit_amount != 0 else expense.total_amount,
                         'product_id': expense.product_id.id,
