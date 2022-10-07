@@ -149,6 +149,43 @@ export class HtmlField extends Component {
         return this.props.readonly && this.props.cssReadonlyAssetId;
     }
     get wysiwygOptions() {
+        let dynamicPlaceholderOptions = {};
+        if (this.props.dynamicPlaceholder) {
+            dynamicPlaceholderOptions = {
+                // Add the powerbox option to open the Dynamic Placeholder
+                // generator.
+                powerboxCommands: [
+                    {
+                        category: this.env._t('Marketing Tools'),
+                        name: this.env._t('Dynamic Placeholder'),
+                        priority: 10,
+                        description: this.env._t('Insert personalized content'),
+                        fontawesome: 'fa-magic',
+                        callback: () => {
+                            this.wysiwygRangePosition = getRangePosition(document.createElement('x'), this.wysiwyg.options.document || document);
+                            const baseModel = this.props.record.data.mailing_model_real || this.props.record.data.model;
+                            if (baseModel) {
+                                // The method openDynamicPlaceholder need to be triggered
+                                // after the focus from powerBox prevalidate.
+                                setTimeout(async () => {
+                                    await this.dynamicPlaceholder.open(
+                                        this.wysiwyg.$editable[0],
+                                        baseModel,
+                                        {
+                                            validateCallback: this.onDynamicPlaceholderValidate.bind(this),
+                                            closeCallback: this.onDynamicPlaceholderClose.bind(this),
+                                            positionCallback: this.positionDynamicPlaceholder.bind(this),
+                                        }
+                                    );
+                                });
+                            }
+                        },
+                    }
+                ],
+                powerboxFilters: [this._filterPowerBoxCommands.bind(this)],
+            }
+        }
+
         return {
             value: this.props.value,
             autostart: false,
@@ -171,6 +208,28 @@ export class HtmlField extends Component {
                 res_id: this.props.record.resId,
             },
         };
+    }
+    /**
+     * Prevent usage of the dynamic placeholder command inside widgets
+     * containing background images ( cover & masonry ).
+     *
+     * We cannot use dynamic placeholder in block containing background images
+     * because the email processing will flatten the text into the background
+     * image and this case the dynamic placeholder cannot be dynamic anymore.
+     *
+     * @param {Array} commands commands available in this wysiwyg
+     * @returns {Array} commands which can be used after the filter was applied
+     */
+    _filterPowerBoxCommands(commands) {
+        let selectionIsInForbidenSnippet = false;
+        if (this.wysiwyg && this.wysiwyg.odooEditor) {
+            const selection = this.wysiwyg.odooEditor.document.getSelection();
+            selectionIsInForbidenSnippet = this.wysiwyg.closestElement(
+                selection.anchorNode,
+                'div[data-snippet="s_cover"], div[data-snippet="s_masonry_block"]'
+            );
+        }
+        return selectionIsInForbidenSnippet ? commands.filter((o) => o.title !== "Dynamic Placeholder") : commands;
     }
     get translationButtonWrapperStyle() {
         return `
