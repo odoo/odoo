@@ -1341,6 +1341,8 @@ export class RelationalModel extends Model {
             }
             const legacyOptions = mapDoActionOptionAPI(payload.options);
             return this.actionService.doAction(payload.action, legacyOptions);
+        } else if (evType === "reload") {
+            return this.load();
         }
         throw new Error(`trigger_up(${evType}) not handled in relational model`);
     }
