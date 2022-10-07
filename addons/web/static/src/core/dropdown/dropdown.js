@@ -305,6 +305,10 @@ Dropdown.props = {
         optional: true,
         validate: (prop) => ["parent"].includes(prop),
     },
+    skipTogglerTabbing: {
+        type: Boolean,
+        optional: true,
+    },
     startOpen: {
         type: Boolean,
         optional: true,

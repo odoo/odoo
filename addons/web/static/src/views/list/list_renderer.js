@@ -1256,6 +1256,7 @@ export class ListRenderer extends Component {
                             futureRecord.switchMode("edit");
                         }
                     } else {
+                        list.unselectRecord(true);
                         return false;
                     }
                 } else {
