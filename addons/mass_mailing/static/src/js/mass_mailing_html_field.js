@@ -13,6 +13,7 @@ import { HtmlField } from "@web_editor/js/backend/html_field";
 import { getWysiwygClass } from 'web_editor.loader';
 import { device } from 'web.config';
 import { MassMailingMobilePreviewDialog } from "./mass_mailing_mobile_preview";
+import { getRangePosition } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 
 const {
     useEffect,
@@ -77,6 +78,29 @@ export class MassMailingHtmlField extends HtmlField {
             powerboxFilters: [this._filterPowerBoxCommands.bind(this)],
             ...this.props.wysiwygOptions,
         };
+    }
+
+    /**
+     * @param {HTMLElement} popover
+     * @param {Object} position
+     * @override
+     */
+    positionDynamicPlaceholder(popover, position) {
+        const editable = this.wysiwyg.$iframe ? this.wysiwyg.$iframe[0] : this.wysiwyg.$editable[0];
+        const relativeParentPosition = editable.getBoundingClientRect();
+
+        let topPosition = relativeParentPosition.top;
+        let leftPosition = relativeParentPosition.left;
+
+        const rangePosition = getRangePosition(popover, this.wysiwyg.options.document);
+        topPosition += rangePosition.top;
+        // Offset the popover to ensure the arrow is pointing at
+        // the precise range location.
+        leftPosition += rangePosition.left - 14;
+
+        // Apply the position back to the element.
+        popover.style.top = topPosition + 'px';
+        popover.style.left = leftPosition + 'px';
     }
 
     async commitChanges() {

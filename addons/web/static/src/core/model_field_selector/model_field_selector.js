@@ -1,27 +1,10 @@
 /** @odoo-module **/
 
-import { usePopover } from "@web/core/popover/popover_hook";
 import { useModelField } from "./model_field_hook";
+import { useUniquePopover } from "./unique_popover_hook";
 import { ModelFieldSelectorPopover } from "./model_field_selector_popover";
 
 const { Component, onWillStart, onWillUpdateProps } = owl;
-
-function useUniquePopover() {
-    const popover = usePopover();
-    let remove = null;
-    return Object.assign(Object.create(popover), {
-        add(target, component, props, options) {
-            if (remove) {
-                remove();
-            }
-            remove = popover.add(target, component, props, options);
-            return () => {
-                remove();
-                remove = null;
-            };
-        },
-    });
-}
 
 export class ModelFieldSelector extends Component {
     setup() {
