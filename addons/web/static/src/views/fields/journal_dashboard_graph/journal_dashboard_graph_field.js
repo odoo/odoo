@@ -2,6 +2,7 @@
 
 import { loadJS } from "@web/core/assets";
 import { registry } from "@web/core/registry";
+import { getColor, hexToRGBA } from "@web/views/graph/colors";
 import { standardFieldProps } from "../standard_field_props";
 
 const { Component, onWillStart, useEffect, useRef } = owl;
@@ -49,8 +50,8 @@ export class JournalDashboardGraphField extends Component {
         const labels = this.data[0].values.map(function (pt) {
             return pt.x;
         });
-        const borderColor = this.data[0].is_sample_data ? "#dddddd" : "#875a7b";
-        const backgroundColor = this.data[0].is_sample_data ? "#ebebeb" : "#dcd0d9";
+        const borderColor = this.data[0].is_sample_data ? hexToRGBA(getColor(10), 0.1) : getColor(10);
+        const backgroundColor = this.data[0].is_sample_data ? hexToRGBA(getColor(10), 0.05) : hexToRGBA(getColor(10), 0.2);
         return {
             type: "line",
             data: {
@@ -96,7 +97,7 @@ export class JournalDashboardGraphField extends Component {
             data.push(pt.value);
             labels.push(pt.label);
             const color =
-                pt.type === "past" ? "#ccbdc8" : pt.type === "future" ? "#a5d8d7" : "#ebebeb";
+                pt.type === "past" ? getColor(13) : pt.type === "future" ? getColor(19) : "#ebebeb";
             backgroundColor.push(color);
         });
         return {
