@@ -1339,7 +1339,7 @@ class TestMany2one(TransactionCase):
             WHERE ("res_partner"."company_id" IN (
                 SELECT "res_company".id
                 FROM "res_company"
-                WHERE ("res_company"."name"::text like %s)
+                WHERE (("res_company"."active" = %s) AND ("res_company"."name"::text like %s))
             ))
             ORDER BY "res_partner"."display_name", "res_partner"."id"
         ''']):
@@ -1353,7 +1353,7 @@ class TestMany2one(TransactionCase):
             WHERE ("res_partner"."company_id" IN (
                 SELECT "res_company".id
                 FROM "res_company"
-                WHERE ("res_company"."name"::text like %s)
+                WHERE (("res_company"."active" = %s) AND ("res_company"."name"::text like %s))
                 ORDER BY "res_company"."id"
                 LIMIT 1
             ))
