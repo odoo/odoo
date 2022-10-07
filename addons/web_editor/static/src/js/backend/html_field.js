@@ -160,7 +160,6 @@ export class HtmlField extends Component {
             if (this.resizerHandleObserver) {
                 this.resizerHandleObserver.disconnect();
             }
-            this.updateValue();
         });
     }
 

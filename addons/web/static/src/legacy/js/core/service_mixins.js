@@ -141,10 +141,9 @@ var ServicesMixin = {
             prom.abort = function () {};
         }
         var abort = prom.abort ? prom.abort : prom.reject;
-        if (!abort) {
-            throw new Error("a rpc promise should always have a reject function");
+        if (abort) {
+            prom.abort = abort.bind(prom);
         }
-        prom.abort = abort.bind(prom);
         return prom;
     },
     loadFieldView: function (modelName, context, view_id, view_type, options) {
