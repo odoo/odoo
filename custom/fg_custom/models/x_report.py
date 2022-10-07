@@ -111,7 +111,7 @@ class FgXReport(models.AbstractModel):
                 total_entry_encoding += abs(i.total_entry_encoding)
             session_start_at = timezone('UTC').localize(session_id.start_at).astimezone(timezone(tz_name))
             cash_register_balance_start += session_id.cash_register_balance_start
-            cash_register_balance_end_real += session_id.total_payments_amount
+            cash_register_balance_end_real += session_id.cash_register_balance_end
             open_cashier_list.append([session_id.user_id.name, session_start_at.strftime('%m/%d/%Y %H:%M:%S')])
         data = {
                 'session_name': ', '.join(s.name for s in session_ids),
