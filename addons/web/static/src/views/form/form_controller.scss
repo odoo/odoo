@@ -668,6 +668,26 @@
         }
     }
 
+    .o_field_float, .o_field_date, .o_field_monetary {
+        &.oe_inline {
+            &, input {
+                max-width: 9rem;
+            }
+        }
+    }
+
+    .o_field_float_time.oe_inline {
+        &, input {
+            max-width: 7ch;
+        }
+    }
+
+    .o_field_integer.oe_inline {
+        &, input {
+            max-width: 7rem;
+        }
+    }
+
     // One2Many, Many2Many outside of group
     .o_field_widget {
         &.o_field_one2many, &.o_field_many2many {
