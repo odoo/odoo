@@ -1098,6 +1098,8 @@ export class RelationalModel extends Model {
             throw "only record root type is supported";
         }
 
+        this.__component = params.component;
+
         this.root = null;
 
         this.__bm__ = new BasicModel(this, {
@@ -1319,7 +1321,25 @@ export class RelationalModel extends Model {
             if (payload.service === "ajax" && payload.method === "rpc") {
                 // ajax service uses an extra 'target' argument for rpc
                 args = args.concat(ev.target);
-                return payload.callback(owl.Component.env.session.rpc(...args));
+                if (owl.status(this.__component) === "destroyed") {
+                    console.warn("Component is destroyed");
+                    return payload.callback(Promise.resolve());
+                }
+                const prom = new Promise((resolve, reject) => {
+                    owl.Component.env.session
+                        .rpc(...args)
+                        .then((value) => {
+                            if (owl.status(this.__component) !== "destroyed") {
+                                resolve(value);
+                            }
+                        })
+                        .guardedCatch((reason) => {
+                            if (owl.status(this.__component) !== "destroyed") {
+                                reject(reason);
+                            }
+                        });
+                });
+                return payload.callback(prom);
             } else if (payload.service === "notification") {
                 return this.notificationService.add(payload.message, {
                     className: payload.className,
