@@ -68,7 +68,7 @@ export class SettingsFormController extends formView.Controller {
                     body: message,
                     confirm: async () => {
                         await this.model.root.save({ stayInEdition: true });
-                        await this.save();
+                        await this._save();
                         // It doesn't make sense to do the action of the button
                         // as the res.config.settings `execute` method will trigger a reload.
                         _continue = false;
@@ -102,7 +102,11 @@ export class SettingsFormController extends formView.Controller {
     //This is needed to avoid writing the id on the url
     updateURL() {}
 
-    async save() {
+    async saveButtonClicked() {
+        await this._save();
+    }
+
+    async _save() {
         this.env.onClickViewButton({
             clickParams: {
                 name: "execute",
