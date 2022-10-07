@@ -11213,32 +11213,6 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.test("reload a form view with a pie chart does not crash", async function (assert) {
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `
-                <form>
-                    <widget name="pie_chart" title="qux by product" attrs="{'measure': 'qux', 'groupby': 'product_id'}"/>
-                </form>`,
-            resIds: [1, 2],
-            resId: 1,
-        });
-
-        assert.containsOnce(
-            target,
-            ".o_widget_pie_chart .o_graph_canvas_container .chartjs-render-monitor"
-        );
-
-        await click(target.querySelector(".o_pager_next"));
-
-        assert.containsOnce(
-            target,
-            ".o_widget_pie_chart .o_graph_canvas_container .chartjs-render-monitor"
-        );
-    });
-
     QUnit.test("Auto save: save when page changed", async function (assert) {
         assert.expect(10);
 
