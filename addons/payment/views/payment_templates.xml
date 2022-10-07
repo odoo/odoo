@@ -121,6 +121,13 @@
                             <span class="payment_option_name" t-esc="token.display_name"/>
                             <!-- === "V" check mark === -->
                             <t t-call="payment.verified_token_checkmark"/>
+                            <!-- === "Fees" badge === -->
+                            <span t-if="fees_by_provider.get(token.provider_id)"
+                                  class="badge rounded-pill text-bg-secondary ms-1">
+                                    + <t t-esc="fees_by_provider.get(token.provider_id)"
+                                         t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                    Fees
+                            </span>
                             <!-- === "Unpublished" badge === -->
                             <span t-if="not token.provider_id.is_published" class="badge text-bg-danger ms-1">
                                 Unpublished
