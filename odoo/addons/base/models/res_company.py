@@ -57,6 +57,7 @@ class Company(models.Model):
             return base64.b64encode(stream.getvalue())
 
     name = fields.Char(related='partner_id.name', string='Company Name', required=True, store=True, readonly=False)
+    active = fields.Boolean(default=True)
     sequence = fields.Integer(help='Used to order Companies in the company switcher', default=10)
     parent_id = fields.Many2one('res.company', string='Parent Company', index=True)
     child_ids = fields.One2many('res.company', 'parent_id', string='Child Companies')

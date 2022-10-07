@@ -697,9 +697,11 @@ class Users(models.Model):
 
         return frozendict(context)
 
-    @tools.ormcache('self._uid')
+    @tools.ormcache('self.id')
     def _get_company_ids(self):
-        return frozenset(self.company_ids.ids)
+        # use search() instead of `self.company_ids` to avoid extra query for `active_test`
+        domain = [('active', '=', True), ('user_ids', 'in', self.id)]
+        return frozenset(self.env['res.company'].search(domain).ids)
 
     @api.model
     def action_get(self):

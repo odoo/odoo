@@ -658,9 +658,9 @@ class Environment(Mapping):
             the targeted company.
         """
         company_ids = self.context.get('allowed_company_ids', [])
+        user_company_ids = self.user._get_company_ids()
         if company_ids:
             if not self.su:
-                user_company_ids = self.user._get_company_ids()
                 if any(cid not in user_company_ids for cid in company_ids):
                     raise AccessError(_("Access to unauthorized or invalid companies."))
             return self['res.company'].browse(company_ids)
@@ -674,7 +674,7 @@ class Environment(Mapping):
         #   - when printing a report for several records from several companies
         #   - when accessing to a record from the notification email template
         #   - when loading an binary image on a template
-        return self.user.company_ids.with_env(self)
+        return self['res.company'].browse(user_company_ids)
 
     @property
     def lang(self):
