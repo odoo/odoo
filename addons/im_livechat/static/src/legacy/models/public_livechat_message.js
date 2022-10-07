@@ -73,8 +73,10 @@ const PublicLivechatMessage = Class.extend({
      */
     getAvatarSource() {
         let source = this._serverURL;
-        if (this.hasAuthor()) {
+        if (this.isOperatorTheAuthor()) {
             source += `/im_livechat/operator/${this.getAuthorID()}/avatar`;
+        } else if (this.hasAuthor() && session.user_id) {
+            source += `/web/image/res.partner/${this.getAuthorID()}/avatar_128`;
         } else {
             source += '/mail/static/src/img/smiley/avatar.jpg';
         }
