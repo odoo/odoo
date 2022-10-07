@@ -28,13 +28,11 @@ export const graphView = {
         if (genericProps.state) {
             modelParams = genericProps.state.metaData;
         } else {
-            const { arch, fields, resModel, additionalMeasures, displayScaleLabels } = genericProps;
+            const { arch, fields, resModel } = genericProps;
             const parser = new view.ArchParser();
             const archInfo = parser.parse(arch, fields);
             modelParams = {
-                additionalMeasures: additionalMeasures,
                 disableLinking: Boolean(archInfo.disableLinking),
-                displayScaleLabels: displayScaleLabels,
                 fieldAttrs: archInfo.fieldAttrs,
                 fields: fields,
                 groupBy: archInfo.groupBy,

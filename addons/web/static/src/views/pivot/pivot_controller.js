@@ -135,12 +135,8 @@ PivotController.components = { Dropdown, DropdownItem, Layout };
 
 PivotController.props = {
     ...standardViewProps,
-    additionalMeasures: { type: Array, elements: String, optional: 1 },
     Model: Function,
     modelParams: Object,
     Renderer: Function,
     buttonTemplate: String,
-};
-PivotController.defaultProps = {
-    additionalMeasures: [],
 };

@@ -29,7 +29,7 @@ export const pivotView = {
             modelParams.data = genericProps.state.data;
             modelParams.metaData = genericProps.state.metaData;
         } else {
-            const { arch, additionalMeasures, fields, resModel } = genericProps;
+            const { arch, fields, resModel } = genericProps;
 
             // parse arch
             const archInfo = new view.ArchParser().parse(arch);
@@ -40,7 +40,6 @@ export const pivotView = {
 
             modelParams.metaData = {
                 activeMeasures: archInfo.activeMeasures,
-                additionalMeasures: additionalMeasures,
                 colGroupBys: archInfo.colGroupBys,
                 defaultOrder: archInfo.defaultOrder,
                 disableLinking: Boolean(archInfo.disableLinking),

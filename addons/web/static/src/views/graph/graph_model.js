@@ -165,12 +165,9 @@ export class GraphModel extends Model {
 
         this._normalize(metaData);
 
-        metaData.measures = computeReportMeasures(
-            metaData.fields,
-            metaData.fieldAttrs,
-            [metaData.measure],
-            metaData.additionalMeasures
-        );
+        metaData.measures = computeReportMeasures(metaData.fields, metaData.fieldAttrs, [
+            metaData.measure,
+        ]);
 
         return Object.assign(metaData, params);
     }
