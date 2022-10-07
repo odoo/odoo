@@ -6730,6 +6730,68 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
     });
 
+    QUnit.test(
+        "one2many list editable - should properly unselect the list field after shift+tab",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: /* xml */ `
+                <form>
+                    <group>
+                        <field name="display_name"/>
+                        <field name="turtles">
+                            <tree editable="bottom">
+                                <field name="turtle_foo"/>
+                                <field name="turtle_bar" optional="hide"/>
+                            </tree>
+                        </field>
+                    </group>
+                </form>`,
+                resId: 1,
+            });
+
+            await click(target, ".o_data_row td:first-child");
+            assert.containsOnce(target, ".o_selected_row", "should have selected row");
+            const { keydownEvent } = triggerHotkey("Shift+Tab");
+            await nextTick();
+            assert.containsNone(target, ".o_selected_row", "list should not be in edition");
+            // We also check the event is not default prevented, to make sure that the
+            // event flows and selection goes to the previous field.
+            assert.ok(!keydownEvent.defaultPrevented);
+        }
+    );
+
+    QUnit.test(
+        "one2many list editable - should not allow tab navigation focus on the optional field toggler",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: /* xml */ `
+                <form>
+                    <group>
+                        <field name="display_name"/>
+                        <field name="turtles">
+                            <tree editable="bottom">
+                                <field name="turtle_foo"/>
+                                <field name="turtle_bar" optional="hide"/>
+                            </tree>
+                        </field>
+                    </group>
+                </form>`,
+                resId: 1,
+            });
+
+            assert.strictEqual(
+                target.querySelector(".o_optional_columns_dropdown .dropdown-toggle").tabIndex,
+                -1
+            );
+        }
+    );
+
     QUnit.test('one2many list edition, no "Remove" button in modal', async function (assert) {
         serverData.models.partner.fields.foo.default = false;
 

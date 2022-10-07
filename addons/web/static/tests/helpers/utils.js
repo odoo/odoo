@@ -489,6 +489,7 @@ export function editSelect(el, selector, value) {
  * @param {string} hotkey
  * @param {boolean} addOverlayModParts
  * @param {KeyboardEventInit} eventAttrs
+ * @returns {{ keydownEvent: KeyboardEvent, keyupEvent: KeyboardEvent }}
  */
 export function triggerHotkey(hotkey, addOverlayModParts = false, eventAttrs = {}) {
     eventAttrs.key = hotkey.split("+").pop();
@@ -517,8 +518,11 @@ export function triggerHotkey(hotkey, addOverlayModParts = false, eventAttrs = {
         eventAttrs.bubbles = true;
     }
 
-    document.activeElement.dispatchEvent(new KeyboardEvent("keydown", eventAttrs));
-    document.activeElement.dispatchEvent(new KeyboardEvent("keyup", eventAttrs));
+    const keydownEvent = new KeyboardEvent("keydown", eventAttrs);
+    const keyupEvent = new KeyboardEvent("keyup", eventAttrs);
+    document.activeElement.dispatchEvent(keydownEvent);
+    document.activeElement.dispatchEvent(keyupEvent);
+    return { keydownEvent, keyupEvent };
 }
 
 export async function legacyExtraNextTick() {
