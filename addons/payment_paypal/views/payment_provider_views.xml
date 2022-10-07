@@ -6,7 +6,7 @@
         <field name="model">payment.provider</field>
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
-            <group name="code" position='inside'>
+            <group name="provider_credentials" position='inside'>
                 <group attrs="{'invisible': [('code', '!=', 'paypal')]}">
                     <field name="paypal_email_account"
                            attrs="{'required':[('code', '=', 'paypal'), ('state', '!=', 'disabled')]}"/>
@@ -24,20 +24,6 @@
                     </a>
                 </group>
             </group>
-        </field>
-    </record>
-
-    <record id="payment_transaction_form" model="ir.ui.view">
-        <field name="name">PayPal Transaction Form</field>
-        <field name="model">payment.transaction</field>
-        <field name="inherit_id" ref="payment.payment_transaction_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='provider_reference']" position="after">
-                <field name="paypal_type"
-                       readonly="1"
-                       attrs="{'invisible': [('provider_code', '!=', 'paypal')]}"
-                       groups="base.group_no_one"/>
-            </xpath>
         </field>
     </record>
 
