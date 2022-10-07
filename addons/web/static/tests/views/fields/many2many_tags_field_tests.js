@@ -1686,4 +1686,77 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_field_many2many_tags .o-autocomplete--input", "new tag");
         assert.containsNone(target, ".o-autocomplete.dropdown li.o_m2o_dropdown_option");
     });
+
+    QUnit.test("Many2ManyTagsField with arch context in form view", async (assert) => {
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => Promise.resolve().then(fn),
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><field name="timmy" widget="many2many_tags" context="{ 'append_coucou': True }"/></form>`,
+            async mockRPC(route, args, performRPC) {
+                const result = await performRPC(route, args);
+                if (args.method === "read") {
+                    if (args.kwargs.context.append_coucou) {
+                        assert.step("read with context given");
+                        result[0].display_name += " coucou";
+                    }
+                }
+                if (args.method === "name_search") {
+                    if (args.kwargs.context.append_coucou) {
+                        assert.step("name search with context given");
+                        for (const res of result) {
+                            res[1] += " coucou";
+                        }
+                    }
+                }
+                return result;
+            },
+        });
+
+        await selectDropdownItem(target, "timmy", "gold coucou");
+
+        assert.verifySteps(["name search with context given", "read with context given"]);
+        assert.strictEqual(target.querySelector(".o_field_tags").innerText, "gold coucou");
+    });
+
+    QUnit.test("Many2ManyTagsField with arch context in list view", async (assert) => {
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => Promise.resolve().then(fn),
+        });
+
+        await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `<list editable="top"><field name="timmy" widget="many2many_tags" context="{ 'append_coucou': True }"/></list>`,
+            async mockRPC(route, args, performRPC) {
+                const result = await performRPC(route, args);
+                if (args.method === "read") {
+                    if (args.kwargs.context.append_coucou) {
+                        assert.step("read with context given");
+                        result[0].display_name += " coucou";
+                    }
+                }
+                if (args.method === "name_search") {
+                    if (args.kwargs.context.append_coucou) {
+                        assert.step("name search with context given");
+                        for (const res of result) {
+                            res[1] += " coucou";
+                        }
+                    }
+                }
+                return result;
+            },
+        });
+
+        await click(target.querySelector("[name=timmy]"));
+        await selectDropdownItem(target, "timmy", "gold coucou");
+
+        assert.verifySteps(["name search with context given", "read with context given"]);
+        assert.strictEqual(target.querySelector(".o_field_tags").innerText, "gold coucou");
+    });
 });
