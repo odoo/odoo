@@ -153,21 +153,14 @@
 
     .o_form_uri {
         display: inline-block;
-        color: $link-color;
-        &:hover {
-            color: darken($link-color, 15%);
-        }
+        @include o-hover-text-color($link-color, $link-hover-color);
+
         > span {
-            color: $o-main-text-color;
-            &:hover {
-                color: $o-main-text-color;
-            }
+            @include o-hover-text-color($o-main-text-color, $o-main-text-color);
         }
+
         > span:first-child {
-            color: $link-color;
-            &:hover {
-                color: darken($link-color, 15%);
-            }
+            @include o-hover-text-color($link-color, $link-hover-color);
         }
     }
 
@@ -337,7 +330,7 @@
 
         &:hover, &:focus, &:active {
             &:after {
-                border-left-color: map-get($grays, '100');
+                border-left-color: $o-btn-light-background-hover;
             }
         }
     }
@@ -845,7 +838,7 @@
             table-layout: fixed;
             display: table;
             td {
-                border: 1px solid #dee2e6;
+                border: 1px solid $table-border-color;
             }
             th, td {
                 padding: 0.75rem 0 0.75rem 0;
