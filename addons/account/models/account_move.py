@@ -469,6 +469,7 @@ class AccountMove(models.Model):
         help='Use this field to encode the total amount of the invoice.\n'
              'Odoo will automatically create one invoice line with default values to match it.',
     )
+    quick_encoding_vals = fields.Binary(compute='_compute_quick_encoding_vals')
 
     # === Misc Information === #
     narration = fields.Html(
@@ -1400,6 +1401,11 @@ class AccountMove(models.Model):
             else:
                 move.quick_edit_mode = False
 
+    @api.depends('quick_edit_total_amount', 'invoice_line_ids.price_total', 'tax_totals')
+    def _compute_quick_encoding_vals(self):
+        for move in self:
+            move.quick_encoding_vals = move._get_quick_edit_suggestions()
+
     @api.depends('ref', 'move_type', 'partner_id', 'invoice_date')
     def _compute_duplicated_ref_ids(self):
         move_to_duplicate_move = self._fetch_duplicate_supplier_reference()
@@ -1459,6 +1465,8 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
 
     def _inverse_tax_totals(self):
+        if self.env.context.get('skip_invoice_sync'):
+            return
         with self._sync_dynamic_line(
             existing_key_fname='term_key',
             needed_vals_fname='needed_terms',
@@ -2202,15 +2210,13 @@ class AccountMove(models.Model):
         if any('state' in vals and vals.get('state') == 'posted' for vals in vals_list):
             raise UserError(_('You cannot create a move already in the posted state. Please create a draft move and post it after.'))
         container = {'records': self, 'self': self}
-        with self._check_balanced(container),\
-             self._sync_dynamic_lines(container):
-            moves = super().create([self._sanitize_vals(vals) for vals in vals_list])
-            container['records'] = moves
-        for move, vals in zip(moves, vals_list):
-            if 'tax_totals' in vals:
-                move.tax_totals = vals['tax_totals']
-            else:
-                move._check_total_amount_on_new_line(vals)
+        with self._check_balanced(container):
+            with self._sync_dynamic_lines(container):
+                moves = super().create([self._sanitize_vals(vals) for vals in vals_list])
+                container['records'] = moves
+            for move, vals in zip(moves, vals_list):
+                if 'tax_totals' in vals:
+                    move.tax_totals = vals['tax_totals']
         return moves
 
     def write(self, vals):
@@ -2281,8 +2287,6 @@ class AccountMove(models.Model):
             for move in self:
                 if 'tax_totals' in vals:
                     super(AccountMove, move).write({'tax_totals': vals['tax_totals']})
-                else:
-                    move._check_total_amount_on_new_line(vals)
 
         return res
 
@@ -2594,7 +2598,7 @@ class AccountMove(models.Model):
                 )
             taxes = self.fiscal_position_id.map_tax(taxes)
         price_untaxed = taxes.with_context(force_price_include=True).compute_all(
-            self.quick_edit_total_amount - self.amount_total)['total_excluded']
+            self.quick_edit_total_amount - self.tax_totals['amount_total'])['total_excluded']
         return {'account_id': account_id, 'tax_ids': taxes.ids, 'price_unit': price_untaxed}
 
     @api.onchange('quick_edit_mode', 'journal_id', 'company_id')
@@ -2624,7 +2628,7 @@ class AccountMove(models.Model):
             or len(self.invoice_line_ids) > 0
         ):
             return
-        suggestions = self._get_quick_edit_suggestions()
+        suggestions = self.quick_encoding_vals
         self.invoice_line_ids = [Command.clear()]
         self.invoice_line_ids += self.env['account.move.line'].new({
             'partner_id': self.partner_id,
@@ -2633,6 +2637,19 @@ class AccountMove(models.Model):
             'price_unit': suggestions['price_unit'],
             'tax_ids': [Command.set(suggestions['tax_ids'])],
         })
+        self._check_total_amount(self.quick_edit_total_amount)
+
+    @api.onchange('invoice_line_ids')
+    def _onchange_quick_edit_line_ids(self):
+        quick_encode_suggestion = self.env.context.get('quick_encoding_vals')
+        if (
+            not self.quick_edit_total_amount
+            or not self.quick_edit_mode
+            or not self.invoice_line_ids
+            or not quick_encode_suggestion
+            or not quick_encode_suggestion['price_unit'] == self.invoice_line_ids[-1].price_unit
+        ):
+            return
         self._check_total_amount(self.quick_edit_total_amount)
 
     def _check_total_amount(self, amount_total):
@@ -2652,14 +2669,6 @@ class AccountMove(models.Model):
                 totals['groups_by_subtotal']['Untaxed Amount'][0]['tax_group_amount'] += tax_amount_rounding_error
                 totals['amount_total'] = amount_total
                 self.tax_totals = totals
-
-    def _check_total_amount_on_new_line(self, vals):
-        if (
-            self.quick_edit_total_amount
-            and self.quick_edit_mode
-            and any(command == Command.CREATE for command, *__ in vals.get('invoice_line_ids', []) + vals.get('line_ids', []))
-        ):
-            self._check_total_amount(self.quick_edit_total_amount)
 
     # -------------------------------------------------------------------------
     # HASH
