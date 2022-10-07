@@ -307,6 +307,7 @@
           t-att-style="getCellClickableStyle(clickableCell.coordinates)"
         />
       </div>
+      <FilterIconsOverlay/>
       <VerticalScrollBar/>
       <HorizontalScrollBar/>
       <div class="o-scrollbar corner"/>
@@ -372,7 +373,7 @@
             t-key="this.props.figure.id"
             sidePanelIsOpen="props.sidePanelIsOpen"
             onFigureDeleted="props.onFigureDeleted"
-            figure="this.props.figure"
+            figure="displayedFigure"
           />
         </div>
       </div>
@@ -462,6 +463,106 @@
     </div>
   </t>
 
+  <t t-name="o-spreadsheet-FilterIcon" owl="1">
+    <div class="o-filter-icon" t-att-style="style" t-on-click="props.onClick">
+      <t t-if="props.isActive" t-call="o-spreadsheet-Icon.FILTER_ICON_ACTIVE"/>
+      <t t-else="" t-call="o-spreadsheet-Icon.FILTER_ICON"/>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-FilterIconsOverlay" owl="1">
+    <t
+      t-foreach="getVisibleFilterHeaders()"
+      t-as="header"
+      t-key="'filter'+header.col + '_' + header.row">
+      <FilterIcon
+        position="getFilterHeaderPosition(header)"
+        isActive="isFilterActive(header)"
+        t-key="'icon_'+header.col + '_' + header.row"
+        onClick="() => this.toggleFilterMenu(header)"
+      />
+    </t>
+  </t>
+
+  <t t-name="o-spreadsheet-FilterMenu" owl="1">
+    <div class="o-filter-menu d-flex flex-column bg-white" t-on-wheel.stop="">
+      <div>
+        <div class="o-filter-menu-item" t-on-click="() => this.sortFilterZone('ascending')">
+          Sort ascending (A ⟶ Z)
+        </div>
+        <div class="o-filter-menu-item" t-on-click="() => this.sortFilterZone('descending')">
+          Sort descending (Z ⟶ A)
+        </div>
+      </div>
+      <div class="o-separator"/>
+      <div class="o-filter-menu-actions">
+        <div class="o-filter-menu-action-text" t-on-click="selectAll">Select all</div>
+        <div class="o-filter-menu-action-text" t-on-click="clearAll">Clear</div>
+      </div>
+      <div class="position-relative">
+        <input
+          class="w-100"
+          t-ref="filterMenuSearchBar"
+          type="text"
+          t-model="state.textFilter"
+          placeholder="Search..."
+          t-on-keydown="(ev) => this.onKeyDown(ev)"
+        />
+        <i class="o-search-icon position-absolute">
+          <t t-call="o-spreadsheet-Icon.SEARCH"/>
+        </i>
+      </div>
+      <div
+        class="o-filter-menu-list d-flex flex-column rounded"
+        t-ref="filterValueList"
+        t-on-click="this.clearScrolledToValue"
+        t-on-scroll="this.clearScrolledToValue">
+        <t t-foreach="displayedValues" t-as="value" t-key="value.string">
+          <FilterMenuValueItem
+            onClick="() => this.checkValue(value)"
+            onMouseMove="() => this.onMouseMove(value)"
+            value="value.string"
+            isChecked="value.checked"
+            isSelected="value.string === state.selectedValue"
+            scrolledTo="value.scrolledTo"
+          />
+        </t>
+        <div
+          t-if="displayedValues.length === 0"
+          class="o-filter-menu-no-values d-flex align-items-center justify-content-center w-100 h-100 ">
+          No results
+        </div>
+      </div>
+      <div class="o-filter-menu-buttons d-flex justify-content-end">
+        <div class="o-filter-menu-button o-filter-menu-button-cancel" t-on-click="cancel">
+          Cancel
+        </div>
+        <div class="o-filter-menu-button o-filter-menu-button-primary" t-on-click="confirm">
+          Confirm
+        </div>
+      </div>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-FilterMenuValueItem" owl="1">
+    <div
+      t-on-click="this.props.onClick"
+      t-on-mousemove="this.props.onMouseMove"
+      class="o-filter-menu-item o-filter-menu-value"
+      t-ref="menuValueItem"
+      t-att-class="{'selected': this.props.isSelected}">
+      <div>
+        <div class="o-filter-menu-value-checked">
+          <span t-if="this.props.isChecked">✓</span>
+        </div>
+      </div>
+      <div class="o-filter-menu-value-text text-truncate">
+        <t t-if="this.props.value === ''">(Blanks)</t>
+        <t t-else="" t-esc="this.props.value"/>
+      </div>
+    </div>
+  </t>
+
   <t t-name="o-spreadsheet-Grid" owl="1">
     <div
       class="o-grid"
@@ -532,6 +633,7 @@
         position="menuState.position"
         onClose="() => this.closeMenu()"
       />
+      <FilterIconsOverlay gridPosition="{ x: HEADER_WIDTH, y : HEADER_HEIGHT }"/>
       <VerticalScrollBar position="{ top: HEADER_HEIGHT }"/>
       <HorizontalScrollBar position="{ left: HEADER_WIDTH }"/>
       <div class="o-scrollbar corner"/>
@@ -1204,6 +1306,53 @@
       <path
         fill="#DC6965"
         d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.FILTER_ICON" owl="1">
+    <svg
+      class="o-cf-icon filter-icon"
+      width="10"
+      height="10"
+      focusable="false"
+      viewBox="0 0 850 850">
+      <path
+        fill="#000"
+        d="M 339.667 681 L 510.333 681 L 510.333 595.667 L 339.667 595.667 L 339.667 681 Z M 41 169 L 41 254.333 L 809 254.333 L 809 169 L 41 169 Z M 169 467.667 L 681 467.667 L 681 382.333 L 169 382.333 L 169 467.667 Z"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.FILTER_ICON_ACTIVE" owl="1">
+    <svg
+      class="o-cf-icon filter-icon-active"
+      width="10"
+      height="10"
+      focusable="false"
+      viewBox="0 0 512 512">
+      <path
+        fill="#188038"
+        d="M487.976 0H24.028C2.71 0-8.047 25.866 7.058 40.971L192 225.941V432c0 7.831 3.821 15.17 10.237 19.662l80 55.98C298.02 518.69 320 507.493 320 487.98V225.941l184.947-184.97C520.021 25.896 509.338 0 487.976 0z"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.FILTER_ICON_INACTIVE" owl="1">
+    <svg
+      class="o-cf-icon filter-icon-inactive"
+      width="10"
+      height="10"
+      focusable="false"
+      viewBox="0 0 512 512">
+      <path
+        fill="#606162"
+        d="M487.976 0H24.028C2.71 0-8.047 25.866 7.058 40.971L192 225.941V432c0 7.831 3.821 15.17 10.237 19.662l80 55.98C298.02 518.69 320 507.493 320 487.98V225.941l184.947-184.97C520.021 25.896 509.338 0 487.976 0z"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.SEARCH" owl="1">
+    <svg class="search-icon" width="10" height="10" focusable="false" viewBox="0 0 512 512">
+      <path
+        fill="#949494"
+        d="M500.3 443.7l-119.7-119.7c27.22-40.41 40.65-90.9 33.46-144.7C401.8 87.79 326.8 13.32 235.2 1.723C99.01-15.51-15.51 99.01 1.724 235.2c11.6 91.64 86.08 166.7 177.6 178.9c53.8 7.189 104.3-6.236 144.7-33.46l119.7 119.7c15.62 15.62 40.95 15.62 56.57 0C515.9 484.7 515.9 459.3 500.3 443.7zM79.1 208c0-70.58 57.42-128 128-128s128 57.42 128 128c0 70.58-57.42 128-128 128S79.1 278.6 79.1 208z"
       />
     </svg>
   </t>
@@ -3024,6 +3173,22 @@
                 <t t-call="o-spreadsheet-Icon.ALIGN_RIGHT"/>
               </div>
             </div>
+          </div>
+          <div class="o-divider"/>
+          <div
+            t-if="selectionContainsFilter"
+            class="o-tool o-filter-tool o-tool-outlined"
+            title="Remove selected filters"
+            t-on-click="removeFilter">
+            <t t-call="o-spreadsheet-Icon.FILTER_ICON_ACTIVE"/>
+          </div>
+          <div
+            t-else=""
+            class="o-tool o-filter-tool"
+            t-att-class="{'o-disabled': cannotCreateFilter}"
+            title="Create filter"
+            t-on-click="createFilter">
+            <t t-call="o-spreadsheet-Icon.FILTER_ICON_INACTIVE"/>
           </div>
         </div>
         <Composer
