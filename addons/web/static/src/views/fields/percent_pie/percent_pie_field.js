@@ -31,5 +31,6 @@ PercentPieField.extractProps = ({ attrs }) => {
         string: attrs.string,
     };
 };
+PercentPieField.additionalClasses = ["o_field_percent_pie"];
 
 registry.category("fields").add("percentpie", PercentPieField);
