@@ -3136,35 +3136,6 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(target.querySelector(".o_cp_bottom_left .dropdown-item"), "selected");
     });
 
-    QUnit.test(
-        "use a many2one as a measure with specified additional measure",
-        async function (assert) {
-            assert.expect(3);
-
-            await makeView({
-                type: "pivot",
-                resModel: "partner",
-                serverData,
-                arch: `
-                    <pivot>
-                        <field name="product_id"/>
-                        <field name="date" interval="month" type="col"/>
-                    </pivot>`,
-                additionalMeasures: ["product_id"],
-            });
-            await click(target.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
-            assert.containsN(target, ".o_cp_bottom_left .dropdown-item", 2);
-            assert.strictEqual(
-                target.querySelector(".o_cp_bottom_left .dropdown-item").innerText,
-                "Product"
-            );
-            assert.doesNotHaveClass(
-                target.querySelector(".o_cp_bottom_left .dropdown-item"),
-                "selected"
-            );
-        }
-    );
-
     QUnit.test("pivot view with many2one field as a measure", async function (assert) {
         assert.expect(1);
 
@@ -3211,62 +3182,6 @@ QUnit.module("Views", (hooks) => {
             "should have loaded the proper data"
         );
     });
-
-    QUnit.test(
-        "pivot view with same many2one field as a measure and grouped by",
-        async function (assert) {
-            assert.expect(1);
-
-            await makeView({
-                type: "pivot",
-                resModel: "partner",
-                serverData,
-                arch: `
-                    <pivot>
-                        <field name="product_id" type="row"/>
-                    </pivot>`,
-                additionalMeasures: ["product_id"],
-            });
-
-            await click(target.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
-            await click(target.querySelector(".o_cp_bottom_left .dropdown-item"));
-            assert.strictEqual(
-                [...target.querySelectorAll(".o_pivot_cell_value")]
-                    .map((c) => c.innerText)
-                    .join(""),
-                "421131",
-                "should have loaded the proper data"
-            );
-        }
-    );
-
-    QUnit.test(
-        "pivot view with same many2one field as a measure and grouped by (and drill down)",
-        async function (assert) {
-            assert.expect(1);
-
-            await makeView({
-                type: "pivot",
-                resModel: "partner",
-                serverData,
-                arch: `
-                    <pivot>
-                        <field name="product_id" type="measure"/>
-                    </pivot>`,
-            });
-
-            await click(target.querySelector("tbody .o_pivot_header_cell_closed"));
-            await click(target.querySelectorAll("tbody .dropdown-item")[4]);
-
-            assert.strictEqual(
-                [...target.querySelectorAll(".o_pivot_cell_value")]
-                    .map((c) => c.innerText)
-                    .join(""),
-                "211",
-                "should have loaded the proper data"
-            );
-        }
-    );
 
     QUnit.test("Row and column groupbys plus a domain", async function (assert) {
         assert.expect(3);
@@ -3472,8 +3387,6 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("rendering of pivot view with comparison", async function (assert) {
-        assert.expect(8);
-
         serverData.models.partner.records[0].date = "2016-12-15";
         serverData.models.partner.records[1].date = "2016-12-17";
         serverData.models.partner.records[2].date = "2016-11-22";
@@ -3494,7 +3407,6 @@ QUnit.module("Views", (hooks) => {
                 <search>
                     <filter name="date_filter" date="date" domain="[]" default_period='last_year'/>
                 </search>`,
-            additionalMeasures: ["product_id"],
             context: { search_default_date_filter: 1 },
             mockRPC(route, args) {
                 if (args.method === "create_or_replace") {
@@ -3579,64 +3491,10 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(getCurrentValues(target), values.join());
 
         await click(target.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
+
         await click(target.querySelectorAll(".o_cp_bottom_left .dropdown-menu .dropdown-item")[0]);
         await click(target.querySelectorAll(".o_cp_bottom_left .dropdown-menu .dropdown-item")[1]);
-        values = [
-            "1",
-            "0",
-            "-100%",
-            "0",
-            "2",
-            "100%",
-            "1",
-            "2",
-            "100%",
-            "1",
-            "0",
-            "-100%",
-            "0",
-            "1",
-            "100%",
-            "1",
-            "1",
-            "0%",
-            "0",
-            "1",
-            "100%",
-            "0",
-            "1",
-            "100%",
-        ];
-        assert.strictEqual(getCurrentValues(target), values.join());
-
-        await click(target.querySelectorAll(".o_cp_bottom_left .dropdown-menu .dropdown-item")[2]);
-        await click(target.querySelectorAll(".o_cp_bottom_left .dropdown-menu .dropdown-item")[1]);
-        values = [
-            "2",
-            "0",
-            "-100%",
-            "0",
-            "2",
-            "100%",
-            "2",
-            "2",
-            "0%",
-            "2",
-            "0",
-            "-100%",
-            "0",
-            "1",
-            "100%",
-            "2",
-            "1",
-            "-50%",
-            "0",
-            "1",
-            "100%",
-            "0",
-            "1",
-            "100%",
-        ];
+        values = ["2,0,-100%,0,2,100%,2,2,0%,2,0,-100%,0,1,100%,2,1,-50%,0,1,100%,0,1,100%"];
         assert.strictEqual(getCurrentValues(target), values.join());
 
         await click(target.querySelector("thead .o_pivot_header_cell_opened"));
@@ -3813,7 +3671,6 @@ QUnit.module("Views", (hooks) => {
                     <search>
                         <filter name="date_filter" date="date" domain="[]" default_period='this_month'/>
                     </search>`,
-                additionalMeasures: ["product_id"],
                 context: { search_default_date_filter: 1 },
             });
 
@@ -4189,7 +4046,6 @@ QUnit.module("Views", (hooks) => {
                     <search>
                         <filter name="date_filter" date="date" domain="[]" default_period='this_month'/>
                     </search>`,
-                additionalMeasures: ["product_id"],
                 context: { search_default_date_filter: 1 },
             });
 
@@ -4300,7 +4156,6 @@ QUnit.module("Views", (hooks) => {
                 <search>
                     <filter name="date_filter" date="date" domain="[]" default_period='this_month'/>
                 </search>`,
-            additionalMeasures: ["product_id"],
         });
 
         assert.deepEqual(
@@ -4475,7 +4330,6 @@ QUnit.module("Views", (hooks) => {
                     <pivot>
                         <field name="foo" type="measure"/>
                     </pivot>`,
-                additionalMeasures: ["product_id"],
             });
 
             assert.deepEqual(
@@ -4550,7 +4404,6 @@ QUnit.module("Views", (hooks) => {
                 <pivot>
                     <field name="foo" type="measure"/>
                 </pivot>`,
-            additionalMeasures: ["product_id"],
         });
 
         // add a col groupby on Product
@@ -4950,6 +4803,12 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("consecutively toggle several measures", async function (assert) {
         let def;
+        serverData.models.partner.fields.foo2 = {
+            ...serverData.models.partner.fields.foo,
+            string: "Foo2",
+            store: true,
+        };
+
         await makeView({
             type: "pivot",
             resModel: "partner",
@@ -4959,7 +4818,6 @@ QUnit.module("Views", (hooks) => {
                     <field name="foo" type="measure"/>
                     <field name="product_id" type="row"/>
                 </pivot>`,
-            additionalMeasures: ["product_id"],
             mockRPC(route, args) {
                 if (args.method === "read_group") {
                     return Promise.resolve(def);
@@ -4972,7 +4830,7 @@ QUnit.module("Views", (hooks) => {
         // Toggle several measures (the reload is blocked, so all measures should be toggled in once)
         def = makeDeferred();
         await toggleMenu(target, "Measures");
-        await toggleMenuItem(target, "Product"); // add product
+        await toggleMenuItem(target, "Foo2"); // add foo2
         assert.strictEqual(getCurrentValues(target), ["32", "12", "20"].join(","));
         await toggleMenuItem(target, "Foo"); // remove foo
         assert.strictEqual(getCurrentValues(target), ["32", "12", "20"].join(","));
@@ -4982,7 +4840,7 @@ QUnit.module("Views", (hooks) => {
         def.resolve();
         await nextTick();
 
-        assert.strictEqual(getCurrentValues(target), ["2", "4", "1", "1", "1", "3"].join(","));
+        assert.strictEqual(getCurrentValues(target), ["0", "4", "0", "1", "0", "3"].join(","));
     });
 
     QUnit.test("flip axis while loading a filter", async function (assert) {
