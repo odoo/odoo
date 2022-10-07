@@ -148,7 +148,7 @@ export const PosLoyaltyPaymentScreen = (PaymentScreen) =>
                 }
                 if (payload.coupon_report) {
                     for (const report_entry of Object.entries(payload.coupon_report)) {
-                        this.env.legacyActionManager.do_action(report_entry[0], {
+                        await this.env.legacyActionManager.do_action(report_entry[0], {
                             additional_context: {
                                 active_ids: report_entry[1],
                             }

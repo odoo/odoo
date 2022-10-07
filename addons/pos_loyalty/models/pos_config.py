@@ -50,7 +50,7 @@ class PosConfig(models.Model):
         if invalid_reward_products_msg:
             prefix_error_msg = _("To continue, make the following reward products available in Point of Sale.")
             raise UserError(f"{prefix_error_msg}\n{invalid_reward_products_msg}")
-        if  gift_card_programs:
+        if gift_card_programs:
             for gc_program in gift_card_programs:
                 # Do not allow a gift card program with more than one rule or reward, and check that they make sense
                 if len(gc_program.reward_ids) > 1:
