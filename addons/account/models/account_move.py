@@ -4841,6 +4841,7 @@ class AccountMoveLine(models.Model):
             has_credit_zero_residual = credit_line.company_currency_id.is_zero(remaining_credit_amount)
             has_debit_zero_residual_currency = debit_line.currency_id.is_zero(remaining_debit_amount_curr)
             has_credit_zero_residual_currency = credit_line.currency_id.is_zero(remaining_credit_amount_curr)
+            is_rec_pay_account = debit_line.account_internal_type in ('receivable', 'payable')
 
             if debit_line.currency_id == credit_line.currency_id == company_currency \
                     and not has_debit_zero_residual \
@@ -4851,6 +4852,7 @@ class AccountMoveLine(models.Model):
                 recon_debit_amount = remaining_debit_amount
                 recon_credit_amount = -remaining_credit_amount
             elif debit_line.currency_id == company_currency \
+                    and is_rec_pay_account \
                     and not has_debit_zero_residual \
                     and credit_line.currency_id != company_currency \
                     and not has_credit_zero_residual_currency:
@@ -4862,6 +4864,7 @@ class AccountMoveLine(models.Model):
                 recon_debit_amount = recon_currency.round(remaining_debit_amount * debit_rate)
                 recon_credit_amount = -remaining_credit_amount_curr
             elif debit_line.currency_id != company_currency \
+                    and is_rec_pay_account \
                     and not has_debit_zero_residual_currency \
                     and credit_line.currency_id == company_currency \
                     and not has_credit_zero_residual:
