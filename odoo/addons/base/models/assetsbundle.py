@@ -429,7 +429,7 @@ class AssetsBundle(object):
         )
         content_bundle_list = []
         content_line_count = 0
-        line_header = 6  # number of lines added by with_header()
+        line_header = 5  # number of lines added by with_header()
         for asset in self.javascripts:
             if asset.is_transpiled:
                 # '+ 3' corresponds to the 3 lines added at the beginning of the file during transpilation.
