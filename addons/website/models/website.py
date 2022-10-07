@@ -20,7 +20,7 @@ from werkzeug.exceptions import NotFound
 from markupsafe import Markup
 
 from odoo import api, fields, models, tools, http, release, registry
-from odoo.addons.http_routing.models.ir_http import RequestUID, slugify, _guess_mimetype, url_for
+from odoo.addons.http_routing.models.ir_http import RequestUID, slugify, url_for
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website.tools import similarity_score, text_from_html
 from odoo.addons.portal.controllers.portal import pager
@@ -741,10 +741,6 @@ class Website(models.Model):
             result['menu_id'] = menu.id
         return result
 
-    @api.model
-    def guess_mimetype(self):
-        return _guess_mimetype()
-
     def get_unique_path(self, page_url):
         """ Given an url, return that url suffixed by counter if it already exists
             :param page_url : the url to be checked for uniqueness
@@ -858,60 +854,6 @@ class Website(models.Model):
                 'content': Markup(_('This page is in the menu <b>%s</b>')) % menu.name,
                 'link': '/web#id=%s&view_type=form&model=website.menu' % menu.id,
                 'item': menu.name,
-            })
-
-        return dependencies
-
-    @api.model
-    def page_search_key_dependencies(self, page_id=False):
-        """ Search dependencies just for information. It will not catch 100%
-            of dependencies and False positive is more than possible
-            Each module could add dependences in this dict
-            :returns a dictionnary where key is the 'categorie' of object related to the given
-                view, and the value is the list of text and link to the resource using given page
-        """
-        dependencies = {}
-        if not page_id:
-            return dependencies
-
-        page = self.env['website.page'].browse(int(page_id))
-        website = page.website_id or self.get_current_website()
-        key = page.key
-
-        # search for website_page with link
-        website_page_search_dom = [
-            ('view_id.arch_db', 'ilike', key),
-            ('id', '!=', page.id)
-        ] + website.website_domain()
-        pages = self.env['website.page'].search(website_page_search_dom)
-        page_key = _('Page')
-        if len(pages) > 1:
-            page_key = _('Pages')
-        page_view_ids = []
-        for p in pages:
-            dependencies.setdefault(page_key, [])
-            dependencies[page_key].append({
-                'content': Markup(_('Page <b>%s</b> is calling this file')) % p.url,
-                'item': p.name,
-                'link': p.url,
-            })
-            page_view_ids.append(p.view_id.id)
-
-        # search for ir_ui_view (not from a website_page) with link
-        page_search_dom = [
-            ('arch_db', 'ilike', key), ('id', 'not in', page_view_ids),
-            ('id', '!=', page.view_id.id),
-        ] + website.website_domain()
-        views = self.env['ir.ui.view'].search(page_search_dom)
-        view_key = _('Template')
-        if len(views) > 1:
-            view_key = _('Templates')
-        for view in views:
-            dependencies.setdefault(view_key, [])
-            dependencies[view_key].append({
-                'content': Markup(_('Template <b>%s (id:%s)</b> is calling this file')) % (view.key or view.name, view.id),
-                'item': _('%s (id:%s)') % (view.key or view.name, view.id),
-                'link': '/web#id=%s&view_type=form&model=ir.ui.view' % view.id,
             })
 
         return dependencies

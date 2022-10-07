@@ -42,26 +42,6 @@
     </t>
 </t>
 
-<t t-name="website.PageNameField" owl="1">
-    <t t-if="props.readonly">
-        <span t-esc="formattedPageName"/>
-    </t>
-    <t t-else="">
-        <input
-            class="o_input"
-            type="text"
-            t-att-placeholder="props.placeholder"
-            t-att-required="props.required"
-            t-att-id="props.id"
-            t-model="state.name"
-            t-ref="input"
-        />
-        <div t-if="warnAboutCall" class="mt-4">
-            <PageDependencies pageId="props.record.resId" mode="'popover'" type="'key'"/>
-        </div>
-    </t>
-</t>
-
 <t t-name="website.FieldImageRadio" owl="1">
     <div class="d-flex">
         <t t-foreach="values" t-as="option" t-key="option">
