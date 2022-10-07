@@ -360,7 +360,7 @@ export class FormController extends Component {
     async beforeExecuteActionButton(clickParams) {
         if (clickParams.special !== "cancel") {
             return this.model.root
-                .save({ stayInEdition: true, useSaveErrorDialog: true })
+                .save({ stayInEdition: true, useSaveErrorDialog: !this.env.inDialog })
                 .then((saved) => {
                     if (saved && this.props.onSave) {
                         this.props.onSave(this.model.root);
