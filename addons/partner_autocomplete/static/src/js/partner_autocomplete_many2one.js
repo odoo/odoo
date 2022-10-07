@@ -10,7 +10,6 @@ import { usePartnerAutocomplete } from "@partner_autocomplete/js/partner_autocom
 export class PartnerMany2XAutocomplete extends Many2XAutocomplete {
     setup() {
         super.setup();
-
         this.partner_autocomplete = usePartnerAutocomplete();
     }
 
