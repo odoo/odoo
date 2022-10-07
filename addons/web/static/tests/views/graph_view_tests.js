@@ -2947,25 +2947,6 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(getYAxeLabel(graph), "Product");
     });
 
-    QUnit.test(
-        "a many2one field can be added as measure in additionalMeasures",
-        async function (assert) {
-            assert.expect(2);
-
-            const graph = await makeView({
-                serverData,
-                type: "graph",
-                resModel: "foo",
-                arch: `<graph/>`,
-                additionalMeasures: ["product_id"],
-            });
-            await toggleMenu(target, "Measures");
-            await toggleMenuItem(target, "Product");
-            checkLegend(assert, graph, "Product");
-            assert.strictEqual(getYAxeLabel(graph), "Product");
-        }
-    );
-
     QUnit.test('graph view "graph_measure" field in context', async function (assert) {
         assert.expect(6);
         const graph = await makeView({
@@ -3041,34 +3022,7 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test(
-        "an invisible field in additional measure can be found in the 'Measures' menu",
-        async function (assert) {
-            assert.expect(8);
-            const graph = await makeView({
-                serverData,
-                type: "graph",
-                resModel: "foo",
-                arch: `
-                    <graph>
-                        <field name="revenue" invisible="1"/>
-                    </graph>
-                `,
-                additionalMeasures: ["revenue"],
-            });
-            checkTooltip(assert, graph, { lines: [{ label: "Total", value: "8" }] }, 0);
-            await toggleMenu(target, "Measures");
-            await toggleMenuItem(target, "Revenue");
-            checkTooltip(
-                assert,
-                graph,
-                { title: "Revenue", lines: [{ label: "Total", value: "23" }] },
-                0
-            );
-        }
-    );
-
-    QUnit.test(
-        "an invisible field not in additional measure can not be found in the 'Measures' menu",
+        "an invisible field can not be found in the 'Measures' menu",
         async function (assert) {
             assert.expect(5);
             const graph = await makeView({
