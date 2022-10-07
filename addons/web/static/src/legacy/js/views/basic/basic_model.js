@@ -2059,7 +2059,7 @@ var BasicModel = AbstractModel.extend({
                         model: list.model,
                         method: 'read',
                         args: [_.pluck(data, 'id'), fieldNames],
-                        context: _.extend({}, record.context, field.context),
+                        context: _.extend({}, record.context, field.context, list.getContext()),
                     }).then(function (records) {
                         _.each(records, function (record) {
                             list_records[record.id].data = record;
