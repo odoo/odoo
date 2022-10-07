@@ -8,15 +8,19 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { getWysiwygClass } from 'web_editor.loader';
 import { QWebPlugin } from '@web_editor/js/backend/QWebPlugin';
 import { TranslationButton } from "@web/views/fields/translation_button";
+import { useDynamicPlaceholder } from "@web/views/fields/dynamicplaceholder_hook";
 import { QWeb } from 'web.core';
 import ajax from 'web.ajax';
 import {
     useBus,
     useService,
 } from "@web/core/utils/hooks";
-import { getAdjacentPreviousSiblings, getAdjacentNextSiblings } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
+import {
+    getAdjacentPreviousSiblings,
+    getAdjacentNextSiblings,
+    getRangePosition
+} from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 import { toInline } from 'web_editor.convertInline';
-
 const {
     markup,
     Component,
@@ -66,6 +70,9 @@ export class HtmlField extends Component {
         this.iframeRef = useRef("iframe");
         this.codeViewButtonRef = useRef("codeViewButton");
 
+        if (this.props.dynamicPlaceholder) {
+            this.dynamicPlaceholder = useDynamicPlaceholder();
+        }
         this.rpc = useService("rpc");
 
         this.onIframeUpdated = this.env.onIframeUpdated || (() => {});
@@ -148,6 +155,7 @@ export class HtmlField extends Component {
             onAttachmentChange: this._onAttachmentChange.bind(this),
             onWysiwygBlur: this._onWysiwygBlur.bind(this),
             ...this.props.wysiwygOptions,
+            ...dynamicPlaceholderOptions,
             recordInfo: {
                 res_model: this.props.record.resModel,
                 res_id: this.props.record.resId,
@@ -234,6 +242,33 @@ export class HtmlField extends Component {
             this.props.update(value);
 
         }
+    }
+    onDynamicPlaceholderValidate(chain, defaultValue) {
+        if (chain) {
+            let dynamicPlaceholder = "object." + chain.join('.');
+            dynamicPlaceholder += defaultValue && defaultValue !== '' ? ` or '''${defaultValue}'''` : '';
+            const t = document.createElement('T');
+            t.setAttribute('t-out', dynamicPlaceholder);
+            this.wysiwyg.odooEditor.execCommand('insert', t);
+        }
+    }
+    onDynamicPlaceholderClose() {
+        this.wysiwyg.focus();
+    }
+
+    /**
+     * @param {HTMLElement} popover
+     * @param {Object} position
+     */
+    positionDynamicPlaceholder(popover, position) {
+        let topPosition = this.wysiwygRangePosition.top;
+        // Offset the popover to ensure the arrow is pointing at
+        // the precise range location.
+        let leftPosition = this.wysiwygRangePosition.left - 14;
+
+        // Apply the position back to the element.
+        popover.style.top = topPosition + 'px';
+        popover.style.left = leftPosition + 'px';
     }
     async commitChanges({ urgent } = {}) {
         if (this._isDirty() || urgent) {
@@ -386,6 +421,9 @@ export class HtmlField extends Component {
         const $editable = this.wysiwyg.getEditable();
         const html = this.wysiwyg.getValue();
         const $odooEditor = $editable.closest('.odoo-editor-editable');
+        // Save correct nodes references.
+        const originalContents = document.createDocumentFragment();
+        originalContents.append(...$editable[0].childNodes);
         // Remove temporarily the class so that css editing will not be converted.
         $odooEditor.removeClass('odoo-editor-editable');
         $editable.html(html);
@@ -393,7 +431,7 @@ export class HtmlField extends Component {
         await toInline($editable, this.cssRules, this.wysiwyg.$iframe);
         $odooEditor.addClass('odoo-editor-editable');
 
-        this.wysiwyg.setValue($editable.html());
+        $editable[0].replaceChildren(...originalContents.childNodes);
     }
     async _getWysiwygClass() {
         return getWysiwygClass();
@@ -467,6 +505,7 @@ HtmlField.components = {
     TranslationButton,
     HtmlFieldWysiwygAdapterComponent,
 };
+HtmlField.defaultProps = {dynamicPlaceholder: false};
 HtmlField.props = {
     ...standardFieldProps,
     isTranslatable: { type: Boolean, optional: true },
@@ -474,6 +513,7 @@ HtmlField.props = {
     fieldName: { type: String, optional: true },
     codeview: { type: Boolean, optional: true },
     isCollaborative: { type: Boolean, optional: true },
+    dynamicPlaceholder: { type: Boolean, optional: true, default: false },
     cssReadonlyAssetId: { type: String, optional: true },
     cssEditAssetId: { type: String, optional: true },
     isInlineStyle: { type: Boolean, optional: true },
@@ -493,6 +533,7 @@ HtmlField.extractProps = ({ attrs, field }) => {
 
         isCollaborative: attrs.options.collaborative,
         cssReadonlyAssetId: attrs.options.cssReadonly,
+        dynamicPlaceholder: attrs.options.dynamic_placeholder,
         cssEditAssetId: attrs.options.cssEdit,
         isInlineStyle: attrs.options['style-inline'],
         wrapper: attrs.options.wrapper,

@@ -25,6 +25,7 @@ class PopoverController extends Component {
             target: this.target,
             position: this.props.position,
             popoverClass: this.props.popoverClass,
+            onPositioned: this.props.onPositioned,
         };
     }
 
