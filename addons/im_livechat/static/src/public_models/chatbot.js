@@ -233,6 +233,9 @@ registerModel({
             this.messaging.publicLivechatGlobal.livechatButtonView.update({
                 isTypingTimeout: setTimeout(
                     () => {
+                        if (!this.messaging.publicLivechatGlobal.chatWindow || !this.messaging.publicLivechatGlobal.chatWindow.exists()) {
+                            return;
+                        }
                         this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_mail_thread_content').append(
                             $(qweb.render('im_livechat.legacy.chatbot.is_typing_message', {
                                 'chatbotImageSrc': `/im_livechat/operator/${
@@ -253,6 +256,9 @@ registerModel({
          * This will receive the next step and call step processing.
          */
         async triggerNextStep() {
+            if (!this.messaging.publicLivechatGlobal.chatWindow || !this.messaging.publicLivechatGlobal.chatWindow.exists()) {
+                return;
+            }
             let triggerNextStep = true;
             if (
                 this.currentStep &&
