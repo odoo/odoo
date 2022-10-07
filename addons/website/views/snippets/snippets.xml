@@ -540,6 +540,8 @@
         t-att-data-selector="so_content_addition_selector"
         t-attf-data-drop-near="p, h1, h2, h3, ul, ol, .row > div > img, #{so_content_addition_selector}"
         data-drop-in=".content, nav"/>
+    <!-- TODO in master: remove the `.content` above, as it will not refer to
+        anything when the `content` classes in carousel will be removed. -->
 
     <div data-js="SnippetSave"
         t-attf-data-selector="#{so_snippet_addition_selector}, #{so_content_addition_selector}"
