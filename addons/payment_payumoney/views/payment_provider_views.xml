@@ -14,7 +14,7 @@
                     Consider disabling it and moving to <strong>Razorpay</strong>.
                 </div>
             </xpath>
-            <group name="code" position="inside">
+            <group name="provider_credentials" position="inside">
                 <group attrs="{'invisible': [('code', '!=', 'payumoney')]}">
                     <field name="payumoney_merchant_key" attrs="{'required':[ ('code', '=', 'payumoney'), ('state', '!=', 'disabled')]}"/>
                     <field name="payumoney_merchant_salt" attrs="{'required':[ ('code', '=', 'payumoney'), ('state', '!=', 'disabled')]}" password="True"/>
