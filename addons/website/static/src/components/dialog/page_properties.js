@@ -30,9 +30,7 @@ export class PageDependencies extends Component {
     async onWillStart() {
         this.dependencies = await this.orm.call(
             'website',
-            this.props.type === 'key' ?
-                'page_search_key_dependencies' :
-                'page_search_dependencies',
+            'page_search_dependencies',
             [this.props.pageId],
         );
         if (this.props.mode === 'popover') {
@@ -73,10 +71,6 @@ PageDependencies.template = 'website.PageDependencies';
 PageDependencies.props = {
     pageId: Number,
     mode: String,
-    type: {
-        type: String,
-        optional: true,
-    },
 };
 
 export class DeletePageDialog extends Component {
