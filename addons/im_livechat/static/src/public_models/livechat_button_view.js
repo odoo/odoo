@@ -450,9 +450,6 @@ registerModel({
         }),
         serverUrl: attr({
             compute() {
-                if (this.messaging.publicLivechatGlobal.chatbot.isActive) {
-                    return this.messaging.publicLivechatGlobal.chatbot.serverUrl;
-                }
                 return this.messaging.publicLivechatGlobal.serverUrl;
             },
         }),

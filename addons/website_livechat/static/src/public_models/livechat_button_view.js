@@ -40,7 +40,7 @@ registerPatch({
                 return this._super();
             }
             this.messaging.publicLivechatGlobal.update({
-                publicLivechat: { data: this.messaging.publicLivechatGlobal.testChatbotData.channel },
+                publicLivechat: { data: this.messaging.publicLivechatGlobal.options.testChatbotChannelData },
             });
             await this.openChatWindow();
             this.widget._sendWelcomeMessage();
