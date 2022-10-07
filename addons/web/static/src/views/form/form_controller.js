@@ -130,6 +130,7 @@ export class FormController extends Component {
                 rootType: "record",
                 mode,
                 beforeLoadProm,
+                component: this,
             },
             {
                 ignoreUseSampleModel: true,
