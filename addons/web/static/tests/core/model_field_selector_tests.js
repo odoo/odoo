@@ -89,7 +89,7 @@ QUnit.module("Components", (hooks) => {
                 readonly="false"
                 resModel="'partner'"
                 fieldName="fieldName"
-                isDebugMode="true"
+                isDebugMode="false"
                 update="(value) => this.onUpdate(value)"
             />
         `;
@@ -222,7 +222,7 @@ QUnit.module("Components", (hooks) => {
                 readonly: false,
                 fieldName: "product_id",
                 resModel: "partner",
-                isDebugMode: true,
+                isDebugMode: false,
             },
         });
 
