@@ -53,8 +53,7 @@ class MrpUnbuild(models.Model):
     mo_bom_id = fields.Many2one('mrp.bom', 'Bill of Material used on the Production Order', related='mo_id.bom_id')
     lot_id = fields.Many2one(
         'stock.lot', 'Lot/Serial Number',
-        domain="[('product_id', '=', product_id), ('company_id', '=', company_id)]", check_company=True,
-        states={'done': [('readonly', True)]})
+        domain="[('product_id', '=', product_id), ('company_id', '=', company_id)]", check_company=True)
     has_tracking=fields.Selection(related='product_id.tracking', readonly=True)
     location_id = fields.Many2one(
         'stock.location', 'Source Location',
@@ -102,23 +101,12 @@ class MrpUnbuild(models.Model):
             self.product_id = self.mo_id.product_id.id
             self.bom_id = self.mo_id.bom_id
             self.product_uom_id = self.mo_id.product_uom_id
+            self.lot_id = self.mo_id.lot_producing_id
             if self.has_tracking == 'serial':
                 self.product_qty = 1
             else:
                 self.product_qty = self.mo_id.product_qty
-            if self.lot_id and self.lot_id not in self.mo_id.move_finished_ids.move_line_ids.lot_id:
-                return {'warning': {
-                    'title': _("Warning"),
-                    'message': _("The selected serial number does not correspond to the one used in the manufacturing order, please select another one.")
-                }}
 
-    @api.onchange('lot_id')
-    def _onchange_lot_id(self):
-        if self.mo_id and self.lot_id and self.lot_id not in self.mo_id.move_finished_ids.move_line_ids.lot_id:
-            return {'warning': {
-                'title': _("Warning"),
-                'message': _("The selected serial number does not correspond to the one used in the manufacturing order, please select another one.")
-            }}
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
