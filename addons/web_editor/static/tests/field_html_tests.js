@@ -11,6 +11,7 @@ var Wysiwyg = require('web_editor.wysiwyg');
 var MediaDialog = require('wysiwyg.widgets.MediaDialog');
 var LinkDialog = require('wysiwyg.widgets.LinkDialog');
 var FieldHtml = require('web_editor.field.html');
+var FieldManagerMixin = require('web.FieldManagerMixin');
 
 const { registerCleanup } = require("@web/../tests/helpers/cleanup");
 const { legacyExtraNextTick, patchWithCleanup } = require("@web/../tests/helpers/utils");
@@ -106,6 +107,29 @@ QUnit.module('web_editor', {}, function () {
 <p class="b o_not_editable">
     b
 </p>`,
+                    }],
+                },
+                'mail.compose.message': {
+                    fields: {
+                        display_name: {
+                            string: "Displayed name",
+                            type: "char"
+                        },
+                        body: {
+                            string: "Message Body inline (to send)",
+                            type: "html"
+                        },
+                        attachment_ids: {
+                            string: "Attachments",
+                            type: "many2many",
+                            relation: "ir.attachment",
+                        }
+                    },
+                    records: [{
+                        id: 1,
+                        display_name: "Some Composer",
+                        body: "Hello",
+                        attachment_ids: [],
                     }],
                 },
                 'mass.mailing': {
@@ -330,21 +354,33 @@ QUnit.module('web_editor', {}, function () {
     QUnit.test('media dialog: upload', async function (assert) {
             /**
              * Ensures _onAttachmentChange from FieldHTML is called on file upload
+             * as well as _onFieldChanged when that model is a mail composer
              */
-            assert.expect(1);
+            assert.expect(2);
             const onAttachmentChangeTriggered = testUtils.makeTestPromise();
             testUtils.mock.patch(FieldHtml, {
-                '_onAttachmentChange': function (event) {
+                '_onAttachmentChange': function (ev) {
+                    this._super(ev);
                     onAttachmentChangeTriggered.resolve(true);
                 }
             });
 
+            const onRecordChange = testUtils.makeTestPromise();
+            testUtils.mock.patch(FieldManagerMixin, {
+                '_applyChanges': function (dataPointID, changes, event) {
+                    const res = this._super(dataPointID, changes, event);
+                    onRecordChange.resolve(true);
+                    return res;
+                },
+            })
+
             const form = await testUtils.createView({
                 View: FormView,
-                model: 'note.note',
+                model: 'mail.compose.message',
                 data: this.data,
                 arch: '<form>' +
                     '<field name="body" widget="html" style="height: 100px"/>' +
+                    '<field name="attachment_ids" widget="many2many_binary"/>' +
                     '</form>',
                 res_id: 1,
                 mockRPC: function (route, args) {
@@ -408,8 +444,14 @@ QUnit.module('web_editor', {}, function () {
             assert.ok(await Promise.race([onAttachmentChangeTriggered, new Promise((res, _) => setTimeout(() => res(false), 400))]),
                       "_onAttachmentChange was not called with the new attachment, necessary for unsused upload cleanup on backend");
 
+            await onRecordChange;
+            // wait to check that dom is properly updated
+            await new Promise((res, _) => setTimeout(() => res(false), 400));
+            assert.ok(form.$('.o_attachment[title="test.jpg"]')[0])
+
             testUtils.mock.unpatch(MediaDialog);
             testUtils.mock.unpatch(FieldHtml);
+            testUtils.mock.unpatch(FieldManagerMixin);
             form.destroy();
         });
 

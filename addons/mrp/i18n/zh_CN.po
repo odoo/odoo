@@ -8,8 +8,8 @@
 # xu aaron, 2021
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
-# Tony Peng <umingpeng@gmail.com>, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
+# Tony Peng <umingpeng@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
+"Last-Translator: Tony Peng <umingpeng@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -811,8 +811,8 @@ msgid ""
 "                materials used to make a finished product; through a manufacturing\n"
 "                order or a pack of products."
 msgstr ""
-"BOM（BOM）可定义制造成品所需原的材料，\n"
-"包括工单或包装。"
+"BOM可定义制造完成产品所需原的材料，\n"
+"包括生产订单或产品包装。"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
@@ -930,7 +930,7 @@ msgstr "副产品"
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "By-product %s should not be the same as BoM product."
-msgstr "副产品%s不应该与BoM产品相同。"
+msgstr "副产品%s不应该与 BoM 产品相同。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__byproduct_id
@@ -1719,7 +1719,7 @@ msgstr "制造订单发生例外情况："
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
 msgid "Exception(s):"
-msgstr "异常:"
+msgstr "异常(多个):"
 
 #. module: mrp
 #: code:addons/mrp/wizard/stock_assign_serial_numbers.py:0
@@ -1964,7 +1964,7 @@ msgstr "分组于..."
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Group by..."
-msgstr "分组..."
+msgstr "分组于..."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__is_produced
@@ -2998,7 +2998,7 @@ msgid ""
 "This should be the smallest quantity that this product can be produced in. "
 "If the BOM contains operations, make sure the work center capacity is "
 "accurate. "
-msgstr "这应该是该产品可以生产的最小数.。如果产品清单包含工序，请确保工作中心产能准确. "
+msgstr "这应该是该产品可以生产的最小数量.。如果BOM包含工序，请确保工作中心产能准确. "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_source_count
@@ -3232,7 +3232,7 @@ msgstr "捡取组件制造，然后储存产品 (3 步)"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_mto_pull_id
 msgid "Picking Before Manufacturing MTO Rule"
-msgstr "在制造（按订单补货）MTO规则之前拣货"
+msgstr "在按MTO制造订单规则之前拣货"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_type_id
@@ -3933,7 +3933,7 @@ msgstr "搜索生产"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Search Work Orders"
-msgstr "搜索工单"
+msgstr "搜索工作单"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
@@ -4518,7 +4518,7 @@ msgstr "用于组件%(component)s的序列号%(number)s已经消耗"
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_tag_tag_name_unique
 msgid "The tag name must be unique."
-msgstr "标签必须唯一."
+msgstr "标签名称必须唯一."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -5163,7 +5163,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__asap
 msgid "When components for 1st operation are available"
-msgstr "当第一次作业的组件可用时"
+msgstr "当第1次作业的组件是可用的"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_warehouse__manufacture_to_resupply

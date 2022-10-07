@@ -43,6 +43,12 @@
         // may impact the bullet point (at least it does on Safari).
         max-width: map-get($sizes, 100);
         overflow-x: auto;
+
+        // overflow: auto can break rendering of next element of a frequent broken Outlook 365
+        // warning table. If detected, we prevent the issue by removing flotation.
+        &table[align="left"][width="100%"] {
+            float: none;
+        }
     }
 
     img {

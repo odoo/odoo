@@ -49,7 +49,7 @@
                                 <field name="can_write" invisible="1"/>
                                 <field name="body_html" widget="html" class="oe-bordered-editor"
                                     options="{'style-inline': true, 'codeview': true }"
-                                    attrs="{'readonly': [('can_write', '=', False)]}"/>
+                                    attrs="{'readonly': [('can_write', '=', False), ('id', '!=', False)]}"/>
                                 <field name="attachment_ids" widget="many2many_binary"/>
                             </page>
                             <page string="Email Configuration" name="email_configuration">
