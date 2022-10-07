@@ -131,13 +131,15 @@ class Repair(models.Model):
     invoice_state = fields.Selection(string='Invoice State', related='invoice_id.state')
     priority = fields.Selection([('0', 'Normal'), ('1', 'Urgent')], default='0', string="Priority")
 
+    @api.depends('product_id')
     def _compute_allowed_picking_type_ids(self):
         '''
             computes the ids of return picking types
         '''
         out_picking_types = self.env['stock.picking.type'].search_read(domain=[('code', '=', 'outgoing')],
                                                                           fields=['return_picking_type_id'], load='')
-        self.allowed_picking_type_ids = [pick_type['return_picking_type_id'] for pick_type in out_picking_types]
+        self.allowed_picking_type_ids = [
+            pt['return_picking_type_id'] for pt in out_picking_types if pt['return_picking_type_id']]
 
     @api.depends('partner_id')
     def _compute_default_address_id(self):

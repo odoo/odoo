@@ -89,7 +89,7 @@
                             <field name="address_id" groups="account.group_delivery_invoice_address"/>
                             <field name="sale_order_id"/>
                             <field name="allowed_picking_type_ids" invisible="1"/>
-                            <field name="picking_id" domain="[('picking_type_id','in', allowed_picking_type_ids)]" options="{'no_create': True}"/>
+                            <field name="picking_id" domain="[('picking_type_id','in', allowed_picking_type_ids), ('product_id','=',product_id)]" options="{'no_create': True}"/>
                         </group>
                         <group>
                             <field name="schedule_date"/>
