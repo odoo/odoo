@@ -7,6 +7,7 @@ import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { CharField } from "@web/views/fields/char/char_field";
 import { useInputField } from "@web/views/fields/input_field_hook";
+import { loadJS } from "@web/core/assets";
 
 import { usePartnerAutocomplete } from "@partner_autocomplete/js/partner_autocomplete_core"
 
@@ -43,6 +44,9 @@ export class PartnerAutoCompleteCharField extends CharField {
         return [
             {
                 options: async (request) => {
+                    // Lazyload jsvat only if the component is being used.
+                    await loadJS("/partner_autocomplete/static/lib/jsvat.js");
+                    
                     if (this.validateSearchTerm(request)) {
                         const suggestions = await this.partner_autocomplete.autocomplete(request, this.isVAT(request));
                         suggestions.forEach((suggestion) => {
