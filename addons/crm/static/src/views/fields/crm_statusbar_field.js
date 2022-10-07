@@ -2,14 +2,8 @@
 
 import { registry } from "@web/core/registry";
 import { StatusBarField, preloadStatusBar } from "@web/views/fields/statusbar/statusbar_field";
-import { useCheckRainbowman } from "@crm/views/check_rainbowman_message";
 
 export class CrmStatusBarField extends StatusBarField {
-    setup() {
-        super.setup();
-        this.checkRainbowmanMessage = useCheckRainbowman();
-    }
-
     /**
      * @override
      *
@@ -28,7 +22,6 @@ export class CrmStatusBarField extends StatusBarField {
                 await this.props.update(item.id);
                 break;
         }
-        await this.checkRainbowmanMessage(this.props.record.resId);
     }
 }
 
