@@ -10,6 +10,7 @@ import {
     triggerEvent,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { loadJS } from "@web/core/assets";
 
 const serviceRegistry = registry.category("services");
 
@@ -22,6 +23,11 @@ async function editInputNoChangeEvent(input, value) {
 }
 
 QUnit.module('partner_autocomplete', {
+    async before() {
+        // Load the lib before the tests to prevent them from
+        // failing because of the delay.
+        await loadJS("/partner_autocomplete/static/lib/jsvat.js");
+    },
     beforeEach() {
         target = getFixture();
 
