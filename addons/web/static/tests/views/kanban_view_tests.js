@@ -6701,7 +6701,7 @@ QUnit.module("Views", (hooks) => {
 
         await toggleColumnActions(0);
 
-        assert.containsNone(target, '[tabindex]:not([tabindex="-1"])');
+        assert.containsN(target, ".o_kanban_record", 16);
         assert.hasClass(document.activeElement, "o_searchview_input");
 
         await triggerEvent(document.activeElement, null, "keydown", { key: "ArrowDown" });
