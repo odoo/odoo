@@ -36,6 +36,7 @@ import { localization } from "@web/core/l10n/localization";
 import { SIZES } from "@web/core/ui/ui_service";
 import { errorService } from "@web/core/errors/error_service";
 import { RPCError } from "@web/core/network/rpc_service";
+import { WarningDialog } from "@web/core/errors/error_dialogs";
 
 const fieldRegistry = registry.category("fields");
 const serviceRegistry = registry.category("services");
@@ -11878,6 +11879,56 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["write"]);
         await nextTick();
         assert.containsOnce(target, ".o_form_error_dialog");
+    });
+
+    QUnit.test("no 'oh snap' error in form view in dialog", async (assert) => {
+        assert.expect(5);
+
+        registry.category("services").add("error", errorService);
+        registry.category("error_dialogs").add("odoo.exceptions.UserError", WarningDialog);
+        // remove the override in qunit.js that swallows unhandledrejection errors
+        // s.t. we let the error service handle them
+        const originalOnUnhandledRejection = window.onunhandledrejection;
+        window.onunhandledrejection = () => {};
+        registerCleanup(() => {
+            window.onunhandledrejection = originalOnUnhandledRejection;
+        });
+
+        serverData.views = {
+            "partner,false,form": `<form><field name="foo"/><footer><button type="object" name="some_method" class="myButton"/></footer></form>`,
+        };
+
+        const webClient = await createWebClient({
+            serverData,
+            mockRPC(route, { method }) {
+                if (method === "create") {
+                    assert.step("create");
+                    const error = new RPCError("Some business message");
+                    error.data = { context: {} };
+                    error.exceptionName = "odoo.exceptions.UserError";
+                    throw error;
+                }
+            },
+        });
+
+        await doAction(webClient, {
+            type: "ir.actions.act_window",
+            target: "new",
+            res_model: "partner",
+            view_mode: "form",
+            views: [[false, "form"]],
+        });
+
+        await editInput(target, ".o_field_widget[name='foo'] input", "test");
+        await click(target.querySelector(".modal  footer .myButton"));
+        assert.verifySteps(["create"]);
+        await nextTick();
+        assert.containsNone(target, ".o_form_error_dialog");
+        assert.containsN(target, ".modal", 2);
+        assert.strictEqual(
+            target.querySelectorAll(".modal .modal-body")[1].textContent,
+            "Some business message"
+        );
     });
 
     QUnit.test('field "length" with value 0: can apply onchange', async function (assert) {
