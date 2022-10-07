@@ -21,7 +21,8 @@
 // ------------------------------------------------------------------
 
 .o_ChatWindowHeader {
-    background-color: $o-brand-odoo;
+    background-color: var(--ChatWindowHeader-background-color, #{$o-brand-odoo});
+    color: #FFFFFF;
 }
 
 .o_ChatWindowHeader_command.o-isDeviceSmall {

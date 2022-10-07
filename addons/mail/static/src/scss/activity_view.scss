@@ -1,7 +1,6 @@
 .o_activity_view {
     height: 100%;
     > table {
-        background-color: white;
         thead > tr > th:first-of-type {
             min-width: 300px;
         }
@@ -10,7 +9,6 @@
         }
     }
     .o_activity_summary_cell {
-        background-color: #FFF;
         &.planned {
             background-color: map-get($theme-colors, 'success');
         }
@@ -38,7 +36,7 @@
                 display: none;
             }
             &:hover {
-                background-color: #eee;
+                background-color: $component-active-bg;
 
                 > i {
                     color: gray;
@@ -101,9 +99,6 @@
     }
     .o_activity_filter_overdue {
         background-color: mix(map-get($theme-colors, 'danger'), $o-webclient-background-color, 5%);
-    }
-    .o_record_selector {
-        color: $o-enterprise-primary-color;
     }
     .o_activity_type_cell {
         padding:10px;
