@@ -23,8 +23,8 @@
         </t>
     </t>
 
-    <t t-name="website_sale.dashboard_content" t-extend="website.dashboard_content">
-        <t t-jquery="div.o_website_dashboard_content" t-operation="prepend">
+    <t t-name="website_sale.dashboard_content" t-inherit="website.dashboard_content" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_website_dashboard_content')]/*[1]" position="before">
             <div t-if="widget.groups.sale_salesman" class="row o_dashboard_sales">
                 <div class="col-12 row o_box">
                     <t t-if="widget.dashboards_data.sales.summary.order_count">
