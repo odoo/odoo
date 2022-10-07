@@ -23,53 +23,57 @@
         </t>
     </t>
 
-    <t t-name="website_sale.dashboard_content" t-extend="website.dashboard_content">
+    <t t-extend="website.dashboard_content">
         <t t-jquery="div.o_website_dashboard_content" t-operation="prepend">
-            <div t-if="widget.groups.sale_salesman" class="row o_dashboard_sales">
-                <div class="col-12 row o_box">
-                    <t t-if="widget.dashboards_data.sales.summary.order_count">
-                        <h2 class="col-lg-7 col-12">
-                            <t t-if="widget.date_range=='week'">
-                                Sales Since Last Week
-                            </t>
-                            <t t-elif="widget.date_range=='month'">
-                                Sales Since Last Month
-                            </t>
-                            <t t-elif="widget.date_range=='year'">
-                                Sales Since Last Year
-                            </t>
-                            <t t-else="">Sales</t>
-                        </h2>
-                        <h4 class='col-lg-5 col-12'>AT A GLANCE</h4>
-                        <div class="col-lg-7 col-12">
-                            <div class="o_graph_sales" data-type="sales"/>
-                        </div>
-                        <div class="col-lg-5 col-12">
-                            <t t-call="website_sale.products_table"/>
-                        </div>
-                    </t>
-                    <t t-if="! widget.dashboards_data.sales.summary.order_count">
+            <t t-call="website_sale.dashboard_content"/>
+        </t>
+    </t>
+
+    <t t-name="website_sale.dashboard_content">
+        <div t-if="widget.groups.sale_salesman" class="row o_dashboard_sales">
+            <div class="col-12 row o_box">
+                <t t-if="widget.dashboards_data.sales.summary.order_count">
+                    <h2 class="col-lg-7 col-12">
                         <t t-if="widget.date_range=='week'">
-                            <h2>Sales Since Last Week</h2>
+                            Sales Since Last Week
                         </t>
                         <t t-elif="widget.date_range=='month'">
-                            <h2>Sales Since Last Month</h2>
+                            Sales Since Last Month
                         </t>
                         <t t-elif="widget.date_range=='year'">
-                            <h2>Sales Since Last Year</h2>
+                            Sales Since Last Year
                         </t>
-                        <t t-else=""><h2>Sales</h2></t>
-                        <div class="col-lg-12 col-12">
-                            <div class="o_demo_background">
-                            </div>
-                            <div class="o_demo_message">
-                                <h3>There is no recent confirmed order.</h3>
-                            </div>
-                        </div>
+                        <t t-else="">Sales</t>
+                    </h2>
+                    <h4 class='col-lg-5 col-12'>AT A GLANCE</h4>
+                    <div class="col-lg-7 col-12">
+                        <div class="o_graph_sales" data-type="sales"/>
+                    </div>
+                    <div class="col-lg-5 col-12">
+                        <t t-call="website_sale.products_table"/>
+                    </div>
+                </t>
+                <t t-if="! widget.dashboards_data.sales.summary.order_count">
+                    <t t-if="widget.date_range=='week'">
+                        <h2>Sales Since Last Week</h2>
                     </t>
-                </div>
+                    <t t-elif="widget.date_range=='month'">
+                        <h2>Sales Since Last Month</h2>
+                    </t>
+                    <t t-elif="widget.date_range=='year'">
+                        <h2>Sales Since Last Year</h2>
+                    </t>
+                    <t t-else=""><h2>Sales</h2></t>
+                    <div class="col-lg-12 col-12">
+                        <div class="o_demo_background">
+                        </div>
+                        <div class="o_demo_message">
+                            <h3>There is no recent confirmed order.</h3>
+                        </div>
+                    </div>
+                </t>
             </div>
-        </t>
+        </div>
     </t>
 
     <t t-name="website_sale.products_table">
