@@ -34,13 +34,13 @@ tour.register('purchase_matrix_tour', {
     trigger: 'span:contains("Confirm")',
     run: 'click'
 }, {
-    trigger: '.o_form_button_save:contains("Save")',
+    trigger: '.o_form_button_save',
     run: 'click' // SAVE Sales Order.
 },
 // Open the matrix through the pencil button next to the product in line edit mode.
 {
     trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\nPA4: PAV41")',
-    extra_trigger: '.o_form_status_indicator_buttons_hidden', // wait for save to be finished
+    extra_trigger: '.o_form_status_indicator_buttons.invisible', // wait for save to be finished
 }, {
     trigger: '[name=product_template_id] button.fa-pencil', // edit the matrix
 }, {
@@ -53,14 +53,14 @@ tour.register('purchase_matrix_tour', {
     trigger: 'span:contains("Confirm")',
     run: 'click' // apply the matrix
 }, {
-    trigger: '.o_form_button_save:contains("Save")',
+    trigger: '.o_form_button_save',
     extra_trigger: '.o_field_cell.o_data_cell.o_list_number:contains("4.00")',
     run: 'click' // SAVE Sales Order, after matrix has been applied (extra_trigger).
 },
 // Ensures the matrix is opened with the values, when adding the same product.
 {
     trigger: 'a:contains("Add a product")',
-    extra_trigger: '.o_form_status_indicator_buttons_hidden',
+    extra_trigger: '.o_form_status_indicator_buttons.invisible',
 }, {
     trigger: 'div[name="product_template_id"] input',
     run: 'text Matrix',
