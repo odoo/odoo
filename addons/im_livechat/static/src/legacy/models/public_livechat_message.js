@@ -260,7 +260,7 @@ const PublicLivechatMessage = Class.extend({
      * @return {boolean}
      */
     _isMyselfAuthor() {
-        return this.hasAuthor() && (this.getAuthorID() === session.partner_id);
+        return this.hasAuthor() && (this.getAuthorID() === this.messaging.publicLivechatGlobal.options.current_partner_id);
     },
 
 });
