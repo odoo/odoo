@@ -80,10 +80,14 @@ class ProductTemplate(models.Model):
             if len(template.product_variant_ids) == 1:
                 template.product_variant_ids.base_unit_id = template.base_unit_id
 
+    def _get_base_unit_price(self, price):
+        self.ensure_one()
+        return self.base_unit_count and price / self.base_unit_count
+
     @api.depends('list_price', 'base_unit_count')
     def _compute_base_unit_price(self):
         for template in self:
-            template.base_unit_price = template.base_unit_count and template.list_price / template.base_unit_count
+            template.base_unit_price = template._get_base_unit_price(template.list_price)
 
     @api.depends('uom_name', 'base_unit_id.name')
     def _compute_base_unit_name(self):
@@ -257,11 +261,18 @@ class ProductTemplate(models.Model):
                 combination_info['price_extra'], product_taxes, taxes, company_id, pricelist,
                 product, partner
             )
+            base_unit_price = product._get_base_unit_price(list_price)
+            if pricelist.currency_id != product.currency_id:
+                base_unit_price = pricelist.currency_id._convert(
+                    base_unit_price,
+                    pricelist.currency_id,
+                    company_id,
+                    fields.Date.today())
             has_discounted_price = pricelist.currency_id.compare_amounts(list_price, price) == 1
             prevent_zero_price_sale = not price and current_website.prevent_zero_price_sale
             combination_info.update(
                 base_unit_name=product.base_unit_name,
-                base_unit_price=product.base_unit_price,
+                base_unit_price=base_unit_price,
                 price=price,
                 list_price=list_price,
                 price_extra=price_extra,
