@@ -29,7 +29,7 @@
                         <group name="domain">
                             <field name="name"/>
                             <field name="domain"/>
-                            <field name="logo" widget="image" class="oe_avatar float-start"/>
+                            <field name="logo" widget="image" class="oe_avatar w-auto float-start"/>
                             <field name="language_count" invisible="1"/>
                             <field name="company_id" options="{'no_open': True, 'no_create': True}" groups="base.group_multi_company"/>
                             <field name="language_ids" widget="many2many_tags" options="{'no_open': True, 'no_create': True}"/>
@@ -319,7 +319,7 @@
                             <t t-set="has_screenshot" t-value="record.image_ids.raw_value.length > 1"/>
                             <t t-set="image_url" t-value="has_image ? '/web/image/' + record.image_ids.raw_value[0] : record.icon.value"/>
 
-                            <div class="o_theme_preview_top bg-white mb4">
+                            <div class="o_theme_preview_top bg-white mb4 border">
                                 <div t-attf-class="bg-gray-lighter #{has_screenshot? 'o_theme_screenshot' : (has_image ? 'o_theme_cover' : 'o_theme_logo')}" t-attf-style="background-image: url(#{image_url});"/>
                                 <div t-if="record.is_installed_on_current_website.raw_value" class="o_button_area">
                                     <button type="object" name="button_refresh_theme" class="btn btn-primary">Update theme</button>
