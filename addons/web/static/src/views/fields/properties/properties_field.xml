@@ -2,14 +2,14 @@
 <templates xml:space="preserve">
     <t t-name="web.PropertiesField" owl="1">
         <div t-ref="properties" class="w-100">
-            <div class="o_group w-100 d-flex flex-row flex-wrap my-0">
+            <div class="o_group w-100 grid my-0">
                 <div
                     t-foreach="propertiesList"
                     t-as="propertyConfiguration"
                     t-key="propertyConfiguration.name"
                     class="o_property_field d-flex flex-row align-items-center justify-content-start"
                     t-att-property-name="propertyConfiguration.name"
-                    t-attf-class="col-md-{{12 / props.columns}} col-sm-12">
+                    t-attf-class="g-col-lg-{{12 / props.columns}} g-col-12">
                     <div class="o_td_label">
                         <label t-attf-class="o_field_property_label o_form_label {{state.movedPropertyName === propertyConfiguration.name ? 'o_property_field_highlight' : ''}} d-flex flex-row align-items-center">
                             <b
@@ -42,7 +42,7 @@
                         />
                     </div>
                 </div>
-                <div class="o_field_property_add">
+                <div class="o_field_property_add" t-attf-class="g-col-lg-{{12 / props.columns}} g-col-12">
                     <button
                         t-if="!props.readonly &amp;&amp; state.canChangeDefinition"
                         class="btn btn-light text-muted m-0"
