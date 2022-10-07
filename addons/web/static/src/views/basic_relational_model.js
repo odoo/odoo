@@ -1312,6 +1312,9 @@ export class RelationalModel extends Model {
             if (payload.service === "ajax" && payload.method === "rpc") {
                 // ajax service uses an extra 'target' argument for rpc
                 args = args.concat(ev.target);
+                if (owl.status(this.__component) === "destroyed") {
+                    throw new Error("Component is destroyed");
+                }
                 const prom = new Promise((resolve, reject) => {
                     owl.Component.env.session
                         .rpc(...args)
