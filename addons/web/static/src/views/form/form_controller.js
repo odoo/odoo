@@ -399,7 +399,7 @@ export class FormController extends Component {
         }
     }
 
-    async save(params = {}) {
+    async saveButtonClicked(params = {}) {
         this.disableButtons();
         const record = this.model.root;
         let saved = false;
