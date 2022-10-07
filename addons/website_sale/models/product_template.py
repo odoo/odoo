@@ -205,7 +205,7 @@ class ProductTemplate(models.Model):
 
             combination_info.update(
                 base_unit_name=product.base_unit_name,
-                base_unit_price=product.base_unit_price,
+                base_unit_price=list_price / product.base_unit_count if product.base_unit_count != 0 else product.base_unit_count,
                 price=price,
                 list_price=list_price,
                 price_extra=price_extra,
