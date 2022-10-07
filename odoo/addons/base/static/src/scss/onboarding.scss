@@ -24,6 +24,10 @@
     background: white center top;
     background-size: cover;
 
+    .o_onboarding_btn_close {
+        color: #fff;
+    }
+
     // = Color Variations
     // ------------------------------------------------------------------------
     @each $key, $values in $o-onboarding-colors {
@@ -66,6 +70,7 @@
 
         .o_onboarding_step_action {
             min-width: $o-onboarding-step-width * .5;
+            border: $border-width solid #fff;
         }
 
         .o_onboarding_progress {
@@ -89,6 +94,13 @@
 
         &:first-of-type .o_onboarding_progress {
             display: none;
+        }
+
+        .o_onboarding_step_title,
+        .o_onboarding_step_action,
+        .o_onboarding_step_action__done,
+        .o_onboarding_dot_isChecked {
+            color: #fff;
         }
 
         // = "To do" Step Design

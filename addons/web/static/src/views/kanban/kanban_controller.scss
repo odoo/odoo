@@ -222,6 +222,8 @@
             // (eg. Company logo badge inside a contact picture)
             .o_kanban_image_fill_left,
             .o_kanban_image {
+                background-color: var(--KanbanRecord__image-bg-color, none);
+
                 .o_kanban_image_inner_pic {
                     @include o-position-absolute($right: 0, $bottom: 0);
                     max: {
@@ -445,7 +447,7 @@
         }
 
         .oe_kanban_text_red {
-            color: #a61300;
+            color: o-text-color('danger');
             font-weight: $font-weight-bold;
         }
 
@@ -522,7 +524,8 @@
         // don't visually fold on smaller screens (aka. mobile)
         @include media-breakpoint-up(md) {
             @include o-kanban-slim-col;
-            background-color: $gray-200;
+
+            background-color: var(--KanbanGroup-grouped-bg, #{$gray-200});
 
             & + .o_kanban_group.o_column_folded {
                 margin-left: 1px;

@@ -77,6 +77,11 @@
 
 // BASE SETTINGS LAYOUT
 .o_base_settings {
+   --settings__tab-bg: #{map-get($grays, '900')};
+   --settings__tab-bg--active: #{map-get($grays, '800')};
+   --settings__tab-color: #{map-get($grays, '400')};
+   --settings__title-bg: #{map-get($grays, '200')};
+
    height: 100%;
 
    .o_control_panel {
@@ -125,18 +130,17 @@
    .o_setting_container {
        display: flex;
        flex: 1 1 auto;
-
        overflow: auto;
 
        .settings_tab {
            display: flex;
            flex: 0 0 auto;
            flex-flow: column nowrap;
-           background: map-get($grays, '900');
+           background: var(--settings__tab-bg);
            overflow: auto;
 
            .selected {
-               background-color: map-get($grays, '800');
+               background-color: var(--settings__tab-bg--active);
                box-shadow: inset 2px 0 0 $o-brand-primary;
            }
 
@@ -144,7 +148,7 @@
                display: flex;
                padding: 0 $o-horizontal-padding*2 0 $o-horizontal-padding;
                height: 40px;
-               color: map-get($grays, '400');
+               color: var(--settings__tab-color);
                font-size: 13px;
                line-height: 40px;
                cursor: pointer;
@@ -172,7 +176,7 @@
                h2 {
                    margin: 0 0 !important;
                    @include o-base-settings-horizontal-padding(.4rem);
-                   background-color: map-get($grays, '200');
+                   background-color: var(--settings__title-bg);
                    font-size: 15px;
 
                    &.o_invisible_modifier + .o_settings_container {

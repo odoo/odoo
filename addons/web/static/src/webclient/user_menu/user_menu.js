@@ -2,6 +2,7 @@
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { CheckBox } from "@web/core/checkbox/checkbox";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -31,7 +32,7 @@ export class UserMenu extends Component {
     }
 }
 UserMenu.template = "web.UserMenu";
-UserMenu.components = { Dropdown, DropdownItem };
+UserMenu.components = { Dropdown, DropdownItem, CheckBox };
 
 export const systrayItem = {
     Component: UserMenu,

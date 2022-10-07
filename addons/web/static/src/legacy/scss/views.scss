@@ -50,9 +50,13 @@
 
 // No content helper
 .o_view_nocontent {
-    @include o-position-absolute(30%, 0, 0, 0);
+    @include o-position-absolute(0, 0, 0, 0);
     pointer-events: none;
     z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image:  radial-gradient(at 50% 50%, #{$o-view-background-color} 0px, #{rgba($o-view-background-color, 0.5)} 100%);
 
     .o_nocontent_help {
         @include o-nocontent-empty;
@@ -100,8 +104,8 @@
 
     .o_nocontent_help {
         border-radius: 20%;
-        background-color: #f9f9f9;
-        box-shadow: 0 0 120px 100px #f9f9f9;
+        background-color: $o-view-background-color;
+        box-shadow: 0 0 120px 100px $o-view-background-color;
     }
 
     .o_sample_data_disabled {

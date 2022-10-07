@@ -58,7 +58,7 @@
 
 
         <button class="btn btn-link" t-on-click="() => { state.showTraceback = !state.showTraceback }">See details</button>
-        <div t-if="state.showTraceback and (props.name or props.message)" class="alert clearfix" style="background-color:#ececec;" role="alert">
+        <div t-if="state.showTraceback and (props.name or props.message)" class="alert alert-info bg-100 clearfix" role="alert">
           <code t-if="props.name" t-esc="props.name"></code>
           <p t-if="props.message" t-esc="props.message"></p>
         </div>
