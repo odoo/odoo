@@ -94,14 +94,7 @@ QUnit.module("Components", (hooks) => {
         `;
 
         // Create the domain selector and its mock environment
-        await mountComponent(Parent, {
-            props: {
-                resModel: "partner",
-                value: "[]",
-                readonly: false,
-                isDebugMode: true,
-            },
-        });
+        await mountComponent(Parent);
 
         // As we gave an empty domain, there should be a visible button to add
         // the first domain part
@@ -125,10 +118,11 @@ QUnit.module("Components", (hooks) => {
         );
 
         // The field selector popover should contain the list of "partner"
-        // fields. "Bar" should be among them.
+        // fields. "Bar" should be among them. "Bar" result li will display the
+        // name of the field and some debug info.
         assert.strictEqual(
             document.body.querySelector(".o_field_selector_popover li").textContent,
-            "Bar",
+            "Barbar (boolean)",
             "field selector popover should contain the 'Bar' field"
         );
 

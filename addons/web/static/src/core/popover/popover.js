@@ -7,7 +7,7 @@ const { Component } = owl;
 export class Popover extends Component {
     setup() {
         usePosition(this.props.target, {
-            onPositioned: this.onPositioned,
+            onPositioned: this.props.onPositioned || this.onPositioned,
             position: this.props.position,
         });
     }
@@ -70,6 +70,10 @@ Popover.props = {
     position: {
         type: String,
         validate: (p) => ["top", "bottom", "left", "right"].includes(p),
+        optional: true,
+    },
+    onPositioned: {
+        type: Function,
         optional: true,
     },
     target: HTMLElement,
