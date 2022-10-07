@@ -54,7 +54,7 @@ registerModel({
                 return;
             }
             // since dropdown is conditionally shown based on state, dropdownRef can be null
-            if (this.dropdownRef.el && !this.dropdownRef.el.contains(ev.target)) {
+            if (this.dropdownRef && this.dropdownRef.el && !this.dropdownRef.el.contains(ev.target)) {
                 this.hide();
             }
         },
