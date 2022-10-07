@@ -41,7 +41,7 @@ tour.register('sale_timesheet_tour', {
     extra_trigger: '.o_field_widget[name=state] button[data-value=sale].o_arrow_button_current',
     content: 'Click on Save button to save the Sales Order.',
 }, {
-    trigger: '.o_form_status_indicator_buttons_hidden',
+    trigger: '.o_form_saved',
     content: 'Save is done and form is reloaded.',
 }, tour.stepUtils.toggleHomeMenu(),
 ...tour.stepUtils.goToAppSteps("project.menu_main_pm", 'Go to the Project app.'),
