@@ -708,8 +708,7 @@ export class PivotModel extends Model {
         metaData.measures = computeReportMeasures(
             metaData.fields,
             metaData.fieldAttrs,
-            metaData.activeMeasures,
-            metaData.additionalMeasures
+            metaData.activeMeasures
         );
         const config = { metaData, data: this.data };
         return this._loadData(config);

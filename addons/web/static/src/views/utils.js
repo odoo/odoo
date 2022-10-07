@@ -54,15 +54,9 @@ export function archParseBoolean(str, trueIfEmpty = false) {
  * @param {Object} fields
  * @param {Object} fieldAttrs
  * @param {string[]} activeMeasures
- * @param {string[]} [additionalMeasures=[]]
  * @returns {Object}
  */
-export const computeReportMeasures = (
-    fields,
-    fieldAttrs,
-    activeMeasures,
-    additionalMeasures = []
-) => {
+export const computeReportMeasures = (fields, fieldAttrs, activeMeasures) => {
     const measures = {
         __count: { name: "__count", string: _t("Count"), type: "integer" },
     };
@@ -71,13 +65,10 @@ export const computeReportMeasures = (
             continue;
         }
         const { isInvisible } = fieldAttrs[fieldName] || {};
-        if (isInvisible && !additionalMeasures.includes(fieldName)) {
+        if (isInvisible) {
             continue;
         }
-        if (
-            ["integer", "float", "monetary"].includes(field.type) ||
-            additionalMeasures.includes(fieldName)
-        ) {
+        if (["integer", "float", "monetary"].includes(field.type)) {
             measures[fieldName] = field;
         }
     }
