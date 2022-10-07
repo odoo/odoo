@@ -99,7 +99,8 @@
             'mass_mailing/static/src/js/mass_mailing_html_field.js',
             'mass_mailing/static/src/js/mailing_mailing_view_form_full_width.js',
             'mass_mailing/static/src/js/mailing_portal.js',
-            'mass_mailing/static/src/xml/*.xml',
+            'mass_mailing/static/src/xml/mailing_filter_widget.xml',
+            'mass_mailing/static/src/xml/mass_mailing.xml',
             'mass_mailing/static/src/views/*.xml',
         ],
         'mass_mailing.assets_mail_themes': [
@@ -114,6 +115,7 @@
         'web_editor.assets_wysiwyg': [
             'mass_mailing/static/src/js/snippets.editor.js',
             'mass_mailing/static/src/js/wysiwyg.js',
+            'mass_mailing/static/src/xml/mass_mailing.editor.xml',
         ],
         'web.assets_common': [
             'mass_mailing/static/src/js/tours/**/*',
