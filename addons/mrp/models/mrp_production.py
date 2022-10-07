@@ -1791,8 +1791,11 @@ class MrpProduction(models.Model):
             'state': 'done',
             'product_uom_qty': 0.0,
         })
-
+        diff_per_production = {}
         for production in self:
+            diff_per_production[production] = 1
+            if production.qty_produced != production.product_qty:
+                diff_per_production[production] = production.qty_produced/production.product_qty
             production.write({
                 'date_finished': fields.Datetime.now(),
                 'product_qty': production.qty_produced,
@@ -1801,8 +1804,11 @@ class MrpProduction(models.Model):
                 'state': 'done',
             })
 
-        for workorder in self.workorder_ids.filtered(lambda w: w.state not in ('done', 'cancel')):
-            workorder.duration_expected = workorder._get_duration_expected()
+        for workorder in self.workorder_ids:
+            if workorder.state not in ('done', 'cancel'):
+                workorder.duration_expected = workorder._get_duration_expected()
+            if workorder.duration == 0.0:
+                workorder.duration = workorder.duration_expected * diff_per_production[workorder.production_id]
 
         if not backorders:
             if self.env.context.get('from_workorder'):
@@ -1968,6 +1974,7 @@ class MrpProduction(models.Model):
             'view_id': self.env.ref('mrp.mrp_unbuild_form_view_simplified').id,
             'type': 'ir.actions.act_window',
             'context': {'default_product_id': self.product_id.id,
+                        'default_lot_id': self.lot_producing_id.id,
                         'default_mo_id': self.id,
                         'default_company_id': self.company_id.id,
                         'default_location_id': self.location_dest_id.id,
