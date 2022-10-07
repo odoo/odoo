@@ -101,6 +101,9 @@ import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
 
             this.messaging.publicLivechatGlobal.chatbot.update({
                 welcomeMessageTimeout: setTimeout(() => {
+                    if (!this.messaging.publicLivechatGlobal.chatWindow || !this.messaging.publicLivechatGlobal.chatWindow.exists()) {
+                        return;
+                    }
                     this._sendWelcomeChatbotMessage(stepIndex + 1, welcomeMessageDelay);
                     this.messaging.publicLivechatGlobal.chatWindow.renderMessages();
                 }, welcomeMessageDelay),
