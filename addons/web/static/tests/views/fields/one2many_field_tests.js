@@ -10796,7 +10796,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsN(target, ".o_data_row", 2);
         assert.hasClass(
             target.querySelectorAll(".o_data_row")[1].querySelector(".o_field_badge .badge"),
-            "bg-warning"
+            "text-bg-warning"
         );
 
         await click(target.querySelector(".o_data_row .o_data_cell"));
@@ -10804,7 +10804,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.hasClass(
             target.querySelectorAll(".o_data_row")[1].querySelector(".o_field_badge .badge"),
-            "bg-warning"
+            "text-bg-warning"
         );
     });
 
