@@ -11,12 +11,18 @@ registerModel({
          * Handles mouse enter event for the container of this element.
          */
         onMouseEnter() {
+            if (!this.exists()) {
+                return;
+            }
             this.update({ isHovered: true });
         },
         /**
          * Handles mouse leave event for the container of this element.
          */
         onMouseLeave() {
+            if (!this.exists()) {
+                return;
+            }
             this.update({ isHovered: false });
         },
     },
