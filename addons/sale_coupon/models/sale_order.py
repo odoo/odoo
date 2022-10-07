@@ -406,6 +406,10 @@ class SaleOrder(models.Model):
         def update_line(order, lines, values):
             '''Update the lines and return them if they should be deleted'''
             lines_to_remove = self.env['sale.order.line']
+            # move global coupons to the end of the SO
+            if program.discount_apply_on == 'on_order':
+                values['sequence'] = max(order.order_line.mapped('sequence')) + 1
+
             # Check commit 6bb42904a03 for next if/else
             # Remove reward line if price or qty equal to 0
             if values['product_uom_qty'] and values['price_unit']:
