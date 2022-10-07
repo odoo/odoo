@@ -3,7 +3,7 @@
 
     <t t-name="mail.ChatWindow" owl="1">
         <t t-if="chatWindow">
-            <div class="o_ChatWindow position-absolute bottom-0 d-flex flex-column rounded-top-3 bg-white" t-attf-class="{{ className }}" tabindex="0" t-att-data-visible-index="chatWindow.visibleIndex"
+            <div class="o_ChatWindow position-absolute bottom-0 d-flex flex-column rounded-top-3 bg-view" t-attf-class="{{ className }}" tabindex="0" t-att-data-visible-index="chatWindow.visibleIndex"
                 t-att-class="{
                     'o-focused': chatWindow.isFocused,
                     'o-folded': chatWindow.isFolded,
@@ -20,10 +20,10 @@
                     record="chatWindow.chatWindowHeaderView"
                 />
                 <t t-if="chatWindow.channelMemberListView">
-                    <ChannelMemberList record="chatWindow.channelMemberListView" className="'bg-white'"/>
+                    <ChannelMemberList record="chatWindow.channelMemberListView" className="'bg-view'"/>
                 </t>
                 <t t-if="chatWindow.callSettingsMenu">
-                    <CallSettingsMenu record="chatWindow.callSettingsMenu" className="'bg-white'"/>
+                    <CallSettingsMenu record="chatWindow.callSettingsMenu" className="'bg-view'"/>
                 </t>
                 <t t-if="chatWindow.channelInvitationForm">
                     <ChannelInvitationForm className="'o_ChatWindow_channelInvitationForm'" record="chatWindow.channelInvitationForm"/>

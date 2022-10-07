@@ -57,7 +57,7 @@
 export const emojiCategoriesData = JSON.parse(`[
     {
         "name": "Smileys & Emotion",
-        "title": "🤠",
+        "title": "🙂",
         "sortId": 1
     },
     {
@@ -67,32 +67,32 @@ export const emojiCategoriesData = JSON.parse(`[
     },
     {
         "name": "Animals & Nature",
-        "title": "🐘",
+        "title": "🐢",
         "sortId": 3
     },
     {
         "name": "Food & Drink",
-        "title": "🍔",
+        "title": "🍭",
         "sortId": 4
     },
     {
         "name": "Travel & Places",
-        "title": "🚍",
+        "title": "🚗",
         "sortId": 5
     },
     {
         "name": "Activities",
-        "title": "🎣",
+        "title": "🏈",
         "sortId": 6
     },
     {
         "name": "Objects",
-        "title": "🎩",
+        "title": "📕",
         "sortId": 7
     },
     {
         "name": "Symbols",
-        "title": "🚰",
+        "title": "🔠",
         "sortId": 8
     }
 ]`);

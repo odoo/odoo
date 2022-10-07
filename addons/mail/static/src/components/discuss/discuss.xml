@@ -4,7 +4,7 @@
     <t t-name="mail.Discuss" owl="1">
         <t t-if="discussView">
             <div class="o_Discuss d-flex h-100" t-attf-class="{{ className }}"
-                t-att-class="{ 'o-isDeviceSmall flex-column align-items-center bg-white': messaging.device.isSmall }"
+                t-att-class="{ 'o-isDeviceSmall flex-column align-items-center bg-view': messaging.device.isSmall }"
                 t-ref="root"
             >
                 <t t-if="!messaging.device.isSmall">
@@ -41,7 +41,7 @@
             />
         </t>
         <t t-if="!discussView.discuss.activeThread and (!messaging.device.isSmall or discussView.discuss.activeMobileNavbarTabId === 'mailbox')">
-            <div class="o_Discuss_noThread d-flex flex-grow-1 align-items-center justify-content-center w-100 bg-white">
+            <div class="o_Discuss_noThread d-flex flex-grow-1 align-items-center justify-content-center w-100 bg-view">
                 <h4 class="text-muted"><b><i>No conversation selected.</i></b></h4>
             </div>
         </t>

@@ -6,7 +6,7 @@
             <a class="o_ActivityMenuView_dropdownToggle dropdown-toggle o-no-caret o-dropdown--narrow" t-att-aria-expanded="activityMenuView.isOpen ? 'true' : 'false'" title="Activities" href="#" role="button" t-on-click="activityMenuView.onClickDropdownToggle">
                 <i class="fa fa-lg fa-clock-o" role="img" aria-label="Activities"/> <span t-if="activityMenuView.counter > 0" class="o_ActivityMenuView_counter badge" t-esc="activityMenuView.counter"/>
             </a>
-            <div t-if="activityMenuView.isOpen" class="o_ActivityMenuView_dropdownMenu o-dropdown-menu dropdown-menu-end show" role="menu">
+            <div t-if="activityMenuView.isOpen" class="o_ActivityMenuView_dropdownMenu o-dropdown-menu dropdown-menu-end show bg-view" role="menu">
                 <div class="o_ActivityMenuView_activityGroups">
                     <t t-if="activityMenuView.activityGroupViews.length === 0">
                         <div class="o_ActivityMenuView_noActivity dropdown-item-text text-center d-flex justify-content-center">
@@ -40,11 +40,11 @@
                                 </div>
                                 <div t-if="activityGroupView.activityGroup.type == 'activity'">
                                     <button t-if="activityGroupView.activityGroup.overdue_count" type="button" class="o_ActivityMenuView_activityGroupFilterButton btn btn-link mr16" t-att-data-res_model="activityGroupView.activityGroup.irModel.model" t-att-data-model_name="activityGroupView.activityGroup.irModel.name" data-filter='overdue'><t t-esc="activityGroupView.activityGroup.overdue_count"/> Late </button>
-                                    <span t-if="!activityGroupView.activityGroup.overdue_count" class="o_ActivityMenuView_activityGroupNoCount mr16">0 Late </span>
+                                    <span t-if="!activityGroupView.activityGroup.overdue_count" class="o_ActivityMenuView_activityGroupNoCount mr16 text-muted">0 Late </span>
                                     <button t-if="activityGroupView.activityGroup.today_count" type="button" class="o_ActivityMenuView_activityGroupFilterButton btn btn-link mr16" t-att-data-res_model="activityGroupView.activityGroup.irModel.model" t-att-data-model_name="activityGroupView.activityGroup.irModel.name" data-filter='today'> <t t-esc="activityGroupView.activityGroup.today_count"/> Today </button>
-                                    <span t-if="!activityGroupView.activityGroup.today_count" class="o_ActivityMenuView_activityGroupNoCount mr16">0 Today </span>
+                                    <span t-if="!activityGroupView.activityGroup.today_count" class="o_ActivityMenuView_activityGroupNoCount mr16 text-muted">0 Today </span>
                                     <button t-if="activityGroupView.activityGroup.planned_count" type="button" class="o_ActivityMenuView_activityGroupFilterButton btn btn-link float-end" t-att-data-res_model="activityGroupView.activityGroup.irModel.model" t-att-data-model_name="activityGroupView.activityGroup.irModel.name" data-filter='upcoming_all'> <t t-esc="activityGroupView.activityGroup.planned_count"/> Future </button>
-                                    <span t-if="!activityGroupView.activityGroup.planned_count" class="o_ActivityMenuView_activityGroupNoCount float-end">0 Future</span>
+                                    <span t-if="!activityGroupView.activityGroup.planned_count" class="o_ActivityMenuView_activityGroupNoCount float-end text-muted">0 Future</span>
                                 </div>
                             </div>
                         </div>
