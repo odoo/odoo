@@ -192,6 +192,12 @@ registerModel({
             default: false,
         }),
         isTestChatbot: attr({
+            compute() {
+                if (!this.options) {
+                    return clear();
+                }
+                return Boolean(this.options.isTestChatbot);
+            },
             default: false,
         }),
         lastMessage: one('PublicLivechatMessage', {
@@ -204,7 +210,7 @@ registerModel({
         }),
         livechatButtonView: one('LivechatButtonView', {
             compute() {
-                if (this.isAvailable && this.isAvailableForMe && this.hasLoadedQWebTemplate && this.env.services.public_livechat_service) {
+                if (this.isAvailable && (this.isAvailableForMe || this.isTestChatbot) && this.hasLoadedQWebTemplate && this.env.services.public_livechat_service) {
                     return {};
                 }
                 return clear();
@@ -227,7 +233,14 @@ registerModel({
             default: '',
         }),
         sessionCookie: attr(),
-        testChatbotData: attr(),
+        testChatbotData: attr({
+            compute() {
+                if (!this.options) {
+                    return clear();
+                }
+                return this.options.testChatbotData;
+            },
+        }),
         welcomeMessages: many('PublicLivechatMessage', {
             compute() {
                 return this.messages.filter((message) => {

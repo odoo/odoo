@@ -367,7 +367,7 @@ registerModel({
         data: attr({
             compute() {
                 if (this.messaging.publicLivechatGlobal.isTestChatbot) {
-                    return this.messaging.publicLivechatGlobal.testChatbotData.chatbot;
+                    return this.messaging.publicLivechatGlobal.testChatbotData;
                 }
                 if (this.state === 'init') {
                     return this.messaging.publicLivechatGlobal.rule.chatbot;
