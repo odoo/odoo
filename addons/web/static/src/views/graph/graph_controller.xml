@@ -8,11 +8,6 @@
                 <t t-set="activeMeasures" t-value="[model.metaData.measure]"/>
             </t>
         </div>
-        <t t-if="props.displayGroupByMenu">
-            <div class="btn-group" role="toolbar" aria-label="Group By">
-                <GroupByMenu showCaretDown="true"/>
-            </div>
-        </t>
         <div class="btn-group" role="toolbar" aria-label="Change graph">
             <button class="btn btn-secondary fa fa-bar-chart o_graph_button" data-tooltip="Bar Chart" aria-label="Bar Chart" data-mode="bar"
                 t-on-click="() => this.onModeSelected('bar')"

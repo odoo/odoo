@@ -419,7 +419,6 @@ export class GraphRenderer extends Component {
     getScaleOptions() {
         const {
             allIntegers,
-            displayScaleLabels,
             fields,
             groupBy,
             measure,
@@ -433,14 +432,13 @@ export class GraphRenderer extends Component {
         const xAxe = {
             type: "category",
             scaleLabel: {
-                display: Boolean(groupBy.length && displayScaleLabels),
+                display: Boolean(groupBy.length),
                 labelString: groupBy.length ? fields[groupBy[0].fieldName].string : "",
             },
         };
         const yAxe = {
             type: "linear",
             scaleLabel: {
-                display: displayScaleLabels,
                 labelString: measures[measure].string,
             },
             ticks: {
