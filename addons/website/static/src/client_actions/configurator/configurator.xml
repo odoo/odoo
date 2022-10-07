@@ -9,9 +9,7 @@
 
     <t t-name="website.Configurator.WelcomeScreen" owl="1">
         <div class="o_configurator_screen h-100 d-flex flex-column o_welcome_screen">
-            <div class="container-fluid pt-3 pb-2">
-                <img class="ms-lg-5" style="height: 31px; width: 99px;" src="/website/static/src/img/odoo_logo.svg" title="Odoo Logo"/>
-            </div>
+            <div class="o_configurator_odoo_logo mt-4 ms-4" style="height: 31px; width: 99px;"/>
             <div class="o_configurator_screen_content d-flex h-100">
                 <div class="container align-self-center o_configurator_show">
                     <div class="display-4 mb-2">Ready to build the<br class="d-none d-lg-inline"/>
@@ -28,9 +26,7 @@
 
 <t t-name="website.Configurator.DescriptionScreen" owl="1">
     <div class="o_configurator_screen h-100 d-flex flex-column o_description_screen">
-        <div class="container-fluid pt-3 pb-2">
-            <img class="ms-lg-5" style="height: 31px; width: 99px;" src="/website/static/src/img/odoo_logo.svg" title="Odoo Logo"/>
-        </div>
+        <div class="o_configurator_odoo_logo mt-4 ms-5" style="height: 31px; width: 99px;"/>
         <div class="o_configurator_screen_content d-flex h-100 flex-grow-1">
             <div class="container align-self-center">
                 <div class="o_configurator_typing_text d-inline d-md-block mb-md-2 mb-lg-4 o_configurator_show">
@@ -41,7 +37,7 @@
                                 <i class="text-primary" t-if="state.selectedType">
                                     <t t-esc="state.getSelectedType(state.selectedType).label"/>
                                 </i>
-                                <i class="fa fa-angle-down text-black-50 ms-auto ps-2" role="img"/>
+                                <i class="fa fa-angle-down ms-auto ps-2" role="img"/>
                             </a>
                         </div>
                         <div t-attf-class="dropdown-menu border-0 shadow-lg {{state.selectedType ? 'o_step_completed' : 'o_step_todo show'}}" role="menu">
@@ -69,7 +65,7 @@
                                 <t t-if="state.selectedPurpose">
                                     <t t-esc="state.getSelectedPurpose(state.selectedPurpose).label"/>
                                 </t>
-                                <i class="fa fa-angle-down text-black-50 ms-auto ps-2" role="img"/>
+                                <i class="fa fa-angle-down ms-auto ps-2" role="img"/>
                             </a>
                         </div>
                         <div class="dropdown-menu border-0 shadow-lg" role="menu">
@@ -89,9 +85,7 @@
 
 <t t-name="website.Configurator.PaletteSelectionScreen" owl="1">
     <div class="o_configurator_screen h-100 d-flex flex-column o_palette_selection_screen">
-        <div class="container-fluid pt-3 pb-2">
-            <img class="ms-lg-5" style="height: 31px; width: 99px;" src="/website/static/src/img/odoo_logo.svg" title="Odoo Logo"/>
-        </div>
+        <div class="o_configurator_odoo_logo mt-4 ms-5" style="height: 31px; width: 99px;"/>
         <div class="o_configurator_screen_content container palette_selection d-flex flex-grow-1 h-100">
             <div class="o_content_container d-flex flex-row w-100 h-auto align-self-md-center o_configurator_show">
                 <div class="o_detect_logo w-25 order-lg-3 my-4 my-md-0 d-flex flex-column">
@@ -124,7 +118,7 @@
                 </div>
                 <div class="o_palettes_separator position-relative d-flex justify-content-center order-lg-2 w-0 py-3 py-lg-0 px-lg-5 mb-4 mb-lg-0">
                     <div class="border-top w-100"></div>
-                    <b class="palette_selection_or bg-white text-muted w-lg-100 text-center px-3 py-lg-3">OR</b>
+                    <b class="palette_selection_or bg-view text-muted w-lg-100 text-center px-3 py-lg-3">OR</b>
                     <div class="border-start d-none d-lg-inline h-100 mx-auto w-0"></div>
                 </div>
                 <div class="o_palettes_container w-auto flex-grow-1 o_configurator_show_fast">
@@ -151,9 +145,7 @@
 
 <t t-name="website.Configurator.FeatureSelection" owl="1">
     <div class="o_configurator_screen h-100 d-flex flex-column o_feature_selection_screen">
-        <div class="container-fluid pt-3 pb-2">
-            <img class="ms-lg-5" style="height: 31px; width: 99px;" src="/website/static/src/img/odoo_logo.svg" title="Odoo Logo"/>
-        </div>
+        <div class="o_configurator_odoo_logo mt-4 ms-5" style="height: 31px; width: 99px;"/>
         <div class="o_configurator_screen_content overflow-hidden container d-flex flex-grow-1 align-items-center">
             <div class="m-auto d-flex mh-100 flex-column">
                 <div class="o_configurator_typing_text o_configurator_show_fast">Add <b class="text-info">Pages</b> and <b class="text-warning">Features</b></div>
@@ -193,9 +185,7 @@
 
 <t t-name="website.Configurator.ThemeSelectionScreen" owl="1">
     <div class="o_configurator_screen h-100 d-flex flex-column o_theme_selection_screen">
-        <div class="container-fluid pt-3 pb-2">
-            <img class="ms-lg-5" style="height: 31px; width: 99px;" src="/website/static/src/img/odoo_logo.svg" title="Odoo Logo"/>
-        </div>
+        <div class="o_configurator_odoo_logo mt-4 ms-5" style="height: 31px; width: 99px;"/>
         <div class="o_configurator_screen_content d-flex flex-column flex-grow-1 align-items-center">
             <div class="m-auto w-100 w-md-75 w-xl-100">
                 <div class="o_configurator_typing_text text-center mt-4 mb-lg-4">Choose your favorite <b>Theme</b>

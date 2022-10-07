@@ -1,6 +1,6 @@
 .o_configurator_container {
     @include o-position-absolute(0, 0, 0, 0);
-    background-color: $white;
+    background-color: $o-view-background-color;
 
     .o_configurator_screen {
 
@@ -74,6 +74,12 @@
             }
         }
 
+        .o_configurator_odoo_logo {
+            background-image: var(--configurator-logo, url(/web/static/img/odoo_logo.svg));
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+
         // ==== Screens
 
         &.o_description_screen {
@@ -125,6 +131,10 @@
                     overflow: hidden;
                     opacity: 0;
                 }
+            }
+
+            .o_configurator_industry_dropdown {
+                background: $dropdown-bg;
             }
 
             .dropdown {
