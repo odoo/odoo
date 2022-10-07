@@ -13458,6 +13458,30 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test("discard an invalid row in a list", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree editable="top"><field name="foo" required="1"/></tree>',
+        });
+
+        await click(target.querySelector(".o_data_cell"));
+        assert.containsNone(target, ".o_field_invalid");
+        assert.containsOnce(target, ".o_selected_row");
+
+        await editInput(target, "[name='foo'] input", "");
+        await click(target, ".o_list_view");
+        assert.containsOnce(target, ".o_field_invalid");
+        assert.containsOnce(target, ".o_selected_row");
+        assert.strictEqual(target.querySelector("[name='foo'] input").value, "");
+
+        await clickDiscard(target);
+        assert.containsNone(target, ".o_field_invalid");
+        assert.containsNone(target, ".o_selected_row");
+        assert.strictEqual(target.querySelector("[name='foo']").textContent, "yop");
+    });
+
     QUnit.test('editable grouped list with create="0"', async function (assert) {
         await makeView({
             type: "list",

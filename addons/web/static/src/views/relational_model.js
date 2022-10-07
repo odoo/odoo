@@ -657,6 +657,8 @@ export class Record extends DataPoint {
                 this.data[fieldName] = this._values[fieldName];
             }
         }
+        this._invalidFields.clear();
+
         if (!this.isVirtual) {
             this.switchMode("readonly");
         }
