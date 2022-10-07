@@ -298,8 +298,8 @@ class AccountEdiFormat(models.Model):
         if issuer:
             address['address']['branchID'] = invoice.journal_id.l10n_eg_branch_identifier or ''
         individual_type = self._l10n_eg_get_partner_tax_type(partner, issuer)
+        address['type'] = individual_type or ''
         if invoice.amount_total >= invoice.company_id.l10n_eg_invoicing_threshold or individual_type != 'P':
-            address['type'] = individual_type or ''
             address['id'] = partner.vat or ''
         return address
 
