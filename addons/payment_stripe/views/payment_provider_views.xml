@@ -6,7 +6,7 @@
         <field name="model">payment.provider</field>
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='code']" position="before">
+            <group name="provider_credentials" position="before">
                 <div invisible="context.get('stripe_onboarding', False)"
                      name="stripe_onboarding_group"
                      attrs="{'invisible': ['|', '|', ('code', '!=', 'stripe'), ('stripe_secret_key', '!=', False), ('stripe_publishable_key', '!=', False)]}">
@@ -17,8 +17,8 @@
                             colspan="2"
                             attrs="{'invisible': [('state', '=', 'enabled')]}"/>
                 </div>
-            </xpath>
-            <xpath expr="//group[@name='code']" position="inside">
+            </group>
+            <group name="provider_credentials" position="inside">
                 <group attrs="{'invisible': [('code', '!=', 'stripe')]}" name="stripe_credentials">
                     <field name="stripe_publishable_key" attrs="{'required':[('code', '=', 'stripe'), ('state', '!=', 'disabled')]}"/>
                     <field name="stripe_secret_key" attrs="{'required':[('code', '=', 'stripe'), ('state', '!=', 'disabled')]}" password="True"/>
@@ -39,7 +39,7 @@
                         Get your Secret and Publishable keys
                     </a>
                 </div>
-            </xpath>
+            </group>
             <field name="allow_express_checkout" position="replace">
                 <label for="allow_express_checkout" attrs="{'invisible': ['|', ('support_express_checkout', '=', False), ('show_allow_express_checkout', '=', False)]}"/>
                 <div class="o_row" col="2" attrs="{'invisible': ['|', ('support_express_checkout', '=', False), ('show_allow_express_checkout', '=', False)]}">

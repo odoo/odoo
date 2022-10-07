@@ -9,8 +9,10 @@
     'description': """Authorize.Net Payment Provider""",
     'depends': ['payment'],
     'data': [
-        'views/payment_views.xml',
         'views/payment_authorize_templates.xml',
+        'views/payment_provider_views.xml',
+        'views/payment_token_views.xml',
+
         'data/payment_provider_data.xml',
     ],
     'application': True,

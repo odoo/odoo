@@ -8,7 +8,8 @@
     'depends': ['payment'],
     'data': [
         'views/payment_custom_templates.xml',
-        'views/payment_views.xml',
+        'views/payment_provider_views.xml',
+
         'data/payment_provider_data.xml',
     ],
     'assets': {

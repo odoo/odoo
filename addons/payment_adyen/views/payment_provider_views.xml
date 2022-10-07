@@ -6,7 +6,7 @@
         <field name="model">payment.provider</field>
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
-            <group name="code" position='inside'>
+            <group name="provider_credentials" position='inside'>
                 <group attrs="{'invisible': [('code', '!=', 'adyen')]}">
                     <field name="adyen_merchant_account" attrs="{'required':[('code', '=', 'adyen'), ('state', '!=', 'disabled')]}"/>
                     <field name="adyen_api_key" attrs="{'required':[('code', '=', 'adyen'), ('state', '!=', 'disabled')]}" password="True"/>

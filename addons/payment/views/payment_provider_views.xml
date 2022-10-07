@@ -70,8 +70,8 @@
                         </group>
                     </group>
                     <notebook attrs="{'invisible': ['&amp;', ('module_id', '!=', False), ('module_state', '!=', 'installed')]}">
-                        <page string="Credentials" name="provider_credentials" attrs="{'invisible': ['|', ('code', '=', 'none'), ('show_credentials_page', '=', False)]}">
-                            <group name="code"/>
+                        <page string="Credentials" name="credentials" attrs="{'invisible': ['|', ('code', '=', 'none'), ('show_credentials_page', '=', False)]}">
+                            <group name="provider_credentials"/>
                         </page>
                         <page string="Configuration" name="configuration">
                             <group name="provider_config">

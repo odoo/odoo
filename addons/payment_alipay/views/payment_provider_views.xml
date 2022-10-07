@@ -14,7 +14,7 @@
                     Consider disabling it and moving to <strong>Asiapay</strong>.
                 </div>
             </xpath>
-            <group name="code" position="inside">
+            <group name="provider_credentials" position="inside">
                 <group attrs="{'invisible': [('code', '!=', 'alipay')]}">
                     <field name="alipay_payment_method" widget="radio"/>
                     <field name="alipay_seller_email"

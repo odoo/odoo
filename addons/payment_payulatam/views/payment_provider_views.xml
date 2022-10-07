@@ -14,7 +14,7 @@
                     Consider disabling it and moving to <strong>Mercado Pago</strong>.
                 </div>
             </xpath>
-            <group name="code" position="inside">
+            <group name="provider_credentials" position="inside">
                 <group attrs="{'invisible': [('code', '!=', 'payulatam')]}">
                     <field name="payulatam_merchant_id"
                            attrs="{'required':[('code', '=', 'payulatam'), ('state', '!=', 'disabled')]}"/>

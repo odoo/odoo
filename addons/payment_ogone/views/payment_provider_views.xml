@@ -14,7 +14,7 @@
                     Consider disabling it and moving to <strong>Stripe</strong>.
                 </div>
             </xpath>
-            <group name="code" position="inside">
+            <group name="provider_credentials" position="inside">
                 <group attrs="{'invisible': [('code', '!=', 'ogone')]}">
                     <field name="ogone_pspid" attrs="{'required':[('code', '=', 'ogone'), ('state', '!=', 'disabled')]}"/>
                     <field name="ogone_userid" attrs="{'required':[('code', '=', 'ogone'), ('state', '!=', 'disabled')]}"/>

@@ -10,7 +10,7 @@
     'depends': ['payment'],
     'data': [
         'views/payment_mercado_pago_templates.xml',
-        'views/payment_views.xml',
+        'views/payment_provider_views.xml',
 
         'data/payment_provider_data.xml',  # Depends on views/payment_mercado_pago_templates.xml
     ],
