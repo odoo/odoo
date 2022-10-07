@@ -1910,30 +1910,42 @@ class AccountMove(models.Model):
     @contextmanager
     def _sync_unbalanced_lines(self, container):
         yield
+        # Skip posted moves.
+        for invoice in (x for x in container['records'] if x.state != 'posted'):
 
-        # Unlink tax lines if all tax tags have been removed.
-        if not container['records'].line_ids.tax_ids:
-            container['records'].line_ids.filtered('tax_line_id').unlink()
+            # Unlink tax lines if all tax tags have been removed.
+            if not invoice.line_ids.tax_ids:
+                invoice.line_ids.filtered('tax_line_id').unlink()
 
-        # Unlink the automatic balancing line, if any, to prevent having multiple ones.
-        balance_name = _('Automatic Balancing Line')
-        container['records'].line_ids.filtered(lambda line: line.name == balance_name).unlink()
+            # Set the balancing line's balance and amount_currency to zero,
+            # so that it does not interfere with _get_unbalanced_moves() below.
+            balance_name = _('Automatic Balancing Line')
+            existing_balancing_line = invoice.line_ids.filtered(lambda line: line.name == balance_name)
+            if existing_balancing_line:
+                existing_balancing_line.balance = existing_balancing_line.amount_currency = 0.0
 
-        # Create an automatic balancing line to make sure the entry can be saved.
-        vals_list = []
-        unbalanced_moves = self._get_unbalanced_moves(container)
-        if unbalanced_moves:
-            for move_id, debit, credit in unbalanced_moves:
-                move = self.browse(move_id)
+            # Create an automatic balancing line to make sure the entry can be saved/posted.
+            # If such a line already exists, we simply update its amounts.
+            unbalanced_moves = self._get_unbalanced_moves({'records': invoice})
+            if isinstance(unbalanced_moves, list) and len(unbalanced_moves) == 1:
+                dummy, debit, credit = unbalanced_moves[0]
                 balance = debit - credit
-                vals_list.append({
-                    'name': balance_name,
-                    'move_id': move.id,
-                    'account_id': move.company_id.account_journal_suspense_account_id.id,
+
+                vals = {
                     'debit': -balance if balance < 0.0 else 0.0,
                     'credit': balance if balance > 0.0 else 0.0,
-                })
-        container['records'].env['account.move.line'].create(vals_list)
+                }
+
+                if existing_balancing_line:
+                    existing_balancing_line.write(vals)
+                else:
+                    vals.update({
+                        'name': balance_name,
+                        'move_id': invoice.id,
+                        'account_id': invoice.company_id.account_journal_suspense_account_id.id,
+                        'currency_id': invoice.currency_id.id,
+                    })
+                    container['records'].env['account.move.line'].create(vals)
 
     @contextmanager
     def _sync_rounding_lines(self, container):
