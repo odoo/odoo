@@ -9,9 +9,10 @@
     'description': """Stripe Payment Provider""",
     'depends': ['payment'],
     'data': [
+        'views/payment_provider_views.xml',
         'views/payment_stripe_templates.xml',
         'views/payment_templates.xml',  # Only load the SDK on pages with a payment form.
-        'views/payment_views.xml',
+
         'data/payment_provider_data.xml',  # Depends on views/payment_stripe_templates.xml
     ],
     'application': True,

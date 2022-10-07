@@ -9,8 +9,9 @@
     'description': """Buckaroo Payment Provider""",
     'depends': ['payment'],
     'data': [
-        'views/payment_views.xml',
         'views/payment_buckaroo_templates.xml',
+        'views/payment_provider_views.xml',
+
         'data/payment_provider_data.xml',
     ],
     'application': True,
