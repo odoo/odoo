@@ -37,6 +37,7 @@ function compileChatter(node, params) {
     }
     const chatterContainerXml = createElement("ChatterContainer");
     setAttributes(chatterContainerXml, {
+        "chatter": params.chatter,
         "hasActivities": hasActivities,
         "hasFollowers": hasFollowers,
         "hasMessageList": hasMessageList,
@@ -116,6 +117,7 @@ export class MailFormCompiler extends ViewCompiler {
 
     compileChatter(node) {
         return compileChatter(node, {
+            chatter: "chatter",
             threadId: "model.root.resId or undefined",
             threadModel: "model.root.resModel",
             webRecord: "model.root",
@@ -134,6 +136,7 @@ registry.category("form_compilers").add("chatter_compiler", {
     selector: "div.oe_chatter",
     fn: (node) =>
         compileChatter(node, {
+            chatter: "props.chatter",
             threadId: "props.record.resId or undefined",
             threadModel: "props.record.resModel",
             webRecord: "props.record",
