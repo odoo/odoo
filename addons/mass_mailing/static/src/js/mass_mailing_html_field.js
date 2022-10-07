@@ -51,6 +51,7 @@ export class MassMailingHtmlField extends HtmlField {
             snippets: 'mass_mailing.email_designer_snippets',
             resizable: false,
             defaultDataForLinkTools: { isNewWindow: true },
+            toolbarTemplate: 'mass_mailing.web_editor_toolbar',
             ...this.props.wysiwygOptions,
         };
     }
