@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { FormController } from "@web/views/form/form_controller";
 import { formView } from "@web/views/form/form_view";
-import { useCheckRainbowman } from "@crm/views/check_rainbowman_message";
+import { checkRainbowmanMessage } from "@crm/views/check_rainbowman_message";
+import { Record, RelationalModel } from "@web/views/basic_relational_model";
 
 /**
  * This Form Controller makes sure we display a rainbowman message
@@ -12,13 +12,7 @@ import { useCheckRainbowman } from "@crm/views/check_rainbowman_message";
  * if the lead is won and if a message should be displayed to the user
  * with a rainbowman like when the user click on the button "Mark Won".
  */
-
-export class CrmFormController extends FormController {
-    async setup() {
-        super.setup();
-        this.checkRainbowmanMessage = useCheckRainbowman();
-    }
-
+export class CrmFormRecord extends Record {
     /**
      * Main method used when saving the record hitting the "Save" button.
      * We check if the stage_id field was altered and if we need to display a rainbowman
@@ -36,8 +30,8 @@ export class CrmFormController extends FormController {
      *
      * @override
      */
-    async save(params = {}) {
-        const recordID = this.model.root.__bm_handle__;
+    async save() {
+        const recordID = this.__bm_handle__;
         const localData = this.model.__bm__.localData[recordID];
         const changes = localData._changes || {};
 
@@ -51,7 +45,11 @@ export class CrmFormController extends FormController {
                 ? localData.data.partner_phone_update // original value
                 : changes.partner_phone_update; // new value
 
-        if (needsSynchronizationEmail && changes.email_from === undefined && localData.data.email_from) {
+        if (
+            needsSynchronizationEmail &&
+            changes.email_from === undefined &&
+            localData.data.email_from
+        ) {
             changes.email_from = localData.data.email_from;
         }
         if (needsSynchronizationPhone && changes.phone === undefined && localData.data.phone) {
@@ -70,14 +68,24 @@ export class CrmFormController extends FormController {
             const newStageId = bm.get(bm.localData[recordID]._changes.stage_id).data.id;
             changedStage = oldStageId !== newStageId;
         }
-        await super.save(params);
+        const res = await super.save(...arguments);
         if (changedStage) {
-            await this.checkRainbowmanMessage(this.model.root.resId);
+            await checkRainbowmanMessage(this.model.orm, this.model.effect, this.resId);
         }
+        return res;
     }
 }
 
+class CrmFormModel extends RelationalModel {
+    setup(params, services) {
+        this.effect = services.effect;
+        super.setup(...arguments);
+    }
+}
+CrmFormModel.Record = CrmFormRecord;
+CrmFormModel.services = [...RelationalModel.services, "effect"];
+
 registry.category("views").add("crm_form", {
     ...formView,
-    Controller: CrmFormController,
+    Model: CrmFormModel,
 });
