@@ -292,6 +292,8 @@ class Web_Editor(http.Controller):
 
     def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view'):
         """Create and return a new attachment."""
+        IrAttachment = request.env['ir.attachment']
+
         if name.lower().endswith('.bmp'):
             # Avoid mismatch between content type and mimetype, see commit msg
             name = name[:-4]
@@ -323,15 +325,13 @@ class Web_Editor(http.Controller):
         else:
             raise UserError(_("You need to specify either data or url to create an attachment."))
 
-        # If the user is a portal and has access rights on the res_model (and
-        # on the res_id if it exists), we can create the attachment. Otherwise,
-        # one of the check will raise an error and the attachment will not be
-        # created
-        if request.env.user.has_group('base.group_portal'):
-            request.env[res_model].check_access_rights('write')
-            if res_id:
-                request.env[res_model].browse(res_id).check_access_rule('write')
-            attachment = request.env['ir.attachment'].sudo().create(attachment_data)
+        # Despite the user having no right to create an attachment, he can still
+        # create an image attachment through some flows
+        if (
+            not request.env.is_admin()
+            and IrAttachment._can_bypass_rights_on_media_dialog(**attachment_data)
+        ):
+            attachment = IrAttachment.sudo().create(attachment_data)
             # When portal users upload an attachment with the wysiwyg widget,
             # the access token is needed to use the image in the editor. If
             # the attachment is not public, the user won't be able to generate
@@ -339,7 +339,7 @@ class Web_Editor(http.Controller):
             if not attachment_data['public']:
                 attachment.sudo().generate_access_token()
         else:
-            attachment = request.env['ir.attachment'].create(attachment_data)
+            attachment = IrAttachment.create(attachment_data)
 
         return attachment
 
