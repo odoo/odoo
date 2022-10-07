@@ -865,4 +865,42 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".o_domain_leaf");
         assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, "ID = 1");
     });
+
+    QUnit.test("invalid value in domain field with 'inDialog' options", async function (assert) {
+        serverData.models.partner.fields.display_name.default = "[]";
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="display_name" widget="domain" options="{'model': 'partner', 'in_dialog': True}"/>
+                </form>`,
+            mockRPC: (route, args) => {
+                if (args.method === "search_count") {
+                    const domain = args.args[0];
+                    if (domain.length && domain[0][0] === "id" && domain[0][2] === "01/01/2002") {
+                        throw new Error("Invalid Domain");
+                    }
+                }
+            },
+        });
+        assert.containsNone(target, ".o_domain_leaf");
+        assert.containsNone(target, ".modal");
+        assert.containsNone(target, ".o_field_domain .text-warning");
+
+        await click(target, ".o_field_domain_dialog_button");
+        assert.containsOnce(target, ".modal");
+
+        await click(target, ".modal .o_domain_add_first_node_button");
+        await editInput(target, ".o_domain_leaf_value_input", "01/01/2002");
+        await click(target, ".modal-footer .btn-primary");
+        assert.containsOnce(target, ".o_domain_leaf");
+        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, 'ID = "01/01/2002"');
+        assert.strictEqual(
+            target.querySelector(".o_field_domain .text-warning").textContent.trim(),
+            "Invalid domain"
+        );
+    });
 });
