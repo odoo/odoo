@@ -303,7 +303,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onMouseEnterTopbarThreadName(ev) {
-            if (!this.thread || !this.thread.isChannelRenamable) {
+            if (!this.exists() || !this.thread || !this.thread.isChannelRenamable) {
                 return;
             }
             this.update({ isMouseOverThreadName: true });
@@ -325,6 +325,9 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onMouseEnterUserName(ev) {
+            if (!this.exists()) {
+                return;
+            }
             this.update({ isMouseOverUserName: true });
         },
         /**
@@ -333,6 +336,9 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onMouseLeaveTopbarThreadName(ev) {
+            if (!this.exists()) {
+                return;
+            }
             this.update({ isMouseOverThreadName: false });
         },
         /**
@@ -341,6 +347,9 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onMouseLeaveTopbarThreadDescription(ev) {
+            if (!this.exists()) {
+                return;
+            }
             this.update({ isMouseOverThreadDescription: false });
         },
         /**
@@ -349,6 +358,9 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onMouseLeaveUserName(ev) {
+            if (!this.exists()) {
+                return;
+            }
             this.update({ isMouseOverUserName: false });
         },
         /**
