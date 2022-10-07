@@ -1140,21 +1140,6 @@ class AccountMoveLine(models.Model):
         ))
 
     # -------------------------------------------------------------------------
-    # ONCHANGE METHODS
-    # -------------------------------------------------------------------------
-
-    @api.onchange('tax_ids')
-    def _onchange_quick_suggest_price_unit(self):
-        """When a new line is created, we suggest a price_unit according to the quick suggestions"""
-        for line in self:
-            if line.price_unit != 0 or not line.move_id.quick_edit_mode:
-                continue
-            suggestions = line.move_id._get_quick_edit_suggestions()
-            if suggestions:
-                line.price_unit = suggestions['price_unit']
-                line.tax_ids = suggestions['tax_ids']
-
-    # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
     # -------------------------------------------------------------------------
 
@@ -1308,6 +1293,14 @@ class AccountMoveLine(models.Model):
         create_index(self._cr, 'account_move_line_partner_id_ref_idx', 'account_move_line', ["partner_id", "ref"])
         create_index(self._cr, 'account_move_line_date_name_id_idx', 'account_move_line', ["date desc", "move_name desc", "id"])
 
+    def default_get(self, fields_list):
+        defaults = super().default_get(fields_list)
+        quick_encode_suggestion = self.env.context.get('quick_encoding_vals')
+        if quick_encode_suggestion:
+            defaults['account_id'] = quick_encode_suggestion['account_id']
+            defaults['price_unit'] = quick_encode_suggestion['price_unit']
+            defaults['tax_ids'] = [Command.set(quick_encode_suggestion['tax_ids'])]
+        return defaults
 
     def _sanitize_vals(self, vals):
         if 'debit' in vals or 'credit' in vals:
@@ -1387,12 +1380,6 @@ class AccountMoveLine(models.Model):
 
         lines.move_id._synchronize_business_models(['line_ids'])
         return lines
-
-    def new(self, values=None, origin=None, ref=None):
-        record = super().new(self._sanitize_vals(values), origin, ref)
-        if record.move_id.quick_edit_total_amount and record.move_id.quick_edit_mode:
-            record.move_id._check_total_amount(record.move_id.quick_edit_total_amount)
-        return record
 
     def write(self, vals):
         if not vals:

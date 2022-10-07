@@ -113,6 +113,7 @@ export class TaxTotalsComponent extends Component {
             // We only reformat tax groups if there are changed
             this.totals = nextProps.value;
             this.readonly = nextProps.readonly;
+            this._computeTotalsFormat();
         });
     }
 
@@ -139,7 +140,6 @@ export class TaxTotalsComponent extends Component {
      */
     _onChangeTaxValueByTaxGroup({ oldValue, newValue, taxGroupId }) {
         if (oldValue === newValue) return;
-        this._computeTotalsFormat();
         this.totals.amount_total = this.totals.amount_untaxed + newValue;
         this.props.update(this.totals);
     }
