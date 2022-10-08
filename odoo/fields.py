@@ -18,6 +18,9 @@ import json
 import logging
 import uuid
 import warnings
+from typing import Any, TypeVar, Generic
+
+_T = TypeVar("_T", bound=Any)
 
 from markupsafe import Markup
 import psycopg2
@@ -128,7 +131,7 @@ class MetaField(type):
 _global_seq = iter(itertools.count())
 
 
-class Field(MetaField('DummyField', (object,), {})):
+class Field(MetaField('DummyField', (object,), {}), Generic[_T]):
     """The field descriptor contains the field definition, and manages accesses
     and assignments of the corresponding field on records. The following
     attributes may be provided when instantiating a field:
@@ -1138,7 +1141,7 @@ class Field(MetaField('DummyField', (object,), {})):
     # Descriptor methods
     #
 
-    def __get__(self, record, owner):
+    def __get__(self, record, owner) -> _T:
         """ return the value of field ``self`` on ``record`` """
         if record is None:
             return self         # the field is accessed through the owner class
@@ -1298,7 +1301,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
         return self.convert_to_record_multi(vals, records)
 
-    def __set__(self, records, value):
+    def __set__(self, records, value: _T) -> None:
         """ set the value of field ``self`` on ``records`` """
         protected_ids = []
         new_ids = []
@@ -1432,7 +1435,7 @@ class Boolean(Field):
         return value
 
 
-class Integer(Field):
+class Integer(Field[int]):
     """ Encapsulates an :class:`int`. """
     type = 'integer'
     column_type = ('int4', 'int4')
@@ -1470,7 +1473,7 @@ class Integer(Field):
         return ''
 
 
-class Float(Field):
+class Float(Field[float]):
     """ Encapsulates a :class:`float`.
 
     The precision digits are given by the (optional) ``digits`` attribute.
@@ -1659,7 +1662,7 @@ class Monetary(Field):
         return value
 
 
-class _String(Field):
+class _String(Field[str]):
     """ Abstract class for string fields. """
     translate = False                   # whether the field is translated
     unaccent = True
@@ -2811,14 +2814,14 @@ class Reference(Selection):
         return value.display_name if value else False
 
 
-class _Relational(Field):
+class _Relational(Generic[_T], Field[_T]):
     """ Abstract class for relational fields. """
     relational = True
     domain = []                         # domain for searching values
     context = {}                        # context for searching values
     check_company = False
 
-    def __get__(self, records, owner):
+    def __get__(self, records, owner) -> _T:
         # base case: do the regular access
         if records is None or len(records._ids) <= 1:
             return super().__get__(records, owner)
@@ -2875,7 +2878,7 @@ class _Relational(Field):
         return record.env[self.comodel_name]
 
 
-class Many2one(_Relational):
+class Many2one(Generic[_T], _Relational[_T]):
     """ The value of such a field is a recordset of size 0 (no
     record) or 1 (a single record).
 
@@ -4099,7 +4102,7 @@ class Command(enum.IntEnum):
         return (cls.SET, 0, ids)
 
 
-class _RelationalMulti(_Relational):
+class _RelationalMulti(Generic[_T], _Relational[_T]):
     r"Abstract class for relational fields \*2many."
     write_sequence = 20
 
@@ -4318,7 +4321,7 @@ class _RelationalMulti(_Relational):
         return comodel
 
 
-class One2many(_RelationalMulti):
+class One2many(Generic[_T], _RelationalMulti[_T]):
     """One2many field; the value of such a field is the recordset of all the
     records in ``comodel_name`` such that the field ``inverse_name`` is equal to
     the current record.
@@ -4383,7 +4386,7 @@ class One2many(_RelationalMulti):
                 domain = domain + [(inverse_field.model_field, '=', records._name)]
         return domain
 
-    def __get__(self, records, owner):
+    def __get__(self, records, owner) -> _T:
         if records is not None and self.inverse_name is not None:
             # force the computation of the inverse field to ensure that the
             # cache value of self is consistent
