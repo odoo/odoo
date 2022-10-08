@@ -68,7 +68,7 @@ function selectColorPalette(position = "left") {
 
 function changeColumnSize(position = "right") {
     return {
-        trigger: `.oe_overlay.ui-draggable.o_we_overlay_sticky.oe_active .o_handle.e`,
+        trigger: `iframe .oe_overlay.ui-draggable.o_we_overlay_sticky.oe_active .o_handle.e`,
         content: Markup(_t("<b>Slide</b> this button to change the column size.")),
         position: position,
     };
@@ -131,7 +131,7 @@ function changePaddingSize(direction) {
         position = "bottom";
     }
     return {
-        trigger: `.oe_overlay.ui-draggable.o_we_overlay_sticky.oe_active .o_handle.${paddingDirection}`,
+        trigger: `iframe .oe_overlay.ui-draggable.o_we_overlay_sticky.oe_active .o_handle.${paddingDirection}`,
         content: Markup(_.str.sprintf(_t("<b>Slide</b> this button to change the %s padding"), direction)),
         consumeEvent: 'mousedown',
         position: position,
