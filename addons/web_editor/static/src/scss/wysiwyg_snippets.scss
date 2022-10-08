@@ -18,13 +18,6 @@ body.editor_enable.editor_has_snippets {
         background-color: rgba(66, 66, 66, 0.4);
     }
 }
-.editor_has_snippets {
-    > .oe_overlay.ui-draggable {
-        .o_handles {
-            display: none;
-        }
-    }
-}
 
 // Mobile fix for mass mailing
 @include media-breakpoint-down(lg) {
@@ -2291,13 +2284,21 @@ body.editor_enable.editor_has_snippets {
         &.o_we_background_position_overlay {
             background-color: rgba(0,0,0,.7);
             pointer-events: auto;
-            bottom: 0;
 
             .o_we_overlay_content {
                 @include o-grab-cursor;
 
                 .o_we_grabbing {
                     cursor: grabbing;
+                }
+            }
+
+            .o_we_overlay_buttons {
+                .btn-primary {
+                    @include button-variant($o-brand-primary, $o-brand-primary);
+                }
+                .btn-secondary {
+                    @include button-variant($o-we-color-danger, $o-we-color-danger);
                 }
             }
 
@@ -2313,6 +2314,9 @@ body.editor_enable.editor_has_snippets {
             }
         }
     }
+}
+.oe_overlay.ui-draggable-dragging .o_handles {
+    display: none;
 }
 
 .s-resize-important * {

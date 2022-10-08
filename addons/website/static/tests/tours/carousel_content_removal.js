@@ -15,7 +15,7 @@ wTourUtils.registerWebsitePreviewTour("carousel_content_removal", {
     trigger: "iframe .carousel .carousel-item.active .carousel-content",
     content: "Select the active carousel item.",
 }, {
-    trigger: ".oe_overlay.oe_active .oe_snippet_remove",
+    trigger: "iframe .oe_overlay.oe_active .oe_snippet_remove",
     content: "Remove the active carousel item.",
 },
 {

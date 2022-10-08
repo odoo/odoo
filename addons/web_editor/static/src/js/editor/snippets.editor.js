@@ -380,16 +380,9 @@ var SnippetEditor = Widget.extend({
         // Now cover the element
         const offset = $target.offset();
 
-        // If the target is in an iframe, we need the iframe offset.
-        const targetWindow = $target[0].ownerDocument.defaultView;
-        const editorWindow = this.$el[0].ownerDocument.defaultView;
-        if (targetWindow.frameElement && targetWindow !== editorWindow) {
-            const { x, y } = targetWindow.frameElement.getBoundingClientRect();
-            offset.left += x;
-            offset.top += y;
-        }
-
-        var manipulatorOffset = this.$el.parent().offset();
+        // The manipulator is supposed to follow the scroll of the content
+        // naturally without any JS recomputation.
+        const manipulatorOffset = this.$el.parent().offset();
         offset.top -= manipulatorOffset.top;
         offset.left -= manipulatorOffset.left;
         this.$el.css({
@@ -929,7 +922,7 @@ var SnippetEditor = Widget.extend({
         const rowEl = previousDropzoneEl.parentNode;
 
         if (rowEl.classList.contains('o_grid_mode')) {
-            document.body.removeEventListener('mousemove', self.onDragMove, false);
+            self.$body[0].removeEventListener('mousemove', self.onDragMove, false);
             const fromGridToGrid = currentDropzoneEl.classList.contains('oe_grid_zone');
             if (fromGridToGrid) {
                 // If we went from a grid dropzone to an other grid one.
@@ -1204,7 +1197,7 @@ var SnippetEditor = Widget.extend({
                     self.dragState.dragHelperEl = dragHelperEl;
                     self.dragState.backgroundGridEl = backgroundGridEl;
                     self.onDragMove = self._onDragMove.bind(self);
-                    document.body.addEventListener('mousemove', self.onDragMove, false);
+                    self.$body[0].addEventListener('mousemove', self.onDragMove, false);
                 }
             },
             out: function () {
@@ -1220,7 +1213,7 @@ var SnippetEditor = Widget.extend({
                 if (sameDropzoneAsCurrent) {
                     if (rowEl.classList.contains('o_grid_mode')) {
                         // Removing the listener + cleaning.
-                        document.body.removeEventListener('mousemove', self.onDragMove, false);
+                        self.$body[0].removeEventListener('mousemove', self.onDragMove, false);
                         gridUtils._gridCleanUp(rowEl, self.$target[0]);
                         self.$target[0].style.removeProperty('z-index');
 
@@ -1269,7 +1262,7 @@ var SnippetEditor = Widget.extend({
             // Case when dropping the column in a grid.
 
             // Removing the event listener.
-            document.body.removeEventListener('mousemove', this.onDragMove, false);
+            this.$body[0].removeEventListener('mousemove', this.onDragMove, false);
 
             // Defining the column grid area with its position.
             const gridProp = gridUtils._getGridProperties(rowEl);
@@ -1303,7 +1296,7 @@ var SnippetEditor = Widget.extend({
         // TODO lot of this is duplicated code of the d&d feature of snippets
         if (!this.dropped) {
             const { nearest } = this.$body[0].ownerDocument.defaultView.$;
-            let $el = nearest({x: ui.position.left, y: ui.position.top}, '.oe_drop_zone', {container: document.body}).first();
+            let $el = nearest({x: ui.position.left, y: ui.position.top}, '.oe_drop_zone', {container: this.$body[0]}).first();
             // Some drop zones might have been disabled.
             $el = $el.filter(this.$dropZones);
             if ($el.length) {
@@ -1569,7 +1562,7 @@ var SnippetEditor = Widget.extend({
         const rowEl = columnEl.parentNode;
 
         // Computing the rowEl position.
-        const rowElTop = rowEl.getBoundingClientRect().top + document.documentElement.scrollTop;
+        const rowElTop = rowEl.getBoundingClientRect().top;
         const rowElLeft = rowEl.getBoundingClientRect().left;
 
         // Getting the column dimensions.
@@ -1809,7 +1802,8 @@ var SnippetsMenu = Widget.extend({
         // Prepare snippets editor environment
         this.$snippetEditorArea = $('<div/>', {
             id: 'oe_manipulators',
-        }).insertAfter(this.$el);
+        });
+        this.$body.prepend(this.$snippetEditorArea);
 
         // Active snippet editor on click in the page
         this.$document.on('click.snippets_menu', '*', this._onClick);
