@@ -2028,7 +2028,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert_date
 #: model:ir.model.fields,field_description:stock.field_stock_picking__delay_alert_date
 msgid "Delay Alert Date"
-msgstr ""
+msgstr "Varsel for dato forsinkelse"
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:0
@@ -2489,7 +2489,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_scrap__tracking
 #: model:ir.model.fields,help:stock.field_stock_track_line__tracking
 msgid "Ensure the traceability of a storable product in your warehouse."
-msgstr ""
+msgstr "Sikre sporbarhet for produkter i ditt lager."
 
 #. module: stock
 #. openerp-web
@@ -2542,7 +2542,7 @@ msgstr "Eksp"
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Exp %s"
-msgstr ""
+msgstr "Exp %s"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__products_availability_state__expected
@@ -2663,6 +2663,10 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
+"Prognose for kvantum (Kalkulert som antall på lager - utgående + innkommende)\n"
+"For en lagerlokasjon inkuderer dette beholdning på lokasjonen og alle underlokasjoner.\n"
+"For et enkelt lager inkluderer dette beholdning på lagerets lokasjon og alle underlokasjoner,\n"
+"Eller inkluderer dette alle beholdnger på lokasjoner av type intern."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__free_qty
@@ -2874,7 +2878,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__has_message
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Har melding"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_line_exist
