@@ -180,7 +180,7 @@ class AccountEdiFormat(models.Model):
                 ('company_id', '=', self.env.company.id), ('type', '=', 'purchase')
             ], limit=1)
 
-        if not self._is_ubl_cii_available(journal.company_id):
+        if not self._is_ubl_cii_available(journal.company_id) and self.code != 'facturx_1_0_05':
             return super()._create_invoice_from_xml_tree(filename, tree, journal=journal)
 
         # infer the xml builder
@@ -197,7 +197,7 @@ class AccountEdiFormat(models.Model):
         # EXTENDS account_edi
         self.ensure_one()
 
-        if not self._is_ubl_cii_available(invoice.company_id):
+        if not self._is_ubl_cii_available(invoice.company_id) and self.code != 'facturx_1_0_05':
             return super()._update_invoice_from_xml_tree(filename, tree, invoice)
 
         # infer the xml builder
