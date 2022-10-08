@@ -1,26 +1,8 @@
 // = Onboarding Panel
 // ============================================================================
+$o-onboarding-step-width: map-get($container-max-widths, 'lg') / 4 !default;
+
 .o_onboarding_main {
-    $o-onboarding-base-time: 0.5s;
-    $o-onboarding-dot-size: 20px;
-    $o-onboarding-progress-size: 2px;
-    $o-onboarding-step-width: map-get($container-max-widths, 'lg') / 4;
-
-    $o-onboarding-colors: (
-        'blue': (
-            'bg': (#60ABC3, #4187AE),
-            'ui': (#fcb157, #FBEEC8),
-        ),
-        'orange': (
-            'bg': (#DA9D77, #B9684F),
-            'ui': (#0774f4, #68B3C9),
-        ),
-        'violet': (
-            'bg': (#6070C3, #475DA4),
-            'ui': (#F39D9B, #FBEEC8),
-        ),
-    );
-
     background: white center top;
     background-size: cover;
 
