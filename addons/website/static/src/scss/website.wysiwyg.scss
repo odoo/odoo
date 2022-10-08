@@ -46,7 +46,7 @@ html[data-edit_translations="1"] {
 
     &::before {
         position: absolute;
-        // Content is 0px wide => use available width. 
+        // Content is 0px wide => use available width.
         width: -webkit-fill-available;
         width: -moz-available;
         right: 20px;
@@ -255,4 +255,10 @@ $i: 1;
     .pac-item-query {
         color: $o-we-sidebar-content-field-clickable-color;
     }
+}
+
+// Editor UI
+.o_table_ui {
+    // TODO make a proper way to not instantiate table UI in the website.
+    display: none !important;
 }
