@@ -169,7 +169,7 @@ export default class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
      *
      * @returns { boolean } true if the given filter is active
      */
-    isFilterActive(id) {
+    isGlobalFilterActive(id) {
         const { type } = this.getters.getGlobalFilter(id);
         const value = this.getGlobalFilterValue(id);
         switch (type) {
@@ -191,8 +191,9 @@ export default class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
      * @returns {number}
      */
     getActiveFilterCount() {
-        return this.getters.getGlobalFilters().filter((filter) => this.isFilterActive(filter.id))
-            .length;
+        return this.getters
+            .getGlobalFilters()
+            .filter((filter) => this.isGlobalFilterActive(filter.id)).length;
     }
 
     getFilterDisplayValue(filterName) {
@@ -322,7 +323,7 @@ export default class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
      * @returns {Domain|undefined}
      */
     _getDateDomain(filter, fieldMatching) {
-        if (!this.isFilterActive(filter.id)) {
+        if (!this.isGlobalFilterActive(filter.id)) {
             return undefined;
         }
         let granularity;
@@ -454,5 +455,5 @@ GlobalFiltersUIPlugin.getters = [
     "getGlobalFilterDomain",
     "getGlobalFilterValue",
     "getActiveFilterCount",
-    "isFilterActive",
+    "isGlobalFilterActive",
 ];
