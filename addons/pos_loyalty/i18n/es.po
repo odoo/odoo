@@ -3,13 +3,14 @@
 # 	* pos_loyalty
 # 
 # Translators:
+# marcescu, 2022
 # Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-27 15:11+0000\n"
+"POT-Creation-Date: 2022-10-04 09:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
@@ -32,6 +33,16 @@ msgstr ""
 #: code:addons/pos_loyalty/static/src/js/PartnerLine.js:0
 #, python-format
 msgid "%s Points"
+msgstr ""
+
+#. module: pos_loyalty
+#: model:loyalty.program,name:pos_loyalty.15_pc_on_next_order
+msgid "15% on next order"
+msgstr "15% en la próxima orden"
+
+#. module: pos_loyalty
+#: model:loyalty.reward,description:pos_loyalty.15_pc_on_next_order_reward
+msgid "15% on your order"
 msgstr ""
 
 #. module: pos_loyalty
@@ -127,6 +138,13 @@ msgid "Coupon Codes"
 msgstr "Códigos de cupones"
 
 #. module: pos_loyalty
+#: model:loyalty.program,portal_point_name:pos_loyalty.15_pc_on_next_order
+#: model:loyalty.reward,point_name:pos_loyalty.15_pc_on_next_order_reward
+#: model:loyalty.rule,reward_point_name:pos_loyalty.15_pc_on_next_order_rule
+msgid "Coupon point(s)"
+msgstr ""
+
+#. module: pos_loyalty
 #. openerp-web
 #: code:addons/pos_loyalty/static/src/xml/Orderline.xml:0
 #, python-format
@@ -186,6 +204,11 @@ msgstr "Error"
 #: code:addons/pos_loyalty/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Error validating rewards"
+msgstr ""
+
+#. module: pos_loyalty
+#: model:loyalty.reward,description:pos_loyalty.loyalty_program_reward
+msgid "Free Product - Simple Pen"
 msgstr ""
 
 #. module: pos_loyalty
@@ -264,7 +287,15 @@ msgid "Loyalty Coupon"
 msgstr ""
 
 #. module: pos_loyalty
+#: model:loyalty.program,portal_point_name:pos_loyalty.loyalty_program
+#: model:loyalty.reward,point_name:pos_loyalty.loyalty_program_reward
+#: model:loyalty.rule,reward_point_name:pos_loyalty.loyalty_program_rule
+msgid "Loyalty Points"
+msgstr "Puntos de lealtad"
+
+#. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_loyalty_program
+#: model:loyalty.program,name:pos_loyalty.loyalty_program
 msgid "Loyalty Program"
 msgstr "Programa de Lealtad"
 
@@ -448,6 +479,12 @@ msgid "Select program"
 msgstr ""
 
 #. module: pos_loyalty
+#: model:product.product,name:pos_loyalty.simple_pen
+#: model:product.template,name:pos_loyalty.simple_pen_product_template
+msgid "Simple Pen"
+msgstr "Pluma simple"
+
+#. module: pos_loyalty
 #: code:addons/pos_loyalty/models/pos_order.py:0
 #, python-format
 msgid ""
@@ -589,6 +626,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_loyalty.field_barcode_rule__type
 msgid "Type"
 msgstr "Tipo"
+
+#. module: pos_loyalty
+#: model:product.product,uom_name:pos_loyalty.simple_pen
+#: model:product.template,uom_name:pos_loyalty.simple_pen_product_template
+msgid "Units"
+msgstr "Unidades"
 
 #. module: pos_loyalty
 #. openerp-web

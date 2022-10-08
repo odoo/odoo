@@ -9,9 +9,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2022-10-04 09:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
 "Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -117,8 +117,8 @@ msgstr "添加新的预填充选项"
 
 #. module: website_payment
 #. openerp-web
-#: code:addons/website_payment/static/src/snippets/s_donation/000.xml:0
-#: code:addons/website_payment/static/src/snippets/s_donation/000.xml:0
+#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
+#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
 #, python-format
 msgid "Amount"
 msgstr "金额"
@@ -140,7 +140,7 @@ msgstr "照顾宝宝1个月。"
 
 #. module: website_payment
 #. openerp-web
-#: code:addons/website_payment/static/src/snippets/s_donation/000.xml:0
+#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
 #, python-format
 msgid "Choose Your Amount"
 msgstr "选择您的金额"
@@ -191,8 +191,8 @@ msgstr "国家..."
 
 #. module: website_payment
 #. openerp-web
-#: code:addons/website_payment/static/src/snippets/s_donation/000.xml:0
-#: code:addons/website_payment/static/src/snippets/s_donation/000.xml:0
+#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
+#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_input
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 #, python-format
@@ -226,7 +226,6 @@ msgid "Donate Now"
 msgstr "现在打赏"
 
 #. module: website_payment
-#: model:mail.template,name:website_payment.mail_template_donation
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 #: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
 msgid "Donation"
@@ -527,6 +526,11 @@ msgstr "我们无法获得付款费用。"
 #: model:ir.model.fields,field_description:website_payment.field_payment_provider__website_id
 msgid "Website"
 msgstr "网站"
+
+#. module: website_payment
+#: model:mail.template,name:website_payment.mail_template_donation
+msgid "Website: Donation"
+msgstr ""
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout

@@ -3,16 +3,17 @@
 # 	* sales_team
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2022-10-04 09:25+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -168,6 +169,11 @@ msgid "Configuration"
 msgstr "配置"
 
 #. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor7
+msgid "Consulting"
+msgstr "咨询"
+
+#. module: sales_team
 #: model:ir.model,name:sales_team.model_res_partner
 msgid "Contact"
 msgstr "联系人"
@@ -221,6 +227,11 @@ msgstr "数据仪表图"
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_sales
 msgid "Define a new sales team"
 msgstr "定义一个新的销售团队"
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor5
+msgid "Design"
+msgstr "设计"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__display_name
@@ -303,9 +314,7 @@ msgstr "确认后, 出现提示消息."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error
-#: model:ir.model.fields,help:sales_team.field_crm_team__message_has_sms_error
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__message_has_error
-#: model:ir.model.fields,help:sales_team.field_crm_team_member__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "如果勾选此项， 某些消息将会产生传递错误。"
 
@@ -333,6 +342,11 @@ msgstr "图像"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_128
 msgid "Image (128)"
 msgstr "图像 (128)"
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor4
+msgid "Information"
+msgstr "信息"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_is_follower
@@ -447,6 +461,11 @@ msgid "Number of messages with delivery error"
 msgstr "发送错误的消息数量"
 
 #. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor8
+msgid "Other"
+msgstr "其他"
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__phone
 msgid "Phone"
 msgstr "电话"
@@ -457,10 +476,14 @@ msgid "Point of Sale"
 msgstr "销售点"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_sms_error
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "短信发送错误"
+#: model:crm.team,name:sales_team.crm_team_1
+msgid "Pre-Sales"
+msgstr "售前服务"
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor1
+msgid "Product"
+msgstr "产品"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.team_sales_department
@@ -540,9 +563,19 @@ msgid "Sequence"
 msgstr "序号"
 
 #. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor3
+msgid "Services"
+msgstr "服务"
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_favorite
 msgid "Show on dashboard"
 msgstr "显示仪表"
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor2
+msgid "Software"
+msgstr "软件"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__name
@@ -611,6 +644,11 @@ msgid ""
 "To add a Salesperson into multiple Teams, activate the Multi-Team option in "
 "settings."
 msgstr "要将一个销售人员加入多个团队，请在设置中激活多团队选项。"
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor6
+msgid "Training"
+msgstr "培训"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__user_in_teams_ids
@@ -693,18 +731,6 @@ msgstr "分配给这个团队的用户。"
 #: model:crm.team,name:sales_team.salesteam_website_sales
 msgid "Website"
 msgstr "网站"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__website_message_ids
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__website_message_ids
-msgid "Website Messages"
-msgstr "网站消息"
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team__website_message_ids
-#: model:ir.model.fields,help:sales_team.field_crm_team_member__website_message_ids
-msgid "Website communication history"
-msgstr "网上沟通记录"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team_member.py:0

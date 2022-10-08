@@ -3,16 +3,16 @@
 # 	* gamification
 # 
 # Translators:
-# Malaz Abuidris <msea@odoo.com>, 2022
 # Martin Trigaux, 2022
+# Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2022-10-04 09:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1041,11 +1041,6 @@ msgstr ""
 "هذا الحقل."
 
 #. module: gamification
-#: model:mail.template,name:gamification.simple_report_template
-msgid "Challenge: Simple Challenge Report Progress"
-msgstr "تحدي: تقدُّم تقرير التحدي البسيط "
-
-#. module: gamification
 #: model:ir.actions.act_window,name:gamification.challenge_list_action
 #: model:ir.ui.menu,name:gamification.gamification_challenge_menu
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_list_view
@@ -1449,6 +1444,16 @@ msgid "Gamification generic goal for challenge"
 msgstr "التلعيب: هدف التحدي العام "
 
 #. module: gamification
+#: model:mail.template,name:gamification.email_template_badge_received
+msgid "Gamification: Badge Received"
+msgstr ""
+
+#. module: gamification
+#: model:mail.template,name:gamification.simple_report_template
+msgid "Gamification: Challenge Report"
+msgstr ""
+
+#. module: gamification
 #: model:ir.actions.server,name:gamification.ir_cron_check_challenge_ir_actions_server
 #: model:ir.cron,cron_name:gamification.ir_cron_check_challenge
 #: model:ir.cron,name:gamification.ir_cron_check_challenge
@@ -1461,6 +1466,16 @@ msgstr "التلعيب: التحقق من هدف التحدي "
 #: model:ir.cron,name:gamification.ir_cron_consolidate_last_month
 msgid "Gamification: Karma tracking consolidation"
 msgstr "التلعيب: تجميع تتبع الكارما "
+
+#. module: gamification
+#: model:mail.template,name:gamification.mail_template_data_new_rank_reached
+msgid "Gamification: New Rank Reached"
+msgstr ""
+
+#. module: gamification
+#: model:mail.template,name:gamification.email_template_goal_reminder
+msgid "Gamification: Reminder For Goal Update"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__goal_id
@@ -1512,11 +1527,6 @@ msgstr "تم الوصول إلى الهدف "
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "Goal definitions"
 msgstr "تعريفات الهدف"
-
-#. module: gamification
-#: model:mail.template,name:gamification.email_template_goal_reminder
-msgid "Goal: Reminder for Goal Update"
-msgstr "الهدف: تذكير لتحديث الهدف "
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.goal_list_action
@@ -2146,24 +2156,24 @@ msgid "Ranks List"
 msgstr "قائمة الرتب "
 
 #. module: gamification
-#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_master
-msgid "Reach the next rank and become a Master!"
-msgstr ""
-
-#. module: gamification
-#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_doctor
-msgid "Reach the next rank and become a powerful user!"
-msgstr ""
-
-#. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_bachelor
-msgid "Reach the next rank to improve your status!"
-msgstr ""
+msgid "Reach the next rank and gain a very magic wand !"
+msgstr "تمكن من الوصول إلى الرتبة التالية وستحصل على عصاً سحرية! "
+
+#. module: gamification
+#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_master
+msgid "Reach the next rank and gain a very nice hat !"
+msgstr "تمكن من الوصول إلى الرتبة التالية وستحصل على قبعة رائعة! "
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_student
-msgid "Reach the next rank to show the rest of the world you exist."
-msgstr ""
+msgid "Reach the next rank and gain a very nice mug !"
+msgstr "تمكن من الوصول إلى الرتبة التالية وستحصل على كوب رائع! "
+
+#. module: gamification
+#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_doctor
+msgid "Reach the next rank and gain a very nice unicorn !"
+msgstr "تمكن من الوصول إلى الرتبة التالية وستحصل على وحيد قرن رائع! "
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__reached
@@ -2174,11 +2184,6 @@ msgstr "تم الوصول "
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Reached when current value is"
 msgstr "تصل إليه عندما تكون القيمة الحالية "
-
-#. module: gamification
-#: model:mail.template,name:gamification.email_template_badge_received
-msgid "Received Badge"
-msgstr "الشارة المستلمة "
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__computation_mode__manually
@@ -2352,6 +2357,11 @@ msgid "Send Report"
 msgstr "إرسال التقرير"
 
 #. module: gamification
+#: model:mail.template,description:gamification.simple_report_template
+msgid "Send a challenge report to all participants"
+msgstr ""
+
+#. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__report_message_group_id
 msgid "Send a copy to"
 msgstr "إرسال نسخة إلى"
@@ -2360,6 +2370,21 @@ msgstr "إرسال نسخة إلى"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__sender_id
 msgid "Sender"
 msgstr "المرسل"
+
+#. module: gamification
+#: model:mail.template,description:gamification.email_template_goal_reminder
+msgid "Sent automatically to participant who haven't updated their goal"
+msgstr ""
+
+#. module: gamification
+#: model:mail.template,description:gamification.email_template_badge_received
+msgid "Sent automatically to the user who received a badge"
+msgstr ""
+
+#. module: gamification
+#: model:mail.template,description:gamification.mail_template_data_new_rank_reached
+msgid "Sent automatically when user reaches a new rank"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__sequence
@@ -2760,11 +2785,6 @@ msgstr "المستخدم"
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__user_domain
 msgid "User domain"
 msgstr "نطاق المستخدم"
-
-#. module: gamification
-#: model:mail.template,name:gamification.mail_template_data_new_rank_reached
-msgid "User: New rank reached"
-msgstr "المستخدم: تم الوصول إلى رتبة جديدة "
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.action_current_rank_users

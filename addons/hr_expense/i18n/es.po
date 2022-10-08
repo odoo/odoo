@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-27 15:11+0000\n"
+"POT-Creation-Date: 2022-10-04 09:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
@@ -50,61 +50,6 @@ msgid ""
 msgstr ""
 "<i class=\"text-muted oe_edit_only\">Utiliza esta referencia como prefijo de"
 " asunto cuando envíes por correo electrónico.</i>"
-
-#. module: hr_expense
-#. openerp-web
-#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
-#, python-format
-msgid ""
-"<p>Approve the report here.</p><p>Tip: if you refuse, don’t forget to give "
-"the reason thanks to the hereunder message tool</p>"
-msgstr ""
-"<p>Aprueba el informe aquí.</p><p>Consejo: si lo rechazas, no olvides dar "
-"una razón con la herramienta de mensajería que hay a continuación</p>"
-
-#. module: hr_expense
-#. openerp-web
-#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
-#, python-format
-msgid ""
-"<p>Click on <b> Action Create Report </b> to submit selected expenses to "
-"your manager</p>"
-msgstr ""
-"<p>Haz clic en <b>Acción Crear informe</b> para enviar los gastos "
-"seleccionados a tu gerente</p>"
-
-#. module: hr_expense
-#. openerp-web
-#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
-#, python-format
-msgid "<p>Click on <b> Create Report </b> to create the report.</p>"
-msgstr "<p>Haz clic en <b>Crear informe</b> para crear el informe.</p>"
-
-#. module: hr_expense
-#. openerp-web
-#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
-#, python-format
-msgid "<p>Once your <b> Expense </b> is ready, you can save it.</p>"
-msgstr "<p>Una vez que tu <b> Gasto </b> esté listo, puedes guardarlo.</p>"
-
-#. module: hr_expense
-#. openerp-web
-#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
-#, python-format
-msgid "<p>Select expenses to submit them to your manager</p>"
-msgstr "<p>Selecciona gastos para enviar a tu responsable</p>"
-
-#. module: hr_expense
-#. openerp-web
-#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
-#, python-format
-msgid ""
-"<p>The accountant receive approved expense reports.</p><p>He can post "
-"journal entries in one click if taxes and accounts are right.</p>"
-msgstr ""
-"<p>El contador recibe informes de gasto aprobados.</p><p>Él puede "
-"contabilizar asientos con un clic si los impuestos y las cuentas están "
-"bien.</p>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -288,16 +233,13 @@ msgstr "Un informe de gastos debe contener solo líneas de la misma compañía."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__analytic_distribution
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__analytic_distribution
 msgid "Analytic"
 msgstr "Analítico"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__analytic_account_id
-msgid "Analytic Account"
-msgstr "Cuenta analítica"
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__analytic_distribution_stored_char
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__analytic_distribution_stored_char
 msgid "Analytic Distribution Stored Char"
 msgstr ""
 
@@ -312,8 +254,11 @@ msgid "Approval Date"
 msgstr "Fecha de aprobación"
 
 #. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+#, python-format
 msgid "Approve"
 msgstr "Aprobar"
 
@@ -347,7 +292,10 @@ msgid "Archived"
 msgstr "Archivado"
 
 #. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+#, python-format
 msgid "Attach Receipt"
 msgstr "Adjuntar recibo."
 
@@ -355,8 +303,8 @@ msgstr "Adjuntar recibo."
 #. openerp-web
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
-msgid "Attach your receipt here."
-msgstr "Adjunta tu recibo aquí."
+msgid "Attach a receipt - usually an image or a PDF file."
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_attachment_count
@@ -475,6 +423,7 @@ msgstr "Crear"
 
 #. module: hr_expense
 #. openerp-web
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #: code:addons/hr_expense/static/src/views/list.xml:0
 #: code:addons/hr_expense/static/src/xml/documents_upload_views.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -487,6 +436,13 @@ msgstr "Crear informe"
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_all
 msgid "Create a new expense report"
 msgstr "Crear nuevo informe de gastos"
+
+#. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#, python-format
+msgid "Create a report to submit one or more expenses to your manager."
+msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -681,6 +637,16 @@ msgid "Employee Home Address"
 msgstr "Dirección particular del empleado"
 
 #. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#, python-format
+msgid ""
+"Enter a name then choose a category and configure the amount of your "
+"expense."
+msgstr ""
+
+#. module: hr_expense
+#: model:account.journal,name:hr_expense.hr_expense_account_journal
 #: model:ir.model,name:hr_expense.model_hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_move_line__expense_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__expense_manager_id
@@ -1101,6 +1067,14 @@ msgid "Is product with non zero cost selected"
 msgstr "¿Se selecciona el producto con costo distinto de cero?"
 
 #. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#, python-format
+msgid "It all begins here - let's go!"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_journal
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 msgid "Journal"
@@ -1165,6 +1139,20 @@ msgid "Let your employees record expenses by email"
 msgstr "Permite que tus empleados registren sus gastos por correo electrónico"
 
 #. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#, python-format
+msgid "Let's check out where you can manage all your employees expenses"
+msgstr ""
+
+#. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#, python-format
+msgid "Let's go back to your expenses."
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_main_attachment_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_main_attachment_id
 msgid "Main Attachment"
@@ -1179,10 +1167,18 @@ msgstr "Gerente"
 #. openerp-web
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
-msgid "Managers can get all reports to approve from this menu."
+msgid ""
+"Managers can approve the report here, then an accountant can post the "
+"accounting entries."
 msgstr ""
-"Los gerentes pueden acceder a todos los informes por aprobar desde este "
-"menú."
+
+#. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#, python-format
+msgid "Managers can inspect all expenses from here."
+msgstr ""
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.expense_product_meal
@@ -1371,11 +1367,9 @@ msgstr ""
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid ""
-"Once your <b>Expense report</b> is ready, you can submit it to your manager "
-"and wait for the approval from your manager."
+"Once your <b>Expense Report</b> is ready, you can submit it to your manager "
+"and wait for approval."
 msgstr ""
-"Una vez que tu <b>informe de gastos</b> esté listo, puedes enviarlo a tu "
-"gerente y esperar por su aprobación."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -1511,6 +1505,16 @@ msgstr "Cant."
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__quantity
 msgid "Quantity"
 msgstr "Cantidad"
+
+#. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#, python-format
+msgid ""
+"Ready? You can save it manually or discard modifications from here. You "
+"don't <em>need to save</em> - Odoo will save eveyrthing for you when you "
+"navigate."
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__reason
@@ -1788,7 +1792,10 @@ msgid "Submit"
 msgstr "Enviar"
 
 #. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+#, python-format
 msgid "Submit to Manager"
 msgstr "Enviar al gerente"
 
@@ -1837,16 +1844,6 @@ msgstr "Impuestos"
 #: model:res.groups,name:hr_expense.group_hr_expense_team_approver
 msgid "Team Approver"
 msgstr "Aprobador de equipo"
-
-#. module: hr_expense
-#. openerp-web
-#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
-#, python-format
-msgid ""
-"The accountant can register a payment to reimburse the employee directly."
-msgstr ""
-"El contador puede registrar un pago para reembolsar al empleado "
-"directamente."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__company_expense_journal_id
@@ -1911,6 +1908,13 @@ msgstr ""
 "El método de pago usado cuando el gasto ha sido pagado por la empresa."
 
 #. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#, python-format
+msgid "The status of all your current expenses is visible from here."
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_split_wizard__split_possible
 msgid "The sum of after split shut remain the same"
 msgstr ""
@@ -1920,6 +1924,13 @@ msgstr ""
 #, python-format
 msgid "There are no expense reports to approve."
 msgstr "No hay ningún reporte de gastos por aprobar."
+
+#. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#, python-format
+msgid "There you go - expense management in a nutshell!"
+msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -2045,6 +2056,13 @@ msgid "Upload"
 msgstr "Subir"
 
 #. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#, python-format
+msgid "Use the breadcrumbs to go back to the list of expenses."
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_res_users
 msgid "User"
 msgstr "Usuario"
@@ -2074,8 +2092,9 @@ msgstr "Ver informe"
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
-msgid "Want to manage your expenses? It starts here."
-msgstr "¿Quieres gestionar tus gastos? Comienza aquí."
+msgid "Wasting time recording your receipts? Let’s try a better way."
+msgstr ""
+"¿Perdiendo el tiempo registrando tus recibos? Probemos una forma mejor."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__website_message_ids

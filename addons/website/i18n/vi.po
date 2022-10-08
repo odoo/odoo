@@ -6,17 +6,19 @@
 # odooviet <cuong.nm@ictech.vn>, 2022
 # Thin Tran <trvathin@gmail.com>, 2022
 # Cécile Collart <cco@odoo.com>, 2022
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
 # Trần Hà <tranthuha13590@gmail.com>, 2022
+# Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2022
 # Martin Trigaux, 2022
+# Vo Thanh Thuy, 2022
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-27 15:11+0000\n"
+"POT-Creation-Date: 2022-10-04 09:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,6 +32,12 @@ msgstr ""
 #, python-format
 msgid " Add Images"
 msgstr " Thêm hình"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "\" alert with a"
+msgstr "\" kèm với "
 
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
@@ -257,6 +265,7 @@ msgstr ""
 
 #. module: website
 #: model:website,contact_us_button_url:website.default_website
+#: model:website,contact_us_button_url:website.website2
 #: model_terms:ir.ui.view,arch_db:website.layout
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "/contactus"
@@ -319,6 +328,12 @@ msgid "15 km"
 msgstr "15 km"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "2 <span class=\"visually-hidden\">(current)</span>"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "2 km"
 msgstr "2 km"
@@ -354,8 +369,10 @@ msgid "24x7 toll-free support"
 msgstr "hỗ trợ gọi miễn phí (toll-free) 24x7"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_hr_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "25%"
 msgstr "25%"
 
@@ -780,6 +797,11 @@ msgstr ""
 "                            <span>Đã kết nối</span>"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
+msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.page_404
 msgid ""
 "<i class=\"fa fa-info-circle\"/> Edit the content below this line to adapt "
@@ -955,9 +977,35 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid ""
+"<small id=\"emailHelp\" class=\"form-text text-muted\">Form field help "
+"text</small>"
+msgstr ""
+"<small id=\"emailHelp\" class=\"form-text text-muted\">Hướng dẫn trường văn "
+"bản</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid ""
+"<small id=\"emailHelp\" class=\"form-text text-muted\">We'll never share "
+"your email with anyone else.</small>"
+msgstr ""
+"<small id=\"emailHelp\" class=\"form-text text-muted\">Chúng tôi sẽ không "
+"bao giờ chia sẻ email của bạn với bất cứ ai khác.</small>"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "<small>/ month</small>"
 msgstr "<small>/ tháng</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "<small>TABS</small>"
+msgstr "<small>TAB</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_header_magazine_oe_structure_header_magazine_1
@@ -1082,6 +1130,13 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Sitemap</span>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.cookies_bar
+msgid ""
+"<span class=\"pe-1\">We use cookies to provide you a better user experience "
+"on this website.</span>"
 msgstr ""
 
 #. module: website
@@ -1396,6 +1451,8 @@ msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__redirect_type
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Action"
 msgstr "Thực hiện"
 
@@ -1404,7 +1461,9 @@ msgstr "Thực hiện"
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__active
 #: model:ir.model.fields,field_description:website.field_website_page__active
 #: model:ir.model.fields,field_description:website.field_website_rewrite__active
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "Active"
 msgstr "Đang hoạt động"
 
@@ -1571,17 +1630,6 @@ msgid "Add to menu"
 msgstr "Thêm trình đơn"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:0
-#, python-format
-msgid ""
-"Adding a font requires a reload of the page. This will save all your "
-"changes."
-msgstr ""
-"Thêm phông chữ yêu cầu tải lại trang. Điều này sẽ lưu tất cả các thay đổi "
-"của bạn."
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_google_map_options
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "Address"
@@ -1589,13 +1637,19 @@ msgstr "Địa chỉ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
-msgid "Advertising &amp; Marketing"
-msgstr "Quảng cáo &amp; Marketing"
+msgid "Advertising &amp; Marketing<br/>(optional)"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_asset__directive__after
 msgid "After"
 msgstr "Sau"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Alert"
+msgstr "Cảnh báo"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list_options
@@ -1679,6 +1733,20 @@ msgstr "Tất cả kết quả"
 msgid "All these icons are completely free for commercial use."
 msgstr ""
 "Tất cả các biểu tượng này là hoàn toàn miễn phí cho mục đích thương mại."
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.cookies_bar.xml:0
+#, python-format
+msgid "Allow all cookies"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.cookies_bar.xml:0
+#, python-format
+msgid "Allow the use of cookies from this website on this browser?"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_ir_ui_view__track
@@ -1783,7 +1851,6 @@ msgstr "Đã xảy ra lỗi trong khi kết xuất mẫu"
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #: model:ir.actions.client,name:website.backend_dashboard
 #: model:ir.ui.menu,name:website.menu_website_analytics
-#: model_terms:ir.ui.view,arch_db:website.cookie_policy
 #, python-format
 msgid "Analytics"
 msgstr "Phân tích"
@@ -1792,6 +1859,11 @@ msgstr "Phân tích"
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "Analytics cookies and privacy information."
 msgstr "Cookie phân tích và thông tin bảo mật."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid "Analytics<br/>(optional)"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -1978,6 +2050,12 @@ msgid "Autoredirect Language"
 msgstr "Tự động nhận dạng Ngôn ngữ"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Autosizing"
+msgstr "Tự động định cỡ"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_published
 msgid "Available on the Website"
@@ -1989,6 +2067,12 @@ msgstr "Khả dụng ở Website"
 #, python-format
 msgid "BSgzTvR5L1GB9jriT451iTN4huVPxHmltG6T6eo"
 msgstr "BSgzTvR5L1GB9jriT451iTN4huVPxHmltG6T6eo"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "BTS Base Colors"
+msgstr "Màu cơ sở BTS"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -2012,6 +2096,12 @@ msgstr "Nền"
 #, python-format
 msgid "Background Shape"
 msgstr "Hình dạng nền"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Badge"
+msgstr "Huy hiệu"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
@@ -2205,6 +2295,14 @@ msgid "Boxes"
 msgstr "Hộp"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "Breadcrumb"
+msgstr "Breadcrumb"
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
@@ -2236,7 +2334,9 @@ msgid "Bundle"
 msgstr "Nhóm"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Button"
 msgstr "Nút"
 
@@ -2250,14 +2350,6 @@ msgstr "Vị trí nút"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Buttons"
 msgstr "Nút"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.cookies_bar.xml:0
-#, python-format
-msgid "By clicking on this banner, you give us permission to collect data."
-msgstr ""
-"Bằng cách nhấp vào biểu ngữ này, bạn cho phép chúng tôi thu thập dữ liệu."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__cdn_url
@@ -2335,6 +2427,30 @@ msgstr ""
 #, python-format
 msgid "Cannot load google map."
 msgstr "Không thể tải bản đồ google."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Card"
+msgstr "Thẻ"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Card Body"
+msgstr "Thân thẻ"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Card Footer"
+msgstr "Chân thẻ"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Card Header"
+msgstr "Đầu thẻ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse_options
@@ -2716,7 +2832,9 @@ msgid "Complete CRM for any size team"
 msgstr "CRM hoàn chỉnh cho mọi cỡ công ty"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Components"
 msgstr "Thành phần"
 
@@ -2889,7 +3007,6 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -3190,6 +3307,10 @@ msgstr "Vượt qua"
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/services/website_service.js:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 #, python-format
 msgid "Data"
 msgstr "Dữ liệu"
@@ -3448,6 +3569,11 @@ msgid "Detect"
 msgstr "Phát hiện"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Device"
+msgstr "Thiết bị"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Direction"
@@ -3464,6 +3590,14 @@ msgstr "Chỉ dẫn"
 #: model:ir.cron,name:website.website_disable_unused_snippets_assets
 msgid "Disable unused snippets assets"
 msgstr "Tắt các snippets assets không sử dụng"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "Disabled"
+msgstr "Đã vô hiệu"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -3721,7 +3855,9 @@ msgid "Dresses"
 msgstr "Váy"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Dropdown"
 msgstr "Thả xuống"
 
@@ -3903,6 +4039,12 @@ msgid "Email &amp; Marketing"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Email address"
+msgstr "Địa chỉ email"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Email support"
 msgstr "Hỗ trợ qua Email"
@@ -3953,6 +4095,12 @@ msgstr "Nhập mã sẽ được thêm vào mọi trang trên trang web của b�
 msgid ""
 "Enter code that will be added into the <head> of every page of your site."
 msgstr "Nhập mã sẽ được thêm vào <head> mỗi trang trên trang web của bạn."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Enter email"
+msgstr "Nhập email"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
@@ -4372,6 +4520,12 @@ msgid "Footer Visible"
 msgstr "Chân trang hiển thị"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Form"
+msgstr "Mẫu"
+
+#. module: website
 #: model:ir.model.fields,help:website.field_ir_model__website_form_label
 msgid ""
 "Form action label. Ex: crm.lead could be 'Send an e-mail' and project.issue "
@@ -4714,6 +4868,18 @@ msgid "H2"
 msgstr "H2"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "H4 Card title"
+msgstr "Tiêu đề thẻ H4"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "H5 Card subtitle"
+msgstr "Tiêu đề phụ thẻ H5"
+
+#. module: website
 #: model:ir.ui.menu,name:website.menu_ace_editor
 msgid "HTML / CSS Editor"
 msgstr ""
@@ -4761,6 +4927,12 @@ msgid "Has Social Default Image"
 msgstr "Có hình ảnh mặc định trên mạng xã hội"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Header"
+msgstr "Đầu trang"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_page__header_color
 #: model:ir.model.fields,field_description:website.field_website_page__header_color
 msgid "Header Color"
@@ -4787,6 +4959,42 @@ msgstr "Tiêu đề Hiển thị"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Headings"
 msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Headings 1"
+msgstr "Tiêu đề 1"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Headings 2"
+msgstr "Tiêu đề 2"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Headings 3"
+msgstr "Tiêu đề 3"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Headings 4"
+msgstr "Tiêu đề 4"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Headings 5"
+msgstr "Tiêu đề 5"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Headings 6"
+msgstr "Tiêu đề 6"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -4837,13 +5045,6 @@ msgid "Hidden for"
 msgstr "Ẩn cho"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/editor/snippets.options.js:0
-#, python-format
-msgid "Hidden on mobile"
-msgstr "Ẩn trên di động"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Hide"
 msgstr "Ẩn"
@@ -4890,15 +5091,23 @@ msgstr ""
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 #: model:website.menu,name:website.menu_home
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
 #: model_terms:ir.ui.view,arch_db:website.template_footer_headline
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 #: model_terms:ir.ui.view,arch_db:website.template_footer_minimalist
+#: model_terms:website.page,arch_db:website.bs_debug_page
 #, python-format
 msgid "Home"
 msgstr "Trang chủ"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Home <span class=\"visually-hidden\">(current)</span>"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -4908,6 +5117,7 @@ msgstr "Thiết bị âm thanh gia đình"
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/components/views/page_list.xml:0
+#: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 #, python-format
 msgid "Home page of the current website"
 msgstr ""
@@ -4968,8 +5178,6 @@ msgstr "Hybrid"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.cookies_bar.xml:0
-#: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #: model_terms:ir.ui.view,arch_db:website.cookies_bar
 #, python-format
@@ -5157,6 +5365,11 @@ msgid "In"
 msgstr "Trong"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
+msgid "In Main Menu"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "In Place"
 msgstr ""
@@ -5325,8 +5538,8 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
-msgid "Interaction History"
-msgstr "Lịch sử tương tác"
+msgid "Interaction History<br/>(optional)"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
@@ -5500,6 +5713,18 @@ msgid "Item"
 msgstr "Mục"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Item 1"
+msgstr "Mục 1"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Item 2"
+msgstr "Mục 2"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options
 msgid "Items per row"
 msgstr "Số mục mỗi hàng"
@@ -5570,8 +5795,10 @@ msgid "Keywords"
 msgstr "Các từ khóa"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "Label"
 msgstr "Nhãn"
 
@@ -5622,11 +5849,13 @@ msgid "Laptops"
 msgstr "Laptop"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Large"
 msgstr "Rộng"
 
@@ -5845,6 +6074,14 @@ msgid "Let's go!"
 msgstr "Đi thôi nào!"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "Library"
+msgstr "Thư viện"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse_options
 msgid "Light"
 msgstr "Sáng"
@@ -5871,6 +6108,14 @@ msgid "Line Color"
 msgstr "Màu dòng"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "Link"
+msgstr "Liên kết"
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
@@ -5881,6 +6126,18 @@ msgstr "Link Anchor"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Link Style"
 msgstr "Link Style"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Link button"
+msgstr "Nút liên kết"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "Link text"
+msgstr "Nội dung link"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__social_linkedin
@@ -6421,6 +6678,12 @@ msgid "Narrow"
 msgstr "Hẹp"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Navbar"
+msgstr "Navbar"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
 msgid ""
 "Need to pick up your order at one of our stores? Discover the nearest to "
@@ -6492,9 +6755,11 @@ msgstr "Newsletter Popup"
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
+#: model_terms:website.page,arch_db:website.bs_debug_page
 #, python-format
 msgid "Next"
 msgstr "Kế tiếp"
@@ -6585,7 +6850,13 @@ msgstr "Thông thường"
 
 #. module: website
 #: model:website,prevent_zero_price_sale_text:website.default_website
+#: model:website,prevent_zero_price_sale_text:website.website2
 msgid "Not Available For Sale"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
+msgid "Not Published"
 msgstr ""
 
 #. module: website
@@ -6778,6 +7049,13 @@ msgid "Online"
 msgstr "Trực tuyến"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.cookies_bar.xml:0
+#, python-format
+msgid "Only allow essential cookies"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,help:website.field_website_page__mode
 msgid ""
 "Only applies if this view inherits from an other one (inherit_id is not False/Null).\n"
@@ -6799,6 +7077,14 @@ msgstr ""
 "different model than this one), then this view's inheritance specs\n"
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.cookies_bar.xml:0
+#: model_terms:ir.ui.view,arch_db:website.cookies_bar
+#, python-format
+msgid "Only essentials"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -6897,7 +7183,9 @@ msgid "Out"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Outline"
 msgstr "Mục lục"
 
@@ -7049,9 +7337,41 @@ msgid "Pages"
 msgstr "Trang"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Pagination"
+msgstr "Phân trang"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
 msgid "Pants"
 msgstr "Quần"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid ""
+"Paragraph text. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing "
+"elit. <i>Integer posuere erat a ante</i>."
+msgstr ""
+"Đoạn văn. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing elit. "
+"<i>Integer posuere erat a ante</i>."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid ""
+"Paragraph with <strong>bold</strong>, <span class=\"text-"
+"muted\">muted</span> and <em>italic</em> texts"
+msgstr ""
+"Đoạn văn với văn bản <strong>in đậm</strong>, <span class=\"text-muted\">in "
+"mờ</span> và <em>in nghiêng</em>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "Paragraph."
+msgstr "Đoạn văn."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_background_options
@@ -7125,6 +7445,12 @@ msgstr "Chọn một chủ đề"
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 msgid "Pie"
 msgstr "Tròn"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Pill"
+msgstr "Viên"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -7208,13 +7534,19 @@ msgstr "Bưu thiếp"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
-msgid "Preferences"
-msgstr "Tùy chỉnh cá nhân"
+msgid "Preferences<br/>(essential)"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_asset__directive__prepend
 msgid "Prepend"
 msgstr "Prepend"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "Preset"
+msgstr "Kiểu định trước "
 
 #. module: website
 #. openerp-web
@@ -7240,9 +7572,11 @@ msgstr "Xem trước"
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
+#: model_terms:website.page,arch_db:website.bs_debug_page
 #, python-format
 msgid "Previous"
 msgstr "Trước đó"
@@ -7396,6 +7730,7 @@ msgstr "Đăng sự kiện tại chỗ và trực tuyến"
 #: code:addons/website/static/src/systray_items/publish.js:0
 #: model_terms:ir.ui.view,arch_db:website.publish_management
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
+#: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 #: model_terms:ir.ui.view,arch_db:website.website_pages_view_search
 #, python-format
 msgid "Published"
@@ -7732,6 +8067,11 @@ msgid "SEO"
 msgstr "SEO"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
+msgid "SEO Optimized"
+msgstr ""
+
+#. module: website
 #: model:ir.model,name:website.model_website_seo_metadata
 msgid "SEO metadata"
 msgstr "Siêu dữ liệu SEO"
@@ -7855,8 +8195,10 @@ msgid "Scroll down to next section"
 msgstr "Cuộn xuống phần tiếp theo"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.view_view_qweb
 #: model_terms:ir.ui.view,arch_db:website.website_search_box
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Search"
 msgstr "Tìm kiếm"
 
@@ -8011,6 +8353,12 @@ msgid "Separate email addresses with a comma."
 msgstr "Phân cách địa chỉ email bằng dấu phẩy. "
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Separated link"
+msgstr "Link riêng biệt"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__sequence
 #: model:ir.model.fields,field_description:website.field_theme_website_menu__sequence
 #: model:ir.model.fields,field_description:website.field_website__sequence
@@ -8020,6 +8368,13 @@ msgstr "Phân cách địa chỉ email bằng dấu phẩy. "
 #: model:ir.model.fields,field_description:website.field_website_rewrite__sequence
 msgid "Sequence"
 msgstr "Trình tự"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Serve font from Google servers"
+msgstr ""
 
 #. module: website
 #: model:ir.model,name:website.model_ir_actions_server
@@ -8045,12 +8400,13 @@ msgstr "Các dịch vụ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
-msgid "Session &amp; Security"
-msgstr "Phiên &amp; Bảo vệ"
+msgid "Session &amp; Security<br/>(essential)"
+msgstr ""
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_configuration
 #: model:ir.ui.menu,name:website.menu_website_website_settings
+#: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 #: model_terms:ir.ui.view,arch_db:website.website_pages_tree_view
 msgid "Settings"
 msgstr "Thiết lập"
@@ -8183,6 +8539,16 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Show/Hide on Desktop"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Show/Hide on Mobile"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Sidebar"
 msgstr "Sidebar"
 
@@ -8281,11 +8647,13 @@ msgid "Slogan"
 msgstr "Slogan"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Small"
 msgstr "Nhỏ"
 
@@ -8293,6 +8661,16 @@ msgstr "Nhỏ"
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
 msgid "Small Header"
 msgstr "Small Header"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid ""
+"Small text. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing elit. "
+"<i>Integer posuere erat a ante</i>."
+msgstr ""
+"Chữ nhỏ. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing elit. "
+"<i>Integer posuere erat a ante</i>."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -8320,6 +8698,12 @@ msgstr "Xem trước mạng xã hội"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_border_line_widgets
 msgid "Solid"
 msgstr "Rắn"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Something else here"
+msgstr "Nội dung khác"
 
 #. module: website
 #. openerp-web
@@ -8722,6 +9106,12 @@ msgid "Text Position"
 msgstr "Text Position"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "Text muted. Lorem <b>ipsum dolor sit amet</b>, consectetur."
+msgstr "Chữ mờ. Lorem <b>ipsum dolor sit amet</b>, consectetur."
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website_form_editor.xml:0
 #, python-format
@@ -8900,6 +9290,8 @@ msgstr "Chủ đề đính kèm"
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 #, python-format
 msgid "Theme Colors"
 msgstr "Màu sắc chủ đề"
@@ -9032,6 +9424,19 @@ msgid ""
 msgstr ""
 "This field will save the current `arch_db` before writing on it.\n"
 "                                                                         Useful to (soft) reset a broken view."
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "This font is hosted and served to your visitors by Google servers"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "This is a \""
+msgstr "Đây là một cảnh báo \""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_banner
@@ -9206,7 +9611,15 @@ msgstr ""
 " thông tin' trong menu thả xuống * Hành động *."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Toggle"
+msgstr "Chuyển đổi"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.option_header_off_canvas
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Toggle navigation"
 msgstr "Chuyển đổi điều hướng"
 
@@ -9676,6 +10089,12 @@ msgid "Users"
 msgstr "Người dùng"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Utilities &amp; Typography"
+msgstr "Tiện ích &amp; Kiểu chữ"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
 msgid "Value"
 msgstr "Giá trị"
@@ -9789,13 +10208,6 @@ msgstr "Hiện cho đăng xuất"
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__website_published
 msgid "Visible on current website"
 msgstr "Hiển thị ở website hiện tại"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/editor/snippets.options.js:0
-#, python-format
-msgid "Visible on mobile"
-msgstr "Hiện trên di động"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -9976,24 +10388,19 @@ msgstr ""
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.cookies_bar.xml:0
-#: code:addons/website/static/src/xml/website.cookies_bar.xml:0
-#: model_terms:ir.ui.view,arch_db:website.cookies_bar
 #, python-format
-msgid "We use cookies to provide you a better user experience."
+msgid ""
+"We use cookies to provide improved experience on this website. You can learn"
+" more about our cookies and how we use them in our"
 msgstr ""
-"Chúng tôi sử dụng cookie để cung cấp cho bạn trải nghiệm người dùng tốt hơn."
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #, python-format
 msgid ""
-"We use them to store info about your habits on our website. It will helps us"
-" to provide you the very best experience and customize what you see."
+"We use cookies to provide you a better user experience on this website."
 msgstr ""
-"Chúng tôi sử dụng chúng để lưu trữ thông tin về thói quen của bạn trên trang"
-" web của chúng tôi. Nó sẽ giúp chúng tôi cung cấp cho bạn trải nghiệm tốt "
-"nhất và tùy chỉnh những gì bạn thấy."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
@@ -10672,6 +11079,38 @@ msgid "big"
 msgstr "lớn"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "breadcrumb"
+msgstr "breadcrumb"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "btn-outline-primary"
+msgstr "nút-viền-chính"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "btn-outline-secondary"
+msgstr "nút-viền-phụ"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "btn-primary"
+msgstr "nút-chính"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "btn-secondary"
+msgstr "nút-phụ"
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
@@ -10914,6 +11353,12 @@ msgid "ir.ui.view"
 msgstr "ir.ui.view"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "link"
+msgstr "link"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "masonry, grid"
 msgstr "nề, lưới"
@@ -10922,6 +11367,12 @@ msgstr "nề, lưới"
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "menu, pricing"
 msgstr "menu, giá cả"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "o-color-"
+msgstr "o-color-"
 
 #. module: website
 #. openerp-web
@@ -10949,6 +11400,12 @@ msgstr "một website hoàn hảo chưa?"
 #, python-format
 msgid "phone"
 msgstr "điện thoại"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "placeholder"
+msgstr "trình giữ chỗ"
 
 #. module: website
 #. openerp-web
@@ -11010,6 +11467,12 @@ msgstr "thống kê, chỉ số thống kê, KPI"
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "testimonials"
 msgstr "lời chứng thực"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "text link"
+msgstr "văn bản link"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_ui_view__inherit_id__theme_ir_ui_view

@@ -3,16 +3,18 @@
 # 	* sale_timesheet
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Noma Yuki, 2022
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
+# Ryoko Tsuda <ryoko@quartile.co>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:03+0000\n"
+"POT-Creation-Date: 2022-10-04 09:25+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Noma Yuki, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -113,6 +115,13 @@ msgid "<u>Sold</u>"
 msgstr ""
 
 #. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid "About us"
+msgstr "会社概要"
+
+#. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order_line__qty_delivered_method
 msgid ""
 "According to product configuration, the delivered quantity can be automatically computed by mechanism :\n"
@@ -126,6 +135,12 @@ msgstr ""
 "-分析から費用:数量は転記された費用からの数量合計です\n"
 "-タイムシート:数量は時間の合計ですこの販売ラインにリンクされたタスクに記録された\n"
 "-在庫移動:数量は確認済みのピッキングから取得されます"
+
+#. module: sale_timesheet
+#: model:account.analytic.account,name:sale_timesheet.account_analytic_account_project_support
+#: model:project.project,name:sale_timesheet.project_support
+msgid "After-Sales Services"
+msgstr "アフターサービス"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__allocated_hours
@@ -154,6 +169,16 @@ msgstr "分析行"
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__analytic_line_ids
 msgid "Analytic lines"
 msgstr "分析行"
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid ""
+"As a leading professional services firm,\n"
+"                                we know that success is all about the\n"
+"                                commitment we put on strong services."
+msgstr ""
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
@@ -228,6 +253,27 @@ msgstr "請求担当"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billing Type"
 msgstr ""
+
+#. module: sale_timesheet
+#: model:project.task,legend_blocked:sale_timesheet.agr_task_1
+#: model:project.task,legend_blocked:sale_timesheet.project_agr_task_1
+#: model:project.task,legend_blocked:sale_timesheet.project_agr_task_2
+#: model:project.task,legend_blocked:sale_timesheet.project_dpc_task_2
+#: model:project.task,legend_blocked:sale_timesheet.project_dpc_task_4
+#: model:project.task,legend_blocked:sale_timesheet.project_dpc_task_5
+#: model:project.task,legend_blocked:sale_timesheet.project_dpc_task_6
+#: model:project.task,legend_blocked:sale_timesheet.project_dpc_task_7
+#: model:project.task,legend_blocked:sale_timesheet.project_task_internal
+msgid "Blocked"
+msgstr "ブロック済"
+
+#. module: sale_timesheet
+#: model:project.task,legend_done:sale_timesheet.project_agr_task_3
+#: model:project.task,legend_done:sale_timesheet.project_agr_task_4
+#: model:project.task,legend_done:sale_timesheet.project_dpc_task_1
+#: model:project.task,legend_done:sale_timesheet.project_dpc_task_3
+msgid "Buzz or set as done"
+msgstr "ブザーまたは完了として設定"
 
 #. module: sale_timesheet
 #: model:ir.ui.menu,name:sale_timesheet.menu_timesheet_billing_analysis
@@ -353,6 +399,12 @@ msgid "Customer"
 msgstr "顧客"
 
 #. module: sale_timesheet
+#: model:product.product,name:sale_timesheet.product_service_order_timesheet
+#: model:product.template,name:sale_timesheet.product_service_order_timesheet_product_template
+msgid "Customer Care (Prepaid Hours)"
+msgstr ""
+
+#. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_kanban_inherit_sale_timesheet
 msgid "Customer Ratings"
 msgstr "顧客評価"
@@ -427,6 +479,28 @@ msgid "Fixed price services"
 msgstr ""
 
 #. module: sale_timesheet
+#: model:product.product,name:sale_timesheet.product_service_deliver_manual
+#: model:product.template,name:sale_timesheet.product_service_deliver_manual_product_template
+msgid "Furniture Delivery (Manual)"
+msgstr ""
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid ""
+"Great quotation templates will significantly\n"
+"                                <strong>boost your success rate</strong>. The\n"
+"                                first section is usually about your company,\n"
+"                                your references, your methodology or\n"
+"                                guarantees, your team, SLA, terms and conditions, etc."
+msgstr ""
+"偉大な見積テンプレートは、\n"
+"                               <strong>成功率を大幅に向上させる</strong>でしょう。\n"
+"                                最初のセクションは通常、あなたの会社、参考資料、\n"
+"                                方法論や保証、チーム、SLA、利用規約などです。"
+
+#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__has_displayed_warning_upsell
 msgid "Has Displayed Warning Upsell"
 msgstr ""
@@ -442,7 +516,13 @@ msgid "Hourly Cost"
 msgstr ""
 
 #. module: sale_timesheet
+#: model:product.product,uom_name:sale_timesheet.product_service_deliver_timesheet_1
+#: model:product.product,uom_name:sale_timesheet.product_service_deliver_timesheet_2
+#: model:product.product,uom_name:sale_timesheet.product_service_order_timesheet
 #: model:product.product,uom_name:sale_timesheet.time_product
+#: model:product.template,uom_name:sale_timesheet.product_service_deliver_timesheet_1_product_template
+#: model:product.template,uom_name:sale_timesheet.product_service_deliver_timesheet_2_product_template
+#: model:product.template,uom_name:sale_timesheet.product_service_order_timesheet_product_template
 #: model:product.template,uom_name:sale_timesheet.time_product_product_template
 msgid "Hours"
 msgstr "時間"
@@ -454,6 +534,34 @@ msgstr "時間"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__id
 msgid "ID"
 msgstr "ID"
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid ""
+"If you edit a quotation from the 'Preview' of a quotation, you will\n"
+"                        update that quotation only. If you edit the quotation\n"
+"                        template (from the Configuration menu), all future quotations will\n"
+"                        use this modified template."
+msgstr ""
+
+#. module: sale_timesheet
+#: model:project.task,legend_normal:sale_timesheet.agr_task_1
+#: model:project.task,legend_normal:sale_timesheet.project_agr_task_1
+#: model:project.task,legend_normal:sale_timesheet.project_agr_task_2
+#: model:project.task,legend_normal:sale_timesheet.project_agr_task_3
+#: model:project.task,legend_normal:sale_timesheet.project_agr_task_4
+#: model:project.task,legend_normal:sale_timesheet.project_dpc_task_1
+#: model:project.task,legend_normal:sale_timesheet.project_dpc_task_2
+#: model:project.task,legend_normal:sale_timesheet.project_dpc_task_3
+#: model:project.task,legend_normal:sale_timesheet.project_dpc_task_4
+#: model:project.task,legend_normal:sale_timesheet.project_dpc_task_5
+#: model:project.task,legend_normal:sale_timesheet.project_dpc_task_6
+#: model:project.task,legend_normal:sale_timesheet.project_dpc_task_7
+#: model:project.task,legend_normal:sale_timesheet.project_task_internal
+msgid "In Progress"
+msgstr "進行中"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__info_invoice
@@ -562,6 +670,18 @@ msgid "Journal Item"
 msgstr "仕訳明細"
 
 #. module: sale_timesheet
+#: model:product.product,name:sale_timesheet.product_service_deliver_timesheet_2
+#: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_2_product_template
+msgid "Junior Architect (Invoice on Timesheets)"
+msgstr "ジュニア開発者（タイムシート請求）"
+
+#. module: sale_timesheet
+#: model:product.product,name:sale_timesheet.product_service_deliver_milestones
+#: model:product.template,name:sale_timesheet.product_service_deliver_milestones_product_template
+msgid "Kitchen Assembly (Milestones)"
+msgstr ""
+
+#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice____last_update
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order____last_update
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line____last_update
@@ -616,6 +736,14 @@ msgstr "納品数量を更新する方法"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
 msgid "Milestone services"
 msgstr ""
+
+#. module: sale_timesheet
+#: model:project.task,legend_blocked:sale_timesheet.project_agr_task_3
+#: model:project.task,legend_blocked:sale_timesheet.project_agr_task_4
+#: model:project.task,legend_blocked:sale_timesheet.project_dpc_task_1
+#: model:project.task,legend_blocked:sale_timesheet.project_dpc_task_3
+msgid "Need functional or technical help"
+msgstr "機能または技術的なヘルプが必要"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
@@ -726,12 +854,40 @@ msgid "Other Revenues"
 msgstr ""
 
 #. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid "Our Offer"
+msgstr "私たちのオファー"
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid "Our Quality"
+msgstr "私たちの品質"
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid "Our Service"
+msgstr "私たちのサービス"
+
+#. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product__service_upsell_threshold
 #: model:ir.model.fields,help:sale_timesheet.field_product_template__service_upsell_threshold
 msgid ""
 "Percentage of time delivered compared to the prepaid amount that must be "
 "reached for the upselling opportunity activity to be triggered."
 msgstr ""
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid "Price"
+msgstr "価格"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__pricing_type
@@ -754,6 +910,16 @@ msgstr "プロダクトバリアント"
 msgid ""
 "Product of the sales order item. Must be a service invoiced based on "
 "timesheets on tasks."
+msgstr ""
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid ""
+"Product quality is the foundation we\n"
+"                                stand on; we build it with a relentless\n"
+"                                focus on fabric, performance and craftsmanship."
 msgstr ""
 
 #. module: sale_timesheet
@@ -803,6 +969,19 @@ msgstr ""
 #, python-format
 msgid "Quotation"
 msgstr "見積"
+
+#. module: sale_timesheet
+#: model:project.task,legend_done:sale_timesheet.agr_task_1
+#: model:project.task,legend_done:sale_timesheet.project_agr_task_1
+#: model:project.task,legend_done:sale_timesheet.project_agr_task_2
+#: model:project.task,legend_done:sale_timesheet.project_dpc_task_2
+#: model:project.task,legend_done:sale_timesheet.project_dpc_task_4
+#: model:project.task,legend_done:sale_timesheet.project_dpc_task_5
+#: model:project.task,legend_done:sale_timesheet.project_dpc_task_6
+#: model:project.task,legend_done:sale_timesheet.project_dpc_task_7
+#: model:project.task,legend_done:sale_timesheet.project_task_internal
+msgid "Ready"
+msgstr "準備完了"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
@@ -872,6 +1051,7 @@ msgstr "受注前払請求書"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__sale_order_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__sale_order_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__order_id
+#: model:project.project,name:sale_timesheet.so_template_project
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_report_search_sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 #, python-format
@@ -960,6 +1140,12 @@ msgid "Sell services and invoice time spent"
 msgstr "サービスを販売し、消費時間で請求書発行"
 
 #. module: sale_timesheet
+#: model:product.product,name:sale_timesheet.product_service_deliver_timesheet_1
+#: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_1_product_template
+msgid "Senior Architect (Invoice on Timesheets)"
+msgstr "シニア開発者（タイムシート請求）"
+
+#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__product_id
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid "Service"
@@ -994,6 +1180,7 @@ msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.product_template_action_default_services
+#: model:project.project,label_tasks:sale_timesheet.project_support
 msgid "Services"
 msgstr "サービス"
 
@@ -1021,6 +1208,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__task_rate
 msgid "Task rate"
 msgstr ""
+
+#. module: sale_timesheet
+#: model:project.project,label_tasks:sale_timesheet.so_template_project
+msgid "Tasks"
+msgstr "タスク"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -1090,6 +1282,17 @@ msgstr ""
 msgid ""
 "This cost overrides the employee's default employee hourly wage in "
 "employee's HR Settings"
+msgstr ""
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid ""
+"This is a <strong>sample quotation template</strong>. You should\n"
+"                                customize it to fit your own needs from the <i>Sales</i>\n"
+"                                application, using the menu: Configuration /\n"
+"                                Quotation Templates."
 msgstr ""
 
 #. module: sale_timesheet
@@ -1320,6 +1523,14 @@ msgid "Unit price of the sales order item."
 msgstr ""
 
 #. module: sale_timesheet
+#: model:product.product,uom_name:sale_timesheet.product_service_deliver_manual
+#: model:product.product,uom_name:sale_timesheet.product_service_deliver_milestones
+#: model:product.template,uom_name:sale_timesheet.product_service_deliver_manual_product_template
+#: model:product.template,uom_name:sale_timesheet.product_service_deliver_milestones_product_template
+msgid "Units"
+msgstr "個"
+
+#. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Value does not exist in the pricing type"
@@ -1342,9 +1553,36 @@ msgid "Warning Employee Rate"
 msgstr ""
 
 #. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid ""
+"We always ensure that our products are\n"
+"                                set at a fair price so that you will be\n"
+"                                happy to buy them."
+msgstr ""
+
+#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__wizard_id
 msgid "Wizard"
 msgstr "ウィザード"
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid ""
+"You can <strong>set a description per product</strong>. Odoo will\n"
+"                        automatically create a quotation using the descriptions\n"
+"                        of all products in the proposal. The table of content\n"
+"                        on the left is generated automatically using the styles you\n"
+"                        used in your description (heading 1, heading 2, ...)"
+msgstr ""
+"<strong>商品ごとの説明を設定</strong>できます。Odooは、\n"
+"                        プロポーザル内のすべての製品の説明を使用して自動的に\n"
+"                        見積を作成します。 左側のコンテンツの表は、説明で\n"
+"                        使用したスタイルを使用して自動的に生成されます\n"
+"                        (見出し1、見出し2、...)"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_invoice.py:0

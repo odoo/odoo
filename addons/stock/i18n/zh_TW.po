@@ -3,15 +3,18 @@
 # 	* stock
 # 
 # Translators:
+# Benson <Benson.Dr@Gmail.com>, 2022
 # Martin Trigaux, 2022
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
+# 226408 台北 <226408@so8d.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-27 15:11+0000\n"
+"POT-Creation-Date: 2022-10-04 09:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: 226408 台北 <226408@so8d.com>, 2022\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -909,6 +912,13 @@ msgid "All at once"
 msgstr "一次性全部"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"All our contractual relations will be governed exclusively by United States "
+"law."
+msgstr "我們所有的合作關係都將受國家法律管轄."
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__returned_move_ids
 msgid "All returned moves"
 msgstr "全部退回移動"
@@ -1236,6 +1246,13 @@ msgid "Before scheduled date"
 msgstr "在預定日期之前"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"Below text serves as a suggestion and doesn’t engage Odoo S.A. "
+"responsibility."
+msgstr "以下文字僅供參照建議，不涉及本系統的相關責任."
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__block
 msgid "Blocking Message"
 msgstr "受阻消息"
@@ -1271,6 +1288,12 @@ msgstr ""
 msgid ""
 "By unchecking the active field, you may hide a location without deleting it."
 msgstr "通過取消勾選有效欄位，您能隱藏一個位置而不是刪除它。"
+
+#. module: stock
+#: model:product.product,name:stock.product_cable_management_box
+#: model:product.template,name:stock.product_cable_management_box_product_template
+msgid "Cable Management Box"
+msgstr "理線盒"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_calendar
@@ -1368,6 +1391,21 @@ msgstr "類別"
 #: model:ir.model.fields,field_description:stock.field_product_template__route_from_categ_ids
 msgid "Category Routes"
 msgstr "類別路線"
+
+#. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"Certain countries apply withholding at source on the amount of invoices, in "
+"accordance with their internal legislation. Any withholding at source will "
+"be paid by the client to the tax authorities. Under no circumstances can My "
+"Company (Chicago) become involved in costs related to a country's "
+"legislation. The amount of the invoice will therefore be due to My Company "
+"(Chicago) in its entirety and does not include any costs relating to the "
+"legislation of the country in which the client is located."
+msgstr ""
+"某些國家根據其國內立法對發票金額實行源頭預扣。任何源頭預扣稅將由客戶支付給稅務機關。在任何情況下，My Company (Chicago) "
+"都不得捲入與某個國家/地區的立法相關的費用。因此，發票金額將全部支付給 My Company "
+"(Chicago)，不包括與客戶所在國家/地區的法律相關的任何費用。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__move_dest_exists
@@ -2231,9 +2269,11 @@ msgid "Delivered Qty"
 msgstr "已交貨數量"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__outgoing
 #: model:ir.ui.menu,name:stock.menu_delivery
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#, python-format
 msgid "Delivery"
 msgstr "交貨"
 
@@ -2249,6 +2289,7 @@ msgstr "交貨方式"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
+#: model:stock.picking.type,name:stock.chi_picking_type_out
 #: model:stock.picking.type,name:stock.picking_type_out
 #, python-format
 msgid "Delivery Orders"
@@ -2287,11 +2328,6 @@ msgstr "交貨單數量"
 #, python-format
 msgid "Delivery orders of %s"
 msgstr "%s 的送貨單"
-
-#. module: stock
-#: model:mail.template,name:stock.mail_template_data_delivery_confirmation
-msgid "Delivery: Send by Email"
-msgstr "交貨：通過電子郵件發送"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_uom_qty
@@ -2640,19 +2676,12 @@ msgid "Email Confirmation picking"
 msgstr "電子郵件確認領料"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Email Template"
-msgstr "Email範本"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_mail_confirmation_template_id
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__stock_mail_confirmation_template_id
 msgid "Email Template confirmation picking"
 msgstr "電子信件範本確認領料"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__stock_mail_confirmation_template_id
-#: model:ir.model.fields,help:stock.field_res_config_settings__stock_mail_confirmation_template_id
 msgid "Email sent to the customer once the order is done."
 msgstr "訂單完成後發送給客戶的電子郵件。"
 
@@ -2884,14 +2913,16 @@ msgstr ""
 "否則，這包括存儲在任何庫存位置具有\"內部\"類型的貨物。"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
-#: model_terms:ir.ui.view,arch_db:stock.report_replenishment_header
+#, python-format
 msgid "Forecasted"
 msgstr "預測"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "Forecasted Date"
 msgstr "預測日期"
@@ -2907,7 +2938,9 @@ msgid "Forecasted Expected date"
 msgstr "預測 預計日期"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Forecasted Inventory"
 msgstr "庫存預測"
 
@@ -2930,8 +2963,6 @@ msgstr "預測收貨"
 #. openerp-web
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #: model:ir.actions.client,name:stock.stock_replenishment_product_product_action
-#: model:ir.actions.report,name:stock.stock_replenishment_report_product_product_action
-#: model:ir.actions.report,name:stock.stock_replenishment_report_product_template_action
 #, python-format
 msgid "Forecasted Report"
 msgstr "預測報告"
@@ -2947,7 +2978,9 @@ msgid "Forecasted Weight"
 msgstr "預測重量"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Forecasted with Pending"
 msgstr "預測(含待處理)"
 
@@ -2963,7 +2996,9 @@ msgid "Free Qty"
 msgstr ""
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Free Stock"
 msgstr "Free Stock"
 
@@ -3226,6 +3261,16 @@ msgid "Icon to indicate an exception activity."
 msgstr "用於指示異常活動的圖示。"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"If a payment is still outstanding more than sixty (60) days after the due "
+"payment date, My Company (Chicago) reserves the right to call on the "
+"services of a debt recovery company. All legal expenses will be payable by "
+"the client."
+msgstr ""
+"如果在到期付款日後六十 (60) 天仍未付款，My Company (Chicago) 保留要求債務追償公司提供服務的權利。所有法律費用將由客戶支付。"
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__same
 msgid "If all products are same"
 msgstr "如果所有產品都一樣"
@@ -3413,11 +3458,23 @@ msgid "In Type"
 msgstr "入庫類型"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"In order for it to be admissible, My Company (Chicago) must be notified of "
+"any claim by means of a letter sent by recorded delivery to its registered "
+"office within 8 days of the delivery of the goods or the provision of the "
+"services."
+msgstr ""
+"為了使其被受理，必須在交付貨物或提供服務後 8 天內通過以掛號信方式將任何索賠通知 My Company (Chicago) 到其註冊辦事處。"
+
+#. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model:ir.model.fields,field_description:stock.field_product_product__incoming_qty
 #: model:ir.model.fields,field_description:stock.field_product_template__incoming_qty
-#: model_terms:ir.ui.view,arch_db:stock.report_replenishment_header
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
+#, python-format
 msgid "Incoming"
 msgstr "入庫"
 
@@ -3427,7 +3484,9 @@ msgid "Incoming Date"
 msgstr "送貨日期"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Incoming Draft Transfer"
 msgstr "進貨預設調撥"
 
@@ -3625,7 +3684,10 @@ msgid "Inventory Loss"
 msgstr "庫存調整"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Inventory On Hand"
 msgstr "在庫庫存"
 
@@ -3653,7 +3715,7 @@ msgstr "庫存路線"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree
 msgid "Inventory Valuation"
-msgstr "庫存計價"
+msgstr "存货估值"
 
 #. module: stock
 #. openerp-web
@@ -3754,7 +3816,7 @@ msgstr "Json 前置日"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.js:0
+#: code:addons/stock/static/src/widgets/json_widget.js:0
 #, python-format
 msgid "Json Popup"
 msgstr ""
@@ -4028,7 +4090,7 @@ msgstr "前置時間"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "Lead Times"
 msgstr "前置時間"
@@ -4157,7 +4219,7 @@ msgstr "地點：到達時"
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 #, python-format
 msgid "Locations"
-msgstr "位置"
+msgstr "儲位"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -4522,7 +4584,7 @@ msgstr "移動"
 #: model:ir.actions.act_window,name:stock.stock_move_line_action
 #: model:ir.ui.menu,name:stock.stock_move_line_menu
 msgid "Moves History"
-msgstr ""
+msgstr "移動明細"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__group_id
@@ -4557,6 +4619,19 @@ msgstr "一種產品的多個容量規則。"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__my_activity_date_deadline
 msgid "My Activity Deadline"
 msgstr "我的活動截止時間"
+
+#. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"My Company (Chicago) undertakes to do its best to supply performant services"
+" in due time in accordance with the agreed timeframes. However, none of its "
+"obligations can be considered as being an obligation to achieve results. My "
+"Company (Chicago) cannot under any circumstances, be required by the client "
+"to appear as a third party in the context of any claim for damages filed "
+"against the client by an end consumer."
+msgstr ""
+"My Company (Chicago) 承諾盡最大努力在約定的時間範圍內及時提供高效服務。但是，其任何義務都不能被視為實現結果的義務。 My "
+"Company (Chicago) 在任何情況下都不能被客戶要求在最終消費者向客戶提出的任何損害索賠的背景下作為第三方出現。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -4791,8 +4866,8 @@ msgstr "一般"
 #. module: stock
 #. openerp-web
 #: code:addons/stock/models/stock_picking.py:0
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 #, python-format
 msgid "Not Available"
 msgstr "不可用"
@@ -4880,11 +4955,13 @@ msgid "October"
 msgstr "十月"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model:ir.model.fields,field_description:stock.field_stock_quant__on_hand
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_on_hand
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
-#: model_terms:ir.ui.view,arch_db:stock.report_replenishment_header
+#, python-format
 msgid "On Hand"
 msgstr "在庫"
 
@@ -5092,21 +5169,39 @@ msgid "Other Information"
 msgstr "其他資訊"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"Our invoices are payable within 21 working days, unless another payment "
+"timeframe is indicated on either the invoice or the order. In the event of "
+"non-payment by the due date, My Company (Chicago) reserves the right to "
+"request a fixed interest payment amounting to 10% of the sum remaining due. "
+"My Company (Chicago) will be authorized to suspend any provision of services"
+" without prior warning in the event of late payment."
+msgstr ""
+"我們的發票應在 21 個工作日內支付，除非發票或訂單上註明了另一個付款時間範圍。如果在到期日之前未付款，My Company (Chicago) "
+"保留要求支付固定利息的權利，金額為剩餘到期金額的 10% o。如果延遲付款，My Company (Chicago) "
+"將被授權在沒有事先警告的情況下暫停任何服務的提供。"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__out_type_id
 msgid "Out Type"
 msgstr "出庫類型"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model:ir.model.fields,field_description:stock.field_product_product__outgoing_qty
 #: model:ir.model.fields,field_description:stock.field_product_template__outgoing_qty
-#: model_terms:ir.ui.view,arch_db:stock.report_replenishment_header
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
+#, python-format
 msgid "Outgoing"
 msgstr "出向"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Outgoing Draft Transfer"
 msgstr "交貨預設調撥"
 
@@ -5458,7 +5553,7 @@ msgstr "計劃的調撥"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/js/stock_rescheduling_popover.js:0
+#: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
 #, python-format
 msgid "Planning Issue"
 msgstr "規劃問題"
@@ -5494,7 +5589,7 @@ msgstr "預填詳細操作"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
 #, python-format
 msgid "Preceding operations"
 msgstr "前面的操作"
@@ -5618,6 +5713,8 @@ msgid "Produced Qty"
 msgstr "生產的數量"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.model,name:stock.model_product_template
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_id
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__product_id
@@ -5642,7 +5739,6 @@ msgstr "生產的數量"
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_body_print
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_inventory
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
@@ -5652,6 +5748,7 @@ msgstr "生產的數量"
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_search_view
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
+#, python-format
 msgid "Product"
 msgstr "商品"
 
@@ -5742,7 +5839,7 @@ msgstr "產品數量更新"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/js/report_stock_forecasted.js:0
+#: code:addons/stock/static/src/stock_forecasted/forecasted_buttons.js:0
 #: model:ir.model,name:stock.model_product_replenish
 #, python-format
 msgid "Product Replenish"
@@ -6193,8 +6290,10 @@ msgid "Real Reserved Quantity"
 msgstr "實際預留數量"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__incoming
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#, python-format
 msgid "Receipt"
 msgstr "收貨"
 
@@ -6205,6 +6304,7 @@ msgstr "收貨路線"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
+#: model:stock.picking.type,name:stock.chi_picking_type_in
 #: model:stock.picking.type,name:stock.picking_type_in
 #, python-format
 msgid "Receipts"
@@ -6370,8 +6470,8 @@ msgstr "重訂貨規則搜尋"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/report_stock_forecasted.xml:0
-#: code:addons/stock/static/src/xml/report_stock_forecasted.xml:0
+#: code:addons/stock/static/src/stock_forecasted/forecasted_buttons.xml:0
+#: code:addons/stock/static/src/stock_forecasted/forecasted_buttons.xml:0
 #: model:ir.actions.act_window,name:stock.action_product_replenish
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_product_view_form_easy_inherit_stock
@@ -6396,12 +6496,14 @@ msgid "Replenish wizard"
 msgstr "補給嚮導"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.actions.act_window,name:stock.action_orderpoint_replenish
 #: model:ir.actions.server,name:stock.action_replenishment
 #: model:ir.ui.menu,name:stock.menu_reordering_rules_replenish
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
+#, python-format
 msgid "Replenishment"
 msgstr "重訂貨規則"
 
@@ -6461,7 +6563,9 @@ msgid "Reservations"
 msgstr "預留"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Reserve"
 msgstr "預留"
 
@@ -6508,7 +6612,9 @@ msgid "Reserved Quantity"
 msgstr "預留數量"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Reserved from stock"
 msgstr "有現貨"
 
@@ -6735,8 +6841,13 @@ msgid "SSCC:"
 msgstr ""
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid "STANDARD TERMS AND CONDITIONS OF SALE"
+msgstr "標准銷售條款和條件"
+
+#. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "Sales History"
 msgstr "銷售歷史"
@@ -6879,6 +6990,12 @@ msgstr "在出貨區整理貨物, 然後交付 (2 步)"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_sendcloud
 msgid "Sendcloud Connector"
+msgstr ""
+
+#. module: stock
+#: model:mail.template,description:stock.mail_template_data_delivery_confirmation
+msgid ""
+"Sent to the customers when orders are delivered, if the setting is enabled"
 msgstr ""
 
 #. module: stock
@@ -7068,6 +7185,11 @@ msgid ""
 " labels and request carrier picking at your warehouse to ship to the "
 "customer. Apply shipping connector from delivery methods."
 msgstr "貨運連接器允許準確的計算運輸成本、列印運輸標籤和請求在您倉庫揀貨的承運人運貨給您的客戶。 從交付方式適用交付連接器。"
+
+#. module: stock
+#: model:mail.template,name:stock.mail_template_data_delivery_confirmation
+msgid "Shipping: Send by Email"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__code
@@ -7538,8 +7660,8 @@ msgstr "添加新的存儲類別"
 #: model:ir.model,name:stock.model_stock_storage_category_capacity
 #: model:ir.model.fields,field_description:stock.field_product_product__storage_category_capacity_ids
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__storage_category_capacity_ids
-#: model:ir.ui.menu,name:stock.menu_storage_categoty_capacity_config
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_capacity_tree
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Storage Category Capacity"
 msgstr "存儲類別容量"
 
@@ -7669,6 +7791,15 @@ msgid "The barcode for a location must be unique per company !"
 msgstr "每個公司的位置條碼必須唯一！"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"The client explicitly waives its own standard terms and conditions, even if "
+"these were drawn up after these standard terms and conditions of sale. In "
+"order to be valid, any derogation must be expressly agreed to in advance in "
+"writing."
+msgstr "客戶明確放棄其自己的標準條款和條件，即使這些是在這些標准銷售條款和條件之後制定的. 為了有效，任何減損必須事先以書面形式明確同意."
+
+#. module: stock
 #: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid ""
@@ -7703,7 +7834,7 @@ msgstr "第一個序列中是預設的."
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "The forecasted stock on the"
 msgstr "預估存量"
@@ -8125,7 +8256,7 @@ msgstr "重新排序"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "Today"
 msgstr "今天"
@@ -8341,7 +8472,7 @@ msgstr ""
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/js/report_stock_forecasted.js:0
+#: code:addons/stock/static/src/stock_forecasted/stock_forecasted.js:0
 #, python-format
 msgid "Try to add some incoming or outgoing transfers."
 msgstr "嘗試添加一些進貨或出貨調撥。"
@@ -8443,6 +8574,12 @@ msgid "Unit of Measure Name"
 msgstr "單位名稱"
 
 #. module: stock
+#: model:product.product,uom_name:stock.product_cable_management_box
+#: model:product.template,uom_name:stock.product_cable_management_box_product_template
+msgid "Units"
+msgstr "單位"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Units Of Measure"
 msgstr "測量單位"
@@ -8479,10 +8616,12 @@ msgid "Unpack"
 msgstr "拆包"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.actions.server,name:stock.action_unreserve_picking
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
+#, python-format
 msgid "Unreserve"
 msgstr "取消預留"
 
@@ -8562,7 +8701,9 @@ msgid "Use your own routes"
 msgstr "使用您自設的路線"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Used by"
 msgstr "使用由"
 
@@ -8745,7 +8886,7 @@ msgstr "倉庫的路線"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/report_stock_forecasted.xml:0
+#: code:addons/stock/static/src/stock_forecasted/forecasted_warehouse_filter.xml:0
 #, python-format
 msgid "Warehouse:"
 msgstr "倉庫:"
@@ -9318,6 +9459,11 @@ msgid "You need to supply a Lot/Serial number for products %s."
 msgstr "您需要提供產品 %s 的批號/序號。"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid "You should update this document to reflect your T&amp;C."
+msgstr "您應該更新此文件以反映您的 T&amp;C."
+
+#. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "You still have ongoing operations for picking types %s in warehouse %s"
@@ -9358,6 +9504,13 @@ msgstr ""
 "            如要在將來節省時間，請將規則設置為“自動”。"
 
 #. module: stock
+#: model_terms:res.company,lunch_notify_message:stock.res_company_1
+msgid ""
+"Your lunch has been delivered.\n"
+"Enjoy your meal!"
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Your stock is currently empty"
@@ -9381,7 +9534,7 @@ msgstr "]<br/>min:"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "below the inventory"
 msgstr "below the inventory"
@@ -9459,7 +9612,7 @@ msgstr "在"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "is"
 msgstr "是"
@@ -9471,7 +9624,7 @@ msgstr "立即手動觸發訂貨規則。"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "minimum of"
 msgstr "最小於"
@@ -9483,7 +9636,7 @@ msgstr "的"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
 #, python-format
 msgid "planned on"
 msgstr "計劃於"
@@ -9500,7 +9653,7 @@ msgstr "report_stock_quantity_graph"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "should be replenished"
 msgstr "應該補充"
@@ -9514,7 +9667,7 @@ msgstr ""
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "to reach the maximum of"
 msgstr "達到最大值"

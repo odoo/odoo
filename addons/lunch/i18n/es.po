@@ -4,20 +4,47 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# marcescu, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2022-10-04 09:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: marcescu, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_temaki
+msgid "1 Avocado - 1 Salmon - 1 Eggs - 1 Tuna"
+msgstr "1 Aguacate - 1 Salmón - 1 Huevos- 1 Atún"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_chirashi
+msgid "2 Tempuras, Cabbages, Onions, Sesame Sauce"
+msgstr "2 Tempuras, coles, cebollas, salsa de sésamo"
+
+#. module: lunch
+#: model:lunch.order,name:lunch.order_line_5
+#: model:lunch.product,name:lunch.product_4formaggi
+msgid "4 Formaggi"
+msgstr "4 Formaggi"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_salmon
+msgid "4 Sushi Salmon - 6 Maki Salmon - 4 Sashimi Salmon"
+msgstr "4 Sushi de salmón - 6 Maki de salmón - 4 Sashimi de salmón"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_maki
+msgid "6 Maki Salmon - 6 Maki Tuna - 6 Maki Shrimp/Avocado"
+msgstr "6 Maki de salmón - 6 Maki de atún - 6 Maki de camarón y aguacate"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
@@ -433,6 +460,11 @@ msgid "Alert Name"
 msgstr "Nombre de la Alerta"
 
 #. module: lunch
+#: model:lunch.alert,name:lunch.alert_office_3
+msgid "Alert for Office 3"
+msgstr "Alerta para la oficina 3"
+
+#. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__mode__alert
 msgid "Alert in app"
 msgstr "Alerta en la aplicación"
@@ -502,6 +534,35 @@ msgid "Available Toppings 3"
 msgstr "Aderezos Disponibles 3"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_bacon
+#: model:lunch.product,name:lunch.product_bacon_0
+msgid "Bacon"
+msgstr "Tocino"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_bacon
+#: model_terms:lunch.product,description:lunch.product_bacon_0
+msgid "Beef, Bacon, Salad, Cheddar, Fried Onion, BBQ Sauce"
+msgstr "Res, tocino, ensalada, queso cheddar, cebolla frita, salsa BBQ "
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_cheese_burger_0
+#: model_terms:lunch.product,description:lunch.product_cheeseburger
+msgid "Beef, Cheddar, Salad, Fried Onions, BBQ Sauce"
+msgstr "Res, queso cheddar, ensalada, cebollas fritas, salsa BBQ"
+
+#. module: lunch
+#: model:lunch.order,name:lunch.order_line_1
+#: model:lunch.product,name:lunch.product_Bolognese
+msgid "Bolognese Pasta"
+msgstr "Pasta boloñesa"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_country
+msgid "Brie, Honey, Walnut Kernels"
+msgstr "Queso brie, miel, granos de nuez"
+
+#. module: lunch
 #: model:lunch.product.category,name:lunch.categ_burger
 msgid "Burger"
 msgstr "Hamburguesa"
@@ -556,6 +617,33 @@ msgid "Chat notification"
 msgstr "Notificación en el chat"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_cheese_ham
+msgid "Cheese And Ham"
+msgstr "Queso y jamón"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_cheese_burger_0
+#: model:lunch.product,name:lunch.product_cheeseburger
+msgid "Cheese Burger"
+msgstr "Hamburguesa con queso"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_cheese_ham
+msgid "Cheese, Ham, Salad, Tomatoes, cucumbers, eggs"
+msgstr "Queso, jamón, ensalada, tomates, pepinos, huevos"
+
+#. module: lunch
+#: model:lunch.order,name:lunch.order_line_4
+#: model:lunch.product,name:lunch.product_chicken_curry
+msgid "Chicken Curry"
+msgstr "Curry de pollo"
+
+#. module: lunch
+#: model:lunch.product.category,name:lunch.categ_chirashi
+msgid "Chirashi"
+msgstr "Chirashi"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__city
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
 msgid "City"
@@ -571,6 +659,17 @@ msgstr ""
 "Haga clic en <span class=\"fa fa-phone text-success\" title=\"Order button\"></span> para anunciar que el pedido está ordenado.<br>\n"
 "            Haga clic en <span class=\"fa fa-check text-success\" title=\"Receive button\"></span> para anunciar que el pedido ha sido recibido.<br>\n"
 "            Haga clic en la <span class=\"fa fa-times-circle text-danger\" title=\"Cancel button\"></span>  X roja para anunciar que el pedido no está disponible."
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_club
+#: model:lunch.product,name:lunch.product_club_0
+msgid "Club"
+msgstr "Club"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_coke_0
+msgid "Coca Cola"
+msgstr "Coca Cola"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_res_company
@@ -877,6 +976,12 @@ msgid "Formatted Email"
 msgstr "Email formateado"
 
 #. module: lunch
+#: model_terms:lunch.order,product_description:lunch.order_line_2
+#: model_terms:lunch.product,description:lunch.product_italiana
+msgid "Fresh Tomatoes, Basil, Mozzarella"
+msgstr "Tomates frescos, albahaca, queso mozzarella"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__fri
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__fri
 msgid "Fri"
@@ -888,11 +993,23 @@ msgid "Friday"
 msgstr "Viernes"
 
 #. module: lunch
+#: model:lunch.order,name:lunch.order_line_3
+#: model:lunch.product,name:lunch.product_gouda
+msgid "Gouda Cheese"
+msgstr "Queso gouda"
+
+#. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search_2
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Group By"
 msgstr "Agrupar por"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_club
+#: model_terms:lunch.product,description:lunch.product_club_0
+msgid "Ham, Cheese, Vegetables"
+msgstr "Jamón, queso, vegetales"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__has_message
@@ -1127,6 +1244,11 @@ msgid "Lunch Locations"
 msgstr "Lugares para Almorzar"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_maki
+msgid "Lunch Maki 18pc"
+msgstr "Almuerzo Maki 18 pzas."
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_company__lunch_minimum_threshold
 msgid "Lunch Minimum Threshold"
 msgstr "Almuerzo Umbral Mínimo"
@@ -1152,9 +1274,19 @@ msgid "Lunch Product Category"
 msgstr "Categoría de producto de almuerzo"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_salmon
+msgid "Lunch Salmon 20pc"
+msgstr "Almuerzo de salmón 20 pzas."
+
+#. module: lunch
 #: model:ir.model,name:lunch.model_lunch_supplier
 msgid "Lunch Supplier"
 msgstr "Proveedor de almuerzo"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_temaki
+msgid "Lunch Temaki mix 3pc"
+msgstr "Almuerzo mezcla temaki 3 pzas."
 
 #. module: lunch
 #: code:addons/lunch/models/lunch_order.py:0
@@ -1178,20 +1310,45 @@ msgid "Lunch: Receive meals"
 msgstr "Comida: Recibir las comidas"
 
 #. module: lunch
-#: model:mail.template,name:lunch.lunch_order_mail_supplier
-msgid "Lunch: Send by email"
-msgstr "Almuerzo: Enviar por correo electrónico"
-
-#. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_action_notify
 msgid "Lunch: Send notifications"
 msgstr ""
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_349
+#: model:mail.template,name:lunch.lunch_order_mail_supplier
+msgid "Lunch: Supplier Order"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_426
+msgid "Lunch: alert chat notification (Alert for Office 3)"
+msgstr "Almuerzo: alerta de notificación de chat (alerta para la oficina 3)"
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_427
+msgid "Lunch: send automatic email to Coin gourmand"
+msgstr "Almuerzo: enviar correo electrónico automático a Coin Gourmand"
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_422
 msgid "Lunch: send automatic email to Lunch Supplier"
 msgstr ""
 "Almuerzo: enviar correo electrónico automático al proveedor de almuerzos"
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_428
+msgid "Lunch: send automatic email to Pizza Inn"
+msgstr "Almuerzo: enviar correo electrónico automático a Pizza Inn"
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_430
+msgid "Lunch: send automatic email to Sushi Shop"
+msgstr "Almuerzo: enviar correo electrónico automático a Sushi Shop"
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_429
+msgid "Lunch: send automatic email to The Corner"
+msgstr "Almuerzo: enviar correo electrónico automático a The Corner"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_main_attachment_id
@@ -1250,6 +1407,16 @@ msgid "Monday"
 msgstr "Lunes"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_mozzarella
+msgid "Mozzarella"
+msgstr "Queso mozzarella"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_mozzarella
+msgid "Mozzarella, Pesto, Tomatoes"
+msgstr "Queso mozzarella, pesto, tomates"
+
+#. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_report_action_account
 msgid "My Account"
 msgstr "Mi cuenta"
@@ -1291,6 +1458,11 @@ msgstr "Mis pedidos"
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__name
 msgid "Name"
 msgstr "Nombre"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_Napoli
+msgid "Napoli Pasta"
+msgstr "Pasta napolitana"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.view_lunch_product_kanban_order
@@ -1494,6 +1666,11 @@ msgid "PM"
 msgstr "PM"
 
 #. module: lunch
+#: model:lunch.product.category,name:lunch.categ_pasta
+msgid "Pasta"
+msgstr "Pasta"
+
+#. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search
 msgid "Payment"
 msgstr "Pagos"
@@ -1518,6 +1695,33 @@ msgstr "Teléfono"
 #: model:lunch.product.category,name:lunch.categ_pizza
 msgid "Pizza"
 msgstr "Pizza"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_funghi
+msgid "Pizza Funghi"
+msgstr "Pizza Funghi"
+
+#. module: lunch
+#: model:lunch.order,name:lunch.order_line_2
+#: model:lunch.product,name:lunch.product_italiana
+msgid "Pizza Italiana"
+msgstr "Pizza Italiana"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_margherita
+#: model:lunch.product,name:lunch.product_pizza_0
+msgid "Pizza Margherita"
+msgstr "Pizza Margherita"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_vege
+msgid "Pizza Vegetarian"
+msgstr "Pizza vegetariana"
+
+#. module: lunch
+#: model_terms:lunch.alert,message:lunch.alert_office_3
+msgid "Please order"
+msgstr "Por favor, ordene"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__price
@@ -1661,6 +1865,11 @@ msgid "SMS Delivery error"
 msgstr "Error de entrega del SMS"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_chirashi
+msgid "Salmon and Avocado"
+msgstr "Salmón y aguacate"
+
+#. module: lunch
 #: model:lunch.product.category,name:lunch.categ_sandwich
 msgid "Sandwich"
 msgstr "Sándwich"
@@ -1719,6 +1928,11 @@ msgid "Sent"
 msgstr "Enviado"
 
 #. module: lunch
+#: model:mail.template,description:lunch.lunch_order_mail_supplier
+msgid "Sent to vendor with the order of the day"
+msgstr ""
+
+#. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_config_settings_action
 #: model:ir.ui.menu,name:lunch.lunch_settings_menu
 msgid "Settings"
@@ -1738,6 +1952,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__until
 msgid "Show Until"
 msgstr "Mostrar hasta"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_spicy_tuna
+msgid "Spicy Tuna"
+msgstr "Atún picante"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__state_id
@@ -1804,6 +2023,21 @@ msgstr "Domingo"
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__supplier_id
 msgid "Supplier"
 msgstr "Proveedor"
+
+#. module: lunch
+#: model:lunch.product.category,name:lunch.categ_sushi
+msgid "Sushi"
+msgstr "Sushi"
+
+#. module: lunch
+#: model:lunch.product.category,name:lunch.categ_temaki
+msgid "Temaki"
+msgstr "Temaki"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_country
+msgid "The Country"
+msgstr "El país"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch_product.py:0
@@ -1943,6 +2177,35 @@ msgid "Today's Orders"
 msgstr "Pedidos de hoy"
 
 #. module: lunch
+#: model_terms:lunch.order,product_description:lunch.order_line_5
+#: model_terms:lunch.product,description:lunch.product_4formaggi
+msgid "Tomato sauce, Olive oil, Fresh Tomatoes, Onions, Vegetables, Parmesan"
+msgstr ""
+"Salsa de tomate, aceite de oliva, tomates frescos, cebollas, vegetales, "
+"queso parmesano"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_Napoli
+msgid "Tomatoes, Basil"
+msgstr "Tomates, albahaca"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_margherita
+#: model_terms:lunch.product,description:lunch.product_pizza_0
+msgid "Tomatoes, Mozzarella"
+msgstr "Tomates, queso mozzarella"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_vege
+msgid "Tomatoes, Mozzarella, Mushrooms, Peppers, Olives"
+msgstr "Tomates, queso mozzarella, champiñones, pimientos, aceitunas"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_funghi
+msgid "Tomatoes, Mushrooms, Mozzarella"
+msgstr "Tomates, champiñones, queso mozzarella"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__topping_category
 msgid "Topping Category"
 msgstr "Categoría de aderezos"
@@ -1988,6 +2251,16 @@ msgstr "Mar"
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Tuesday"
 msgstr "Martes"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_tuna
+msgid "Tuna"
+msgstr "Atún"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_tuna
+msgid "Tuna, Mayonnaise"
+msgstr "Atún, mayonesa"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__activity_exception_decoration

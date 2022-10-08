@@ -3,18 +3,18 @@
 # 	* project
 # 
 # Translators:
-# Camille Dantinne <cmd@odoo.com>, 2022
-# Alexandra Jubert, 2022
 # Martin Trigaux, 2022
+# Alexandra Jubert, 2022
 # Cécile Collart <cco@odoo.com>, 2022
+# Jolien De Paepe, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-27 15:11+0000\n"
+"POT-Creation-Date: 2022-10-04 09:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,6 +41,13 @@ msgstr ""
 "                    Suivez les points de progression majeurs qui doivent être atteints afin de réussir.\n"
 "                </p>\n"
 "            "
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/views/project_calendar/project_calendar_controller.js:0
+#, python-format
+msgid " - Tasks by Deadline"
+msgstr " - Tâches par échéance"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__collaborator_count
@@ -70,6 +77,8 @@ msgid ""
 "#{record.milestone_count_reached.value} Milestones reached out of "
 "#{record.milestone_count.value}"
 msgstr ""
+"#{record.milestone_count_reached.value} Jalons atteints sur "
+"#{record.milestone_count.value}"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -81,7 +90,7 @@ msgstr "%(name)s"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "%(name)s's Burndown Chart"
-msgstr "Burndown chat de %(name)s"
+msgstr "Burndown chart de %(name)s"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -384,7 +393,7 @@ msgstr ""
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            <t t-if=\"partner.name\">\n"
-"                Cher/Chère <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"                Cher <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                Bonjour,<br/><br/>\n"
@@ -438,6 +447,31 @@ msgstr ""
 "    </tbody>\n"
 "    </table>\n"
 "</div>\n"
+"            "
+
+#. module: project
+#: model:mail.template,body_html:project.project_done_email_template
+msgid ""
+"<div>\n"
+"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
+"    It is my pleasure to let you know that we have successfully completed the project \"<strong t-out=\"object.name or ''\">Renovations</strong>\".\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br/>\n"
+"        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
+"            "
+msgstr ""
+"<div>\n"
+"    Cher <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
+"    J'ai le plaisir de vous annoncer que nous avons complété avec succès le projet \"<strong t-out=\"object.name or ''\">Rénovations</strong>\".\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br/>\n"
+"        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">Vous recevez cet email parce que votre projet a été déplacé à l'étape <b t-out=\"object.stage_id.name or ''\">Fait</b></span>\n"
 "            "
 
 #. module: project
@@ -576,7 +610,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Blocking</span>"
-msgstr "<span class=\"o_stat_text\">Bloquant</span>"
+msgstr "<span class=\"o_stat_text\">Bloque</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -684,6 +718,16 @@ msgid "A new task will be created on the following dates:"
 msgstr "Une nouvelle tâche sera créée aux dates suivantes :"
 
 #. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"A personal stage cannot be linked to a project because it is only visible to"
+" its corresponding user."
+msgstr ""
+"Une étape personnelle ne peut pas être liée à un projet car elle n'est "
+"visible que par son utilisateur correspondant."
+
+#. module: project
 #: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
 msgid "A tag with the same name already exists."
 msgstr "Une étiquette avec le même nom existe déjà."
@@ -702,7 +746,7 @@ msgstr "Accepter les emails de"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_instruction_message
 msgid "Access Instruction Message"
-msgstr ""
+msgstr "Message des instructions d'accès"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__access_mode
@@ -881,7 +925,7 @@ msgstr "Heures Allouées"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allow_rating
 msgid "Allow Customer Ratings"
-msgstr ""
+msgstr "Autoriser les évaluations des clients"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__allow_subtasks
@@ -916,6 +960,9 @@ msgid ""
 "Track the costs and revenues of your task by setting its analytic account on your related documents (e.g. sales orders, invoices, purchase orders, vendor bills, expenses etc.).\n"
 "By default, the analytic account of the project is set. However, it can be changed on each task individually if necessary."
 msgstr ""
+"Compte analytique auquel sont liés cette tâche et ses feuilles de temps.\n"
+"Suivez les coûts et les revenus de votre tâche en paramétrant ce compte analytique sur vos documents associés (par ex. commandes, factures, bons de commande, factures fournisseurs, notes de frais, etc.).\n"
+"Par défaut, le compte analytique du projet est défini. Toutefois, il peut être changé sur chaque tâche individuellement si nécessaire."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1017,6 +1064,13 @@ msgid "Assembling"
 msgstr "Assemblage"
 
 #. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tours/project.js:0
+#, python-format
+msgid "Assign a responsible to your task"
+msgstr "Assignez un responsable à votre tâche"
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Assign to Me"
@@ -1078,7 +1132,7 @@ msgstr "Date d'affectation"
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__at_risk
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "At Risk"
-msgstr "À risque"
+msgstr "En danger"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -1132,8 +1186,8 @@ msgid ""
 " * Neutral or bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
 "Modifiez automatiquement le statut Kanban lorsque le client fait un commentaire sur cette étape.\n"
-" * Un bon retour de la part du client change le statut Kanban en « prêt pour la nouvelle étape » (point vert).\n"
-" * Un retour neutre ou un mauvais retour change le statut Kanban en « bloqué » (point rouge).\n"
+" * Un bon retour de la part du client change le statut Kanban en « prêt pour la nouvelle étape » (boule verte).\n"
+" * Un retour neutre ou un mauvais retour change le statut Kanban en « bloqué » (boule rouge).\n"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_avg
@@ -1194,6 +1248,39 @@ msgstr "Bloquer"
 #: code:addons/project/models/project.py:0
 #: model:ir.model.fields.selection,name:project.selection__project_task__kanban_state__blocked
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__blocked
+#: model:project.task,legend_blocked:project.project_1_task_1
+#: model:project.task,legend_blocked:project.project_1_task_2
+#: model:project.task,legend_blocked:project.project_1_task_3
+#: model:project.task,legend_blocked:project.project_1_task_4
+#: model:project.task,legend_blocked:project.project_2_task_1
+#: model:project.task,legend_blocked:project.project_2_task_10
+#: model:project.task,legend_blocked:project.project_2_task_11
+#: model:project.task,legend_blocked:project.project_2_task_2
+#: model:project.task,legend_blocked:project.project_2_task_7
+#: model:project.task,legend_blocked:project.project_2_task_8
+#: model:project.task,legend_blocked:project.project_2_task_9
+#: model:project.task,legend_blocked:project.project_3_task_1
+#: model:project.task,legend_blocked:project.project_3_task_2
+#: model:project.task,legend_blocked:project.project_3_task_3
+#: model:project.task,legend_blocked:project.project_3_task_4
+#: model:project.task,legend_blocked:project.project_3_task_5
+#: model:project.task.type,legend_blocked:project.project_personal_stage_admin_0
+#: model:project.task.type,legend_blocked:project.project_personal_stage_admin_1
+#: model:project.task.type,legend_blocked:project.project_personal_stage_admin_2
+#: model:project.task.type,legend_blocked:project.project_personal_stage_admin_3
+#: model:project.task.type,legend_blocked:project.project_personal_stage_admin_4
+#: model:project.task.type,legend_blocked:project.project_personal_stage_admin_5
+#: model:project.task.type,legend_blocked:project.project_personal_stage_admin_6
+#: model:project.task.type,legend_blocked:project.project_personal_stage_demo_0
+#: model:project.task.type,legend_blocked:project.project_personal_stage_demo_1
+#: model:project.task.type,legend_blocked:project.project_personal_stage_demo_2
+#: model:project.task.type,legend_blocked:project.project_personal_stage_demo_3
+#: model:project.task.type,legend_blocked:project.project_personal_stage_demo_4
+#: model:project.task.type,legend_blocked:project.project_personal_stage_demo_5
+#: model:project.task.type,legend_blocked:project.project_personal_stage_demo_6
+#: model:project.task.type,legend_blocked:project.project_stage_0
+#: model:project.task.type,legend_blocked:project.project_stage_2
+#: model:project.task.type,legend_blocked:project.project_stage_3
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
 msgid "Blocked"
@@ -1218,6 +1305,11 @@ msgid "Brainstorm"
 msgstr "Brainstorm"
 
 #. module: project
+#: model:project.tags,name:project.project_tags_00
+msgid "Bug"
+msgstr "Bogue"
+
+#. module: project
 #: code:addons/project/models/project.py:0
 #: model:ir.actions.act_window,name:project.action_project_task_burndown_chart_report
 #: model:ir.model,name:project.model_project_task_burndown_chart_report
@@ -1229,6 +1321,26 @@ msgid "Burndown Chart"
 msgstr "Burndown Chart"
 
 #. module: project
+#: model:project.task,legend_done:project.project_1_task_10
+#: model:project.task,legend_done:project.project_1_task_11
+#: model:project.task,legend_done:project.project_1_task_12
+#: model:project.task,legend_done:project.project_1_task_13
+#: model:project.task,legend_done:project.project_1_task_14
+#: model:project.task,legend_done:project.project_1_task_15
+#: model:project.task,legend_done:project.project_1_task_5
+#: model:project.task,legend_done:project.project_1_task_6
+#: model:project.task,legend_done:project.project_1_task_7
+#: model:project.task,legend_done:project.project_1_task_8
+#: model:project.task,legend_done:project.project_1_task_9
+#: model:project.task,legend_done:project.project_2_task_3
+#: model:project.task,legend_done:project.project_2_task_4
+#: model:project.task,legend_done:project.project_2_task_5
+#: model:project.task,legend_done:project.project_2_task_6
+#: model:project.task.type,legend_done:project.project_stage_1
+msgid "Buzz or set as done"
+msgstr "Buzz ou définir comme terminé"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__can_be_marked_as_done
 msgid "Can Be Marked As Done"
 msgstr "Peut être marqué comme terminé"
@@ -1236,6 +1348,9 @@ msgstr "Peut être marqué comme terminé"
 #. module: project
 #: code:addons/project/models/project.py:0
 #: model:project.project.stage,name:project.project_project_stage_3
+#: model:project.task.type,name:project.project_personal_stage_admin_6
+#: model:project.task.type,name:project.project_personal_stage_demo_6
+#: model:project.task.type,name:project.project_stage_3
 #, python-format
 msgid "Canceled"
 msgstr "Annulé"
@@ -1294,7 +1409,7 @@ msgstr "Evaluation client"
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Closed"
-msgstr "Fermé"
+msgstr "Clôturé"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
@@ -1312,7 +1427,7 @@ msgstr "Terminées ces 7 derniers jours"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Closed Tasks"
-msgstr "Fermer des tâches"
+msgstr "Tâches clôturées"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_closed
@@ -1357,6 +1472,9 @@ msgid ""
 "Rating when changing stage: an email will be automatically sent when the task reaches the stage on which the rating email template is set.\n"
 "Periodic rating: an email will be automatically sent at regular intervals as long as the task remains in the stage in which the rating email template is set."
 msgstr ""
+"Recueillez un retour de vos clients en leur envoyant une demande d'évaluation lorsqu'une tâche atteint une certaine étape. Pour ce faire, définissez un modèle d'email d'évaluation sur les étapes correspondantes.\n"
+"Évaluation lors du changement d'étape : un email sera envoyé automatiquement quand la tâche atteint l'étape pour laquelle le modèle d'email d'évaluation est défini.\n"
+"Évaluation périodique : un email sera envoyé automatiquement à des intervalles régulières tant que la tâche se situe à l'étape pour laquelle le modèle d'email d'évaluation est défini."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_tags__color
@@ -1385,7 +1503,7 @@ msgid ""
 "      designers to the workers who print the t-shirt. Organize priorities amongst orders using the"
 msgstr ""
 "Communiquez avec les clients sur la tâche à l'aide de la passerelle de messagerie. Joignez des conceptions de logo à la tâche, de sorte que les informations circulent des\n"
-" concepteurs aux travailleurs qui impriment le t-shirt. Organisez les priorités entre les commandes en utilisant le"
+" concepteurs aux travailleurs qui impriment le t-shirt. Organisez les priorités entre les commandes en utilisant"
 
 #. module: project
 #: model:ir.model,name:project.model_res_company
@@ -1725,6 +1843,8 @@ msgid ""
 "Date on which the stage of your task has last been modified.\n"
 "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage to another."
 msgstr ""
+"Date à laquelle l'étape de votre tâche a été dernièrement modifiée.\n"
+"Sur la base de ces informations, vous pouvez identifier les tâches en suspens et obtenir des statistiques sur le temps qu'il faut normalement pour déplacer les tâches d'une étape à l'autre."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__date
@@ -1732,6 +1852,8 @@ msgid ""
 "Date on which this project ends. The timeframe defined on the project is "
 "taken into account when viewing its planning."
 msgstr ""
+"Date à laquelle le projet prend fin. Le délai défini sur le projet est pris "
+"en compte lors de la visualisation de son planning."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__date_assign
@@ -1739,6 +1861,9 @@ msgid ""
 "Date on which this task was last assigned (or unassigned). Based on this, "
 "you can get statistics on the time it usually takes to assign tasks."
 msgstr ""
+"Date à laquelle cette tâche a été dernièrement assignée (ou retirée). Vous "
+"pouvez ainsi obtenir des statistiques sur le temps qu'il faut normalement "
+"pour assigner des tâches."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_weekday
@@ -1804,13 +1929,13 @@ msgstr "Décembre"
 #: model:ir.model.fields,field_description:project.field_res_company__analytic_plan_id
 #: model:ir.model.fields,field_description:project.field_res_config_settings__analytic_plan_id
 msgid "Default Plan"
-msgstr ""
+msgstr "Plan par défaut"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_res_company__analytic_plan_id
 #: model:ir.model.fields,help:project.field_res_config_settings__analytic_plan_id
 msgid "Default Plan for a new analytic account for projects"
-msgstr ""
+msgstr "Plan par défaut pour un nouveau compte analytique pour des projets"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_defaults
@@ -1873,6 +1998,8 @@ msgid ""
 "Deliver your services automatically when a milestone is reached by linking "
 "it to a sales order item."
 msgstr ""
+"Livrez vos services automatiquement lorsqu'un jalon est atteint en le liant "
+"à un article de la commande."
 
 #. module: project
 #. openerp-web
@@ -1905,6 +2032,7 @@ msgstr "Description"
 #: model:ir.model.fields,help:project.field_project_project__description
 msgid "Description to provide more information and context about this project"
 msgstr ""
+"Description pour donner plus d'informations et de contexte sur ce projet"
 
 #. module: project
 #. openerp-web
@@ -2015,6 +2143,9 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: model:project.project.stage,name:project.project_project_stage_2
+#: model:project.task.type,name:project.project_personal_stage_admin_5
+#: model:project.task.type,name:project.project_personal_stage_demo_5
+#: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
 msgstr "Fait"
@@ -2064,18 +2195,18 @@ msgstr "Edition"
 #: model:ir.model.fields,field_description:project.field_project_project__partner_email
 #: model:ir.model.fields,field_description:project.field_project_task__partner_email
 msgid "Email"
-msgstr "Courriel"
+msgstr "Email"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_from
 msgid "Email From"
-msgstr "E-mail de"
+msgstr "Email de"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_stage__mail_template_id
 #: model:ir.model.fields,field_description:project.field_project_task_type__mail_template_id
 msgid "Email Template"
-msgstr "Modèle de courriel"
+msgstr "Modèle d'email"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_cc
@@ -2083,12 +2214,14 @@ msgid ""
 "Email addresses that were in the CC of the incoming emails from this task "
 "and that are not currently linked to an existing customer."
 msgstr ""
+"Adresses email qui étaient en CC ou les emails entrants de cette tâche et "
+"qui ne sont actuellement pas associées à un client existant."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_cc
 #: model:ir.model.fields,field_description:project.field_project_update__email_cc
 msgid "Email cc"
-msgstr "Courriel cc"
+msgstr "Email cc"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
@@ -2135,6 +2268,11 @@ msgid "Expected"
 msgstr "Attendu"
 
 #. module: project
+#: model:project.tags,name:project.project_tags_02
+msgid "Experiment"
+msgstr "Expérimentation"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date
 msgid "Expiration Date"
 msgstr "Date de fin de validité"
@@ -2143,6 +2281,11 @@ msgstr "Date de fin de validité"
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Extended Filters"
 msgstr "Filtres étendus"
+
+#. module: project
+#: model:project.tags,name:project.project_tags_05
+msgid "External"
+msgstr "Externe"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -2284,7 +2427,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Get customer feedback"
-msgstr "Obtenir des retours client"
+msgstr "Obtenez des retours client"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -2334,7 +2477,7 @@ msgid ""
 " in the chatter of the tasks. Use the"
 msgstr ""
 "Gérez votre collecte d'idées dans les tâches de votre nouveau projet et "
-"discutez-en dans le chatter des tâches. Utilisez le"
+"discutez-en dans le chatter des tâches. Utilisez les boutons"
 
 #. module: project
 #. openerp-web
@@ -2353,7 +2496,7 @@ msgstr "Tête content"
 #: model:ir.model.fields,field_description:project.field_project_task__has_late_and_unreached_milestone
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__has_late_and_unreached_milestone
 msgid "Has Late And Unreached Milestone"
-msgstr ""
+msgstr "A un jalon en retard et non atteint"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__has_message
@@ -2471,6 +2614,8 @@ msgid ""
 "If enabled, this stage will be displayed as folded in the Kanban view of "
 "your projects. Projects in a folded stage are considered as closed."
 msgstr ""
+"Si activé, cette étape sera affichée comme repliée dans la vue kanban de vos"
+" projets. Les projets dans une étape repliée sont considérés comme fermés."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__fold
@@ -2478,6 +2623,8 @@ msgid ""
 "If enabled, this stage will be displayed as folded in the Kanban view of "
 "your tasks. Tasks in a folded stage are considered as closed."
 msgstr ""
+"Si activé, cette étape sera affichée comme repliée dans la vue kanban de vos"
+" tâches. Les tâches dans une étape repliée sont considérées comme fermées."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
@@ -2486,6 +2633,9 @@ msgid ""
 "Alternatively, it will be sent at a regular interval as long as the task remains in this stage, depending on the configuration of your project. \n"
 "To use this feature make sure that the 'Customer Ratings' option is enabled on your project."
 msgstr ""
+"Si défini, une demande d'évaluation sera automatiquement envoyée par email au client lorsque la tâche atteindra ce stade.\n"
+"Alternativement, il sera envoyé à intervalles réguliers tant que la tâche reste à ce stade, selon la configuration de votre projet.\n"
+"Pour utiliser cette fonctionnalité, assurez-vous que l'option \"Évaluations des clients\" est activée sur votre projet."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
@@ -2493,6 +2643,8 @@ msgid ""
 "If set, an email will be automatically sent to the customer when the project"
 " reaches this stage."
 msgstr ""
+"Si défini, un email sera automatiquement envoyé au client lorsque le projet "
+"atteindra cette étape."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__mail_template_id
@@ -2500,6 +2652,8 @@ msgid ""
 "If set, an email will be automatically sent to the customer when the task "
 "reaches this stage."
 msgstr ""
+"Si défini, un email sera automatiquement envoyé au client lorsque la tâche "
+"atteindra cette étape."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_bounced_content
@@ -2527,6 +2681,56 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__kanban_state__normal
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__normal
 #: model:project.project.stage,name:project.project_project_stage_1
+#: model:project.task,legend_normal:project.project_1_task_1
+#: model:project.task,legend_normal:project.project_1_task_10
+#: model:project.task,legend_normal:project.project_1_task_11
+#: model:project.task,legend_normal:project.project_1_task_12
+#: model:project.task,legend_normal:project.project_1_task_13
+#: model:project.task,legend_normal:project.project_1_task_14
+#: model:project.task,legend_normal:project.project_1_task_15
+#: model:project.task,legend_normal:project.project_1_task_2
+#: model:project.task,legend_normal:project.project_1_task_3
+#: model:project.task,legend_normal:project.project_1_task_4
+#: model:project.task,legend_normal:project.project_1_task_5
+#: model:project.task,legend_normal:project.project_1_task_6
+#: model:project.task,legend_normal:project.project_1_task_7
+#: model:project.task,legend_normal:project.project_1_task_8
+#: model:project.task,legend_normal:project.project_1_task_9
+#: model:project.task,legend_normal:project.project_2_task_1
+#: model:project.task,legend_normal:project.project_2_task_10
+#: model:project.task,legend_normal:project.project_2_task_11
+#: model:project.task,legend_normal:project.project_2_task_2
+#: model:project.task,legend_normal:project.project_2_task_3
+#: model:project.task,legend_normal:project.project_2_task_4
+#: model:project.task,legend_normal:project.project_2_task_5
+#: model:project.task,legend_normal:project.project_2_task_6
+#: model:project.task,legend_normal:project.project_2_task_7
+#: model:project.task,legend_normal:project.project_2_task_8
+#: model:project.task,legend_normal:project.project_2_task_9
+#: model:project.task,legend_normal:project.project_3_task_1
+#: model:project.task,legend_normal:project.project_3_task_2
+#: model:project.task,legend_normal:project.project_3_task_3
+#: model:project.task,legend_normal:project.project_3_task_4
+#: model:project.task,legend_normal:project.project_3_task_5
+#: model:project.task.type,legend_normal:project.project_personal_stage_admin_0
+#: model:project.task.type,legend_normal:project.project_personal_stage_admin_1
+#: model:project.task.type,legend_normal:project.project_personal_stage_admin_2
+#: model:project.task.type,legend_normal:project.project_personal_stage_admin_3
+#: model:project.task.type,legend_normal:project.project_personal_stage_admin_4
+#: model:project.task.type,legend_normal:project.project_personal_stage_admin_5
+#: model:project.task.type,legend_normal:project.project_personal_stage_admin_6
+#: model:project.task.type,legend_normal:project.project_personal_stage_demo_0
+#: model:project.task.type,legend_normal:project.project_personal_stage_demo_1
+#: model:project.task.type,legend_normal:project.project_personal_stage_demo_2
+#: model:project.task.type,legend_normal:project.project_personal_stage_demo_3
+#: model:project.task.type,legend_normal:project.project_personal_stage_demo_4
+#: model:project.task.type,legend_normal:project.project_personal_stage_demo_5
+#: model:project.task.type,legend_normal:project.project_personal_stage_demo_6
+#: model:project.task.type,legend_normal:project.project_stage_0
+#: model:project.task.type,legend_normal:project.project_stage_1
+#: model:project.task.type,legend_normal:project.project_stage_2
+#: model:project.task.type,legend_normal:project.project_stage_3
+#: model:project.task.type,name:project.project_stage_1
 #, python-format
 msgid "In Progress"
 msgstr "En cours"
@@ -2540,6 +2744,8 @@ msgstr "En développement"
 
 #. module: project
 #: code:addons/project/models/project.py:0
+#: model:project.task.type,name:project.project_personal_stage_admin_0
+#: model:project.task.type,name:project.project_personal_stage_demo_0
 #, python-format
 msgid "Inbox"
 msgstr "Boîte de réception"
@@ -2548,6 +2754,11 @@ msgstr "Boîte de réception"
 #: model:ir.model.fields,field_description:project.field_project_task__planned_hours
 msgid "Initially Planned Hours"
 msgstr "Heures prévues initialement"
+
+#. module: project
+#: model:project.tags,name:project.project_tags_04
+msgid "Internal"
+msgstr "Interne"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_id
@@ -2609,7 +2820,7 @@ msgstr "Facturé"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_analytic_account_id_changed
 msgid "Is Analytic Account Manually Changed"
-msgstr ""
+msgstr "Est un compte analytique manuellement modifié"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_blocked
@@ -2753,7 +2964,7 @@ msgid ""
 "                    Collaborate efficiently by chatting in real-time or via email."
 msgstr ""
 "Suivez l'évolution de vos tâches de la création à la complétion.<br>\n"
-"                    Collaborez efficacement en discutant en temps-réel ou par e-mail."
+"                    Collaborez efficacement en discutant en temps réel ou par email."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_action
@@ -2762,7 +2973,7 @@ msgid ""
 "                Collaborate efficiently by chatting in real-time or via email."
 msgstr ""
 "Suivez l'évolution de vos tâches de la création à la complétion.<br>\n"
-"                Collaborez effiacement en discutant en temps-réel ou par e-mail."
+"                Collaborez efficacement en discutant en temps réel ou par email."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened_value
@@ -2803,7 +3014,7 @@ msgstr "Mois dernier"
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_last_stage_update
 #, python-format
 msgid "Last Stage Update"
-msgstr "Dernière étape de mise à jour"
+msgstr "Dernière mise à jour de l'étape"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__last_update_id
@@ -2879,6 +3090,8 @@ msgstr "Tâches en retard"
 
 #. module: project
 #: code:addons/project/models/project.py:0
+#: model:project.task.type,name:project.project_personal_stage_admin_4
+#: model:project.task.type,name:project.project_personal_stage_demo_4
 #, python-format
 msgid "Later"
 msgstr "Plus tard"
@@ -2929,7 +3142,7 @@ msgstr "Lien"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_update__email_cc
 msgid "List of cc from incoming emails."
-msgstr "Liste de cc des courriels entrant."
+msgstr "Liste des cc des emails entrants."
 
 #. module: project
 #. openerp-web
@@ -2979,6 +3192,8 @@ msgid ""
 "Manage the lifecycle of your project using the kanban view. Add newly acquired projects,\n"
 "      assign them and use the"
 msgstr ""
+"Gérez le cycle de vie de votre projet en utilisant la vue kanban. Ajoutez de nouveaux projets acquis,\n"
+"      allouez-les et utilisez les boutons"
 
 #. module: project
 #. openerp-web
@@ -3139,7 +3354,7 @@ msgstr "Mes favoris"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_extended
 msgid "My Private Tasks"
-msgstr ""
+msgstr "Mes tâches privées"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -3192,6 +3407,8 @@ msgid ""
 "Name of your project. It can be anything you want e.g. the name of a "
 "customer or a service."
 msgstr ""
+"Nom de votre projet. Vous pouvez le nommer comme vous voulez, par exemple le"
+" nom d'un client ou d'un service. "
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__label_tasks
@@ -3199,6 +3416,28 @@ msgid ""
 "Name used to refer to the tasks of your project e.g. tasks, tickets, "
 "sprints, etc..."
 msgstr ""
+"Nom utilisé pour référer aux tâches de votre projet, par ex. tâches, "
+"tickets, sprints, etc..."
+
+#. module: project
+#: model:project.task,legend_blocked:project.project_1_task_10
+#: model:project.task,legend_blocked:project.project_1_task_11
+#: model:project.task,legend_blocked:project.project_1_task_12
+#: model:project.task,legend_blocked:project.project_1_task_13
+#: model:project.task,legend_blocked:project.project_1_task_14
+#: model:project.task,legend_blocked:project.project_1_task_15
+#: model:project.task,legend_blocked:project.project_1_task_5
+#: model:project.task,legend_blocked:project.project_1_task_6
+#: model:project.task,legend_blocked:project.project_1_task_7
+#: model:project.task,legend_blocked:project.project_1_task_8
+#: model:project.task,legend_blocked:project.project_1_task_9
+#: model:project.task,legend_blocked:project.project_2_task_3
+#: model:project.task,legend_blocked:project.project_2_task_4
+#: model:project.task,legend_blocked:project.project_2_task_5
+#: model:project.task,legend_blocked:project.project_2_task_6
+#: model:project.task.type,legend_blocked:project.project_stage_1
+msgid "Need functional or technical help"
+msgstr "Besoin d'une aide fonctionnelle ou technique"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -3211,10 +3450,16 @@ msgstr "Tête neutre"
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+#: model:project.task.type,name:project.project_stage_0
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #, python-format
 msgid "New"
 msgstr "Nouveau"
+
+#. module: project
+#: model:project.tags,name:project.project_tags_01
+msgid "New Feature"
+msgstr "Nouvelle fonctionnalité"
 
 #. module: project
 #. openerp-web
@@ -3475,6 +3720,12 @@ msgid "Off Track"
 msgstr "En retard"
 
 #. module: project
+#: model:account.analytic.account,name:project.analytic_office_design
+#: model:project.project,name:project.project_project_1
+msgid "Office Design"
+msgstr "Office Design"
+
+#. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__rating_last_text__ok
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -3487,7 +3738,7 @@ msgstr "Ok"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Old Completed Sprint"
-msgstr "Vieux sprint terminé"
+msgstr "Vieux sprint terminés"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__on_hold
@@ -3530,7 +3781,7 @@ msgstr "Tâches ouvertes"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Operation should be = or != (not %s)"
-msgstr ""
+msgstr "L'opération doit être = ou != (et non %s)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_force_thread_id
@@ -3550,7 +3801,7 @@ msgid ""
 "                    Collaborate efficiently by chatting in real-time or via email."
 msgstr ""
 "Organisez vos tâches en les répartissant à travers le pipeline.<br>\n"
-"                    Collaborez efficacement en discutant en temps-réel ou par e-mail."
+"                    Collaborez efficacement en discutant en temps réel ou par email."
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -3562,7 +3813,7 @@ msgstr "Autres"
 #: code:addons/project/report/project_task_burndown_chart_report.py:0
 #, python-format
 msgid "Output name %r is used twice."
-msgstr ""
+msgstr "Le nom de sortie %r est utilisé deux fois."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
@@ -3702,7 +3953,7 @@ msgstr "Date planifiée"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_project_forecast
 msgid "Planning"
-msgstr "Planification"
+msgstr "Planning"
 
 #. module: project
 #: code:addons/project/models/analytic_account.py:0
@@ -3760,7 +4011,7 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Prioritize Tasks by using the"
-msgstr "Prioriser les tâches en utilisant le"
+msgstr "Priorisez les tâches en utilisant"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -3779,7 +4030,7 @@ msgstr "Priorité: {{'Important' if task.priority == '1' else 'Normal'}}"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility_warning
 msgid "Privacy Visibility Warning"
-msgstr ""
+msgstr "Avertissement de visibilité vie privée"
 
 #. module: project
 #. openerp-web
@@ -3873,7 +4124,7 @@ msgstr "Nombre de projets"
 #: model_terms:ir.ui.view,arch_db:project.view_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Project Manager"
-msgstr "Responsable"
+msgstr "Chef de Projet"
 
 #. module: project
 #: model:ir.model,name:project.model_project_milestone
@@ -3888,7 +4139,7 @@ msgstr "Nom du projet"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_active
 msgid "Project Rating Status"
-msgstr ""
+msgstr "Statut de l'évaluation du projet"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__project_id
@@ -3919,7 +4170,7 @@ msgstr "Étape du projet modifiée"
 #. module: project
 #: model:ir.model,name:project.model_project_task_type_delete_wizard
 msgid "Project Stage Delete Wizard"
-msgstr "Wizard de suppression d'étape de projet"
+msgstr "Assistant de suppression d'étape de projet"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_project_stage_configure
@@ -3956,6 +4207,11 @@ msgid "Project Visibility"
 msgstr "Visibilité du projet"
 
 #. module: project
+#: model:mail.template,subject:project.project_done_email_template
+msgid "Project status - {{ object.name }}"
+msgstr "Statut su projet - {{ object.name }}"
+
+#. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
 msgid "Project's tasks"
 msgstr "Tâches de projet"
@@ -3968,11 +4224,26 @@ msgid "Project: Create Recurring Tasks"
 msgstr "Projet: créez des tâches récurrentes"
 
 #. module: project
+#: model:mail.template,name:project.project_done_email_template
+msgid "Project: Project Completed"
+msgstr "Projet : Projet terminé"
+
+#. module: project
+#: model:mail.template,name:project.mail_template_data_project_task
+msgid "Project: Request Acknowledgment"
+msgstr "Projet : Demande d'accusé de réception"
+
+#. module: project
 #: model:ir.actions.server,name:project.ir_cron_rating_project_ir_actions_server
 #: model:ir.cron,cron_name:project.ir_cron_rating_project
 #: model:ir.cron,name:project.ir_cron_rating_project
 msgid "Project: Send rating"
 msgstr "Projet : envoyer l'évaluation"
+
+#. module: project
+#: model:mail.template,name:project.rating_project_request_email_template
+msgid "Project: Task Rating Request"
+msgstr "Projet : Demande d'évaluation de la tâche"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_project_all
@@ -4012,6 +4283,14 @@ msgid ""
 " several projects, you can share this stage among them and get consolidated "
 "information this way."
 msgstr ""
+"Projets dans lesquels cette étape figure. Si vous suivez un flux similaire "
+"dans plusieurs projets, vous pouvez partager cette étape et ainsi obtenir "
+"des informations consolidées."
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__task_properties
+msgid "Properties"
+msgstr "Propriétés"
 
 #. module: project
 #. openerp-web
@@ -4043,7 +4322,7 @@ msgstr "Évaluation"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
 msgid "Rating (/5)"
-msgstr "Valeur de l'évaluation (/5)"
+msgstr "Evaluation (/5)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_avg_text
@@ -4113,7 +4392,7 @@ msgstr "Nombre d'évaluations"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__stage
 msgid "Rating when changing stage"
-msgstr "Evaluation au changement d'étape"
+msgstr "Évaluation au changement d'étape"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_task
@@ -4140,6 +4419,36 @@ msgstr "Lecture seule"
 #. module: project
 #: code:addons/project/models/project.py:0
 #: model:ir.model.fields.selection,name:project.selection__project_task__kanban_state__done
+#: model:project.task,legend_done:project.project_1_task_1
+#: model:project.task,legend_done:project.project_1_task_2
+#: model:project.task,legend_done:project.project_1_task_3
+#: model:project.task,legend_done:project.project_1_task_4
+#: model:project.task,legend_done:project.project_2_task_1
+#: model:project.task,legend_done:project.project_2_task_10
+#: model:project.task,legend_done:project.project_2_task_2
+#: model:project.task,legend_done:project.project_2_task_7
+#: model:project.task,legend_done:project.project_2_task_8
+#: model:project.task,legend_done:project.project_2_task_9
+#: model:project.task,legend_done:project.project_3_task_1
+#: model:project.task,legend_done:project.project_3_task_2
+#: model:project.task,legend_done:project.project_3_task_3
+#: model:project.task,legend_done:project.project_3_task_4
+#: model:project.task.type,legend_done:project.project_personal_stage_admin_0
+#: model:project.task.type,legend_done:project.project_personal_stage_admin_1
+#: model:project.task.type,legend_done:project.project_personal_stage_admin_2
+#: model:project.task.type,legend_done:project.project_personal_stage_admin_3
+#: model:project.task.type,legend_done:project.project_personal_stage_admin_4
+#: model:project.task.type,legend_done:project.project_personal_stage_admin_5
+#: model:project.task.type,legend_done:project.project_personal_stage_admin_6
+#: model:project.task.type,legend_done:project.project_personal_stage_demo_0
+#: model:project.task.type,legend_done:project.project_personal_stage_demo_1
+#: model:project.task.type,legend_done:project.project_personal_stage_demo_2
+#: model:project.task.type,legend_done:project.project_personal_stage_demo_3
+#: model:project.task.type,legend_done:project.project_personal_stage_demo_4
+#: model:project.task.type,legend_done:project.project_personal_stage_demo_5
+#: model:project.task.type,legend_done:project.project_personal_stage_demo_6
+#: model:project.task.type,legend_done:project.project_stage_0
+#: model:project.task.type,legend_done:project.project_stage_2
 #, python-format
 msgid "Ready"
 msgstr "Prêt"
@@ -4148,6 +4457,13 @@ msgstr "Prêt"
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__done
 msgid "Ready for Next Stage"
 msgstr "Prêt pour la prochaine étape"
+
+#. module: project
+#: model:project.task,legend_done:project.project_2_task_11
+#: model:project.task,legend_done:project.project_3_task_5
+#: model:project.task.type,legend_done:project.project_stage_3
+msgid "Ready to reopen"
+msgstr "Prêt à ré-ouvrir"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__rating_last_feedback
@@ -4209,7 +4525,7 @@ msgstr "Indicateur Kanban rouge"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Refused"
-msgstr "Refusée"
+msgstr "Refusé"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__resource_ref
@@ -4225,6 +4541,12 @@ msgstr "ID du document associé"
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__res_model
 msgid "Related Document Model"
 msgstr "Modèle de document concerné"
+
+#. module: project
+#: model:account.analytic.account,name:project.analytic_renovations
+#: model:project.project,name:project.project_project_3
+msgid "Renovations"
+msgstr "Rénovations"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_day
@@ -4311,6 +4633,12 @@ msgstr "Analyse"
 #, python-format
 msgid "Research"
 msgstr "Recherche"
+
+#. module: project
+#: model:account.analytic.account,name:project.analytic_research_development
+#: model:project.project,name:project.project_project_2
+msgid "Research & Development"
+msgstr "Recherche & Développement"
 
 #. module: project
 #. openerp-web
@@ -4468,7 +4796,7 @@ msgstr "Rechercher dans le Statut"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_week__second
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_week__second
 msgid "Second"
-msgstr "Seconde"
+msgstr "Deuxième"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_token
@@ -4485,7 +4813,7 @@ msgstr "Envoyer"
 #: model:ir.actions.act_window,name:project.action_send_mail_project_project
 #: model:ir.actions.act_window,name:project.action_send_mail_project_task
 msgid "Send Email"
-msgstr "Envoyer un courriel"
+msgstr "Envoyer un email"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__september
@@ -4505,7 +4833,7 @@ msgstr "Séquence"
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Set Cover Image"
 msgstr ""
-"Ajouter l'image\n"
+"Ajouter une image\n"
 "de couverture"
 
 #. module: project
@@ -4520,6 +4848,33 @@ msgstr "Définir le statut"
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Set a Rating Email Template on Stages"
 msgstr "Définissez un modèle d'email d'évaluation sur les étapes"
+
+#. module: project
+#: model:mail.template,description:project.project_done_email_template
+msgid ""
+"Set on project's stages to inform customers when a project reaches that "
+"stage"
+msgstr ""
+"Défini sur des étapes de projet pour informer les clients quand un projet "
+"atteint cette étape"
+
+#. module: project
+#: model:mail.template,description:project.rating_project_request_email_template
+msgid ""
+"Set this template on a project stage to request feedback from your "
+"customers. Enable the \"customer ratings\" feature on the project"
+msgstr ""
+"Définissez ce modèle sur une étape de projet pour demander un retour de vos "
+"clients. Activez la fonctionnalité \"Évaluation du client\" sur le projet"
+
+#. module: project
+#: model:mail.template,description:project.mail_template_data_project_task
+msgid ""
+"Set this template on a project's stage to automate email when tasks reach "
+"stages"
+msgstr ""
+"Définissez ce modèle sur une étape de projet pour automatiquement envoyer un"
+" email lorsque la tâche atteint cette étape"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_config_settings_action
@@ -4539,7 +4894,7 @@ msgstr "Partager"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Share Editable"
-msgstr "Partage éditable"
+msgstr "Partager en édition"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_share_wizard_action
@@ -4550,7 +4905,7 @@ msgstr "Partager le projet"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Share Readonly"
-msgstr "Partage en lecture seule"
+msgstr "Partager en lecture seule"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_favorite
@@ -4567,7 +4922,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "Since"
-msgstr "Depuis"
+msgstr "Depuis le"
 
 #. module: project
 #. openerp-web
@@ -4607,7 +4962,7 @@ msgstr "Sprint Backlog"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Sprint Complete"
-msgstr "Sprint terminé"
+msgstr "Sprint terminés"
 
 #. module: project
 #. openerp-web
@@ -4754,6 +5109,9 @@ msgid ""
 "linked to this task. Usually less than or equal to the allocated hours of "
 "this task."
 msgstr ""
+"Somme des heures allouées à toutes les sous-tâches (et leurs propres sous-"
+"tâches) associées à cette tâche. Est habituellement égale ou inférieure aux "
+"heures allouées à cette tâche."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -4858,10 +5216,15 @@ msgid "Task Logs"
 msgstr "Feuilles de temps sur les tâches"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__task_properties_definition
+msgid "Task Properties"
+msgstr "Propriétés de la tâche"
+
+#. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_rating
 #: model:mail.message.subtype,name:project.mt_task_rating
 msgid "Task Rating"
-msgstr "Evaluation de la tâche"
+msgstr "Évaluation de la tâche"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_ready
@@ -4937,16 +5300,6 @@ msgid "Task:"
 msgstr "Tâche:"
 
 #. module: project
-#: model:mail.template,name:project.rating_project_request_email_template
-msgid "Task: Rating Request"
-msgstr "Tâche: Demande d'évaluation"
-
-#. module: project
-#: model:mail.template,name:project.mail_template_data_project_task
-msgid "Task: Reception Acknowledgment"
-msgstr "Tâche: Accusé de réception"
-
-#. module: project
 #: code:addons/project/models/project.py:0
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task
@@ -4958,6 +5311,9 @@ msgstr "Tâche: Accusé de réception"
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__task_id
 #: model:ir.model.fields,field_description:project.field_res_partner__task_ids
 #: model:ir.model.fields,field_description:project.field_res_users__task_ids
+#: model:project.project,label_tasks:project.project_project_1
+#: model:project.project,label_tasks:project.project_project_2
+#: model:project.project,label_tasks:project.project_project_3
 #: model_terms:ir.ui.view,arch_db:project.portal_layout
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
@@ -5003,7 +5359,7 @@ msgstr "Gestion des tâches"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Tasks Managment"
-msgstr ""
+msgstr "Gestion des tâches"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__type_ids
@@ -5028,7 +5384,7 @@ msgstr "Tests"
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_search_model.js:0
 #, python-format
 msgid "The Burndown Chart must be grouped by"
-msgstr ""
+msgstr "Le graphique d'avancement doit être groupé par"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_id
@@ -5057,9 +5413,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"Le modèle (sorte de document Odoo) auquel correspond cet alias. Tout les "
-"e-mail entrant ne correspondant pas à un enregistrement existant entraînera "
-"la création d'un nouvel enregistrement de ce modèle (Ex. : une tâche d'un "
+"Le modèle (sorte de document Odoo) auquel correspond cet alias. Chaque email"
+" entrant ne correspondant pas à un enregistrement existant entraînera la "
+"création d'un nouvel enregistrement de ce modèle (Ex. : une tâche d'un "
 "projet)"
 
 #. module: project
@@ -5068,8 +5424,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"Le nom de l'alias de messagerie, par exemple 'carrieres' pour relever les "
-"e-mails de <carrieres@example.odoo.com>"
+"Le nom de l'alias de messagerie, par exemple 'carrières' pour relever les "
+"emails de <jobs@example.odoo.com>"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_user_id
@@ -5079,8 +5435,8 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
-"Le propriétaire d'enregistrements créés lors de la réception de courriel sur"
-" cet alias. Si ce champ n'est pas renseigné, le système essaiera de trouver "
+"Le propriétaire d'enregistrements créés lors de la réception d'emails sur "
+"cet alias. Si ce champ n'est pas renseigné, le système essaiera de trouver "
 "le propriétaire approprié à partir de l'adresse de l'expéditeur (De) ou "
 "utilisera le compte Administrateur si aucun utilisateur du système n'est "
 "trouvé pour cette adresse."
@@ -5110,6 +5466,9 @@ msgid ""
 "Via the stage configuration you can set up email templates and automate the sending of emails when a project moves into the stage.\n"
 "Projects in a folded stage are considered as closed."
 msgstr ""
+"L'étape à laquelle se situe votre projet. Vous pouvez ajouter, supprimer et déplacer les étapes autour pour adapter le pipeline à vos besoins. \n"
+"Via la configuration de l'étape, vous pouvez configurer des modèles d'email et automatiser l'envoi d'emails quand un projet arrive à l'étape.\n"
+"Les projets dans une étape repliée sont considérés comme fermés."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -5161,7 +5520,7 @@ msgstr "Il n'y a rien à rendre compte."
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_from
 msgid "These people will receive email."
-msgstr "Ces personnes recevront un courriel."
+msgstr "Ces personnes recevront un email."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_week__third
@@ -5171,12 +5530,16 @@ msgstr "Troisième"
 
 #. module: project
 #: code:addons/project/models/project.py:0
+#: model:project.task.type,name:project.project_personal_stage_admin_3
+#: model:project.task.type,name:project.project_personal_stage_demo_3
 #, python-format
 msgid "This Month"
 msgstr "Ce mois"
 
 #. module: project
 #: code:addons/project/models/project.py:0
+#: model:project.task.type,name:project.project_personal_stage_admin_2
+#: model:project.task.type,name:project.project_personal_stage_demo_2
 #, python-format
 msgid "This Week"
 msgstr "Cette semaine"
@@ -5235,7 +5598,7 @@ msgstr "Gestion du temps"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Time Managment"
-msgstr ""
+msgstr "Gestion du temps"
 
 #. module: project
 #: model:digest.tip,name:project.digest_tip_project_1
@@ -5294,6 +5657,8 @@ msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:0
+#: model:project.task.type,name:project.project_personal_stage_admin_1
+#: model:project.task.type,name:project.project_personal_stage_demo_1
 #, python-format
 msgid "Today"
 msgstr "Aujourd'hui"
@@ -5322,8 +5687,7 @@ msgstr "Suivez la satisfaction client sur les tâches"
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track major progress points that must be reached to achieve success"
 msgstr ""
-"Suivez les principaux points de progrès qui doivent être atteints pour "
-"réussir"
+"Suivez les étapes importantes devant être atteintes pour assurer le succès"
 
 #. module: project
 #. openerp-web
@@ -5341,7 +5705,7 @@ msgstr "Suivez l'évolution de vos projets"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track time spent on projects and tasks"
-msgstr "Gardez un oeil sur le temps passé sur vos tâches et projets"
+msgstr "Suivez le temps passé sur vos projets et tâches"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_tags__color
@@ -5349,6 +5713,8 @@ msgid ""
 "Transparent tags are not visible in the kanban view of your projects and "
 "tasks."
 msgstr ""
+"Les étiquettes transparents ne sont pas visibles dans la vue kanban de vos "
+"projets et tâches."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__tue
@@ -5442,11 +5808,16 @@ msgid "Update Created"
 msgstr "Mise à jour créée"
 
 #. module: project
+#: model:project.tags,name:project.project_tags_03
+msgid "Usability"
+msgstr "Facilité d'utilisation"
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Use"
-msgstr "Usage"
+msgstr "Utilisez"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_enabled
@@ -5513,7 +5884,7 @@ msgstr "Utilisez les étiquetes pour catégoriser vos tâches."
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Use the"
-msgstr "Utiliser le"
+msgstr "Utilisez"
 
 #. module: project
 #. openerp-web
@@ -5537,7 +5908,7 @@ msgstr "Utilisateur"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Value should be True or False (not %s)"
-msgstr "Les valeurs doivent être VRAI ou Faux (pas %s)"
+msgstr "Les valeurs doivent être Vrai ou Faux (pas %s)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -5699,6 +6070,9 @@ msgid ""
 "creating a tag that is already existing in other projects, it won't generate"
 " any duplicates."
 msgstr ""
+"Vous ne pouvez voir que les étiquettes étant déjà présentes dans votre "
+"projet. Si vous essayez de créer une étiquette existant déjà dans d'autres "
+"projets, cela ne génèrera pas de doublons."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -5768,6 +6142,20 @@ msgid "You have not write access of %s field."
 msgstr "Vous n'avez pas de droits d'écriture pour le champ %s ."
 
 #. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tours/project.js:0
+#, python-format
+msgid ""
+"You have unsaved changes - no worries! Odoo will automatically save it as "
+"you navigate.<br/> You can discard these changes from here or manually save "
+"your task.<br/>Let's save it manually."
+msgstr ""
+"Certains changements ne sont pas sauvegardés - ne vous inquiétez pas ! Odoo "
+"les sauvegardera automatiquement au fur et à mesure.<br/> Vous pouvez "
+"annuler ces changements d'ici ou manuellement sauvegarder vos "
+"tâches.<br/>Sauvegardons-les manuellement."
+
+#. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid ""
@@ -5795,6 +6183,8 @@ msgid ""
 "and which feedback is\n"
 "      moved to the \"Refused\" column."
 msgstr ""
+"et quels retours sont\n"
+"      bougés vers l'étape \"Refusés\"."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
@@ -5811,7 +6201,7 @@ msgstr "assignés"
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "bullets to indicate the status of a task."
-msgstr "puces pour indiquer l'état d'une tâche."
+msgstr "les puces pour indiquer l'état d'une tâche."
 
 #. module: project
 #. openerp-web
@@ -5820,7 +6210,7 @@ msgstr "puces pour indiquer l'état d'une tâche."
 msgid ""
 "button to inform your colleagues that a task is ready for the next stage."
 msgstr ""
-"bouton pour informer vos collègues qu'une tâche est prête pour l'étape "
+"le bouton pour informer vos collègues qu'une tâche est prête pour l'étape "
 "suivante."
 
 #. module: project
@@ -5867,7 +6257,7 @@ msgstr "par ex. Lancement du produit"
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "icon to organize your daily activities."
-msgstr "icône pour organiser vos activités quotidiennes."
+msgstr "l'icône pour organiser vos activités quotidiennes."
 
 #. module: project
 #. openerp-web
@@ -5875,12 +6265,12 @@ msgstr "icône pour organiser vos activités quotidiennes."
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "icon."
-msgstr ""
+msgstr "l'icône."
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "project."
-msgstr ""
+msgstr "projet."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
@@ -5896,12 +6286,12 @@ msgstr "tâche"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "the deadline for the following milestone has been updated:"
-msgstr "la date limite pour le jalon suivant a été mise à jour :"
+msgstr "la date limite du jalon suivant a été mise à jour:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "the deadline for the following milestones has been updated:"
-msgstr "la date limite pour les jalons suivants a été mise à jour :"
+msgstr "la date limite des jalons suivants a été mise à jour:"
 
 #. module: project
 #. openerp-web
@@ -5919,7 +6309,9 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "to indicate a problem or a need for discussion on a task."
-msgstr "pour indiquer un problème ou un besoin de discussion sur une tâche."
+msgstr ""
+"le bouton pour indiquer un problème ou un besoin de discussion sur une "
+"tâche."
 
 #. module: project
 #. openerp-web

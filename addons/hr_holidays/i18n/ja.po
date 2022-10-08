@@ -3,17 +3,17 @@
 # 	* hr_holidays
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # Noma Yuki, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-27 15:11+0000\n"
+"POT-Creation-Date: 2022-10-04 09:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Noma Yuki, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -962,12 +962,9 @@ msgid "Allocation Remaining Display"
 msgstr ""
 
 #. module: hr_holidays
-#. openerp-web
-#: code:addons/hr_holidays/static/src/js/time_off_calendar/time_off_calendar_controller.js:0
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__allocation_id
 #: model:mail.message.subtype,description:hr_holidays.mt_leave_allocation
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
-#, python-format
 msgid "Allocation Request"
 msgstr "割当申請"
 
@@ -1164,13 +1161,6 @@ msgstr "アーカイブ済"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Archived Time Off"
 msgstr "アーカイブ済休暇"
-
-#. module: hr_holidays
-#. openerp-web
-#: code:addons/hr_holidays/static/src/js/time_off_calendar/time_off_calendar_controller.js:0
-#, python-format
-msgid "Are you sure you want to delete this record ?"
-msgstr "このレコードを本当に削除しますか？"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__action_with_unused_accruals
@@ -1598,8 +1588,7 @@ msgstr "12月"
 
 #. module: hr_holidays
 #. openerp-web
-#: code:addons/hr_holidays/static/src/js/time_off_calendar/time_off_calendar_controller.js:0
-#: code:addons/hr_holidays/static/src/xml/time_off_calendar.xml:0
+#: code:addons/hr_holidays/static/src/views/view_dialog/form_view_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 #, python-format
@@ -1608,7 +1597,7 @@ msgstr "削除"
 
 #. module: hr_holidays
 #. openerp-web
-#: code:addons/hr_holidays/static/src/js/time_off_calendar/time_off_calendar_controller.js:0
+#: code:addons/hr_holidays/static/src/views/hooks.js:0
 #, python-format
 msgid "Delete Confirmation"
 msgstr ""
@@ -1738,13 +1727,6 @@ msgstr "日単位の期間。必要に応じて使用する参照フィールド
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__number_of_hours_display
 msgid "Duration in hours"
 msgstr "時間単位の期間"
-
-#. module: hr_holidays
-#. openerp-web
-#: code:addons/hr_holidays/static/src/xml/time_off_calendar.xml:0
-#, python-format
-msgid "Edit"
-msgstr "編集"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
@@ -2319,7 +2301,7 @@ msgstr ""
 
 #. module: hr_holidays
 #. openerp-web
-#: code:addons/hr_holidays/static/src/xml/time_off_calendar.xml:0
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
 #, python-format
 msgid "Legend"
 msgstr "凡例"
@@ -2630,17 +2612,10 @@ msgstr ""
 
 #. module: hr_holidays
 #. openerp-web
-#: code:addons/hr_holidays/static/src/js/time_off_calendar/time_off_calendar_controller.js:0
+#: code:addons/hr_holidays/static/src/views/calendar/calendar_controller.js:0
 #, python-format
 msgid "New Allocation"
 msgstr "新しい割り当て"
-
-#. module: hr_holidays
-#. openerp-web
-#: code:addons/hr_holidays/static/src/js/time_off_calendar/time_off_calendar_employee_controller.js:0
-#, python-format
-msgid "New Allocation Request"
-msgstr "休暇割当リクエスト"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -2652,16 +2627,9 @@ msgstr "%(user)sによって作成された新しい割当リクエスト:%(coun
 
 #. module: hr_holidays
 #. openerp-web
-#: code:addons/hr_holidays/static/src/js/time_off_calendar/time_off_calendar_controller.js:0
+#: code:addons/hr_holidays/static/src/views/calendar/calendar_controller.js:0
 #, python-format
 msgid "New Time Off"
-msgstr "新しい休暇"
-
-#. module: hr_holidays
-#. openerp-web
-#: code:addons/hr_holidays/static/src/js/time_off_calendar/time_off_calendar_controller.js:0
-#, python-format
-msgid "New time off"
 msgstr "新しい休暇"
 
 #. module: hr_holidays
@@ -2930,6 +2898,11 @@ msgid "Parent"
 msgstr "親"
 
 #. module: hr_holidays
+#: model:hr.leave.type,name:hr_holidays.hr_holiday_status_dv
+msgid "Parental Leaves"
+msgstr "育児休暇"
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_stress_day_view_search
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_search_hr_holidays_employee_type_report
 msgid "Period"
@@ -3015,7 +2988,7 @@ msgstr "否認"
 
 #. module: hr_holidays
 #. openerp-web
-#: code:addons/hr_holidays/static/src/xml/time_off_calendar.xml:0
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__refuse
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_base__current_leave_state__refuse
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_public__current_leave_state__refuse
@@ -3152,6 +3125,13 @@ msgstr "SMS配信エラー"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__sat
 msgid "Saturday"
 msgstr "土曜"
+
+#. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/views/view_dialog/form_view_dialog.xml:0
+#, python-format
+msgid "Save"
+msgstr "保存"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -3643,13 +3623,6 @@ msgid "Time Off"
 msgstr "休暇"
 
 #. module: hr_holidays
-#. openerp-web
-#: code:addons/hr_holidays/static/src/js/time_off_calendar/time_off_calendar_popover.js:0
-#, python-format
-msgid "Time Off : %s"
-msgstr "休暇:%s"
-
-#. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_allocation
 msgid "Time Off Allocation"
 msgstr "休暇の割り当て"
@@ -3706,8 +3679,6 @@ msgstr ""
 "従業員は、休暇担当者へ割り当てを要求します(例:回復日)。"
 
 #. module: hr_holidays
-#. openerp-web
-#: code:addons/hr_holidays/static/src/js/time_off_calendar/time_off_calendar_controller.js:0
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_my_request
 #: model:mail.message.subtype,description:hr_holidays.mt_leave
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_employee_view_dashboard
@@ -3715,7 +3686,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_calendar
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_dashboard
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
-#, python-format
 msgid "Time Off Request"
 msgstr "休暇リクエスト"
 
@@ -3867,7 +3837,7 @@ msgstr "終了日"
 
 #. module: hr_holidays
 #. openerp-web
-#: code:addons/hr_holidays/static/src/xml/time_off_calendar.xml:0
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__state__confirm
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__state__confirm
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_employee_type_report__state__confirm
@@ -3943,6 +3913,11 @@ msgid ""
 " without overriding limit."
 msgstr ""
 "この従業員に割り当てられた有給休暇の総数。この値を変更して、割り当て/休暇リクエストを作成します。制限を上書きせずに、すべてのタイムオフタイプに基づく合計。"
+
+#. module: hr_holidays
+#: model:hr.leave.type,name:hr_holidays.holiday_status_training
+msgid "Training Time Off"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__action_with_unused_accruals__postponed
@@ -4046,7 +4021,7 @@ msgstr "検証"
 
 #. module: hr_holidays
 #. openerp-web
-#: code:addons/hr_holidays/static/src/xml/time_off_calendar.xml:0
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
 #, python-format
 msgid "Validated"
 msgstr "検証済"
@@ -4123,6 +4098,13 @@ msgstr "ウェブサイトコミュニケーション履歴"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__wed
 msgid "Wednesday"
 msgstr "水曜"
+
+#. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/views/calendar/year/calendar_year_renderer.js:0
+#, python-format
+msgid "Week"
+msgstr "週"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__frequency__weekly

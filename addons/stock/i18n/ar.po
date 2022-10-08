@@ -8,16 +8,16 @@
 # Shaima Safar <shaima.safar@open-inside.com>, 2022
 # Samer Ali, 2022
 # Mustafa Rawi <mustafa@cubexco.com>, 2022
-# Malaz Abuidris <msea@odoo.com>, 2022
 # Martin Trigaux, 2022
+# Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-27 15:11+0000\n"
+"POT-Creation-Date: 2022-10-04 09:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -931,6 +931,13 @@ msgid "All at once"
 msgstr "الكل دفعة واحدة "
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"All our contractual relations will be governed exclusively by United States "
+"law."
+msgstr "ستخضع كافة علاقاتنا التعاقدية لقانون الولايات المتحدة بشكل حصري. "
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__returned_move_ids
 msgid "All returned moves"
 msgstr "جميع الترجيعات"
@@ -1261,6 +1268,15 @@ msgid "Before scheduled date"
 msgstr "قبل التاريخ المجدول "
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"Below text serves as a suggestion and doesn’t engage Odoo S.A. "
+"responsibility."
+msgstr ""
+"النص المذكور أدناه هو مجرد اقتراح من شركة أودو ولا يترتب عليها منه أي "
+"مسؤولية تجاهه"
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__block
 msgid "Blocking Message"
 msgstr "رسالة الحظر"
@@ -1299,6 +1315,12 @@ msgstr ""
 msgid ""
 "By unchecking the active field, you may hide a location without deleting it."
 msgstr "عند إلغاء تحديد حقل نشط، يمكنك إخفاء الموقع دون حذفه. "
+
+#. module: stock
+#: model:product.product,name:stock.product_cable_management_box
+#: model:product.template,name:stock.product_cable_management_box_product_template
+msgid "Cable Management Box"
+msgstr "صندوق تنظيم الأسلاك الكهربائية "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_calendar
@@ -1398,6 +1420,23 @@ msgstr "فئة"
 #: model:ir.model.fields,field_description:stock.field_product_template__route_from_categ_ids
 msgid "Category Routes"
 msgstr "مسارات الفئة"
+
+#. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"Certain countries apply withholding at source on the amount of invoices, in "
+"accordance with their internal legislation. Any withholding at source will "
+"be paid by the client to the tax authorities. Under no circumstances can My "
+"Company (Chicago) become involved in costs related to a country's "
+"legislation. The amount of the invoice will therefore be due to My Company "
+"(Chicago) in its entirety and does not include any costs relating to the "
+"legislation of the country in which the client is located."
+msgstr ""
+"تطبق بعض الدول نظام الاقتطاع في المصدر على كمية الفواتير، بناءً على تشريعها "
+"الداخلي. سيقوم العميل بدفع أي ضريبة مقتطعة في المصدر لهيئات الضرائب. لن "
+"تتحمل شركتي (شيكاغو) في ظل أي من الظروف تكاليف تشريعات دولة ما. ستستحق شركتي"
+" (شيكاغو) مبلغ الفاتورة بأكمله ولا يشمل أي تكاليف متعلقة بتشريعات الدولة "
+"التي يقطن فيها العميل. "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__move_dest_exists
@@ -2279,9 +2318,11 @@ msgid "Delivered Qty"
 msgstr "الكمية التي تم إيصالها "
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__outgoing
 #: model:ir.ui.menu,name:stock.menu_delivery
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#, python-format
 msgid "Delivery"
 msgstr "التوصيل "
 
@@ -2297,6 +2338,7 @@ msgstr "طرق التوصيل "
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
+#: model:stock.picking.type,name:stock.chi_picking_type_out
 #: model:stock.picking.type,name:stock.picking_type_out
 #, python-format
 msgid "Delivery Orders"
@@ -2337,11 +2379,6 @@ msgstr "عدد أوامر التوصيل "
 #, python-format
 msgid "Delivery orders of %s"
 msgstr "أوامر توصيل %s "
-
-#. module: stock
-#: model:mail.template,name:stock.mail_template_data_delivery_confirmation
-msgid "Delivery: Send by Email"
-msgstr "التوصيل: الإرسال عبر البريد الإلكتروني "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_uom_qty
@@ -2696,19 +2733,12 @@ msgid "Email Confirmation picking"
 msgstr "البريد الإلكتروني لتأكيد الاستلام "
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Email Template"
-msgstr "قالب البريد الإلكتروني"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_mail_confirmation_template_id
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__stock_mail_confirmation_template_id
 msgid "Email Template confirmation picking"
 msgstr "قالب البريد الإلكتروني يؤكد الاستلام "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__stock_mail_confirmation_template_id
-#: model:ir.model.fields,help:stock.field_res_config_settings__stock_mail_confirmation_template_id
 msgid "Email sent to the customer once the order is done."
 msgstr "بريد إلكتروني يتم إرساله إلى العميل بمجرد انتهاء الطلب. "
 
@@ -2947,14 +2977,16 @@ msgstr ""
 "خلاف ذلك، وهذا يشمل البضائع المخزنة في أي موقع مع نوع 'الداخلي'. "
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
-#: model_terms:ir.ui.view,arch_db:stock.report_replenishment_header
+#, python-format
 msgid "Forecasted"
 msgstr "المتوقعة "
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "Forecasted Date"
 msgstr "التاريخ المتوقع "
@@ -2970,7 +3002,9 @@ msgid "Forecasted Expected date"
 msgstr "التاريخ المتوقع "
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Forecasted Inventory"
 msgstr "المخزون المتوقع "
 
@@ -2993,8 +3027,6 @@ msgstr "الإيصالات المتوقعة "
 #. openerp-web
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #: model:ir.actions.client,name:stock.stock_replenishment_product_product_action
-#: model:ir.actions.report,name:stock.stock_replenishment_report_product_product_action
-#: model:ir.actions.report,name:stock.stock_replenishment_report_product_template_action
 #, python-format
 msgid "Forecasted Report"
 msgstr "تقرير التوقعات "
@@ -3010,7 +3042,9 @@ msgid "Forecasted Weight"
 msgstr "الوزن المتوقع "
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Forecasted with Pending"
 msgstr "المتوقع مع المنتجات المعلقة "
 
@@ -3026,7 +3060,9 @@ msgid "Free Qty"
 msgstr ""
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Free Stock"
 msgstr "المخزون غير المحجوز "
 
@@ -3289,6 +3325,18 @@ msgid "Icon to indicate an exception activity."
 msgstr "الأيقونة للإشارة إلى استثناء النشاط"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"If a payment is still outstanding more than sixty (60) days after the due "
+"payment date, My Company (Chicago) reserves the right to call on the "
+"services of a debt recovery company. All legal expenses will be payable by "
+"the client."
+msgstr ""
+"إذا كان الدفع لا يزال مستحقاً بعد مرور أكثر من ستين (60) يوم بعد تاريخ "
+"استحقاق الدفع، يحق لشركتي (شيكاغو) استدعاء خدمات تحصيل الديون. يتحمل العميل "
+"كافة التكاليف القانونية. "
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__same
 msgid "If all products are same"
 msgstr "عندما تكون كافة المنتجات متشابهة "
@@ -3496,11 +3544,25 @@ msgid "In Type"
 msgstr "في النوع"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"In order for it to be admissible, My Company (Chicago) must be notified of "
+"any claim by means of a letter sent by recorded delivery to its registered "
+"office within 8 days of the delivery of the goods or the provision of the "
+"services."
+msgstr ""
+"حتى تكون مقبولة، يجب أن يتم إخطار شركتي (شيكاغو) بوجود أي دعوى عن طريق رسالة"
+" مُرسلة عبر التسليم المُسجَّل إلى المكتب المسجَّل خلال 8 أيام من تاريخ تسليم"
+" البضاعة أو أحكام الخدمات. "
+
+#. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model:ir.model.fields,field_description:stock.field_product_product__incoming_qty
 #: model:ir.model.fields,field_description:stock.field_product_template__incoming_qty
-#: model_terms:ir.ui.view,arch_db:stock.report_replenishment_header
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
+#, python-format
 msgid "Incoming"
 msgstr "واردة "
 
@@ -3510,7 +3572,9 @@ msgid "Incoming Date"
 msgstr "تاريخ الوصول"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Incoming Draft Transfer"
 msgstr "مسودة الشحنة الواردة "
 
@@ -3710,7 +3774,10 @@ msgid "Inventory Loss"
 msgstr "خسارة المخزون "
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Inventory On Hand"
 msgstr "المخزون في اليد "
 
@@ -3839,7 +3906,7 @@ msgstr "مهلة توصيل Json "
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.js:0
+#: code:addons/stock/static/src/widgets/json_widget.js:0
 #, python-format
 msgid "Json Popup"
 msgstr ""
@@ -4115,7 +4182,7 @@ msgstr "مهلة التسليم "
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "Lead Times"
 msgstr "مهلة التسليمات "
@@ -4653,6 +4720,22 @@ msgid "My Activity Deadline"
 msgstr "نهاية الوقت المعين للنشاط"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"My Company (Chicago) undertakes to do its best to supply performant services"
+" in due time in accordance with the agreed timeframes. However, none of its "
+"obligations can be considered as being an obligation to achieve results. My "
+"Company (Chicago) cannot under any circumstances, be required by the client "
+"to appear as a third party in the context of any claim for damages filed "
+"against the client by an end consumer."
+msgstr ""
+"تتطلع شركتي (شيكاغو) إلى بذل قصارى جهدها للتزويد خدمات ذات أداءٍ عالٍ في "
+"الوقت المطلوب، وفقاً للإطار الزمني المتفق عليه. وعلى الرغم من ذلك، فلا يمكن "
+"اعتبار أي من التزاماتها كتكليف ملزم لتحقيق النتائج. لا يمكن لشركتي (شيكاغو) "
+"تحت ظل أي من الظروف أن تمثل طرفاً ثالثاً تلبية لطلب العميل في حال حدوث أي "
+"أضرار تم التقرير عنها ضد العميل من قِبَل المستهلك. "
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "My Counts"
 msgstr ""
@@ -4887,8 +4970,8 @@ msgstr "عادي"
 #. module: stock
 #. openerp-web
 #: code:addons/stock/models/stock_picking.py:0
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 #, python-format
 msgid "Not Available"
 msgstr "غير متاح "
@@ -4976,11 +5059,13 @@ msgid "October"
 msgstr "أكتوبر"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model:ir.model.fields,field_description:stock.field_stock_quant__on_hand
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_on_hand
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
-#: model_terms:ir.ui.view,arch_db:stock.report_replenishment_header
+#, python-format
 msgid "On Hand"
 msgstr "الكمية في اليد"
 
@@ -5189,21 +5274,41 @@ msgid "Other Information"
 msgstr "المعلومات الأخرى "
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"Our invoices are payable within 21 working days, unless another payment "
+"timeframe is indicated on either the invoice or the order. In the event of "
+"non-payment by the due date, My Company (Chicago) reserves the right to "
+"request a fixed interest payment amounting to 10% of the sum remaining due. "
+"My Company (Chicago) will be authorized to suspend any provision of services"
+" without prior warning in the event of late payment."
+msgstr ""
+"فواتيرنا قابلة للدفع خلال 21 يوم عمل، إلا إذا تمت الإشارة إلى إطار زمني آخر "
+"للدفع في الفاتورة أو الأمر. في حال عدم الدفع بحلول تاريخ الاستحقاق، تحتفظ "
+"شركتي (شيكاغو) بحق طلب مبلغ فوائد ثابت تبلغ قيمته 10% من إجمالي المبلغ "
+"المستحق. سيكون لشركتي (شيكاغو) حق تعليق أي قسم من الخدمات دون تحذير مسبق في "
+"حال تأخر الدفع. "
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__out_type_id
 msgid "Out Type"
 msgstr "نوع الخارج "
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model:ir.model.fields,field_description:stock.field_product_product__outgoing_qty
 #: model:ir.model.fields,field_description:stock.field_product_template__outgoing_qty
-#: model_terms:ir.ui.view,arch_db:stock.report_replenishment_header
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
+#, python-format
 msgid "Outgoing"
 msgstr "الصادرة "
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Outgoing Draft Transfer"
 msgstr "مسودة شحنة صادرة "
 
@@ -5555,7 +5660,7 @@ msgstr "الشحنة المخطط لها "
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/js/stock_rescheduling_popover.js:0
+#: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
 #, python-format
 msgid "Planning Issue"
 msgstr "مشكلة تخطيط "
@@ -5591,7 +5696,7 @@ msgstr "ملء العمليات المفصلة مسبقاً "
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
 #, python-format
 msgid "Preceding operations"
 msgstr "العمليات السابقة "
@@ -5717,6 +5822,8 @@ msgid "Produced Qty"
 msgstr "الكمية المنتجة"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.model,name:stock.model_product_template
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_id
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__product_id
@@ -5741,7 +5848,6 @@ msgstr "الكمية المنتجة"
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_body_print
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_inventory
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
@@ -5751,6 +5857,7 @@ msgstr "الكمية المنتجة"
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_search_view
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
+#, python-format
 msgid "Product"
 msgstr "المنتج"
 
@@ -5841,7 +5948,7 @@ msgstr "تم تحديث كمية المنتج "
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/js/report_stock_forecasted.js:0
+#: code:addons/stock/static/src/stock_forecasted/forecasted_buttons.js:0
 #: model:ir.model,name:stock.model_product_replenish
 #, python-format
 msgid "Product Replenish"
@@ -6296,8 +6403,10 @@ msgid "Real Reserved Quantity"
 msgstr "الكميات المحجوزة الفعلية "
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__incoming
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#, python-format
 msgid "Receipt"
 msgstr "الإيصال "
 
@@ -6308,6 +6417,7 @@ msgstr "مسار الإيصال "
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
+#: model:stock.picking.type,name:stock.chi_picking_type_in
 #: model:stock.picking.type,name:stock.picking_type_in
 #, python-format
 msgid "Receipts"
@@ -6473,8 +6583,8 @@ msgstr "البحث في قواعد إعادة الطلب "
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/report_stock_forecasted.xml:0
-#: code:addons/stock/static/src/xml/report_stock_forecasted.xml:0
+#: code:addons/stock/static/src/stock_forecasted/forecasted_buttons.xml:0
+#: code:addons/stock/static/src/stock_forecasted/forecasted_buttons.xml:0
 #: model:ir.actions.act_window,name:stock.action_product_replenish
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_product_view_form_easy_inherit_stock
@@ -6499,12 +6609,14 @@ msgid "Replenish wizard"
 msgstr "معالج نجديد المخزون "
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.actions.act_window,name:stock.action_orderpoint_replenish
 #: model:ir.actions.server,name:stock.action_replenishment
 #: model:ir.ui.menu,name:stock.menu_reordering_rules_replenish
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
+#, python-format
 msgid "Replenishment"
 msgstr "تجديد المخزون "
 
@@ -6564,7 +6676,9 @@ msgid "Reservations"
 msgstr "الحجوزات"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Reserve"
 msgstr "حجز"
 
@@ -6611,7 +6725,9 @@ msgid "Reserved Quantity"
 msgstr "الكمية المحجوزة"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Reserved from stock"
 msgstr "محجوز من المخزون "
 
@@ -6842,8 +6958,13 @@ msgid "SSCC:"
 msgstr ""
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid "STANDARD TERMS AND CONDITIONS OF SALE"
+msgstr "الشروط والأحكام القياسية للبيع "
+
+#. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "Sales History"
 msgstr "سجل المبيعات "
@@ -6992,6 +7113,12 @@ msgstr "قم بإرسال البضائع إلى المخرج ثم توصيلها
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_sendcloud
 msgid "Sendcloud Connector"
+msgstr ""
+
+#. module: stock
+#: model:mail.template,description:stock.mail_template_data_delivery_confirmation
+msgid ""
+"Sent to the customers when orders are delivered, if the setting is enabled"
 msgstr ""
 
 #. module: stock
@@ -7194,6 +7321,11 @@ msgstr ""
 "يتيح لك موصلو الشحن احتساب تكاليف الشحن بدقة، وطباعة بطاقات عناوين الشحن "
 "وطلب انتقاء شركة الشحن في مستودعك للشحن إلى العميل. قم بتطبيق خاصية موصلي "
 "الشحن من طرق التوصيل. "
+
+#. module: stock
+#: model:mail.template,name:stock.mail_template_data_delivery_confirmation
+msgid "Shipping: Send by Email"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__code
@@ -7666,8 +7798,8 @@ msgstr "فئة التخزين "
 #: model:ir.model,name:stock.model_stock_storage_category_capacity
 #: model:ir.model.fields,field_description:stock.field_product_product__storage_category_capacity_ids
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__storage_category_capacity_ids
-#: model:ir.ui.menu,name:stock.menu_storage_categoty_capacity_config
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_capacity_tree
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Storage Category Capacity"
 msgstr "سعة فئة التخزين "
 
@@ -7802,6 +7934,18 @@ msgid "The barcode for a location must be unique per company !"
 msgstr "يجب أن يكون باركود الموقع فريدًا لكل شركة! "
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"The client explicitly waives its own standard terms and conditions, even if "
+"these were drawn up after these standard terms and conditions of sale. In "
+"order to be valid, any derogation must be expressly agreed to in advance in "
+"writing."
+msgstr ""
+"يتنازل العميل صراحةً عن شروطه وأحكامه القياسية، حتى وإن تم سحبها بعد هذه "
+"الشروط والأحكام القياسية للبيع. حتى تكون صالحة، يجب أن يُتّفق كتابةً على أي "
+"انتقاص مسبقاً. "
+
+#. module: stock
 #: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid ""
@@ -7836,7 +7980,7 @@ msgstr "أول قيمة في التسلسل هي القيمة الافتراضي
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "The forecasted stock on the"
 msgstr "المخزون المتوقع في "
@@ -8294,7 +8438,7 @@ msgstr "بانتظار إعادة الطلب "
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "Today"
 msgstr "اليوم"
@@ -8517,7 +8661,7 @@ msgstr ""
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/js/report_stock_forecasted.js:0
+#: code:addons/stock/static/src/stock_forecasted/stock_forecasted.js:0
 #, python-format
 msgid "Try to add some incoming or outgoing transfers."
 msgstr "حاول إضافة شحنات واردة أو صادرة. "
@@ -8619,6 +8763,12 @@ msgid "Unit of Measure Name"
 msgstr "اسم وحدة القياس"
 
 #. module: stock
+#: model:product.product,uom_name:stock.product_cable_management_box
+#: model:product.template,uom_name:stock.product_cable_management_box_product_template
+msgid "Units"
+msgstr "الوحدات"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Units Of Measure"
 msgstr "وحدا ت القياس"
@@ -8655,10 +8805,12 @@ msgid "Unpack"
 msgstr "تفريغ "
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.actions.server,name:stock.action_unreserve_picking
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
+#, python-format
 msgid "Unreserve"
 msgstr "إلغاء الحجز"
 
@@ -8738,7 +8890,9 @@ msgid "Use your own routes"
 msgstr "استخدم مساراتك الخاصة "
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Used by"
 msgstr "مُستخدَم من قِبَل "
 
@@ -8921,7 +9075,7 @@ msgstr "مسارات المستودع "
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/report_stock_forecasted.xml:0
+#: code:addons/stock/static/src/stock_forecasted/forecasted_warehouse_filter.xml:0
 #, python-format
 msgid "Warehouse:"
 msgstr "المستودع: "
@@ -9541,6 +9695,11 @@ msgid "You need to supply a Lot/Serial number for products %s."
 msgstr "عليك توريد رقم دفعة/رقم تسلسلي للمنتجات %s. "
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid "You should update this document to reflect your T&amp;C."
+msgstr "عليك تحديث هذا المستند لتطبيق الشروط والأحكام الخاصة بك. "
+
+#. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "You still have ongoing operations for picking types %s in warehouse %s"
@@ -9583,6 +9742,13 @@ msgstr ""
 "            لتوفير الوقت في المستقبل، قم بتعيين القواعد كـ \"مؤتمتة\". "
 
 #. module: stock
+#: model_terms:res.company,lunch_notify_message:stock.res_company_1
+msgid ""
+"Your lunch has been delivered.\n"
+"Enjoy your meal!"
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Your stock is currently empty"
@@ -9606,7 +9772,7 @@ msgstr "]<br/>الحد الأدنى:"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "below the inventory"
 msgstr "تحت المخزون "
@@ -9684,7 +9850,7 @@ msgstr "في"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "is"
 msgstr "هو "
@@ -9696,7 +9862,7 @@ msgstr "يدوياً لتشغيل قواعد إعادة الطلب الآن. "
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "minimum of"
 msgstr "حد أدنى "
@@ -9708,7 +9874,7 @@ msgstr "من"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
 #, python-format
 msgid "planned on"
 msgstr "مخطط في "
@@ -9725,7 +9891,7 @@ msgstr "report_stock_quantity_graph"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "should be replenished"
 msgstr "يجب تجديده "
@@ -9739,7 +9905,7 @@ msgstr ""
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "to reach the maximum of"
 msgstr "للوصول إلى الحد الأقصى لـ"

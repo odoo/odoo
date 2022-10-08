@@ -10,16 +10,16 @@
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2022
 # Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2022
 # monchai7 <montchye@gmail.com>, 2022
-# Wichanon Jamwutthipreecha, 2022
 # Martin Trigaux, 2022
+# Wichanon Jamwutthipreecha, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:01+0000\n"
+"POT-Creation-Date: 2022-10-04 09:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1027,6 +1027,11 @@ msgid "Cash Out"
 msgstr "เงินออก"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
+msgid "Cash Register"
+msgstr "ลงทะเบียนเงินสด"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__cash_rounding
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Cash Rounding"
@@ -1060,6 +1065,12 @@ msgstr ""
 #, python-format
 msgid "Cash in/out of %s is ignored."
 msgstr "เงินสดเข้า/ออกของ %s ถูกละเลย"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "Cash register"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__rounding_method
@@ -1113,6 +1124,11 @@ msgstr "ชื่อหมวดหมู่"
 #: model:ir.model.fields,help:point_of_sale.field_product_template__pos_categ_id
 msgid "Category used in the Point of Sale."
 msgstr "หมวดหมู่ที่ใช้ในระบบขายหน้าร้าน"
+
+#. module: point_of_sale
+#: model:pos.category,name:point_of_sale.pos_category_chairs
+msgid "Chairs"
+msgstr "เก้าอี้"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1592,6 +1608,11 @@ msgid "Current Session State"
 msgstr "สถานะเซสชันปัจจุบัน"
 
 #. module: point_of_sale
+#: model:product.attribute.value,name:point_of_sale.fabric_attribute_custom
+msgid "Custom"
+msgstr "กำหนดเอง"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_header_or_footer
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_is_header_or_footer
 msgid "Custom Header & Footer"
@@ -1858,6 +1879,23 @@ msgstr "ลบคำสั่งที่ยังไม่ได้ชำระ
 #, python-format
 msgid "Delete Unpaid Orders ?"
 msgstr "ลบคำสั่งที่ยังไม่ได้ชำระ ?"
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.desk_organizer
+#: model:product.template,name:point_of_sale.desk_organizer_product_template
+msgid "Desk Organizer"
+msgstr "ออแกไนเซอร์ตั้งโต๊ะ"
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.desk_pad
+#: model:product.template,name:point_of_sale.desk_pad_product_template
+msgid "Desk Pad"
+msgstr "แผ่นรองโต๊ะ"
+
+#. module: point_of_sale
+#: model:pos.category,name:point_of_sale.pos_category_desks
+msgid "Desks"
+msgstr "โต๊ะ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__account_id
@@ -2215,6 +2253,11 @@ msgstr "ส่งออกคำสั่งที่ยังไม่ได้
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Extra Info"
 msgstr "ข้อมูลเพิ่มเติม"
+
+#. module: point_of_sale
+#: model:product.attribute,name:point_of_sale.fabric_attribute
+msgid "Fabric"
+msgstr "ผ้า"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__failed_pickings
@@ -2854,6 +2897,12 @@ msgid "Kpi Pos Total Value"
 msgstr "ค่า Kpi Pos รวม"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.led_lamp
+#: model:product.template,name:point_of_sale.led_lamp_product_template
+msgid "LED Lamp"
+msgstr "หลอดไฟ LED"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__name
 msgid "Label"
 msgstr "ป้าย"
@@ -2934,6 +2983,11 @@ msgid "Last Updated on"
 msgstr "อัปเดตครั้งล่าสุดเมื่อ"
 
 #. module: point_of_sale
+#: model:product.attribute.value,name:point_of_sale.fabric_attribute_leather
+msgid "Leather"
+msgstr "หนัง"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
 msgid "Leave empty to use the default account from the company setting"
 msgstr "เว้นว่างไว้เพื่อใช้บัญชีเริ่มต้นจากการตั้งค่าบริษัท"
@@ -2968,6 +3022,12 @@ msgid ""
 "For bank journal, we write to the outstanding account specified in this payment method.\n"
 "Only cash and bank journals are allowed."
 msgstr ""
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.letter_tray
+#: model:product.template,name:point_of_sale.letter_tray_product_template
+msgid "Letter Tray"
+msgstr "ถาดจดหมาย"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__limited_partners_amount
@@ -3067,6 +3127,12 @@ msgid "Lot/serial Number"
 msgstr "ล็อต/หมายเลขซีเรียล"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.magnetic_board
+#: model:product.template,name:point_of_sale.magnetic_board_product_template
+msgid "Magnetic Board"
+msgstr "กระดานแม่เหล็ก"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_main_attachment_id
 msgid "Main Attachment"
 msgstr "เอกสารหลักที่แนบมา"
@@ -3156,6 +3222,11 @@ msgid "Method"
 msgstr "วิธีการ"
 
 #. module: point_of_sale
+#: model:pos.category,name:point_of_sale.pos_category_miscellaneous
+msgid "Miscellaneous"
+msgstr "เบ็ดเตล็ด"
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerDetailsEdit.xml:0
 #, python-format
@@ -3167,6 +3238,12 @@ msgstr "มือถือ"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_module_pos_hr
 msgid "Module Pos Hr"
 msgstr "โมดูล Pos Hr"
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.monitor_stand
+#: model:product.template,name:point_of_sale.monitor_stand_product_template
+msgid "Monitor Stand"
+msgstr "ขาตั้งจอมอนิเตอร์"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3261,6 +3338,12 @@ msgstr "คำสั่งใหม่"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "New Session"
 msgstr "เซสชันใหม่"
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.newspaper_rack
+#: model:product.template,name:point_of_sale.newspaper_rack_product_template
+msgid "Newspaper Rack"
+msgstr "ชั้นวางหนังสือพิมพ์"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
@@ -4082,6 +4165,11 @@ msgstr "การรับสินค้า"
 #, python-format
 msgid "Picture"
 msgstr "รูปภาพ"
+
+#. module: point_of_sale
+#: model:product.attribute.value,name:point_of_sale.fabric_attribute_plastic
+msgid "Plastic"
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -5527,6 +5615,11 @@ msgid "Six Payment Terminal"
 msgstr ""
 
 #. module: point_of_sale
+#: model:product.attribute,name:point_of_sale.size_attribute
+msgid "Size"
+msgstr "ไซส์"
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Chrome.xml:0
 #, python-format
@@ -5537,6 +5630,12 @@ msgstr "ข้าม"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_print_skip_screen
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_print_skip_screen
 msgid "Skip Preview Screen"
+msgstr ""
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.small_shelf
+#: model:product.template,name:point_of_sale.small_shelf_product_template
+msgid "Small Shelf"
 msgstr ""
 
 #. module: point_of_sale
@@ -6627,10 +6726,32 @@ msgid "Unit Price"
 msgstr "ราคาต่อหน่วย"
 
 #. module: point_of_sale
+#: model:product.product,uom_name:point_of_sale.desk_organizer
+#: model:product.product,uom_name:point_of_sale.desk_pad
+#: model:product.product,uom_name:point_of_sale.led_lamp
+#: model:product.product,uom_name:point_of_sale.letter_tray
+#: model:product.product,uom_name:point_of_sale.magnetic_board
+#: model:product.product,uom_name:point_of_sale.monitor_stand
+#: model:product.product,uom_name:point_of_sale.newspaper_rack
 #: model:product.product,uom_name:point_of_sale.product_product_consumable
 #: model:product.product,uom_name:point_of_sale.product_product_tip
+#: model:product.product,uom_name:point_of_sale.small_shelf
+#: model:product.product,uom_name:point_of_sale.wall_shelf
+#: model:product.product,uom_name:point_of_sale.whiteboard
+#: model:product.product,uom_name:point_of_sale.whiteboard_pen
+#: model:product.template,uom_name:point_of_sale.desk_organizer_product_template
+#: model:product.template,uom_name:point_of_sale.desk_pad_product_template
+#: model:product.template,uom_name:point_of_sale.led_lamp_product_template
+#: model:product.template,uom_name:point_of_sale.letter_tray_product_template
+#: model:product.template,uom_name:point_of_sale.magnetic_board_product_template
+#: model:product.template,uom_name:point_of_sale.monitor_stand_product_template
+#: model:product.template,uom_name:point_of_sale.newspaper_rack_product_template
 #: model:product.template,uom_name:point_of_sale.product_product_consumable_product_template
 #: model:product.template,uom_name:point_of_sale.product_product_tip_product_template
+#: model:product.template,uom_name:point_of_sale.small_shelf_product_template
+#: model:product.template,uom_name:point_of_sale.wall_shelf_product_template
+#: model:product.template,uom_name:point_of_sale.whiteboard_pen_product_template
+#: model:product.template,uom_name:point_of_sale.whiteboard_product_template
 msgid "Units"
 msgstr "หน่วย"
 
@@ -6774,6 +6895,12 @@ msgid "Waiting for card"
 msgstr ""
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.wall_shelf
+#: model:product.template,name:point_of_sale.wall_shelf_product_template
+msgid "Wall Shelf Unit"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_warehouse
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__warehouse_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6826,6 +6953,18 @@ msgid ""
 "Whenever you close a session, one entry is generated in the following "
 "accounting journal for all the orders not invoiced. Invoices are recorded in"
 " accounting separately."
+msgstr ""
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.whiteboard
+#: model:product.template,name:point_of_sale.whiteboard_product_template
+msgid "Whiteboard"
+msgstr "ไวท์บอร์ด"
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.whiteboard_pen
+#: model:product.template,name:point_of_sale.whiteboard_pen_product_template
+msgid "Whiteboard Pen"
 msgstr ""
 
 #. module: point_of_sale

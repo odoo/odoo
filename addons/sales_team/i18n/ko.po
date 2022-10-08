@@ -3,13 +3,14 @@
 # 	* sales_team
 # 
 # Translators:
+# Heesoo Choi, 2022
 # Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2022-10-04 09:25+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
@@ -167,6 +168,11 @@ msgid "Configuration"
 msgstr "구성"
 
 #. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor7
+msgid "Consulting"
+msgstr "컨설팅"
+
+#. module: sales_team
 #: model:ir.model,name:sales_team.model_res_partner
 msgid "Contact"
 msgstr "연락처"
@@ -220,6 +226,11 @@ msgstr "현황판 그래프 데이터"
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_sales
 msgid "Define a new sales team"
 msgstr "새로운 영업팀 정의"
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor5
+msgid "Design"
+msgstr "디자인"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__display_name
@@ -302,9 +313,7 @@ msgstr "만약 선택하였으면, 신규 메시지에 주의를 기울여야 �
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error
-#: model:ir.model.fields,help:sales_team.field_crm_team__message_has_sms_error
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__message_has_error
-#: model:ir.model.fields,help:sales_team.field_crm_team_member__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "이 옵션을 선택하면 일부 정보가 전달 오류를 생성합니다."
 
@@ -332,6 +341,11 @@ msgstr "이미지"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_128
 msgid "Image (128)"
 msgstr ""
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor4
+msgid "Information"
+msgstr "정보"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_is_follower
@@ -446,6 +460,11 @@ msgid "Number of messages with delivery error"
 msgstr "전송 오류 메시지 수"
 
 #. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor8
+msgid "Other"
+msgstr "기타"
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__phone
 msgid "Phone"
 msgstr "전화번호"
@@ -456,10 +475,14 @@ msgid "Point of Sale"
 msgstr "점포판매시스템"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_sms_error
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "SMS 전송 에러"
+#: model:crm.team,name:sales_team.crm_team_1
+msgid "Pre-Sales"
+msgstr "사전 영업"
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor1
+msgid "Product"
+msgstr "품목"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.team_sales_department
@@ -539,9 +562,19 @@ msgid "Sequence"
 msgstr "순서"
 
 #. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor3
+msgid "Services"
+msgstr "서비스"
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_favorite
 msgid "Show on dashboard"
 msgstr "현황판에 표시"
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor2
+msgid "Software"
+msgstr "소프트웨어"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__name
@@ -610,6 +643,11 @@ msgid ""
 "To add a Salesperson into multiple Teams, activate the Multi-Team option in "
 "settings."
 msgstr ""
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor6
+msgid "Training"
+msgstr "훈련"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__user_in_teams_ids
@@ -690,18 +728,6 @@ msgstr ""
 #: model:crm.team,name:sales_team.salesteam_website_sales
 msgid "Website"
 msgstr "웹사이트"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__website_message_ids
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__website_message_ids
-msgid "Website Messages"
-msgstr "웹사이트 메시지"
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team__website_message_ids
-#: model:ir.model.fields,help:sales_team.field_crm_team_member__website_message_ids
-msgid "Website communication history"
-msgstr "웹사이트 대화 이력"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team_member.py:0

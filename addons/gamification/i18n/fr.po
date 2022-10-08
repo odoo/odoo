@@ -9,9 +9,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2022-10-04 09:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
 "Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
@@ -1058,11 +1058,6 @@ msgstr ""
 "des objectifs avec une valeur dans ce champ."
 
 #. module: gamification
-#: model:mail.template,name:gamification.simple_report_template
-msgid "Challenge: Simple Challenge Report Progress"
-msgstr "Défi : Rapport d'avancement simple du défi"
-
-#. module: gamification
 #: model:ir.actions.act_window,name:gamification.challenge_list_action
 #: model:ir.ui.menu,name:gamification.gamification_challenge_menu
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_list_view
@@ -1477,6 +1472,16 @@ msgid "Gamification generic goal for challenge"
 msgstr "Objectif générique de ludification pour les défis"
 
 #. module: gamification
+#: model:mail.template,name:gamification.email_template_badge_received
+msgid "Gamification: Badge Received"
+msgstr "Ludification : Badge reçu"
+
+#. module: gamification
+#: model:mail.template,name:gamification.simple_report_template
+msgid "Gamification: Challenge Report"
+msgstr "Ludification : Rapport sur le défi"
+
+#. module: gamification
 #: model:ir.actions.server,name:gamification.ir_cron_check_challenge_ir_actions_server
 #: model:ir.cron,cron_name:gamification.ir_cron_check_challenge
 #: model:ir.cron,name:gamification.ir_cron_check_challenge
@@ -1489,6 +1494,16 @@ msgstr "Ludification : vérification des défis liés à l'objectif"
 #: model:ir.cron,name:gamification.ir_cron_consolidate_last_month
 msgid "Gamification: Karma tracking consolidation"
 msgstr "Ludification : consolidation du suivi des points Karma"
+
+#. module: gamification
+#: model:mail.template,name:gamification.mail_template_data_new_rank_reached
+msgid "Gamification: New Rank Reached"
+msgstr "Ludification : Nouveau rang atteint"
+
+#. module: gamification
+#: model:mail.template,name:gamification.email_template_goal_reminder
+msgid "Gamification: Reminder For Goal Update"
+msgstr "Ludification : Rappel pour mettre à jour l'objectif"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__goal_id
@@ -1540,11 +1555,6 @@ msgstr "Objectif Atteint"
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "Goal definitions"
 msgstr "Définitions d'objectif"
-
-#. module: gamification
-#: model:mail.template,name:gamification.email_template_goal_reminder
-msgid "Goal: Reminder for Goal Update"
-msgstr "Objectif : Rappel pour mettre à jour l'objectif"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.goal_list_action
@@ -2179,25 +2189,24 @@ msgid "Ranks List"
 msgstr "Liste des grades"
 
 #. module: gamification
-#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_master
-msgid "Reach the next rank and become a Master!"
-msgstr "Atteins le grade suivant et deviens un Maître!"
-
-#. module: gamification
-#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_doctor
-msgid "Reach the next rank and become a powerful user!"
-msgstr "Atteins le grade suivant et deviens un Utilisateur Puissant!"
-
-#. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_bachelor
-msgid "Reach the next rank to improve your status!"
-msgstr "Atteins le grade suivant pour améliorer ton statut!"
+msgid "Reach the next rank and gain a very magic wand !"
+msgstr "Atteignez le grade suivant et obtenez une baguette magique !"
+
+#. module: gamification
+#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_master
+msgid "Reach the next rank and gain a very nice hat !"
+msgstr "Atteignez le grade suivant et obtenez un très joli chapeau !"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_student
-msgid "Reach the next rank to show the rest of the world you exist."
-msgstr ""
-"Atteins le grade suivant pour montrer au reste du monde que tu existes."
+msgid "Reach the next rank and gain a very nice mug !"
+msgstr "Atteignez le grade suivant et obtenez un très beau mug !"
+
+#. module: gamification
+#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_doctor
+msgid "Reach the next rank and gain a very nice unicorn !"
+msgstr "Atteignez le grade suivant et obtenez une magnifique licorne !"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__reached
@@ -2208,11 +2217,6 @@ msgstr "Atteint"
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Reached when current value is"
 msgstr "Atteint si la valeur courante est "
-
-#. module: gamification
-#: model:mail.template,name:gamification.email_template_badge_received
-msgid "Received Badge"
-msgstr "Badges attribués"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__computation_mode__manually
@@ -2387,6 +2391,11 @@ msgid "Send Report"
 msgstr "Envoyer le compte-rendu"
 
 #. module: gamification
+#: model:mail.template,description:gamification.simple_report_template
+msgid "Send a challenge report to all participants"
+msgstr "Envoyez un rapport sur le défi à tous les participants"
+
+#. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__report_message_group_id
 msgid "Send a copy to"
 msgstr "Envoyer une copie à"
@@ -2395,6 +2404,22 @@ msgstr "Envoyer une copie à"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__sender_id
 msgid "Sender"
 msgstr "Émetteur"
+
+#. module: gamification
+#: model:mail.template,description:gamification.email_template_goal_reminder
+msgid "Sent automatically to participant who haven't updated their goal"
+msgstr ""
+"Envoyé automatiquement au participant qui n'a pas mis à jour son objectif"
+
+#. module: gamification
+#: model:mail.template,description:gamification.email_template_badge_received
+msgid "Sent automatically to the user who received a badge"
+msgstr "Envoyé automatiquement à l'utilisateur qui a reçu un badge"
+
+#. module: gamification
+#: model:mail.template,description:gamification.mail_template_data_new_rank_reached
+msgid "Sent automatically when user reaches a new rank"
+msgstr "Envoyé automatiquement lorsque l'utilisateur atteint un nouveau rang"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__sequence
@@ -2806,11 +2831,6 @@ msgstr "Utilisateur"
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__user_domain
 msgid "User domain"
 msgstr "Domaine de l'utilisateur"
-
-#. module: gamification
-#: model:mail.template,name:gamification.mail_template_data_new_rank_reached
-msgid "User: New rank reached"
-msgstr "Utilisateur : Nouveau grade atteint"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.action_current_rank_users

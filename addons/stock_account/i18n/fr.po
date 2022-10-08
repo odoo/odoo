@@ -6,6 +6,7 @@
 # Martin Trigaux, 2022
 # Nicolas Seinlet <nicolas@seinlet.com>, 2022
 # Marie Willemyns <mwi@odoo.com>, 2022
+# Jolien De Paepe, 2022
 # Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
@@ -208,7 +209,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history_inherit_stock_account
 msgid "Choose a date to get the valuation at that date"
-msgstr ""
+msgstr "Choisir une date pour obtenir la valorisation à cette date"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__company_id
@@ -412,7 +413,7 @@ msgstr "Ligne de facture"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__price_diff_value
 msgid "Invoice value correction with invoice currency"
-msgstr ""
+msgstr "Correction de la valeur de la facture avec la devise de la facture"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_journal_id
@@ -727,6 +728,9 @@ msgid ""
 "Technical field to correctly show the currently selected company's currency "
 "that corresponds to the totaled value of the product's valuation layers"
 msgstr ""
+"Champ technique pour afficher correctement la devise sélectionnée "
+"actuellement par l'entreprise qui correspond à la valeur totale des couches "
+"de valorisation du produit"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_picking__country_code
@@ -803,6 +807,9 @@ msgid ""
 "There are no valuation layers. Valuation layers are created when there are "
 "product moves that impact the valuation of the stock."
 msgstr ""
+"Il n'y pas de couches de valorisation. Les couches de valorisation sont "
+"créées quand certains mouvements d'articles impactent la valorisation du "
+"stock."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_report_tree
@@ -903,7 +910,7 @@ msgstr "Valorisation"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__company_currency_id
 msgid "Valuation Currency"
-msgstr ""
+msgstr "Devise de la valorisation"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
@@ -916,7 +923,7 @@ msgstr "Rapport de valorisation"
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history_inherit_stock_account
 #, python-format
 msgid "Valuation at Date"
-msgstr ""
+msgstr "Valorisation à la date"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0

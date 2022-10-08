@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"POT-Creation-Date: 2022-10-04 09:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
@@ -917,7 +917,7 @@ msgstr "Un utilisateur ne peut pas avoir deux fois le même contact."
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:0
+#: code:addons/calendar/static/src/views/attendee_calendar/common/attendee_calendar_common_popover.xml:0
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #, python-format
 msgid "Accept"
@@ -977,9 +977,9 @@ msgstr "Type d'activité"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:0
-#: code:addons/calendar/static/src/xml/base_calendar.xml:0
-#: code:addons/calendar/static/src/xml/base_calendar.xml:0
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 #, python-format
 msgid "Add"
 msgstr "Ajouter"
@@ -1012,7 +1012,7 @@ msgstr "Toute la journée, %(day)s"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:0
+#: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.js:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__all_events
 #, python-format
 msgid "All events"
@@ -1023,6 +1023,13 @@ msgstr "Toutes les occurrences"
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Archived"
 msgstr "Archivé"
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_model.js:0
+#, python-format
+msgid "Are you sure you want to delete this record ?"
+msgstr "Êtes-vous sûr de vouloir supprimer cet enregistrement ?"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_attachment_count
@@ -1072,13 +1079,9 @@ msgid "Busy"
 msgstr "Occupé(e)"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__byday
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__byday
 msgid "By day"
-msgstr "Par jour"
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event__byday
-msgid "Byday"
 msgstr "Par jour"
 
 #. module: calendar
@@ -1129,8 +1132,8 @@ msgstr "Assistant de configuration du fournisseur de calendrier"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_changedate
-msgid "Calendar: Date updated"
-msgstr "Calendrier : Date mise à jour"
+msgid "Calendar: Date Updated"
+msgstr "Calendar: Date Updated"
 
 #. module: calendar
 #: model:ir.actions.server,name:calendar.ir_cron_scheduler_alarm_ir_actions_server
@@ -1205,7 +1208,7 @@ msgstr "Configuration"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/js/calendar_controller.js:0
+#: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.xml:0
 #, python-format
 msgid "Confirm"
 msgstr "Confirmer"
@@ -1217,7 +1220,7 @@ msgstr "Connecter"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/js/calendar_renderer.js:0
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.js:0
 #, python-format
 msgid "Connect your Calendar"
 msgstr "Connectez votre calendrier"
@@ -1303,7 +1306,7 @@ msgstr "Jours"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:0
+#: code:addons/calendar/static/src/views/attendee_calendar/common/attendee_calendar_common_popover.xml:0
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #, python-format
 msgid "Decline"
@@ -1314,6 +1317,13 @@ msgstr "Refuser"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__attendee_status__declined
 msgid "Declined"
 msgstr "Refusé"
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/views/attendee_calendar/common/attendee_calendar_common_popover.xml:0
+#, python-format
+msgid "Delete"
+msgstr "Supprimer"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__description
@@ -1393,14 +1403,7 @@ msgstr "Durée en minutes"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "EMAIL"
-msgstr "Courriel"
-
-#. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/js/calendar_controller.js:0
-#, python-format
-msgid "Edit Recurrent event"
-msgstr "Modifier le rendez-vous périodique"
+msgstr "EMAIL"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1555,7 +1558,7 @@ msgstr "Vendredi"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:0
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_provider_config__external_calendar_provider__google
 #, python-format
 msgid "Google"
@@ -1620,7 +1623,6 @@ msgstr "Si coché, de nouveaux messages demandent votre attention."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error
-#: model:ir.model.fields,help:calendar.field_calendar_event__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Si actif, certains messages ont une erreur de livraison."
 
@@ -1667,6 +1669,11 @@ msgstr "Jeton d'invitation"
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Invitation details"
 msgstr "Détails de l'invitation"
+
+#. module: calendar
+#: model:mail.template,description:calendar.calendar_template_meeting_invitation
+msgid "Invitation email to new attendees"
+msgstr "Email d'invitation aux nouveaux participants"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -1896,20 +1903,9 @@ msgid "Needs Action"
 msgstr "Nécessite une action"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_hr_employee__activity_calendar_event_id
 #: model:ir.model.fields,field_description:calendar.field_mail_activity_mixin__activity_calendar_event_id
-#: model:ir.model.fields,field_description:calendar.field_mailing_mailing__activity_calendar_event_id
-#: model:ir.model.fields,field_description:calendar.field_product_product__activity_calendar_event_id
-#: model:ir.model.fields,field_description:calendar.field_product_template__activity_calendar_event_id
-#: model:ir.model.fields,field_description:calendar.field_project_project__activity_calendar_event_id
-#: model:ir.model.fields,field_description:calendar.field_project_task__activity_calendar_event_id
-#: model:ir.model.fields,field_description:calendar.field_project_update__activity_calendar_event_id
 #: model:ir.model.fields,field_description:calendar.field_res_partner__activity_calendar_event_id
 #: model:ir.model.fields,field_description:calendar.field_res_users__activity_calendar_event_id
-#: model:ir.model.fields,field_description:calendar.field_stock_lot__activity_calendar_event_id
-#: model:ir.model.fields,field_description:calendar.field_stock_picking__activity_calendar_event_id
-#: model:ir.model.fields,field_description:calendar.field_survey_survey__activity_calendar_event_id
-#: model:ir.model.fields,field_description:calendar.field_survey_user_input__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
 msgstr "Activité suivante de l'événement du calendrier"
 
@@ -2030,7 +2026,7 @@ msgstr "Organisé par"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:0
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_provider_config__external_calendar_provider__microsoft
 #, python-format
 msgid "Outlook"
@@ -2185,11 +2181,6 @@ msgid "Rrule Type"
 msgstr "Type de règle"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "Erreur d'envoi SMS"
-
-#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__sat
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__sat
 msgid "Sat"
@@ -2225,7 +2216,7 @@ msgstr "Selectionnez les participants..."
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Send Email to attendees"
-msgstr "Envoyer un e-mail aux participants"
+msgstr "Envoyer un email aux participants"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2236,6 +2227,16 @@ msgstr "Envoyer les invitations"
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "Send Mail"
 msgstr "Envoyer l'email"
+
+#. module: calendar
+#: model:mail.template,description:calendar.calendar_template_meeting_reminder
+msgid "Sent to all attendees if a reminder is set"
+msgstr "Envoyé à tous les participants si un rappel est planifié"
+
+#. module: calendar
+#: model:mail.template,description:calendar.calendar_template_meeting_changedate
+msgid "Sent to all attendees if the schedule change"
+msgstr "Envoyé à tous les participants si le programme change"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__show_as
@@ -2313,7 +2314,7 @@ msgstr "Dimanche"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:0
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 #, python-format
 msgid "Synchronize with:"
 msgstr "Synchroniser avec :"
@@ -2421,7 +2422,7 @@ msgstr "Troisième"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:0
+#: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.js:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__future_events
 #, python-format
 msgid "This and following events"
@@ -2429,7 +2430,7 @@ msgstr "Cette occurrence et les suivantes"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:0
+#: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.js:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__self_only
 #, python-format
 msgid "This event"
@@ -2484,7 +2485,7 @@ msgstr "Type"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:0
+#: code:addons/calendar/static/src/views/attendee_calendar/common/attendee_calendar_common_popover.xml:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__tentative
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__attendee_status__tentative
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2504,6 +2505,11 @@ msgid "Until"
 msgstr "Jusqu'à"
 
 #. module: calendar
+#: model:mail.template,description:calendar.calendar_template_meeting_update
+msgid "Used to manually notifiy attendees"
+msgstr "Utilisé pour manuellement informer les participants"
+
+#. module: calendar
 #: model:ir.model,name:calendar.model_res_users
 msgid "User"
 msgstr "Utilisateur"
@@ -2517,16 +2523,6 @@ msgstr "Source de l'appel vidéo"
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Videocall URL"
 msgstr "URL de l'appel vidéo"
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event__website_message_ids
-msgid "Website Messages"
-msgstr "Messages du site web"
-
-#. module: calendar
-#: model:ir.model.fields,help:calendar.field_calendar_event__website_message_ids
-msgid "Website communication history"
-msgstr "Historique de communication du site web"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__wed

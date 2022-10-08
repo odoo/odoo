@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2022-10-04 09:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
 "Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
@@ -116,8 +116,8 @@ msgstr "Neue vorausgefüllte Option hinzufügen"
 
 #. module: website_payment
 #. openerp-web
-#: code:addons/website_payment/static/src/snippets/s_donation/000.xml:0
-#: code:addons/website_payment/static/src/snippets/s_donation/000.xml:0
+#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
+#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
 #, python-format
 msgid "Amount"
 msgstr "Betrag"
@@ -139,7 +139,7 @@ msgstr "Für einen Monat ein Baby versorgen."
 
 #. module: website_payment
 #. openerp-web
-#: code:addons/website_payment/static/src/snippets/s_donation/000.xml:0
+#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
 #, python-format
 msgid "Choose Your Amount"
 msgstr "Wählen Sie einen Betrag"
@@ -190,8 +190,8 @@ msgstr "Bitte Land auswählen..."
 
 #. module: website_payment
 #. openerp-web
-#: code:addons/website_payment/static/src/snippets/s_donation/000.xml:0
-#: code:addons/website_payment/static/src/snippets/s_donation/000.xml:0
+#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
+#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_input
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 #, python-format
@@ -225,7 +225,6 @@ msgid "Donate Now"
 msgstr "Jetzt spenden"
 
 #. module: website_payment
-#: model:mail.template,name:website_payment.mail_template_donation
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 #: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
 msgid "Donation"
@@ -530,6 +529,11 @@ msgstr "Wir konnten keine Zahlungsgebühren erhalten."
 #: model:ir.model.fields,field_description:website_payment.field_payment_provider__website_id
 msgid "Website"
 msgstr "Website"
+
+#. module: website_payment
+#: model:mail.template,name:website_payment.mail_template_donation
+msgid "Website: Donation"
+msgstr ""
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout

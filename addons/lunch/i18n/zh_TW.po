@@ -3,22 +3,48 @@
 # 	* lunch
 # 
 # Translators:
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
 # Martin Trigaux, 2022
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2022-10-04 09:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2022\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_temaki
+msgid "1 Avocado - 1 Salmon - 1 Eggs - 1 Tuna"
+msgstr "1 個鱷梨 - 1 個鮭魚 - 1 個雞蛋 - 1 個金槍魚"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_chirashi
+msgid "2 Tempuras, Cabbages, Onions, Sesame Sauce"
+msgstr "2 天婦羅、捲心菜、洋蔥、芝麻醬"
+
+#. module: lunch
+#: model:lunch.order,name:lunch.order_line_5
+#: model:lunch.product,name:lunch.product_4formaggi
+msgid "4 Formaggi"
+msgstr "4 福馬吉"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_salmon
+msgid "4 Sushi Salmon - 6 Maki Salmon - 4 Sashimi Salmon"
+msgstr "4 鮭魚壽司 - 6 Maki 鮭魚 - 4 鮭魚生魚片"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_maki
+msgid "6 Maki Salmon - 6 Maki Tuna - 6 Maki Shrimp/Avocado"
+msgstr "6 Maki 鮭魚 - 6 Maki 金槍魚 - 6 Maki 蝦/鱷梨"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
@@ -307,6 +333,11 @@ msgid "Alert Name"
 msgstr "提醒名稱"
 
 #. module: lunch
+#: model:lunch.alert,name:lunch.alert_office_3
+msgid "Alert for Office 3"
+msgstr ""
+
+#. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__mode__alert
 msgid "Alert in app"
 msgstr "在APP中提醒"
@@ -376,6 +407,35 @@ msgid "Available Toppings 3"
 msgstr "可用的配料 3"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_bacon
+#: model:lunch.product,name:lunch.product_bacon_0
+msgid "Bacon"
+msgstr "熏肉"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_bacon
+#: model_terms:lunch.product,description:lunch.product_bacon_0
+msgid "Beef, Bacon, Salad, Cheddar, Fried Onion, BBQ Sauce"
+msgstr "牛肉、培根、沙拉、切達干酪、炸洋蔥、燒烤醬"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_cheese_burger_0
+#: model_terms:lunch.product,description:lunch.product_cheeseburger
+msgid "Beef, Cheddar, Salad, Fried Onions, BBQ Sauce"
+msgstr "牛肉、切達干酪、沙拉、炸洋蔥、燒烤醬"
+
+#. module: lunch
+#: model:lunch.order,name:lunch.order_line_1
+#: model:lunch.product,name:lunch.product_Bolognese
+msgid "Bolognese Pasta"
+msgstr "意大利肉醬麵"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_country
+msgid "Brie, Honey, Walnut Kernels"
+msgstr "布里、蜂蜜、核桃仁"
+
+#. module: lunch
 #: model:lunch.product.category,name:lunch.categ_burger
 msgid "Burger"
 msgstr "漢堡包"
@@ -430,6 +490,33 @@ msgid "Chat notification"
 msgstr "聊天通知"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_cheese_ham
+msgid "Cheese And Ham"
+msgstr "奶酪和火腿"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_cheese_burger_0
+#: model:lunch.product,name:lunch.product_cheeseburger
+msgid "Cheese Burger"
+msgstr "乳酪漢堡"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_cheese_ham
+msgid "Cheese, Ham, Salad, Tomatoes, cucumbers, eggs"
+msgstr "奶酪、火腿、沙拉、西紅柿、黃瓜、雞蛋"
+
+#. module: lunch
+#: model:lunch.order,name:lunch.order_line_4
+#: model:lunch.product,name:lunch.product_chicken_curry
+msgid "Chicken Curry"
+msgstr "咖哩雞"
+
+#. module: lunch
+#: model:lunch.product.category,name:lunch.categ_chirashi
+msgid "Chirashi"
+msgstr ""
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__city
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
 msgid "City"
@@ -446,6 +533,17 @@ msgstr ""
 "            點選<span class=\"fa fa-check text-success\" title=\"Receive button\"></span> 宣佈訂單已收到。\n"
 " <br>\n"
 "            點選<span class=\"fa fa-times-circle text-danger\" title=\"Cancel button\"></span> 紅色X宣佈訂單不可用。"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_club
+#: model:lunch.product,name:lunch.product_club_0
+msgid "Club"
+msgstr "俱樂部"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_coke_0
+msgid "Coca Cola"
+msgstr "可口可樂"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_res_company
@@ -752,6 +850,12 @@ msgid "Formatted Email"
 msgstr "格式化的信件"
 
 #. module: lunch
+#: model_terms:lunch.order,product_description:lunch.order_line_2
+#: model_terms:lunch.product,description:lunch.product_italiana
+msgid "Fresh Tomatoes, Basil, Mozzarella"
+msgstr "新鮮番茄、羅勒、馬蘇里拉奶酪"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__fri
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__fri
 msgid "Fri"
@@ -763,11 +867,23 @@ msgid "Friday"
 msgstr "五"
 
 #. module: lunch
+#: model:lunch.order,name:lunch.order_line_3
+#: model:lunch.product,name:lunch.product_gouda
+msgid "Gouda Cheese"
+msgstr "高達奶酪"
+
+#. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search_2
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Group By"
 msgstr "分組依據"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_club
+#: model_terms:lunch.product,description:lunch.product_club_0
+msgid "Ham, Cheese, Vegetables"
+msgstr "火腿、奶酪、蔬菜"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__has_message
@@ -1000,6 +1116,11 @@ msgid "Lunch Locations"
 msgstr "午餐地點"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_maki
+msgid "Lunch Maki 18pc"
+msgstr "午餐 Maki 18pc"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_company__lunch_minimum_threshold
 msgid "Lunch Minimum Threshold"
 msgstr "午餐最低門檻"
@@ -1025,9 +1146,19 @@ msgid "Lunch Product Category"
 msgstr "工作餐產品類別"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_salmon
+msgid "Lunch Salmon 20pc"
+msgstr "午餐鮭魚 20pc"
+
+#. module: lunch
 #: model:ir.model,name:lunch.model_lunch_supplier
 msgid "Lunch Supplier"
 msgstr "午餐供應商"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_temaki
+msgid "Lunch Temaki mix 3pc"
+msgstr "午餐 Temaki mix 3pc"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch_order.py:0
@@ -1051,18 +1182,43 @@ msgid "Lunch: Receive meals"
 msgstr "午餐：收到餐食"
 
 #. module: lunch
-#: model:mail.template,name:lunch.lunch_order_mail_supplier
-msgid "Lunch: Send by email"
-msgstr "午餐：通過電子郵件發送"
-
-#. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_action_notify
 msgid "Lunch: Send notifications"
 msgstr ""
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_349
+#: model:mail.template,name:lunch.lunch_order_mail_supplier
+msgid "Lunch: Supplier Order"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_426
+msgid "Lunch: alert chat notification (Alert for Office 3)"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_427
+msgid "Lunch: send automatic email to Coin gourmand"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_422
 msgid "Lunch: send automatic email to Lunch Supplier"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_428
+msgid "Lunch: send automatic email to Pizza Inn"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_430
+msgid "Lunch: send automatic email to Sushi Shop"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_429
+msgid "Lunch: send automatic email to The Corner"
 msgstr ""
 
 #. module: lunch
@@ -1122,6 +1278,16 @@ msgid "Monday"
 msgstr "一"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_mozzarella
+msgid "Mozzarella"
+msgstr "奶酪"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_mozzarella
+msgid "Mozzarella, Pesto, Tomatoes"
+msgstr "馬蘇里拉奶酪、香蒜醬、番茄"
+
+#. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_report_action_account
 msgid "My Account"
 msgstr "我的帳號"
@@ -1163,6 +1329,11 @@ msgstr "我的銷售訂單"
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__name
 msgid "Name"
 msgstr "名稱"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_Napoli
+msgid "Napoli Pasta"
+msgstr "那不勒斯意大利面"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.view_lunch_product_kanban_order
@@ -1366,6 +1537,11 @@ msgid "PM"
 msgstr "下午"
 
 #. module: lunch
+#: model:lunch.product.category,name:lunch.categ_pasta
+msgid "Pasta"
+msgstr "意大利麵"
+
+#. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search
 msgid "Payment"
 msgstr "付款"
@@ -1387,6 +1563,33 @@ msgstr "電話"
 #: model:lunch.product.category,name:lunch.categ_pizza
 msgid "Pizza"
 msgstr "比薩"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_funghi
+msgid "Pizza Funghi"
+msgstr "比薩蘑菇"
+
+#. module: lunch
+#: model:lunch.order,name:lunch.order_line_2
+#: model:lunch.product,name:lunch.product_italiana
+msgid "Pizza Italiana"
+msgstr "意大利比薩"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_margherita
+#: model:lunch.product,name:lunch.product_pizza_0
+msgid "Pizza Margherita"
+msgstr "瑪格麗特比薩"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_vege
+msgid "Pizza Vegetarian"
+msgstr "比薩 素食"
+
+#. module: lunch
+#: model_terms:lunch.alert,message:lunch.alert_office_3
+msgid "Please order"
+msgstr ""
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__price
@@ -1530,6 +1733,11 @@ msgid "SMS Delivery error"
 msgstr "簡訊發送錯誤"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_chirashi
+msgid "Salmon and Avocado"
+msgstr "鮭魚和酪梨"
+
+#. module: lunch
 #: model:lunch.product.category,name:lunch.categ_sandwich
 msgid "Sandwich"
 msgstr "三明治"
@@ -1588,6 +1796,11 @@ msgid "Sent"
 msgstr "已發送"
 
 #. module: lunch
+#: model:mail.template,description:lunch.lunch_order_mail_supplier
+msgid "Sent to vendor with the order of the day"
+msgstr ""
+
+#. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_config_settings_action
 #: model:ir.ui.menu,name:lunch.lunch_settings_menu
 msgid "Settings"
@@ -1607,6 +1820,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__until
 msgid "Show Until"
 msgstr "顯示直到"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_spicy_tuna
+msgid "Spicy Tuna"
+msgstr "辣金槍魚"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__state_id
@@ -1672,6 +1890,21 @@ msgstr "日"
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__supplier_id
 msgid "Supplier"
 msgstr "供應商"
+
+#. module: lunch
+#: model:lunch.product.category,name:lunch.categ_sushi
+msgid "Sushi"
+msgstr "壽司"
+
+#. module: lunch
+#: model:lunch.product.category,name:lunch.categ_temaki
+msgid "Temaki"
+msgstr "手捲"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_country
+msgid "The Country"
+msgstr "按國家"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch_product.py:0
@@ -1803,6 +2036,33 @@ msgid "Today's Orders"
 msgstr "今天的訂單"
 
 #. module: lunch
+#: model_terms:lunch.order,product_description:lunch.order_line_5
+#: model_terms:lunch.product,description:lunch.product_4formaggi
+msgid "Tomato sauce, Olive oil, Fresh Tomatoes, Onions, Vegetables, Parmesan"
+msgstr "番茄醬、橄欖油、新鮮番茄、洋蔥、蔬菜、巴馬干酪"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_Napoli
+msgid "Tomatoes, Basil"
+msgstr "番茄、羅勒"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_margherita
+#: model_terms:lunch.product,description:lunch.product_pizza_0
+msgid "Tomatoes, Mozzarella"
+msgstr "番茄、馬蘇里拉奶酪"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_vege
+msgid "Tomatoes, Mozzarella, Mushrooms, Peppers, Olives"
+msgstr "番茄、馬蘇里拉奶酪、蘑菇、辣椒、橄欖"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_funghi
+msgid "Tomatoes, Mushrooms, Mozzarella"
+msgstr "番茄、蘑菇、馬蘇里拉奶酪"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__topping_category
 msgid "Topping Category"
 msgstr "配料類別"
@@ -1848,6 +2108,16 @@ msgstr "二"
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Tuesday"
 msgstr "二"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_tuna
+msgid "Tuna"
+msgstr "金槍魚"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_tuna
+msgid "Tuna, Mayonnaise"
+msgstr "金槍魚、蛋黃醬"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__activity_exception_decoration

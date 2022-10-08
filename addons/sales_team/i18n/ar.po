@@ -9,9 +9,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2022-10-04 09:25+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
@@ -175,6 +175,11 @@ msgid "Configuration"
 msgstr "التهيئة "
 
 #. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor7
+msgid "Consulting"
+msgstr "استشارة"
+
+#. module: sales_team
 #: model:ir.model,name:sales_team.model_res_partner
 msgid "Contact"
 msgstr "جهة الاتصال"
@@ -228,6 +233,11 @@ msgstr "بيانات الرسم البياني للوحة البيانات "
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_sales
 msgid "Define a new sales team"
 msgstr "تحديد فريق مبيعات جديد "
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor5
+msgid "Design"
+msgstr "تصميم"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__display_name
@@ -314,9 +324,7 @@ msgstr "إذا كان محددًا، فهناك رسائل جديدة تحتاج
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error
-#: model:ir.model.fields,help:sales_team.field_crm_team__message_has_sms_error
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__message_has_error
-#: model:ir.model.fields,help:sales_team.field_crm_team_member__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "إذا كان محددًا، فقد حدث خطأ في تسليم بعض الرسائل."
 
@@ -347,6 +355,11 @@ msgstr "صورة"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_128
 msgid "Image (128)"
 msgstr "صورة (128) "
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor4
+msgid "Information"
+msgstr "معلومات"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_is_follower
@@ -463,6 +476,11 @@ msgid "Number of messages with delivery error"
 msgstr "عدد الرسائل الحادث بها خطأ في التسليم"
 
 #. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor8
+msgid "Other"
+msgstr "غير ذلك"
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__phone
 msgid "Phone"
 msgstr "رقم الهاتف"
@@ -473,10 +491,14 @@ msgid "Point of Sale"
 msgstr "نقطة البيع"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_sms_error
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "خطأ في تسليم الرسائل القصيرة"
+#: model:crm.team,name:sales_team.crm_team_1
+msgid "Pre-Sales"
+msgstr "ما قبل المبيعات "
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor1
+msgid "Product"
+msgstr "المنتج"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.team_sales_department
@@ -556,9 +578,19 @@ msgid "Sequence"
 msgstr "التسلسل "
 
 #. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor3
+msgid "Services"
+msgstr "الخدمات"
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_favorite
 msgid "Show on dashboard"
 msgstr "إظهار على لوحة البيانات "
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor2
+msgid "Software"
+msgstr "البرنامج"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__name
@@ -631,6 +663,11 @@ msgid ""
 msgstr ""
 "لإضافة مندوب مبيعات إلى عدة فرق، قم بتفعيل خيار الفرق المتعددة من الإعدادات."
 " "
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor6
+msgid "Training"
+msgstr "التدريب"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__user_in_teams_ids
@@ -717,18 +754,6 @@ msgstr "المستخدمين المسندين إلى هذا الفريق. "
 #: model:crm.team,name:sales_team.salesteam_website_sales
 msgid "Website"
 msgstr "الموقع الإلكتروني"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__website_message_ids
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__website_message_ids
-msgid "Website Messages"
-msgstr "رسائل الموقع الإلكتروني "
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team__website_message_ids
-#: model:ir.model.fields,help:sales_team.field_crm_team_member__website_message_ids
-msgid "Website communication history"
-msgstr "سجل تواصل الموقع الإلكتروني "
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team_member.py:0

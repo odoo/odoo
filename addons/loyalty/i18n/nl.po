@@ -3,16 +3,16 @@
 # 	* loyalty
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-27 15:12+0000\n"
+"POT-Creation-Date: 2022-10-04 09:25+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -105,6 +105,17 @@ msgstr "(als tenminste"
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "(tax excluded)"
 msgstr "(exclusief belastingen)"
+
+#. module: loyalty
+#: model:loyalty.program,name:loyalty.10_percent_coupon
+msgid "10% Discount Coupons"
+msgstr ""
+
+#. module: loyalty
+#: model:loyalty.reward,description:loyalty.10_percent_coupon_reward
+#: model:loyalty.reward,description:loyalty.10_percent_with_code_reward
+msgid "10% on your order"
+msgstr ""
 
 #. module: loyalty
 #: code:addons/loyalty/models/loyalty_program.py:0
@@ -587,6 +598,11 @@ msgid "Buy 2 products and get a third one for free"
 msgstr "Koop 2 producten en ontvang een derde gratis"
 
 #. module: loyalty
+#: model:loyalty.program,name:loyalty.3_cabinets_plus_1_free
+msgid "Buy 3 large cabinets, get one for free"
+msgstr "Koop 3 grote kasten, krijg er 1 gratis"
+
+#. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__buy_x_get_y
 msgid "Buy X Get Y"
 msgstr "Koop X Krijg Y"
@@ -631,6 +647,11 @@ msgstr "Wis alle actiepunt(en)"
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__code
 msgid "Code"
 msgstr "Code"
+
+#. module: loyalty
+#: model:loyalty.program,name:loyalty.10_percent_with_code
+msgid "Code for 10% on orders"
+msgstr "Code voor 10% op orders"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__communication_plan_ids
@@ -701,9 +722,21 @@ msgid "Coupon point(s)"
 msgstr "Coupon punt(en)"
 
 #. module: loyalty
+#: model:loyalty.program,portal_point_name:loyalty.10_percent_coupon
+#: model:loyalty.reward,point_name:loyalty.10_percent_coupon_reward
+#: model:loyalty.rule,reward_point_name:loyalty.10_percent_coupon_rule
+msgid "Coupon points"
+msgstr ""
+
+#. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid "Coupon value"
 msgstr "waarde coupon"
+
+#. module: loyalty
+#: model:mail.template,name:loyalty.mail_template_loyalty_card
+msgid "Coupon: Coupon Information"
+msgstr ""
 
 #. module: loyalty
 #: code:addons/loyalty/models/loyalty_program.py:0
@@ -753,6 +786,9 @@ msgstr "Gemaakt op"
 
 #. module: loyalty
 #: code:addons/loyalty/models/loyalty_program.py:0
+#: model:loyalty.program,portal_point_name:loyalty.3_cabinets_plus_1_free
+#: model:loyalty.reward,point_name:loyalty.3_cabinets_plus_1_free_reward
+#: model:loyalty.rule,reward_point_name:loyalty.3_cabinets_plus_1_free_rule
 #, python-format
 msgid "Credit(s)"
 msgstr "Krediet(en)"
@@ -857,6 +893,9 @@ msgstr "Kortingscode"
 
 #. module: loyalty
 #: code:addons/loyalty/models/loyalty_program.py:0
+#: model:loyalty.program,portal_point_name:loyalty.10_percent_with_code
+#: model:loyalty.reward,point_name:loyalty.10_percent_with_code_reward
+#: model:loyalty.rule,reward_point_name:loyalty.10_percent_with_code_rule
 #, python-format
 msgid "Discount point(s)"
 msgstr "Kortingspunt(en)"
@@ -979,6 +1018,11 @@ msgid "Free Product - %s"
 msgstr "Gratis product - %s"
 
 #. module: loyalty
+#: model:loyalty.reward,description:loyalty.3_cabinets_plus_1_free_reward
+msgid "Free Product - Large Cabinet"
+msgstr "Gratis product - grote kast"
+
+#. module: loyalty
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "Free Product - [%s]"
@@ -1049,6 +1093,7 @@ msgstr "Cadeau & E-wallet"
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #: model:ir.actions.report,name:loyalty.report_gift_card
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__gift_card
+#: model:loyalty.reward,description:loyalty.gift_card_program_reward
 #: model:product.product,name:loyalty.gift_card_product_50
 #: model:product.template,name:loyalty.gift_card_product_50_product_template
 #, python-format
@@ -1067,11 +1112,12 @@ msgstr "Waarde cadeaukaart"
 
 #. module: loyalty
 #: model:mail.template,name:loyalty.mail_template_gift_card
-msgid "Gift Card: Send by Email"
-msgstr "Cadeaubon: per e-mail verzenden"
+msgid "Gift Card: Gift Card Information"
+msgstr ""
 
 #. module: loyalty
 #: code:addons/loyalty/models/loyalty_program.py:0
+#: model:loyalty.program,name:loyalty.gift_card_program
 #, python-format
 msgid "Gift Cards"
 msgstr "Cadeaubonnen"
@@ -1613,6 +1659,16 @@ msgstr ""
 "Stuur een unieke couponcode voor eenmalig gebruik voor de volgende aankoop"
 
 #. module: loyalty
+#: model:mail.template,description:loyalty.mail_template_gift_card
+msgid "Sent to customer who purchased a gift card"
+msgstr ""
+
+#. module: loyalty
+#: model:mail.template,description:loyalty.mail_template_loyalty_card
+msgid "Sent to customer with coupon information"
+msgstr ""
+
+#. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__sequence
 msgid "Sequence"
 msgstr "Reeks"
@@ -1858,11 +1914,6 @@ msgstr "Je cadeaukaart bij {{ object.company_id.name }}"
 #: model:mail.template,subject:loyalty.mail_template_loyalty_card
 msgid "Your reward coupon from {{ object.program_id.company_id.name }} "
 msgstr "Je beloningscoupon van {{ object.program_id.company_id.name }} "
-
-#. module: loyalty
-#: model:mail.template,name:loyalty.mail_template_loyalty_card
-msgid "[Loyalty] Coupon: Send by Email"
-msgstr "[Loyaliteit] Coupon: per e-mail verzenden"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban

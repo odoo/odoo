@@ -3,13 +3,14 @@
 # 	* sale
 # 
 # Translators:
+# JH CHOI <hwangtog@gmail.com>, 2022
 # Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-27 15:12+0000\n"
+"POT-Creation-Date: 2022-10-04 09:25+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
@@ -75,6 +76,12 @@ msgid ""
 msgstr ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
+
+#. module: sale
+#: model:product.product,description_sale:sale.product_product_4e
+#: model:product.product,description_sale:sale.product_product_4f
+msgid "160x80cm, with large legs."
+msgstr "160x80cm. 긴 다리."
 
 #. module: sale
 #. openerp-web
@@ -463,11 +470,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
 msgid "<span class=\"flex-grow-1\">/ Month</span>"
 msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "<span class=\"o_form_label\">Confirmation Email</span>"
-msgstr "<span class=\"o_form_label\">확인 이메일</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -916,11 +918,6 @@ msgid "Automatic Invoice"
 msgstr "자동 청구서 생성"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Automatic email sent after the customer has signed or paid online"
-msgstr "고객이 온라인으로 서명하거나 지불한 후 자동 이메일 전송"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__journal_name
 msgid "Bank Name"
 msgstr "은행명"
@@ -1116,11 +1113,6 @@ msgid "Confirm"
 msgstr "승인"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__confirmation_mail_template_id
-msgid "Confirmation Email Template"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Connectors"
 msgstr "커넥터"
@@ -1130,6 +1122,12 @@ msgstr "커넥터"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Contact"
 msgstr "연락처"
+
+#. module: sale
+#: model_terms:product.product,website_description:sale.product_product_4e
+#: model_terms:product.product,website_description:sale.product_product_4f
+msgid "Contact Us"
+msgstr "문의하기"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__body
@@ -1253,6 +1251,12 @@ msgid "Currency Rate"
 msgstr "환율"
 
 #. module: sale
+#: model:product.attribute.value,name:sale.product_attribute_value_7
+#: model:product.template.attribute.value,name:sale.product_4_attribute_1_value_3
+msgid "Custom"
+msgstr "사용자 정의"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_custom_attribute_value_ids
 msgid "Custom Values"
 msgstr "맞춤 값"
@@ -1312,6 +1316,12 @@ msgstr "고객 세금"
 #: model:ir.ui.menu,name:sale.res_partner_menu
 msgid "Customers"
 msgstr "고객"
+
+#. module: sale
+#: model:product.product,name:sale.product_product_4e
+#: model:product.product,name:sale.product_product_4f
+msgid "Customizable Desk"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
@@ -1425,6 +1435,12 @@ msgstr ""
 "최소 또는 최대 리드타임을 사용하도록 고려됩니다."
 
 #. module: sale
+#: model:product.product,name:sale.advance_product_0
+#: model:product.template,name:sale.advance_product_0_product_template
+msgid "Deposit"
+msgstr "보증금"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__deposit_default_product_id
 msgid "Deposit Product"
 msgstr "보증금 상품"
@@ -1437,7 +1453,10 @@ msgid "Description"
 msgstr "설명"
 
 #. module: sale
+#. openerp-web
+#: code:addons/sale/static/src/js/product_discount_field.js:0
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, python-format
 msgid "Disc.%"
 msgstr "할인 %"
 
@@ -1483,9 +1502,9 @@ msgstr "표시 유형"
 
 #. module: sale
 #. openerp-web
-#: code:addons/sale/static/src/js/sale_order_controller.js:0
+#: code:addons/sale/static/src/js/product_discount_field.js:0
 #, python-format
-msgid "Do you want to apply this value to all order lines?"
+msgid "Do you want to apply this value to all lines ?"
 msgstr ""
 
 #. module: sale
@@ -1580,8 +1599,7 @@ msgstr "Easypost 커넥터"
 
 #. module: sale
 #. openerp-web
-#: code:addons/sale/static/src/js/product_configurator_widget.js:0
-#: code:addons/sale/static/src/js/product_configurator_widget.js:0
+#: code:addons/sale/static/src/js/sale_product_field.js:0
 #, python-format
 msgid "Edit Configuration"
 msgstr "설정 편집"
@@ -1607,9 +1625,10 @@ msgid "Email sent to the customer once the invoice is available."
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_res_config_settings__confirmation_mail_template_id
-msgid "Email sent to the customer once the order is paid."
-msgstr "주문이 결제되면 고객에게 이메일이 발송됩니다."
+#: model_terms:product.product,website_description:sale.product_product_4e
+#: model_terms:product.product,website_description:sale.product_product_4f
+msgid "Ergonomic"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
@@ -1641,14 +1660,6 @@ msgstr "만료"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Extended Filters"
 msgstr "확장 필터"
-
-#. module: sale
-#. openerp-web
-#: code:addons/sale/static/src/js/product_configurator_widget.js:0
-#: code:addons/sale/static/src/js/product_configurator_widget.js:0
-#, python-format
-msgid "External Link"
-msgstr "외부 링크"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_no_variant_attribute_value_ids
@@ -2168,6 +2179,12 @@ msgid "Lets keep electronic signature for now."
 msgstr "지금 전자 서명을 계속진행합니다."
 
 #. module: sale
+#: model_terms:product.product,website_description:sale.product_product_4e
+#: model_terms:product.product,website_description:sale.product_product_4f
+msgid "Locally handmade"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
 msgid "Lock"
 msgstr "잠금"
@@ -2182,6 +2199,14 @@ msgstr "확인된 판매 잠금"
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__done
 msgid "Locked"
 msgstr "잠김"
+
+#. module: sale
+#: model_terms:product.product,website_description:sale.product_product_4e
+#: model_terms:product.product,website_description:sale.product_product_4f
+msgid ""
+"Looking for a custom bamboo stain to match existing furniture? Contact us "
+"for a quote."
+msgstr ""
 
 #. module: sale
 #. openerp-web
@@ -2322,13 +2347,6 @@ msgstr "내 견적"
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "My Sales Order Lines"
 msgstr "내 판매 주문 내역"
-
-#. module: sale
-#. openerp-web
-#: code:addons/sale/static/src/js/sale_order_controller.js:0
-#, python-format
-msgid "NO"
-msgstr ""
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
@@ -2747,6 +2765,14 @@ msgstr "페이팔 사용자 유형"
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_url
 msgid "Portal Access URL"
 msgstr "포털 접근 URL"
+
+#. module: sale
+#: model_terms:product.product,website_description:sale.product_product_4e
+#: model_terms:product.product,website_description:sale.product_product_4f
+msgid ""
+"Press a button and watch your desk glide effortlessly from sitting to "
+"standing height in seconds."
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce
@@ -3309,21 +3335,6 @@ msgid "Sales Order(s)"
 msgstr "판매 주문"
 
 #. module: sale
-#: model:mail.template,name:sale.mail_template_sale_cancellation
-msgid "Sales Order: Cancellation email"
-msgstr ""
-
-#. module: sale
-#: model:mail.template,name:sale.mail_template_sale_confirmation
-msgid "Sales Order: Confirmation Email"
-msgstr ""
-
-#. module: sale
-#: model:mail.template,name:sale.email_template_edi_sale
-msgid "Sales Order: Send by email"
-msgstr ""
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders
 #: model:ir.actions.act_window,name:sale.action_orders_salesteams
 #: model:ir.actions.act_window,name:sale.action_orders_to_invoice_salesteams
@@ -3374,6 +3385,21 @@ msgstr "판매 경고"
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
 msgid "Sales price"
 msgstr "판매 가격"
+
+#. module: sale
+#: model:mail.template,name:sale.mail_template_sale_cancellation
+msgid "Sales: Order Cancellation"
+msgstr ""
+
+#. module: sale
+#: model:mail.template,name:sale.mail_template_sale_confirmation
+msgid "Sales: Order Confirmation"
+msgstr ""
+
+#. module: sale
+#: model:mail.template,name:sale.email_template_edi_sale
+msgid "Sales: Send Quotation"
+msgstr ""
 
 #. module: sale
 #: code:addons/sale/models/crm_team.py:0
@@ -3508,6 +3534,16 @@ msgid ""
 msgstr ""
 "제품에 대한 특정 정보나 내용 (소개, 사용법, 링크, 미디어 등)을 공유해야 하는 경우 이메일을 보내는 것이 유용합니다. 제품 세부 "
 "사항 양식(판매 탭)에서 이메일 서식을 작성하고 설정하십시오."
+
+#. module: sale
+#: model:mail.template,description:sale.mail_template_sale_cancellation
+msgid "Sent automatically to customers when you cancel an order"
+msgstr ""
+
+#. module: sale
+#: model:mail.template,description:sale.mail_template_sale_confirmation
+msgid "Sent to customers on order confirmation"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sequence
@@ -3862,6 +3898,14 @@ msgid ""
 msgstr "이익은 제품 판매 가격의 합계에서 세부 양식에 설정된 비용을 뺀 값으로 계산됩니다."
 
 #. module: sale
+#: model_terms:product.product,website_description:sale.product_product_4e
+#: model_terms:product.product,website_description:sale.product_product_4f
+msgid ""
+"The minimum height is 65 cm, and for standing work the maximum height "
+"position is 125 cm."
+msgstr ""
+
+#. module: sale
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The order is not in a state requiring customer signature."
@@ -4169,6 +4213,14 @@ msgid "Unit of Measure"
 msgstr "단위"
 
 #. module: sale
+#: model:product.product,uom_name:sale.advance_product_0
+#: model:product.product,uom_name:sale.product_product_4e
+#: model:product.product,uom_name:sale.product_product_4f
+#: model:product.template,uom_name:sale.advance_product_0_product_template
+msgid "Units"
+msgstr "단위"
+
+#. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_form_action
 #: model:ir.ui.menu,name:sale.next_id_16
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4239,6 +4291,11 @@ msgid "Upselling Opportunity"
 msgstr "추가판매 기회"
 
 #. module: sale
+#: model:mail.template,description:sale.email_template_edi_sale
+msgid "Used by salespeople when they send quotations or proforma to prospects"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "Valid Until"
 msgstr "유효기간"
@@ -4306,6 +4363,14 @@ msgid "Warning when Selling this Product"
 msgstr "이 상품을 판매할 때 경고"
 
 #. module: sale
+#: model_terms:product.product,website_description:sale.product_product_4e
+#: model_terms:product.product,website_description:sale.product_product_4f
+msgid ""
+"We pay special attention to detail, which is why our desks are of a superior"
+" quality."
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__website_message_ids
 msgid "Website Messages"
 msgstr "웹사이트 메시지"
@@ -4321,13 +4386,6 @@ msgstr "웹사이트 대화 이력"
 #, python-format
 msgid "Write a company name to create one, or see suggestions."
 msgstr "신규 생성 또는 추천자료를 보기 위해 회사명을 입력합니다."
-
-#. module: sale
-#. openerp-web
-#: code:addons/sale/static/src/js/sale_order_controller.js:0
-#, python-format
-msgid "YES"
-msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view

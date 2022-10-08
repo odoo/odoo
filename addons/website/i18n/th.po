@@ -8,15 +8,15 @@
 # Phinitnan Chanasabaeng <crackerizer@gmail.com>, 2022
 # Seksan Poltree <seksan.poltree@gmail.com>, 2022
 # Martin Trigaux, 2022
-# Odoo Thaidev <odoothaidev@gmail.com>, 2022
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2022
+# Odoo Thaidev <odoothaidev@gmail.com>, 2022
 # Wichanon Jamwutthipreecha, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-27 15:11+0000\n"
+"POT-Creation-Date: 2022-10-04 09:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
 "Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
@@ -32,6 +32,12 @@ msgstr ""
 #, python-format
 msgid " Add Images"
 msgstr "เพิ่มรูปภาพ"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "\" alert with a"
+msgstr "เตือนด้วย"
 
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
@@ -258,6 +264,7 @@ msgstr "...และเปลี่ยนเนื้อหาไทม์ไล
 
 #. module: website
 #: model:website,contact_us_button_url:website.default_website
+#: model:website,contact_us_button_url:website.website2
 #: model_terms:ir.ui.view,arch_db:website.layout
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "/contactus"
@@ -320,6 +327,12 @@ msgid "15 km"
 msgstr "15 กม."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "2 <span class=\"visually-hidden\">(current)</span>"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "2 km"
 msgstr "2 กม."
@@ -355,8 +368,10 @@ msgid "24x7 toll-free support"
 msgstr "รองรับระบบ toll-free ตลอด 24x7"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_hr_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "25%"
 msgstr "25%"
 
@@ -771,6 +786,11 @@ msgstr ""
 "                            <span>เชื่อมต่อ</span>"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
+msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.page_404
 msgid ""
 "<i class=\"fa fa-info-circle\"/> Edit the content below this line to adapt "
@@ -946,9 +966,35 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid ""
+"<small id=\"emailHelp\" class=\"form-text text-muted\">Form field help "
+"text</small>"
+msgstr ""
+"<small id=\"emailHelp\" class=\"form-text text-"
+"muted\">ข้อความช่วยเหลือช่องแบบฟอร์ม</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid ""
+"<small id=\"emailHelp\" class=\"form-text text-muted\">We'll never share "
+"your email with anyone else.</small>"
+msgstr ""
+"<small id=\"emailHelp\" class=\"form-text text-"
+"muted\">เราจะไม่เปิดเผยอีเมลของคุณกับคนอื่น</small>"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "<small>/ month</small>"
 msgstr "<small>/ เดือน</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "<small>TABS</small>"
+msgstr "<small>แท็บ</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_header_magazine_oe_structure_header_magazine_1
@@ -1073,6 +1119,13 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Sitemap</span>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.cookies_bar
+msgid ""
+"<span class=\"pe-1\">We use cookies to provide you a better user experience "
+"on this website.</span>"
 msgstr ""
 
 #. module: website
@@ -1386,6 +1439,8 @@ msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__redirect_type
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Action"
 msgstr "การดำเนินการ"
 
@@ -1394,7 +1449,9 @@ msgstr "การดำเนินการ"
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__active
 #: model:ir.model.fields,field_description:website.field_website_page__active
 #: model:ir.model.fields,field_description:website.field_website_rewrite__active
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "Active"
 msgstr "เปิดใช้งาน"
 
@@ -1560,17 +1617,6 @@ msgid "Add to menu"
 msgstr "เพิ่มในเมนู"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:0
-#, python-format
-msgid ""
-"Adding a font requires a reload of the page. This will save all your "
-"changes."
-msgstr ""
-"การเพิ่มฟอนต์ใหม่จำเป็นต้องโหลดหน้าซ้ำ "
-"การดำเนินการนี้จะบันทึกการเปลี่ยนแปลงทั้งหมดของคุณ"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_google_map_options
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "Address"
@@ -1578,13 +1624,19 @@ msgstr "ที่อยู่"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
-msgid "Advertising &amp; Marketing"
-msgstr "การโฆษณาและการตลาด"
+msgid "Advertising &amp; Marketing<br/>(optional)"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_asset__directive__after
 msgid "After"
 msgstr "หลังจาก"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Alert"
+msgstr "การเตือน"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list_options
@@ -1668,6 +1720,20 @@ msgstr "ผลลัพธ์ทั้งหมด"
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "All these icons are completely free for commercial use."
 msgstr "ไอคอนทั้งหมดนี้ไม่มีค่าใช้จ่ายสำหรับการใช้งานเชิงพาณิชย์"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.cookies_bar.xml:0
+#, python-format
+msgid "Allow all cookies"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.cookies_bar.xml:0
+#, python-format
+msgid "Allow the use of cookies from this website on this browser?"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_ir_ui_view__track
@@ -1771,7 +1837,6 @@ msgstr "เกิดข้อผิดพลาดขณะแสดงเทม
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #: model:ir.actions.client,name:website.backend_dashboard
 #: model:ir.ui.menu,name:website.menu_website_analytics
-#: model_terms:ir.ui.view,arch_db:website.cookie_policy
 #, python-format
 msgid "Analytics"
 msgstr "การวิเคราะห์"
@@ -1780,6 +1845,11 @@ msgstr "การวิเคราะห์"
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "Analytics cookies and privacy information."
 msgstr "คุกกี้การวิเคราะห์และข้อมูลความเป็นส่วนตัว"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid "Analytics<br/>(optional)"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -1963,6 +2033,12 @@ msgid "Autoredirect Language"
 msgstr "เปลี่ยนเส้นทางภาษาอัตโนมัติ"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Autosizing"
+msgstr "ปรับขนาดอัตโนมัติ"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_published
 msgid "Available on the Website"
@@ -1974,6 +2050,12 @@ msgstr "มีอยู่ในเว็บไซต์"
 #, python-format
 msgid "BSgzTvR5L1GB9jriT451iTN4huVPxHmltG6T6eo"
 msgstr "BSgzTvR5L1GB9jriT451iTN4huVPxHmltG6T6eo"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "BTS Base Colors"
+msgstr "สี BTS Base "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -1997,6 +2079,12 @@ msgstr "พื้นหลัง"
 #, python-format
 msgid "Background Shape"
 msgstr "รูปร่างพื้นหลัง"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Badge"
+msgstr "ป้าย"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
@@ -2190,6 +2278,14 @@ msgid "Boxes"
 msgstr "กล่อง"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "Breadcrumb"
+msgstr "Breadcrumb"
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
@@ -2221,7 +2317,9 @@ msgid "Bundle"
 msgstr "กลุ่ม"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Button"
 msgstr "ปุ่ม"
 
@@ -2235,13 +2333,6 @@ msgstr "ตำแหน่งปุ่ม"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Buttons"
 msgstr "ปุ่ม"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.cookies_bar.xml:0
-#, python-format
-msgid "By clicking on this banner, you give us permission to collect data."
-msgstr "การคลิกที่แบนเนอร์นี้แสดงว่าคุณอนุญาตให้เราเก็บรวบรวมข้อมูล"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__cdn_url
@@ -2318,6 +2409,30 @@ msgstr "ไม่สามารถปิดการใช้งานภาษ
 #, python-format
 msgid "Cannot load google map."
 msgstr "ไม่สามารถโหลด google map ได้"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Card"
+msgstr "การ์ด"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Card Body"
+msgstr "การ์ดส่วนเนื้อหา"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Card Footer"
+msgstr "การ์ดส่วนท้าย"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Card Header"
+msgstr "การ์ดส่วนหัว"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse_options
@@ -2697,7 +2812,9 @@ msgid "Complete CRM for any size team"
 msgstr "CRM ที่สมบูรณ์แบบสำหรับทีมทุกขนาด"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Components"
 msgstr "ส่วนประกอบ"
 
@@ -2870,7 +2987,6 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -3171,6 +3287,10 @@ msgstr "เส้นประ"
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/services/website_service.js:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 #, python-format
 msgid "Data"
 msgstr "Data"
@@ -3430,6 +3550,11 @@ msgid "Detect"
 msgstr "ตรวจจับ"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Device"
+msgstr "อุปกรณ์"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Direction"
@@ -3446,6 +3571,14 @@ msgstr "คำสั่ง"
 #: model:ir.cron,name:website.website_disable_unused_snippets_assets
 msgid "Disable unused snippets assets"
 msgstr "ปิดใช้งานตัวอย่างข้อมูลที่ไม่ได้ใช้"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "Disabled"
+msgstr "Disabled"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -3700,7 +3833,9 @@ msgid "Dresses"
 msgstr "ชุดกระโปรง"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Dropdown"
 msgstr "ดรอปดาว์น"
 
@@ -3882,6 +4017,12 @@ msgid "Email &amp; Marketing"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Email address"
+msgstr "ที่อยู่อีเมล"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Email support"
 msgstr "การสนับสนุนทางอีเมล"
@@ -3931,6 +4072,12 @@ msgstr "ป้อนโค้ดที่จะเพิ่มลงในทุ
 msgid ""
 "Enter code that will be added into the <head> of every page of your site."
 msgstr "ป้อนโค้ดที่จะเพิ่มลงใน <head> ในทุกหน้าเว็บไซต์ของคุณ"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Enter email"
+msgstr "กรอกอีเมล"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
@@ -4349,6 +4496,12 @@ msgid "Footer Visible"
 msgstr "มองเห็นส่วนท้าย"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Form"
+msgstr "ฟอร์ม"
+
+#. module: website
 #: model:ir.model.fields,help:website.field_ir_model__website_form_label
 msgid ""
 "Form action label. Ex: crm.lead could be 'Send an e-mail' and project.issue "
@@ -4689,6 +4842,18 @@ msgid "H2"
 msgstr "H2"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "H4 Card title"
+msgstr "H4 Card title"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "H5 Card subtitle"
+msgstr "H5 Card subtitle"
+
+#. module: website
 #: model:ir.ui.menu,name:website.menu_ace_editor
 msgid "HTML / CSS Editor"
 msgstr ""
@@ -4736,6 +4901,12 @@ msgid "Has Social Default Image"
 msgstr "มีภาพเริ่มต้นทางสังคม"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Header"
+msgstr "ส่วนหัว"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_page__header_color
 #: model:ir.model.fields,field_description:website.field_website_page__header_color
 msgid "Header Color"
@@ -4762,6 +4933,42 @@ msgstr "มองเห็นส่วนหัว"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Headings"
 msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Headings 1"
+msgstr "หัวเรื่อง 1"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Headings 2"
+msgstr "หัวเรื่อง 2"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Headings 3"
+msgstr "หัวเรื่อง 3"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Headings 4"
+msgstr "หัวเรื่อง 4"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Headings 5"
+msgstr "หัวเรื่อง 5"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Headings 6"
+msgstr "หัวเรื่อง 6"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -4811,13 +5018,6 @@ msgid "Hidden for"
 msgstr "ซ่อนแล้วเพื่อ"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/editor/snippets.options.js:0
-#, python-format
-msgid "Hidden on mobile"
-msgstr "ซ่อนบนมือถือ"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Hide"
 msgstr "ซ่อน"
@@ -4863,15 +5063,23 @@ msgstr ""
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 #: model:website.menu,name:website.menu_home
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
 #: model_terms:ir.ui.view,arch_db:website.template_footer_headline
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 #: model_terms:ir.ui.view,arch_db:website.template_footer_minimalist
+#: model_terms:website.page,arch_db:website.bs_debug_page
 #, python-format
 msgid "Home"
 msgstr "โฮม"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Home <span class=\"visually-hidden\">(current)</span>"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -4881,6 +5089,7 @@ msgstr "เครื่องเสียงบ้าน"
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/components/views/page_list.xml:0
+#: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 #, python-format
 msgid "Home page of the current website"
 msgstr ""
@@ -4941,8 +5150,6 @@ msgstr "ไฮบริด"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.cookies_bar.xml:0
-#: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #: model_terms:ir.ui.view,arch_db:website.cookies_bar
 #, python-format
@@ -5132,6 +5339,11 @@ msgid "In"
 msgstr "ใน"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
+msgid "In Main Menu"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "In Place"
 msgstr ""
@@ -5300,8 +5512,8 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
-msgid "Interaction History"
-msgstr "ประวัติการโต้ตอบ"
+msgid "Interaction History<br/>(optional)"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
@@ -5474,6 +5686,18 @@ msgid "Item"
 msgstr "รายการ"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Item 1"
+msgstr "รายการ 1"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Item 2"
+msgstr "รายการ  2"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options
 msgid "Items per row"
 msgstr "รายการต่อแถว"
@@ -5544,8 +5768,10 @@ msgid "Keywords"
 msgstr "คำสำคัญ"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "Label"
 msgstr "ป้าย"
 
@@ -5596,11 +5822,13 @@ msgid "Laptops"
 msgstr "แล็ปท็อป"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Large"
 msgstr "ใหญ่"
 
@@ -5819,6 +6047,14 @@ msgid "Let's go!"
 msgstr "ไปกันเลย!"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "Library"
+msgstr "Library"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse_options
 msgid "Light"
 msgstr "อ่อน"
@@ -5845,6 +6081,14 @@ msgid "Line Color"
 msgstr "สีเส้น"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "Link"
+msgstr "ลิงก์"
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
@@ -5855,6 +6099,18 @@ msgstr "ลิงก์ Anchor"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Link Style"
 msgstr "สไตล์ลิงก์"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Link button"
+msgstr "ปุ่มลิงค์"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "Link text"
+msgstr "ลิงก์ข้อความ"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__social_linkedin
@@ -6395,6 +6651,12 @@ msgid "Narrow"
 msgstr "แคบ"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Navbar"
+msgstr "Navbar"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
 msgid ""
 "Need to pick up your order at one of our stores? Discover the nearest to "
@@ -6466,9 +6728,11 @@ msgstr "จดหมายข่าวแบบป๊อปอัพ"
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
+#: model_terms:website.page,arch_db:website.bs_debug_page
 #, python-format
 msgid "Next"
 msgstr "ถัดไป"
@@ -6559,7 +6823,13 @@ msgstr "ปกติ"
 
 #. module: website
 #: model:website,prevent_zero_price_sale_text:website.default_website
+#: model:website,prevent_zero_price_sale_text:website.website2
 msgid "Not Available For Sale"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
+msgid "Not Published"
 msgstr ""
 
 #. module: website
@@ -6748,6 +7018,13 @@ msgid "Online"
 msgstr "ออนไลน์"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.cookies_bar.xml:0
+#, python-format
+msgid "Only allow essential cookies"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,help:website.field_website_page__mode
 msgid ""
 "Only applies if this view inherits from an other one (inherit_id is not False/Null).\n"
@@ -6769,6 +7046,14 @@ msgstr ""
 "แตกต่างจากรุ่นนี้) แล้วสเปคที่ถูกสืบทอดจากมุมมองนี้\n"
 "(<xpath/>)ถูกนำไปใช้ และใช้ผลลัพธ์ราวกับว่าเป็นมุมมอง\n"
 "Arch ที่แท้จริง\n"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.cookies_bar.xml:0
+#: model_terms:ir.ui.view,arch_db:website.cookies_bar
+#, python-format
+msgid "Only essentials"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -6867,7 +7152,9 @@ msgid "Out"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Outline"
 msgstr "เค้าโครง"
 
@@ -7017,9 +7304,41 @@ msgid "Pages"
 msgstr "หน้า"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Pagination"
+msgstr "หมายเลขหน้า"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
 msgid "Pants"
 msgstr "กางเกง"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid ""
+"Paragraph text. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing "
+"elit. <i>Integer posuere erat a ante</i>."
+msgstr ""
+"ข้อความย่อหน้า. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing "
+"elit. <i>Integer posuere erat a ante</i>."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid ""
+"Paragraph with <strong>bold</strong>, <span class=\"text-"
+"muted\">muted</span> and <em>italic</em> texts"
+msgstr ""
+"ย่อหน้าที่มีข้อความ <strong>ตัวหนา</strong>  <span class=\"text-"
+"muted\">ถูกระงับ</span> และ <em>เอียง</em> "
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "Paragraph."
+msgstr "ย่อหน้า"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_background_options
@@ -7093,6 +7412,12 @@ msgstr "เลือกธีม"
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 msgid "Pie"
 msgstr "พาย"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Pill"
+msgstr "ทรงยา"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -7176,13 +7501,19 @@ msgstr "โปสการ์ด"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
-msgid "Preferences"
-msgstr "การตั้งค่า"
+msgid "Preferences<br/>(essential)"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_asset__directive__prepend
 msgid "Prepend"
 msgstr "นำหน้า"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "Preset"
+msgstr "พรีเซ็ต"
 
 #. module: website
 #. openerp-web
@@ -7208,9 +7539,11 @@ msgstr "ตัวอย่าง"
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
+#: model_terms:website.page,arch_db:website.bs_debug_page
 #, python-format
 msgid "Previous"
 msgstr "ก่อนหน้า"
@@ -7364,6 +7697,7 @@ msgstr "เผยแพร่กิจกรรมในสถานที่แ
 #: code:addons/website/static/src/systray_items/publish.js:0
 #: model_terms:ir.ui.view,arch_db:website.publish_management
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
+#: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 #: model_terms:ir.ui.view,arch_db:website.website_pages_view_search
 #, python-format
 msgid "Published"
@@ -7699,6 +8033,11 @@ msgid "SEO"
 msgstr "SEO"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
+msgid "SEO Optimized"
+msgstr ""
+
+#. module: website
 #: model:ir.model,name:website.model_website_seo_metadata
 msgid "SEO metadata"
 msgstr "SEO ข้อมูลอภิพันธุ์"
@@ -7822,8 +8161,10 @@ msgid "Scroll down to next section"
 msgstr "เลื่อนลงไปที่ส่วนถัดไป"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.view_view_qweb
 #: model_terms:ir.ui.view,arch_db:website.website_search_box
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Search"
 msgstr "ค้นหา"
 
@@ -7978,6 +8319,12 @@ msgid "Separate email addresses with a comma."
 msgstr "แยกที่อยู่อีเมลด้วยเครื่องหมายจุลภาค (,)"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Separated link"
+msgstr "แยกลิงก์"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__sequence
 #: model:ir.model.fields,field_description:website.field_theme_website_menu__sequence
 #: model:ir.model.fields,field_description:website.field_website__sequence
@@ -7987,6 +8334,13 @@ msgstr "แยกที่อยู่อีเมลด้วยเครื่
 #: model:ir.model.fields,field_description:website.field_website_rewrite__sequence
 msgid "Sequence"
 msgstr "ลำดับ"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Serve font from Google servers"
+msgstr ""
 
 #. module: website
 #: model:ir.model,name:website.model_ir_actions_server
@@ -8012,12 +8366,13 @@ msgstr "บริการ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
-msgid "Session &amp; Security"
-msgstr "เซสชั่นและความปลอดภัย"
+msgid "Session &amp; Security<br/>(essential)"
+msgstr ""
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_configuration
 #: model:ir.ui.menu,name:website.menu_website_website_settings
+#: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 #: model_terms:ir.ui.view,arch_db:website.website_pages_tree_view
 msgid "Settings"
 msgstr "การตั้งค่า"
@@ -8150,6 +8505,16 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Show/Hide on Desktop"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Show/Hide on Mobile"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Sidebar"
 msgstr "แถบด้านข้าง"
 
@@ -8249,11 +8614,13 @@ msgid "Slogan"
 msgstr "สโลแกน"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Small"
 msgstr "เล็ก"
 
@@ -8261,6 +8628,16 @@ msgstr "เล็ก"
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
 msgid "Small Header"
 msgstr "ส่วนหัวขนาดเล็ก"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid ""
+"Small text. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing elit. "
+"<i>Integer posuere erat a ante</i>."
+msgstr ""
+"ข้อความขนาดเล็ก. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing "
+"elit. <i>Integer posuere erat a ante</i>."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -8288,6 +8665,12 @@ msgstr "ดูตัวอย่างในโซเชียล"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_border_line_widgets
 msgid "Solid"
 msgstr "ของแข็ง"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Something else here"
+msgstr "อย่างอื่นที่นี่"
 
 #. module: website
 #. openerp-web
@@ -8687,6 +9070,12 @@ msgid "Text Position"
 msgstr "ตำแหน่งข้อความ"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "Text muted. Lorem <b>ipsum dolor sit amet</b>, consectetur."
+msgstr "ข้อความที่ถูกระงับ. Lorem <b>ipsum dolor sit amet</b>, consectetur."
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website_form_editor.xml:0
 #, python-format
@@ -8858,6 +9247,8 @@ msgstr "การแนบธีม"
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 #, python-format
 msgid "Theme Colors"
 msgstr "สีธีม"
@@ -8985,6 +9376,19 @@ msgid ""
 msgstr ""
 "ฟิลด์นี้จะบันทึก \"arch_db\" ปัจจุบันก่อนที่จะเขียนลงไป\n"
 "                                                                         มีประโยชน์ในการรีเซ็ตมุมมองที่เสียหายแบบซอฟต์ "
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "This font is hosted and served to your visitors by Google servers"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "This is a \""
+msgstr "นี้คือ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_banner
@@ -9156,7 +9560,15 @@ msgstr ""
 "'จัดการการเข้าถึงพอร์ทัล' ในเมนูดรอปดาวน์ *การดำเนินการ*"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Toggle"
+msgstr "สลับ"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.option_header_off_canvas
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Toggle navigation"
 msgstr "ระบบนำทางแบบสลับ"
 
@@ -9621,6 +10033,12 @@ msgid "Users"
 msgstr "ผู้ใช้"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Utilities &amp; Typography"
+msgstr "ประโยชน์ใช้สอยและการพิมพ์"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
 msgid "Value"
 msgstr "ค่า"
@@ -9734,13 +10152,6 @@ msgstr "มองเห็นได้เมื่อออกจากระบ
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__website_published
 msgid "Visible on current website"
 msgstr "ปรากฏบนเว็บไซต์ปัจจุบัน"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/editor/snippets.options.js:0
-#, python-format
-msgid "Visible on mobile"
-msgstr "มองเห็นได้บนมือถือ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -9914,22 +10325,19 @@ msgstr "เรานำเสนอสินค้าที่ออกแบบ
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.cookies_bar.xml:0
-#: code:addons/website/static/src/xml/website.cookies_bar.xml:0
-#: model_terms:ir.ui.view,arch_db:website.cookies_bar
 #, python-format
-msgid "We use cookies to provide you a better user experience."
-msgstr "เราใช้คุกกี้เพื่อมอบประสบการณ์การใช้งานที่ดียิ่งขึ้นแก่คุณ"
+msgid ""
+"We use cookies to provide improved experience on this website. You can learn"
+" more about our cookies and how we use them in our"
+msgstr ""
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #, python-format
 msgid ""
-"We use them to store info about your habits on our website. It will helps us"
-" to provide you the very best experience and customize what you see."
+"We use cookies to provide you a better user experience on this website."
 msgstr ""
-"เราใช้มันเพื่อเก็บข้อมูลเกี่ยวกับนิสัยของคุณบนเว็บไซต์ของเรา "
-"ซึ่งจะช่วยให้เรามอบประสบการณ์ที่ดีที่สุดแก่คุณและปรับแต่งสิ่งที่คุณเห็น"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
@@ -10602,6 +11010,38 @@ msgid "big"
 msgstr "ใหญ่"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "breadcrumb"
+msgstr "เกล็ดขนมปัง"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "btn-outline-primary"
+msgstr "btn-outline-primary"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "btn-outline-secondary"
+msgstr "btn-outline-secondary"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "btn-primary"
+msgstr "btn-primary"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "btn-secondary"
+msgstr "btn-secondary"
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
@@ -10844,6 +11284,12 @@ msgid "ir.ui.view"
 msgstr "ir.ui.view"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "link"
+msgstr "ลิงก์"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "masonry, grid"
 msgstr "masonry, ตาราง"
@@ -10852,6 +11298,12 @@ msgstr "masonry, ตาราง"
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "menu, pricing"
 msgstr "เมนู, ราคา"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "o-color-"
+msgstr "o-color-"
 
 #. module: website
 #. openerp-web
@@ -10879,6 +11331,12 @@ msgstr "เว็บไซต์ที่ยอดเยี่ยม?"
 #, python-format
 msgid "phone"
 msgstr "โทรศัพท์"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "placeholder"
+msgstr "ตัวอย่างข้อความ"
 
 #. module: website
 #. openerp-web
@@ -10940,6 +11398,12 @@ msgstr "สถิติ, สแตท, KPI"
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "testimonials"
 msgstr "คำรับรอง"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:website.page,arch_db:website.color_combinations_debug_page
+msgid "text link"
+msgstr "ลิงก์ข้อความ"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_ui_view__inherit_id__theme_ir_ui_view

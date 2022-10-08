@@ -23,7 +23,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard___data_fetched
 msgid " Data Fetched"
-msgstr "Gegevens opgehaald"
+msgstr " Gegevens opgehaald"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -68,12 +68,12 @@ msgstr "<span class=\"o_stat_text\">Opgeslagen betaalmethoden</span>"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "<span class=\"text-danger\">Unpublished</span>"
-msgstr ""
+msgstr "<span class=\"text-danger\">Niet gepubliceerd</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "<span class=\"text-success\">Published</span>"
-msgstr ""
+msgstr "<span class=\"text-success\">Gepubliceerd</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
@@ -105,7 +105,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_methods
 msgid "<strong>No suitable payment provider could be found.</strong>"
-msgstr ""
+msgstr "<strong>Geen geschikte betalingsprovider gevonden.</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -113,6 +113,8 @@ msgid ""
 "<strong>Warning</strong> Creating a payment provider from the <em>CREATE</em> button is not supported.\n"
 "                        Please use the <em>Duplicate</em> action instead."
 msgstr ""
+"<strong>Waarschuwing</strong> Het maken van een betalingsprovider via de knop <em>CREATE</em> wordt niet ondersteund.\n"
+"                        Gebruik in plaats daarvan de actie <em>Dupliceren</em>."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -140,12 +142,16 @@ msgid ""
 "A refund request of %(amount)s has been sent. The payment will be created "
 "soon. Refund transaction reference: %(ref)s (%(provider_name)s)."
 msgstr ""
+"Er is een teruggaveverzoek van %(amount)s verzonden. De betaling wordt "
+"binnenkort aangemaakt. Referentie transactie teruggave: %(ref)s "
+"(%(provider_name)s)."
 
 #. module: payment
 #: code:addons/payment/models/payment_token.py:0
 #, python-format
 msgid "A token cannot be unarchived once it has been archived."
 msgstr ""
+"Een token kan niet uit het archief worden gehaald nadat het is gearchiveerd."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -153,6 +159,7 @@ msgstr ""
 msgid ""
 "A transaction with reference %(ref)s has been initiated (%(provider_name)s)."
 msgstr ""
+"Er is een transactie gestart met referentie %(ref)s (%(provider_name)s)."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -161,6 +168,8 @@ msgid ""
 "A transaction with reference %(ref)s has been initiated to save a new "
 "payment method (%(provider_name)s)"
 msgstr ""
+"Er is een transactie gestart met referentie %(ref)s om een nieuwe "
+"betaalmethode (%(provider_name)s) op te slaan"
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -169,6 +178,8 @@ msgid ""
 "A transaction with reference %(ref)s has been initiated using the payment "
 "method %(token)s (%(provider_name)s)."
 msgstr ""
+"Een transactie met referentie %(ref)s is gestart met de betaalmethode "
+"%(token)s (%(provider_name)s)."
 
 #. module: payment
 #: code:addons/payment/wizards/payment_onboarding_wizard.py:0
@@ -210,12 +221,12 @@ msgstr "Adyen"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__allow_express_checkout
 msgid "Allow Express Checkout"
-msgstr ""
+msgstr "Snel afrekenen toestaan"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__payment_provider_selection
 msgid "Allow Payment Provider"
-msgstr ""
+msgstr "Betalingsprovider toestaan"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__allow_tokenization
@@ -226,7 +237,7 @@ msgstr "Opslaan van betalingsmethoden toestaan"
 #: model:payment.provider,display_as:payment.payment_provider_aps
 #: model:payment.provider,name:payment.payment_provider_aps
 msgid "Amazon Payment Services"
-msgstr ""
+msgstr "Amazon-betalingsservices"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount
@@ -250,7 +261,7 @@ msgstr "Er is een fout opgetreden tijdens de verwerking van deze betaling."
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
 msgid "An error occurred during the processing of your payment."
-msgstr ""
+msgstr "Er is een fout opgetreden tijdens de verwerking van je betaling."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
@@ -282,7 +293,7 @@ msgstr ""
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_asiapay
 msgid "Asiapay"
-msgstr ""
+msgstr "Azië betalen"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__auth_msg
@@ -297,7 +308,7 @@ msgstr "Authorize.net"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__authorized
 msgid "Authorized"
-msgstr "Geautoriseerd "
+msgstr "Geautoriseerd"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -394,7 +405,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_ids
 msgid "Child Transactions"
-msgstr ""
+msgstr "Onderliggende transacties"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
@@ -493,7 +504,7 @@ msgstr "Token maken"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
 msgid "Create a new payment provider"
-msgstr ""
+msgstr "Een nieuwe betalingsprovider maken"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_token
@@ -529,7 +540,7 @@ msgstr "Aangemaakt op"
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Creating a transaction from an archived token is forbidden."
-msgstr ""
+msgstr "Het maken van een transactie van een gearchiveerd token is verboden."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -544,7 +555,7 @@ msgstr "Creditcard / betaalkaart"
 #. module: payment
 #: model:payment.provider,display_as:payment.payment_provider_razorpay
 msgid "Credit & Debit Card, UPI (Powered by Razorpay)"
-msgstr ""
+msgstr "Credit- en debetkaart, UPI (aangedreven door Razorpay)"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__stripe
@@ -559,7 +570,7 @@ msgstr "Credit Card (aangeboden via Adyen)"
 #. module: payment
 #: model:payment.provider,display_as:payment.payment_provider_asiapay
 msgid "Credit Card (powered by Asiapay)"
-msgstr ""
+msgstr "Creditcard (mogelijk gemaakt door Asiapay)"
 
 #. module: payment
 #: model:payment.provider,display_as:payment.payment_provider_authorize
@@ -574,7 +585,7 @@ msgstr "Credit Card (aangeboden via Buckaroo)"
 #. module: payment
 #: model:payment.provider,display_as:payment.payment_provider_mercado_pago
 msgid "Credit Card (powered by Mercado Pago)"
-msgstr ""
+msgstr "Creditcard (aangedreven door Mercado Pago)"
 
 #. module: payment
 #: model:payment.provider,display_as:payment.payment_provider_sips
@@ -611,7 +622,7 @@ msgstr "Demo"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__display_as
 msgid "Description of the provider for customers"
-msgstr ""
+msgstr "Beschrijving van de provider voor klanten"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__state__disabled
@@ -688,12 +699,12 @@ msgstr "Fout: %s"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__express_checkout_form_view_id
 msgid "Express Checkout Form Template"
-msgstr ""
+msgstr "Express Checkout-formuliersjabloon"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_express_checkout
 msgid "Express Checkout Supported"
-msgstr ""
+msgstr "Express Checkout ondersteund"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__fees
@@ -705,7 +716,7 @@ msgstr "Vergoedingen"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_fees
 msgid "Fees Supported"
-msgstr ""
+msgstr "Ondersteunde kosten"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__fees_dom_fixed
@@ -720,7 +731,7 @@ msgstr "Vaste internationale vergoedingen"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_flutterwave
 msgid "Flutterwave"
-msgstr ""
+msgstr "Fluttergolf"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -757,12 +768,12 @@ msgstr "HTTP routing"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__has_multiple_providers
 msgid "Has Multiple Providers"
-msgstr ""
+msgstr "Heeft meerdere providers"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__is_post_processed
 msgid "Has the payment been post-processed"
-msgstr "Is de betaling nabewerkt?"
+msgstr "Is de betaling nabewerkt"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__pre_msg
@@ -796,11 +807,14 @@ msgid ""
 "to pay via this one. If 'All' is selected, customers can pay via any "
 "available payment provider."
 msgstr ""
+"Als een specifieke betalingsprovider wordt geselecteerd, kunnen klanten "
+"alleen via deze betalen. Als 'Alle' is geselecteerd, kunnen klanten betalen "
+"via elke beschikbare betalingsprovider."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "If not defined, the provider name will be used."
-msgstr ""
+msgstr "Indien niet gedefinieerd, wordt de naam van de provider gebruikt."
 
 #. module: payment
 #. openerp-web
@@ -835,6 +849,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
+"In de testmodus wordt een nepbetaling verwerkt via een testbetalingsinterface.\n"
+"Deze modus wordt geadviseerd bij het instellen van de provider."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__inline_form_view_id
@@ -933,6 +949,8 @@ msgid ""
 "Making a request to the provider is not possible because the provider is "
 "disabled."
 msgstr ""
+"Een verzoek doen aan de aanbieder is niet mogelijk omdat de aanbieder is "
+"uitgeschakeld."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_meth_link
@@ -947,17 +965,17 @@ msgstr "Handmatig"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_manual_capture
 msgid "Manual Capture Supported"
-msgstr ""
+msgstr "Handmatige opname ondersteund"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__maximum_amount
 msgid "Maximum Amount"
-msgstr ""
+msgstr "Maximaal aantal"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_mercado_pago
 msgid "Mercado Pago"
-msgstr ""
+msgstr "Mercado Pago"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__paypal_seller_account
@@ -1012,6 +1030,8 @@ msgid ""
 "No manual payment method could be found for this company. Please create one "
 "from the Payment Provider menu."
 msgstr ""
+"Er is geen handmatige betaalmethode gevonden voor dit bedrijf. Maak er een "
+"aan in het menu Payment Provider."
 
 #. module: payment
 #. openerp-web
@@ -1035,7 +1055,7 @@ msgstr "Niet gedaan"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
 msgid "Not verified"
-msgstr "niet geverifieerd"
+msgstr "Niet geverifieerd"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__module_to_buy
@@ -1194,7 +1214,7 @@ msgstr "Betalingsproviders"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__available_provider_ids
 msgid "Payment Providers Available"
-msgstr ""
+msgstr "Betaalproviders beschikbaar"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__description
@@ -1245,17 +1265,17 @@ msgstr "Betalingstransacties gekoppeld aan token"
 #: code:addons/payment/models/payment_token.py:0
 #, python-format
 msgid "Payment details saved on %(date)s"
-msgstr ""
+msgstr "Betalingsgegevens opgeslagen op %(date)s"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Payment provider"
-msgstr ""
+msgstr "Betalingsprovider"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_provider_onboarding_wizard
 msgid "Payment provider onboarding wizard"
-msgstr ""
+msgstr "Onboarding-wizard voor betalingsproviders"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
@@ -1340,7 +1360,7 @@ msgstr "Provider"
 #: model:ir.model.fields,field_description:payment.field_payment_token__provider_ref
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__provider_reference
 msgid "Provider Reference"
-msgstr ""
+msgstr "Providerreferentie"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__provider_ids
@@ -1350,7 +1370,7 @@ msgstr "Providers"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_icon_form
 msgid "Providers list"
-msgstr ""
+msgstr "Lijst met aanbieders"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__is_published
@@ -1361,7 +1381,7 @@ msgstr "Gepubliceerd"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_razorpay
 msgid "Razorpay"
-msgstr ""
+msgstr "Razorpay"
 
 #. module: payment
 #. openerp-web
@@ -1437,7 +1457,7 @@ msgstr "Bewaar mijn betalingsgegevens"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Select countries. Leave empty to make available everywhere."
-msgstr ""
+msgstr "Selecteer landen. Laat leeg om overal beschikbaar te maken."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_onboarding_payment_method
@@ -1470,7 +1490,7 @@ msgstr "Serverfout:"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_allow_express_checkout
 msgid "Show Allow Express Checkout"
-msgstr ""
+msgstr "Toon Express Checkout toestaan"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_allow_tokenization
@@ -1533,7 +1553,7 @@ msgstr "Status"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_provider_onboarding_state
 msgid "State of the onboarding payment provider step"
-msgstr ""
+msgstr "Status van de stap van de onboarding-betalingsprovider"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__state
@@ -1569,12 +1589,12 @@ msgstr "Het toegangstoken is ongeldig."
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__child_transaction_ids
 msgid "The child transactions of the source transaction."
-msgstr ""
+msgstr "De onderliggende transacties van de brontransactie."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__payment_details
 msgid "The clear part of the payment method's payment details."
-msgstr ""
+msgstr "Het duidelijke deel van de betalingsgegevens van de betaalmethode."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__color
@@ -1592,11 +1612,15 @@ msgid ""
 "The countries in which this payment provider is available. Leave blank to "
 "make it available in all countries."
 msgstr ""
+"De landen waarin deze betalingsprovider beschikbaar is. Laat dit veld leeg "
+"om het in alle landen beschikbaar te maken."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__fees
 msgid "The fees amount; set by the system as it depends on the provider"
 msgstr ""
+"Het bedrag van de vergoedingen; ingesteld door het systeem omdat het "
+"afhankelijk is van de provider"
 
 #. module: payment
 #: code:addons/payment/models/payment_provider.py:0
@@ -1612,12 +1636,14 @@ msgstr "De interne referentie van de transactie"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__provider_ids
 msgid "The list of providers supporting this payment icon"
-msgstr ""
+msgstr "De lijst met providers die dit betalingspictogram ondersteunen"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__main_currency_id
 msgid "The main currency of the company, used to display monetary fields."
 msgstr ""
+"De belangrijkste valuta van het bedrijf, die wordt gebruikt om geldvelden "
+"weer te geven."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__maximum_amount
@@ -1625,6 +1651,8 @@ msgid ""
 "The maximum payment amount that this payment provider is available for. "
 "Leave blank to make it available for any payment amount."
 msgstr ""
+"Het maximale betalingsbedrag waarvoor deze betalingsprovider beschikbaar is."
+" Laat leeg om het beschikbaar te maken voor elk betalingsbedrag."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__auth_msg
@@ -1672,12 +1700,12 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__provider_ref
 msgid "The provider reference of the token of the transaction"
-msgstr ""
+msgstr "De providerreferentie van het token van de transactie"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__provider_reference
 msgid "The provider reference of the transaction"
-msgstr ""
+msgstr "De providerreferentie van de transactie"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__landing_route
@@ -1694,7 +1722,7 @@ msgstr "De brontransactie van gerelateerde terugbetalingstransacties"
 #: model:ir.model.fields,help:payment.field_payment_token__provider_code
 #: model:ir.model.fields,help:payment.field_payment_transaction__provider_code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "De technische code van deze betalingsprovider."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__redirect_form_view_id
@@ -1709,6 +1737,8 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_provider__express_checkout_form_view_id
 msgid "The template rendering the express payment methods' form."
 msgstr ""
+"De sjabloon die het formulier voor uitdrukkelijke betalingsmethoden "
+"weergeeft."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__inline_form_view_id
@@ -1724,6 +1754,8 @@ msgid ""
 "The template rendering the inline payment form when making a payment by "
 "token."
 msgstr ""
+"De sjabloon die het inline betalingsformulier weergeeft bij een betaling per"
+" token."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -1732,6 +1764,8 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s encountered an error "
 "(%(provider_name)s)."
 msgstr ""
+"Er is een fout opgetreden bij de transactie met referentie %(ref)s voor "
+"%(amount)s (%(provider_name)s)."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -1740,6 +1774,8 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s has been authorized "
 "(%(provider_name)s)."
 msgstr ""
+"De transactie met referentie %(ref)s voor %(amount)s is geautoriseerd "
+"(%(provider_name)s)."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -1748,6 +1784,8 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s has been confirmed "
 "(%(provider_name)s)."
 msgstr ""
+"De transactie met referentie %(ref)s voor %(amount)s is bevestigd "
+"(%(provider_name)s)."
 
 #. module: payment
 #: code:addons/payment/wizards/payment_link_wizard.py:0
@@ -1772,6 +1810,8 @@ msgid ""
 "This action will also archive %s tokens that are registered with this "
 "provider. Archiving tokens is irreversible."
 msgstr ""
+"Deze actie zal ook %s tokens archiveren die bij deze provider zijn "
+"geregistreerd. Het archiveren van tokens is onomkeerbaar."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_tokenization
@@ -1780,6 +1820,9 @@ msgid ""
 "A payment token is an anonymous link to the payment method details saved in the\n"
 "provider's database, allowing the customer to reuse it for a next purchase."
 msgstr ""
+"Hiermee wordt bepaald of klanten hun betaalmethoden kunnen opslaan als betaaltokens.\n"
+"Een betalingstoken is een anonieme link naar de details van de betalingsmethode die zijn opgeslagen in de\n"
+"database van de provider, zodat de klant deze kan hergebruiken voor een volgende aankoop."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_express_checkout
@@ -1788,6 +1831,9 @@ msgid ""
 "checkout enables customers to pay with Google Pay and Apple Pay from which "
 "address information is collected at payment."
 msgstr ""
+"Hiermee wordt bepaald of klanten expresbetaalmethoden kunnen gebruiken. Met "
+"Express checkout kunnen klanten betalen met Google Pay en Apple Pay waarvan "
+"adresgegevens worden verzameld bij de betaling."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__image
@@ -1804,6 +1850,9 @@ msgid ""
 "This partner has no email, which may cause issues with some payment "
 "providers. Setting an email for this partner is advised."
 msgstr ""
+"Deze partner heeft geen e-mailadres, wat problemen kan veroorzaken bij "
+"sommige betalingsproviders. Het wordt aangeraden om een e-mailadres in te "
+"stellen voor deze partner."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
@@ -1820,12 +1869,12 @@ msgstr "Deze betaalmethode is niet geverifieerd door ons systeem."
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "This transaction has been cancelled."
-msgstr "De transactie is geannuleerd"
+msgstr "De transactie is geannuleerd."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_inline_form_view_id
 msgid "Token Inline Form Template"
-msgstr ""
+msgstr "Token inline formuliersjabloon"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_tokenization
@@ -1839,6 +1888,8 @@ msgid ""
 "Transaction authorization is not supported by the following payment "
 "providers: %s"
 msgstr ""
+"Transactieautorisatie wordt niet ondersteund door de volgende "
+"betalingsproviders: %s"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_refund
@@ -1957,7 +2008,7 @@ msgstr "We verwerken je betaling, een moment geduld..."
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "We are waiting for the payment provider to confirm the payment."
-msgstr ""
+msgstr "We wachten op de betalingsprovider om de betaling te bevestigen."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__tokenize
@@ -1979,6 +2030,8 @@ msgid ""
 "Whether the provider is visible on the website or not. Tokens remain "
 "functional but are only visible on manage forms."
 msgstr ""
+"Of de aanbieder nu wel of niet zichtbaar is op de website. Tokens blijven "
+"functioneel, maar zijn alleen zichtbaar op beheerformulieren."
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_transfer
@@ -1997,7 +2050,7 @@ msgstr ""
 #: code:addons/payment/models/payment_provider.py:0
 #, python-format
 msgid "You cannot publish a disabled provider."
-msgstr ""
+msgstr "Je kunt een uitgeschakelde provider niet publiceren."
 
 #. module: payment
 #: code:addons/payment/controllers/portal.py:0
@@ -2026,14 +2079,14 @@ msgstr "Je wordt verwittigd wanneer de betaling bevestigd is."
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "You will be notified when the payment is fully confirmed."
-msgstr "Je ontvangt een bericht wanneer de betaling volledig bevestigd is"
+msgstr "Je ontvangt een bericht wanneer de betaling volledig bevestigd is."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Your order has been processed."
-msgstr "Je bestelling is verwerkt"
+msgstr "Je bestelling is verwerkt."
 
 #. module: payment
 #. openerp-web
@@ -2136,14 +2189,14 @@ msgstr "Je betaling is succesvol verwerkt. Bedankt!"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
 msgid "Your payment has not been processed yet."
-msgstr ""
+msgstr "Uw betaling is nog niet verwerkt."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Your payment is in pending state."
-msgstr "Je betaling is in afwachting"
+msgstr "Je betaling is in afwachting."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -2158,12 +2211,12 @@ msgstr "Postcode"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
 msgid "danger"
-msgstr ""
+msgstr "gevaar"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
 msgid "info"
-msgstr ""
+msgstr "info"
 
 #. module: payment
 #: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
@@ -2176,12 +2229,12 @@ msgstr "betaling: transacties na verwerking"
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
 msgid "provider"
-msgstr ""
+msgstr "aanbieder"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__provider_id
 msgid "provider Account"
-msgstr ""
+msgstr "provider-account"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.icon_list
@@ -2196,9 +2249,9 @@ msgstr "laat meer zien"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
 msgid "success"
-msgstr ""
+msgstr "succes"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
 msgid "warning"
-msgstr ""
+msgstr "waarschuwing"

@@ -3,7 +3,6 @@
 # 	* point_of_sale
 # 
 # Translators:
-# CristianCruzParra, 2022
 # Eric Antones <eantones@users.noreply.github.com>, 2022
 # Josep Sànchez <papapep@gmx.com>, 2022
 # Sandra Franch <sandra.franch@upc.edu>, 2022
@@ -21,19 +20,20 @@
 # Arnau Ros, 2022
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2022
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
-# oscaryuu, 2022
-# Martin Trigaux, 2022
+# Harcogourmet, 2022
 # jabelchi, 2022
 # Quim - eccit <quim@eccit.com>, 2022
-# Harcogourmet, 2022
+# oscaryuu, 2022
+# CristianCruzParra, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:01+0000\n"
+"POT-Creation-Date: 2022-10-04 09:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Harcogourmet, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1045,6 +1045,11 @@ msgid "Cash Out"
 msgstr ""
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
+msgid "Cash Register"
+msgstr "Registre de caixa"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__cash_rounding
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Cash Rounding"
@@ -1077,6 +1082,12 @@ msgstr "Diferència d'efectiu observada durant el recompte (Guany)"
 #: code:addons/point_of_sale/static/src/js/ChromeWidgets/CashMoveButton.js:0
 #, python-format
 msgid "Cash in/out of %s is ignored."
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "Cash register"
 msgstr ""
 
 #. module: point_of_sale
@@ -1131,6 +1142,11 @@ msgstr "Nom de categoria"
 #: model:ir.model.fields,help:point_of_sale.field_product_template__pos_categ_id
 msgid "Category used in the Point of Sale."
 msgstr "Categoria utilitzada al punt de venda."
+
+#. module: point_of_sale
+#: model:pos.category,name:point_of_sale.pos_category_chairs
+msgid "Chairs"
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -1615,6 +1631,11 @@ msgid "Current Session State"
 msgstr "Estat de la sessió actual"
 
 #. module: point_of_sale
+#: model:product.attribute.value,name:point_of_sale.fabric_attribute_custom
+msgid "Custom"
+msgstr "Personalitzat"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_header_or_footer
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_is_header_or_footer
 msgid "Custom Header & Footer"
@@ -1883,6 +1904,23 @@ msgstr "Esborrar comandes no pagades"
 #, python-format
 msgid "Delete Unpaid Orders ?"
 msgstr "Esborrar comandes no pagades?"
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.desk_organizer
+#: model:product.template,name:point_of_sale.desk_organizer_product_template
+msgid "Desk Organizer"
+msgstr ""
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.desk_pad
+#: model:product.template,name:point_of_sale.desk_pad_product_template
+msgid "Desk Pad"
+msgstr ""
+
+#. module: point_of_sale
+#: model:pos.category,name:point_of_sale.pos_category_desks
+msgid "Desks"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__account_id
@@ -2242,6 +2280,11 @@ msgstr "Exportat comandes no pagades"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Extra Info"
 msgstr "Informació extra"
+
+#. module: point_of_sale
+#: model:product.attribute,name:point_of_sale.fabric_attribute
+msgid "Fabric"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__failed_pickings
@@ -2877,6 +2920,12 @@ msgid "Kpi Pos Total Value"
 msgstr ""
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.led_lamp
+#: model:product.template,name:point_of_sale.led_lamp_product_template
+msgid "LED Lamp"
+msgstr "Llum LED"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__name
 msgid "Label"
 msgstr "Etiqueta"
@@ -2957,6 +3006,11 @@ msgid "Last Updated on"
 msgstr "Última actualització el"
 
 #. module: point_of_sale
+#: model:product.attribute.value,name:point_of_sale.fabric_attribute_leather
+msgid "Leather"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
 msgid "Leave empty to use the default account from the company setting"
 msgstr ""
@@ -2988,6 +3042,12 @@ msgid ""
 "For cash journal, we directly write to the default account in the journal via statement lines.\n"
 "For bank journal, we write to the outstanding account specified in this payment method.\n"
 "Only cash and bank journals are allowed."
+msgstr ""
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.letter_tray
+#: model:product.template,name:point_of_sale.letter_tray_product_template
+msgid "Letter Tray"
 msgstr ""
 
 #. module: point_of_sale
@@ -3088,6 +3148,12 @@ msgid "Lot/serial Number"
 msgstr "Lot/núm. de sèrie"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.magnetic_board
+#: model:product.template,name:point_of_sale.magnetic_board_product_template
+msgid "Magnetic Board"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_main_attachment_id
 msgid "Main Attachment"
 msgstr "Adjunt principal"
@@ -3170,6 +3236,11 @@ msgid "Method"
 msgstr "Mètode"
 
 #. module: point_of_sale
+#: model:pos.category,name:point_of_sale.pos_category_miscellaneous
+msgid "Miscellaneous"
+msgstr "Diversos"
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerDetailsEdit.xml:0
 #, python-format
@@ -3180,6 +3251,12 @@ msgstr "Mòbil"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_hr
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_module_pos_hr
 msgid "Module Pos Hr"
+msgstr ""
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.monitor_stand
+#: model:product.template,name:point_of_sale.monitor_stand_product_template
+msgid "Monitor Stand"
 msgstr ""
 
 #. module: point_of_sale
@@ -3271,6 +3348,12 @@ msgstr "Nou tiquet"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "New Session"
 msgstr "Nova Sessió"
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.newspaper_rack
+#: model:product.template,name:point_of_sale.newspaper_rack_product_template
+msgid "Newspaper Rack"
+msgstr "Magatzem de periodico"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
@@ -4094,6 +4177,11 @@ msgstr "Albarans"
 #, python-format
 msgid "Picture"
 msgstr "Imatge"
+
+#. module: point_of_sale
+#: model:product.attribute.value,name:point_of_sale.fabric_attribute_plastic
+msgid "Plastic"
+msgstr "Plástic"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5551,6 +5639,11 @@ msgid "Six Payment Terminal"
 msgstr "Terminal de pagament Six"
 
 #. module: point_of_sale
+#: model:product.attribute,name:point_of_sale.size_attribute
+msgid "Size"
+msgstr "Mida"
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Chrome.xml:0
 #, python-format
@@ -5562,6 +5655,12 @@ msgstr "Omet"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_print_skip_screen
 msgid "Skip Preview Screen"
 msgstr "Saltar pantalla de vista prèvia"
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.small_shelf
+#: model:product.template,name:point_of_sale.small_shelf_product_template
+msgid "Small Shelf"
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -6664,10 +6763,32 @@ msgid "Unit Price"
 msgstr "Preu un."
 
 #. module: point_of_sale
+#: model:product.product,uom_name:point_of_sale.desk_organizer
+#: model:product.product,uom_name:point_of_sale.desk_pad
+#: model:product.product,uom_name:point_of_sale.led_lamp
+#: model:product.product,uom_name:point_of_sale.letter_tray
+#: model:product.product,uom_name:point_of_sale.magnetic_board
+#: model:product.product,uom_name:point_of_sale.monitor_stand
+#: model:product.product,uom_name:point_of_sale.newspaper_rack
 #: model:product.product,uom_name:point_of_sale.product_product_consumable
 #: model:product.product,uom_name:point_of_sale.product_product_tip
+#: model:product.product,uom_name:point_of_sale.small_shelf
+#: model:product.product,uom_name:point_of_sale.wall_shelf
+#: model:product.product,uom_name:point_of_sale.whiteboard
+#: model:product.product,uom_name:point_of_sale.whiteboard_pen
+#: model:product.template,uom_name:point_of_sale.desk_organizer_product_template
+#: model:product.template,uom_name:point_of_sale.desk_pad_product_template
+#: model:product.template,uom_name:point_of_sale.led_lamp_product_template
+#: model:product.template,uom_name:point_of_sale.letter_tray_product_template
+#: model:product.template,uom_name:point_of_sale.magnetic_board_product_template
+#: model:product.template,uom_name:point_of_sale.monitor_stand_product_template
+#: model:product.template,uom_name:point_of_sale.newspaper_rack_product_template
 #: model:product.template,uom_name:point_of_sale.product_product_consumable_product_template
 #: model:product.template,uom_name:point_of_sale.product_product_tip_product_template
+#: model:product.template,uom_name:point_of_sale.small_shelf_product_template
+#: model:product.template,uom_name:point_of_sale.wall_shelf_product_template
+#: model:product.template,uom_name:point_of_sale.whiteboard_pen_product_template
+#: model:product.template,uom_name:point_of_sale.whiteboard_product_template
 msgid "Units"
 msgstr "Unitats"
 
@@ -6812,6 +6933,12 @@ msgid "Waiting for card"
 msgstr "Esperant tarja"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.wall_shelf
+#: model:product.template,name:point_of_sale.wall_shelf_product_template
+msgid "Wall Shelf Unit"
+msgstr "Unitat de prestatge de paret"
+
+#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_warehouse
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__warehouse_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6864,6 +6991,18 @@ msgid ""
 "Whenever you close a session, one entry is generated in the following "
 "accounting journal for all the orders not invoiced. Invoices are recorded in"
 " accounting separately."
+msgstr ""
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.whiteboard
+#: model:product.template,name:point_of_sale.whiteboard_product_template
+msgid "Whiteboard"
+msgstr ""
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.whiteboard_pen
+#: model:product.template,name:point_of_sale.whiteboard_pen_product_template
+msgid "Whiteboard Pen"
 msgstr ""
 
 #. module: point_of_sale

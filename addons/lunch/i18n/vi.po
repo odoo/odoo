@@ -5,20 +5,47 @@
 # Translators:
 # Thin Tran <trvathin@gmail.com>, 2022
 # Martin Trigaux, 2022
+# Vo Thanh Thuy, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2022-10-04 09:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Vo Thanh Thuy, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_temaki
+msgid "1 Avocado - 1 Salmon - 1 Eggs - 1 Tuna"
+msgstr "1 quả bơ - 1 cá hồi - 1 trứng - 1 cá thu"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_chirashi
+msgid "2 Tempuras, Cabbages, Onions, Sesame Sauce"
+msgstr "2 tempura, bắp cải, hành tây, sốt mè "
+
+#. module: lunch
+#: model:lunch.order,name:lunch.order_line_5
+#: model:lunch.product,name:lunch.product_4formaggi
+msgid "4 Formaggi"
+msgstr "4 Formaggi"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_salmon
+msgid "4 Sushi Salmon - 6 Maki Salmon - 4 Sashimi Salmon"
+msgstr "4 sushi cá hồi - 6 maki cá hồi - 4 cá hồi sashimi"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_maki
+msgid "6 Maki Salmon - 6 Maki Tuna - 6 Maki Shrimp/Avocado"
+msgstr "6 maki cá hồi - 6 maki cá ngừ - 6 maki tôm/bơ"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
@@ -432,6 +459,11 @@ msgid "Alert Name"
 msgstr "Tên cảnh báo"
 
 #. module: lunch
+#: model:lunch.alert,name:lunch.alert_office_3
+msgid "Alert for Office 3"
+msgstr "Cảnh báo cho văn phòng 3"
+
+#. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__mode__alert
 msgid "Alert in app"
 msgstr "Cảnh báo trong ứng dụng"
@@ -501,6 +533,35 @@ msgid "Available Toppings 3"
 msgstr "Toppings có sẵn 3"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_bacon
+#: model:lunch.product,name:lunch.product_bacon_0
+msgid "Bacon"
+msgstr "Thịt hun khói"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_bacon
+#: model_terms:lunch.product,description:lunch.product_bacon_0
+msgid "Beef, Bacon, Salad, Cheddar, Fried Onion, BBQ Sauce"
+msgstr "Bò, thịt hun khói, sa lát, phô mai Cheddar, hành tây chiên, sốt BBQ"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_cheese_burger_0
+#: model_terms:lunch.product,description:lunch.product_cheeseburger
+msgid "Beef, Cheddar, Salad, Fried Onions, BBQ Sauce"
+msgstr "Bò, phô mai Cheddar, sa lát, hành tây chiên, sốt BBQ"
+
+#. module: lunch
+#: model:lunch.order,name:lunch.order_line_1
+#: model:lunch.product,name:lunch.product_Bolognese
+msgid "Bolognese Pasta"
+msgstr "Mì ý sốt bò băm"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_country
+msgid "Brie, Honey, Walnut Kernels"
+msgstr "Phô mai Brie, mật ong, nhân quả óc chó"
+
+#. module: lunch
 #: model:lunch.product.category,name:lunch.categ_burger
 msgid "Burger"
 msgstr "Burger"
@@ -555,6 +616,33 @@ msgid "Chat notification"
 msgstr "Thông báo trò chuyện"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_cheese_ham
+msgid "Cheese And Ham"
+msgstr "Phô mai và thịt nguội"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_cheese_burger_0
+#: model:lunch.product,name:lunch.product_cheeseburger
+msgid "Cheese Burger"
+msgstr "Burger phô mai"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_cheese_ham
+msgid "Cheese, Ham, Salad, Tomatoes, cucumbers, eggs"
+msgstr "Phô mai, thịt nguội, sa lát, cà chua, dưa chuột, trứng"
+
+#. module: lunch
+#: model:lunch.order,name:lunch.order_line_4
+#: model:lunch.product,name:lunch.product_chicken_curry
+msgid "Chicken Curry"
+msgstr "Cà ri gà"
+
+#. module: lunch
+#: model:lunch.product.category,name:lunch.categ_chirashi
+msgid "Chirashi"
+msgstr "Cơm trộn sushi"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__city
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
 msgid "City"
@@ -570,6 +658,17 @@ msgstr ""
 "Bấm vào <span class=\"fa fa-phone text-success\" title=\"Nút Đặt\"></span> để thông báo rằng đơn hàng đã được đặt.<br>\n"
 "            Bấm vào <span class=\"fa fa-check text-success\" title=\"Nút Nhận\"></span> để thông báo rằng đơn đặt hàng đã được nhận.<br>\n"
 "            Bấm vào <span class=\"fa fa-times-circle text-danger\" title=\"Nút Hủy\"></span> X màu đỏ để thông báo rằng đơn đặt hàng không có."
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_club
+#: model:lunch.product,name:lunch.product_club_0
+msgid "Club"
+msgstr "Ba lát"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_coke_0
+msgid "Coca Cola"
+msgstr "Coca Cola"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_res_company
@@ -876,6 +975,12 @@ msgid "Formatted Email"
 msgstr "Định dạng email"
 
 #. module: lunch
+#: model_terms:lunch.order,product_description:lunch.order_line_2
+#: model_terms:lunch.product,description:lunch.product_italiana
+msgid "Fresh Tomatoes, Basil, Mozzarella"
+msgstr "Cà chua tươi, húng quế, phô mai mozzarella"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__fri
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__fri
 msgid "Fri"
@@ -887,11 +992,23 @@ msgid "Friday"
 msgstr "Thứ sáu"
 
 #. module: lunch
+#: model:lunch.order,name:lunch.order_line_3
+#: model:lunch.product,name:lunch.product_gouda
+msgid "Gouda Cheese"
+msgstr "Phô mai Gouda"
+
+#. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search_2
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Group By"
 msgstr "Nhóm theo"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_club
+#: model_terms:lunch.product,description:lunch.product_club_0
+msgid "Ham, Cheese, Vegetables"
+msgstr "Thịt nguội, phô mai, rau củ"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__has_message
@@ -1126,6 +1243,11 @@ msgid "Lunch Locations"
 msgstr "Địa điểm ăn trưa"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_maki
+msgid "Lunch Maki 18pc"
+msgstr "Sushi cuộn 18 miếng"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_company__lunch_minimum_threshold
 msgid "Lunch Minimum Threshold"
 msgstr "Ngưỡng tối thiểu cho bữa trưa"
@@ -1151,9 +1273,19 @@ msgid "Lunch Product Category"
 msgstr "Danh mục Sản phẩm Bữa trưa"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_salmon
+msgid "Lunch Salmon 20pc"
+msgstr "Sushi cá hồi 20 miếng"
+
+#. module: lunch
 #: model:ir.model,name:lunch.model_lunch_supplier
 msgid "Lunch Supplier"
 msgstr "Nhà cung cấp bữa ăn"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_temaki
+msgid "Lunch Temaki mix 3pc"
+msgstr "Sushi Temaki 3 miếng"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch_order.py:0
@@ -1177,19 +1309,44 @@ msgid "Lunch: Receive meals"
 msgstr "Bữa trưa: Nhận suất ăn"
 
 #. module: lunch
-#: model:mail.template,name:lunch.lunch_order_mail_supplier
-msgid "Lunch: Send by email"
-msgstr "Bữa trưa: Gửi qua email"
-
-#. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_action_notify
 msgid "Lunch: Send notifications"
 msgstr ""
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_349
+#: model:mail.template,name:lunch.lunch_order_mail_supplier
+msgid "Lunch: Supplier Order"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_426
+msgid "Lunch: alert chat notification (Alert for Office 3)"
+msgstr "Bữa trưa: cảnh báo thông báo chat (Cảnh báo cho Phòng 3)"
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_427
+msgid "Lunch: send automatic email to Coin gourmand"
+msgstr "Bữa trưa: tự động gửi email tới cửa hàng Coin Gourmand"
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_422
 msgid "Lunch: send automatic email to Lunch Supplier"
 msgstr "Bữa trưa: tự động gửi email tới cửa hàng Lunch Supplier"
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_428
+msgid "Lunch: send automatic email to Pizza Inn"
+msgstr "Bữa trưa: tự động gửi email tới cửa hàng Pizza Inn"
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_430
+msgid "Lunch: send automatic email to Sushi Shop"
+msgstr "Bữa trưa: tự động gửi email tới cửa hàng Sushi Shop"
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_429
+msgid "Lunch: send automatic email to The Corner"
+msgstr "Bữa trưa: tự động gửi email tới cửa hàng The Corner"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_main_attachment_id
@@ -1248,6 +1405,16 @@ msgid "Monday"
 msgstr "Thứ Hai"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_mozzarella
+msgid "Mozzarella"
+msgstr "Phô mai Mozzarella"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_mozzarella
+msgid "Mozzarella, Pesto, Tomatoes"
+msgstr "Mozzarella, sốt lá húng, cà chua"
+
+#. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_report_action_account
 msgid "My Account"
 msgstr "Tài khoản của Tôi"
@@ -1289,6 +1456,11 @@ msgstr "Đơn hàng của tôi"
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__name
 msgid "Name"
 msgstr "Tên"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_Napoli
+msgid "Napoli Pasta"
+msgstr "Mỳ Ý Napoli"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.view_lunch_product_kanban_order
@@ -1492,6 +1664,11 @@ msgid "PM"
 msgstr "PM"
 
 #. module: lunch
+#: model:lunch.product.category,name:lunch.categ_pasta
+msgid "Pasta"
+msgstr "Mỳ Ý"
+
+#. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search
 msgid "Payment"
 msgstr "Thanh toán"
@@ -1516,6 +1693,33 @@ msgstr "Điện thoại"
 #: model:lunch.product.category,name:lunch.categ_pizza
 msgid "Pizza"
 msgstr "Pizza"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_funghi
+msgid "Pizza Funghi"
+msgstr "Pizza nấm"
+
+#. module: lunch
+#: model:lunch.order,name:lunch.order_line_2
+#: model:lunch.product,name:lunch.product_italiana
+msgid "Pizza Italiana"
+msgstr "Pizza Italiana"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_margherita
+#: model:lunch.product,name:lunch.product_pizza_0
+msgid "Pizza Margherita"
+msgstr "Pizza Margherita"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_vege
+msgid "Pizza Vegetarian"
+msgstr "Pizza chay"
+
+#. module: lunch
+#: model_terms:lunch.alert,message:lunch.alert_office_3
+msgid "Please order"
+msgstr "Vui lòng đặt hàng"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__price
@@ -1659,6 +1863,11 @@ msgid "SMS Delivery error"
 msgstr "Lỗi gửi SMS"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_chirashi
+msgid "Salmon and Avocado"
+msgstr "Cá hồi kèm quả bơ"
+
+#. module: lunch
 #: model:lunch.product.category,name:lunch.categ_sandwich
 msgid "Sandwich"
 msgstr "Sandwich"
@@ -1717,6 +1926,11 @@ msgid "Sent"
 msgstr "Đã gửi"
 
 #. module: lunch
+#: model:mail.template,description:lunch.lunch_order_mail_supplier
+msgid "Sent to vendor with the order of the day"
+msgstr ""
+
+#. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_config_settings_action
 #: model:ir.ui.menu,name:lunch.lunch_settings_menu
 msgid "Settings"
@@ -1736,6 +1950,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__until
 msgid "Show Until"
 msgstr "Hiển thị đến khi"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_spicy_tuna
+msgid "Spicy Tuna"
+msgstr "Cá ngừ cay"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__state_id
@@ -1801,6 +2020,21 @@ msgstr "Chủ nhật"
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__supplier_id
 msgid "Supplier"
 msgstr "Nhà cung cấp"
+
+#. module: lunch
+#: model:lunch.product.category,name:lunch.categ_sushi
+msgid "Sushi"
+msgstr "Sushi"
+
+#. module: lunch
+#: model:lunch.product.category,name:lunch.categ_temaki
+msgid "Temaki"
+msgstr "Temaki"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_country
+msgid "The Country"
+msgstr "The Country"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch_product.py:0
@@ -1940,6 +2174,34 @@ msgid "Today's Orders"
 msgstr "Đặt món hôm nay"
 
 #. module: lunch
+#: model_terms:lunch.order,product_description:lunch.order_line_5
+#: model_terms:lunch.product,description:lunch.product_4formaggi
+msgid "Tomato sauce, Olive oil, Fresh Tomatoes, Onions, Vegetables, Parmesan"
+msgstr ""
+"Sốt cà chua, dầu ô liu, cà chua tươi, hành tây, rau củ, phô mai Parmesan"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_Napoli
+msgid "Tomatoes, Basil"
+msgstr "Cà chua, húng quế"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_margherita
+#: model_terms:lunch.product,description:lunch.product_pizza_0
+msgid "Tomatoes, Mozzarella"
+msgstr "Cà chua, phô mai Mozzarella"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_vege
+msgid "Tomatoes, Mozzarella, Mushrooms, Peppers, Olives"
+msgstr "Cà chua, phô mai mozzarella, nấm, tiêu, ô liu"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_funghi
+msgid "Tomatoes, Mushrooms, Mozzarella"
+msgstr "Cà chua, nấm, phô mai Mozzarella"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__topping_category
 msgid "Topping Category"
 msgstr "Danh mục Topping"
@@ -1985,6 +2247,16 @@ msgstr "Thứ 3"
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Tuesday"
 msgstr "Thứ Ba"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_tuna
+msgid "Tuna"
+msgstr "Cá ngừ"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_tuna
+msgid "Tuna, Mayonnaise"
+msgstr "Cá ngừ, sốt Mayonnaise"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__activity_exception_decoration

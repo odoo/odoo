@@ -3,17 +3,18 @@
 # 	* sale_product_configurator
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
+# Noma Yuki, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:03+0000\n"
+"POT-Creation-Date: 2022-10-04 09:25+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,21 +64,26 @@ msgstr "利用可能なオプション:"
 
 #. module: sale_product_configurator
 #. openerp-web
-#: code:addons/sale_product_configurator/static/src/js/product_configurator_widget.js:0
+#: code:addons/sale_product_configurator/static/src/js/sale_product_field.js:0
 #, python-format
 msgid "Back"
 msgstr "戻る"
 
 #. module: sale_product_configurator
+#: model:product.template,name:sale_product_configurator.product_product_1_product_template
+msgid "Chair floor protection"
+msgstr "チェアマット"
+
+#. module: sale_product_configurator
 #. openerp-web
-#: code:addons/sale_product_configurator/static/src/js/product_configurator_widget.js:0
+#: code:addons/sale_product_configurator/static/src/js/sale_product_field.js:0
 #, python-format
 msgid "Configure"
 msgstr "設定しましょう"
 
 #. module: sale_product_configurator
 #. openerp-web
-#: code:addons/sale_product_configurator/static/src/js/product_configurator_widget.js:0
+#: code:addons/sale_product_configurator/static/src/js/sale_product_field.js:0
 #, python-format
 msgid "Confirm"
 msgstr "確認"
@@ -85,6 +91,11 @@ msgstr "確認"
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__is_configurable_product
 msgid "Is the product configurable?"
+msgstr ""
+
+#. module: sale_product_configurator
+#: model:product.template,description_sale:sale_product_configurator.product_product_1_product_template
+msgid "Office chairs can harm your floor: protect it."
 msgstr ""
 
 #. module: sale_product_configurator
@@ -149,3 +160,8 @@ msgstr "この組み合わせは存在しません。"
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
 msgid "This product has no valid combination."
 msgstr "このプロダクトには有効な組み合わせがありません。"
+
+#. module: sale_product_configurator
+#: model:product.template,uom_name:sale_product_configurator.product_product_1_product_template
+msgid "Units"
+msgstr "個"

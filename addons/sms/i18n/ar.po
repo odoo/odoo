@@ -9,9 +9,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2022-10-04 09:25+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
@@ -36,14 +36,6 @@ msgstr "عدد المستلمين الصالحين "
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (نسخة)"
-
-#. module: sms
-#. openerp-web
-#: code:addons/sms/static/src/js/fields_sms_widget.js:0
-#: code:addons/sms/static/src/js/fields_sms_widget.js:0
-#, python-format
-msgid "%s characters, fits in %s SMS (%s) "
-msgstr "%s رمز، يسعون في %s رسالة نصية قصيرة (%s) "
 
 #. module: sms
 #: code:addons/sms/wizard/sms_composer.py:0
@@ -267,6 +259,16 @@ msgid "Customer"
 msgstr "العميل"
 
 #. module: sms
+#: model:sms.template,name:sms.sms_template_demo_0
+msgid "Customer: automated SMS"
+msgstr "العميل: الرسائل النصية القصيرة المؤتمتة "
+
+#. module: sms
+#: model:sms.template,body:sms.sms_template_demo_0
+msgid "Dear {{ object.display_name }} this is an automated SMS."
+msgstr "عزيزنا {{ object.display_name }} هذه رسالة نصية قصيرة مؤتمتة. "
+
+#. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "Discard"
 msgstr "تجاهل"
@@ -416,6 +418,9 @@ msgid "If checked, new messages require your attention."
 msgstr "إذا كان محددًا، فهناك رسائل جديدة تحتاج لرؤيتها."
 
 #. module: sms
+#: model:ir.model.fields,help:sms.field_calendar_event__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_crm_team__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_crm_team_member__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_mail_blacklist__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_mail_channel__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_mail_thread__message_has_sms_error
@@ -423,6 +428,8 @@ msgstr "إذا كان محددًا، فهناك رسائل جديدة تحتاج
 #: model:ir.model.fields,help:sms.field_mail_thread_cc__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_mail_thread_phone__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_phone_blacklist__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_product_product__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_product_template__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_res_partner__message_has_error
 #: model:ir.model.fields,help:sms.field_res_partner__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_res_users__message_has_sms_error
@@ -849,11 +856,21 @@ msgid "SMS"
 msgstr "الرسائل النصية القصيرة "
 
 #. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
+#, python-format
+msgid "SMS ("
+msgstr ""
+
+#. module: sms
 #: model:ir.model,name:sms.model_sms_api
 msgid "SMS API"
 msgstr "الواجهة البرمجية للرسائل النصية القصيرة "
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_calendar_event__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_crm_team__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_crm_team_member__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_mail_blacklist__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_mail_channel__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_mail_thread__message_has_sms_error
@@ -861,6 +878,8 @@ msgstr "الواجهة البرمجية للرسائل النصية القصير
 #: model:ir.model.fields,field_description:sms.field_mail_thread_cc__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_mail_thread_phone__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_phone_blacklist__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_product_product__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_product_template__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_res_users__message_has_sms_error
 msgid "SMS Delivery error"
@@ -885,8 +904,8 @@ msgstr "معاينة الرسائل النصية القصيرة "
 
 #. module: sms
 #. openerp-web
-#: code:addons/sms/static/src/js/fields_sms_widget.js:0
-#: code:addons/sms/static/src/js/fields_sms_widget.js:0
+#: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
+#: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 #, python-format
 msgid "SMS Pricing"
 msgstr "تسعير الرسائل النصية القصيرة "
@@ -1254,11 +1273,18 @@ msgstr "لا تملك الرصيد الكافي في حساب الوكيل ال�
 
 #. module: sms
 #. openerp-web
-#: code:addons/sms/static/src/js/fields_sms_widget.js:0
+#: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.js:0
 #, python-format
 msgid ""
 "Your SMS Text Message must include at least one non-whitespace character"
 msgstr "يجب أن تحتوي رسالتك النصية القصيرة على رمز غير مسافة واحد على الأقل "
+
+#. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
+#, python-format
+msgid "characters, fits in"
+msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form

@@ -5,14 +5,15 @@
 # Translators:
 # Martin Trigaux, 2022
 # Cécile Collart <cco@odoo.com>, 2022
+# Jolien De Paepe, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2022-10-04 09:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,8 +28,7 @@ msgid ""
 "containing the following link has been sent:</strong>"
 msgstr ""
 "<strong>Une réinitialisation du mot de passe a été demandée pour cet "
-"utilisateur. Un courriel lui a été envoyé, contenant le lien suivant "
-":</strong>"
+"utilisateur. Un email lui a été envoyé, contenant le lien suivant :</strong>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -36,7 +36,7 @@ msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
 msgstr ""
-"<strong>Une invitation a été envoyée par courriel. Elle contient le lien "
+"<strong>Une invitation a été envoyée par email. Elle contient le lien "
 "suivant pour s'abonner :</strong>"
 
 #. module: auth_signup
@@ -405,7 +405,7 @@ msgstr ""
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
 "                        Cher/Chère <t t-out=\"object.name or ''\">Marc Demo</t>,<br/><br/>\n"
-"                        Une réinitialisation du mot de passe a été demandée pour le compte Odoo lié à cet e-mail.\n"
+"                        Une réinitialisation du mot de passe a été demandée pour le compte Odoo lié à cet email.\n"
 "                        Vous pouvez changer votre mot de passe en utilisant ce lien qui restera valide pendant 24 heures :<br/>\n"
 "                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "                            <a t-att-href=\"object.signup_url\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
@@ -638,27 +638,7 @@ msgstr "Vous avez déjà un compte ?"
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Another user is already registered using this email address."
-msgstr "Un autre utilisateur est déjà enregistré avec cette adresse courriel."
-
-#. module: auth_signup
-#: model:mail.template,name:auth_signup.mail_template_user_signup_account_created
-msgid "Auth Signup: Odoo Account Created"
-msgstr "Auth Signup : Compte Odoo créé"
-
-#. module: auth_signup
-#: model:mail.template,name:auth_signup.set_password_email
-msgid "Auth Signup: Odoo Connection"
-msgstr "Auth Signup : Connexion Odoo"
-
-#. module: auth_signup
-#: model:mail.template,name:auth_signup.reset_password_email
-msgid "Auth Signup: Reset Password"
-msgstr "Auth Signup : Réinitialiser le mot de passe"
-
-#. module: auth_signup
-#: model:mail.template,name:auth_signup.mail_template_data_unregistered_users
-msgid "Auth Signup: Unregistered Users"
-msgstr "Auth Signup : Utilisateurs non enregistrés"
+msgstr "Un autre utilisateur est déjà enregistré avec cette adresse email."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
@@ -676,8 +656,7 @@ msgstr "Retour à la page d'authentification"
 #, python-format
 msgid "Cannot send email: user %s has no email address."
 msgstr ""
-"Impossible d'envoyer le courriel : l'utilisateur %s n'a pas d'adresse "
-"courriel."
+"Impossible d'envoyer l'email : l'utilisateur %s n'a pas d'adresse email."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -837,7 +816,51 @@ msgstr "Envoyer les instructions de réinitialisation du mot de passe"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Send an Invitation Email"
-msgstr "Inviter par courriel"
+msgstr "Inviter par email"
+
+#. module: auth_signup
+#: model:mail.template,description:auth_signup.mail_template_data_unregistered_users
+msgid ""
+"Sent automatically to admin if new user haven't responded to the invitation"
+msgstr ""
+"Envoyé automatiquement à l'administrateur si le nouvel utilisateur n'a pas "
+"répondu à l'invitation"
+
+#. module: auth_signup
+#: model:mail.template,description:auth_signup.set_password_email
+msgid "Sent to new user after you invited them"
+msgstr "Envoyé au nouvel utilisateur après l'avoir invité"
+
+#. module: auth_signup
+#: model:mail.template,description:auth_signup.mail_template_user_signup_account_created
+msgid "Sent to portal user who registered themselves"
+msgstr "Envoyé à l'utilisateur portail qui s'est enregistré lui-même"
+
+#. module: auth_signup
+#: model:mail.template,description:auth_signup.reset_password_email
+msgid "Sent to user who requested a password reset"
+msgstr ""
+"Envoyé à l'utilisateur qui a demandé de réinitialiser son mot de passe"
+
+#. module: auth_signup
+#: model:mail.template,name:auth_signup.set_password_email
+msgid "Settings: New Portal Signup"
+msgstr "Paramètres : Nouvelle inscription au portail"
+
+#. module: auth_signup
+#: model:mail.template,name:auth_signup.mail_template_user_signup_account_created
+msgid "Settings: New User Invite"
+msgstr "Paramètres : Nouvelle invitation d'utilisateur"
+
+#. module: auth_signup
+#: model:mail.template,name:auth_signup.mail_template_data_unregistered_users
+msgid "Settings: Unregistered User Reminder"
+msgstr "Paramètres : Rappel envoyé à l'utilisateur non registré"
+
+#. module: auth_signup
+#: model:mail.template,name:auth_signup.reset_password_email
+msgid "Settings: User Reset Password"
+msgstr "Paramètres : Réinitialisation du mot de passe de l'utilisateur"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup

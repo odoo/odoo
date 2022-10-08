@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-27 15:11+0000\n"
+"POT-Creation-Date: 2022-10-04 09:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
@@ -150,6 +150,12 @@ msgid ""
 msgstr ""
 ".\n"
 "            قد تضطر إلى تنفيذ إجراءات يدوياً. "
+
+#. module: mrp
+#: model_terms:product.product,description:mrp.product_product_computer_desk_leg
+#: model_terms:product.template,description:mrp.product_product_computer_desk_leg_product_template
+msgid "18″ x 2½″ Square Leg"
+msgstr "ساق بأبعاد 18 إنش * 2.5 إنش"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
@@ -1010,6 +1016,12 @@ msgid "BoM line product %s should not be the same as BoM product."
 msgstr "يجب أن يكون منتج بند قائمة المواد %s مطابقاً لمنتج قائمة المواد. "
 
 #. module: mrp
+#: model:product.product,name:mrp.product_product_computer_desk_bolt
+#: model:product.template,name:mrp.product_product_computer_desk_bolt_product_template
+msgid "Bolt"
+msgstr "برغي "
+
+#. module: mrp
 #. openerp-web
 #: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_byproducts
@@ -1201,7 +1213,9 @@ msgid "Component Status"
 msgstr "حالة المكون "
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_report_product_product_replenishment
+#. openerp-web
+#: code:addons/mrp/static/src/mrp_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Component of Draft MO"
 msgstr "مكون مسودة أمر التصنيع "
 
@@ -1794,6 +1808,24 @@ msgstr "تحميل"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Draft"
 msgstr "مسودة"
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_drawer_drawer
+#: model:product.template,name:mrp.product_product_drawer_drawer_product_template
+msgid "Drawer Black"
+msgstr "درج خزانة أسود"
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_drawer_case
+#: model:product.template,name:mrp.product_product_drawer_case_product_template
+msgid "Drawer Case Black"
+msgstr "درج خزانة أسود"
+
+#. module: mrp
+#: model_terms:product.product,description:mrp.product_product_drawer_drawer
+#: model_terms:product.template,description:mrp.product_product_drawer_drawer_product_template
+msgid "Drawer on casters for great usability."
+msgstr "أدراج على عجلات للاستخدام بشكل رائع. "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
@@ -2569,6 +2601,12 @@ msgstr ""
 "التصنيع جاهز، حسب تهيئة قائمة المواد. "
 
 #. module: mrp
+#: model_terms:product.product,description:mrp.product_product_wood_ply
+#: model_terms:product.template,description:mrp.product_product_wood_ply_product_template
+msgid "Layers that are stick together to assemble wood panels."
+msgstr "الطبقات الملتصقة معاً لتكوين الألواح الخشبية. "
+
+#. module: mrp
 #. openerp-web
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -2824,8 +2862,8 @@ msgstr "التصنيع"
 
 #. module: mrp
 #. openerp-web
-#: code:addons/mrp/static/src/xml/report_stock_forecasted.xml:0
-#: code:addons/mrp/static/src/xml/report_stock_forecasted.xml:0
+#: code:addons/mrp/static/src/mrp_forecasted/forecasted_buttons.xml:0
+#: code:addons/mrp/static/src/mrp_forecasted/forecasted_buttons.xml:0
 #, python-format
 msgid "Manufacturing Forecast"
 msgstr ""
@@ -3570,6 +3608,24 @@ msgid "Planning Issues"
 msgstr "مشاكل التخطيط "
 
 #. module: mrp
+#: model:product.product,name:mrp.product_product_plastic_laminate
+#: model:product.template,name:mrp.product_product_plastic_laminate_product_template
+msgid "Plastic Laminate"
+msgstr "الألواح البلاستيكية "
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_wood_ply
+#: model:product.template,name:mrp.product_product_wood_ply_product_template
+msgid "Ply Layer"
+msgstr "طبقة رقائق "
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_ply_veneer
+#: model:product.template,name:mrp.product_product_ply_veneer_product_template
+msgid "Ply Veneer"
+msgstr "قشرة رقائق "
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__json_popover
 msgid "Popover Data JSON"
 msgstr "JSON البيانات المنبثقة "
@@ -3838,7 +3894,9 @@ msgid "Production Workcenter"
 msgstr "مركز عمل الإنتاج "
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_report_product_product_replenishment
+#. openerp-web
+#: code:addons/mrp/static/src/mrp_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Production of Draft MO"
 msgstr "إنتاج مسودة أمر التصنيع "
 
@@ -4054,7 +4112,7 @@ msgstr "المرفق ذو الصلة "
 
 #. module: mrp
 #. openerp-web
-#: code:addons/mrp/static/src/xml/mrp.xml:0
+#: code:addons/mrp/static/src/widgets/mrp_workorder_popover.xml:0
 #, python-format
 msgid "Replan"
 msgstr "إعادة التخطيط "
@@ -4065,7 +4123,9 @@ msgid "Reporting"
 msgstr "التقارير"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_report_product_product_replenishment
+#. openerp-web
+#: code:addons/mrp/static/src/mrp_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Reserve"
 msgstr "حجز"
 
@@ -4192,7 +4252,7 @@ msgstr "تمت الجدولة قبل أمر العمل السابق، مخطط �
 
 #. module: mrp
 #. openerp-web
-#: code:addons/mrp/static/src/js/mrp_workorder_popover.js:0
+#: code:addons/mrp/static/src/widgets/mrp_workorder_popover.xml:0
 #, python-format
 msgid "Scheduling Information"
 msgstr "معلومات الجدولة "
@@ -4218,6 +4278,12 @@ msgstr "حركة مخلفات التصنيع "
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__scrap_ids
 msgid "Scraps"
 msgstr "مخلفات التصنيع "
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_computer_desk_screw
+#: model:product.template,name:mrp.product_product_computer_desk_screw_product_template
+msgid "Screw"
+msgstr "مسمار"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -4385,6 +4451,18 @@ msgid "Slot into workcenter calendar once planned"
 msgstr "خانة في تقويم مركز العمل بمجرد التخطيط لها "
 
 #. module: mrp
+#: model_terms:product.product,description:mrp.product_product_computer_desk_head
+#: model_terms:product.template,description:mrp.product_product_computer_desk_head_product_template
+msgid "Solid wood is a durable natural material."
+msgstr "الخشب الصلب هو مادة طبيعية ذات تحمل عالٍ. "
+
+#. module: mrp
+#: model_terms:product.product,description:mrp.product_product_computer_desk
+#: model_terms:product.template,description:mrp.product_product_computer_desk_product_template
+msgid "Solid wood table."
+msgstr "منضدة خشبية صلبة."
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid ""
@@ -4495,6 +4573,18 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_split_multi
 msgid "Split productions"
 msgstr ""
+
+#. module: mrp
+#: model_terms:product.product,description:mrp.product_product_computer_desk_screw
+#: model_terms:product.template,description:mrp.product_product_computer_desk_screw_product_template
+msgid "Stainless steel screw"
+msgstr "مسمار لولبي صلب مقاوم للصدأ"
+
+#. module: mrp
+#: model_terms:product.product,description:mrp.product_product_computer_desk_bolt
+#: model_terms:product.template,description:mrp.product_product_computer_desk_bolt_product_template
+msgid "Stainless steel screw full (dia - 5mm, Length - 10mm)"
+msgstr "مسمار لولبي صلب مقاوم للصدأ (قطره: 5 مم، وطوله: 10 مم)"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -4626,6 +4716,36 @@ msgstr "التعاقد من الباطن بشأن إنتاج بعض المنتج
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_subcontracting
 msgid "Subcontracting"
 msgstr "التعاقد من الباطن "
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_computer_desk
+#: model:product.template,name:mrp.product_product_computer_desk_product_template
+msgid "Table"
+msgstr "جدول "
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_table_kit
+#: model:product.template,name:mrp.product_product_table_kit_product_template
+msgid "Table Kit"
+msgstr "عدة الطاولة "
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_computer_desk_leg
+#: model:product.template,name:mrp.product_product_computer_desk_leg_product_template
+msgid "Table Leg"
+msgstr "رجل الطاولة "
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_computer_desk_head
+#: model:product.template,name:mrp.product_product_computer_desk_head_product_template
+msgid "Table Top"
+msgstr "سطح الطاولة "
+
+#. module: mrp
+#: model_terms:product.product,description:mrp.product_product_table_kit
+#: model_terms:product.template,description:mrp.product_product_table_kit_product_template
+msgid "Table kit"
+msgstr "عدة الطاولة "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__tag_ids
@@ -5036,6 +5156,12 @@ msgid "Today Activities"
 msgstr "أنشطة اليوم "
 
 #. module: mrp
+#: model_terms:product.product,description:mrp.product_product_wood_wear
+#: model_terms:product.template,description:mrp.product_product_wood_wear_product_template
+msgid "Top layer of a wood panel."
+msgstr "الطبقة العليا للوح خشبي."
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_bom_tree_view
 msgid "Total Duration"
 msgstr "المدة الكلية "
@@ -5236,6 +5362,36 @@ msgid ""
 msgstr "وحدة القياس (وحدة القياس) هي وحدة قياس لمراقبة المخزون"
 
 #. module: mrp
+#: model:product.product,uom_name:mrp.product_product_computer_desk
+#: model:product.product,uom_name:mrp.product_product_computer_desk_bolt
+#: model:product.product,uom_name:mrp.product_product_computer_desk_head
+#: model:product.product,uom_name:mrp.product_product_computer_desk_leg
+#: model:product.product,uom_name:mrp.product_product_computer_desk_screw
+#: model:product.product,uom_name:mrp.product_product_drawer_case
+#: model:product.product,uom_name:mrp.product_product_drawer_drawer
+#: model:product.product,uom_name:mrp.product_product_plastic_laminate
+#: model:product.product,uom_name:mrp.product_product_ply_veneer
+#: model:product.product,uom_name:mrp.product_product_table_kit
+#: model:product.product,uom_name:mrp.product_product_wood_panel
+#: model:product.product,uom_name:mrp.product_product_wood_ply
+#: model:product.product,uom_name:mrp.product_product_wood_wear
+#: model:product.template,uom_name:mrp.product_product_computer_desk_bolt_product_template
+#: model:product.template,uom_name:mrp.product_product_computer_desk_head_product_template
+#: model:product.template,uom_name:mrp.product_product_computer_desk_leg_product_template
+#: model:product.template,uom_name:mrp.product_product_computer_desk_product_template
+#: model:product.template,uom_name:mrp.product_product_computer_desk_screw_product_template
+#: model:product.template,uom_name:mrp.product_product_drawer_case_product_template
+#: model:product.template,uom_name:mrp.product_product_drawer_drawer_product_template
+#: model:product.template,uom_name:mrp.product_product_plastic_laminate_product_template
+#: model:product.template,uom_name:mrp.product_product_ply_veneer_product_template
+#: model:product.template,uom_name:mrp.product_product_table_kit_product_template
+#: model:product.template,uom_name:mrp.product_product_wood_panel_product_template
+#: model:product.template,uom_name:mrp.product_product_wood_ply_product_template
+#: model:product.template,uom_name:mrp.product_product_wood_wear_product_template
+msgid "Units"
+msgstr "الوحدات"
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Unlock"
 msgstr "إلغاء القفل "
@@ -5262,10 +5418,12 @@ msgid "Unplan"
 msgstr "إلغاء التخطيط "
 
 #. module: mrp
+#. openerp-web
+#: code:addons/mrp/static/src/mrp_forecasted/forecasted_details.xml:0
 #: model:ir.actions.server,name:mrp.mrp_production_action_unreserve_tree
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_report_product_product_replenishment
+#, python-format
 msgid "Unreserve"
 msgstr "إلغاء الحجز"
 
@@ -5440,6 +5598,12 @@ msgid "Warnings"
 msgstr "تحذيرات"
 
 #. module: mrp
+#: model:product.product,name:mrp.product_product_wood_wear
+#: model:product.template,name:mrp.product_product_wood_wear_product_template
+msgid "Wear Layer"
+msgstr "طبقة خشبية "
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__website_id
 msgid "Website"
 msgstr "الموقع الإلكتروني"
@@ -5534,6 +5698,12 @@ msgstr ""
 #: model:ir.model,name:mrp.model_mrp_production_backorder
 msgid "Wizard to mark as done or create back order"
 msgstr "معالج للتعيين كمنتهي أو إنشاء طلب متأخر "
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_wood_panel
+#: model:product.template,name:mrp.product_product_wood_panel_product_template
+msgid "Wood Panel"
+msgstr "لوح خشبي"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter

@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2022-10-04 09:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
@@ -457,17 +457,19 @@ msgid "The journal in which the successful transactions are posted."
 msgstr ""
 
 #. module: account_payment
+#: code:addons/account_payment/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"The payment related to the transaction with reference %(ref)s has been "
+"posted: %(link)s"
+msgstr ""
+
+#. module: account_payment
 #: code:addons/account_payment/controllers/payment.py:0
 #: code:addons/account_payment/controllers/payment.py:0
 #, python-format
 msgid "The provided parameters are invalid."
 msgstr "I parametri forniti non sono validi."
-
-#. module: account_payment
-#: code:addons/account_payment/models/payment_transaction.py:0
-#, python-format
-msgid "The related payment is posted: %s"
-msgstr "Il relativo pagamento è stato registrato: %s"
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment__source_payment_id

@@ -3,17 +3,17 @@
 # 	* website_slides
 # 
 # Translators:
-# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2022
 # Chatcha Mee, 2022
-# Martin Trigaux, 2022
 # Odoo Thaidev <odoothaidev@gmail.com>, 2022
+# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2022
+# Martin Trigaux, 2022
 # Wichanon Jamwutthipreecha, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"POT-Creation-Date: 2022-10-04 09:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
 "Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
@@ -115,6 +115,11 @@ msgstr "(ว่างเปล่า)"
 #, python-format
 msgid ". This way, they will be secured."
 msgstr "ด้วยวิธีนี้พวกเขาจะปลอดภัย"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_slide_demo_1_5
+msgid "3 Main Methodologies"
+msgstr "3 วิธีการหลัก"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:0
@@ -448,6 +453,11 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "<i class=\"fa fa-folder-o me-1\"/>Add a section"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_pages_kanban_view
+msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 msgstr ""
 
 #. module: website_slides
@@ -833,6 +843,16 @@ msgid "<strong>Sharing is caring!</strong> Email(s) sent."
 msgstr ""
 
 #. module: website_slides
+#: model:slide.slide,name:website_slides.slide_slide_demo_2_1
+msgid "A Mighty Forest from Ages"
+msgstr "ป่าอันยิ่งใหญ่ตั้งแต่ยุคโบราณ"
+
+#. module: website_slides
+#: model:slide.answer,text_value:website_slides.slide_slide_demo_0_4_question_0_0
+msgid "A fruit"
+msgstr "ผลไม้"
+
+#. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
@@ -842,6 +862,19 @@ msgid ""
 msgstr ""
 "คอร์สที่ดีต้องมีโครงสร้าง เลือกชื่อสำหรับส่วนแรกของคุณแล้วคลิก<b>บันทึก</b> "
 "เพื่อสร้าง"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_slide_demo_1_4
+msgid "A little chat with Harry Potted"
+msgstr "คุยกับ Harry Potted นิดหน่อย"
+
+#. module: website_slides
+#: model_terms:slide.channel,description:website_slides.slide_channel_demo_2_gard2
+#: model_terms:slide.channel,description_short:website_slides.slide_channel_demo_2_gard2
+msgid ""
+"A lot of nice documentation: trees, wood, gardens. A gold mine for "
+"references."
+msgstr "เอกสารดี ๆ มากมาย: ต้นไม้ ไม้ สวน ขุมสมบัติสำหรับการอ้างอิง"
 
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_channel_partner_channel_partner_uniq
@@ -864,14 +897,54 @@ msgid "A resource of type url must contain a link."
 msgstr ""
 
 #. module: website_slides
+#: model:slide.answer,text_value:website_slides.slide_slide_demo_0_4_question_1_0
+msgid "A shovel"
+msgstr "พลั่ว"
+
+#. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_slide_exclusion_html_content_and_url
 msgid "A slide is either filled with a url or HTML content. Not both."
 msgstr ""
 
 #. module: website_slides
+#: model:slide.answer,text_value:website_slides.slide_slide_demo_0_4_question_1_1
+msgid "A spoon"
+msgstr "ช้อน"
+
+#. module: website_slides
+#: model_terms:slide.slide,description:website_slides.slide_slide_demo_1_5
+msgid "A summary of know-how: how and what."
+msgstr "สรุปความรู้: อะไรและอย่างไร"
+
+#. module: website_slides
+#: model_terms:slide.slide,description:website_slides.slide_slide_demo_0_0
+msgid ""
+"A summary of know-how: how and what. All the basics for this course about "
+"gardening."
+msgstr ""
+"สรุปความรู้: อย่างไรและอะไร พื้นฐานทั้งหมดสำหรับหลักสูตรนี้เกี่ยวกับการทำสวน"
+
+#. module: website_slides
+#: model_terms:slide.slide,description:website_slides.slide_slide_demo_2_0
+msgid ""
+"A summary of know-how: what are the main trees categories and how to "
+"differentiate them."
+msgstr "สรุปความรู้: หมวดหมู่ต้นไม้หลักคืออะไรและจะแยกความแตกต่างได้อย่างไร"
+
+#. module: website_slides
+#: model:slide.answer,text_value:website_slides.slide_slide_demo_0_4_question_0_2
+msgid "A table"
+msgstr "โต๊ะ"
+
+#. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_tag_slide_tag_unique
 msgid "A tag must be unique!"
 msgstr "แท็กต้องไม่ซ้ำกัน!"
+
+#. module: website_slides
+#: model:slide.answer,text_value:website_slides.slide_slide_demo_0_4_question_0_1
+msgid "A vegetable"
+msgstr "ผัก"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
@@ -1077,6 +1150,12 @@ msgid "All questions must be answered !"
 msgstr "ต้องตอบทุกคำถาม !"
 
 #. module: website_slides
+#: model_terms:slide.channel,description:website_slides.slide_channel_demo_5_furn2
+#: model_terms:slide.channel,description_short:website_slides.slide_channel_demo_5_furn2
+msgid "All you need to know about furniture creation."
+msgstr "ทั้งหมดที่คุณต้องรู้เกี่ยวกับการสร้างเฟอร์นิเจอร์"
+
+#. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__allow_comment
 #: model:ir.model.fields,help:website_slides.field_slide_slide__channel_allow_comment
 msgid ""
@@ -1144,6 +1223,11 @@ msgstr "เป็นสมาชิกแล้ว"
 #, python-format
 msgid "Amazing!"
 msgstr "น่าทึ่ง!"
+
+#. module: website_slides
+#: model:slide.answer,text_value:website_slides.slide_slide_demo_2_0_question_1_2
+msgid "And also bananas"
+msgstr "แล้วก็กล้วย"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__text_value
@@ -1314,6 +1398,16 @@ msgid "Basic"
 msgstr "พื้นฐาน"
 
 #. module: website_slides
+#: model:slide.channel,name:website_slides.slide_channel_demo_5_furn2
+msgid "Basics of Furniture Creation"
+msgstr "พื้นฐานของการสร้างเฟอร์นิเจอร์"
+
+#. module: website_slides
+#: model:slide.channel,name:website_slides.slide_channel_demo_0_gard_0
+msgid "Basics of Gardening"
+msgstr "พื้นฐานของการจัดสวน"
+
+#. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_unsubscribe.xml:0
 #, python-format
@@ -1392,6 +1486,17 @@ msgid "Cancel"
 msgstr "ยกเลิก"
 
 #. module: website_slides
+#: model:slide.channel.tag,name:website_slides.slide_channel_tag_role_carpenter
+msgid "Carpenter"
+msgstr "ช่างไม้"
+
+#. module: website_slides
+#: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_1_4
+#: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_2_1
+msgid "Catchy Headline"
+msgstr "การพาดหัวที่น่าสนใจ"
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__slide_category_ids
 msgid "Categories"
 msgstr "หมวดหมู่"
@@ -1402,6 +1507,11 @@ msgstr "หมวดหมู่"
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Category"
 msgstr "หมวดหมู่"
+
+#. module: website_slides
+#: model:slide.channel.tag,name:website_slides.slide_channel_tag_other_1
+msgid "Certification"
+msgstr "ใบรับรอง"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__module_website_slides_survey
@@ -1478,15 +1588,15 @@ msgid "Channel/Course Tag"
 msgstr "ช่อง/แท็กคอร์ส"
 
 #. module: website_slides
-#: model:mail.template,name:website_slides.mail_template_slide_channel_invite
-msgid "Channel: Invite by email"
-msgstr "ช่อง: เชิญทางอีเมล"
-
-#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag__channel_ids
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Channels"
 msgstr "ช่อง"
+
+#. module: website_slides
+#: model:slide.tag,name:website_slides.slide_tag_demo_cheatsheet
+msgid "CheatSheet"
+msgstr "CheatSheet"
 
 #. module: website_slides
 #. openerp-web
@@ -1535,6 +1645,11 @@ msgstr "เลือกเลย์เอาท์"
 #, python-format
 msgid "Choose an Image"
 msgstr ""
+
+#. module: website_slides
+#: model:slide.channel,name:website_slides.slide_channel_demo_3_furn0
+msgid "Choose your wood !"
+msgstr "เลือกไม้ของคุณ !"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
@@ -1592,6 +1707,11 @@ msgstr "สี"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag__color
 msgid "Color Index"
 msgstr "ดัชนีสี"
+
+#. module: website_slides
+#: model:slide.tag,name:website_slides.slide_tag_demo_colorful
+msgid "Colorful"
+msgstr "มีสีสัน"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.rating_rating_action_slide_channel
@@ -1655,6 +1775,12 @@ msgid "Company Course Count"
 msgstr "จำนวนหลักสูตรของบริษัท"
 
 #. module: website_slides
+#: model:slide.slide,name:website_slides.slide_slide_demo_3_0
+#: model_terms:slide.slide,description:website_slides.slide_slide_demo_3_0
+msgid "Comparing Hardness of Wood Species"
+msgstr "เปรียบเทียบความแข็งของพันธุ์ไม้"
+
+#. module: website_slides
 #: model:gamification.challenge,name:website_slides.badge_data_course_challenge
 #: model_terms:gamification.badge,description:website_slides.badge_data_course
 msgid "Complete a course"
@@ -1675,7 +1801,6 @@ msgstr "เสร็จสิ้น"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:0
-#: model:mail.template,name:website_slides.mail_template_channel_completed
 #, python-format
 msgid "Completed Course"
 msgstr "จบคอร์ส"
@@ -1768,6 +1893,13 @@ msgstr "ติดต่อ"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:0
+#: model_terms:slide.channel,enroll_msg:website_slides.slide_channel_demo_0_gard_0
+#: model_terms:slide.channel,enroll_msg:website_slides.slide_channel_demo_1_gard1
+#: model_terms:slide.channel,enroll_msg:website_slides.slide_channel_demo_2_gard2
+#: model_terms:slide.channel,enroll_msg:website_slides.slide_channel_demo_3_furn0
+#: model_terms:slide.channel,enroll_msg:website_slides.slide_channel_demo_4_furn1
+#: model_terms:slide.channel,enroll_msg:website_slides.slide_channel_demo_5_furn2
+#: model_terms:slide.channel,enroll_msg:website_slides.slide_channel_demo_6_furn3
 #, python-format
 msgid "Contact Responsible"
 msgstr "ติดต่อรับผิดชอบ"
@@ -1778,6 +1910,13 @@ msgstr "ติดต่อรับผิดชอบ"
 #, python-format
 msgid "Contact the responsible to enroll."
 msgstr "ติดต่อผู้รับผิดชอบในการลงทะเบียน"
+
+#. module: website_slides
+#: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_1_4
+#: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_2_1
+#: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_4_0
+msgid "Contact us"
+msgstr "ติดต่อเรา"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__slide_content_ids
@@ -1855,6 +1994,33 @@ msgstr "ต่อไป"
 #, python-format
 msgid "Copy Link"
 msgstr "คัดลอกลิงก์"
+
+#. module: website_slides
+#: model:slide.answer,comment:website_slides.slide_slide_demo_1_4_question_0_0
+#: model:slide.answer,comment:website_slides.slide_slide_demo_2_0_question_0_1
+#: model:slide.answer,comment:website_slides.slide_slide_demo_2_0_question_1_1
+msgid "Correct !"
+msgstr "ถูกต้อง !"
+
+#. module: website_slides
+#: model:slide.answer,comment:website_slides.slide_slide_demo_0_4_question_1_0
+msgid "Correct ! A shovel is the perfect tool to dig a hole."
+msgstr "ถูกต้อง ! พลั่วเป็นเครื่องมือที่สมบูรณ์แบบในการขุดหลุม"
+
+#. module: website_slides
+#: model:slide.answer,comment:website_slides.slide_slide_demo_0_4_question_0_0
+msgid "Correct ! A strawberry is a fruit because it's the product of a tree."
+msgstr "ถูกต้อง ! สตรอเบอรี่เป็นผลไม้เพราะเป็นผลผลิตของต้นไม้"
+
+#. module: website_slides
+#: model:slide.answer,comment:website_slides.slide_slide_demo_1_4_question_1_0
+msgid "Correct ! Congratulations you have time to loose"
+msgstr "ถูกต้อง ! ยินดีด้วยที่คุณมีเวลาพักผ่อน"
+
+#. module: website_slides
+#: model:slide.answer,comment:website_slides.slide_slide_demo_5_3_question_0_0
+msgid "Correct ! You did it !"
+msgstr "ถูกต้อง ! คุณทำได้ !"
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:0
@@ -2065,6 +2231,11 @@ msgid "Custom HTML content for slides of category 'Article'."
 msgstr ""
 
 #. module: website_slides
+#: model:slide.channel,name:website_slides.slide_channel_demo_6_furn3
+msgid "DIY Furniture"
+msgstr "DIY เฟอร์นิเจอร์"
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_searchbar_input_snippet_options
 msgid "Date (new to old)"
 msgstr "วันที่ (ใหม่ไปเก่า)"
@@ -2148,12 +2319,24 @@ msgid "Detailed Description"
 msgstr "คำอธิบายโดยละเอียด"
 
 #. module: website_slides
+#: model:slide.question,question:website_slides.slide_slide_demo_1_4_question_1
+msgid "Did you read the whole article ?"
+msgstr "คุณอ่านบทความทั้งหมดหรือไม่?"
+
+#. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_unsubscribe.js:0
 #: code:addons/website_slides/static/src/js/slides_course_unsubscribe.js:0
 #, python-format
 msgid "Discard"
 msgstr "ละทิ้ง"
+
+#. module: website_slides
+#: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_1_4
+#: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_2_1
+#: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_4_0
+msgid "Discover more"
+msgstr "ค้นพบเพิ่มขึ้น"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
@@ -2191,6 +2374,16 @@ msgid "Display Name"
 msgstr "แสดงชื่อ"
 
 #. module: website_slides
+#: model:slide.question,question:website_slides.slide_slide_demo_2_0_question_0
+msgid "Do you make beams out of lemon trees ?"
+msgstr "ทำคานจากต้นมะนาว ?"
+
+#. module: website_slides
+#: model:slide.question,question:website_slides.slide_slide_demo_2_0_question_1
+msgid "Do you make lemons out of beams ?"
+msgstr "คุณทำมะนาวจากคาน ?"
+
+#. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_unsubscribe.xml:0
 #, python-format
@@ -2198,11 +2391,21 @@ msgid "Do you really want to leave the course?"
 msgstr "คุณต้องการที่จะออกจากคอร์ส?"
 
 #. module: website_slides
+#: model:slide.question,question:website_slides.slide_slide_demo_1_4_question_0
+msgid "Do you think Harry Potted has a good name ?"
+msgstr "คุณคิดว่า Harry Potted มีชื่อที่ดีหรือไม่?"
+
+#. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
 msgid "Do you want to install the \"%s\" app?"
 msgstr "คุณต้องการติดตั้ง\"%s\" แอป?"
+
+#. module: website_slides
+#: model:slide.question,question:website_slides.slide_slide_demo_5_3_question_0
+msgid "Do you want to reply correctly ?"
+msgstr "คุณต้องการตอบกลับอย่างถูกต้องหรือไม่?"
 
 #. module: website_slides
 #. openerp-web
@@ -2247,8 +2450,14 @@ msgstr "เอกสารประกอบ"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_document
+#: model:slide.slide,name:website_slides.slide_category_demo_4_0
 msgid "Documents"
 msgstr "เอกสาร"
+
+#. module: website_slides
+#: model:slide.channel.tag,name:website_slides.slide_channel_tag_other_2
+msgid "Dog Friendly"
+msgstr "เป็นมิตรกับสุนัข"
 
 #. module: website_slides
 #. openerp-web
@@ -2286,6 +2495,16 @@ msgid "Download Content"
 msgstr "ดาวน์โหลดเนื้อหา"
 
 #. module: website_slides
+#: model:slide.slide,name:website_slides.slide_slide_demo_4_10
+msgid "Drawing 1"
+msgstr "ภาพร่าง 1"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_slide_demo_4_11
+msgid "Drawing 2"
+msgstr "ภาพร่าง 2"
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
 msgid "Dropdown menu"
 msgstr "เมนูดรอปดาว์น"
@@ -2312,6 +2531,26 @@ msgstr "การแก้ไข"
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
 msgid "Edit in backend"
 msgstr "แก้ไขในส่วนหลัง"
+
+#. module: website_slides
+#: model:mail.template,name:website_slides.mail_template_channel_completed
+msgid "Elearning: Completed Course"
+msgstr ""
+
+#. module: website_slides
+#: model:mail.template,name:website_slides.mail_template_slide_channel_invite
+msgid "Elearning: Course Invite"
+msgstr ""
+
+#. module: website_slides
+#: model:mail.template,name:website_slides.slide_template_shared
+msgid "Elearning: Course Share"
+msgstr ""
+
+#. module: website_slides
+#: model:mail.template,name:website_slides.slide_template_published
+msgid "Elearning: New Course Content Notification"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__partner_email
@@ -2365,6 +2604,11 @@ msgid "End course"
 msgstr "จบคอร์ส"
 
 #. module: website_slides
+#: model:slide.slide,name:website_slides.slide_slide_demo_1_2
+msgid "Energy Efficiency Facts"
+msgstr "ข้อมูลประสิทธิภาพพลังงาน"
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
 msgid "Enjoy this exclusive content !"
 msgstr "เพลิดเพลินไปกับเนื้อหาพิเศษนี้ !"
@@ -2410,6 +2654,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Evaluate the knowledge of your Attendees and certify their skills."
 msgstr ""
+
+#. module: website_slides
+#: model:slide.tag,name:website_slides.slide_tag_demo_exercises
+msgid "Exercises"
+msgstr "แบบทดสอบ"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__embed_code_external
@@ -2550,6 +2799,17 @@ msgid "Font awesome icon e.g. fa-tasks"
 msgstr "ไอคอนแบบฟอนต์ที่ยอดเยี่ยมเช่น fa-tasks"
 
 #. module: website_slides
+#: model:slide.slide,name:website_slides.slide_slide_demo_4_0
+#: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_4_0
+msgid "Foreword"
+msgstr "คำนำ"
+
+#. module: website_slides
+#: model_terms:slide.slide,description:website_slides.slide_slide_demo_4_0
+msgid "Foreword for this documentation: how to use it, main attention points"
+msgstr "คำนำสำหรับเอกสารนี้: วิธีใช้งาน จุดน่าสนใจหลัก"
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__module_website_slides_forum
 msgid "Forum"
 msgstr "ฟอรั่ม"
@@ -2558,6 +2818,11 @@ msgstr "ฟอรั่ม"
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Fourth Try & More"
 msgstr ""
+
+#. module: website_slides
+#: model_terms:slide.slide,description:website_slides.slide_slide_demo_5_2
+msgid "From a piece of wood to a fully functional furniture, step by step."
+msgstr "ตั้งแต่ชิ้นไม้ไปจนถึงเฟอร์นิเจอร์ที่ใช้งานได้จริง ทีละขั้นตอน"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:0
@@ -2570,9 +2835,34 @@ msgid ""
 msgstr ""
 
 #. module: website_slides
+#: model:slide.channel.tag,name:website_slides.slide_channel_tag_role_furniture
+msgid "Furniture Designer"
+msgstr "นักออกแบบเฟอร์นิเจอร์"
+
+#. module: website_slides
+#: model:slide.channel,name:website_slides.slide_channel_demo_4_furn1
+msgid "Furniture Technical Specifications"
+msgstr "ข้อมูลจำเพาะทางเทคนิคของเฟอร์นิเจอร์"
+
+#. module: website_slides
+#: model_terms:slide.slide,description:website_slides.slide_slide_demo_4_12
+msgid "GLork"
+msgstr "GLork"
+
+#. module: website_slides
 #: model:ir.model,name:website_slides.model_gamification_challenge
 msgid "Gamification Challenge"
 msgstr "ความท้าทายในรูปแบบเกม"
+
+#. module: website_slides
+#: model:slide.channel.tag,name:website_slides.slide_channel_tag_role_gardener
+msgid "Gardener"
+msgstr "คนสวน"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_slide_demo_0_0
+msgid "Gardening: The Know-How"
+msgstr "การจัดสวน: องค์ความรู้"
 
 #. module: website_slides
 #: model:gamification.challenge,name:website_slides.badge_data_certification_challenge
@@ -2672,6 +2962,11 @@ msgid "HTML Content"
 msgstr "เนื้อหา HTML"
 
 #. module: website_slides
+#: model:slide.slide,name:website_slides.slide_category_demo_5_1
+msgid "Hand on !"
+msgstr "ส่งต่อ !"
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_search
 msgid "Has Menu Entry"
 msgstr ""
@@ -2683,9 +2978,25 @@ msgid "Has Message"
 msgstr "มีข้อความ"
 
 #. module: website_slides
+#: model_terms:slide.slide,description:website_slides.slide_slide_demo_0_3
+#: model_terms:slide.slide,description:website_slides.slide_slide_demo_1_6
+msgid "Here is How to get the Sweetest Strawberries you ever tasted!"
+msgstr "นี่คือวิธีการที่จะได้สตรอเบอร์รี่ที่หอมหวานที่สุดที่คุณเคยลิ้มลอง!"
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 msgid "Home"
 msgstr "โฮม"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_slide_demo_0_1
+msgid "Home Gardening"
+msgstr "จัดสวนที่บ้าน"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_slide_demo_5_2
+msgid "How To Build a HIGH QUALITY Dining Table with LIMITED TOOLS"
+msgstr "วิธีการสร้างโต๊ะรับประทานอาหารคุณภาพสูงด้วยเครื่องมือที่จำกัด"
 
 #. module: website_slides
 #. openerp-web
@@ -2696,11 +3007,33 @@ msgid "How do I add new content?"
 msgstr ""
 
 #. module: website_slides
+#: model:slide.slide,name:website_slides.slide_slide_demo_0_3
+msgid "How to Grow and Harvest The Best Strawberries | Basics"
+msgstr "วิธีปลูกและเก็บเกี่ยวสตรอเบอร์รี่ที่ดีที่สุด | พื้นฐาน"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_slide_demo_1_6
+msgid ""
+"How to Grow and Harvest The Best Strawberries | Gardening Tips and Tricks"
+msgstr ""
+"วิธีการปลูกและเก็บเกี่ยวสตรอเบอร์รี่ที่ดีที่สุด | เคล็ดลับและเทคนิคการจัดสวน"
+
+#. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "How to create a Lesson as an Article?"
 msgstr ""
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_slide_demo_5_1
+msgid "How to find quality wood"
+msgstr "วิธีหาไม้ที่มีคุณภาพ"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_slide_demo_1_3
+msgid "How to plant a potted tree"
+msgstr "วิธีการปลูกต้นไม้ในกระถาง"
 
 #. module: website_slides
 #. openerp-web
@@ -2722,6 +3055,16 @@ msgstr "อัปโหลดวิดีโอของคุณได้อย
 #, python-format
 msgid "How to use Google Drive?"
 msgstr ""
+
+#. module: website_slides
+#: model_terms:slide.slide,description:website_slides.slide_slide_demo_2_2
+msgid "How to wall decorating by tree planting in hanging plastic bottles."
+msgstr "วิธีตกแต่งผนังด้วยการปลูกต้นไม้ในขวดพลาสติกแบบแขวน"
+
+#. module: website_slides
+#: model:slide.tag,name:website_slides.slide_tag_demo_howto
+msgid "HowTo"
+msgstr "ได้อย่างไร"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__id
@@ -2762,6 +3105,14 @@ msgstr "ถ้าเลือก ข้อความใหม่จะต้�
 #: model:ir.model.fields,help:website_slides.field_slide_slide__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "ถ้าเลือก ข้อความบางข้อความมีข้อผิดพลาดในการส่ง"
+
+#. module: website_slides
+#: model_terms:slide.channel,description:website_slides.slide_channel_demo_4_furn1
+#: model_terms:slide.channel,description_short:website_slides.slide_channel_demo_4_furn1
+msgid ""
+"If you are looking for technical specifications, have a look at this "
+"documentation."
+msgstr "หากคุณกำลังมองหาข้อกำหนดทางเทคนิค โปรดดูเอกสารนี้"
 
 #. module: website_slides
 #. openerp-web
@@ -2839,6 +3190,48 @@ msgid "Image Source"
 msgstr ""
 
 #. module: website_slides
+#: model:slide.answer,comment:website_slides.slide_slide_demo_1_4_question_0_1
+#: model:slide.answer,comment:website_slides.slide_slide_demo_2_0_question_0_0
+#: model:slide.answer,comment:website_slides.slide_slide_demo_2_0_question_1_0
+msgid "Incorrect !"
+msgstr "ไม่ถูกต้อง !"
+
+#. module: website_slides
+#: model:slide.answer,comment:website_slides.slide_slide_demo_0_4_question_0_1
+msgid "Incorrect ! A strawberry is not a vegetable."
+msgstr "ไม่ถูกต้อง ! สตรอเบอร์รี่ไม่ใช่ผัก"
+
+#. module: website_slides
+#: model:slide.answer,comment:website_slides.slide_slide_demo_0_4_question_0_2
+msgid "Incorrect ! A table is a piece of furniture."
+msgstr "ไม่ถูกต้อง ! โต๊ะเป็นเฟอร์นิเจอร์ชิ้นหนึ่ง"
+
+#. module: website_slides
+#: model:slide.answer,comment:website_slides.slide_slide_demo_0_4_question_1_1
+msgid "Incorrect ! Good luck digging a hole with a spoon..."
+msgstr "ไม่ถูกต้อง ! ขอให้โชคดี ขุดหลุมด้วยช้อน..."
+
+#. module: website_slides
+#: model:slide.answer,comment:website_slides.slide_slide_demo_1_4_question_1_2
+msgid "Incorrect ! Seriously ?"
+msgstr "ไม่ถูกต้อง ! จริงจังป่ะเนี้ย ?"
+
+#. module: website_slides
+#: model:slide.answer,comment:website_slides.slide_slide_demo_5_3_question_0_1
+msgid "Incorrect ! You better think twice..."
+msgstr "ไม่ถูกต้อง ! คุณควรคิดใหม่อีกครั้ง..."
+
+#. module: website_slides
+#: model:slide.answer,comment:website_slides.slide_slide_demo_1_4_question_1_1
+msgid "Incorrect ! You really should read it."
+msgstr "ไม่ถูกต้อง ! คุณควรอ่านมันจริง ๆ"
+
+#. module: website_slides
+#: model:slide.answer,comment:website_slides.slide_slide_demo_2_0_question_1_2
+msgid "Incorrect ! of course not ..."
+msgstr "ไม่ถูกต้อง ! แน่นอนว่าไม่ ..."
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_infographic
 msgid "Infographics"
 msgstr "อินโฟกราฟิกส์"
@@ -2863,6 +3256,21 @@ msgstr ""
 #, python-format
 msgid "Installing \"%s\"."
 msgstr "กำลังติดตั้ง \"%s\"."
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_category_demo_1_0
+msgid "Interesting Facts"
+msgstr "ข้อเท็จจริงที่น่าสนใจ"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_slide_demo_1_1
+msgid "Interesting Tree Facts"
+msgstr "ข้อเท็จจริงของต้นไม้ที่น่าสนใจ"
+
+#. module: website_slides
+#: model_terms:slide.slide,description:website_slides.slide_slide_demo_0_1
+msgid "Interesting information about home gardening. Keep it close !"
+msgstr "ข้อมูลที่น่าสนใจเกี่ยวกับการจัดสวนที่บ้าน เอาไว้ใกล้ตัว !"
 
 #. module: website_slides
 #: model:slide.channel.tag,name:website_slides.slide_channel_tag_level_intermediate
@@ -2947,6 +3355,15 @@ msgid "It should look similar to"
 msgstr ""
 
 #. module: website_slides
+#: model_terms:slide.slide,description:website_slides.slide_slide_demo_1_3
+msgid ""
+"Jim and Todd plant a potted tree for a customer of Knecht's Nurseries and "
+"Landscaping. Narrated by Leif Knecht, owner."
+msgstr ""
+"Jim และ Todd ปลูกต้นไม้ในกระถางให้กับลูกค้าของสถานรับเลี้ยงเด็กของ Knecht "
+"และปรับภูมิทัศน์ให้อีกด้วย บรรยายโดย Leif Knecht เจ้าของ"
+
+#. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
 #, python-format
@@ -2977,6 +3394,21 @@ msgid "Join this Course"
 msgstr ""
 
 #. module: website_slides
+#: model_terms:slide.slide,description:website_slides.slide_slide_demo_1_2
+msgid "Just some basics Energy Efficiency Facts."
+msgstr "ข้อมูลพื้นฐานบางประการเกี่ยวกับประสิทธิภาพพลังงาน"
+
+#. module: website_slides
+#: model_terms:slide.slide,description:website_slides.slide_slide_demo_1_1
+msgid "Just some basics Interesting Tree Facts."
+msgstr "เพียงข้อมูลพื้นฐานเกี่ยวกับต้นไม้ที่น่าสนใจ"
+
+#. module: website_slides
+#: model_terms:slide.slide,description:website_slides.slide_slide_demo_1_0
+msgid "Just some basics Tree Infographic."
+msgstr "ข้อมูลพื้นฐานเกี่ยวกับต้นไม้ในรูปแบบอินโฟกราฟิกส์"
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Karma"
 msgstr "Karma"
@@ -3002,6 +3434,24 @@ msgstr "คะแนน Karma จำเป็นสำหรับกดถู�
 #: model:gamification.goal.definition,name:website_slides.badge_data_profile_goal
 msgid "Know yourself"
 msgstr "เรียนรู้ตัวคุณเอง"
+
+#. module: website_slides
+#: model_terms:slide.channel,description:website_slides.slide_channel_demo_3_furn0
+#: model_terms:slide.channel,description_short:website_slides.slide_channel_demo_3_furn0
+msgid ""
+"Knowing which kind of wood to use depending on your application is important. In this course you\n"
+"will learn the basics of wood characteristics."
+msgstr ""
+"การรู้ว่าควรใช้ไม้ชนิดใดขึ้นอยู่กับการใช้งานของคุณเป็นสิ่งสำคัญ ในหลักสูตรนี้คุณ\n"
+"จะได้เรียนรู้พื้นฐานของคุณสมบัติของไม้"
+
+#. module: website_slides
+#: model_terms:slide.slide,description:website_slides.slide_slide_demo_2_3
+msgid ""
+"Knowing wood characteristics is a requirement in order to know which kind of"
+" wood to use in a given situation."
+msgstr ""
+"การรู้ลักษณะของไม้เป็นข้อกำหนดเพื่อให้ทราบว่าควรใช้ไม้ชนิดใดในสถานการณ์ที่กำหนด"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__lang
@@ -3082,6 +3532,27 @@ msgstr "ความสำเร็จล่าสุด"
 #: model_terms:ir.ui.view,arch_db:website_slides.toggle_leaderboard
 msgid "Leaderboard"
 msgstr "กระดานผู้นำ"
+
+#. module: website_slides
+#: model_terms:slide.channel,description:website_slides.slide_channel_demo_1_gard1
+#: model_terms:slide.channel,description_short:website_slides.slide_channel_demo_1_gard1
+msgid ""
+"Learn how to take care of your favorite trees. Learn when to plant, how to "
+"manage potted trees, ..."
+msgstr ""
+"เรียนรู้วิธีดูแลต้นไม้ที่คุณชอบ เรียนรู้ช่วงเวลาที่ควรปลูก "
+"วิธีจัดการต้นไม้ในกระถาง ..."
+
+#. module: website_slides
+#: model_terms:slide.channel,description:website_slides.slide_channel_demo_0_gard_0
+#: model_terms:slide.channel,description_short:website_slides.slide_channel_demo_0_gard_0
+msgid "Learn the basics of gardening !"
+msgstr "เรียนรู้พื้นฐานของการทำสวน !"
+
+#. module: website_slides
+#: model_terms:slide.slide,description:website_slides.slide_slide_demo_5_1
+msgid "Learn to identify quality wood in order to create solid furnitures."
+msgstr "เรียนรู้ที่จะระบุไม้ที่มีคุณภาพเพื่อสร้างเฟอร์นิเจอร์ที่แข็งแรง"
 
 #. module: website_slides
 #. openerp-web
@@ -3180,6 +3651,11 @@ msgid "Main Attachment"
 msgstr "เอกสารหลักที่แนบมา"
 
 #. module: website_slides
+#: model:slide.slide,name:website_slides.slide_slide_demo_2_0
+msgid "Main Trees Categories"
+msgstr "หมวดหมู่ต้นไม้หลัก"
+
+#. module: website_slides
 #: model:res.groups,name:website_slides.group_website_slides_manager
 msgid "Manager"
 msgstr "ผู้จัดการ"
@@ -3269,6 +3745,25 @@ msgstr "ข้อความอธิบายขั้นตอนการส
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_ids
 msgid "Messages"
 msgstr "ข้อความ"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_category_demo_1_1
+msgid "Methods"
+msgstr "วิธีการ"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_slide_demo_0_2
+msgid "Mighty Carrots"
+msgstr "แครอทอันยิ่งใหญ่"
+
+#. module: website_slides
+#: model_terms:slide.slide,description:website_slides.slide_slide_demo_2_1
+msgid ""
+"Mighty forest just don't appear in a few weeks. Learn how time made our "
+"forests mighty and mysterious."
+msgstr ""
+"ป่าอันยิ่งใหญ่จะไม่ได้เกิดขึ้นภายในไม่กี่สัปดาห์ "
+"เรียนรู้กันว่าเวลาทำให้ป่าของเรายิ่งใหญ่และลึกลับได้อย่างไร"
 
 #. module: website_slides
 #. openerp-web
@@ -3423,6 +3918,11 @@ msgstr "อันดับต่อไป:"
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
+#: model:slide.answer,text_value:website_slides.slide_slide_demo_1_4_question_0_1
+#: model:slide.answer,text_value:website_slides.slide_slide_demo_1_4_question_1_1
+#: model:slide.answer,text_value:website_slides.slide_slide_demo_2_0_question_0_1
+#: model:slide.answer,text_value:website_slides.slide_slide_demo_2_0_question_1_1
+#: model:slide.answer,text_value:website_slides.slide_slide_demo_5_3_question_0_1
 #, python-format
 msgid "No"
 msgstr "ไม่"
@@ -3509,6 +4009,11 @@ msgstr "ไม่พบผลลัพธ์สำหรับ "
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__promote_strategy__none
 msgid "None"
 msgstr "ไม่มี"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_pages_kanban_view
+msgid "Not Published"
+msgstr ""
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
@@ -3598,6 +4103,13 @@ msgstr "จำนวนของคำถาม"
 #: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
 msgid "Odoo"
 msgstr "Odoo"
+
+#. module: website_slides
+#: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_1_4
+#: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_2_1
+#: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_4_0
+msgid "Odoo • Image and Text"
+msgstr "Odoo • ภาพและข้อความ"
 
 #. module: website_slides
 #: model:res.groups,name:website_slides.group_website_slides_officer
@@ -3790,6 +4302,7 @@ msgstr "สนับสนุนโดย"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed__slide_id
+#: model:slide.slide,name:website_slides.slide_slide_demo_4_12
 msgid "Presentation"
 msgstr "งานนำเสนอ"
 
@@ -3849,6 +4362,7 @@ msgid "Publish Date"
 msgstr "วันที่เผยแพร่"
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_pages_kanban_view
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_search
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
@@ -3909,6 +4423,7 @@ msgstr "คำถาม"
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_category__quiz
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__quiz
+#: model:slide.channel.tag,name:website_slides.slide_channel_tag_other_0
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_question_view_form
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 #, python-format
@@ -4292,6 +4807,13 @@ msgid "Section"
 msgstr "ส่วน"
 
 #. module: website_slides
+#: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_1_4
+#: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_2_1
+#: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_4_0
+msgid "Section Subtitle"
+msgstr "คำบรรยายส่วน"
+
+#. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_management.xml:0
 #, python-format
@@ -4349,6 +4871,26 @@ msgstr "ส่ง"
 #, python-format
 msgid "Send Email"
 msgstr "ส่งอีเมล"
+
+#. module: website_slides
+#: model:mail.template,description:website_slides.mail_template_channel_completed
+msgid "Sent to attendees once they've completed the course"
+msgstr ""
+
+#. module: website_slides
+#: model:mail.template,description:website_slides.slide_template_published
+msgid "Sent to attendees when new course is published"
+msgstr ""
+
+#. module: website_slides
+#: model:mail.template,description:website_slides.mail_template_slide_channel_invite
+msgid "Sent to attendees when they are added to a course"
+msgstr ""
+
+#. module: website_slides
+#: model:mail.template,description:website_slides.slide_template_shared
+msgid "Sent when attendees share the course by email"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__seo_name
@@ -4492,6 +5034,11 @@ msgid "Short Description"
 msgstr "คำอธิบายสั้น ๆ "
 
 #. module: website_slides
+#: model_terms:slide.slide,description:website_slides.slide_slide_demo_0_4
+msgid "Show your newly mastered knowledge !"
+msgstr "แสดงความรู้ที่เชี่ยวชาญใหม่ของคุณ !"
+
+#. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
@@ -4525,19 +5072,9 @@ msgid "Slide / Partner decorated m2m"
 msgstr "สไลด์ / พาร์ทเนอร์ตกแต่ง m2m"
 
 #. module: website_slides
-#: model:mail.template,name:website_slides.slide_template_published
-msgid "Slide Published"
-msgstr "เผยแพร่สไลด์"
-
-#. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_answer
 msgid "Slide Question's Answer"
 msgstr "คำตอบของคำถามสไลด์"
-
-#. module: website_slides
-#: model:mail.template,name:website_slides.slide_template_shared
-msgid "Slide Shared"
-msgstr "แชร์สไลด์"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_tag
@@ -4592,6 +5129,12 @@ msgid "Slides and categories"
 msgstr "สไลด์และหมวดหมู่"
 
 #. module: website_slides
+#: model_terms:slide.channel,description:website_slides.slide_channel_demo_6_furn3
+#: model_terms:slide.channel,description_short:website_slides.slide_channel_demo_6_furn3
+msgid "So much amazing certification."
+msgstr "หลากหลายการรับรองน่าทึ่ง"
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "Sort by"
 msgstr "เรียงลำดับตาม"
@@ -4610,6 +5153,13 @@ msgstr "เริ่มคอร์ส"
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
 msgid "Start Course Channel"
 msgstr "เริ่มช่องหลักสูตร"
+
+#. module: website_slides
+#: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_1_4
+#: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_2_1
+#: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_4_0
+msgid "Start with the customer – find out what they want and give it to them."
+msgstr "เริ่มที่ลูกค้า ค้นหาสิ่งที่พวกเขาต้องการและมอบให้พวกเขา"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
@@ -4750,6 +5300,38 @@ msgid "Take Quiz"
 msgstr ""
 
 #. module: website_slides
+#: model:slide.channel,name:website_slides.slide_channel_demo_1_gard1
+msgid "Taking care of Trees"
+msgstr "ดูแลต้นไม้"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_category_demo_4_1
+msgid "Technical Drawings"
+msgstr "ภาพร่างทางเทคนิค"
+
+#. module: website_slides
+#: model_terms:slide.slide,description:website_slides.slide_slide_demo_4_10
+#: model_terms:slide.slide,description:website_slides.slide_slide_demo_4_11
+msgid "Technical drawing"
+msgstr "ภาพร่างทางเทคนิค"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_category_demo_5_2
+msgid "Test Yourself"
+msgstr "ทดสอบตัวเอง"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_slide_demo_0_4
+msgid "Test your knowledge"
+msgstr "ทดสอบความรู้ของคุณ"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_slide_demo_5_3
+#: model_terms:slide.slide,description:website_slides.slide_slide_demo_5_3
+msgid "Test your knowledge !"
+msgstr "ทดสอบความรู้ของคุณ !"
+
+#. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
@@ -4882,6 +5464,11 @@ msgid "Then, go into the file permissions and set it as \"Anyone with the link\"
 msgstr ""
 
 #. module: website_slides
+#: model:slide.tag,name:website_slides.slide_tag_demo_theory
+msgid "Theory"
+msgstr "ทฤษฎี"
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "There are no comments for now."
 msgstr ""
@@ -4987,6 +5574,21 @@ msgid "Toggle navigation"
 msgstr "ระบบนำทางแบบสลับ"
 
 #. module: website_slides
+#: model:slide.tag,name:website_slides.slide_tag_demo_tools
+msgid "Tools"
+msgstr "เครื่องมือ"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_category_demo_5_0
+msgid "Tools and Methods"
+msgstr "เครื่องมือและวิธีการ"
+
+#. module: website_slides
+#: model_terms:slide.slide,description:website_slides.slide_slide_demo_5_0
+msgid "Tools you will need to complete this course."
+msgstr "เครื่องมือที่คุณต้องใช้ในการเรียนคอร์สนี้"
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_tree
 msgid "Total"
 msgstr "รวม"
@@ -5029,6 +5631,26 @@ msgid "Training"
 msgstr "การอบรม"
 
 #. module: website_slides
+#: model:slide.slide,name:website_slides.slide_slide_demo_1_0
+msgid "Tree Infographic"
+msgstr "อินโฟกราฟิกต้นไม้"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_slide_demo_2_2
+msgid "Tree planting in hanging bottles on wall"
+msgstr "ปลูกต้นไม้ในขวดแขวนบนผนัง"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_category_demo_2_0
+msgid "Trees"
+msgstr "ต้นไม้"
+
+#. module: website_slides
+#: model:slide.channel,name:website_slides.slide_channel_demo_2_gard2
+msgid "Trees, Wood and Gardens"
+msgstr "ต้นไม้ ไม้ และสวน"
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Type"
@@ -5057,6 +5679,11 @@ msgstr "ไม่สามารถโพสต์ข้อความ โป�
 #, python-format
 msgid "Uncategorized"
 msgstr "ไม่ถูกจัดหมวด"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_slide_demo_5_0
+msgid "Unforgettable Tools"
+msgstr "เครื่องมือที่น่าจดจำ"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_embed.py:0
@@ -5294,6 +5921,18 @@ msgid "Want to test and certify your students?"
 msgstr ""
 
 #. module: website_slides
+#: model_terms:slide.slide,description:website_slides.slide_slide_demo_3_1
+msgid "Watching the master(s) at work"
+msgstr "ดูผู้เชี่ยวชาญเวลาทำงาน"
+
+#. module: website_slides
+#: model_terms:slide.slide,description:website_slides.slide_slide_demo_1_4
+msgid ""
+"We had a little chat with Harry Potted, sure he had interesting things to "
+"say !"
+msgstr "เราได้คุยกับ Harry Potted นิดหน่อย มั่นใจว่าเขามีเรื่องน่าสนใจจะพูด !"
+
+#. module: website_slides
 #: model:ir.model,name:website_slides.model_website
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__channel_website_id
@@ -5370,6 +6009,16 @@ msgid "What does"
 msgstr "อะไรคือ"
 
 #. module: website_slides
+#: model:slide.question,question:website_slides.slide_slide_demo_0_4_question_0
+msgid "What is a strawberry ?"
+msgstr "สตรอเบอรี่คืออะไร ?"
+
+#. module: website_slides
+#: model:slide.question,question:website_slides.slide_slide_demo_0_4_question_1
+msgid "What is the best tool to dig a hole for your plants ?"
+msgstr "เครื่องมือใดที่ดีที่สุดในการขุดหลุมให้ต้นไม้ของคุณ ?"
+
+#. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
@@ -5378,11 +6027,25 @@ msgid "What types of documents do we support?"
 msgstr ""
 
 #. module: website_slides
+#: model:slide.answer,text_value:website_slides.slide_slide_demo_1_4_question_1_2
+msgid "What was the question again ?"
+msgstr "คำถามอะไรนะ ?"
+
+#. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "When using local files, we only support PDF files."
 msgstr ""
+
+#. module: website_slides
+#: model_terms:slide.slide,description:website_slides.slide_slide_demo_4_1
+msgid ""
+"Which wood type is best for my solid wood furniture? That's the question we "
+"help you answer in this video !"
+msgstr ""
+"ไม้ชนิดใดที่เหมาะกับกสรทำเฟอร์นิเจอร์ไม้เนื้อแข็งของฉันมากที่สุด? "
+"นั่นคือคำถามที่เราช่วยคุณตอบในวิดีโอนี้ !"
 
 #. module: website_slides
 #. openerp-web
@@ -5394,6 +6057,56 @@ msgid ""
 msgstr ""
 "ด้วยแบบทดสอบ "
 "คุณสามารถให้นักเรียนจดจ่อและมีแรงจูงใจโดยการตอบคำถามบางข้อและรับคะแนนกรรม"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_category_demo_2_1
+msgid "Wood"
+msgstr "ไม้"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_slide_demo_3_1
+msgid "Wood Bending With Steam Box"
+msgstr "ดัดไม้ด้วยหม้อพักไอ"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_slide_demo_2_3
+msgid "Wood Characteristics"
+msgstr "ลักษณะไม้"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_slide_demo_4_1
+msgid "Wood Types"
+msgstr "ชนิดไม้"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_category_demo_3_0
+msgid "Working with Wood"
+msgstr "ทำงานกับไม้"
+
+#. module: website_slides
+#: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_1_4
+#: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_2_1
+#: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_4_0
+msgid ""
+"Write one or two paragraphs describing your product or services. <br>To be "
+"successful your content needs to be useful to your readers."
+msgstr ""
+"เขียนหนึ่งหรือสองย่อหน้าเพื่ออธิบายผลิตภัณฑ์ บริการ "
+"หรือคุณลักษณะเฉพาะของคุณ<br>การจะประสบความสำเร็จได้นั้น "
+"เนื้อหาของคุณต้องเป็นประโยชน์ต่อผู้อ่านของคุณ"
+
+#. module: website_slides
+#: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_1_4
+#: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_2_1
+#: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_4_0
+msgid ""
+"Write one or two paragraphs describing your product, services or a specific "
+"feature.<br> To be successful your content needs to be useful to your "
+"readers."
+msgstr ""
+"เขียนหนึ่งหรือสองย่อหน้าเพื่ออธิบายผลิตภัณฑ์ บริการ "
+"หรือคุณลักษณะเฉพาะของคุณ<br>การจะประสบความสำเร็จได้นั้น "
+"เนื้อหาของคุณต้องเป็นประโยชน์ต่อผู้อ่านของคุณ"
 
 #. module: website_slides
 #. openerp-web
@@ -5409,6 +6122,11 @@ msgstr "XP"
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_enroll_email.js:0
 #: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
+#: model:slide.answer,text_value:website_slides.slide_slide_demo_1_4_question_0_0
+#: model:slide.answer,text_value:website_slides.slide_slide_demo_1_4_question_1_0
+#: model:slide.answer,text_value:website_slides.slide_slide_demo_2_0_question_0_0
+#: model:slide.answer,text_value:website_slides.slide_slide_demo_2_0_question_1_0
+#: model:slide.answer,text_value:website_slides.slide_slide_demo_5_3_question_0_0
 #, python-format
 msgid "Yes"
 msgstr "ใช่"
@@ -5565,6 +6283,11 @@ msgid "You need to join this course to access \""
 msgstr ""
 
 #. module: website_slides
+#: model_terms:slide.slide,description:website_slides.slide_slide_demo_0_2
+msgid "You won't believe those facts about carrots."
+msgstr "คุณจะไม่เชื่อข้อเท็จจริงเหล่านั้นเกี่ยวกับแครอท"
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
 msgid "You're enrolled"
 msgstr "คุณลงทะเบียนแล้ว"
@@ -5588,6 +6311,11 @@ msgstr " "
 #: model:slide.channel.tag.group,name:website_slides.slide_channel_tag_group_level
 msgid "Your Level"
 msgstr "ระดับของคุณ"
+
+#. module: website_slides
+#: model:slide.channel.tag.group,name:website_slides.slide_channel_tag_group_role
+msgid "Your Role"
+msgstr "บทบาทของคุณ"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_channel_action_overview

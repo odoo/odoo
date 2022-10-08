@@ -10,9 +10,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta+e\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-30 10:54+0000\n"
+"POT-Creation-Date: 2022-10-04 09:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
@@ -207,6 +207,11 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "- A default Customer Invoice / Vendor Bill date will be suggested."
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "- A new field « Total (tax inc.) » to speed up and control the encoding by "
 "automating line creation with the right account &amp; tax."
@@ -220,7 +225,7 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "- The sequence’s document becomes manageable for each document."
+msgid "- The document's sequence becomes editable on all documents."
 msgstr ""
 
 #. module: account
@@ -285,6 +290,11 @@ msgstr "30일"
 #: model:account.payment.term,name:account.account_payment_term_30_days_end_month_the_10
 msgid "30 days End of Month on the 10th"
 msgstr ""
+
+#. module: account
+#: model:account.payment.term,name:account.account_payment_term_advance
+msgid "30% Advance End of Following Month"
+msgstr "익월말 30% 선불"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days
@@ -869,15 +879,14 @@ msgid "<span>5.00</span>"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-msgid "<span>Amount</span>"
+msgid "<span>Amount In Currency</span>"
 msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-msgid "<span>Amount In Currency</span>"
+msgid "<span>Amount</span>"
 msgstr ""
 
 #. module: account
@@ -1005,8 +1014,19 @@ msgstr "<strong>지불해야 할 금액</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Credit Note Date:</strong>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code:</strong>"
 msgstr "<strong>고객 코드 : </strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.bill_preview
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Date:</strong>"
+msgstr "<strong>일자 : </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1029,6 +1049,11 @@ msgstr "<strong>국제 상업 약관 : </strong>"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Invoice Date:</strong>"
 msgstr "<strong>청구서 발행일:</strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Receipt Date:</strong>"
+msgstr "<strong>입고일:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1430,6 +1455,7 @@ msgid "Account Tax"
 msgstr "계정 세금"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_tax_group_form
 #: model_terms:ir.ui.view,arch_db:account.view_tax_group_tree
 msgid "Account Tax Group"
 msgstr "세금 그룹 계정"
@@ -2425,6 +2451,21 @@ msgid "Analytics"
 msgstr "분석"
 
 #. module: account
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid ""
+"Any journal item on a payable account must have a due date and vice versa."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid ""
+"Any journal item on a receivable account must have a due date and vice "
+"versa."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__applicability
 msgid "Applicability"
 msgstr "적용성"
@@ -2846,7 +2887,7 @@ msgid "Bank Suspense Account"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move_line.py:0
+#: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Bank Transaction"
 msgstr ""
@@ -3334,8 +3375,20 @@ msgid "Cash Difference Loss"
 msgstr "현금 차액 손실"
 
 #. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid "Cash Discount Gain"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
 msgid "Cash Discount Gain account"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid "Cash Discount Loss"
 msgstr ""
 
 #. module: account
@@ -3349,18 +3402,14 @@ msgid "Cash Discount Tax Reduction"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/chart_template.py:0
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_early_pay_discount_gain_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_early_pay_discount_gain_account_id
-#, python-format
 msgid "Cash Discount Write-Off Gain Account"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/chart_template.py:0
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_early_pay_discount_loss_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_early_pay_discount_loss_account_id
-#, python-format
 msgid "Cash Discount Write-Off Loss Account"
 msgstr ""
 
@@ -4344,6 +4393,11 @@ msgid "Credit Note Currency"
 msgstr ""
 
 #. module: account
+#: model:mail.template,name:account.email_template_edi_credit_note
+msgid "Credit Note: Sending"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_move_out_refund_type
 #: model:ir.ui.menu,name:account.menu_action_move_out_refund_type
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -4360,11 +4414,6 @@ msgstr "이 분개 항목과 일치하는 대변 분개 항목입니다."
 #: model:ir.model.fields,help:account.field_res_partner__credit_limit
 #: model:ir.model.fields,help:account.field_res_users__credit_limit
 msgid "Credit limit specific to this partner."
-msgstr ""
-
-#. module: account
-#: model:mail.template,name:account.email_template_edi_credit_note
-msgid "Credit note: Send by email"
 msgstr ""
 
 #. module: account
@@ -4991,6 +5040,26 @@ msgid "Delivery address for current invoice."
 msgstr "현재 청구서의 배송 주소"
 
 #. module: account
+#: model:account.account.tag,name:account.demo_ceo_wages_account
+msgid "Demo CEO Wages Account"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.demo_capital_account
+msgid "Demo Capital Account"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.demo_sale_of_land_account
+msgid "Demo Sale of Land Account"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.demo_stock_account
+msgid "Demo Stock Account"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__deprecated
 msgid "Deprecated"
 msgstr "감가상각됨"
@@ -5517,14 +5586,9 @@ msgid "Early Payment Discount"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move_line.py:0
-#: code:addons/account/models/account_move_line.py:0
-#, python-format
-msgid "Early Payment Discount (%s%%)"
-msgstr ""
-
-#. module: account
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_line.py:0
+#: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Early Payment Discount (%s)"
 msgstr ""
@@ -7392,7 +7456,7 @@ msgstr "청구서/청구서 발행일"
 
 #. module: account
 #: model:mail.template,name:account.email_template_edi_invoice
-msgid "Invoice: Send by email"
+msgid "Invoice: Sending"
 msgstr ""
 
 #. module: account
@@ -7667,7 +7731,7 @@ msgstr "날짜별 분개장 기입 항목"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/models/account_move_line.py:0
+#: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_payment.py:0
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.js:0
 #: code:addons/account/static/src/js/legacy_mail_activity.js:0
@@ -8952,12 +9016,6 @@ msgid "No attachment was provided"
 msgstr "첨부 파일이 제공되지 않았습니다"
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:0
-#, python-format
-msgid "No editable line selected."
-msgstr ""
-
-#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -9273,6 +9331,11 @@ msgstr "대차대조표에 계상되지 않은"
 #: model:ir.model.fields.selection,name:account.selection__account_account_template__account_type__off_balance
 msgid "Off-Balance Sheet"
 msgstr "대차대조표에 계상되지 않은 항목"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_office_furniture_account
+msgid "Office Furniture"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__old_first
@@ -9914,7 +9977,7 @@ msgid "Payables"
 msgstr "지급금"
 
 #. module: account
-#: code:addons/account/models/account_move_line.py:0
+#: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_id
 #: model:ir.model.fields,field_description:account.field_account_move__payment_id
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_id
@@ -10006,11 +10069,6 @@ msgid "Payment Receipt:"
 msgstr "지불 영수증:"
 
 #. module: account
-#: model:mail.template,name:account.mail_template_data_payment_receipt
-msgid "Payment Receipt: Send by email"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_reference
 #: model:ir.model.fields,field_description:account.field_account_move__payment_reference
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_reference
@@ -10084,6 +10142,11 @@ msgid "Payment term explanation for the customer..."
 msgstr "고객에 대한 지불 조건 설명입니다..."
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Payment terms"
+msgstr "결제 조건"
+
+#. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_15days
 msgid "Payment terms: 15 Days"
 msgstr "지불 조건: 15일"
@@ -10115,6 +10178,11 @@ msgid "Payment terms: 30 days End of Month on the 10th"
 msgstr ""
 
 #. module: account
+#: model_terms:account.payment.term,note:account.account_payment_term_advance
+msgid "Payment terms: 30% Advance End of Following Month"
+msgstr "지불 조건: 익월 말에 30% 선불"
+
+#. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_advance_60days
 msgid "Payment terms: 30% Now, Balance 60 Days"
 msgstr "지불 조건 : 30%는 지금, 잔금은 60일"
@@ -10133,6 +10201,11 @@ msgstr "지불 조건: 익월 말"
 #: model_terms:account.payment.term,note:account.account_payment_term_immediate
 msgid "Payment terms: Immediate Payment"
 msgstr "지불 조건: 즉시 지불"
+
+#. module: account
+#: model:mail.template,name:account.mail_template_data_payment_receipt
+msgid "Payment: Payment Receipt"
+msgstr ""
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -11642,6 +11715,23 @@ msgid "Sent"
 msgstr "전송됨"
 
 #. module: account
+#: model:mail.template,description:account.mail_template_data_payment_receipt
+msgid ""
+"Sent manually to customer when clicking on 'Send receipt by email' in "
+"payment action"
+msgstr ""
+
+#. module: account
+#: model:mail.template,description:account.email_template_edi_credit_note
+msgid "Sent to customers with the credit note in attachment"
+msgstr ""
+
+#. module: account
+#: model:mail.template,description:account.email_template_edi_invoice
+msgid "Sent to customers with their invoices in attachment"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__9
 msgid "September"
 msgstr "9월"
@@ -12284,6 +12374,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tax_audit_tree
 msgid "Tax"
 msgstr "세금"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax_group__property_advance_tax_payment_account_id
+msgid "Tax Advance Account"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_audit
@@ -14957,22 +15052,6 @@ msgid "You can only send invoices."
 msgstr "청구서만 보낼 수 있습니다."
 
 #. module: account
-#: code:addons/account/models/account_move_line.py:0
-#, python-format
-msgid ""
-"You can only set an account having the payable type on payment terms lines "
-"for vendor bill."
-msgstr "공급업체 청구서의 지불 조건 내역에 지불 가능 유형의 계정 만 설정할 수 있습니다."
-
-#. module: account
-#: code:addons/account/models/account_move_line.py:0
-#, python-format
-msgid ""
-"You can only set an account having the receivable type on payment terms "
-"lines for customer invoice."
-msgstr "고객 청구서의 지불 조건 내역에 수금 가능 유형의 계정만 설정할 수 있습니다."
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_journal__invoice_reference_type
 msgid ""
 "You can set here the default communication that will appear on customer "
@@ -15709,11 +15788,6 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "tax"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_tax_group__property_advance_tax_payment_account_id
-msgid "Tax Advance Account"
 msgstr ""
 
 #. module: account

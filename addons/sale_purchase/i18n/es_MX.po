@@ -33,7 +33,7 @@ msgstr ""
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
 msgid "<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Service to Purchase\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Servicio a comprar\"/>"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_inherited_form_purchase
@@ -54,6 +54,11 @@ msgid ""
 "                </span>\n"
 "            </span>"
 msgstr ""
+"<span id=\"display_invoice_alert\" position=\"after\">\n"
+"                <span id=\"display_purchase_orders_alert\" attrs=\"{'invisible': [('display_purchase_orders_alert', '=', False)]}\">\n"
+"                    Hay órdenes de compra activas vinculadas a esta orden de venta que no se cancelan automáticamente. <br/>\n"
+"                </span>\n"
+"            </span>"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
@@ -153,7 +158,7 @@ msgstr "Orden de compra"
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_cancel__display_purchase_orders_alert
 msgid "Purchase Order Alert"
-msgstr ""
+msgstr "Alerta de orden de compra"
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order_line

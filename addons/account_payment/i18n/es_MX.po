@@ -10,9 +10,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2022-10-04 09:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
 "Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
@@ -360,7 +360,7 @@ msgstr "Métodos de pago"
 #: model:ir.model,name:account_payment.model_payment_provider
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_id
 msgid "Payment Provider"
-msgstr "Método de pago"
+msgstr "Proveedor de pago"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_provider_menu
@@ -481,17 +481,21 @@ msgid "The journal in which the successful transactions are posted."
 msgstr "El diario donde se publican las transacciones exitosas."
 
 #. module: account_payment
+#: code:addons/account_payment/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"The payment related to the transaction with reference %(ref)s has been "
+"posted: %(link)s"
+msgstr ""
+"Se ha publicado el pago relacionado a la transacción con referencia %(ref)s:"
+" %(link)s"
+
+#. module: account_payment
 #: code:addons/account_payment/controllers/payment.py:0
 #: code:addons/account_payment/controllers/payment.py:0
 #, python-format
 msgid "The provided parameters are invalid."
 msgstr "Los parámetros proporcionados no son válidos."
-
-#. module: account_payment
-#: code:addons/account_payment/models/payment_transaction.py:0
-#, python-format
-msgid "The related payment is posted: %s"
-msgstr "Se publicó el pago relacionado: %s"
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment__source_payment_id

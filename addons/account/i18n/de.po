@@ -6,16 +6,17 @@
 # Leon Grill <leg@odoo.com>, 2022
 # Jinjiu Liu, 2022
 # Johannes Croe <jcr@odoo.com>, 2022
-# Martin Trigaux, 2022
 # Friederike Fasterling-Nesselbosch, 2022
+# Felix Hoßfeld <felix.hossfeld@thoughtgang.de>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta+e\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-30 10:54+0000\n"
+"POT-Creation-Date: 2022-10-04 09:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -211,6 +212,11 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "- A default Customer Invoice / Vendor Bill date will be suggested."
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "- A new field « Total (tax inc.) » to speed up and control the encoding by "
 "automating line creation with the right account &amp; tax."
@@ -224,7 +230,7 @@ msgstr "- Bewegen mit ID %i\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "- The sequence’s document becomes manageable for each document."
+msgid "- The document's sequence becomes editable on all documents."
 msgstr ""
 
 #. module: account
@@ -291,6 +297,11 @@ msgstr "30 Tage"
 #: model:account.payment.term,name:account.account_payment_term_30_days_end_month_the_10
 msgid "30 days End of Month on the 10th"
 msgstr "30 Tage Monatsende am 10."
+
+#. module: account
+#: model:account.payment.term,name:account.account_payment_term_advance
+msgid "30% Advance End of Following Month"
+msgstr "30% im Voraus zum Ende des Folgemonats"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days
@@ -1024,16 +1035,15 @@ msgid "<span>5.00</span>"
 msgstr "<span>5,00</span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-msgid "<span>Amount</span>"
-msgstr "<span>Betrag</span>"
+msgid "<span>Amount In Currency</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-msgid "<span>Amount In Currency</span>"
-msgstr ""
+msgid "<span>Amount</span>"
+msgstr "<span>Betrag</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1165,8 +1175,19 @@ msgstr "<strong>Fälliger Betrag</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Credit Note Date:</strong>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code:</strong>"
 msgstr "<strong>Kunden-Nr:</strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.bill_preview
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Date:</strong>"
+msgstr "<strong>Datum:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1189,6 +1210,11 @@ msgstr "<strong>Incoterm: </strong>"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Invoice Date:</strong>"
 msgstr "<strong>Rechnungsdatum:</strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Receipt Date:</strong>"
+msgstr "<strong>Eingangsdatum\\:</strong> "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1611,6 +1637,7 @@ msgid "Account Tax"
 msgstr "Steuerkonto"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_tax_group_form
 #: model_terms:ir.ui.view,arch_db:account.view_tax_group_tree
 msgid "Account Tax Group"
 msgstr "Konto Steuergruppe"
@@ -2635,6 +2662,21 @@ msgid "Analytics"
 msgstr "Analysen"
 
 #. module: account
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid ""
+"Any journal item on a payable account must have a due date and vice versa."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid ""
+"Any journal item on a receivable account must have a due date and vice "
+"versa."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__applicability
 msgid "Applicability"
 msgstr "Anwendbarkeit"
@@ -3063,7 +3105,7 @@ msgid "Bank Suspense Account"
 msgstr "Bankzwischenkonto"
 
 #. module: account
-#: code:addons/account/models/account_move_line.py:0
+#: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Bank Transaction"
 msgstr "Banktransaktion"
@@ -3565,8 +3607,20 @@ msgid "Cash Difference Loss"
 msgstr "Bargelddifferenz Verlust"
 
 #. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid "Cash Discount Gain"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
 msgid "Cash Discount Gain account"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid "Cash Discount Loss"
 msgstr ""
 
 #. module: account
@@ -3580,18 +3634,14 @@ msgid "Cash Discount Tax Reduction"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/chart_template.py:0
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_early_pay_discount_gain_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_early_pay_discount_gain_account_id
-#, python-format
 msgid "Cash Discount Write-Off Gain Account"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/chart_template.py:0
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_early_pay_discount_loss_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_early_pay_discount_loss_account_id
-#, python-format
 msgid "Cash Discount Write-Off Loss Account"
 msgstr ""
 
@@ -4615,6 +4665,11 @@ msgid "Credit Note Currency"
 msgstr "Währung der Gutschrift"
 
 #. module: account
+#: model:mail.template,name:account.email_template_edi_credit_note
+msgid "Credit Note: Sending"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_move_out_refund_type
 #: model:ir.ui.menu,name:account.menu_action_move_out_refund_type
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -4632,11 +4687,6 @@ msgstr "Buchung im Haben, die mit dieser Buchungszeile übereinstimmt."
 #: model:ir.model.fields,help:account.field_res_users__credit_limit
 msgid "Credit limit specific to this partner."
 msgstr "Für diesen Partner spezifisches Kreditlimit."
-
-#. module: account
-#: model:mail.template,name:account.email_template_edi_credit_note
-msgid "Credit note: Send by email"
-msgstr "Gutschrift: per E-Mail senden"
 
 #. module: account
 #: model:mail.template,report_name:account.email_template_edi_credit_note
@@ -5280,6 +5330,26 @@ msgid "Delivery address for current invoice."
 msgstr "Lieferadresse für aktuelle Rechnung."
 
 #. module: account
+#: model:account.account.tag,name:account.demo_ceo_wages_account
+msgid "Demo CEO Wages Account"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.demo_capital_account
+msgid "Demo Capital Account"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.demo_sale_of_land_account
+msgid "Demo Sale of Land Account"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.demo_stock_account
+msgid "Demo Stock Account"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__deprecated
 msgid "Deprecated"
 msgstr "Nicht mehr verwenden"
@@ -5820,14 +5890,9 @@ msgid "Early Payment Discount"
 msgstr "Frühzahlerrabatt"
 
 #. module: account
-#: code:addons/account/models/account_move_line.py:0
-#: code:addons/account/models/account_move_line.py:0
-#, python-format
-msgid "Early Payment Discount (%s%%)"
-msgstr "Frühzahlerrabatt (%s%%)"
-
-#. module: account
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_line.py:0
+#: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Early Payment Discount (%s)"
 msgstr "Frühzahlerrabatt (%s)"
@@ -7783,8 +7848,8 @@ msgstr "Rechnungsdatum"
 
 #. module: account
 #: model:mail.template,name:account.email_template_edi_invoice
-msgid "Invoice: Send by email"
-msgstr "Rechnung: Per E-Mail senden"
+msgid "Invoice: Sending"
+msgstr ""
 
 #. module: account
 #: model:mail.template,report_name:account.email_template_edi_invoice
@@ -8062,7 +8127,7 @@ msgstr "Journalbuchungen nach Datum"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/models/account_move_line.py:0
+#: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_payment.py:0
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.js:0
 #: code:addons/account/static/src/js/legacy_mail_activity.js:0
@@ -9397,12 +9462,6 @@ msgid "No attachment was provided"
 msgstr "Es wurde keine Anlage bereit gestellt"
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:0
-#, python-format
-msgid "No editable line selected."
-msgstr "Keine bearbeitbare Zeile ausgewählt."
-
-#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -9739,6 +9798,11 @@ msgstr "Nicht bilanzwirksam"
 #: model:ir.model.fields.selection,name:account.selection__account_account_template__account_type__off_balance
 msgid "Off-Balance Sheet"
 msgstr "Ausserbilanz"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_office_furniture_account
+msgid "Office Furniture"
+msgstr "Büromöbel"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__old_first
@@ -10409,7 +10473,7 @@ msgid "Payables"
 msgstr "Verbindlichkeiten"
 
 #. module: account
-#: code:addons/account/models/account_move_line.py:0
+#: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_id
 #: model:ir.model.fields,field_description:account.field_account_move__payment_id
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_id
@@ -10501,11 +10565,6 @@ msgid "Payment Receipt:"
 msgstr "Zahlungseingang:"
 
 #. module: account
-#: model:mail.template,name:account.mail_template_data_payment_receipt
-msgid "Payment Receipt: Send by email"
-msgstr "Zahlungseingang: Per E-Mail senden"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_reference
 #: model:ir.model.fields,field_description:account.field_account_move__payment_reference
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_reference
@@ -10579,6 +10638,11 @@ msgid "Payment term explanation for the customer..."
 msgstr "Beschreibung der Zahlungsbedingungen für den Kunden..."
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Payment terms"
+msgstr "Zahlungsbedingungen"
+
+#. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_15days
 msgid "Payment terms: 15 Days"
 msgstr "Zahlungsbedingungen: 15 Tage"
@@ -10610,6 +10674,11 @@ msgid "Payment terms: 30 days End of Month on the 10th"
 msgstr "Zahlungsbedingungen: 30 Tage Ende des Monats am 10."
 
 #. module: account
+#: model_terms:account.payment.term,note:account.account_payment_term_advance
+msgid "Payment terms: 30% Advance End of Following Month"
+msgstr "Zahlungsbedingungen: 30 % im Voraus zum Ende des Folgemonats"
+
+#. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_advance_60days
 msgid "Payment terms: 30% Now, Balance 60 Days"
 msgstr "Zahlungsbedingungen: 30% direkt fällig, Restbetrag 60 Tage"
@@ -10628,6 +10697,11 @@ msgstr "Zahlungsbedingungen: Am Ende des Folgemonats"
 #: model_terms:account.payment.term,note:account.account_payment_term_immediate
 msgid "Payment terms: Immediate Payment"
 msgstr "Zahlungsbedindungen: Sofortige Zahlung"
+
+#. module: account
+#: model:mail.template,name:account.mail_template_data_payment_receipt
+msgid "Payment: Payment Receipt"
+msgstr ""
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -12175,6 +12249,23 @@ msgid "Sent"
 msgstr "Gesendet"
 
 #. module: account
+#: model:mail.template,description:account.mail_template_data_payment_receipt
+msgid ""
+"Sent manually to customer when clicking on 'Send receipt by email' in "
+"payment action"
+msgstr ""
+
+#. module: account
+#: model:mail.template,description:account.email_template_edi_credit_note
+msgid "Sent to customers with the credit note in attachment"
+msgstr ""
+
+#. module: account
+#: model:mail.template,description:account.email_template_edi_invoice
+msgid "Sent to customers with their invoices in attachment"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__9
 msgid "September"
 msgstr "September"
@@ -12844,6 +12935,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tax_audit_tree
 msgid "Tax"
 msgstr "Steuer"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax_group__property_advance_tax_payment_account_id
+msgid "Tax Advance Account"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_audit
@@ -15806,26 +15902,6 @@ msgid "You can only send invoices."
 msgstr "Sie können nur Rechnungen versenden."
 
 #. module: account
-#: code:addons/account/models/account_move_line.py:0
-#, python-format
-msgid ""
-"You can only set an account having the payable type on payment terms lines "
-"for vendor bill."
-msgstr ""
-"Sie können ein Konto mit der Kreditorenart nur in den "
-"Zahlungsbedingungszeilen für Kreditorenrechnung einstellen."
-
-#. module: account
-#: code:addons/account/models/account_move_line.py:0
-#, python-format
-msgid ""
-"You can only set an account having the receivable type on payment terms "
-"lines for customer invoice."
-msgstr ""
-"Sie können ein Konto mit der Forderungsart nur in Zeilen mit "
-"Zahlungsbedingungen für Debitorenrechnungen festlegen."
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_journal__invoice_reference_type
 msgid ""
 "You can set here the default communication that will appear on customer "
@@ -16703,11 +16779,6 @@ msgstr ""
 #, python-format
 msgid "tax"
 msgstr "tax"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_tax_group__property_advance_tax_payment_account_id
-msgid "Tax Advance Account"
-msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form

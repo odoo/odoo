@@ -8,27 +8,28 @@
 # Mohamed Sallam, 2022
 # Susanna Pujol, 2022
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2022
-# eriiikgt, 2022
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
 # Harcogourmet, 2022
-# Martin Trigaux, 2022
 # RGB Consulting <odoo@rgbconsulting.com>, 2022
 # Eugeni Chafer <eugeni@chafer.cat>, 2022
-# Arnau Ros, 2022
-# Jonatan Gk, 2022
 # Sandra Franch <sandra.franch@upc.edu>, 2022
-# Quim - eccit <quim@eccit.com>, 2022
 # marcescu, 2022
 # Carles Antoli <carlesantoli@hotmail.com>, 2022
 # jabelchi, 2022
+# José Cabrera Lozano <jose.cabrera@edukative.es>, 2022
+# Arnau Ros, 2022
+# Jonatan Gk, 2022
+# Martin Trigaux, 2022
+# Quim - eccit <quim@eccit.com>, 2022
+# eriiikgt, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-27 15:12+0000\n"
+"POT-Creation-Date: 2022-10-04 09:25+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: jabelchi, 2022\n"
+"Last-Translator: eriiikgt, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -92,6 +93,12 @@ msgid ""
 msgstr ""
 "(object.state in ('draft', 'sent') and 'Pressupost - %s' % (object.name)) or"
 " 'Comanda - %s' % (object.name)"
+
+#. module: sale
+#: model:product.product,description_sale:sale.product_product_4e
+#: model:product.product,description_sale:sale.product_product_4f
+msgid "160x80cm, with large legs."
+msgstr "160x80cm, amb cames grans."
 
 #. module: sale
 #. openerp-web
@@ -482,11 +489,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
 msgid "<span class=\"flex-grow-1\">/ Month</span>"
 msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "<span class=\"o_form_label\">Confirmation Email</span>"
-msgstr "<span class=\"o_form_label\">Correu de confirmació</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -944,11 +946,6 @@ msgid "Automatic Invoice"
 msgstr "Factura Automàtica"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Automatic email sent after the customer has signed or paid online"
-msgstr "Email enviat automàticament quan el client ha signat o pagat online"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__journal_name
 msgid "Bank Name"
 msgstr "Nom del Banc "
@@ -1146,11 +1143,6 @@ msgid "Confirm"
 msgstr "Confirmar"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__confirmation_mail_template_id
-msgid "Confirmation Email Template"
-msgstr "Plantilla de correu electrònic de confirmació"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Connectors"
 msgstr "Connectors"
@@ -1160,6 +1152,12 @@ msgstr "Connectors"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Contact"
 msgstr "Contacte"
+
+#. module: sale
+#: model_terms:product.product,website_description:sale.product_product_4e
+#: model_terms:product.product,website_description:sale.product_product_4f
+msgid "Contact Us"
+msgstr "Contacta'ns"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__body
@@ -1287,6 +1285,12 @@ msgid "Currency Rate"
 msgstr "Taxa monetària"
 
 #. module: sale
+#: model:product.attribute.value,name:sale.product_attribute_value_7
+#: model:product.template.attribute.value,name:sale.product_4_attribute_1_value_3
+msgid "Custom"
+msgstr "Personalitzat"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_custom_attribute_value_ids
 msgid "Custom Values"
 msgstr "Valors personalitzats"
@@ -1346,6 +1350,12 @@ msgstr "Impostos client"
 #: model:ir.ui.menu,name:sale.res_partner_menu
 msgid "Customers"
 msgstr "Clients"
+
+#. module: sale
+#: model:product.product,name:sale.product_product_4e
+#: model:product.product,name:sale.product_product_4f
+msgid "Customizable Desk"
+msgstr "Desk personalitzable"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
@@ -1461,6 +1471,12 @@ msgstr ""
 "servir el mínim o el màxim \"lead time\" de les línies de comanda."
 
 #. module: sale
+#: model:product.product,name:sale.advance_product_0
+#: model:product.template,name:sale.advance_product_0_product_template
+msgid "Deposit"
+msgstr "Dipòsit"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__deposit_default_product_id
 msgid "Deposit Product"
 msgstr "Producte de Dipòsit"
@@ -1473,7 +1489,10 @@ msgid "Description"
 msgstr "Descripció"
 
 #. module: sale
+#. openerp-web
+#: code:addons/sale/static/src/js/product_discount_field.js:0
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, python-format
 msgid "Disc.%"
 msgstr "Desc.%"
 
@@ -1519,9 +1538,9 @@ msgstr "Tipus de visualització"
 
 #. module: sale
 #. openerp-web
-#: code:addons/sale/static/src/js/sale_order_controller.js:0
+#: code:addons/sale/static/src/js/product_discount_field.js:0
 #, python-format
-msgid "Do you want to apply this value to all order lines?"
+msgid "Do you want to apply this value to all lines ?"
 msgstr ""
 
 #. module: sale
@@ -1618,8 +1637,7 @@ msgstr "Connector EasyPost"
 
 #. module: sale
 #. openerp-web
-#: code:addons/sale/static/src/js/product_configurator_widget.js:0
-#: code:addons/sale/static/src/js/product_configurator_widget.js:0
+#: code:addons/sale/static/src/js/sale_product_field.js:0
 #, python-format
 msgid "Edit Configuration"
 msgstr "Editar configuración"
@@ -1645,9 +1663,10 @@ msgid "Email sent to the customer once the invoice is available."
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_res_config_settings__confirmation_mail_template_id
-msgid "Email sent to the customer once the order is paid."
-msgstr "Email enviat al client un cop la comanda està pagada."
+#: model_terms:product.product,website_description:sale.product_product_4e
+#: model_terms:product.product,website_description:sale.product_product_4f
+msgid "Ergonomic"
+msgstr "Ergonòmic"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
@@ -1680,14 +1699,6 @@ msgstr "Caducitat"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Extended Filters"
 msgstr "Filtres estesos"
-
-#. module: sale
-#. openerp-web
-#: code:addons/sale/static/src/js/product_configurator_widget.js:0
-#: code:addons/sale/static/src/js/product_configurator_widget.js:0
-#, python-format
-msgid "External Link"
-msgstr "Enllaç extern"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_no_variant_attribute_value_ids
@@ -2219,6 +2230,12 @@ msgid "Lets keep electronic signature for now."
 msgstr "Mantinguem la signatura electrònica per ara."
 
 #. module: sale
+#: model_terms:product.product,website_description:sale.product_product_4e
+#: model_terms:product.product,website_description:sale.product_product_4f
+msgid "Locally handmade"
+msgstr "Fet a mà localment"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
 msgid "Lock"
 msgstr "Bloqueja"
@@ -2233,6 +2250,16 @@ msgstr "Blocar vendes confirmades"
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__done
 msgid "Locked"
 msgstr "Bloquejat"
+
+#. module: sale
+#: model_terms:product.product,website_description:sale.product_product_4e
+#: model_terms:product.product,website_description:sale.product_product_4f
+msgid ""
+"Looking for a custom bamboo stain to match existing furniture? Contact us "
+"for a quote."
+msgstr ""
+"Buscant una taca de bambú personalitzada per a trobar mobles existents? "
+"Contacte amb nosaltres per citar-nos."
 
 #. module: sale
 #. openerp-web
@@ -2373,13 +2400,6 @@ msgstr "El meus pressupostos"
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "My Sales Order Lines"
 msgstr "Les meves línies de comandes de venda"
-
-#. module: sale
-#. openerp-web
-#: code:addons/sale/static/src/js/sale_order_controller.js:0
-#, python-format
-msgid "NO"
-msgstr ""
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
@@ -2813,6 +2833,16 @@ msgstr "Tipus d'usuari Paypal"
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_url
 msgid "Portal Access URL"
 msgstr "URL del portal d'accés"
+
+#. module: sale
+#: model_terms:product.product,website_description:sale.product_product_4e
+#: model_terms:product.product,website_description:sale.product_product_4f
+msgid ""
+"Press a button and watch your desk glide effortlessly from sitting to "
+"standing height in seconds."
+msgstr ""
+"Premeu un botó i mireu el vostre escriptori planant-se sense esforç de seure"
+" a alçada en segons."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce
@@ -3378,21 +3408,6 @@ msgid "Sales Order(s)"
 msgstr "Comanda(es) de venda"
 
 #. module: sale
-#: model:mail.template,name:sale.mail_template_sale_cancellation
-msgid "Sales Order: Cancellation email"
-msgstr ""
-
-#. module: sale
-#: model:mail.template,name:sale.mail_template_sale_confirmation
-msgid "Sales Order: Confirmation Email"
-msgstr "Comandes de venda: correu de confirmació"
-
-#. module: sale
-#: model:mail.template,name:sale.email_template_edi_sale
-msgid "Sales Order: Send by email"
-msgstr "Comandes de venda: enviar per correu"
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders
 #: model:ir.actions.act_window,name:sale.action_orders_salesteams
 #: model:ir.actions.act_window,name:sale.action_orders_to_invoice_salesteams
@@ -3443,6 +3458,21 @@ msgstr "Avisos de vendes"
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
 msgid "Sales price"
 msgstr "Preus de venda"
+
+#. module: sale
+#: model:mail.template,name:sale.mail_template_sale_cancellation
+msgid "Sales: Order Cancellation"
+msgstr ""
+
+#. module: sale
+#: model:mail.template,name:sale.mail_template_sale_confirmation
+msgid "Sales: Order Confirmation"
+msgstr ""
+
+#. module: sale
+#: model:mail.template,name:sale.email_template_edi_sale
+msgid "Sales: Send Quotation"
+msgstr ""
 
 #. module: sale
 #: code:addons/sale/models/crm_team.py:0
@@ -3584,6 +3614,16 @@ msgstr ""
 "contingut específics sobre el producte (instruccions, normes, enllaços...). "
 "Crea i fixa la plantilla de correu pel detall del producte (pestanya Vendes)"
 "  "
+
+#. module: sale
+#: model:mail.template,description:sale.mail_template_sale_cancellation
+msgid "Sent automatically to customers when you cancel an order"
+msgstr ""
+
+#. module: sale
+#: model:mail.template,description:sale.mail_template_sale_confirmation
+msgid "Sent to customers on order confirmation"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sequence
@@ -3948,6 +3988,16 @@ msgstr ""
 "cost fixat en el formulari de detall"
 
 #. module: sale
+#: model_terms:product.product,website_description:sale.product_product_4e
+#: model_terms:product.product,website_description:sale.product_product_4f
+msgid ""
+"The minimum height is 65 cm, and for standing work the maximum height "
+"position is 125 cm."
+msgstr ""
+"L'alçada mínima és 65 cm, i per treballar en la posició màxima d'alçada és "
+"125 cm."
+
+#. module: sale
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The order is not in a state requiring customer signature."
@@ -4290,6 +4340,14 @@ msgid "Unit of Measure"
 msgstr "Unitat de mesura"
 
 #. module: sale
+#: model:product.product,uom_name:sale.advance_product_0
+#: model:product.product,uom_name:sale.product_product_4e
+#: model:product.product,uom_name:sale.product_product_4f
+#: model:product.template,uom_name:sale.advance_product_0_product_template
+msgid "Units"
+msgstr "Unitats"
+
+#. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_form_action
 #: model:ir.ui.menu,name:sale.next_id_16
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4360,6 +4418,11 @@ msgid "Upselling Opportunity"
 msgstr "Oportunitat de venda incremental"
 
 #. module: sale
+#: model:mail.template,description:sale.email_template_edi_sale
+msgid "Used by salespeople when they send quotations or proforma to prospects"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "Valid Until"
 msgstr "Vàlid fins"
@@ -4427,6 +4490,16 @@ msgid "Warning when Selling this Product"
 msgstr "Avís quan ven aquest producte"
 
 #. module: sale
+#: model_terms:product.product,website_description:sale.product_product_4e
+#: model_terms:product.product,website_description:sale.product_product_4f
+msgid ""
+"We pay special attention to detail, which is why our desks are of a superior"
+" quality."
+msgstr ""
+"Paguem atenció especial als detalls, per això els nostres pupitres són d'una"
+" qualitat superior."
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__website_message_ids
 msgid "Website Messages"
 msgstr "Missatges del lloc web"
@@ -4443,13 +4516,6 @@ msgstr "Historial de comunicacions del lloc web"
 msgid "Write a company name to create one, or see suggestions."
 msgstr ""
 "Escriviu un nom de companyia per a crear-ne una, o veieu els suggeriments."
-
-#. module: sale
-#. openerp-web
-#: code:addons/sale/static/src/js/sale_order_controller.js:0
-#, python-format
-msgid "YES"
-msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view

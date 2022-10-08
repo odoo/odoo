@@ -3,15 +3,15 @@
 # 	* mass_mailing
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2022
+# Martin Trigaux, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-27 15:11+0000\n"
+"POT-Creation-Date: 2022-10-04 09:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -766,10 +766,7 @@ msgstr ""
 " de bovenste pictogrammen om je actie uit te voeren."
 
 #. module: mass_mailing
-#. openerp-web
-#: code:addons/mass_mailing/static/src/xml/mailing_filter_widget.xml:0
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form
-#, python-format
 msgid "Add"
 msgstr "Toevoegen"
 
@@ -807,13 +804,6 @@ msgstr "Toevoegen aan lijst"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Add to Templates"
 msgstr "Toevoegen aan sjablonen"
-
-#. module: mass_mailing
-#. openerp-web
-#: code:addons/mass_mailing/static/src/xml/mailing_filter_widget.xml:0
-#, python-format
-msgid "Add to favorite filters"
-msgstr "Toevoegen aan favoriete filters"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -1545,13 +1535,6 @@ msgstr "Teller met het aantal niet-afgeleverde e-mails voor dit contact"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__country_id
 msgid "Country"
 msgstr "Land"
-
-#. module: mass_mailing
-#. openerp-web
-#: code:addons/mass_mailing/static/src/xml/mailing_filter_widget.xml:0
-#, python-format
-msgid "Create Favorite Filter"
-msgstr "Favoriete filter maken"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.layout
@@ -3019,6 +3002,13 @@ msgid "Missing email address"
 msgstr "E-mailadres ontbreekt"
 
 #. module: mass_mailing
+#. openerp-web
+#: code:addons/mass_mailing/static/src/js/mass_mailing_html_field.js:0
+#, python-format
+msgid "Mobile Preview"
+msgstr "Mobiele weergave"
+
+#. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_ir_model
 msgid "Models"
 msgstr "Modellen"
@@ -3086,6 +3076,11 @@ msgstr "Nieuwe mailinglijst naam"
 #, python-format
 msgid "New contacts imported"
 msgstr "Nieuwe contacten geïmporteerd"
+
+#. module: mass_mailing
+#: model:utm.campaign,title:mass_mailing.mass_mail_campaign_1
+msgid "Newsletter"
+msgstr "Nieuwsbrief"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_calendar_event_id
@@ -3462,7 +3457,7 @@ msgstr "Platte tekst"
 
 #. module: mass_mailing
 #. openerp-web
-#: code:addons/mass_mailing/static/src/js/mailing_filter_widget.js:0
+#: code:addons/mass_mailing/static/src/js/mailing_m2o_filter.js:0
 #, python-format
 msgid "Please provide a name for the filter"
 msgstr "Geef een naam op voor het filter"
@@ -3604,13 +3599,6 @@ msgstr "Een favoriet filter opnieuw laden"
 
 #. module: mass_mailing
 #. openerp-web
-#: code:addons/mass_mailing/static/src/xml/mailing_filter_widget.xml:0
-#, python-format
-msgid "Remove from Favorites"
-msgstr "Verwijderen uit favorieten"
-
-#. module: mass_mailing
-#. openerp-web
 #: code:addons/mass_mailing/static/src/xml/mass_mailing.xml:0
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #, python-format
@@ -3735,13 +3723,6 @@ msgstr "Voorbeeld iconen"
 #: model:ir.model,name:mass_mailing.model_mailing_mailing_test
 msgid "Sample Mail Wizard"
 msgstr "Voorbeeld e-mail wizard"
-
-#. module: mass_mailing
-#. openerp-web
-#: code:addons/mass_mailing/static/src/xml/mailing_filter_widget.xml:0
-#, python-format
-msgid "Save as Favorite Filter"
-msgstr "Opslaan als favoriet filter"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_filter__create_uid
@@ -4839,7 +4820,7 @@ msgid ""
 "You cannot delete these UTM Mediums as they are linked to the following mailings in Mass Mailing:\n"
 "%(mailing_names)s"
 msgstr ""
-"U kunt deze UTM-mediums niet verwijderen omdat ze zijn gekoppeld aan de volgende mailings in Mass Mailing:\n"
+"Je kunt deze UTM-mediums niet verwijderen omdat ze zijn gekoppeld aan de volgende mailings in Mass Mailing:\n"
 "%(mailing_names)s"
 
 #. module: mass_mailing
@@ -4849,7 +4830,7 @@ msgid ""
 "You cannot delete these UTM Sources as they are linked to the following mailings in Mass Mailing:\n"
 "%(mailing_names)s"
 msgstr ""
-"U kunt deze UTM-bronnen niet verwijderen omdat ze zijn gekoppeld aan de volgende mailings in Mass Mailing:\n"
+"Je kunt deze UTM-bronnen niet verwijderen omdat ze zijn gekoppeld aan de volgende mailings in Mass Mailing:\n"
 "%(mailing_names)s"
 
 #. module: mass_mailing
@@ -4939,13 +4920,6 @@ msgstr "Jouw titel"
 #, python-format
 msgid "Your changes have been saved."
 msgstr "Jouw wijzigingen zijn opgeslagen."
-
-#. module: mass_mailing
-#. openerp-web
-#: code:addons/mass_mailing/static/src/xml/mailing_filter_widget.xml:0
-#, python-format
-msgid "e.g. \"VIP Customers\""
-msgstr "bijv. \"VIP-klanten\""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form

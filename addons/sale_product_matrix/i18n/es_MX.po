@@ -3,16 +3,17 @@
 # 	* sale_product_matrix
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Braulio D. López Vázquez <bdl@odoo.com>, 2022
+# Martin Trigaux, 2022
+# Lucia Pacheco <lpo@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-27 15:12+0000\n"
+"POT-Creation-Date: 2022-10-04 09:25+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
+"Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +29,20 @@ msgid "Add product mode"
 msgstr "Añadir modo de producto"
 
 #. module: sale_product_matrix
+#. openerp-web
+#: code:addons/sale_product_matrix/static/src/js/sale_product_field.js:0
+#, python-format
+msgid "Choose Product Variants"
+msgstr "Seleccione las variantes de producto"
+
+#. module: sale_product_matrix
+#. openerp-web
+#: code:addons/sale_product_matrix/static/src/js/sale_product_field.js:0
+#, python-format
+msgid "Close"
+msgstr "Cerrar"
+
+#. module: sale_product_matrix
 #: model:ir.model.fields,help:sale_product_matrix.field_product_product__product_add_mode
 #: model:ir.model.fields,help:sale_product_matrix.field_product_template__product_add_mode
 #: model:ir.model.fields,help:sale_product_matrix.field_sale_order_line__product_add_mode
@@ -35,6 +50,15 @@ msgid ""
 "Configurator: choose attribute values to add the matching product variant to the order.\n"
 "Grid: add several variants at once from the grid of attribute values"
 msgstr ""
+"Configurador: seleccione valores de atributo para añadir la variante de producto correspondiente a la orden.\n"
+"Tabla: añada varias variantes a la vez desde la tabla de valores de atributos."
+
+#. module: sale_product_matrix
+#. openerp-web
+#: code:addons/sale_product_matrix/static/src/js/sale_product_field.js:0
+#, python-format
+msgid "Confirm"
+msgstr "Confirmar"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_product_tmpl_id
@@ -93,6 +117,9 @@ msgid ""
 "If grid_update, will be loaded on the SO.\n"
 "If not, represents the matrix to open."
 msgstr ""
+"Almacenamiento técnico local de la tabla.\n"
+"Si grid_update, se cargará en la orden de venta.\n"
+"Si no, representa la matriz a abrir."
 
 #. module: sale_product_matrix
 #: code:addons/sale_product_matrix/models/sale_order.py:0

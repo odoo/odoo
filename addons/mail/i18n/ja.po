@@ -7,13 +7,15 @@
 # Noma Yuki, 2022
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
 # ook rio <riokoko5@gmail.com>, 2022
+# 江口和志 <sandwhale1010@gmail.com>, 2022
+# Ryoko Tsuda <ryoko@quartile.co>, 2022
 # Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"POT-Creation-Date: 2022-10-04 09:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
@@ -156,6 +158,7 @@ msgstr "%s 登録"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/activity.js:0
+#: code:addons/mail/static/src/models/activity_list_view_item.js:0
 #, python-format
 msgid "%s days overdue"
 msgstr ""
@@ -415,12 +418,27 @@ msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "<span class=\"d-block w-75 py-2\">Button Color</span>"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "<span class=\"d-block w-75 py-2\">Header Color</span>"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Activities</span>"
 msgstr "<span class=\"o_form_label\">活動</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Custom ICE server list</span>"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">Email Templates</span>"
 msgstr ""
 
 #. module: mail
@@ -623,6 +641,7 @@ msgstr "購読の際デフォルトで有効化されます。"
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__active
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__active
 #: model:ir.model.fields,field_description:mail.field_mail_channel__active
+#: model:ir.model.fields,field_description:mail.field_mail_template__active
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_search
 msgid "Active"
 msgstr "有効"
@@ -734,13 +753,6 @@ msgstr "活動タイプ"
 #, python-format
 msgid "Activity: %s"
 msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/components/chatter_topbar/chatter_topbar.xml:0
-#, python-format
-msgid "Add Attachments"
-msgstr "添付を追加"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
@@ -860,11 +872,6 @@ msgstr "詳細"
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
 msgid "Advanced Options"
 msgstr "高度オプション"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.email_template_form
-msgid "Advanced Settings"
-msgstr "詳細設定"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_exception_decoration__warning
@@ -1026,7 +1033,7 @@ msgstr ""
 #: code:addons/mail/models/mail_thread_blacklist.py:0
 #, python-format
 msgid "Are you sure you want to unblacklist this Email Address?"
-msgstr ""
+msgstr "本当にこのメールアドレスのブラックリストを解除しますか？"
 
 #. module: mail
 #. openerp-web
@@ -1264,6 +1271,16 @@ msgid "Base"
 msgstr "ベース"
 
 #. module: mail
+#: model:ir.model.fields.selection,name:mail.selection__mail_template__template_category__base_template
+msgid "Base Template"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
+msgid "Base Templates"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__is_blacklisted
 #: model:ir.model.fields,field_description:mail.field_res_partner__is_blacklisted
 #: model:ir.model.fields,field_description:mail.field_res_users__is_blacklisted
@@ -1341,6 +1358,11 @@ msgstr "不達"
 #: code:addons/mail/static/src/components/call_settings_menu/call_settings_menu.xml:0
 #, python-format
 msgid "Browser default"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__secondary_color
+msgid "Button Color"
 msgstr ""
 
 #. module: mail
@@ -2052,6 +2074,16 @@ msgid "Custom Bounced Message"
 msgstr "カスタムバウンスメッセージ"
 
 #. module: mail
+#: model:ir.model.fields.selection,name:mail.selection__mail_template__template_category__custom_template
+msgid "Custom Template"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
+msgid "Custom Templates"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_member__custom_channel_name
 msgid "Custom channel name"
 msgstr "カスタムチャネル名"
@@ -2060,6 +2092,11 @@ msgstr "カスタムチャネル名"
 #: model:ir.model.constraint,message:mail.constraint_mail_notification_notification_partner_required
 msgid "Customer is required for inbox / email notification"
 msgstr "受信トレイ/電子メール通知には顧客が必要です"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Customize the look and feel of automated emails"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__date
@@ -2088,6 +2125,8 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/backend_components/activity_list_view_item/activity_list_view_item.xml:0
+#: code:addons/mail/static/src/backend_components/activity_list_view_item/activity_list_view_item.xml:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -2470,7 +2509,7 @@ msgstr "ダウンロード"
 #: code:addons/mail/static/src/components/call_option_menu/call_option_menu.xml:0
 #, python-format
 msgid "Download logs"
-msgstr ""
+msgstr "ログのダウンロード"
 
 #. module: mail
 #. openerp-web
@@ -2498,6 +2537,7 @@ msgstr "期日"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/activity.js:0
+#: code:addons/mail/static/src/models/activity_list_view_item.js:0
 #, python-format
 msgid "Due in %s days"
 msgstr ""
@@ -3019,8 +3059,6 @@ msgid "Follow"
 msgstr "フォロー"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/components/follower_list_menu/follower_list_menu.xml:0
 #: model:ir.actions.act_window,name:mail.action_view_followers
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_follower_ids
@@ -3031,7 +3069,6 @@ msgstr "フォロー"
 #: model:ir.model.fields,field_description:mail.field_res_users__message_follower_ids
 #: model:ir.ui.menu,name:mail.menu_email_followers
 #: model_terms:ir.ui.view,arch_db:mail.view_followers_tree
-#, python-format
 msgid "Followers"
 msgstr "フォロワー"
 
@@ -3299,13 +3336,18 @@ msgstr "メッセージあり"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_rtc_session__is_deaf
 msgid "Has disabled incoming sound"
-msgstr ""
+msgstr "着信音を無効にしている"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__has_error
 #: model:ir.model.fields,field_description:mail.field_mail_message__has_error
 msgid "Has error"
 msgstr "エラーがあります"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__primary_color
+msgid "Header Color"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__headers
@@ -3328,6 +3370,11 @@ msgstr "こんにちは、"
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__hidden
 msgid "Hidden"
 msgstr "非表示"
+
+#. module: mail
+#: model:ir.model.fields.selection,name:mail.selection__mail_template__template_category__hidden_template
+msgid "Hidden Template"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -3771,7 +3818,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/channel_invitation_form/channel_invitation_form.xml:0
 #, python-format
 msgid "Invitation Link"
-msgstr ""
+msgstr "招待状のリンク"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__invitation_url
@@ -3873,7 +3920,7 @@ msgstr "ディスカスサイドバーのチャットカテゴリーを開いて
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_rtc_session__is_muted
 msgid "Is microphone muted"
-msgstr ""
+msgstr "マイクがミュートされている"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_member__is_pinned
@@ -3883,12 +3930,12 @@ msgstr "画面に固定されている"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_rtc_session__is_camera_on
 msgid "Is sending user video"
-msgstr ""
+msgstr "ユーザービデオの送信は可能か"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_rtc_session__is_screen_sharing_on
 msgid "Is sharing the screen"
-msgstr ""
+msgstr "画面を共有している"
 
 #. module: mail
 #. openerp-web
@@ -4211,13 +4258,6 @@ msgid "Log"
 msgstr "ログ"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/components/chatter_topbar/chatter_topbar.xml:0
-#, python-format
-msgid "Log a note"
-msgstr ""
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Log a note..."
@@ -4315,6 +4355,12 @@ msgstr "メールの失敗"
 #: model:ir.ui.menu,name:mail.mail_gateway_allowed_menu
 #: model_terms:ir.ui.view,arch_db:mail.mail_gateway_allowed_view_tree
 msgid "Mail Gateway Allowed"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/res_config_settings.py:0
+#, python-format
+msgid "Mail Layout"
 msgstr ""
 
 #. module: mail
@@ -4440,6 +4486,7 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/activity/activity.xml:0
+#: code:addons/mail/static/src/models/activity_mark_done_popover_content_view.js:0
 #: code:addons/mail/static/src/models/activity_view.js:0
 #, python-format
 msgid "Mark Done"
@@ -4475,6 +4522,8 @@ msgstr "処理準備"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/backend_components/activity_list_view_item/activity_list_view_item.xml:0
+#: code:addons/mail/static/src/backend_components/activity_list_view_item/activity_list_view_item.xml:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
@@ -5389,6 +5438,12 @@ msgid "Open in Discuss"
 msgstr "ディスカッションで開く"
 
 #. module: mail
+#: code:addons/mail/models/mail_template.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "操作はサポートされていません"
+
+#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_optout
 msgid "Opted Out"
 msgstr ""
@@ -5480,6 +5535,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/backend_components/activity_list_view/activity_list_view.xml:0
 #: code:addons/mail/static/src/js/views/activity/activity_renderer.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__overdue
@@ -5629,6 +5685,7 @@ msgstr "電話"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/backend_components/activity_list_view/activity_list_view.xml:0
 #: code:addons/mail/static/src/js/views/activity/activity_renderer.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__planned
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__planned
@@ -5904,13 +5961,13 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_member__rtc_session_ids
 msgid "RTC Sessions"
-msgstr ""
+msgstr "RTCセッション"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_channel_rtc_session_action
 #: model:ir.ui.menu,name:mail.mail_channel_rtc_session_menu
 msgid "RTC sessions"
-msgstr ""
+msgstr "RTCセッション"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_settings_volumes__volume
@@ -5927,7 +5984,7 @@ msgstr "Re:"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_reaction__guest_id
 msgid "Reacting Guest"
-msgstr ""
+msgstr "反応したゲスト"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_reaction__partner_id
@@ -6302,6 +6359,11 @@ msgid "Retry"
 msgstr "再試行"
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Review All Templates"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__body_html
 msgid "Rich-text Contents"
 msgstr "リッチテキストのコンテンツ"
@@ -6372,15 +6434,14 @@ msgstr "スケジュール"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/activity.js:0
-#: code:addons/mail/static/src/models/activity.js:0
-#: code:addons/mail/static/src/models/chatter.js:0
+#: code:addons/mail/static/src/models/messaging.js:0
 #, python-format
 msgid "Schedule Activity"
 msgstr "活動をスケジュール　"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/backend_components/activity_list_view/activity_list_view.xml:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
 msgid "Schedule activities to help you get things done."
@@ -6402,7 +6463,7 @@ msgstr "ある活動をスケジュール　"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/chatter_topbar/chatter_topbar.xml:0
+#: code:addons/mail/static/src/backend_components/activity_list_view/activity_list_view.xml:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
 msgid "Schedule an activity"
@@ -6585,13 +6646,6 @@ msgstr "今すぐ送信"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/chatter_topbar/chatter_topbar.xml:0
-#, python-format
-msgid "Send a message"
-msgstr "メッセージを送信"
-
-#. module: mail
-#. openerp-web
 #: code:addons/mail/static/src/models/composer.js:0
 #, python-format
 msgid "Send a message to followers..."
@@ -6722,6 +6776,7 @@ msgstr "チャネルを削除せずに非表示にするには、activeをfalse�
 #: code:addons/mail/static/src/models/call_view.js:0
 #: model:ir.model.fields,field_description:mail.field_res_users__res_users_settings_id
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
+#: model_terms:ir.ui.view,arch_db:mail.email_template_form
 #, python-format
 msgid "Settings"
 msgstr "管理設定"
@@ -6749,13 +6804,6 @@ msgstr "ショートコード"
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__source
 msgid "Shortcut"
 msgstr "ショートカット"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/components/chatter_topbar/chatter_topbar.xml:0
-#, python-format
-msgid "Show Attachments"
-msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -7100,6 +7148,11 @@ msgid "Template"
 msgstr "テンプレート"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_template__template_category
+msgid "Template Category"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__template_fs
 #: model:ir.model.fields,field_description:mail.field_template_reset_mixin__template_fs
 msgid "Template Filename"
@@ -7118,6 +7171,11 @@ msgstr "テンプレートプレビュー言語"
 #. module: mail
 #: model:ir.model,name:mail.model_template_reset_mixin
 msgid "Template Reset Mixin"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_template__description
+msgid "Template description"
 msgstr ""
 
 #. module: mail
@@ -7390,6 +7448,11 @@ msgid "This field is case insensitive."
 msgstr "このフィールドでは大文字と小文字は区別されません。"
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_mail_template__description
+msgid "This field is used for internal description of the template's usage."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__email_normalized
 #: model:ir.model.fields,help:mail.field_res_partner__email_normalized
 #: model:ir.model.fields,help:mail.field_res_users__email_normalized
@@ -7407,6 +7470,12 @@ msgid "This is their first connection. Wish them luck."
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/models/res_config_settings.py:0
+#, python-format
+msgid "This layout seems to no longer exist."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__auto_delete
 #: model:ir.model.fields,help:mail.field_mail_mail__auto_delete
 #: model:ir.model.fields,help:mail.field_mail_template__auto_delete
@@ -7419,6 +7488,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/backend_components/activity_exception/activity_exception.xml:0
 #: code:addons/mail/static/src/js/activity.js:0
 #, python-format
 msgid "This record has an exception activity."
@@ -7507,9 +7577,11 @@ msgstr "To:"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/backend_components/activity_list_view/activity_list_view.xml:0
 #: code:addons/mail/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #: code:addons/mail/static/src/js/activity.js:0
 #: code:addons/mail/static/src/js/views/activity/activity_renderer.js:0
+#: code:addons/mail/static/src/models/activity_list_view_item.js:0
 #: code:addons/mail/static/src/models/message.js:0
 #: code:addons/mail/static/src/models/message.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__today
@@ -7535,6 +7607,7 @@ msgstr "今日:"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/activity.js:0
+#: code:addons/mail/static/src/models/activity_list_view_item.js:0
 #, python-format
 msgid "Tomorrow"
 msgstr "明日"
@@ -7782,6 +7855,11 @@ msgid "Unsupported report type %s found."
 msgstr "サポートされていないレポートタイプ%sが見つかりました。"
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Update Mail Layout"
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/activity/activity.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__category__upload_file
@@ -7792,6 +7870,7 @@ msgstr "ドキュメントをアップロード"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/backend_components/activity_list_view_item/activity_list_view_item.xml:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
 msgid "Upload file"
@@ -8060,6 +8139,7 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/activity.js:0
+#: code:addons/mail/static/src/models/list_field_activity_view.js:0
 #, python-format
 msgid "Warning"
 msgstr "警告"
@@ -8135,6 +8215,7 @@ msgstr "はい"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/activity.js:0
+#: code:addons/mail/static/src/models/activity_list_view_item.js:0
 #: code:addons/mail/static/src/models/message.js:0
 #, python-format
 msgid "Yesterday"
@@ -8522,7 +8603,7 @@ msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
-msgid "e.g. \"Welcome to MyCompany\" or \"Nice to meet you, ${object.name}\""
+msgid "e.g. \"Welcome to MyCompany\" or \"Nice to meet you, {{ object.name }}\""
 msgstr ""
 
 #. module: mail

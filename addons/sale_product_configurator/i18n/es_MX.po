@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Lucia Pacheco <lpo@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:03+0000\n"
+"POT-Creation-Date: 2022-10-04 09:25+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +38,7 @@ msgstr "<span class=\"label\">Producto</span>"
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
 msgid "<span class=\"label\">Quantity</span>"
-msgstr "<span class=\"label\">Calidad</span>"
+msgstr "<span class=\"label\">Cantidad</span>"
 
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
@@ -61,21 +62,26 @@ msgstr "Opciones disponibles: "
 
 #. module: sale_product_configurator
 #. openerp-web
-#: code:addons/sale_product_configurator/static/src/js/product_configurator_widget.js:0
+#: code:addons/sale_product_configurator/static/src/js/sale_product_field.js:0
 #, python-format
 msgid "Back"
 msgstr "Regresar"
 
 #. module: sale_product_configurator
+#: model:product.template,name:sale_product_configurator.product_product_1_product_template
+msgid "Chair floor protection"
+msgstr "Protector de piso para silla"
+
+#. module: sale_product_configurator
 #. openerp-web
-#: code:addons/sale_product_configurator/static/src/js/product_configurator_widget.js:0
+#: code:addons/sale_product_configurator/static/src/js/sale_product_field.js:0
 #, python-format
 msgid "Configure"
 msgstr "Configurar"
 
 #. module: sale_product_configurator
 #. openerp-web
-#: code:addons/sale_product_configurator/static/src/js/product_configurator_widget.js:0
+#: code:addons/sale_product_configurator/static/src/js/sale_product_field.js:0
 #, python-format
 msgid "Confirm"
 msgstr "Confirmar"
@@ -84,6 +90,11 @@ msgstr "Confirmar"
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__is_configurable_product
 msgid "Is the product configurable?"
 msgstr "¿El producto es configurable?"
+
+#. module: sale_product_configurator
+#: model:product.template,description_sale:sale_product_configurator.product_product_1_product_template
+msgid "Office chairs can harm your floor: protect it."
+msgstr "Las sillas de oficina pueden dañar su piso: protéjalo."
 
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
@@ -149,3 +160,8 @@ msgstr "Esta combinación no existe."
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
 msgid "This product has no valid combination."
 msgstr "Este producto no tiene combinaciones válidas."
+
+#. module: sale_product_configurator
+#: model:product.template,uom_name:sale_product_configurator.product_product_1_product_template
+msgid "Units"
+msgstr "Unidades"

@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2022-10-04 09:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
 "Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
@@ -87,11 +87,6 @@ msgid "Email Sent"
 msgstr "ส่งอีเมลแล้ว"
 
 #. module: hr_presence
-#: model:mail.template,name:hr_presence.mail_template_presence
-msgid "Employee: Absence email"
-msgstr "พนักงาน: อีเมลการขาด"
-
-#. module: hr_presence
 #: model:sms.template,name:hr_presence.sms_template_data_hr_presence
 msgid "Employee: Presence Reminder"
 msgstr "พนักงาน: แจ้งเตือนการเข้างาน"
@@ -120,6 +115,11 @@ msgstr ""
 #: model:ir.cron,name:hr_presence.ir_cron_presence_control
 msgid "HR Presence: cron"
 msgstr "การเข้างานของ HR: cron"
+
+#. module: hr_presence
+#: model:mail.template,name:hr_presence.mail_template_presence
+msgid "HR: Employee Absence email"
+msgstr ""
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_last_compute_date
@@ -175,6 +175,13 @@ msgstr "การมา"
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
 msgid "SMS"
 msgstr "SMS"
+
+#. module: hr_presence
+#: model:mail.template,description:hr_presence.mail_template_presence
+msgid ""
+"Sent manually in presence module when an employee wasn't working despite not"
+" being off"
+msgstr ""
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban

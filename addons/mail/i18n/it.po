@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"POT-Creation-Date: 2022-10-04 09:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
@@ -156,6 +156,7 @@ msgstr "%s creato"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/activity.js:0
+#: code:addons/mail/static/src/models/activity_list_view_item.js:0
 #, python-format
 msgid "%s days overdue"
 msgstr ""
@@ -426,12 +427,27 @@ msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "<span class=\"d-block w-75 py-2\">Button Color</span>"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "<span class=\"d-block w-75 py-2\">Header Color</span>"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Activities</span>"
 msgstr "<span class=\"o_form_label\">Attività</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Custom ICE server list</span>"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">Email Templates</span>"
 msgstr ""
 
 #. module: mail
@@ -646,6 +662,7 @@ msgstr "Attivati di default dopo l'iscrizione."
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__active
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__active
 #: model:ir.model.fields,field_description:mail.field_mail_channel__active
+#: model:ir.model.fields,field_description:mail.field_mail_template__active
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_search
 msgid "Active"
 msgstr "Attivo"
@@ -757,13 +774,6 @@ msgstr "Tipo di attività"
 #, python-format
 msgid "Activity: %s"
 msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/components/chatter_topbar/chatter_topbar.xml:0
-#, python-format
-msgid "Add Attachments"
-msgstr "Aggiunge allegati"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
@@ -885,11 +895,6 @@ msgstr "Avanzato"
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
 msgid "Advanced Options"
 msgstr "Opzioni avanzate"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.email_template_form
-msgid "Advanced Settings"
-msgstr "Impostazioni avanzate"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_exception_decoration__warning
@@ -1298,6 +1303,16 @@ msgid "Base"
 msgstr "Imponibile"
 
 #. module: mail
+#: model:ir.model.fields.selection,name:mail.selection__mail_template__template_category__base_template
+msgid "Base Template"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
+msgid "Base Templates"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__is_blacklisted
 #: model:ir.model.fields,field_description:mail.field_res_partner__is_blacklisted
 #: model:ir.model.fields,field_description:mail.field_res_users__is_blacklisted
@@ -1376,6 +1391,11 @@ msgstr "Non recapitate"
 #, python-format
 msgid "Browser default"
 msgstr "Browser default"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__secondary_color
+msgid "Button Color"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_thread_cc.py:0
@@ -2093,6 +2113,16 @@ msgid "Custom Bounced Message"
 msgstr "Messaggio personalizzato di non recapito"
 
 #. module: mail
+#: model:ir.model.fields.selection,name:mail.selection__mail_template__template_category__custom_template
+msgid "Custom Template"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
+msgid "Custom Templates"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_member__custom_channel_name
 msgid "Custom channel name"
 msgstr "Nome canale personalizzato"
@@ -2101,6 +2131,11 @@ msgstr "Nome canale personalizzato"
 #: model:ir.model.constraint,message:mail.constraint_mail_notification_notification_partner_required
 msgid "Customer is required for inbox / email notification"
 msgstr "Per le notifiche posta in arrivo / e-mail il cliente è obbligatorio"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Customize the look and feel of automated emails"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__date
@@ -2129,6 +2164,8 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/backend_components/activity_list_view_item/activity_list_view_item.xml:0
+#: code:addons/mail/static/src/backend_components/activity_list_view_item/activity_list_view_item.xml:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -2549,6 +2586,7 @@ msgstr "Data di scadenza tra"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/activity.js:0
+#: code:addons/mail/static/src/models/activity_list_view_item.js:0
 #, python-format
 msgid "Due in %s days"
 msgstr ""
@@ -3082,8 +3120,6 @@ msgid "Follow"
 msgstr "Segui"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/components/follower_list_menu/follower_list_menu.xml:0
 #: model:ir.actions.act_window,name:mail.action_view_followers
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_follower_ids
@@ -3094,7 +3130,6 @@ msgstr "Segui"
 #: model:ir.model.fields,field_description:mail.field_res_users__message_follower_ids
 #: model:ir.ui.menu,name:mail.menu_email_followers
 #: model_terms:ir.ui.view,arch_db:mail.view_followers_tree
-#, python-format
 msgid "Followers"
 msgstr "Follower"
 
@@ -3371,6 +3406,11 @@ msgid "Has error"
 msgstr "Contiene un errore"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__primary_color
+msgid "Header Color"
+msgstr "Colore intestazione"
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__headers
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Headers"
@@ -3391,6 +3431,11 @@ msgstr "Buongiorno,"
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__hidden
 msgid "Hidden"
 msgstr "Nascosto"
+
+#. module: mail
+#: model:ir.model.fields.selection,name:mail.selection__mail_template__template_category__hidden_template
+msgid "Hidden Template"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -4297,13 +4342,6 @@ msgid "Log"
 msgstr "Registra"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/components/chatter_topbar/chatter_topbar.xml:0
-#, python-format
-msgid "Log a note"
-msgstr "Registra nota"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Log a note..."
@@ -4401,6 +4439,12 @@ msgstr "Errori e-mail"
 #: model:ir.ui.menu,name:mail.mail_gateway_allowed_menu
 #: model_terms:ir.ui.view,arch_db:mail.mail_gateway_allowed_view_tree
 msgid "Mail Gateway Allowed"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/res_config_settings.py:0
+#, python-format
+msgid "Mail Layout"
 msgstr ""
 
 #. module: mail
@@ -4530,6 +4574,7 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/activity/activity.xml:0
+#: code:addons/mail/static/src/models/activity_mark_done_popover_content_view.js:0
 #: code:addons/mail/static/src/models/activity_view.js:0
 #, python-format
 msgid "Mark Done"
@@ -4565,6 +4610,8 @@ msgstr "Segna come «Da fare»"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/backend_components/activity_list_view_item/activity_list_view_item.xml:0
+#: code:addons/mail/static/src/backend_components/activity_list_view_item/activity_list_view_item.xml:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
@@ -5510,6 +5557,12 @@ msgid "Open in Discuss"
 msgstr "Aprire in Messaggi"
 
 #. module: mail
+#: code:addons/mail/models/mail_template.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "Operazione non supportata"
+
+#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_optout
 msgid "Opted Out"
 msgstr "Casi di opt-out"
@@ -5614,6 +5667,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/backend_components/activity_list_view/activity_list_view.xml:0
 #: code:addons/mail/static/src/js/views/activity/activity_renderer.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__overdue
@@ -5769,6 +5823,7 @@ msgstr "Chiamata"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/backend_components/activity_list_view/activity_list_view.xml:0
 #: code:addons/mail/static/src/js/views/activity/activity_renderer.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__planned
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__planned
@@ -6446,6 +6501,11 @@ msgid "Retry"
 msgstr "Riprova"
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Review All Templates"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__body_html
 msgid "Rich-text Contents"
 msgstr "Contenuto Rich-text"
@@ -6516,15 +6576,14 @@ msgstr "Pianifica"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/activity.js:0
-#: code:addons/mail/static/src/models/activity.js:0
-#: code:addons/mail/static/src/models/chatter.js:0
+#: code:addons/mail/static/src/models/messaging.js:0
 #, python-format
 msgid "Schedule Activity"
 msgstr "Pianifica Attività"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/backend_components/activity_list_view/activity_list_view.xml:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
 msgid "Schedule activities to help you get things done."
@@ -6546,7 +6605,7 @@ msgstr "Pianifica un'attività"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/chatter_topbar/chatter_topbar.xml:0
+#: code:addons/mail/static/src/backend_components/activity_list_view/activity_list_view.xml:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
 msgid "Schedule an activity"
@@ -6729,13 +6788,6 @@ msgstr "Invia ora"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/chatter_topbar/chatter_topbar.xml:0
-#, python-format
-msgid "Send a message"
-msgstr "Invia un messaggio"
-
-#. module: mail
-#. openerp-web
 #: code:addons/mail/static/src/models/composer.js:0
 #, python-format
 msgid "Send a message to followers..."
@@ -6870,6 +6922,7 @@ msgstr "Per nascondere il canale senza rimuoverlo, impostare Attivo a falso."
 #: code:addons/mail/static/src/models/call_view.js:0
 #: model:ir.model.fields,field_description:mail.field_res_users__res_users_settings_id
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
+#: model_terms:ir.ui.view,arch_db:mail.email_template_form
 #, python-format
 msgid "Settings"
 msgstr "Impostazioni"
@@ -6897,13 +6950,6 @@ msgstr "Codici brevi"
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__source
 msgid "Shortcut"
 msgstr "Scorciatoia"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/components/chatter_topbar/chatter_topbar.xml:0
-#, python-format
-msgid "Show Attachments"
-msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -7256,6 +7302,11 @@ msgid "Template"
 msgstr "Modello"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_template__template_category
+msgid "Template Category"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__template_fs
 #: model:ir.model.fields,field_description:mail.field_template_reset_mixin__template_fs
 msgid "Template Filename"
@@ -7274,6 +7325,11 @@ msgstr "Lingua di anteprima del modello"
 #. module: mail
 #: model:ir.model,name:mail.model_template_reset_mixin
 msgid "Template Reset Mixin"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_template__description
+msgid "Template description"
 msgstr ""
 
 #. module: mail
@@ -7565,6 +7621,11 @@ msgid "This field is case insensitive."
 msgstr "Questo campo non distingue tra maiuscole e minuscole."
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_mail_template__description
+msgid "This field is used for internal description of the template's usage."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__email_normalized
 #: model:ir.model.fields,help:mail.field_res_partner__email_normalized
 #: model:ir.model.fields,help:mail.field_res_users__email_normalized
@@ -7583,6 +7644,12 @@ msgid "This is their first connection. Wish them luck."
 msgstr "Questa è la loro prima connessione. Augura loro buona fortuna."
 
 #. module: mail
+#: code:addons/mail/models/res_config_settings.py:0
+#, python-format
+msgid "This layout seems to no longer exist."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__auto_delete
 #: model:ir.model.fields,help:mail.field_mail_mail__auto_delete
 #: model:ir.model.fields,help:mail.field_mail_template__auto_delete
@@ -7597,6 +7664,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/backend_components/activity_exception/activity_exception.xml:0
 #: code:addons/mail/static/src/js/activity.js:0
 #, python-format
 msgid "This record has an exception activity."
@@ -7685,9 +7753,11 @@ msgstr "A:"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/backend_components/activity_list_view/activity_list_view.xml:0
 #: code:addons/mail/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #: code:addons/mail/static/src/js/activity.js:0
 #: code:addons/mail/static/src/js/views/activity/activity_renderer.js:0
+#: code:addons/mail/static/src/models/activity_list_view_item.js:0
 #: code:addons/mail/static/src/models/message.js:0
 #: code:addons/mail/static/src/models/message.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__today
@@ -7713,6 +7783,7 @@ msgstr "Oggi:"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/activity.js:0
+#: code:addons/mail/static/src/models/activity_list_view_item.js:0
 #, python-format
 msgid "Tomorrow"
 msgstr "Domani"
@@ -7966,6 +8037,11 @@ msgid "Unsupported report type %s found."
 msgstr "Trovato tipo di resoconto non supportato %s."
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Update Mail Layout"
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/activity/activity.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__category__upload_file
@@ -7976,6 +8052,7 @@ msgstr "Carica Documento"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/backend_components/activity_list_view_item/activity_list_view_item.xml:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
 msgid "Upload file"
@@ -8249,6 +8326,7 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/activity.js:0
+#: code:addons/mail/static/src/models/list_field_activity_view.js:0
 #, python-format
 msgid "Warning"
 msgstr "Attenzione"
@@ -8329,6 +8407,7 @@ msgstr "Sì"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/activity.js:0
+#: code:addons/mail/static/src/models/activity_list_view_item.js:0
 #: code:addons/mail/static/src/models/message.js:0
 #, python-format
 msgid "Yesterday"
@@ -8730,7 +8809,7 @@ msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
-msgid "e.g. \"Welcome to MyCompany\" or \"Nice to meet you, ${object.name}\""
+msgid "e.g. \"Welcome to MyCompany\" or \"Nice to meet you, {{ object.name }}\""
 msgstr ""
 
 #. module: mail

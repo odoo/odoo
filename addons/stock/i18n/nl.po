@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-27 15:11+0000\n"
+"POT-Creation-Date: 2022-10-04 09:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -938,6 +938,15 @@ msgid "All at once"
 msgstr "Lever alles tegelijk"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"All our contractual relations will be governed exclusively by United States "
+"law."
+msgstr ""
+"Al onze contractuele relaties worden uitsluitend beheerst door het recht van"
+" de Verenigde Staten."
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__returned_move_ids
 msgid "All returned moves"
 msgstr "Alle retourverplaatsingen"
@@ -1274,6 +1283,15 @@ msgid "Before scheduled date"
 msgstr "Voor geplande datum"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"Below text serves as a suggestion and doesn’t engage Odoo S.A. "
+"responsibility."
+msgstr ""
+"Onderstaande tekst dient als suggestie en geeft Odoo S.A. geen "
+"verantwoordelijkheid."
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__block
 msgid "Blocking Message"
 msgstr "Blokkerend bericht"
@@ -1316,6 +1334,12 @@ msgid ""
 msgstr ""
 "Door het uivinken van dit actief veld, kun je een locatie verbergen zonder "
 "deze te verwijderen."
+
+#. module: stock
+#: model:product.product,name:stock.product_cable_management_box
+#: model:product.template,name:stock.product_cable_management_box_product_template
+msgid "Cable Management Box"
+msgstr "Kabelbeheer box"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_calendar
@@ -1415,6 +1439,26 @@ msgstr "Categorie"
 #: model:ir.model.fields,field_description:stock.field_product_template__route_from_categ_ids
 msgid "Category Routes"
 msgstr "Categorie routes"
+
+#. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"Certain countries apply withholding at source on the amount of invoices, in "
+"accordance with their internal legislation. Any withholding at source will "
+"be paid by the client to the tax authorities. Under no circumstances can My "
+"Company (Chicago) become involved in costs related to a country's "
+"legislation. The amount of the invoice will therefore be due to My Company "
+"(Chicago) in its entirety and does not include any costs relating to the "
+"legislation of the country in which the client is located."
+msgstr ""
+"Bepaalde landen passen in overeenstemming met hun interne wetgeving "
+"bronheffing toe op het bedrag van de facturen. Eventuele inhouding aan de "
+"bron wordt door de opdrachtgever aan de Belastingdienst betaald. My Company "
+"(Chicago) kan in geen geval betrokken raken bij kosten die verband houden "
+"met de wetgeving van een land. Het bedrag van de factuur is dan ook "
+"integraal verschuldigd aan My Company (Chicago) en is exclusief eventuele "
+"kosten die verband houden met de wetgeving van het land waar de "
+"opdrachtgever gevestigd is."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__move_dest_exists
@@ -2308,9 +2352,11 @@ msgid "Delivered Qty"
 msgstr "Geleverd aantal"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__outgoing
 #: model:ir.ui.menu,name:stock.menu_delivery
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#, python-format
 msgid "Delivery"
 msgstr "Levering"
 
@@ -2326,6 +2372,7 @@ msgstr "Verzendwijzes"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
+#: model:stock.picking.type,name:stock.chi_picking_type_out
 #: model:stock.picking.type,name:stock.picking_type_out
 #, python-format
 msgid "Delivery Orders"
@@ -2366,11 +2413,6 @@ msgstr "Aantal uitgaande leveringen"
 #, python-format
 msgid "Delivery orders of %s"
 msgstr "Leveringsorders van %s"
-
-#. module: stock
-#: model:mail.template,name:stock.mail_template_data_delivery_confirmation
-msgid "Delivery: Send by Email"
-msgstr "Levering: per e-mail verzenden"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_uom_qty
@@ -2728,19 +2770,12 @@ msgid "Email Confirmation picking"
 msgstr "E-mail bij bevestigen levering"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Email Template"
-msgstr "E-mailsjabloon"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_mail_confirmation_template_id
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__stock_mail_confirmation_template_id
 msgid "Email Template confirmation picking"
 msgstr "E-mailsjabloon bevestiging picking"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__stock_mail_confirmation_template_id
-#: model:ir.model.fields,help:stock.field_res_config_settings__stock_mail_confirmation_template_id
 msgid "Email sent to the customer once the order is done."
 msgstr "E-mail verzonden naar de klant zodra de order is voltooid."
 
@@ -2977,14 +3012,16 @@ msgstr ""
 "Anders, dit omvat goederen die zijn opgeslagen op alle voorraadlocaties van het type 'intern'."
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
-#: model_terms:ir.ui.view,arch_db:stock.report_replenishment_header
+#, python-format
 msgid "Forecasted"
 msgstr "Virtueel"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "Forecasted Date"
 msgstr "Datum prognose"
@@ -3000,7 +3037,9 @@ msgid "Forecasted Expected date"
 msgstr "Prognose datum verwacht"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Forecasted Inventory"
 msgstr "Voorraadprognose"
 
@@ -3023,8 +3062,6 @@ msgstr "Geplande ontvangsten"
 #. openerp-web
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #: model:ir.actions.client,name:stock.stock_replenishment_product_product_action
-#: model:ir.actions.report,name:stock.stock_replenishment_report_product_product_action
-#: model:ir.actions.report,name:stock.stock_replenishment_report_product_template_action
 #, python-format
 msgid "Forecasted Report"
 msgstr "Voorraadprognose rapport"
@@ -3040,7 +3077,9 @@ msgid "Forecasted Weight"
 msgstr "Voorspeld gewicht"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Forecasted with Pending"
 msgstr "Virtueel en wachtend"
 
@@ -3056,7 +3095,9 @@ msgid "Free Qty"
 msgstr "Gratis aantal"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Free Stock"
 msgstr "Vrije voorraad"
 
@@ -3327,6 +3368,19 @@ msgid "Icon to indicate an exception activity."
 msgstr "Icoon om uitzondering op activiteit aan te geven."
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"If a payment is still outstanding more than sixty (60) days after the due "
+"payment date, My Company (Chicago) reserves the right to call on the "
+"services of a debt recovery company. All legal expenses will be payable by "
+"the client."
+msgstr ""
+"Indien een betaling meer dan zestig (60) dagen na de vervaldatum nog "
+"openstaat, behoudt My Company (Chicago) zich het recht voor om een beroep te"
+" doen op een incassobureau. Alle juridische kosten zijn voor rekening van de"
+" opdrachtgever."
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__same
 msgid "If all products are same"
 msgstr "Als alle producten hetzelfde zijn"
@@ -3548,11 +3602,26 @@ msgid "In Type"
 msgstr "In type"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"In order for it to be admissible, My Company (Chicago) must be notified of "
+"any claim by means of a letter sent by recorded delivery to its registered "
+"office within 8 days of the delivery of the goods or the provision of the "
+"services."
+msgstr ""
+"Om ontvankelijk te zijn, moet My Company (Chicago) binnen 8 dagen na de "
+"levering van de goederen of de levering van de diensten op de hoogte worden "
+"gesteld van elke claim door middel van een aangetekend schrijven naar haar "
+"maatschappelijke zetel."
+
+#. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model:ir.model.fields,field_description:stock.field_product_product__incoming_qty
 #: model:ir.model.fields,field_description:stock.field_product_template__incoming_qty
-#: model_terms:ir.ui.view,arch_db:stock.report_replenishment_header
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
+#, python-format
 msgid "Incoming"
 msgstr "Inkomend"
 
@@ -3562,7 +3631,9 @@ msgid "Incoming Date"
 msgstr "Ontvangstdatum"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Incoming Draft Transfer"
 msgstr "Concept inkomende levering"
 
@@ -3764,7 +3835,10 @@ msgid "Inventory Loss"
 msgstr "Voorraadverlies"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Inventory On Hand"
 msgstr "Aanwezige voorraad"
 
@@ -3900,7 +3974,7 @@ msgstr "Json leverdagen"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.js:0
+#: code:addons/stock/static/src/widgets/json_widget.js:0
 #, python-format
 msgid "Json Popup"
 msgstr "Json Popup"
@@ -4178,7 +4252,7 @@ msgstr "Levertijd"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "Lead Times"
 msgstr "Doorlooptijden"
@@ -4720,6 +4794,24 @@ msgid "My Activity Deadline"
 msgstr "Mijn activiteit deadline"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"My Company (Chicago) undertakes to do its best to supply performant services"
+" in due time in accordance with the agreed timeframes. However, none of its "
+"obligations can be considered as being an obligation to achieve results. My "
+"Company (Chicago) cannot under any circumstances, be required by the client "
+"to appear as a third party in the context of any claim for damages filed "
+"against the client by an end consumer."
+msgstr ""
+"My Company (Chicago) verbindt zich ertoe haar best te doen om tijdige en "
+"goede diensten te leveren in overeenstemming met de overeengekomen "
+"termijnen. Geen van haar verplichtingen kan echter worden beschouwd als een "
+"resultaatsverplichting. My Company (Chicago) kan in geen geval door de klant"
+" worden verplicht om als derde partij op te treden in het kader van een "
+"vordering tot schadevergoeding die door een eindconsument tegen de klant "
+"wordt ingediend."
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "My Counts"
 msgstr "Mijn tellingen"
@@ -4954,8 +5046,8 @@ msgstr "Normaal"
 #. module: stock
 #. openerp-web
 #: code:addons/stock/models/stock_picking.py:0
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 #, python-format
 msgid "Not Available"
 msgstr "Niet beschikbaar"
@@ -5043,11 +5135,13 @@ msgid "October"
 msgstr "Oktober"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model:ir.model.fields,field_description:stock.field_stock_quant__on_hand
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_on_hand
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
-#: model_terms:ir.ui.view,arch_db:stock.report_replenishment_header
+#, python-format
 msgid "On Hand"
 msgstr "Beschikbaar"
 
@@ -5258,21 +5352,43 @@ msgid "Other Information"
 msgstr "Overige informatie"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"Our invoices are payable within 21 working days, unless another payment "
+"timeframe is indicated on either the invoice or the order. In the event of "
+"non-payment by the due date, My Company (Chicago) reserves the right to "
+"request a fixed interest payment amounting to 10% of the sum remaining due. "
+"My Company (Chicago) will be authorized to suspend any provision of services"
+" without prior warning in the event of late payment."
+msgstr ""
+"Onze facturen zijn betaalbaar binnen 21 werkdagen, tenzij op de factuur of "
+"de bestelling een andere betalingstermijn is vermeld. In geval van niet-"
+"betaling op de vervaldag, behoudt My Company (Chicago) zich het recht voor "
+"om een vaste rentebetaling te vragen ten bedrage van 10% van het resterende "
+"bedrag. My Company (Chicago) heeft het recht om elke levering van diensten "
+"zonder voorafgaande waarschuwing op te schorten in geval van te late "
+"betaling."
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__out_type_id
 msgid "Out Type"
 msgstr "Uit type"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model:ir.model.fields,field_description:stock.field_product_product__outgoing_qty
 #: model:ir.model.fields,field_description:stock.field_product_template__outgoing_qty
-#: model_terms:ir.ui.view,arch_db:stock.report_replenishment_header
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
+#, python-format
 msgid "Outgoing"
 msgstr "Uitgaand"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Outgoing Draft Transfer"
 msgstr "Concept uitgaande levering"
 
@@ -5625,7 +5741,7 @@ msgstr "Geplande verplaatsing"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/js/stock_rescheduling_popover.js:0
+#: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
 #, python-format
 msgid "Planning Issue"
 msgstr "Planningsprobleem"
@@ -5662,7 +5778,7 @@ msgstr "Gedetailleerde bewerkingen vooraf invullen"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
 #, python-format
 msgid "Preceding operations"
 msgstr "Voorgaande bewerkingen"
@@ -5788,6 +5904,8 @@ msgid "Produced Qty"
 msgstr "Geproduceerd aantal"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.model,name:stock.model_product_template
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_id
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__product_id
@@ -5812,7 +5930,6 @@ msgstr "Geproduceerd aantal"
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_body_print
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_inventory
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
@@ -5822,6 +5939,7 @@ msgstr "Geproduceerd aantal"
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_search_view
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
+#, python-format
 msgid "Product"
 msgstr "Product"
 
@@ -5912,7 +6030,7 @@ msgstr "Producthoeveelheid bijgewerkt"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/js/report_stock_forecasted.js:0
+#: code:addons/stock/static/src/stock_forecasted/forecasted_buttons.js:0
 #: model:ir.model,name:stock.model_product_replenish
 #, python-format
 msgid "Product Replenish"
@@ -6375,8 +6493,10 @@ msgid "Real Reserved Quantity"
 msgstr "Werkelijke gereserveerde hoeveelheid"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__incoming
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#, python-format
 msgid "Receipt"
 msgstr "Ontvangst"
 
@@ -6387,6 +6507,7 @@ msgstr "Ontvangst route"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
+#: model:stock.picking.type,name:stock.chi_picking_type_in
 #: model:stock.picking.type,name:stock.picking_type_in
 #, python-format
 msgid "Receipts"
@@ -6556,8 +6677,8 @@ msgstr "Aanvulopdrachtregels zoeken"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/report_stock_forecasted.xml:0
-#: code:addons/stock/static/src/xml/report_stock_forecasted.xml:0
+#: code:addons/stock/static/src/stock_forecasted/forecasted_buttons.xml:0
+#: code:addons/stock/static/src/stock_forecasted/forecasted_buttons.xml:0
 #: model:ir.actions.act_window,name:stock.action_product_replenish
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_product_view_form_easy_inherit_stock
@@ -6582,12 +6703,14 @@ msgid "Replenish wizard"
 msgstr "Heraanvulling wizard"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.actions.act_window,name:stock.action_orderpoint_replenish
 #: model:ir.actions.server,name:stock.action_replenishment
 #: model:ir.ui.menu,name:stock.menu_reordering_rules_replenish
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
+#, python-format
 msgid "Replenishment"
 msgstr "Voorraadaanvullen"
 
@@ -6647,7 +6770,9 @@ msgid "Reservations"
 msgstr "Reserveringen"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Reserve"
 msgstr "Reserveer"
 
@@ -6694,7 +6819,9 @@ msgid "Reserved Quantity"
 msgstr "Gereserveerde hoeveelheid"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Reserved from stock"
 msgstr "Gereserveerd van de voorraad"
 
@@ -6925,8 +7052,13 @@ msgid "SSCC:"
 msgstr "SSCC:"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid "STANDARD TERMS AND CONDITIONS OF SALE"
+msgstr "STANDAARD VERKOOPVOORWAARDEN"
+
+#. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "Sales History"
 msgstr "Verkoopgeschiedenis"
@@ -7083,6 +7215,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_sendcloud
 msgid "Sendcloud Connector"
 msgstr "Sendcloud-connector"
+
+#. module: stock
+#: model:mail.template,description:stock.mail_template_data_delivery_confirmation
+msgid ""
+"Sent to the customers when orders are delivered, if the setting is enabled"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__9
@@ -7285,6 +7423,11 @@ msgstr ""
 "Met verzendconnectoren kun je nauwkeurig de verzendkosten berekenen, "
 "verzendlabels afdrukken en ophaling in je magazijn aanvragen. Pas een "
 "verzendconnector toe op een verzendwijze."
+
+#. module: stock
+#: model:mail.template,name:stock.mail_template_data_delivery_confirmation
+msgid "Shipping: Send by Email"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__code
@@ -7763,8 +7906,8 @@ msgstr "Opslagcategorie"
 #: model:ir.model,name:stock.model_stock_storage_category_capacity
 #: model:ir.model.fields,field_description:stock.field_product_product__storage_category_capacity_ids
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__storage_category_capacity_ids
-#: model:ir.ui.menu,name:stock.menu_storage_categoty_capacity_config
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_capacity_tree
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Storage Category Capacity"
 msgstr "Opslagcategorie capaciteit"
 
@@ -7907,6 +8050,19 @@ msgid "The barcode for a location must be unique per company !"
 msgstr "De barcode voor een locatie moet per bedrijf uniek zijn!"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"The client explicitly waives its own standard terms and conditions, even if "
+"these were drawn up after these standard terms and conditions of sale. In "
+"order to be valid, any derogation must be expressly agreed to in advance in "
+"writing."
+msgstr ""
+"De opdrachtgever doet uitdrukkelijk afstand van zijn eigen "
+"standaardvoorwaarden, ook indien deze zijn opgesteld na deze algemene "
+"verkoopvoorwaarden. Om geldig te zijn, moet elke afwijking vooraf "
+"uitdrukkelijk schriftelijk worden overeengekomen."
+
+#. module: stock
 #: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid ""
@@ -7943,7 +8099,7 @@ msgstr "De eerste in de reeks is de standaard."
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "The forecasted stock on the"
 msgstr "De voorraadprognose op"
@@ -8438,7 +8594,7 @@ msgstr "Te bestellen"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "Today"
 msgstr "Vandaag"
@@ -8662,7 +8818,7 @@ msgstr "Handmatig triggeren"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/js/report_stock_forecasted.js:0
+#: code:addons/stock/static/src/stock_forecasted/stock_forecasted.js:0
 #, python-format
 msgid "Try to add some incoming or outgoing transfers."
 msgstr ""
@@ -8765,6 +8921,12 @@ msgid "Unit of Measure Name"
 msgstr "Naam maateenheid"
 
 #. module: stock
+#: model:product.product,uom_name:stock.product_cable_management_box
+#: model:product.template,uom_name:stock.product_cable_management_box_product_template
+msgid "Units"
+msgstr "Stuks"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Units Of Measure"
 msgstr "Maateenheid"
@@ -8801,10 +8963,12 @@ msgid "Unpack"
 msgstr "Uitpakken"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.actions.server,name:stock.action_unreserve_picking
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
+#, python-format
 msgid "Unreserve"
 msgstr "Reservering ongedaan maken"
 
@@ -8888,7 +9052,9 @@ msgid "Use your own routes"
 msgstr "Gebruik je eigen routes"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. openerp-web
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Used by"
 msgstr "Gebruikt door"
 
@@ -9071,7 +9237,7 @@ msgstr "Magazijnroutes"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/report_stock_forecasted.xml:0
+#: code:addons/stock/static/src/stock_forecasted/forecasted_warehouse_filter.xml:0
 #, python-format
 msgid "Warehouse:"
 msgstr "Magazijn:"
@@ -9473,7 +9639,7 @@ msgid ""
 "You can't deactivate the multi-location if you have more than once warehouse"
 " by company"
 msgstr ""
-"U kunt de multi-locatie niet deactiveren als u meer dan één magazijn per "
+"Je kunt de multi-locatie niet deactiveren als u meer dan één magazijn per "
 "bedrijf heeft"
 
 #. module: stock
@@ -9586,7 +9752,7 @@ msgid ""
 "You cannot set a location as a scrap location when it assigned as a "
 "destination location for a manufacturing type operation."
 msgstr ""
-"U kunt een locatie niet instellen als uitvallocatie wanneer deze is "
+"Je kunt een locatie niet instellen als uitvallocatie wanneer deze is "
 "toegewezen als bestemmingslocatie voor een bewerking van het productietype."
 
 #. module: stock
@@ -9596,7 +9762,7 @@ msgid ""
 "You cannot set a scrap location as the destination location for a "
 "manufacturing type operation."
 msgstr ""
-"U kunt geen uitvallocatie instellen als bestemmingslocatie voor een "
+"Je kunt geen uitvallocatie instellen als bestemmingslocatie voor een "
 "bewerking van het productietype."
 
 #. module: stock
@@ -9742,6 +9908,11 @@ msgid "You need to supply a Lot/Serial number for products %s."
 msgstr "Je moet een partij/serienummer ingeven voor het product %s."
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid "You should update this document to reflect your T&amp;C."
+msgstr "Je moet dit document bijwerken om je T&C weer te geven."
+
+#. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "You still have ongoing operations for picking types %s in warehouse %s"
@@ -9788,6 +9959,13 @@ msgstr ""
 "Om in de toekomst tijd te besparen, stel je de regels in als \"Automatiseer orders\"."
 
 #. module: stock
+#: model_terms:res.company,lunch_notify_message:stock.res_company_1
+msgid ""
+"Your lunch has been delivered.\n"
+"Enjoy your meal!"
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Your stock is currently empty"
@@ -9811,7 +9989,7 @@ msgstr "]<br/>min:"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "below the inventory"
 msgstr "onder de het voorraadniveau van"
@@ -9889,7 +10067,7 @@ msgstr "in"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "is"
 msgstr "is"
@@ -9901,7 +10079,7 @@ msgstr "om nu direct handmatig de aanvulopdrachtregels uit te voeren."
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "minimum of"
 msgstr "minimaal"
@@ -9913,7 +10091,7 @@ msgstr "of"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
 #, python-format
 msgid "planned on"
 msgstr "gepland op"
@@ -9930,7 +10108,7 @@ msgstr "report_stock_quantity_graph"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "should be replenished"
 msgstr "en moet worden aangevuld"
@@ -9946,7 +10124,7 @@ msgstr ""
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/widgets/popover_widget.xml:0
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "to reach the maximum of"
 msgstr "om het maximum te bereiken van"

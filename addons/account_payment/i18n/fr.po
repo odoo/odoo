@@ -5,16 +5,18 @@
 # Translators:
 # Alexandra Jubert, 2022
 # Martin Trigaux, 2022
-# Cécile Collart <cco@odoo.com>, 2022
 # Malika Berardi, 2022
+# Cécile Collart <cco@odoo.com>, 2022
+# Loïc De Greef, 2022
+# Jolien De Paepe, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2022-10-04 09:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Malika Berardi, 2022\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -233,7 +235,7 @@ msgstr "Générer un lien de paiement"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__has_pending_refund
 msgid "Has a pending refund"
-msgstr "a un remboursement en cours"
+msgstr "A un remboursement en cours"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__id
@@ -294,7 +296,7 @@ msgstr "Dernière mise à jour le"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__amount_available_for_refund
 msgid "Maximum Refund Allowed"
-msgstr "remboursement maximum permis "
+msgstr "Remboursement maximum permis "
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment__payment_token_id
@@ -302,6 +304,8 @@ msgid ""
 "Note that only tokens from providers allowing to capture the amount are "
 "available."
 msgstr ""
+"Notez que seuls les tokens des fournisseurs permettant de capturer le "
+"montant sont disponibles."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_register__payment_token_id
@@ -309,6 +313,8 @@ msgid ""
 "Note that tokens from providers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
 msgstr ""
+"Notez que les tokens des fournisseurs configurés pour autoriser uniquement "
+"les transactions (au lieu de capturer le montant) ne sont pas disponibles."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -366,7 +372,7 @@ msgstr "Fournisseurs de paiement"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_refund_wizard
 msgid "Payment Refund Wizard"
-msgstr ""
+msgstr "Assistant du remboursement de paiement"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_token_menu
@@ -414,7 +420,7 @@ msgstr "Montant du remboursement"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__refunded_amount
 msgid "Refunded Amount"
-msgstr "montant remboursé "
+msgstr "Montant remboursé "
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_payment_form_inherit_payment
@@ -424,7 +430,7 @@ msgstr "Retours"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__refunds_count
 msgid "Refunds Count"
-msgstr ""
+msgstr "Compte des remboursements"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_register
@@ -434,12 +440,12 @@ msgstr "Enregistrer un paiement"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_journal_form
 msgid "SETUP"
-msgstr ""
+msgstr "Configuration"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__payment_token_id
 msgid "Saved Payment Token"
-msgstr "Token de paiement sauvegardé"
+msgstr "Jeton de paiement sauvegardé"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_token_id
@@ -473,7 +479,17 @@ msgstr ""
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_payment_provider__journal_id
 msgid "The journal in which the successful transactions are posted."
+msgstr "Le journal dans lequel les transactions réussies sont enregistrées."
+
+#. module: account_payment
+#: code:addons/account_payment/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"The payment related to the transaction with reference %(ref)s has been "
+"posted: %(link)s"
 msgstr ""
+"Le paiement lié à la transactions avec la référence %(ref)s a été "
+"comptabilisé : %(link)s"
 
 #. module: account_payment
 #: code:addons/account_payment/controllers/payment.py:0
@@ -483,15 +499,9 @@ msgid "The provided parameters are invalid."
 msgstr "Les paramètres fournis ne sont pas valides."
 
 #. module: account_payment
-#: code:addons/account_payment/models/payment_transaction.py:0
-#, python-format
-msgid "The related payment is posted: %s"
-msgstr "Le paiement associé est comptabilisé : %s"
-
-#. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment__source_payment_id
 msgid "The source payment of related refund payments"
-msgstr ""
+msgstr "Le paiement d'origine des remboursements connexes"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -533,7 +543,7 @@ msgstr "Transactions"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__support_refund
 msgid "Type of Refund Supported"
-msgstr "type de remboursements supportés"
+msgstr "Type de remboursements pris en charge"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__use_electronic_payment_method

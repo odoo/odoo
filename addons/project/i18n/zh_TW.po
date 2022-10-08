@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-27 15:11+0000\n"
+"POT-Creation-Date: 2022-10-04 09:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2022\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,6 +31,13 @@ msgid ""
 "                    Track major progress points that must be reached to achieve success.\n"
 "                </p>\n"
 "            "
+msgstr ""
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/views/project_calendar/project_calendar_controller.js:0
+#, python-format
+msgid " - Tasks by Deadline"
 msgstr ""
 
 #. module: project
@@ -363,6 +371,21 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model:mail.template,body_html:project.project_done_email_template
+msgid ""
+"<div>\n"
+"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
+"    It is my pleasure to let you know that we have successfully completed the project \"<strong t-out=\"object.name or ''\">Renovations</strong>\".\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br/>\n"
+"        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
+"            "
+msgstr ""
+
+#. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
 msgid ""
 "<div>\n"
@@ -578,6 +601,14 @@ msgstr "在專案共享存取權限中不能多次選擇協作者。請刪除重
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "A new task will be created on the following dates:"
+msgstr ""
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"A personal stage cannot be linked to a project because it is only visible to"
+" its corresponding user."
 msgstr ""
 
 #. module: project
@@ -903,6 +934,13 @@ msgid "Assembling"
 msgstr ""
 
 #. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tours/project.js:0
+#, python-format
+msgid "Assign a responsible to your task"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Assign to Me"
@@ -1080,6 +1118,39 @@ msgstr "阻塞"
 #: code:addons/project/models/project.py:0
 #: model:ir.model.fields.selection,name:project.selection__project_task__kanban_state__blocked
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__blocked
+#: model:project.task,legend_blocked:project.project_1_task_1
+#: model:project.task,legend_blocked:project.project_1_task_2
+#: model:project.task,legend_blocked:project.project_1_task_3
+#: model:project.task,legend_blocked:project.project_1_task_4
+#: model:project.task,legend_blocked:project.project_2_task_1
+#: model:project.task,legend_blocked:project.project_2_task_10
+#: model:project.task,legend_blocked:project.project_2_task_11
+#: model:project.task,legend_blocked:project.project_2_task_2
+#: model:project.task,legend_blocked:project.project_2_task_7
+#: model:project.task,legend_blocked:project.project_2_task_8
+#: model:project.task,legend_blocked:project.project_2_task_9
+#: model:project.task,legend_blocked:project.project_3_task_1
+#: model:project.task,legend_blocked:project.project_3_task_2
+#: model:project.task,legend_blocked:project.project_3_task_3
+#: model:project.task,legend_blocked:project.project_3_task_4
+#: model:project.task,legend_blocked:project.project_3_task_5
+#: model:project.task.type,legend_blocked:project.project_personal_stage_admin_0
+#: model:project.task.type,legend_blocked:project.project_personal_stage_admin_1
+#: model:project.task.type,legend_blocked:project.project_personal_stage_admin_2
+#: model:project.task.type,legend_blocked:project.project_personal_stage_admin_3
+#: model:project.task.type,legend_blocked:project.project_personal_stage_admin_4
+#: model:project.task.type,legend_blocked:project.project_personal_stage_admin_5
+#: model:project.task.type,legend_blocked:project.project_personal_stage_admin_6
+#: model:project.task.type,legend_blocked:project.project_personal_stage_demo_0
+#: model:project.task.type,legend_blocked:project.project_personal_stage_demo_1
+#: model:project.task.type,legend_blocked:project.project_personal_stage_demo_2
+#: model:project.task.type,legend_blocked:project.project_personal_stage_demo_3
+#: model:project.task.type,legend_blocked:project.project_personal_stage_demo_4
+#: model:project.task.type,legend_blocked:project.project_personal_stage_demo_5
+#: model:project.task.type,legend_blocked:project.project_personal_stage_demo_6
+#: model:project.task.type,legend_blocked:project.project_stage_0
+#: model:project.task.type,legend_blocked:project.project_stage_2
+#: model:project.task.type,legend_blocked:project.project_stage_3
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
 msgid "Blocked"
@@ -1104,6 +1175,11 @@ msgid "Brainstorm"
 msgstr "腦力激盪"
 
 #. module: project
+#: model:project.tags,name:project.project_tags_00
+msgid "Bug"
+msgstr ""
+
+#. module: project
 #: code:addons/project/models/project.py:0
 #: model:ir.actions.act_window,name:project.action_project_task_burndown_chart_report
 #: model:ir.model,name:project.model_project_task_burndown_chart_report
@@ -1115,6 +1191,26 @@ msgid "Burndown Chart"
 msgstr "燃盡圖"
 
 #. module: project
+#: model:project.task,legend_done:project.project_1_task_10
+#: model:project.task,legend_done:project.project_1_task_11
+#: model:project.task,legend_done:project.project_1_task_12
+#: model:project.task,legend_done:project.project_1_task_13
+#: model:project.task,legend_done:project.project_1_task_14
+#: model:project.task,legend_done:project.project_1_task_15
+#: model:project.task,legend_done:project.project_1_task_5
+#: model:project.task,legend_done:project.project_1_task_6
+#: model:project.task,legend_done:project.project_1_task_7
+#: model:project.task,legend_done:project.project_1_task_8
+#: model:project.task,legend_done:project.project_1_task_9
+#: model:project.task,legend_done:project.project_2_task_3
+#: model:project.task,legend_done:project.project_2_task_4
+#: model:project.task,legend_done:project.project_2_task_5
+#: model:project.task,legend_done:project.project_2_task_6
+#: model:project.task.type,legend_done:project.project_stage_1
+msgid "Buzz or set as done"
+msgstr "Buzz或設定已完成"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__can_be_marked_as_done
 msgid "Can Be Marked As Done"
 msgstr ""
@@ -1122,6 +1218,9 @@ msgstr ""
 #. module: project
 #: code:addons/project/models/project.py:0
 #: model:project.project.stage,name:project.project_project_stage_3
+#: model:project.task.type,name:project.project_personal_stage_admin_6
+#: model:project.task.type,name:project.project_personal_stage_demo_6
+#: model:project.task.type,name:project.project_stage_3
 #, python-format
 msgid "Canceled"
 msgstr "已取消"
@@ -1869,6 +1968,9 @@ msgstr "無權存取，跳過使用者摘要電子信件的此筆資料"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: model:project.project.stage,name:project.project_project_stage_2
+#: model:project.task.type,name:project.project_personal_stage_admin_5
+#: model:project.task.type,name:project.project_personal_stage_demo_5
+#: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
 msgstr "完成"
@@ -1987,6 +2089,11 @@ msgid "Expected"
 msgstr "預期"
 
 #. module: project
+#: model:project.tags,name:project.project_tags_02
+msgid "Experiment"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date
 msgid "Expiration Date"
 msgstr "過期日期"
@@ -1995,6 +2102,11 @@ msgstr "過期日期"
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Extended Filters"
 msgstr "進階篩選"
+
+#. module: project
+#: model:project.tags,name:project.project_tags_05
+msgid "External"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -2361,6 +2473,56 @@ msgstr "如果有效欄位設為錯誤，它將允許您隱藏專案而不將其
 #: model:ir.model.fields.selection,name:project.selection__project_task__kanban_state__normal
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__normal
 #: model:project.project.stage,name:project.project_project_stage_1
+#: model:project.task,legend_normal:project.project_1_task_1
+#: model:project.task,legend_normal:project.project_1_task_10
+#: model:project.task,legend_normal:project.project_1_task_11
+#: model:project.task,legend_normal:project.project_1_task_12
+#: model:project.task,legend_normal:project.project_1_task_13
+#: model:project.task,legend_normal:project.project_1_task_14
+#: model:project.task,legend_normal:project.project_1_task_15
+#: model:project.task,legend_normal:project.project_1_task_2
+#: model:project.task,legend_normal:project.project_1_task_3
+#: model:project.task,legend_normal:project.project_1_task_4
+#: model:project.task,legend_normal:project.project_1_task_5
+#: model:project.task,legend_normal:project.project_1_task_6
+#: model:project.task,legend_normal:project.project_1_task_7
+#: model:project.task,legend_normal:project.project_1_task_8
+#: model:project.task,legend_normal:project.project_1_task_9
+#: model:project.task,legend_normal:project.project_2_task_1
+#: model:project.task,legend_normal:project.project_2_task_10
+#: model:project.task,legend_normal:project.project_2_task_11
+#: model:project.task,legend_normal:project.project_2_task_2
+#: model:project.task,legend_normal:project.project_2_task_3
+#: model:project.task,legend_normal:project.project_2_task_4
+#: model:project.task,legend_normal:project.project_2_task_5
+#: model:project.task,legend_normal:project.project_2_task_6
+#: model:project.task,legend_normal:project.project_2_task_7
+#: model:project.task,legend_normal:project.project_2_task_8
+#: model:project.task,legend_normal:project.project_2_task_9
+#: model:project.task,legend_normal:project.project_3_task_1
+#: model:project.task,legend_normal:project.project_3_task_2
+#: model:project.task,legend_normal:project.project_3_task_3
+#: model:project.task,legend_normal:project.project_3_task_4
+#: model:project.task,legend_normal:project.project_3_task_5
+#: model:project.task.type,legend_normal:project.project_personal_stage_admin_0
+#: model:project.task.type,legend_normal:project.project_personal_stage_admin_1
+#: model:project.task.type,legend_normal:project.project_personal_stage_admin_2
+#: model:project.task.type,legend_normal:project.project_personal_stage_admin_3
+#: model:project.task.type,legend_normal:project.project_personal_stage_admin_4
+#: model:project.task.type,legend_normal:project.project_personal_stage_admin_5
+#: model:project.task.type,legend_normal:project.project_personal_stage_admin_6
+#: model:project.task.type,legend_normal:project.project_personal_stage_demo_0
+#: model:project.task.type,legend_normal:project.project_personal_stage_demo_1
+#: model:project.task.type,legend_normal:project.project_personal_stage_demo_2
+#: model:project.task.type,legend_normal:project.project_personal_stage_demo_3
+#: model:project.task.type,legend_normal:project.project_personal_stage_demo_4
+#: model:project.task.type,legend_normal:project.project_personal_stage_demo_5
+#: model:project.task.type,legend_normal:project.project_personal_stage_demo_6
+#: model:project.task.type,legend_normal:project.project_stage_0
+#: model:project.task.type,legend_normal:project.project_stage_1
+#: model:project.task.type,legend_normal:project.project_stage_2
+#: model:project.task.type,legend_normal:project.project_stage_3
+#: model:project.task.type,name:project.project_stage_1
 #, python-format
 msgid "In Progress"
 msgstr "進行中"
@@ -2374,6 +2536,8 @@ msgstr "開發中"
 
 #. module: project
 #: code:addons/project/models/project.py:0
+#: model:project.task.type,name:project.project_personal_stage_admin_0
+#: model:project.task.type,name:project.project_personal_stage_demo_0
 #, python-format
 msgid "Inbox"
 msgstr "收件箱"
@@ -2382,6 +2546,11 @@ msgstr "收件箱"
 #: model:ir.model.fields,field_description:project.field_project_task__planned_hours
 msgid "Initially Planned Hours"
 msgstr "最初計劃時數"
+
+#. module: project
+#: model:project.tags,name:project.project_tags_04
+msgid "Internal"
+msgstr "內部"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_id
@@ -2701,6 +2870,8 @@ msgstr "逾期任務"
 
 #. module: project
 #: code:addons/project/models/project.py:0
+#: model:project.task.type,name:project.project_personal_stage_admin_4
+#: model:project.task.type,name:project.project_personal_stage_demo_4
 #, python-format
 msgid "Later"
 msgstr "稍後"
@@ -3019,6 +3190,26 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model:project.task,legend_blocked:project.project_1_task_10
+#: model:project.task,legend_blocked:project.project_1_task_11
+#: model:project.task,legend_blocked:project.project_1_task_12
+#: model:project.task,legend_blocked:project.project_1_task_13
+#: model:project.task,legend_blocked:project.project_1_task_14
+#: model:project.task,legend_blocked:project.project_1_task_15
+#: model:project.task,legend_blocked:project.project_1_task_5
+#: model:project.task,legend_blocked:project.project_1_task_6
+#: model:project.task,legend_blocked:project.project_1_task_7
+#: model:project.task,legend_blocked:project.project_1_task_8
+#: model:project.task,legend_blocked:project.project_1_task_9
+#: model:project.task,legend_blocked:project.project_2_task_3
+#: model:project.task,legend_blocked:project.project_2_task_4
+#: model:project.task,legend_blocked:project.project_2_task_5
+#: model:project.task,legend_blocked:project.project_2_task_6
+#: model:project.task.type,legend_blocked:project.project_stage_1
+msgid "Need functional or technical help"
+msgstr "需要功能或者技術幫助"
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Neutral face"
@@ -3029,10 +3220,16 @@ msgstr "平淡的表情"
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+#: model:project.task.type,name:project.project_stage_0
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #, python-format
 msgid "New"
 msgstr "新增"
+
+#. module: project
+#: model:project.tags,name:project.project_tags_01
+msgid "New Feature"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -3291,6 +3488,12 @@ msgstr "十月"
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "Off Track"
 msgstr "偏離軌道"
+
+#. module: project
+#: model:account.analytic.account,name:project.analytic_office_design
+#: model:project.project,name:project.project_project_1
+msgid "Office Design"
+msgstr "辦公室設計"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__rating_last_text__ok
@@ -3748,6 +3951,11 @@ msgid "Project Visibility"
 msgstr "專案可見度"
 
 #. module: project
+#: model:mail.template,subject:project.project_done_email_template
+msgid "Project status - {{ object.name }}"
+msgstr ""
+
+#. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
 msgid "Project's tasks"
 msgstr "專案的任務"
@@ -3760,11 +3968,26 @@ msgid "Project: Create Recurring Tasks"
 msgstr "專案：建立重複任務"
 
 #. module: project
+#: model:mail.template,name:project.project_done_email_template
+msgid "Project: Project Completed"
+msgstr ""
+
+#. module: project
+#: model:mail.template,name:project.mail_template_data_project_task
+msgid "Project: Request Acknowledgment"
+msgstr ""
+
+#. module: project
 #: model:ir.actions.server,name:project.ir_cron_rating_project_ir_actions_server
 #: model:ir.cron,cron_name:project.ir_cron_rating_project
 #: model:ir.cron,name:project.ir_cron_rating_project
 msgid "Project: Send rating"
 msgstr "專案：發送評級"
+
+#. module: project
+#: model:mail.template,name:project.rating_project_request_email_template
+msgid "Project: Task Rating Request"
+msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_project_all
@@ -3802,6 +4025,11 @@ msgid ""
 " several projects, you can share this stage among them and get consolidated "
 "information this way."
 msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__task_properties
+msgid "Properties"
+msgstr "權益"
 
 #. module: project
 #. openerp-web
@@ -3930,6 +4158,36 @@ msgstr "唯讀"
 #. module: project
 #: code:addons/project/models/project.py:0
 #: model:ir.model.fields.selection,name:project.selection__project_task__kanban_state__done
+#: model:project.task,legend_done:project.project_1_task_1
+#: model:project.task,legend_done:project.project_1_task_2
+#: model:project.task,legend_done:project.project_1_task_3
+#: model:project.task,legend_done:project.project_1_task_4
+#: model:project.task,legend_done:project.project_2_task_1
+#: model:project.task,legend_done:project.project_2_task_10
+#: model:project.task,legend_done:project.project_2_task_2
+#: model:project.task,legend_done:project.project_2_task_7
+#: model:project.task,legend_done:project.project_2_task_8
+#: model:project.task,legend_done:project.project_2_task_9
+#: model:project.task,legend_done:project.project_3_task_1
+#: model:project.task,legend_done:project.project_3_task_2
+#: model:project.task,legend_done:project.project_3_task_3
+#: model:project.task,legend_done:project.project_3_task_4
+#: model:project.task.type,legend_done:project.project_personal_stage_admin_0
+#: model:project.task.type,legend_done:project.project_personal_stage_admin_1
+#: model:project.task.type,legend_done:project.project_personal_stage_admin_2
+#: model:project.task.type,legend_done:project.project_personal_stage_admin_3
+#: model:project.task.type,legend_done:project.project_personal_stage_admin_4
+#: model:project.task.type,legend_done:project.project_personal_stage_admin_5
+#: model:project.task.type,legend_done:project.project_personal_stage_admin_6
+#: model:project.task.type,legend_done:project.project_personal_stage_demo_0
+#: model:project.task.type,legend_done:project.project_personal_stage_demo_1
+#: model:project.task.type,legend_done:project.project_personal_stage_demo_2
+#: model:project.task.type,legend_done:project.project_personal_stage_demo_3
+#: model:project.task.type,legend_done:project.project_personal_stage_demo_4
+#: model:project.task.type,legend_done:project.project_personal_stage_demo_5
+#: model:project.task.type,legend_done:project.project_personal_stage_demo_6
+#: model:project.task.type,legend_done:project.project_stage_0
+#: model:project.task.type,legend_done:project.project_stage_2
 #, python-format
 msgid "Ready"
 msgstr "準備好"
@@ -3938,6 +4196,13 @@ msgstr "準備好"
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__done
 msgid "Ready for Next Stage"
 msgstr "下一階段就緒"
+
+#. module: project
+#: model:project.task,legend_done:project.project_2_task_11
+#: model:project.task,legend_done:project.project_3_task_5
+#: model:project.task.type,legend_done:project.project_stage_3
+msgid "Ready to reopen"
+msgstr "準備重新開啟"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__rating_last_feedback
@@ -4015,6 +4280,12 @@ msgstr "相關單據編號"
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__res_model
 msgid "Related Document Model"
 msgstr "相關的單據模型"
+
+#. module: project
+#: model:account.analytic.account,name:project.analytic_renovations
+#: model:project.project,name:project.project_project_3
+msgid "Renovations"
+msgstr "裝修"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_day
@@ -4101,6 +4372,12 @@ msgstr "報告"
 #, python-format
 msgid "Research"
 msgstr "研究"
+
+#. module: project
+#: model:account.analytic.account,name:project.analytic_research_development
+#: model:project.project,name:project.project_project_2
+msgid "Research & Development"
+msgstr "研發"
 
 #. module: project
 #. openerp-web
@@ -4308,6 +4585,27 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Set a Rating Email Template on Stages"
 msgstr "在階段上設置評分電郵範本"
+
+#. module: project
+#: model:mail.template,description:project.project_done_email_template
+msgid ""
+"Set on project's stages to inform customers when a project reaches that "
+"stage"
+msgstr ""
+
+#. module: project
+#: model:mail.template,description:project.rating_project_request_email_template
+msgid ""
+"Set this template on a project stage to request feedback from your "
+"customers. Enable the \"customer ratings\" feature on the project"
+msgstr ""
+
+#. module: project
+#: model:mail.template,description:project.mail_template_data_project_task
+msgid ""
+"Set this template on a project's stage to automate email when tasks reach "
+"stages"
+msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_config_settings_action
@@ -4644,6 +4942,11 @@ msgid "Task Logs"
 msgstr "任務日誌"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__task_properties_definition
+msgid "Task Properties"
+msgstr ""
+
+#. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_rating
 #: model:mail.message.subtype,name:project.mt_task_rating
 msgid "Task Rating"
@@ -4723,16 +5026,6 @@ msgid "Task:"
 msgstr "任務："
 
 #. module: project
-#: model:mail.template,name:project.rating_project_request_email_template
-msgid "Task: Rating Request"
-msgstr "任務：評級請求"
-
-#. module: project
-#: model:mail.template,name:project.mail_template_data_project_task
-msgid "Task: Reception Acknowledgment"
-msgstr "任務：接收確認"
-
-#. module: project
 #: code:addons/project/models/project.py:0
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task
@@ -4744,6 +5037,9 @@ msgstr "任務：接收確認"
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__task_id
 #: model:ir.model.fields,field_description:project.field_res_partner__task_ids
 #: model:ir.model.fields,field_description:project.field_res_users__task_ids
+#: model:project.project,label_tasks:project.project_project_1
+#: model:project.project,label_tasks:project.project_project_2
+#: model:project.project,label_tasks:project.project_project_3
 #: model_terms:ir.ui.view,arch_db:project.portal_layout
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
@@ -4940,12 +5236,16 @@ msgstr "第三個"
 
 #. module: project
 #: code:addons/project/models/project.py:0
+#: model:project.task.type,name:project.project_personal_stage_admin_3
+#: model:project.task.type,name:project.project_personal_stage_demo_3
 #, python-format
 msgid "This Month"
 msgstr "本月"
 
 #. module: project
 #: code:addons/project/models/project.py:0
+#: model:project.task.type,name:project.project_personal_stage_admin_2
+#: model:project.task.type,name:project.project_personal_stage_demo_2
 #, python-format
 msgid "This Week"
 msgstr "本周"
@@ -5056,6 +5356,8 @@ msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:0
+#: model:project.task.type,name:project.project_personal_stage_admin_1
+#: model:project.task.type,name:project.project_personal_stage_demo_1
 #, python-format
 msgid "Today"
 msgstr "今天"
@@ -5198,6 +5500,11 @@ msgstr "更新"
 #: model:mail.message.subtype,name:project.mt_project_update_create
 #: model:mail.message.subtype,name:project.mt_update_create
 msgid "Update Created"
+msgstr ""
+
+#. module: project
+#: model:project.tags,name:project.project_tags_03
+msgid "Usability"
 msgstr ""
 
 #. module: project
@@ -5509,6 +5816,16 @@ msgstr "您被指派到"
 #, python-format
 msgid "You have not write access of %s field."
 msgstr "您沒有 %s 欄位的寫入權限。"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tours/project.js:0
+#, python-format
+msgid ""
+"You have unsaved changes - no worries! Odoo will automatically save it as "
+"you navigate.<br/> You can discard these changes from here or manually save "
+"your task.<br/>Let's save it manually."
+msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:0

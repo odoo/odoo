@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-27 15:11+0000\n"
+"POT-Creation-Date: 2022-10-04 09:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
@@ -972,12 +972,9 @@ msgid "Allocation Remaining Display"
 msgstr ""
 
 #. module: hr_holidays
-#. openerp-web
-#: code:addons/hr_holidays/static/src/js/time_off_calendar/time_off_calendar_controller.js:0
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__allocation_id
 #: model:mail.message.subtype,description:hr_holidays.mt_leave_allocation
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
-#, python-format
 msgid "Allocation Request"
 msgstr "طلب تخصيص رصيد إجازات"
 
@@ -1178,13 +1175,6 @@ msgstr "مؤرشف"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Archived Time Off"
 msgstr "أرشفة الإجازة "
-
-#. module: hr_holidays
-#. openerp-web
-#: code:addons/hr_holidays/static/src/js/time_off_calendar/time_off_calendar_controller.js:0
-#, python-format
-msgid "Are you sure you want to delete this record ?"
-msgstr "هل أنت متأكد من أنك ترغب في حذف هذا السجل؟ "
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__action_with_unused_accruals
@@ -1613,8 +1603,7 @@ msgstr "ديسمبر"
 
 #. module: hr_holidays
 #. openerp-web
-#: code:addons/hr_holidays/static/src/js/time_off_calendar/time_off_calendar_controller.js:0
-#: code:addons/hr_holidays/static/src/xml/time_off_calendar.xml:0
+#: code:addons/hr_holidays/static/src/views/view_dialog/form_view_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 #, python-format
@@ -1623,7 +1612,7 @@ msgstr "حذف"
 
 #. module: hr_holidays
 #. openerp-web
-#: code:addons/hr_holidays/static/src/js/time_off_calendar/time_off_calendar_controller.js:0
+#: code:addons/hr_holidays/static/src/views/hooks.js:0
 #, python-format
 msgid "Delete Confirmation"
 msgstr ""
@@ -1753,13 +1742,6 @@ msgstr "المدة بالأيام. حقل مرجعي يُستخدم عند ال�
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__number_of_hours_display
 msgid "Duration in hours"
 msgstr "المدة بالساعات"
-
-#. module: hr_holidays
-#. openerp-web
-#: code:addons/hr_holidays/static/src/xml/time_off_calendar.xml:0
-#, python-format
-msgid "Edit"
-msgstr "تحرير"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
@@ -2352,7 +2334,7 @@ msgstr ""
 
 #. module: hr_holidays
 #. openerp-web
-#: code:addons/hr_holidays/static/src/xml/time_off_calendar.xml:0
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
 #, python-format
 msgid "Legend"
 msgstr "أسطورة "
@@ -2665,17 +2647,10 @@ msgstr "طلب %(leave_type)s جديد أنشئ بواسطة %(user)s "
 
 #. module: hr_holidays
 #. openerp-web
-#: code:addons/hr_holidays/static/src/js/time_off_calendar/time_off_calendar_controller.js:0
+#: code:addons/hr_holidays/static/src/views/calendar/calendar_controller.js:0
 #, python-format
 msgid "New Allocation"
 msgstr "مخصص جديد "
-
-#. module: hr_holidays
-#. openerp-web
-#: code:addons/hr_holidays/static/src/js/time_off_calendar/time_off_calendar_employee_controller.js:0
-#, python-format
-msgid "New Allocation Request"
-msgstr "طلب مخصصات جديد "
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -2689,17 +2664,10 @@ msgstr ""
 
 #. module: hr_holidays
 #. openerp-web
-#: code:addons/hr_holidays/static/src/js/time_off_calendar/time_off_calendar_controller.js:0
+#: code:addons/hr_holidays/static/src/views/calendar/calendar_controller.js:0
 #, python-format
 msgid "New Time Off"
 msgstr "إجازة جديدة "
-
-#. module: hr_holidays
-#. openerp-web
-#: code:addons/hr_holidays/static/src/js/time_off_calendar/time_off_calendar_controller.js:0
-#, python-format
-msgid "New time off"
-msgstr "أجازة جديدة "
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_calendar_event_id
@@ -2970,6 +2938,11 @@ msgid "Parent"
 msgstr "الأصل"
 
 #. module: hr_holidays
+#: model:hr.leave.type,name:hr_holidays.hr_holiday_status_dv
+msgid "Parental Leaves"
+msgstr "إجازات الأبوة"
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_stress_day_view_search
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_search_hr_holidays_employee_type_report
 msgid "Period"
@@ -3055,7 +3028,7 @@ msgstr "رفض"
 
 #. module: hr_holidays
 #. openerp-web
-#: code:addons/hr_holidays/static/src/xml/time_off_calendar.xml:0
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__refuse
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_base__current_leave_state__refuse
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_public__current_leave_state__refuse
@@ -3192,6 +3165,13 @@ msgstr "خطأ في تسليم الرسائل القصيرة"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__sat
 msgid "Saturday"
 msgstr "السبت"
+
+#. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/views/view_dialog/form_view_dialog.xml:0
+#, python-format
+msgid "Save"
+msgstr "حفظ"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -3692,13 +3672,6 @@ msgid "Time Off"
 msgstr "الإجازات "
 
 #. module: hr_holidays
-#. openerp-web
-#: code:addons/hr_holidays/static/src/js/time_off_calendar/time_off_calendar_popover.js:0
-#, python-format
-msgid "Time Off : %s"
-msgstr ""
-
-#. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_allocation
 msgid "Time Off Allocation"
 msgstr "مخصص الإجازات "
@@ -3755,8 +3728,6 @@ msgstr ""
 "               يطلب الموظفون المخصصات من الموظفين المسؤولين عن الإجازات (مثال: أيام الاستجمام)."
 
 #. module: hr_holidays
-#. openerp-web
-#: code:addons/hr_holidays/static/src/js/time_off_calendar/time_off_calendar_controller.js:0
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_my_request
 #: model:mail.message.subtype,description:hr_holidays.mt_leave
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_employee_view_dashboard
@@ -3764,7 +3735,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_calendar
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_dashboard
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
-#, python-format
 msgid "Time Off Request"
 msgstr "طلبات الإجازة "
 
@@ -3921,7 +3891,7 @@ msgstr "إلى"
 
 #. module: hr_holidays
 #. openerp-web
-#: code:addons/hr_holidays/static/src/xml/time_off_calendar.xml:0
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__state__confirm
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__state__confirm
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_employee_type_report__state__confirm
@@ -3998,6 +3968,11 @@ msgid ""
 msgstr ""
 "إجمالي عدد أيام الإجازة المخصصة لهذا الموظف. قم بتغيير هذه القيمة لإنشاء "
 "طلبات إجازة/مخصصات. يعتمد الإجمالي على كافة أنواع الإجازات دون تخطي الحد. "
+
+#. module: hr_holidays
+#: model:hr.leave.type,name:hr_holidays.holiday_status_training
+msgid "Training Time Off"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__action_with_unused_accruals__postponed
@@ -4101,7 +4076,7 @@ msgstr "تصديق "
 
 #. module: hr_holidays
 #. openerp-web
-#: code:addons/hr_holidays/static/src/xml/time_off_calendar.xml:0
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
 #, python-format
 msgid "Validated"
 msgstr "تم التصديق "
@@ -4178,6 +4153,13 @@ msgstr "سجل تواصل الموقع الإلكتروني "
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__wed
 msgid "Wednesday"
 msgstr "الأربعاء"
+
+#. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/views/calendar/year/calendar_year_renderer.js:0
+#, python-format
+msgid "Week"
+msgstr "الأسبوع"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__frequency__weekly

@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-27 15:11+0000\n"
+"POT-Creation-Date: 2022-10-04 09:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
@@ -154,6 +154,12 @@ msgid ""
 msgstr ""
 " \n"
 "             อาจจำเป็นต้องดำเนินการด้วยตัวเอง"
+
+#. module: mrp
+#: model_terms:product.product,description:mrp.product_product_computer_desk_leg
+#: model_terms:product.template,description:mrp.product_product_computer_desk_leg_product_template
+msgid "18″ x 2½″ Square Leg"
+msgstr "18″ x 2½″ ขาเหลี่ยม"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
@@ -1014,6 +1020,12 @@ msgid "BoM line product %s should not be the same as BoM product."
 msgstr "ไลน์สินค้า BoM %sไม่ควรเป็นสินค้า BoM เดียวกัน"
 
 #. module: mrp
+#: model:product.product,name:mrp.product_product_computer_desk_bolt
+#: model:product.template,name:mrp.product_product_computer_desk_bolt_product_template
+msgid "Bolt"
+msgstr "โบลท์"
+
+#. module: mrp
 #. openerp-web
 #: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_byproducts
@@ -1205,7 +1217,9 @@ msgid "Component Status"
 msgstr "สถานะส่วนประกอบ"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_report_product_product_replenishment
+#. openerp-web
+#: code:addons/mrp/static/src/mrp_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Component of Draft MO"
 msgstr "ส่วนประกอบของร่าง MO"
 
@@ -1798,6 +1812,24 @@ msgstr "ดาวน์โหลด"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Draft"
 msgstr "ร่าง"
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_drawer_drawer
+#: model:product.template,name:mrp.product_product_drawer_drawer_product_template
+msgid "Drawer Black"
+msgstr "ลิ้นชัก สีดำ"
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_drawer_case
+#: model:product.template,name:mrp.product_product_drawer_case_product_template
+msgid "Drawer Case Black"
+msgstr "ตู้ลิ้นชัก สีดำ"
+
+#. module: mrp
+#: model_terms:product.product,description:mrp.product_product_drawer_drawer
+#: model_terms:product.template,description:mrp.product_product_drawer_drawer_product_template
+msgid "Drawer on casters for great usability."
+msgstr "ลิ้นชักบนล้อเลื่อนเพื่อการใช้งานที่ยอดเยี่ยม"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
@@ -2571,6 +2603,12 @@ msgstr ""
 "แสดงว่าสถานะความพร้อมของ MO พร้อมแล้ว ตามการกำหนดค่า BOM"
 
 #. module: mrp
+#: model_terms:product.product,description:mrp.product_product_wood_ply
+#: model_terms:product.template,description:mrp.product_product_wood_ply_product_template
+msgid "Layers that are stick together to assemble wood panels."
+msgstr "ชั้นที่ติดกันเพื่อประกอบแผ่นไม้"
+
+#. module: mrp
 #. openerp-web
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -2824,8 +2862,8 @@ msgstr "การผลิต"
 
 #. module: mrp
 #. openerp-web
-#: code:addons/mrp/static/src/xml/report_stock_forecasted.xml:0
-#: code:addons/mrp/static/src/xml/report_stock_forecasted.xml:0
+#: code:addons/mrp/static/src/mrp_forecasted/forecasted_buttons.xml:0
+#: code:addons/mrp/static/src/mrp_forecasted/forecasted_buttons.xml:0
 #, python-format
 msgid "Manufacturing Forecast"
 msgstr ""
@@ -3574,6 +3612,26 @@ msgid "Planning Issues"
 msgstr "ปัญหาการวางแผน"
 
 #. module: mrp
+#: model:product.product,name:mrp.product_product_plastic_laminate
+#: model:product.template,name:mrp.product_product_plastic_laminate_product_template
+msgid "Plastic Laminate"
+msgstr ""
+"พลาสติกลามิเนต"
+"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  "
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_wood_ply
+#: model:product.template,name:mrp.product_product_wood_ply_product_template
+msgid "Ply Layer"
+msgstr "ชั้นอัด"
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_ply_veneer
+#: model:product.template,name:mrp.product_product_ply_veneer_product_template
+msgid "Ply Veneer"
+msgstr "แผ่นไม้ธรรมชาติบาง"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__json_popover
 msgid "Popover Data JSON"
 msgstr "ข้อมูลป๊อปโอเวอร์ JSON"
@@ -3842,7 +3900,9 @@ msgid "Production Workcenter"
 msgstr "ศูนย์การผลิต"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_report_product_product_replenishment
+#. openerp-web
+#: code:addons/mrp/static/src/mrp_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Production of Draft MO"
 msgstr "การผลิตฉบับร่าง MO"
 
@@ -4057,7 +4117,7 @@ msgstr "ไฟล์แนบที่เกี่ยวข้อง"
 
 #. module: mrp
 #. openerp-web
-#: code:addons/mrp/static/src/xml/mrp.xml:0
+#: code:addons/mrp/static/src/widgets/mrp_workorder_popover.xml:0
 #, python-format
 msgid "Replan"
 msgstr "วางแผนใหม่"
@@ -4068,7 +4128,9 @@ msgid "Reporting"
 msgstr "การรายงาน"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_report_product_product_replenishment
+#. openerp-web
+#: code:addons/mrp/static/src/mrp_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Reserve"
 msgstr "สำรอง"
 
@@ -4195,7 +4257,7 @@ msgstr "จัดกำหนดการก่อนคำสั่งงาน
 
 #. module: mrp
 #. openerp-web
-#: code:addons/mrp/static/src/js/mrp_workorder_popover.js:0
+#: code:addons/mrp/static/src/widgets/mrp_workorder_popover.xml:0
 #, python-format
 msgid "Scheduling Information"
 msgstr "ข้อมูลกำหนดการ"
@@ -4221,6 +4283,12 @@ msgstr "ย้ายเศษซากผลิตภัณฑ์"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__scrap_ids
 msgid "Scraps"
 msgstr "เศษซากผลิตภัณฑ์"
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_computer_desk_screw
+#: model:product.template,name:mrp.product_product_computer_desk_screw_product_template
+msgid "Screw"
+msgstr "สกรู"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -4388,6 +4456,18 @@ msgid "Slot into workcenter calendar once planned"
 msgstr "สล็อตลงในปฏิทินศูนย์งานเมื่อวางแผนไว้"
 
 #. module: mrp
+#: model_terms:product.product,description:mrp.product_product_computer_desk_head
+#: model_terms:product.template,description:mrp.product_product_computer_desk_head_product_template
+msgid "Solid wood is a durable natural material."
+msgstr "ไม้เนื้อแข็งเป็นวัสดุธรรมชาติที่ทนทาน"
+
+#. module: mrp
+#: model_terms:product.product,description:mrp.product_product_computer_desk
+#: model_terms:product.template,description:mrp.product_product_computer_desk_product_template
+msgid "Solid wood table."
+msgstr "โต๊ะไม้เนื้อแข็ง"
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid ""
@@ -4500,6 +4580,18 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_split_multi
 msgid "Split productions"
 msgstr ""
+
+#. module: mrp
+#: model_terms:product.product,description:mrp.product_product_computer_desk_screw
+#: model_terms:product.template,description:mrp.product_product_computer_desk_screw_product_template
+msgid "Stainless steel screw"
+msgstr "สกรูสแตนเลส"
+
+#. module: mrp
+#: model_terms:product.product,description:mrp.product_product_computer_desk_bolt
+#: model_terms:product.template,description:mrp.product_product_computer_desk_bolt_product_template
+msgid "Stainless steel screw full (dia - 5mm, Length - 10mm)"
+msgstr "สกรูสแตนเลส เต็ม(เส้นผ่านศูนย์กลาง - 5 มม. ยาว - 10 มม.)"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -4631,6 +4723,36 @@ msgstr "สัญญาช่วงการผลิตสำหรับสิ
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_subcontracting
 msgid "Subcontracting"
 msgstr "สัญญาช่วง"
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_computer_desk
+#: model:product.template,name:mrp.product_product_computer_desk_product_template
+msgid "Table"
+msgstr "โต๊ะ"
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_table_kit
+#: model:product.template,name:mrp.product_product_table_kit_product_template
+msgid "Table Kit"
+msgstr "ชุดอุปกรณ์โต๊ะ"
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_computer_desk_leg
+#: model:product.template,name:mrp.product_product_computer_desk_leg_product_template
+msgid "Table Leg"
+msgstr "ขาโต๊ะ"
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_computer_desk_head
+#: model:product.template,name:mrp.product_product_computer_desk_head_product_template
+msgid "Table Top"
+msgstr "ท็อปโต๊ะ"
+
+#. module: mrp
+#: model_terms:product.product,description:mrp.product_product_table_kit
+#: model_terms:product.template,description:mrp.product_product_table_kit_product_template
+msgid "Table kit"
+msgstr "ชุดอุปกรณ์โต๊ะ"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__tag_ids
@@ -5038,6 +5160,12 @@ msgid "Today Activities"
 msgstr "กิจกรรมวันนี้"
 
 #. module: mrp
+#: model_terms:product.product,description:mrp.product_product_wood_wear
+#: model_terms:product.template,description:mrp.product_product_wood_wear_product_template
+msgid "Top layer of a wood panel."
+msgstr "ชั้นบนของแผ่นไม้"
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_bom_tree_view
 msgid "Total Duration"
 msgstr "ระยะเวลารวม"
@@ -5238,6 +5366,36 @@ msgid ""
 msgstr "หน่วยวัด (หน่วยวัด) คือหน่วยวัดสำหรับการควบคุมคลังสินค้า"
 
 #. module: mrp
+#: model:product.product,uom_name:mrp.product_product_computer_desk
+#: model:product.product,uom_name:mrp.product_product_computer_desk_bolt
+#: model:product.product,uom_name:mrp.product_product_computer_desk_head
+#: model:product.product,uom_name:mrp.product_product_computer_desk_leg
+#: model:product.product,uom_name:mrp.product_product_computer_desk_screw
+#: model:product.product,uom_name:mrp.product_product_drawer_case
+#: model:product.product,uom_name:mrp.product_product_drawer_drawer
+#: model:product.product,uom_name:mrp.product_product_plastic_laminate
+#: model:product.product,uom_name:mrp.product_product_ply_veneer
+#: model:product.product,uom_name:mrp.product_product_table_kit
+#: model:product.product,uom_name:mrp.product_product_wood_panel
+#: model:product.product,uom_name:mrp.product_product_wood_ply
+#: model:product.product,uom_name:mrp.product_product_wood_wear
+#: model:product.template,uom_name:mrp.product_product_computer_desk_bolt_product_template
+#: model:product.template,uom_name:mrp.product_product_computer_desk_head_product_template
+#: model:product.template,uom_name:mrp.product_product_computer_desk_leg_product_template
+#: model:product.template,uom_name:mrp.product_product_computer_desk_product_template
+#: model:product.template,uom_name:mrp.product_product_computer_desk_screw_product_template
+#: model:product.template,uom_name:mrp.product_product_drawer_case_product_template
+#: model:product.template,uom_name:mrp.product_product_drawer_drawer_product_template
+#: model:product.template,uom_name:mrp.product_product_plastic_laminate_product_template
+#: model:product.template,uom_name:mrp.product_product_ply_veneer_product_template
+#: model:product.template,uom_name:mrp.product_product_table_kit_product_template
+#: model:product.template,uom_name:mrp.product_product_wood_panel_product_template
+#: model:product.template,uom_name:mrp.product_product_wood_ply_product_template
+#: model:product.template,uom_name:mrp.product_product_wood_wear_product_template
+msgid "Units"
+msgstr "หน่วย"
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Unlock"
 msgstr "ปลดล็อก"
@@ -5264,10 +5422,12 @@ msgid "Unplan"
 msgstr "ไม่ได้วางแผน"
 
 #. module: mrp
+#. openerp-web
+#: code:addons/mrp/static/src/mrp_forecasted/forecasted_details.xml:0
 #: model:ir.actions.server,name:mrp.mrp_production_action_unreserve_tree
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_report_product_product_replenishment
+#, python-format
 msgid "Unreserve"
 msgstr "ยกเลิกการสำรอง"
 
@@ -5441,6 +5601,12 @@ msgid "Warnings"
 msgstr "คำเตือน"
 
 #. module: mrp
+#: model:product.product,name:mrp.product_product_wood_wear
+#: model:product.template,name:mrp.product_product_wood_wear_product_template
+msgid "Wear Layer"
+msgstr "ใส่ชั้น"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__website_id
 msgid "Website"
 msgstr "เว็บไซต์"
@@ -5539,6 +5705,12 @@ msgstr ""
 #: model:ir.model,name:mrp.model_mrp_production_backorder
 msgid "Wizard to mark as done or create back order"
 msgstr "ตัวช่วยเพื่อทำเครื่องหมายว่าเสร็จสิ้นหรือสร้างคำสั่งล่วงหน้า"
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_wood_panel
+#: model:product.template,name:mrp.product_product_wood_panel_product_template
+msgid "Wood Panel"
+msgstr "แผ่นไม้"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
