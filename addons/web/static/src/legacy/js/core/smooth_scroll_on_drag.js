@@ -159,6 +159,10 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
      */
     _startSmoothScroll(ui) {
         this._stopSmoothScroll();
+
+        this._initialScrollBehavior = this.$scrollTarget[0].style.scrollBehavior;
+        this.$scrollTarget[0].style.scrollBehavior = 'auto';
+
         this.autoScrollHandler = setInterval(
             () => {
                 // Prevents Delta's from being different from 0 when scroll should not occur (except when
@@ -222,6 +226,8 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
      */
     _stopSmoothScroll() {
         clearInterval(this.autoScrollHandler);
+
+        this.$scrollTarget[0].style.scrollBehavior = this._initialScrollBehavior || '';
     },
     /**
      * Updates the options depending on the offset position of the draggable
