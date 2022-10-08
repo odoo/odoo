@@ -521,6 +521,9 @@ This module provides the core of the Odoo Web Client.
         "web.dark_mode_assets_backend": [
             ('include', 'web.assets_backend'),
         ],
+        "web.dark_mode_variables": [
+            ('before', 'base/static/src/scss/onboarding.variables.scss', 'base/static/src/scss/onboarding.variables.dark.scss'),
+        ],
 
         # ---------------------------------------------------------------------
         # SUB BUNDLES
