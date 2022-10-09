@@ -96,12 +96,12 @@ msgid ""
 " * Done: The transfer has been processed.\n"
 " * Cancelled: The transfer has been cancelled."
 msgstr ""
-"* Borrador: El traslado aún no ha sido confirmado. No se realizan reservas.\n"
-" * En espera de otra operación: El traslado espera otra operación antes de estar preparado.\n"
-" * En espera: El traslado está en espera de disponibilidad de algunos productos.\n"
+"* Borrador: el traslado aún no ha sido confirmado. No se realizan reservas.\n"
+" * En espera de otra operación: el traslado espera otra operación antes de estar preparado.\n"
+" * En espera: el traslado está en espera de disponibilidad de algunos productos.\n"
 "(a) La política de envío es \"Tan pronto como sea posible\": no se pudo reservar ningún producto.\n"
 "(b) La política de envío es \"Cuando todos los productos estén listos\": no se pueden reservar todos los productos.\n"
-" * Preparado: El traslado está listo para ser procesado.\n"
+" * Preparado: el traslado está listo para ser procesado.\n"
 "(a) La política de envío es \"Tan pronto como sea posible\": por lo menos se reservó un producto.\n"
 "(b) La política de envío es \"Cuando todos los productos estén listos\": se reservaron todos los productos.\n"
 " * Hecho: se procesó el traslado.\n"
@@ -209,11 +209,11 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
-"*  Nuevo: Cuando se crea el movimiento de existencias y aún no se confirma.\n"
-"* En espera de otro movimiento: Este estado aparece cuando un movimiento está en espera de otro, por ejemplo en un flujo encadenado.\n"
-"* En espera de disponibilidad: Este estado se alcanza cuando no hay existencias disponibles. Tal vez necesite ejecutar el planificador, un componente a fabricar...\n"
-"* Disponible: Cuando los productos están reservados, se establece en 'Disponible'.\n"
-"* Hecho: Cuando se procesa el envío, el estado es 'Hecho'."
+"*  Nuevo: cuando se crea el movimiento de existencias y aún no se confirma.\n"
+"* En espera de otro movimiento: este estado aparece cuando un movimiento está en espera de otro, por ejemplo en un flujo encadenado.\n"
+"* En espera de disponibilidad: este estado se alcanza cuando no hay existencias disponibles. Tal vez necesite ejecutar el planificador, un componente a fabricar...\n"
+"* Disponible: cuando los productos están reservados, se establece en 'Disponible'.\n"
+"* Hecho: cuando se procesa el envío, el estado es 'Hecho'."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__usage
@@ -257,7 +257,7 @@ msgid ""
 "            Manual actions may be needed."
 msgstr ""
 ".\n"
-"            Puede que se necesiten acciones manuales."
+"            Puede necesitar acciones manuales."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_snooze__predefined_date__day
@@ -577,7 +577,7 @@ msgid ""
 "            </strong>"
 msgstr ""
 "<strong>\n"
-"                La línea de movimiento hecha ha sido corregida.\n"
+"                Se corrigió a línea de movimiento hecha.\n"
 "            </strong>"
 
 #. module: stock
@@ -714,7 +714,7 @@ msgstr "<strong>A</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
 msgid "<strong>Tracked product(s):</strong>"
-msgstr "<strong>Productos rastrados:</strong>"
+msgstr "<strong>Productos rastreados:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
@@ -928,7 +928,7 @@ msgstr "Todo a la vez"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__returned_move_ids
 msgid "All returned moves"
-msgstr "Todas los movimientos de devolución"
+msgstr "Todos los movimientos de devolución"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -1469,7 +1469,7 @@ msgstr "Elegir diseño de etiquetas"
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Choose Type of Labels To Print"
-msgstr "Elija tipos de etiquetas para imprimir"
+msgstr "Elegir tipos de etiquetas para imprimir"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quantity_history__inventory_datetime
@@ -1716,7 +1716,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__set_count
 msgid "Count"
-msgstr "Número"
+msgstr "Conteo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking
@@ -2148,13 +2148,13 @@ msgstr "Ruta de salida a seguir predeterminada"
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_uom
 msgid "Default unit of measure used for all stock operations."
 msgstr ""
-"Unidad de medida predeterminada utilizada para todas las operaciones de "
-"existencias"
+"Unidad de medida predeterminada que se utiliza para todas las operaciones de"
+" existencias"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__procure_method__make_to_stock
 msgid "Default: Take From Stock"
-msgstr "Predeterminado: Tomar de las existencias"
+msgstr "Predeterminado: tomar de las existencias"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__route_ids
@@ -2628,7 +2628,7 @@ msgstr "Número de serie duplicado"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
 msgid "Easypost Connector"
-msgstr "Conector con Easypost"
+msgstr "Conector de Easypost"
 
 #. module: stock
 #: code:addons/stock/models/stock_orderpoint.py:0
@@ -4771,7 +4771,7 @@ msgstr "No se permiten cantidades negativas"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_inventory
 msgid "No operation made on this lot."
-msgstr "Ninguna operación realizada en este lote."
+msgstr "No se realizó ninguna operación en este lote."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_get_picking_type_operations
@@ -6618,7 +6618,7 @@ msgstr "Ubicación de devolución"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Devolución para recolección"
+msgstr "Recolección de devolución"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking_line
@@ -6853,7 +6853,7 @@ msgstr "Desechar movimiento"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_scrap
 msgid "Scrap Orders"
-msgstr "Ordenes de desecho"
+msgstr "Órdenes de desecho"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_stock_scrap
@@ -7171,7 +7171,7 @@ msgstr "Mostrar verificar disponibilidad"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_clear_qty_button
 msgid "Show Clear Qty Button"
-msgstr "Mostrar un botón de cantidad claro"
+msgstr "Mostrar un botón de quitar cantidad"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_operations
@@ -8579,12 +8579,12 @@ msgstr "Tipo de actividad de excepción registrada."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
 msgid "UPS Connector"
-msgstr "Conector con UPS"
+msgstr "Conector de UPS"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps
 msgid "USPS Connector"
-msgstr "Conector con USPS"
+msgstr "Conector de USPS"
 
 #. module: stock
 #. openerp-web
@@ -9062,7 +9062,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_route__packaging_selectable
 msgid "When checked, the route will be selectable on the Product Packaging."
 msgstr ""
-"Cuando se selecciona, la ruta será seleccionable en el empaquetado de "
+"Cuando se selecciona, la ruta se podrá seleccionar en el empaquetado de "
 "producto. "
 
 #. module: stock
@@ -9600,7 +9600,7 @@ msgstr "Etiquetas ZPL"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__print_format__zplxprice
 msgid "ZPL Labels with price"
-msgstr "Etiquetas con precio ZPL"
+msgstr "Etiquetas ZPL con precio"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule

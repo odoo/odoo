@@ -30,12 +30,12 @@ msgid ""
 " * Done: The MO is closed, the stock moves are posted. \n"
 " * Cancelled: The MO has been cancelled, can't be confirmed anymore."
 msgstr ""
-"* Borrador: La orden de fabricación aún no está confirmada.\n"
-"* Confirmada: La orden de fabricación está confirmada, las reglas de existencias y el reordenamiento de los componentes se activan.\n"
-"* En curso: la producción ha comenzado (en la orden de fabricación o en la orden de trabajo).\n"
-"* Por cerrar: La producción ha terminado, se tiene que cerrar la orden de fabricación.\n"
-"* Listo: se ha cerrado la orden de fabricación, los movimientos de existencias se registran.\n"
-"* Cancelado: se ha cancelado la orden de fabricación, ya no se puede confirmar."
+"* Borrador: la orden de fabricación aún no está confirmada.\n"
+"* Confirmada: la orden de fabricación está confirmada, las reglas de existencias y el reordenamiento de los componentes se activan.\n"
+"* En curso: la producción comenzó (en la orden de fabricación o en la orden de trabajo).\n"
+"* Por cerrar: la producción terminó, se tiene que cerrar la orden de fabricación.\n"
+"* Listo: se cerró la orden de fabricación, los movimientos de existencias se registran.\n"
+"* Cancelado: se canceló la orden de fabricación, ya no se puede confirmar."
 
 #. module: mrp
 #: code:addons/mrp/models/stock_rule.py:0
@@ -428,7 +428,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled."
-msgstr "Una orden de fabricación ya ha sido terminada o cancelada."
+msgstr "Una orden de fabricación ya se terminó o se canceló."
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:0
@@ -1092,7 +1092,7 @@ msgstr "Suma de verificación/SHA1"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_stop
 msgid "Cleanup Time"
-msgstr "Hora de limpieza"
+msgstr "Tiempo de limpieza"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__code
@@ -1794,7 +1794,7 @@ msgstr "Esp %s"
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__components_availability_state__expected
 msgid "Expected"
-msgstr "Esperados"
+msgstr "Esperado"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__production_duration_expected
@@ -2293,7 +2293,7 @@ msgstr "Está bloqueado"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__manual
 msgid "Is a Blocking Reason"
-msgstr "Es un motivo de bloqueo"
+msgstr "Es una razón de bloqueo"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
@@ -2497,7 +2497,7 @@ msgstr "Ubicación"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__location_id
 msgid "Location where the product you want to unbuild is."
-msgstr "Ubicación donde se encuentra el producto que desea desarmar."
+msgstr "Ubicación donde se encuentra el producto que desea desmantelar."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__location_src_id
@@ -2806,8 +2806,8 @@ msgid ""
 "            * Waiting: The material is not available to start the production.\n"
 msgstr ""
 "La preparación de fabricación para esta orden, según la configuración de la lista de materiales:\n"
-"            * Listo: El material está disponible para empezar la producción.\n"
-"            * En espera: El material no está disponible para empezar la producción.\n"
+"            * Listo: el material está disponible para empezar la producción.\n"
+"            * En espera: el material no está disponible para empezar la producción.\n"
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_production_order_mark_done
@@ -3144,17 +3144,17 @@ msgstr "Número de órdenes de fabricación de origen"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "OEE"
-msgstr "OEE"
+msgstr "Eficiencia general del equipo"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__oee_target
 msgid "OEE Target"
-msgstr "Objetivo de OEE"
+msgstr "Objetivo de eficiencia general del equipo"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__oee
 msgid "Oee"
-msgstr "OEE"
+msgstr "Eficiencia general del equipo"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -3525,8 +3525,8 @@ msgid ""
 "Produce : Move the components to the production location        directly and start the manufacturing process.\n"
 "Pick / Produce : Unload        the components from the Stock to Input location first, and then        transfer it to the Production location."
 msgstr ""
-"Producir: Mueva los componentes a la ubicación de producción directamente y comience el proceso de fabricación.\n"
-"Recolectar/producir: Primero descargue        los componentes de las existencias a la ubicación de entrada y luego        trasládelos a la ubicación de producción."
+"Producir: mueva los componentes a la ubicación de producción directamente y comience el proceso de fabricación.\n"
+"Recolectar/producir: primero descargue        los componentes de las existencias a la ubicación de entrada y luego        trasládelos a la ubicación de producción."
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_byproducts
@@ -3980,7 +3980,7 @@ msgstr "Ejecutar planificador"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__message_has_sms_error
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "Error en entrega de SMS"
+msgstr "Error de entrega de SMS"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_line__date
@@ -4467,7 +4467,7 @@ msgstr "Nombre de etiqueta"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__is_done
 msgid "Technical Field to order moves"
-msgstr "Campo técnico para movimientos de ordenes"
+msgstr "Campo técnico para movimientos de órdenes"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__show_allocation
@@ -4700,7 +4700,7 @@ msgid ""
 "The serial number %(number)s used for byproduct %(product_name)s has already"
 " been produced"
 msgstr ""
-"Ya se procesó el número de serie %(number)s utilizado para el subproducto "
+"Ya se produjo el número de serie %(number)s utilizado para el subproducto "
 "%(product_name)s"
 
 #. module: mrp
@@ -5043,7 +5043,7 @@ msgstr "Traslado"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Transfers"
-msgstr "Transferencias"
+msgstr "Traslados"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__type
@@ -5242,9 +5242,9 @@ msgid ""
 "is useful if you have long lead time and if you produce based on sales "
 "forecasts."
 msgstr ""
-"Es útil usar un reporte MPS para planear sus operaciones de reordenamiento y"
-" fabricación si ha tenido tiempo y si se ha producido según el pronóstico de"
-" ventas."
+"Es útil usar un reporte de plan maestro de producción para planear sus "
+"operaciones de reordenamiento y fabricación si ha tenido tiempo y si se ha "
+"producido según el pronóstico de ventas."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__valid_details
@@ -5919,8 +5919,7 @@ msgstr "Debe proporcionar un lote para el producto terminado."
 #: code:addons/mrp/wizard/mrp_immediate_production.py:0
 #, python-format
 msgid "You need to supply Lot/Serial Number for products:"
-msgstr ""
-"Necesita proporcionar un número de serie o de lote para los productos:"
+msgstr "Debe proporcionar un número de serie o de lote para los productos:"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder

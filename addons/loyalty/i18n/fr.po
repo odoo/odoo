@@ -71,7 +71,7 @@ msgstr "%s par commande"
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "%s per order on "
-msgstr ""
+msgstr "%s par commande le "
 
 #. module: loyalty
 #: code:addons/loyalty/models/loyalty_reward.py:0
@@ -83,7 +83,7 @@ msgstr "%s par point"
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "%s per point on "
-msgstr ""
+msgstr "%s par point le"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -395,7 +395,7 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__all_discount_product_ids
 msgid "All Discount Product"
-msgstr ""
+msgstr "Tous les produits faisant l'objet d'une remise"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_generate_wizard__mode__anonymous
@@ -642,7 +642,7 @@ msgstr "Applicabilité de la remise"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_line_product_id
 msgid "Discount Line Product"
-msgstr ""
+msgstr "Ligne de remise du produit"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_mode
@@ -652,7 +652,7 @@ msgstr "Mode de remise"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_domain
 msgid "Discount Product Domain"
-msgstr ""
+msgstr "Domaine du produit de remise"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_category_id
@@ -931,7 +931,7 @@ msgstr "Cartes de fidélité"
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_mail
 msgid "Loyalty Communication"
-msgstr ""
+msgstr "Communication de fidélité"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_card
@@ -994,7 +994,7 @@ msgstr "Messages"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__minimum_amount_tax_mode
 msgid "Minimum Amount Tax Mode"
-msgstr ""
+msgstr "Montant minimal de la taxe"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__minimum_amount
@@ -1098,12 +1098,12 @@ msgstr "Points nécessaires"
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__point_name
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__reward_point_name
 msgid "Portal Point Name"
-msgstr ""
+msgstr "Portail Nom Points"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__portal_visible
 msgid "Portal Visible"
-msgstr ""
+msgstr "Visible dans le portail"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_product_product
@@ -1128,6 +1128,8 @@ msgid ""
 "Product used in the sales order to apply the discount. Each reward has its "
 "own product for reporting purpose"
 msgstr ""
+"Produit utilisé dans le bon de commande auquel s'applique la remise. Chaque "
+"récompense a son propre produit à des fins de rapportage"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__product_ids
@@ -1198,17 +1200,17 @@ msgstr "Récompense"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__reward_point_mode
 msgid "Reward Point Mode"
-msgstr ""
+msgstr "Mode de points de récompense"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_qty
 msgid "Reward Product Qty"
-msgstr ""
+msgstr "Quantité de produit de récompense"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_uom_id
 msgid "Reward Product Uom"
-msgstr ""
+msgstr "UdM du produit récompense"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_ids
@@ -1228,7 +1230,7 @@ msgstr "Récompense"
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_rule_reward_point_amount_positive
 msgid "Rule points reward must be strictly positive."
-msgstr ""
+msgstr "La règle des points de récompense doit être strictement positive."
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_generate_wizard__mode__selected
@@ -1358,7 +1360,7 @@ msgstr "Recharger le eWallet"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__total_order_count
 msgid "Total Order Count"
-msgstr ""
+msgstr "Valeur totale de la commande"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__trigger
@@ -1386,7 +1388,7 @@ msgstr "Unité(s)"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__use_count
 msgid "Use Count"
-msgstr ""
+msgstr "Utiliser la valeur"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__trigger__with_code
@@ -1416,7 +1418,7 @@ msgstr "Quand"
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_mail__trigger__points_reach
 msgid "When Reaching"
-msgstr ""
+msgstr "Lorsque vous avez atteint"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_rule__reward_point_split
@@ -1424,6 +1426,9 @@ msgid ""
 "Whether to separate reward coupons per matched unit, only applies to "
 "'future' programs and trigger mode per money spent or unit paid.."
 msgstr ""
+"Que ce soit pour séparer les coupons de récompense par unité correspondante,"
+" s'applique uniquement aux programmes 'futurs' et déclenche le mode par "
+"argent dépense ou par unité payée."
 
 #. module: loyalty
 #: code:addons/loyalty/models/loyalty_program.py:0
@@ -1472,7 +1477,7 @@ msgstr ""
 #. module: loyalty
 #: model:mail.template,name:loyalty.mail_template_loyalty_card
 msgid "[Loyalty] Coupon: Send by Email"
-msgstr ""
+msgstr "[Fidélité] Coupon : Envoyer par mail"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban

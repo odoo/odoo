@@ -90,6 +90,8 @@ msgid ""
 "<b>Congratulations</b>, your first quotation is sent!<br>Check your email to"
 " validate the quote."
 msgstr ""
+"<b>Gefeliciteerd</b>, uw eerste offerte is verzonden!<br>Controleer uw "
+"e-mail om de offerte te valideren."
 
 #. module: sale
 #. openerp-web
@@ -658,6 +660,8 @@ msgid ""
 "<span class=\"o_stat_text\">Customer</span>\n"
 "                            <span class=\"o_stat_text\">Preview</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Klant</span>\n"
+"                            <span class=\"o_stat_text\">Voorbeeld</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -735,6 +739,9 @@ msgid ""
 "                            Shipping Address:\n"
 "                        </strong>"
 msgstr ""
+"<strong class=\"d-block mb-1\">\n"
+"                            Verzendingsadres:\n"
+"                        </strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -856,13 +863,13 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Pay Quotation"
-msgstr ""
+msgstr "Offerte accepteren en betalen"
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Sign Quotation"
-msgstr ""
+msgstr "Offerte accepteren en ondertekenen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -997,6 +1004,8 @@ msgid ""
 "An order is to upsell when delivered quantities are above initially\n"
 "            ordered quantities, and the invoicing policy is based on ordered quantities."
 msgstr ""
+"Een bestelling is bedoeld om te verkopen wanneer de geleverde hoeveelheden aanvankelijk hoger zijn\n"
+"            bestelde hoeveelheden, en het facturatiebeleid is gebaseerd op bestelde hoeveelheden."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__analytic_account_id
@@ -1049,6 +1058,8 @@ msgid ""
 "As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
 "            to sell extra hours when all ordered hours have been consumed."
 msgstr ""
+"Als u bijvoorbeeld vooruitbetaalde uren aan diensten verkoopt, raadt Odoo u aan:\n"
+"            om extra uren te verkopen wanneer alle bestelde uren zijn verbruikt."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -1580,7 +1591,7 @@ msgstr "Verzendwijzes"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered
 msgid "Delivery Quantity"
-msgstr ""
+msgstr "Leveringshoeveelheid"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
@@ -1772,7 +1783,7 @@ msgstr "Wizard e-mail opstellen"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__invoice_mail_template_id
 msgid "Email sent to the customer once the invoice is available."
-msgstr ""
+msgstr "E-mail verzonden naar de klant zodra de factuur beschikbaar is."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__confirmation_mail_template_id
@@ -1957,7 +1968,7 @@ msgstr "Groepeer op"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
 msgid "Has Fiscal Position Changed"
-msgstr ""
+msgstr "Is fiscale positie gewijzigd"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
@@ -2218,7 +2229,7 @@ msgstr "Facturatiedoel"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing and Payments"
-msgstr ""
+msgstr "Facturering en betalingen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -2747,7 +2758,7 @@ msgstr "Orderdatum"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Order Date:"
-msgstr ""
+msgstr "Besteldatum:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
@@ -2950,7 +2961,7 @@ msgstr "Gereduceerde prijs excl. BTW"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxinc
 msgid "Price Reduce Tax incl"
-msgstr ""
+msgstr "Prijs Verlaag BTW incl"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__pricelist_id
@@ -2988,7 +2999,7 @@ msgstr "Proforma factuur"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Pro-Forma Invoice #"
-msgstr ""
+msgstr "Pro-forma factuur #"
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
@@ -3058,13 +3069,13 @@ msgstr "Productvarianten"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Product prices have been recomputed according to pricelist %s."
-msgstr ""
+msgstr "Productprijzen zijn herberekend volgens prijslijst %s."
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Product taxes have been recomputed according to fiscal position %s."
-msgstr ""
+msgstr "Productbelastingen zijn herberekend volgens fiscale positie %s."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3125,7 +3136,7 @@ msgstr "Aantal"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_to_invoice
 msgid "Quantity To Invoice"
-msgstr ""
+msgstr "Te factureren hoeveelheid"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_qty_configurator
@@ -3260,7 +3271,7 @@ msgstr "Bereken alle prijzen opnieuw op basis van deze prijslijst."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all taxes based on this fiscal position"
-msgstr ""
+msgstr "Bereken alle belastingen opnieuw op basis van deze fiscale positie"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -3272,6 +3283,7 @@ msgstr "Referentie"
 #: model:ir.model.fields,help:sale.field_sale_order__origin
 msgid "Reference of the document that generated this sales order request"
 msgstr ""
+"Referentie van het document dat deze verkooporderaanvraag heeft gegenereerd"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_payment_register
@@ -3742,7 +3754,7 @@ msgstr "Toon marge op verkooporders"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Sign & Pay Quotation"
-msgstr ""
+msgstr "Offerte ondertekenen en betalen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4312,6 +4324,8 @@ msgstr ""
 msgid ""
 "This will update all taxes based on the currently selected fiscal position."
 msgstr ""
+"Hiermee worden alle belastingen bijgewerkt op basis van de momenteel "
+"geselecteerde fiscale positie."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4514,7 +4528,7 @@ msgstr "Prijzen bijwerken"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Taxes"
-msgstr ""
+msgstr "Belastingen bijwerken"
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
@@ -4547,7 +4561,7 @@ msgstr "Variantenmatrix ingave"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "View Order"
-msgstr ""
+msgstr "Bestelling bekijken"
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
@@ -4650,6 +4664,8 @@ msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "            or check every order and invoice them one by one."
 msgstr ""
+"U kunt alle bestellingen selecteren en deze in batch factureren,<br>\n"
+"            of controleer elke bestelling en factureer ze één voor één."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_acquirer__so_reference_type
