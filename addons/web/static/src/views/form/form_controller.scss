@@ -130,9 +130,6 @@
     }
 
     .o_row > div > .o_field_widget,
-    &.o_form_editable .oe_title .o_field_char {
-        width: 100%;
-    }
 
     // Readonly specific rules
     .o_form_readonly {
@@ -179,6 +176,10 @@
 
         .oe_title {
             max-width: 75%;
+
+            .o_field_char {
+                width: 100%;
+            }
         }
 
         .o_field_x2many .o_list_table .o_handle_cell .o_row_handle {
@@ -600,7 +601,7 @@
                     box-shadow: inset 0 1px 0 $border-color;
                     > td {
                         border:none;
-    
+
                         &:empty {
                             padding: 0;
                         }
@@ -1001,6 +1002,8 @@
 // Overridden style when form view in modal
 .modal .modal-dialog {
     .o_form_view {
+        min-height: auto;
+
         .o_statusbar_buttons > .btn {
             /**
              * Override to prevent the status bar from increasing height when
