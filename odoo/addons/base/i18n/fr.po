@@ -86,8 +86,9 @@
 # Benoît Fontaine <benoitfontaine.ba@gmail.com>, 2022
 # Florent de Labarre <florent@iguanayachts.com>, 2022
 # Thomas Charpentier, 2022
-# Cécile Collart <cco@odoo.com>, 2022
+# laje_odoo, 2022
 # Jolien De Paepe, 2022
+# Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -95,7 +96,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1262,6 +1263,9 @@ msgid ""
 "        RFQ from an approval purchase request.\n"
 "    "
 msgstr ""
+"\n"
+"Ce module ajoute au flux d'approbation la possibilité de générer \n"
+"une demande de devis à partir d'une demande d'achat d'approbation."
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_product_matrix
@@ -1628,6 +1632,23 @@ msgid ""
 "    but rather the amount of these lines will be deduced from the lines they apply to during tax computation.\n"
 "    "
 msgstr ""
+"\n"
+"Gérer les remises dans les calculs taxclouds.\n"
+"Voir https://taxcloud.com/support/discounts ou\n"
+"https://service.taxcloud.net/hc/en-us/articles/360015649791-How-can-discounts-be-applied-\n"
+"\n"
+"Résumé : toutes les remises fournies par le vendeur doivent être appliquées au prix de vente avant le calcul de la taxe de vente.\n"
+"Les vendeurs doivent divulguer leur méthodologie aux clients dans une politique d'application de remise.\n"
+"\n"
+"L'algorithme est le suivant :\n"
+"- les remises spécifiques aux lignes sont appliquées en premier, sur les lignes auxquelles elles sont censées s'appliquer.\n"
+"Cela signifie des remises spécifiques au produit ou des remises sur la ligne la moins chère.\n"
+"- Ensuite, les remises globales sont appliquées uniformément sur les lignes payantes, dans la mesure du possible.\n"
+"S'il y a un reste, il est appliqué séquentiellement, dans l'ordre des lignes,\n"
+"jusqu'à ce qu'il n'y ait plus de remise ou qu'il n'y ait plus de ligne pouvant faire l'objet d'une remise.\n"
+"\n"
+"Notez que les lignes de remise (avec un prix négatif) ne seront pas soumises à des taxes,\n"
+"mais le montant de ces lignes sera plutôt déduit des lignes auxquelles elles s'appliquent lors du calcul de l'impôt."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_taxcloud_delivery
@@ -1641,6 +1662,13 @@ msgid ""
 "    With Sale coupon delivery, the discount computation does not apply on delivery lines.\n"
 "    "
 msgstr ""
+"\n"
+"Gérez les remises avec les livraisons dans les calculs taxclouds.\n"
+"Ce module suit la même logique que \"Compte Taxcloud - Vente (coupon)\".\n"
+"Vous y trouverez plus d'informations sur la manière dont les calculs de remise sont effectués pour TaxCloud.\n"
+"\n"
+"Il existe une option supplémentaire de remise (livraison gratuite) sur les livraisons.\n"
+"Avec la livraison du bon de réduction, le calcul de la remise ne s'applique pas sur les lignes de livraison."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -1926,6 +1954,86 @@ msgid ""
 "    When validating a batch payment, the ABA file will be generated.  It can\n"
 "    be regenerated.  This file can then be uploaded to the bank.\n"
 msgstr ""
+"\n"
+"ABA Credit Transfer\n"
+"===================\n"
+"\n"
+"Ce module permet de générer des lots de paiements sous forme de fichiers texte ABA (Australian Bankers Association).\n"
+"Le fichier 'aba' généré peut être envoyé vers de nombreuses banques australiennes.\n"
+"\n"
+"Configuration\n"
+"-----\n"
+"\n"
+"- *Comptabilité > Configuration > Journaux*\n"
+"\n"
+"    Si nécessaire, créez une nouveau journal ou choisissez un journal existant de **type** \"Banque\". \n"
+"\n"
+"    Dans **Pièces compables**, vérifiez que l'option ABA Credit Transfer est activée.\n"
+"\n"
+"    Dans l'onglet **Pièces comptables**, ajoutez le numéro de compte.\n"
+"\n"
+"    Dans ce même onglet, assurez-vous que les informations de transfert ABA sont remplies correctement.\n"
+"\n"
+"    **BSB** - Requis, 6 chiffres, et formaté automatiquement.\n"
+"\n"
+"    **Financial Institution Code** - Requis (soit fourni par votre banque soit cherchez sur Google).  Il s'agit de trois caractères majuscules.\n"
+"\n"
+"    **Supplying User Name** - Certaines banques autorisent une forme libre, d'autres peuvent rejeter le fichier ABA si le nom d'utilisateur fournisseur n'est pas conforme. Il ne doit pas comporter plus de 26 caractères.\n"
+"\n"
+"    **APCA Identification Number** - le numéro d'identification User Identification number est fourni par votre banque. Il comporte 6 chiffres.\n"
+"\n"
+"    **Include Self Balancing Transaction** - Certaines institutions demandent que la dernière transaction soit une transaction d'auto-équilibrage à des fins de vérification.\n"
+"\n"
+"- *Comptabilité > Configuration > Paiements > Comptes bancaires*\n"
+"\n"
+"    Le compte apparaîtra dans la liste comme le nom du journal.\n"
+"\n"
+"   L'édition montrera le **Numéro de compte**. Ce numéro est important car il est utilisé par le processus ABA.\n"
+"\n"
+"    **Banque** est optionnel.\n"
+"\n"
+"- *Contacts > Configuration > Comptes bancaires > Comptes bancaires*\n"
+"\n"
+"    Le compte de paiement apparaîtra dans la liste sous la forme d'un numéro de compte.\n"
+"\n"
+"    **Titulaire du compte** - Peut être saisi ici, si nécessaire. Généralement pas validé par les banques lors des transferts de fichiers ABA, mais peut apparaître sur le relevé bancaire du bénéficiaire en contrepartie du paiement.\n"
+"\n"
+"- Les comptes bancaires des fournisseurs peuvent être configurés au même endroit, mais il est généralement plus facile de les configurer à partir de la fiche du fournisseur.\n"
+"\n"
+"- *Comptabilité > Fournisseurs > Fournisseurs*\n"
+"\n"
+"    Dans l'onglet **Comptabilité**, cliquez sur *\"Voir détails du compte\"* pour créer ou modifier un compte bancaire du fournisseur.\n"
+"\n"
+"    **Numéro de compte** - Requis, doit comporter moins de 9 chiffres.\n"
+"\n"
+"    **BSB** - Requis, 6 chiffres, et sera auto-formaté.\n"
+"\n"
+"    **Titulaire du compte** - Optionnel.\n"
+"\n"
+"Utilisation\n"
+"---\n"
+"\n"
+"- Créez un paiement fournisseur de la manière habituelle.\n"
+"\n"
+"    Assurez-vous que le **Fournisseur** dispose d'un compte de paiement ABA valide.\n"
+"\n"
+"    Choisissez le bon **Journal de paiement** qui est configuré pour les paiements ABA.\n"
+"\n"
+"    Selectionnez l'option **ABA Credit Transfer**.\n"
+"\n"
+"    Si le fournisseur a plusieurs comptes bancaires, vous devrez peut-être sélectionner le bon **Compte bancaire du destinataire**. Ou si vous payez une facture d'un fournisseur, il peut être nécessaire d'y associer le bon compte bancaire.\n"
+"\n"
+"    Entrez le montant, etc.\n"
+"\n"
+"- *Fournisseurs > Paiements*\n"
+"\n"
+"    Une fois le(s) paiement(s) confirmé(s), ils apparaîtront dans la liste des paiements.\n"
+"\n"
+"    À l'aide de filtres ou de tris, sélectionnez les paiements à inclure. Sous *Actions*, choisissez *Créer un paiement par lot*.\n"
+"\n"
+"- *Fournisseurs > Paiements en groupe*\n"
+"\n"
+"    Lors de la validation d'un paiement par lot, le fichier ABA sera généré. Il peut être régénéré. Ce fichier peut ensuite être téléchargé auprès de la banque.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_auto_transfer
@@ -2288,6 +2396,8 @@ msgid ""
 "\n"
 "Add relation information between Sale Orders and Purchase Orders if Make to Order (MTO) is activated on one sold product.\n"
 msgstr ""
+"\n"
+"Ajoutez des informations de relation entre les bons de commande (commande/achat) si la fabrication sur commande (MTO) est activée sur un produit vendu.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_project
@@ -2792,6 +2902,29 @@ msgid ""
 "The report uses tax tags ``Service`` and ``Tax Withheld`` in order to find adequate journal items. These are set using the fiscal positions, and the right type of product (Services).\n"
 "    "
 msgstr ""
+"\n"
+"Module de comptabilité australien\n"
+"============================\n"
+"\n"
+"Rapports annuels sur les paiements imposables (TPAR) pour l'Australie\n"
+"\n"
+"Le rapport annuel des versements imposables (TPAR) permet :\n"
+"\n"
+"• Les paiements effectués aux entrepreneurs (ou sous-traitants) pour des services, ou\n"
+"• Subventions versées par des entités gouvernementales aux titulaires d'ABN\n"
+"\n"
+"à déclarer, le cas échéant, en vertu du Système de déclaration des paiements imposables (TPRS) et de la mesure de déclaration des subventions et paiements gouvernementaux imposables.\n"
+"\n"
+"Le TPAR est dû avant le 28 août de chaque année.\n"
+"\n"
+"Des pénalités peuvent s'appliquer si vous ne déposez pas votre TPAR à temps.\n"
+"\n"
+"Pour plus d'informations sur qui est tenu de déposer un rapport annuel sur les paiements imposables, reportez-vous à\n"
+"https://softwaredevelopers.ato.gov.au/tprs\n"
+"\n"
+"Le rapport annuel doit être remis au commissaire au plus tard le 28 août suivant la fin de l'exercice financier. Les rapports peuvent être envoyés plus fréquemment pour ceux qui le souhaitent.\n"
+"\n"
+"Le rapport utilise les balises fiscales ``Service`` et ``Tax Withheld`` afin de trouver les éléments de journal adéquats. Ceux-ci sont définis à l'aide des positions fiscales et du bon type de produit (Services)."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_et
@@ -3113,6 +3246,10 @@ msgid ""
 "=================================\n"
 "    "
 msgstr ""
+"\n"
+"Base de caisse pour les rapports comptables\n"
+"=================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_skills_survey
@@ -3927,6 +4064,8 @@ msgid ""
 "Filters the stock lines out of the reconciliation widget\n"
 "    "
 msgstr ""
+"\n"
+"Filtre les lignes de stock hors du widget de réconciliation"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_hr_payroll
@@ -7545,6 +7684,22 @@ msgid ""
 "- Check on bottom: ADP standard (https://www.checkdepot.net/checks/checkorder/laser_bottomcheck.htm)\n"
 "    "
 msgstr ""
+"\n"
+"Module qui permet d'imprimer les paiements sur des chèques pré-imprimés.\n"
+"\n"
+"Dans paramètres de la société, on peut configurer les éditions (mise en page, etc.), et de gérer la numérotation des chèques (si on utilise des chèques pré-imprimés non numérotés) dans les paramètres du journal.\n"
+"\n"
+"Formats pris en compte\n"
+"-------------------------------\n"
+"Ce module prend en charge les trois formats de chèques les plus courants et fonctionnera immédiatement avec les chèques de checkdepot.net.\n"
+"\n"
+"Consultez tous les chèques sur: https://www.checkdepot.net/checks/laser/Odoo.htm\n"
+"\n"
+"Vous pouvez choisir entre:\n"
+"\n"
+"- Chèque en haut: standard Quicken / QuickBooks (https://www.checkdepot.net/checks/checkorder/laser_topcheck.htm)\n"
+"- Chèque au milieu: standard Peachtree (https://www.checkdepot.net/checks/checkorder/laser_middlecheck.htm)\n"
+"- Chèque en bas: standard ADP (https://www.checkdepot.net/checks/checkorder/laser_bottomcheck.htm)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca_check_printing
@@ -7615,6 +7770,10 @@ msgid ""
 "take them into account in your stock valuation.\n"
 "    "
 msgstr ""
+"\n"
+"Ce module vous permet d'ajouter facilement des surcoûts sur ordre de fabrication \n"
+"et de décider de la répartition de ces surcoûts entre leurs mouvements de stock afin de \n"
+"les prendre en compte dans votre valorisation de stock."
 
 #. module: base
 #: model:ir.module.module,description:base.module_membership
@@ -9015,6 +9174,8 @@ msgstr ""
 msgid ""
 "<code>UserError</code>: Warning Exception to use with <code>raise</code>"
 msgstr ""
+"<code>Erreur utiliser</code>:Avertissement Exception à utiliser avec "
+"<code>raise</code>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -10286,7 +10447,7 @@ msgstr "Ajoutez les cours terminés au CV de vos employés"
 #. module: base
 #: model:ir.module.module,summary:base.module_social_crm
 msgid "Add crm UTM info on social"
-msgstr ""
+msgstr "Ajoute des UTM de CRM sur Social"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_delivery
@@ -10340,7 +10501,7 @@ msgstr "Ajouter le Live Chat pour OdooBot"
 #. module: base
 #: model:ir.module.module,summary:base.module_social_sale
 msgid "Add sale UTM info on social"
-msgstr ""
+msgstr "Ajoute des UTM de vente sur Social"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing_sale
@@ -10600,7 +10761,7 @@ msgstr "Mise en forme avancée d'adresse"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_gantt
 msgid "Advanced Event Track Management"
-msgstr ""
+msgstr "Gestion avancée des sessions d'événements"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track
@@ -11281,12 +11442,12 @@ msgstr "Présences"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_attendance_mobile
 msgid "Attendances Barcode in Mobile"
-msgstr ""
+msgstr "Code-barres Présences dans Mobile"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_attendance_mobile
 msgid "Attendances Barcode scan in Mobile"
-msgstr ""
+msgstr "Lecture de code-barres Présences dans Mobile"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_mass_mailing
@@ -11339,7 +11500,7 @@ msgstr "Rapports financiers autrichiens"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_at
 msgid "Austrian Standardized Charts & Tax"
-msgstr ""
+msgstr "Plans comptables et fiscaux standardisés autrichiens"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
@@ -13077,7 +13238,7 @@ msgstr "Configurez un mur Twitter sur votre événement"
 #. module: base
 #: model:ir.module.module,summary:base.module_partner_commission
 msgid "Configure resellers commissions on subscription sale"
-msgstr ""
+msgstr "Configurer les commissions des revendeurs sur la vente d'abonnements"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet_enterprise
@@ -13953,7 +14114,7 @@ msgstr "Personnalisations"
 #. module: base
 #: model:ir.module.module,summary:base.module_purchase_stock_enterprise
 msgid "Customized Dashboard for Purchase Stock"
-msgstr ""
+msgstr "Tableau de bord personnalisé pour le Achats et Stock"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_ui_view_custom
@@ -14462,7 +14623,7 @@ msgstr "Clefs API développeur"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_digest_enterprise
 msgid "Digest Enterprise"
-msgstr ""
+msgstr "Digest de l'entreprise"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_digital
@@ -15474,7 +15635,7 @@ msgstr "Lecture de code-barres d'événement sur mobile"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_crm
 msgid "Event CRM"
-msgstr ""
+msgstr "Événement CRM"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_crm_sale
@@ -18446,6 +18607,9 @@ msgid ""
 "comma-separated list of valid field names (optionally followed by asc/desc "
 "for the direction)"
 msgstr ""
+"La propriété \"order\" est incorrecte (%s). \"order\" doit contenir une "
+"liste de noms de champs corrects et séparés par des virgules (éventuellement"
+" suivis de \"asc\" ou \"desc\" pour indiquer le sens)"
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
@@ -18530,7 +18694,7 @@ msgstr "Nom de modèle %r non valide dans la définition de l'action."
 #: code:addons/base/models/ir_actions.py:611
 #, python-format
 msgid "many2many fields cannot be evaluated by reference"
-msgstr ""
+msgstr "les champs many2many ne peuvent pas être évalués par référence"
 
 #. module: base
 #: code:addons/template_inheritance.py:0
@@ -18594,7 +18758,7 @@ msgstr "Définition de vue %(name)s non valide dans %(file)s"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Invalid xmlid %(xmlid)s for button of type action."
-msgstr ""
+msgstr "Xmlid %(xmlid)s non valide pour le bouton de type action."
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_inventory
@@ -18932,12 +19096,12 @@ msgstr "Coûts logistiques"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_landed_costs
 msgid "Landed Costs On MO"
-msgstr ""
+msgstr "Couts au Débarquement sur l'ordre de fabrication"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_landed_costs
 msgid "Landed Costs on Manufacturing Order"
-msgstr ""
+msgstr "Coûts au débarquement sur ordre de fabrication"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__orientation__landscape
@@ -19335,7 +19499,7 @@ msgstr "Génération de pistes à partir de visites de sites Web"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm_livechat
 msgid "Lead Livechat Sessions"
-msgstr ""
+msgstr "Piste des sessions de LiveChat"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm_score
@@ -19463,7 +19627,7 @@ msgstr "Ligne"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Linebreak"
-msgstr ""
+msgstr "Sauts de ligne"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__line_ids
@@ -19559,7 +19723,7 @@ msgstr "Taux de change courant"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_live
 msgid "Live Event Tracks"
-msgstr ""
+msgstr "Sessions d'événements live"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_im_livechat_enterprise
@@ -19687,12 +19851,12 @@ msgstr "MRP II"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_workorder_expiry
 msgid "MRP II - Expiry"
-msgstr ""
+msgstr "MRP II - Expiration"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder_expiry
 msgid "MRP Workorder Expiry"
-msgstr ""
+msgstr "Expiration de l'ordre de travail dans MRP"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_mrp
@@ -19909,7 +20073,7 @@ msgstr "Gérez un forum avec un FAQ et une Q&R"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_fleet
 msgid "Manage accounting with fleets"
-msgstr ""
+msgstr "Gérer la comptabilité avec les parcs automobiles"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.grant_menu_access
@@ -20421,6 +20585,74 @@ msgid ""
 "perspectiva contable íntegramente. Por lo tanto, este PCGE no debe ser considerado en ningún aspecto\n"
 "como una guía con propósitos distintos del contable.\n"
 msgstr ""
+"Ensemble minimal de comptes pour commencer à travailler au Pérou.\n"
+"=================================================\n"
+"\n"
+"L'utilisation de ce plan comptable doit se référer à la documentation officielle sur le MEF.\n"
+"\n"
+"https://www.mef.gob.pe/contenidos/conta_publ/documentac/VERSION_MODIFICADA_PCG_EMPRESARIAL.pdf\n"
+"https://www.mef.gob.pe/contenidos/conta_publ/documentac/PCGE_2019.pdf\n"
+"\n"
+"Toutes les références légales se trouvent ici.\n"
+"\n"
+"http://www.sunat.gob.pe/legislacion/general/index.html\n"
+"\n"
+"Considérations.\n"
+"===============\n"
+"\n"
+"Plan comptable :\n"
+"-----------------\n"
+"\n"
+"L'arborescence du plan comptable se fait à l'aide de groupes de comptes, tous les comptes avec mouvement\n"
+"sont disponibles en tant que groupes mais seuls les plus courants sont disponibles en tant que comptes réels\n"
+"accounts, if you want to create a new one use the group of accounts assi vous souhaitez en créer un nouveau, utilisez le groupe de comptes\n"
+"comme référence.\n"
+"\n"
+"# TODO: Image showing what I am talking about.\n"
+"\n"
+"Impôts :\n"
+"------\n"
+"\n"
+"'IGV': {'name': 'VAT', 'code': 'S'},\n"
+"'IVAP': {'name': 'VAT', 'code': ''},\n"
+"'ISC': {'name': 'EXC', 'code': 'S'},\n"
+"'ICBPER': {'name': 'OTH', 'code': ''},\n"
+"'EXP': {'name': 'FRE', 'code': 'G'},\n"
+"'GRA': {'name': 'FRE', 'code': 'Z'},\n"
+"'EXO': {'name': 'VAT', 'code': 'E'},\n"
+"'INA': {'name': 'FRE', 'code': 'O'},\n"
+"'OTROS': {'name': 'OTH', 'code': 'S'},\n"
+"\n"
+"Nous avons ajouté sur ce module les 3 notions en taxes (nécessaires à la \n"
+"signature EDI)\n"
+"\n"
+"# TODO: Describe new fields.\n"
+"\n"
+"Produits :\n"
+"---------\n"
+"\n"
+"Les codes des produits à utiliser dans l'EDI sont disponibles ici, afin de décider\n"
+"quelle utilisation fiscale en raison de quel code suivant cette référence et le code python :\n"
+"\n"
+"https://docs.google.com/spreadsheets/d/1f1fxV8uGhA-Qz9-R1L1-dJirZ8xi3Wfg/edit#gid=662652969\n"
+"\n"
+"**Nota:**\n"
+"---------\n"
+"\n"
+"**RELACIÓN ENTRE EL PCGE Y LA LEGISLACIÓN TRIBUTARIA:**\n"
+"\n"
+"Este PCGE ha sido preparado como una herramienta de carácter contable, para acumular información que\n"
+"requiere ser expuesta en el cuerpo de los estados financieros o en las notas a dichos estados. Esa acumulación se\n"
+"efectúa en los libros o registros contables, cuya denominación y naturaleza depende de las actividades que se\n"
+"efectúen, y que permiten acciones de verificación, control y seguimiento. Las NIIF completas y la NIIF PYMES no\n"
+"contienen prescripciones sobre teneduría de libros, y consecuentemente, sobre los libros y otros registros\n"
+"de naturaleza contable. Por otro lado, si bien es cierto la contabilidad es también un insumo, dentro de otros, para\n"
+"labores de cumplimiento tributario, este PCGE no ha sido elaborado para satisfacer prescripciones tributarias ni su\n"
+"verificación. No obstante ello, donde no hubo oposición entre la contabilidad financiera prescrita por las NIIF y\n"
+"la legislación tributaria, este PCGE ha incluido subcuentas, divisionarias y sub divisionarias, para\n"
+"distinguir componentes con validez tributaria, dentro del conjunto de componentes que corresponden a una\n"
+"perspectiva contable íntegramente. Por lo tanto, este PCGE no debe ser considerado en ningún aspecto\n"
+"como una guía con propósitos distintos del contable.\n"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_B
@@ -22404,7 +22636,7 @@ msgstr "Rapports de localisation mexicains Odoo pour la fermeture"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_landing
 msgid "Odoo Mexico Localization for Stock/Landing"
-msgstr ""
+msgstr "Localisation Odoo Mexique pour Stock/Débarquement"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_mobile
@@ -23785,7 +24017,7 @@ msgstr "Résolution en ppp"
 #: code:addons/models.py:0
 #, python-format
 msgid "Output name %r is used twice."
-msgstr ""
+msgstr "Le nom de sortie %r est utilisé deux fois."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_import__overwrite
@@ -23841,7 +24073,7 @@ msgstr "Code-barres de Pdv sur mobile"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_hr_mobile
 msgid "POS Barcode scan in Mobile"
-msgstr ""
+msgstr "Scan de barres-codes PdV dans Mobile"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_restaurant_adyen
@@ -24487,6 +24719,8 @@ msgid ""
 "Previous time the cron ran successfully, provided to the job through the "
 "context on the `lastcall` key"
 msgstr ""
+"La dernière fois que la cron a été exécutée avec succès, fourni au travail "
+"via le contexte sur la touche `lastcall`"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_form
@@ -24691,7 +24925,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_forecast
 msgid "Project Planning"
-msgstr ""
+msgstr "Planification de projet"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_project
@@ -24989,17 +25223,17 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_live_quiz
 msgid "Quiz on Live Event Tracks"
-msgstr ""
+msgstr "Quiz sur les sessions des évents live"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_quiz
 msgid "Quizzes on Tracks"
-msgstr ""
+msgstr "Quiz à propos des sessions"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_quiz
 msgid "Quizzes on tracks"
-msgstr ""
+msgstr "Quiz à propos des sessions"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_quotation_builder
@@ -25788,6 +26022,7 @@ msgstr "Serveur SMTP"
 #: model:ir.module.module,summary:base.module_sale_purchase_stock
 msgid "SO/PO relation in case of MTO"
 msgstr ""
+"Relation commande client/commande d'achat en cas de fabrication sur commande"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model__order
@@ -25926,7 +26161,7 @@ msgstr "Vente entreprise"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_sale
 msgid "Sale statistics on social"
-msgstr ""
+msgstr "Statistiques de vente sur social"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales
@@ -26758,7 +26993,7 @@ msgstr "Suivi Envoi Postal"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_demo
 msgid "Social Demo Module"
-msgstr ""
+msgstr "Module Démo Social"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_facebook
@@ -26784,7 +27019,7 @@ msgstr "Médias sociaux"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_push_notifications
 msgid "Social Push Notifications"
-msgstr ""
+msgstr "Notifications Push dans Social"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_twitter
@@ -27002,7 +27237,7 @@ msgstr "Nom de l'État"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__state_required
 msgid "State Required"
-msgstr ""
+msgstr "Etape requise"
 
 #. module: base
 #: model:res.country,name:base.ps
@@ -27046,7 +27281,7 @@ msgstr "L'étape ne doit pas être zéro."
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder_iot
 msgid "Steps in MRP work orders with IoT devices"
-msgstr ""
+msgstr "Étapes des ordres de travail MRP avec des appareils IoT"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_note_pad
@@ -27259,12 +27494,12 @@ msgstr "Arguments supplémentaires"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_live
 msgid "Support live tracks: streaming, participation, youtube"
-msgstr ""
+msgstr "Prise en charge des sessions live : streaming, participation, youtube"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_quality_control_picking_batch
 msgid "Support of quality control into batch transfers"
-msgstr ""
+msgstr "Prise en charge du contrôle qualité dans les transferts par lots"
 
 #. module: base
 #: model:res.country,name:base.sr
@@ -27651,7 +27886,7 @@ msgstr "Tests pour read_group"
 #. module: base
 #: model:ir.module.module,description:base.module_test_search_panel
 msgid "Tests for the search panel python methods"
-msgstr ""
+msgstr "Tests pour les méthodes python du panneau de recherche"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_converter
@@ -28442,6 +28677,9 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
+"Ce module contient des tests liés aux mails. Ceux-ci sont \n"
+"présents dans un module séparé car il contient des modèles utilisés uniquement pour effectuer \n"
+"des tests indépendamment des aspects fonctionnels d'autres modèles."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mail_enterprise
@@ -28452,6 +28690,10 @@ msgid ""
 "modules build on mail (sms, snailmail, mail_enterprise) are set as dependencies\n"
 "in order to test the whole mail codebase. "
 msgstr ""
+"Ce module contient des tests liés aux mails. Ceux-ci sont\n"
+" présents dans un module séparé car il contient des modèles utilisés uniquement pour effectuer \n"
+"des tests indépendamment des aspects fonctionnels d'autres modèles. De plus, la plupart des \n"
+"modules construits sur le Email Marketing (sms, snailmail, mail_enterprise) sont définis comme des dépendances afin de tester l'ensemble de la base de code d'email."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mass_mailing
@@ -28482,6 +28724,9 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
+"Ce module contient des tests liés au Minuteur. Ceux-ci sont \n"
+"présents dans un module séparé car il contient des modèles utilisés uniquement pour effectuer \n"
+"des tests indépendamment des aspects fonctionnels d'autres modèles."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mail_full
@@ -28491,6 +28736,10 @@ msgid ""
 "contains models used only to perform tests independently to functional aspects of\n"
 "real applications. "
 msgstr ""
+"Ce module contient des tests liés à diverses fonctionnalités de messagerie \n"
+"et à des sous-modules liés à la messagerie. Ces tests sont présents dans un module séparé car il \n"
+"contient des modèles utilisés uniquement pour effectuer des tests indépendamment des aspects fonctionnels \n"
+"d'applications réelles."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_web_cohort
@@ -28499,6 +28748,9 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
+"Ce module contient des tests liés à la cohorte Web. Ceux-ci sont présents \n"
+"dans un module séparé car il contient des modèles utilisés uniquement pour effectuer \n"
+"des tests indépendamment des aspects fonctionnels d'autres modèles."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_website
@@ -28661,6 +28913,8 @@ msgstr "Tests Chronomètre"
 #: model:ir.module.module,summary:base.module_test_timer
 msgid "Timer Tests: feature and performance tests for timer"
 msgstr ""
+"Tests du Minuteur :tests de fonctionnalités et de performances pour la "
+"minuterie"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet_forecast
@@ -28821,7 +29075,7 @@ msgstr "Tours d'introduction"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_event_track_sms
 msgid "Track Speakers SMS Marketing"
-msgstr ""
+msgstr "SMS Marketing pour Orateurs des sessions"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_attendance
@@ -29373,6 +29627,8 @@ msgstr "Erreur inconnue pendant l'importation :"
 #, python-format
 msgid "Unknown field \"%(field)s\" in \"group_by\" value in %(attribute)s=%(value)r"
 msgstr ""
+"Champ inconnu \"%(field)s\" dans la valeur \"group_by\" dans "
+"%(attribute)s=%(value)r"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -30138,6 +30394,9 @@ msgid ""
 " <br> <br>\n"
 "At Lumber Inc we bring operational experience combined with technological acumen. We understand that any software that supports business operations needs to be designed in such a way that facilitates the execution of critical operational processes, and serves as a tool to the users rather than a barrier. Our approach is focused on the process first, ensuring that it contributes to the goals of the company, we then optimize it, and design the software solutions to best support it."
 msgstr ""
+"Nous sommes une société de conseil technologique &amp; stratégique qui crée des solutions à valeur ajoutée grâce à l'utilisation de logiciels avancés pour nos clients du monde entier.\n"
+"<br><br>\n"
+"Chez Lumber Inc, nous apportons une expérience opérationnelle combinée à un sens technologique. Nous comprenons que tout logiciel prenant en charge les opérations commerciales doit être conçu de manière à faciliter l'exécution des processus opérationnels critiques et à servir d'outil aux utilisateurs plutôt qu'une barrière. Notre approche est centrée sur le processus d'abord, en veillant à ce qu'il contribue aux objectifs de l'entreprise, nous l'optimisons ensuite et concevons les solutions logicielles pour le soutenir au mieux."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web
@@ -30147,7 +30406,7 @@ msgstr "Web"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_web_cohort
 msgid "Web Cohort Tests"
-msgstr ""
+msgstr "Tests Cohote Web"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_editor
@@ -30172,7 +30431,7 @@ msgstr "Tests de grilles Web"
 #. module: base
 #: model:ir.module.module,summary:base.module_test_web_grid
 msgid "Web Grid Tests: performances and tests specific to the grid view"
-msgstr ""
+msgstr "Tests Web Grid : performances et tests spécifiques à la vue grille"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__web_icon
@@ -30229,7 +30488,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_crm
 msgid "Website Events CRM"
-msgstr ""
+msgstr "Site Web Events CRM"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_form
@@ -30501,7 +30760,7 @@ msgstr "Prestations"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_contract
 msgid "Work Entries - Contract"
-msgstr ""
+msgstr "Prestations - Contrat"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder
