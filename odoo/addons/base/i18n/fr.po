@@ -76,6 +76,8 @@
 # SAKodoo <sak@odoo.com>, 2021
 # Antoine Dupuis (andu), 2022
 # Thomas Charpentier, 2022
+# Jolien De Paepe, 2022
+# laje_odoo, 2022
 # Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
@@ -1483,6 +1485,23 @@ msgid ""
 "    but rather the amount of these lines will be deduced from the lines they apply to during tax computation.\n"
 "    "
 msgstr ""
+"\n"
+"Gérer les remises dans les calculs taxclouds.\n"
+"Voir https://taxcloud.com/support/discounts ou\n"
+"https://service.taxcloud.net/hc/en-us/articles/360015649791-How-can-discounts-be-applied-\n"
+"\n"
+"Résumé : toutes les remises fournies par le vendeur doivent être appliquées au prix de vente avant le calcul de la taxe de vente.\n"
+"Les vendeurs doivent divulguer leur méthodologie aux clients dans une politique d'application de remise.\n"
+"\n"
+"L'algorithme est le suivant :\n"
+"- les remises spécifiques aux lignes sont appliquées en premier, sur les lignes auxquelles elles sont censées s'appliquer.\n"
+"Cela signifie des remises spécifiques au produit ou des remises sur la ligne la moins chère.\n"
+"- Ensuite, les remises globales sont appliquées uniformément sur les lignes payantes, dans la mesure du possible.\n"
+"S'il y a un reste, il est appliqué séquentiellement, dans l'ordre des lignes,\n"
+"jusqu'à ce qu'il n'y ait plus de remise ou qu'il n'y ait plus de ligne pouvant faire l'objet d'une remise.\n"
+"\n"
+"Notez que les lignes de remise (avec un prix négatif) ne seront pas soumises à des taxes,\n"
+"mais le montant de ces lignes sera plutôt déduit des lignes auxquelles elles s'appliquent lors du calcul de l'impôt."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_taxcloud_delivery
@@ -1742,6 +1761,86 @@ msgid ""
 "    When validating a batch payment, the ABA file will be generated.  It can\n"
 "    be regenerated.  This file can then be uploaded to the bank.\n"
 msgstr ""
+"\n"
+"ABA Credit Transfer\n"
+"===================\n"
+"\n"
+"Ce module permet de générer des lots de paiements sous forme de fichiers texte ABA (Australian Bankers Association).\n"
+"Le fichier 'aba' généré peut être envoyé vers de nombreuses banques australiennes.\n"
+"\n"
+"Configuration\n"
+"-----\n"
+"\n"
+"- *Comptabilité > Configuration > Journaux*\n"
+"\n"
+"    Si nécessaire, créez une nouveau journal ou choisissez un journal existant de **type** \"Banque\". \n"
+"\n"
+"    Dans **Pièces compables**, vérifiez que l'option ABA Credit Transfer est activée.\n"
+"\n"
+"    Dans l'onglet **Pièces comptables**, ajoutez le numéro de compte.\n"
+"\n"
+"    Dans ce même onglet, assurez-vous que les informations de transfert ABA sont remplies correctement.\n"
+"\n"
+"    **BSB** - Requis, 6 chiffres, et formaté automatiquement.\n"
+"\n"
+"    **Financial Institution Code** - Requis (soit fourni par votre banque soit cherchez sur Google).  Il s'agit de trois caractères majuscules.\n"
+"\n"
+"    **Supplying User Name** - Certaines banques autorisent une forme libre, d'autres peuvent rejeter le fichier ABA si le nom d'utilisateur fournisseur n'est pas conforme. Il ne doit pas comporter plus de 26 caractères.\n"
+"\n"
+"    **APCA Identification Number** - le numéro d'identification User Identification number est fourni par votre banque. Il comporte 6 chiffres.\n"
+"\n"
+"    **Include Self Balancing Transaction** - Certaines institutions demandent que la dernière transaction soit une transaction d'auto-équilibrage à des fins de vérification.\n"
+"\n"
+"- *Comptabilité > Configuration > Paiements > Comptes bancaires*\n"
+"\n"
+"    Le compte apparaîtra dans la liste comme le nom du journal.\n"
+"\n"
+"   L'édition montrera le **Numéro de compte**. Ce numéro est important car il est utilisé par le processus ABA.\n"
+"\n"
+"    **Banque** est optionnel.\n"
+"\n"
+"- *Contacts > Configuration > Comptes bancaires > Comptes bancaires*\n"
+"\n"
+"    Le compte de paiement apparaîtra dans la liste sous la forme d'un numéro de compte.\n"
+"\n"
+"    **Titulaire du compte** - Peut être saisi ici, si nécessaire. Généralement pas validé par les banques lors des transferts de fichiers ABA, mais peut apparaître sur le relevé bancaire du bénéficiaire en contrepartie du paiement.\n"
+"\n"
+"- Les comptes bancaires des fournisseurs peuvent être configurés au même endroit, mais il est généralement plus facile de les configurer à partir de la fiche du fournisseur.\n"
+"\n"
+"- *Comptabilité > Fournisseurs > Fournisseurs*\n"
+"\n"
+"    Dans l'onglet **Comptabilité**, cliquez sur *\"Voir détails du compte\"* pour créer ou modifier un compte bancaire du fournisseur.\n"
+"\n"
+"    **Numéro de compte** - Requis, doit comporter moins de 9 chiffres.\n"
+"\n"
+"    **BSB** - Requis, 6 chiffres, et sera auto-formaté.\n"
+"\n"
+"    **Titulaire du compte** - Optionnel.\n"
+"\n"
+"Utilisation\n"
+"---\n"
+"\n"
+"- Créez un paiement fournisseur de la manière habituelle.\n"
+"\n"
+"    Assurez-vous que le **Fournisseur** dispose d'un compte de paiement ABA valide.\n"
+"\n"
+"    Choisissez le bon **Journal de paiement** qui est configuré pour les paiements ABA.\n"
+"\n"
+"    Selectionnez l'option **ABA Credit Transfer**.\n"
+"\n"
+"    Si le fournisseur a plusieurs comptes bancaires, vous devrez peut-être sélectionner le bon **Compte bancaire du destinataire**. Ou si vous payez une facture d'un fournisseur, il peut être nécessaire d'y associer le bon compte bancaire.\n"
+"\n"
+"    Entrez le montant, etc.\n"
+"\n"
+"- *Fournisseurs > Paiements*\n"
+"\n"
+"    Une fois le(s) paiement(s) confirmé(s), ils apparaîtront dans la liste des paiements.\n"
+"\n"
+"    À l'aide de filtres ou de tris, sélectionnez les paiements à inclure. Sous *Actions*, choisissez *Créer un paiement par lot*.\n"
+"\n"
+"- *Fournisseurs > Paiements en groupe*\n"
+"\n"
+"    Lors de la validation d'un paiement par lot, le fichier ABA sera généré. Il peut être régénéré. Ce fichier peut ensuite être téléchargé auprès de la banque.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_auto_transfer
@@ -2876,6 +2975,10 @@ msgid ""
 "=================================\n"
 "    "
 msgstr ""
+"\n"
+"Base de caisse pour les rapports comptables\n"
+"=================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_skills_survey
@@ -9965,7 +10068,7 @@ msgstr "Ajoutez les cours terminés au CV de vos employés"
 #. module: base
 #: model:ir.module.module,summary:base.module_social_crm
 msgid "Add crm UTM info on social"
-msgstr ""
+msgstr "Ajoute des UTM de CRM sur Social"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_delivery
@@ -9997,7 +10100,7 @@ msgstr "Ajouter le Live Chat pour OdooBot"
 #. module: base
 #: model:ir.module.module,summary:base.module_social_sale
 msgid "Add sale UTM info on social"
-msgstr ""
+msgstr "Ajoute des UTM de vente sur Social"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing_sale
@@ -10879,7 +10982,7 @@ msgstr "Rapports financiers autrichiens"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_at
 msgid "Austrian Standardized Charts & Tax"
-msgstr ""
+msgstr "Plans comptables et fiscaux standardisés autrichiens"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_ldap
@@ -12505,7 +12608,7 @@ msgstr "Assistants de configuration"
 #. module: base
 #: model:ir.module.module,summary:base.module_partner_commission
 msgid "Configure resellers commissions on subscription sale"
-msgstr ""
+msgstr "Configurer les commissions des revendeurs sur la vente d'abonnements"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet_enterprise
@@ -17597,7 +17700,7 @@ msgstr "Nom de modèle %r non valide dans la définition de l'action."
 #: code:addons/base/models/ir_actions.py:611
 #, python-format
 msgid "many2many fields cannot be evaluated by reference"
-msgstr ""
+msgstr "les champs many2many ne peuvent pas être évalués par référence"
 
 #. module: base
 #: code:addons/template_inheritance.py:0
@@ -18362,7 +18465,7 @@ msgstr "Génération de pistes à partir de visites de sites Web"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm_livechat
 msgid "Lead Livechat Sessions"
-msgstr ""
+msgstr "Piste des sessions de LiveChat"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm_score
@@ -21356,7 +21459,7 @@ msgstr "Rapports de localisation mexicains Odoo pour la fermeture"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_landing
 msgid "Odoo Mexico Localization for Stock/Landing"
-msgstr ""
+msgstr "Localisation Odoo Mexique pour Stock/Débarquement"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_mobile
@@ -23037,7 +23140,7 @@ msgstr "Résolution en ppp"
 #: code:addons/models.py:0
 #, python-format
 msgid "Output name %r is used twice."
-msgstr ""
+msgstr "Le nom de sortie %r est utilisé deux fois."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_import__overwrite
@@ -23733,6 +23836,8 @@ msgid ""
 "Previous time the cron ran successfully, provided to the job through the "
 "context on the `lastcall` key"
 msgstr ""
+"La dernière fois que la cron a été exécutée avec succès, fourni au travail "
+"via le contexte sur la touche `lastcall`"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_form
@@ -25157,7 +25262,7 @@ msgstr "Vente entreprise"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_sale
 msgid "Sale statistics on social"
-msgstr ""
+msgstr "Statistiques de vente sur social"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales
@@ -25945,7 +26050,7 @@ msgstr "Médias sociaux"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_push_notifications
 msgid "Social Push Notifications"
-msgstr ""
+msgstr "Notifications Push dans Social"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_twitter
@@ -26220,7 +26325,7 @@ msgstr "L'étape ne doit pas être zéro."
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder_iot
 msgid "Steps in MRP work orders with IoT devices"
-msgstr ""
+msgstr "Étapes des ordres de travail MRP avec des appareils IoT"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_note_pad
@@ -27832,7 +27937,7 @@ msgstr "Tours d'introduction"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_event_track_sms
 msgid "Track Speakers SMS Marketing"
-msgstr ""
+msgstr "SMS Marketing pour Orateurs des sessions"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_attendance
@@ -29050,6 +29155,9 @@ msgid ""
 " <br> <br>\n"
 "At Lumber Inc we bring operational experience combined with technological acumen. We understand that any software that supports business operations needs to be designed in such a way that facilitates the execution of critical operational processes, and serves as a tool to the users rather than a barrier. Our approach is focused on the process first, ensuring that it contributes to the goals of the company, we then optimize it, and design the software solutions to best support it."
 msgstr ""
+"Nous sommes une société de conseil technologique &amp; stratégique qui crée des solutions à valeur ajoutée grâce à l'utilisation de logiciels avancés pour nos clients du monde entier.\n"
+"<br><br>\n"
+"Chez Lumber Inc, nous apportons une expérience opérationnelle combinée à un sens technologique. Nous comprenons que tout logiciel prenant en charge les opérations commerciales doit être conçu de manière à faciliter l'exécution des processus opérationnels critiques et à servir d'outil aux utilisateurs plutôt qu'une barrière. Notre approche est centrée sur le processus d'abord, en veillant à ce qu'il contribue aux objectifs de l'entreprise, nous l'optimisons ensuite et concevons les solutions logicielles pour le soutenir au mieux."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web
@@ -29059,7 +29167,7 @@ msgstr "Web"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_web_cohort
 msgid "Web Cohort Tests"
-msgstr ""
+msgstr "Tests Cohote Web"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_editor

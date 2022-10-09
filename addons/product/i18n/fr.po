@@ -21,12 +21,13 @@
 # edc <edc@odoo.com>, 2020
 # Vladilsav Kakakovko <vladislav.k@ventor.tech>, 2020
 # Pauline Thiry <pth@odoo.com>, 2020
-# Cécile Collart <cco@odoo.com>, 2020
 # Vallen Delobel <edv@odoo.com>, 2020
 # Laura Piraux <lap@odoo.com>, 2020
 # Priscilla (prs) Odoo <prs@odoo.com>, 2020
 # Martin Trigaux, 2020
 # Rémi CAZENAVE, 2021
+# Cécile Collart <cco@odoo.com>, 2022
+# Jolien De Paepe, 2022
 # 
 msgid ""
 msgstr ""
@@ -34,13 +35,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Rémi CAZENAVE, 2021\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__2_product_category
@@ -2372,6 +2373,18 @@ msgid "This comes from the product form."
 msgstr "A pour origine le formulaire de l'article"
 
 #. module: product
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid ""
+"This configuration of product attributes, values, and exclusions would lead "
+"to no possible variant. Please archive or delete your product directly if "
+"intended."
+msgstr ""
+"Cette configuration d'attributs, de valeurs et d'exclusions de produits "
+"n'entraînerait aucune variante possible. Veuillez archiver ou supprimer "
+"votre produit directement si vous le souhaitez."
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
 msgid "This is the sum of the extra price of all attributes"
 msgstr ""
@@ -2880,6 +2893,16 @@ msgid ""
 "You cannot move the attribute %s from the product %s to the product %s."
 msgstr ""
 "Vous ne pouvez pas déplacer l'attribut %s du produit %s vers le produit %s."
+
+#. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"You cannot disable a pricelist rule, please delete it or archive its "
+"pricelist instead."
+msgstr ""
+"Vous ne pouvez pas désactiver une règle de liste de prix. Veuillez plutôt la"
+" supprimer ou archiver sa liste de prix."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
