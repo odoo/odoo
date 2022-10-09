@@ -828,7 +828,7 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
     run: 'text 10 hours',
 }, {
     mobile: true,
-    trigger: '.modal-body .o_form_view div[name="name"] input',
+    trigger: '.modal-content.o_form_view div[name="name"] input',
     content: 'Enter a description this timesheet',
     run: 'text 10 hours',
 }, {
@@ -838,7 +838,7 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
     run: 'text 10',
 }, {
     mobile: true,
-    trigger: '.modal-body .o_form_view div[name="unit_amount"] input',
+    trigger: '.modal-content.o_form_view div[name="unit_amount"] input',
     content: 'Enter one hour for this timesheet',
     run: 'text 10',
 }, {

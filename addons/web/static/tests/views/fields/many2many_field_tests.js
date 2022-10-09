@@ -380,7 +380,7 @@ QUnit.module("Fields", (hooks) => {
         await click($(target).find(".o_field_many2many .o-kanban-button-new")[0]);
         await click($(".modal .modal-footer .btn-primary:nth(1)")[0]);
         assert.ok(
-            $(".modal .o_form_view.o_form_editable").length,
+            $(".modal .o_form_view .o_form_editable").length,
             "should have opened a form view in edit mode, in a modal"
         );
         await editInput(target, ".modal .o_form_view input", "A new type");

@@ -9169,7 +9169,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(target, ".modal .o_form_view .o_data_row");
 
         // click on the action button
-        await click(target.querySelector(".modal .o_form_view button"));
+        await click(target.querySelector(".modal .o_form_editable button"));
         assert.containsOnce(target, ".modal .o_data_row");
         assert.strictEqual(target.querySelector(".modal .o_data_cell").textContent, "gold");
 
