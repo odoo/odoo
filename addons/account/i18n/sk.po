@@ -15,7 +15,6 @@
 # Michal Matus <misko.matus@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Matus Krnac <matus.krnac@gmail.com>, 2020
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2020
 # gebri <gebri@inmail.sk>, 2020
 # Jan Prokop, 2020
 # Damian Brencic <brencicdamian12313@gmail.com>, 2020
@@ -24,6 +23,8 @@
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # jprokop1 <jprokop@jackie.sk>, 2021
 # Filip Matúšek <filip.matusek@26house.com>, 2022
+# Viktor Dicer, 2022
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2022
 # 
 msgid ""
 msgstr ""
@@ -31,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Filip Matúšek <filip.matusek@26house.com>, 2022\n"
+"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2022\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -796,6 +797,11 @@ msgstr "<strong>Spoločnosť:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Credit Note Date:</strong>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code:</strong>"
 msgstr "<strong>Kód zákazníka:</strong>"
 
@@ -808,6 +814,11 @@ msgstr "<strong>Zákazník: </strong>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
 msgid "<strong>Customer</strong>"
 msgstr "<strong>Zákazník</strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Date:</strong>"
+msgstr "<strong>Dátum:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -863,6 +874,11 @@ msgstr "<strong>Platobná metóda:</strong>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
 msgid "<strong>Product</strong>"
 msgstr "<strong>Produkt</strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Receipt Date:</strong>"
+msgstr "<strong>Dátum prijatia:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -9785,6 +9801,12 @@ msgid "Reconciliation Parts"
 msgstr "Časti párovania"
 
 #. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Record cannot be deleted. Partner used in Accounting"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Record transactions in foreign currencies"
 msgstr "Záznam transakcií v cudzích menách"
@@ -15003,3 +15025,11 @@ msgstr "s pdf faktúry ako prílohy."
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "→ Spočítať"
+
+#. module: account
+#: code:addons/account/models/account_analytic_default.py:31
+#, python-format
+msgid ""
+"An analytic default requires an analytic account or an analytic tag used for"
+" analytic distribution."
+msgstr ""
