@@ -513,7 +513,7 @@
                     </group>
                     <notebook>
                         <page name="description" string="Description">
-                            <field name="description" options="{'resizable': false}"/>
+                            <field name="description" options="{'resizable': false}" placeholder="Project description..."/>
                         </page>
                         <page name="settings" string="Settings">
                             <group>
@@ -1183,7 +1183,7 @@
                         name="task_properties" nolabel="1" columns="2"/>
                     <notebook>
                         <page name="description_page" string="Description">
-                            <field name="description" type="html" options="{'collaborative': true, 'resizable': false}"/>
+                            <field name="description" type="html" options="{'collaborative': true, 'resizable': false}" placeholder="Task description..."/>
                         </page>
                         <page name="sub_tasks_page" string="Sub-tasks" attrs="{'invisible': [('allow_subtasks', '=', False)]}">
                             <field name="child_ids"
