@@ -136,7 +136,7 @@ export class MassMailingHtmlField extends HtmlField {
         // named so they are handled properly by the snippets menu.
         this.wysiwyg.$iframeBody.find('.o_layout').addBack().data('name', 'Mailing');
         // We don't want to drop snippets directly within the wysiwyg.
-        this.wysiwyg.$iframeBody.removeClass('o_editable');
+        this.wysiwyg.$iframeBody.find('.odoo-editor-editable').removeClass('o_editable');
 
         initializeDesignTabCss(this.wysiwyg.getEditable());
         this.wysiwyg.getEditable().find('img').attr('loading', '');
