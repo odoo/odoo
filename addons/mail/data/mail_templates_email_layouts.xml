@@ -38,9 +38,11 @@
                                 </td>
                                 <td t-if="has_button_access">&amp;nbsp;&amp;nbsp;</td>
                                 <td t-if="subtitles" style="font-size: 12px;">
-                                     <t t-foreach="subtitles" t-as="subtitle">
-                                        <span t-attf-style="{{ 'font-weight:bold;' if subtitle_first else '' }}"
-                                              t-out="subtitle"/>
+                                    <t t-foreach="subtitles" t-as="subtitle">
+                                        <span t-out="subtitle" t-attf-style="{{
+                                            'font-size: 20px; font-weight: bold;' if subtitles_highlight_2nd and subtitle_index == 1
+                                            else 'font-weight:bold;' if not subtitles_highlight_2nd and subtitle_first else ''}}"
+                                        />
                                         <br t-if="not subtitle_last"/>
                                     </t>
                                 </td>
@@ -84,7 +86,7 @@
 </div>
 <div t-if="show_footer" style="color: #555555; font-size:11px;">
     Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email"
-                  t-att-style="'color: ' + (company.email_secondary_color or '#875A7B') + ';'">Odoo</a>
+              t-attf-style="color: {{company.email_secondary_color or '#875A7B'}};">Odoo</a>
     <span t-if="show_unfollow" id="mail_unfollow">
         | <a href="/mail/unfollow" style="text-decoration:none; color:#555555;">Unfollow</a>
     </span>
@@ -142,14 +144,14 @@
     <tr>
         <td align="center" style="min-width: 590px; padding: 0 8px 0 8px; font-size:11px;">
             <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;"/>
-            <b t-out="company.name"/><br/>
-            <div style="color: #999999;">
+            <b t-out="company.name" style="font-size:11px;"/><br/>
+            <p style="color: #999999; margin-top:2px; font-size:11px;">
                 <t t-out="company.phone"/>
                 <t t-if="company.email and company.phone"> |</t>
                 <a t-if="company.email" t-att-href="'mailto:%s' % company.email" style="text-decoration:none; color: #999999;" t-out="company.email"/>
                 <t t-if="company.website and (company.phone or company.email)"> |</t>
                 <a t-if="company.website" t-att-href="'%s' % company.website" style="text-decoration:none; color: #999999;" t-out="company.website"/>
-            </div>
+            </p>
         </td>
     </tr>
 </tbody>
@@ -157,8 +159,8 @@
 </td></tr>
 <!-- POWERED BY -->
 <tr><td align="center" style="min-width: 590px;">
-        Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email"
-                      t-att-style="'color: ' + (company.email_secondary_color or '#875A7B') + ';'">Odoo</a>
+    Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email"
+              t-attf-style="color: {{company.email_secondary_color or '#875A7B'}};">Odoo</a>
     <span t-if="show_unfollow" id="mail_unfollow">
         | <a href="/mail/unfollow" style="text-decoration:none; color:#555555;">Unfollow</a>
     </span>

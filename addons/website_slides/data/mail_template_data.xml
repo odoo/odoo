@@ -149,6 +149,16 @@
         You have been enrolled to a new course: <t t-out="object.channel_id.name or ''">Basics of Gardening</t>.
     </p>
 </div>
+<div style="margin: 32px 0px 32px 0px;">
+    <a t-att-href="object.invitation_link"
+        style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+        <t t-if="enroll_mode"> Click here to start the course </t> <t t-else=""> Click here to get started </t>
+    </a>
+</div>
+<div style="margin: 0px; padding: 0px; font-size:13px;">
+    Enjoy this exclusive content!
+</div>
+<div>&amp;nbsp;</div>
             </field>
             <field name="auto_delete" eval="True"/>
         </record>
@@ -168,6 +178,16 @@
         You have been invited to check out this course: <t t-out="object.channel_id.name or ''">Basics of Gardening</t>.
     </p>
 </div>
+<div style="margin: 32px 0px 32px 0px;">
+    <a t-att-href="object.invitation_link"
+        style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+        <t t-if="enroll_mode"> Click here to start the course </t> <t t-else=""> Click here to get started </t>
+    </a>
+</div>
+<div style="margin: 0px; padding: 0px; font-size:13px;">
+    Enjoy this exclusive content!
+</div>
+<div>&amp;nbsp;</div>
             </field>
             <field name="auto_delete" eval="True"/>
         </record>

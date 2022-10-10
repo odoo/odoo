@@ -6,7 +6,7 @@ import uuid
 
 from datetime import datetime
 from werkzeug import urls
-from odoo import api, models
+from odoo import api, models, _
 
 VALIDATION_KARMA_GAIN = 3
 
@@ -53,8 +53,15 @@ class ResUsers(models.Model):
             }
             params.update(kwargs)
             token_url = self.get_base_url() + '/profile/validate_email?%s' % urls.url_encode(params)
-            activation_template.sudo().with_context(token_url=token_url).send_mail(
-                self.id, force_send=True, raise_exception=True)
+            activation_template.sudo().with_context(
+                email_notification_force_header=True,
+                email_notification_force_footer=True,
+                token_url=token_url,
+            ).send_mail(
+                self.id, force_send=True, raise_exception=True,
+                email_layout_xmlid='mail.mail_notification_layout',
+                subtitles=[_("%(company_name)s Profile validation", company_name=self.sudo().company_id.name or '')]
+            )
         return True
 
     def _process_profile_validation_token(self, token, email):
