@@ -6,6 +6,7 @@ import re
 from odoo import api, fields, models, _
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.exceptions import AccessError, UserError
+from odoo.osv import expression
 
 
 class PhoneMixin(models.AbstractModel):
@@ -47,6 +48,13 @@ class PhoneMixin(models.AbstractModel):
     phone_mobile_search = fields.Char("Phone/Mobile", store=False, search='_search_phone_mobile_search')
 
     def _search_phone_mobile_search(self, operator, value):
+        phone_fields = [
+            fname for fname in self._phone_get_number_fields()
+            if fname in self._fields and self._fields[fname].store
+        ]
+        if not phone_fields:
+            raise UserError(_('Missing definition of phone fields.'))
+
         value = value.strip()
         if len(value) < 3:
             raise UserError(_('Please enter at least 3 characters when searching a Phone/Mobile number.'))
@@ -55,39 +63,35 @@ class PhoneMixin(models.AbstractModel):
         if value.startswith('+') or value.startswith('00'):
             # searching on +32485112233 should also finds 0032485112233 (and vice versa)
             # we therefore remove it from input value and search for both of them in db
+            where_str = ' OR '.join(
+                f"""model.{phone_field} IS NOT NULL AND (
+                        REGEXP_REPLACE(model.{phone_field}, %s, '', 'g') ILIKE %s OR
+                        REGEXP_REPLACE(model.{phone_field}, %s, '', 'g') ILIKE %s
+                )"""
+                for phone_field in phone_fields
+            )
             query = f"""
                 SELECT model.id
                 FROM {self._table} model
-                WHERE
-                    model.phone IS NOT NULL AND (
-                        REGEXP_REPLACE(model.phone, %s, '', 'g') ILIKE %s OR
-                        REGEXP_REPLACE(model.phone, %s, '', 'g') ILIKE %s
-                    ) OR
-                    model.mobile IS NOT NULL AND (
-                        REGEXP_REPLACE(model.mobile, %s, '', 'g') ILIKE %s OR
-                        REGEXP_REPLACE(model.mobile, %s, '', 'g') ILIKE %s
-                    );
+                WHERE {where_str};
             """
             term = re.sub(pattern, '', value[1 if value.startswith('+') else 2:]) + '%'
-            self._cr.execute(query, (
-                pattern, '00' + term,
-                pattern, '+' + term,
-                pattern, '00' + term,
-                pattern, '+' + term
-            ))
+            self._cr.execute(
+                query, 
+                (pattern, '00' + term, pattern, '+' + term) * len(phone_fields)
+            )
         else:
+            where_str = ' OR '.join(
+                f"REGEXP_REPLACE(model.{phone_field}, %s, '', 'g') ILIKE %s"
+                for phone_field in phone_fields
+            )
             query = f"""
                 SELECT model.id
                 FROM {self._table} model
-                WHERE
-                    REGEXP_REPLACE(model.phone, %s, '', 'g') ILIKE %s OR
-                    REGEXP_REPLACE(model.mobile, %s, '', 'g') ILIKE %s;
+                WHERE {where_str};
             """
             term = '%' + re.sub(pattern, '', value) + '%'
-            self._cr.execute(query, (
-                pattern, term,
-                pattern, term
-            ))
+            self._cr.execute(query, (pattern, term) * len(phone_fields))
         res = self._cr.fetchall()
         if not res:
             return [(0, '=', 1)]
