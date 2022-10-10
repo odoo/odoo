@@ -574,7 +574,7 @@ class MailTemplate(models.Model):
         records.check_access('read')
 
     def send_mail(self, res_id, force_send=False, raise_exception=False, email_values=None,
-                  email_layout_xmlid=False):
+                  email_layout_xmlid=False, subtitles=False, subtitles_highlight_2nd=False):
         """ Generates a new mail.mail. Template is rendered on record given by
         res_id and model coming from template.
 
@@ -585,6 +585,9 @@ class MailTemplate(models.Model):
             customize the mail;
         :param str email_layout_xmlid: optional notification layout to encapsulate the
             generated email;
+        :param list[str] subtitles: titles to display in the header (maximum 2)
+        :param str subtitles_highlight_2nd: if set, highlight the second subtitle instead
+            the first one.
         :returns: id of the mail.mail that was created """
 
         # Grant access to send_mail only if access to related document
@@ -594,12 +597,14 @@ class MailTemplate(models.Model):
             force_send=force_send,
             raise_exception=raise_exception,
             email_values=email_values,
-            email_layout_xmlid=email_layout_xmlid
+            email_layout_xmlid=email_layout_xmlid,
+            subtitles=subtitles,
+            subtitles_highlight_2nd=subtitles_highlight_2nd,
         )[0].id  # TDE CLEANME: return mail + api.returns ?
 
     @api.returns('self', lambda value: value.ids)
     def send_mail_batch(self, res_ids, force_send=False, raise_exception=False, email_values=None,
-                  email_layout_xmlid=False):
+                  email_layout_xmlid=False, subtitles=False, subtitles_highlight_2nd=False):
         """ Generates new mail.mails. Batch version of 'send_mail'.'
 
         :param list res_ids: IDs of modelrecords on which template will be rendered
@@ -680,7 +685,8 @@ class MailTemplate(models.Model):
                     'model_description': model_lang.display_name,
                     'record': record,
                     'record_name': False,
-                    'subtitles': False,
+                    'subtitles': subtitles,
+                    'subtitles_highlight_2nd': subtitles_highlight_2nd,
                     # user / environment
                     'company': company,
                     'email_add_signature': False,

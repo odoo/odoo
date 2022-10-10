@@ -18,13 +18,12 @@
         <meta itemprop="name" t-att-content="button_access['title']"/>
     </div>
 </div>
-<div t-if="subtitles or has_button_access or actions or not is_discussion"
-        summary="o_mail_notification" style="padding: 0px;">
+<div summary="o_mail_notification" style="padding: 0px;">
     <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="width: 100%; margin-top: 5px;">
         <tbody>
             <tr>
-                <td valign="center" style="white-space:nowrap;">
-                    <table cellspacing="0" cellpadding="0" border="0">
+                <td valign="center" style="white-space:nowrap;"">
+                    <table t-if="bool(subtitles or has_button_access or actions)" cellspacing="0" cellpadding="0" border="0">
                         <tbody>
                             <tr>
                                 <td t-if="has_button_access" t-att-style="'border-radius: 3px; text-align: center; background: ' + (company.email_secondary_color or '#875A7B') + ';'">
@@ -43,9 +42,11 @@
                                     </t>
                                 </td>
                                 <td t-if="subtitles" style="font-size: 12px;">
-                                     <t t-foreach="subtitles" t-as="subtitle">
-                                        <span t-attf-style="{{ 'font-weight:bold;' if subtitle_first else '' }}"
-                                              t-out="subtitle"/>
+                                    <t t-foreach="subtitles" t-as="subtitle">
+                                        <span t-out="subtitle" t-attf-style="{{
+                                            'font-size: 20px; font-weight: bold;' if subtitles_highlight_2nd and subtitle_index == 1
+                                            else 'font-weight:bold;' if not subtitles_highlight_2nd and subtitle_first else ''}}"
+                                        />
                                         <br t-if="not subtitle_last"/>
                                     </t>
                                 </td>
@@ -55,14 +56,23 @@
                         </tbody>
                     </table>
                 </td>
+                <td valign="middle" align="right" t-if="company and not company.uses_default_logo">
+                    <img t-att-src="'/logo.png?company=%s' % (company.id or 0)" style="padding: 0px; margin: 0px; height: auto; max-width: 200px; max-height: 36px;" t-att-alt="'%s' % company.name"/>
+                </td>
+            </tr>
+            <tr t-if="subtype_internal">
+                <td colspan="2" valign="center">
+                    <hr width="100%"
+                        style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin: 10px 0px 10px 0px;"/>
+                    <div style="background-color: #f2dede; font-size: 13px;">
+                        <strong>Internal communication</strong>: Replying will post an internal note. Followers won't receive any email notification.
+                    </div>
+                </td>
             </tr>
             <tr>
-                <td valign="center">
+                <td colspan="2" style="text-align:center;">
                     <hr width="100%"
-                        style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin: 10px 0px;"/>
-                    <p t-if="subtype_internal" style="background-color: #f2dede; padding: 5px; margin-bottom: 16px; font-size: 13px;">
-                        <strong>Internal communication</strong>: Replying will post an internal note. Followers won't receive any email notification.
-                    </p>
+                        style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 10px 0px 20px 0px;"/>
                 </td>
             </tr>
         </tbody>
