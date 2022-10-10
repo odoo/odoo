@@ -257,7 +257,7 @@ def showwarning_with_traceback(message, category, filename, lineno, file=None, l
     if category is BytesWarning and message.args[0] in IGNORE:
         return
 
-    # find the stack frame maching (filename, lineno)
+    # find the stack frame matching (filename, lineno)
     filtered = []
     for frame in traceback.extract_stack():
         if 'importlib' not in frame.filename:
