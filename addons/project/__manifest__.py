@@ -79,6 +79,7 @@
         ],
         'web.assets_frontend': [
             'project/static/src/scss/portal_rating.scss',
+            'project/static/src/scss/project_sharing_frontend.scss',
             'project/static/src/js/portal_rating.js',
         ],
         'web.qunit_suite_tests': [
@@ -95,18 +96,12 @@
 
             ('remove', 'mail/static/src/components/dialog_manager/dialog_manager.js'),
             ('remove', 'mail/static/src/components/chat_window_manager/chat_window_manager.js'),
+            ('remove', 'mail/static/src/views/form/*'),
 
-            'web/static/src/legacy/js/public/public_widget.js',
-            'portal/static/src/js/portal_chatter.js',
-            'portal/static/src/js/portal_composer.js',
             'project/static/src/project_sharing/search/favorite_menu/custom_favorite_item.xml',
-            'project/static/src/project_sharing/**/*.js',
-            'project/static/src/scss/project_sharing/*',
+            'project/static/src/project_sharing/**/*',
             'web/static/src/start.js',
             'web/static/src/legacy/legacy_setup.js',
-
-            'project/static/src/project_sharing/**/*.xml',
-            'portal/static/src/xml/portal_chatter.xml',
         ],
     },
     'license': 'LGPL-3',

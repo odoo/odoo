@@ -49,14 +49,14 @@ const projectSharingSteps = [...tour.stepUtils.goToAppSteps("project.menu_main_p
     trigger: '.o_kanban_quick_create .o_kanban_edit',
     content: 'Go to the form view of this new task',
 }, {
-    trigger: 'div.o_statusbar_status[name="stage_id"] button[aria-checked="false"]:contains(Done)',
+    trigger: 'div[name="stage_id"] div.o_statusbar_status button[aria-checked="false"]:contains(Done)',
     content: 'Change the stage of the task.',
 }, {
-    trigger: '.o_portal_chatter_composer_input .o_portal_chatter_composer_body textarea[name="message"]',
+    trigger: '.o_portal_chatter_composer_input .o_portal_chatter_composer_body textarea',
     content: 'Write a message in the chatter of the task',
     run: 'text I create a new task for testing purpose.',
 }, {
-    trigger: '.o_portal_chatter_composer_input .o_portal_chatter_composer_body button[data-action="/mail/chatter_post"]',
+    trigger: '.o_portal_chatter_composer_input .o_portal_chatter_composer_body button[name="send_message"]',
     content: 'Send the message',
 }, {
     trigger: 'ol.breadcrumb > li.o_back_button > a:contains(Project Sharing)',

@@ -85,7 +85,7 @@
                                 </div>
                             </div>
                             <div class="o_kanban_record_body">
-                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" context="{'project_id': project_id}"/>
                                 <div t-if="record.date_deadline.raw_value" name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}">
                                     <field name="date_deadline" widget="remaining_days"/>
                                 </div>
