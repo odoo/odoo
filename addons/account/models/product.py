@@ -3,7 +3,13 @@
 from odoo import api, fields, models, _
 from odoo.tools import format_amount
 
+<<<<<<< HEAD
 ACCOUNT_DOMAIN = "['&', '&', '&', ('deprecated', '=', False), ('internal_type','=','other'), ('company_id', '=', current_company_id), ('is_off_balance', '=', False)]"
+||||||| parent of 1c1dbd8306bc... temp
+ACCOUNT_DOMAIN = "[('deprecated', '=', False), ('internal_type','=','other'), ('company_id', '=', current_company_id), ('is_off_balance', '=', False), ('internal_group', '=', '%s')]"
+=======
+ACCOUNT_DOMAIN = "[('deprecated', '=', False), ('internal_type','=','other'), ('company_id', '=', current_company_id), ('is_off_balance', '=', False)]"
+>>>>>>> 1c1dbd8306bc... temp
 
 class ProductCategory(models.Model):
     _inherit = "product.category"
