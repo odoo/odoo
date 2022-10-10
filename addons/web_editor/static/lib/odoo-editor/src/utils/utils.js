@@ -2076,6 +2076,12 @@ const priorityRestoreStateRules = [
         { spaceVisibility: true },
     ],
     [
+        // Replace a space by &nbsp; when it was content before and now it is
+        // a BR (removal of last character before a BR for example).
+        { direction: DIRECTIONS.RIGHT, cType1: CTGROUPS.CONTENT, cType2: CTGROUPS.BR },
+        { spaceVisibility: true },
+    ],
+    [
         // Replace a space by &nbsp; when it was visible thanks to a BR which
         // is now gone.
         { direction: DIRECTIONS.RIGHT, cType1: CTGROUPS.BR, cType2: CTYPES.SPACE | CTGROUPS.BLOCK },
