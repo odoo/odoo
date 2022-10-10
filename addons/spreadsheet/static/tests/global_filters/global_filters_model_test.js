@@ -1710,4 +1710,26 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             "Chart does not exist"
         );
     });
+
+    QUnit.test(
+        "getFiltersMatchingPivot return correctly matching filter with the 'measure' special field",
+        async function (assert) {
+            const { model } = await createSpreadsheetWithPivot({
+                arch: /*xml*/ `
+                <pivot>
+                <field name="product_id" type="row"/>
+                <field name="probability" type="measure"/>
+                </pivot>`,
+            });
+            await addGlobalFilter(model, {
+                filter: {
+                    id: "42",
+                    type: "relation",
+                    defaultValue: [],
+                },
+            });
+            const filters = model.getters.getFiltersMatchingPivot(getCellFormula(model, "B2"));
+            assert.deepEqual(filters, []);
+        }
+    );
 });
