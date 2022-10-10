@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.FormStatusIndicator" owl="1">
-        <div class="o_form_status_indicator ms-2 d-flex align-items-center" t-att-class="{ o_form_status_indicator_new_record: props.model.root.isVirtual }">
+        <div class="o_form_status_indicator ms-2 d-flex align-items-baseline" t-att-class="{ o_form_status_indicator_new_record: props.model.root.isVirtual }">
             <div class="o_form_status_indicator_buttons d-flex" t-att-class="{ invisible: !(props.model.root.isVirtual or displayButtons) }">
                 <button
                     type="button"

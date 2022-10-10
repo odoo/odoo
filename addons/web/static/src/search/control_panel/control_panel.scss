@@ -6,19 +6,36 @@
     > div {
         display: flex;
         min-height: $o-statusbar-height;
+        @include media-breakpoint-up(md) {
+            justify-content: space-between;
+        }
     }
 
     @include media-breakpoint-up(md) {
-        .o_cp_top_left, .o_cp_top_right,
-        .o_cp_bottom_left, .o_cp_bottom_right {
-            width: 50%;
+        :not(.o_form_view_container) > & {
+            .o_cp_top_left, .o_cp_top_right,
+            .o_cp_bottom_left, .o_cp_bottom_right {
+                width: 50%;
+            }
         }
+    }
+
+    .o_cp_top_left, .o_cp_top_right,
+    .o_cp_bottom_left, .o_cp_bottom_right {
+        overflow: hidden;
+        flex-wrap: wrap;
     }
 
     @include media-breakpoint-down(md) {
         padding-right: 0;
         width: 100%;
 
+        .o_form_view_container & .o_cp_top {
+            flex-wrap: wrap;
+            .o_cp_top_left {
+                width: 70%;
+            }
+        }
         > div.o_cp_bottom {
             min-height: auto;
         }
@@ -80,14 +97,18 @@
 
     .breadcrumb {
         font-size: 18px;
+        width: 100%;
 
         > li {
-            @include o-text-overflow();
+            min-width: 0;
+            @include o-text-overflow($max-width: 90%);
         }
 
         @include media-breakpoint-down(md) {
             width: 100%;
             overflow: hidden;
+            display: flex;
+            flex-flow: nowrap;
 
             > li {
                 margin: 0;
@@ -120,10 +141,6 @@
                 }
             }
         }
-    }
-
-    .o_cp_top_right {
-        min-height: $o-cp-breadcrumb-height;
     }
 
     .o_cp_bottom_left {
@@ -190,10 +207,13 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: flex-end;
+        align-items: baseline;
         column-gap: $o-horizontal-padding;
 
         > .o_cp_pager {
-            margin: auto 0 auto auto;
+            @include media-breakpoint-down(md) {
+                margin: auto 0 auto auto;
+            }
             padding-left: 5px;
             text-align: center;
             user-select: none;
