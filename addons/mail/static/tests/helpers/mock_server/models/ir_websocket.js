@@ -18,7 +18,7 @@ patch(MockServer.prototype, 'mail/models/ir_websocket', {
         const imStatus = this._super(imStatusIdsByModel);
         const { 'mail.guest': guestIds } = imStatusIdsByModel;
         if (guestIds) {
-            imStatus['guests'] = this.pyEnv['mail.guest'].searchRead([['id', 'in', guestIds]], { context: { 'active_test': false }, fields: ['im_status'] });
+            imStatus['Guest'] = this.pyEnv['mail.guest'].searchRead([['id', 'in', guestIds]], { context: { 'active_test': false }, fields: ['im_status'] });
         }
         return imStatus;
     },

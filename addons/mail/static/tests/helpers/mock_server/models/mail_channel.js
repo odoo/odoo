@@ -309,10 +309,12 @@ patch(MockServer.prototype, 'mail/models/mail_channel', {
                 is_minimized: foldState !== 'closed',
             };
             this.pyEnv['mail.channel.member'].write([memberOfCurrentUser.id], vals);
-            this.pyEnv['bus.bus']._sendone(this.pyEnv.currentPartner, 'mail.thread/insert', {
-                'id': channel.id,
-                'model': 'mail.channel',
-                'serverFoldState': memberOfCurrentUser.fold_state,
+            this.pyEnv['bus.bus']._sendone(this.pyEnv.currentPartner, 'mail.record/insert', {
+                'Thread': {
+                    'id': channel.id,
+                    'model': 'mail.channel',
+                    'serverFoldState': memberOfCurrentUser.fold_state,
+                }
             });
         }
     },
@@ -490,10 +492,12 @@ patch(MockServer.prototype, 'mail/models/mail_channel', {
             [channel.id],
             { name },
         );
-        this.pyEnv['bus.bus']._sendone(channel, 'mail.thread/insert', {
-            'id': channel.id,
-            'model': 'mail.channel',
-            'name': name,
+        this.pyEnv['bus.bus']._sendone(channel, 'mail.record/insert', {
+            'Thread': {
+                'id': channel.id,
+                'model': 'mail.channel',
+                'name': name,
+            }
         });
     },
     /**
@@ -509,9 +513,11 @@ patch(MockServer.prototype, 'mail/models/mail_channel', {
             [memberIdOfCurrentUser],
             { custom_channel_name: name },
         );
-        this.pyEnv['bus.bus']._sendone(this.pyEnv.currentPartner, 'mail.channel/insert', {
-            'custom_channel_name': name,
-            'id': channelId,
+        this.pyEnv['bus.bus']._sendone(this.pyEnv.currentPartner, 'mail.record/insert', {
+            'Channel': {
+                'custom_channel_name': name,
+                'id': channelId,
+            }
         });
     },
     /**
@@ -634,9 +640,11 @@ patch(MockServer.prototype, 'mail/models/mail_channel', {
             },
         );
         const channel = this.pyEnv['mail.channel'].searchRead([['id', '=', id]])[0];
-        this.pyEnv['bus.bus']._sendone(channel, 'mail.channel/insert', {
-            'avatarCacheKey': channel.avatarCacheKey,
-            'id': id,
+        this.pyEnv['bus.bus']._sendone(channel, 'mail.record/insert', {
+            'Channel': {
+                'avatarCacheKey': channel.avatarCacheKey,
+                'id': id,
+            }
         });
     },
     /**
