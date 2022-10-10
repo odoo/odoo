@@ -672,7 +672,7 @@ class SlideChannel(models.Model):
         local_context = dict(
             self.env.context,
             default_channel_id=self.id if len(self) == 1 else False,
-            default_email_layout_xmlid='website_slides.mail_notification_channel_invite',
+            default_email_layout_xmlid='mail.mail_notification_layout',
             default_enroll_mode=enroll_mode,
             default_template_id=mail_template and mail_template.id or False,
             default_use_template=bool(mail_template),

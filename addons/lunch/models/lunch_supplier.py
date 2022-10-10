@@ -10,11 +10,13 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import float_round
+from odoo.tools.translate import LazyTranslate
 
 from odoo.addons.base.models.res_partner import _tz_get
 
 WEEKDAY_TO_NAME = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 CRON_DEPENDS = {'name', 'active', 'send_by', 'automatic_email_time', 'moment', 'tz'}
+_lt = LazyTranslate(__name__)
 
 def float_to_time(hours, moment='am'):
     """ Convert a number of hours into a time object. """
@@ -283,8 +285,11 @@ class LunchSupplier(models.Model):
         } for site in sites]
 
         self.env.ref('lunch.lunch_order_mail_supplier').with_context(
+            email_notification_force_header=True,
+            email_notification_force_footer=True,
+            email_notification_subtitles=[_lt("Lunch Order")],
             order=order, lines=email_orders, sites=email_sites
-        ).send_mail(self.id)
+        ).send_mail_batch(self.ids, email_layout_xmlid='mail.mail_notification_layout')
 
         orders.action_send()
 
