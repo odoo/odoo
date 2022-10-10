@@ -1035,7 +1035,7 @@
                 };
                 parentRightEdge = this.parentEl[0].clientWidth + this.parentEl.offset().left;
             }
-            
+
             switch (drops) {
             case 'auto':
                 containerTop = this.element.offset().top + this.element.outerHeight() - parentOffset.top;
@@ -1329,6 +1329,10 @@
                 //special case: clicking the same date for start/end,
                 //but the time of the end date is before the start date
                 this.setEndDate(this.startDate.clone());
+            } else if(!this.endDate && date.isSame(this.startDate)) {
+                console.log('same date');
+                date = date.clone().hour(23).minute(59).second(59);
+                this.setEndDate(date.clone());
             } else { // picking end
                 if (this.timePicker) {
                     var hour = parseInt(this.container.find('.right .hourselect').val(), 10);
