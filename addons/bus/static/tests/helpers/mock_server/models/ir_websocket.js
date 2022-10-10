@@ -13,7 +13,7 @@ patch(MockServer.prototype, 'bus/models/ir_websocket', {
      _mockIrWebsocket__updatePresence(inactivityPeriod, imStatusIdsByModel) {
         const imStatusNotifications = this._mockIrWebsocket__getImStatus(imStatusIdsByModel);
         if (Object.keys(imStatusNotifications).length > 0) {
-            this._mockBusBus__sendone(this.currentPartnerId, 'bus/im_status', imStatusNotifications);
+            this._mockBusBus__sendone(this.currentPartnerId, 'mail.record/insert', imStatusNotifications);
         }
     },
     /**
@@ -27,7 +27,7 @@ patch(MockServer.prototype, 'bus/models/ir_websocket', {
         const imStatus = {};
         const { 'res.partner': partnerIds } = imStatusIdsByModel;
         if (partnerIds) {
-            imStatus['partners'] = this.mockSearchRead('res.partner', [[['id', 'in', partnerIds]]], { context: { 'active_test': false }, fields: ['im_status'] })
+            imStatus['Partner'] = this.mockSearchRead('res.partner', [[['id', 'in', partnerIds]]], { context: { 'active_test': false }, fields: ['im_status'] })
         }
         return imStatus;
     },

@@ -316,9 +316,11 @@ QUnit.test('channel - states: close from the bus', async function (assert) {
     await openDiscuss();
 
     await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(pyEnv.currentPartner, 'res.users.settings/insert', {
-            id: resUsersSettingsId1,
-            'is_discuss_sidebar_category_channel_open': false,
+        pyEnv['bus.bus']._sendone(pyEnv.currentPartner, 'mail.record/insert', {
+            'res.users.settings': {
+                id: resUsersSettingsId1,
+                'is_discuss_sidebar_category_channel_open': false,
+            },
         });
     });
     assert.containsNone(
@@ -341,9 +343,11 @@ QUnit.test('channel - states: open from the bus', async function (assert) {
     await openDiscuss();
 
     await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(pyEnv.currentPartner, 'res.users.settings/insert', {
-            id: resUsersSettingsId1,
-            'is_discuss_sidebar_category_channel_open': true,
+        pyEnv['bus.bus']._sendone(pyEnv.currentPartner, 'mail.record/insert', {
+            'res.users.settings': {
+                id: resUsersSettingsId1,
+                'is_discuss_sidebar_category_channel_open': true,
+            },
         });
     });
     assert.containsOnce(
@@ -651,9 +655,11 @@ QUnit.test('chat - states: close from the bus', async function (assert) {
     await openDiscuss();
 
     await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(pyEnv.currentPartner, 'res.users.settings/insert', {
-            id: resUsersSettingsId1,
-            'is_discuss_sidebar_category_chat_open': false,
+        pyEnv['bus.bus']._sendone(pyEnv.currentPartner, 'mail.record/insert', {
+            'res.users.settings': {
+                id: resUsersSettingsId1,
+                'is_discuss_sidebar_category_chat_open': false,
+            },
         });
     });
     assert.containsNone(
@@ -678,9 +684,11 @@ QUnit.test('chat - states: open from the bus', async function (assert) {
     await openDiscuss();
 
     await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(pyEnv.currentPartner, 'res.users.settings/insert', {
-            id: resUsersSettingsId1,
-            'is_discuss_sidebar_category_chat_open': true,
+        pyEnv['bus.bus']._sendone(pyEnv.currentPartner, 'mail.record/insert', {
+            'res.users.settings': {
+                id: resUsersSettingsId1,
+                'is_discuss_sidebar_category_chat_open': true,
+            },
         });
     });
     assert.containsOnce(

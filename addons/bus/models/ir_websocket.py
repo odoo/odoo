@@ -12,7 +12,7 @@ class IrWebsocket(models.AbstractModel):
     def _get_im_status(self, im_status_ids_by_model):
         im_status = {}
         if 'res.partner' in im_status_ids_by_model:
-            im_status['partners'] = self.env['res.partner'].with_context(active_test=False).search_read(
+            im_status['Partner'] = self.env['res.partner'].with_context(active_test=False).search_read(
                 [('id', 'in', im_status_ids_by_model['res.partner'])],
                 ['im_status']
             )
@@ -47,7 +47,7 @@ class IrWebsocket(models.AbstractModel):
             )
             im_status_notification = self._get_im_status(im_status_ids_by_model)
             if im_status_notification:
-                self.env['bus.bus']._sendone(self.env.user.partner_id, 'bus/im_status', im_status_notification)
+                self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.record/insert', im_status_notification)
 
     @classmethod
     def _authenticate(cls):

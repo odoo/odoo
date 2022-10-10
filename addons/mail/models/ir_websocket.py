@@ -9,7 +9,7 @@ class IrWebsocket(models.AbstractModel):
     def _get_im_status(self, data):
         im_status = super()._get_im_status(data)
         if 'mail.guest' in data:
-            im_status['guests'] = self.env['mail.guest'].sudo().with_context(active_test=False).search_read(
+            im_status['Guest'] = self.env['mail.guest'].sudo().with_context(active_test=False).search_read(
                 [('id', 'in', data['mail.guest'])],
                 ['im_status']
             )

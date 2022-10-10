@@ -249,6 +249,32 @@ export class ModelManager {
     }
 
     /**
+     * This method creates or updates records, based on provided data. This
+     * method assumes that records are uniquely identifiable per "unique find"
+     * criteria from data on model.
+     *
+     * @param {Object} data
+     * ```javascript
+     * {
+     *     Partner: {
+     *         ...
+     *     },
+     *     Guest: [{
+     *         ...
+     *     }]
+     * }
+     * ```
+     * @returns void
+     */
+    multiModelInsert(data) {
+        for (const [modelName, recordsData] of Object.entries(data)) {
+            const isMulti = typeof recordsData[Symbol.iterator] === 'function';
+            this._insert(this.models[modelName], isMulti ? recordsData : [recordsData]);
+        }
+        this._flushUpdateCycle();
+    }
+
+    /**
      * Returns the messaging singleton associated to this model manager.
      *
      * @returns {Messaging|undefined}
