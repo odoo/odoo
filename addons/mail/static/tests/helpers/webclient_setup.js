@@ -20,6 +20,7 @@ import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { createWebClient } from "@web/../tests/webclient/helpers";
 
 const ROUTES_TO_IGNORE = [
+    '/bus/websocket_worker_version',
     '/web/webclient/load_menus',
     '/web/dataset/call_kw/res.users/load_views',
     '/web/dataset/call_kw/res.users/systray_get_activities'

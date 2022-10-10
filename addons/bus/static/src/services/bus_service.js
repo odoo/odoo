@@ -19,14 +19,20 @@ const { EventBus } = owl;
 export const busService = {
     dependencies: ['localization', 'multi_tab'],
 
-    start(env, { multi_tab: multiTab }) {
+    async start(env, { multi_tab: multiTab }) {
         if (session.dbuuid && multiTab.getSharedValue('dbuuid') !== session.dbuuid) {
             multiTab.setSharedValue('dbuuid', session.dbuuid);
             multiTab.removeSharedValue('last_notification_id');
         }
         const bus = new EventBus();
+
+        let workerVersion = session['websocket_worker_version'];
+        if (!workerVersion) {
+            const response = await browser.fetch('/bus/websocket_worker_version');
+            workerVersion = await response.text();
+        }
         const workerClass = 'SharedWorker' in window ? browser.SharedWorker : browser.Worker;
-        const worker = new workerClass('/bus/websocket_worker_bundle', {
+        const worker = new workerClass(`/bus/websocket_worker_bundle?version=${workerVersion}`, {
             name: 'SharedWorker' in window ? 'odoo:websocket_shared_worker' : 'odoo:websocket_worker',
         });
 
