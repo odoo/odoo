@@ -53,7 +53,6 @@ Featuring
         'data/gamification_data.xml',
         'data/mail_message_subtype_data.xml',
         'data/mail_template_data.xml',
-        'data/mail_templates.xml',
         'data/slide_data.xml',
         'data/website_data.xml',
         'data/slides_tour.xml',

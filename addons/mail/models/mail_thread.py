@@ -3591,7 +3591,7 @@ class MailThread(models.AbstractModel):
                 force_email_company=force_email_company,
                 force_email_lang=lang,
                 force_record_name=force_record_name,
-            ) # 10 queries
+            )
             if subtitles:
                 render_values['subtitles'] = subtitles
 
@@ -3701,7 +3701,7 @@ class MailThread(models.AbstractModel):
             'model_description': model_description,
             'record': record_wlang,
             'record_name': record_name,
-            'subtitles': [record_name],
+            'subtitles': self.env.context.get('email_notification_subtitles', [record_name]),
             # user / environment
             'author_user': author_user,  # User who sends the message
             'company': company,
@@ -3717,6 +3717,7 @@ class MailThread(models.AbstractModel):
             'email_notification_force_footer': self.env.context.get('email_notification_force_footer', False),  # force displaying the email footer
             'email_notification_allow_header': self.env.context.get('email_notification_allow_header', True),
             'email_notification_allow_footer': self.env.context.get('email_notification_allow_footer', False),
+            'subtitles_highlight_index': self.env.context.get('email_notification_subtitles_highlight_index', 0),
         }
 
     def _notify_by_email_render_layout(self, message, recipients_group,

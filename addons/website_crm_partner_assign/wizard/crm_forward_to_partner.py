@@ -3,6 +3,9 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools.translate import LazyTranslate
+
+_lt = LazyTranslate(__name__)
 
 
 class CrmLeadForwardToPartner(models.TransientModel):
@@ -94,7 +97,12 @@ class CrmLeadForwardToPartner(models.TransientModel):
             local_context['partner_id'] = partner_leads['partner']
             local_context['partner_leads'] = partner_leads['leads']
             local_context['partner_in_portal'] = in_portal
-            template.with_context(local_context).send_mail(self.id)
+            template.with_context(
+                local_context,
+                email_notification_force_header=True,
+                email_notification_force_footer=True,
+                email_notification_subtitles=[_lt("Your leads")],
+            ).send_mail_batch(self.ids, email_layout_xmlid='mail.mail_notification_layout')
             leads = self.env['crm.lead']
             for lead_data in partner_leads['leads']:
                 leads |= lead_data['lead_id']
