@@ -99,6 +99,9 @@ sent mails with personal token for the invitation of the survey.
             'survey/static/src/scss/survey_question_views.scss',
             'survey/static/src/scss/survey_templates_results.scss',
         ],
+        "web.dark_mode_assets_backend": [
+            'survey/static/src/scss/*.dark.scss',
+        ],
         'web.assets_tests': [
             'survey/static/tests/tours/*.js',
         ],
