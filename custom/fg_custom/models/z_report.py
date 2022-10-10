@@ -111,13 +111,16 @@ class FgZReport(models.AbstractModel):
 
             for i in session_id.statement_ids:
                 total_entry_encoding += abs(i.total_entry_encoding)
+            result_pos_pay = self.env['pos.payment'].read_group([('session_id', '=', session_id.id), ('payment_method_id.is_cash_count', '=', True)], ['amount'], ['session_id'])
+            session_amount_map = dict((data['session_id'][0], data['amount']) for data in result_pos_pay)
+            total_entry_encoding += session_amount_map.get(session_id.id) or 0
 
             session_start_at = timezone('UTC').localize(session_id.start_at).astimezone(timezone(tz_name))
             session_stop_at = timezone('UTC').localize(session_id.stop_at).astimezone(timezone(tz_name))
             cash_register_balance_start += session_id.cash_register_balance_start
-            cash_register_balance_end_real += session_id.total_payments_amount
+            cash_register_balance_end_real += session_id.cash_register_balance_end
             open_cashier_list.append([self.env.user.name, session_start_at.strftime('%m/%d/%Y %H:%M:%S')])
-            close_cashier_list.append([session_id.write_uid.name, session_stop_at.strftime('%m/%d/%Y %H:%M:%S')])
+            close_cashier_list.append([self.env.user.name, session_stop_at.strftime('%m/%d/%Y %H:%M:%S')])
         data = {
                 'session_id': session_ids[0] if session_ids else False,
                 'open_cashier_list': open_cashier_list,
@@ -146,7 +149,7 @@ class FgZReport(models.AbstractModel):
                 'changes_order_count': int(changes_order_count),
                 'changes_order_total': changes_order_total,
                 }
-        print('---------data--z--', data)
+        # print('---------data--z--', data)
         return data
 
     @api.model
