@@ -37,12 +37,18 @@
                                 <field name="state_required"/>
                             </group>
                         </group>
-                        <group name="advanced_address_formatting" string="Advanced Address Formatting" groups="base.group_no_one" col="4" colspan="4">
-                            <field name="address_view_id" colspan="2"/>
-                            <div colspan="2" class="text-muted">Choose a subview of partners that includes only address fields, to change the way users can input addresses.</div>
-                            <field name="address_format" placeholder="Address format..." colspan="2"/>
-                            <div colspan="2" name="div_address_format" class="text-muted">Change the way addresses are displayed in reports</div>
-                            <field name="name_position" colspan="2"/>
+                        <group name="advanced_address_formatting" string="Advanced Address Formatting" groups="base.group_no_one">
+                            <label for="address_view_id"/>
+                            <div class="o_row">
+                                <field name="address_view_id"/>
+                                <div class="text-muted ms-2">Choose a subview of partners that includes only address fields, to change the way users can input addresses.</div>
+                            </div>
+                            <label for="address_format"/>
+                            <div class="o_row">
+                                <field name="address_format" placeholder="Address format..."/>
+                                <div name="div_address_format ms-2" class="text-muted">Change the way addresses are displayed in reports</div>
+                            </div>
+                            <field name="name_position" class="oe_inline"/>
                         </group>
                         <label for="state_ids"/>
                         <field name="state_ids">
