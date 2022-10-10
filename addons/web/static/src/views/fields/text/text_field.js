@@ -6,6 +6,7 @@ import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { TranslationButton } from "../translation_button";
 import { useDynamicPlaceholder } from "../dynamicplaceholder_hook";
+import { parseInteger } from '../parsers';
 
 const { Component, useEffect, onMounted, onWillUnmount, useRef } = owl;
 
@@ -67,7 +68,7 @@ export class TextField extends Component {
         return 50;
     }
     get rowCount() {
-        return 2;
+        return this.props.rowCount;
     }
 
     resize() {
@@ -105,23 +106,31 @@ TextField.template = "web.TextField";
 TextField.components = {
     TranslationButton,
 };
-TextField.defaultProps = {dynamicPlaceholder: false};
+TextField.defaultProps = {
+    dynamicPlaceholder: false,
+    rowCount: 2,
+};
 TextField.props = {
     ...standardFieldProps,
     isTranslatable: { type: Boolean, optional: true },
     placeholder: { type: String, optional: true },
     dynamicPlaceholder: { type: Boolean, optional: true},
+    rowCount: { type: Number, optional: true },
 };
 
 TextField.displayName = _lt("Multiline Text");
 TextField.supportedTypes = ["html", "text"];
 
 TextField.extractProps = ({ attrs, field }) => {
-    return {
+    const props = {
         isTranslatable: field.translate,
         placeholder: attrs.placeholder,
         dynamicPlaceholder: attrs.options.dynamic_placeholder,
     };
+    if (attrs.rows) {
+        props.rowCount = parseInteger(attrs.rows);
+    }
+    return props;
 };
 
 registry.category("fields").add("text", TextField);
@@ -131,8 +140,12 @@ export class ListTextField extends TextField {
         return 0;
     }
     get rowCount() {
-        return 1;
+        return this.props.rowCount;
     }
 }
+ListTextField.defaultProps = {
+    ...TextField.defaultProps,
+    rowCount: 1,
+};
 
 registry.category("fields").add("list.text", ListTextField);
