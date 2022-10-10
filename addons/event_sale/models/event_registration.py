@@ -128,6 +128,6 @@ class EventRegistration(models.Model):
         res.update({
             'payment_status': self.payment_status,
             'payment_status_value': dict(self._fields['payment_status']._description_selection(self.env))[self.payment_status],
-            'has_to_pay': not self.is_paid,
+            'has_to_pay': not self.is_paid and self.payment_status != 'free',
         })
         return res
