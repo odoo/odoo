@@ -812,7 +812,7 @@
 
                                 <!-- Invoice payment terms (only invoices) + due date (only invoices / receipts) -->
                                 <div class="o_td_label" attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}">
-                                    <label for="invoice_payment_term_id" string="Due Date"
+                                    <label for="invoice_date_due" string="Due Date"
                                            attrs="{'invisible': [('invoice_payment_term_id', '!=', False)]}"/>
                                     <label for="invoice_payment_term_id" string="Payment terms"
                                            attrs="{'invisible': [('invoice_payment_term_id', '=', False)]}"/>
