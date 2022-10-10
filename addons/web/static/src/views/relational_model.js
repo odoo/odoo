@@ -1005,18 +1005,18 @@ export class Record extends DataPoint {
             return [false, ""];
         }
         const relation = this.fields[fieldName].relation;
-        if (!id && label) {
+        const activeField = this.activeFields[fieldName];
+        const getContext = () =>
+            processRawContext({
+                parent: this.rawContext,
+                make: () => {
+                    return makeContext([activeField.context], this.evalContext);
+                },
+            });
+        if (!id && label && activeField) {
             // only display_name given -> do a name_create
             const res = await this.model.orm.call(relation, "name_create", [label], {
-                context: processRawContext({
-                    parent: this.rawContext,
-                    make: () => {
-                        return makeContext(
-                            [this.activeFields[fieldName].context],
-                            this.evalContext
-                        );
-                    },
-                }),
+                context: getContext(),
             });
             // Check if a record is really created. Models without defined
             // _rec_name cannot create record based on name_create.
@@ -1025,6 +1025,11 @@ export class Record extends DataPoint {
             }
             id = res[0];
             label = res[1];
+        } else if (id && label === undefined && activeField) {
+            const result = await this.model.orm.nameGet(relation, [id], {
+                context: getContext(),
+            });
+            label = result[0][1];
         }
         return [id, label];
     }
