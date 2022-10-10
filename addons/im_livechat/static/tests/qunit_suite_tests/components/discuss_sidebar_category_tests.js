@@ -318,9 +318,11 @@ QUnit.test('livechat - states: close from the bus', async function (assert) {
     );
 
     await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(pyEnv.currentPartner, 'res.users.settings/insert', {
-            id: resUsersSettingsId1,
-            'is_discuss_sidebar_category_livechat_open': false,
+        pyEnv['bus.bus']._sendone(pyEnv.currentPartner, 'mail.record/insert', {
+            'res.users.settings': {
+                'id': resUsersSettingsId1,
+                'is_discuss_sidebar_category_livechat_open': false,
+            },
         });
     });
     assert.containsNone(
@@ -356,9 +358,11 @@ QUnit.test('livechat - states: open from the bus', async function (assert) {
     );
 
     await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(pyEnv.currentPartner, 'res.users.settings/insert', {
-            id: resUsersSettingsId1,
-            'is_discuss_sidebar_category_livechat_open': true,
+        pyEnv['bus.bus']._sendone(pyEnv.currentPartner, 'mail.record/insert', {
+            'res.users.settings': {
+                id: resUsersSettingsId1,
+                'is_discuss_sidebar_category_livechat_open': true,
+            },
         });
     });
     assert.containsOnce(

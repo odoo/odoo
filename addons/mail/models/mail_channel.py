@@ -263,9 +263,11 @@ class Channel(models.Model):
         if 'image_128' in vals:
             notifications = []
             for channel in self:
-                notifications.append([channel, 'mail.channel/insert', {
-                    'avatarCacheKey': channel._get_avatar_cache_key(),
-                    'id': channel.id,
+                notifications.append([channel, 'mail.record/insert', {
+                    'Channel': {
+                        'avatarCacheKey': channel._get_avatar_cache_key(),
+                        'id': channel.id,
+                    }
                 }])
             self.env['bus.bus']._sendmany(notifications)
         return result
@@ -314,10 +316,12 @@ class Channel(models.Model):
         notification = _('<div class="o_mail_notification">left the channel</div>')
         # post 'channel left' message as root since the partner just unsubscribed from the channel
         self.sudo().message_post(body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id)
-        self.env['bus.bus']._sendone(self, 'mail.channel/insert', {
-            'channelMembers': [('insert-and-unlink', {'id': member_id})],
-            'id': self.id,
-            'memberCount': self.member_count,
+        self.env['bus.bus']._sendone(self, 'mail.record/insert', {
+            'Channel': {
+                'channelMembers': [('insert-and-unlink', {'id': member_id})],
+                'id': self.id,
+                'memberCount': self.member_count,
+            }
         })
 
     def add_members(self, partner_ids=None, guest_ids=None, invite_to_rtc_call=False, open_chat_window=False, post_joined_message=True):
@@ -395,19 +399,23 @@ class Channel(models.Model):
                     notifications.append((guest, 'mail.channel/joined', {
                         'channel': member.channel_id.sudo().channel_info()[0],
                     }))
-            notifications.append((channel, 'mail.channel/insert', {
-                'channelMembers': [('insert', list(new_members._mail_channel_member_format().values()))],
-                'id': channel.id,
-                'memberCount': channel.member_count,
+            notifications.append((channel, 'mail.record/insert', {
+                'Channel': {
+                    'channelMembers': [('insert', list(new_members._mail_channel_member_format().values()))],
+                    'id': channel.id,
+                    'memberCount': channel.member_count,
+                }
             }))
             if existing_members:
                 # If the current user invited these members but they are already present, notify the current user about their existence as well.
                 # In particular this fixes issues where the current user is not aware of its own member in the following case:
                 # create channel from form view, and then join from discuss without refreshing the page.
-                notifications.append((current_partner or current_guest, 'mail.channel/insert', {
-                    'channelMembers': [('insert', list(existing_members._mail_channel_member_format().values()))],
-                    'id': channel.id,
-                    'memberCount': channel.member_count,
+                notifications.append((current_partner or current_guest, 'mail.record/insert', {
+                    'Channel': {
+                        'channelMembers': [('insert', list(existing_members._mail_channel_member_format().values()))],
+                        'id': channel.id,
+                        'memberCount': channel.member_count,
+                    }
                 }))
         if invite_to_rtc_call:
             for channel in self:
@@ -461,16 +469,18 @@ class Channel(models.Model):
                 target = member.partner_id
             else:
                 target = member.guest_id
-            invitation_notifications.append((target, 'mail.thread/insert', {
-                'id': self.id,
-                'model': 'mail.channel',
-                'rtcInvitingSession': [('unlink',)],
+            invitation_notifications.append((target, 'mail.record/insert', {
+                'Thread': {
+                    'id': self.id,
+                    'model': 'mail.channel',
+                    'rtcInvitingSession': [('unlink',)],
+                }
             }))
         self.env['bus.bus']._sendmany(invitation_notifications)
         channel_data = {'id': self.id, 'model': 'mail.channel'}
         if members:
             channel_data['invitedMembers'] = [('insert-and-unlink', list(members._mail_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id', 'name', 'im_status'}, 'guest': {'id', 'name', 'im_status'}}}).values()))]
-            self.env['bus.bus']._sendone(self, 'mail.thread/insert', channel_data)
+            self.env['bus.bus']._sendone(self, 'mail.record/insert', {'Thread': channel_data})
         return channel_data
 
     # ------------------------------------------------------------
@@ -617,10 +627,12 @@ class Channel(models.Model):
 
     def _message_update_content_after_hook(self, message):
         self.ensure_one()
-        self.env['bus.bus']._sendone(self, 'mail.message/insert', {
-            'id': message.id,
-            'body': message.body,
-            'attachments': message.attachment_ids._attachment_format(),
+        self.env['bus.bus']._sendone(self, 'mail.record/insert', {
+            'Message': {
+                'id': message.id,
+                'body': message.body,
+                'attachments': message.attachment_ids._attachment_format(),
+            }
         })
         return super()._message_update_content_after_hook(message=message)
 
@@ -633,15 +645,17 @@ class Channel(models.Model):
             guests = []
             partners = [('insert', {'id': self.env.user.partner_id.id})]
         reactions = self.env['mail.message.reaction'].sudo().search([('message_id', '=', message.id), ('content', '=', content)])
-        self.env['bus.bus']._sendone(self, 'mail.message/insert', {
-            'id': message.id,
-            'messageReactionGroups': [('insert' if len(reactions) > 0 else 'insert-and-unlink', {
-                'content': content,
-                'count': len(reactions),
-                'guests': guests,
-                'message': {'id': message.id},
-                'partners': partners,
-            })],
+        self.env['bus.bus']._sendone(self, 'mail.record/insert', {
+            'Message': {
+                'id': message.id,
+                'messageReactionGroups': [('insert' if len(reactions) > 0 else 'insert-and-unlink', {
+                    'content': content,
+                    'count': len(reactions),
+                    'guests': guests,
+                    'message': {'id': message.id},
+                    'partners': partners,
+                })],
+            }
         })
         return super()._message_add_reaction_after_hook(message=message, content=content)
 
@@ -654,15 +668,17 @@ class Channel(models.Model):
             guests = []
             partners = [('insert-and-unlink', {'id': self.env.user.partner_id.id})]
         reactions = self.env['mail.message.reaction'].sudo().search([('message_id', '=', message.id), ('content', '=', content)])
-        self.env['bus.bus']._sendone(self, 'mail.message/insert', {
-            'id': message.id,
-            'messageReactionGroups': [('insert' if len(reactions) > 0 else 'insert-and-unlink', {
-                'content': content,
-                'count': len(reactions),
-                'guests': guests,
-                'message': {'id': message.id},
-                'partners': partners,
-            })],
+        self.env['bus.bus']._sendone(self, 'mail.record/insert', {
+            'Message': {
+                'id': message.id,
+                'messageReactionGroups': [('insert' if len(reactions) > 0 else 'insert-and-unlink', {
+                    'content': content,
+                    'count': len(reactions),
+                    'guests': guests,
+                    'message': {'id': message.id},
+                    'partners': partners,
+                })],
+            }
         })
         return super()._message_remove_reaction_after_hook(message=message, content=content)
 
@@ -918,10 +934,12 @@ class Channel(models.Model):
                 vals['is_minimized'] = is_minimized
             if vals:
                 session_state.write(vals)
-            self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.thread/insert', {
-                'id': session_state.channel_id.id,
-                'model': 'mail.channel',
-                'serverFoldState': state,
+            self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.record/insert', {
+                'Thread': {
+                    'id': session_state.channel_id.id,
+                    'model': 'mail.channel',
+                    'serverFoldState': state,
+                }
             })
 
     def channel_pin(self, pinned=False):
@@ -1006,27 +1024,33 @@ class Channel(models.Model):
         self.ensure_one()
         member = self.env['mail.channel.member'].search([('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', self.id)])
         member.write({'custom_channel_name': name})
-        self.env['bus.bus']._sendone(member.partner_id, 'mail.channel/insert', {
-            'custom_channel_name': name,
-            'id': self.id,
+        self.env['bus.bus']._sendone(member.partner_id, 'mail.record/insert', {
+            'Channel': {
+                'custom_channel_name': name,
+                'id': self.id,
+            }
         })
 
     def channel_rename(self, name):
         self.ensure_one()
         self.write({'name': name})
-        self.env['bus.bus']._sendone(self, 'mail.thread/insert', {
-            'id': self.id,
-            'model': 'mail.channel',
-            'name': name,
+        self.env['bus.bus']._sendone(self, 'mail.record/insert', {
+            'Thread': {
+                'id': self.id,
+                'model': 'mail.channel',
+                'name': name,
+            }
         })
 
     def channel_change_description(self, description):
         self.ensure_one()
         self.write({'description': description})
-        self.env['bus.bus']._sendone(self, 'mail.thread/insert', {
-            'id': self.id,
-            'description': description,
-            'model': 'mail.channel',
+        self.env['bus.bus']._sendone(self, 'mail.record/insert', {
+            'Thread': {
+                'id': self.id,
+                'description': description,
+                'model': 'mail.channel',
+            }
         })
 
     def channel_join(self):

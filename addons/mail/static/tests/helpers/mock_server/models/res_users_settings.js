@@ -73,6 +73,6 @@ patch(MockServer.prototype, 'mail/models/res_users_settings', {
         );
         const [relatedUser] = this.pyEnv['res.users'].searchRead([['id', '=', oldSettings.user_id]]);
         const [relatedPartner] = this.pyEnv['res.partner'].searchRead([['id', '=', relatedUser.partner_id]]);
-        this.pyEnv['bus.bus']._sendone(relatedPartner, 'res.users.settings/insert', { ...changedSettings, id });
+        this.pyEnv['bus.bus']._sendone(relatedPartner, 'mail.record/insert', { 'res.users.settings': { ...changedSettings, id } });
     },
 });

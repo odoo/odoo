@@ -23,10 +23,10 @@ registerModel({
          * @param {Object} notification.payload
          * @param {string} notification.type
          */
-        _handleNotification({ payload, type }) {
+        _handleNotification({ payload: notifPayload, type }) {
             switch (type) {
                 case 'im_livechat.history_command': {
-                    if (payload.id !== this.messaging.publicLivechatGlobal.publicLivechat.id) {
+                    if (notifPayload.id !== this.messaging.publicLivechatGlobal.publicLivechat.id) {
                         return;
                     }
                     const cookie = getCookie(this.messaging.publicLivechatGlobal.LIVECHAT_COOKIE_HISTORY);
@@ -42,7 +42,7 @@ registerModel({
                     if (!this.messaging.publicLivechatGlobal.chatWindow || !this.messaging.publicLivechatGlobal.chatWindow.exists()) {
                         return;
                     }
-                    const channelMemberData = payload;
+                    const channelMemberData = notifPayload;
                     if (channelMemberData.channel.id !== this.messaging.publicLivechatGlobal.publicLivechat.id) {
                         return;
                     }
@@ -64,10 +64,10 @@ registerModel({
                     if (!this.messaging.publicLivechatGlobal.chatWindow || !this.messaging.publicLivechatGlobal.chatWindow.exists()) {
                         return;
                     }
-                    if (payload.id !== this.messaging.publicLivechatGlobal.publicLivechat.id) {
+                    if (notifPayload.id !== this.messaging.publicLivechatGlobal.publicLivechat.id) {
                         return;
                     }
-                    const notificationData = payload.message;
+                    const notificationData = notifPayload.message;
                     // If message from notif is already in chatter messages, stop handling
                     if (this.messaging.publicLivechatGlobal.messages.some(message => message.id === notificationData.id)) {
                         return;
@@ -80,7 +80,11 @@ registerModel({
                     this.messaging.publicLivechatGlobal.chatWindow.renderMessages();
                     return;
                 }
-                case 'mail.message/insert': {
+                case 'mail.record/insert': {
+                    const { Message: payload } = notifPayload;
+                    if (!payload) {
+                        return;
+                    }
                     if (!this.messaging.publicLivechatGlobal.chatWindow || !this.messaging.publicLivechatGlobal.chatWindow.exists()) {
                         return;
                     }

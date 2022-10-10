@@ -226,14 +226,16 @@ class ChannelMember(models.Model):
                 target = member.partner_id
             else:
                 target = member.guest_id
-            invitation_notifications.append((target, 'mail.thread/insert', {
-                'id': self.channel_id.id,
-                'model': 'mail.channel',
-                'rtcInvitingSession': self.rtc_session_ids._mail_rtc_session_format(),
+            invitation_notifications.append((target, 'mail.record/insert', {
+                'Thread': {
+                    'id': self.channel_id.id,
+                    'model': 'mail.channel',
+                    'rtcInvitingSession': self.rtc_session_ids._mail_rtc_session_format(),
+                }
             }))
         self.env['bus.bus']._sendmany(invitation_notifications)
         if members:
             channel_data = {'id': self.channel_id.id, 'model': 'mail.channel'}
             channel_data['invitedMembers'] = [('insert', list(members._mail_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id', 'name', 'im_status'}, 'guest': {'id', 'name', 'im_status'}}}).values()))]
-            self.env['bus.bus']._sendone(self.channel_id, 'mail.thread/insert', channel_data)
+            self.env['bus.bus']._sendone(self.channel_id, 'mail.record/insert', {'Thread': channel_data})
         return members

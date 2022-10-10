@@ -47,8 +47,9 @@ registerModel({
             const proms = notifications.map(message => {
                 if (typeof message === 'object') {
                     switch (message.type) {
-                        case 'bus/im_status':
-                            return this._handleNotificationBusImStatus(message.payload);
+                        case 'mail.record/insert':
+                            this.messaging.modelManager.multiModelInsert(message.payload);
+                            break;
                         case 'ir.attachment/delete':
                             return this._handleNotificationAttachmentDelete(message.payload);
                         case 'mail.channel.member/seen':
@@ -70,9 +71,6 @@ registerModel({
                                 return;
                             }
                             return this._handleNotificationChannelMessage(message.payload);
-                        case 'mail.link.preview/insert':
-                            this.messaging.models['LinkPreview'].insert(message.payload);
-                            return;
                         case 'mail.link.preview/delete': {
                             const linkPreview = this.messaging.models['LinkPreview'].findFromIdentifyingData(message.payload);
                             if (linkPreview) {
@@ -117,26 +115,12 @@ registerModel({
                             return this._handleNotificationChannelLastInterestDateTimeChanged(message.payload);
                         case 'mail.channel/legacy_insert':
                             return this.messaging.models['Thread'].insert(this.messaging.models['Thread'].convertData({ model: 'mail.channel', ...message.payload }));
-                        case 'mail.channel/insert':
-                            return this.messaging.models['Channel'].insert(message.payload);
-                        case 'mail.guest/insert':
-                            return this.messaging.models['Guest'].insert(message.payload);
-                        case 'mail.message/insert':
-                            return this.messaging.models['Message'].insert(message.payload);
-                        case 'mail.channel.rtc.session/insert':
-                            return this.messaging.models['RtcSession'].insert(message.payload);
                         case 'mail.channel.rtc.session/peer_notification':
                             return this._handleNotificationRtcPeerToPeer(message.payload);
                         case 'mail.channel/rtc_sessions_update':
                             return this._handleNotificationRtcSessionUpdate(message.payload);
                         case 'mail.channel.rtc.session/ended':
                             return this._handleNotificationRtcSessionEnded(message.payload);
-                        case 'mail.thread/insert':
-                            return this.messaging.models['Thread'].insert(message.payload);
-                        case 'res.users.settings/insert':
-                            return this.messaging.models['res.users.settings'].insert(message.payload);
-                        case 'res.users.settings.volumes/insert':
-                            return this.messaging.models['res.users.settings.volumes'].insert(message.payload);
                         default:
                             return this._handleNotification(message);
                     }
@@ -156,14 +140,6 @@ registerModel({
          * @param {Object[]} [payload.partners]
          * @param {Object[]|undefined} [payload.guests]
          */
-        _handleNotificationBusImStatus({ partners, guests }) {
-            if (partners) {
-                this.models['Partner'].insert(partners);
-            }
-            if (guests) {
-                this.models['Guest'].insert(guests);
-            }
-        },
         /**
          * @private
          * @param {Object} payload
