@@ -504,7 +504,8 @@ export class HtmlField extends Component {
         return getWysiwygClass();
     }
     _onAttachmentChange(attachment) {
-        if (!this.props.record.fieldNames.includes('attachment_ids')) {
+        // This only needs to happen for the composer for now
+        if (!(this.props.record.fieldNames.includes('attachment_ids') && this.props.record.resModel === 'mail.compose.message')) {
             return;
         }
         this.props.record.update(_.object(['attachment_ids'], [{

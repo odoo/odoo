@@ -16,37 +16,38 @@ const { useEffect } = owl;
 QUnit.module('field html file upload', {
     beforeEach: function () {
         this.data = weTestUtils.wysiwygData({
-            'note.note': {
+            'mail.compose.message': {
                 fields: {
                     display_name: {
                         string: "Displayed name",
                         type: "char"
                     },
-                    header: {
-                        string: "Header",
-                        type: "html",
-                        required: true,
-                    },
                     body: {
-                        string: "Message",
+                        string: "Message Body inline (to send)",
                         type: "html"
                     },
+                    attachment_ids: {
+                        string: "Attachments",
+                        type: "many2many",
+                        relation: "ir.attachment",
+                    }
                 },
                 records: [{
                     id: 1,
-                    display_name: "first record",
-                    header: "<p>  &nbsp;&nbsp;  <br>   </p>",
-                    body: "<p>toto toto toto</p><p>tata</p>",
+                    display_name: "Some Composer",
+                    body: "Hello",
+                    attachment_ids: [],
                 }],
             },
         });
     },
 }, function () {
     QUnit.test('media dialog: upload', async function (assert) {
-        assert.expect(3);
+        assert.expect(4);
         const onAttachmentChangeTriggered = testUtils.makeTestPromise();
         patchWithCleanup(HtmlField.prototype, {
             '_onAttachmentChange': function (event) {
+                this._super(event);
                 onAttachmentChangeTriggered.resolve(true);
             }
         });
@@ -75,16 +76,17 @@ QUnit.module('field html file upload', {
             1: {
                 id: 1,
                 name: "test",
-                res_model: "note.note",
+                res_model: "mail.compose.message",
                 type: "ir.actions.act_window",
                 views: [[false, "form"]],
             },
         };
         serverData.views = {
-            "note.note,false,search": "<search></search>",
-            "note.note,false,form": `
+            "mail.compose.message,false,search": "<search></search>",
+            "mail.compose.message,false,form": `
                 <form>
                     <field name="body" type="html"/>
+                    <field name="attachment_ids" widget="many2many_binary"/>
                 </form>`,
         };
         const mockRPC = (route, args) => {
@@ -122,9 +124,14 @@ QUnit.module('field html file upload', {
         fileInputs.forEach(input => {
             input.dispatchEvent(new Event('change', {}));
         });
+
         assert.ok(await Promise.race([onChangeTriggered, new Promise((res, _) => setTimeout(() => res(false), 400))]),
                   "File change event was not triggered");
         assert.ok(await Promise.race([onAttachmentChangeTriggered, new Promise((res, _) => setTimeout(() => res(false), 400))]),
                   "_onAttachmentChange was not called with the new attachment, necessary for unsused upload cleanup on backend");
+
+        // wait to check that dom is properly updated
+        await new Promise((res, _) => setTimeout(() => res(false), 400));
+        assert.ok(fixture.querySelector('.o_attachment[title="test.jpg"]'));
     });
 });
