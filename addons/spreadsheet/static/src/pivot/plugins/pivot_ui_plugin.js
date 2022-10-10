@@ -210,6 +210,9 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
         }
         const pivotId = evaluatedArgs[0];
         const argField = evaluatedArgs[evaluatedArgs.length - 2];
+        if (argField === "measure") {
+            return [];
+        }
         const filters = this.getters.getGlobalFilters();
         const matchingFilters = [];
 
