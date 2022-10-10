@@ -163,6 +163,7 @@ class AutomaticEntryWizard(models.TransientModel):
 
             counterpart_balances[(line.partner_id, counterpart_currency)]['amount_currency'] += counterpart_amount_currency
             counterpart_balances[(line.partner_id, counterpart_currency)]['balance'] += line.balance
+            counterpart_balances[(line.partner_id, counterpart_currency)]['analytic_distribution'] = line.analytic_distribution
             grouped_source_lines[(line.partner_id, line.currency_id, line.account_id)] += line
 
         # Generate counterpart lines' vals
@@ -179,6 +180,7 @@ class AutomaticEntryWizard(models.TransientModel):
                     'partner_id': counterpart_partner.id or None,
                     'amount_currency': counterpart_currency.round((counterpart_vals['balance'] < 0 and -1 or 1) * abs(counterpart_vals['amount_currency'])) or 0,
                     'currency_id': counterpart_currency.id,
+                    'analytic_distribution': counterpart_vals['analytic_distribution'],
                 })
 
         # Generate change_account lines' vals
@@ -246,6 +248,7 @@ class AutomaticEntryWizard(models.TransientModel):
                     'currency_id': aml.currency_id.id,
                     'account_id': aml.account_id.id,
                     'partner_id': aml.partner_id.id,
+                    'analytic_distribution': aml.analytic_distribution,
                 }),
                 (0, 0, {
                     'name': self._format_strings(_('{percent:0.2f}% recognized on {new_date}'), aml.move_id),
@@ -255,6 +258,7 @@ class AutomaticEntryWizard(models.TransientModel):
                     'currency_id': aml.currency_id.id,
                     'account_id': accrual_account.id,
                     'partner_id': aml.partner_id.id,
+                    'analytic_distribution': aml.analytic_distribution,
                 }),
             ]
             move_data[aml.move_id.date]['line_ids'] += [
@@ -266,6 +270,7 @@ class AutomaticEntryWizard(models.TransientModel):
                     'currency_id': aml.currency_id.id,
                     'account_id': aml.account_id.id,
                     'partner_id': aml.partner_id.id,
+                    'analytic_distribution': aml.analytic_distribution,
                 }),
                 (0, 0, {
                     'name': self._format_strings(_('{percent:0.2f}% to recognize on {new_date}'), aml.move_id),
@@ -275,6 +280,7 @@ class AutomaticEntryWizard(models.TransientModel):
                     'currency_id': aml.currency_id.id,
                     'account_id': accrual_account.id,
                     'partner_id': aml.partner_id.id,
+                    'analytic_distribution': aml.analytic_distribution,
                 }),
             ]
 
