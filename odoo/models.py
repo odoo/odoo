@@ -622,7 +622,6 @@ class BaseModel(metaclass=MetaModel):
         This "registry" class carries inferred model metadata, and inherits (in
         the Python sense) from all classes that define the model, and possibly
         other registry classes.
-
         """
         if getattr(cls, '_constraints', None):
             _logger.warning("Model attribute '_constraints' is no longer supported, "
@@ -934,10 +933,10 @@ class BaseModel(metaclass=MetaModel):
     def _export_rows(self, fields, *, _is_toplevel_call=True):
         """ Export fields of the records in ``self``.
 
-            :param fields: list of lists of fields to traverse
-            :param bool _is_toplevel_call:
-                used when recursing, avoid using when calling from outside
-            :return: list of lists of corresponding values
+        :param list fields: list of lists of fields to traverse
+        :param bool _is_toplevel_call:
+            used when recursing, avoid using when calling from outside
+        :return: list of lists of corresponding values
         """
         import_compatible = self.env.context.get('import_compat', True)
         lines = []
@@ -1049,10 +1048,11 @@ class BaseModel(metaclass=MetaModel):
     def export_data(self, fields_to_export):
         """ Export fields for selected objects
 
-            :param fields_to_export: list of fields
-            :rtype: dictionary with a *datas* matrix
+        This method is used when exporting data via client menu
 
-            This method is used when exporting data via client menu
+        :param list fields_to_export: list of fields
+        :returns: dictionary with a *datas* matrix
+        :rtype: dict
         """
         if not (self.env.is_admin() or self.env.user.has_group('base.group_allow_export')):
             raise UserError(_("You don't have the rights to export data. Please contact an Administrator."))
