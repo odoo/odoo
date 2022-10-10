@@ -91,7 +91,7 @@
                             </td>
                             <td style="width:40%">
                                 <p>
-                                    <t t-esc="cash_register_balance_end_real + cash_register_balance_start - return_order_total" t-options='{"widget": "float", "precision": 2}'/>
+                                    <t t-esc="cash_register_balance_end_real" t-options='{"widget": "float", "precision": 2}'/>
                                     <t t-esc="company.currency_id.name"/>
                                 </p>
                             </td>
@@ -662,7 +662,7 @@
                             </td>
                             <td style="width:40%">
                                 <p>
-                                    <t t-esc="cash_register_balance_end_real + cash_register_balance_start - return_order_total" t-options='{"widget": "float", "precision": 2}'/>
+                                    <t t-esc="cash_register_balance_end_real" t-options='{"widget": "float", "precision": 2}'/>
                                     <t t-esc="company.currency_id.name"/>
                                 </p>
                             </td>
