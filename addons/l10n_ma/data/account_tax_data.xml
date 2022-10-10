@@ -1,16 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- account chart  -->
-    <record id="l10n_kzc_temp_chart" model="account.chart.template">
-        <field name="property_account_receivable_id" ref="pcg_34211"/>
-        <field name="property_account_payable_id" ref="pcg_4411"/>
-        <field name="property_account_income_categ_id" ref="pcg_7111"/>
-        <field name="property_account_expense_categ_id" ref="pcg_6111"/>
-        <field name="income_currency_exchange_account_id" ref="pcg_733"/>
-        <field name="expense_currency_exchange_account_id" ref="pcg_633"/>
-        <field name="default_pos_receivable_account_id" ref="pcg_3489"/>
-    </record>
-    <!-- Account Tax Template -->
     <record model="account.tax.template" id="tva_exo">
         <field name="name">Exonere de TVA VENTES</field>
         <field name="description">Exonere de TVA VENTES</field>
@@ -58,7 +47,7 @@
             }),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_445520'),
+                'account_id': ref('ma_4455'),
                 'plus_report_expression_ids': [ref('tax_report_taux_normal_tva_20_tag')],
             }),
         ]"/>
@@ -69,7 +58,7 @@
             }),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_445520'),
+                'account_id': ref('ma_4455'),
                 'minus_report_expression_ids': [ref('tax_report_taux_normal_tva_20_tag')],
             }),
         ]"/>
@@ -85,21 +74,21 @@
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('tax_report_tauz_reduit_ht_14_tag')],
+                'plus_report_expression_ids': [ref('tax_report_taux_reduit_ht_14_tag')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_445514'),
+                'account_id': ref('ma_4455'),
                 'plus_report_expression_ids': [ref('tax_report_taux_rediut_tva_14_tag')],
             }),]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                  'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('tax_report_tauz_reduit_ht_14_tag')],
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_taux_reduit_ht_14_tag')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_445514'),
+                'account_id': ref('ma_4455'),
                 'minus_report_expression_ids': [ref('tax_report_taux_rediut_tva_14_tag')],
             }),
         ]"/>
@@ -119,7 +108,7 @@
             }),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_445510'),
+                'account_id': ref('ma_4455'),
                 'plus_report_expression_ids': [ref('tax_report_taux_reduit_tva_10_tag')],
             }),
         ]"/>
@@ -130,7 +119,7 @@
             }),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_445510'),
+                'account_id': ref('ma_4455'),
                 'minus_report_expression_ids': [ref('tax_report_taux_reduit_tva_10_tag')],
             }),
         ]"/>
@@ -150,7 +139,7 @@
             }),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_445507'),
+                'account_id': ref('ma_4455'),
                 'plus_report_expression_ids': [ref('tax_report_taux_reduit_tva_7_tag')],
             }),
         ]"/>
@@ -161,7 +150,7 @@
             }),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_445507'),
+                'account_id': ref('ma_4455'),
                 'minus_report_expression_ids': [ref('tax_report_taux_reduit_tva_7_tag')],
             }),
         ]"/>
@@ -177,23 +166,23 @@
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('tax_report_achats_importation_ht_20_tag')],
+                'plus_report_expression_ids': [ref('tax_report_achats_ht_20_tag')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_3455220'),
-                'plus_report_expression_ids': [ref('tax_report_achats_importation_tva_20_tag')],
+                'account_id': ref('ma_34552'),
+                'plus_report_expression_ids': [ref('tax_report_achats_tva_20_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('tax_report_achats_importation_ht_20_tag')],
+                'minus_report_expression_ids': [ref('tax_report_achats_ht_20_tag')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_3455220'),
-                'minus_report_expression_ids': [ref('tax_report_achats_importation_tva_20_tag')],
+                'account_id': ref('ma_34552'),
+                'minus_report_expression_ids': [ref('tax_report_achats_tva_20_tag')],
             }),
         ]"/>
     </record>
@@ -212,7 +201,7 @@
             }),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_34551'),
+                'account_id': ref('ma_34551'),
                 'plus_report_expression_ids': [ref('tax_report_immobilisations_deductible_tva_tag')],
             }),
         ]"/>
@@ -223,7 +212,7 @@
             }),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_34551'),
+                'account_id': ref('ma_34551'),
                 'minus_report_expression_ids': [ref('tax_report_immobilisations_deductible_tva_tag')],
             }),
         ]"/>
@@ -239,23 +228,23 @@
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('tax_report_achats_importation_ht_14_tag')],
+                'plus_report_expression_ids': [ref('tax_report_achats_ht_14_tag')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_3455214'),
-                'plus_report_expression_ids': [ref('tax_report_achats_importation_tva_14_tag')],
+                'account_id': ref('ma_34552'),
+                'plus_report_expression_ids': [ref('tax_report_achats_tva_14_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('tax_report_achats_importation_ht_14_tag')],
+                'minus_report_expression_ids': [ref('tax_report_achats_ht_14_tag')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_3455214'),
-                'minus_report_expression_ids': [ref('tax_report_achats_importation_tva_14_tag')],
+                'account_id': ref('ma_34552'),
+                'minus_report_expression_ids': [ref('tax_report_achats_tva_14_tag')],
             }),
         ]"/>
     </record>
@@ -270,23 +259,23 @@
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('tax_report_achats_importation_ht_10_tag')],
+                'plus_report_expression_ids': [ref('tax_report_achats_ht_10_tag')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_3455210'),
-                'plus_report_expression_ids': [ref('tax_report_achats_importation_tva_10_tag')],
+                'account_id': ref('ma_34552'),
+                'plus_report_expression_ids': [ref('tax_report_achats_tva_10_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('tax_report_achats_importation_ht_10_tag')],
+                'minus_report_expression_ids': [ref('tax_report_achats_ht_10_tag')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_3455210'),
-                'minus_report_expression_ids': [ref('tax_report_achats_importation_tva_10_tag')],
+                'account_id': ref('ma_34552'),
+                'minus_report_expression_ids': [ref('tax_report_achats_tva_10_tag')],
             }),
         ]"/>
     </record>
@@ -301,23 +290,81 @@
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('tax_report_achat_importation_ht_7_tag')],
+                'plus_report_expression_ids': [ref('tax_report_achats_ht_7_tag')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_3455207'),
-                'plus_report_expression_ids': [ref('tax_report_achats_importation_tva_7_tag')],
+                'account_id': ref('ma_34552'),
+                'plus_report_expression_ids': [ref('tax_report_achats_tva_7_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('tax_report_achat_importation_ht_7_tag')],
+                'minus_report_expression_ids': [ref('tax_report_achats_ht_7_tag')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_3455207'),
-                'minus_report_expression_ids': [ref('tax_report_achats_importation_tva_7_tag')],
+                'account_id': ref('ma_34552'),
+                'minus_report_expression_ids': [ref('tax_report_achats_tva_7_tag')],
+            }),
+        ]"/>
+    </record>
+    <record model="account.tax.template" id="tax_import_fee">
+        <field name="name">DROITS DE DOUANE</field>
+        <field name="description">DROITS DE DOUANE</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
+        <field name="tax_group_id" ref="tax_group_import"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ma_34552'),
+                'plus_report_expression_ids': [ref('tax_report_custom_fees_balance')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ma_34552'),
+                'minus_report_expression_ids': [ref('tax_report_custom_fees_balance')],
+            }),
+        ]"/>
+    </record>
+    <record model="account.tax.template" id="tax_import">
+        <field name="name">TAXE PARAFISCALE A L'IMPORTATION</field>
+        <field name="description">TAXE PARAFISCALE A L'IMPORTATION</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount">0.25</field>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
+        <field name="tax_group_id" ref="tax_group_import"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ma_34552'),
+                'plus_report_expression_ids': [ref('tax_report_import_fees_balance')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ma_34552'),
+                'minus_report_expression_ids': [ref('tax_report_import_fees_balance')],
             }),
         ]"/>
     </record>
