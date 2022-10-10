@@ -980,6 +980,7 @@ var SnippetEditor = Widget.extend({
         var self = this;
         this.dragState = {};
         const rowEl = this.$target[0].parentNode;
+        this.dragState.overFirstDropzone = true;
 
         this.dragState.restore = this._prepareDrag();
 
@@ -1041,6 +1042,9 @@ var SnippetEditor = Widget.extend({
                     this.dragState.columnHeight = parseFloat(this.$target[0].scrollHeight);
                 }
             }
+            // Storing the starting top position of the column.
+            this.dragState.columnTop = this.$target[0].getBoundingClientRect().top;
+            this.dragState.isColumn = true;
             // Deactivate the snippet so the overlay doesn't show.
             this.trigger_up('deactivate_snippet', {$snippet: self.$target});
         }
@@ -1123,6 +1127,25 @@ var SnippetEditor = Widget.extend({
                     self.$target.detach();
                     $('.oe_drop_zone').removeClass('invisible');
                 }
+
+                // Prevent a column to be trapped in an upper grid dropzone at
+                // the start of the drag.
+                if (self.dragState.isColumn && self.dragState.overFirstDropzone) {
+                    self.dragState.overFirstDropzone = false;
+
+                    // The column is considered as glued to the dropzone if the
+                    // dropzone is above and if the space between them is less
+                    // than 25px (the move handle height is 22px so 25 is a
+                    // safety margin).
+                    const columnTop = self.dragState.columnTop;
+                    const dropzoneBottom = this.getBoundingClientRect().bottom;
+                    const areDropzonesGlued = (columnTop >= dropzoneBottom) && (columnTop - dropzoneBottom < 25);
+
+                    if (areDropzonesGlued && this.classList.contains('oe_grid_zone')) {
+                        return;
+                    }
+                }
+
                 self.dropped = true;
                 const $dropzone = $(this).first().after(self.$target);
                 $dropzone.addClass('invisible');
