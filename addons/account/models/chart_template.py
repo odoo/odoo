@@ -257,6 +257,7 @@ class AccountChartTemplate(models.Model):
     def _create_demo_data(self):
         try:
             with self.env.cr.savepoint():
+                self = self.with_context(install_demo=True)
                 demo_data = self._get_demo_data()
                 for model, data in demo_data:
                     created = self.env[model]._load_records([{
@@ -265,6 +266,10 @@ class AccountChartTemplate(models.Model):
                         'noupdate': True,
                     } for xml_id, record in data.items()])
                     self._post_create_demo_data(created)
+
+                    # We need to flush everything before the __exit__ to avoid triggering the recompute without the
+                    # current context containing 'install_demo'.
+                    self.env.flush_all()
         except Exception:
             # Do not rollback installation of CoA if demo data failed
             _logger.exception('Error while loading accounting demo data')

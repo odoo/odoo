@@ -114,6 +114,46 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
         return self.env['account.bank.statement.line'].create(values)
 
     # -------------------------------------------------------------------------
+    # TESTS about the statement model.
+    # -------------------------------------------------------------------------
+
+    def test_statement_report_auto_creation(self):
+        statement = self.env['account.bank.statement'].create({})
+
+        # The statement is empty.
+        self.assertRecordValues(statement, [{'is_complete': False, 'attachment_ids': []}])
+
+        self.env['account.bank.statement.line'].create({
+            'statement_id': statement.id,
+            'journal_id': self.bank_journal_1.id,
+            'date': '2019-01-01',
+            'payment_ref': 'line_1',
+            'partner_id': self.partner_a.id,
+            'amount': 100,
+        })
+
+        # The statement is still not complete.
+        self.assertRecordValues(statement, [{'is_complete': False, 'attachment_ids': []}])
+
+        # The report has been generated.
+        statement.balance_end_real = 100.0
+        self.assertRecordValues(statement, [{'is_complete': True}])
+        self.assertTrue(statement.attachment_ids)
+        raw = statement.attachment_ids.raw
+
+        # The statement is no longer complete but the statement is still there and the report is still the same.
+        statement.balance_start = 100.0
+        self.assertRecordValues(statement, [{'is_complete': False}])
+        self.assertTrue(statement.attachment_ids)
+        self.assertEqual(raw, statement.attachment_ids.raw)
+
+        # The statement is complete again and the report has been updated.
+        statement.balance_end_real = 200.0
+        self.assertRecordValues(statement, [{'is_complete': True}])
+        self.assertTrue(statement.attachment_ids)
+        self.assertNotEqual(raw, statement.attachment_ids.raw)
+
+    # -------------------------------------------------------------------------
     # TESTS about the statement line model.
     # -------------------------------------------------------------------------
 

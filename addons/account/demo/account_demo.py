@@ -111,7 +111,7 @@ class AccountChartTemplate(models.Model):
         return ('account.bank.statement', {
             f'{cid}_demo_bank_statement_0': {
                 'name': f'{bnk_journal.name} - {time.strftime("%Y")}-01-01/1',
-                'balance_end_real': 6378.0,
+                'balance_end_real': 0.0, # Must not be complete directly to not create the PDF automatically.
                 'balance_start': 0.0,
                 'line_ids': [
                     Command.create({
@@ -320,6 +320,15 @@ class AccountChartTemplate(models.Model):
                     move.action_post()
                 except Exception:
                     _logger.exception('Error while posting demo data')
+        elif created._name == 'account.bank.statement':
+            created.balance_end_real = 6378
+            created.attachment_ids = self.env['ir.attachment'].create({
+                'type': 'binary',
+                'name': f"Bank Statement {created.name}.pdf",
+                'res_model': 'account.bank.statement',
+                'res_id': created.id,
+                'raw': file_open('account/static/demo/statement_yourcompany_demo_report_1.pdf', 'rb').read(),
+            })
 
     @api.model
     def _get_demo_account(self, xml_id, account_type, company):

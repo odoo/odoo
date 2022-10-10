@@ -178,9 +178,41 @@ class AccountBankStatement(models.Model):
 
     @api.depends('balance_end_real', 'balance_end')
     def _compute_is_complete(self):
+        incomplete_statements = self.filtered(lambda stmt: not stmt.is_complete)
+
         for stmt in self:
             stmt.is_complete = stmt.line_ids and stmt.currency_id.compare_amounts(
                 stmt.balance_end, stmt.balance_end_real) == 0
+
+        if self._context.get('install_demo'):
+            return
+
+        # Process the bank statement report.
+        # 'self.ids' is used to ignore this part is case of "New" records.
+        complete_stmts = incomplete_statements.filtered('is_complete')
+        if self.ids and complete_stmts:
+            ir_actions_report_sudo = self.env['ir.actions.report'].sudo()
+            statement_report = self.env.ref('account.action_report_account_statement').sudo()
+
+            for statement in complete_stmts:
+                attachment_name = _("Bank Statement %s.pdf", statement.name) if statement.name else _("Bank Statement.pdf")
+
+                # Find the existing attachment.
+                existing_attachment = statement.attachment_ids.filtered(lambda x: x.name == attachment_name)
+
+                # Create / update the document.
+                content, _content_type = ir_actions_report_sudo._render_qweb_pdf(statement_report, res_ids=statement.ids)
+                if existing_attachment:
+                    existing_attachment.raw = content
+                else:
+                    statement.attachment_ids |= self.env['ir.attachment'].create({
+                        'name': statement.name and _("Bank Statement %s.pdf", statement.name) or _("Bank Statement.pdf"),
+                        'type': 'binary',
+                        'mimetype': 'application/pdf',
+                        'raw': content,
+                        'res_model': statement._name,
+                        'res_id': statement.id,
+                    })
 
     def _compute_is_valid(self):
         # we extract the invalid statements, the statements with no lines and the first statement are not in the query
