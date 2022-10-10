@@ -223,7 +223,7 @@ export class Many2XAutocomplete extends Component {
 
         const options = records.map((result) => ({
             value: result[0],
-            label: result[1],
+            label: result[1].split("\n")[0],
         }));
 
         if (this.props.quickCreate && request.length) {
