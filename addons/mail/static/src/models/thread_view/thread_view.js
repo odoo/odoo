@@ -245,16 +245,16 @@ function factory(dependencies) {
          * @private
          */
         _onThreadCacheChanged() {
-            // clear obsolete hints
-            this.update({ componentHintList: clear() });
-            this.addComponentHint('change-of-thread-cache');
             if (this.threadCache) {
+                // clear obsolete hints
+                this.update({ componentHintList: clear() });
+                this.addComponentHint('change-of-thread-cache');
                 this.threadCache.update({
                     isCacheRefreshRequested: true,
                     isMarkAllAsReadRequested: true,
                 });
+                this.update({ lastVisibleMessage: unlink() });
             }
-            this.update({ lastVisibleMessage: unlink() });
         }
 
         /**
@@ -278,7 +278,9 @@ function factory(dependencies) {
                 return;
             }
             this.env.browser.clearTimeout(this._loaderTimeout);
-            this.update({ isLoading: false, isPreparingLoading: false });
+            if (this.thread) {
+                this.update({ isLoading: false, isPreparingLoading: false });
+            }
         }
 
         /**

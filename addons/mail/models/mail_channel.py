@@ -237,6 +237,7 @@ class Channel(models.Model):
             all_emp_group = None
         if all_emp_group and all_emp_group in self:
             raise UserError(_('You cannot delete those groups, as the Whole Company group is required by other modules.'))
+        self.env['bus.bus']._sendmany([(channel, 'mail.channel/delete', {'id': channel.id}) for channel in self])
 
     def write(self, vals):
         result = super(Channel, self).write(vals)
