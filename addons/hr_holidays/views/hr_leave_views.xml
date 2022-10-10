@@ -275,9 +275,16 @@
                                         </span>
                                         <field name="request_date_from" class="oe_inline" nolabel="1"
                                             attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))],
+                                                    'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)],
                                                     'required': ['|', ('date_from', '=', False), ('date_to', '=', False)]
                                                     }"
                                             widget="daterange" options="{'related_end_date': 'request_date_to'}"/>
+                                        <field name="request_date_from" class="oe_inline" nolabel="1"
+                                            attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))],
+                                                    'invisible': ['&amp;', ('request_unit_half', '=', False), ('request_unit_hours', '=', False)],
+                                                    'required': ['|', ('date_from', '=', False), ('date_to', '=', False)]
+                                                    }"
+                                        />
                                     </div>
                                     <div>
                                         <span class="oe_inline"
