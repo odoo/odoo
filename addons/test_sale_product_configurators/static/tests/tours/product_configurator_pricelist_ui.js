@@ -34,6 +34,7 @@ tour.stepUtils.showAppsMenuItem(),
 }, {
     content: "select the pricelist",
     trigger: 'ul.ui-autocomplete > li > a:contains(Custom pricelist (TEST))',
+    in_modal: false,
 }, {
     trigger: 'a:contains("Add a product")',
 }, {
