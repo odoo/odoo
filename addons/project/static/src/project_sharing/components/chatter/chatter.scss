@@ -19,11 +19,12 @@
                 .o_portal_chatter_attachments {
                     margin-bottom: 1rem;
                     .o_portal_chatter_attachment {
-                        .o_portal_chatter_attachment_delete {
+                        > button {
                             @include o-position-absolute($top: 0, $right: 0);
                             opacity: 0;
                         }
-                        &:hover .o_portal_chatter_attachment_delete {
+
+                        &:hover > button {
                             opacity: 1;
                         }
                     }
@@ -55,7 +56,7 @@
         .o_portal_chatter {
             .o_portal_chatter_header {
                 padding-top: 1rem;
-                padding-bottom: 2px;
+                padding-bottom: 1px;
             }
 
             .o_portal_chatter_composer, .o_portal_chatter_messages {
