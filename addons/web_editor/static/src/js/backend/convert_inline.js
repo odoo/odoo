@@ -2,7 +2,6 @@
 'use strict';
 
 import { isBlock, rgbToHex } from '../editor/odoo-editor/src/utils/utils';
-import { loadJS } from '@web/core/assets';
 
 /* global html2canvas */
 
@@ -633,7 +632,6 @@ async function toInline($editable, cssRules, $iframe) {
  * @param {Element} editable
  */
 async function flattenBackgroundImages(editable) {
-    await loadJS('/web_editor/static/lib/html2canvas.js');
     for (const backgroundImage of editable.querySelectorAll('*[style*=background-image]')) {
         if (backgroundImage.parentElement) { // If the image was nested, we removed it already.
             const canvas = await html2canvas(backgroundImage);
