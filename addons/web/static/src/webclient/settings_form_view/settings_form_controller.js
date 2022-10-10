@@ -43,12 +43,6 @@ export class SettingsFormController extends formView.Controller {
         this.initialApp = "module" in this.props.context && this.props.context.module;
     }
 
-    get className() {
-        const result = super.className;
-        result["o_form_with_borderless_input"] = false;
-        return result;
-    }
-
     /**
      * @override
      */
