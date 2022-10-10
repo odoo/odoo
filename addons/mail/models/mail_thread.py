@@ -3168,6 +3168,7 @@ class MailThread(models.AbstractModel):
             'send_after_commit',
             'skip_existing',
             'subtitles',
+            'subtitles_highlight_2nd',
         }
         # limit mail headers to internal users
         if not self.env.user.share or self.env.su:
@@ -3377,6 +3378,7 @@ class MailThread(models.AbstractModel):
                                 model_description=False, force_email_company=False, force_email_lang=False,  # rendering
                                 force_record_name=False,  # rendering
                                 subtitles=None,  # rendering
+                                subtitles_highlight_2nd=False,  # rendering
                                 force_send=True, send_after_commit=True,  # email send
                                 **kwargs):
         """ Method to send emails notifications linked to a message.
@@ -3400,6 +3402,8 @@ class MailThread(models.AbstractModel):
         :param str force_record_name: record_name to use instead of being
           related record's display_name;
         :param list subtitles: optional list set as template value "subtitles";
+        :param bool subtitles_highlight_2nd: if set, highlight the second subtitle
+          instead the first one.
 
         :param bool force_send: send emails directly instead of using queue;
         :param bool send_after_commit: if force_send, tells to send emails after
@@ -3441,6 +3445,7 @@ class MailThread(models.AbstractModel):
             force_email_lang=force_email_lang,
             force_record_name=force_record_name,
             subtitles=subtitles,
+            subtitles_highlight_2nd=subtitles_highlight_2nd
         ):
             # generate notification email content
             mail_body = self._notify_by_email_render_layout(
@@ -3508,7 +3513,8 @@ class MailThread(models.AbstractModel):
             self, message, recipients_data, msg_vals=False,
             model_description=False, force_email_company=False, force_email_lang=False,  # rendering
             force_record_name=False,  # rendering
-            subtitles=None):
+            subtitles=None,
+            subtitles_highlight_2nd=False):
         """ Make groups of recipients, based on 'recipients_data' which is a list
         of recipients informations. Purpose of this method is to group them by
         main usage ('user', 'portal_user', 'follower', 'customer', ... see
@@ -3532,6 +3538,8 @@ class MailThread(models.AbstractModel):
         :param str force_record_name: record_name to use instead of being
           related record's display_name;
         :param list subtitles: optional list set as template value "subtitles";
+        :param bool subtitles_highlight_2nd: if set, highlight the second subtitle
+          instead the first one.
 
         :return: iterator based on recipients classified by lang, with their
           rendering evaluation context. Each item is a tuple containing (
@@ -3591,6 +3599,8 @@ class MailThread(models.AbstractModel):
             ) # 10 queries
             if subtitles:
                 render_values['subtitles'] = subtitles
+            if subtitles_highlight_2nd:
+                render_values['subtitles_highlight_2nd'] = subtitles_highlight_2nd
 
             for recipients_group in recipients_groups_list:
                 if not render_values['show_unfollow']:
