@@ -57,7 +57,9 @@ class AuthSignupHome(Home):
                 )
                 template = request.env.ref('auth_signup.mail_template_user_signup_account_created', raise_if_not_found=False)
                 if user_sudo and template:
-                    template.sudo().send_mail(user_sudo.id, force_send=True)
+                    template.sudo().send_mail(user_sudo.id, force_send=True,
+                                              email_layout_xmlid='mail.mail_notification_layout',
+                                              subtitles=[_("Your Account"), user_sudo.name or ''])
                 return self.web_login(*args, **kw)
             except UserError as e:
                 qcontext['error'] = e.args[0]
