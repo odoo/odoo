@@ -2831,6 +2831,7 @@
         "SET_FORMULA_VISIBILITY",
         "OPEN_CELL_POPOVER",
         "CLOSE_CELL_POPOVER",
+        "UPDATE_FILTER",
     ]);
     const coreTypes = new Set([
         /** CELLS */
@@ -20422,6 +20423,12 @@
                         target: this.env.model.getters.getSelectedZones(),
                     });
                 },
+                BACKSPACE: () => {
+                    this.env.model.dispatch("DELETE_CONTENT", {
+                        sheetId: this.env.model.getters.getActiveSheetId(),
+                        target: this.env.model.getters.getSelectedZones(),
+                    });
+                },
                 "CTRL+A": () => this.env.model.selection.loopSelection(),
                 "CTRL+S": () => {
                     var _a, _b;
@@ -31197,7 +31204,6 @@
     }
     HeaderVisibilityUIPlugin.getters = [
         "getNextVisibleCellPosition",
-        "getNextVisibleCellPosition",
         "findVisibleHeader",
         "findLastVisibleColRowIndex",
         "findFirstVisibleColRowIndex",
@@ -39828,6 +39834,9 @@
                 if (!(name in plugin)) {
                     throw new Error(`Invalid getter name: ${name} for plugin ${plugin.constructor}`);
                 }
+                if (name in this.getters) {
+                    throw new Error(`Getter "${name}" is already defined.`);
+                }
                 this.getters[name] = plugin[name].bind(plugin);
             }
             this.uiPlugins.push(plugin);
@@ -39846,6 +39855,9 @@
             for (let name of Plugin.getters) {
                 if (!(name in plugin)) {
                     throw new Error(`Invalid getter name: ${name} for plugin ${plugin.constructor}`);
+                }
+                if (name in this.coreGetters) {
+                    throw new Error(`Getter "${name}" is already defined.`);
                 }
                 this.coreGetters[name] = plugin[name].bind(plugin);
             }
@@ -40116,8 +40128,8 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
     exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2022-10-07T17:05:19.324Z';
-    exports.__info__.hash = '8421fac';
+    exports.__info__.date = '2022-10-10T07:42:59.012Z';
+    exports.__info__.hash = '22b4de0';
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map
