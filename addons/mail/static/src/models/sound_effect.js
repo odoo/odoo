@@ -22,7 +22,7 @@ registerModel({
             if (!this.audio) {
                 const audio = new window.Audio();
                 const ext = audio.canPlayType("audio/ogg; codecs=vorbis") ? ".ogg" : ".mp3";
-                audio.src = this.path + this.filename + ext;
+                audio.src = this.path + ext;
                 this.update({ audio });
             }
             this.audio.pause();
@@ -57,16 +57,9 @@ registerModel({
             default: 1,
         }),
         /**
-         * Name of the audio file.
-         */
-        filename: attr({
-            identifying: true,
-        }),
-        /**
          * Path to the audio file.
          */
         path: attr({
-            default: '/mail/static/src/audio/',
             identifying: true,
         }),
     },
