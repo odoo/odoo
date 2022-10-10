@@ -40,7 +40,7 @@ QUnit.test('sidebar find shows channels matching search term', async function (a
 
     await searchReadDef;
     await nextAnimationFrame(); // ensures search_read rpc is rendered.
-    const results = document.querySelectorAll('.ui-autocomplete .ui-menu-item a');
+    const results = document.querySelectorAll('.o_DiscussSidebarCategory_addingItemInput .o_AutocompleteInputSuggestionListView .o_AutocompleteInputSuggestionView');
     assert.ok(
         results,
         "should have autocomplete suggestion after typing on 'find or create channel' input"
@@ -90,7 +90,7 @@ QUnit.test('sidebar find shows channels matching search term even when user is m
 
     await searchReadDef;
     await nextAnimationFrame();
-    const results = document.querySelectorAll('.ui-autocomplete .ui-menu-item a');
+    const results = document.querySelectorAll('.o_DiscussSidebarCategory_addingItemInput .o_AutocompleteInputSuggestionListView .o_AutocompleteInputSuggestionView');
     assert.ok(
         results,
         "should have autocomplete suggestion after typing on 'find or create channel' input"

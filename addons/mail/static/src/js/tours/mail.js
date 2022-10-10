@@ -12,7 +12,7 @@ tour.register('mail_tour', {
     content: Markup(_t("<p>Channels make it easy to organize information across different topics and groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, marketing, product XYZ, after work party, etc).</p>")),
     position: 'bottom',
 }, {
-    trigger: '.o_DiscussSidebarCategory_addingItemInput',
+    trigger: '.o_DiscussSidebarCategory_addingItemInput .o_AutocompleteInputView_input',
     content: Markup(_t("<p>Create a channel here.</p>")),
     position: 'bottom',
     auto: true,
@@ -21,12 +21,9 @@ tour.register('mail_tour', {
         actions.text("SomeChannel_" + t, this.$anchor);
     },
 }, {
-    trigger: ".o_DiscussSidebarCategory_newChannelAutocompleteSuggestions",
-    content: Markup(_t("<p>Create a public or private channel.</p>")),
+    trigger: ".o_AutocompleteInputSuggestionView",
+    content: Markup(_t("<p>Create a public channel.</p>")),
     position: 'right',
-    run() {
-        this.$consumeEventAnchors.find('li:first').click();
-    },
 }, {
     trigger: '.o_Discuss_thread .o_ComposerTextInput_textarea',
     content: Markup(_t("<p><b>Write a message</b> to the members of the channel here.</p> <p>You can notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. Start your message with <i>'/'</i> to get the list of possible commands.</p>")),

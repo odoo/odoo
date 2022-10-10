@@ -54,35 +54,12 @@ registerModel({
         },
         /**
          * @private
-         * @param {Event} ev
-         * @param {Object} ui
-         * @param {Object} ui.item
-         * @param {integer} ui.item.id
+         * @param {AutocompleteInputSuggestable} suggestable
          */
-        onMobileNewMessageInputSelect(ev, ui) {
-            this.messaging.openChat({ partnerId: ui.item.id });
-        },
-        /**
-         * @param {Object} req
-         * @param {string} req.term
-         * @param {function} res
-         */
-        onMobileNewMessageInputSource(req, res) {
-            const value = _.escape(req.term);
-            this.messaging.models['Partner'].imSearch({
-                callback: partners => {
-                    const suggestions = partners.map(partner => {
-                        return {
-                            id: partner.id,
-                            value: partner.nameOrDisplayName,
-                            label: partner.nameOrDisplayName,
-                        };
-                    });
-                    res(_.sortBy(suggestions, 'label'));
-                },
-                keyword: value,
-                limit: 10,
-            });
+        onMobileNewMessageInputSelect(suggestable) {
+            if (suggestable && suggestable.partner) {
+                this.messaging.openChat({ partnerId: suggestable.partner.id });
+            }
         },
         /**
          * Toggle the visibility of the messaging menu "new message" input in

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.AutocompleteInputSuggestionListView" owl="1">
+        <div class="o_AutocompleteInputSuggestionListView position-absolute dropdown-menu show overflow-auto w-100 p-0 border-light" t-attf-class="{{ className }}" t-ref="root">
+            <t t-foreach="autocompleteInputSuggestionListView.suggestionViews" t-as="suggestionView" t-key="suggestionView">
+                <AutocompleteInputSuggestionView record="suggestionView"/>
+            </t>
+        </div>
+    </t>
+
+</templates>

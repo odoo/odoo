@@ -60,6 +60,12 @@ registerModel({
                 return this.memberCount === this.channelMembers.length;
             },
         }),
+        autocompleteInputSuggestable: one('AutocompleteInputSuggestable', {
+            default: {},
+            inverse: 'channel',
+            readonly: true,
+            required: true,
+        }),
         /**
          * Cache key to force a reload of the avatar when avatar is changed.
          */

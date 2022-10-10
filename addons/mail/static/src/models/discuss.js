@@ -3,7 +3,6 @@
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
-import { escape, sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'Discuss',
@@ -20,26 +19,21 @@ registerModel({
             }
         },
         /**
-         * @param {Event} ev
-         * @param {Object} ui
-         * @param {Object} ui.item
-         * @param {integer} ui.item.id
+         * @param {AutocompleteInputSuggestable} suggestable
          */
-        async handleAddChannelAutocompleteSelect(ev, ui) {
-            // Necessary in order to prevent AutocompleteSelect event's default
-            // behaviour as html tags visible for a split second in text area
-            ev.preventDefault();
-            const name = this.discussView.addingChannelValue;
-            this.discussView.clearIsAddingItem();
-            if (ui.item.create) {
+        async handleAddChannelAutocompleteSelect(suggestable) {
+            if (!suggestable) {
+                return;
+            }
+            if (suggestable.ownerAsCreatingChannel) {
                 const channel = await this.messaging.models['Thread'].performRpcCreateChannel({
-                    name,
+                    name: suggestable.nameToCreateChannel,
                     group_id: this.messaging.internalUserGroupId,
                 });
                 channel.open();
-            } else {
+            } else if (suggestable.channel) {
                 const channel = this.messaging.models['Thread'].insert({
-                    id: ui.item.id,
+                    id: suggestable.channel.id,
                     model: 'mail.channel',
                 });
                 await channel.join();
@@ -48,67 +42,17 @@ registerModel({
                 channel.update({ isServerPinned: true });
                 channel.open();
             }
-        },
-        /**
-         * @param {Object} req
-         * @param {string} req.term
-         * @param {function} res
-         */
-        async handleAddChannelAutocompleteSource(req, res) {
-            this.discussView.update({ addingChannelValue: req.term });
-            const threads = await this.messaging.models['Thread'].searchChannelsToOpen({ limit: 10, searchTerm: req.term });
-            const items = threads.map((thread) => {
-                const escapedName = escape(thread.name);
-                return {
-                    id: thread.id,
-                    label: escapedName,
-                    value: escapedName,
-                };
-            });
-            const escapedValue = escape(req.term);
-            // XDU FIXME could use a component but be careful with owl's
-            // renderToString https://github.com/odoo/owl/issues/708
-            items.push({
-                create: true,
-                escapedValue,
-                label: sprintf(
-                    `<strong>${this.env._t('Create %s')}</strong>`,
-                    `<em><span class="fa fa-hashtag"/>${escapedValue}</em>`,
-                ),
-            });
-            res(items);
-        },
-        /**
-         * @param {Event} ev
-         * @param {Object} ui
-         * @param {Object} ui.item
-         * @param {integer} ui.item.id
-         */
-        handleAddChatAutocompleteSelect(ev, ui) {
-            this.messaging.openChat({ partnerId: ui.item.id });
             this.discussView.clearIsAddingItem();
         },
         /**
-         * @param {Object} req
-         * @param {string} req.term
-         * @param {function} res
+         * @param {AutocompleteInputSuggestable} suggestable
          */
-        handleAddChatAutocompleteSource(req, res) {
-            const value = escape(req.term);
-            this.messaging.models['Partner'].imSearch({
-                callback: partners => {
-                    const suggestions = partners.map(partner => {
-                        return {
-                            id: partner.id,
-                            value: partner.nameOrDisplayName,
-                            label: partner.nameOrDisplayName,
-                        };
-                    });
-                    res(_.sortBy(suggestions, 'label'));
-                },
-                keyword: value,
-                limit: 10,
-            });
+        handleAddChatAutocompleteSelect(suggestable) {
+            if (!suggestable || !suggestable.partner) {
+                return;
+            }
+            this.messaging.openChat({ partnerId: suggestable.partner.id });
+            this.discussView.clearIsAddingItem();
         },
         open() {
             this.update({ discussView: {} });

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.AutocompleteInputSuggestionView" owl="1">
+        <a class="o_AutocompleteInputSuggestionView dropdown-item d-flex w-100 px-3 py-1" t-att-class="{ 'bg-300 o-active': autocompleteInputSuggestionView.isActive }" t-attf-class="{{ className }}" href="#" role="menuitem" t-ref="root" t-on-click="autocompleteInputSuggestionView.onClick" tabindex="-1">
+            <t t-esc='autocompleteInputSuggestionView.displayName'>
+        </a>
+    </t>
+
+</templates>

@@ -126,7 +126,7 @@ QUnit.test('chat window new message: focused on open [REQUIRE FOCUS]', async fun
     );
     assert.strictEqual(
         document.activeElement,
-        document.querySelector(`.o_ChatWindow_newMessageFormInput`),
+        document.querySelector(`.o_ChatWindow_newMessageFormInput .o_AutocompleteInputView_input`),
         "chat window focused = selection input focused"
     );
 });
@@ -288,13 +288,13 @@ QUnit.test('open chat from "new message" chat window should open chat in place o
     );
 
     // search for a user in "new message" autocomplete
-    await insertText('.o_ChatWindow_newMessageFormInput', "131");
+    await insertText('.o_ChatWindow_newMessageFormInput .o_AutocompleteInputView_input', "131");
     // Wait for search RPC to be resolved. The following await lines are
     // necessary because autocomplete is an external lib therefore it is not
     // possible to use `afterNextRender`.
     await imSearchDef;
     await nextAnimationFrame();
-    const link = document.querySelector('.ui-autocomplete .ui-menu-item a');
+    const link = document.querySelector('.o_ChatWindow_newMessageFormInput .o_AutocompleteInputSuggestionListView .o_AutocompleteInputSuggestionView');
     assert.ok(
         link,
         "should have autocomplete suggestion after typing on 'new message' input"
@@ -344,7 +344,7 @@ QUnit.test('new message chat window should close on selecting the user if chat w
 
     // search for a user in "new message" autocomplete
     await afterEvent({
-        eventName: 'o-AutocompleteInput-source',
+        eventName: 'o-AutocompleteInput-search',
         func: () => {
             document.execCommand('insertText', false, "131");
             document.querySelector(`.o_ChatWindow_newMessageFormInput`)
@@ -356,7 +356,7 @@ QUnit.test('new message chat window should close on selecting the user if chat w
         predicate: () => true,
     });
     await nextAnimationFrame();
-    const link = document.querySelector('.ui-autocomplete .ui-menu-item a');
+    const link = document.querySelector('.o_ChatWindow_newMessageFormInput .o_AutocompleteInputSuggestionListView .o_AutocompleteInputSuggestionView');
 
     await afterNextRender(() => link.click());
     assert.containsNone(
@@ -402,8 +402,8 @@ QUnit.test('new message autocomplete should automatically select first result', 
     await imSearchDef;
     await nextAnimationFrame();
     assert.hasClass(
-        document.querySelector('.ui-autocomplete .ui-menu-item a'),
-        'ui-state-active',
+        document.querySelector('.o_ChatWindow_newMessageFormInput .o_AutocompleteInputSuggestionListView .o_AutocompleteInputSuggestionView'),
+        'o-active',
         "first autocomplete result should be automatically selected",
     );
 });

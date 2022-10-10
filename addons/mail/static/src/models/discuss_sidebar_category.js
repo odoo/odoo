@@ -62,33 +62,15 @@ registerModel({
             this.update({ isAddingItem: false });
         },
         /**
-         * @param {Event} ev
-         * @param {Object} ui
-         * @param {Object} ui.item
-         * @param {integer} ui.item.id
+         * @param {AutocompleteInputSuggestable} suggestable
          */
-        onAddItemAutocompleteSelect(ev, ui) {
+        onAddItemAutocompleteSelect(suggestable) {
             switch (this.autocompleteMethod) {
                 case 'channel':
-                    this.messaging.discuss.handleAddChannelAutocompleteSelect(ev, ui);
+                    this.messaging.discuss.handleAddChannelAutocompleteSelect(suggestable);
                     break;
                 case 'chat':
-                    this.messaging.discuss.handleAddChatAutocompleteSelect(ev, ui);
-                    break;
-            }
-        },
-        /**
-         * @param {Object} req
-         * @param {string} req.term
-         * @param {function} res
-         */
-        onAddItemAutocompleteSource(req, res) {
-            switch (this.autocompleteMethod) {
-                case 'channel':
-                    this.messaging.discuss.handleAddChannelAutocompleteSource(req, res);
-                    break;
-                case 'chat':
-                    this.messaging.discuss.handleAddChatAutocompleteSource(req, res);
+                    this.messaging.discuss.handleAddChatAutocompleteSelect(suggestable);
                     break;
             }
         },

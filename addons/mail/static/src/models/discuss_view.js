@@ -9,7 +9,6 @@ registerModel({
     recordMethods: {
         clearIsAddingItem() {
             this.update({
-                addingChannelValue: clear(),
                 isAddingChannel: clear(),
                 isAddingChat: clear(),
             });
@@ -72,34 +71,16 @@ registerModel({
             mailbox.thread.open();
         },
         /**
-         * @param {Event} ev
-         * @param {Object} ui
-         * @param {Object} ui.item
-         * @param {integer} ui.item.id
+         * @param {AutocompleteInputSuggestable} suggestable
          */
-        onMobileAddItemHeaderInputSelect(ev, ui) {
+        onMobileAddItemHeaderInputSelect(suggestable) {
             if (!this.exists()) {
                 return;
             }
             if (this.isAddingChannel) {
-                this.discuss.handleAddChannelAutocompleteSelect(ev, ui);
+                this.discuss.handleAddChannelAutocompleteSelect(suggestable);
             } else {
-                this.discuss.handleAddChatAutocompleteSelect(ev, ui);
-            }
-        },
-        /**
-         * @param {Object} req
-         * @param {string} req.term
-         * @param {function} res
-         */
-        onMobileAddItemHeaderInputSource(req, res) {
-            if (!this.exists()) {
-                return;
-            }
-            if (this.isAddingChannel) {
-                this.discuss.handleAddChannelAutocompleteSource(req, res);
-            } else {
-                this.discuss.handleAddChatAutocompleteSource(req, res);
+                this.discuss.handleAddChatAutocompleteSelect(suggestable);
             }
         },
         /**
@@ -118,12 +99,6 @@ registerModel({
          * The id of the action which opened discuss.
          */
         actionId: attr(),
-        /**
-         * Value that is used to create a channel from the sidebar.
-         */
-        addingChannelValue: attr({
-            default: "",
-        }),
         discuss: one('Discuss', {
             identifying: true,
             inverse: 'discussView',

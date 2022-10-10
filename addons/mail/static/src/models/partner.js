@@ -270,6 +270,12 @@ registerModel({
         active: attr({
             default: true,
         }),
+        autocompleteInputSuggestable: one('AutocompleteInputSuggestable', {
+            default: {},
+            inverse: 'partner',
+            readonly: true,
+            required: true,
+        }),
         avatarUrl: attr({
             compute() {
                 return `/web/image/res.partner/${this.id}/avatar_128`;

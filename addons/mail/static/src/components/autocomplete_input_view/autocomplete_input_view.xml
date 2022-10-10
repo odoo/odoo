@@ -2,7 +2,20 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.AutocompleteInputView" owl="1">
-        <input class="o_AutocompleteInputView form-control" t-attf-class="{{ className }}" t-on-blur="autocompleteInputView.onBlur" t-on-focusin="autocompleteInputView.onFocusin" t-on-keydown="autocompleteInputView.onKeydown" t-att-placeholder="autocompleteInputView.placeholder" t-ref="root"/>
+        <div class="o_AutocompleteInputView position-relative w-100" t-attf-class="{{ className }}">
+            <input
+                class="o_AutocompleteInputView_input form-control px-3"
+                t-attf-class="{{ autocompleteInputView.customInputClass }}"
+                t-att-placeholder="autocompleteInputView.placeholder"
+                t-on-focusin="autocompleteInputView.onFocusin"
+                t-on-input="autocompleteInputView.onInputSearch"
+                t-on-keydown="autocompleteInputView.onKeydown"
+                t-ref="root"
+            />
+            <t t-if='autocompleteInputView.autocompleteInputSuggestionListView'>
+                <AutocompleteInputSuggestionListView record='autocompleteInputView.autocompleteInputSuggestionListView'>
+            </t>
+        </div>
     </t>
 
 </templates>
