@@ -171,13 +171,6 @@ patch(ThreadService.prototype, "mail/web", {
         }
         thread.suggestedRecipients = recipients;
     },
-    async leaveChannel(channel) {
-        const chatWindow = this.store.chatWindows.find((c) => c.threadLocalId === channel.localId);
-        if (chatWindow) {
-            this.chatWindowService.close(chatWindow);
-        }
-        this._super(...arguments);
-    },
     open(thread, replaceNewMessageChatWindow) {
         if (!this.store.discuss.isActive && !this.store.isSmall) {
             this._openChatWindow(thread, replaceNewMessageChatWindow);
@@ -197,6 +190,13 @@ patch(ThreadService.prototype, "mail/web", {
             return;
         }
         this._super(thread, replaceNewMessageChatWindow);
+    },
+    remove(channel) {
+        const chatWindow = this.store.chatWindows.find((c) => c.threadLocalId === channel.localId);
+        if (chatWindow) {
+            this.chatWindowService.close(chatWindow);
+        }
+        this._super(...arguments);
     },
     /**
      * @param {import("@mail/core/follower_model").Follower} follower
