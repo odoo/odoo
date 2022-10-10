@@ -2941,18 +2941,15 @@ X[]
                     await testEditor(BasicEditor, {
                         contentBefore: '<p>ab []cd</p>',
                         stepFunction: insertLineBreak,
-                        // The space is converted to a non-breaking
-                        // space so it is visible (because it's before a
-                        // <br>).
-                        // JW cAfter: '<p>ab&nbsp;<br>[]cd</p>',
-                        contentAfter: '<p>ab <br>[]cd</p>', // Note: JW seems just wrong here...
+                        // The space is converted to a non-breaking space so it
+                        // is visible (because it's before a <br>).
+                        contentAfter: '<p>ab&nbsp;<br>[]cd</p>',
                     });
                     await testEditor(BasicEditor, {
                         contentBefore: '<p>ab[] cd</p>',
                         stepFunction: insertLineBreak,
-                        // The space is converted to a non-breaking
-                        // space so it is visible (because it's after a
-                        // <br>).
+                        // The space is converted to a non-breaking space so it
+                        // is visible (because it's after a <br>).
                         contentAfter: '<p>ab<br>[]&nbsp;cd</p>',
                     });
                 });
@@ -3049,16 +3046,15 @@ X[]
                     await testEditor(BasicEditor, {
                         contentBefore: '<p>abc <b>[]def</b></p>',
                         stepFunction: insertLineBreak,
-                        // JW cAfter: '<p>abc&nbsp;<br><b>[]def</b></p>',
-                        contentAfter: '<p>abc <b><br>[]def</b></p>', // Note: JW seems just wrong here
+                        // The space is converted to a non-breaking space so it
+                        // is visible (because it's before a <br>).
+                        contentAfter: '<p>abc&nbsp;<b><br>[]def</b></p>',
                     });
                     await testEditor(BasicEditor, {
                         contentBefore: '<p>abc<b>[] def </b></p>',
                         stepFunction: insertLineBreak,
-                        // The space is converted to a non-breaking
-                        // space so it is visible (because it's before a
-                        // <br>).
-                        // JW cAfter: '<p>abc<br><b>[]&nbsp;def</b></p>',
+                        // The space is converted to a non-breaking space so it
+                        // is visible (because it's before a <br>).
                         contentAfter: '<p>abc<b><br>[]&nbsp;def </b></p>',
                     });
                 });
@@ -3089,8 +3085,9 @@ X[]
                     await testEditor(BasicEditor, {
                         contentBefore: '<p><b>abc []</b>def</p>',
                         stepFunction: insertLineBreak,
-                        // JW cAfter: '<p><b>abc&nbsp;[]<br></b>def</p>',
-                        contentAfter: '<p><b>abc <br>[]</b>def</p>', // Note: JW seems wrong here
+                        // The space is converted to a non-breaking space so it
+                        // is visible (because it's before a <br>).
+                        contentAfter: '<p><b>abc&nbsp;<br>[]</b>def</p>',
                     });
                 });
                 it('should insert a <br> at the beginning of a format node', async () => {
@@ -3122,10 +3119,9 @@ X[]
                     await testEditor(BasicEditor, {
                         contentBefore: '<p><b>ab []cd</b></p>',
                         stepFunction: insertLineBreak,
-                        // The space is converted to a non-breaking
-                        // space so it is visible.
-                        // JW cAfter: '<p><b>ab&nbsp;<br>[]cd</b></p>',
-                        contentAfter: '<p><b>ab <br>[]cd</b></p>', // Note: JW seems just wrong here...
+                        // The space is converted to a non-breaking space so it
+                        // is visible (because it's before a <br>).
+                        contentAfter: '<p><b>ab&nbsp;<br>[]cd</b></p>',
                     });
                     await testEditor(BasicEditor, {
                         contentBefore: '<p><b>ab[] cd</b></p>',
