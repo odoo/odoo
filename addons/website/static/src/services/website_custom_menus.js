@@ -4,6 +4,7 @@ import { registry } from "@web/core/registry";
 import { EditMenuDialog } from '@website/components/dialog/edit_menu';
 import { OptimizeSEODialog } from '@website/components/dialog/seo';
 import {PagePropertiesDialog} from '@website/components/dialog/page_properties';
+import {sprintf} from '@web/core/utils/strings';
 
 /**
  * This service displays contextual menus, depending of the state of the
@@ -19,14 +20,20 @@ export const websiteCustomMenus = {
             get(xmlId) {
                 return registry.category('website_custom_menus').get(xmlId, null);
             },
-            open(xmlId) {
-                const menu = this.get(xmlId);
-                if (menu.openWidget) {
-                    return menu.openWidget(services);
+            open(customMenu) {
+                const menuConfig = this.get(customMenu.xmlid);
+                if (menuConfig.openWidget) {
+                    return menuConfig.openWidget(services);
                 }
+                const menuProps = {
+                    ...(menuConfig.getProps && menuConfig.getProps(services)),
+                    // Values on 'dynamicProps' are retrieved after the content is loaded (e.g. id of
+                    // the content menu to be edited).
+                    ...customMenu.dynamicProps,
+                };
                 return dialog.add(
-                    menu.Component,
-                    menu.getProps && menu.getProps(services),
+                    menuConfig.Component,
+                    menuProps,
                 );
             },
             addCustomMenus(sections) {
@@ -39,7 +46,21 @@ export const websiteCustomMenus = {
                         if (section.childrenTree.length) {
                             subSections = this.addCustomMenus(section.childrenTree);
                         }
-                        filteredSections.push(Object.assign({}, section, {childrenTree: subSections}));
+                        if (section.xmlid === 'website.custom_menu_edit_menu') {
+                            // Hack: this code will simulate an XML pre-configured navbar menuitem to edit each
+                            // content menu found on the current page by duplicating one menuitem with
+                            // different data (name, dialog props...). this will prevent breaking the current
+                            // 'navbar menus' display system.
+                            filteredSections.push(...website.currentWebsite.metadata.contentMenus.map((menu, index) => ({
+                                ...section,
+                                name: sprintf(env._t("Edit %s"), menu[0]),
+                                dynamicProps: {rootID: parseInt(menu[1], 10)},
+                                // Prevent a 't-foreach' duplicate key on menus template.
+                                id: `${section.id}-${index}`,
+                            })));
+                        } else {
+                            filteredSections.push(Object.assign({}, section, {childrenTree: subSections}));
+                        }
                     }
                 }
                 return filteredSections;
@@ -83,4 +104,13 @@ registry.category('website_custom_menus').add('website.menu_page_properties', {
             });
         },
     })
+});
+registry.category('website_custom_menus').add('website.custom_menu_edit_menu', {
+    Component: EditMenuDialog,
+    // 'isDisplayed' === true => at least 1 content menu was found on the page. This
+    // menuitem will be cloned (in 'addCustomMenus()') to edit every content menu using
+    // the 'EditMenuDialog' component.
+    isDisplayed: (env) => env.services.website.currentWebsite
+        && env.services.website.currentWebsite.metadata.contentMenus.length
+        && !env.services.ui.isSmall,
 });
