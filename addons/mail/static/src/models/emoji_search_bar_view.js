@@ -41,7 +41,6 @@ registerModel({
         reset() {
             this.update({ currentSearch: "" });
             this.inputRef.el.value = "";
-            this.update({ isDoFocus: true });
         },
         /**
          * @private
