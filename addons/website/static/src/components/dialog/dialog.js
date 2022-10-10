@@ -85,6 +85,7 @@ export class AddPageDialog extends Component {
         this.website = useService('website');
         this.orm = useService('orm');
         this.http = useService('http');
+        this.action = useService('action');
 
         this.state = useState({
             addMenu: true,
