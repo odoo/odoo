@@ -4559,8 +4559,11 @@ registry.layout_column = SnippetOptionWidget.extend({
         // Needs to be done manually for now because _computeWidgetVisibility
         // doesn't go through this option for buttons inside of a select.
         // TODO: improve this.
-        this.$el.find('we-button[data-name="zero_cols_opt"]')
-            .toggleClass('d-none', !this.$target.is('.s_allow_columns'));
+        let $row = this.$('> .row')[0];
+        let $el = this.$el.find('we-button[data-name="zero_cols_opt"]');
+        $row && $row.querySelectorAll('div.row').length !== 0
+            ? $el.hide()
+            : $el.toggleClass('d-none', !this.$target.is('.s_allow_columns'));
         return this._super(...arguments);
     },
 
