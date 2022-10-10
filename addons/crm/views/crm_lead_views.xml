@@ -17,7 +17,7 @@
                             attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}"/>
                         <button name="action_set_lost" string="Lost" type="object" data-hotkey="l" title="Mark as lost"
                             attrs="{'invisible': ['|', ('type', '=', 'opportunity'), '&amp;', ('probability', '=', 0), ('active', '=', False)]}"/>
-                        <field name="stage_id" widget="crm_statusbar" class="o_field_statusbar"
+                        <field name="stage_id" widget="statusbar" class="o_field_statusbar"
                             options="{'clickable': '1', 'fold_field': 'fold'}"
                             domain="['|', ('team_id', '=', team_id), ('team_id', '=', False)]"
                             attrs="{'invisible': ['|', ('active', '=', False), ('type', '=', 'lead')]}"/>

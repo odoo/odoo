@@ -89,7 +89,7 @@ QUnit.module('Crm Rainbowman Triggers', {
         this.testFormView = {
             arch: `
                 <form js_class="crm_form">
-                    <header><field name="stage_id" widget="crm_statusbar" options="{'clickable': '1'}"/></header>
+                    <header><field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/></header>
                     <field name="name"/>
                     <field name="planned_revenue"/>
                     <field name="team_id"/>
