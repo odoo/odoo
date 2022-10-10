@@ -134,6 +134,10 @@ export class MassMailingHtmlField extends HtmlField {
     }
 
     async _resetIframe() {
+        if (this._switchingTheme) {
+            return;
+        }
+        this.wysiwyg.$iframeBody.find('.o_mail_theme_selector_new').remove();
         await this._onSnippetsLoaded();
 
         // Data is removed on save but we need the mailing and its body to be
@@ -494,7 +498,7 @@ export class MassMailingHtmlField extends HtmlField {
      * @private
      * @param {Object} themeParams
      */
-    _switchThemes(themeParams) {
+    async _switchThemes(themeParams) {
         if (!themeParams || this.switchThemeLast === themeParams) {
             return;
         }
@@ -550,7 +554,9 @@ export class MassMailingHtmlField extends HtmlField {
         // The value of the field gets updated upon editor blur. If for any
         // reason, the selection was not in the editable before modifying
         // another field, ensure that the value is properly set.
-        return this.commitChanges();
+        this._switchingTheme = true;
+        await this.commitChanges();
+        this._switchingTheme = false;
     }
     async _getWysiwygClass() {
         return getWysiwygClass({moduleName: 'mass_mailing.wysiwyg'});
