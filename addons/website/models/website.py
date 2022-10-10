@@ -807,55 +807,55 @@ class Website(models.Model):
         """
         dependencies = {}
         current_website = self.get_current_website()
+        page_model_name = 'Page'
 
-        # search for views containing the url, including the ones linked to a
-        # website.page
-        domains = []
-        urls = []
+        def _handle_views_and_pages(views):
+            page_views = views.filtered('page_ids')
+            views = views - page_views
+            if page_views:
+                dependencies.setdefault(page_model_name, [])
+                dependencies[page_model_name] += [{
+                    'field_name': 'Content',
+                    'record_name': page.name,
+                    'link': page.url,
+                    'model_name': page_model_name,
+                } for page in page_views.page_ids]
+            return views
+
+        # Prepare what's needed to later generate the URL search domain for the
+        # given records
+        search_criteria = []
         for record in self.env[res_model].browse([int(res_id) for res_id in res_ids]):
-            website = getattr(record, 'website_id', current_website)
-            url = getattr(record, 'website_url', False) or record.url
-            urls.append(url)
-            domains.append(AND([
-                [('arch_db', 'ilike', url)],
-                website.website_domain()
-            ]))
-        views = self.env['ir.ui.view'].search(OR(domains))
+            website = 'website_id' in record and record.website_id or current_website
+            url = 'website_url' in record and record.website_url or record.url
+            search_criteria.append((url, website.website_domain()))
 
-        page_views = views.filtered('page_ids')
-        views -= page_views
+        # Search the URL in every relevant field
+        html_fields_attributes = self._get_html_fields_attributes() + [
+            ('website.menu', 'website_menu', 'url', False),
+        ]
+        for model, _table, column, _translate in html_fields_attributes:
+            Model = self.env[model]
+            # Generate the exact domain to search for the URL in this field
+            domains = []
+            for url, website_domain in search_criteria:
+                domains.append(AND([
+                    [(column, 'ilike', url)],
+                    website_domain if hasattr(Model, 'website_id') else [],
+                ]))
 
-        if views:
-            view_key = _('Template') if len(views) == 1 else _('Templates')
-            dependencies[view_key] = [{
-                'content': Markup(_('Template <b>%s (id:%s)</b> contains a link to this page')) % (view.key or view.name, view.id),
-                'item': _('%s (id:%s)') % (view.key or view.name, view.id),
-                'link': '/web#id=%s&view_type=form&model=ir.ui.view' % view.id,
-            } for view in views]
-
-        if page_views:
-            page_key = _('Page') if len(page_views) == 1 else _('Pages')
-            dependencies[page_key] = [{
-                'content': Markup(_("Page <b>%s</b> contains a link to this page")) % page.url,
-                'item': page.name,
-                'link': page.url,
-            } for page in page_views.page_ids]
-
-        # search for menu containing the url
-        domains = []
-        for url in urls:
-            domains.append(AND([
-                [('url', 'ilike', url)],
-                website.website_domain(),
-            ]))
-        menus = self.env['website.menu'].search(OR(domains))
-        if menus:
-            menu_key = _('Menu') if len(menus) == 1 else _('Menus')
-            dependencies[menu_key] = [{
-                'content': Markup(_('This page is in the menu <b>%s</b>')) % menu.name,
-                'link': '/web#id=%s&view_type=form&model=website.menu' % menu.id,
-                'item': menu.name,
-            } for menu in menus]
+            dependency_records = Model.search(OR(domains))
+            if model == 'ir.ui.view':
+                dependency_records = _handle_views_and_pages(dependency_records)
+            if dependency_records:
+                model_name = self.env['ir.model']._display_name_for([model])[0]['display_name']
+                dependencies.setdefault(model_name, [])
+                dependencies[model_name] += [{
+                    'field_name': Model.fields_get()[column]['string'],
+                    'record_name': rec.name,
+                    'link': 'website_url' in rec and rec.website_url or f'/web#id={rec.id}&view_type=form&model={model}',
+                    'model_name': model_name,
+                } for rec in dependency_records]
 
         return dependencies
 
@@ -1331,10 +1331,15 @@ class Website(models.Model):
     def _get_cached(self, field):
         return self._get_cached_values()[field]
 
+    def _get_html_fields_attributes_blacklist(self):
+        return (
+            'mail.message', 'mail.activity', 'digest.tip',
+        )
+
     def _get_html_fields_attributes(self):
-        html_fields = [('ir_ui_view', 'arch_db', True)]
+        html_fields = [('ir.ui.view', 'ir_ui_view', 'arch_db', True)]
         cr = self.env.cr
-        cr.execute(r"""
+        cr.execute("""
             SELECT f.model,
                    f.name,
                    f.translate
@@ -1344,13 +1349,13 @@ class Website(models.Model):
              WHERE f.ttype = 'html'
                AND f.store = true
                AND m.transient = false
-               AND f.model NOT LIKE 'ir.actions%'
-               AND f.model != 'mail.message'
-        """)
+               AND f.model NOT LIKE 'ir.actions%%'
+               AND f.model NOT IN %s
+        """, ([self._get_html_fields_attributes_blacklist()]))
         for model, name, translate in cr.fetchall():
             table = self.env[model]._table
             if tools.table_exists(cr, table) and tools.column_exists(cr, table, name):
-                html_fields.append((table, name, translate))
+                html_fields.append((model, table, name, translate))
         return html_fields
 
     def _get_snippets_assets(self):
@@ -1398,7 +1403,7 @@ class Website(models.Model):
                 sql.SQL("->>'en_US'" if translate else ''),
                 sql.Placeholder('snippet_regex'),
                 sql.Identifier(table)
-            ) for table, column, translate in html_fields_attributes
+            ) for _model, table, column, translate in html_fields_attributes
         ), {'snippet_regex': f'<([^>]*data-snippet="{snippet_id}"[^>]*)>'})
         results = self.env.cr.fetchall()
         for r in results:
