@@ -3,6 +3,9 @@
 /// They are available in every asset bundle.
 ///
 
+// Color-scheme
+$o-webclient-color-scheme: bright !default;
+
 // Font sizes
 $o-root-font-size: 12px !default;
 $o-font-size-base: 13rem * (1px / $o-root-font-size) !default;
@@ -52,6 +55,7 @@ $o-theme-text-colors: (
     "info": #0180a5,
     "warning": #9a6b01,
     "danger": #d23f3a,
+    "odoo": $o-brand-odoo,
 )!default;
 
 $o-opacity-disabled: .5 !default;
@@ -78,12 +82,12 @@ $o-form-lightsecondary: #ccc !default;
 $o-list-footer-bg-color: #eee !default;
 $o-list-footer-font-weight: bold !default;
 
-$o-tooltip-background-color: white !default;
-$o-tooltip-color: #666666 !default;
+$o-tooltip-background-color: $o-view-background-color !default;
+$o-tooltip-color: $o-main-text-color !default;
 $o-tooltip-arrow-color: white !default;
-$o-tooltip-text-color: #777777 !default;
-$o-tooltip-title-text-color: black !default;
-$o-tooltip-title-background-color: #F7F7F7 !default;
+$o-tooltip-text-color: $o-main-text-color !default;
+$o-tooltip-title-text-color: $o-main-headings-color !default;
+$o-tooltip-title-background-color: $o-view-background-color !default;
 
 // Forms
 
@@ -169,6 +173,10 @@ $o-border-radius-sm: .2rem !default;
 $o-touch-btn-padding: 7px 14px !default;
 
 // Buttons
-$o-btn-secondary-bg: white !default;
+$o-btn-secondary-bg: $o-white !default;
 $o-btn-secondary-hover-bg: $o-gray-100 !default;
 $o-btn-secondary-hover-border: $o-gray-200 !default;
+
+$o-btn-light-bg: $o-white !default;
+$o-btn-light-border: $o-btn-light-bg !default;
+$o-btn-light-background-hover: $o-gray-100 !default;

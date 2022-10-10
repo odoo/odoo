@@ -15,7 +15,7 @@ $cyan: #17a2b8 !default;
 //End Restore BS4 Colors
 
 // All of those are BS default
-$white:    #fff !default;
+$white:    $o-white !default;
 $gray-100: $o-gray-100 !default;
 $gray-200: $o-gray-200 !default;
 $gray-300: $o-gray-300 !default;
@@ -26,7 +26,7 @@ $gray-700: $o-gray-700 !default;
 $gray-800: $o-gray-800 !default;
 $gray-900: $o-gray-900 !default;
 
-$black:    #000 !default;
+$black:    $o-black !default;
 
 $primary: $o-brand-primary !default;
 $secondary: $white !default;
@@ -70,7 +70,7 @@ $spacer: 1rem !default;
 //
 // Settings for the `<body>` element.
 
-$body-bg: $o-main-bg-color !default;
+$body-bg: $o-webclient-background-color !default;
 $body-color: $o-main-text-color !default;
 
 // Links
@@ -154,6 +154,7 @@ $table-th-font-weight: $headings-font-weight !default;
 //
 
 $btn-font-weight: $font-weight-bold !default;
+$btn-disabled-opacity: $o-opacity-disabled !default;
 $btn-border-radius-lg: $border-radius !default;
 
 // Dropdowns
@@ -178,6 +179,7 @@ $dropdown-item-padding-x: $o-dropdown-hpadding !default;
 
 $list-group-active-color: $o-list-group-active-color !default;
 $list-group-active-bg: $o-list-group-active-bg !default;
+$list-group-action-hover-color: $gray-900 !default;
 
 // Z-index master list
 
@@ -251,13 +253,15 @@ $kbd-bg: $o-gray-100 !default;
 $kbd-box-shadow: 0px 1px 1px rgba($o-black, 0.2), inset 0px -1px 1px 1px rgba($o-gray-200, 0.8), inset 0px 2px 0px 0px rgba($o-white, 0.8) !default;
 
 // Input
-$input-bg: $o-white !default;
+$input-bg: $o-view-background-color !default;
 $input-focus-border-color: $o-brand-primary !default;
 $form-check-input-checked-color: $o-brand-lightsecondary !default;
 $form-check-input-checked-border-color: $o-brand-primary !default;
 $form-check-input-checked-bg-color: $o-brand-primary !default;
 $form-switch-checked-color: $input-bg !default;
 $form-switch-circle-bg-color: $input-bg !default;
+
+$form-range-thumb-bg: $primary !default;
 
 // Badge
 $badge-color: inherit !default;
