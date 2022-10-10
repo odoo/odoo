@@ -682,7 +682,7 @@ class AccountBankStatementLine(models.Model):
             if balance_to_reconcile is None else balance_to_reconcile
 
         if 'currency_id' in counterpart_vals:
-            currency_id = counterpart_vals['currency_id'] or company_currency.id
+            currency_id = counterpart_vals['currency_id'] or foreign_currency.id
         elif move_line:
             currency_id = move_line.currency_id.id or company_currency.id
         else:
