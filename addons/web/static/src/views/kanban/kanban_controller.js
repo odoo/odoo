@@ -28,6 +28,7 @@ export class KanbanController extends Component {
             onCreate: archInfo.onCreate,
             quickCreateView: archInfo.quickCreateView,
             defaultGroupBy,
+            defaultOrder: archInfo.defaultOrder,
             viewMode: "kanban",
             openGroupsByDefault: true,
             tooltipInfo: archInfo.tooltipInfo,
