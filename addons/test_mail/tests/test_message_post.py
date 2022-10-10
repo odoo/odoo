@@ -2127,7 +2127,10 @@ class TestMessagePostLang(MailCommon, TestRecipients):
                     'customer_id': partner.id,
                 })
                 with self.mock_mail_gateway():
-                    test_record.message_post_with_source(
+                    test_record.with_context({
+                        'email_notification_subtitles': self.subtitles,
+                        'email_notification_subtitles_highlight_index': 1,
+                    }).message_post_with_source(
                         test_template,
                         email_layout_xmlid='mail.test_layout',
                         message_type='comment',
@@ -2175,6 +2178,11 @@ class TestMessagePostLang(MailCommon, TestRecipients):
                                      '"View document" translation failed')
                     self.assertIn(f'View {test_record._description}', body,
                                   '"View document" translation failed')
+                    # Check subtitles
+                    self.assertIn('<span>Subtitle test_model</span>', body, 'Subtitles translation failed')
+                    self.assertIn('<b>Subtitle2 test_model2</b>', body, 'Subtitles translation failed')
+                    self.assertNotIn('<span>Subtitular test_model</span>', body, 'Subtitles translation failed')
+                    self.assertNotIn('<b>Subtitular2 test_model2</b>', body, 'Subtitles translation failed')
                 else:
                     self.assertNotIn('English Layout for', body, 'Layout translation failed')
                     self.assertIn('Spanish Layout para Spanish Model Description', body,
@@ -2185,6 +2193,11 @@ class TestMessagePostLang(MailCommon, TestRecipients):
                                   '"View document" translation failed')
                     self.assertNotIn(f'View {test_record._description}', body,
                                     '"View document" translation failed')
+                    # Check subtitles
+                    self.assertIn('<span>Subtitular test_model</span>', body, 'Subtitles translation failed')
+                    self.assertIn('<b>Subtitular2 test_model2</b>', body, 'Subtitles translation failed')
+                    self.assertNotIn('<span>Subtitle test_model</span>', body, 'Subtitles translation failed')
+                    self.assertNotIn('<b>Subtitle2 test_model2</b>', body, 'Subtitles translation failed')
 
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')

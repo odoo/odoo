@@ -33,13 +33,14 @@ from odoo.addons.mail.models.mail_notification import MailNotification
 from odoo.addons.mail.models.res_users import ResUsers
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tests import common, RecordCapturer, new_test_user
-from odoo.tools import mute_logger
+from odoo.tools import LazyTranslate, mute_logger
 from odoo.tools.mail import (
     email_normalize, email_normalize_all, email_split, email_split_and_format_normalize, formataddr
 )
 from odoo.tools.translate import code_translations
 
 _logger = logging.getLogger(__name__)
+_test_lt = LazyTranslate(__name__)
 
 mail_new_test_user = partial(new_test_user, context={'mail_create_nolog': True,
                                                      'mail_create_nosubscribe': True,
@@ -1827,6 +1828,7 @@ class MailCommon(MailCase):
         )
         cls.partner_employee = cls.user_employee.partner_id
         cls.guest = cls.env['mail.guest'].create({'name': 'Guest Mario'})
+        cls.subtitles = []
 
     @classmethod
     def _activate_multi_company(cls):
@@ -1924,8 +1926,13 @@ class MailCommon(MailCase):
         # Translate some code strings used in mailing
         code_translations.python_translations[('mail', 'es_ES')] = {
             **code_translations.python_translations[('mail', 'es_ES')],
-            'View %s': 'SpanishView %s'
+            'View %s': 'SpanishView %s',
+            'Subtitle %(model)s': 'Subtitular %(model)s',
+            'Subtitle2 %(model)s': 'Subtitular2 %(model)s',
         }
+        cls.subtitles = [
+            _test_lt("Subtitle %(model)s", model="test_model"),
+            _test_lt("Subtitle2 %(model)s", model="test_model2")]
         cls.addClassCleanup(code_translations.python_translations.clear)
 
         # Prepare some translated value for template if given
@@ -1951,6 +1958,12 @@ class MailCommon(MailCase):
             <a t-att-href="action['url']">
                 <t t-out="action['title']"/>
             </a>
+        </t>
+        <t t-if="subtitles">
+            <t t-foreach="subtitles" t-as="subtitle">
+                <b t-if="subtitles_highlight_index == subtitle_index" t-out="subtitle"/>
+                <span t-else="" t-out="subtitle"/>
+            </t>
         </t>
     </div>
     <t t-out="message.body"/>

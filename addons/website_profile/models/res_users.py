@@ -6,8 +6,10 @@ import uuid
 from datetime import datetime
 from werkzeug import urls
 from odoo import api, fields, models
+from odoo.tools.translate import LazyTranslate
 
 VALIDATION_KARMA_GAIN = 3
+_lt = LazyTranslate(__name__)
 
 
 class ResUsers(models.Model):
@@ -50,8 +52,17 @@ class ResUsers(models.Model):
             }
             params.update(kwargs)
             token_url = self.get_base_url() + '/profile/validate_email?%s' % urls.url_encode(params)
-            activation_template.sudo().with_context(token_url=token_url).send_mail(
-                self.id, force_send=True, raise_exception=True)
+            # At this point, user access on template should not restrict template rendering
+            activation_template.sudo().with_context(
+                email_notification_force_header=True,
+                email_notification_force_footer=True,
+                email_notification_subtitles=[
+                    _lt("%(company_name)s Profile validation", company_name=self.sudo().company_id.name or '')],
+                token_url=token_url,
+            ).send_mail_batch(
+                self.ids, force_send=True, raise_exception=True,
+                email_layout_xmlid='mail.mail_notification_layout',
+            )
         return True
 
     def _process_profile_validation_token(self, token, email):
