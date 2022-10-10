@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:26+0000\n"
-"PO-Revision-Date: 2022-10-04 09:26+0000\n"
+"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"PO-Revision-Date: 2022-10-10 10:23+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -935,6 +935,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/core/model_field_selector/model_field_selector_popover.xml:0
 #: code:addons/web/static/src/legacy/js/widgets/model_field_selector_popover.js:0
 #, python-format
 msgid "As a default text when no value are set"
@@ -1799,6 +1800,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/core/model_field_selector/model_field_selector_popover.xml:0
 #: code:addons/web/static/src/legacy/js/widgets/model_field_selector_popover.js:0
 #, python-format
 msgid "Default text is used when no values are set"
@@ -1806,6 +1808,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/core/model_field_selector/model_field_selector_popover.xml:0
 #: code:addons/web/static/src/legacy/js/widgets/model_field_selector_popover.js:0
 #, python-format
 msgid "Default value"
@@ -1910,7 +1913,6 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
 #: code:addons/web/static/src/views/fields/translation_dialog.xml:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
-#: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_cover_image_dialog.xml:0
 #: code:addons/web/static/src/views/list/list_controller.xml:0
 #: code:addons/web/static/src/webclient/settings_form_view/settings_confirmation_dialog.xml:0
@@ -1921,6 +1923,7 @@ msgstr ""
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/views/form/form_error_dialog/form_error_dialog.xml:0
+#: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 #, python-format
 msgid "Discard changes"
 msgstr ""
@@ -2536,7 +2539,6 @@ msgstr ""
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/search/group_by_menu/group_by_menu.xml:0
-#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Group By"
 msgstr ""
@@ -3265,8 +3267,6 @@ msgstr ""
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/views/basic/basic_model.js:0
 #: code:addons/web/static/src/views/form/form_controller.js:0
-#: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
-#: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
 #, python-format
 msgid "New"
 msgstr ""
@@ -4211,10 +4211,6 @@ msgstr ""
 #: code:addons/web/static/src/legacy/xml/kanban.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
-#: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
-#: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
-#: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
-#: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
 #, python-format
 msgid "Quick add"
 msgstr ""
@@ -4360,6 +4356,7 @@ msgstr ""
 #: code:addons/web/static/src/search/search_bar/search_bar.xml:0
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
+#: code:addons/web/static/src/views/form/form_controller.xml:0
 #, python-format
 msgid "Remove"
 msgstr ""
@@ -4516,7 +4513,6 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
 #: code:addons/web/static/src/views/fields/translation_dialog.xml:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
-#: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 #: code:addons/web/static/src/views/list/list_controller.xml:0
 #: code:addons/web/static/src/webclient/settings_form_view/settings_confirmation_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
@@ -4569,6 +4565,13 @@ msgstr ""
 #: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #, python-format
 msgid "Save default"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
+#, python-format
+msgid "Save manually"
 msgstr ""
 
 #. module: web
@@ -5179,6 +5182,11 @@ msgid "There was a problem while uploading your file."
 msgstr ""
 
 #. module: web
+#: model_terms:ir.ui.view,arch_db:web.neutralize_banner
+msgid "This database is neutralized."
+msgstr ""
+
+#. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/widgets/date_picker.js:0
 #, python-format
@@ -5365,6 +5373,13 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/core/model_field_selector/model_field_selector_popover.xml:0
+#, python-format
+msgid "Type a default text or press ENTER"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/core/signature/name_and_signature.xml:0
 #: code:addons/web/static/src/legacy/xml/name_and_signature.xml:0
 #, python-format
@@ -5501,7 +5516,6 @@ msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 #: code:addons/web/static/src/webclient/settings_form_view/settings_confirmation_dialog.js:0
 #: code:addons/web/static/src/webclient/settings_form_view/settings_form_view.xml:0
 #, python-format
@@ -5690,6 +5704,13 @@ msgstr ""
 #: code:addons/web/static/src/webclient/actions/debug_items.js:0
 #, python-format
 msgid "View Fields"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
+#, python-format
+msgid "View In Kanban"
 msgstr ""
 
 #. module: web
