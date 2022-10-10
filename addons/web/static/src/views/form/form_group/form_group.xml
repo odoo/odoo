@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="web.Form.OuterGroup" owl="1">
-    <div class="o_group row align-items-start" t-attf-class="{{ allClasses }} {{ props.hasOuterTemplate and props.class ? '' : 'my-3' }}" t-att-style="props.style">
+    <div class="o_group row align-items-start" t-attf-class="{{ allClasses }}" t-att-style="props.style">
         <t t-slot="title" t-if="props.slots and props.slots.title" />
         <t t-foreach="getItems()" t-as="item" t-key="item_index">
             <span class="o_newline" t-if="item.newline" />
