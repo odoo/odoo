@@ -15,6 +15,7 @@ import { ListController } from "@web/views/list/list_controller";
 import { DynamicRecordList } from "@web/views/relational_model";
 import { actionService } from "@web/webclient/actions/action_service";
 import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
+import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import {
     addRow,
     click,
@@ -15721,5 +15722,62 @@ QUnit.module("Views", (hooks) => {
         });
         assert.containsOnce(target, "thead th[data-name=foo]");
         assert.hasClass(target.querySelector("thead th[data-name=foo]"), "table-active");
+    });
+
+    QUnit.test("Search more in a many2one", async function (assert) {
+        serverData.views = {
+            "bar,false,list": `
+                <list>
+                    <field name="display_name"/>
+                </list>
+            `,
+            "bar,false,search": `<search/>`,
+        };
+
+        patchWithCleanup(browser, {
+            setTimeout: () => {},
+        });
+
+        patchWithCleanup(Many2XAutocomplete.defaultProps, {
+            searchLimit: 1,
+        });
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom">
+                    <field name="m2o"/>
+                </tree>
+            `,
+            mockRPC(_, args) {
+                if (args.method === "name_get") {
+                    assert.step("name_get");
+                    assert.deepEqual(args.args[0], [3]);
+                }
+            },
+        });
+
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_row td[name=m2o]")].map((el) => el.innerText),
+            ["Value 1", "Value 2", "Value 1", "Value 1"]
+        );
+
+        await click(target, ".o_data_row:nth-child(1) td.o_list_many2one");
+        await click(target, ".o_field_many2one_selection .o-autocomplete--input");
+        await clickOpenedDropdownItem(target, "m2o", "Search More...");
+
+        assert.verifySteps([]);
+
+        await click(target, ".modal .o_data_row:nth-child(3) td[name=display_name]");
+
+        assert.verifySteps(["name_get"]);
+
+        await click(target, ".o_list_button_save");
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_row td[name=m2o]")].map((el) => el.innerText),
+            ["Value 3", "Value 2", "Value 1", "Value 1"]
+        );
     });
 });
