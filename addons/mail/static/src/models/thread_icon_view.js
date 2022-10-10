@@ -40,6 +40,7 @@ Model({
             inverse: "threadIconViewOwner",
             compute() {
                 if (
+                    this.thread &&
                     this.thread.channel &&
                     this.thread.channel.channel_type === "chat" &&
                     this.thread.channel.correspondent &&

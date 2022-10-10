@@ -119,15 +119,15 @@ Model({
          * @private
          */
         _onThreadCacheChanged() {
-            // clear obsolete hints
-            this.update({ componentHintList: clear() });
-            this.addComponentHint("change-of-thread-cache");
             if (this.threadCache) {
+                // clear obsolete hints
+                this.update({ componentHintList: clear() });
+                this.addComponentHint("change-of-thread-cache");
                 this.threadCache.update({
                     isCacheRefreshRequested: true,
                 });
+                this.update({ lastVisibleMessage: clear() });
             }
-            this.update({ lastVisibleMessage: clear() });
         },
         /**
          * @private
@@ -154,7 +154,9 @@ Model({
                 return;
             }
             this.messaging.browser.clearTimeout(this.loaderTimeout);
-            this.update({ isLoading: false, isPreparingLoading: false });
+            if (this.thread) {
+                this.update({ isLoading: false, isPreparingLoading: false });
+            }
         },
         /**
          * @param {Message} prevMessage
