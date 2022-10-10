@@ -9457,18 +9457,18 @@ QUnit.module("Views", (hooks) => {
                 if (route === "/web/dataset/resequence") {
                     assert.deepEqual(
                         args.ids,
-                        [2, 3, 4, 1],
+                        [2, 1, 3, 4],
                         "should write the sequence in correct order"
                     );
                 }
             },
         });
 
-        assert.deepEqual(getCardTexts(), ["yop", "blip", "gnap", "blip"]);
+        assert.deepEqual(getCardTexts(), ["blip", "blip", "yop", "gnap"]);
 
         await dragAndDrop(".o_kanban_record", ".o_kanban_record:nth-child(4)");
 
-        assert.deepEqual(getCardTexts(), ["blip", "gnap", "blip", "yop"]);
+        assert.deepEqual(getCardTexts(), ["blip", "yop", "gnap", "blip"]);
     });
 
     QUnit.test("ungrouped kanban without handle field", async (assert) => {
@@ -11161,26 +11161,25 @@ QUnit.module("Views", (hooks) => {
             [...target.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")].map(
                 (el) => el.innerText
             ),
-            ["yop", "blip", "gnap", "blip"]
+            ["blip", "blip", "yop", "gnap"]
         );
 
         assert.verifySteps([]);
 
-        // move "yop" to second place
-        await dragAndDrop(".o_kanban_record", ".o_kanban_record:nth-child(2)");
+        // move second "blip" to third place
+        await dragAndDrop(".o_kanban_record:nth-child(2)", ".o_kanban_record:nth-child(3)");
 
         assert.deepEqual(
             [...target.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")].map(
                 (el) => el.innerText
             ),
-            ["yop", "blip", "gnap", "blip"]
+            ["blip", "blip", "yop", "gnap"]
         );
         assert.verifySteps(["resequence"]);
 
         // try again
-        await dragAndDrop(".o_kanban_record", ".o_kanban_record:nth-child(2)");
-
-        assert.verifySteps([]);
+        await dragAndDrop(".o_kanban_record:nth-child(2)", ".o_kanban_record:nth-child(3)");
+        -assert.verifySteps([]);
 
         def.resolve();
         await nextTick();
@@ -11189,16 +11188,16 @@ QUnit.module("Views", (hooks) => {
             [...target.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")].map(
                 (el) => el.innerText
             ),
-            ["blip", "yop", "gnap", "blip"]
+            ["blip", "yop", "blip", "gnap"]
         );
 
-        await dragAndDrop(".o_kanban_record:nth-child(2)", ".o_kanban_record:nth-child(3)");
+        await dragAndDrop(".o_kanban_record:nth-child(3)", ".o_kanban_record:nth-child(4)");
 
         assert.deepEqual(
             [...target.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")].map(
                 (el) => el.innerText
             ),
-            ["blip", "gnap", "yop", "blip"]
+            ["blip", "yop", "gnap", "blip"]
         );
         assert.verifySteps(["resequence"]);
     });
@@ -11908,5 +11907,39 @@ QUnit.module("Views", (hooks) => {
         await triggerEvent(content, null, "mousedown");
 
         assert.containsNone(target, ".o_kanban_record.o_dragged");
+    });
+
+    QUnit.test("attribute default_order", async function (assert) {
+        serverData.models.custom_model = {
+            fields: {
+                int: { type: "integer", string: "Int" },
+            },
+            records: [
+                { id: 1, int: 1 },
+                { id: 2, int: 3 },
+                { id: 3, int: 2 },
+            ],
+        };
+
+        await makeView({
+            type: "kanban",
+            resModel: "custom_model",
+            serverData,
+            arch: `
+                <kanban default_order="int">
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="int" />
+                        </div>
+                    </templates>
+                </kanban>
+            `,
+        });
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")].map(
+                (el) => el.innerText
+            ),
+            ["1", "2", "3"]
+        );
     });
 });
