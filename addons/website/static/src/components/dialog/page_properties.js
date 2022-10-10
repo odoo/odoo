@@ -2,12 +2,13 @@
 
 import {CheckBox} from '@web/core/checkbox/checkbox';
 import {useService, useAutofocus} from "@web/core/utils/hooks";
+import {sprintf} from "@web/core/utils/strings";
 import {useWowlService} from '@web/legacy/utils';
 import {WebsiteDialog} from './dialog';
 import {FormViewDialog} from "@web/views/view_dialogs/form_view_dialog";
 import {qweb, _t} from 'web.core';
 
-const {Component, onWillStart, useState, xml, useRef, markup} = owl;
+const {Component, onWillStart, useState, xml, useRef} = owl;
 
 export class PageDependencies extends Component {
     setup() {
@@ -23,6 +24,7 @@ export class PageDependencies extends Component {
         this.dependencies = {};
         this.depText = '...';
         this.action = useRef('action');
+        this.sprintf = sprintf;
 
         onWillStart(() => this.onWillStart());
     }
@@ -37,16 +39,6 @@ export class PageDependencies extends Component {
             this.depText = Object.entries(this.dependencies)
                 .map(dependency => `${dependency[1].length} ${dependency[0].toLowerCase()}`)
                 .join(', ');
-        } else {
-            for (const key of Object.keys(this.dependencies)) {
-                this.dependencies[key] = this.dependencies[key].map(item => {
-                    // TODO probably need to refactor this feature so that the
-                    // client side is in charge of what the sentences look like
-                    // (not server-side HTML).
-                    item.contentToDisplay = markup(item.content);
-                    return item;
-                });
-            }
         }
     }
 
