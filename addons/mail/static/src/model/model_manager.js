@@ -197,12 +197,6 @@ export class ModelManager {
      * @returns {Record|undefined}
      */
     findFromIdentifyingData(model, data = {}) {
-        for (const fieldName of model.__identifyingFieldNames) {
-            const field = model.__fieldMap.get(fieldName);
-            if (data[field.fieldName] === undefined && field.default !== undefined) {
-                data[field.fieldName] = field.default;
-            }
-        }
         this._preInsertIdentifyingFieldsFromData(model, data);
         const record = model.__recordsIndex.findRecord(data);
         if (!record) {
@@ -454,13 +448,16 @@ export class ModelManager {
                         throw new Error(`Relational field "${model}/${fieldName}" has "sort" with a relation of type "${field.relationType}" but "sort" is only supported for "many".`);
                     }
                 }
-                // 3. Check for redundant attributes on identifying fields.
+                // 3. Check for redundant or unsupported attributes on identifying fields.
                 if (field.identifying) {
                     if ('readonly' in field) {
                         throw new Error(`Identifying field ${model}/${fieldName} has unnecessary "readonly" attribute (readonly is implicit for identifying fields).`);
                     }
                     if ('required' in field && model.identifyingMode === 'and') {
                         throw new Error(`Identifying field ${model}/${fieldName} has unnecessary "required" attribute (required is implicit for AND identifying fields).`);
+                    }
+                    if ('default' in field) {
+                        throw new Error(`Identifying field ${model}/${fieldName} has "default" attribute, but default values are not supported for identifying fields.`);
                     }
                 }
                 // 4. Computed field.
