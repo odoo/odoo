@@ -700,7 +700,7 @@ class Users(models.Model):
     @tools.ormcache('self.id')
     def _get_company_ids(self):
         # use search() instead of `self.company_ids` to avoid extra query for `active_test`
-        domain = [('active', '=', True), ('user_ids', 'in', self._uid)]
+        domain = [('active', '=', True), ('user_ids', 'in', self.id)]
         return frozenset(self.env['res.company'].search(domain).ids)
 
     @api.model
