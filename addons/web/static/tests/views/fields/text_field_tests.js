@@ -240,6 +240,28 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test("set row on text fields", async function (assert) {
+        serverData.models.partner.fields.foo.type = "text";
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="foo" rows="4"/>
+                </form>`,
+        });
+
+        const textarea = target.querySelector("textarea");
+        assert.strictEqual(
+            textarea.rows,
+            4,
+            "rowCount should be the one set on the field",
+        );
+    });
+
     QUnit.test(
         "autoresize of text fields is done when switching to edit mode",
         async function (assert) {
