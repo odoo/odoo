@@ -2490,7 +2490,7 @@ class Form(object):
             values[f] = v
         return values
 
-    def _perform_onchange(self, fields):
+    def _perform_onchange(self, fields, context=None):
         assert isinstance(fields, list)
         # marks any onchange source as changed
         self._changed.update(fields)
@@ -2502,6 +2502,8 @@ class Form(object):
             return
 
         record = self._model.browse(self._values.get('id'))
+        if context is not None:
+            record = record.with_context(**context)
         result = record.onchange(self._onchange_values(), fields, spec)
         self._model.env.flush_all()
         self._model.env.clear()  # discard cache and pending recomputations
@@ -2697,7 +2699,7 @@ class O2MForm(Form):
                 raise AssertionError("Expected command type 0 or 1, found %s" % c)
 
         # FIXME: should be called when performing on change => value needs to be serialised into parent every time?
-        proxy._parent._perform_onchange([proxy._field])
+        proxy._parent._perform_onchange([proxy._field], self._env.context)
 
     def _values_to_save(self, all_fields=False):
         """ Validates values and returns only fields modified since
