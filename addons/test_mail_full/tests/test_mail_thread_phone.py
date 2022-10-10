@@ -45,3 +45,49 @@ class TestMailThreadPhone(TestMailFullCommon, TestMailFullRecipients):
             self.test_phone_records.mapped('phone_nbr'),
             [False] * 5 + ['+32475110505', '0032475110606', '0032475110707', False]
         )
+
+    @users('employee')
+    def test_search_phone_mobile_search_equal(self):
+        """ Test searching by phone/mobile with direct search """
+        test_phone_records = self.test_phone_records.with_env(self.env)
+
+        # test "=" search
+        # Currently not suported, returning results for "ilike"
+        results = self.env['mail.test.sms.bl'].search([('phone_mobile_search', '=', '0475')])
+        self.assertEqual(results, test_phone_records[:5])
+        results = self.env['mail.test.sms.bl'].search([('phone_mobile_search', '=', '0475000000')])
+        self.assertEqual(results, test_phone_records[0])
+        results = self.env['mail.test.sms.bl'].search([('phone_mobile_search', '=', '0032475110606')])
+        self.assertEqual(results, test_phone_records[6])
+        results = self.env['mail.test.sms.bl'].search([('phone_mobile_search', '=', '+32475110606')])
+        self.assertEqual(results, test_phone_records[6])
+
+    @users('employee')
+    def test_search_phone_mobile_search_ilike(self):
+        """ Test searching by phone/mobile on various ilike combinations """
+        test_phone_records = self.test_phone_records.with_env(self.env)
+
+        # test ilike search
+        results = self.env['mail.test.sms.bl'].search([('phone_mobile_search', 'ilike', '0475')])
+        self.assertEqual(results, test_phone_records[:5])
+        results = self.env['mail.test.sms.bl'].search([('phone_mobile_search', 'ilike', '101')])
+        self.assertEqual(results, test_phone_records[1])
+
+        # test search using +32/0032
+        results = self.env['mail.test.sms.bl'].search([('phone_mobile_search', 'ilike', '+32475')])
+        self.assertEqual(results, test_phone_records[5:8],
+                         'Search on phone_mobile_search: +32/0032 likeliness')
+        results = self.env['mail.test.sms.bl'].search([('phone_mobile_search', 'ilike', '0032475')])
+        self.assertEqual(results, test_phone_records[5:8],
+                         'Search on phone_mobile_search: +32/0032 likeliness')
+
+        # test inverse ilike search
+        # Currently not supported, returning results for "ilike"
+        results = self.env['mail.test.sms.bl'].search([('phone_mobile_search', 'not ilike', '0475')])
+        # self.assertEqual(results, test_phone_records - test_phone_records[:5],
+        self.assertEqual(results, test_phone_records[:5],
+                         'Seach on phone_mobile_search: not ilike not supported')
+        results = self.env['mail.test.sms.bl'].search([('phone_mobile_search', 'not ilike', '101')])
+        # self.assertEqual(results, test_phone_records - test_phone_records[1],
+        self.assertEqual(results, test_phone_records[1],
+                         'Seach on phone_mobile_search: not ilike not supported')
