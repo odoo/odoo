@@ -19,13 +19,11 @@ registerModel({
         },
         async _populateFromEmojiData(dataCategories, dataEmojis) {
             dataCategories.map(category => {
-                const emojiCount = dataEmojis.reduce((acc, emoji) => emoji.category === category.name ? acc + 1 : acc, 0);
                 this.update({
                     dataCategories: insert({
                         name: category.name,
                         title: category.title,
                         sortId: category.sortId,
-                        emojiCount,
                     }),
                 });
             });
