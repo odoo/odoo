@@ -120,12 +120,12 @@
                                 <group name="group_lots_and_weight" string="Logistics" attrs="{'invisible': [('type', 'not in', ['product', 'consu'])]}">
                                     <label for="weight" attrs="{'invisible':[('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}"/>
                                     <div class="o_row" name="weight" attrs="{'invisible':[('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}">
-                                        <field name="weight"/>
+                                        <field name="weight" class="oe_inline"/>
                                         <field name="weight_uom_name"/>
                                     </div>
                                     <label for="volume" attrs="{'invisible':[('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}"/>
                                     <div class="o_row" name="volume" attrs="{'invisible':[('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}">
-                                        <field name="volume" string="Volume"/>
+                                        <field name="volume" string="Volume" class="oe_inline"/>
                                         <field name="volume_uom_name"/>
                                     </div>
                                 </group>
