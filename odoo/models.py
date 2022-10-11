@@ -3075,7 +3075,7 @@ class BaseModel(metaclass=MetaModel):
         :param str field_name: field name
         :param list langs: languages
 
-        :return dict translations: [(lang, val_en, val_lang)]
+        :return: list of dicts like [{"lang": lang, "source": source_term, "value": value_term}]
         In the UI, translation_dialog.js
         for model: val_en will be shown as the translation
         for model term: val_en will be shown as the src
@@ -3086,11 +3086,10 @@ class BaseModel(metaclass=MetaModel):
         langs = set(langs or [l[0] for l in self.env['res.lang'].get_installed()])
         val_en = self.with_context(lang='en_US')[field_name]
         if not callable(field.translate):
-            val_lang_func = lambda val_lang: val_lang if val_lang != val_en else ''
             translations = [{
                 'lang': lang,
                 'source': val_en,
-                'value': val_lang_func(self.with_context(lang=lang)[field_name])
+                'value': self.with_context(lang=lang)[field_name]
             } for lang in langs]
         else:
             translation_dictionary = field.get_translation_dictionary(
