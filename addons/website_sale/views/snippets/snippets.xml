@@ -13,7 +13,7 @@
 <template id="snippet_options" inherit_id="website.snippet_options" name="e-commerce snippet options">
     <xpath expr="." position="inside">
         <!-- All products page -->
-        <div data-js="WebsiteSaleGridLayout" data-page-options="true" data-selector="main:has(.o_wsale_products_page)" data-no-check="true"
+        <div data-js="WebsiteSaleGridLayout" data-page-options="true" groups="website.group_website_designer" data-selector="main:has(.o_wsale_products_page)" data-no-check="true"
             string="Products Page" data-target="#products_grid .o_wsale_products_grid_table_wrapper > table">
             <we-select string="Layout" data-no-preview="true" data-reload="/">
                 <we-button data-customize-website-views="" data-name="grid_view_opt">Grid</we-button>
@@ -214,7 +214,7 @@
             </we-select>
         </div>
         <!-- Product page -->
-        <div data-js="WebsiteSaleProductPage" data-selector="main:has(.o_wsale_product_page)" data-page-options="true" data-no-check="true" string="Product Page">
+        <div data-js="WebsiteSaleProductPage" data-selector="main:has(.o_wsale_product_page)" data-page-options="true" groups="website.group_website_designer" data-no-check="true" string="Product Page">
             <we-row string="Customers" class="o_we_full_row">
                 <we-button string="Rating"
                            data-customize-website-views="website_sale.product_comment"
@@ -285,7 +285,7 @@
             </we-row>
         </div>
         <!-- Checkout page  -->
-        <div data-selector="main:has(.oe_website_sale .wizard)" data-page-options="true" data-no-check="true" string="Checkout Pages">
+        <div data-selector="main:has(.oe_website_sale .wizard)" data-page-options="true" groups="website.group_website_designer" data-no-check="true" string="Checkout Pages">
             <we-checkbox string="Extra Step Option"
                          data-customize-website-views="website_sale.extra_info_option"
                          data-no-preview="true"
