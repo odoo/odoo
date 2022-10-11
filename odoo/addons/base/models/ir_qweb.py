@@ -562,8 +562,19 @@ class IrQWeb(models.AbstractModel):
 
         safe_eval.check_values(values)
 
+<<<<<<< HEAD
         template_functions, def_name = irQweb._compile(template)
         render_template = template_functions[def_name]
+||||||| parent of dae6cdb04d3d... temp
+        render_template = irQweb._compile(template)
+=======
+        if isinstance(template, etree._Element):
+            # template is already an xml etree
+            render_template = irQweb._compile(template)
+        else:
+            render_template = irQweb._compile_cached(template)
+
+>>>>>>> dae6cdb04d3d... temp
         rendering = render_template(irQweb, values)
         result = ''.join(rendering)
 
@@ -585,6 +596,11 @@ class IrQWeb(models.AbstractModel):
             return None
 
     @QwebTracker.wrap_compile
+    def _compile_cached(self, template):
+        if isinstance(template, etree._Element):
+            raise ValueError("You cannot compile and cache an etree. Use a template with its ID, or the `_compile` method.")
+        return self._compile(template)
+
     def _compile(self, template):
         if isinstance(template, etree._Element):
             self = self.with_context(is_t_cache_disabled=True)
@@ -2103,12 +2119,20 @@ class IrQWeb(models.AbstractModel):
         # call
         code.append(indent_code(f"""
             irQweb = self.with_context(**t_call_options)
+<<<<<<< HEAD
             template = {template}
             if template.isnumeric():
                 template = int(template)
             t_call_template_functions, def_name = irQweb._compile(template)
             render_template = t_call_template_functions[def_name]
             yield from render_template(irQweb, t_call_values)
+||||||| parent of dae6cdb04d3d... temp
+            render_template = irQweb._compile({template})
+            yield from render_template(irQweb, t_call_values, t_call_gen0)
+=======
+            render_template = irQweb._compile_cached({template})
+            yield from render_template(irQweb, t_call_values, t_call_gen0)
+>>>>>>> dae6cdb04d3d... temp
             """, level))
 
         return code
