@@ -2,10 +2,10 @@
 
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import { makeFakeUserService } from "../helpers/mock_services";
-import { click, getFixture, patchWithCleanup, triggerEvents } from "../helpers/utils";
-import { getMenuItemTexts, toggleActionMenu } from "../search/helpers";
-import { makeView, setupViewRegistries } from "../views/helpers";
+import { makeFakeUserService } from "@web/../tests/helpers/mock_services";
+import { click, getFixture, patchWithCleanup, triggerEvents } from "@web/../tests/helpers/utils";
+import { getMenuItemTexts, toggleActionMenu } from "@web/../tests/search/helpers";
+import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
 let fixture;

@@ -9,8 +9,8 @@ import {
     makeDeferred,
     nextTick,
     patchWithCleanup,
-} from "../helpers/utils";
-import { makeView, setupViewRegistries } from "../views/helpers";
+} from "@web/../tests/helpers/utils";
+import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let fixture;
 let serverData;
