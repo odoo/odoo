@@ -864,12 +864,12 @@ class MrpWorkorder(models.Model):
     def _check_sn_uniqueness(self):
         """ Alert the user if the serial number as already been produced """
         if self.product_tracking == 'serial' and self.finished_lot_id:
-            sml = self.env['stock.move.line'].search_count([
-                ('lot_id', '=', self.finished_lot_id.id),
-                ('location_id.usage', '=', 'production'),
-                ('qty_done', '=', 1),
-                ('state', '=', 'done')
+            sml = self.env["stock.quant"].search_count([
+                ("lot_id", "=", self.finished_lot_id.id),
+                ("product_id", "=", self.product_id.id),
+                ("quantity", ">", 0)
             ])
+
             if sml:
                 raise UserError(_('This serial number for product %s has already been produced', self.product_id.name))
 
