@@ -3,7 +3,7 @@
 import { registry } from "@web/core/registry";
 import { Transition } from "@web/core/transition";
 import { useService } from "@web/core/utils/hooks";
-import { BurgerUserMenu } from "./user_menu/user_menu";
+import { BurgerUserMenu } from "./burger_user_menu/burger_user_menu";
 import { MobileSwitchCompanyMenu } from "./mobile_switch_company_menu/mobile_switch_company_menu";
 
 const { Component, onMounted, useState } = owl;
