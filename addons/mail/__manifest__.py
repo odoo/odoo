@@ -204,6 +204,12 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/webclient/commands/*.js',
             'mail/static/src/widgets/*/*.js',
             'mail/static/src/widgets/*/*.scss',
+
+            # Don't include dark mode files in light mode
+            ('remove', 'mail/static/src/components/*/*.dark.scss'),
+        ],
+        "web.dark_mode_assets_backend": [
+            'mail/static/src/components/*/*.dark.scss',
         ],
         'web.assets_backend_prod_only': [
             'mail/static/src/main.js',

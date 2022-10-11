@@ -3,7 +3,7 @@
     min-width: 0;
     height: 100%;
     background-color: map-get($grays, "100");
-    background: linear-gradient(-45deg, map-get($grays, "100"), white);
+    background: linear-gradient(-45deg, map-get($grays, "100"), $o-view-background-color);
 
     .fc-event {
         margin: 0 1px;
@@ -410,12 +410,12 @@
                     }
 
                     &.o_attendee_status_needsAction {
-                        background-color: rgba(white, 0.9) !important;
+                        background-color: rgba($o-view-background-color, 0.9) !important;
                     }
 
                     &.o_attendee_status_declined {
                         text-decoration: line-through;
-                        background-color: rgba(white, 0.9) !important;
+                        background-color: rgba($o-view-background-color, 0.9) !important;
                     }
                 }
             }
@@ -654,19 +654,19 @@ $o-filter_colors: lighten(#000, 46.7%), #f06050, #f4a460, #f7cd1f, #6cc1ed, #814
 
             &.o_attendee_status_alone,
             &.o_attendee_status_needsAction {
-                background-color: rgba(white, 0.9) !important;
-                color: black;
+                background-color: rgba($o-view-background-color, 0.9) !important;
+                color: $o-black;
                 .fc-bg {
-                    background-color: rgba(white, 0.9) !important;
+                    background-color: rgba($o-view-background-color, 0.9) !important;
                 }
             }
 
             &.o_attendee_status_declined {
                 text-decoration: line-through;
-                background-color: rgba(white, 0.9) !important;
-                color: black;
+                background-color: rgba($o-view-background-color, 0.9) !important;
+                color: $o-black;
                 .fc-bg {
-                    background-color: rgba(white, 0.9) !important;
+                    background-color: rgba($o-view-background-color, 0.9) !important;
                 }
             }
         }
@@ -681,7 +681,7 @@ $o-filter_colors: lighten(#000, 46.7%), #f06050, #f4a460, #f7cd1f, #6cc1ed, #814
     }
 
     .o_cw_popover.o_calendar_color_#{$i - 1} {
-        $color-subdle: mix(white, $color, 90%);
+        $color-subdle: mix($o-white, $color, 85%);
 
         .card-header,
         .card-header .popover-header {
@@ -691,7 +691,7 @@ $o-filter_colors: lighten(#000, 46.7%), #f06050, #f4a460, #f7cd1f, #6cc1ed, #814
 
         .card-header {
             padding-left: 2px;
-            border-color: mix($card-border-color, mix(white, $color));
+            border-color: mix($card-border-color, mix($o-white, $color));
         }
     }
 }

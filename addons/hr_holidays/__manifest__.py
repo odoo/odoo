@@ -83,6 +83,14 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
             'hr_holidays/static/src/tours/*.js',
             'hr_holidays/static/src/radio_image_field/*.js',
             'hr_holidays/static/src/radio_image_field/*.xml',
+
+            # Don't include dark mode files in light mode
+            ('remove', 'hr_holidays/static/src/views/**/*.dark.scss'),
+            ('remove', 'hr_holidays/static/src/dashboard/**/*.dark.scss'),
+        ],
+        "web.dark_mode_assets_backend": [
+            'hr_holidays/static/src/views/**/*.dark.scss',
+            'hr_holidays/static/src/dashboard/**/*.dark.scss',
         ],
         'web.tests_assets': [
             'hr_holidays/static/tests/helpers/**/*',

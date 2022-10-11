@@ -6,8 +6,10 @@ import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { formatText } from "../formatters";
 import { standardFieldProps } from "../standard_field_props";
+import { getCookie } from "web.utils.cookies";
 
 const { Component, onWillStart, onWillUpdateProps, useEffect, useRef } = owl;
+const colorSchemeCookie = getCookie("color_scheme");
 
 export class AceField extends Component {
     setup() {
@@ -46,6 +48,7 @@ export class AceField extends Component {
         this.aceEditor.setOptions({
             maxLines: Infinity,
             showPrintMargin: false,
+            theme: (colorSchemeCookie && colorSchemeCookie === "dark" ? 'ace/theme/monokai' : ''),
         });
         this.aceEditor.$blockScrolling = true;
 

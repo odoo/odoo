@@ -76,7 +76,7 @@
     <tfoot>
         <tr class="o_data_row">
             <td class="o_record_selector p-3" t-on-click.prevent.stop="() => this.trigger('schedule_activity')">
-                <span class="fa fa-plus pe-2"/><span>Schedule activity</span>
+                <span class="btn btn-link"><i class="fa fa-plus pe-2"/><span>Schedule activity</span></span>
             </td>
         </tr>
     </tfoot>
@@ -84,7 +84,7 @@
 
 <div t-name="mail.ActivityRenderer" class="o_activity_view" owl="1">
     <t t-if="!props.activity_types.length" t-call="web.NoContentHelper"/>
-    <table t-else="" class="table table-bordered mb-5">
+    <table t-else="" class="table table-bordered mb-5 bg-view">
         <t t-call="mail.ActivityViewHeader"/>
         <t t-call="mail.ActivityViewBody"/>
         <t t-call="mail.ActivityViewFooter"/>

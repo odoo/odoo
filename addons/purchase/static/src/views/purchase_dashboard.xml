@@ -11,17 +11,17 @@
                         <div class="g-col-9 g-col-sm-10 grid gap-1">
                             <div class="g-col-4 p-0" t-on-click="setSearchContext" title="All Draft RFQs" filter_name="draft_rfqs">
                                 <a href="#" class="btn btn-primary w-100 h-100 border-0 rounded-0 text-capitalize fw-normal">
-                                    <h2 t-out="purchaseData['all_to_send']"/>To Send
+                                    <div class="fs-2" t-out="purchaseData['all_to_send']"/>To Send
                                 </a>
                             </div>
                             <div class="g-col-4 p-0" t-on-click="setSearchContext" title="All Waiting RFQs" filter_name="waiting_rfqs">
                                 <a href="#" class="btn btn-primary w-100 h-100 border-0 rounded-0 text-capitalize fw-normal">
-                                    <h2 t-out="purchaseData['all_waiting']"/>Waiting
+                                    <div class="fs-2" t-out="purchaseData['all_waiting']"/>Waiting
                                 </a>
                             </div>
                             <div class="g-col-4 p-0" t-on-click="setSearchContext" title="All Late RFQs" filter_name="late_rfqs">
                                 <a href="#" class="btn btn-primary w-100 h-100 border-0 rounded-0 text-capitalize fw-normal">
-                                    <h2 t-out="purchaseData['all_late']"/>Late
+                                    <div class="fs-2" t-out="purchaseData['all_late']"/>Late
                                 </a>
                             </div>
                         </div>

@@ -13,12 +13,11 @@
             .settings_tab {
                 flex: 0 0 $o-base-settings-mobile-tabs-height;
                 flex-direction: row;
-                justify-content: space-between;
                 position: relative;
                 overflow: hidden;
                 overflow-x: auto;
                 padding: 0;
-                background: #5E5E5E;
+                border-bottom: 1px solid $border-color;
 
                 .tab {
                     display: block;
@@ -49,7 +48,6 @@
                     }
 
                     &.current {
-                        color: white;
                         font-weight: bold;
 
                         // Reset default style for 'selected' tabs

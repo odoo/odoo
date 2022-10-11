@@ -9,11 +9,11 @@
                         <t t-if="activityView.activity.assignee">
                             <img class="o_Activity_userAvatar rounded-circle h-100 w-100 o_object_fit_cover" t-attf-src="/web/image/res.users/{{ activityView.activity.assignee.id }}/avatar_128" t-att-alt="activityView.activity.assignee.nameOrDisplayName"/>
                         </t>
-                        <div class="o_Activity_iconContainer d-flex align-items-center justify-content-center rounded-circle w-50 h-50 text-white"
+                        <div class="o_Activity_iconContainer d-flex align-items-center justify-content-center rounded-circle w-50 h-50"
                             t-att-class="{
-                                'bg-success': activityView.activity.state === 'planned',
-                                'bg-warning': activityView.activity.state === 'today',
-                                'bg-danger': activityView.activity.state === 'overdue',
+                                'text-bg-success': activityView.activity.state === 'planned',
+                                'text-bg-warning': activityView.activity.state === 'today',
+                                'text-bg-danger': activityView.activity.state === 'overdue',
                             }"
                         >
                             <i class="o_Activity_icon fa small" t-attf-class="{{ activityView.activity.icon }}"/>

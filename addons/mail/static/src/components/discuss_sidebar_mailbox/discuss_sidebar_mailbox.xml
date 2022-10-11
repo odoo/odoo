@@ -15,7 +15,7 @@
             </div>
             <div t-attf-class="o_DiscussSidebarMailbox_item flex-grow-1 {{ discussSidebarMailboxView.mailbox.counter === 0 ? 'me-3': '' }}"/>
             <t t-if="discussSidebarMailboxView.mailbox.counter > 0">
-                <div t-attf-class="o_DiscussSidebarMailbox_counter o_DiscussSidebarMailbox_item badge rounded-pill {{ discussSidebarMailboxView.mailbox === messaging.starred ? 'bg-400 text-light' : 'text-bg-primary' }} ms-1 me-3 border-0">
+                <div t-attf-class="o_DiscussSidebarMailbox_counter o_DiscussSidebarMailbox_item badge rounded-pill {{ discussSidebarMailboxView.mailbox === messaging.starred ? 'bg-400 text-light' : 'text-bg-primary' }} ms-1 me-3">
                     <t t-esc="discussSidebarMailboxView.mailbox.counter"/>
                 </div>
             </t>

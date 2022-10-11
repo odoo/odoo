@@ -35,7 +35,7 @@ $grays: () !default;
 // prevent-backend-colors-alteration for more information)
 @if variable-exists('prevent-backend-colors-alteration') and $prevent-backend-colors-alteration {
     $theme-colors: map-remove($theme-colors, 'primary', 'secondary', 'success', 'info', 'warning', 'danger', 'light', 'dark');
-    $grays: map-remove($grays, '100', '200', '300', '400', '500', '600', '700', '800', '900');
+    $grays: map-remove($grays, '100', '200', '300', '400', '500', '600', '700', '800', '900', 'black', 'white');
 }
 
 // Bootstrap use standard variables to define individual colors which are then

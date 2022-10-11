@@ -10,12 +10,12 @@
                 t-on-keydown="ev => this.onFacetKeydown(facet, facet_index, ev)"
                 >
                 <t t-if="facet.icon">
-                    <span t-attf-class="o_searchview_facet_label text-bg-odoo {{ facet.icon }}"/>
+                    <span t-attf-class="o_searchview_facet_label {{ facet.icon }}"/>
                 </t>
                 <t t-else="">
-                    <span class="o_searchview_facet_label text-bg-odoo" t-esc="facet.title"/>
+                    <span class="o_searchview_facet_label" t-esc="facet.title"/>
                 </t>
-                <div class="o_facet_values border border-odoo border-start-0">
+                <div class="o_facet_values border-start-0">
                     <t t-foreach="facet.values" t-as="facetValue" t-key="facetValue_index">
                         <t t-if="!facetValue_first">
                             <span class="o_facet_values_sep" t-esc="facet.separator"/>
@@ -23,7 +23,7 @@
                         <span class="o_facet_value" t-esc="facetValue"/>
                     </t>
                 </div>
-                <i class="o_facet_remove oi oi-close"
+                <i class="o_facet_remove oi oi-close btn btn-link opacity-50 opacity-100-hover text-900"
                     role="img"
                     aria-label="Remove"
                     title="Remove"

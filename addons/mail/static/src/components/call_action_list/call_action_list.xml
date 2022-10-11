@@ -6,7 +6,7 @@
             <div class="o_CallActionList d-flex justify-content-between" t-attf-class="{{ className }}" t-ref="root">
                 <div class="o_CallActionList_buttons d-flex align-items-center flex-wrap">
                     <t t-if="callActionListView.thread.rtc and messaging.rtc.currentRtcSession">
-                        <button class="o_CallActionList_button btn d-flex m-1 border-0 rounded-circle bg-800 shadow-none"
+                        <button class="o_CallActionList_button btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
                             t-att-class="{ 'o-isActive': !messaging.rtc.currentRtcSession.isMute, 'o-isSmall p-2': callActionListView.isSmall, 'p-3': !callActionListView.isSmall }"
                             t-att-aria-label="callActionListView.microphoneButtonTitle"
                             t-att-title="callActionListView.microphoneButtonTitle"
@@ -20,7 +20,7 @@
                                 }"/>
                             </div>
                         </button>
-                        <button class="o_CallActionList_button btn d-flex m-1 border-0 rounded-circle bg-800 shadow-none"
+                        <button class="o_CallActionList_button btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
                             t-att-class="{ 'o-isActive': !messaging.rtc.currentRtcSession.isDeaf, 'o-isSmall p-2': callActionListView.isSmall, 'p-3': !callActionListView.isSmall }"
                             t-att-aria-label="callActionListView.headphoneButtonTitle"
                             t-att-title="callActionListView.headphoneButtonTitle"
@@ -34,7 +34,7 @@
                                 }"/>
                             </div>
                         </button>
-                        <button class="o_CallActionList_button o_CallActionList_videoButton btn d-flex m-1 border-0 rounded-circle bg-800 shadow-none"
+                        <button class="o_CallActionList_button o_CallActionList_videoButton btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
                             t-att-class="{
                                 'o-isActive': messaging.rtc.sendUserVideo,
                                 'o-isSmall p-2': callActionListView.isSmall,
@@ -48,7 +48,7 @@
                             </div>
                         </button>
                         <t t-if="!messaging.device.isMobileDevice">
-                            <button class="o_CallActionList_button o_CallActionList_videoButton btn d-flex m-1 border-0 rounded-circle bg-800 shadow-none"
+                            <button class="o_CallActionList_button o_CallActionList_videoButton btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
                                 t-att-class="{
                                     'o-isActive': messaging.rtc.sendDisplay,
                                     'o-isSmall p-2': callActionListView.isSmall,
@@ -63,7 +63,7 @@
                             </button>
                         </t>
                         <t t-if="!callActionListView.callView.isFullScreen">
-                            <button class="o_CallActionList_button btn d-flex m-1 border-0 rounded-circle bg-800 shadow-none"
+                            <button class="o_CallActionList_button btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
                                 aria-label="Activate Full Screen"
                                 title="Activate Full Screen"
                                 t-att-class="{ 'o-isSmall p-2': callActionListView.isSmall, 'p-3': !callActionListView.isSmall }"
@@ -75,7 +75,7 @@
                             </button>
                         </t>
                         <t t-if="callActionListView.callView.isFullScreen">
-                            <button class="o_CallActionList_button btn d-flex m-1 border-0 rounded-circle bg-800 shadow-none"
+                            <button class="o_CallActionList_button btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
                                 aria-label="Deactivate Full Screen"
                                 title="Deactivate Full Screen"
                                 t-att-class="{ 'o-isSmall p-2': callActionListView.isSmall, 'p-3': !callActionListView.isSmall }"
@@ -87,7 +87,7 @@
                             </button>
                         </t>
                         <t t-if="messaging.modelManager.isDebug">
-                            <button class="o_CallActionList_button btn d-flex m-1 border-0 rounded-circle bg-800 shadow-none"
+                            <button class="o_CallActionList_button btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
                                     aria-label="More"
                                     title="More"
                                     t-att-class="{ 'o-isSmall p-2': callActionListView.isSmall, 'p-3': !callActionListView.isSmall }"

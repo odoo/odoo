@@ -113,6 +113,13 @@ Odoo Web Editor widget.
             'web_editor/static/src/js/backend/**/*',
             'web_editor/static/src/xml/backend.xml',
         ],
+        "web.dark_mode_assets_backend": [
+            'web_editor/static/src/scss/odoo-editor/powerbox.dark.scss',
+            'web_editor/static/src/scss/odoo-editor/tablepicker.dark.scss',
+            'web_editor/static/src/scss/odoo-editor/tableui.dark.scss',
+            'web_editor/static/src/scss/wysiwyg.dark.scss',
+            'web_editor/static/src/scss/web_editor.common.dark.scss',
+        ],
         'web.assets_frontend_minimal': [
             'web_editor/static/src/js/frontend/loader_loading.js',
         ],
@@ -139,6 +146,7 @@ Odoo Web Editor widget.
 
         'web._assets_primary_variables': [
             'web_editor/static/src/scss/web_editor.variables.scss',
+            'web_editor/static/src/scss/wysiwyg.variables.scss',
         ],
         'web._assets_secondary_variables': [
             'web_editor/static/src/scss/secondary_variables.scss',

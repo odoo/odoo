@@ -13,17 +13,17 @@
                     <t t-if="!activityBoxView.isActivityListVisible">
                         <span class="o_ActivityBox_titleBadges ms-2">
                             <t t-if="activityBoxView.chatter.thread.overdueActivities.length > 0">
-                                <span class="o_ActivityBox_titleBadge me-1 badge border-0 text-bg-danger">
+                                <span class="o_ActivityBox_titleBadge me-1 badge text-bg-danger">
                                     <t t-esc="activityBoxView.chatter.thread.overdueActivities.length"/>
                                 </span>
                             </t>
                             <t t-if="activityBoxView.chatter.thread.todayActivities.length > 0">
-                                <span class="o_ActivityBox_titleBadge me-1 badge border-0 text-bg-warning">
+                                <span class="o_ActivityBox_titleBadge me-1 badge text-bg-warning">
                                     <t t-esc="activityBoxView.chatter.thread.todayActivities.length"/>
                                 </span>
                             </t>
                             <t t-if="activityBoxView.chatter.thread.futureActivities.length > 0">
-                                <span class="o_ActivityBox_titleBadge me-1 badge border-0 text-bg-success">
+                                <span class="o_ActivityBox_titleBadge me-1 badge text-bg-success">
                                     <t t-esc="activityBoxView.chatter.thread.futureActivities.length"/>
                                 </span>
                             </t>

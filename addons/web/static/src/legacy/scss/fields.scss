@@ -35,7 +35,7 @@
     border:$input-border-width solid var(--o-input-border-color);
     border-width: 0 0 $input-border-width 0;
     padding: $o-input-padding-y $o-input-padding-x;
-    background-color: var(--o-input-background-color, unset);
+    background-color: var(--o-input-background-color, #{$input-bg});
 
     // -- Nested o_input(s)
     .o_input {
@@ -163,7 +163,8 @@
         }
         .o_m2o_avatar_empty {
             display: block;
-            background-color: #e9ecef;
+            background: $o-black;
+            opacity: .1;
         }
     }
 

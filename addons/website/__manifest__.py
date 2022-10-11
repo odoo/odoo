@@ -182,6 +182,15 @@
             'website/static/src/components/views/*',
             'website/static/src/services/website_service.js',
             'website/static/src/js/utils.js',
+
+            # Don't include dark mode files in light mode
+            ('remove', 'website/static/src/client_actions/*/*.dark.scss'),
+        ],
+        "web.dark_mode_assets_backend": [
+            'website/static/src/components/dialog/*.dark.scss',
+            'website/static/src/scss/website.backend.dark.scss',
+            'website/static/src/client_actions/*/*.dark.scss',
+            'website/static/src/components/website_loader/website_loader.dark.scss'
         ],
         'web.assets_common': [
             'website/static/src/js/tours/tour_utils.js',
@@ -274,6 +283,9 @@
             'website/static/src/client_actions/*/*.xml',
             'website/static/src/components/website_loader/*.xml',
             'website/static/src/js/backend/**/*',
+
+            # Don't include dark mode files in light mode
+            ('remove', 'website/static/src/components/dialog/*.dark.scss'),
         ],
         'website.test_bundle': [
             '/web/static/lib/qweb/qweb2.js',
