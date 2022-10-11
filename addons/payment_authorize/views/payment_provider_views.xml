@@ -12,7 +12,7 @@
                     <field name="authorize_transaction_key" password="True" attrs="{'required':[ ('code', '=', 'authorize'), ('state', '!=', 'disabled')]}"/>
                     <field name="authorize_signature_key" password="True" attrs="{'required':[ ('code', '=', 'authorize'), ('state', '!=', 'disabled')]}"/>
                     <label for="authorize_client_key"/>
-                    <div>
+                    <div class="o_row" col="2">
                         <field name="authorize_client_key"/>
                         <button class="oe_link" icon="fa-refresh" type="object"
                                 name="action_update_merchant_details"
@@ -29,7 +29,7 @@
             </field>
             <field name="available_country_ids" position="after">
                 <label for="authorize_currency_id" string="Currency" attrs="{'invisible': [('code', '!=', 'authorize')]}"/>
-                <div attrs="{'invisible': [('code', '!=', 'authorize')]}">
+                <div  class="o_row" col="2" attrs="{'invisible': [('code', '!=', 'authorize')]}">
                     <field name="authorize_currency_id"/>
                     <button class="oe_link" icon="fa-refresh" type="object"
                             name="action_update_merchant_details"
