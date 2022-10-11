@@ -10,6 +10,7 @@ registerModel({
         _willDelete() {
             this._removeAudio();
             this._removeVideo();
+            this.messaging.browser.clearTimeout(this.connectionRecoveryTimeout);
         },
     },
     recordMethods: {
