@@ -16,7 +16,9 @@
             </t>
             <t t-else="">
                 <t t-foreach="slots" t-as="slot" t-key="slot">
-                    <t t-slot="{{ slot }}" />
+                    <t t-slot="{{ slot }}">
+                        <t t-esc="slot" />
+                    </t>
                 </t>
             </t>
         </div>

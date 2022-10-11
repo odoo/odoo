@@ -2855,6 +2855,65 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
+    QUnit.test("rerender of buttons in form view", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="state" invisible="1"/>
+                    <header>
+                        <button type="object" string="A1" name="a" attrs="{'invisible': [('state', 'not in', ('ab'))]}" />
+                        <button type="object" string="A2" name="a" attrs="{'invisible': [('state', 'in', ('ab'))]}" />
+                        <button type="object" string="B" name="b" />
+                        <button type="object" string="C1" name="c" attrs="{'invisible': [('state', 'not in', ('ab'))]}" />
+                    </header>
+                    <div name="button_box">
+                        <button type="object" string="A1" name="a" attrs="{'invisible': [('state', 'not in', ('ab'))]}" />
+                        <button type="object" string="A2" name="a" attrs="{'invisible': [('state', 'in', ('ab'))]}" />
+                        <button type="object" string="B" name="b" />
+                        <button type="object" string="C1" name="c" attrs="{'invisible': [('state', 'not in', ('ab'))]}" />
+                    </div>
+                </form>`,
+            resId: 1,
+            resIds: [1, 2],
+        });
+        assert.equal(target.querySelector(".breadcrumb").textContent, "first record");
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_statusbar_buttons .btn")].map((btn) => btn.textContent),
+            ["A1", "B", "C1"]
+        );
+        assert.deepEqual(
+            [...target.querySelectorAll(".o-form-buttonbox .btn")].map((btn) => btn.textContent),
+            ["A1", "B", "C1"]
+        );
+
+        // Go to the next record
+        await click(target, ".o_pager_next");
+        assert.equal(target.querySelector(".breadcrumb").textContent, "second record");
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_statusbar_buttons .btn")].map((btn) => btn.textContent),
+            ["A2", "B"]
+        );
+        assert.deepEqual(
+            [...target.querySelectorAll(".o-form-buttonbox .btn")].map((btn) => btn.textContent),
+            ["A2", "B"]
+        );
+
+        // Come back to the first record, its buttons should have kept the same order
+        await click(target, ".o_pager_previous");
+        assert.equal(target.querySelector(".breadcrumb").textContent, "first record");
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_statusbar_buttons .btn")].map((btn) => btn.textContent),
+            ["A1", "B", "C1"]
+        );
+        assert.deepEqual(
+            [...target.querySelectorAll(".o-form-buttonbox .btn")].map((btn) => btn.textContent),
+            ["A1", "B", "C1"]
+        );
+    });
+
     QUnit.test("buttons classes in form view", async function (assert) {
         await makeView({
             type: "form",
@@ -12495,15 +12554,9 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.strictEqual(
-            target.querySelector(".o_form_status_indicator").textContent,
-            ""
-        );
+        assert.strictEqual(target.querySelector(".o_form_status_indicator").textContent, "");
         await editInput(target, ".o_field_widget input", "");
-        assert.strictEqual(
-            target.querySelector(".o_form_status_indicator").textContent,
-            ""
-        );
+        assert.strictEqual(target.querySelector(".o_form_status_indicator").textContent, "");
         await clickSave(target);
         assert.strictEqual(
             target.querySelector(".o_form_status_indicator").textContent.trim(),
