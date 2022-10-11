@@ -15691,4 +15691,35 @@ QUnit.module("Views", (hooks) => {
             assert.hasClass(target.querySelectorAll(".o_data_row")[1], "o_selected_row");
         }
     );
+
+    QUnit.test("no highlight of a (sortable) column without label", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree default_order="foo">
+                    <field name="foo" nolabel="1"/>
+                    <field name="bar"/>
+                </tree>
+            `,
+        });
+        assert.containsOnce(target, "thead th[data-name=foo]");
+        assert.doesNotHaveClass(target.querySelector("thead th[data-name=foo]"), "table-active");
+    });
+
+    QUnit.test("highlight of a (sortable) column with label", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree default_order="foo">
+                    <field name="foo"/>
+                </tree>
+            `,
+        });
+        assert.containsOnce(target, "thead th[data-name=foo]");
+        assert.hasClass(target.querySelector("thead th[data-name=foo]"), "table-active");
+    });
 });
