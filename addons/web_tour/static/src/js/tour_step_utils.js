@@ -193,7 +193,7 @@ return Class.extend({
             auto: true,
         }, {
             content: "wait for cancellation to complete",
-            trigger: ".o_list_renderer, .o_form_readonly, .o_form_saved",
+            trigger: ".o_list_view, .o_form_view > div > div > .o_form_readonly, .o_form_view > div > div > .o_form_saved",
             run() {},
             auto: true,
         }];
