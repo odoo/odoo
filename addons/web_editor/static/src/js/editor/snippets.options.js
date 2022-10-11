@@ -4824,11 +4824,19 @@ registry.SnippetMove = SnippetOptionWidget.extend({
         }
         if (!this.$target.is(this.data.noScroll)
                 && (params.name === 'move_up_opt' || params.name === 'move_down_opt')) {
-            scrollTo(this.$target[0], {
-                extraOffset: 50,
-                easing: 'linear',
-                duration: 550,
-            });
+            const mainScrollingEl = $().getScrollingElement()[0];
+            const elTop = this.$target[0].getBoundingClientRect().top;
+            const heightDiff = mainScrollingEl.offsetHeight - this.$target[0].offsetHeight;
+            const bottomHidden = heightDiff < elTop;
+            const hidden = elTop < 0 || bottomHidden;
+            if (hidden) {
+                scrollTo(this.$target[0], {
+                    extraOffset: 50,
+                    forcedOffset: bottomHidden ? heightDiff - 50 : undefined,
+                    easing: 'linear',
+                    duration: 500,
+                });
+            }
         }
         this.trigger_up('option_update', {
             optionName: 'StepsConnector',
