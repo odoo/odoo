@@ -1108,6 +1108,27 @@ class Lead(models.Model):
                 })
         return True
 
+    def _merge_opportunity_followers(self, opportunities):
+        """ Move followers of given opportunities to the current one `self`
+
+        :param opportunities: see ``merge_dependences``
+        """
+        self.ensure_one()
+
+        # return followers of opportunity
+        def _get_followers(opportunity_id):
+            return self.env['mail.followers'].search([('res_model', '=', self._name), ('res_id', '=', opportunity_id)])
+        # make sure not to have duplicated followers
+        followers_partner_ids = _get_followers(self.id).partner_id.ids
+        for opportunity in opportunities:
+            followers = _get_followers(opportunity.id)
+            for follower in followers:
+                if follower.partner_id.id not in followers_partner_ids:
+                    followers_partner_ids.append(follower.partner_id.id)
+                    values = {'res_id': self.id}
+                    follower.sudo().write(values)
+        return True
+
     def _merge_opportunity_attachments(self, opportunities):
         """ Move attachments of given opportunities to the current one `self`, and rename
             the attachments having same name than native ones.
@@ -1135,7 +1156,7 @@ class Lead(models.Model):
         return True
 
     def merge_dependences(self, opportunities):
-        """ Merge dependences (messages, attachments, ...). These dependences will be
+        """ Merge dependences (messages, attachments, followers, ...). These dependences will be
             transfered to `self`, the most important lead.
 
         :param opportunities : recordset of opportunities to transfer. Does not
@@ -1145,6 +1166,7 @@ class Lead(models.Model):
         self._merge_notify(opportunities)
         self._merge_opportunity_history(opportunities)
         self._merge_opportunity_attachments(opportunities)
+        self._merge_opportunity_followers(opportunities)
 
     def merge_opportunity(self, user_id=False, team_id=False, auto_unlink=True):
         """ Merge opportunities in one. Different cases of merge:

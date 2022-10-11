@@ -141,3 +141,25 @@ class TestLeadMerge(TestLeadConvertMassCommon):
         # self.assertEqual(merge_opportunity.team_id, self.sales_team_1)
         # TDE FIXME: BUT team_id is computed after checking stage, based on wizard's team_id
         self.assertEqual(merge_opportunity.stage_id, self.stage_team_convert_1)
+
+    @users('user_sales_manager')
+    def test_lead_merge_followers(self):
+        """ Make sure to move the followers to new opp/lead
+            -lead_1 has 2 followers : OdooBot and user_sales_leads
+            -lead_w_contact has 2 followers : OdooBot and user_sales_salesman
+            We expect the merged lead to have OdooBot, user_sales_leads, user_sales_salesman
+            and user_sales_leads_convert (the user who created the merged lead) as followers
+        """
+        merge = self.env['crm.merge.opportunity'].with_context({
+            'active_model': 'crm.lead',
+            'active_ids': [self.lead_1.id, self.lead_w_contact.id],
+            'active_id': False,
+        }).create({
+            'user_id': self.user_sales_leads_convert.id,
+        })
+        result = merge.action_merge()
+        merged_followers = self.env['mail.followers'].search([('res_model', '=', 'crm.lead'), ('res_id', '=', result['res_id'])])
+        self.assertIn(self.env.ref('base.partner_root').id, merged_followers.partner_id.ids)
+        self.assertIn(self.user_sales_leads.partner_id.id, merged_followers.partner_id.ids)
+        self.assertIn(self.user_sales_salesman.partner_id.id, merged_followers.partner_id.ids)
+        self.assertIn(self.user_sales_leads_convert.partner_id.id, merged_followers.partner_id.ids)
