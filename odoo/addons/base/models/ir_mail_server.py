@@ -422,6 +422,29 @@ class IrMailServer(models.Model):
             return "%s@%s" % (email_from, domain)
         return tools.config.get("email_from")
 
+    def _fix_utf8_cutoff_formatting_issue(self, message_str):
+        """Fixes formatting issue while not using cutoff values in as_string
+        method from email.message using sys version < 3.7.4 leading to an
+        invalid end of line prefix, for instance '=?utf-8?q??='"""
+        try:
+            carriage_return = "\r\n"
+            prefix = "=?utf-8?q??="
+            # Split the lines by carriage return before starting detection
+            message_lines = message_str.split(carriage_return)
+            # And reprocess lines to reconstruct the message string
+            # reoving the bad formatting result
+            return carriage_return.join(
+                [
+                    line[-12:] if line.endswith(prefix)
+                    else line
+                    for line in message_lines
+                ]
+            )
+        # In any case, we should not raise any exception to avoid blocking
+        # the send mail method.
+        except Exception:
+            return message_str
+
     @api.model
     def send_email(self, message, mail_server_id=None, smtp_server=None, smtp_port=None,
                    smtp_user=None, smtp_password=None, smtp_encryption=None, smtp_debug=False,
@@ -504,6 +527,9 @@ class IrMailServer(models.Model):
                 # returns, it got fixed in 3.7.4 thanks to bpo-34424
                 message_str = message.as_string()
                 message_str = re.sub('\r+(?!\n)', '', message_str)
+
+                # Header length cutoff FIX
+                message_str = self._fix_utf8_cutoff_formatting_issue(message_str)
 
                 mail_options = []
                 if any((not is_ascii(addr) for addr in smtp_to_list + [smtp_from])):
