@@ -68,37 +68,52 @@ class PhoneMixin(models.AbstractModel):
             raise UserError(_('Please enter at least 3 characters when searching a Phone/Mobile number.'))
 
         pattern = r'[\s\\./\(\)\-]'
+        sql_operator = {'=like': 'LIKE', '=ilike': 'ILIKE'}.get(operator, operator)
+
         if value.startswith('+') or value.startswith('00'):
-            # searching on +32485112233 should also finds 0032485112233 (and vice versa)
-            # we therefore remove it from input value and search for both of them in db
-            where_str = ' OR '.join(
-                f"""model.{phone_field} IS NOT NULL AND (
-                        REGEXP_REPLACE(model.{phone_field}, %s, '', 'g') ILIKE %s OR
-                        REGEXP_REPLACE(model.{phone_field}, %s, '', 'g') ILIKE %s
-                )"""
-                for phone_field in phone_fields
-            )
-            query = f"""
-                SELECT model.id
-                FROM {self._table} model
-                WHERE {where_str};
-            """
-            term = re.sub(pattern, '', value[1 if value.startswith('+') else 2:]) + '%'
+            if operator in expression.NEGATIVE_TERM_OPERATORS:
+                # searching on +32485112233 should also finds 0032485112233 (and vice versa)
+                # we therefore remove it from input value and search for both of them in db
+                where_str = ' AND '.join(
+                    f"""model.{phone_field} IS NULL OR (
+                            REGEXP_REPLACE(model.{phone_field}, %s, '', 'g') {sql_operator} %s OR
+                            REGEXP_REPLACE(model.{phone_field}, %s, '', 'g') {sql_operator} %s
+                    )"""
+                    for phone_field in phone_fields
+                )
+            else:
+                # searching on +32485112233 should also finds 0032485112233 (and vice versa)
+                # we therefore remove it from input value and search for both of them in db
+                where_str = ' OR '.join(
+                    f"""model.{phone_field} IS NOT NULL AND (
+                            REGEXP_REPLACE(model.{phone_field}, %s, '', 'g') {sql_operator} %s OR
+                            REGEXP_REPLACE(model.{phone_field}, %s, '', 'g') {sql_operator} %s
+                    )"""
+                    for phone_field in phone_fields
+                )
+            query = f"SELECT model.id FROM {self._table} model WHERE {where_str};"
+
+            term = re.sub(pattern, '', value[1 if value.startswith('+') else 2:])
+            if operator not in ('=', '!='):  # for like operators
+                term = f'{term}%'
             self._cr.execute(
-                query, 
-                (pattern, '00' + term, pattern, '+' + term) * len(phone_fields)
+                query, (pattern, '00' + term, pattern, '+' + term) * len(phone_fields)
             )
         else:
-            where_str = ' OR '.join(
-                f"REGEXP_REPLACE(model.{phone_field}, %s, '', 'g') ILIKE %s"
-                for phone_field in phone_fields
-            )
-            query = f"""
-                SELECT model.id
-                FROM {self._table} model
-                WHERE {where_str};
-            """
-            term = '%' + re.sub(pattern, '', value) + '%'
+            if operator in expression.NEGATIVE_TERM_OPERATORS:
+                where_str = ' AND '.join(
+                    f"(model.{phone_field} IS NULL OR REGEXP_REPLACE(model.{phone_field}, %s, '', 'g') {sql_operator} %s)"
+                    for phone_field in phone_fields
+                )
+            else:
+                where_str = ' OR '.join(
+                    f"(model.{phone_field} IS NOT NULL AND REGEXP_REPLACE(model.{phone_field}, %s, '', 'g') {sql_operator} %s)"
+                    for phone_field in phone_fields
+                )
+            query = f"SELECT model.id FROM {self._table} model WHERE {where_str};"
+            term = re.sub(pattern, '', value)
+            if operator not in ('=', '!='):  # for like operators
+                term = f'%{term}%'
             self._cr.execute(query, (pattern, term) * len(phone_fields))
         res = self._cr.fetchall()
         if not res:
