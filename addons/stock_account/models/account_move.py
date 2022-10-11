@@ -11,6 +11,15 @@ class AccountMove(models.Model):
     stock_move_id = fields.Many2one('stock.move', string='Stock Move', index='btree_not_null')
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'account_move_id', string='Stock Valuation Layer')
 
+    def _compute_show_reset_to_draft_button(self):
+        for move in self:
+            for line in move.line_ids:
+                # if a line has correction layers hide the 'Reset to Darft' button
+                if line._get_stock_valuation_layers(move).stock_valuation_layer_ids.filtered('account_move_line_id'):
+                    move.show_reset_to_draft_button = False
+                    return
+        super()._compute_show_reset_to_draft_button()
+
     # -------------------------------------------------------------------------
     # OVERRIDE METHODS
     # -------------------------------------------------------------------------
@@ -293,7 +302,6 @@ class AccountMoveLine(models.Model):
                 price_unit /= prec
             layers_price_unit = line._get_stock_valuation_layers_price_unit(layers)
             layers_to_correct = line._get_stock_layer_price_difference(layers, layers_price_unit, price_unit)
-
             svl_vals_list += line._prepare_in_invoice_svl_vals(layers_to_correct)
         return self.env['stock.valuation.layer'].sudo().create(svl_vals_list)
 
