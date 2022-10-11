@@ -14,11 +14,11 @@ QUnit.module("hr_timesheet", (hooks) => {
     hooks.beforeEach(async function (assert) {
         setupTestEnv();
         serverData = getServerData();
-        updateArch(serverData, { unit_amount: "timesheet_uom" });
+        updateArch(serverData, { unit_amount: "timesheet_uom_no_toggle" });
         target = getFixture();
     });
 
-    QUnit.module("timesheet_uom");
+    QUnit.module("timesheet_uom_no_toggle");
 
     QUnit.test("FloatTimeField is used when current company uom uses float_time widget", async function (assert) {
         await makeView({
@@ -43,7 +43,7 @@ QUnit.module("hr_timesheet", (hooks) => {
         assert.equal(unitAmountInput.value, "01:00", "timesheet_uom_factor is not taken into account");
     });
 
-    QUnit.test("FloatToggleField is used when current company uom uses float_toggle widget", async function (assert) {
+    QUnit.test("FloatToggleField is not used when current company uom uses float_toggle widget, FloatFactorField is used instead", async function (assert) {
         patchWithCleanup(session.user_companies.allowed_companies[1], { timesheet_uom_id: 2 });
         await makeView({
             serverData,
@@ -51,18 +51,10 @@ QUnit.module("hr_timesheet", (hooks) => {
             resModel: "account.analytic.line",
             resId: 1,
         });
-        assert.containsOnce(target, 'div[name="unit_amount"] .o_field_float_toggle', "unit_amount is displayed as float toggle");
-    });
-
-    QUnit.test("FloatToggleField is dependent of timesheet_uom_factor of the current company when current company uom uses float_toggle widget", async function (assert) {
-        patchWithCleanup(session.user_companies.allowed_companies[1], { timesheet_uom_id: 2, timesheet_uom_factor: 2 });
-        await makeView({
-            serverData,
-            type: "form",
-            resModel: "account.analytic.line",
-            resId: 1,
-        });
-        assert.containsOnce(target, 'div[name="unit_amount"] .o_field_float_toggle:contains("2.00")', "timesheet_uom_factor is taken into account");
+        assert.containsNone(target, 'div[name="unit_amount"] .o_field_float_toggle', "unit_amount is not displayed as float toggle");
+        const unitAmountInput = target.querySelector('div[name="unit_amount"] input');
+        assert.containsOnce(target, 'div[name="unit_amount"] input[inputmode="numeric"]', "unit_amount is displayed as float");
+        assert.equal(unitAmountInput.value, "1.00", "unit_amount is not displayed as float and not as time");
     });
 
     QUnit.test("FloatFactorField is used when the current_company uom is not part of the session uom", async function (assert) {
