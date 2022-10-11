@@ -199,6 +199,7 @@
             'website/static/tests/dashboard_tests.js',
             'website/static/tests/website_tests.js',
             'website/static/tests/redirect_field_tests.js',
+            'website/static/tests/backend_tests.js',
         ],
         'web.tests_assets': [
             'website/static/tests/website_service_mock.js',

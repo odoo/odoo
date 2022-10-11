@@ -19,7 +19,17 @@ function makeFakeWebsiteService() {
                 get hasMultiWebsites() {
                     return true;
                 },
+                get websites() {
+                    return [{
+                        id: 1,
+                        name: 'My Website',
+                    }, {
+                        id: 2,
+                        name: 'My Other Website',
+                    }];
+                },
                 async fetchUserGroups() {},
+                async fetchWebsites() {},
             };
         }
     };
