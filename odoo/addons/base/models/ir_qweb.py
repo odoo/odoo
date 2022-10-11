@@ -564,7 +564,12 @@ class IrQWeb(models.AbstractModel):
 
         safe_eval.check_values(values)
 
-        render_template = irQweb._compile(template)
+        if isinstance(template, etree._Element):
+            # template is already an xml etree
+            render_template = irQweb._compile(template)
+        else:
+            render_template = irQweb._compile_cached(template)
+
         rendering = render_template(irQweb, values)
         result = ''.join(rendering)
 
@@ -581,6 +586,11 @@ class IrQWeb(models.AbstractModel):
         tools.ormcache('template', 'tuple(self.env.context.get(k) for k in self._get_template_cache_keys())'),
     )
     @QwebTracker.wrap_compile
+    def _compile_cached(self, template):
+        if isinstance(template, etree._Element):
+            raise ValueError("You cannot compile and cache an etree. Use a template with its ID, or the `_compile` method.")
+        return self._compile(template)
+
     def _compile(self, template):
         """ Compile the given template into a rendering function (generator)::
 
@@ -2055,7 +2065,7 @@ class IrQWeb(models.AbstractModel):
         # call
         code.append(indent_code(f"""
             irQweb = self.with_context(**t_call_options)
-            render_template = irQweb._compile({template})
+            render_template = irQweb._compile_cached({template})
             yield from render_template(irQweb, t_call_values, t_call_gen0)
             """, level))
 
