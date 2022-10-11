@@ -6,14 +6,10 @@ const { Component } = owl;
 
 export class DiscussMobileMailboxSelection extends Component {
 
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
     /**
-     * @returns {DiscussView}
+     * @returns {DiscussMobileMailboxSelectionView}
      */
-    get discussView() {
+    get discussMobileMailboxSelectionView() {
         return this.props.record;
     }
 

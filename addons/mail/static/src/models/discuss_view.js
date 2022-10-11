@@ -160,6 +160,15 @@ registerModel({
             },
             inverse: 'discussViewOwnerAsMobileAddItemHeader',
         }),
+        mobileMailboxSelectionView: one('DiscussMobileMailboxSelectionView', {
+            compute() {
+                if (this.messaging.device.isSmall && this.discuss.activeMobileNavbarTabId === 'mailbox') {
+                    return {};
+                }
+                return clear();
+            },
+            inverse: 'owner',
+        }),
         orderedMailboxes: many('Mailbox', {
             related: 'messaging.allMailboxes',
             sort: [['smaller-first', 'sequence']],
