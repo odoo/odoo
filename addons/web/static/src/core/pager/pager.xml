@@ -8,7 +8,7 @@
                     <input type="text" class="o_pager_value o_input d-inline-block w-auto text-end" size="7" t-ref="autofocus" t-att-value="value" t-on-blur="onInputBlur" t-on-change="onInputChange" t-on-keydown.stop="onInputKeydown" />
                 </t>
                 <t t-else="">
-                    <span class="o_pager_value d-inline-block border-bottom border-white" t-esc="value" t-on-click="onValueClick" />
+                    <span class="o_pager_value d-inline-block border-bottom border-transparent" t-esc="value" t-on-click="onValueClick" />
                 </t>
                 <span> / </span>
                 <t t-if="props.updateTotal">

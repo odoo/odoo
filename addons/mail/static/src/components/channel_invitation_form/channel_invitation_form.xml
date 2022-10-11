@@ -7,7 +7,7 @@
                 <h3 class="mx-3 mt-3 mb-2">Invite people</h3>
                 <t t-if="!messaging.isCurrentUserGuest">
                     <div class="mx-3 my-2">
-                        <input class="o_ChannelInvitationForm_searchInput" type="text" t-att-value="channelInvitationForm.searchTerm" placeholder="Type the name of a person" t-on-input="channelInvitationForm.onInputSearch" t-ref="searchInput"/>
+                        <input class="o_ChannelInvitationForm_searchInput form-control" type="text" t-att-value="channelInvitationForm.searchTerm" placeholder="Type the name of a person" t-on-input="channelInvitationForm.onInputSearch" t-ref="searchInput"/>
                     </div>
                     <div class="d-flex flex-column flex-grow-1 mx-0 py-2 overflow-auto">
                         <t t-foreach="channelInvitationForm.selectablePartnerViews" t-as="selectablePartnerView" t-key="selectablePartnerView.localId">

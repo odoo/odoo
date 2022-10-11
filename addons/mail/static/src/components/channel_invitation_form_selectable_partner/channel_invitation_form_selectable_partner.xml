@@ -19,7 +19,7 @@
             <span class="o_ChannelInvitationFormSelectablePartner_name flex-grow-1 mx-2 text-truncate">
                 <t t-esc="channelInvitationFormSelectablePartnerView.partner.nameOrDisplayName"/>
             </span>
-            <input class="o_ChannelInvitationFormSelectablePartner_checkbox flex-shrink-0" type="checkbox" t-att-checked="channelInvitationFormSelectablePartnerView.channelInvitationFormOwner.selectedPartners.includes(channelInvitationFormSelectablePartnerView.partner) ? 'checked' : undefined" t-on-input="ev => channelInvitationFormSelectablePartnerView.channelInvitationFormOwner.onInputPartnerCheckbox(channelInvitationFormSelectablePartnerView.partner, ev)" t-ref="selection-status"/>
+            <input class="o_ChannelInvitationFormSelectablePartner_checkbox form-check-input flex-shrink-0" type="checkbox" t-att-checked="channelInvitationFormSelectablePartnerView.channelInvitationFormOwner.selectedPartners.includes(channelInvitationFormSelectablePartnerView.partner) ? 'checked' : undefined" t-on-input="ev => channelInvitationFormSelectablePartnerView.channelInvitationFormOwner.onInputPartnerCheckbox(channelInvitationFormSelectablePartnerView.partner, ev)" t-ref="selection-status"/>
         </div>
     </t>
 
