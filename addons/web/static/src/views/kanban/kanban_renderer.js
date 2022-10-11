@@ -45,7 +45,7 @@ export class KanbanRenderer extends Component {
             useSortable({
                 enable: () => this.canResequenceRecords,
                 // Params
-                ref: this.props.layoutContentRef || rootRef,
+                ref: rootRef,
                 elements: ".o_record_draggable",
                 ignore: ".dropdown",
                 groups: () => this.props.list.isGrouped && ".o_kanban_group",
@@ -610,7 +610,6 @@ KanbanRenderer.props = [
     "readonly",
     "forceGlobalClick?",
     "noContentHelp?",
-    "layoutContentRef?",
 ];
 KanbanRenderer.components = {
     Dropdown,

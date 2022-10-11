@@ -190,7 +190,7 @@ export const useSortable = makeDraggableHook({
         if (ctx.groupSelector) {
             ctx.currentGroup = ctx.currentElement.closest(ctx.groupSelector);
             if (!ctx.connectGroups) {
-                ctx.currentContainerEl = ctx.currentGroup;
+                ctx.currentContainer = ctx.currentGroup;
             }
         }
     },
