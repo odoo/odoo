@@ -115,7 +115,7 @@ class ReportBomStructure(models.AbstractModel):
         if product_id:
             product = self.env['product.product'].browse(int(product_id))
         else:
-            product = bom.product_id or bom.product_tmpl_id.product_variant_id
+            product = bom.product_id or bom.product_tmpl_id.with_context(active_test=False).product_variant_id
         if product:
             price = product.uom_id._compute_price(product.with_company(company).standard_price, bom.product_uom_id) * bom_quantity
             attachments = self.env['mrp.document'].search(['|', '&', ('res_model', '=', 'product.product'),
