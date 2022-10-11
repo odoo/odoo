@@ -571,7 +571,12 @@ export class ListRenderer extends Component {
             classNames.push("cursor-default");
         }
         const orderBy = this.props.list.orderBy;
-        if (orderBy.length && column.widget !== "handle" && orderBy[0].name === column.name) {
+        if (
+            orderBy.length &&
+            column.widget !== "handle" &&
+            orderBy[0].name === column.name &&
+            column.hasLabel
+        ) {
             classNames.push("table-active");
         }
         if (this.isNumericColumn(column)) {
