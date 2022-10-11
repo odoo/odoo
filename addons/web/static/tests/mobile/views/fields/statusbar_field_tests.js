@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import { click, getFixture } from "../helpers/utils";
-import { makeView, setupViewRegistries } from "../views/helpers";
+import { click, getFixture } from "@web/../tests/helpers/utils";
+import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let fixture;
 let serverData;
