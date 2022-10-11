@@ -7314,7 +7314,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
     backgroundType: function (previewMode, widgetValue, params) {
         this.$target.toggleClass('o_bg_img_opt_repeat', widgetValue === 'repeat-pattern');
         this.$target.css('background-position', '');
-        this.$target.css('background-size', '');
+        this.$target.css('background-size', widgetValue !== 'repeat-pattern' ? '' : '100px');
     },
     /**
      * Saves current background position and enables overlay.
