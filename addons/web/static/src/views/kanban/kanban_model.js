@@ -443,7 +443,9 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
             const refIndex = targetGroup.list.records.findIndex((r) => r.id === refId);
             // Quick update: moves the record at the right position and notifies components
             targetGroup.addRecord(sourceGroup.removeRecord(record), refIndex + 1);
-            const value = isRelational(this.groupByField) ? [targetGroup.value] : targetGroup.value;
+            const value = isRelational(this.groupByField)
+                ? [targetGroup.value, targetGroup.displayName]
+                : targetGroup.value;
 
             const abort = () => {
                 this.model.transaction.abort(dataRecordId);
