@@ -28,9 +28,6 @@ export class TranslationDialog extends Component {
 
             this.terms = translations.map((term) => {
                 const relatedLanguage = languages.find((l) => l[0] === term.lang);
-                if (!term.value && !this.props.showSource) {
-                    term.value = term.source;
-                }
                 return {
                     id: term.id,
                     lang: term.lang,
