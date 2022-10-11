@@ -13,6 +13,14 @@ export class PartnerMany2XAutocomplete extends Many2XAutocomplete {
         this.partner_autocomplete = usePartnerAutocomplete();
     }
 
+    getNameSearchContext() {
+        const context = {
+            ...this.props.context,
+        }
+        delete context.show_address;
+        return context;
+    }
+
     validateSearchTerm(request) {
         return request && request.length > 2;
     }

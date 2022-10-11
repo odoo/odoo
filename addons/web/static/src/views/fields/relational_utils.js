@@ -189,6 +189,10 @@ export class Many2XAutocomplete extends Component {
         return this.props.activeActions || {};
     }
 
+    getNameSearchContext() {
+        return this.props.context;
+    }
+
     getCreationContext(value) {
         return makeContext([
             this.props.context,
@@ -218,7 +222,7 @@ export class Many2XAutocomplete extends Component {
             operator: "ilike",
             args: this.props.getDomain(),
             limit: this.props.searchLimit + 1,
-            context: this.props.context,
+            context: this.getNameSearchContext(),
         });
 
         const options = records.map((result) => ({
