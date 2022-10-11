@@ -248,3 +248,39 @@ class TestWebsocketCaryall(WebsocketCase):
         # But ChromeHeadless still can.
         headers = ['User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/102.0.0.0 Safari/537.36']
         self.websocket_connect()
+
+    def test_subscribe_higher_last_notification_id(self):
+        subscribe_done_event = Event()
+        server_last_notification_id = self.env['bus.bus'].sudo().search([], limit=1, order='id desc').id or 0
+        client_last_notification_id = server_last_notification_id + 1
+
+        def subscribe_side_effect(_, last):
+            # Last notification id given by the client is higher than
+            # the one known by the server, should default to 0.
+            self.assertEqual(last, 0)
+            subscribe_done_event.set()
+
+        with patch.object(Websocket, 'subscribe', side_effect=subscribe_side_effect):
+            websocket = self.websocket_connect()
+            websocket.send(json.dumps({
+                'event_name': 'subscribe',
+                'data': {'channels': ['my_channel'], 'last': client_last_notification_id}
+            }))
+            subscribe_done_event.wait()
+
+    def test_subscribe_lower_last_notification_id(self):
+        subscribe_done_event = Event()
+        server_last_notification_id = self.env['bus.bus'].sudo().search([], limit=1, order='id desc').id or 0
+        client_last_notification_id = server_last_notification_id - 1
+
+        def subscribe_side_effect(_, last):
+            self.assertEqual(last, client_last_notification_id)
+            subscribe_done_event.set()
+
+        with patch.object(Websocket, 'subscribe', side_effect=subscribe_side_effect):
+            websocket = self.websocket_connect()
+            websocket.send(json.dumps({
+                'event_name': 'subscribe',
+                'data': {'channels': ['my_channel'], 'last': client_last_notification_id}
+            }))
+            subscribe_done_event.wait()

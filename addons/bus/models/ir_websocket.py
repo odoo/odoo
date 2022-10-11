@@ -32,6 +32,9 @@ class IrWebsocket(models.AbstractModel):
     def _subscribe(self, data):
         if not all(isinstance(c, str) for c in data['channels']):
             raise ValueError("bus.Bus only string channels are allowed.")
+        last_known_notification_id = self.env['bus.bus'].sudo().search([], limit=1, order='id desc').id or 0
+        if data['last'] > last_known_notification_id:
+            data['last'] = 0
         channels = set(self._build_bus_channel_list(data['channels']))
         dispatch.subscribe(channels, data['last'], self.env.registry.db_name, wsrequest.ws)
 
