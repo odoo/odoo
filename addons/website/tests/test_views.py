@@ -1115,6 +1115,19 @@ class TestCowViewSaving(TestViewSavingCommon):
 
 
 @tagged('-at_install', 'post_install')
+class TestViewSavingTour(HttpCase):
+    """ Ensure no COW view is generated on save if no change was made
+        in the page content.
+    """
+    def test_view_no_cow(self):
+        self.assertEqual(self.env['website.page'].search_count([('url', '=', '/contactus')]), 1)
+        self.assertEqual(self.env['ir.ui.view'].search_count([('key', '=', 'website.footer_custom')]), 1)
+        self.start_tour('/contactus', 'test_edit_footer_only', login='admin')
+        self.assertEqual(self.env['website.page'].search_count([('url', '=', '/contactus')]), 1)
+        self.assertEqual(self.env['ir.ui.view'].search_count([('key', '=', 'website.footer_custom')]), 2)
+
+
+@tagged('-at_install', 'post_install')
 class Crawler(HttpCase):
     def setUp(self):
         super(Crawler, self).setUp()
