@@ -12157,7 +12157,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(content.scrollLeft, 0);
 
         // Cancel drag: click outside
-        await triggerEvent(content, null, "mousedown");
+        await triggerEvent(content, ".o_kanban_renderer", "mousedown");
 
         assert.containsNone(target, ".o_kanban_record.o_dragged");
     });
