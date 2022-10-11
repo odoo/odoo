@@ -653,6 +653,14 @@ img::selection {
     // buttons in the popover
     user-select: none;
 
+    // As the popover is displayed both in the frontend and the backend,
+    // the font styles need to be uniformized.
+    font-size: 12px;
+    font-weight: 400 !important;
+    .fw-bold {
+        font-weight: 500 !important;
+    }
+
     .o_we_preview_favicon > img {
         max-height: 16px;
         max-width: 16px;
