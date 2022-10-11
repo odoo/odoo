@@ -67,14 +67,9 @@ QUnit.test("Burger Menu on an App", async (assert) => {
 
     await click(document.body, ".o_mobile_menu_toggle");
     assert.containsOnce(document.body, ".o_burger_menu");
-    assert.containsOnce(
-        document.body,
-        ".o_burger_menu nav.o_burger_menu_content li"
-    );
+    assert.containsOnce(document.body, ".o_burger_menu nav.o_burger_menu_content li");
     assert.strictEqual(
-        document.body.querySelector(
-            ".o_burger_menu nav.o_burger_menu_content li"
-        ).textContent,
+        document.body.querySelector(".o_burger_menu nav.o_burger_menu_content li").textContent,
         "SubMenu"
     );
     assert.hasClass(document.body.querySelector(".o_burger_menu_content"), "o_burger_menu_dark");
@@ -145,9 +140,7 @@ QUnit.test("Burger menu closes when click on menu item", async (assert) => {
     await click(document.body, ".o_mobile_menu_toggle");
     assert.containsOnce(document.body, ".o_burger_menu");
     assert.strictEqual(
-        document.body.querySelector(
-            ".o_burger_menu nav.o_burger_menu_content li"
-        ).textContent,
+        document.body.querySelector(".o_burger_menu nav.o_burger_menu_content li").textContent,
         "SubMenu"
     );
     await click(document.body, ".o_burger_menu nav.o_burger_menu_content li");
