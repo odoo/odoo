@@ -60,6 +60,12 @@
         <field name="priority">1000</field>
         <field name="inherit_id" ref="mrp_production_subcontracting_form_view" />
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="attributes">
+                <attribute name="options">{'no_create_edit': True, 'no_open': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='product_qty']" position="attributes">
+                <attribute name="attrs">{'readonly': True}</attribute>
+            </xpath>
             <xpath expr="//field[@name='lot_producing_id']" position="attributes">
                 <attribute name="domain">[('id', '=', False)]</attribute>
                 <attribute name="options">{'no_create_edit': True, 'no_open': True}</attribute>
@@ -68,6 +74,7 @@
                 <attribute name="context">{'tree_view_ref': 'mrp_subcontracting.mrp_subcontracting_portal_stock_move_line_tree_view', 'default_company_id': company_id, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'bom_product_ids': bom_product_ids}</attribute>
             </xpath>
             <xpath expr="//field[@name='forecasted_issue']" position="replace"/>
+            <xpath expr="//button[@name='%(mrp.action_change_production_qty)d']" position="replace"/>
             <xpath expr="//button[@name='action_product_forecast_report']" position="replace"/>
             <xpath expr="//button[@name='action_product_forecast_report']" position="replace"/>
         </field>
