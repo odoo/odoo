@@ -272,7 +272,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("char field translatable", async function (assert) {
-        assert.expect(11);
+        assert.expect(13);
 
         serverData.models.partner.fields.foo.translate = true;
         serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), {
@@ -281,6 +281,7 @@ QUnit.module("Fields", (hooks) => {
         patchWithCleanup(session.user_context, {
             lang: "en_US",
         });
+        let call_get_field_translations = 0;
 
         await makeView({
             type: "form",
@@ -300,21 +301,36 @@ QUnit.module("Fields", (hooks) => {
                     return Promise.resolve([
                         ["en_US", "English"],
                         ["fr_BE", "French (Belgium)"],
+                        ["es_ES", "Spanish"],
                     ]);
                 }
                 if (route === "/web/dataset/call_kw/partner/get_field_translations") {
-                    return Promise.resolve([
-                        [
-                            { lang: "en_US", source: "yop", value: "yop" },
-                            { lang: "fr_BE", source: "yop", value: "valeur français" },
-                        ],
-                        { translation_type: "char", translation_show_source: false },
-                    ]);
+                    if (call_get_field_translations === 0) {
+                        call_get_field_translations = 1;
+                        return Promise.resolve([
+                            [
+                                { lang: "en_US", source: "yop", value: "yop" },
+                                { lang: "fr_BE", source: "yop", value: "valeur français" },
+                                { lang: "es_ES", source: "yop", value: "yop español" },
+                            ],
+                            { translation_type: "char", translation_show_source: false },
+                        ]);
+                    }
+                    if (call_get_field_translations === 1) {
+                        return Promise.resolve([
+                            [
+                                { lang: "en_US", source: "yop", value: "english value" },
+                                { lang: "fr_BE", source: "yop", value: "valeur français" },
+                                { lang: "es_ES", source: "yop", value: "" },
+                            ],
+                            { translation_type: "char", translation_show_source: false },
+                        ]);
+                    }
                 }
                 if (route === "/web/dataset/call_kw/partner/update_field_translations") {
                     assert.deepEqual(
                         args[2],
-                        { en_US: "english value" },
+                        { en_US: "english value", es_ES: "" },
                         "the new translation value should be written"
                     );
                     return Promise.resolve(null);
@@ -340,19 +356,27 @@ QUnit.module("Fields", (hooks) => {
         assert.containsN(
             target,
             ".modal .o_translation_dialog .translation",
-            2,
-            "two rows should be visible"
+            3,
+            "three rows should be visible"
         );
 
-        let enFields = target.querySelectorAll(".modal .o_translation_dialog .translation input");
-        assert.strictEqual(enFields[0].value, "yop", "English translation should be filled");
+        let translations = target.querySelectorAll(
+            ".modal .o_translation_dialog .translation input"
+        );
+        assert.strictEqual(translations[0].value, "yop", "English translation should be filled");
         assert.strictEqual(
-            enFields[enFields.length - 1].value,
+            translations[1].value,
             "valeur français",
             "French translation should be filled"
         );
+        assert.strictEqual(
+            translations[2].value,
+            "yop español",
+            "Spanish translation should be filled"
+        );
 
-        await editInput(enFields[0], null, "english value");
+        await editInput(translations[0], null, "english value");
+        await editInput(translations[2], null, "");
         await click(target, ".modal button.btn-primary"); // save
 
         assert.strictEqual(
@@ -364,16 +388,21 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, `.o_field_char input[type="text"]`, "new english value");
         await click(target, ".o_field_char .btn.o_field_translate");
 
-        enFields = target.querySelectorAll(".modal .o_translation_dialog .translation input");
+        translations = target.querySelectorAll(".modal .o_translation_dialog .translation input");
         assert.strictEqual(
-            enFields[0].value,
+            translations[0].value,
             "new english value",
             "Modified value should be used instead of translation"
         );
         assert.strictEqual(
-            enFields[enFields.length - 1].value,
+            translations[1].value,
             "valeur français",
             "French translation should be filled"
+        );
+        assert.strictEqual(
+            translations[2].value,
+            "",
+            "Spanish translation should be an empty string"
         );
     });
 
