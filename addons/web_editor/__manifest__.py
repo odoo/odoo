@@ -91,6 +91,7 @@ Odoo Web Editor widget.
             'web_editor/static/src/components/**/*',
         ],
         'web_editor.assets_tests_styles': [
+            ('include', 'web._assets_helpers'),
             'web_editor/static/src/js/editor/odoo-editor/src/base_style.scss',
             'web_editor/static/src/js/editor/odoo-editor/src/checklist.scss',
         ],
