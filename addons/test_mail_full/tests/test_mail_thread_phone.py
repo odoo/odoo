@@ -77,7 +77,7 @@ class TestMailThreadPhone(TestMailFullCommon, TestMailFullRecipients):
         # test "=" search
         # Currently not suported, returning results for "ilike"
         results = self.env['mail.test.sms.bl'].search([('phone_mobile_search', '=', '0475')])
-        self.assertEqual(results, test_phone_records[:5])
+        self.assertFalse(results, 'Search on phone_mobile_search: = should return only matching results')
         results = self.env['mail.test.sms.bl'].search([('phone_mobile_search', '=', '0475000000')])
         self.assertEqual(results, test_phone_records[0])
         results = self.env['mail.test.sms.bl'].search([('phone_mobile_search', '=', '0032475110606')])
@@ -107,10 +107,6 @@ class TestMailThreadPhone(TestMailFullCommon, TestMailFullRecipients):
         # test inverse ilike search
         # Currently not supported, returning results for "ilike"
         results = self.env['mail.test.sms.bl'].search([('phone_mobile_search', 'not ilike', '0475')])
-        # self.assertEqual(results, test_phone_records - test_phone_records[:5],
-        self.assertEqual(results, test_phone_records[:5],
-                         'Seach on phone_mobile_search: not ilike not supported')
+        self.assertEqual(results, test_phone_records - test_phone_records[:5])
         results = self.env['mail.test.sms.bl'].search([('phone_mobile_search', 'not ilike', '101')])
-        # self.assertEqual(results, test_phone_records - test_phone_records[1],
-        self.assertEqual(results, test_phone_records[1],
-                         'Seach on phone_mobile_search: not ilike not supported')
+        self.assertEqual(results, test_phone_records - test_phone_records[1])
