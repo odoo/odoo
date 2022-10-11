@@ -1479,7 +1479,8 @@ options.registry.menu_data = options.Class.extend({
      */
     start: function () {
         const wysiwyg = $(this.ownerDocument.getElementById('wrapwrap')).data('wysiwyg');
-        wLinkPopoverWidget.createFor(this, this.$target[0], { wysiwyg });
+        const popoverContainer = this.ownerDocument.getElementById('oe_manipulators');
+        wLinkPopoverWidget.createFor(this, this.$target[0], { wysiwyg, container: popoverContainer });
         return this._super(...arguments);
     },
     /**
