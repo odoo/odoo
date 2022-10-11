@@ -11942,4 +11942,66 @@ QUnit.module("Views", (hooks) => {
             ["1", "2", "3"]
         );
     });
+
+    QUnit.test(
+        "drag & drop records grouped by m2o with m2o displayed in records",
+        async (assert) => {
+            const prom = makeDeferred();
+            const readIds = [[2], [1, 3, 2]];
+
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <kanban>
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div>
+                                    <field name="product_id" widget="many2one"/>
+                                </div>
+                            </t>
+                        </templates>
+                    </kanban>
+                `,
+                groupBy: ["product_id"],
+                mockRPC: async (route, args) => {
+                    assert.step(args.method || route);
+                    if (args.method === "read") {
+                        assert.deepEqual(args.args[0], readIds.shift());
+                        await prom;
+                    }
+                },
+            });
+
+            assert.verifySteps([
+                "get_views",
+                "web_read_group",
+                "web_search_read",
+                "web_search_read",
+            ]);
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_kanban_record")].map((el) => el.innerText),
+                ["hello", "hello", "xmo", "xmo"]
+            );
+
+            await dragAndDrop(
+                ".o_kanban_group:nth-child(2) .o_kanban_record",
+                ".o_kanban_group:first-child"
+            );
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_kanban_record")].map((el) => el.innerText),
+                ["hello", "hello", "hello", "xmo"]
+            );
+
+            prom.resolve();
+            await nextTick();
+
+            assert.verifySteps(["write", "read", "/web/dataset/resequence", "read"]);
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_kanban_record")].map((el) => el.innerText),
+                ["hello", "hello", "hello", "xmo"]
+            );
+        }
+    );
 });
