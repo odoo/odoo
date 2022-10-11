@@ -44,6 +44,9 @@ class WebsocketController(Controller):
             channel_with_db(request.db, c)
             for c in request.env['ir.websocket']._build_bus_channel_list(channels)
         ))
+        last_known_notification_id = request.env['bus.bus'].sudo().search([], limit=1, order='id desc').id or 0
+        if last > last_known_notification_id:
+            last = 0
         notifications = request.env['bus.bus']._poll(channels, last)
         return {'channels': channels, 'notifications': notifications}
 
