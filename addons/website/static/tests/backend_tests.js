@@ -1,11 +1,13 @@
 /** @odoo-module **/
 
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
-
+import {clickCreate, getFixture} from "@web/../tests/helpers/utils";
 let serverData;
+let target;
 
 QUnit.module("Website Backend Test", (hooks) => {
     hooks.beforeEach(() => {
+        target = getFixture();
         serverData = {
             models: {
                 foo: {
@@ -43,5 +45,22 @@ QUnit.module("Website Backend Test", (hooks) => {
                 </kanban>`,
         });
         assert.containsOnce(document.body, ".o_kanban_view");
+    });
+
+    QUnit.test("Website Create Object", async function (assert) {
+        assert.expect(1);
+        
+        await makeView({
+            type: "form",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <form js_class="website_new_content_form">
+                    <field name="foo"/>
+                    <field name="bar"/>
+                    <field name="context">{'create_action': 'website_sale.product_product_action_add'}</field>
+                </form>`,
+        });
+        assert.containsOnce(document.body, ".o_form_view");
     });
 });
