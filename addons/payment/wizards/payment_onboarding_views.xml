@@ -9,9 +9,7 @@
                 <div class="container">
                     <div class="row align-items-start">
                         <div class="col col-4" name="left-column">
-                            <group>
-                                <field name="payment_method" widget="radio" nolabel="1"/>
-                            </group>
+                            <field name="payment_method" widget="radio" nolabel="1"/>
                         </div>
                         <div class="col" name="right-column">
                             <div attrs="{'invisible': [('payment_method', '!=', 'paypal')]}">
