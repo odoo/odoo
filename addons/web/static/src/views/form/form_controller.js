@@ -471,7 +471,7 @@ export class FormController extends Component {
         if (this.props.className) {
             result[this.props.className] = true;
         }
-        result["o_form_with_borderless_input"] = size > SIZES.SM && !hasTouch();
+        result["o_field_highlight"] = size < SIZES.SM || hasTouch();
         return result;
     }
 }

@@ -202,29 +202,29 @@
         flex: 1 1 auto;
     }
 
-    &.o_form_with_borderless_input {
-        .o_input {
-            border-color: transparent;
-            padding: $o-input-padding-y $o-input-padding-x;
+    // rules for fields borders: only on hover/focus by default
+    // except when used with o_field_highlight (on parent or on the field)
+    .o_input {
+        border-color: transparent;
+        padding: $o-input-padding-y $o-input-padding-x;
 
-            &:hover, &:focus {
-                border-color: var(--o-input-border-color);
-            }
-        }
-
-        &.o_field_invalid .o_input {
+        &:hover, &:focus {
             border-color: var(--o-input-border-color);
         }
+    }
 
-        .o_datepicker {
+    &.o_field_invalid .o_input {
+        border-color: var(--o-input-border-color);
+    }
+
+    .o_datepicker {
+        .o_datepicker_button {
+            visibility: hidden;
+        }
+
+        &:hover, &:focus-within {
             .o_datepicker_button {
-                visibility: hidden;
-            }
-
-            &:hover, &:focus-within {
-                .o_datepicker_button {
-                    visibility: visible;
-                }
+                visibility: visible;
             }
         }
     }
@@ -523,6 +523,9 @@
 
                 > .o_field_html > .note-editable {
                     min-height: 180px;
+                    &:hover, &:focus {
+                        border-color: transparent;
+                    }
                 }
                 > :first-child {
                     // Reset margin to 0 and use tab-pane's padding
