@@ -15,9 +15,6 @@ registerModel({
         allEmojis: many('Emoji', {
             inverse: 'emojiCategories',
         }),
-        emojiCount: attr({ //Number of emojis that will be in that category once every emoji is loaded.
-            default: 0,
-        }),
         emojiRegistry: one("EmojiRegistry", {
             compute() {
                 return this.messaging.emojiRegistry;

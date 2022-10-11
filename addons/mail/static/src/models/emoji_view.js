@@ -14,12 +14,12 @@ registerModel({
             if (!this.emojiGridItemViewOwner.emojiGridRowViewOwner) {
                 return;
             }
-            if (this.emojiGridItemViewOwner.emojiGridRowViewOwner.emojiGridViewOwner.emojiPickerViewOwner.popoverViewOwner.messageActionViewOwnerAsReaction) {
-                this.emojiGridItemViewOwner.emojiGridRowViewOwner.emojiGridViewOwner.emojiPickerViewOwner.popoverViewOwner.messageActionViewOwnerAsReaction.onClickReaction(ev);
+            if (this.emojiPickerViewOwner.popoverViewOwner.messageActionViewOwnerAsReaction) {
+                this.emojiPickerViewOwner.popoverViewOwner.messageActionViewOwnerAsReaction.onClickReaction(ev);
                 return;
             }
-            if (this.emojiGridItemViewOwner.emojiGridRowViewOwner.emojiGridViewOwner.emojiPickerViewOwner.popoverViewOwner.composerViewOwnerAsEmoji) {
-                this.emojiGridItemViewOwner.emojiGridRowViewOwner.emojiGridViewOwner.emojiPickerViewOwner.popoverViewOwner.composerViewOwnerAsEmoji.onClickEmoji(ev);
+            if (this.emojiPickerViewOwner.popoverViewOwner.composerViewOwnerAsEmoji) {
+                this.emojiPickerViewOwner.popoverViewOwner.composerViewOwnerAsEmoji.onClickEmoji(ev);
                 return;
             }
         },
@@ -54,5 +54,10 @@ registerModel({
         emojiGridViewAsHovered: one('EmojiGridView', {
             inverse: 'hoveredEmojiView',
         }),
+        emojiPickerViewOwner: one('EmojiPickerView', {
+            compute() {
+                return this.emojiGridItemViewOwner.emojiGridRowViewOwner.emojiGridViewOwner.emojiPickerViewOwner;
+            }
+        })
     },
 });
