@@ -521,7 +521,12 @@ class IrQWeb(models.AbstractModel):
         if values and T_CALL_SLOT in values:
             raise ValueError('values[0] should be unset when call the _render method and only set into the template.')
 
-        render_template = self._compile(template, compile_options)
+        if isinstance(template, etree._Element):
+            # template is already an xml etree
+            render_template = self._compile(template, compile_options)
+        else:
+            render_template = self._compile_cached(template, compile_options)
+
         rendering = render_template(self, values or {})
         result = ''.join(rendering)
 
@@ -538,6 +543,11 @@ class IrQWeb(models.AbstractModel):
         tools.ormcache('template', 'tuple(options.get(k) for k in self._get_template_cache_keys())'),
     )
     @QwebTracker.wrap_compile
+    def _compile_cached(self, template, options):
+        if isinstance(template, etree._Element):
+            raise ValueError("You cannot compile and cache an etree. Use a template with its ID, or the `_compile` method.")
+        return self._compile(template, options)
+
     def _compile(self, template, options):
         """ Compile the given template into a rendering function (generator)::
 
@@ -1952,12 +1962,12 @@ class IrQWeb(models.AbstractModel):
             code.append(indent_code(f"""
                 if compile_options.get('lang') != t_call_options.get('lang'):
                     self_lang = self.with_context(lang=t_call_options.get('lang'))
-                    yield from self_lang._compile({template}, t_call_options)(self_lang, t_call_values)
+                    yield from self_lang._compile_cached({template}, t_call_options)(self_lang, t_call_values)
                 else:
-                    yield from self._compile({template}, t_call_options)(self, t_call_values)
+                    yield from self._compile_cached({template}, t_call_options)(self, t_call_values)
                 """, level))
         else:
-            code.append(indent_code(f"yield from self._compile({template}, t_call_options)(self, t_call_values)", level))
+            code.append(indent_code(f"yield from self._compile_cached({template}, t_call_options)(self, t_call_values)", level))
 
         return code
 
