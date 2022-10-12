@@ -209,8 +209,8 @@ class StockWarehouse(models.Model):
         })
         return values
 
-    def _get_sequence_values(self):
-        values = super(StockWarehouse, self)._get_sequence_values()
+    def _get_sequence_values(self, name=False, code=False):
+        values = super(StockWarehouse, self)._get_sequence_values(name=name, code=code)
         values.update({
             'pbm_type_id': {'name': self.name + ' ' + _('Sequence picking before manufacturing'), 'prefix': self.code + '/PC/', 'padding': 5, 'company_id': self.company_id.id},
             'sam_type_id': {'name': self.name + ' ' + _('Sequence stock after manufacturing'), 'prefix': self.code + '/SFP/', 'padding': 5, 'company_id': self.company_id.id},
