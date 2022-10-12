@@ -65,9 +65,9 @@ class Project(models.Model):
     @api.model
     def _search_is_internal_project(self, operator, value):
         if not isinstance(value, bool):
-            raise ValueError('Invalid value: %s' % (value))
+            raise ValueError(_('Invalid value: %s', value))
         if operator not in ['=', '!=']:
-            raise ValueError('Invalid operator: %s' % (operator))
+            raise ValueError(_('Invalid operator: %s', operator))
 
         query = """
             SELECT C.internal_project_id
@@ -300,7 +300,7 @@ class Task(models.Model):
 
     def _search_remaining_hours_percentage(self, operator, value):
         if operator not in OPERATOR_MAPPING:
-            raise NotImplementedError('This operator %s is not supported in this search method.' % operator)
+            raise NotImplementedError(_('This operator %s is not supported in this search method.', operator))
         query = f"""
             SELECT id
               FROM {self._table}

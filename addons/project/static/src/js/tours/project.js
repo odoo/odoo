@@ -103,7 +103,7 @@ tour.register('project_tour', {
     content: Markup(_t("Create <b>activities</b> to set yourself to-dos or to schedule meetings.")),
 }, {
     trigger: ".modal-dialog .btn-primary",
-    content: "Schedule your activity once it is ready.",
+    content: _t("Schedule your activity once it is ready."),
     position: "bottom",
     run: "click",
 }, {

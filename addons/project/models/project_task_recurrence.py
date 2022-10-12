@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 from calendar import monthrange
@@ -118,28 +118,28 @@ class ProjectTaskRecurrence(models.Model):
     def _check_recurrence_days(self):
         for project in self.filtered(lambda p: p.repeat_unit == 'week'):
             if not any([project.mon, project.tue, project.wed, project.thu, project.fri, project.sat, project.sun]):
-                raise ValidationError('You should select a least one day')
+                raise ValidationError(_('You should select a least one day'))
 
     @api.constrains('repeat_interval')
     def _check_repeat_interval(self):
         if self.filtered(lambda t: t.repeat_interval <= 0):
-            raise ValidationError('The interval should be greater than 0')
+            raise ValidationError(_('The interval should be greater than 0'))
 
     @api.constrains('repeat_number', 'repeat_type')
     def _check_repeat_number(self):
         if self.filtered(lambda t: t.repeat_type == 'after' and t.repeat_number <= 0):
-            raise ValidationError('Should repeat at least once')
+            raise ValidationError(_('Should repeat at least once'))
 
     @api.constrains('repeat_type', 'repeat_until')
     def _check_repeat_until_date(self):
         today = fields.Date.today()
         if self.filtered(lambda t: t.repeat_type == 'until' and t.repeat_until < today):
-            raise ValidationError('The end date should be in the future')
+            raise ValidationError(_('The end date should be in the future'))
 
     @api.constrains('repeat_unit', 'repeat_on_month', 'repeat_day', 'repeat_type', 'repeat_until')
     def _check_repeat_until_month(self):
         if self.filtered(lambda r: r.repeat_type == 'until' and r.repeat_unit == 'month' and r.repeat_until and r.repeat_on_month == 'date' and int(r.repeat_day) > r.repeat_until.day):
-            raise ValidationError('The end date should be after the day of the month')
+            raise ValidationError(_('The end date should be after the day of the month'))
 
     @api.model
     def _get_recurring_fields(self):
