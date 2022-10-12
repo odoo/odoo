@@ -137,7 +137,8 @@ class FgXReport(models.AbstractModel):
                 # if i.total_entry_encoding < 0:
                 #     cash_out_amount += abs(i.total_entry_encoding)
 
-            close_amount = session_id.cash_register_balance_start + total_cash_payment - abs(return_total_cash_payment) - cash_out_amount
+            # close_amount = session_id.cash_register_balance_start + total_cash_payment - abs(return_total_cash_payment) - cash_out_amount
+            close_amount = session_id.cash_register_balance_start + session_id.total_payments_amount - cash_out_amount
             # cash_register_balance_end_real += session_id.cash_register_balance_end
             cash_register_balance_end_real += close_amount
             open_cashier_list.append([session_id.user_id.name, session_start_at.strftime('%m/%d/%Y %H:%M:%S')])
