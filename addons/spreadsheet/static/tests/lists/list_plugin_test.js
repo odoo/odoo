@@ -252,8 +252,6 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
     QUnit.test("user context is combined with list context to fetch data", async function (assert) {
         const context = {
             allowed_company_ids: [15],
-            default_stage_id: 5,
-            search_default_stage_id: 5,
             tz: "bx",
             lang: "FR",
             uid: 4,
