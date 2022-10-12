@@ -55,6 +55,7 @@ class Project(models.Model):
     warning_employee_rate = fields.Boolean(compute='_compute_warning_employee_rate', compute_sudo=True)
     partner_id = fields.Many2one(compute='_compute_partner_id', store=True, readonly=False)
 
+<<<<<<< HEAD
     @api.depends('sale_line_id', 'sale_line_employee_ids', 'allow_billable')
     def _compute_pricing_type(self):
         billable_projects = self.filtered('allow_billable')
@@ -66,6 +67,27 @@ class Project(models.Model):
             else:
                 project.pricing_type = 'task_rate'
         (self - billable_projects).update({'pricing_type': False})
+||||||| parent of 9b1c0e0f083 (temp)
+    _sql_constraints = [
+        ('timesheet_product_required_if_billable_and_timesheets', """
+            CHECK(
+                (allow_billable = 't' AND allow_timesheets = 't' AND timesheet_product_id IS NOT NULL)
+                OR (allow_billable IS NOT TRUE)
+                OR (allow_timesheets IS NOT TRUE)
+                OR (allow_billable IS NULL)
+                OR (allow_timesheets IS NULL)
+            )""", 'The timesheet product is required when the task can be billed and timesheets are allowed.'),
+=======
+    _sql_constraints = [
+        ('timesheet_product_required_if_billable_and_time', """
+            CHECK(
+                (allow_billable = 't' AND allow_timesheets = 't' AND timesheet_product_id IS NOT NULL)
+                OR (allow_billable IS NOT TRUE)
+                OR (allow_timesheets IS NOT TRUE)
+                OR (allow_billable IS NULL)
+                OR (allow_timesheets IS NULL)
+            )""", 'The timesheet product is required when the task can be billed and timesheets are allowed.'),
+>>>>>>> 9b1c0e0f083 (temp)
 
     def _search_pricing_type(self, operator, value):
         """ Search method for pricing_type field.
