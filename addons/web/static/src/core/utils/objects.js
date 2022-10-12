@@ -23,6 +23,25 @@ export function deepCopy(obj) {
 }
 
 /**
+ * Returns a shallow copy of object with every property in properties removed
+ * if present in object.
+ *
+ * @param {Object} object
+ * @param {...string} properties
+ * @returns {Object}
+ */
+export function omit(object, ...properties) {
+    const result = {};
+    const propertiesSet = new Set(properties);
+    for (const key in object) {
+        if (!propertiesSet.has(key)) {
+            result[key] = object[key];
+        }
+    }
+    return result;
+}
+
+/**
  * @template {T}
  * @param {T} object
  * @param {...(keyof T)} properties
