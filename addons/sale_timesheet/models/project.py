@@ -52,7 +52,7 @@ class Project(models.Model):
     warning_employee_rate = fields.Boolean(compute='_compute_warning_employee_rate')
 
     _sql_constraints = [
-        ('timesheet_product_required_if_billable_and_timesheets', """
+        ('timesheet_product_required_if_billable_and_time', """
             CHECK(
                 (allow_billable = 't' AND allow_timesheets = 't' AND timesheet_product_id IS NOT NULL)
                 OR (allow_billable IS NOT TRUE)
