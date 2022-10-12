@@ -99,17 +99,19 @@ export class KanbanRenderer extends Component {
             this.dialogClose.forEach((close) => close());
         });
 
-        useBus(this.env.searchModel, "focus-view", () => {
-            const { model } = this.props.list;
-            if (model.useSampleModel || !model.hasData()) {
-                return;
-            }
-            const firstCard = rootRef.el.querySelector(".o_kanban_record");
-            if (firstCard) {
-                // Focus first kanban card
-                firstCard.focus();
-            }
-        });
+        if (this.env.searchModel) {
+            useBus(this.env.searchModel, "focus-view", () => {
+                const { model } = this.props.list;
+                if (model.useSampleModel || !model.hasData()) {
+                    return;
+                }
+                const firstCard = rootRef.el.querySelector(".o_kanban_record");
+                if (firstCard) {
+                    // Focus first kanban card
+                    firstCard.focus();
+                }
+            });
+        }
 
         useHotkey(
             "Enter",
@@ -129,15 +131,17 @@ export class KanbanRenderer extends Component {
         );
 
         const arrowsOptions = { area: () => rootRef.el, allowRepeat: true };
-        useHotkey(
-            "ArrowUp",
-            ({ area }) => {
-                if (!this.focusNextCard(area, "up")) {
-                    this.env.searchModel.trigger("focus-search");
-                }
-            },
-            arrowsOptions
-        );
+        if (this.env.searchModel) {
+            useHotkey(
+                "ArrowUp",
+                ({ area }) => {
+                    if (!this.focusNextCard(area, "up")) {
+                        this.env.searchModel.trigger("focus-search");
+                    }
+                },
+                arrowsOptions
+            );
+        }
         useHotkey("ArrowDown", ({ area }) => this.focusNextCard(area, "down"), arrowsOptions);
         useHotkey("ArrowLeft", ({ area }) => this.focusNextCard(area, "left"), arrowsOptions);
         useHotkey("ArrowRight", ({ area }) => this.focusNextCard(area, "right"), arrowsOptions);
