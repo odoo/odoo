@@ -2482,7 +2482,20 @@ X[]
                     contentAfter: '<p>ab<b class="oe_unremovable">[]\u200B</b>ef</p>',
                 });
             });
+            it('should delete if first element and append in paragraph', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<blockquote><br>[]</blockquote>`,
+                    stepFunction: deleteBackward,
+                    contentAfter: `<p>[]<br></p>`,
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: `<h1>[]abcd</h1>`,
+                    stepFunction: deleteBackward,
+                    contentAfter: `<p>[]abcd</p>`,
+                });
+            });
         });
+
     });
 
     describe('deleterange', () => {
