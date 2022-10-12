@@ -111,13 +111,13 @@
                             <td>..............................</td>
                             <td style="text-align: center;">
                                 <p>
-                                    <t t-esc="total_qty"/>
+                                    <t t-esc="total_qty + return_order_count"/>
                                 </p>
                             </td>
                             <td>
                                 <div class="right_content" style="text-align: right;font-size: 15px;">
                                     <p>
-                                        <span t-esc="total_amt" t-options='{"widget": "float", "precision": 2}'/>
+                                        <span t-esc="total_amt + return_order_total" t-options='{"widget": "float", "precision": 2}'/>
                                         <t t-esc="company.currency_id.name"/>
                                     </p>
                                 </div>
@@ -682,13 +682,13 @@
                             <td>..............................</td>
                             <td style="text-align: center;">
                                 <p>
-                                    <t t-esc="total_qty"/>
+                                    <t t-esc="total_qty + return_order_count"/>
                                 </p>
                             </td>
                             <td>
                                 <div class="right_content" style="text-align: right;font-size: 15px;">
                                     <p>
-                                        <span t-esc="total_amt" t-options='{"widget": "float", "precision": 2}'/>
+                                        <span t-esc="total_amt + return_order_total" t-options='{"widget": "float", "precision": 2}'/>
                                         <t t-esc="company.currency_id.name"/>
                                     </p>
                                 </div>

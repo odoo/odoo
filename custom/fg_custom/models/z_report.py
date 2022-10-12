@@ -97,6 +97,11 @@ class FgZReport(models.AbstractModel):
                         transactions_history['Retail'].update({'count': count, 'total': total})
                     else:
                         transactions_history['Retail'] = {'count': 1, 'total': order.amount_total}
+                if order.amount_return:
+                    changes_order_count += len(order)
+                    changes_order_total += order.amount_return
+
+            for order in session_id.order_ids.filtered(lambda x: x.amount_total > 0):
                 if order.payment_ids:
                     for pay in order.payment_ids:
                         if pay.payment_method_id.name in tender_history:
@@ -105,20 +110,45 @@ class FgZReport(models.AbstractModel):
                             tender_history[pay.payment_method_id.name].update({'count': count, 'total': total})
                         else:
                             tender_history[pay.payment_method_id.name] = {'count': 1, 'total': pay.amount}
-                if order.amount_return:
-                    changes_order_count += len(order)
-                    changes_order_total += order.amount_return
 
             for i in session_id.statement_ids:
-                total_entry_encoding += abs(i.total_entry_encoding)
-            result_pos_pay = self.env['pos.payment'].read_group([('session_id', '=', session_id.id), ('payment_method_id.is_cash_count', '=', True)], ['amount'], ['session_id'])
-            session_amount_map = dict((data['session_id'][0], data['amount']) for data in result_pos_pay)
-            total_entry_encoding += session_amount_map.get(session_id.id) or 0
-
+                for j in i.line_ids:
+                    if j.amount < 0:
+                        total_entry_encoding += abs(j.amount)
+                # if i.total_entry_encoding < 0:
+                #     total_entry_encoding += abs(i.total_entry_encoding)
+            # result_pos_pay = self.env['pos.payment'].read_group([('session_id', '=', session_id.id), ('payment_method_id.is_cash_count', '=', True)], ['amount'], ['session_id'])
+            # session_amount_map = dict((data['session_id'][0], data['amount']) for data in result_pos_pay)
+            # total_entry_encoding += session_amount_map.get(session_id.id) or 0
             session_start_at = timezone('UTC').localize(session_id.start_at).astimezone(timezone(tz_name))
             session_stop_at = timezone('UTC').localize(session_id.stop_at).astimezone(timezone(tz_name))
             cash_register_balance_start += session_id.cash_register_balance_start
-            cash_register_balance_end_real += session_id.cash_register_balance_end
+
+
+            cash_payment_method = session_id.payment_method_ids.filtered('is_cash_count')
+            total_cash_payment = 0.0
+            result = self.env['pos.payment'].read_group(
+                [('session_id', '=', session_id.id), ('payment_method_id', 'in', cash_payment_method.ids),
+                 ('amount', '>', 0)], ['amount'], ['session_id'])
+            if result:
+                total_cash_payment = result[0]['amount']
+            return_total_cash_payment = 0.0
+            result = self.env['pos.payment'].read_group(
+                [('session_id', '=', session_id.id), ('payment_method_id', 'in', cash_payment_method.ids),
+                 ('amount', '<', 0)], ['amount'], ['session_id'])
+            if result:
+                return_total_cash_payment = result[0]['amount']
+            cash_out_amount = 0
+            for i in session_id.statement_ids:
+                for j in i.line_ids:
+                    if j.amount < 0:
+                        cash_out_amount += abs(j.amount)
+                # if i.total_entry_encoding < 0:
+                #     cash_out_amount += abs(i.total_entry_encoding)
+
+            close_amount = session_id.cash_register_balance_start + total_cash_payment - abs(return_total_cash_payment) - cash_out_amount
+            # cash_register_balance_end_real += session_id.cash_register_balance_end
+            cash_register_balance_end_real += close_amount
             open_cashier_list.append([self.env.user.name, session_start_at.strftime('%m/%d/%Y %H:%M:%S')])
             close_cashier_list.append([self.env.user.name, session_stop_at.strftime('%m/%d/%Y %H:%M:%S')])
         data = {
