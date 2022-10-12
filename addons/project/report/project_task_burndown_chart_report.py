@@ -361,7 +361,7 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
                 fname = fname or name
                 field = self._fields.get(fname)
                 if not field:
-                    raise ValueError("Invalid field %r on model %r" % (fname, self._name))
+                    raise ValueError(_("Invalid field %r on model %r", (fname, self._name)))
                 if not (field.base_field.store and field.base_field.column_type):
                     raise UserError(_("Cannot aggregate field %r.", fname))
                 if func not in VALID_AGGREGATE_FUNCTIONS:
@@ -370,7 +370,7 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
                 # we have 'name', retrieve the aggregator on the field
                 field = self._fields.get(name)
                 if not field:
-                    raise ValueError("Invalid field %r on model %r" % (name, self._name))
+                    raise ValueError(_("Invalid field %r on model %r", (name, self._name)))
                 if not (field.base_field.store and
                         field.base_field.column_type and field.group_operator):
                     continue
