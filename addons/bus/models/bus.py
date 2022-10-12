@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import contextlib
 import datetime
 import json
 import logging
@@ -130,8 +131,9 @@ class ImDispatch(threading.Thread):
         outdated_channels = websocket._channels - channels
         self._clear_outdated_channels(websocket, outdated_channels)
         websocket.subscribe(channels, last)
-        if not self.is_alive():
-            self.start()
+        with contextlib.suppress(RuntimeError):
+            if not self.is_alive():
+                self.start()
 
     def unsubscribe(self, websocket):
         self._clear_outdated_channels(websocket, websocket._channels)
