@@ -5,7 +5,7 @@ import { uiService } from "@web/core/ui/ui_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { makeTestEnv } from "../helpers/mock_env";
-import { click, getFixture, mount, triggerHotkey } from "../helpers/utils";
+import { click, getFixture, makeDeferred, mount, nextTick, triggerHotkey } from "../helpers/utils";
 import { makeFakeDialogService } from "../helpers/mock_services";
 
 const serviceRegistry = registry.category("services");
@@ -35,8 +35,6 @@ QUnit.module("Components", (hooks) => {
     QUnit.module("ConfirmationDialog");
 
     QUnit.test("pressing escape to close the dialog", async function (assert) {
-        assert.expect(4);
-
         const env = await makeDialogTestEnv();
         await mount(ConfirmationDialog, target, {
             env,
@@ -49,20 +47,19 @@ QUnit.module("Components", (hooks) => {
                 confirm: () => {},
                 cancel: () => {
                     assert.step("Cancel action");
-                }
-            }
+                },
+            },
         });
         assert.verifySteps([]);
         triggerHotkey("escape");
-        assert.verifySteps([
-            "Cancel action",
-            "Close action"
-        ], "dialog has called its cancel method before its closure");
+        await nextTick();
+        assert.verifySteps(
+            ["Cancel action", "Close action"],
+            "dialog has called its cancel method before its closure"
+        );
     });
 
-    QUnit.test("clicking on dialog buttons", async function (assert) {
-        assert.expect(7);
-
+    QUnit.test("clicking on 'Ok'", async function (assert) {
         const env = await makeDialogTestEnv();
         await mount(ConfirmationDialog, target, {
             env,
@@ -76,20 +73,133 @@ QUnit.module("Components", (hooks) => {
                     assert.step("Confirm action");
                 },
                 cancel: () => {
-                    assert.step("Cancel action");
-                }
-            }
+                    throw new Error("should not be called");
+                },
+            },
         });
         assert.verifySteps([]);
         await click(target, ".modal-footer .btn-primary");
-        assert.verifySteps([
-            "Confirm action",
-            "Close action"
-        ]);
+        assert.verifySteps(["Confirm action", "Close action"]);
+    });
+
+    QUnit.test("clicking on 'Cancel'", async function (assert) {
+        const env = await makeDialogTestEnv();
+        await mount(ConfirmationDialog, target, {
+            env,
+            props: {
+                body: "Some content",
+                title: "Confirmation",
+                close: () => {
+                    assert.step("Close action");
+                },
+                confirm: () => {
+                    throw new Error("should not be called");
+                },
+                cancel: () => {
+                    assert.step("Cancel action");
+                },
+            },
+        });
+        assert.verifySteps([]);
         await click(target, ".modal-footer .btn-secondary");
-        assert.verifySteps([
-            "Cancel action",
-            "Close action"
-        ], "dialog has called its cancel method before its closure");
+        assert.verifySteps(["Cancel action", "Close action"]);
+    });
+
+    QUnit.test("can't click twice on 'Ok'", async function (assert) {
+        const env = await makeDialogTestEnv();
+        await mount(ConfirmationDialog, target, {
+            env,
+            props: {
+                body: "Some content",
+                title: "Confirmation",
+                close: () => {},
+                confirm: () => {
+                    assert.step("Confirm");
+                },
+                cancel: () => {},
+            },
+        });
+        assert.notOk(target.querySelector(".modal-footer .btn-primary").disabled);
+        assert.notOk(target.querySelector(".modal-footer .btn-secondary").disabled);
+        click(target, ".modal-footer .btn-primary");
+        assert.ok(target.querySelector(".modal-footer .btn-primary").disabled);
+        assert.ok(target.querySelector(".modal-footer .btn-secondary").disabled);
+        assert.verifySteps(["Confirm"]);
+    });
+
+    QUnit.test("can't click twice on 'Cancel'", async function (assert) {
+        const env = await makeDialogTestEnv();
+        await mount(ConfirmationDialog, target, {
+            env,
+            props: {
+                body: "Some content",
+                title: "Confirmation",
+                close: () => {},
+                confirm: () => {},
+                cancel: () => {
+                    assert.step("Cancel");
+                },
+            },
+        });
+        assert.notOk(target.querySelector(".modal-footer .btn-primary").disabled);
+        assert.notOk(target.querySelector(".modal-footer .btn-secondary").disabled);
+        click(target, ".modal-footer .btn-secondary");
+        assert.ok(target.querySelector(".modal-footer .btn-primary").disabled);
+        assert.ok(target.querySelector(".modal-footer .btn-secondary").disabled);
+        assert.verifySteps(["Cancel"]);
+    });
+
+    QUnit.test("can't cancel (with escape) after confirm", async function (assert) {
+        const def = makeDeferred();
+        const env = await makeDialogTestEnv();
+        await mount(ConfirmationDialog, target, {
+            env,
+            props: {
+                body: "Some content",
+                title: "Confirmation",
+                close: () => {
+                    assert.step("close");
+                },
+                confirm: () => {
+                    assert.step("confirm");
+                    return def;
+                },
+                cancel: () => {
+                    throw new Error("should not cancel");
+                },
+            },
+        });
+        await click(target, ".modal-footer .btn-primary");
+        assert.verifySteps(["confirm"]);
+        triggerHotkey("escape");
+        await nextTick();
+        assert.verifySteps([]);
+        def.resolve();
+        await nextTick();
+        assert.verifySteps(["close"]);
+    });
+
+    QUnit.test("wait for confirm callback before closing", async function (assert) {
+        const env = await makeDialogTestEnv();
+        const def = makeDeferred();
+        await mount(ConfirmationDialog, target, {
+            env,
+            props: {
+                body: "Some content",
+                title: "Confirmation",
+                close: () => {
+                    assert.step("close");
+                },
+                confirm: () => {
+                    assert.step("confirm");
+                    return def;
+                },
+            },
+        });
+        await click(target, ".modal-footer .btn-primary");
+        assert.verifySteps(["confirm"]);
+        def.resolve();
+        await nextTick();
+        assert.verifySteps(["close"]);
     });
 });

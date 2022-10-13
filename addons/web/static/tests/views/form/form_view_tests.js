@@ -9254,6 +9254,44 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test('buttons with "confirm" attribute: click twice on "Ok"', async function (assert) {
+        const actionService = {
+            start() {
+                return {
+                    async doActionButton(args) {
+                        assert.step("execute_action"); // should be called only once
+                    },
+                };
+            },
+        };
+        registry.category("services").add("action", actionService, { force: true });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <header>
+                        <button name="post" class="p" string="Confirm" type="object" confirm="U sure?"/>
+                    </header>
+                </form>`,
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+            },
+        });
+
+        assert.verifySteps(["get_views", "onchange"]);
+
+        await click(target.querySelector(".o_statusbar_buttons button"));
+        assert.verifySteps([]);
+
+        click(target.querySelector(".modal-footer button.btn-primary"));
+        await Promise.resolve();
+        await click(target.querySelector(".modal-footer button.btn-primary"));
+        assert.verifySteps(["create", "read", "execute_action"]);
+    });
+
     QUnit.test(
         "buttons are disabled until action is resolved (in dialogs)",
         async function (assert) {
