@@ -19,4 +19,10 @@
         'views/templates.xml',
     ],
     'license': 'LGPL-3',
+    'assets': {
+        'web.assets_backend': [
+            'sale_loyalty/static/src/**/*.js',
+            'sale_loyalty/static/src/**/*.xml',
+        ],
+    },
 }

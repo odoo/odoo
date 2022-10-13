@@ -121,7 +121,7 @@ class SaleOrder(models.Model):
         """
         return self._get_applied_global_discount_lines().reward_id
 
-    def _get_reward_values_product(self, reward, coupon, product=None, **kwargs):
+    def _get_reward_values_product(self, reward, coupon, product=None, previous_qty=None, is_new_claim=False, **kwargs):
         """
         Returns an array of dict containing the values required for the reward lines
         """
@@ -134,13 +134,19 @@ class SaleOrder(models.Model):
             raise UserError(_('Invalid product to claim.'))
         taxes = self.fiscal_position_id.map_tax(product.taxes_id.filtered(lambda t: t.company_id == self.company_id))
         points = self._get_real_points_for_coupon(coupon)
-        claimable_count = float_round(points / reward.required_points, precision_rounding=1, rounding_method='DOWN') if not reward.clear_wallet else 1
+        max_claimable_count = float_round(points / reward.required_points, precision_rounding=1,
+                                          rounding_method='DOWN') * reward.reward_product_qty
+        claimable_count = min(previous_qty or reward.reward_product_qty, max_claimable_count)
+        if previous_qty and is_new_claim:
+            claimable_count += reward.reward_product_qty
+        if not reward.clear_wallet and not reward.reward_type == 'product':
+            claimable_count = max_claimable_count
         cost = points if reward.clear_wallet else claimable_count * reward.required_points
         return [{
             'name': _("Free Product - %(product)s", product=product.name),
             'product_id': product.id,
             'discount': 100,
-            'product_uom_qty': reward.reward_product_qty * claimable_count,
+            'product_uom_qty': claimable_count,
             'reward_id': reward.id,
             'coupon_id': coupon.id,
             'points_cost': cost,
@@ -307,8 +313,8 @@ class SaleOrder(models.Model):
         point_cost = reward.required_points if not reward.clear_wallet else self._get_real_points_for_coupon(coupon)
         if reward.discount_mode == 'per_point' and not reward.clear_wallet:
             # Calculate the actual point cost if the cost is per point
-            converted_discount = self.currency_id._convert(min(max_discount, discountable), reward.currency_id, self.company_id, fields.Date.today())
-            point_cost = converted_discount / reward.discount
+            converted_discount = round(self.currency_id._convert(min(max_discount, discountable), reward.currency_id, self.company_id, fields.Date.today()), 3)
+            point_cost = round(converted_discount / reward.discount, 3)
         # Gift cards and eWallets are considered gift cards and should not have any taxes
         if reward.program_id.program_type in ('ewallet', 'gift_card'):
             return [{
@@ -535,6 +541,7 @@ class SaleOrder(models.Model):
         NOTE: A call to `_update_programs_and_rewards` is expected to reorder the discounts.
         """
         self.ensure_one()
+        kwargs["is_new_claim"] = True
         # Use the old lines before creating new ones. These should already be in a 'reset' state.
         old_reward_lines = kwargs.get('old_lines', self.env['sale.order.line'])
         if reward.is_global_discount:
@@ -550,6 +557,13 @@ class SaleOrder(models.Model):
             return {'error': _('The coupon can only be claimed on future orders.')}
         elif self._get_real_points_for_coupon(coupon) < reward.required_points:
             return {'error': _('The coupon does not have enough points for the selected reward.')}
+        # When claiming a product reward we try to keep only one line.
+        if reward.reward_type == "product":
+            # Should never be more than one line
+            common_reward_lines = self.order_line.filtered(lambda line: line.reward_id == reward and line.coupon_id == coupon)
+            if common_reward_lines:
+                old_reward_lines += common_reward_lines
+                kwargs["previous_qty"] = common_reward_lines[-1].product_uom_qty
         reward_vals = self._get_reward_line_values(reward, coupon, **kwargs)
         self._write_vals_from_reward_vals(reward_vals, old_reward_lines)
         return {}
@@ -715,20 +729,21 @@ class SaleOrder(models.Model):
                 continue
             seen_rewards.add(line.reward_identifier_code)
             if line.reward_id.program_id.is_payment_program:
-                line_rewards.append((line.reward_id, line.coupon_id, line.reward_identifier_code, line.product_id))
+                line_rewards.append((line.reward_id, line.coupon_id, line.product_id, line.product_uom_qty))
             else:
-                payment_rewards.append((line.reward_id, line.coupon_id, line.reward_identifier_code, line.product_id))
+                payment_rewards.append((line.reward_id, line.coupon_id, line.product_id, line.product_uom_qty))
 
         for reward_key in itertools.chain(line_rewards, payment_rewards):
             coupon = reward_key[1]
             reward = reward_key[0]
+            previous_qty = reward_key[3]
             program = reward.program_id
             points = self._get_real_points_for_coupon(coupon)
             if coupon not in all_coupons or points < reward.required_points or program not in domain_matching_programs:
                 # Reward is not applicable anymore, the reward lines will simply be removed at the end of this function
                 continue
             try:
-                values_list = self._get_reward_line_values(reward, coupon, product=reward_key[3])
+                values_list = self._get_reward_line_values(reward, coupon, product=reward_key[2], previous_qty=previous_qty)
             except UserError:
                 # It could happen that we have nothing to discount after changing the order.
                 values_list = []
@@ -986,3 +1001,17 @@ class SaleOrder(models.Model):
                 return apply_result
             coupon = apply_result.get('coupon', self.env['loyalty.card'])
         return self._get_claimable_rewards(forced_coupons=coupon)
+
+    def _get_loyalty_points(self):
+        loyalty_points_changes = defaultdict(dict)
+        for coupon_point in self.coupon_point_ids:
+            if coupon_point.coupon_id.program_type != 'loyalty':
+                continue
+            loyalty_points_changes[coupon_point.coupon_id]['name'] = coupon_point.coupon_id.point_name
+            loyalty_points_changes[coupon_point.coupon_id]['won'] = coupon_point.points
+        for line in self.order_line:
+            if not line.reward_id or not line.coupon_id or line.coupon_id.program_type != 'loyalty':
+                continue
+            loyalty_points_changes[line.coupon_id]['name'] = line.coupon_id.point_name
+            loyalty_points_changes[line.coupon_id]['spent'] = line.points_cost
+        return loyalty_points_changes

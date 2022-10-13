@@ -28,8 +28,31 @@
                 <t t-set="hide_intro" t-value="1"/>
             </t>
         </xpath>
+        <xpath expr="//div[@id='total']/div" position="inside">
+            <table class="table table-sm">
+                <t t-foreach="sale_order._get_loyalty_points().items()" t-as="point_change">
+                    <tr class="border-black o_subtotal">
+                        <td class="pt-3">
+                            <strong t-out="point_change[1].get('name')"/>
+                        </td>
+                    </tr>
+                    <tr t-if="point_change[1].get('won')">
+                        <td><span t-out="point_change[1].get('name')"/> Won</td>
+                        <td class="text-end">
+                            <span t-att-class="oe_subtotal_footer_separator" t-out="point_change[1].get('won')"/>
+                        </td>
+                    </tr>
+                    <tr t-if="point_change[1].get('spent')">
+                        <td><span t-out="point_change[1].get('name')"/> Spent</td>
+                        <td class="text-end">
+                            <span t-att-class="oe_subtotal_footer_separator" t-out="point_change[1].get('spent')"/>
+                        </td>
+                    </tr>
+                </t>
+            </table>
+        </xpath>
     </template>
-    
+
     <template id="sale_purchased_gift_card">
         <t t-set="gift_cards" t-value="order.coupon_point_ids.filtered(lambda pe: pe.coupon_id.program_id.program_type == 'gift_card').coupon_id"/>
         <div class="card mt-3 " t-if="gift_cards">

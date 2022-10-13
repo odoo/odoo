@@ -24,42 +24,61 @@
                         </t>
                         <t t-if="website_sale_order and website_sale_order.get_promo_code_success_message(delete=False)">
                             <div class="alert alert-success text-start mt16" role="alert">
-                                You have successfully applied the following code: <strong t-esc="website_sale_order.get_promo_code_success_message()"/>
+                                You have successfully applied the following code:
+                                <strong t-esc="website_sale_order.get_promo_code_success_message()"/>
                             </div>
                         </t>
                         <t t-if="website_sale_order">
                             <t t-foreach="website_sale_order._get_claimable_rewards().items()" t-as="coupon_reward">
-                                <t t-foreach="coupon_reward[1]" t-as="reward">
-                                    <form t-att-action="'/shop/claimreward%s' % (redirect and '?r=' + redirect or '')"
-                                        method="post" name="claim_reward">
-                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                                        <input type="hidden" name="reward" t-att-value="reward.id"/>
-                                        <div class="alert alert-success text-start mt16" role="alert">
-                                            <div class="d-flex flex-row">
+                                <div class="alert alert-success text-start mt16" role="alert">
+                                    <strong t-esc="coupon_reward[0].program_id.display_name"/>
+                                    <t t-if="coupon_reward[0].program_id.is_nominative">
+                                        <div>You have
+                                            <span t-out="('%.2f' % website_sale_order._get_real_points_for_coupon(coupon_reward[0])).rstrip('0').rstrip('.')"/>
+                                            <span t-out="coupon_reward[0].point_name"/>
+                                        </div>
+                                        <div t-if="coupon_reward[0].program_id.program_type == 'ewallet'">
+                                            in your ewallet
+                                        </div>
+                                    </t>
+                                    <t t-foreach="coupon_reward[1]" t-as="reward">
+                                        <form t-att-action="'/shop/claimreward%s' % (redirect and '?r=' + redirect or '')"
+                                              method="post" name="claim_reward">
+                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                            <input type="hidden" name="reward" t-att-value="reward.id"/>
+                                            <div class="d-flex flex-row pt-3">
                                                 <div class="flex-grow-1">
                                                     <strong t-esc="reward.description"/>
                                                     <div t-if="reward.program_id.portal_visible">
-                                                        <t t-if="not reward.program_id.is_nominative"><span t-out="website_sale_order._get_real_points_for_coupon(coupon_reward[0])"/> <span t-out="reward.point_name"/></t>
+                                                        <t t-if="not reward.program_id.is_nominative">
+                                                            <span t-out="('%.2f' % website_sale_order._get_real_points_for_coupon(coupon_reward[0])).rstrip('0').rstrip('.')"/>
+                                                            <span t-out="reward.point_name"/>
+                                                        </t>
                                                         <t t-else="">
-                                                            <span>You have <t t-out="website_sale_order._get_real_points_for_coupon(coupon_reward[0])"/></span> <span t-out="reward.point_name"/>
-                                                            <span t-if="reward.program_id.program_type == 'ewallet'"> in your ewallet</span>
-                                                            <t t-if="reward.program_id.program_type != 'ewallet'">
-                                                                <br/>
-                                                                <span>Costs <t t-out="reward.required_points"/></span> <span t-out="reward.point_name"/>
+                                                            <t t-if="coupon_reward[0].program_id.program_type != 'ewallet'">
+                                                                <t t-set="reward_values" t-value="website_sale_order._get_reward_line_values(reward, coupon_reward[0])"/>
+                                                                <t t-if="reward_values[0]">
+                                                                    <span>Costs
+                                                                        <t t-out="('%.2f' % reward_values[0].get('points_cost')).rstrip('0').rstrip('.')"/>
+                                                                    </span>
+                                                                    <span t-out="reward.point_name"/>
+                                                                </t>
                                                             </t>
                                                         </t>
                                                     </div>
                                                 </div>
                                                 <div class="justify-content-end">
                                                     <a class="btn btn-primary a-submit" href="#" role="button">
-                                                        <t t-if="reward.program_id.program_type == 'ewallet'">Pay with eWallet</t>
+                                                        <t t-if="reward.program_id.program_type == 'ewallet'">Pay
+                                                            with eWallet
+                                                        </t>
                                                         <t t-else="">Claim</t>
                                                     </a>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </form>
-                                </t>
+                                        </form>
+                                    </t>
+                                </div>
                             </t>
                         </t>
                     </span>
