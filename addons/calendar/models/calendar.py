@@ -1254,10 +1254,10 @@ class Meeting(models.Model):
                 for name, desc in sort_spec
             )
             # then Reverse if the value matches a "desc" column
-            return [
+            return tuple(
                 (tools.Reverse(v) if desc else v)
                 for v, desc in vals_spec
-            ]
+            )
         return [r['id'] for r in sorted(result_data, key=key)]
 
     @api.multi
