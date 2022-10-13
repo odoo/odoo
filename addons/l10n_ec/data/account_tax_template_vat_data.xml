@@ -2,10 +2,10 @@
 <odoo>
     <data >
         <!-- 
-        VAT TAXES *IMPUESTO AL VALOR AGREGADO
+        VAT taxes *impuesto al valor agregado
         -->
         <record id="tax_vat_411" model="account.tax.template">
-            <!-- IVA EN VENTAS LOCALES (EXCLUYE ACTIVOS FIJOS) -->
+            <!-- IVA en ventas locales (excluye activos fijos) -->
             <field name="name">IVA 12%</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
@@ -43,7 +43,7 @@
         </record>
 
         <record id="tax_vat_412" model="account.tax.template">
-            <!-- IVA EN VENTAS DE ACTIVOS FIJOS -->
+            <!-- IVA en ventas de activos fijos -->
             <field name="name">IVA 12% (Activos)</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
@@ -81,7 +81,7 @@
         </record>
 
         <record id="tax_vat_415" model="account.tax.template">
-            <!-- IVA EN VENTAS LOCALES 0% (EXCLUYE ACTIVOS FIJOS) CON DERECHO A CREDITO TRIBUTARIO -->
+            <!-- IVA en ventas locales 0% (excluye activos fijos) con derecho a credito tributario -->
             <field name="name">IVA 0%</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
@@ -115,7 +115,7 @@
                 })]"/>
         </record>
         <record id="tax_vat_416" model="account.tax.template">
-            <!-- IVA VENTAS DE ACTIVOS FIJOS GRAVADAS TARIFA 0% CON DERECHO A CREDITO TRIBUTARIO -->
+            <!-- IVA ventas de activos fijos gravadas tarifa 0% con derecho a credito tributario -->
             <field name="name">IVA 0% (Activos)</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
@@ -149,7 +149,7 @@
                 })]"/>
         </record>
         <record id="tax_vat_413" model="account.tax.template">
-            <!-- IVA EN VENTAS LOCALES 0% (EXCLUYE ACTIVOS FIJOS) SIN DERECHO A CREDITO TRIBUTARIO -->
+            <!-- IVA en ventas locales 0% (excluye activos fijos) sin derecho a credito tributario -->
             <field name="name">IVA 0% (Sin Crédito Tributario)</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
@@ -183,7 +183,7 @@
                 })]"/>
         </record>
         <record id="tax_vat_414" model="account.tax.template">
-            <!-- IVA EN VENTAS DE ACTIVOS FIJOS GRAVADAS 0% SIN DERECHO A CREDITO TRIBUTARIO -->
+            <!-- IVA en ventas de activos fijos gravadas 0% sin derecho a credito tributario -->
             <field name="name">IVA 0% (Activos Sin Crédito Tributario)</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
@@ -217,7 +217,7 @@
                 })]"/>
         </record>
         <record id="tax_vat_417" model="account.tax.template">
-            <!-- IVA 0% POR EXPORTACIONES DE BIENES -->
+            <!-- IVA 0% por exportaciones de bienes -->
             <field name="name">IVA 0% (Exportación Bienes)</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
@@ -251,7 +251,7 @@
                 })]"/>
         </record>
         <record id="tax_vat_418" model="account.tax.template">
-            <!-- IVA POR EXPORTACIONES DE SERVICIOS -->
+            <!-- IVA por exportaciones de servicios -->
             <field name="name">IVA 0% (Exportación Servicios)</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
@@ -285,7 +285,7 @@
                 })]"/>
         </record>
         <record id="tax_vat_441" model="account.tax.template">
-            <!-- TRANSFERENCIAS EN VENTAS NO OBJETO O EXENTAS DE IVA -->
+            <!-- Transferencias en ventas no objeto o exentas de IVA -->
             <field name="name">IVA 0% (No Objeto/Exentas)</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
@@ -320,7 +320,7 @@
                 })]"/>
         </record>
         <record id="tax_vat_444" model="account.tax.template">
-            <!-- IVA EN VENTAS POR REEMBOLSO COMO INTERMEDIARIO -->
+            <!-- IVA en ventas por reembolso como intermediario -->
             <field name="name">IVA 12% (Reembolso)</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
@@ -357,12 +357,12 @@
                 })]"/>
         </record>
 
-        <!--        IMPUESTOS DE COMPRAS   -->
+        <!--        impuestos de compras   -->
 
         <!--IVA 12%-->
 
         <record id="tax_vat_510_sup_01" model="account.tax.template">
-            <!-- IVA EN COMPRAS LOCALES (EXCLUYE ACTIVOS FIJOS) CON DERECHO A CREDITO TRIBUTARIO -->
+            <!-- IVA en compras locales (excluye activos fijos) con derecho a credito tributario -->
             <field name="name">IVA 12% (510, 01 Crédito IVA)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
@@ -400,7 +400,7 @@
         </record>
 
         <record id="tax_vat_510_sup_05" model="account.tax.template">
-            <!-- IVA EN COMPRAS LOCALES (EXCLUYE ACTIVOS FIJOS) CON DERECHO A CREDITO TRIBUTARIO -->
+            <!-- IVA en compras locales (excluye activos fijos) con derecho a credito tributario -->
             <field name="name">IVA 12% (510, 05 Liq. Viaje Gasto IR)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
@@ -438,7 +438,7 @@
         </record>
 
         <record id="tax_vat_510_sup_06" model="account.tax.template">
-            <!-- IVA EN COMPRAS LOCALES (EXCLUYE ACTIVOS FIJOS) CON DERECHO A CREDITO TRIBUTARIO -->
+            <!-- IVA en compras locales (excluye activos fijos) con derecho a credito tributario -->
             <field name="name">IVA 12% (510, 06 Inventario Crédito IVA)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
@@ -476,7 +476,7 @@
         </record>
 
         <record id="tax_vat_510_sup_09" model="account.tax.template">
-            <!-- IVA EN COMPRAS LOCALES (EXCLUYE ACTIVOS FIJOS) CON DERECHO A CREDITO TRIBUTARIO -->
+            <!-- IVA en compras locales (excluye activos fijos) con derecho a credito tributario -->
             <field name="name">IVA 12% (510, 09 Reembolso Siniestro)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
@@ -514,7 +514,7 @@
         </record>
 
         <record id="tax_vat_510_sup_15" model="account.tax.template">
-            <!-- IVA EN COMPRAS LOCALES (EXCLUYE ACTIVOS FIJOS) CON DERECHO A CREDITO TRIBUTARIO -->
+            <!-- IVA en compras locales (excluye activos fijos) con derecho a credito tributario -->
             <field name="name">IVA 12% (510, 15 Servicios Digitales)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
@@ -554,7 +554,7 @@
         <!--IVA 12% (Activos)-->
 
         <record id="tax_vat_511_sup_03" model="account.tax.template">
-            <!-- IVA EN COMPRAS LOCALES DE ACTIVOS FIJOS CON DERECHO A CREDITO TRIBUTARIO -->
+            <!-- IVA en compras locales de activos fijos con derecho a credito tributario -->
             <field name="name">IVA 12% (511, 03 Activos Crédito IVA)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
@@ -592,7 +592,7 @@
         </record>
 
         <record id="tax_vat_511_sup_04" model="account.tax.template">
-            <!-- IVA EN COMPRAS LOCALES DE ACTIVOS FIJOS CON DERECHO A CREDITO TRIBUTARIO -->
+            <!-- IVA en compras locales de activos fijos con derecho a credito tributario -->
             <field name="name">IVA 12% (511, 04 Activos Costo IR)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
@@ -629,7 +629,7 @@
                 })]"/>
         </record>
         <record id="tax_vat_512_sup_02" model="account.tax.template">
-            <!-- IVA EN OTRAS ADQUISICIONES SIN DERECHO A CREDITO TRIBUTARIO -->
+            <!-- IVA en otras adquisiciones sin derecho a credito tributario -->
             <field name="name">IVA 12% (512, 02 Costo IR)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
@@ -664,7 +664,7 @@
                 })]"/>
         </record>
         <record id="tax_vat_512_sup_07" model="account.tax.template">
-            <!-- IVA EN OTRAS ADQUISICIONES SIN DERECHO A CREDITO TRIBUTARIO -->
+            <!-- IVA en otras adquisiciones sin derecho a credito tributario -->
             <field name="name">IVA 12% (512, 07 Inventario Costo IR)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
@@ -699,7 +699,7 @@
                 })]"/>
         </record>
         <record id="tax_vat_512_sup_09" model="account.tax.template">
-            <!-- IVA EN OTRAS ADQUISICIONES SIN DERECHO A CREDITO TRIBUTARIO -->
+            <!-- IVA en otras adquisiciones sin derecho a credito tributario -->
             <field name="name">IVA 12% (512, 09 Reembolso Siniestro)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
@@ -734,8 +734,8 @@
                 })]"/>
         </record>
         <record id="tax_vat_sup_513" model="account.tax.template">
-            <!-- IVA EN IMPORTACIONES DE SERVICIOS -->
-            <field name="name">Iva 12% (importación servicios)</field>
+            <!-- IVA en importaciones de servicios -->
+            <field name="name">IVA 12% (importación servicios)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
             <field name="sequence">10</field>
@@ -771,7 +771,7 @@
                 })]"/>
         </record>
         <record id="tax_vat_514_sup_06" model="account.tax.template">
-            <!-- IVA EN IMPORTACIONES DE BIENES (EXCLUYE ACTIVOS FIJOS) -->
+            <!-- IVA en importaciones de bienes (excluye activos fijos) -->
             <field name="name">IVA 12% (514, 06 Inventario Crédito IVA)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
@@ -808,7 +808,7 @@
                 })]"/>
         </record>
         <record id="tax_vat_514_sup_07" model="account.tax.template">
-            <!-- IVA EN IMPORTACIONES DE BIENES (EXCLUYE ACTIVOS FIJOS) -->
+            <!-- IVA en importaciones de bienes (excluye activos fijos) -->
             <field name="name">IVA 12% (514, 07 Inventario Costo IR)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
@@ -847,7 +847,7 @@
 
 
         <record id="tax_vat_515_sup_03" model="account.tax.template">
-            <!-- IVA EN IMPORTACIONES DE ACTIVOS FIJOS -->
+            <!-- IVA en importaciones de activos fijos -->
             <field name="name">IVA 12% (515, 03 Activos Crédito IVA)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
@@ -887,7 +887,7 @@
         <!--IVA 0%-->
 
         <record id="tax_vat_517_sup_02" model="account.tax.template">
-            <!-- IVA EN COMPRAS 0% (INCLUYE ACTIVOS FIJOS) -->
+            <!-- IVA en compras 0% (incluye activos fijos) -->
             <field name="name">IVA 0% (517, 02 Costo IR)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
@@ -923,7 +923,7 @@
         </record>
 
         <record id="tax_vat_517_sup_04" model="account.tax.template">
-            <!-- IVA EN COMPRAS 0% (INCLUYE ACTIVOS FIJOS) -->
+            <!-- IVA en compras 0% (incluye activos fijos) -->
             <field name="name">IVA 0% (517, 04 Activos Costo IR)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
@@ -959,7 +959,7 @@
         </record>
 
         <record id="tax_vat_517_sup_05" model="account.tax.template">
-            <!-- IVA EN COMPRAS 0% (INCLUYE ACTIVOS FIJOS) -->
+            <!-- IVA en compras 0% (incluye activos fijos) -->
             <field name="name">IVA 0% (517, 05 Liq. Viaje Gasto IR)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
@@ -995,7 +995,7 @@
         </record>
 
         <record id="tax_vat_517_sup_07" model="account.tax.template">
-            <!-- IVA EN COMPRAS 0% (INCLUYE ACTIVOS FIJOS) -->
+            <!-- IVA en compras 0% (incluye activos fijos) -->
             <field name="name">IVA 0% (517, 07 Inventario Costo IR)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
@@ -1031,7 +1031,7 @@
         </record>
 
         <record id="tax_vat_517_sup_15" model="account.tax.template">
-            <!-- IVA EN COMPRAS 0% (INCLUYE ACTIVOS FIJOS) -->
+            <!-- IVA en compras 0% (incluye activos fijos) -->
             <field name="name">IVA 0% (517, 15 Servicios Digitales)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
@@ -1069,7 +1069,7 @@
         <!--IVA 0% (No Objeto de IVA)-->
 
         <record id="tax_vat_541_sup_02" model="account.tax.template">
-            <!-- ADQUISICIONES NO OBJETO DE IVA -->
+            <!-- Adquisiciones no objeto de IVA -->
             <field name="name">No Objeto IVA 0% (541, 02 Costo IR)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
@@ -1141,7 +1141,7 @@
                 })]"/>
         </record>
         <record id="tax_vat_542_sup_02" model="account.tax.template">
-            <!-- ADQUISICIONES EXENTAS DEL PAGO DE IVA -->
+            <!-- Adquisiciones exentas del pago de IVA -->
             <field name="name">Exento IVA 0% (542, 02 Costo IR)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
@@ -1175,7 +1175,7 @@
                 })]"/>
         </record>
         <record id="tax_vat_545" model="account.tax.template">
-            <!-- IVA EN COMPRAS POR REEMBOLSO COMO INTERMEDIARIO -->
+            <!-- IVA en compras por reembolso como intermediario -->
             <field name="name">IVA 12% (Reembolso Intermediario)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
