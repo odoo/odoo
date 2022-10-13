@@ -233,6 +233,14 @@ export const fakeTitleService = {
     },
 };
 
+export const fakeColorSchemeService = {
+    start() {
+        return {
+            switchToColorScheme() {},
+        };
+    },
+};
+
 export function makeFakeNotificationService(mock) {
     return {
         start() {
@@ -306,6 +314,7 @@ export function makeFakeHTTPService(getResponse, postResponse) {
 }
 
 export const mocks = {
+    color_scheme: () => fakeColorSchemeService,
     company: () => fakeCompanyService,
     command: () => fakeCommandService,
     cookie: () => fakeCookieService,
