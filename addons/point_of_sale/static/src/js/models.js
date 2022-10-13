@@ -1932,7 +1932,7 @@ class Orderline extends PosModel {
         if (this.pos.config.iface_tax_included === 'total') {
             var product =  this.get_product();
             var taxes_ids = product.taxes_id;
-            var product_taxes = this.get_taxes_after_fp(taxes_ids);
+            var product_taxes = this.pos.get_taxes_after_fp(taxes_ids);
             return this.compute_all(product_taxes, lst_price, 1, this.pos.currency.rounding).total_included;
         }
         return lst_price;
