@@ -169,7 +169,12 @@ class RequestBatcherORM extends ORM {
             batch.scheduled = true;
             Promise.resolve().then(async () => {
                 delete this.batches[key];
-                const result = await callback(batch.ids);
+                let result;
+                try {
+                    result = await callback(batch.ids);
+                } catch (e) {
+                    return batch.deferred.reject(e);
+                }
                 batch.deferred.resolve(result);
             });
         }
