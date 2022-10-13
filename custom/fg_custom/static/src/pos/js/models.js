@@ -16,8 +16,6 @@ odoo.define("fg_custom.is_non_zero_vat", function (require) {
             result.is_program_reward = this.is_program_reward;
             result.program_id = this.program_id;
             result.coupon_id = this.coupon_id;
-//            console.log('------Orderline-----result---', result)
-//            console.log('------Orderline-----this---', this.is_program_reward, this.program_id, this.coupon_id)
             return result;
         },
      });

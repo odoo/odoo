@@ -63,8 +63,6 @@ odoo.define('fg_custom.FgPosReceipt', function (require) {
                     }
                 }
             });
-            console.log('----val--', val)
-            console.log('-=====-receipt----', receipt, this);
             receipt.program_reward_lines = val;
             return receipt;
         }
