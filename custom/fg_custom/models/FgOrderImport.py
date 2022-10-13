@@ -174,7 +174,6 @@ class FgImportOrders(models.TransientModel):
                     orderSource = orderLine[3]
                     sku = orderLine[10]
                     cust = orderLine[4]
-                    #print(orderSource+orderRef)
                     if sku != 'Payment':
                         price = float(orderLine[12])
                         quantity = float(orderLine[13])

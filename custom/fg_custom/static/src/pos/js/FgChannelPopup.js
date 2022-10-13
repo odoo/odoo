@@ -27,7 +27,6 @@ odoo.define('fg_custom.FgChannelPopup', function (require) {
         }
 
         getPayload() {
-            console.log('------getPayload-1111--', $("input[name='website_order_id']").val(), $("select[name='x_ext_source']").val(), this, this.state.x_ext_source, this.state.website_order_id)
             return {
                 x_ext_source: $("select[name='x_ext_source']").val(),
                 website_order_id: this.state.website_order_id

@@ -101,7 +101,7 @@ class FgZReport(models.AbstractModel):
                     changes_order_count += len(order)
                     changes_order_total += order.amount_return
 
-            for order in session_id.order_ids.filtered(lambda x: x.amount_total > 0):
+            for order in session_id.order_ids.filtered(lambda x: not x.is_refunded and x.amount_total > 0):
                 if order.payment_ids:
                     for pay in order.payment_ids:
                         if pay.payment_method_id.name in tender_history:
@@ -180,7 +180,6 @@ class FgZReport(models.AbstractModel):
                 'changes_order_count': int(changes_order_count),
                 'changes_order_total': changes_order_total,
                 }
-        # print('---------data--z--', data)
         return data
 
     @api.model
