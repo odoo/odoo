@@ -24,7 +24,7 @@ import { errorService } from "../../../src/core/errors/error_service";
 import { RPCError } from "@web/core/network/rpc_service";
 import { registerCleanup } from "../../helpers/cleanup";
 import { WarningDialog } from "@web/core/errors/error_dialogs";
-import { makeFakeUserService } from "@web/../tests/helpers/mock_services";
+import { makeFakeUserService, fakeCookieService } from "@web/../tests/helpers/mock_services";
 import * as cpHelpers from "@web/../tests/search/helpers";
 
 const { onMounted } = owl;
@@ -1171,6 +1171,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("restore previous view state when switching back", async function (assert) {
         assert.expect(5);
+        registry.category("services").add("cookie", fakeCookieService);
         serverData.actions[3].views.unshift([false, "graph"]);
         serverData.views["partner,false,graph"] = "<graph/>";
         const webClient = await createWebClient({ serverData });
@@ -1231,6 +1232,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("view switcher is properly highlighted in graph view", async function (assert) {
         assert.expect(4);
+        registry.category("services").add("cookie", fakeCookieService);
         serverData.actions[3].views.splice(1, 1, [false, "graph"]);
         serverData.views["partner,false,graph"] = "<graph/>";
         const webClient = await createWebClient({ serverData });
