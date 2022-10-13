@@ -15,7 +15,7 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
     oldChangeCombinationStock.apply(this, arguments);
     if (this.el.querySelector('.o_add_wishlist_dyn')) {
         const messageEl = this.el.querySelector('div.availability_messages');
-        if (!this.el.querySelector('#stock_wishlist_message')) {
+        if (messageEl && !this.el.querySelector('#stock_wishlist_message')) {
             messageEl.insertAdjacentHTML('beforeend',
                 QWeb.render('website_sale_stock_wishlist.product_availability', combination)
             );
