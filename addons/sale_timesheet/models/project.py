@@ -512,7 +512,6 @@ class ProjectTask(models.Model):
     pricing_type = fields.Selection(related="project_id.pricing_type")
     is_project_map_empty = fields.Boolean("Is Project map empty", compute='_compute_is_project_map_empty')
     has_multi_sol = fields.Boolean(compute='_compute_has_multi_sol', compute_sudo=True)
-    allow_billable = fields.Boolean(related="project_id.allow_billable")
     timesheet_product_id = fields.Many2one(related="project_id.timesheet_product_id")
     remaining_hours_so = fields.Float('Remaining Hours on SO', compute='_compute_remaining_hours_so', search='_search_remaining_hours_so', compute_sudo=True)
     remaining_hours_available = fields.Boolean(related="sale_line_id.remaining_hours_available")
@@ -520,7 +519,6 @@ class ProjectTask(models.Model):
     @property
     def SELF_READABLE_FIELDS(self):
         return super().SELF_READABLE_FIELDS | {
-            'allow_billable',
             'remaining_hours_available',
             'remaining_hours_so',
         }
@@ -555,19 +553,11 @@ class ProjectTask(models.Model):
         for task in self:
             task.analytic_account_active = task.analytic_account_active or task.so_analytic_account_id.active
 
-    @api.depends('allow_billable')
-    def _compute_sale_order_id(self):
-        billable_tasks = self.filtered('allow_billable')
-        super(ProjectTask, billable_tasks)._compute_sale_order_id()
-        (self - billable_tasks).sale_order_id = False
-
     @api.depends('commercial_partner_id', 'sale_line_id.order_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id', 'allow_billable')
     def _compute_sale_line(self):
-        billable_tasks = self.filtered('allow_billable')
-        (self - billable_tasks).update({'sale_line_id': False})
-        super(ProjectTask, billable_tasks)._compute_sale_line()
-        for task in billable_tasks:
-            if not task.sale_line_id:
+        super()._compute_sale_line()
+        for task in self:
+            if task.allow_billable and not task.sale_line_id:
                 task.sale_line_id = task._get_last_sol_of_customer()
 
     @api.depends('project_id.sale_line_employee_ids')

@@ -101,9 +101,6 @@
             <field name="model">project.task</field>
             <field name="inherit_id" ref="hr_timesheet.view_task_form2_inherited"/>
             <field name="arch" type="xml">
-                <xpath expr="//header" position="inside">
-                    <field name="allow_billable" invisible="1"/>
-                </xpath>
                 <xpath expr="//field[@name='child_ids']/tree//field[@name='remaining_hours']" position="after">
                     <field name="remaining_hours_so" widget="timesheet_uom" optional="hide" groups="base.group_user"/>
                 </xpath>
@@ -190,10 +187,6 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='sale_line_id'][2]" position="attributes">
                     <attribute name="context">{'create': False, 'edit': False, 'delete': False, 'with_price_unit': True, 'with_remaining_hours': True}</attribute>
-                    <!-- To do: move allow_billable field in sale_project and add attrs directly on field in master -->
-                    <attribute name="attrs">
-                        {'invisible': [('allow_billable', '=', False)]}
-                    </attribute>
                 </xpath>
             </field>
         </record>
