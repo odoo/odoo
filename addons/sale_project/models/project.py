@@ -483,17 +483,21 @@ class ProjectTask(models.Model):
              "Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually.")
     project_sale_order_id = fields.Many2one('sale.order', string="Project's sale order", related='project_id.sale_order_id')
     task_to_invoice = fields.Boolean("To invoice", compute='_compute_task_to_invoice', search='_search_task_to_invoice', groups='sales_team.group_sale_salesman_all_leads')
+    allow_billable = fields.Boolean(related="project_id.allow_billable")
 
     # Project sharing  fields
     display_sale_order_button = fields.Boolean(string='Display Sales Order', compute='_compute_display_sale_order_button')
 
     @property
     def SELF_READABLE_FIELDS(self):
-        return super().SELF_READABLE_FIELDS | {'sale_order_id', 'sale_line_id', 'display_sale_order_button'}
+        return super().SELF_READABLE_FIELDS | {'allow_billable', 'sale_order_id', 'sale_line_id', 'display_sale_order_button'}
 
-    @api.depends('sale_line_id', 'project_id', 'commercial_partner_id')
+    @api.depends('sale_line_id', 'project_id', 'commercial_partner_id', 'allow_billable')
     def _compute_sale_order_id(self):
         for task in self:
+            if not task.allow_billable:
+                task.sale_order_id = False
+                continue
             sale_order_id = task.sale_order_id or self.env["sale.order"]
             if task.sale_line_id:
                 sale_order_id = task.sale_line_id.sudo().order_id
@@ -505,9 +509,12 @@ class ProjectTask(models.Model):
                 task.partner_id = sale_order_id.partner_id
             task.sale_order_id = sale_order_id
 
-    @api.depends('commercial_partner_id', 'sale_line_id.order_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id', 'milestone_id.sale_line_id')
+    @api.depends('commercial_partner_id', 'sale_line_id.order_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id', 'milestone_id.sale_line_id', 'allow_billable')
     def _compute_sale_line(self):
         for task in self:
+            if not task.allow_billable:
+                task.sale_line_id = False
+                continue
             if not task.sale_line_id:
                 # if the display_project_id is set then it means the task is classic task or a subtask with another project than its parent.
                 task.sale_line_id = task.display_project_id.sale_line_id or task.parent_id.sale_line_id or task.project_id.sale_line_id or task.milestone_id.sale_line_id
