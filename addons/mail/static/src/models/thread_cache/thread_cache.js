@@ -173,7 +173,7 @@ function factory(dependencies) {
          * @returns {mail.message[]}
          */
         _computeOrderedFetchedMessages() {
-            return [['replace', this.fetchedMessages.sort((m1, m2) => m1.id < m2.id ? -1 : 1)]];
+            return [['replace', this.fetchedMessages.sort((m1, m2) => m1.date._d < m2.date._d ? -1 : 1)]];
         }
 
         /**
@@ -181,7 +181,7 @@ function factory(dependencies) {
          * @returns {mail.message[]}
          */
         _computeOrderedMessages() {
-            return [['replace', this.messages.sort((m1, m2) => m1.id < m2.id ? -1 : 1)]];
+            return [['replace', this.messages.sort((m1, m2) => m1.date._d < m2.date._d ? -1 : 1)]];
         }
 
         /**
