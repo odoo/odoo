@@ -426,17 +426,24 @@ Dialog.alert = function (owner, message, options) {
 
 // static method to open simple confirm dialog
 Dialog.confirm = function (owner, message, options) {
+    let clickProm;
     var buttons = [
         {
             text: _t("Ok"),
             classes: 'btn-primary',
             close: true,
-            click: options && options.confirm_callback,
+            click: options && options.confirm_callback && (() => {
+                clickProm = clickProm || options.confirm_callback() || Promise.resolve();
+                return clickProm;
+            }),
         },
         {
             text: _t("Cancel"),
             close: true,
-            click: options && options.cancel_callback
+            click: options && options.cancel_callback && (() => {
+                clickProm = clickProm || options.cancel_callback() || Promise.resolve();
+                return clickProm;
+            }),
         }
     ];
     return new Dialog(owner, _.extend({
