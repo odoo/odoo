@@ -103,6 +103,53 @@ QUnit.module('core', {}, function () {
         parent.destroy();
     });
 
+    QUnit.test("click twice on 'Ok' button of a confirm dialog", async function (assert) {
+        assert.expect(3);
+
+        var testPromise = testUtils.makeTestPromise();
+        var parent = await createEmptyParent();
+        var options = {
+            confirm_callback: () => {
+                assert.step("confirm");
+                return testPromise;
+            },
+        };
+        Dialog.confirm(parent, "", options);
+        await testUtils.nextTick();
+
+        assert.verifySteps([]);
+
+        await testUtils.dom.click($('.modal[role="dialog"] .btn-primary'));
+        await testUtils.dom.click($('.modal[role="dialog"] .btn-primary'));
+        assert.verifySteps(['confirm']);
+
+        parent.destroy();
+    });
+
+    QUnit.test("click on 'Cancel' and then 'Ok' in a confirm dialog", async function (assert) {
+        assert.expect(3);
+
+        var parent = await createEmptyParent();
+        var options = {
+            confirm_callback: () => {
+                throw new Error("should not be called");
+            },
+            cancel_callback: () => {
+                assert.step("cancel");
+            }
+        };
+        Dialog.confirm(parent, "", options);
+        await testUtils.nextTick();
+
+        assert.verifySteps([]);
+
+        testUtils.dom.click($('.modal[role="dialog"] footer button:not(.btn-primary)'));
+        testUtils.dom.click($('.modal[role="dialog"] footer .btn-primary'));
+        assert.verifySteps(['cancel']);
+
+        parent.destroy();
+    });
+
     QUnit.test("Closing alert dialog without using buttons calls confirm callback", async function (assert) {
         assert.expect(3);
 
