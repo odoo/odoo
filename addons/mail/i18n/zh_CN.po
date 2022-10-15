@@ -9,14 +9,15 @@
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # Martin Trigaux, 2022
 # 深圳 JM <3440895@qq.com>, 2022
+# 稀饭~~ <wangwhai@qq.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: 深圳 JM <3440895@qq.com>, 2022\n"
+"Last-Translator: 稀饭~~ <wangwhai@qq.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,13 +60,6 @@ msgstr "\"%s\" 需要\"%s\" 访问权限"
 #, python-format
 msgid "\"%s\" requires microphone access"
 msgstr "\"%s\"需要麦克风访问权限"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/models/chatter_topbar.js:0
-#, python-format
-msgid "%(attachmentCount)s files"
-msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -282,20 +276,6 @@ msgstr "迟到 0"
 #, python-format
 msgid "0 Today"
 msgstr "今天 0"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/models/chatter_topbar.js:0
-#, python-format
-msgid "1 file"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/models/chatter_topbar.js:0
-#, python-format
-msgid "2 files"
-msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
@@ -656,6 +636,7 @@ msgstr "启用域名"
 #. openerp-web
 #: code:addons/mail/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #: code:addons/mail/static/src/components/activity_menu_view/activity_menu_view.xml:0
+#: code:addons/mail/static/src/components/chatter_topbar/chatter_topbar.xml:0
 #: model:ir.actions.act_window,name:mail.mail_activity_action
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_ids
@@ -1087,8 +1068,6 @@ msgstr "添加附件"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/attachment_box/attachment_box.xml:0
-#: code:addons/mail/static/src/components/chatter_topbar/chatter_topbar.xml:0
-#: code:addons/mail/static/src/models/chatter_topbar.js:0
 #, python-format
 msgid "Attach files"
 msgstr ""
@@ -1878,6 +1857,13 @@ msgstr "包含此合作伙伴在此频道中发生的最后一个有趣事件的
 #: model_terms:ir.ui.view,arch_db:mail.view_message_search
 msgid "Content"
 msgstr "内容"
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_shortcode__substitution
+msgid ""
+"Content that will automatically replace the shortcut of your choosing. This "
+"content can still be adapted before sending your message."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__body
@@ -3103,7 +3089,7 @@ msgstr "仅关注者"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/follow_button/follow_button.xml:0
+#: code:addons/mail/static/src/models/follow_button_view.js:0
 #, python-format
 msgid "Following"
 msgstr "正在关注中"
@@ -4192,11 +4178,6 @@ msgstr ""
 #, python-format
 msgid "Link copied!"
 msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_mail_thread_cc__email_cc
-msgid "List of cc from incoming emails."
-msgstr "收到的邮件里的抄送列表。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite__partner_ids
@@ -6457,7 +6438,6 @@ msgstr "安排活动以帮助您完成工作。"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/chatter_topbar/chatter_topbar.xml:0
 #: code:addons/mail/static/src/xml/activity_view.xml:0
 #, python-format
 msgid "Schedule activity"
@@ -6813,6 +6793,14 @@ msgstr "短码"
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__source
 msgid "Shortcut"
 msgstr "快捷"
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_shortcode__source
+msgid ""
+"Shortcut that will automatically be substituted with longer content in your "
+"messages. Type ':' followed by the name of your shortcut (e.g. :hello) to "
+"use in your messages."
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -7317,11 +7305,6 @@ msgid "The email sent to"
 msgstr "EMail发到"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_shortcode__substitution
-msgid "The escaped html code replacing the shortcut"
-msgstr "html 转义码替换快捷方式"
-
-#. module: mail
 #: code:addons/mail/models/mail_composer_mixin.py:0
 #, python-format
 msgid "The field %s does not exist on the model %s"
@@ -7395,11 +7378,6 @@ msgstr ""
 #, python-format
 msgid "The server \"%s\" cannot be used because it is archived."
 msgstr "无法使用服务器“%s”，因为它已存档。"
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_mail_shortcode__source
-msgid "The shortcut which must be replaced in the Chat Messages"
-msgstr "在聊天消息中，必须替换掉的快捷方式"
 
 #. module: mail
 #. openerp-web
@@ -7809,7 +7787,7 @@ msgstr "打开扬声器"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/follow_button/follow_button.xml:0
+#: code:addons/mail/static/src/models/follow_button_view.js:0
 #, python-format
 msgid "Unfollow"
 msgstr "取消关注"
@@ -8213,7 +8191,7 @@ msgstr "反馈"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Write your message here..."
-msgstr ""
+msgstr "在这里写下您的留言..."
 
 #. module: mail
 #: code:addons/mail/models/mail_message.py:0

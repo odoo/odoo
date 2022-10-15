@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:25+0000\n"
+"POT-Creation-Date: 2022-10-10 10:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -1110,6 +1110,14 @@ msgid ""
 msgstr ""
 
 #. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__so_line
+msgid ""
+"Sales order item to which the time spent will be added in order to be "
+"invoiced to your customer. Remove the sales order item for the timesheet "
+"entry to be non-billable."
+msgstr ""
+
+#. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__sale_order_id
 msgid "Sales order to which the task is linked."
 msgstr "任務連結到的銷售訂單。"
@@ -1131,22 +1139,6 @@ msgstr "於銷售訂單中搜尋"
 #, python-format
 msgid "Search in Sales Order Item"
 msgstr "於銷售訂單明細中搜尋"
-
-#. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product__project_id
-#: model:ir.model.fields,help:sale_timesheet.field_product_template__project_id
-msgid ""
-"Select a billable project on which tasks can be created. This setting must "
-"be set for each company."
-msgstr "選擇可以在其上建立任務的可計費專案。 必須為每個公司設置此設置。"
-
-#. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product__project_template_id
-#: model:ir.model.fields,help:sale_timesheet.field_product_template__project_template_id
-msgid ""
-"Select a billable project to be the skeleton of the new created project when"
-" selling the current product. Its stages and tasks will be duplicated."
-msgstr "在銷售當前產品時，選擇一個可計費專案作為新增專案的框架。 它的階段和任務將重複。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__project_id
@@ -1320,18 +1312,6 @@ msgstr ""
 "這是一個<strong>報價單範本範例 </strong>。您應該\n"
 "           從<i>銷售</i>\n"
 "           應用自訂它以滿足自己的需求，使用選單：配置/ 報價單範本。"
-
-#. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_account_bank_statement_line__timesheet_encode_uom_id
-#: model:ir.model.fields,help:sale_timesheet.field_account_move__timesheet_encode_uom_id
-#: model:ir.model.fields,help:sale_timesheet.field_account_payment__timesheet_encode_uom_id
-#: model:ir.model.fields,help:sale_timesheet.field_sale_order__timesheet_encode_uom_id
-msgid ""
-"This will set the unit of measure used to encode timesheet. This will simply provide tools\n"
-"        and widgets to help the encoding. All reporting will still be expressed in hours (default value)."
-msgstr ""
-"這將設定用於工時表的度量單位。這只會提供工具\n"
-" 和小工具來幫助編碼。所有報告仍將以小時（預設值）表示。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_upsell_threshold

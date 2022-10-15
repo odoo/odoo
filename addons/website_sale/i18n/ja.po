@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:23+0000\n"
+"POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
@@ -110,6 +110,11 @@ msgstr "<b>コミュニケーション: </b>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_products_price
 msgid "<b>Price Range</b>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
+msgid "<b>Pricelist</b>"
 msgstr ""
 
 #. module: website_sale
@@ -508,13 +513,6 @@ msgid "A short description that will also appear on documents."
 msgstr ""
 
 #. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "AT A GLANCE"
-msgstr "パフォーマンス"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "Abandoned"
 msgstr "放置"
@@ -525,9 +523,7 @@ msgid "Abandoned Cart"
 msgstr "放置カート"
 
 #. module: website_sale
-#. openerp-web
 #: code:addons/website_sale/models/crm_team.py:0
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: model:ir.actions.act_window,name:website_sale.action_view_abandoned_tree
 #: model:ir.ui.menu,name:website_sale.menu_orders_abandoned_orders
 #, python-format
@@ -651,18 +647,13 @@ msgstr "1つ追加"
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_banner
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_borderless_2
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_horizontal_card
+#: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_horizontal_card_2
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart_options
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 #, python-format
 msgid "Add to Cart"
 msgstr "カートに追加"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_banner
-#: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_borderless_2
-msgid "Add to Cart <i class=\"fa fa-fw fa-shopping-cart\"/>"
-msgstr "カートに追加 <i class=\"fa fa-fw fa-shopping-cart\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
@@ -749,14 +740,6 @@ msgid "Attributes"
 msgstr "属性"
 
 #. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Average Order"
-msgstr "オーダ平均"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_avg
 msgid "Average Rating"
 msgstr ""
@@ -797,7 +780,6 @@ msgstr "基本単価"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.base_unit_action
-#: model:ir.ui.menu,name:website_sale.website_base_unit_menu
 msgid "Base Units"
 msgstr "基本単位"
 
@@ -815,13 +797,6 @@ msgstr ""
 #: model:product.pricelist,name:website_sale.list_benelux
 msgid "Benelux"
 msgstr "ベネルクス三国"
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Best Sellers"
-msgstr "ベストセラー"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__big
@@ -920,14 +895,6 @@ msgid "Cabinets"
 msgstr ""
 
 #. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Campaigns"
-msgstr "キャンペーン"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__can_image_1024_be_zoomed
 msgid "Can Image 1024 be zoomed"
 msgstr ""
@@ -941,13 +908,6 @@ msgstr "公開可能"
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "Can not resequence embedded image/video with a non compatible image."
-msgstr ""
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Capture order payments when the delivery is completed."
 msgstr ""
 
 #. module: website_sale
@@ -981,14 +941,6 @@ msgstr "カートリカバリEメール"
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__cart_recovery_email_sent
 msgid "Cart recovery email already sent"
 msgstr "カートリカバリEメール送信済"
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Carts"
-msgstr "カート"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1223,13 +1175,6 @@ msgid "Confirm Order"
 msgstr "オーダ確認"
 
 #. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Confirm orders when you get paid."
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "Confirmed"
 msgstr "確認済"
@@ -1258,14 +1203,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Content"
 msgstr "内容"
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Conversion"
-msgstr "コンバージョン"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_couches
@@ -1759,13 +1696,6 @@ msgid "Furnitures"
 msgstr ""
 
 #. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Generate an invoice from orders ready for invoicing."
-msgstr "請求の準備ができている注文から請求書を生成します。"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "Generate the invoice automatically when the online payment is confirmed"
@@ -2131,10 +2061,7 @@ msgid "Mandatory (no guest checkout)"
 msgstr ""
 
 #. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__medium
-#, python-format
 msgid "Medium"
 msgstr "媒体"
 
@@ -2435,13 +2362,9 @@ msgid "Order Total"
 msgstr "オーダ合計"
 
 #. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: model:ir.actions.act_window,name:website_sale.action_orders_ecommerce
 #: model:ir.ui.menu,name:website_sale.menu_orders
 #: model:ir.ui.menu,name:website_sale.menu_orders_orders
-#, python-format
 msgid "Orders"
 msgstr "オーダ"
 
@@ -2449,21 +2372,6 @@ msgstr "オーダ"
 #: model:ir.actions.act_window,name:website_sale.sale_order_action_to_invoice
 msgid "Orders To Invoice"
 msgstr "請求対象オーダ"
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Orders to Invoice"
-msgstr "請求対象オーダ"
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Orders/Day"
-msgstr "オーダ/日"
 
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.out_of_stock_ribbon
@@ -2519,13 +2427,6 @@ msgstr "支払トークン"
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_transactions
 msgid "Payment Transactions"
 msgstr "入金トランザクション"
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Payments to Capture"
-msgstr ""
 
 #. module: website_sale
 #: code:addons/website_sale/models/website_snippet_filter.py:0
@@ -2672,7 +2573,6 @@ msgstr ""
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #: model:ir.model,name:website_sale.model_product_template
 #: model:ir.model.fields,field_description:website_sale.field_website_track__product_id
@@ -2806,7 +2706,6 @@ msgid "Product Variant"
 msgstr "プロダクトバリアント"
 
 #. module: website_sale
-#: model:ir.ui.menu,name:website_sale.product_catalog_variants
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Product Variants"
 msgstr "プロダクトバリアント"
@@ -2936,20 +2835,12 @@ msgstr "数量:"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
 #, python-format
 msgid "Quantity"
 msgstr "数量"
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "REVENUE BY"
-msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3008,11 +2899,6 @@ msgstr "再注文"
 #: model:ir.model.fields,field_description:website_sale.field_website__enabled_portal_reorder_button
 msgid "Re-order From Portal"
 msgstr ""
-
-#. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_template__rating_last_feedback
-msgid "Reason of the rating"
-msgstr "評価の理由"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_sold_products_action
@@ -3140,13 +3026,9 @@ msgid "Sale Analysis"
 msgstr ""
 
 #. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: model:ir.actions.act_window,name:website_sale.sale_report_action_carts
 #: model_terms:ir.ui.view,arch_db:website_sale.digest_digest_view_form
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
-#, python-format
 msgid "Sales"
 msgstr "販売"
 
@@ -3171,30 +3053,6 @@ msgid "Sales Order Line"
 msgstr "販売オーダ明細"
 
 #. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Sales Since Last Month"
-msgstr ""
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Sales Since Last Week"
-msgstr "先週からの販売"
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Sales Since Last Year"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.model,name:website_sale.model_crm_team
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__salesteam_id
 #: model:ir.model.fields,field_description:website_sale.field_website__salesteam_id
@@ -3213,8 +3071,10 @@ msgstr "販売担当者"
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_banner
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_borderless_1
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_borderless_2
+#: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_card_group
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_centered
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_horizontal_card
+#: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_horizontal_card_2
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_mini_image
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_mini_name
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_mini_price
@@ -3270,13 +3130,6 @@ msgstr "カートリカバリEメールを送信"
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_view_form_cart_recovery
 msgid "Send a Recovery Email"
 msgstr "リカバリEメールを送信"
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Send a recovery email to visitors who haven't completed their order."
-msgstr "オーダを完了していないビジターにリカバリEメールを送信。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3440,14 +3293,6 @@ msgid "Small"
 msgstr "小"
 
 #. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Sold"
-msgstr "販売額"
-
-#. module: website_sale
 #: model:product.ribbon,html:website_sale.sold_out_ribbon
 msgid "Sold out"
 msgstr ""
@@ -3462,13 +3307,6 @@ msgstr "埋められていない必須項目があります。"
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Sort by"
 msgstr "ソート順"
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Sources"
-msgstr "ソース"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -3672,24 +3510,10 @@ msgid "There is no confirmed order from the website"
 msgstr "ウェブサイトからの確認済み注文はありません"
 
 #. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "There is no recent confirmed order."
-msgstr "最近確定された注文はありません。"
-
-#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_unpaid_quotation_tree
 msgid "There is no unpaid order from the website yet"
 msgstr "ウェブサイトからの未払いのオーダはありません"
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "There isn't any UTM tag detected in orders"
-msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -3831,12 +3655,9 @@ msgid "Unpaid"
 msgstr "無給"
 
 #. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: model:ir.actions.act_window,name:website_sale.action_unpaid_orders_ecommerce
 #: model:ir.actions.act_window,name:website_sale.action_view_unpaid_quotation_tree
 #: model:ir.ui.menu,name:website_sale.menu_orders_unpaid_orders
-#, python-format
 msgid "Unpaid Orders"
 msgstr "未払のオーダ"
 
@@ -3844,13 +3665,6 @@ msgstr "未払のオーダ"
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item
 msgid "Unpublished"
 msgstr "未公開"
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Untaxed Total Sold"
-msgstr "税抜合計販売額"
 
 #. module: website_sale
 #. openerp-web
@@ -3894,6 +3708,11 @@ msgstr "カートを見る ("
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_banner
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_centered
 msgid "View Product"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_view_detail
+msgid "View product"
 msgstr ""
 
 #. module: website_sale

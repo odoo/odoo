@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
 "Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
@@ -358,6 +358,13 @@ msgstr ""
 "ce type de congés."
 
 #. module: hr_timesheet
+#: model:ir.model.fields,help:hr_timesheet.field_account_analytic_line__employee_id
+msgid ""
+"Define an 'hourly cost' on the employee to track the cost of their time."
+msgstr ""
+"Définissez un 'coût horaire' sur l'employé pour suivre le coût de son temps."
+
+#. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__department_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__department_id
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
@@ -485,19 +492,6 @@ msgstr "Heures enregistrées sur les sous-tâches :"
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__id
 msgid "ID"
 msgstr "ID"
-
-#. module: hr_timesheet
-#: model:ir.model.fields,help:hr_timesheet.field_res_config_settings__reminder_manager_allow
-msgid "If checked, send an email to all manager"
-msgstr "Si cochée, envoyer un email à tous les responsables"
-
-#. module: hr_timesheet
-#: model:ir.model.fields,help:hr_timesheet.field_res_config_settings__reminder_user_allow
-msgid ""
-"If checked, send an email to all users who have not recorded their timesheet"
-msgstr ""
-"Si cochée, envoyer un email à tous les utilisateurs qui n’ont pas enregistré"
-" leur feuille de temps"
 
 #. module: hr_timesheet
 #: model:project.task.type,legend_normal:hr_timesheet.internal_project_default_stage
@@ -729,7 +723,7 @@ msgstr "Unité de mesure d'article"
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__progress
 #, python-format
 msgid "Progress"
-msgstr "En cours"
+msgstr "Avancement"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
@@ -1019,17 +1013,6 @@ msgstr ""
 "Si vous utilisez les feuilles de temps liées aux projets, n'oubliez pas de paramétrer la bonne unité dans la configuration des employés."
 
 #. module: hr_timesheet
-#: model:ir.model.fields,help:hr_timesheet.field_project_project__timesheet_encode_uom_id
-#: model:ir.model.fields,help:hr_timesheet.field_res_company__timesheet_encode_uom_id
-#: model:ir.model.fields,help:hr_timesheet.field_res_config_settings__timesheet_encode_uom_id
-msgid ""
-"This will set the unit of measure used to encode timesheet. This will simply provide tools\n"
-"        and widgets to help the encoding. All reporting will still be expressed in hours (default value)."
-msgstr ""
-"Cela définira l'unité de mesure utilisée pour encoder les feuilles de temps. Cela fournira simplement des outils\n"
-"        et des widgets pour faciliter l'encodage. Tous les rapports seront toujours exprimés en heures (valeur par défaut)."
-
-#. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "This year"
@@ -1059,11 +1042,6 @@ msgid "Time spent on this task and its sub-tasks (and their own sub-tasks)."
 msgstr ""
 "Temps passé sur cette tâche et ses sous-tâches (et leurs propres sous-"
 "tâches)."
-
-#. module: hr_timesheet
-#: model:ir.model.fields,help:hr_timesheet.field_project_task__effective_hours
-msgid "Time spent on this task, excluding its sub-tasks."
-msgstr "Temps passé sur cette tâche, excluant ses sous-tâches."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form

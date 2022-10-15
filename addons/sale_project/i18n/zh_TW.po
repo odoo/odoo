@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:03+0000\n"
+"POT-Creation-Date: 2022-10-10 10:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -52,6 +52,13 @@ msgstr ""
 " - 費用分析：數量是來自過帳費用的數量總和\n"
 " - 工時表：數量是與此銷售明細相關聯的任務記錄的時數\n"
 " - 庫存變動：數量來自已確認的庫存移動\n"
+
+#. module: sale_project
+#. openerp-web
+#: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
+#, python-format
+msgid "All items have been loaded"
+msgstr ""
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__allow_billable
@@ -549,22 +556,6 @@ msgstr "於銷售訂單中搜尋"
 #, python-format
 msgid "Search in Sales Order Item"
 msgstr "於銷售訂單明細中搜尋"
-
-#. module: sale_project
-#: model:ir.model.fields,help:sale_project.field_product_product__project_id
-#: model:ir.model.fields,help:sale_project.field_product_template__project_id
-msgid ""
-"Select a billable project on which tasks can be created. This setting must "
-"be set for each company."
-msgstr "選擇可以在其上建立任務的可計費專案。 必須為每個公司設置此設置。"
-
-#. module: sale_project
-#: model:ir.model.fields,help:sale_project.field_product_product__project_template_id
-#: model:ir.model.fields,help:sale_project.field_product_template__project_template_id
-msgid ""
-"Select a billable project to be the skeleton of the new created project when"
-" selling the current product. Its stages and tasks will be duplicated."
-msgstr "在銷售當前產品時，選擇一個可計費專案作為新增專案的框架。 它的階段和任務將重複。"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id

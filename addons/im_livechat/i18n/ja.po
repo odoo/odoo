@@ -3,16 +3,16 @@
 # 	* im_livechat
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -141,17 +141,6 @@ msgid "<i class=\"fa fa-user\" role=\"img\" aria-label=\"User\" title=\"User\"/>
 msgstr ""
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
-msgid ""
-"<span class=\"text-muted\">Define rules for your live support channel. You "
-"can apply an action for the given URL, and per country.<br/>To identify the "
-"country, GeoIP must be installed on your server, otherwise, the countries of"
-" the rule will not be taken into account.</span>"
-msgstr ""
-"<span class=\"text-muted\">ライブサポートチャネルのルールを定義します。指定された "
-"URL、および国ごとにアクションを適用することができます。<br/>国を特定するためには、サーバーにGeoIPがインストールされている必要があり、そうでない場合は、ルールの国が考慮されません。</span>"
-
-#. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "<span style=\"font-size: 10px;\">Livechat Conversation</span><br/>"
 msgstr ""
@@ -243,6 +232,11 @@ msgid "Anonymous Name"
 msgstr "匿名"
 
 #. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__name
+msgid "Answer"
+msgstr "回答"
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__answer_ids
 msgid "Answers"
 msgstr "回答"
@@ -260,7 +254,7 @@ msgstr ""
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/models/livechat_button_view.js:0
+#: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
 #, python-format
 msgid "Ask something ..."
 msgstr ""
@@ -414,7 +408,7 @@ msgstr ""
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/models/livechat_button_view.js:0
+#: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
 #, python-format
 msgid "Chat with one of our collaborators"
 msgstr ""
@@ -475,10 +469,7 @@ msgid "Chatbots"
 msgstr ""
 
 #. module: im_livechat
-#. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat_chatbot_step_form_view_dialog.js:0
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
-#, python-format
 msgid "Close"
 msgstr "閉じる"
 
@@ -566,13 +557,6 @@ msgstr ""
 #: model:ir.model.fields,help:im_livechat.field_mail_channel__country_id
 msgid "Country of the visitor of the channel"
 msgstr ""
-
-#. module: im_livechat
-#. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat_chatbot_form_controller.js:0
-#, python-format
-msgid "Create "
-msgstr "作成"
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.chatbot_script_action
@@ -672,6 +656,15 @@ msgid "Define a new website live chat channel"
 msgstr ""
 
 #. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"Define rules for your live support channel. You can apply an action for the "
+"given URL, and per country.<br/>To identify the country, GeoIP must be "
+"installed on your server, otherwise, the countries of the rule will not be "
+"taken into account."
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__auto_popup_timer
 msgid ""
 "Delay (in seconds) to automatically open the conversation window. Note: the "
@@ -690,13 +683,6 @@ msgstr ""
 #: model:ir.model,name:im_livechat.model_digest_digest
 msgid "Digest"
 msgstr "ダイジェスト"
-
-#. module: im_livechat
-#. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat_chatbot_step_form_view_dialog.js:0
-#, python-format
-msgid "Discard"
-msgstr "破棄"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_mail_channel
@@ -847,7 +833,7 @@ msgstr ""
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/models/livechat_button_view.js:0
+#: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
 #, python-format
 msgid "How may I help you?"
 msgstr "どのようなご用件でしょうか？"
@@ -1150,7 +1136,6 @@ msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__name
-#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__name
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_search
 msgid "Name"
 msgstr "名称"
@@ -1164,8 +1149,8 @@ msgstr "新規メッセージ"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/models/livechat_button_view.js:0
-#: code:addons/im_livechat/static/src/models/livechat_button_view.js:0
+#: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
+#: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
 #, python-format
 msgid "No available collaborator, please try again later."
 msgstr ""
@@ -1246,13 +1231,6 @@ msgstr ""
 #, python-format
 msgid "Oops! Something went wrong."
 msgstr ""
-
-#. module: im_livechat
-#. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat_chatbot_form_controller.js:0
-#, python-format
-msgid "Open: "
-msgstr "オープン:"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__partner_id
@@ -1425,11 +1403,6 @@ msgid "Ratings for livechat channel"
 msgstr ""
 
 #. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_mail_channel__rating_last_feedback
-msgid "Reason of the rating"
-msgstr "評価の理由"
-
-#. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.xml:0
 #, python-format
@@ -1458,7 +1431,10 @@ msgid "Report"
 msgstr "レポート"
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+#. openerp-web
+#: code:addons/im_livechat/static/src/js/colors_reset_button/colors_reset_button.xml:0
+#: code:addons/im_livechat/static/src/js/colors_reset_button/colors_reset_button.xml:0
+#, python-format
 msgid "Reset to default colors"
 msgstr ""
 
@@ -1495,27 +1471,13 @@ msgid "Satisfaction Rate"
 msgstr ""
 
 #. module: im_livechat
-#. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat_chatbot_step_form_view_dialog.js:0
-#, python-format
-msgid "Save & Close"
-msgstr "保存して閉じる"
-
-#. module: im_livechat
-#. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat_chatbot_step_form_view_dialog.js:0
-#, python-format
-msgid "Save & New"
-msgstr "保存して新規"
-
-#. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Save your Channel to get your configuration widget."
 msgstr "チャネルを保存すると、設定ウィジェットが表示されます。"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/models/public_livechat_window.js:0
+#: code:addons/im_livechat/static/src/public_models/public_livechat_window.js:0
 #, python-format
 msgid "Say something"
 msgstr "何か言う"
@@ -1560,7 +1522,7 @@ msgstr ""
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/models/public_livechat_window.js:0
+#: code:addons/im_livechat/static/src/public_models/public_livechat_window.js:0
 #, python-format
 msgid "Select an option above"
 msgstr ""
@@ -1591,8 +1553,8 @@ msgstr "セッション統計"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/models/livechat_button_view.js:0
-#: code:addons/im_livechat/static/src/models/livechat_button_view.js:0
+#: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
+#: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
 #, python-format
 msgid "Session expired... Please refresh and try again."
 msgstr ""
@@ -1833,7 +1795,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/im_livechat/controllers/main.py:0
 #: code:addons/im_livechat/models/im_livechat_channel.py:0
-#: code:addons/im_livechat/static/src/models/livechat_button_view.js:0
+#: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
 #, python-format
 msgid "Visitor"
 msgstr "訪問者"

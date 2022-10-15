@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:25+0000\n"
+"POT-Creation-Date: 2022-10-10 10:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
@@ -1132,6 +1132,14 @@ msgid ""
 msgstr ""
 
 #. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__so_line
+msgid ""
+"Sales order item to which the time spent will be added in order to be "
+"invoiced to your customer. Remove the sales order item for the timesheet "
+"entry to be non-billable."
+msgstr ""
+
+#. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__sale_order_id
 msgid "Sales order to which the task is linked."
 msgstr "Ordine di vendita al quale è collegato il lavoro."
@@ -1153,27 +1161,6 @@ msgstr "Ricerca in ordine di vendita"
 #, python-format
 msgid "Search in Sales Order Item"
 msgstr "Ricerca articolo dell'ordine di vendita"
-
-#. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product__project_id
-#: model:ir.model.fields,help:sale_timesheet.field_product_template__project_id
-msgid ""
-"Select a billable project on which tasks can be created. This setting must "
-"be set for each company."
-msgstr ""
-"Selezionare un progetto fatturabile nel quale sia possibile creare lavori. "
-"L'opzione deve essere impostata per ciascuna azienda."
-
-#. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product__project_template_id
-#: model:ir.model.fields,help:sale_timesheet.field_product_template__project_template_id
-msgid ""
-"Select a billable project to be the skeleton of the new created project when"
-" selling the current product. Its stages and tasks will be duplicated."
-msgstr ""
-"Selezionare un progetto fatturabile da usare come schema del nuovo progetto "
-"creato quando viene venduto il prodotto corrente. Le fasi e i lavori vengono"
-" duplicati."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__project_id
@@ -1358,18 +1345,6 @@ msgid ""
 msgstr ""
 "Questo è un <strong>modello di preventivo</strong>. Dovresti personalizzarlo secondo le tue necessità utilizzando l'applicazione <i>Vendite</i>\n"
 "                                tramite il menu: Configurazione / Modello di preventivo"
-
-#. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_account_bank_statement_line__timesheet_encode_uom_id
-#: model:ir.model.fields,help:sale_timesheet.field_account_move__timesheet_encode_uom_id
-#: model:ir.model.fields,help:sale_timesheet.field_account_payment__timesheet_encode_uom_id
-#: model:ir.model.fields,help:sale_timesheet.field_sale_order__timesheet_encode_uom_id
-msgid ""
-"This will set the unit of measure used to encode timesheet. This will simply provide tools\n"
-"        and widgets to help the encoding. All reporting will still be expressed in hours (default value)."
-msgstr ""
-"Verrà impostata l'unità di misura usata nei fogli ore, con la disponibilità di strumenti e oggetti\n"
-"        utili alla gestione. Le rendicontazioni resteranno tutte espresse in ore (valore predefinito)."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_upsell_threshold

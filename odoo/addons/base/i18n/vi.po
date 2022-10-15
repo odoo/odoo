@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:41+0000\n"
+"POT-Creation-Date: 2022-10-10 13:34+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
@@ -1646,14 +1646,6 @@ msgstr ""
 "\n"
 "    Đồng nhất cầu hình thiết bị IoT để sử dụng \n"
 "    các bước đo kiểm, chụp hình, ...\n"
-
-#. module: base
-#: model:ir.module.module,description:base.module_website_slides_enterprise
-msgid ""
-"\n"
-"    Contains advanced features for eLeaning such as new views\n"
-"    "
-msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp_workorder_worksheet
@@ -3801,17 +3793,6 @@ msgstr ""
 "    "
 
 #. module: base
-#: model:ir.module.module,description:base.module_im_livechat_enterprise
-msgid ""
-"\n"
-"Contains advanced features for Live Chat such as new views\n"
-"    "
-msgstr ""
-"\n"
-"Contains advanced features for Live Chat such as new views\n"
-"    "
-
-#. module: base
 #: model:ir.module.module,description:base.module_purchase_enterprise
 msgid ""
 "\n"
@@ -4404,9 +4385,9 @@ msgid ""
 "respectively. UBL Bis 3 is only available for companies which country is present in the `EAS list \n"
 "<https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_.\n"
 "\n"
-"Note also that you need to activate PDF A in order to be able to submit a Factur-X pdf on Chorus Pro: \n"
-"go to Settings > Technical (debug mode) > System Parameters > select/create one with Key: edi.use_pdfa, Value: true.\n"
-"With this setting, Chorus Pro will automatically detect the \"PDF/A-3 (Factur-X)\" format.\n"
+"Note also that in order for Chorus Pro to automatically detect the \"PDF/A-3 (Factur-X)\" format, you need to activate \n"
+"the \"Factur-X PDF/A-3\" option on the journal. This option will also validate the xml against the Factur-X and Chorus\n"
+"Pro rules and show the errors.\n"
 "    "
 msgstr ""
 
@@ -6278,25 +6259,6 @@ msgid ""
 "\n"
 "Odoo Arabic localization for most Saudi Arabia.\n"
 msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_web_dashboard
-msgid ""
-"\n"
-"Odoo Dashboard View.\n"
-"========================\n"
-"\n"
-"This module defines the Dashboard view, a new type of reporting view. This view\n"
-"can embed graph and/or pivot views, and displays aggregate values.\n"
-"        "
-msgstr ""
-"\n"
-"Xem bảng điều khiển Odoo.\n"
-"========================\n"
-"\n"
-"Mô-đun này xác định chế độ xem Bảng điều khiển, một loại chế độ xem báo cáo mới. Quan điểm này\n"
-"có thể nhúng biểu đồ và / hoặc chế độ xem trục và hiển thị giá trị tổng hợp.\n"
-"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_enterprise
@@ -9170,7 +9132,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_fleet
-#: model:ir.module.module,description:base.module_fleet_dashboard
 msgid ""
 "\n"
 "Vehicle, leasing, insurances, cost\n"
@@ -10126,7 +10087,9 @@ msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
-msgid "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
+msgid ""
+"<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>\n"
+"                                        Learn more"
 msgstr ""
 
 #. module: base
@@ -10848,6 +10811,7 @@ msgstr "API Key: description input wizard"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__api_key_ids
+#: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "API Keys"
 msgstr "Khóa API"
 
@@ -10855,6 +10819,13 @@ msgstr "Khóa API"
 #: model:ir.actions.act_window,name:base.action_apikeys_admin
 msgid "API Keys Listing"
 msgstr "API Keys Listing"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
+msgid ""
+"API Keys are used to connect to Odoo from external tools without the need "
+"for a password or Two-factor Authentication."
+msgstr ""
 
 #. module: base
 #: code:addons/fields.py:0
@@ -11294,6 +11265,7 @@ msgstr "Kích hoạt và dịch"
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__active
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__active
 #: model:ir.model.fields,field_description:base.field_res_bank__active
+#: model:ir.model.fields,field_description:base.field_res_company__active
 #: model:ir.model.fields,field_description:base.field_res_currency__active
 #: model:ir.model.fields,field_description:base.field_res_lang__active
 #: model:ir.model.fields,field_description:base.field_res_partner__active
@@ -11806,11 +11778,6 @@ msgstr "Thuộc tính Nâng cao"
 #: model:ir.module.module,summary:base.module_crm_enterprise
 msgid "Advanced features for CRM"
 msgstr "Các tính năng nâng cao cho CRM"
-
-#. module: base
-#: model:ir.module.module,summary:base.module_im_livechat_enterprise
-msgid "Advanced features for Live Chat"
-msgstr "Các tính năng nâng cao cho Live Chat"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_enterprise
@@ -15574,11 +15541,6 @@ msgid "Customizations"
 msgstr "Tuỳ chỉnh"
 
 #. module: base
-#: model:ir.module.module,summary:base.module_purchase_stock_enterprise
-msgid "Customized Dashboard for Purchase Stock"
-msgstr "Bảng thông tin  tùy chỉnh cho Mua hàng tồn kho"
-
-#. module: base
 #: model:ir.actions.act_window,name:base.action_ui_view_custom
 #: model:ir.ui.menu,name:base.menu_action_ui_view_custom
 #: model_terms:ir.ui.view,arch_db:base.view_view_custom_form
@@ -15661,11 +15623,6 @@ msgstr "DLE 26 110 x 220 mm"
 #, python-format
 msgid "Dash"
 msgstr "Gạch ngang"
-
-#. module: base
-#: model:ir.module.module,summary:base.module_fleet_dashboard
-msgid "Dashboard for fleet"
-msgstr "Bảng thông tin đội phương tiện"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_board
@@ -16134,11 +16091,6 @@ msgid ""
 msgstr ""
 "Xác định vị trí nên đặt tên khách hàng / công ty, tức là sau hoặc trước địa "
 "chỉ."
-
-#. module: base
-#: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
-msgid "Developer API Keys"
-msgstr "Developer API Keys"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_digest_enterprise
@@ -18227,11 +18179,6 @@ msgid "Fleet"
 msgstr "Đội phương tiện"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_fleet_dashboard
-msgid "Fleet Dashboard"
-msgstr "Bảng thông tin đội phương tiện"
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_fleet
 msgid "Fleet History"
 msgstr "Lịch sử phương tiện"
@@ -19399,11 +19346,6 @@ msgid "Home Menu"
 msgstr "Menu chính"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_hr_homeworking
-msgid "Homeworking"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.hn
 msgid "Honduras"
 msgstr "Honduras"
@@ -20319,13 +20261,13 @@ msgstr ""
 "tiếp."
 
 #. module: base
-#: code:addons/models.py:0
+#: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Insufficient fields for Calendar View!"
 msgstr "Insufficient fields for Calendar View!"
 
 #. module: base
-#: code:addons/models.py:0
+#: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid ""
 "Insufficient fields to generate a Calendar View for %s, missing a date_stop "
@@ -21646,11 +21588,6 @@ msgid "Live Event Tracks"
 msgstr "Live Event Tracks"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_im_livechat_enterprise
-msgid "Live chat enterprise"
-msgstr "Live chat enterprise"
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_language_install
 msgid "Load a Translation"
 msgstr "Nạp ngôn ngữ"
@@ -21965,12 +21902,6 @@ msgstr ""
 msgid ""
 "Manage Contact Titles as well as their abbreviations (e.g. \"Mr.\", "
 "\"Mrs.\", etc)."
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_hr_homeworking
-#: model:ir.module.module,summary:base.module_hr_homeworking
-msgid "Manage Homeworking policy"
 msgstr ""
 
 #. module: base
@@ -23366,7 +23297,7 @@ msgid "No Country Found!"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:0
+#: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "No default view of type '%s' could be found !"
 msgstr "Không tìm thấy giao diện (view) mặc định cho kiểu '%s'!"
@@ -26862,11 +26793,6 @@ msgstr "Kho yêu cầu mua hàng"
 #: model:ir.module.module,shortdesc:base.module_purchase_stock
 msgid "Purchase Stock"
 msgstr "Mua hàng về kho"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_purchase_stock_enterprise
-msgid "Purchase Stock Enterprise"
-msgstr "Purchase Stock Enterprise"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_mrp
@@ -33881,11 +33807,6 @@ msgid "eLearning"
 msgstr "eLearning"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_website_slides_enterprise
-msgid "eLearning enterprise"
-msgstr ""
-
-#. module: base
 #: model:ir.module.category,name:base.module_category_services_expenses
 msgid "expenses"
 msgstr "các chi phí"
@@ -34313,11 +34234,6 @@ msgstr "tiêu đề"
 #, python-format
 msgid "true"
 msgstr "đúng"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_web_dashboard
-msgid "web_dashboard"
-msgstr "web_dashboard"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_delivery_mondialrelay

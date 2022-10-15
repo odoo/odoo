@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:41+0000\n"
+"POT-Creation-Date: 2022-10-10 13:34+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
 "Last-Translator: JH CHOI <hwangtog@gmail.com>, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
@@ -1622,14 +1622,6 @@ msgstr ""
 "\n"
 "    측정, 사진 촬영 등의 특정 단계에서 사용할 \n"
 "    IoT 장치를 구성합니다.\n"
-
-#. module: base
-#: model:ir.module.module,description:base.module_website_slides_enterprise
-msgid ""
-"\n"
-"    Contains advanced features for eLeaning such as new views\n"
-"    "
-msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp_workorder_worksheet
@@ -3833,17 +3825,6 @@ msgstr ""
 "    "
 
 #. module: base
-#: model:ir.module.module,description:base.module_im_livechat_enterprise
-msgid ""
-"\n"
-"Contains advanced features for Live Chat such as new views\n"
-"    "
-msgstr ""
-"\n"
-"새로운 보기와 같은 실시간 채팅에 대한 고급 기능 포함\n"
-"    "
-
-#. module: base
 #: model:ir.module.module,description:base.module_purchase_enterprise
 msgid ""
 "\n"
@@ -4472,9 +4453,9 @@ msgid ""
 "respectively. UBL Bis 3 is only available for companies which country is present in the `EAS list \n"
 "<https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_.\n"
 "\n"
-"Note also that you need to activate PDF A in order to be able to submit a Factur-X pdf on Chorus Pro: \n"
-"go to Settings > Technical (debug mode) > System Parameters > select/create one with Key: edi.use_pdfa, Value: true.\n"
-"With this setting, Chorus Pro will automatically detect the \"PDF/A-3 (Factur-X)\" format.\n"
+"Note also that in order for Chorus Pro to automatically detect the \"PDF/A-3 (Factur-X)\" format, you need to activate \n"
+"the \"Factur-X PDF/A-3\" option on the journal. This option will also validate the xml against the Factur-X and Chorus\n"
+"Pro rules and show the errors.\n"
 "    "
 msgstr ""
 
@@ -6351,25 +6332,6 @@ msgid ""
 "\n"
 "Odoo Arabic localization for most Saudi Arabia.\n"
 msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_web_dashboard
-msgid ""
-"\n"
-"Odoo Dashboard View.\n"
-"========================\n"
-"\n"
-"This module defines the Dashboard view, a new type of reporting view. This view\n"
-"can embed graph and/or pivot views, and displays aggregate values.\n"
-"        "
-msgstr ""
-"\n"
-"Odoo 현황판 보기.\n"
-"========================\n"
-"\n"
-"이 모듈은 새로운 유형의 보고서 보기인 현황판 보기를 정의합니다. \n"
-"이 보기는 그래프 또는 피벗 보기를 포함하거나 집계값을 표시할 수 있습니다.\n"
-"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_enterprise
@@ -9260,7 +9222,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_fleet
-#: model:ir.module.module,description:base.module_fleet_dashboard
 msgid ""
 "\n"
 "Vehicle, leasing, insurances, cost\n"
@@ -10201,7 +10162,9 @@ msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
-msgid "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
+msgid ""
+"<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>\n"
+"                                        Learn more"
 msgstr ""
 
 #. module: base
@@ -10910,6 +10873,7 @@ msgstr "API 키 : 설명 입력 마법사입니다."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__api_key_ids
+#: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "API Keys"
 msgstr "API 키"
 
@@ -10917,6 +10881,13 @@ msgstr "API 키"
 #: model:ir.actions.act_window,name:base.action_apikeys_admin
 msgid "API Keys Listing"
 msgstr "API 키 나열"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
+msgid ""
+"API Keys are used to connect to Odoo from external tools without the need "
+"for a password or Two-factor Authentication."
+msgstr ""
 
 #. module: base
 #: code:addons/fields.py:0
@@ -11354,6 +11325,7 @@ msgstr "활성화 및 번역"
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__active
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__active
 #: model:ir.model.fields,field_description:base.field_res_bank__active
+#: model:ir.model.fields,field_description:base.field_res_company__active
 #: model:ir.model.fields,field_description:base.field_res_currency__active
 #: model:ir.model.fields,field_description:base.field_res_lang__active
 #: model:ir.model.fields,field_description:base.field_res_partner__active
@@ -11867,11 +11839,6 @@ msgstr "고급 속성"
 #: model:ir.module.module,summary:base.module_crm_enterprise
 msgid "Advanced features for CRM"
 msgstr "고객 관계 관리-CRM를 위한 고급 기능"
-
-#. module: base
-#: model:ir.module.module,summary:base.module_im_livechat_enterprise
-msgid "Advanced features for Live Chat"
-msgstr "실시간 채팅을 위한 고급 기능"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_enterprise
@@ -15589,11 +15556,6 @@ msgid "Customizations"
 msgstr "맞춤화"
 
 #. module: base
-#: model:ir.module.module,summary:base.module_purchase_stock_enterprise
-msgid "Customized Dashboard for Purchase Stock"
-msgstr "재고 구매를 위한 맞춤형 현황표"
-
-#. module: base
 #: model:ir.actions.act_window,name:base.action_ui_view_custom
 #: model:ir.ui.menu,name:base.menu_action_ui_view_custom
 #: model_terms:ir.ui.view,arch_db:base.view_view_custom_form
@@ -15674,11 +15636,6 @@ msgstr "DLE 26 110 x 220 mm"
 #, python-format
 msgid "Dash"
 msgstr "현황표"
-
-#. module: base
-#: model:ir.module.module,summary:base.module_fleet_dashboard
-msgid "Dashboard for fleet"
-msgstr "차량 현황표"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_board
@@ -16137,11 +16094,6 @@ msgid ""
 "Determines where the customer/company name should be placed, i.e. after or "
 "before the address."
 msgstr "고객/회사 이름을 배치할 위치를 결정합니다. 예: 주소 전후"
-
-#. module: base
-#: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
-msgid "Developer API Keys"
-msgstr "개발자용 API 키"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_digest_enterprise
@@ -18195,11 +18147,6 @@ msgid "Fleet"
 msgstr "차량"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_fleet_dashboard
-msgid "Fleet Dashboard"
-msgstr "차량 현황판"
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_fleet
 msgid "Fleet History"
 msgstr "차량 이력"
@@ -19345,11 +19292,6 @@ msgid "Home Menu"
 msgstr "홈 메뉴"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_hr_homeworking
-msgid "Homeworking"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.hn
 msgid "Honduras"
 msgstr "온두라스"
@@ -20241,13 +20183,13 @@ msgid "Instant Messaging Bus allow you to send messages to users, in live."
 msgstr "인스턴트 메시징 버스를 사용하면 실시간으로 사용자에게 메시지를 보낼 수 있습니다."
 
 #. module: base
-#: code:addons/models.py:0
+#: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Insufficient fields for Calendar View!"
 msgstr "일정관리 보기에 대한 필드가 부족합니다!"
 
 #. module: base
-#: code:addons/models.py:0
+#: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid ""
 "Insufficient fields to generate a Calendar View for %s, missing a date_stop "
@@ -21557,11 +21499,6 @@ msgid "Live Event Tracks"
 msgstr "실시간 행사 과정"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_im_livechat_enterprise
-msgid "Live chat enterprise"
-msgstr "실시간 채팅 유료버전"
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_language_install
 msgid "Load a Translation"
 msgstr "번역 불러오기"
@@ -21875,12 +21812,6 @@ msgstr ""
 msgid ""
 "Manage Contact Titles as well as their abbreviations (e.g. \"Mr.\", "
 "\"Mrs.\", etc)."
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_hr_homeworking
-#: model:ir.module.module,summary:base.module_hr_homeworking
-msgid "Manage Homeworking policy"
 msgstr ""
 
 #. module: base
@@ -23311,7 +23242,7 @@ msgid "No Country Found!"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:0
+#: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "No default view of type '%s' could be found !"
 msgstr "'%s' 유형의 기본 보기를 찾을 수 없습니다!"
@@ -26777,11 +26708,6 @@ msgstr "재고 구매 요청"
 #: model:ir.module.module,shortdesc:base.module_purchase_stock
 msgid "Purchase Stock"
 msgstr "구매 재고"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_purchase_stock_enterprise
-msgid "Purchase Stock Enterprise"
-msgstr "재고 구매 유료버전"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_mrp
@@ -33711,11 +33637,6 @@ msgid "eLearning"
 msgstr "온라인 학습 관리"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_website_slides_enterprise
-msgid "eLearning enterprise"
-msgstr ""
-
-#. module: base
 #: model:ir.module.category,name:base.module_category_services_expenses
 msgid "expenses"
 msgstr ""
@@ -34143,11 +34064,6 @@ msgstr "제목"
 #, python-format
 msgid "true"
 msgstr "O"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_web_dashboard
-msgid "web_dashboard"
-msgstr "web_dashboard"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_delivery_mondialrelay

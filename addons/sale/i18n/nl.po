@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:25+0000\n"
+"POT-Creation-Date: 2022-10-10 10:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -334,7 +334,7 @@ msgstr ""
 "<t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
 "Hallo,\n"
 "<br/><br/>\n"
-"Uw\n"
+"Je\n"
 "<t t-if=\"ctx.get('proforma')\">\n"
 "Pro forma factuur voor <t t-out=\"doc_name or ''\">citaat</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
 "<t t-if=\"object.origin\">\n"
@@ -350,7 +350,7 @@ msgstr ""
 "bedrag in <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 10.00</span> is klaar voor beoordeling.\n"
 "</t>\n"
 "<br/><br/>\n"
-"Aarzel niet om ons te contacteren indien u vragen heeft.\n"
+"Aarzel niet om ons te contacteren indien je vragen heeft.\n"
 "<t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "<br/><br/>\n"
 "<t t-out=\"object.user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
@@ -387,7 +387,7 @@ msgstr ""
 "        <t t-set=\"doc_name\" t-value=\"object.type_name\"/>\n"
 "        Beste <t t-out=\"object.partner_id.name of ''\">gebruiker</t>,\n"
 "        <br/><br/>\n"
-"        Houd er rekening mee dat uw\n"
+"        Houd er rekening mee dat je\n"
 "        <t t-out=\"doc_name of ''\">citaat</t> <strong t-out=\"object.name of ''\">S00052</strong>\n"
 "        <t t-if=\"object.oorsprong\">\n"
 "            (met referentie: <t t-out=\"object.origin of ''\">S00052</t> )\n"
@@ -395,7 +395,7 @@ msgstr ""
 "        is geannuleerd. Daarom hoeven er voor deze bestelling geen kosten meer in rekening te worden gebracht.\n"
 "        Als een terugbetaling nodig is, zal dit zo goed mogelijk worden uitgevoerd.\n"
 "        <br/><br/>\n"
-"        Aarzel niet om ons te contacteren indien u vragen heeft.\n"
+"        Aarzel niet om ons te contacteren indien je vragen heeft.\n"
 "        <br/>\n"
 "    </p>\n"
 "</div>\n"
@@ -935,6 +935,11 @@ msgstr "Kostenplaats van kosten"
 #: model:ir.model,name:sale.model_account_analytic_line
 msgid "Analytic Line"
 msgstr "Kostenplaatsregel"
+
+#. module: sale
+#: model:ir.model,name:sale.model_account_analytic_applicability
+msgid "Analytic Plan's Applicabilities"
+msgstr "Toepassingen van kostenplaatsplan"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_line_ids
@@ -1604,12 +1609,17 @@ msgstr "Soort weergave"
 #: code:addons/sale/static/src/js/product_discount_field.js:0
 #, python-format
 msgid "Do you want to apply this value to all lines ?"
-msgstr "Wilt u deze waarde op alle regels toepassen?"
+msgstr "Wilt je deze waarde op alle regels toepassen?"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Documentation"
 msgstr "Documentatie"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_account_analytic_applicability__business_domain
+msgid "Domain"
+msgstr "Domein"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_order_confirmation_state__done
@@ -2122,7 +2132,7 @@ msgid ""
 "Invoices will be created in draft so that you can review\n"
 "                    them before validation."
 msgstr ""
-"Facturen worden in concept gemaakt, zodat u ze kunt bekijken\n"
+"Facturen worden in concept gemaakt, zodat je ze kunt bekijken\n"
 "                    ze vóór validatie."
 
 #. module: sale
@@ -2409,6 +2419,12 @@ msgstr "Medium"
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__paypal_seller_account
 msgid "Merchant Account ID"
 msgstr "Handelaarsaccount ID"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
+#: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
+msgid "Message"
+msgstr "Bericht"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error
@@ -3338,6 +3354,7 @@ msgstr "SMS fout bij versturen"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__sale_order_ids
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__order_id
+#: model:ir.model.fields.selection,name:sale.selection__account_analytic_applicability__business_domain__sale_order
 msgid "Sale Order"
 msgstr "Verkooporder"
 
@@ -3523,6 +3540,14 @@ msgid "Sales Warnings"
 msgstr "Verkoopwaarschuwingen"
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_account_analytic_line__so_line
+msgid ""
+"Sales order item to which the time spent will be added in order to be "
+"invoiced to your customer. Remove the sales order item for the timesheet "
+"entry to be non-billable."
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
 msgid "Sales price"
 msgstr "Verkoopprijs"
@@ -3686,7 +3711,7 @@ msgstr ""
 #: model:mail.template,description:sale.mail_template_sale_cancellation
 msgid "Sent automatically to customers when you cancel an order"
 msgstr ""
-"Wordt automatisch naar klanten verzonden wanneer u een bestelling annuleert"
+"Wordt automatisch naar klanten verzonden wanneer je een bestelling annuleert"
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_confirmation
@@ -4019,7 +4044,7 @@ msgid ""
 "The delivery date is sooner than the expected date. You may be unable to "
 "honor the delivery date."
 msgstr ""
-"De leverdatum is eerder dan de verwachte datum. Het kan zijn dat u de "
+"De leverdatum is eerder dan de verwachte datum. Het kan zijn dat je de "
 "leveringsdatum niet kunt respecteren."
 
 #. module: sale
@@ -4048,7 +4073,7 @@ msgid ""
 msgstr ""
 "De factuur wordt automatisch gegenereerd en is beschikbaar in het klantenportaal wanneer de transactie is bevestigd door de betalingsprovider.\n"
 "De factuur wordt gemarkeerd als betaald en de betaling wordt geregistreerd in het betalingsjournaal dat is gedefinieerd in de configuratie van de betalingsprovider.\n"
-"Deze modus wordt geadviseerd als u de eindfactuur opgeeft bij de bestelling en niet na de levering."
+"Deze modus wordt geadviseerd als je de eindfactuur opgeeft bij de bestelling en niet na de levering."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4368,6 +4393,12 @@ msgid "Type Name"
 msgstr "Type naam"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
+#: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
+msgid "Type a message..."
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "Type van activiteit uitzondering op record."
@@ -4544,6 +4575,8 @@ msgstr "Volume"
 #: code:addons/sale/models/sale_order_line.py:0
 #: model:ir.model.fields.selection,name:sale.selection__product_template__sale_line_warn__warning
 #: model:ir.model.fields.selection,name:sale.selection__res_partner__sale_warn__warning
+#: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
+#: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 #, python-format
 msgid "Warning"
 msgstr "Waarschuwing"

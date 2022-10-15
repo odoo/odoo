@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
 "Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
@@ -347,6 +347,12 @@ msgid "Default project value for timesheet generated from time off type."
 msgstr ""
 
 #. module: hr_timesheet
+#: model:ir.model.fields,help:hr_timesheet.field_account_analytic_line__employee_id
+msgid ""
+"Define an 'hourly cost' on the employee to track the cost of their time."
+msgstr ""
+
+#. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__department_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__department_id
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
@@ -474,17 +480,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__id
 msgid "ID"
 msgstr "ID"
-
-#. module: hr_timesheet
-#: model:ir.model.fields,help:hr_timesheet.field_res_config_settings__reminder_manager_allow
-msgid "If checked, send an email to all manager"
-msgstr "チェックされている場合は、すべてのマネージャーにメールを送信します"
-
-#. module: hr_timesheet
-#: model:ir.model.fields,help:hr_timesheet.field_res_config_settings__reminder_user_allow
-msgid ""
-"If checked, send an email to all users who have not recorded their timesheet"
-msgstr "チェックした場合、タイムシートを記録していないすべてのユーザーにメールを送信します"
 
 #. module: hr_timesheet
 #: model:project.task.type,legend_normal:hr_timesheet.internal_project_default_stage
@@ -990,16 +985,6 @@ msgstr ""
 "プロジェクトにリンクされたタイムシートを使用する場合は、従業員に適切な計量単位を設定することを忘れないでください。"
 
 #. module: hr_timesheet
-#: model:ir.model.fields,help:hr_timesheet.field_project_project__timesheet_encode_uom_id
-#: model:ir.model.fields,help:hr_timesheet.field_res_company__timesheet_encode_uom_id
-#: model:ir.model.fields,help:hr_timesheet.field_res_config_settings__timesheet_encode_uom_id
-msgid ""
-"This will set the unit of measure used to encode timesheet. This will simply provide tools\n"
-"        and widgets to help the encoding. All reporting will still be expressed in hours (default value)."
-msgstr ""
-"ここでタイムシート入力の単位を指定します。入力を補佐するツールやウィジェットでこの単位が使われます。ここでの指定にかかわらず、レポートでの表示は時間(デフォルト値)単位となります。"
-
-#. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "This year"
@@ -1024,11 +1009,6 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__total_hours_spent
 msgid "Time spent on this task and its sub-tasks (and their own sub-tasks)."
-msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.model.fields,help:hr_timesheet.field_project_task__effective_hours
-msgid "Time spent on this task, excluding its sub-tasks."
 msgstr ""
 
 #. module: hr_timesheet

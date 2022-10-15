@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:23+0000\n"
+"POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
@@ -58,7 +58,7 @@ msgstr "Número de colaboradores"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
 msgid "# Ratings"
-msgstr "Número de valoraciones"
+msgstr "Número de calificaciones"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner__task_count
@@ -103,7 +103,7 @@ msgstr "Objetivos de %(name)s"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "%(name)s's Rating"
-msgstr "Valoración de %(name)s"
+msgstr "Calificación de %(name)s"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -548,8 +548,8 @@ msgid ""
 "Customer Ratings</b> are disabled on the following project(s) : <br/>"
 msgstr ""
 "<i class=\"fa fa-warning\" title=\"Cliente deshabilitado en los "
-"proyectos\"/><b> Las valoraciones de los clientes</b> están deshabilitadas "
-"para los siguientes proyectos: <br/>"
+"proyectos\"/><b> Las calificaciones de los clientes</b> están deshabilitadas"
+" para los siguientes proyectos: <br/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -596,11 +596,6 @@ msgid "<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"/
 msgstr "<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"/>"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_form2
-msgid "<span class=\"o_form_label\"> Recurrent </span>"
-msgstr "<span class=\"o_form_label\"> Recurrente </span>"
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid ""
 "<span class=\"o_stat_text\">\n"
@@ -619,7 +614,7 @@ msgstr "<span class=\"o_stat_text\">Bloqueo</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Last Rating</span>"
-msgstr "<span class=\"o_stat_text\">Última valoración</span>"
+msgstr "<span class=\"o_stat_text\">Última calificación</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -928,7 +923,7 @@ msgstr "Horas asignadas"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allow_rating
 msgid "Allow Customer Ratings"
-msgstr "Permitir las valoraciones de clientes"
+msgstr "Permitir las calificaciones de clientes"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__allow_subtasks
@@ -1005,7 +1000,6 @@ msgstr "Abril"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_form.js:0
 #: code:addons/project/static/src/views/project_task_form/project_task_form_controller.js:0
 #: code:addons/project/static/src/views/project_task_list/project_task_list_controller.js:0
 #, python-format
@@ -1198,30 +1192,30 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__rating_avg
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_avg
 msgid "Average Rating"
-msgstr "Valoración promedio"
+msgstr "Calificación promedio"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_avg_percentage
 msgid "Average Rating (%)"
-msgstr "Valoración promedio (%)"
+msgstr "Calificación promedio (%)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Dissatisfied"
-msgstr "Valoración promedio: Inconforme"
+msgstr "Calificación promedio: Inconforme"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Okay"
-msgstr "Valoración promedio: Bien"
+msgstr "Calificación promedio: Bien"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Satisfied"
-msgstr "Valoración promedio: Satisfecho"
+msgstr "Calificación promedio: Satisfactorio"
 
 #. module: project
 #. openerp-web
@@ -1477,9 +1471,9 @@ msgid ""
 "Rating when changing stage: an email will be automatically sent when the task reaches the stage on which the rating email template is set.\n"
 "Periodic rating: an email will be automatically sent at regular intervals as long as the task remains in the stage in which the rating email template is set."
 msgstr ""
-"Recopile la retroalimentación de sus clientes mediante las solicitudes de valoración cuando una tarea pase a una etapa determinada. Para ello, defina una plantilla de correo electrónico de valoración en las etapas correspondientes.\n"
-"Valoración al cambiar de etapa: se enviará automáticamente un correo electrónico cuando la tarea alcance la etapa en la que se haya establecido la plantilla de correo electrónico de valoración.\n"
-"Valoración periódica: se enviará automáticamente un correo electrónico cada cierto tiempo mientras la tarea permanezca en la fase en la que está establecida la plantilla de correo electrónico de valoración."
+"Recopile la retroalimentación de sus clientes mediante las solicitudes de calificación cuando una tarea pase a una etapa determinada. Para ello, defina una plantilla de correo electrónico de calificación en las etapas correspondientes.\n"
+"Calificación al cambiar de etapa: se enviará automáticamente un correo electrónico cuando la tarea alcance la etapa en la que se haya establecido la plantilla de correo electrónico de calificación.\n"
+"Calificación periódica: se enviará automáticamente un correo electrónico cada cierto tiempo mientras la tarea permanezca en la fase en la que está establecida la plantilla de correo electrónico de calificación."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_tags__color
@@ -1544,8 +1538,6 @@ msgid "Confirm"
 msgstr "Confirmar"
 
 #. module: project
-#. openerp-web
-#: code:addons/project/static/src/js/project_form.js:0
 #: code:addons/project/wizard/project_task_type_delete.py:0
 #, python-format
 msgid "Confirmation"
@@ -1575,7 +1567,6 @@ msgstr "Contacto"
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/components/project_stop_recurrence_confirmation_dialog/project_stop_recurrence_confirmation_dialog.xml:0
-#: code:addons/project/static/src/js/project_form.js:0
 #, python-format
 msgid "Continue Recurrence"
 msgstr "Continuar con la secuencia"
@@ -1769,12 +1760,12 @@ msgstr "URL del portal del cliente"
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_rating
 #: model:ir.ui.menu,name:project.rating_rating_menu_project
 msgid "Customer Ratings"
-msgstr "Valoración de clientes"
+msgstr "Calificaciones de clientes"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status
 msgid "Customer Ratings Status"
-msgstr "Estado de las valoraciones de los clientes"
+msgstr "Estado de las calificaciones de los clientes"
 
 #. module: project
 #. openerp-web
@@ -2076,17 +2067,14 @@ msgstr "Marketing digital"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__disabled_rating_warning
 msgid "Disabled Rating Warning"
-msgstr "Advertencia de valoración desactivada"
+msgstr "Advertencia de calificación desactivada"
 
 #. module: project
-#. openerp-web
-#: code:addons/project/static/src/js/project_form.js:0
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_footer
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_unarchive_wizard
-#, python-format
 msgid "Discard"
 msgstr "Descartar"
 
@@ -2641,9 +2629,9 @@ msgid ""
 "Alternatively, it will be sent at a regular interval as long as the task remains in this stage, depending on the configuration of your project. \n"
 "To use this feature make sure that the 'Customer Ratings' option is enabled on your project."
 msgstr ""
-"Si esta opción está activada, se enviará automáticamente una solicitud de valoración por correo electrónico al cliente cuando la tarea llegue a esta fase.\n"
+"Si esta opción está activada, se enviará automáticamente una solicitud de calificación por correo electrónico al cliente cuando la tarea llegue a esta fase.\n"
 "Otra opción es que se envíe de manera periódica durante el tiempo que la tarea permanezca en esta fase, según la configuración de su proyecto.\n"
-"Para utilizar esta función, asegúrese de que la opción \"Valoraciones de los clientes\" está activada en su proyecto."
+"Para utilizar esta función, asegúrese de que la opción \"Calificaciones de los clientes\" está activada en su proyecto."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
@@ -2899,7 +2887,6 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_form.js:0
 #: code:addons/project/static/src/services/project_task_recurrence.js:0
 #, python-format
 msgid "It seems that this task is part of a recurrence."
@@ -2907,7 +2894,6 @@ msgstr "Parece que esta tarea forma parte de una secuencia."
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_form.js:0
 #: code:addons/project/static/src/services/project_task_recurrence.js:0
 #, python-format
 msgid ""
@@ -3147,11 +3133,6 @@ msgid "Link"
 msgstr "Enlace"
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_update__email_cc
-msgid "List of cc from incoming emails."
-msgstr "Lista de cc en correos electrónicos entrantes."
-
-#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
@@ -3242,7 +3223,7 @@ msgid ""
 "Measure your customer satisfaction by sending rating requests when your "
 "tasks reach a certain stage."
 msgstr ""
-"Evalúe la satisfacción de sus clientes enviando solicitudes de valoración "
+"Evalúe la satisfacción de sus clientes enviando solicitudes de calificación "
 "cuando sus tareas alcancen una determinada fase."
 
 #. module: project
@@ -3563,12 +3544,12 @@ msgstr "Sin objetivo"
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "No Rating"
-msgstr "Sin valoración"
+msgstr "Sin calificación"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__rating_last_text__none
 msgid "No Rating yet"
-msgstr "Todavía no hay valoración"
+msgstr "Todavía no hay calificación"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3590,7 +3571,7 @@ msgstr "No se encontraron colaboradores"
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_task
 msgid "No customer ratings yet"
-msgstr "Todavía no hay valoraciones de los clientes"
+msgstr "Todavía no hay calificaciones de los clientes"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_project_task_burndown_chart_report
@@ -3907,12 +3888,12 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
 msgid "Percentage of happy ratings"
-msgstr "Porcentaje de valoraciones positivas"
+msgstr "Porcentaje de calificaciones positivas"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__periodic
 msgid "Periodic rating"
-msgstr "Valoración periódica"
+msgstr "Calificación periódica"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_type_ids
@@ -4146,7 +4127,7 @@ msgstr "Nombre del proyecto"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_active
 msgid "Project Rating Status"
-msgstr "Estado de la valoración del proyecto"
+msgstr "Estado de la calificación del proyecto"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__project_id
@@ -4245,12 +4226,12 @@ msgstr "Proyecto: Solicitud de confirmación"
 #: model:ir.cron,cron_name:project.ir_cron_rating_project
 #: model:ir.cron,name:project.ir_cron_rating_project
 msgid "Project: Send rating"
-msgstr "Proyecto: Enviar valoración"
+msgstr "Proyecto: Enviar calificación"
 
 #. module: project
 #: model:mail.template,name:project.rating_project_request_email_template
 msgid "Project: Task Rating Request"
-msgstr "Proyecto: Solicitud de valoración de la tarea"
+msgstr "Proyecto: Solicitud de calificación de la tarea"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_project_all
@@ -4324,63 +4305,63 @@ msgstr "Trimestralmente"
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #: model_terms:ir.ui.view,arch_db:project.view_task_tree2
 msgid "Rating"
-msgstr "Valoración"
+msgstr "Calificación"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
 msgid "Rating (/5)"
-msgstr "Valoración (/5)"
+msgstr "Calificación (/5)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_avg_text
 msgid "Rating Avg Text"
-msgstr "Texto de valoración promedio"
+msgstr "Texto de calificación promedio"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_template_id
 msgid "Rating Email Template"
-msgstr "Plantilla del correo de valoración"
+msgstr "Plantilla del correo de calificación"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status_period
 msgid "Rating Frequency"
-msgstr "Frecuencia de valoración"
+msgstr "Frecuencia de calificación"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr "Retroalimentación de la última valoración "
+msgstr "Retroalimentación de la última calificación"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_image
 msgid "Rating Last Image"
-msgstr "Imagen de la última valoración"
+msgstr "Calificación de la última imagen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_last_text
 msgid "Rating Last Text"
-msgstr "Texto de la última valoración"
+msgstr "Texto de la última calificación"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_value
 msgid "Rating Last Value"
-msgstr "Último valor de valoración"
+msgstr "Último valor de calificación"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_request_deadline
 msgid "Rating Request Deadline"
-msgstr "Fecha límite de solicitud de valoración"
+msgstr "Fecha límite de solicitud de calificación"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_percentage_satisfaction
 #: model:ir.model.fields,field_description:project.field_project_task__rating_percentage_satisfaction
 msgid "Rating Satisfaction"
-msgstr "Valoración de satisfacción"
+msgstr "Calificación de satisfacción"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_text
 msgid "Rating Text"
-msgstr "Texto de la valoración"
+msgstr "Texto de calificación"
 
 #. module: project
 #. openerp-web
@@ -4389,24 +4370,24 @@ msgstr "Texto de la valoración"
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_last_value
 #, python-format
 msgid "Rating Value (/5)"
-msgstr "Valor de valoración (/5)"
+msgstr "Valor de calificación (/ 5)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_count
 msgid "Rating count"
-msgstr "Número de valoración "
+msgstr "Número de calificaciones"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__stage
 msgid "Rating when changing stage"
-msgstr "Valoración al cambiar de estado"
+msgstr "Calificación al cambiar de estado"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_task
 #: model:ir.actions.act_window,name:project.rating_rating_action_view_project_rating
 #: model:ir.model.fields,field_description:project.field_project_project__rating_ids
 msgid "Ratings"
-msgstr "Valoraciones"
+msgstr "Calificaciones"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__is_reached
@@ -4471,11 +4452,6 @@ msgstr "Listo para la siguiente etapa"
 #: model:project.task.type,legend_done:project.project_stage_3
 msgid "Ready to reopen"
 msgstr "Listo para reabrir"
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_task__rating_last_feedback
-msgid "Reason of the rating"
-msgstr "Motivo de la valoración"
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
@@ -4853,7 +4829,7 @@ msgstr "Establecer estado"
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Set a Rating Email Template on Stages"
 msgstr ""
-"Establecer una plantilla de correo electrónico para la valoración de las "
+"Establecer una plantilla de correo electrónico para la calificación de las "
 "etapas"
 
 #. module: project
@@ -4872,7 +4848,7 @@ msgid ""
 "customers. Enable the \"customer ratings\" feature on the project"
 msgstr ""
 "Establezca esta plantilla en una etapa de proyecto para solicitar "
-"retroalimentación a sus clientes. Habilite la función \"valoración de "
+"retroalimentación a sus clientes. Habilite la función \"calificación de "
 "clientes\" en el proyecto"
 
 #. module: project
@@ -5076,7 +5052,6 @@ msgstr ""
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/components/project_stop_recurrence_confirmation_dialog/project_stop_recurrence_confirmation_dialog.xml:0
-#: code:addons/project/static/src/js/project_form.js:0
 #, python-format
 msgid "Stop Recurrence"
 msgstr "Detener la secuencia"
@@ -5231,7 +5206,7 @@ msgstr "Propiedades de la tarea"
 #: model:mail.message.subtype,name:project.mt_project_task_rating
 #: model:mail.message.subtype,name:project.mt_task_rating
 msgid "Task Rating"
-msgstr "Valoración de tarea"
+msgstr "Calificación de tarea"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_ready
@@ -5359,13 +5334,9 @@ msgid "Tasks Due Today"
 msgstr "Tareas por hacer hoy"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Tasks Management"
-msgstr "Gestión de tareas"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid "Tasks Managment"
 msgstr "Gestión de tareas"
 
 #. module: project
@@ -5467,17 +5438,6 @@ msgstr ""
 "finalización."
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_project__stage_id
-msgid ""
-"The step, or stage, that your project is in. You can add, remove, and move stages around to adapt the pipeline to your own needs.\n"
-"Via the stage configuration you can set up email templates and automate the sending of emails when a project moves into the stage.\n"
-"Projects in a folded stage are considered as closed."
-msgstr ""
-"El paso o etapa, en la que se encuentra su proyecto. Puede añadir, eliminar y mover las etapas para adaptar el proceso a sus necesidades.\n"
-"Se pueden establecer plantillas de correo electrónico en la configuración de la etapa y de esta manera automatizar el envío de correos electrónicos cuando un proyecto pasa a una etapa.\n"
-"Los proyectos en fase de plegado se consideran cerrados."
-
-#. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid ""
@@ -5509,7 +5469,7 @@ msgstr "No hay proyectos."
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_view_project_rating
 msgid "There are no ratings for this project at the moment"
-msgstr "Este proyecto no cuenta con valoraciones en este momento."
+msgstr "Este proyecto no cuenta con calificaciones en este momento."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
@@ -5597,13 +5557,9 @@ msgid "Thursday"
 msgstr "Jueves"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Time Management"
-msgstr "Gestión del tiempo"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid "Time Managment"
 msgstr "Gestión del tiempo"
 
 #. module: project
@@ -5841,7 +5797,7 @@ msgstr "Usar objetivos"
 #. module: project
 #: model:res.groups,name:project.group_project_rating
 msgid "Use Rating on Project"
-msgstr "Use valoración en el proyecto"
+msgstr "Usar calificación en el proyecto"
 
 #. module: project
 #: model:res.groups,name:project.group_project_recurring_tasks

@@ -3,18 +3,20 @@
 # 	* base_vat
 # 
 # Translators:
-# Ediz Duman <neps1192@gmail.com>, 2019
-# Murat Kaplan <muratk@projetgrup.com>, 2019
-# Umur Akın <umura@projetgrup.com>, 2019
-# Buket Şeker <buket_skr@hotmail.com>, 2019
+# Ediz Duman <neps1192@gmail.com>, 2022
+# abc Def <hdogan1974@gmail.com>, 2022
+# Levent Karakaş <levent@mektup.at>, 2022
+# Murat Kaplan <muratk@projetgrup.com>, 2022
+# Umur Akın <umura@projetgrup.com>, 2022
+# Tugay Hatıl <tugayh@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Buket Şeker <buket_skr@hotmail.com>, 2019\n"
+"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,11 +36,6 @@ msgstr ""
 "groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: base_vat
-#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
-msgid "<span class=\"o_vat_label\">VAT</span>"
-msgstr ""
-
-#. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
 msgid "Companies"
 msgstr "Şirketler"
@@ -46,12 +43,17 @@ msgstr "Şirketler"
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfigürasyon Ayarları"
+msgstr "Yapılandırma Ayarları"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Contact"
 msgstr "Kontak"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_account_fiscal_position
+msgid "Fiscal Position"
+msgstr "Mali Koşul"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
@@ -63,31 +65,51 @@ msgstr ""
 "tarafından doğrulanmamışsa, bir bağlantı kaydedemezsiniz."
 
 #. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:188
+#: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid ""
-"The VAT number [%s] for partner [%s] does not seem to be valid. \n"
-"Note: the expected format is %s"
+"The VAT number [%(wrong_vat)s] does not seem to be valid. \n"
+"Note: the expected format is %(expected_format)s"
 msgstr ""
-"Vergi Numarası [%s] iş ortağı [%s] için geçerli görünmüyor. \n"
-"Not: Beklenen biçim %s"
 
 #. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:187
+#: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid ""
-"The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
-"check or did not respect the expected format %s."
+"The VAT number [%(wrong_vat)s] either failed the VIES VAT validation check "
+"or did not respect the expected format %(expected_format)s."
 msgstr ""
-"Vergi numarası [%s] iş ortağı [%s] için VIES Vergi No kontrolünü geçemedi "
-"yada umulan %s biçimine uymadı."
 
 #. module: base_vat
-#: model_terms:ir.ui.view,arch_db:base_vat.company_form_vat
-#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
-#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_short_form
-msgid "VAT"
-msgstr "Vergi No"
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid ""
+"The VAT number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
+"Note: the expected format is %(expected_format)s"
+msgstr ""
+"Vergi numarası geçerli görünmüyor. [%(wrong_vat)s]  %(record_label)s  \n"
+"Beklenen biçim %(expected_format)s şeklindedir."
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid ""
+"The VAT number [%(wrong_vat)s] for %(record_label)s either failed the VIES "
+"VAT validation check or did not respect the expected format "
+"%(expected_format)s."
+msgstr ""
+"Vergi numarası doğrulamada başarısız oldu. [%(wrong_vat)s]  %(record_label)s"
+" Beklenen biçim: %(expected_format)s."
+
+#. module: base_vat
+#: code:addons/base_vat/models/account_fiscal_position.py:0
+#, python-format
+msgid ""
+"The country detected for this foreign VAT number does not match the one set "
+"on this fiscal position."
+msgstr ""
+"Bu yabancı vergi numarası için tespit edilen ülke, bu mali pozisyonda "
+"ayarlanan ülke ile eşleşmiyor."
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
@@ -99,3 +121,15 @@ msgstr "Vergi No Doğrulama"
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid "Verify VAT numbers using the European VIES service"
 msgstr "Avrupa VIES servisini kullanarak Vergi No Doğrulama"
+
+#. module: base_vat
+#: code:addons/base_vat/models/account_fiscal_position.py:0
+#, python-format
+msgid "fiscal position [%s]"
+msgstr "mali koşul [%s]"
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "partner [%s]"
+msgstr "kontak [%s]"

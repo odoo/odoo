@@ -3,23 +3,25 @@
 # 	* sale_product_configurator
 # 
 # Translators:
-# Ediz Duman <neps1192@gmail.com>, 2019
-# Martin Trigaux, 2019
-# Levent Karakaş <levent@mektup.at>, 2019
-# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2019
-# Mehmet Demirel <mdemirell@gmail.com>, 2019
-# Ramiz Deniz Öner <deniz@denizoner.com>, 2019
-# Umur Akın <umura@projetgrup.com>, 2019
-# Ugur Yilmaz <ugurlu2001@hotmail.com>, 2019
-# Murat Kaplan <muratk@projetgrup.com>, 2019
+# Mehmet Demirel <mdemirell@gmail.com>, 2022
+# Ugur Yilmaz <ugurlu2001@hotmail.com>, 2022
+# Martin Trigaux, 2022
+# abc Def <hdogan1974@gmail.com>, 2022
+# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2022
+# Murat Kaplan <muratk@projetgrup.com>, 2022
+# Ediz Duman <neps1192@gmail.com>, 2022
+# Umur Akın <umura@projetgrup.com>, 2022
+# Murat Durmuş <muratd@projetgrup.com>, 2022
+# Tugay Hatıl <tugayh@projetgrup.com>, 2022
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Murat Kaplan <muratk@projetgrup.com>, 2019\n"
+"POT-Creation-Date: 2022-10-04 09:25+0000\n"
+"PO-Revision-Date: 2022-09-22 05:55+0000\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,24 +36,31 @@ msgstr "<i class=\"fa fa-shopping-cart add-optionnal-item\"/> Sepete ekle"
 
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
+msgid "<span class=\"label\">Price</span>"
+msgstr "<span class=\"label\">Fiyat</span>"
+
+#. module: sale_product_configurator
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
+msgid "<span class=\"label\">Product</span>"
+msgstr "<span class=\"label\">Ürün</span>"
+
+#. module: sale_product_configurator
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
+msgid "<span class=\"label\">Quantity</span>"
+msgstr "<span class=\"label\">Miktar</span>"
+
+#. module: sale_product_configurator
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
 msgid "<strong>Total:</strong>"
 msgstr "<strong>Toplam:</strong>"
 
 #. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.sale_product_configurator_view_form
-msgid "Add"
-msgstr "Ekle"
-
-#. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.product_quantity_config
 msgid "Add one"
 msgstr "Ekle"
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__product_template_attribute_value_ids
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_template_attribute_value_ids
 msgid "Attribute Values"
 msgstr "Nitelik Değerleri"
 
@@ -62,86 +71,42 @@ msgstr "Mevcut Seçenekler:"
 
 #. module: sale_product_configurator
 #. openerp-web
-#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:0
+#: code:addons/sale_product_configurator/static/src/js/sale_product_field.js:0
 #, python-format
 msgid "Back"
 msgstr "Geri"
 
 #. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.sale_product_configurator_view_form
-msgid "Cancel"
-msgstr "İptal"
+#: model:product.template,name:sale_product_configurator.product_product_1_product_template
+msgid "Chair floor protection"
+msgstr "Sandalye zemini koruması"
 
 #. module: sale_product_configurator
 #. openerp-web
-#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:0
+#: code:addons/sale_product_configurator/static/src/js/sale_product_field.js:0
 #, python-format
 msgid "Configure"
 msgstr "Yapılandır"
 
 #. module: sale_product_configurator
-#: model:ir.actions.act_window,name:sale_product_configurator.sale_product_configurator_action
-msgid "Configure a product"
-msgstr "Bir Ürün Yapılandır"
-
-#. module: sale_product_configurator
 #. openerp-web
-#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:0
+#: code:addons/sale_product_configurator/static/src/js/sale_product_field.js:0
 #, python-format
 msgid "Confirm"
-msgstr "Doğrula"
-
-#. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__create_uid
-msgid "Created by"
-msgstr "Oluşturan"
-
-#. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__create_date
-msgid "Created on"
-msgstr "Oluşturulma"
-
-#. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_custom_attribute_value_ids
-msgid "Custom Values"
-msgstr ""
-
-#. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__display_name
-msgid "Display Name"
-msgstr "Görünüm Adı"
-
-#. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_no_variant_attribute_value_ids
-msgid "Extra Values"
-msgstr ""
-
-#. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__id
-msgid "ID"
-msgstr "ID"
+msgstr "Onayla"
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__is_configurable_product
 msgid "Is the product configurable?"
-msgstr ""
+msgstr "Ürün yapılandırılabilir mi?"
 
 #. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator____last_update
-msgid "Last Modified on"
-msgstr "Son Güncelleme"
+#: model:product.template,description_sale:sale_product_configurator.product_product_1_product_template
+msgid "Office chairs can harm your floor: protect it."
+msgstr "Ofis koltukları zemine zarar verebilir: koruyun."
 
 #. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__write_uid
-msgid "Last Updated by"
-msgstr "Son Güncelleyen"
-
-#. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__write_date
-msgid "Last Updated on"
-msgstr "Son Güncelleme"
-
-#. module: sale_product_configurator
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
 msgid "Option not available"
 msgstr "Seçenek mevcut değil"
@@ -160,27 +125,11 @@ msgid ""
 "(cross-sell strategy, e.g. for computers: warranty, software, etc.)."
 msgstr ""
 "Tamamlayıcı Ürünler, müşteriye her \"Sepete Ekle\" butonuna tıkladığında "
-"önerilir (Çapraz satış stratejisi, ör. Bilgisayarlar için: garanti, yazılım,"
-" vb.)."
+"önerilir (Çapraz satış stratejisi, örn. Bilgisayarlar için: garanti, "
+"yazılım, vb.)."
 
 #. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.product_template_view_form
-msgid "Options"
-msgstr "Seçenekler"
-
-#. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
-msgid "Price"
-msgstr "Fiyat"
-
-#. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__pricelist_id
-msgid "Pricelist"
-msgstr "Fiyat Listesi"
-
-#. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_template_id
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
+#: model:ir.model,name:sale_product_configurator.model_product_template
 msgid "Product"
 msgstr "Ürün"
 
@@ -192,37 +141,24 @@ msgid "Product Image"
 msgstr "Ürün Görseli"
 
 #. module: sale_product_configurator
-#: model:ir.model,name:sale_product_configurator.model_product_template
-msgid "Product Template"
-msgstr "Ürün Şablonu"
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.sale_order_view_form
+msgid "Product Variant"
+msgstr "Ürün Varyantı"
 
 #. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__quantity
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
-msgid "Quantity"
-msgstr "Miktar"
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.product_template_view_form
+msgid "Recommend when 'Adding to Cart' or quotation"
+msgstr "'Sepete Eklerken' veya teklif verirken tavsiye edin"
 
 #. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.product_quantity_config
 msgid "Remove one"
 msgstr "Birini kaldır"
-
-#. module: sale_product_configurator
-#: model:ir.model,name:sale_product_configurator.model_sale_product_configurator
-msgid "Sale Product Configurator"
-msgstr ""
 
 #. module: sale_product_configurator
 #: model:ir.model,name:sale_product_configurator.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "Satış Sipariş Satırı"
-
-#. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.sale_product_configurator_view_form
-msgid "Save"
-msgstr "Kaydet"
 
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
@@ -232,4 +168,9 @@ msgstr "Bu kombinasyon mevcut değil."
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
 msgid "This product has no valid combination."
-msgstr ""
+msgstr "Bu ürünün geçerli bir kombinasyonu yok."
+
+#. module: sale_product_configurator
+#: model:product.template,uom_name:sale_product_configurator.product_product_1_product_template
+msgid "Units"
+msgstr "Adet"

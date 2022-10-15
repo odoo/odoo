@@ -3,25 +3,34 @@
 # 	* spreadsheet
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2022
 # Noma Yuki, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:26+0000\n"
+"POT-Creation-Date: 2022-10-10 10:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Noma Yuki, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid ""
+" A string, possible empty, or a reference to a valid string. If empty, the "
+"text will be simply concatenated."
+msgstr ""
 
 #. module: spreadsheet
 #. openerp-web
@@ -63,6 +72,34 @@ msgstr "下に %s 行"
 #: code:addons/spreadsheet/static/src/assets_backend/spreadsheet_action_loader.js:0
 #, python-format
 msgid "%s couldn't be loaded"
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid ""
+"(0) Exact match. (-1) Return next smaller item if no match. (1) Return next "
+"greater item if no match."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid ""
+"(1) Search starting at first item. \n"
+"    (-1) Search starting at last item. \n"
+"    (2) Perform a binary search that relies on lookup_array being sorted in ascending order. If not sorted, invalid results will be returned. \n"
+"    (-2) Perform a binary search that relies on lookup_array being sorted in descending order. If not sorted, invalid results will be returned.\n"
+"    "
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#, python-format
+msgid "(Blanks)"
 msgstr ""
 
 #. module: spreadsheet
@@ -122,6 +159,15 @@ msgstr ""
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid ""
+"A boolean; if TRUE, empty cells selected in the text arguments won't be "
+"included in the result."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "A conditional count across a range."
 msgstr "範囲全体の条件付きカウント。"
 
@@ -131,6 +177,13 @@ msgstr "範囲全体の条件付きカウント。"
 #, python-format
 msgid "A conditional sum across a range."
 msgstr "範囲全体の条件付き合計。"
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "A filter can only be created on a continuous selection."
+msgstr ""
 
 #. module: spreadsheet
 #. openerp-web
@@ -149,17 +202,9 @@ msgstr ""
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "A number raised to a power."
 msgstr "累乗された数。"
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
-msgid "A number with the sign reversed."
-msgstr "符号が逆になっている数字。"
 
 #. module: spreadsheet
 #. openerp-web
@@ -181,20 +226,6 @@ msgstr ""
 #, python-format
 msgid "A sheet with the name %s already exists. Please select another name."
 msgstr ""
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
-msgid "A specified number, unchanged."
-msgstr "指定された番号、変更なし。"
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
-msgid "A substring from the end of a specified string."
-msgstr "指定された文字列の末尾からの部分文字列。"
 
 #. module: spreadsheet
 #. openerp-web
@@ -226,9 +257,23 @@ msgstr "追加"
 
 #. module: spreadsheet
 #. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "Add Filter"
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Add range"
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "Additional text item(s)."
 msgstr ""
 
 #. module: spreadsheet
@@ -263,8 +308,9 @@ msgstr "匿名"
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid "Appends strings to one another."
-msgstr "文字列を相互に追加します。"
+msgid ""
+"Any text item. This could be a string, or an array of strings in a range."
+msgstr ""
 
 #. module: spreadsheet
 #. openerp-web
@@ -464,16 +510,10 @@ msgstr "下"
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Cancel"
 msgstr "取消"
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
-msgid "Cannot dispatch commands in the finalize state"
-msgstr ""
 
 #. module: spreadsheet
 #. openerp-web
@@ -487,6 +527,13 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Cannot find workbook relations file"
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "Cannot open the chart side panel while no chart are selected"
 msgstr ""
 
 #. module: spreadsheet
@@ -531,6 +578,13 @@ msgstr "チャート"
 
 #. module: spreadsheet
 #. openerp-web
+#: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
+#, python-format
+msgid "Chart - %s"
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Chart type"
@@ -546,6 +600,7 @@ msgstr "循環参照"
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/global_filters/components/filter_value/filter_value.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Clear"
 msgstr "クリア"
@@ -667,13 +722,6 @@ msgstr "右の列"
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid "Combines text from multiple strings and/or arrays."
-msgstr "複数の文字列や配列からのテキストを結合します。"
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
 msgid "Compare two numeric values, returning 1 if they're equal."
 msgstr ""
 
@@ -684,20 +732,6 @@ msgstr ""
 msgid ""
 "Computes the number of periods needed for an investment to reach a value."
 msgstr ""
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
-msgid "Concatenates elements of arrays with delimiter."
-msgstr "配列の要素を区切り文字で連結します。"
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
-msgid "Concatenation of two values."
-msgstr "2つの値の連結。"
 
 #. module: spreadsheet
 #. openerp-web
@@ -720,6 +754,7 @@ msgstr "設定"
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Confirm"
 msgstr "確認"
@@ -737,27 +772,6 @@ msgstr "含む"
 #, python-format
 msgid "Converts a date string to a date value."
 msgstr "日付文字列を日付値に変換します。"
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
-msgid "Converts a number to text according to a specified format."
-msgstr ""
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
-msgid "Converts a specified string to lowercase."
-msgstr "指定された文字列を小文字に変換します。"
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
-msgid "Converts a specified string to uppercase."
-msgstr "指定された文字列を大文字に変換します。"
 
 #. module: spreadsheet
 #. openerp-web
@@ -883,6 +897,13 @@ msgstr "表のような範囲から値とテキストをカウントします。
 #, python-format
 msgid "Counts values from a table-like range."
 msgstr "表のような範囲から値をカウントします。"
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#, python-format
+msgid "Create filter"
+msgstr ""
 
 #. module: spreadsheet
 #. openerp-web
@@ -1189,13 +1210,6 @@ msgstr ""
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid "Difference of two numbers."
-msgstr "2つの数字の違い。"
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
 msgid "Does not contain"
 msgstr ""
 
@@ -1242,13 +1256,6 @@ msgstr "そうしないと"
 #, python-format
 msgid "Ends with"
 msgstr "終了値"
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
-msgid "Equal."
-msgstr "同一。"
 
 #. module: spreadsheet
 #. openerp-web
@@ -1330,7 +1337,7 @@ msgstr ""
 
 #. module: spreadsheet
 #. openerp-web
-#: code:addons/spreadsheet/static/src/global_filters/plugins/filters_evaluation_plugin.js:0
+#: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_ui_plugin.js:0
 #, python-format
 msgid "Filter \"%s\" not found"
 msgstr "フィルター \"%s\" は見つかりません"
@@ -1369,20 +1376,6 @@ msgstr ""
 #, python-format
 msgid "First day of the year a specific date falls in."
 msgstr ""
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
-msgid "First position of string found in text, case-sensitive."
-msgstr "テキストで見つかった文字列の最初の位置。大文字と小文字が区別されます。"
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
-msgid "First position of string found in text, ignoring case."
-msgstr "大文字と小文字を区別せずに、テキストで見つかった文字列の最初の位置。"
 
 #. module: spreadsheet
 #. openerp-web
@@ -1619,20 +1612,6 @@ msgstr "ピボットから値を取得します。"
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid "Gets character associated with number."
-msgstr "数値に関連付けられた文字を取得します。"
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
-msgid "Greater than or equal to."
-msgstr "大なりイコール"
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
 msgid "Hide column %s"
 msgstr "%s 列目を非表示"
 
@@ -1780,9 +1759,8 @@ msgstr ""
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid "In [[FUNCTION_NAME]] evaluation, cannot find '%s' within '%s'."
+msgid "If a valid match is not found, return this value."
 msgstr ""
 
 #. module: spreadsheet
@@ -1944,24 +1922,6 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Invalid expression"
-msgstr ""
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
-msgid "Invalid formula"
-msgstr "無効な式"
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
-msgid ""
-"Invalid function name %s. Function names can exclusively contain "
-"alphanumerical values separated by dots (.) or underscore (_)"
 msgstr ""
 
 #. module: spreadsheet
@@ -2302,27 +2262,6 @@ msgstr ""
 
 #. module: spreadsheet
 #. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
-msgid "Length of a string."
-msgstr "文字列の長さ。"
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
-msgid "Less than or equal to."
-msgstr "以下。"
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
-msgid "Less than."
-msgstr "未満。"
-
-#. module: spreadsheet
-#. openerp-web
 #: code:addons/spreadsheet/static/src/chart/odoo_chart/odoo_line_chart.js:0
 #, python-format
 msgid "Line"
@@ -2342,6 +2281,13 @@ msgstr "リンク"
 #, python-format
 msgid "Link sheet"
 msgstr "シートへリンク"
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/list/plugins/list_core_plugin.js:0
+#, python-format
+msgid "List #%s"
+msgstr ""
 
 #. module: spreadsheet
 #. openerp-web
@@ -2589,8 +2535,22 @@ msgstr ""
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "More strings to append in sequence."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "More than one match found in DGET evaluation."
 msgstr "DGET評価で複数の一致が見つかりました。"
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "More values to be appended using delimiter."
+msgstr ""
 
 #. module: spreadsheet
 #. openerp-web
@@ -2661,6 +2621,13 @@ msgstr "一致はありません。"
 
 #. module: spreadsheet
 #. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#, python-format
+msgid "No results"
+msgstr "該当結果なし"
+
+#. module: spreadsheet
+#. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "No rows"
@@ -2677,13 +2644,6 @@ msgstr ""
 #, python-format
 msgid "None"
 msgstr "なし"
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
-msgid "Not equal."
-msgstr "不一致。"
 
 #. module: spreadsheet
 #. openerp-web
@@ -2788,13 +2748,6 @@ msgstr "10月"
 
 #. module: spreadsheet
 #. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
-msgid "One number divided by another."
-msgstr "別の分の1人の数。"
-
-#. module: spreadsheet
-#. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Paint Format"
@@ -2888,6 +2841,13 @@ msgstr "パイ"
 
 #. module: spreadsheet
 #. openerp-web
+#: code:addons/spreadsheet/static/src/pivot/plugins/pivot_core_plugin.js:0
+#, python-format
+msgid "Pivot #%s"
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Position of item in range that matches value."
@@ -2940,13 +2900,6 @@ msgstr ""
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid "Product of two numbers"
-msgstr "2つの数の積"
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
 msgid "Product of values from a table-like range."
 msgstr "テーブルのような範囲の値の積。"
 
@@ -2988,6 +2941,13 @@ msgstr "やり直し"
 
 #. module: spreadsheet
 #. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "Remove Filter"
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Remove link"
@@ -3002,10 +2962,10 @@ msgstr "ルールを削除する"
 
 #. module: spreadsheet
 #. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
-msgid "Removes space characters."
-msgstr "空白文字を削除します。"
+msgid "Remove selected filters"
+msgstr ""
 
 #. module: spreadsheet
 #. openerp-web
@@ -3042,20 +3002,6 @@ msgstr ""
 #, python-format
 msgid "Replace all"
 msgstr ""
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
-msgid "Replaces existing text with new text in a string."
-msgstr "文字列内の新しいテキストを既存のテキストを置き換えます。"
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
-msgid "Replaces part of a text string with different text."
-msgstr "別のテキストとテキスト文字列の一部を置き換えます。"
 
 #. module: spreadsheet
 #. openerp-web
@@ -3227,10 +3173,26 @@ msgstr "検索"
 
 #. module: spreadsheet
 #. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid ""
+"Search a range for a match and return the corresponding item from a second "
+"range."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Search in formulas"
 msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#, python-format
+msgid "Search..."
+msgstr "検索..."
 
 #. module: spreadsheet
 #. openerp-web
@@ -3263,6 +3225,21 @@ msgstr ""
 #, python-format
 msgid "Select a color..."
 msgstr "色を選択..."
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#, python-format
+msgid "Select all"
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/global_filters/components/filter_date_value/filter_date_value.xml:0
+#: code:addons/spreadsheet/static/src/global_filters/components/filter_value/filter_value.xml:0
+#, python-format
+msgid "Select period..."
+msgstr ""
 
 #. module: spreadsheet
 #. openerp-web
@@ -3360,6 +3337,13 @@ msgstr ""
 
 #. module: spreadsheet
 #. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#, python-format
+msgid "Sort ascending (A ⟶ Z)"
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Sort column"
@@ -3371,6 +3355,13 @@ msgstr "列をソート"
 #, python-format
 msgid "Sort columns"
 msgstr "列を並び替え"
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#, python-format
+msgid "Sort descending (Z ⟶ A)"
+msgstr ""
 
 #. module: spreadsheet
 #. openerp-web
@@ -3461,25 +3452,11 @@ msgstr ""
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
-msgid "Strictly greater than."
-msgstr "より厳密に大きいです。"
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Strikethrough"
 msgstr "取り消し線"
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
-msgid "Substring from beginning of specified string."
-msgstr "指定された文字列の先頭から部分。"
 
 #. module: spreadsheet
 #. openerp-web
@@ -3494,13 +3471,6 @@ msgstr "合計"
 #, python-format
 msgid "Sum of a series of numbers and/or cells."
 msgstr "数字および/または一連のセルの合計。"
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
-msgid "Sum of two numbers."
-msgstr "2つの数の合計。"
 
 #. module: spreadsheet
 #. openerp-web
@@ -3529,13 +3499,6 @@ msgstr "記号"
 #, python-format
 msgid "Tangent of an angle provided in radians."
 msgstr "ラジアンで提供さ角度のタンジェント。"
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
-msgid "Tests whether two strings are identical."
-msgstr "二つの文字列が同一であるかどうかをテストします。"
 
 #. module: spreadsheet
 #. openerp-web
@@ -3605,6 +3568,21 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The cell you are trying to edit has been deleted."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The character or string to place between each concatenated value."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The character within text_to_search at which to start the search."
 msgstr ""
 
 #. module: spreadsheet
@@ -3701,13 +3679,6 @@ msgstr ""
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid "The divisor must be different from zero."
-msgstr ""
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
 msgid "The end_date (%s) must be positive or null."
 msgstr ""
 
@@ -3716,6 +3687,13 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The exponent (%s) must be an integer when the base is negative."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The exponent to raise base to."
 msgstr ""
 
 #. module: spreadsheet
@@ -3760,7 +3738,36 @@ msgstr ""
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "The first addend."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The first multiplicand."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The first string to compare."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "The first value must be a number"
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The first value."
 msgstr ""
 
 #. module: spreadsheet
@@ -3837,7 +3844,41 @@ msgstr ""
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid ""
+"The index from the left of string from which to begin extracting. The first "
+"character in string has the index 1."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The initial string."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid ""
+"The instance of search_for within text_to_search to replace with "
+"replace_with. By default, all occurrences of search_for are replaced; "
+"however, if occurrence_number is specified, only the indicated instance of "
+"search_for is replaced."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "The key value is invalid"
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The length of the segment to extract."
 msgstr ""
 
 #. module: spreadsheet
@@ -3910,6 +3951,13 @@ msgstr ""
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "The minuend, or number to be subtracted from."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "The month (%s) must be between 1 and 12 inclusive."
 msgstr ""
 
@@ -3926,8 +3974,38 @@ msgstr ""
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "The number of characters in the text to be replaced."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The number of characters to return from the left side of string."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The number of characters to return from the right side of string."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "The number of numeric values in dataset."
 msgstr "データセット内の数値の数。"
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid ""
+"The number of the character to look up from the current Unicode table in "
+"decimal format."
+msgstr ""
 
 #. module: spreadsheet
 #. openerp-web
@@ -3946,16 +4024,53 @@ msgstr "数のパイ。"
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid "The number_of_characters (%s) must be positive or null."
+msgid "The number to be divided."
 msgstr ""
 
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid "The occurrenceNumber (%s) must be positive or null."
+msgid "The number to divide by."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid ""
+"The number to have its sign reversed. Equivalently, the number to multiply "
+"by -1."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The number to raise to the exponent power."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The number to return."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The number, date or time to format."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid ""
+"The pattern by which to format the number, enclosed in quotation marks."
 msgstr ""
 
 #. module: spreadsheet
@@ -3976,7 +4091,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid "The position (%s) must be greater than or equal to 1."
+msgid "The position where the replacement will begin (starting from 1)."
 msgstr ""
 
 #. module: spreadsheet
@@ -4005,6 +4120,15 @@ msgstr ""
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid ""
+"The range containing the return value. Should have the same dimensions as "
+"lookup_range."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "The range is invalid"
 msgstr ""
 
@@ -4013,6 +4137,15 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The range must be a single row or a single column."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid ""
+"The range to consider for the search. Should be a single column or a single "
+"row."
 msgstr ""
 
 #. module: spreadsheet
@@ -4079,6 +4212,13 @@ msgstr "データセットの標本共分散。"
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "The second addend."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "The second argument is missing. Please provide a value"
 msgstr ""
 
@@ -4086,7 +4226,31 @@ msgstr ""
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "The second multiplicand."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The second string to compare."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "The second value must be a number"
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The second value."
 msgstr ""
 
 #. module: spreadsheet
@@ -4113,16 +4277,43 @@ msgstr ""
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid "The starting_at (%s) must be greater than or equal to 1."
+msgid "The string from which the left portion will be returned."
 msgstr ""
 
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid "The table_number (%s) is out of range."
+msgid "The string from which the right portion will be returned."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The string that will replace search_for."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The string to convert to lowercase."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The string to convert to uppercase."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The string to extract a segment from."
 msgstr ""
 
 #. module: spreadsheet
@@ -4130,7 +4321,80 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid "The text_to_search must be non-empty."
+msgid "The string to look for within text_to_search."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The string to search for within text_to_search."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The string whose length will be returned."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The subtrahend, or number to subtract from value1."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The text or reference to a cell containing text to be trimmed."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The text to search for the first occurrence of search_for."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The text which will be inserted into the original text."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid ""
+"The text which will be returned with the first letter of each word in "
+"uppercase and all other letters in lowercase."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The text whose non-printable characters are to be removed."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The text within which to search and replace."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The text, a part of which will be replaced."
 msgstr ""
 
 #. module: spreadsheet
@@ -4216,6 +4480,83 @@ msgstr ""
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "The value or values to be appended using delimiter."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The value to append to value1."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The value to interpret as a percentage."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The value to search for."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The value to test against value1 for equality."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The value to test against value1 for inequality."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The value to test as being greater than or equal to value2."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The value to test as being greater than value2."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The value to test as being less than or equal to value2."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The value to test as being less than value2."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The value to which value2 will be appended."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid ""
 "The weekend (%s) must be a string or a number in the range 1-7 or 11-17."
 msgstr ""
@@ -4269,15 +4610,6 @@ msgstr "ピボットは、ID\"%s\"はありません"
 #, python-format
 msgid "This formula depends on invalid values"
 msgstr "この式は、無効な値に依存します"
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
-msgid ""
-"This formula has over 100 parts. It can't be processed properly, consider "
-"splitting it into multiple cells"
-msgstr "この式は、100を超える部分があります。これは、複数のセルにそれを分割を検討し、適切に処理することはできません"
 
 #. module: spreadsheet
 #. openerp-web
@@ -4395,13 +4727,6 @@ msgstr "戻す"
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid "Unexpected token: %s"
-msgstr ""
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
 msgid "Unfreeze"
 msgstr ""
 
@@ -4424,20 +4749,6 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Unknown function: \"%s\""
-msgstr ""
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
-msgid "Unknown token: %s"
-msgstr ""
-
-#. module: spreadsheet
-#. openerp-web
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
-msgid "Unmatched left parenthesis"
 msgstr ""
 
 #. module: spreadsheet
@@ -4496,15 +4807,15 @@ msgstr ""
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid "Value if it is not an error, otherwise 2nd argument."
-msgstr "値がエラーでない場合は、第2引数。"
+msgid "Value if it is not an #N/A error, otherwise 2nd argument."
+msgstr ""
 
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid "Value interpreted as a percentage."
-msgstr "値はパーセンテージとして解釈しました。"
+msgid "Value if it is not an error, otherwise 2nd argument."
+msgstr "値がエラーでない場合は、第2引数。"
 
 #. module: spreadsheet
 #. openerp-web
@@ -4693,15 +5004,14 @@ msgstr "値が偶数であるかどうかです。"
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid "Wrapping"
+msgid "Whether the referenced cell is empty"
 msgstr ""
 
 #. module: spreadsheet
 #. openerp-web
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid "Wrong function call"
+msgid "Wrapping"
 msgstr ""
 
 #. module: spreadsheet
@@ -4724,6 +5034,27 @@ msgstr "引数の数が誤っています。偶数の引数となるべきです
 #, python-format
 msgid "Year specified by a given date."
 msgstr "年は、特定の日付で指定されました。"
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "You can't create a filter over a range that contains a merge."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "You can't merge cells inside of an existing filter."
+msgstr ""
+
+#. module: spreadsheet
+#. openerp-web
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "You cannot create overlapping filters."
+msgstr ""
 
 #. module: spreadsheet
 #. openerp-web

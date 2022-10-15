@@ -9,9 +9,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
@@ -144,18 +144,6 @@ msgid "<i class=\"fa fa-user\" role=\"img\" aria-label=\"User\" title=\"User\"/>
 msgstr "<i class=\"fa fa-user\" role=\"img\" aria-label=\"User\" title=\"المستخدم \"/>"
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
-msgid ""
-"<span class=\"text-muted\">Define rules for your live support channel. You "
-"can apply an action for the given URL, and per country.<br/>To identify the "
-"country, GeoIP must be installed on your server, otherwise, the countries of"
-" the rule will not be taken into account.</span>"
-msgstr ""
-"<span class=\"text-muted\">قم بتحديد قواعد لقناة الدعم المباشر لديك. بإمكانك"
-" تطبيق إجراء على رابط URL المعطى حسب الدولة. <br/>لتحديد الدولة، يجب أن يكون"
-" المعرف الجغرافي مثبتاً في خادمك، وإلا فلن يتم اعتبار دول القاعدة. </span> "
-
-#. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "<span style=\"font-size: 10px;\">Livechat Conversation</span><br/>"
 msgstr "<span style=\"font-size: 10px;\">محادثة الدردشة المباشرة</span><br/>"
@@ -249,6 +237,11 @@ msgid "Anonymous Name"
 msgstr "اسم مجهول"
 
 #. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__name
+msgid "Answer"
+msgstr "الإجابة "
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__answer_ids
 msgid "Answers"
 msgstr "الإجابات"
@@ -266,7 +259,7 @@ msgstr "هل أنت داخل المصفوفة؟ "
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/models/livechat_button_view.js:0
+#: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
 #, python-format
 msgid "Ask something ..."
 msgstr "اسأل سؤالاً... "
@@ -426,7 +419,7 @@ msgstr ""
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/models/livechat_button_view.js:0
+#: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
 #, python-format
 msgid "Chat with one of our collaborators"
 msgstr "دردش مع أحد متعاونينا "
@@ -487,10 +480,7 @@ msgid "Chatbots"
 msgstr ""
 
 #. module: im_livechat
-#. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat_chatbot_step_form_view_dialog.js:0
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
-#, python-format
 msgid "Close"
 msgstr "إغلاق "
 
@@ -578,13 +568,6 @@ msgstr "دولة الزائر "
 #: model:ir.model.fields,help:im_livechat.field_mail_channel__country_id
 msgid "Country of the visitor of the channel"
 msgstr "دولة زائر القناة "
-
-#. module: im_livechat
-#. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat_chatbot_form_controller.js:0
-#, python-format
-msgid "Create "
-msgstr "إنشاء "
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.chatbot_script_action
@@ -684,6 +667,15 @@ msgid "Define a new website live chat channel"
 msgstr "تحديد قناة دردشة مباشرة جديدة للموقع الإلكتروني "
 
 #. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"Define rules for your live support channel. You can apply an action for the "
+"given URL, and per country.<br/>To identify the country, GeoIP must be "
+"installed on your server, otherwise, the countries of the rule will not be "
+"taken into account."
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__auto_popup_timer
 msgid ""
 "Delay (in seconds) to automatically open the conversation window. Note: the "
@@ -704,13 +696,6 @@ msgstr "هل أجبنا على سؤالك بشكل صحيح؟"
 #: model:ir.model,name:im_livechat.model_digest_digest
 msgid "Digest"
 msgstr "الملخص"
-
-#. module: im_livechat
-#. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat_chatbot_step_form_view_dialog.js:0
-#, python-format
-msgid "Discard"
-msgstr "تجاهل"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_mail_channel
@@ -864,7 +849,7 @@ msgstr "ساعة تاريخ بدء الجلسة "
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/models/livechat_button_view.js:0
+#: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
 #, python-format
 msgid "How may I help you?"
 msgstr "كيف يمكنني مساعدتك؟"
@@ -1168,7 +1153,6 @@ msgstr "الجلسات الفائتة "
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__name
-#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__name
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_search
 msgid "Name"
 msgstr "الاسم"
@@ -1182,8 +1166,8 @@ msgstr "رسائل جديدة"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/models/livechat_button_view.js:0
-#: code:addons/im_livechat/static/src/models/livechat_button_view.js:0
+#: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
+#: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
 #, python-format
 msgid "No available collaborator, please try again later."
 msgstr "لا يوجد متعاون متاح. يرجى المحاولة مجدداً لاحقاً. "
@@ -1264,13 +1248,6 @@ msgstr ""
 #, python-format
 msgid "Oops! Something went wrong."
 msgstr "عذراً! حدث خطأ ما. "
-
-#. module: im_livechat
-#. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat_chatbot_form_controller.js:0
-#, python-format
-msgid "Open: "
-msgstr "فتح: "
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__partner_id
@@ -1445,11 +1422,6 @@ msgid "Ratings for livechat channel"
 msgstr "تقييمات قناة الدردشة المباشرة "
 
 #. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_mail_channel__rating_last_feedback
-msgid "Reason of the rating"
-msgstr "سبب التقييم"
-
-#. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.xml:0
 #, python-format
@@ -1479,7 +1451,10 @@ msgid "Report"
 msgstr "التقرير"
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+#. openerp-web
+#: code:addons/im_livechat/static/src/js/colors_reset_button/colors_reset_button.xml:0
+#: code:addons/im_livechat/static/src/js/colors_reset_button/colors_reset_button.xml:0
+#, python-format
 msgid "Reset to default colors"
 msgstr "إعادة الضبط إلى الألوان الافتراضية "
 
@@ -1516,27 +1491,13 @@ msgid "Satisfaction Rate"
 msgstr "معدل الرضا "
 
 #. module: im_livechat
-#. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat_chatbot_step_form_view_dialog.js:0
-#, python-format
-msgid "Save & Close"
-msgstr "حفظ وإغلاق"
-
-#. module: im_livechat
-#. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat_chatbot_step_form_view_dialog.js:0
-#, python-format
-msgid "Save & New"
-msgstr "حفظ و جديد"
-
-#. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Save your Channel to get your configuration widget."
 msgstr "احفظ قناتك لتحصل على أداة تهيئتك. "
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/models/public_livechat_window.js:0
+#: code:addons/im_livechat/static/src/public_models/public_livechat_window.js:0
 #, python-format
 msgid "Say something"
 msgstr "قل شيئًا"
@@ -1581,7 +1542,7 @@ msgstr "عرض آخر 15 صفحة تمت زيارتها "
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/models/public_livechat_window.js:0
+#: code:addons/im_livechat/static/src/public_models/public_livechat_window.js:0
 #, python-format
 msgid "Select an option above"
 msgstr ""
@@ -1612,8 +1573,8 @@ msgstr "إحصائيات الجلسة"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/models/livechat_button_view.js:0
-#: code:addons/im_livechat/static/src/models/livechat_button_view.js:0
+#: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
+#: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
 #, python-format
 msgid "Session expired... Please refresh and try again."
 msgstr "لقد انتهت صلاحية الجلسة...يرجى التحديث ثم المحاولة مجدداً. "
@@ -1861,7 +1822,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/im_livechat/controllers/main.py:0
 #: code:addons/im_livechat/models/im_livechat_channel.py:0
-#: code:addons/im_livechat/static/src/models/livechat_button_view.js:0
+#: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
 #, python-format
 msgid "Visitor"
 msgstr "زائر "

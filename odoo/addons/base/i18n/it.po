@@ -5,14 +5,15 @@
 # Translators:
 # Martin Trigaux, 2022
 # Friederike Fasterling-Nesselbosch, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:41+0000\n"
+"POT-Creation-Date: 2022-10-10 13:34+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1753,17 +1754,6 @@ msgstr ""
 "\n"
 "    Configura i device IoT per essere usati in certi \n"
 "    step per prendere le misure, scattare foto, ...\n"
-
-#. module: base
-#: model:ir.module.module,description:base.module_website_slides_enterprise
-msgid ""
-"\n"
-"    Contains advanced features for eLeaning such as new views\n"
-"    "
-msgstr ""
-"\n"
-"    Contiene funzioni avanzate per l'eLearning, come le nuove viste\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp_workorder_worksheet
@@ -3713,17 +3703,6 @@ msgstr ""
 "    "
 
 #. module: base
-#: model:ir.module.module,description:base.module_im_livechat_enterprise
-msgid ""
-"\n"
-"Contains advanced features for Live Chat such as new views\n"
-"    "
-msgstr ""
-"\n"
-"Contiene funzionalità avanzate per la chat dal vivo come nuove viste\n"
-"    "
-
-#. module: base
 #: model:ir.module.module,description:base.module_purchase_enterprise
 msgid ""
 "\n"
@@ -4345,9 +4324,9 @@ msgid ""
 "respectively. UBL Bis 3 is only available for companies which country is present in the `EAS list \n"
 "<https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_.\n"
 "\n"
-"Note also that you need to activate PDF A in order to be able to submit a Factur-X pdf on Chorus Pro: \n"
-"go to Settings > Technical (debug mode) > System Parameters > select/create one with Key: edi.use_pdfa, Value: true.\n"
-"With this setting, Chorus Pro will automatically detect the \"PDF/A-3 (Factur-X)\" format.\n"
+"Note also that in order for Chorus Pro to automatically detect the \"PDF/A-3 (Factur-X)\" format, you need to activate \n"
+"the \"Factur-X PDF/A-3\" option on the journal. This option will also validate the xml against the Factur-X and Chorus\n"
+"Pro rules and show the errors.\n"
 "    "
 msgstr ""
 
@@ -6057,24 +6036,6 @@ msgid ""
 "\n"
 "Odoo Arabic localization for most Saudi Arabia.\n"
 msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_web_dashboard
-msgid ""
-"\n"
-"Odoo Dashboard View.\n"
-"========================\n"
-"\n"
-"This module defines the Dashboard view, a new type of reporting view. This view\n"
-"can embed graph and/or pivot views, and displays aggregate values.\n"
-"        "
-msgstr ""
-"\n"
-"Odoo Dashboard View.\n"
-"========================\n"
-"\n"
-"Questo modulo definisce la vista Dashboard, un nuovo tipo di vista di reporting. Questa vista\n"
-"può incorporare grafici e/o viste pivot e mostra valori aggregati."
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_enterprise
@@ -8802,7 +8763,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_fleet
-#: model:ir.module.module,description:base.module_fleet_dashboard
 msgid ""
 "\n"
 "Vehicle, leasing, insurances, cost\n"
@@ -9746,8 +9706,10 @@ msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
-msgid "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
-msgstr "<i title=\"Documentazione\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
+msgid ""
+"<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>\n"
+"                                        Learn more"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
@@ -10473,6 +10435,7 @@ msgstr "API Key: procedura guidata di inserimento della descrizione"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__api_key_ids
+#: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "API Keys"
 msgstr "Chiavi API"
 
@@ -10480,6 +10443,13 @@ msgstr "Chiavi API"
 #: model:ir.actions.act_window,name:base.action_apikeys_admin
 msgid "API Keys Listing"
 msgstr "Elenco chiavi API"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
+msgid ""
+"API Keys are used to connect to Odoo from external tools without the need "
+"for a password or Two-factor Authentication."
+msgstr ""
 
 #. module: base
 #: code:addons/fields.py:0
@@ -10922,6 +10892,7 @@ msgstr "Attiva e Traduci"
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__active
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__active
 #: model:ir.model.fields,field_description:base.field_res_bank__active
+#: model:ir.model.fields,field_description:base.field_res_company__active
 #: model:ir.model.fields,field_description:base.field_res_currency__active
 #: model:ir.model.fields,field_description:base.field_res_lang__active
 #: model:ir.model.fields,field_description:base.field_res_partner__active
@@ -10956,7 +10927,7 @@ msgstr "Aggiungi"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_language_install
 msgid "Add Languages"
-msgstr "Aggiungere lingue"
+msgstr "Aggiungi lingue"
 
 #. module: base
 #: model:ir.module.module,description:base.module_data_merge_helpdesk
@@ -11387,11 +11358,6 @@ msgstr "Proprietà avanzate"
 #: model:ir.module.module,summary:base.module_crm_enterprise
 msgid "Advanced features for CRM"
 msgstr "Funzionalità avanzate per CRM"
-
-#. module: base
-#: model:ir.module.module,summary:base.module_im_livechat_enterprise
-msgid "Advanced features for Live Chat"
-msgstr "Funzionalità avanzate per Liva Chat"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_enterprise
@@ -15181,11 +15147,6 @@ msgid "Customizations"
 msgstr "Personalizzazioni"
 
 #. module: base
-#: model:ir.module.module,summary:base.module_purchase_stock_enterprise
-msgid "Customized Dashboard for Purchase Stock"
-msgstr "Bacheca personalizzata per magazzino acquisti"
-
-#. module: base
 #: model:ir.actions.act_window,name:base.action_ui_view_custom
 #: model:ir.ui.menu,name:base.menu_action_ui_view_custom
 #: model_terms:ir.ui.view,arch_db:base.view_view_custom_form
@@ -15268,11 +15229,6 @@ msgstr "DLE 26 110 x 220 mm"
 #, python-format
 msgid "Dash"
 msgstr "Trattino"
-
-#. module: base
-#: model:ir.module.module,summary:base.module_fleet_dashboard
-msgid "Dashboard for fleet"
-msgstr "Bacheca per parco veicoli"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_board
@@ -15748,11 +15704,6 @@ msgid ""
 msgstr ""
 "Determina dove il nome del cliente o dell'azienda deve essere posizionato, "
 "ossia prima o dopo l'indirizzo."
-
-#. module: base
-#: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
-msgid "Developer API Keys"
-msgstr "Chiavi API sviluppatore"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_digest_enterprise
@@ -17806,11 +17757,6 @@ msgid "Fleet"
 msgstr "Parco veicoli"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_fleet_dashboard
-msgid "Fleet Dashboard"
-msgstr "Bacheca parco veicoli"
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_fleet
 msgid "Fleet History"
 msgstr "Cronologia Parco Veicoli"
@@ -18982,11 +18928,6 @@ msgid "Home Menu"
 msgstr "Menu principale"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_hr_homeworking
-msgid "Homeworking"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.hn
 msgid "Honduras"
 msgstr "Honduras"
@@ -19910,13 +19851,13 @@ msgid "Instant Messaging Bus allow you to send messages to users, in live."
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:0
+#: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Insufficient fields for Calendar View!"
 msgstr "Campi insufficienti per la vista calendario!"
 
 #. module: base
-#: code:addons/models.py:0
+#: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid ""
 "Insufficient fields to generate a Calendar View for %s, missing a date_stop "
@@ -21240,11 +21181,6 @@ msgid "Live Event Tracks"
 msgstr "Sessioni evento dal vivo"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_im_livechat_enterprise
-msgid "Live chat enterprise"
-msgstr "Chat dal vivo per Enterprise"
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_language_install
 msgid "Load a Translation"
 msgstr "Carica una traduzione"
@@ -21563,12 +21499,6 @@ msgid ""
 msgstr ""
 "Gestire i titoli dei contatti e le loro abbreviazioni (ad esempio "
 "\"signor\", \"signora\", ecc.)"
-
-#. module: base
-#: model:ir.module.module,description:base.module_hr_homeworking
-#: model:ir.module.module,summary:base.module_hr_homeworking
-msgid "Manage Homeworking policy"
-msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment
@@ -23016,7 +22946,7 @@ msgid "No Country Found!"
 msgstr "Nessun paese trovato!"
 
 #. module: base
-#: code:addons/models.py:0
+#: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "No default view of type '%s' could be found !"
 msgstr "Impossibile trovare una vista predefinita di tipo  \"%s\"."
@@ -25579,7 +25509,7 @@ msgstr "Gestione follow-up pagamenti"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment
 msgid "Payment Provider"
-msgstr ""
+msgstr "Fornitore di pagamenti"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment
@@ -25654,7 +25584,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_payment_providers
 msgid "Payment Providers"
-msgstr ""
+msgstr "Fornitori di pagamenti"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_payment
@@ -26669,11 +26599,6 @@ msgstr "Richieste di acquisto per magazzino"
 #: model:ir.module.module,shortdesc:base.module_purchase_stock
 msgid "Purchase Stock"
 msgstr "Magazzino acquisti"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_purchase_stock_enterprise
-msgid "Purchase Stock Enterprise"
-msgstr "Magazzino acquisti per Enterprise"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_mrp
@@ -33756,11 +33681,6 @@ msgid "eLearning"
 msgstr "eLearning"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_website_slides_enterprise
-msgid "eLearning enterprise"
-msgstr "eLearning enterprise"
-
-#. module: base
 #: model:ir.module.category,name:base.module_category_services_expenses
 msgid "expenses"
 msgstr "spese"
@@ -34190,11 +34110,6 @@ msgstr "titolo"
 #, python-format
 msgid "true"
 msgstr "vero"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_web_dashboard
-msgid "web_dashboard"
-msgstr "web_dashboard"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_delivery_mondialrelay

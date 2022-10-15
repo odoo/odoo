@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
@@ -55,13 +55,6 @@ msgstr ""
 #: code:addons/mail/static/src/models/rtc.js:0
 #, python-format
 msgid "\"%s\" requires microphone access"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/models/chatter_topbar.js:0
-#, python-format
-msgid "%(attachmentCount)s files"
 msgstr ""
 
 #. module: mail
@@ -279,20 +272,6 @@ msgstr "0 지남"
 #, python-format
 msgid "0 Today"
 msgstr "0 오늘"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/models/chatter_topbar.js:0
-#, python-format
-msgid "1 file"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/models/chatter_topbar.js:0
-#, python-format
-msgid "2 files"
-msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
@@ -651,6 +630,7 @@ msgstr "도메인 활성"
 #. openerp-web
 #: code:addons/mail/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #: code:addons/mail/static/src/components/activity_menu_view/activity_menu_view.xml:0
+#: code:addons/mail/static/src/components/chatter_topbar/chatter_topbar.xml:0
 #: model:ir.actions.act_window,name:mail.mail_activity_action
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_ids
@@ -1080,8 +1060,6 @@ msgstr "파일 첨부"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/attachment_box/attachment_box.xml:0
-#: code:addons/mail/static/src/components/chatter_topbar/chatter_topbar.xml:0
-#: code:addons/mail/static/src/models/chatter_topbar.js:0
 #, python-format
 msgid "Attach files"
 msgstr ""
@@ -1871,6 +1849,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.view_message_search
 msgid "Content"
 msgstr "내용"
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_shortcode__substitution
+msgid ""
+"Content that will automatically replace the shortcut of your choosing. This "
+"content can still be adapted before sending your message."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__body
@@ -3097,7 +3082,7 @@ msgstr "팔로워 전용"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/follow_button/follow_button.xml:0
+#: code:addons/mail/static/src/models/follow_button_view.js:0
 #, python-format
 msgid "Following"
 msgstr "팔로잉"
@@ -4184,11 +4169,6 @@ msgstr ""
 #, python-format
 msgid "Link copied!"
 msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_mail_thread_cc__email_cc
-msgid "List of cc from incoming emails."
-msgstr "수신메일의 참조 목록"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite__partner_ids
@@ -6448,7 +6428,6 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/chatter_topbar/chatter_topbar.xml:0
 #: code:addons/mail/static/src/xml/activity_view.xml:0
 #, python-format
 msgid "Schedule activity"
@@ -6806,6 +6785,14 @@ msgstr "단축코드"
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__source
 msgid "Shortcut"
 msgstr "단축키"
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_shortcode__source
+msgid ""
+"Shortcut that will automatically be substituted with longer content in your "
+"messages. Type ':' followed by the name of your shortcut (e.g. :hello) to "
+"use in your messages."
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -7305,11 +7292,6 @@ msgid "The email sent to"
 msgstr "다음에게 보낸 이메일"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_shortcode__substitution
-msgid "The escaped html code replacing the shortcut"
-msgstr "단축키를 대체하는 이스케이프 처리된 html 코드"
-
-#. module: mail
 #: code:addons/mail/models/mail_composer_mixin.py:0
 #, python-format
 msgid "The field %s does not exist on the model %s"
@@ -7385,11 +7367,6 @@ msgstr ""
 #, python-format
 msgid "The server \"%s\" cannot be used because it is archived."
 msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_mail_shortcode__source
-msgid "The shortcut which must be replaced in the Chat Messages"
-msgstr "채팅 메시지에서 대체해야 하는 바로 가기"
 
 #. module: mail
 #. openerp-web
@@ -7790,7 +7767,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/follow_button/follow_button.xml:0
+#: code:addons/mail/static/src/models/follow_button_view.js:0
 #, python-format
 msgid "Unfollow"
 msgstr "팔로우 취소"

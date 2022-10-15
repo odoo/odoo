@@ -3,17 +3,17 @@
 # 	* sale_timesheet
 # 
 # Translators:
-# Lucia Pacheco <lpo@odoo.com>, 2022
 # Martin Trigaux, 2022
 # Braulio D. López Vázquez <bdl@odoo.com>, 2022
+# Lucia Pacheco <lpo@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:25+0000\n"
+"POT-Creation-Date: 2022-10-10 10:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
+"Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -212,7 +212,7 @@ msgstr "Facturable"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__billable_time
 msgid "Billable Hours"
-msgstr ""
+msgstr "Horas facturables"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__billable_percentage
@@ -270,7 +270,7 @@ msgstr "Facturación"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billing Type"
-msgstr ""
+msgstr "Tipo de facturación"
 
 #. module: sale_timesheet
 #: model:project.task,legend_blocked:sale_timesheet.agr_task_1
@@ -500,7 +500,7 @@ msgstr "Servicios con precio fijo"
 #: model:product.product,name:sale_timesheet.product_service_deliver_manual
 #: model:product.template,name:sale_timesheet.product_service_deliver_manual_product_template
 msgid "Furniture Delivery (Manual)"
-msgstr ""
+msgstr "Entrega de muebles (Manual)"
 
 #. module: sale_timesheet
 #: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
@@ -527,7 +527,7 @@ msgstr "Ha mostrado la advertencia para la venta adicional"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__has_multi_sol
 msgid "Has Multi Sol"
-msgstr "Tiene varias soluciones"
+msgstr "Tiene varias líneas de orden de venta"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__display_cost
@@ -823,22 +823,23 @@ msgstr "No facturable"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__non_billable_time
 msgid "Non-billable Hours"
-msgstr ""
+msgstr "Horas no facturables"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__timesheet_revenues
 msgid "Number of hours spent multiplied by the unit price per hour/day."
 msgstr ""
+"Número de horas empleadas multiplicadas por el precio unitario por hora/día."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__billable_time
 msgid "Number of hours/days linked to a SOL."
-msgstr ""
+msgstr "Número de horas/días vinculados a una línea de orden de venta"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__non_billable_time
 msgid "Number of hours/days not linked to a SOL."
-msgstr ""
+msgstr "Número de horas/días no vinculados a una línea de orden de venta"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_bank_statement_line__timesheet_count
@@ -1136,6 +1137,20 @@ msgid ""
 "If you would like to bill the same service at a different rate, you need to create two separate sales order items as each sales order item can only have a single unit price at a time.\n"
 "You can also define the hourly company cost of your employees for their timesheets on this project specifically. It will bypass the timesheet cost set on the employee."
 msgstr ""
+"Elemento de la orden de venta que se seleccionará de forma predeterminada en las hojas de horas del empleado correspondiente. No toma en cuenta el elemento de la orden de venta definido en el proyecto y la tarea; puede modificarse en cada entrada de la hoja de horas si es necesario. En otras palabras, define el precio en el que se factura el tiempo de un empleado dependiendo de ciertas características, como sus conocimientos, habilidades o experiencia.\n"
+"Si desea facturar el mismo servicio con un precio diferente, deberá crear dos artículos distintos en la orden de venta, ya que cada artículo solo puede tener un precio único a la vez.\n"
+"También puede definir el costo por hora de sus empleados para sus hojas de horas en un proyecto en específico. Se omitirá el costo de la hoja de horas establecido en el empleado."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__so_line
+msgid ""
+"Sales order item to which the time spent will be added in order to be "
+"invoiced to your customer. Remove the sales order item for the timesheet "
+"entry to be non-billable."
+msgstr ""
+"Artículo en la orden de venta al que se añadirá el tiempo empleado para "
+"facturarlo a su cliente. Elimine el artículo para que la entrada de la hoja "
+"de horas no sea facturable."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__sale_order_id
@@ -1159,26 +1174,6 @@ msgstr "Buscar en la orden de venta"
 #, python-format
 msgid "Search in Sales Order Item"
 msgstr "Buscar en el artículo de la orden de venta"
-
-#. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product__project_id
-#: model:ir.model.fields,help:sale_timesheet.field_product_template__project_id
-msgid ""
-"Select a billable project on which tasks can be created. This setting must "
-"be set for each company."
-msgstr ""
-"Seleccione un proyecto facturable en el que se puedan crear tareas. Se debe "
-"establecer esta configuración para cada empresa."
-
-#. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product__project_template_id
-#: model:ir.model.fields,help:sale_timesheet.field_product_template__project_template_id
-msgid ""
-"Select a billable project to be the skeleton of the new created project when"
-" selling the current product. Its stages and tasks will be duplicated."
-msgstr ""
-"Seleccione un proyecto facturable para que sea el núcleo del proyecto nuevo "
-"que se cree al vender el producto actual. Se duplicarán sus etapas y tareas."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__project_id
@@ -1229,6 +1224,9 @@ msgid ""
 "task. It can be modified on each task individually by selecting a specific "
 "sales order item."
 msgstr ""
+"Servicio que se utilizará de forma predeterminada al facturar el tiempo "
+"empleado en una tarea. Se puede modificar individualmente en cada tarea al "
+"seleccionar un elemento específico en la orden de venta."
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.product_template_action_default_services
@@ -1349,6 +1347,8 @@ msgid ""
 "This cost overrides the employee's default employee hourly wage in "
 "employee's HR Settings"
 msgstr ""
+"Este costo anula el salario por hora predeterminado del empleado en la "
+"Configuración de la aplicación de Recursos humanos del empleado"
 
 #. module: sale_timesheet
 #: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
@@ -1364,18 +1364,6 @@ msgstr ""
 "                                personalizarla según sus necesidades desde la aplicación de <i>Ventas</i>,\n"
 "                                con el menú: Configuración /\n"
 "                                Plantillas de cotización."
-
-#. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_account_bank_statement_line__timesheet_encode_uom_id
-#: model:ir.model.fields,help:sale_timesheet.field_account_move__timesheet_encode_uom_id
-#: model:ir.model.fields,help:sale_timesheet.field_account_payment__timesheet_encode_uom_id
-#: model:ir.model.fields,help:sale_timesheet.field_sale_order__timesheet_encode_uom_id
-msgid ""
-"This will set the unit of measure used to encode timesheet. This will simply provide tools\n"
-"        and widgets to help the encoding. All reporting will still be expressed in hours (default value)."
-msgstr ""
-"Esto configurará la unidad de medida utilizada para codificar la hoja de horas, lo que proporcionará herramientas\n"
-"y widgets que ayuden con la codificación. Todos los reportes se expresarán en horas (valor predeterminado)."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_upsell_threshold
@@ -1513,7 +1501,7 @@ msgstr "Hojas de horas por tipo de facturación"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
 msgid "Timesheets for the"
-msgstr ""
+msgstr "Hojas de horas de"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -1529,7 +1517,7 @@ msgstr "Hojas de horas en el proyecto (un precio por orden de venta/proyecto)"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__margin
 msgid "Timesheets revenues minus the costs"
-msgstr ""
+msgstr "Ingresos de hojas de horas menos el precio"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form

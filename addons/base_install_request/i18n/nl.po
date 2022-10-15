@@ -45,12 +45,33 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hallo,\n"
+"        <br/><br/>\n"
+"        <span style=\"font-weight: bold;\" t-out=\"object.user_id.name\"/> heeft verzocht om de <span style=\"font-weight: bold;\" t-out=\"object.module_id.shortdesc\"/> module. Deze module is inbegrepen in je abonnement. Het heeft <span style=\"color: #875A7B; font-weight: bold;\">geen extra kosten</span>, maar een beheerdersrol is vereist om het te activeren.\n"
+"        <br/><br/>\n"
+"        <blockquote>\n"
+"            <t t-out=\"object.body_html\"/>\n"
+"        </blockquote>\n"
+"        <br/><br/>\n"
+"        <a style=\"background-color:#875A7B; padding:8px 16px 8px 16px; text-decoration:none; color:#fff; border-radius:5px\" t-attf-href=\"/web?#action=base_install_request .action_base_module_install_review&amp;active_id={{ object.module_id.id }}&amp;menu_id={{ ctx['menu_id'] }}\">Revisieverzoek</a>\n"
+"        <br/><br/>\n"
+"        Bedankt,\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature of ''\">--<br/>Mitchell-beheerder</t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: base_install_request
 #: code:addons/base_install_request/models/ir_module_module.py:0
 #, python-format
 msgid "Activation Request of \"%s\""
-msgstr ""
+msgstr "Activeringsverzoek van \"%s\""
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__body_html
@@ -78,7 +99,7 @@ msgstr "Gemaakt op"
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__module_ids
 msgid "Depending Apps"
-msgstr ""
+msgstr "Afhankelijke apps"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__display_name
@@ -95,7 +116,7 @@ msgstr "ID"
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_view_form
 msgid "Install App"
-msgstr ""
+msgstr "Installeer app"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request____last_update
@@ -118,7 +139,7 @@ msgstr "Laatst geupdate op"
 #. module: base_install_request
 #: model:mail.template,name:base_install_request.mail_template_base_install_request
 msgid "Mail: Install Request"
-msgstr ""
+msgstr "Mail: Installatieverzoek"
 
 #. module: base_install_request
 #: model:ir.model,name:base_install_request.model_ir_module_module
@@ -130,60 +151,60 @@ msgstr "Module"
 #. module: base_install_request
 #: model:ir.model,name:base_install_request.model_base_module_install_request
 msgid "Module Activation Request"
-msgstr ""
+msgstr "Verzoek om moduleactivering"
 
 #. module: base_install_request
 #: model:mail.template,subject:base_install_request.mail_template_base_install_request
 msgid "Module Activation Request for \"{{ object.module_id.shortdesc }}\""
-msgstr ""
+msgstr "Module-activeringsverzoek voor \"{{ object.module_id.shortdesc }}\""
 
 #. module: base_install_request
 #: model:ir.model,name:base_install_request.model_base_module_install_review
 msgid "Module Activation Review"
-msgstr ""
+msgstr "Module activatie beoordeling"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__modules_description
 msgid "Modules Description"
-msgstr ""
+msgstr "Modulebeschrijving"
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_view_form
 msgid "No extra cost, this application is free."
-msgstr ""
+msgstr "Geen extra kosten, deze applicatie is gratis."
 
 #. module: base_install_request
 #: code:addons/base_install_request/wizard/base_module_install_request.py:0
 #, python-format
 msgid "No module selected."
-msgstr ""
+msgstr "Geen module geselecteerd."
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.ir_module_module_view_kanban
 msgid "Request Access"
-msgstr ""
+msgstr "Toegang vragen"
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
 msgid "Request Activation"
-msgstr ""
+msgstr "Activering aanvragen"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__user_ids
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
 msgid "Send to:"
-msgstr ""
+msgstr "Verzenden naar:"
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_description
 msgid "The following apps will be installed:"
-msgstr ""
+msgstr "De volgende apps worden geïnstalleerd:"
 
 #. module: base_install_request
 #: code:addons/base_install_request/wizard/base_module_install_request.py:0
 #, python-format
 msgid "The module is already installed."
-msgstr ""
+msgstr "De module is al geïnstalleerd."
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
@@ -191,6 +212,9 @@ msgid ""
 "This app is included in your subscription. It's free to activate, but only "
 "an administrator can do it. Fill this form to send an activation request."
 msgstr ""
+"Deze app is inbegrepen in je abonnement. Het is gratis te activeren, maar "
+"alleen een beheerder kan het doen. Vul dit formulier in om een "
+"activeringsverzoek te verzenden."
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__user_id
@@ -200,18 +224,18 @@ msgstr "Gebruiker"
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
 msgid "Why do you need this module ?"
-msgstr ""
+msgstr "Waarom heb je deze module nodig?"
 
 #. module: base_install_request
 #: model:ir.actions.act_window,name:base_install_request.action_base_module_install_review
 msgid "You are about to install an extra application"
-msgstr ""
+msgstr "Je staat op het punt een extra applicatie te installeren"
 
 #. module: base_install_request
 #: code:addons/base_install_request/wizard/base_module_install_request.py:0
 #, python-format
 msgid "Your request has been successfully sent"
-msgstr ""
+msgstr "Je aanvraag is succesvol verzonden"
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
@@ -219,3 +243,6 @@ msgid ""
 "e.g. I'd like to use the SMS Marketing module to organize the promotion of "
 "our internal events, and exhibitions. I need access for 3 people of my team."
 msgstr ""
+"bijv. Ik wil de module SMS Marketing gebruiken om de promotie van onze "
+"interne evenementen en tentoonstellingen te organiseren. Ik heb toegang "
+"nodig voor 3 personen van mijn team."

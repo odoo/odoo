@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:41+0000\n"
+"POT-Creation-Date: 2022-10-10 13:34+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
@@ -1925,17 +1925,6 @@ msgstr ""
 "\n"
 "    قم بتهيئة أجهزة IoT حتى يتم استخدامها في خطوات\n"
 "    محددة لأخذ القياسات، والتقاط الصور، ...\n"
-
-#. module: base
-#: model:ir.module.module,description:base.module_website_slides_enterprise
-msgid ""
-"\n"
-"    Contains advanced features for eLeaning such as new views\n"
-"    "
-msgstr ""
-"\n"
-"    يحتوي على الخصائص المتقدمة للتعلم الإلكتروني كنوافذ العرض الجديدة\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp_workorder_worksheet
@@ -4380,17 +4369,6 @@ msgstr ""
 "    "
 
 #. module: base
-#: model:ir.module.module,description:base.module_im_livechat_enterprise
-msgid ""
-"\n"
-"Contains advanced features for Live Chat such as new views\n"
-"    "
-msgstr ""
-"\n"
-"يحتوي على خصائص متقدمة للدردشة المباشرة كطرق العرض الجديدة\n"
-"    "
-
-#. module: base
 #: model:ir.module.module,description:base.module_purchase_enterprise
 msgid ""
 "\n"
@@ -5120,30 +5098,11 @@ msgid ""
 "respectively. UBL Bis 3 is only available for companies which country is present in the `EAS list \n"
 "<https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_.\n"
 "\n"
-"Note also that you need to activate PDF A in order to be able to submit a Factur-X pdf on Chorus Pro: \n"
-"go to Settings > Technical (debug mode) > System Parameters > select/create one with Key: edi.use_pdfa, Value: true.\n"
-"With this setting, Chorus Pro will automatically detect the \"PDF/A-3 (Factur-X)\" format.\n"
+"Note also that in order for Chorus Pro to automatically detect the \"PDF/A-3 (Factur-X)\" format, you need to activate \n"
+"the \"Factur-X PDF/A-3\" option on the journal. This option will also validate the xml against the Factur-X and Chorus\n"
+"Pro rules and show the errors.\n"
 "    "
 msgstr ""
-"\n"
-"Electronic invoicing module\n"
-"===========================\n"
-"\n"
-"Allows to export and import formats: E-FFF, UBL Bis 3, EHF3, NLCIUS, Factur-X (CII), XRechnung (UBL).\n"
-"When generating the PDF on the invoice, the PDF will be embedded inside the xml for all UBL formats. This allows the \n"
-"receiver to retrieve the PDF with only the xml file. Note that **EHF3 is fully implemented by UBL Bis 3** (`reference \n"
-"<https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/#_implementation>`_).\n"
-"\n"
-"The formats can be chosen from the journal (Journal > Advanced Settings) linked to the invoice. \n"
-"\n"
-"Note that E-FFF, NLCIUS and XRechnung (UBL) are only available for Belgian, Dutch and German companies, \n"
-"respectively. UBL Bis 3 is only available for companies which country is present in the `EAS list \n"
-"<https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_.\n"
-"\n"
-"Note also that you need to activate PDF A in order to be able to submit a Factur-X pdf on Chorus Pro: \n"
-"go to Settings > Technical (debug mode) > System Parameters > select/create one with Key: edi.use_pdfa, Value: true.\n"
-"With this setting, Chorus Pro will automatically detect the \"PDF/A-3 (Factur-X)\" format.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_l10n_be_hr_payroll
@@ -7285,25 +7244,6 @@ msgid ""
 msgstr ""
 "\n"
 "الأقلمة العربية لأودو، لمعظم المملكة العربية السعودية.\n"
-
-#. module: base
-#: model:ir.module.module,description:base.module_web_dashboard
-msgid ""
-"\n"
-"Odoo Dashboard View.\n"
-"========================\n"
-"\n"
-"This module defines the Dashboard view, a new type of reporting view. This view\n"
-"can embed graph and/or pivot views, and displays aggregate values.\n"
-"        "
-msgstr ""
-"\n"
-"عرض لوحة بيانات أودو.\n"
-"========================\n"
-"\n"
-"يحدد هذا التطبيق طريقة عرض لوحة البيانات، وهي نوع جديد من العرض التقريري. بوسع هذا\n"
-"العرض تضمين طرق عرض المخطط البياني و/أو عرض المحور، وقوم بعرض القيم المجمعة.\n"
-"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_enterprise
@@ -10404,7 +10344,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_fleet
-#: model:ir.module.module,description:base.module_fleet_dashboard
 msgid ""
 "\n"
 "Vehicle, leasing, insurances, cost\n"
@@ -11548,8 +11487,10 @@ msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
-msgid "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
-msgstr "<i title=\"التوثيق \" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
+msgid ""
+"<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>\n"
+"                                        Learn more"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
@@ -12279,6 +12220,7 @@ msgstr "مفتاح الواجهة البرمجية للتطبيق: معالج إ
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__api_key_ids
+#: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "API Keys"
 msgstr "مفاتيح الواجهة البرمجية للتطبيق "
 
@@ -12286,6 +12228,13 @@ msgstr "مفاتيح الواجهة البرمجية للتطبيق "
 #: model:ir.actions.act_window,name:base.action_apikeys_admin
 msgid "API Keys Listing"
 msgstr "إدراج مفاتيح الواجهة البرمجية للتطبيق "
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
+msgid ""
+"API Keys are used to connect to Odoo from external tools without the need "
+"for a password or Two-factor Authentication."
+msgstr ""
 
 #. module: base
 #: code:addons/fields.py:0
@@ -12725,6 +12674,7 @@ msgstr "التفعيل والترجمة "
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__active
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__active
 #: model:ir.model.fields,field_description:base.field_res_bank__active
+#: model:ir.model.fields,field_description:base.field_res_company__active
 #: model:ir.model.fields,field_description:base.field_res_currency__active
 #: model:ir.model.fields,field_description:base.field_res_lang__active
 #: model:ir.model.fields,field_description:base.field_res_partner__active
@@ -13245,11 +13195,6 @@ msgstr "الخصائص المتقدمة "
 #: model:ir.module.module,summary:base.module_crm_enterprise
 msgid "Advanced features for CRM"
 msgstr "الخصائص المتقدمة لإدارة علاقات العملاء "
-
-#. module: base
-#: model:ir.module.module,summary:base.module_im_livechat_enterprise
-msgid "Advanced features for Live Chat"
-msgstr "الخصائص المتقدمة للدردشة المباشرة "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_enterprise
@@ -17046,11 +16991,6 @@ msgid "Customizations"
 msgstr "التخصيصات "
 
 #. module: base
-#: model:ir.module.module,summary:base.module_purchase_stock_enterprise
-msgid "Customized Dashboard for Purchase Stock"
-msgstr "لوحة بيانات مخصصة لمخزون المشتريات "
-
-#. module: base
 #: model:ir.actions.act_window,name:base.action_ui_view_custom
 #: model:ir.ui.menu,name:base.menu_action_ui_view_custom
 #: model_terms:ir.ui.view,arch_db:base.view_view_custom_form
@@ -17133,11 +17073,6 @@ msgstr "DLE 26 110 x 220 مم"
 #, python-format
 msgid "Dash"
 msgstr "Dash"
-
-#. module: base
-#: model:ir.module.module,summary:base.module_fleet_dashboard
-msgid "Dashboard for fleet"
-msgstr "لوحة البيانات للأسطول "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_board
@@ -17612,11 +17547,6 @@ msgid ""
 "before the address."
 msgstr ""
 "يحدد المكان الذي سيوضع فيه اسم العميل/الشركة، مثال: بعد أو قبل العنوان. "
-
-#. module: base
-#: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
-msgid "Developer API Keys"
-msgstr "مفاتيح API للمطور "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_digest_enterprise
@@ -19714,11 +19644,6 @@ msgid "Fleet"
 msgstr "الأسطول"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_fleet_dashboard
-msgid "Fleet Dashboard"
-msgstr "لوحة بيانات الأسطول "
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_fleet
 msgid "Fleet History"
 msgstr "سجل الأسطول "
@@ -20889,11 +20814,6 @@ msgid "Home Menu"
 msgstr "القائمة الرئيسية"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_hr_homeworking
-msgid "Homeworking"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.hn
 msgid "Honduras"
 msgstr "هندوراس"
@@ -21810,13 +21730,13 @@ msgstr ""
 "ناقل رسائل فوري يتيح لك إرسال الرسائل إلى المستخدمين في الوضع المباشر. "
 
 #. module: base
-#: code:addons/models.py:0
+#: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Insufficient fields for Calendar View!"
 msgstr "لا توجد حقول كافية لطريقة عرض التقويم! "
 
 #. module: base
-#: code:addons/models.py:0
+#: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid ""
 "Insufficient fields to generate a Calendar View for %s, missing a date_stop "
@@ -23139,11 +23059,6 @@ msgid "Live Event Tracks"
 msgstr "مسار الفعاليات الحية "
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_im_livechat_enterprise
-msgid "Live chat enterprise"
-msgstr "الدردشة المباشرة للمؤسسات "
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_language_install
 msgid "Load a Translation"
 msgstr "تحميل ترجمة"
@@ -23460,12 +23375,6 @@ msgid ""
 "Manage Contact Titles as well as their abbreviations (e.g. \"Mr.\", "
 "\"Mrs.\", etc)."
 msgstr "قم بإدارة مسميات جهات اتصالك كألقابهم (مثال: \"السيد\"، \"السيدة\"، إلخ). "
-
-#. module: base
-#: model:ir.module.module,description:base.module_hr_homeworking
-#: model:ir.module.module,summary:base.module_hr_homeworking
-msgid "Manage Homeworking policy"
-msgstr "إدارة سياسة العمل من المنزل "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment
@@ -24919,7 +24828,7 @@ msgid "No Country Found!"
 msgstr "لم يتم العثور على دولة! "
 
 #. module: base
-#: code:addons/models.py:0
+#: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "No default view of type '%s' could be found !"
 msgstr "لا يوجد إيجاد طريقة عرض افتراضية من النوع '%s'!"
@@ -29427,11 +29336,6 @@ msgstr "مخزون طلبات الشراء "
 #: model:ir.module.module,shortdesc:base.module_purchase_stock
 msgid "Purchase Stock"
 msgstr "مخزون المشتريات "
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_purchase_stock_enterprise
-msgid "Purchase Stock Enterprise"
-msgstr "مخزون المشتريات للمؤسسات "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_mrp
@@ -36487,11 +36391,6 @@ msgid "eLearning"
 msgstr "التعلم الإلكتروني "
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_website_slides_enterprise
-msgid "eLearning enterprise"
-msgstr "التعلم الإلكتروني للمؤسسات "
-
-#. module: base
 #: model:ir.module.category,name:base.module_category_services_expenses
 msgid "expenses"
 msgstr "النفقات "
@@ -36919,11 +36818,6 @@ msgstr "عنوان"
 #, python-format
 msgid "true"
 msgstr "صحيح"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_web_dashboard
-msgid "web_dashboard"
-msgstr "web_dashboard"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_delivery_mondialrelay

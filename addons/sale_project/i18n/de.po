@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:03+0000\n"
+"POT-Creation-Date: 2022-10-10 10:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
@@ -53,6 +53,13 @@ msgstr ""
 "  - Analytik von Aufwendungen: Die Menge ist die Mengensumme aus gebuchten Aufwendungen\n"
 "  - Arbeitszeitblatt: Die Menge ist die Summe der Stunden, die für Aufgaben erfasst wurden, die mit dieser Verkaufslinie verbunden sind.\n"
 "  - Lagerbewegungen: Die Menge stammt aus bestätigten Kommissionierungen\n"
+
+#. module: sale_project
+#. openerp-web
+#: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
+#, python-format
+msgid "All items have been loaded"
+msgstr ""
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__allow_billable
@@ -552,27 +559,6 @@ msgstr "In Auftrag suchen"
 #, python-format
 msgid "Search in Sales Order Item"
 msgstr "Suche in Kundenauftragspositionen"
-
-#. module: sale_project
-#: model:ir.model.fields,help:sale_project.field_product_product__project_id
-#: model:ir.model.fields,help:sale_project.field_product_template__project_id
-msgid ""
-"Select a billable project on which tasks can be created. This setting must "
-"be set for each company."
-msgstr ""
-"Wählen Sie ein abrechenbares Projekt aus, für das Aufgaben erstellt werden "
-"können. Diese Einstellung muss für jedes Unternehmen festgelegt werden."
-
-#. module: sale_project
-#: model:ir.model.fields,help:sale_project.field_product_product__project_template_id
-#: model:ir.model.fields,help:sale_project.field_product_template__project_template_id
-msgid ""
-"Select a billable project to be the skeleton of the new created project when"
-" selling the current product. Its stages and tasks will be duplicated."
-msgstr ""
-"Wählen Sie ein abrechenbares Projekt aus, das als Grundgerüst für das neu "
-"erstellte Projekt beim Verkauf des aktuellen Produkts dienen soll. Phasen "
-"und Aufgaben werden dupliziert."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id

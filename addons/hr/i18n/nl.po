@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:23+0000\n"
+"POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -254,6 +254,11 @@ msgstr ""
 "e-mails</span>"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
+msgid "<span class=\"fw-bolder\">Reporting</span>"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid ""
 "<span class=\"o_form_label o_hr_form_label cursor-default\">Close "
@@ -351,11 +356,6 @@ msgstr "<span class=\"text-muted small\">Tijd om te antwoorden</span>"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<span>Km</span>"
 msgstr "<span>Km</span>"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
-msgid "<strong><span>Reporting</span></strong>"
-msgstr "<strong><span>Reportage</span></strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1050,12 +1050,6 @@ msgid "Default departure reasons cannot be deleted."
 msgstr "Standaard vertrekredenen kunnen niet worden verwijderd."
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee__resource_calendar_id
-#: model:ir.model.fields,help:hr.field_res_users__employee_resource_calendar_id
-msgid "Define the schedule of resource"
-msgstr "Definieert de planning van de resource"
-
-#. module: hr
 #: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__department_id
@@ -1150,15 +1144,6 @@ msgstr "Ontdek onze producten."
 #: model:ir.model,name:hr.model_mail_channel
 msgid "Discussion Channel"
 msgstr "Discussiekanaal"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
-msgid ""
-"Display Homeworking settings for each employee and dedicated reports.\n"
-"                                        Presence icons will be updated with homeworking location."
-msgstr ""
-"Toon thuiswerkinstellingen voor elke werknemer en speciale rapporten.\n"
-"                                        Aanwezigheidspictogrammen worden bijgewerkt met de thuiswerklocatie."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__display_name
@@ -2959,7 +2944,7 @@ msgstr "Technisch veld, bind gebruiker aan deze medewerker bij aanmaken"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__create_employee
 msgid "Technical field, whether to create an employee"
-msgstr "Technisch veld, of u een werknemer wilt maken"
+msgstr "Technisch veld, of je een werknemer wilt maken"
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_temporary
@@ -3121,9 +3106,9 @@ msgid ""
 " leaves, ...), you should create another employee in the new company "
 "instead."
 msgstr ""
-"Om problemen met meerdere bedrijven te vermijden (de toegang tot uw vorige "
-"contracten verliezen, vertrekken, ...), moet u in plaats daarvan een andere "
-"werknemer in het nieuwe bedrijf creëren."
+"Om problemen met meerdere bedrijven te vermijden (de toegang tot je vorige "
+"contracten verliezen, vertrekken, ...), moet je in plaats daarvan een andere"
+" werknemer in het nieuwe bedrijf creëren."
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_to_define

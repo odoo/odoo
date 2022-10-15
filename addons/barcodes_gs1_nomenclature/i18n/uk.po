@@ -1,0 +1,251 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* barcodes_gs1_nomenclature
+# 
+# Translators:
+# Martin Trigaux, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~15.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-06-09 14:05+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
+"Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__alpha
+msgid "Alpha-Numeric Name"
+msgstr "Алфавітно-цифрова назва"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__gs1_separator_fnc1
+msgid ""
+"Alternative regex delimiter for the FNC1 (by default, if not set, it is <GS>"
+" ASCII 29 char). The separator must not match the begin/end of any related "
+"rules pattern."
+msgstr ""
+"Альтернативний роздільник регулярного виразу для FNC1 (за замовчуванням, "
+"якщо не встановлено, він є <GS> діаграмою ASCII 29). Роздільник не повинен "
+"збигатися з початком/кінцем будь-якого пов'язаного паттерна правил."
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__associated_uom_id
+msgid "Associated Uom"
+msgstr "Пов'язана од. вим."
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model,name:barcodes_gs1_nomenclature.model_barcode_nomenclature
+msgid "Barcode Nomenclature"
+msgstr "Номенклатура штрих-кодів"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model,name:barcodes_gs1_nomenclature.model_barcode_rule
+msgid "Barcode Rule"
+msgstr "Правило штрих-коду"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__use_date
+msgid "Best before Date"
+msgstr "Дата вжити до"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__date
+msgid "Date"
+msgstr "Дата"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__gs1_decimal_usage
+msgid "Decimal"
+msgstr "Десятковий"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__location_dest
+msgid "Destination location"
+msgstr "Розташування призначення"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__encoding
+msgid "Encoding"
+msgstr "Кодування"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__expiration_date
+msgid "Expiration Date"
+msgstr "Термін дії"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_nomenclature__gs1_separator_fnc1
+msgid "FNC1 Separator"
+msgstr "Роздільник FNC1"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
+msgid "GS1 Content Type"
+msgstr "Тип вмісту GS1"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__encoding__gs1-128
+msgid "GS1-128"
+msgstr "GS1-128"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__gs1_decimal_usage
+msgid ""
+"If True, use the last digit of AI to determine where the first decimal is"
+msgstr ""
+
+#. module: barcodes_gs1_nomenclature
+#. openerp-web
+#: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
+#, python-format
+msgid "Invalid barcode: can't be formated as date"
+msgstr "Недійсний штрих-код: не можна відформатувати як дату"
+
+#. module: barcodes_gs1_nomenclature
+#. openerp-web
+#: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
+#, python-format
+msgid "Invalid barcode: the check digit is incorrect"
+msgstr "Недвйсний штрих-код: знаки чеку некоректні"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__is_gs1_nomenclature
+msgid "Is GS1 Nomenclature"
+msgstr "Є номенклатурою GS1"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__location
+msgid "Location"
+msgstr "Розташування"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__lot
+msgid "Lot"
+msgstr "Партія"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__measure
+msgid "Measure"
+msgstr "Міра"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__identifier
+msgid "Numeric Identifier"
+msgstr "Числовий ідентифікатор"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__pack_date
+msgid "Pack Date"
+msgstr ""
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__package
+msgid "Package"
+msgstr "Упаковка"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__package_type
+msgid "Package Type"
+msgstr "Тип упаковки"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__quantity
+msgid "Quantity"
+msgstr "Кількість"
+
+#. module: barcodes_gs1_nomenclature
+#: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
+#, python-format
+msgid "The FNC1 Separator Alternative is not a valid Regex: "
+msgstr "Альтернативний роздільник FNC1 не є дійсним регулярним виразом: "
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
+msgid ""
+"The GS1 content type defines what kind of data the rule will process the "
+"barcode as:        * Date: the barcode will be converted into a Odoo "
+"datetime;        * Measure: the barcode's value is related to a specific "
+"UoM;        * Numeric Identifier: fixed length barcode following a specific "
+"encoding;        * Alpha-Numeric Name: variable length barcode."
+msgstr ""
+"Тип вмісту GS1 визначає, які будуть дані при обробці правилом штрих-коду: * "
+"Дата: штрих-код буде перетворено в дату і час Odoo; * Вимірювання: значення "
+"штрих-коду пов'язане з певною лд. вим.; * Числовий ідентифікатор: штрих-код "
+"фіксованої довжини після певного кодування; * Буквенно-цифрова назва: штрих-"
+"код змінної довжини."
+
+#. module: barcodes_gs1_nomenclature
+#: code:addons/barcodes_gs1_nomenclature/models/barcode_rule.py:0
+#, python-format
+msgid "The rule pattern \"%s\" is not a valid Regex: "
+msgstr "Паттерн правила \"%s\" не є дійсним регуляним виразом: "
+
+#. module: barcodes_gs1_nomenclature
+#: code:addons/barcodes_gs1_nomenclature/models/barcode_rule.py:0
+#, python-format
+msgid ""
+"The rule pattern \"%s\" is not valid, it needs two groups:\n"
+"\t- A first one for the Application Identifier (usually 2 to 4 digits);\n"
+"\t- A second one to catch the value."
+msgstr ""
+"Паттерн правила \"%s\" недійсний, він вимагає дві групи:\n"
+"\t- Перша модуля ідентифікатора (зазвичай від 2 до 4 чисел);\n"
+"\t- Друга для отримання значення."
+
+#. module: barcodes_gs1_nomenclature
+#: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
+#, python-format
+msgid ""
+"There is something wrong with the barcode rule \"%s\" pattern.\n"
+"If this rule uses decimal, check it can't get sometime else than a digit as last char for the Application Identifier.\n"
+"Check also the possible matched values can only be digits, otherwise the value can't be casted as a measure."
+msgstr ""
+"Щось не так із паттерном правила штрих-коду \"%s\".\n"
+"Якщо це правило використовує десяткові числа, перевірте, чи він не може отримати тільки цифру як останній символ для модуля ідентифікатора.\n"
+"Перевірте також, чи збігаються значення, які можуть бути лише цифрами, інакше значення не може бути використано як міра."
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
+#: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__is_gs1_nomenclature
+msgid ""
+"This Nomenclature use the GS1 specification, only GS1-128 encoding rules is "
+"accepted is this kind of nomenclature."
+msgstr ""
+"Ця номенклатура використовує специфікацію GS1, лише дозволені правила "
+"кодування GS1-128 є правильною номенклатурою."
+
+#. module: barcodes_gs1_nomenclature
+#. openerp-web
+#: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
+#, python-format
+msgid "This barcode can't be parsed by any barcode rules."
+msgstr "Цей штрих-код не може бути розділений жодним правилом."
+
+#. module: barcodes_gs1_nomenclature
+#. openerp-web
+#: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
+#, python-format
+msgid "This barcode can't be partially or fully parsed."
+msgstr "Штрих-код не може бути частково чи повністю розділений."
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__encoding
+msgid ""
+"This rule will apply only if the barcode is encoded with the specified "
+"encoding"
+msgstr ""
+"Дане правило діятиме, тільки якщо штрих-код закодовано точно зазначеним "
+"кодуванням"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__type
+msgid "Type"
+msgstr "Тип"

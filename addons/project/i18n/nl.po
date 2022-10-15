@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:23+0000\n"
+"POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -583,11 +583,6 @@ msgid "<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"/
 msgstr "<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"/>"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_form2
-msgid "<span class=\"o_form_label\"> Recurrent </span>"
-msgstr "<span class=\"o_form_label\"> Terugkerend </span>"
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid ""
 "<span class=\"o_stat_text\">\n"
@@ -677,7 +672,7 @@ msgstr "<strong>Project:</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "<u>Milestones</u>"
-msgstr "<u>Milestones</u>"
+msgstr "<je>Milestones</je>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -993,7 +988,6 @@ msgstr "April"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_form.js:0
 #: code:addons/project/static/src/views/project_task_form/project_task_form_controller.js:0
 #: code:addons/project/static/src/views/project_task_list/project_task_list_controller.js:0
 #, python-format
@@ -1529,8 +1523,6 @@ msgid "Confirm"
 msgstr "Bevestigen"
 
 #. module: project
-#. openerp-web
-#: code:addons/project/static/src/js/project_form.js:0
 #: code:addons/project/wizard/project_task_type_delete.py:0
 #, python-format
 msgid "Confirmation"
@@ -1560,7 +1552,6 @@ msgstr "Contact"
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/components/project_stop_recurrence_confirmation_dialog/project_stop_recurrence_confirmation_dialog.xml:0
-#: code:addons/project/static/src/js/project_form.js:0
 #, python-format
 msgid "Continue Recurrence"
 msgstr "Doorgaan met herhaling"
@@ -2060,14 +2051,11 @@ msgid "Disabled Rating Warning"
 msgstr "Beschikbaarheid waarschuwing weergeven"
 
 #. module: project
-#. openerp-web
-#: code:addons/project/static/src/js/project_form.js:0
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_footer
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_unarchive_wizard
-#, python-format
 msgid "Discard"
 msgstr "Negeren"
 
@@ -2877,7 +2865,6 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_form.js:0
 #: code:addons/project/static/src/services/project_task_recurrence.js:0
 #, python-format
 msgid "It seems that this task is part of a recurrence."
@@ -2885,7 +2872,6 @@ msgstr "Het lijkt erop dat deze taak onderdeel is van een herhaling."
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_form.js:0
 #: code:addons/project/static/src/services/project_task_recurrence.js:0
 #, python-format
 msgid ""
@@ -3124,11 +3110,6 @@ msgstr "Laten we wachten tot je klanten zich manifesteren."
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__share_link
 msgid "Link"
 msgstr "Link"
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_update__email_cc
-msgid "List of cc from incoming emails."
-msgstr "Cc lijst van binnenkomende e-mails."
 
 #. module: project
 #. openerp-web
@@ -4451,11 +4432,6 @@ msgid "Ready to reopen"
 msgstr "Gereed om te heropenen"
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_task__rating_last_feedback
-msgid "Reason of the rating"
-msgstr "Reden van de beoordeling"
-
-#. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
 msgid "Reception of {{ object.name }}"
 msgstr "Ontvangst van {{ object.name }}"
@@ -4852,6 +4828,8 @@ msgid ""
 "Set this template on a project's stage to automate email when tasks reach "
 "stages"
 msgstr ""
+"Stel deze sjabloon in op de fase van een project om e-mail te automatiseren "
+"wanneer taken de fasen bereiken"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_config_settings_action
@@ -5044,7 +5022,6 @@ msgstr ""
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/components/project_stop_recurrence_confirmation_dialog/project_stop_recurrence_confirmation_dialog.xml:0
-#: code:addons/project/static/src/js/project_form.js:0
 #, python-format
 msgid "Stop Recurrence"
 msgstr "Herhaling stoppen"
@@ -5328,14 +5305,10 @@ msgid "Tasks Due Today"
 msgstr "Taken die vandaag moeten worden voltooid"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Tasks Management"
 msgstr "Taakbeheer"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid "Tasks Managment"
-msgstr "Takenbeheer"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__type_ids
@@ -5432,17 +5405,6 @@ msgstr ""
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
 msgid "The project's start date must be before its end date."
 msgstr "De startdatum van het project moet voor de einddatum vallen."
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_project__stage_id
-msgid ""
-"The step, or stage, that your project is in. You can add, remove, and move stages around to adapt the pipeline to your own needs.\n"
-"Via the stage configuration you can set up email templates and automate the sending of emails when a project moves into the stage.\n"
-"Projects in a folded stage are considered as closed."
-msgstr ""
-"De stap of fase waarin je project zich bevindt. Je kunt fasen toevoegen, verwijderen en verplaatsen om de pijplijn aan je eigen behoeften aan te passen.\n"
-"Via de fase-onfiguratie kun je e-mailsjablonen instellen en het verzenden van e-mails automatiseren wanneer een project in de stage komt.\n"
-"Projecten in een gevouwen fase worden als afgesloten beschouwd."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -5563,14 +5525,10 @@ msgid "Thursday"
 msgstr "Donderdag"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Time Management"
 msgstr "Tijdbeheer"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid "Time Managment"
-msgstr "Time Managment"
 
 #. module: project
 #: model:digest.tip,name:project.digest_tip_project_1
@@ -6121,6 +6079,9 @@ msgid ""
 "you navigate.<br/> You can discard these changes from here or manually save "
 "your task.<br/>Let's save it manually."
 msgstr ""
+"Je hebt niet-opgeslagen wijzigingen - geen zorgen! Odoo zal het automatisch "
+"opslaan terwijl je navigeert. <br/> Je kunt deze wijzigingen hier ongedaan "
+"maken of je taak handmatig opslaan. <br/>Laten we deze handmatig opslaan."
 
 #. module: project
 #: code:addons/project/models/project.py:0

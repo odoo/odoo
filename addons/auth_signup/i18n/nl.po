@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Eteil Jr., 2022
+# Gunther Clauwaert <gclauwae@hotmail.com>, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
@@ -99,13 +99,13 @@ msgstr ""
 "<tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "<div>\n"
 "Beste <t t-out=\"object.name or ''\">Mitchell Admin</t>,<br/> <br/>\n"
-"U heeft de volgende gebruiker(s) toegevoegd aan uw database, maar ze hebben zich nog niet geregistreerd:\n"
+"U heeft de volgende gebruiker(s) toegevoegd aan je database, maar ze hebben zich nog niet geregistreerd:\n"
 "<ul>\n"
 "<t t-foreach=\"invited_users\" t-as=\"invited_user\">\n"
 "<li t-out=\"invited_user or ''\">demo@voorbeeld.com</li>\n"
 "</t>\n"
 "</ul>\n"
-"Volg ze op, zodat ze toegang krijgen tot uw database en met u kunnen gaan werken.\n"
+"Volg ze op, zodat ze toegang krijgen tot je database en met je kunnen gaan werken.\n"
 "<br/><br/>\n"
 "Nog een fijne dag!<br/>\n"
 "--<br/>The <t t-out=\"object.company_id.name or ''\">UwBedrijf</t> Team\n"
@@ -243,9 +243,9 @@ msgstr ""
 "</a>\n"
 "</div>\n"
 "<t t-set=\"website_url\" t-value=\"object.get_base_url()\"/>\n"
-"Uw Odoo domein is: <b><a t-att-href=\"website_url\" t-out=\"website_url or ''\">http://uwbedrijf.odoo.com</a></b><br/>\n"
-"Uw aanmeldings e-mail is: <b><a t-attf-href=\"/web/login?login={{ object.email }}\" target=\"_blank\" t-out=\"object.email or ''\">mark.brown23@voorbeeld.com</a></b><br/><br/>\n"
-"Nog nooit gehoord van Odoo? Het is een all-in-one bedrijfssoftware geliefd bij meer dan 7 miljoen gebruikers. Het zal uw ervaring op het werk aanzienlijk verbeteren en uw productiviteit verhogen.\n"
+"Je Odoo domein is: <b><a t-att-href=\"website_url\" t-out=\"website_url or ''\">http://uwbedrijf.odoo.com</a></b><br/>\n"
+"Je aanmeldings e-mail is: <b><a t-attf-href=\"/web/login?login={{ object.email }}\" target=\"_blank\" t-out=\"object.email or ''\">mark.brown23@voorbeeld.com</a></b><br/><br/>\n"
+"Nog nooit gehoord van Odoo? Het is een all-in-one bedrijfssoftware geliefd bij meer dan 7 miljoen gebruikers. Het zal je ervaring op het werk aanzienlijk verbeteren en je productiviteit verhogen.\n"
 "<br/><br/>\n"
 "Kijk eens naar de <a href=\"https://www.odoo.com/page/tour?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo Tour</a> om het gereedschap te ontdekken.\n"
 "<br/><br/>\n"
@@ -385,7 +385,7 @@ msgstr ""
 "<td align=\"center\" style=\"min-width: 590px;\">\n"
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "<tr><td valign=\"middle\">\n"
-"<span style=\"font-size: 10px;\">Uw rekening</span><br/>\n"
+"<span style=\"font-size: 10px;\">Je rekening</span><br/>\n"
 "<span style=\"font-size: 20px; font-weight: bold;\">\n"
 "<t t-out=\"object.name or ''\">Marc Demo</t>\n"
 "</span>\n"
@@ -406,13 +406,13 @@ msgstr ""
 "<div>\n"
 "Beste <t t-out=\"object.name or ''\">Marc Demo</t>,<br/><br/>\n"
 "Een wachtwoord reset is aangevraagd voor de Odoo account die aan deze e-mail is gekoppeld. \n"
-"Je kunt uw wachtwoord wijzigen door deze link te volgen die gedurende 24 uur geldig zal blijven:<br/>\n"
+"Je kunt je wachtwoord wijzigen door deze link te volgen die gedurende 24 uur geldig zal blijven:<br/>\n"
 "<div style=\"margin: 16px 0px 16px 0px;\">\n"
 "<a t-att-href=\"object.signup_url\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "Wijzig wachtwoord\n"
 "</a>\n"
 "</div>\n"
-"Als u dit niet verwacht, kunt u deze e-mail gerust negeren.<br/><br/>\n"
+"Als je dit niet verwacht, kun je deze e-mail gerust negeren.<br/><br/>\n"
 "Bedankt,\n"
 "<t t-if=\"user.signature\">\n"
 "<br/>\n"
@@ -553,7 +553,7 @@ msgstr ""
 "<td align=\"center\" style=\"min-width: 590px;\">\n"
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "<tr><td valign=\"middle\">\n"
-"<span style=\"font-size: 10px;\">Uw Rekening</span><br/>\n"
+"<span style=\"font-size: 10px;\">Je Rekening</span><br/>\n"
 "<span style=\"font-size: 20px; font-weight: bold;\">\n"
 "<t t-out=\"object.name or ''\">Marc Demo</t>\n"
 "</span>\n"
@@ -573,9 +573,9 @@ msgstr ""
 "<tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "<div>\n"
 "Beste <t t-out=\"object.name or ''\">Marc Demo</t>,<br/><br/>\n"
-"Uw account is succesvol aangemaakt!<br/>\n"
-"Uw login is <strong><t t-out=\"object.email or ''\">mark.brown23@example.com</t></strong><br/>\n"
-"Om toegang te krijgen tot uw account, kunt u de volgende link gebruiken:\n"
+"Je account is succesvol aangemaakt!<br/>\n"
+"Je login is <strong><t t-out=\"object.email or ''\">mark.brown23@example.com</t></strong><br/>\n"
+"Om toegang te krijgen tot je account, kun je de volgende link gebruiken:\n"
 "<div style=\"margin: 16px 0px 16px 0px;\">\n"
 "<a t-attf-href=\"/web/login?auth_login={{object.email}}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "Ga naar mijn account\n"
@@ -745,7 +745,7 @@ msgstr "Nog nooit verbonden"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "No account found for this login"
-msgstr ""
+msgstr "Geen account gevonden voor deze login"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
@@ -777,7 +777,7 @@ msgstr "Reset wachtwoord"
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Password reset instructions sent to your email"
-msgstr ""
+msgstr "Wachtwoord reset instructies verzonden naar je e-mail"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
@@ -788,7 +788,7 @@ msgstr "Wachtwoorden komen niet overeen, probeer het opnieuw."
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login_successful
 msgid "Registration successful."
-msgstr ""
+msgstr "Registratie succesvol"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_data_unregistered_users

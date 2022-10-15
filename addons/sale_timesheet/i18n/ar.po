@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:25+0000\n"
+"POT-Creation-Date: 2022-10-10 10:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
@@ -1133,6 +1133,14 @@ msgid ""
 msgstr ""
 
 #. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__so_line
+msgid ""
+"Sales order item to which the time spent will be added in order to be "
+"invoiced to your customer. Remove the sales order item for the timesheet "
+"entry to be non-billable."
+msgstr ""
+
+#. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__sale_order_id
 msgid "Sales order to which the task is linked."
 msgstr "أمر البيع الذي ترتبط به هذه المهمة. "
@@ -1154,26 +1162,6 @@ msgstr "البحث في أمر البيع "
 #, python-format
 msgid "Search in Sales Order Item"
 msgstr "البحث في عنصر أمر البيع "
-
-#. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product__project_id
-#: model:ir.model.fields,help:sale_timesheet.field_product_template__project_id
-msgid ""
-"Select a billable project on which tasks can be created. This setting must "
-"be set for each company."
-msgstr ""
-"قم بتحديد مشروع قابل للفوترة يمكن إنشاء المهام فيه. يجب تعيين هذه الإعدادات "
-"لكل شركة. "
-
-#. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product__project_template_id
-#: model:ir.model.fields,help:sale_timesheet.field_product_template__project_template_id
-msgid ""
-"Select a billable project to be the skeleton of the new created project when"
-" selling the current product. Its stages and tasks will be duplicated."
-msgstr ""
-"قم بتحديد مشروع قابل للفوترة ليكون هيكل المشروع الجديد الذي تم إنشاؤه عند "
-"بيع المنتج الحالي. سوف يتم استنساخ مراحله ومهامه. "
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__project_id
@@ -1354,18 +1342,6 @@ msgstr ""
 "                                من تطبيق <i>المبيعات</i> ليناسب احتياجاتك، \n"
 "                                باستخدام القائمة: تهيئة /\n"
 "                                قوالب عروض الأسعار. "
-
-#. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_account_bank_statement_line__timesheet_encode_uom_id
-#: model:ir.model.fields,help:sale_timesheet.field_account_move__timesheet_encode_uom_id
-#: model:ir.model.fields,help:sale_timesheet.field_account_payment__timesheet_encode_uom_id
-#: model:ir.model.fields,help:sale_timesheet.field_sale_order__timesheet_encode_uom_id
-msgid ""
-"This will set the unit of measure used to encode timesheet. This will simply provide tools\n"
-"        and widgets to help the encoding. All reporting will still be expressed in hours (default value)."
-msgstr ""
-"سيقوم هذا بتعيين وحدة القياس المستخدمة لترميز الجداول الزمنية. سيوفر هذا أدوات\n"
-"        للمساعدة في عملية الترميز. لكن ستظل التقارير مُعبر عنها بالساعات (القيمة الافتراضية). "
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_upsell_threshold

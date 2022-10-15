@@ -6,17 +6,17 @@
 # Nicolas Seinlet <nicolas@seinlet.com>, 2022
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2022
 # Eloïse Stilmant <est@odoo.com>, 2022
-# Cécile Collart <cco@odoo.com>, 2022
 # Martin Trigaux, 2022
 # Jolien De Paepe, 2022
+# Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:23+0000\n"
+"POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1423,6 +1423,13 @@ msgid "Costs"
 msgstr "Coûts"
 
 #. module: mrp
+#. openerp-web
+#: code:addons/mrp/static/src/views/fields/google_slides_viewer.js:0
+#, python-format
+msgid "Could not display the selected spreadsheet"
+msgstr "Impossible d'afficher la feuille de calcul sélectionnée"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_backorder_count
 msgid "Count of linked backorder"
 msgstr "Compte des reliquats liés"
@@ -1701,11 +1708,6 @@ msgid ""
 msgstr ""
 "Définissez les composants et les produits finis que vous souhaitez utiliser dans \n"
 "les nomenclatures et les ordres de fabrication."
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_workcenter__resource_calendar_id
-msgid "Define the schedule of resource"
-msgstr "Définir la planification de la ressource"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__consumption
@@ -2215,6 +2217,13 @@ msgstr "Google Slide"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "Google Slide Link"
 msgstr "Lien Google Slide"
+
+#. module: mrp
+#. openerp-web
+#: code:addons/mrp/static/src/views/fields/google_slides_viewer.js:0
+#, python-format
+msgid "Google Slides Viewer"
+msgstr "Google Visionneuse de diapositives"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -4540,6 +4549,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__show_backorder_lines
 msgid "Show backorder lines"
 msgstr "Afficher les lignes du reliquat"
+
+#. module: mrp
+#. openerp-web
+#: code:addons/mrp/static/src/views/fields/google_slides_viewer.xml:0
+#, python-format
+msgid "Slides viewer"
+msgstr "Visionneuse de diapositives"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__leave_id

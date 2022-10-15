@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:23+0000\n"
+"POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
@@ -30,7 +30,12 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
-msgid "\tCannot create unbalanced journal entry. The balance is equal to %s\n"
+msgid ""
+"\n"
+"\n"
+"The move (%s) is not balanced.\n"
+"The total of debits equals %s and the total of credits equals %s.\n"
+"You might want to specify a default account on journal \"%s\" to automatically balance each move."
 msgstr ""
 
 #. module: account
@@ -210,12 +215,6 @@ msgstr ""
 msgid ""
 "- A new field « Total (tax inc.) » to speed up and control the encoding by "
 "automating line creation with the right account &amp; tax."
-msgstr ""
-
-#. module: account
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "- Move with id %i\n"
 msgstr ""
 
 #. module: account
@@ -765,8 +764,9 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
 msgid ""
-"<span class=\"text-muted\">Leave empty to create a new journal for this bank"
-" account, or select a journal to link it with the bank account.</span>"
+"<span class=\"text-muted\" colspan=\"2\">\n"
+"                                    Leave empty to create a new journal for this bank account, or select a journal to link it with the bank account.\n"
+"                                </span>"
 msgstr ""
 
 #. module: account
@@ -1020,7 +1020,6 @@ msgid "<strong>Customer Code:</strong>"
 msgstr "<strong>รหัสลูกค้า:</strong>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Date:</strong>"
 msgstr "<strong>วันที่</strong>"
@@ -2371,6 +2370,12 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
+msgid "An error has occurred."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
 msgid ""
 "An error occurred when computing the inalterability. Impossible to get the "
 "unique previous posted journal entry."
@@ -2673,6 +2678,7 @@ msgid "Auto-validate"
 msgstr "การตรวจสอบอัตโนมัติ"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Automatic Balancing Line"
@@ -3136,8 +3142,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__foldable
 msgid ""
-"By default, we always unfold the lines that can be. If this is checked; the "
-"line won't be unfolded by default, and a folding button will be displayed"
+"By default, we always unfold the lines that can be. If this is checked, the "
+"line won't be unfolded by default, and a folding button will be displayed."
 msgstr ""
 
 #. module: account
@@ -3727,6 +3733,13 @@ msgstr "ดัชนีสี"
 #: model:ir.model.fields,field_description:account.field_account_report__column_ids
 msgid "Columns"
 msgstr "คอลัมน์"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_report_line__groupby
+msgid ""
+"Comma-separated list of fields from account.move.line (Journal Item). When "
+"set, this line will generate sublines grouped by those keys."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__commercial_partner_id
@@ -5434,6 +5447,11 @@ msgid "Documentation"
 msgstr "เอกสารประกอบ"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_applicability__business_domain
+msgid "Domain"
+msgstr "โดเมน"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__domain_formula
 msgid "Domain Formula Shortcut"
 msgstr ""
@@ -6851,6 +6869,11 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+msgid "If set, this account is used to automatically balance entries."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_account__non_trade
 msgid ""
 "If set, this account will belong to Non Trade Receivable/Payable in reports and filters.\n"
@@ -7332,6 +7355,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_warn
 #: model:ir.model.fields,field_description:account.field_res_users__invoice_warn
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_applicability__business_domain__invoice
 #: model:ir.model.fields.selection,name:account.selection__account_payment__reconciled_invoices_type__invoice
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__document_type__invoice
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -7669,6 +7693,13 @@ msgstr "มากกว่า"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__green_on_positive
 msgid "Is Growth Good when Positive"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_report_expression__blank_if_zero
+msgid ""
+"When checked, 0 values will not show when displaying this expression's "
+"value."
 msgstr ""
 
 #. module: account
@@ -9470,6 +9501,12 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "One or more Bank Accounts set on this partner are also used by other"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "One or more lines require a 100% analytic distribution."
 msgstr ""
 
 #. module: account
@@ -11949,6 +11986,13 @@ msgstr ""
 "template."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_report_line__action_id
+msgid ""
+"Setting this field will turn the line into a link, executing the action when"
+" clicked."
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_account_config
 #: model:ir.actions.act_window,name:account.action_open_settings
 #: model:ir.ui.menu,name:account.menu_account_config
@@ -13432,6 +13476,12 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/account_analytic_line.py:0
+#, python-format
+msgid "The journal item is not linked to the correct financial account"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_month
 msgid ""
@@ -13676,6 +13726,11 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_report__root_report_id
+msgid "The report this report is a variant of."
+msgstr ""
+
+#. module: account
 #: code:addons/account/controllers/terms.py:0
 #, python-format
 msgid "The requested page is invalid, or doesn't exist anymore."
@@ -13913,12 +13968,6 @@ msgstr ""
 "journal."
 
 #. module: account
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "There was a problem with the following move(s):\n"
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_error
 msgid "There was an error processing this page."
 msgstr "มีข้อผิดพลาดในการประมวลผลหน้านี้."
@@ -14108,8 +14157,7 @@ msgstr "This journal is not in strict mode."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__hide_if_zero
 msgid ""
-"This line and its children will be hidden when all of their columns are at "
-"0."
+"This line and its children will be hidden when all of their columns are 0."
 msgstr ""
 
 #. module: account
@@ -14529,6 +14577,11 @@ msgid "Unfold All"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_report_line__code
+msgid "Unique identifier for this line."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_unit
 msgid "Unit Price"
 msgstr "ราคาต่อหน่วย"
@@ -14651,8 +14704,6 @@ msgstr "อัพเดตอัตราแลกเปลี่ยนโดย
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/components/bills_upload/bills_upload.xml:0
-#: code:addons/account/static/src/xml/legacy_bills_upload_views.xml:0
-#: code:addons/account/static/src/xml/legacy_bills_upload_views.xml:0
 #, python-format
 msgid "Upload"
 msgstr "อัปโหลด"
@@ -14878,6 +14929,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_vendor_bill_id
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_vendor_bill_id
 #: model:ir.model.fields,field_description:account.field_account_payment__invoice_vendor_bill_id
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_applicability__business_domain__bill
 #: model:ir.model.fields.selection,name:account.selection__account_analytic_line__category__vendor_bill
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__in_invoice
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_invoice
@@ -15052,6 +15104,11 @@ msgstr "ประวัติการสื่อสารของเว็บ
 msgid ""
 "When an internal transfer is posted, a paired payment is created. They are "
 "cross referenced through this field"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_report_line__blank_if_zero
+msgid "When checked, 0 values will not show in this column."
 msgstr ""
 
 #. module: account
@@ -15298,6 +15355,12 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid "You can't delete a report that has variants."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_payment_method.py:0
 #, python-format
 msgid ""
@@ -15388,6 +15451,14 @@ msgid ""
 msgstr ""
 "You cannot change the owner company of an account that already contains "
 "journal items."
+
+#. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid ""
+"You cannot change the type of an account set as Bank Account on a journal to"
+" Receivable or Payable."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/partner.py:0

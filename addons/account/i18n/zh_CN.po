@@ -4,26 +4,26 @@
 # 
 # Translators:
 # as co02 <asco02@163.com>, 2022
-# Jeana Jiang, 2022
 # 智能科技奇客罗方 <alanljj@gmail.com>, 2022
-# 稀饭~~ <wangwhai@qq.com>, 2022
 # liAnGjiA <liangjia@qq.com>, 2022
 # keecome <7017511@qq.com>, 2022
-# 深圳 JM <3440895@qq.com>, 2022
+# Martin Trigaux, 2022
 # 宇洛 李, 2022
 # Ryan Zhang <so_happy_boy@hotmail.com>, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Seeboy, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
+# lonely落叶 <liu--qiong@hotmail.com>, 2022
+# YIMIN XUAN, 2022
+# 226408 台北 <226408@so8d.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
+# 稀饭~~ <wangwhai@qq.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:23+0000\n"
+"POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2022\n"
+"Last-Translator: 稀饭~~ <wangwhai@qq.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,8 +34,18 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
-msgid "\tCannot create unbalanced journal entry. The balance is equal to %s\n"
-msgstr "无法创建不平衡的日记帐分录。差额等于 %s\n"
+msgid ""
+"\n"
+"\n"
+"The move (%s) is not balanced.\n"
+"The total of debits equals %s and the total of credits equals %s.\n"
+"You might want to specify a default account on journal \"%s\" to automatically balance each move."
+msgstr ""
+"\n"
+"\n"
+"凭证 (%s) 不平衡.\n"
+"借方合计 %s 与贷方合计 %s需相等.\n"
+"您可能需要在日记帐 \"%s\" 上指定默认科目，以自动平衡每个凭证。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -81,7 +91,7 @@ msgstr "#已调节结算单"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
 msgid "# Reconciled Statement Lines"
-msgstr "# 已核销对账单明细"
+msgstr "# 已调节调节单明细"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
@@ -232,12 +242,6 @@ msgid ""
 msgstr "- 一个新字段 « Total (含税.) » 通过使用正确的帐户自动创建行来加速和控制编码税."
 
 #. module: account
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "- Move with id %i\n"
-msgstr "- 使用ID移动 %i\n"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "- The document's sequence becomes editable on all documents."
 msgstr "- 文件的序号在所有文件上都变得可编辑"
@@ -288,7 +292,7 @@ msgstr "2个月"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30days_early_discount
 msgid "2/7 Net 30"
-msgstr "月结(30天)"
+msgstr "2/7 货到30天"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_21days
@@ -655,8 +659,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('reconciled_statement_lines_count','&gt;', 1)]}\">Statement line</span>\n"
 "                                <span attrs=\"{'invisible': [('reconciled_statement_lines_count','&lt;=', 1)]}\">Statement lines</span>"
 msgstr ""
-"<span attrs=\"{'invisible': [('reconciled_statement_lines_count','>', 1)]}\">语句行</span>\n"
-" <span attrs=\"{'invisible': [( 'reconciled_statement_lines_count','&lt;=', 1)]}\">语句行</span>"
+"<span attrs=\"{'invisible': [('reconciled_statement_lines_count','&gt;', 1)]}\">Statement line</span>\n"
+"                                <span attrs=\"{'invisible': [('reconciled_statement_lines_count','&lt;=', 1)]}\">Statement lines</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -915,9 +919,10 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
 msgid ""
-"<span class=\"text-muted\">Leave empty to create a new journal for this bank"
-" account, or select a journal to link it with the bank account.</span>"
-msgstr "<span class=\"text-muted\">留空以为此银行帐户创建新日记帐，或选择日记账以将日记帐与银行帐户链接。</span>"
+"<span class=\"text-muted\" colspan=\"2\">\n"
+"                                    Leave empty to create a new journal for this bank account, or select a journal to link it with the bank account.\n"
+"                                </span>"
+msgstr "选择一个日记帐将其与银行帐户链接，不填写则系统自动创建一个新的日记账。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -963,7 +968,6 @@ msgid ""
 "                                        <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">金额</span>\n"
-" <span groups=\"account.group_show_line_subtotals_tax_included\">总价</span><span groups=\"account.group_show_line_subtotals_tax_excluded\">金额</span>\n"
 "                                        <span groups=\"account.group_show_line_subtotals_tax_included\">总价</span>"
 
 #. module: account
@@ -1165,7 +1169,7 @@ msgstr "<strong>到期金额</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Credit Note Date:</strong>"
-msgstr "抵用券到期日"
+msgstr "<strong>退款单日期:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1173,7 +1177,6 @@ msgid "<strong>Customer Code:</strong>"
 msgstr "<strong>客户代码:</strong>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Date:</strong>"
 msgstr "<strong>日期:</strong>"
@@ -1203,7 +1206,7 @@ msgstr "<strong>结算日期:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Receipt Date:</strong>"
-msgstr "<strong>单据日期：</strong>"
+msgstr "<strong>收据日期：</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1337,7 +1340,7 @@ msgstr "定义为金额的付款容差应始终大于0"
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_reconcile_model_name_unique
 msgid "A reconciliation model already bears this name."
-msgstr "协调模型已使用此名称。"
+msgstr "调节模型已使用此名称。"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_report_line_code_uniq
@@ -2517,6 +2520,12 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
+msgid "An error has occurred."
+msgstr "发生了一个错误。"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
 msgid ""
 "An error occurred when computing the inalterability. Impossible to get the "
 "unique previous posted journal entry."
@@ -2605,7 +2614,7 @@ msgstr "分析"
 #, python-format
 msgid ""
 "Any journal item on a payable account must have a due date and vice versa."
-msgstr ""
+msgstr "应收/付账款上的日记账都必须有到期日。"
 
 #. module: account
 #: code:addons/account/models/account_move_line.py:0
@@ -2613,7 +2622,7 @@ msgstr ""
 msgid ""
 "Any journal item on a receivable account must have a due date and vice "
 "versa."
-msgstr ""
+msgstr "应收账款账户上的任何日记账项目都必须有到期日，反之亦然。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__applicability
@@ -2817,6 +2826,7 @@ msgid "Auto-validate"
 msgstr "自动验证"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Automatic Balancing Line"
@@ -3279,9 +3289,9 @@ msgstr "生成对应分录的按钮"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__foldable
 msgid ""
-"By default, we always unfold the lines that can be. If this is checked; the "
-"line won't be unfolded by default, and a folding button will be displayed"
-msgstr "默认情况下，我们总是展开可以的线条。如果选中此项；线条默认不展开，会显示折叠按钮"
+"By default, we always unfold the lines that can be. If this is checked, the "
+"line won't be unfolded by default, and a folding button will be displayed."
+msgstr "默认情况下，我们总是展开可能的明细行。如果选中此选项，则默认情况下不会展开明细行，并显示一个折叠按钮。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__active
@@ -3851,6 +3861,13 @@ msgstr "颜色索引"
 #: model:ir.model.fields,field_description:account.field_account_report__column_ids
 msgid "Columns"
 msgstr "列"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_report_line__groupby
+msgid ""
+"Comma-separated list of fields from account.move.line (Journal Item). When "
+"set, this line will generate sublines grouped by those keys."
+msgstr "以逗号分隔的字段列表，来自account.move.line (Journal Item)。设置后，此行将生成按这些键分组的子行。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__commercial_partner_id
@@ -4545,7 +4562,7 @@ msgstr "信用证货币"
 #. module: account
 #: model:mail.template,name:account.email_template_edi_credit_note
 msgid "Credit Note: Sending"
-msgstr ""
+msgstr "退款单发送中"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_out_refund_type
@@ -5204,7 +5221,7 @@ msgstr "演示资本账户"
 #. module: account
 #: model:account.account.tag,name:account.demo_sale_of_land_account
 msgid "Demo Sale of Land Account"
-msgstr ""
+msgstr "演示销售账户"
 
 #. module: account
 #: model:account.account.tag,name:account.demo_stock_account
@@ -5540,6 +5557,11 @@ msgstr "文档类型"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Documentation"
 msgstr "文档"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_applicability__business_domain
+msgid "Domain"
+msgstr "域"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__domain_formula
@@ -6952,6 +6974,11 @@ msgid ""
 msgstr "如果设置，付款截止日期和相应的应付金额将在发票上详细说明。"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+msgid "If set, this account is used to automatically balance entries."
+msgstr "如果设置，此帐户用于自动平衡条目。"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_account__non_trade
 msgid ""
 "If set, this account will belong to Non Trade Receivable/Payable in reports and filters.\n"
@@ -7421,6 +7448,7 @@ msgstr "投资和非凡活动"
 #: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_warn
 #: model:ir.model.fields,field_description:account.field_res_users__invoice_warn
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_applicability__business_domain__invoice
 #: model:ir.model.fields.selection,name:account.selection__account_payment__reconciled_invoices_type__invoice
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__document_type__invoice
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -7758,6 +7786,13 @@ msgstr "大于"
 #: model:ir.model.fields,field_description:account.field_account_report_expression__green_on_positive
 msgid "Is Growth Good when Positive"
 msgstr "积极的时候增长是好的吗"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_report_expression__blank_if_zero
+msgid ""
+"When checked, 0 values will not show when displaying this expression's "
+"value."
+msgstr "选中后，显示此表达式的值时将不显示 0 值。"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__lower
@@ -9559,10 +9594,16 @@ msgid "One or more Bank Accounts set on this partner are also used by other"
 msgstr "在此合作伙伴上设置的一个或多个银行账户也被其他人使用"
 
 #. module: account
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "One or more lines require a 100% analytic distribution."
+msgstr "一条或多条线需要 100% 的分析分布。"
+
+#. module: account
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "One or more selected lines already belong to a complete statement."
-msgstr ""
+msgstr "一个或多个选定的行已属于完整语句。"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -10990,12 +11031,12 @@ msgstr "已调节应收结算单类型"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reconciled Items"
-msgstr "核销项目"
+msgstr "调节项目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
 msgid "Reconciled Statement Lines"
-msgstr "对帐单行"
+msgstr "已调节对帐单行"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconcile_model_id
@@ -12030,6 +12071,13 @@ msgid ""
 msgstr "如果您不想在根据模版生成科目表的向导里使用此模版，不要勾选这个字段。当您需要用到本模版的子模板时才生成这个模版的会计科目。"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_report_line__action_id
+msgid ""
+"Setting this field will turn the line into a link, executing the action when"
+" clicked."
+msgstr "设置此字段会将行转换为链接，并在单击时执行操作。"
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_account_config
 #: model:ir.actions.act_window,name:account.action_open_settings
 #: model:ir.ui.menu,name:account.menu_account_config
@@ -12128,7 +12176,7 @@ msgstr "显示“重置为草稿”按钮"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Show Unreconciled Bank Statement Line"
-msgstr "显示未对帐的银行对帐单明细"
+msgstr "显示未调节的银行对帐单明细"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -13316,6 +13364,8 @@ msgid ""
 "The date is being set prior to the %(lock_type)s lock date %(lock_date)s. "
 "The Journal Entry will be accounted on %(accounting_date)s upon posting."
 msgstr ""
+"该日期是在 %(lock_type)s 锁定日期 %(lock_date)s） 之前设置的。日记帐分录将在过帐时记入 "
+"%(accounting_date)s。"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -13495,6 +13545,12 @@ msgid ""
 "The journal entry from which this tax cash basis journal entry has been "
 "created."
 msgstr "创建此税项收付实现制会计凭证的会计凭证。"
+
+#. module: account
+#: code:addons/account/models/account_analytic_line.py:0
+#, python-format
+msgid "The journal item is not linked to the correct financial account"
+msgstr "日记帐未设置正确的会计科目。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
@@ -13731,6 +13787,11 @@ msgid ""
 msgstr "应仅对记录或记录调用account.move登记account.move.line。"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_report__root_report_id
+msgid "The report this report is a variant of."
+msgstr "此报告被引用。"
+
+#. module: account
 #: code:addons/account/controllers/terms.py:0
 #, python-format
 msgid "The requested page is invalid, or doesn't exist anymore."
@@ -13943,7 +14004,7 @@ msgstr "在您要锁定的时间段中仍有未发布的分录。您应该发布
 msgid ""
 "There are still unreconciled bank statement lines in the period you want to "
 "lock.You should either reconcile or delete them."
-msgstr "在您要锁定的期间内仍有未对帐的银行对帐单明细. 您应该对帐或删除它们."
+msgstr "在您要锁定的期间内仍有未调节的银行对帐单明细. 您应该对帐或删除它们."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
@@ -13969,12 +14030,6 @@ msgid ""
 "There isn't any journal entry flagged for data inalterability yet for this "
 "journal."
 msgstr "还没有任何会计凭证被标记为数据不可更改。"
-
-#. module: account
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "There was a problem with the following move(s):\n"
-msgstr "以下移动存在问题:\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_error
@@ -14159,9 +14214,8 @@ msgstr "这个日记账不是严格模式。"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__hide_if_zero
 msgid ""
-"This line and its children will be hidden when all of their columns are at "
-"0."
-msgstr "当所有列都为 0 时，该行及其子行将被隐藏。"
+"This line and its children will be hidden when all of their columns are 0."
+msgstr "当该行及其下属行的所有值都为0时，它将被隐藏。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__to_check
@@ -14568,6 +14622,11 @@ msgid "Unfold All"
 msgstr "展开所有"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_report_line__code
+msgid "Unique identifier for this line."
+msgstr "此行的唯一标识符。"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_unit
 msgid "Unit Price"
 msgstr "单价"
@@ -14637,13 +14696,13 @@ msgstr "未调节"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_unreconciled
 msgid "Unreconciled Entries"
-msgstr "未核销的分录"
+msgstr "未调节的分录"
 
 #. module: account
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Unreconciled Transactions"
-msgstr "未对账交易"
+msgstr "未调节交易"
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -14690,8 +14749,6 @@ msgstr "自动更新货币汇率"
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/components/bills_upload/bills_upload.xml:0
-#: code:addons/account/static/src/xml/legacy_bills_upload_views.xml:0
-#: code:addons/account/static/src/xml/legacy_bills_upload_views.xml:0
 #, python-format
 msgid "Upload"
 msgstr "上传"
@@ -14919,6 +14976,7 @@ msgstr "供应商银行账户"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_vendor_bill_id
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_vendor_bill_id
 #: model:ir.model.fields,field_description:account.field_account_payment__invoice_vendor_bill_id
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_applicability__business_domain__bill
 #: model:ir.model.fields.selection,name:account.selection__account_analytic_line__category__vendor_bill
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__in_invoice
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_invoice
@@ -15094,6 +15152,11 @@ msgid ""
 msgstr "过帐内部转账时，会创建配对付款。它们通过此字段进行交叉引用"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_report_line__blank_if_zero
+msgid "When checked, 0 values will not show in this column."
+msgstr "请检查，明细行不能为0"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__print_on_new_page
 msgid ""
 "When checked this line and everything after it will be printed on a new "
@@ -15222,7 +15285,7 @@ msgstr "当日记账用哈希锁定时，不能按日期重新排序。"
 msgid ""
 "You can only change the period/account for items that are not yet "
 "reconciled."
-msgstr "您只能更改尚未对帐项目的期间/科目."
+msgstr "您只能更改尚未调节项目的期间/科目."
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -15324,6 +15387,12 @@ msgid ""
 msgstr "您不能为属于不同公司的分录创建付款。"
 
 #. module: account
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid "You can't delete a report that has variants."
+msgstr "不能删除被引用的报告。"
+
+#. module: account
 #: code:addons/account/models/account_payment_method.py:0
 #, python-format
 msgid ""
@@ -15407,6 +15476,14 @@ msgid ""
 "You cannot change the owner company of an account that already contains "
 "journal items."
 msgstr "不能更改已经包含会计分录的所属公司 "
+
+#. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid ""
+"You cannot change the type of an account set as Bank Account on a journal to"
+" Receivable or Payable."
+msgstr "不能将日记帐上设置为“银行帐户”的帐户类型更改为“应收帐款”或“应付帐款”。"
 
 #. module: account
 #: code:addons/account/models/partner.py:0
@@ -16069,7 +16146,7 @@ msgstr "{label}：调整 {new_date} 的条目"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "{percent:0.2f}% recognized on {new_date}"
-msgstr ""
+msgstr "{percent:0.2f}% 确认于 {new_date}"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0

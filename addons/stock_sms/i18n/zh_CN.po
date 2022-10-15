@@ -28,7 +28,7 @@ msgid ""
 "            "
 msgstr ""
 "\n"
-"                {{（object.company_id.name + '：我们很高兴地通知您，您的订单编号为'+ object.origin + '已被发货。）+ (' 您的货运单号是 '+ (object.承运商_tracking_ref) + '。' 如果 hasattr(object, '承运商_tracking_ref') and object.承运商_tracking_ref else '')}}\n"
+"                {{ (object.company_id.name + ': 我们很高兴通知你，关于订单号码 ' + object.origin + ' 即将发货.' if object.origin else object.company_id.name + ': 我们很高兴通知你，你的订单已经发货') + (' 跟踪号码是 ' + (object.carrier_tracking_ref) + '.' if hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
 "            "
 
 #. module: stock_sms

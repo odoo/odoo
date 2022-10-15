@@ -3,18 +3,19 @@
 # 	* mrp
 # 
 # Translators:
-# Tony Peng <umingpeng@gmail.com>, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # Martin Trigaux, 2022
+# Tony Peng <umingpeng@gmail.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
+# 陕西_jack, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:23+0000\n"
+"POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: 陕西_jack, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -154,7 +155,7 @@ msgstr ""
 #: model_terms:product.product,description:mrp.product_product_computer_desk_leg
 #: model_terms:product.template,description:mrp.product_product_computer_desk_leg_product_template
 msgid "18″ x 2½″ Square Leg"
-msgstr "方桌桌脚规格18“x2½”"
+msgstr "方形桌桌脚规格18“x2½”"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
@@ -270,7 +271,7 @@ msgstr "<span class=\"o_stat_text\">源 MO</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Unbuilds</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">未建立</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
@@ -336,7 +337,7 @@ msgstr "<strong class=\"mr8 oe_inline\">到</strong>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Actual Duration (minutes)</strong>"
-msgstr ""
+msgstr "<strong>实际期间 (分)</strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -386,7 +387,7 @@ msgstr "<strong>产品:</strong><br/>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Quantity Producing:</strong><br/>"
-msgstr ""
+msgstr "<strong>正在生产数量</strong><br/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
@@ -531,7 +532,7 @@ msgstr "添加副产品到BOM。 这也可以用来获得几个完工产品。 �
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Add quality checks to your work orders"
-msgstr "质检【亲，这是付费企业版才有，当然您也可以请人开发一个功能模块自己用】"
+msgstr "为您的工单增加质量检查"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_tag
@@ -579,7 +580,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allow_workorder_dependencies
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__allow_workorder_dependencies
 msgid "Allow Work Order Dependencies"
-msgstr ""
+msgstr "容许工单依赖"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__use_auto_consume_components_lots
@@ -740,7 +741,7 @@ msgstr "可用性"
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #, python-format
 msgid "Availabilities on products."
-msgstr ""
+msgstr "产品可用数量"
 
 #. module: mrp
 #. openerp-web
@@ -956,7 +957,7 @@ msgstr "阻塞原因"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__needed_by_operation_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__needed_by_workorder_ids
 msgid "Blocks"
-msgstr ""
+msgstr "阻塞数"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__bom_id
@@ -1108,7 +1109,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_reported_from_previous_wo
 msgid "Carried Quantity"
-msgstr ""
+msgstr "已运送数量"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_uom_category_id
@@ -1154,7 +1155,7 @@ msgstr "清理时间"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__time_stop
 msgid "Cleanup Time (minutes)"
-msgstr ""
+msgstr "清理时间 (分钟)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__code
@@ -1244,7 +1245,7 @@ msgstr "根据跟踪时间进行计算"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "Compute from BoM"
-msgstr ""
+msgstr "从BOM计算"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
@@ -1381,6 +1382,13 @@ msgid "Costs"
 msgstr "费用"
 
 #. module: mrp
+#. openerp-web
+#: code:addons/mrp/static/src/views/fields/google_slides_viewer.js:0
+#, python-format
+msgid "Could not display the selected spreadsheet"
+msgstr "无法显示选择的电子表格"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_backorder_count
 msgid "Count of linked backorder"
 msgstr "缺货的欠单数量"
@@ -1456,7 +1464,7 @@ msgid ""
 "the status of work orders upon MO confirmation. If this feature is ticked, "
 "and nothing is specified, Odoo will assume that all operations can be "
 "started simultaneously."
-msgstr ""
+msgstr "创建操作级依赖项，该依赖项将在MO确认时影响计划和工单状态。如果勾选此功能，且未指定任何内容，Odoo将假定所有操作都可以同时启动"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__created_production_id
@@ -1594,7 +1602,7 @@ msgstr "天"
 #: code:addons/mrp/models/stock_rule.py:0
 #, python-format
 msgid "Days to Supply Components"
-msgstr ""
+msgstr "供应组件天数"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__days_to_prepare_mo
@@ -1641,11 +1649,6 @@ msgid ""
 msgstr ""
 "定义您希望使用的组件和完工产品\n"
 "                BOM和制造订单。"
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_workcenter__resource_calendar_id
-msgid "Define the schedule of resource"
-msgstr "定义资源调度"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__consumption
@@ -2146,6 +2149,13 @@ msgstr "谷歌幻灯片"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "Google Slide Link"
 msgstr "谷歌幻灯片链接"
+
+#. module: mrp
+#. openerp-web
+#: code:addons/mrp/static/src/views/fields/google_slides_viewer.js:0
+#, python-format
+msgid "Google Slides Viewer"
+msgstr "Google幻灯片浏览器"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -2709,7 +2719,7 @@ msgstr "MO 准备就绪"
 #. module: mrp
 #: model:ir.actions.client,name:mrp.mrp_reception_action
 msgid "MRP Reception Report"
-msgstr ""
+msgstr "MRP收料报告"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_routings
@@ -3186,7 +3196,7 @@ msgstr "请注意，已归档的工作中心：'%s'仍然与活动的BOM相联�
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
 msgid "Note that components"
-msgstr ""
+msgstr "备注那些部件"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_needaction_counter
@@ -3213,7 +3223,7 @@ msgstr "制造订单的数量"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__unbuild_count
 msgid "Number of Unbuilds"
-msgstr ""
+msgstr "未建立数量"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_has_error_counter
@@ -3677,7 +3687,7 @@ msgstr "生产残留产品"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Produce residual products (A + B -&gt; C + D)"
-msgstr "产生残留产物(A + B -&gt; C + D)【例如模具制作过程中产生的铜渣就是副产品，不能直接扔了，这都是钱啊】"
+msgstr "产生残留产物(A + B -&gt; C + D)"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -4148,7 +4158,7 @@ msgstr "负责用户"
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #, python-format
 msgid "Resupply lead time."
-msgstr ""
+msgstr "重新供应前置时间."
 
 #. module: mrp
 #. openerp-web
@@ -4341,7 +4351,7 @@ msgstr "手动设置时长"
 msgid ""
 "Set the order that work orders should be processed in. Activate the feature "
 "within each BoM's Miscellaneous tab"
-msgstr ""
+msgstr "设置处理工作订单的顺序。激活每个BoM的杂项选项卡中的功能"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
@@ -4415,6 +4425,13 @@ msgstr "显示所有的在今天之前的下一个行动日期的记录"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__show_backorder_lines
 msgid "Show backorder lines"
 msgstr "显示制造欠单明细"
+
+#. module: mrp
+#. openerp-web
+#: code:addons/mrp/static/src/views/fields/google_slides_viewer.xml:0
+#, python-format
+msgid "Slides viewer"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__leave_id
@@ -4502,7 +4519,7 @@ msgstr "拆分"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__counter
 msgid "Split #"
-msgstr ""
+msgstr "拆分 #"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__production_detailed_vals_ids
@@ -4658,7 +4675,7 @@ msgstr "库存规则报告"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Store Finished Product"
-msgstr "存储完工产品"
+msgstr "生产入库单"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__store_fname
@@ -4673,7 +4690,7 @@ msgstr "子 BOM"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Subcontract the production of some products"
-msgstr "外包一些产品的生产【不能工序外包，仅在创建产品BOM时就指定是否外包。】"
+msgstr "外包一些产品的生产"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_subcontracting
@@ -5624,7 +5641,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_split
 msgid "Wizard to Split a Production"
-msgstr ""
+msgstr "生产单分拆向导"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_backorder
@@ -5655,7 +5672,7 @@ msgstr "工作中心"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_capacity
 msgid "Work Center Capacity"
-msgstr ""
+msgstr "工作中心能力"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workcenter_load

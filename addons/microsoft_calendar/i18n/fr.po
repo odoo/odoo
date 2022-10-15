@@ -9,9 +9,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2022-10-10 10:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
@@ -46,13 +46,6 @@ msgid "%s - At time of event"
 msgstr "%s - Au moment de l'événément"
 
 #. module: microsoft_calendar
-#. openerp-web
-#: code:addons/microsoft_calendar/static/src/xml/base_calendar.xml:0
-#, python-format
-msgid "&nbsp;Outlook"
-msgstr "&nbsp;Outlook"
-
-#. module: microsoft_calendar
 #: code:addons/microsoft_calendar/models/calendar.py:0
 #, python-format
 msgid "(No title)"
@@ -67,7 +60,7 @@ msgstr "Active"
 
 #. module: microsoft_calendar
 #. openerp-web
-#: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
+#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 #, python-format
 msgid ""
 "An administrator needs to configure Outlook Synchronization before you can "
@@ -89,13 +82,6 @@ msgstr ""
 "d'autorisation est peut-être invalide ou a déjà expiré [%s]. Vous devez "
 "vérifier votre ID client et votre secret sur le portail Microsoft Azure ou "
 "essayer d'arrêter et de redémarrer la synchronisation de votre calendrier."
-
-#. module: microsoft_calendar
-#. openerp-web
-#: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
-#, python-format
-msgid "Are you sure you want to delete this record ?"
-msgstr "Voulez-vous réellement supprimer cet enregistrement ?"
 
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_calendar_attendee
@@ -129,8 +115,8 @@ msgstr "Paramètres de config"
 
 #. module: microsoft_calendar
 #. openerp-web
-#: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
-#: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
+#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
+#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 #, python-format
 msgid "Configuration"
 msgstr "Configuration"
@@ -141,13 +127,6 @@ msgid "Confirm"
 msgstr "Confirmer"
 
 #. module: microsoft_calendar
-#. openerp-web
-#: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
-#, python-format
-msgid "Confirmation"
-msgstr "Confirmation"
-
-#. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__create_uid
 msgid "Created by"
 msgstr "Créé par"
@@ -156,13 +135,6 @@ msgstr "Créé par"
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__create_date
 msgid "Created on"
 msgstr "Créé le"
-
-#. module: microsoft_calendar
-#. openerp-web
-#: code:addons/microsoft_calendar/static/src/xml/microsoft_calendar_popover.xml:0
-#, python-format
-msgid "Delete"
-msgstr "Supprimer"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__delete_policy__delete_odoo
@@ -308,7 +280,8 @@ msgstr "Id organisateur de l'événement"
 
 #. module: microsoft_calendar
 #. openerp-web
-#: code:addons/microsoft_calendar/static/src/xml/base_calendar.xml:0
+#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.xml:0
+#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.xml:0
 #, python-format
 msgid "Outlook"
 msgstr "Outlook"
@@ -359,7 +332,7 @@ msgstr "Réinitialiser le compte Outlook Calendar"
 
 #. module: microsoft_calendar
 #. openerp-web
-#: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
+#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 #, python-format
 msgid "Success"
 msgstr "Succès"
@@ -381,7 +354,7 @@ msgstr "Synchroniser uniquement les nouveaux événements"
 
 #. module: microsoft_calendar
 #. openerp-web
-#: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
+#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 #, python-format
 msgid ""
 "The Outlook Synchronization needs to be configured before you can use it, do"
@@ -398,7 +371,7 @@ msgstr "Le compte pour le Calendrier Outlook n'est pas configuré."
 
 #. module: microsoft_calendar
 #. openerp-web
-#: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
+#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 #, python-format
 msgid "The synchronization with Outlook calendar was successfully stopped."
 msgstr ""
@@ -440,7 +413,7 @@ msgstr "Événements existants de l'utilisateur"
 
 #. module: microsoft_calendar
 #. openerp-web
-#: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
+#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 #, python-format
 msgid ""
 "You are about to stop the synchronization of your calendar with Outlook. Are"

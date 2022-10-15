@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Benson <Benson.Dr@Gmail.com>, 2022
-# Martin Trigaux, 2022
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
+# Martin Trigaux, 2022
 # 226408 台北 <226408@so8d.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:23+0000\n"
+"POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: 226408 台北 <226408@so8d.com>, 2022\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -81,6 +81,15 @@ msgstr ""
 "(%s) 存在於位置 %s"
 
 #. module: stock
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid ""
+"\n"
+"The quantity done for the product %s doesn't respect the rounding precision defined on the unit of measure %s.\n"
+"Please change the quantity done or the rounding precision of your unit of measure."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
 msgid ""
 " * Draft: The transfer is not confirmed yet. Reservation doesn't apply.\n"
@@ -126,6 +135,7 @@ msgid "%(warehouse)s: Supply Product from %(supplier)s"
 msgstr "%(warehouse)s：從%(supplier)s供應產品"
 
 #. module: stock
+#: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_package_type.py:0
 #: code:addons/stock/models/stock_storage_category.py:0
 #, python-format
@@ -417,20 +427,6 @@ msgid ""
 msgstr ""
 "<span attrs=\"{'invisible': ['|', ('state', '=', 'done'), "
 "('from_immediate_transfer', '=', True)]}\"> / </span>"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
-msgid ""
-"<span class=\"d-none d-sm-block o_print_label_text\">Print Label</span>\n"
-"                                        <span class=\"d-block d-sm-none fa fa-print\"/>"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
-msgid ""
-"<span class=\"d-none d-sm-block o_print_label_text\">Print Labels</span>\n"
-"                                        <span class=\"d-block d-sm-none fa fa-print\"/>"
-msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1061,16 +1057,16 @@ msgstr ""
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/js/report_stock_reception.js:0
-#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#: code:addons/stock/static/src/components/reception_report_line/stock_reception_report_line.xml:0
 #, python-format
 msgid "Assign"
 msgstr "分配"
 
 #. module: stock
 #. openerp-web
+#: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
+#: code:addons/stock/static/src/components/reception_report_table/stock_reception_report_table.xml:0
 #: code:addons/stock/static/src/xml/report_stock_reception.xml:0
-#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 #, python-format
 msgid "Assign All"
 msgstr "全部分配"
@@ -1542,11 +1538,6 @@ msgid "Close"
 msgstr "關閉"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_picking_type__sequence_code
-msgid "Code"
-msgstr "代號"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__color
 msgid "Color"
 msgstr "顏色"
@@ -1714,6 +1705,13 @@ msgid "Continue"
 msgstr "繼續"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
+#, python-format
+msgid "Control panel buttons"
+msgstr "控制面板按鈕"
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__product_uom_category_id
 #: model:ir.model.fields,help:stock.field_stock_move__product_uom_category_id
 #: model:ir.model.fields,help:stock.field_stock_move_line__product_uom_category_id
@@ -1800,6 +1798,11 @@ msgid "Create Backorder?"
 msgstr "建立欠單？"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "Create New"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_type_use_create_lots
 #: model:ir.model.fields,field_description:stock.field_stock_picking__use_create_lots
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__use_create_lots
@@ -1810,11 +1813,9 @@ msgstr "建立新批次/序號"
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid ""
 "Create a backorder if you expect to process the remaining\n"
-"                        products later. Do not create a backorder if you will not\n"
-"                        process the remaining products."
+"                            products later. Do not create a backorder if you will not\n"
+"                            process the remaining products."
 msgstr ""
-"如果您後續要發貨餘下的的數量， 則需要建立一個欠單。 如果不用再發貨後續數量， 則不用建立欠單。\n"
-"處理餘下的產品。"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -2770,7 +2771,10 @@ msgid "Expected"
 msgstr "預期"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/components/reception_report_table/stock_reception_report_table.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Expected Delivery:"
 msgstr "預期交貨"
 
@@ -2993,7 +2997,7 @@ msgstr "格式"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__free_qty
 msgid "Free Qty"
-msgstr ""
+msgstr "可用數量"
 
 #. module: stock
 #. openerp-web
@@ -4240,12 +4244,12 @@ msgstr "批次"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__picking_label_type__label_type__lots
 msgid "Lot/SN Labels"
-msgstr ""
+msgstr "批號/序號 標籤"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_kanban
 msgid "Lot/SN:"
-msgstr ""
+msgstr "批號/序號"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_lot
@@ -4321,6 +4325,7 @@ msgstr "未提供跟踪產品的批號或序號"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_production_lot_form
 #: model:ir.ui.menu,name:stock.menu_action_production_lot_form
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_tree
 msgid "Lots/Serial Numbers"
@@ -4776,7 +4781,10 @@ msgid "No Tracking"
 msgstr "無追蹤資訊"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "No allocation need found."
 msgstr ""
 
@@ -5619,6 +5627,8 @@ msgstr ""
 
 #. module: stock
 #. openerp-web
+#: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
+#: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
 #: code:addons/stock/static/src/legacy_web_report/report.xml:0
 #: code:addons/stock/static/src/legacy_web_report/report.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -5637,12 +5647,17 @@ msgid "Print GS1 Barcodes for Lots & Serial Numbers"
 msgstr ""
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/components/reception_report_line/stock_reception_report_line.xml:0
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__print_label
+#, python-format
 msgid "Print Label"
 msgstr "列印備註"
 
 #. module: stock
 #. openerp-web
+#: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
+#: code:addons/stock/static/src/components/reception_report_table/stock_reception_report_table.xml:0
 #: code:addons/stock/static/src/xml/report_stock_reception.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #, python-format
@@ -6698,6 +6713,11 @@ msgid "Returns"
 msgstr "退回"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "Returns Type"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_quant_package__package_use__reusable
 msgid "Reusable Box"
 msgstr "可重複使用的包裝"
@@ -7019,6 +7039,11 @@ msgstr "九月"
 #, python-format
 msgid "Sequence"
 msgstr "序號"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__sequence_code
+msgid "Sequence Prefix"
+msgstr "序列號前綴"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -7660,8 +7685,8 @@ msgstr "添加新的存儲類別"
 #: model:ir.model,name:stock.model_stock_storage_category_capacity
 #: model:ir.model.fields,field_description:stock.field_product_product__storage_category_capacity_ids
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__storage_category_capacity_ids
-#: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_capacity_tree
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_capacity_tree
 msgid "Storage Category Capacity"
 msgstr "存儲類別容量"
 
@@ -8310,7 +8335,6 @@ msgstr "路線合計"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Traceability"
@@ -8512,9 +8536,7 @@ msgstr "USPS 連接器"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/js/report_stock_reception.js:0
-#: code:addons/stock/static/src/js/report_stock_reception.js:0
-#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#: code:addons/stock/static/src/components/reception_report_line/stock_reception_report_line.xml:0
 #, python-format
 msgid "Unassign"
 msgstr "取消分派"
@@ -8665,6 +8687,11 @@ msgstr "緊急"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__use_existing_lots
 msgid "Use Existing Lots/Serial Numbers"
 msgstr "使用已有批次/序號"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "Use Existing ones"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -9589,6 +9616,11 @@ msgstr "例如：PO0032"
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "e.g. Physical Locations"
 msgstr "例如物理位置"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "e.g. Receptions"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form

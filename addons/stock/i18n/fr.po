@@ -3,16 +3,16 @@
 # 	* stock
 # 
 # Translators:
-# Jolien De Paepe, 2022
-# Martin Trigaux, 2022
 # Thomas Deleval <thd@odoo.com>, 2022
+# Martin Trigaux, 2022
+# Jolien De Paepe, 2022
 # Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:23+0000\n"
+"POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
@@ -81,6 +81,18 @@ msgstr ""
 "(%s)existe à l'emplacement %s"
 
 #. module: stock
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid ""
+"\n"
+"The quantity done for the product %s doesn't respect the rounding precision defined on the unit of measure %s.\n"
+"Please change the quantity done or the rounding precision of your unit of measure."
+msgstr ""
+"\n"
+"La quantité renseignée pour l'article %s ne respecte pas les règles d'arrondissement définies dans l'unité de mesure %s.\n"
+"Veuillez changer la quantité renseignée ou les règles d'arrondissement de votre unité de mesure."
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
 msgid ""
 " * Draft: The transfer is not confirmed yet. Reservation doesn't apply.\n"
@@ -128,6 +140,7 @@ msgid "%(warehouse)s: Supply Product from %(supplier)s"
 msgstr "%(warehouse)s: Approvisionner l'article depuis %(supplier)s"
 
 #. module: stock
+#: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_package_type.py:0
 #: code:addons/stock/models/stock_storage_category.py:0
 #, python-format
@@ -138,7 +151,7 @@ msgstr "%s (copie)"
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "%s [reverted]"
-msgstr ""
+msgstr "%s [inversé]"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -428,24 +441,6 @@ msgstr ""
 "('from_immediate_transfer', '=', True)]}\"> / </span>"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
-msgid ""
-"<span class=\"d-none d-sm-block o_print_label_text\">Print Label</span>\n"
-"                                        <span class=\"d-block d-sm-none fa fa-print\"/>"
-msgstr ""
-"<span class=\"d-none d-sm-block o_print_label_text\">Imprimer l'étiquette</span>\n"
-"                    <span class=\"d-block d-sm-none fa fa-print\"/>"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
-msgid ""
-"<span class=\"d-none d-sm-block o_print_label_text\">Print Labels</span>\n"
-"                                        <span class=\"d-block d-sm-none fa fa-print\"/>"
-msgstr ""
-"<span class=\"d-none d-sm-block o_print_label_text\">Imprimer les étiquettes</span>\n"
-"                    <span class=\"d-block d-sm-none fa fa-print\"/>"
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
@@ -467,6 +462,8 @@ msgid ""
 "<span class=\"o_stat_text\">In:</span>\n"
 "                                    <span class=\"o_stat_text\">Out:</span>"
 msgstr ""
+"<span class=\"o_stat_text\">In:</span>\n"
+"                                    <span class=\"o_stat_text\">Out:</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -1097,16 +1094,16 @@ msgstr "Me demander"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/js/report_stock_reception.js:0
-#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#: code:addons/stock/static/src/components/reception_report_line/stock_reception_report_line.xml:0
 #, python-format
 msgid "Assign"
 msgstr "Affecter"
 
 #. module: stock
 #. openerp-web
+#: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
+#: code:addons/stock/static/src/components/reception_report_table/stock_reception_report_table.xml:0
 #: code:addons/stock/static/src/xml/report_stock_reception.xml:0
-#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 #, python-format
 msgid "Assign All"
 msgstr "Affecter tout"
@@ -1600,11 +1597,6 @@ msgid "Close"
 msgstr "Fermer"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_picking_type__sequence_code
-msgid "Code"
-msgstr "Code"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__color
 msgid "Color"
 msgstr "Couleur"
@@ -1772,6 +1764,13 @@ msgid "Continue"
 msgstr "Continuer"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
+#, python-format
+msgid "Control panel buttons"
+msgstr "Boutons du panneau de commande"
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__product_uom_category_id
 #: model:ir.model.fields,help:stock.field_stock_move__product_uom_category_id
 #: model:ir.model.fields,help:stock.field_stock_move_line__product_uom_category_id
@@ -1802,7 +1801,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__set_count
 msgid "Count"
-msgstr "Comptage"
+msgstr "Compte"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking
@@ -1863,6 +1862,11 @@ msgid "Create Backorder?"
 msgstr "Créer un reliquat ? "
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "Create New"
+msgstr "Créer nouveau"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_type_use_create_lots
 #: model:ir.model.fields,field_description:stock.field_stock_picking__use_create_lots
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__use_create_lots
@@ -1873,11 +1877,12 @@ msgstr "Créer de nouveaux lots/numéros de série"
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid ""
 "Create a backorder if you expect to process the remaining\n"
-"                        products later. Do not create a backorder if you will not\n"
-"                        process the remaining products."
+"                            products later. Do not create a backorder if you will not\n"
+"                            process the remaining products."
 msgstr ""
-"Créez un reliquat si vous vous attendez à traiter la quantité d'articles restante\n"
-"Ne créez pas de reliquat si vous ne vous attendez pas à traiter la quantité d'articles restante."
+"Créer un reliquat si vous vous attendez à traiter la quantité d'articles restante\n"
+"                            . Ne créez pas de reliquat si vous ne voulez pas\n"
+"                            traiter la quantité d'articles restante."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -2096,7 +2101,7 @@ msgstr "Emplacements clients"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "Cyclic Counting"
-msgstr "Comptage cyclique"
+msgstr "Compte cyclique"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
@@ -2190,7 +2195,7 @@ msgstr "Jours"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__days_to_order
 msgid "Days To Order"
-msgstr ""
+msgstr "Jours pour commander"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__reservation_days_before_priority
@@ -2870,7 +2875,10 @@ msgid "Expected"
 msgstr "Attendu"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/components/reception_report_table/stock_reception_report_table.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Expected Delivery:"
 msgstr "Livraison Prévue:"
 
@@ -4009,7 +4017,7 @@ msgid ""
 "to reflect the same difference as when you counted)"
 msgstr ""
 "Garder la <strong>Différence</strong> (la quantité comptée sera mise à jour "
-"pour refleter la différence constatée lors du comptage)"
+"pour refléter la différence constatée lors du compte)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_lot_label
@@ -4039,7 +4047,7 @@ msgstr "Les 30 derniers jours"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__last_count_date
 msgid "Last Count Date"
-msgstr "Date du dernier comptage"
+msgstr "Date du dernier compte"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__last_delivery_partner_id
@@ -4477,6 +4485,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_production_lot_form
 #: model:ir.ui.menu,name:stock.menu_action_production_lot_form
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_tree
 msgid "Lots/Serial Numbers"
@@ -4804,7 +4813,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "My Counts"
-msgstr "Mes Comptages"
+msgstr "Mes Comptes"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -4944,7 +4953,10 @@ msgid "No Tracking"
 msgstr "Pas de suivi"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "No allocation need found."
 msgstr "Aucun besoin d'allocation trouvé."
 
@@ -5573,7 +5585,7 @@ msgstr "Utilisation du Colis"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__valid_sscc
 msgid "Package name is valid SSCC"
-msgstr ""
+msgstr "Le nom du package est valide SSCC"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
@@ -5807,6 +5819,8 @@ msgstr ""
 
 #. module: stock
 #. openerp-web
+#: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
+#: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
 #: code:addons/stock/static/src/legacy_web_report/report.xml:0
 #: code:addons/stock/static/src/legacy_web_report/report.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -5825,12 +5839,17 @@ msgid "Print GS1 Barcodes for Lots & Serial Numbers"
 msgstr "Imprimer des codes-barres GS1 pour les lots et les numéros de série"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/components/reception_report_line/stock_reception_report_line.xml:0
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__print_label
+#, python-format
 msgid "Print Label"
 msgstr "Imprimer l'Etiquette"
 
 #. module: stock
 #. openerp-web
+#: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
+#: code:addons/stock/static/src/components/reception_report_table/stock_reception_report_table.xml:0
 #: code:addons/stock/static/src/xml/report_stock_reception.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #, python-format
@@ -6385,7 +6404,7 @@ msgstr "La quantité ne peut pas être négative."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__is_outdated
 msgid "Quantity has been moved since last count"
-msgstr "Des quantités ont été transférées depuis votre dernier comptage"
+msgstr "Des quantités ont été transférées depuis votre dernier compte"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__availability
@@ -6750,7 +6769,7 @@ msgstr "Analyse"
 #: model:ir.actions.act_window,name:stock.action_stock_request_count
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "Request a Count"
-msgstr "Demander un Comptage"
+msgstr "Demander un Compte"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_sign_delivery
@@ -6904,6 +6923,11 @@ msgid "Returns"
 msgstr "Retours"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "Returns Type"
+msgstr "Type de retour"
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_quant_package__package_use__reusable
 msgid "Reusable Box"
 msgstr "Boîte Réutilisable"
@@ -6925,7 +6949,7 @@ msgstr "Annuler le transfert"
 #. module: stock
 #: model:ir.actions.server,name:stock.action_revert_inventory_adjustment
 msgid "Revert Inventory Adjustment"
-msgstr "Rétablir l'ajustement de l'inventaire"
+msgstr "Annuler l'ajustement de l'inventaire"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__route_id
@@ -7159,7 +7183,7 @@ msgstr "Recherche de rebuts"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.replenishment_option_tree_view
 msgid "Select Route"
-msgstr ""
+msgstr "Sélectionner la route"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -7247,6 +7271,11 @@ msgstr "Septembre"
 #, python-format
 msgid "Sequence"
 msgstr "Séquence"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__sequence_code
+msgid "Sequence Prefix"
+msgstr "Préfixe de la Séquence"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -7914,8 +7943,8 @@ msgstr "Catégories d'emplacement"
 #: model:ir.model,name:stock.model_stock_storage_category_capacity
 #: model:ir.model.fields,field_description:stock.field_product_product__storage_category_capacity_ids
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__storage_category_capacity_ids
-#: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_capacity_tree
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_capacity_tree
 msgid "Storage Category Capacity"
 msgstr "Capacité de la catégorie d'emplacement"
 
@@ -8531,8 +8560,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.inventory_warning_reset_view
 msgid "This will discard all unapplied counts, do you want to proceed?"
 msgstr ""
-"Ceci va effacer tous les comptages non appliqués, est-ce vraiment ce que "
-"vous voulez faire ?"
+"Ceci va effacer tous les comptes non appliqués, est-ce vraiment ce que vous "
+"voulez faire ?"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
@@ -8657,7 +8686,6 @@ msgstr "Total des routes"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Traceability"
@@ -8868,9 +8896,7 @@ msgstr "Connecteur USPSConnecteur USPS"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/js/report_stock_reception.js:0
-#: code:addons/stock/static/src/js/report_stock_reception.js:0
-#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#: code:addons/stock/static/src/components/reception_report_line/stock_reception_report_line.xml:0
 #, python-format
 msgid "Unassign"
 msgstr "Désassigner"
@@ -9023,6 +9049,11 @@ msgid "Use Existing Lots/Serial Numbers"
 msgstr "Utiliser les numéros de lot/série existants"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "Use Existing ones"
+msgstr "Utiliser les existants"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid ""
 "Use GS1 nomenclature datamatrix whenever barcodes are printed for lots and "
@@ -9082,7 +9113,7 @@ msgstr "Utilisateur"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__user_id
 msgid "User assigned to do product count."
-msgstr "Utilisateur assigné au comptage d'articles"
+msgstr "Utilisateur assigné au compte d'articles"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_validate_picking
@@ -9347,7 +9378,7 @@ msgstr "Poids"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__base_weight
 msgid "Weight of the package type"
-msgstr ""
+msgstr "Poids du type de conditionnement"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__weight_uom_name
@@ -10056,6 +10087,11 @@ msgstr "par ex. PO0032"
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "e.g. Physical Locations"
 msgstr "Ex: Emplacements physiques"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "e.g. Receptions"
+msgstr "par ex. Réceptions"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form

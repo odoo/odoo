@@ -5,18 +5,18 @@
 # Translators:
 # 6534c450c77b2549e41c52e2051f5839, 2022
 # Cécile Perrez <cpe@odoo.com>, 2022
-# Cécile Collart <cco@odoo.com>, 2022
 # Alexandra Jubert, 2022
 # Martin Trigaux, 2022
 # Jolien De Paepe, 2022
+# Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:25+0000\n"
+"POT-Creation-Date: 2022-10-10 10:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1143,6 +1143,17 @@ msgstr ""
 "Vous pouvez également définir le coût horaire de l'entreprise de vos employés pour leurs feuilles de temps sur ce projet spécifiquement. Il contourne le coût de feuille de temps défini pour l'employé."
 
 #. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__so_line
+msgid ""
+"Sales order item to which the time spent will be added in order to be "
+"invoiced to your customer. Remove the sales order item for the timesheet "
+"entry to be non-billable."
+msgstr ""
+"Article de  la commande auquel le temps passé sera ajouté afin d'être "
+"facturé à votre client. Supprimez l'article de la commande pour que l'entrée"
+" de feuille de temps soit non facturable."
+
+#. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__sale_order_id
 msgid "Sales order to which the task is linked."
 msgstr "Bon de commande auquel la tâche est liée."
@@ -1164,26 +1175,6 @@ msgstr "Rechercher dans le Bon de commande"
 #, python-format
 msgid "Search in Sales Order Item"
 msgstr "Rechercher dans Article de la commande"
-
-#. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product__project_id
-#: model:ir.model.fields,help:sale_timesheet.field_product_template__project_id
-msgid ""
-"Select a billable project on which tasks can be created. This setting must "
-"be set for each company."
-msgstr ""
-"Sélectionnez un projet facturable permettant de créer des tâches. Ce "
-"paramétrage doit être configuré en fonction de chaque entreprise."
-
-#. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product__project_template_id
-#: model:ir.model.fields,help:sale_timesheet.field_product_template__project_template_id
-msgid ""
-"Select a billable project to be the skeleton of the new created project when"
-" selling the current product. Its stages and tasks will be duplicated."
-msgstr ""
-"Sélectionnez un projet facturable comme squelette du nouveau projet créé "
-"lors de la vente du produit. Ses étapes et tâches seront dupliquées."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__project_id
@@ -1374,18 +1365,6 @@ msgstr ""
 "                                l'adapter à vos besoins depuis l'application <i>Vente</i>\n"
 "                                à l'aide du menu : Configuration /\n"
 "                                Modèles de devis."
-
-#. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_account_bank_statement_line__timesheet_encode_uom_id
-#: model:ir.model.fields,help:sale_timesheet.field_account_move__timesheet_encode_uom_id
-#: model:ir.model.fields,help:sale_timesheet.field_account_payment__timesheet_encode_uom_id
-#: model:ir.model.fields,help:sale_timesheet.field_sale_order__timesheet_encode_uom_id
-msgid ""
-"This will set the unit of measure used to encode timesheet. This will simply provide tools\n"
-"        and widgets to help the encoding. All reporting will still be expressed in hours (default value)."
-msgstr ""
-"Cela définira l'unité de mesure utilisée pour encoder les feuilles de temps. Cela fournira simplement des outils\n"
-"        et des widgets pour faciliter l'encodage. Tous les rapports seront toujours exprimés en heures (valeur par défaut)."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_upsell_threshold
