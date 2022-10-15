@@ -833,7 +833,17 @@ function makeActionManager(env) {
      */
     function _executeActURLAction(action, options) {
         if (action.target === "self") {
+            let willUnload = false;
+            const onUnload = () => {
+                willUnload = true;
+            };
+            browser.addEventListener("beforeunload", onUnload);
+            env.services.ui.block();
             env.services.router.redirect(action.url);
+            browser.removeEventListener("beforeunload", onUnload);
+            if (!willUnload) {
+                env.services.ui.unblock();
+            }
         } else {
             const w = browser.open(action.url, "_blank");
             if (!w || w.closed || typeof w.closed === "undefined") {

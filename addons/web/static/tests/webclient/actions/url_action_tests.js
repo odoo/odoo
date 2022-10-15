@@ -36,6 +36,31 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps(["/my/test/url"]);
     });
 
+    QUnit.test("an 'ir.actions.act_url' with target 'self' blocks the ui", async (assert) => {
+        serviceRegistry.add(
+            "ui",
+            {
+                start() {
+                    return {
+                        block: () => assert.step("block"),
+                        // we can't simulate a page unload in the tests, so in this scenario the
+                        // ui will be unblocked directly (and we thus need to define the unblock
+                        // function)
+                        unblock: () => {},
+                    };
+                },
+            }
+        );
+        setupWebClientRegistries();
+        const env = await makeTestEnv({ serverData });
+        await doAction(env, {
+            type: "ir.actions.act_url",
+            target: "self",
+            url: "/my/test/url",
+        });
+        assert.verifySteps(["block"]);
+    });
+
     QUnit.test("execute an 'ir.actions.act_url' action with onClose option", async (assert) => {
         setupWebClientRegistries();
         patchWithCleanup(browser, {
