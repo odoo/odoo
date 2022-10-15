@@ -36,6 +36,28 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps(["/my/test/url"]);
     });
 
+    QUnit.test("execute an 'ir.actions.act_url' action with 'block_ui' param", async (assert) => {
+        serviceRegistry.add(
+            "ui",
+            {
+                start() {
+                    return {
+                        block: () => assert.step("block"),
+                    };
+                },
+            }
+        );
+        setupWebClientRegistries();
+        const env = await makeTestEnv({ serverData });
+        await doAction(env, {
+            type: "ir.actions.act_url",
+            target: "self",
+            url: "/my/test/url",
+            params: {"block_ui": true},
+        });
+        assert.verifySteps(["block"]);
+    });
+
     QUnit.test("execute an 'ir.actions.act_url' action with onClose option", async (assert) => {
         setupWebClientRegistries();
         patchWithCleanup(browser, {

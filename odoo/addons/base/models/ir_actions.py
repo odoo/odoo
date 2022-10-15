@@ -812,6 +812,8 @@ class IrActionsTodo(models.Model):
 
         result = action.read()[0]
         if action_type != 'ir.actions.act_window':
+            if action_type == 'ir.actions.act_url':
+                result['params'] = {'block_ui': True}
             return result
         result.setdefault('context', '{}')
 

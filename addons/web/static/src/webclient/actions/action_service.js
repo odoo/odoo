@@ -815,6 +815,9 @@ function makeActionManager(env) {
      */
     function _executeActURLAction(action, options) {
         if (action.target === "self") {
+            if (action.params && action.params.block_ui) {
+                env.services.ui.block();
+            }
             env.services.router.redirect(action.url);
         } else {
             const w = browser.open(action.url, "_blank");
@@ -981,6 +984,10 @@ function makeActionManager(env) {
                 onClose: options.onClose,
             });
         } else {
+            // TODO: move to action implementation after migration from legacy
+            if (action.tag === "reload" && action.params && action.params.block_ui) {
+                env.services.ui.block();
+            }
             const next = await clientAction(env, action);
             if (next) {
                 return doAction(next, options);

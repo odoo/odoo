@@ -587,6 +587,7 @@ class Module(models.Model):
             'type': 'ir.actions.act_url',
             'target': 'self',
             'url': '/web',
+            'params': {"block_ui": True},
         }
 
     def _button_immediate_function(self, function):

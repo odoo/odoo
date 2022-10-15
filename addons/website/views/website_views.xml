@@ -481,7 +481,7 @@
         <record id="action_open_website_configurator" model="ir.actions.client">
             <field name="name">Open Website Configurator</field>
             <field name="tag">reload</field>
-            <field name="params" eval="{'action_id': ref('website_configurator'), 'menu_id': ref('menu_website_configuration')}"/>
+            <field name="params" eval="{'action_id': ref('website_configurator'), 'menu_id': ref('menu_website_configuration'), 'block_ui': True}"/>
         </record>
 
         <record id="website_configurator_todo" model="ir.actions.todo">
