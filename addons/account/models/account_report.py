@@ -19,6 +19,7 @@ FIGURE_TYPE_SELECTION_VALUES = [
 
 DOMAIN_REGEX = re.compile(r'(-?sum)\((.*)\)')
 
+
 class AccountReport(models.Model):
     _name = "account.report"
     _description = "Accounting Report"

@@ -168,8 +168,6 @@ class AccountPaymentTerm(models.Model):
             if line.value == 'balance':
                 term_vals['company_amount'] = tax_amount_left + untaxed_amount_left
                 term_vals['foreign_amount'] = tax_amount_currency_left + untaxed_amount_currency_left
-                line_tax_amount = tax_amount_left
-                line_tax_amount_currency = tax_amount_currency_left
                 line_untaxed_amount = untaxed_amount_left
                 line_untaxed_amount_currency = untaxed_amount_currency_left
 

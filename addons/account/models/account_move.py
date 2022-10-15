@@ -1556,7 +1556,6 @@ class AccountMove(models.Model):
     def _onchange_partner_id(self):
         self = self.with_company(self.journal_id.company_id)
 
-        warning = {}
         if self.partner_id:
             rec_account = self.partner_id.property_account_receivable_id
             pay_account = self.partner_id.property_account_payable_id

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from odoo import api, Command, fields, models, _
-from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.base.models.res_bank import sanitize_account_number
 from odoo.tools import remove_accents
@@ -31,6 +30,7 @@ class AccountJournalGroup(models.Model):
     _sql_constraints = [
         ('uniq_name', 'unique(company_id, name)', 'A journal group name must be unique per company.'),
     ]
+
 
 class AccountJournal(models.Model):
     _name = "account.journal"
@@ -91,9 +91,8 @@ class AccountJournal(models.Model):
         compute='_compute_suspense_account_id',
         help="Bank statements transactions will be posted on the suspense account until the final reconciliation "
              "allowing finding the right account.", string='Suspense Account',
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id), \
-                ('account_type', 'not in', ('asset_receivable', 'liability_payable')), \
-                ('account_type', '=', 'asset_current')]")
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id), "
+               "('account_type', '=', 'asset_current')]")
     restrict_mode_hash_table = fields.Boolean(string="Lock Posted Entries with Hash",
         help="If ticked, the accounting entry or invoice receives a hash as soon as it is posted and cannot be modified anymore.")
     sequence = fields.Integer(help='Used to order Journals in the dashboard view', default=10)
@@ -149,14 +148,12 @@ class AccountJournal(models.Model):
         help="Used to register a profit when the ending balance of a cash register differs from what the system computes",
         string='Profit Account',
         domain="[('deprecated', '=', False), ('company_id', '=', company_id), \
-                ('account_type', 'not in', ('asset_receivable', 'liability_payable')), \
                 ('account_type', 'in', ('income', 'income_other'))]")
     loss_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True,
         help="Used to register a loss when the ending balance of a cash register differs from what the system computes",
         string='Loss Account',
         domain="[('deprecated', '=', False), ('company_id', '=', company_id), \
-                ('account_type', 'not in', ('asset_receivable', 'liability_payable')), \
                 ('account_type', '=', 'expense')]")
 
     # Bank journals fields
@@ -531,7 +528,7 @@ class AccountJournal(models.Model):
     def write(self, vals):
         for journal in self:
             company = journal.company_id
-            if ('company_id' in vals and journal.company_id.id != vals['company_id']):
+            if 'company_id' in vals and journal.company_id.id != vals['company_id']:
                 if self.env['account.move'].search([('journal_id', '=', journal.id)], limit=1):
                     raise UserError(_('This journal already contains items, therefore you cannot modify its company.'))
                 company = self.env['res.company'].browse(vals['company_id'])

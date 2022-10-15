@@ -184,9 +184,9 @@ class account_journal(models.Model):
         day_of_week = int(format_datetime(today, 'e', locale=get_lang(self.env).code))
         first_day_of_week = today + timedelta(days=-day_of_week+1)
         for i in range(-1,4):
-            if i==0:
+            if i == 0:
                 label = _('This Week')
-            elif i==3:
+            elif i == 3:
                 label = _('Not Due')
             else:
                 start_week = first_day_of_week + timedelta(days=i*7)

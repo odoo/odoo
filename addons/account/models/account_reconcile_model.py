@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, Command, tools, _
-from odoo.tools import float_compare, float_is_zero
-from odoo.osv.expression import get_unaccent_wrapper
 from odoo.exceptions import UserError, ValidationError
 import re
 from math import copysign

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _, Command
-from odoo.osv import expression
 from odoo.tools.float_utils import float_round as round
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import formatLang

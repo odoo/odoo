@@ -144,6 +144,7 @@ class Country(models.Model):
                 except (ValueError, KeyError):
                     raise UserError(_('The layout contains an invalid format key'))
 
+
 class CountryGroup(models.Model):
     _description = "Country Group"
     _name = 'res.country.group'

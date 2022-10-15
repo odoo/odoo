@@ -7,7 +7,6 @@ from odoo.exceptions import MissingError, ValidationError, AccessError
 from odoo.tools import frozendict
 from odoo.tools.safe_eval import safe_eval, test_python_expr
 from odoo.tools.float_utils import float_compare
-from odoo.http import request
 
 import base64
 from collections import defaultdict

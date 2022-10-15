@@ -9,6 +9,7 @@ import re
 ACCOUNT_REGEX = re.compile(r'(?:(\S*\d+\S*)\s)?(.*)')
 ACCOUNT_CODE_REGEX = re.compile(r'^[A-Za-z0-9.]+$')
 
+
 class AccountAccount(models.Model):
     _name = "account.account"
     _inherit = ['mail.thread']

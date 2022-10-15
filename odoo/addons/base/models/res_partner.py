@@ -63,6 +63,7 @@ class FormatAddressMixin(models.AbstractModel):
                 address_node.getparent().replace(address_node, sub_arch)
         return arch
 
+
 class PartnerCategory(models.Model):
     _description = 'Partner Tags'
     _name = 'res.partner.category'

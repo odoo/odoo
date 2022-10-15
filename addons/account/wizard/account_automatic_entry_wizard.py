@@ -7,6 +7,7 @@ from collections import defaultdict
 from itertools import groupby
 import json
 
+
 class AutomaticEntryWizard(models.TransientModel):
     _name = 'account.automatic.entry.wizard'
     _description = 'Create Automatic Entries'

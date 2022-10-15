@@ -14,6 +14,7 @@ from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 
 _logger = logging.getLogger(__name__)
 
+
 class AccountFiscalPosition(models.Model):
     _name = 'account.fiscal.position'
     _description = 'Fiscal Position'
@@ -322,14 +323,14 @@ class ResPartner(models.Model):
                       GROUP BY account_move_line.partner_id, a.account_type
                       """, where_params)
         treated = self.browse()
-        for pid, type, val in self._cr.fetchall():
+        for pid, account_type, val in self._cr.fetchall():
             partner = self.browse(pid)
-            if type == 'asset_receivable':
+            if account_type == 'asset_receivable':
                 partner.credit = val
                 if partner not in treated:
                     partner.debit = False
                     treated |= partner
-            elif type == 'liability_payable':
+            elif account_type == 'liability_payable':
                 partner.debit = -val
                 if partner not in treated:
                     partner.credit = False
@@ -346,7 +347,7 @@ class ResPartner(models.Model):
         sign = 1
         if account_type == 'liability_payable':
             sign = -1
-        res = self._cr.execute('''
+        self._cr.execute('''
             SELECT partner.id
             FROM res_partner partner
             LEFT JOIN account_move_line aml ON aml.partner_id = partner.id
