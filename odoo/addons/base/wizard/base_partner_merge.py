@@ -16,6 +16,7 @@ from odoo.tools import mute_logger
 
 _logger = logging.getLogger('odoo.addons.base.partner.merge')
 
+
 class MergePartnerLine(models.TransientModel):
 
     _name = 'base.partner.merge.line'

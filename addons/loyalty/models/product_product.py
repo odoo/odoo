@@ -4,6 +4,7 @@
 from odoo import _, models
 from odoo.exceptions import ValidationError
 
+
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 

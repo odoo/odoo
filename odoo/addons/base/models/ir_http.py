@@ -2,15 +2,9 @@
 #----------------------------------------------------------
 # ir_http modular http routing
 #----------------------------------------------------------
-import base64
 import hashlib
 import json
 import logging
-import mimetypes
-import os
-import re
-import sys
-import traceback
 
 import werkzeug
 import werkzeug.exceptions
@@ -24,7 +18,6 @@ from odoo.http import request, Response, ROUTING_KEYS, Stream
 from odoo.service import security
 from odoo.tools import consteq, submap
 from odoo.tools.translate import code_translations
-from odoo.modules.module import get_resource_path, get_module_path
 
 _logger = logging.getLogger(__name__)
 

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import Form
 from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.addons.base.models.ir_qweb import QWebException
 

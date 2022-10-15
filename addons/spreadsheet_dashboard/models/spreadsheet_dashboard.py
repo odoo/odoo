@@ -3,6 +3,7 @@ import json
 
 from odoo import api, fields, models, _
 
+
 class SpreadsheetDashboard(models.Model):
     _name = 'spreadsheet.dashboard'
     _description = 'Spreadsheet Dashboard'

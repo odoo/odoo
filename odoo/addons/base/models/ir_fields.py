@@ -32,6 +32,7 @@ class ImportWarning(Warning):
 class ConversionNotFound(ValueError):
     pass
 
+
 class IrFieldsConverter(models.AbstractModel):
     _name = 'ir.fields.converter'
     _description = 'Fields Converter'
@@ -640,6 +641,7 @@ class IrFieldsConverter(models.AbstractModel):
                 commands.append(Command.create(writable))
 
         return commands, warnings
+
 
 class O2MIdMapper(models.AbstractModel):
     """

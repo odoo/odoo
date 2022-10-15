@@ -4,8 +4,6 @@
 import logging
 import math
 
-from lxml import etree
-
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
 from odoo.tools import parse_date
@@ -420,7 +418,7 @@ class CurrencyRate(models.Model):
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
         arch, view = super()._get_view(view_id, view_type, **options)
-        if view_type in ('tree'):
+        if view_type == 'tree':
             names = {
                 'company_currency_name': (self.env['res.company'].browse(self._context.get('company_id')) or self.env.company).currency_id.name,
                 'rate_currency_name': self.env['res.currency'].browse(self._context.get('active_id')).name or 'Unit',

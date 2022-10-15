@@ -52,5 +52,5 @@ class Job(models.Model):
         self.ensure_one()
         default = dict(default or {})
         if 'name' not in default:
-            default['name'] = _("%s (copy)") % (self.name)
+            default['name'] = _("%s (copy)") % self.name
         return super(Job, self).copy(default=default)

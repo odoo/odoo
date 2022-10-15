@@ -5,6 +5,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
 
+
 class LoyaltyGenerateWizard(models.TransientModel):
     _name = 'loyalty.generate.wizard'
     _description = 'Generate Coupons'

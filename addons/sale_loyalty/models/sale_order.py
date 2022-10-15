@@ -16,6 +16,7 @@ from odoo.osv import expression
 def _generate_random_reward_code():
     return str(random.getrandbits(32))
 
+
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 

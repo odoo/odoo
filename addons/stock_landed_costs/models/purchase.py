@@ -1,5 +1,6 @@
 from odoo import api,models
 
+
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 

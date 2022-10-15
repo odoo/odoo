@@ -6,7 +6,6 @@ import logging
 from odoo import api, fields, models, tools
 from odoo.osv import expression
 from odoo.exceptions import UserError
-from psycopg2 import IntegrityError
 from odoo.tools.translate import _
 _logger = logging.getLogger(__name__)
 
@@ -161,7 +160,7 @@ class CountryState(models.Model):
 
     country_id = fields.Many2one('res.country', string='Country', required=True)
     name = fields.Char(string='State Name', required=True,
-               help='Administrative divisions of a country. E.g. Fed. State, Departement, Canton')
+               help='Administrative divisions of a country. E.g. Fed. State, Department, Canton')
     code = fields.Char(string='State Code', help='The state code.', required=True)
 
     _sql_constraints = [

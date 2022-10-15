@@ -146,6 +146,7 @@ class Partner(models.Model):
             partners.write({'parent_id': company.id})
             partners._onchange_company_id()
 
+
 class ResPartnerIndustry(models.Model):
     _inherit = "res.partner.industry"
 

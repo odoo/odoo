@@ -13,6 +13,7 @@ class MailShortcode(models.Model):
 
     _name = 'mail.shortcode'
     _description = 'Canned Response / Shortcode'
+
     source = fields.Char('Shortcut', required=True, index='trigram',
         help="Shortcut that will automatically be substituted with longer content in your messages."
              " Type ':' followed by the name of your shortcut (e.g. :hello) to use in your messages.")

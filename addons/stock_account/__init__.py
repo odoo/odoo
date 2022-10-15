@@ -7,6 +7,7 @@ from . import wizard
 
 from odoo import api, SUPERUSER_ID, _, tools
 
+
 def _configure_journals(cr, registry):
     """Setting journal and property field (if needed)"""
 

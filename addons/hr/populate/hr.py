@@ -5,6 +5,7 @@ from collections import defaultdict
 from odoo import models
 from odoo.tools import populate
 
+
 class HrDepartment(models.Model):
     _inherit = 'hr.department'
 
@@ -37,6 +38,7 @@ class HrDepartment(models.Model):
         for parent, children in parent_children.items():
             children.write({'parent_id': parent})
 
+
 class HrJob(models.Model):
     _inherit = 'hr.job'
 
@@ -51,6 +53,7 @@ class HrJob(models.Model):
             ('department_id', populate.randomize(department_ids)),
         ]
 
+
 class HrWorkLocation(models.Model):
     _inherit = 'hr.work.location'
 
@@ -64,6 +67,7 @@ class HrWorkLocation(models.Model):
             ('address_id', populate.constant(address_id)),
         ]
 
+
 class HrEmployeeCategory(models.Model):
     _inherit = 'hr.employee.category'
 
@@ -73,6 +77,7 @@ class HrEmployeeCategory(models.Model):
         return [
             ('name', populate.constant('tag_{counter}')),
         ]
+
 
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'

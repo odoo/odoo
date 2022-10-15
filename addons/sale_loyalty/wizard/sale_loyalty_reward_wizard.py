@@ -4,6 +4,7 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
+
 class SaleLoyaltyRewardWizard(models.TransientModel):
     _name = 'sale.loyalty.reward.wizard'
     _description = 'Sale Loyalty - Reward Selection Wizard'

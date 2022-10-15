@@ -25,6 +25,7 @@ class ProcurementGroup(models.Model):
         else:
             return super(ProcurementGroup, self)._get_rule_domain(location, values)
 
+
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 

@@ -18,6 +18,7 @@ TIMESHEET_INVOICE_TYPES = [
     ('other_costs', 'Other Costs'),
 ]
 
+
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
 

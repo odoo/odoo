@@ -5,7 +5,6 @@ import datetime
 import logging
 
 import requests
-import werkzeug.urls
 
 from ast import literal_eval
 

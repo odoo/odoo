@@ -8,7 +8,6 @@ from pytz import timezone, UTC
 from werkzeug.urls import url_encode
 
 from odoo import api, fields, models, _
-from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, format_amount, format_date, formatLang, get_lang, groupby
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.exceptions import UserError, ValidationError
@@ -1021,7 +1020,7 @@ class PurchaseOrderLine(models.Model):
             # compute qty_invoiced
             qty = 0.0
             for inv_line in line._get_invoice_lines():
-                if inv_line.move_id.state not in ['cancel'] or inv_line.move_id.payment_state == 'invoicing_legacy':
+                if inv_line.move_id.state != 'cancel' or inv_line.move_id.payment_state == 'invoicing_legacy':
                     if inv_line.move_id.move_type == 'in_invoice':
                         qty += inv_line.product_uom_id._compute_quantity(inv_line.quantity, line.product_uom)
                     elif inv_line.move_id.move_type == 'in_refund':
@@ -1174,8 +1173,6 @@ class PurchaseOrderLine(models.Model):
         if not self.product_id or not self.env.user.has_group('purchase.group_warning_purchase'):
             return
         warning = {}
-        title = False
-        message = False
 
         product_info = self.product_id
 

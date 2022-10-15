@@ -5,6 +5,7 @@ from odoo import api, fields, models
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 from odoo.osv import expression
 
+
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 

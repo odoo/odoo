@@ -6,7 +6,6 @@ import logging
 import re
 
 from ast import literal_eval
-from lxml import etree
 
 from odoo import api, models, _
 from odoo.exceptions import AccessError, RedirectWarning, UserError

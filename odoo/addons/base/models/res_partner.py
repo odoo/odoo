@@ -16,7 +16,6 @@ from random import randint
 from werkzeug import urls
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _, Command
-from odoo.osv.expression import get_unaccent_wrapper
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 
 # Global variables used for the warning fields declared on the res.partner
@@ -288,7 +287,7 @@ class Partner(models.Model):
             return "base/static/img/company_image.png"
         if self.type == 'delivery':
             return "base/static/img/truck.png"
-        if self.type == 'invoice':
+        elif self.type == 'invoice':
             return "base/static/img/money.png"
         return super()._avatar_get_placeholder_path()
 
@@ -785,17 +784,17 @@ class Partner(models.Model):
             name = name + "\n" + partner._display_address(without_company=True)
         name = name.replace('\n\n', '\n')
         name = name.replace('\n\n', '\n')
-        if self._context.get('partner_show_db_id'):
-            name = "%s (%s)" % (name, partner.id)
-        if self._context.get('address_inline'):
-            splitted_names = name.split("\n")
-            name = ", ".join([n for n in splitted_names if n.strip()])
-        if self._context.get('show_email') and partner.email:
-            name = "%s <%s>" % (name, partner.email)
-        if self._context.get('html_format'):
-            name = name.replace('\n', '<br/>')
         if self._context.get('show_vat') and partner.vat:
             name = "%s ‒ %s" % (name, partner.vat)
+        elif self._context.get('html_format'):
+            name = name.replace('\n', '<br/>')
+        elif self._context.get('show_email') and partner.email:
+            name = "%s <%s>" % (name, partner.email)
+        elif self._context.get('address_inline'):
+            splitted_names = name.split("\n")
+            name = ", ".join([n for n in splitted_names if n.strip()])
+        elif self._context.get('partner_show_db_id'):
+            name = "%s (%s)" % (name, partner.id)
         return name
 
     def name_get(self):
@@ -1041,7 +1040,6 @@ class Partner(models.Model):
 
     def _get_country_name(self):
         return self.country_id.name or ''
-
 
 
 class ResPartnerIndustry(models.Model):

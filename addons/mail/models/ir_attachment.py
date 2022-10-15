@@ -5,6 +5,7 @@ from odoo import models
 from odoo.exceptions import AccessError
 from odoo.http import request
 
+
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
 

@@ -123,6 +123,7 @@ def check_identity(fn, self):
 # Basic res.groups and res.users
 #----------------------------------------------------------
 
+
 class Groups(models.Model):
     _name = "res.groups"
     _description = "Access Groups"
@@ -1175,6 +1176,7 @@ class Users(models.Model):
 # to the implied groups (transitively).
 #
 
+
 class GroupsImplied(models.Model):
     _inherit = 'res.groups'
 
@@ -1246,6 +1248,7 @@ class GroupsImplied(models.Model):
             if groups.users:
                 implied_group.write({'users': [Command.unlink(user.id) for user in groups.users]})
 
+
 class UsersImplied(models.Model):
     _inherit = 'res.users'
 
@@ -1301,6 +1304,7 @@ class UsersImplied(models.Model):
 # - selection field 'sel_groups_ID1_..._IDk' is ID iff
 #       ID is in 'groups_id' and ID is maximal in the set {ID1, ..., IDk}
 #
+
 
 class GroupsView(models.Model):
     _inherit = 'res.groups'
@@ -1788,6 +1792,7 @@ class UsersView(models.Model):
             })
         return res
 
+
 class CheckIdentity(models.TransientModel):
     """ Wizard used to re-check the user's credentials (password)
 
@@ -1818,6 +1823,7 @@ class CheckIdentity(models.TransientModel):
 #----------------------------------------------------------
 # change password wizard
 #----------------------------------------------------------
+
 
 class ChangePasswordWizard(models.TransientModel):
     """ A wizard to manage the change of users' passwords. """
@@ -1859,6 +1865,7 @@ class ChangePasswordUser(models.TransientModel):
         # don't keep temporary passwords in the database longer than necessary
         self.write({'new_passwd': False})
 
+
 class ChangePasswordOwn(models.TransientModel):
     _name = "change.password.own"
     _description = "User, change own password wizard"
@@ -1889,6 +1896,8 @@ KEY_CRYPT_CONTEXT = CryptContext(
     # attacks on API keys isn't much of a concern
     ['pbkdf2_sha512'], pbkdf2_sha512__rounds=6000,
 )
+
+
 class APIKeysUser(models.Model):
     _inherit = 'res.users'
 
@@ -1938,6 +1947,7 @@ class APIKeysUser(models.Model):
             'target': 'new',
             'views': [(False, 'form')],
         }
+
 
 class APIKeys(models.Model):
     _name = _description = 'res.users.apikeys'
@@ -2027,8 +2037,10 @@ class APIKeys(models.Model):
 
         return k
 
+
 class APIKeyDescription(models.TransientModel):
-    _name = _description = 'res.users.apikeys.description'
+    _name = 'res.users.apikeys.description'
+    _description = 'API Key Description'
 
     name = fields.Char("Description", required=True)
 
@@ -2056,8 +2068,10 @@ class APIKeyDescription(models.TransientModel):
         if not self.user_has_groups('base.group_user'):
             raise AccessError(_("Only internal users can create API keys"))
 
+
 class APIKeyShow(models.AbstractModel):
-    _name = _description = 'res.users.apikeys.show'
+    _name = 'res.users.apikeys.show'
+    _description = 'API Key Show'
 
     # the field 'id' is necessary for the onchange that returns the value of 'key'
     id = fields.Id()

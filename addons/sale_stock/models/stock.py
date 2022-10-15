@@ -152,6 +152,7 @@ class StockPicking(models.Model):
 
         return super(StockPicking, self)._log_less_quantities_than_expected(moves)
 
+
 class StockLot(models.Model):
     _inherit = 'stock.lot'
 

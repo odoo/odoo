@@ -3,7 +3,6 @@
 
 import ast
 import base64
-import re
 
 from odoo import _, api, fields, models, tools, Command
 from odoo.exceptions import UserError

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models
 
+
 class IrQweb(models.AbstractModel):
     """ Add ``raise_on_code`` option for qweb. When this option is activated
     then all directives are prohibited.

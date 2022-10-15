@@ -3,7 +3,6 @@
 
 import base64
 from collections import defaultdict
-import operator
 import re
 
 from odoo import api, fields, models, tools, _

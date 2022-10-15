@@ -1,4 +1,3 @@
-import collections
 import logging
 
 from odoo import models, Command

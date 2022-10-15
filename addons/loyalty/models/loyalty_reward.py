@@ -6,6 +6,7 @@ import ast
 from odoo import _, api, fields, models
 from odoo.osv import expression
 
+
 class LoyaltyReward(models.Model):
     _name = 'loyalty.reward'
     _description = 'Loyalty Reward'

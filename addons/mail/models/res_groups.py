@@ -11,7 +11,6 @@ class ResGroups(models.Model):
     """
     _name = 'res.groups'
     _inherit = 'res.groups'
-    _description = 'Access Groups'
 
     def write(self, vals):
         res = super(ResGroups, self).write(vals)

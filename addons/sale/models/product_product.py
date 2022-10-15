@@ -80,6 +80,7 @@ class ProductAttributeCustomValue(models.Model):
         ('sol_custom_value_unique', 'unique(custom_product_template_attribute_value_id, sale_order_line_id)', "Only one Custom Value is allowed per Attribute Value per Sales Order Line.")
     ]
 
+
 class ProductPackaging(models.Model):
     _inherit = 'product.packaging'
 

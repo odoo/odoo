@@ -6,6 +6,7 @@ from odoo.exceptions import UserError
 from odoo.osv.expression import AND
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 
+
 class StockPickingBatch(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _name = "stock.picking.batch"

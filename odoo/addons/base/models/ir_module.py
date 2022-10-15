@@ -43,6 +43,7 @@ ACTION_DICT = {
     'type': 'ir.actions.act_window',
 }
 
+
 def backup(path, raise_exception=True):
     path = os.path.normpath(path)
     if not os.path.exists(path):
@@ -74,6 +75,7 @@ def assert_log_admin_access(method):
         _logger.info('ALLOW access to module.%s on %s to user %s #%s via %s', *log_data)
         return method(self, *args, **kwargs)
     return decorator(check_and_log, method)
+
 
 class ModuleCategory(models.Model):
     _name = "ir.module.category"
@@ -116,6 +118,7 @@ class ModuleCategory(models.Model):
             xml_ids[data['res_id']].append("%s.%s" % (data['module'], data['name']))
         for cat in self:
             cat.xml_id = xml_ids.get(cat.id, [''])[0]
+
 
 class MyFilterMessages(Transform):
     """
@@ -345,7 +348,6 @@ class Module(models.Model):
         except Exception as e:
             _logger.warning("get_distribution(%s) failed: %s", pydep, e)
             raise Exception('Error finding python library %s' % (pydep,))
-
 
     @staticmethod
     def _check_external_dependencies(terp):
