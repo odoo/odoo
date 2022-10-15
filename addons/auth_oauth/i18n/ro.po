@@ -6,7 +6,6 @@
 # Martin Trigaux, 2021
 # Dorin Hongu <dhongu@gmail.com>, 2021
 # Cozmin Candea <office@terrabit.ro>, 2021
-# Foldi Robert <foldirobert@nexterp.ro>, 2021
 # 
 msgid ""
 msgstr ""
@@ -14,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-21 10:46+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2021\n"
+"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2021\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,13 +54,8 @@ msgstr "Permis"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__auth_endpoint
-msgid "Authentication URL"
-msgstr "URL Autentificare"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__body
-msgid "Body"
-msgstr "Conținut"
+msgid "Authorization URL"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__css_class
@@ -96,8 +90,8 @@ msgstr "Creat în"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__data_endpoint
-msgid "Data URL"
-msgstr "URL Date"
+msgid "Data Endpoint"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__display_name
@@ -135,11 +129,6 @@ msgid "Last Updated on"
 msgstr "Ultima actualizare pe"
 
 #. module: auth_oauth
-#: model:ir.model.fields,help:auth_oauth.field_auth_oauth_provider__body
-msgid "Link text in Login Dialog"
-msgstr "Legați textul în dialogul de conectare"
-
-#. module: auth_oauth
 #: model:auth.oauth.provider,body:auth_oauth.provider_facebook
 msgid "Log in with Facebook"
 msgstr "Autentificare cu Facebook"
@@ -153,6 +142,11 @@ msgstr "Autentificare cu Google"
 #: model:auth.oauth.provider,body:auth_oauth.provider_openerp
 msgid "Log in with Odoo.com"
 msgstr "Autentificare cu Odoo.com"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__body
+msgid "Login button label"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users__oauth_access_token
@@ -232,14 +226,14 @@ msgid "System Parameter"
 msgstr "Parametru de sistem"
 
 #. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__validation_endpoint
+msgid "UserInfo URL"
+msgstr ""
+
+#. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users
 msgid "Users"
 msgstr "Utilizatori"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__validation_endpoint
-msgid "Validation URL"
-msgstr "URL Validare"
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:0

@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: hr_work_entry_contract
 #: code:addons/hr_work_entry_contract/models/hr_work_entry.py:0
@@ -140,12 +140,12 @@ msgstr "Tiempo personal genérico"
 #. module: hr_work_entry_contract
 #: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry
 msgid "HR Work Entry"
-msgstr "Entrada de trabajo de RRHH"
+msgstr "Entrada de trabajo de RR. HH."
 
 #. module: hr_work_entry_contract
 #: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry_type
 msgid "HR Work Entry Type"
-msgstr "Tipo de entrada de trabajo de RRHH"
+msgstr "Tipo de entrada de trabajo de RR. HH."
 
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_home_working
@@ -247,7 +247,7 @@ msgstr ""
 msgid "This work entry cannot be validated. The work entry type is undefined."
 msgstr ""
 "Esta entrada de trabajo no se puede validar. El tipo de entrada de trabajo "
-"no está definida."
+"no está definido."
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_type__is_leave

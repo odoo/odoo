@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import threading
 from odoo import api, fields, models
 from odoo.tools.translate import xml_translate
 from odoo.modules.module import get_resource_from_path
@@ -149,7 +150,7 @@ class ThemeMenu(models.Model):
     def _convert_to_base_model(self, website, **kwargs):
         self.ensure_one()
         page_id = self.page_id.copy_ids.filtered(lambda x: x.website_id == website)
-        parent_id = self.copy_ids.filtered(lambda x: x.website_id == website)
+        parent_id = self.parent_id.copy_ids.filtered(lambda x: x.website_id == website)
         new_menu = {
             'name': self.name,
             'url': self.url,
@@ -157,6 +158,7 @@ class ThemeMenu(models.Model):
             'new_window': self.new_window,
             'sequence': self.sequence,
             'parent_id': parent_id and parent_id.id or False,
+            'website_id': website.id,
             'theme_template_id': self.id,
         }
         return new_menu
@@ -182,6 +184,7 @@ class ThemePage(models.Model):
             'url': self.url,
             'view_id': view_id.id,
             'website_indexed': self.website_indexed,
+            'website_id': website.id,
             'theme_template_id': self.id,
         }
         return new_page
@@ -343,6 +346,12 @@ class IrUiView(models.Model):
     theme_template_id = fields.Many2one('theme.ir.ui.view', copy=False)
 
     def write(self, vals):
+        # During a theme module update, theme views' copies receiving an arch
+        # update should not be considered as `arch_updated`, as this is not a
+        # user made change.
+        test_mode = getattr(threading.current_thread(), 'testing', False)
+        if not (test_mode or self.pool._init):
+            return super().write(vals)
         no_arch_updated_views = other_views = self.env['ir.ui.view']
         for record in self:
             # Do not mark the view as user updated if original view arch is similar

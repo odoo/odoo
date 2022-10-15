@@ -230,7 +230,10 @@ body.editor_enable {
 //s_dynamic_snippet
 body.editor_enable {
     .s_dynamic {
-        > * {
+        // TODO remove .stretched-link::after in master
+        // BS4 adds pointer-events: auto on it which breaks the editor.
+        // BS5 doesn't do that so this can safely be removed in master.
+        > *, .stretched-link::after {
             pointer-events: none;
         }
         [data-url] {

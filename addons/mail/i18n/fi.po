@@ -27,11 +27,12 @@
 # Sari Mäyrä <sari.mayra@sv-oy.fi>, 2021
 # Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2021
 # Kim Asplund <kim.asplund@gmail.com>, 2021
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
 # Antti Oksman <antti.oksman@web-veistamo.fi>, 2021
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2021
 # Miika Nissi <miika.nissi@tawasta.fi>, 2022
 # Martin Trigaux, 2022
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
+# Joakim Weckman, 2022
 # 
 msgid ""
 msgstr ""
@@ -39,7 +40,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Joakim Weckman, 2022\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -807,6 +808,7 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/composer/composer.xml:0
+#: code:addons/mail/static/src/components/composer/composer.xml:0
 #, python-format
 msgid "Add attachment"
 msgstr "Lisää liite"
@@ -1087,6 +1089,7 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/attachment_box/attachment_box.xml:0
+#: code:addons/mail/static/src/components/chatter_topbar/chatter_topbar.xml:0
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__attachment_ids
 #: model:ir.model.fields,field_description:mail.field_mail_mail__attachment_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__attachment_ids
@@ -1177,8 +1180,6 @@ msgstr ""
 #. openerp-web
 #: code:addons/mail/static/src/components/channel_invitation_form/channel_invitation_form.xml:0
 #: code:addons/mail/static/src/components/channel_member_list/channel_member_list.xml:0
-#: code:addons/mail/static/src/components/follower/follower.xml:0
-#: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/components/rtc_call_participant_card/rtc_call_participant_card.xml:0
 #: code:addons/mail/static/src/components/rtc_invitation_card/rtc_invitation_card.xml:0
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
@@ -1472,6 +1473,14 @@ msgstr "Vaihdettu"
 #, python-format
 msgid "Channel"
 msgstr "Kanava"
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid ""
+"Channel \"%(channel_name)s\" only accepts members of group "
+"\"%(group_name)s\". Forbidden for: %(guest_names)s"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -2077,6 +2086,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/mail/static/src/components/delete_message_confirm_dialog/delete_message_confirm_dialog.xml:0
 #: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
+#: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
 #: code:addons/mail/static/src/xml/composer.xml:0
 #: code:addons/mail/static/src/xml/composer.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -2098,6 +2108,13 @@ msgstr "Poista viestin kopio"
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__exception
 msgid "Delivery Failed"
 msgstr "Lähetys epäonnistui"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/message/message.xml:0
+#, python-format
+msgid "Delivery failure"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__description
@@ -2319,6 +2336,7 @@ msgstr "Merkitse tehdyksi & aikatauluta seuraava"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
+#: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
@@ -2407,6 +2425,7 @@ msgstr "Dynaamisen placeholderin luonti"
 #. openerp-web
 #: code:addons/mail/static/src/components/activity/activity.xml:0
 #: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
+#: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
 #, python-format
 msgid "Edit"
 msgstr "Muokkaa"
@@ -2425,6 +2444,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/components/follower/follower.xml:0
 #: code:addons/mail/static/src/components/follower/follower.xml:0
 #, python-format
 msgid "Edit subscription"
@@ -2603,6 +2623,13 @@ msgstr "Sähköpostipohjat"
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tree
 msgid "Emails"
 msgstr "Sähköpostit"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer/composer.xml:0
+#, python-format
+msgid "Emojis"
+msgstr "Emojit"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__is_internal
@@ -2862,6 +2889,8 @@ msgid "Follow"
 msgstr "Seuraa"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/follower_list_menu/follower_list_menu.xml:0
 #: model:ir.actions.act_window,name:mail.action_view_followers
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_follower_ids
@@ -2872,6 +2901,7 @@ msgstr "Seuraa"
 #: model:ir.model.fields,field_description:mail.field_res_users__message_follower_ids
 #: model:ir.ui.menu,name:mail.menu_email_followers
 #: model_terms:ir.ui.view,arch_db:mail.view_followers_tree
+#, python-format
 msgid "Followers"
 msgstr "Seuraajat"
 
@@ -2935,6 +2965,7 @@ msgstr "Lähtöpaikka"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/components/composer/composer.xml:0
 #: code:addons/mail/static/src/components/composer/composer.xml:0
 #, python-format
 msgid "Full composer"
@@ -4108,6 +4139,7 @@ msgstr "Merkitse tehdyksi"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
+#: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
 #: code:addons/mail/static/src/components/thread_needaction_preview/thread_needaction_preview.xml:0
 #: code:addons/mail/static/src/components/thread_preview/thread_preview.xml:0
 #, python-format
@@ -4116,6 +4148,7 @@ msgstr "Merkitse luetuksi"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
 #: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
 #, python-format
 msgid "Mark as Todo"
@@ -4164,6 +4197,8 @@ msgid "Merged with the following partners:"
 msgstr "Yhdistä seuraavat kontaktit"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/message/message.js:0
 #: model:ir.model,name:mail.model_mail_message
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_message_id
 #: model:ir.model.fields,field_description:mail.field_mail_message_reaction__message_id
@@ -4171,6 +4206,7 @@ msgstr "Yhdistä seuraavat kontaktit"
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__mail_message_id
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__message
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
+#, python-format
 msgid "Message"
 msgstr "Viesti"
 
@@ -4710,10 +4746,13 @@ msgid "Normalized Email"
 msgstr "Normalisoitu sähköposti"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/message/message.js:0
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_note
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_note
 #: model:ir.model.fields,field_description:mail.field_mail_activity__note
 #: model:mail.message.subtype,name:mail.mt_note
+#, python-format
 msgid "Note"
 msgstr "Muistiinpano"
 
@@ -4964,6 +5003,7 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/models/mail_render_mixin.py:0
 #: code:addons/mail/models/mail_render_mixin.py:0
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
@@ -5380,6 +5420,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
 #: code:addons/mail/static/src/components/mail_template/mail_template.xml:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -5722,6 +5763,8 @@ msgstr "Yhdistämiskenttä"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
+#: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
+#: code:addons/mail/static/src/components/attachment_image/attachment_image.xml:0
 #: code:addons/mail/static/src/components/attachment_image/attachment_image.xml:0
 #, python-format
 msgid "Remove"
@@ -5739,6 +5782,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/components/follower/follower.xml:0
 #: code:addons/mail/static/src/components/follower/follower.xml:0
 #, python-format
 msgid "Remove this follower"
@@ -5759,6 +5803,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
 #: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
@@ -6545,8 +6590,11 @@ msgid "System Parameter"
 msgstr "Järjestelmäparametri"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/message/message.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__message_type__notification
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__notification
+#, python-format
 msgid "System notification"
 msgstr "Järjestelmän ilmoitus"
 
@@ -6851,6 +6899,9 @@ msgid ""
 "including from the Technical menu in the Settings, in order to preserve "
 "storage space of your Odoo database."
 msgstr ""
+"Tämä vaihtoehto poistaa pysyvästi kaikki sähköpostiviestijäljet lähettämisen"
+" jälkeen, mukaan lukien Asetutusten Tekniset-valikosta Odoo-tietokannan "
+"tallennustilan säilyttämiseksi."
 
 #. module: mail
 #. openerp-web
@@ -7426,6 +7477,13 @@ msgstr "Näkymän tyyppi"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/components/attachment_image/attachment_image.xml:0
+#, python-format
+msgid "View image"
+msgstr ""
+
+#. module: mail
+#. openerp-web
 #: code:addons/mail/static/src/components/discuss_sidebar_category/discuss_sidebar_category.xml:0
 #, python-format
 msgid "View or join channels"
@@ -7583,6 +7641,12 @@ msgstr "Olet yksitykseskustelussa <b>@%s</b> kanssa."
 #, python-format
 msgid "You are in channel <b>#%s</b>."
 msgstr "Olet kanavalla <b>#%s</b>."
+
+#. module: mail
+#: code:addons/mail/controllers/discuss.py:0
+#, python-format
+msgid "You are not allowed to upload an attachment here."
+msgstr "Sinulla ei ole oikeuksia ladata liitettä tähän"
 
 #. module: mail
 #. openerp-web

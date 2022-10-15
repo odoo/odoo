@@ -1466,6 +1466,14 @@ function factory(dependencies) {
          * @private
          * @returns {boolean}
          */
+        _computeHasCallFeature() {
+            return ['channel', 'chat', 'group'].includes(this.channel_type);
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
         _computeHasInviteFeature() {
             return this.model === 'mail.channel';
         }
@@ -1487,6 +1495,18 @@ function factory(dependencies) {
         */
         _computeIsChannelDescriptionChangeable() {
             return this.model === 'mail.channel' && ['channel', 'group'].includes(this.channel_type);
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsDescriptionEditableByCurrentUser() {
+            return Boolean(
+                this.messaging.currentUser &&
+                this.messaging.currentUser.isInternalUser &&
+                this.isChannelDescriptionChangeable
+            );
         }
 
         /**
@@ -2221,6 +2241,12 @@ function factory(dependencies) {
             default: false,
         }),
         /**
+         * Determines whether the RTC call feature should be displayed.
+         */
+        hasCallFeature: attr({
+            compute: '_computeHasCallFeature',
+        }),
+        /**
          * States whether this thread should has the invite feature. Only makes
          * sense for channels.
          */
@@ -2292,6 +2318,12 @@ function factory(dependencies) {
         isCurrentPartnerFollowing: attr({
             compute: '_computeIsCurrentPartnerFollowing',
             default: false,
+        }),
+        /**
+         * States whether this thread description is editable by the current user.
+         */
+        isDescriptionEditableByCurrentUser: attr({
+            compute: '_computeIsDescriptionEditableByCurrentUser',
         }),
         /**
          * States whether `this` is currently loading attachments.

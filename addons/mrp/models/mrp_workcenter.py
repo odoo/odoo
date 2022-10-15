@@ -32,7 +32,7 @@ class MrpWorkcenter(models.Model):
         help="Description of the Work Center.")
     capacity = fields.Float(
         'Capacity', default=1.0,
-        help="Number of pieces that can be produced in parallel. In case the work center has a capacity of 5 and you have to produce 10 units on your work order, the usual operation time will be multiplied by 2.")
+        help="Number of pieces (in product UoM) that can be produced in parallel (at the same time) at this work center. For example: the capacity is 5 and you need to produce 10 units, then the operation time listed on the BOM will be multiplied by two. However, note that both time before and after production will only be counted once.")
     sequence = fields.Integer(
         'Sequence', default=1, required=True,
         help="Gives the sequence order when displaying a list of work centers.")
@@ -394,6 +394,13 @@ class MrpWorkcenterProductivity(models.Model):
                     blocktime.duration = round(diff.total_seconds() / 60.0, 2)
             else:
                 blocktime.duration = 0.0
+
+    @api.constrains('workorder_id')
+    def _check_open_time_ids(self):
+        for workorder in self.workorder_id:
+            open_time_ids_by_user = self.env["mrp.workcenter.productivity"].read_group([("id", "in", workorder.time_ids.ids), ("date_end", "=", False)], ["user_id", "open_time_ids_count:count(id)"], ["user_id"])
+            if any(data["open_time_ids_count"] > 1 for data in open_time_ids_by_user):
+                raise ValidationError(_('The Workorder (%s) cannot be started twice!', workorder.display_name))
 
     def button_block(self):
         self.ensure_one()

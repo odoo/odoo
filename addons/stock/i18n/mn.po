@@ -14,8 +14,6 @@
 # Suren Ch <oyunsuren.ch@gmail.com>, 2021
 # Ubuntu Erka <erdenebold10@gmail.com>, 2021
 # nurbakhit nurka <nurbakhit@bumanit.mn>, 2021
-# Bayarkhuu Bataa, 2021
-# Martin Trigaux, 2021
 # Otgonbayar.A <gobi.mn@gmail.com>, 2021
 # Насан-Очир <nasaaskii@gmail.com>, 2021
 # Батмөнх Ганбат <batmunkh2522@gmail.com>, 2021
@@ -25,6 +23,8 @@
 # Munkhbaatar g <muuguu17@gmail.com>, 2021
 # tumenjargal hadbaatar <tumenjargal7903@gmail.com>, 2021
 # Sanjaajamts Badamjunai <b.sanjaajamtsfc@gmail.com>, 2021
+# Bayarkhuu Bataa, 2022
+# Martin Trigaux, 2022
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022
 # 
 msgid ""
@@ -981,7 +981,10 @@ msgid "As soon as possible"
 msgstr "Боломжтой болмогц"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Assign"
 msgstr "Оноох"
 
@@ -1909,7 +1912,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
-msgstr ""
+msgstr "DHL Express Connector"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__date
@@ -1926,7 +1929,7 @@ msgstr "Огноо"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "Date Processing"
-msgstr ""
+msgstr "Боловсруулалтын огноо"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__date_deadline
@@ -1938,7 +1941,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move__date
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "Date Scheduled"
-msgstr ""
+msgstr "Товлосон огноо"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__date_planned
@@ -3286,6 +3289,12 @@ msgid "Immediate transfer?"
 msgstr "Даруй шилжүүлэх эсэх?"
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Import"
+msgstr "Импортлох"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
 msgid "In Type"
 msgstr "Орлогын төрөл"
@@ -4602,6 +4611,12 @@ msgid "No stock move found"
 msgstr "Агуулахын хөдөлгөөн олдсонгүй"
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "No Stock On Hand"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_form
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_all
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_backorder
@@ -5275,12 +5290,12 @@ msgstr "Товлосон шилжүүлгүүд"
 #: code:addons/stock/static/src/js/stock_rescheduling_popover.js:0
 #, python-format
 msgid "Planning Issue"
-msgstr ""
+msgstr "Хоцролттой"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Planning Issues"
-msgstr ""
+msgstr "Хоцролттой"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -5327,6 +5342,14 @@ msgstr "Зөвлөмжит дамжлагууд"
 #: model:ir.model.fields,help:stock.field_stock_move__route_ids
 msgid "Preferred route"
 msgstr "Зөвлөмжит дамжлага"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"Press the CREATE button to define quantity for each product in your stock or"
+" import them from a spreadsheet throughout Favorites"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -6528,6 +6551,8 @@ msgstr "Товлогдсон огноо"
 #: model:ir.model.fields,help:stock.field_stock_move__date
 msgid "Scheduled date until move is done, then date of actual move processing"
 msgstr ""
+"Хөдөлгөөн дуусах хүртэл товлосон огноо байх бөгөөд дууссан үед бодит "
+"боловсруулалтын огноо болно"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
@@ -7575,7 +7600,7 @@ msgstr "Агуулахын нэр компанийн хэмжээнд үл да�
 #. module: stock
 #: code:addons/stock/wizard/stock_assign_serial_numbers.py:0
 #, python-format
-msgid "The number of Serial Numbers to generate must greater than zero."
+msgid "The number of Serial Numbers to generate must be greater than zero."
 msgstr ""
 
 #. module: stock
@@ -7717,6 +7742,14 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
 msgid "There's no product move yet"
 msgstr "Барааны ямар нэг хөдөлгөөн одоогоор алга"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"This analysis gives you an overview of the current stock level of your "
+"products."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__name
@@ -8187,7 +8220,10 @@ msgid "USPS Connector"
 msgstr "USPS холболт"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Unassign"
 msgstr ""
 
@@ -8885,7 +8921,7 @@ msgstr ""
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "You cannot change the Scheduled Date on a done or cancelled transfer."
-msgstr ""
+msgstr "Дууссан эсвэл цуцалсан шилжүүлгийн товлосон огноог өөрчлөх боомжгүй."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -9120,6 +9156,12 @@ msgid ""
 "You'll find here smart replenishment propositions based on inventory forecasts.\n"
 "            Choose the quantity to buy or manufacture and launch orders in a click.\n"
 "            To save time in the future, set the rules as \"automated\"."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Your stock is currently empty"
 msgstr ""
 
 #. module: stock

@@ -15,11 +15,12 @@
 # Manami Hashi <manami@roomsfor.hk>, 2022
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
 # Martin Trigaux, 2022
-# Noma Yuki, 2022
-# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # Tsuda Ryoko <ryoko04nov@gmail.com>, 2022
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # Shigekazu N. <shigekazu.noka@gmail.com>, 2022
+# Noma Yuki, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2022
+# 江口和志 <sandwhale1010@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -27,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:29+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2022\n"
+"Last-Translator: 江口和志 <sandwhale1010@gmail.com>, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,7 +39,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__completed_slides_count
 msgid "# Completed Slides"
-msgstr ""
+msgstr "# 完成したスライド"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed__count_views
@@ -48,17 +49,17 @@ msgstr "＃ビュー"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__public_views
 msgid "# of Public Views"
-msgstr ""
+msgstr "# 公開ビュー数"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_views
 msgid "# of Website Views"
-msgstr ""
+msgstr "# ウェブサイトビュー数"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__completion
 msgid "% Completed Slides"
-msgstr ""
+msgstr "% 完成したスライド"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
@@ -68,7 +69,7 @@ msgstr "&amp;nbsp;"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "'. Showing results for '"
-msgstr ""
+msgstr "'. 右記の結果を表示しています'"
 
 #. module: website_slides
 #. openerp-web
@@ -76,35 +77,35 @@ msgstr ""
 #: code:addons/website_slides/static/src/js/slides_slide_archive.js:0
 #, python-format
 msgid "(empty)"
-msgstr ""
+msgstr "(空)"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ". This way, they will be secured."
-msgstr ""
+msgstr ". この方法により、保護されます."
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_5
 msgid "3 Main Methodologies"
-msgstr ""
+msgstr "3つの主な方法"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "<b>%s</b> is requesting access to this course."
-msgstr ""
+msgstr "このコースに<b>%s</b>がアクセスを要求しています。"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
 msgid "<b>(empty)</b>"
-msgstr ""
+msgstr "<b>(空)</b>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "<b>Order by</b>"
-msgstr ""
+msgstr "<b>順</b>"
 
 #. module: website_slides
 #. openerp-web
@@ -112,19 +113,19 @@ msgstr ""
 #, python-format
 msgid ""
 "<b>Save & Publish</b> your lesson to make it available to your attendees."
-msgstr ""
+msgstr "参加者が利用できるよう、あなたのレッスンを<b>保存 & 公開</b> します."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid "<b>Save</b> your question."
-msgstr ""
+msgstr "質問を<b>保存</b>します."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training_category
 msgid "<b>Uncategorized</b>"
-msgstr ""
+msgstr "<b>未分類</b>"
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.mail_template_slide_channel_invite
@@ -137,6 +138,13 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        こんにちは<br/><br/>\n"
+"        新しいコースへの招待です: <t t-out=\"object.channel_id.name or ''\">ガーデニングの基本</t>.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.mail_template_channel_completed
@@ -231,6 +239,8 @@ msgid ""
 "<i class=\"fa fa-bars\"/><span class=\"d-none d-md-inline-block "
 "ml-1\">Lessons</span>"
 msgstr ""
+"<i class=\"fa fa-bars\"/><span class=\"d-none d-md-inline-block "
+"ml-1\">レッスン</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -238,16 +248,18 @@ msgid ""
 "<i class=\"fa fa-chevron-left mr-2\"/> <span class=\"d-none d-sm-inline-"
 "block\">Prev</span>"
 msgstr ""
+"<i class=\"fa fa-chevron-left mr-2\"/> <span class=\"d-none d-sm-inline-"
+"block\">前回</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "<i class=\"fa fa-circle-o-notch fa-spin mr-2\"/><b>Loading...</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-circle-o-notch fa-spin mr-2\"/><b>ローディング..</b>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_kanban_slide_channel
 msgid "<i class=\"fa fa-clock-o mr-2\" aria-label=\"Create date\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o mr-2\" aria-label=\"Create date\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
@@ -255,21 +267,23 @@ msgid ""
 "<i class=\"fa fa-clock-o mr-2\" aria-label=\"Duration\" role=\"img\" "
 "title=\"Duration\"/>"
 msgstr ""
+"<i class=\"fa fa-clock-o mr-2\" aria-label=\"Duration\" role=\"img\" "
+"title=\"Duration\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "<i class=\"fa fa-cloud-upload mr-1\"/>Upload new content"
-msgstr ""
+msgstr "<i class=\"fa fa-cloud-upload mr-1\"/>新しいコンテンツをアップロード"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "<i class=\"fa fa-code\"/> Embed"
-msgstr ""
+msgstr "<i class=\"fa fa-code\"/> 埋め込む"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "<i class=\"fa fa-comments\"/> Comments ("
-msgstr ""
+msgstr "<i class=\"fa fa-comments\"/> コメント ("
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -277,26 +291,28 @@ msgid ""
 "<i class=\"fa fa-desktop mr-2\"/>\n"
 "                <span class=\"d-none d-sm-inline-block\">Fullscreen</span>"
 msgstr ""
+"<i class=\"fa fa-desktop mr-2\"/>\n"
+"                <span class=\"d-none d-sm-inline-block\">全画面</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "<i class=\"fa fa-envelope\"/> Email"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope\"/> Eメール"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "<i class=\"fa fa-envelope\"/> Send Email"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope\"/>Emailを送る"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "<i class=\"fa fa-eraser mr-1\"/>Clear filters"
-msgstr ""
+msgstr "<i class=\"fa fa-eraser mr-1\"/>フィルタをクリア"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "<i class=\"fa fa-eraser\"/> Clear filters"
-msgstr ""
+msgstr "<i class=\"fa fa-eraser\"/> フィルタをクリア"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide_forbidden
@@ -304,11 +320,13 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-"
 "label=\"Attention\" title=\"Attention\"/> This document is private."
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-"
+"label=\"Attention\" title=\"Attention\"/> このドキュメントはプライベートです。"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
 msgid "<i class=\"fa fa-eye mr-2\" aria-label=\"Views\" role=\"img\" title=\"Views\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-eye mr-2\" aria-label=\"Views\" role=\"img\" title=\"Views\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
@@ -316,8 +334,8 @@ msgid ""
 "<i class=\"fa fa-file-code-o mr-2\" aria-label=\"Webpage\" role=\"img\" "
 "title=\"Webpage\"/>"
 msgstr ""
-"<i class=\"fa fa-file-code-o mr-2\" aria-label=\"ウェブページ\" role=\"img\" "
-"title=\"ウェブページ\"/>"
+"<i class=\"fa fa-file-code-o mr-2\" aria-label=\"Webpage\" role=\"img\" "
+"title=\"Webpage\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
@@ -325,8 +343,8 @@ msgid ""
 "<i class=\"fa fa-file-image-o mr-2\" aria-label=\"Infographic\" role=\"img\""
 " title=\"Infographic\"/>"
 msgstr ""
-"<i class=\"fa fa-file-image-o mr-2\" aria-label=\"インフォグラフィック\" role=\"img\" "
-"title=\"インフォグラフィック\"/>"
+"<i class=\"fa fa-file-image-o mr-2\" aria-label=\"Infographic\" role=\"img\""
+" title=\"Infographic\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
@@ -334,6 +352,8 @@ msgid ""
 "<i class=\"fa fa-file-pdf-o mr-2\" aria-label=\"Document\" role=\"img\" "
 "title=\"Document\"/>"
 msgstr ""
+"<i class=\"fa fa-file-pdf-o mr-2\" aria-label=\"Document\" role=\"img\" "
+"title=\"Document\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
@@ -341,26 +361,28 @@ msgid ""
 "<i class=\"fa fa-file-video-o mr-2\" aria-label=\"Video\" role=\"img\" "
 "title=\"Video\"/>"
 msgstr ""
+"<i class=\"fa fa-file-video-o mr-2\" aria-label=\"Video\" role=\"img\" "
+"title=\"Video\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
 msgid "<i class=\"fa fa-flag mr-2\" aria-label=\"Quiz\" role=\"img\" title=\"Quiz\"/>"
-msgstr "<i class=\"fa fa-flag mr-2\" aria-label=\"クイズ\" role=\"img\" title=\"クイズ\"/>"
+msgstr "<i class=\"fa fa-flag mr-2\" aria-label=\"Quiz\" role=\"img\" title=\"Quiz\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training_category
 msgid "<i class=\"fa fa-flag text-warning\"/> Quiz"
-msgstr ""
+msgstr "<i class=\"fa fa-flag text-warning\"/> 質問"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen_sidebar_category
 msgid "<i class=\"fa fa-flag-checkered text-warning mr-2\"/>Quiz"
-msgstr ""
+msgstr "<i class=\"fa fa-flag-checkered text-warning mr-2\"/>質問"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_kanban_slide_channel
 msgid "<i class=\"fa fa-folder mr-2\" aria-label=\"Open folder\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-folder mr-2\" aria-label=\"Open folder\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
@@ -380,12 +402,12 @@ msgstr "<i class=\"fa fa-graduation-cap mr-1\"/>全てのコース"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "<i class=\"fa fa-home\"/> About"
-msgstr ""
+msgstr "<i class=\"fa fa-home\"/>詳細"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_main
 msgid "<i class=\"fa fa-home\"/> Course"
-msgstr ""
+msgstr "<i class=\"fa fa-home\"/>コース"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
@@ -393,6 +415,8 @@ msgid ""
 "<i class=\"fa fa-home\"/><span class=\"d-none d-md-inline-block ml-1\">Back "
 "to course</span>"
 msgstr ""
+"<i class=\"fa fa-home\"/><span class=\"d-none d-md-inline-block "
+"ml-1\">コースに戻る</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -400,6 +424,8 @@ msgid ""
 "<i class=\"fa fa-info-circle\"/>\n"
 "                    The social sharing module will be unlocked when a moderator will allow your publication."
 msgstr ""
+"<i class=\"fa fa-info-circle\"/>\n"
+"                    モデレーターがあなたの公開を許可すると、ソーシャル共有モジュールのロックが解除されます。"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
@@ -421,6 +447,8 @@ msgid ""
 "<i class=\"fa fa-plus mr-2\"/>\n"
 "            <span>Add Question</span>"
 msgstr ""
+"<i class=\"fa fa-plus mr-2\"/>\n"
+"            <span>質問を追加</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_content_quiz_add_buttons
@@ -469,21 +497,23 @@ msgid ""
 "<i class=\"fa fa-sign-out\"/><span class=\"d-none d-md-inline-block "
 "ml-1\">Exit Fullscreen</span>"
 msgstr ""
+"<i class=\"fa fa-sign-out\"/><span class=\"d-none d-md-inline-block "
+"ml-1\">全画面を解除</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_kanban_slide_channel
 msgid "<i class=\"fa fa-star text-black-25\" aria-label=\"A star\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-star text-black-25\" aria-label=\"A star\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_kanban_slide_channel
 msgid "<i class=\"fa fa-star\" aria-label=\"A star\" role=\"img\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-star\" aria-label=\"A star\" role=\"img\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_kanban_slide_channel
 msgid "<i class=\"fa fa-star-half-o\" aria-label=\"Half a star\" role=\"img\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-star-half-o\" aria-label=\"Half a star\" role=\"img\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
@@ -492,7 +522,7 @@ msgid ""
 "                      My Courses"
 msgstr ""
 "<i class=\"fa fa-tag mr-2 text-muted\"/>\n"
-"                      私のコース"
+"                      自分のコース"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
@@ -501,12 +531,16 @@ msgid ""
 "<i class=\"fa fa-thumbs-down fa-1x\" role=\"img\" aria-label=\"Dislikes\" "
 "title=\"Dislikes\"/>"
 msgstr ""
+"<i class=\"fa fa-thumbs-down fa-1x\" role=\"img\" aria-label=\"Dislikes\" "
+"title=\"Dislikes\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "<i class=\"fa fa-thumbs-up fa-1x\" role=\"img\" aria-label=\"Likes\" title=\"Likes\"/>"
 msgstr ""
+"<i class=\"fa fa-thumbs-up fa-1x\" role=\"img\" aria-label=\"Likes\" "
+"title=\"Likes\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
@@ -515,6 +549,9 @@ msgid ""
 "                                Request already sent\n"
 "                            </small>"
 msgstr ""
+"<small class=\"text-success\">\n"
+"                                送信済を要求する\n"
+"                            </small>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_main
@@ -523,6 +560,8 @@ msgid ""
 "px-2 font-weight-normal\"><i class=\"fa fa-check\"/> "
 "Completed</span></small>"
 msgstr ""
+"<small><span class=\"badge badge-pill badge-success pull-right my-1 py-1 "
+"px-2 font-weight-normal\"><i class=\"fa fa-check\"/> 完了する</span></small>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
@@ -613,6 +652,8 @@ msgid ""
 "<span class=\"fa fa-arrow-right\"/>\n"
 "                                    Create a Google Project and Get a Key"
 msgstr ""
+"<span class=\"fa fa-arrow-right\"/>\n"
+"Googleプロジェクトを作成し、キーを取得します"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_share_link
@@ -1372,7 +1413,7 @@ msgstr "検定"
 #: model:gamification.challenge.line,name:website_slides.badge_data_certification_challenge_line_0
 #: model:gamification.goal.definition,name:website_slides.badge_data_certification_goal
 msgid "Certified Knowledge"
-msgstr ""
+msgstr "認定知識"
 
 #. module: website_slides
 #. openerp-web
@@ -1588,7 +1629,7 @@ msgstr "コミュニケーション"
 #: model:gamification.challenge.line,name:website_slides.badge_data_karma_challenge_line_0
 #: model:gamification.goal.definition,name:website_slides.badge_data_karma_goal
 msgid "Community hero"
-msgstr ""
+msgstr "コミュニティヒーロー"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_partner__slide_channel_company_count
@@ -1642,7 +1683,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__completed_template_id
 msgid "Completion Email"
-msgstr ""
+msgstr "完了Eメール"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
@@ -2710,7 +2751,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__has_message
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "メッセージあり"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_0_3
@@ -3112,7 +3153,7 @@ msgstr ""
 #: model:gamification.challenge.line,name:website_slides.badge_data_profile_challenge_line_0
 #: model:gamification.goal.definition,name:website_slides.badge_data_profile_goal
 msgid "Know yourself"
-msgstr ""
+msgstr "自己紹介"
 
 #. module: website_slides
 #: model_terms:slide.channel,description:website_slides.slide_channel_demo_3_furn0
@@ -3204,7 +3245,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.toggle_latest_achievements
 msgid "Latest achievements"
-msgstr ""
+msgstr "最近の達成者"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.toggle_leaderboard
@@ -3427,7 +3468,7 @@ msgstr "投票数"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "Most popular courses"
-msgstr ""
+msgstr "人気の高いコース"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__my_activity_date_deadline
@@ -3437,12 +3478,12 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "My Courses"
-msgstr "私のコース"
+msgstr "自分のコース"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "My courses"
-msgstr "私のコース"
+msgstr "自分のコース"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__name
@@ -3494,7 +3535,7 @@ msgstr "最新"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "Newest courses"
-msgstr ""
+msgstr "最新のコース"
 
 #. module: website_slides
 #. openerp-web
@@ -3845,7 +3886,7 @@ msgstr ""
 #: model:gamification.challenge.line,name:website_slides.badge_data_course_challenge_line_0
 #: model:gamification.goal.definition,name:website_slides.badge_data_course_goal
 msgid "Power User"
-msgstr ""
+msgstr "パワーユーザ"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
@@ -4027,7 +4068,7 @@ msgstr "最後の評価フィードバック"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_last_image
 msgid "Rating Last Image"
-msgstr ""
+msgstr "最後の評価イメージ"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_last_value
@@ -4516,7 +4557,7 @@ msgstr "規模"
 msgid ""
 "Skill up and have an impact! Your business career starts here.<br/>Time to "
 "start a course."
-msgstr ""
+msgstr "スキルアップして、インパクトを与えよう！ あなたのビジネスキャリアはここから始まる。<br/>コース開始の時間です。"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_link__slide_id
@@ -5168,7 +5209,7 @@ msgstr "ビュー"
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_achievements_small
 #: model_terms:ir.ui.view,arch_db:website_slides.toggle_leaderboard
 msgid "View all"
-msgstr ""
+msgstr "すべてを見る"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
@@ -5266,7 +5307,7 @@ msgstr "ウェブサイト"
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__gamification_challenge__challenge_category__slides
 msgid "Website / Slides"
-msgstr ""
+msgstr "ホームページ／スライド"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_message_ids
@@ -5622,7 +5663,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.achievement_card
 msgid "achieved"
-msgstr ""
+msgstr "が完了したコース："
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav

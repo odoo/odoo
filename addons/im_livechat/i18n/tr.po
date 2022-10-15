@@ -10,7 +10,6 @@
 # Murat Kaplan <muratk@projetgrup.com>, 2021
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2021
 # Saban Yildiz <sabany@projetgrup.com>, 2021
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2021
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2021
 # Umur Akın <umura@projetgrup.com>, 2021
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
@@ -19,6 +18,8 @@
 # Murat Durmuş <muratd@projetgrup.com>, 2021
 # Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2021
 # Ediz Duman <neps1192@gmail.com>, 2022
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
+# Halil, 2022
 # 
 msgid ""
 msgstr ""
@@ -26,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2022\n"
+"Last-Translator: Halil, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,7 +43,7 @@ msgstr "# Mesajlar"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rating_count
 msgid "# Ratings"
-msgstr ""
+msgstr "# Derecelendirmeler"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__nbr_channel
@@ -62,7 +63,7 @@ msgstr "% Memnuniyet"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_rating
 msgid "% of Happiness"
-msgstr "% of Happiness"
+msgstr "% Mutluluk"
 
 #. module: im_livechat
 #. openerp-web
@@ -114,6 +115,8 @@ msgid ""
 "<i class=\"fa fa-smile-o text-success\" title=\"Percentage of happy "
 "ratings\" role=\"img\" aria-label=\"Happy face\"/>"
 msgstr ""
+"<i class=\"fa fa-smile-o text-success\" title=\"Percentage of happy "
+"ratings\" role=\"img\" aria-label=\"Happy face\"/>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
@@ -155,7 +158,7 @@ msgid ""
 "                                       If the visitor is also the operator, the session will always be answered."
 msgstr ""
 "Operatör cevap vermediyse bir oturum cevapsızdır. \n"
-"Ziyaretçi aynı zamanda operatör ise, oturum her zaman cevaplandırılacaktır."
+"                                       Ziyaretçi aynı zamanda operatör ise, oturum her zaman cevaplandırılacaktır."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__action
@@ -278,7 +281,7 @@ msgid ""
 "                replaced directly in your message, so that you can still edit\n"
 "                it before sending."
 msgstr ""
-"Hazır cevaplar daha önceden tanımlanmış cevapların <i>:shortcut</i>\n"
+"Hazır cevaplar daha önceden tanımlanmış cevapların <i>:kısayol</i>\n"
 "                yazılarak mesajlarda kullanılmasını sağlar. Kısayol \n"
 "                direk olarak mesaja eklenir ve göndermeden önce\n"
 "                düzenleme şansı verilir."
@@ -345,6 +348,9 @@ msgid ""
 "Chat is private and unique between 2 persons. Group is private among invited"
 " persons. Channel can be freely joined (depending on its configuration)."
 msgstr ""
+"Sohbet 2 kişi arasında özel ve benzersizdir. Grup, davet edilen kişiler "
+"arasında özeldir. Kanal serbestçe birleştirilebilir (yapılandırmasına bağlı "
+"olarak)."
 
 #. module: im_livechat
 #. openerp-web
@@ -421,8 +427,7 @@ msgstr "Conversations handled"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid ""
 "Copy and paste this code into your website, within the &lt;head&gt; tag:"
-msgstr ""
-"Kopyalayın ve Web sitesi, &lt; head &gt; etiketi içinde bu kodu yapıştırın:"
+msgstr "Bu kodu kopyalayıp web sitenize &lt;head&gt; etiketine yapıştırın:"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__country_ids
@@ -502,12 +507,12 @@ msgstr "Faaliyet Günleri"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__button_background_color
 msgid "Default background color of the Livechat button"
-msgstr "Default background color of the Livechat button"
+msgstr "Livechat düğmesinin varsayılan arka plan rengi"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__header_background_color
 msgid "Default background color of the channel header once open"
-msgstr "Default background color of the channel header once open"
+msgstr "Açıldıktan sonra kanal üstbilgisinin varsayılan arka plan rengi"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__button_text_color
@@ -583,7 +588,7 @@ msgstr "Butonu Göster"
 #: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
 #, python-format
 msgid "Document not downloadable"
-msgstr ""
+msgstr "Belge indirilebilir değil"
 
 #. module: im_livechat
 #. openerp-web
@@ -626,6 +631,9 @@ msgid ""
 "Settings and select the Website Live Chat Channel you want to add to your "
 "website."
 msgstr ""
+"Odoo CMS ile oluşturulan web siteleri için, Web Sitesi &gt; Yapılandırma "
+"&gt; Ayarları'na gidin ve web sitenize eklemek istediğiniz Web Sitesi Canlı "
+"Sohbet Kanalı'nı seçin."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__sequence
@@ -719,7 +727,7 @@ msgstr "Geçersiz e-posta adresi"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_res_users_settings__is_discuss_sidebar_category_livechat_open
 msgid "Is category livechat open"
-msgstr ""
+msgstr "Kategori livechat açık mı"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__livechat_active
@@ -729,18 +737,18 @@ msgstr "Livechat devam ediyor mu?"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_anonymous
 msgid "Is visitor anonymous"
-msgstr "Ziyaretçi anonim mi?"
+msgstr "Ziyaretçi anonim mi"
 
 #. module: im_livechat
 #: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_3
 msgid "Joel Willis, Marc Demo"
-msgstr ""
+msgstr "Joel Willis, Marc Demo"
 
 #. module: im_livechat
 #: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_2
 #: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_6
 msgid "Joel Willis, Mitchell Admin"
-msgstr ""
+msgstr "Joel Willis, Mitchell Admin"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
@@ -755,12 +763,12 @@ msgstr "Kanala Katıl"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_conversations_value
 msgid "Kpi Livechat Conversations Value"
-msgstr "Kpi Livechat Conversations Value"
+msgstr "Kpi Livechat Konuşmalarının Değeri"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_rating_value
 msgid "Kpi Livechat Rating Value"
-msgstr "Kpi Livechat Rating Value"
+msgstr "Kpi Livechat Konuşmalarının Değeri"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_response_value
@@ -796,7 +804,7 @@ msgstr "Son Güncelleme"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Leave"
-msgstr "İzin"
+msgstr "Ayrıl"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -833,12 +841,12 @@ msgstr "Canlı sohbet"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Livechat Button"
-msgstr "Livechat Button"
+msgstr "Livechat Butonu"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Livechat Button Color"
-msgstr "Livechat Button Color"
+msgstr "Livechat Butonu Rengi"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_channel
@@ -900,12 +908,12 @@ msgstr "Canlı Yardım Kullanıcı Adı"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Livechat Window"
-msgstr "Livechat Window"
+msgstr "Livechat Penceresi"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_mail_channel__livechat_active
 msgid "Livechat session is active until visitor leave the conversation."
-msgstr "Livechat session is active until visitor leave the conversation."
+msgstr "Livechat oturumu, ziyaretçi görüşmeden ayrılana kadar aktiftir."
 
 #. module: im_livechat
 #. openerp-web
@@ -942,7 +950,7 @@ msgstr "Yapılacak Olarak İşaretle"
 #: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
 #, python-format
 msgid "Mark as todo"
-msgstr ""
+msgstr "Yapılacaklar olarak işaretle"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__sequence
@@ -985,7 +993,7 @@ msgstr "Sonraki"
 #: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
 #, python-format
 msgid "No available collaborator, please try again later."
-msgstr ""
+msgstr "Mevcut ortak çalışan yok, lütfen daha sonra tekrar deneyin."
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.rating_rating_action_livechat_report
@@ -1193,7 +1201,7 @@ msgstr "Değerlendirme Ortalaması"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr "Son Geribildirimleri Derecelendirme "
+msgstr "Son Geribildirimleri Derecelendirme"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_last_image
@@ -1270,7 +1278,7 @@ msgstr "Tarafından alındı:"
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__regex_url
 msgid ""
 "Regular expression specifying the web pages this rule will be applied on."
-msgstr "Bu kuralın geçerli olduğu web sayfalarını belirten tanımlama"
+msgstr "Bu kuralın geçerli olduğu web sayfalarını belirten tanımlama."
 
 #. module: im_livechat
 #. openerp-web
@@ -1398,7 +1406,7 @@ msgstr "Oturum İstatistikleri"
 #: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
 #, python-format
 msgid "Session expired... Please refresh and try again."
-msgstr ""
+msgstr "Oturum süresi doldu... Lütfen yenileyin ve tekrar deneyin."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_unrated
@@ -1460,7 +1468,7 @@ msgstr "Kullanıcıdan sohbeti başlatmasını isteyen metin."
 #: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
 #, python-format
 msgid "Thank you for your feedback"
-msgstr "Geri bildiriminiz için teşekkür ederiz."
+msgstr "Geri bildiriminiz için teşekkür ederiz"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__channel_id
@@ -1494,7 +1502,7 @@ msgstr "Kullanıcı destek kanallarını silebilecek."
 #. module: im_livechat
 #: model:res.groups,comment:im_livechat.im_livechat_group_user
 msgid "The user will be able to join support channels."
-msgstr "Destek kanallarına katılmaya yetkili olacak"
+msgstr "Destek kanallarına katılmaya yetkili olacak."
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.rating_rating_action_livechat
@@ -1535,23 +1543,23 @@ msgstr "Yanıtlama süresi (sn)"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_digest_digest__kpi_livechat_response
 msgid "Time to answer the user in second."
-msgstr "Time to answer the user in second."
+msgstr "Kullanıcıya ikinci olarak cevap verme zamanı."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_response
 msgid "Time to answer(sec)"
-msgstr "Time to answer(sec)"
+msgstr "Cevap verme zamanı (sn)"
 
 #. module: im_livechat
 #: model:digest.tip,name:im_livechat.digest_tip_im_livechat_0
 #: model_terms:digest.tip,tip_description:im_livechat.digest_tip_im_livechat_0
 msgid "Tip: Use canned responses to chat faster"
-msgstr "Tip: Use canned responses to chat faster"
+msgstr "İpucu: Daha hızlı sohbet etmek için hazır yanıtları kullanın"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__title_color
 msgid "Title Color"
-msgstr "Title Color"
+msgstr "Başlık Rengi"
 
 #. module: im_livechat
 #. openerp-web
@@ -1576,7 +1584,7 @@ msgstr "Tekrar deneyin"
 #: code:addons/im_livechat/models/mail_channel.py:0
 #, python-format
 msgid "Type <b>:shortcut</b> to insert a canned response in your message.<br>"
-msgstr ""
+msgstr "İletinize hazır bir yanıt eklemek için <b>:kısayol</b> yazın.<br>"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__regex_url
@@ -1639,26 +1647,26 @@ msgstr "Kullanıcı"
 #: model:ir.model.fields,field_description:im_livechat.field_res_partner__user_livechat_username
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__user_livechat_username
 msgid "User Livechat Username"
-msgstr ""
+msgstr "Kullanıcı Livechat Kullanıcı Adı"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_users_settings
 msgid "User Settings"
-msgstr ""
+msgstr "Kullanıcı ayarları"
 
 #. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
 #, python-format
 msgid "User is idle"
-msgstr ""
+msgstr "Kullanıcı boşta"
 
 #. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
 #, python-format
 msgid "User is offline"
-msgstr ""
+msgstr "Kullanıcı çevrimdışı"
 
 #. module: im_livechat
 #. openerp-web
@@ -1701,33 +1709,33 @@ msgstr "Ziyaretçi"
 #. module: im_livechat
 #: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_0
 msgid "Visitor #234, Mitchell Admin"
-msgstr ""
+msgstr "Ziyaretçi #234, Mitchell Admin"
 
 #. module: im_livechat
 #: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_1
 msgid "Visitor #323, Marc Demo"
-msgstr ""
+msgstr "Ziyaretçi #323, Marc Demo"
 
 #. module: im_livechat
 #: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_4
 msgid "Visitor #532, Mitchell Admin"
-msgstr ""
+msgstr "Ziyaretçi #532, Mitchell Admin"
 
 #. module: im_livechat
 #: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_5
 msgid "Visitor #649, Mitchell Admin"
-msgstr ""
+msgstr "Ziyaretçi #649, Mitchell Admin"
 
 #. module: im_livechat
 #: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_7
 msgid "Visitor #722, Marc Demo"
-msgstr ""
+msgstr "Ziyaretçi #722, Marc Demo"
 
 #. module: im_livechat
 #: code:addons/im_livechat/models/mail_channel.py:0
 #, python-format
 msgid "Visitor has left the conversation."
-msgstr "Visitor has left the conversation."
+msgstr "Ziyaretçi sohbetten ayrıldı."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_happy
@@ -1737,7 +1745,7 @@ msgstr "Ziyaretçi memnun"
 #. module: im_livechat
 #: model:mail.channel,name:im_livechat.mail_channel_livechat_1
 msgid "Visitor, Mitchell Admin"
-msgstr ""
+msgstr "Ziyaretçi, Mitchell Admin"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__web_page
@@ -1757,7 +1765,7 @@ msgstr "Karşılama Mesajı"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Widget"
-msgstr "Widget"
+msgstr "Bileşen"
 
 #. module: im_livechat
 #. openerp-web
@@ -1801,7 +1809,7 @@ msgstr "Uzaklaştır"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
 msgid "e.g. /contactus"
-msgstr ""
+msgstr "örneğin /bizimle iletişime geç"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -1811,7 +1819,7 @@ msgstr "örn. Merhaba, size nasıl yardımcı olabilirim?"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. YourWebsite.com"
-msgstr "örn. Websiteniz.com"
+msgstr "örn. YourWebsite.com"
 
 #. module: im_livechat
 #. openerp-web
@@ -1825,7 +1833,7 @@ msgstr "den"
 #: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
 #, python-format
 msgid "mail@example.com"
-msgstr "posta@ornek.com"
+msgstr "mail@example.com"
 
 #. module: im_livechat
 #. openerp-web

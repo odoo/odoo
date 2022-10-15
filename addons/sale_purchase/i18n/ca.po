@@ -10,6 +10,7 @@
 # M Palau <mpalau@tda.ad>, 2021
 # Arnau Ros, 2021
 # jabelchi, 2021
+# marcescu, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: jabelchi, 2021\n"
+"Last-Translator: marcescu, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,12 +39,12 @@ msgstr ""
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_inherited_form_purchase
 msgid "<span class=\"o_stat_text\">Purchase</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Comprar</span>"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.purchase_order_inherited_form_sale
 msgid "<span class=\"o_stat_text\">Sale</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Venda</span>"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
@@ -76,6 +77,9 @@ msgid ""
 "automatically created to buy the product. Tip: don't forget to set a vendor "
 "on the product."
 msgstr ""
+"Si està marcat, cada vegada que vens aquest producte a través d'un SO, es "
+"crea automàticament un RfQ per comprar el producte. Consell: no t'oblidis de"
+" posar un venedor al producte."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
@@ -85,17 +89,17 @@ msgstr "Accions manuals poden ser requerides."
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order__purchase_order_count
 msgid "Number of Purchase Order Generated"
-msgstr ""
+msgstr "Nombre d'ordres de compra generades"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__sale_order_count
 msgid "Number of Source Sale"
-msgstr ""
+msgstr "Número de venda en origen"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__purchase_line_count
 msgid "Number of generated purchase items"
-msgstr ""
+msgstr "Nombre d'elements de compra generats"
 
 #. module: sale_purchase
 #: code:addons/sale_purchase/models/sale_order.py:0
@@ -106,7 +110,7 @@ msgstr "La quantitat demanada ha disminuït!"
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_line_id
 msgid "Origin Sale Item"
-msgstr ""
+msgstr "Element de venda d'origen"
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_product_template
@@ -116,7 +120,7 @@ msgstr "Plantilla de producte"
 #. module: sale_purchase
 #: model:ir.model.constraint,message:sale_purchase.constraint_product_template_service_to_purchase
 msgid "Product that is not a service can not create RFQ."
-msgstr ""
+msgstr "Producte que no és un servei no pot crear RFQ."
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order
@@ -132,7 +136,7 @@ msgstr "Línia de la comanda de compra"
 #: code:addons/sale_purchase/models/sale_order.py:0
 #, python-format
 msgid "Purchase Order generated from %s"
-msgstr ""
+msgstr "Ordre de compra generat a partir de %s"
 
 #. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_sale_order_line__purchase_line_ids
@@ -146,7 +150,7 @@ msgstr ""
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
 msgid "Reordering"
-msgstr ""
+msgstr "Reordenació"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_order_id
@@ -167,13 +171,13 @@ msgstr "Línia comanda de venda"
 #: code:addons/sale_purchase/models/purchase_order.py:0
 #, python-format
 msgid "Sources Sale Orders %s"
-msgstr ""
+msgstr "Fonts Ordres de venda %s"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_product_product__service_to_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_product_template__service_to_purchase
 msgid "Subcontract Service"
-msgstr ""
+msgstr "Servei de subcontractació"
 
 #. module: sale_purchase
 #: code:addons/sale_purchase/models/sale_order.py:0
@@ -192,6 +196,8 @@ msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the purchase order if needed."
 msgstr ""
+"Estàs disminuint la quantitat ordenada! No oblideu actualitzar manualment la"
+" comanda de compra si cal."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation

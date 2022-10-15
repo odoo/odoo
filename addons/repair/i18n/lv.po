@@ -1,16 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * mrp_repair
+# 	* repair
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# JanisJanis <jbojars@gmail.com>, 2022
+# Arnis Putniņš <arnis@allegro.lv>, 2022
+# Konstantins Zabogonskis <inculin4ik@gmail.com>, 2022
+# InfernalLV <karlisdreizis@gmail.com>, 2022
+# ievaputnina <ievai.putninai@gmail.com>, 2022
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:27+0000\n"
-"PO-Revision-Date: 2017-10-02 11:27+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"PO-Revision-Date: 2021-09-14 12:26+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Latvian (https://www.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,946 +24,1353 @@ msgstr ""
 "Language: lv\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
 
-#. module: mrp_repair
-#: model:mail.template,report_name:mrp_repair.mail_template_mrp_repair_quotation
-msgid "${(object.name or '').replace('/','_')}"
+#. module: repair
+#: model:ir.actions.report,print_report_name:repair.action_report_repair_order
+msgid ""
+"(\n"
+"                object.state == 'draft' and 'Repair Quotation - %s' % (object.name) or\n"
+"                'Repair Order - %s' % (object.name))"
 msgstr ""
 
-#. module: mrp_repair
-#: model:mail.template,subject:mrp_repair.mail_template_mrp_repair_quotation
-msgid "${object.partner_id.name} Repair Orders (Ref ${object.name or 'n/a' })"
-msgstr ""
-
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "(<i>Remove</i>)"
 msgstr ""
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "(update)"
-msgstr ""
+msgstr "(atjaunināt)"
 
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_state
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__state
 msgid ""
 "* The 'Draft' status is used when a user is encoding a new and unconfirmed repair order.\n"
 "* The 'Confirmed' status is used when a user confirms the repair order.\n"
 "* The 'Ready to Repair' status is used to start to repairing, user can start repairing only after repair order is confirmed.\n"
+"* The 'Under Repair' status is used when the repair is ongoing.\n"
 "* The 'To be Invoiced' status is used to generate the invoice before or after repairing done.\n"
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
 
-#. module: mrp_repair
-#: model:mail.template,body_html:mrp_repair.mail_template_mrp_repair_quotation
-msgid ""
-"<?xml version=\"1.0\"?>\n"
-"<data><p>Dear ${object.partner_id.name}</p>\n"
-"                <p>\n"
-"                Here is your repair order ${doc_name} <strong>${object.name}</strong>\n"
-"                % if object.origin:\n"
-"                (with reference: ${object.origin} )\n"
-"                % endif\n"
-"                % if object.invoice_method != 'none':\n"
-"                amounting in <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}.</strong>\n"
-"                % endif\n"
-"                </p>\n"
-"                <p>You can reply to this email if you have any questions.</p>\n"
-"                <p>Thank you,</p>\n"
-"            </data>"
+#. module: repair
+#: code:addons/repair/models/repair.py:0
+#, python-format
+msgid ": Insufficient Quantity To Repair"
 msgstr ""
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+#. module: repair
+#: model:mail.template,body_html:repair.mail_template_repair_quotation
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
+"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/>\n"
+"        Here is your repair order <strong t-out=\"object.name or ''\">RO/00004</strong>\n"
+"        <t t-if=\"object.invoice_method != 'none'\">\n"
+"            amounting in <strong><t t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 100.00</t>.</strong><br/>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            .<br/>\n"
+"        </t>\n"
+"        You can reply to this email if you have any questions.\n"
+"        <br/><br/>\n"
+"        Thank you,\n"
+"        <t t-if=\"user.signature\">\n"
+"            <br/>\n"
+"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>"
+msgstr ""
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<i>(Add)</i>"
 msgstr ""
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid ""
+"<span class=\"o_stat_text\">1</span>\n"
+"                                <span class=\"o_stat_text\">Invoices</span>"
+msgstr ""
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
+msgid "<span class=\"o_stat_text\">Repairs</span>"
+msgstr ""
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Lot/Serial Number:</strong>"
 msgstr ""
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Operations</strong>"
 msgstr ""
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Parts</strong>"
 msgstr ""
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Printing Date:</strong>"
 msgstr ""
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Product to Repair:</strong>"
 msgstr ""
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Shipping address :</strong>"
 msgstr ""
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Total Without Taxes</strong>"
-msgstr ""
+msgstr "<strong>Kopā bez nodokļiem</strong>"
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Total</strong>"
-msgstr ""
+msgstr "<strong>Summa</strong>"
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Warranty:</strong>"
 msgstr ""
 
-#. module: mrp_repair
-#: selection:mrp.repair.line,type:0
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
+msgid "? This may lead to inconsistencies in your inventory."
+msgstr ""
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction
+msgid "Action Needed"
+msgstr "Nepieciešama darbība"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_ids
+msgid "Activities"
+msgstr "Aktivitātes"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_state
+msgid "Activity State"
+msgstr "Darbības stāvoklis"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_type_icon
+msgid "Activity Type Icon"
+msgstr ""
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_line__type__add
 msgid "Add"
+msgstr "Pievienot"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "Add internal notes."
 msgstr ""
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
-msgid "Add internal notes..."
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "Add quotation notes."
 msgstr ""
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
-msgid "Add quotation notes..."
-msgstr ""
-
-#. module: mrp_repair
-#: selection:mrp.repair,invoice_method:0
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__invoice_method__after_repair
 msgid "After Repair"
-msgstr ""
+msgstr "Pēc labojuma"
 
-#. module: mrp_repair
-#: selection:mrp.repair,invoice_method:0
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_attachment_count
+msgid "Attachment Count"
+msgstr "Pielikumu skaits"
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__invoice_method__b4repair
 msgid "Before Repair"
-msgstr ""
+msgstr "Pirms labojumiem"
 
-#. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:237
-#, python-format
-msgid "Can only confirm draft repairs."
-msgstr ""
-
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_make_invoice
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Cancel"
 msgstr "Atcelt"
 
-#. module: mrp_repair
-#: model:ir.model,name:mrp_repair.model_mrp_repair_cancel
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Cancel Repair"
-msgstr ""
+msgstr "Atcelt labojumu"
 
-#. module: mrp_repair
-#: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
-msgid "Cancel Repair Order"
-msgstr ""
-
-#. module: mrp_repair
-#: selection:mrp.repair,state:0 selection:mrp.repair.line,state:0
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_line__state__cancel
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__state__cancel
 msgid "Cancelled"
 msgstr "Atcelts"
 
-#. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:249
-#, python-format
-msgid "Cannot cancel completed repairs."
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_fee__product_uom_category_id
+#: model:ir.model.fields,field_description:repair.field_repair_line__product_uom_category_id
+#: model:ir.model.fields,field_description:repair.field_repair_order__product_uom_category_id
+msgid "Category"
+msgstr "Kategorija"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__partner_id
+msgid ""
+"Choose partner for whom the order will be invoiced and delivered. You can "
+"find a partner by its Name, TIN, Email or Internal Reference."
 msgstr ""
 
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_partner_id
-msgid "Choose partner for whom the order will be invoiced and delivered."
-msgstr ""
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_tags__color
+msgid "Color Index"
+msgstr "Krāsas Indekss"
 
-#. module: mrp_repair
-#: model_terms:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
-msgid "Click to create a reparation order."
-msgstr ""
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_company_id
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_fee__company_id
+#: model:ir.model.fields,field_description:repair.field_repair_line__company_id
+#: model:ir.model.fields,field_description:repair.field_repair_order__company_id
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Company"
 msgstr "Uzņēmums"
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+#. module: repair
+#: model:ir.ui.menu,name:repair.repair_menu_config
+msgid "Configuration"
+msgstr "Uzstādījumi"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Confirm Repair"
-msgstr ""
+msgstr "Apstiprināt labojumu"
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
-#: selection:mrp.repair,state:0 selection:mrp.repair.line,state:0
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_line__state__confirmed
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__state__confirmed
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Confirmed"
+msgstr "Apstiprināts"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_fee__product_uom_category_id
+#: model:ir.model.fields,help:repair.field_repair_line__product_uom_category_id
+#: model:ir.model.fields,help:repair.field_repair_order__product_uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
 msgstr ""
 
-#. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:600
-#: code:addons/mrp_repair/models/mrp_repair.py:658
+#. module: repair
+#: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
 msgstr ""
 
-#. module: mrp_repair
-#: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_make_invoice
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Create Invoice"
+msgstr "Izveidot rēķinu"
+
+#. module: repair
+#: model:ir.model,name:repair.model_repair_order_make_invoice
+msgid "Create Mass Invoice (repair)"
 msgstr ""
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_make_invoice
+#. module: repair
+#: model_terms:ir.actions.act_window,help:repair.action_repair_order_tag
+msgid "Create a new tag"
+msgstr ""
+
+#. module: repair
+#: model:ir.actions.act_window,name:repair.act_repair_invoice
+#: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Create invoices"
-msgstr ""
+msgstr "Izveidot Rēķinus"
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel_create_uid
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_create_uid
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_create_uid
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_create_uid
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_create_uid
-#: model:ir.model.fields,field_description:mrp_repair.field_stock_warn_insufficient_qty_repair_create_uid
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_fee__create_uid
+#: model:ir.model.fields,field_description:repair.field_repair_line__create_uid
+#: model:ir.model.fields,field_description:repair.field_repair_order__create_uid
+#: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__create_uid
+#: model:ir.model.fields,field_description:repair.field_repair_tags__create_uid
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__create_uid
 msgid "Created by"
 msgstr "Izveidoja"
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel_create_date
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_create_date
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_create_date
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_create_date
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_create_date
-#: model:ir.model.fields,field_description:mrp_repair.field_stock_warn_insufficient_qty_repair_create_date
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_fee__create_date
+#: model:ir.model.fields,field_description:repair.field_repair_line__create_date
+#: model:ir.model.fields,field_description:repair.field_repair_order__create_date
+#: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__create_date
+#: model:ir.model.fields,field_description:repair.field_repair_tags__create_date
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__create_date
 msgid "Created on"
 msgstr "Izveidots"
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_location_id
-msgid "Current Location"
-msgstr ""
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_fee__currency_id
+#: model:ir.model.fields,field_description:repair.field_repair_line__currency_id
+#: model:ir.model.fields,field_description:repair.field_repair_order__currency_id
+msgid "Currency"
+msgstr "Valūta"
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_partner_id
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__partner_id
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Customer"
 msgstr "Klients"
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_default_address_id
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__default_address_id
 msgid "Default Address"
 msgstr ""
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_address_id
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__address_id
 msgid "Delivery Address"
 msgstr "Piegādes adrese"
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_location_dest_id
-msgid "Delivery Location"
-msgstr ""
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_name
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_name
-#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_fee__name
+#: model:ir.model.fields,field_description:repair.field_repair_line__name
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Description"
 msgstr "Apraksts"
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_location_dest_id
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_line__location_dest_id
 msgid "Dest. Location"
-msgstr ""
+msgstr "Galamērķa Noliktavas postenis"
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel_display_name
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_display_name
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_display_name
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_display_name
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_display_name
-#: model:ir.model.fields,field_description:mrp_repair.field_stock_warn_insufficient_qty_repair_display_name
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_fee__display_name
+#: model:ir.model.fields,field_description:repair.field_repair_line__display_name
+#: model:ir.model.fields,field_description:repair.field_repair_order__display_name
+#: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__display_name
+#: model:ir.model.fields,field_description:repair.field_repair_tags__display_name
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__display_name
 msgid "Display Name"
+msgstr "Attēlotais nosaukums"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
+msgid "Do you confirm you want to repair"
 msgstr ""
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_make_invoice
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Do you really want to create the invoice(s)?"
-msgstr ""
+msgstr "Vai Jūs tiešām vēlaties izveidot rēķinu(s)?"
 
-#. module: mrp_repair
-#: selection:mrp.repair.line,state:0
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_line__state__done
 msgid "Done"
-msgstr ""
+msgstr "Gatavs"
 
-#. module: mrp_repair
-#: selection:mrp.repair.line,state:0
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_line__state__draft
 msgid "Draft"
+msgstr "Melnraksts"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid ""
+"Draft invoices for this order will be cancelled. Do you confirm the action?"
 msgstr ""
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "End Repair"
+msgstr "Beigt labojumu"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_line__tracking
+#: model:ir.model.fields,help:repair.field_repair_order__tracking
+msgid "Ensure the traceability of a storable product in your warehouse."
 msgstr ""
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Extra Info"
-msgstr ""
+msgstr "Papildus informācija"
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Fees"
+msgstr "Maksājumi"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_follower_ids
+msgid "Followers"
+msgstr "Sekotāji"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Sekotāji (Partneri)"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
 msgstr ""
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Future Activities"
-msgstr ""
+msgstr "Nākotnes aktivitātes"
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Group By"
 msgstr "Grupēt pēc"
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_group
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__group
 msgid "Group by partner invoice address"
+msgstr "Grupēt pēc partnera rēķina adreses"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__has_message
+msgid "Has Message"
 msgstr ""
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
-msgid "Guarantee limit Month"
-msgstr ""
-
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
-msgid "Guarantee limit by Month"
-msgstr ""
-
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "History"
-msgstr ""
+msgstr "Vēsture"
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel_id
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_id
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_id
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_id
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_id
-#: model:ir.model.fields,field_description:mrp_repair.field_stock_warn_insufficient_qty_repair_id
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_fee__id
+#: model:ir.model.fields,field_description:repair.field_repair_line__id
+#: model:ir.model.fields,field_description:repair.field_repair_order__id
+#: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__id
+#: model:ir.model.fields,field_description:repair.field_repair_tags__id
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__id
 msgid "ID"
 msgstr "ID"
 
-#. module: mrp_repair
-#: model_terms:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_exception_icon
+msgid "Icon"
+msgstr "Icon"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr ""
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__message_needaction
+#: model:ir.model.fields,help:repair.field_repair_order__message_unread
+msgid "If checked, new messages require your attention."
+msgstr "Ja atzīmēts, jums jāpievērš uzmanība jauniem ziņojumiem."
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__message_has_error
+#: model:ir.model.fields,help:repair.field_repair_order__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Ja atzīmēts, daži ziņojumi satur piegādes kļūdu."
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__priority
+msgid "Important repair order"
+msgstr ""
+
+#. module: repair
+#: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid ""
 "In a repair order, you can detail the components you remove,\n"
 "                add or replace and record the time you spent on the different\n"
 "                operations."
 msgstr ""
 
-#. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:215
-#, python-format
-msgid "Insufficient Quantity"
-msgstr ""
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_internal_notes
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__internal_notes
 msgid "Internal Notes"
-msgstr ""
+msgstr "Iekšējās piezīmes"
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_move_id
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_line__move_id
 msgid "Inventory Move"
 msgstr ""
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_invoice_id
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+#. module: repair
+#: model:ir.actions.act_window,name:repair.action_repair_move_lines
+msgid "Inventory Moves"
+msgstr ""
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__invoice_id
 msgid "Invoice"
 msgstr "Rēķins"
 
-#. module: mrp_repair
-#: selection:mrp.repair,state:0
-msgid "Invoice Exception"
-msgstr ""
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_invoice_line_id
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_invoice_line_id
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_fee__invoice_line_id
+#: model:ir.model.fields,field_description:repair.field_repair_line__invoice_line_id
 msgid "Invoice Line"
 msgstr "Rēķina rinda"
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_invoice_method
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__invoice_method
 msgid "Invoice Method"
-msgstr ""
+msgstr "Rēķina metode"
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__invoice_state
+msgid "Invoice State"
+msgstr "Rēķina Stāvoklis"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Invoice address:"
-msgstr ""
+msgstr "Rēķina adrese:"
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Invoice and shipping address:"
-msgstr ""
+msgstr "Rēķina un piegādes adrese:"
 
-#. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:389
+#. module: repair
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Invoice created"
-msgstr ""
+msgstr "Rēķins izveidots"
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_invoiced
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_invoiced
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_invoiced
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_fee__invoiced
+#: model:ir.model.fields,field_description:repair.field_repair_line__invoiced
+#: model:ir.model.fields,field_description:repair.field_repair_order__invoiced
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Invoiced"
 msgstr "Rēķins izrakstīts"
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_partner_invoice_id
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__partner_invoice_id
 msgid "Invoicing Address"
-msgstr ""
+msgstr "Rēķina adrese"
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair___last_update
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel___last_update
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee___last_update
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line___last_update
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice___last_update
-#: model:ir.model.fields,field_description:mrp_repair.field_stock_warn_insufficient_qty_repair___last_update
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_is_follower
+msgid "Is Follower"
+msgstr "Ir sekotājs"
+
+#. module: repair
+#: model:ir.model,name:repair.model_account_move
+msgid "Journal Entry"
+msgstr "Grāmatojumi"
+
+#. module: repair
+#: model:ir.model,name:repair.model_account_move_line
+msgid "Journal Item"
+msgstr "Kontējums"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_fee____last_update
+#: model:ir.model.fields,field_description:repair.field_repair_line____last_update
+#: model:ir.model.fields,field_description:repair.field_repair_order____last_update
+#: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice____last_update
+#: model:ir.model.fields,field_description:repair.field_repair_tags____last_update
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Pēdējoreiz modificēts"
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel_write_uid
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_write_uid
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_write_uid
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_write_uid
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_write_uid
-#: model:ir.model.fields,field_description:mrp_repair.field_stock_warn_insufficient_qty_repair_write_uid
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_fee__write_uid
+#: model:ir.model.fields,field_description:repair.field_repair_line__write_uid
+#: model:ir.model.fields,field_description:repair.field_repair_order__write_uid
+#: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__write_uid
+#: model:ir.model.fields,field_description:repair.field_repair_tags__write_uid
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__write_uid
 msgid "Last Updated by"
-msgstr "Pēdējo reizi atjaunoja"
+msgstr "Pēdējoreiz atjaunoja"
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel_write_date
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_write_date
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_write_date
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_write_date
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_write_date
-#: model:ir.model.fields,field_description:mrp_repair.field_stock_warn_insufficient_qty_repair_write_date
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_fee__write_date
+#: model:ir.model.fields,field_description:repair.field_repair_line__write_date
+#: model:ir.model.fields,field_description:repair.field_repair_order__write_date
+#: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__write_date
+#: model:ir.model.fields,field_description:repair.field_repair_tags__write_date
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__write_date
 msgid "Last Updated on"
-msgstr "Pēdējās izmaiņas"
+msgstr "Pēdējoreiz atjaunots"
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Late Activities"
-msgstr ""
+msgstr "Pēdējās aktivitātes"
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_lot_id
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_lot_id
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__location_id
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__location_id
+msgid "Location"
+msgstr "Vieta"
+
+#. module: repair
+#: model:ir.model,name:repair.model_stock_production_lot
+#: model:ir.model.fields,field_description:repair.field_repair_line__lot_id
+#: model:ir.model.fields,field_description:repair.field_repair_order__lot_id
 msgid "Lot/Serial"
-msgstr ""
+msgstr "Partija/Sērija"
 
-#. module: mrp_repair
-#: model:ir.model,name:mrp_repair.model_mrp_repair_make_invoice
-msgid "Make Invoice"
-msgstr ""
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Galvenais pielikums"
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_move_id
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error
+msgid "Message Delivery error"
+msgstr "Ziņojuma piegādes kļūda"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_ids
+msgid "Messages"
+msgstr "Ziņojumi"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__move_id
 msgid "Move"
-msgstr ""
+msgstr "Kustība"
 
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_move_id
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__move_id
 msgid "Move created by the repair order"
 msgstr ""
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
-msgid "My Activities"
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__my_activity_date_deadline
+msgid "My Activity Deadline"
 msgstr ""
 
-#. module: mrp_repair
-#: selection:mrp.repair,invoice_method:0
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr ""
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Nākamās darbības beigu termiņš"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_summary
+msgid "Next Activity Summary"
+msgstr "Nākamās darbības kopsavilkums"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_type_id
+msgid "Next Activity Type"
+msgstr "Nākamās darbības veids"
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__invoice_method__none
 msgid "No Invoice"
-msgstr ""
+msgstr "Nav rēķina"
 
-#. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:591
-#: code:addons/mrp_repair/models/mrp_repair.py:649
-#, python-format
-msgid "No Pricelist!"
-msgstr ""
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:312
-#, python-format
-msgid "No account defined for partner \"%s\"."
-msgstr ""
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:338
-#: code:addons/mrp_repair/models/mrp_repair.py:366
+#. module: repair
+#: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No account defined for product \"%s\"."
-msgstr ""
+msgstr "Produktam \"%s\" nav nodefinēts konts."
 
-#. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:359
+#. module: repair
+#: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
-msgid "No product defined on Fees!"
+msgid "No pricelist found."
 msgstr ""
 
-#. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:598
-#: code:addons/mrp_repair/models/mrp_repair.py:656
+#. module: repair
+#: code:addons/repair/models/repair.py:0
 #, python-format
-msgid "No valid pricelist line found !"
+msgid "No product defined on fees."
 msgstr ""
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
-msgid "Notes"
+#. module: repair
+#: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
+msgid "No repair order found. Let's create one!"
 msgstr ""
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fees_lines
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+#. module: repair
+#: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
+#, python-format
+msgid "No valid pricelist line found."
+msgstr ""
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__priority__0
+msgid "Normal"
+msgstr "Standarta"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Darbību skaits"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error_counter
+msgid "Number of errors"
+msgstr ""
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Ziņojumu, kuriem nepieciešama darbība, skaits"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Ziņojumu, kas satur piegādes kļūdu, skaits"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Neizlasīto ziņojumu skaits"
+
+#. module: repair
+#: code:addons/repair/models/repair.py:0
+#, python-format
+msgid "Only draft repairs can be confirmed."
+msgstr ""
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__fees_lines
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Operations"
-msgstr ""
+msgstr "Operācijas"
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
-msgid "Partner"
-msgstr "Partneris"
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_operations
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__operations
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Parts"
 msgstr ""
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+#. module: repair
+#: code:addons/repair/models/repair.py:0
+#, python-format
+msgid "Please define an accounting sales journal for the company %s (%s)."
+msgstr ""
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Price"
 msgstr "Cena"
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_pricelist_id
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__pricelist_id
 msgid "Pricelist"
 msgstr "Cenrādis"
 
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_pricelist_id
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__pricelist_id
 msgid "Pricelist of the selected partner."
-msgstr ""
+msgstr "Atzīmētā partnera cenrādis."
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Print Quotation"
 msgstr ""
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_product_id
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_product_id
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__priority
+msgid "Priority"
+msgstr "Prioritāte"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_fee__product_id
+#: model:ir.model.fields,field_description:repair.field_repair_line__product_id
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__product_id
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Product"
 msgstr "Produkts"
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_product_qty
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "Product Moves"
+msgstr ""
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__product_qty
 msgid "Product Quantity"
+msgstr "Produkta Daudzums"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_line__tracking
+#: model:ir.model.fields,field_description:repair.field_repair_order__tracking
+msgid "Product Tracking"
 msgstr ""
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_product_uom
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_product_uom
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_product_uom
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_fee__product_uom
+#: model:ir.model.fields,field_description:repair.field_repair_line__product_uom
+#: model:ir.model.fields,field_description:repair.field_repair_order__product_uom
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Produkta Mērvienība"
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_product_id
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__product_id
 msgid "Product to Repair"
-msgstr ""
+msgstr "Produkts labojumam"
 
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_lot_id
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__lot_id
 msgid "Products repaired are all belonging to this lot"
 msgstr ""
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_product_uom_qty
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_product_uom_qty
-#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__quant_ids
+msgid "Quant"
+msgstr ""
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_fee__product_uom_qty
+#: model:ir.model.fields,field_description:repair.field_repair_line__product_uom_qty
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__quantity
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_tree
 msgid "Quantity"
 msgstr "Daudzums"
 
-#. module: mrp_repair
-#: selection:mrp.repair,state:0
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__state__draft
 msgid "Quotation"
-msgstr "Tāme"
+msgstr "Piedāvājums"
 
-#. module: mrp_repair
-#: model:ir.actions.report,name:mrp_repair.action_report_mrp_repair_order
+#. module: repair
+#: model:ir.actions.report,name:repair.action_report_repair_order
 msgid "Quotation / Order"
-msgstr "Cenas piedāvājums / Pasūtījums"
+msgstr "Piedāvājums / Pasūtījums"
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_quotation_notes
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__quotation_notes
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Quotation Notes"
-msgstr ""
+msgstr "Piedāvājuma piezīmes"
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Quotations"
 msgstr "Piedāvājumi"
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Ready To Repair"
-msgstr ""
+msgstr "Gatavs labojumiem"
 
-#. module: mrp_repair
-#: selection:mrp.repair,state:0
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__state__ready
 msgid "Ready to Repair"
-msgstr ""
+msgstr "Gatavs labojumiem"
 
-#. module: mrp_repair
-#: selection:mrp.repair.line,type:0
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_line__type__remove
 msgid "Remove"
-msgstr ""
+msgstr "Noņemt"
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_stock_move_repair_id
-#: model:ir.model.fields,field_description:mrp_repair.field_stock_warn_insufficient_qty_repair_repair_id
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_account_bank_statement_line__repair_ids
+#: model:ir.model.fields,field_description:repair.field_account_move__repair_ids
+#: model:ir.model.fields,field_description:repair.field_account_payment__repair_ids
+#: model:ir.model.fields,field_description:repair.field_stock_move__repair_id
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__repair_id
 msgid "Repair"
 msgstr ""
 
-#. module: mrp_repair
-#: model:ir.model,name:mrp_repair.model_mrp_repair_fee
-msgid "Repair Fees Line"
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__description
+msgid "Repair Description"
 msgstr ""
 
-#. module: mrp_repair
-#: model:ir.model,name:mrp_repair.model_mrp_repair_line
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_account_move_line__repair_fee_ids
+msgid "Repair Fee"
+msgstr ""
+
+#. module: repair
+#: model:ir.model,name:repair.model_repair_fee
+msgid "Repair Fees"
+msgstr ""
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_account_move_line__repair_line_ids
 msgid "Repair Line"
+msgstr "Labojumu rinda"
+
+#. module: repair
+#: model:ir.model,name:repair.model_repair_line
+msgid "Repair Line (parts)"
 msgstr ""
 
-#. module: mrp_repair
-#: model:ir.model,name:mrp_repair.model_mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "Repair Notes"
+msgstr ""
+
+#. module: repair
+#: model:ir.model,name:repair.model_repair_order
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Repair Order"
-msgstr ""
+msgstr "Labojumu orderis"
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Repair Order #:"
 msgstr ""
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_repair_id
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_repair_id
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_fee__repair_id
+#: model:ir.model.fields,field_description:repair.field_repair_line__repair_id
 msgid "Repair Order Reference"
-msgstr ""
+msgstr "Labojumu ordera atsauce"
 
-#. module: mrp_repair
-#: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+#. module: repair
+#: model:ir.actions.act_window,name:repair.action_repair_order_graph
+#: model:ir.actions.act_window,name:repair.action_repair_order_tree
+#: model:ir.model.fields,field_description:repair.field_stock_production_lot__repair_order_ids
+#: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_graph
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_pivot
 msgid "Repair Orders"
+msgstr "Labojumu orderi"
+
+#. module: repair
+#: model:ir.ui.menu,name:repair.repair_menu_tag
+msgid "Repair Orders Tags"
 msgstr ""
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Repair Quotation #:"
 msgstr ""
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_name
-msgid "Repair Reference"
+#. module: repair
+#: model:mail.template,name:repair.mail_template_repair_quotation
+msgid "Repair Quotation: Send by email"
 msgstr ""
 
-#. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:203
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__name
+msgid "Repair Reference"
+msgstr "Labojuma atsauce"
+
+#. module: repair
+#: model:product.product,name:repair.product_service_order_repair
+#: model:product.template,name:repair.product_service_order_repair_product_template
+msgid "Repair Services"
+msgstr ""
+
+#. module: repair
+#: model:ir.model,name:repair.model_repair_tags
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_tag_form
+msgid "Repair Tags"
+msgstr ""
+
+#. module: repair
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be canceled in order to reset it to draft."
 msgstr ""
 
-#. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:408
+#. module: repair
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be confirmed before starting reparation."
 msgstr ""
 
-#. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:436
+#. module: repair
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be repaired in order to make the product moves."
 msgstr ""
 
-#. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:419
+#. module: repair
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be under repair in order to end reparation."
 msgstr ""
 
-#. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:251
-#, python-format
-msgid "Repair order is already invoiced."
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_production_lot__repair_order_count
+msgid "Repair order count"
 msgstr ""
 
-#. module: mrp_repair
-#: code:addons/mrp_repair/wizard/mrp_repair_cancel.py:20
+#. module: repair
+#: code:addons/repair/models/stock_production_lot.py:0
 #, python-format
-msgid "Repair order is not invoiced."
+msgid "Repair orders of %s"
 msgstr ""
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_repaired
-#: selection:mrp.repair,state:0
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__repaired
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__state__done
 msgid "Repaired"
-msgstr ""
+msgstr "Izlabots"
 
-#. module: mrp_repair
-#: model:ir.ui.menu,name:mrp_repair.menu_repair_order
+#. module: repair
+#: model:ir.ui.menu,name:repair.menu_repair_order
+#: model:ir.ui.menu,name:repair.repair_menu
 msgid "Repairs"
 msgstr ""
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_tree
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_tree
 msgid "Repairs order"
+msgstr "Labojumu orderis"
+
+#. module: repair
+#: model:ir.ui.menu,name:repair.repair_menu_reporting
+msgid "Reporting"
+msgstr "Atskaites"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__user_id
+msgid "Responsible"
+msgstr "Atbildīgais"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_user_id
+msgid "Responsible User"
+msgstr "Atbildīgie lietotāji"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_has_sms_error
+msgid "SMS Delivery error"
 msgstr ""
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__sale_order_id
+msgid "Sale Order"
+msgstr "Tirdzniecības Pasūtījums"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__sale_order_id
+msgid "Sale Order from which the product to be repaired comes from."
+msgstr ""
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__schedule_date
+msgid "Scheduled Date"
+msgstr "Plānotais Datums"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Search Repair Orders"
 msgstr ""
 
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_invoice_method
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__invoice_method
 msgid ""
 "Selecting 'Before Repair' or 'After Repair' will allow you to generate "
 "invoice before or after the repair is done respectively. 'No invoice' means "
 "you don't want to generate invoice for this repair order."
 msgstr ""
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Send Quotation"
 msgstr ""
 
-#. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:540
+#. module: repair
+#: code:addons/repair/models/repair.py:0
 #, python-format
-msgid "Serial number is required for operation line with product '%s'"
+msgid "Serial number is required for operation lines with products: %s"
 msgstr ""
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Set to Draft"
-msgstr ""
+msgstr "Atzīmēt kā melnrakstu"
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Show all records which has next action date is before today"
 msgstr ""
+"Rādīt visus ierakstus, kuriem  nākamais darbības datums ir pirms šodienas"
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_location_id
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_line__location_id
 msgid "Source Location"
-msgstr ""
+msgstr "Resursa novietojums"
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Start Repair"
-msgstr ""
+msgstr "Sākt labojumu"
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_state
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_state
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_line__state
+#: model:ir.model.fields,field_description:repair.field_repair_order__state
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Status"
 msgstr "Statuss"
 
-#. module: mrp_repair
-#: model:ir.model,name:mrp_repair.model_stock_move
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Statuss balstīts uz darbībām\n"
+"Kavēts: termiņš jauy ir pagājis\n"
+"Šodien: darbības datums ir šodien\n"
+"Plānots: nākotnes aktivitātes."
+
+#. module: repair
+#: model:ir.model,name:repair.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Krājumu kustība"
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_price_subtotal
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_price_subtotal
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_fee__price_subtotal
+#: model:ir.model.fields,field_description:repair.field_repair_line__price_subtotal
 msgid "Subtotal"
-msgstr "Apakšsumma kopā"
+msgstr "Starpsumma"
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
-msgid "Tax"
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_tags__name
+msgid "Tag Name"
+msgstr "Tag Name"
+
+#. module: repair
+#: model:ir.model.constraint,message:repair.constraint_repair_tags_name_uniq
+msgid "Tag name already exists!"
 msgstr ""
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_amount_tax
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_tax_id
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_tax_id
-#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+#. module: repair
+#: model:ir.actions.act_window,name:repair.action_repair_order_tag
+#: model:ir.model.fields,field_description:repair.field_repair_order__tag_ids
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_tag_search
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_tag_tree
+msgid "Tags"
+msgstr "Birkas"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "Tax"
+msgstr "Nodoklis"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_fee__tax_id
+#: model:ir.model.fields,field_description:repair.field_repair_line__tax_id
+#: model:ir.model.fields,field_description:repair.field_repair_order__amount_tax
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Taxes"
 msgstr "Nodokļi"
 
-#. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:175
-#, python-format
-msgid ""
-"The Product Unit of Measure you chose has a different category than in the "
-"product form."
-msgstr ""
-
-#. module: mrp_repair
-#: sql_constraint:mrp.repair:0
+#. module: repair
+#: model:ir.model.constraint,message:repair.constraint_repair_order_name
 msgid "The name of the Repair Order must be unique!"
 msgstr ""
 
-#. module: mrp_repair
-#: model_terms:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
+#. module: repair
+#: code:addons/repair/models/repair.py:0
+#, python-format
 msgid ""
-"The repair order uses the warranty date on the Serial Number in\n"
-"                order to know if whether the repair should be invoiced to the\n"
-"                customer or not."
+"The product unit of measure you chose has a different category than the "
+"product unit of measure."
 msgstr ""
 
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_line_state
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_line__state
 msgid ""
 "The status of a repair line is set automatically to the one of the linked "
 "repair order."
 msgstr ""
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
-msgid ""
-"This operation will cancel the Repair process, but will not cancel it's "
-"Invoice. Do you want to continue?"
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__location_id
+msgid "This is the location where the product to repair is located."
 msgstr ""
 
-#. module: mrp_repair
-#: selection:mrp.repair,state:0
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__state__2binvoiced
 msgid "To be Invoiced"
-msgstr ""
+msgstr "Tiks izrakstīts rēķins"
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Today Activities"
-msgstr ""
+msgstr "Šodienas aktivitātes"
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_amount_total
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_fee__price_total
+#: model:ir.model.fields,field_description:repair.field_repair_line__price_total
+#: model:ir.model.fields,field_description:repair.field_repair_order__amount_total
 msgid "Total"
 msgstr "Summa"
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Total amount"
+msgstr "Summa kopā"
+
+#. module: repair
+#: model:ir.model,name:repair.model_stock_traceability_report
+msgid "Traceability Report"
 msgstr ""
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_tracking
-msgid "Tracking"
-msgstr ""
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_type
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_line__type
 msgid "Type"
+msgstr "Tips"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__activity_exception_decoration
+msgid "Type of the exception activity on record."
 msgstr ""
 
-#. module: mrp_repair
-#: selection:mrp.repair,state:0
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__state__under_repair
 msgid "Under Repair"
 msgstr ""
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_price_unit
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_price_unit
-#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_fee__price_unit
+#: model:ir.model.fields,field_description:repair.field_repair_line__price_unit
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Unit Price"
-msgstr "Vienības Cena"
+msgstr "Cena"
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__product_uom_name
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_tree
 msgid "Unit of Measure"
 msgstr "Mērvienība"
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_amount_untaxed
+#. module: repair
+#: model:product.product,uom_name:repair.product_service_order_repair
+#: model:product.template,uom_name:repair.product_service_order_repair_product_template
+msgid "Units"
+msgstr ""
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_unread
+msgid "Unread Messages"
+msgstr "Neizlasīti ziņojumi"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Neizlasīto ziņojumu skaitītājs"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__amount_untaxed
 msgid "Untaxed Amount"
+msgstr "Neapliekamā Summa"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "Untaxed amount"
 msgstr "Summa bez nodokļiem"
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
-msgid "Untaxed amount"
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "UoM"
 msgstr ""
 
-#. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:175
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__priority__1
+msgid "Urgent"
+msgstr "Steidzama"
+
+#. module: repair
+#: model:ir.model,name:repair.model_stock_warn_insufficient_qty_repair
+msgid "Warn Insufficient Repair Quantity"
+msgstr ""
+
+#. module: repair
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Brīdinājums"
 
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_guarantee_limit
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__guarantee_limit
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Warranty Expiration"
-msgstr ""
+msgstr "Garantijas termiņš"
 
-#. module: mrp_repair
-#: model_terms:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
-msgid "Yes"
-msgstr ""
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__website_message_ids
+msgid "Website Messages"
+msgstr "Tīmekļa lapas ziņojumi"
 
-#. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:300
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__website_message_ids
+msgid "Website communication history"
+msgstr "Tīmekļa lapas komunikācijas vēsture"
+
+#. module: repair
+#: code:addons/repair/models/repair.py:0
 #, python-format
-msgid "You have to select a Partner Invoice Address in the repair form!"
+msgid ""
+"You can not delete a repair order once it has been confirmed. You must first"
+" cancel it."
 msgstr ""
 
-#. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:593
-#: code:addons/mrp_repair/models/mrp_repair.py:651
+#. module: repair
+#: code:addons/repair/models/repair.py:0
+#, python-format
+msgid ""
+"You can not delete a repair order which is linked to an invoice which has "
+"been posted once."
+msgstr ""
+
+#. module: repair
+#: code:addons/repair/models/repair.py:0
+#, python-format
+msgid "You can not enter negative quantities."
+msgstr ""
+
+#. module: repair
+#: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
 "You have to select a pricelist in the Repair form !\n"
 " Please set one before choosing a product."
 msgstr ""
 
-#. module: mrp_repair
-#: model:ir.model,name:mrp_repair.model_stock_traceability_report
-msgid "stock.traceability.report"
+#. module: repair
+#: code:addons/repair/models/repair.py:0
+#, python-format
+msgid "You have to select an invoice address in the repair form."
 msgstr ""
 
-#. module: mrp_repair
-#: model:ir.model,name:mrp_repair.model_stock_warn_insufficient_qty_repair
-msgid "stock.warn.insufficient.qty.repair"
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
+msgid "from location"
+msgstr ""
+
+#. module: repair
+#: model:mail.template,report_name:repair.mail_template_repair_quotation
+msgid "{{ (object.name or '').replace('/','_') }}"
+msgstr ""
+
+#. module: repair
+#: model:mail.template,subject:repair.mail_template_repair_quotation
+msgid ""
+"{{ object.partner_id.name }} Repair Orders (Ref {{ object.name or 'n/a' }})"
 msgstr ""

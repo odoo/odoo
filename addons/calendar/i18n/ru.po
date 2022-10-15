@@ -13,6 +13,7 @@
 # ILMIR <karamov@it-projects.info>, 2021
 # Сергей Шебанин <sergey@shebanin.ru>, 2021
 # Evgeniia Kotova, 2022
+# Валерий Хохлов, 2022
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Evgeniia Kotova, 2022\n"
+"Last-Translator: Валерий Хохлов, 2022\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -223,18 +224,9 @@ msgid ""
 "                        <strong>Details of the event</strong>\n"
 "                    </p>\n"
 "                    <ul>\n"
-"                        <t t-if=\"not is_online and object.display_description\">\n"
-"                            <li>Description: <t t-out=\"object.description or ''\"/></li>\n"
-"                        </t>\n"
-"                        <t t-elif=\"is_online and object.description\">\n"
-"                            <t t-set=\"splitted_description\" t-value=\"object.description_to_html_lines()\"/>\n"
+"                        <t t-if=\"not is_html_empty(object.description)\">\n"
 "                            <li>Description:\n"
-"                                <ul>\n"
-"                                    <t t-foreach=\"splitted_description\" t-as=\"description_line\">\n"
-"                                        <li t-out=\"description_line or ''\"/>\n"
-"                                    </t>\n"
-"                                </ul>\n"
-"                            </li>\n"
+"                            <t t-out=\"object.description\">Internal meeting for discussion for new pricing for product and services.</t></li>\n"
 "                        </t>\n"
 "                        <t t-if=\"object.videocall_location\">\n"
 "                            <li>Meeting URL:\n"
@@ -564,7 +556,7 @@ msgstr "Добавить"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__body
 msgid "Additional Message"
-msgstr ""
+msgstr "Дополнительное сообщение"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__body
@@ -717,7 +709,7 @@ msgstr "Календарь: Напоминания о встречах"
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_update
 msgid "Calendar: Event Update"
-msgstr ""
+msgstr "Календарь: Обновление событий"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_invitation
@@ -1419,27 +1411,27 @@ msgstr "Уведомления"
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_5
 msgid "Notification - 1 Days"
-msgstr ""
+msgstr "Уведомление - 1 День"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_3
 msgid "Notification - 1 Hours"
-msgstr ""
+msgstr "Уведомление - 1 Час"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_1
 msgid "Notification - 15 Minutes"
-msgstr ""
+msgstr "Уведомление - 15 Минут"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_4
 msgid "Notification - 2 Hours"
-msgstr ""
+msgstr "Уведомление - 2 Часа"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_2
 msgid "Notification - 30 Minutes"
-msgstr ""
+msgstr "Уведомление - 30 Минут"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__alarm_ids
@@ -1694,7 +1686,7 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Send Invitations"
-msgstr ""
+msgstr "Отправить приглашения"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree

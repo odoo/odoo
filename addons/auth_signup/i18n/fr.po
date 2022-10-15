@@ -4,9 +4,10 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Cécile Collart <cco@odoo.com>, 2021
 # Grégory Schreiner <gregory@mokatourisme.fr>, 2021
 # Caroline Renson <car@odoo.com>, 2022
+# Thomas Charpentier, 2022
+# Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Caroline Renson <car@odoo.com>, 2022\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -95,6 +96,45 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <t t-set=\"invited_users\" t-value=\"ctx.get('invited_users', [])\"/>\n"
+"                <td style=\"text-align : left\">\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        Invitations en attente\n"
+"                    </span><br/><br/>\n"
+"                </td>\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Cher <t t-out=\"object.name or ''\">Mitchell Admin</t>,<br/> <br/>\n"
+"                        Vous avez ajouté le ou les utilisateurs suivants à votre base de données mais ils ne se sont pas encore inscrits:\n"
+"                        <ul>\n"
+"                            <t t-foreach=\"invited_users\" t-as=\"invited_user\">\n"
+"                                <li t-out=\"invited_user or ''\">demo@example.com</li>\n"
+"                            </t>\n"
+"                        </ul>\n"
+"                        Effectuez un suivi auprès d'eux afin qu'ils puissent accéder à votre base de données et commencer à travailler avec vous.\n"
+"                        <br/><br/>\n"
+"                        Passez une bonne journée!<br/>\n"
+"                        --<br/>The <t t-out=\"object.company_id.name or ''\">YourCompany</t> Team\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.set_password_email
@@ -606,7 +646,7 @@ msgstr ""
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
 msgid "Already have an account?"
-msgstr "Vous avez déjà un compte ?"
+msgstr "Vous avez déjà un compte ?"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
@@ -625,22 +665,22 @@ msgstr "Un autre utilisateur est déjà enregistré avec cette adresse courriel.
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_user_signup_account_created
 msgid "Auth Signup: Odoo Account Created"
-msgstr ""
+msgstr "Auth Signup : Compte Odoo créé"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.set_password_email
 msgid "Auth Signup: Odoo Connection"
-msgstr ""
+msgstr "Auth Signup : Connexion Odoo"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.reset_password_email
 msgid "Auth Signup: Reset Password"
-msgstr ""
+msgstr "Auth Signup : Réinitialiser le mot de passe"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_data_unregistered_users
 msgid "Auth Signup: Unregistered Users"
-msgstr ""
+msgstr "Auth Signup : Utilisateurs non enregistrés"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
@@ -716,7 +756,7 @@ msgstr "Droits d'accès par défaut"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
 msgid "Don't have an account?"
-msgstr "Vous n'avez pas de compte ?"
+msgstr "Vous n'avez pas de compte ?"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_reset_password
@@ -934,7 +974,7 @@ msgstr "Les utilisateurs : Notification des utilisateurs non enregistrés"
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
 msgid "Welcome to {{ object.company_id.name }}!"
-msgstr ""
+msgstr "Bienvenue chez {{ object.company_id.name }}!"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0

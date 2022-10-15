@@ -5,9 +5,13 @@
 <div t-name="website.s_searchbar.autocomplete"
     class="dropdown-menu show w-100">
     <t t-if="fuzzySearch and results.length">
+        <!-- TODO adapt in master, this is patched in JS so that text-muted -->
+        <!-- is not on the same element as dropdown-item-text -->
         <span class="dropdown-item-text text-muted">No results found for '<t t-esc="search"/>'. Showing results for '<a href="#" class="s_searchbar_fuzzy_submit" t-esc="fuzzySearch"/>'.</span>
     </t>
     <t t-elif="!results.length">
+        <!-- TODO adapt in master, this is patched in JS so that text-muted -->
+        <!-- is not on the same element as dropdown-item-text -->
         <span class="dropdown-item-text text-muted">No results found. Please try another search.</span>
     </t>
     <a t-foreach="results" t-as="result"

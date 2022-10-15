@@ -1468,6 +1468,14 @@ msgstr "ช่องทาง"
 #, python-format
 msgid ""
 "Channel \"%(channel_name)s\" only accepts members of group "
+"\"%(group_name)s\". Forbidden for: %(guest_names)s"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid ""
+"Channel \"%(channel_name)s\" only accepts members of group "
 "\"%(group_name)s\". Forbidden for: %(partner_names)s"
 msgstr ""
 
@@ -7589,6 +7597,12 @@ msgid "You are in channel <b>#%s</b>."
 msgstr "คุณอยู่ในช่อง <b>#%s</b>."
 
 #. module: mail
+#: code:addons/mail/controllers/discuss.py:0
+#, python-format
+msgid "You are not allowed to upload an attachment here."
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/models/discuss_sidebar_category_item/discuss_sidebar_category_item.js:0
 #, python-format
@@ -8231,7 +8245,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email
 msgid "using"
-msgstr ""
+msgstr "โดยใช้"
 
 #. module: mail
 #. openerp-web

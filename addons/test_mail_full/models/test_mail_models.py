@@ -4,6 +4,25 @@
 from odoo import fields, models
 
 
+class MailTestPortal(models.Model):
+    """ A model intheriting from mail.thread with some fields used for portal
+    sharing, like a partner, ..."""
+    _description = 'Chatter Model for Portal'
+    _name = 'mail.test.portal'
+    _inherit = [
+        'mail.thread',
+        'portal.mixin',
+    ]
+
+    name = fields.Char()
+    partner_id = fields.Many2one('res.partner', 'Customer')
+
+    def _compute_access_url(self):
+        self.access_url = False
+        for record in self.filtered('id'):
+            record.access_url = '/my/test_portal/%s' % self.id
+
+
 class MailTestSMS(models.Model):
     """ A model inheriting from mail.thread with some fields used for SMS
     gateway, like a partner, a specific mobile phone, ... """

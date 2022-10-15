@@ -14,7 +14,6 @@
 # Daniel Koć <daniel@xn--ko-wla.pl>, 2021
 # Grażyna Grzelak <grazyna.grzelak@openglobe.pl>, 2021
 # Michał <michal.gorecki@esnc.pl>, 2021
-# Andrzej Donczew <a.donczew@hadron.eu.com>, 2021
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2021
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2021
 # Monika Grzelak <m.e.grzelak@gmail.com>, 2021
@@ -31,9 +30,10 @@
 # Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2021
 # Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2021
 # Paweł Wodyński <pw@myodoo.pl>, 2021
-# Maksym <ms@myodoo.pl>, 2021
 # Wojciech Warczakowski <w.warczakowski@gmail.com>, 2021
-# Dawid Prus, 2021
+# Dawid Prus, 2022
+# Maksym <ms@myodoo.pl>, 2022
+# Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -41,7 +41,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 06:07+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: Dawid Prus, 2021\n"
+"Last-Translator: Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2022\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -702,7 +702,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_card
 msgid "<i class=\"fa fa-1x fa-clock-o mr8\"/><small>2 days ago</small>"
-msgstr ""
+msgstr "2 dni temu"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
@@ -1012,7 +1012,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "<small>/ month</small>"
-msgstr ""
+msgstr "<small>/miesiąc</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
@@ -1640,7 +1640,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps
 msgid "Add to cart"
-msgstr ""
+msgstr "Dodaj do koszyka"
 
 #. module: website
 #. openerp-web
@@ -4789,6 +4789,18 @@ msgid "Google Search Console"
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"Google deprecated both its \"Universal Analytics\" and \"Google Sign-In\" "
+"API. It means that only accounts and keys created before 2020 will be able "
+"to integrate their Analytics dashboard in Odoo (or any other website). This "
+"will be possible only up to mid 2023. After that, those services won't work "
+"anymore, at all."
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__google_search_console
 #: model:ir.model.fields,help:website.field_website__google_search_console
 msgid "Google key, or Enable to access first reply"
@@ -5621,12 +5633,18 @@ msgid "Is not equal to"
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
+#, python-format
 msgid "Is not set"
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
+#, python-format
 msgid "Is set"
 msgstr ""
 
@@ -6653,6 +6671,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "New"
 msgstr "Nowe"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"New Google Analytics accounts and keys are now using Google Analytics 4 "
+"which, for now, can't be integrated/embed in external websites."
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -8420,7 +8447,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Show reCaptcha Policy"
-msgstr ""
+msgstr "Polityka korzystania z weryfikacji"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -8786,7 +8813,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
 msgid "Suggestions"
-msgstr ""
+msgstr "Sugestie"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -8797,7 +8824,7 @@ msgstr ""
 #: code:addons/website/controllers/form.py:0
 #, python-format
 msgid "Suspicious activity detected by Google reCaptcha."
-msgstr ""
+msgstr "Podejrzana aktywność wykryta przez weryfikator Google"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9211,6 +9238,13 @@ msgid "There is no data currently available."
 msgstr "Brak dostępnych danych w tej chwili."
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "There is no field available for this option."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid ""
 "There is no website available for this company. You could create a new one."
@@ -9316,6 +9350,12 @@ msgid "This page"
 msgstr ""
 
 #. module: website
+#: code:addons/website/models/website_visitor.py:0
+#, python-format
+msgid "This operator is not supported"
+msgstr "Ten symbol lub funkcja nie jest dostępna"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.page_404
 msgid ""
 "This page does not exist, but you can create it as you are editor of this "
@@ -9345,6 +9385,15 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.report_viewhierarchy_children
 msgid "This view arch has been modified"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"Those accounts should now check their Analytics dashboard in the Google "
+"platform directly."
 msgstr ""
 
 #. module: website
@@ -11043,6 +11092,12 @@ msgstr "Konsola eCommerce"
 #: model:website.configurator.feature,name:website.feature_module_elearning
 msgid "eLearning"
 msgstr "eNauka"
+
+#. module: website
+#: code:addons/website/controllers/form.py:0
+#, python-format
+msgid "email"
+msgstr ""
 
 #. module: website
 #. openerp-web

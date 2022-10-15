@@ -201,7 +201,7 @@ def log_ormcache_stats(sig=None, frame=None):
     from odoo.modules.registry import Registry
     import threading
 
-    me = threading.currentThread()
+    me = threading.current_thread()
     me_dbname = getattr(me, 'dbname', 'n/a')
 
     for dbname, reg in sorted(Registry.registries.d.items()):

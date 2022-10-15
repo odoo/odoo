@@ -111,7 +111,7 @@ const ProjectListController = ListController.extend({
         });
 
         if (allowContinue) {
-            Dialog.buttons.splice(0, 1,
+            Dialog.buttons.splice(1, 0,
                 {
                     click: () => {
                         this._rpc({

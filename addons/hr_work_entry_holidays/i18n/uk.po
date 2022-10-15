@@ -29,8 +29,26 @@ msgstr "%s: Відпустка"
 #. module: hr_work_entry_holidays
 #: code:addons/hr_work_entry_holidays/models/hr_leave.py:0
 #, python-format
-msgid "A leave cannot be set across multiple contracts."
-msgstr "Відпустку не можна встановлювати за кількома контрактами."
+msgid ""
+"A leave cannot be set across multiple contracts with different working schedules.\n"
+"\n"
+"Please create one time off for each contract.\n"
+"\n"
+"Time off:\n"
+"%s\n"
+"\n"
+"Contracts:\n"
+"%s"
+msgstr ""
+"Відпустка не може бути встановлена для кількох контрактів із різними графіками роботи.\n"
+"\n"
+"Будь ласка, створіть одну відпустку для кожного контракту.\n"
+"\n"
+"Відпустка:\n"
+"%s\n"
+"\n"
+"Контракти:\n"
+"%s"
 
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_contract

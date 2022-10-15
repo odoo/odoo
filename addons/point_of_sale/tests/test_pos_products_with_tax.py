@@ -36,6 +36,12 @@ class TestPoSProductsWithTax(TestPoSCommon):
             15.0,
             tax_ids=self.taxes['tax_group_7_10'].ids,
         )
+        self.product4 = self.create_product(
+            'Product 4',
+            self.categ_basic,
+            54.99,
+            tax_ids=[self.taxes['tax_fixed006'].id, self.taxes['tax_fixed012'].id, self.taxes['tax21'].id],
+        )
         self.adjust_inventory([self.product1, self.product2, self.product3], [100, 50, 50])
 
     def test_orders_no_invoiced(self):
@@ -144,15 +150,15 @@ class TestPoSProductsWithTax(TestPoSCommon):
 
         def _before_closing_cb():
             # check values before closing the session
-            self.assertEqual(3, self.pos_session.order_count)
+            self.assertEqual(4, self.pos_session.order_count)
             orders_total = sum(order.amount_total for order in self.pos_session.order_ids)
             self.assertAlmostEqual(orders_total, self.pos_session.total_payments_amount, msg='Total order amount should be equal to the total payment amount.')
 
             # check account move in the invoiced order
-            invoiced_order = self.pos_session.order_ids.filtered(lambda order: '09876-098-0987' in order.pos_reference)
-            self.assertEqual(1, len(invoiced_order), 'Only one order is invoiced in this test.')
-            invoice = invoiced_order.account_move
-            self.assertAlmostEqual(invoice.amount_total, 426.09)
+            invoiced_orders = self.pos_session.order_ids.filtered(lambda order: order.is_invoiced)
+            self.assertEqual(2, len(invoiced_orders), 'Only one order is invoiced in this test.')
+            invoices = invoiced_orders.mapped('account_move')
+            self.assertAlmostEqual(sum(invoices.mapped('amount_total')), 481.08)
 
         def _after_closing_cb():
             session_move = self.pos_session.move_id
@@ -172,6 +178,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
                 {'pos_order_lines_ui_args': [(self.product3, 1), (self.product1, 6), (self.product2, 3)], 'uid': '00100-010-0001'},
                 {'pos_order_lines_ui_args': [(self.product2, 20), (self.product1, 1)], 'payments': [(self.bank_pm1, 410.7)], 'uid': '00100-010-0002'},
                 {'pos_order_lines_ui_args': [(self.product1, 10), (self.product3, 10)], 'payments': [(self.bank_pm1, 426.09)], 'customer': self.customer, 'is_invoiced': True, 'uid': '09876-098-0987'},
+                {'pos_order_lines_ui_args': [(self.product4, 1)], 'payments': [(self.bank_pm1, 54.99)], 'customer': self.customer, 'is_invoiced': True, 'uid': '00100-010-0004'},
             ],
             'before_closing_cb': _before_closing_cb,
             'journal_entries_before_closing': {
@@ -181,6 +188,16 @@ class TestPoSProductsWithTax(TestPoSCommon):
                             'line_ids': [
                                 {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 426.09, 'reconciled': True},
                                 {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 426.09, 'credit': 0, 'reconciled': False},
+                            ]
+                        }),
+                    ],
+                },
+                '00100-010-0004': {
+                    'payments': [
+                        ((self.bank_pm1, 54.99), {
+                            'line_ids': [
+                                {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 54.99, 'reconciled': True},
+                                {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 54.99, 'credit': 0, 'reconciled': False},
                             ]
                         }),
                     ],
@@ -195,9 +212,9 @@ class TestPoSProductsWithTax(TestPoSCommon):
                         {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 27.27, 'reconciled': False},
                         {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 70, 'reconciled': False},
                         {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 418.19, 'reconciled': False},
-                        {'account_id': self.bank_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 836.79, 'credit': 0, 'reconciled': True},
+                        {'account_id': self.bank_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 891.78, 'credit': 0, 'reconciled': True},
                         {'account_id': self.cash_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 156.11, 'credit': 0, 'reconciled': True},
-                        {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 0, 'credit': 426.09, 'reconciled': True},
+                        {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 0, 'credit': 481.08, 'reconciled': True},
                     ],
                 },
                 'cash_statement': [
@@ -209,10 +226,10 @@ class TestPoSProductsWithTax(TestPoSCommon):
                     }),
                 ],
                 'bank_payments': [
-                    ((836.79, ), {
+                    ((891.78, ), {
                         'line_ids': [
-                            {'account_id': self.bank_pm1.outstanding_account_id.id, 'partner_id': False, 'debit': 836.79, 'credit': 0, 'reconciled': False},
-                            {'account_id': self.bank_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 836.79, 'reconciled': True},
+                            {'account_id': self.bank_pm1.outstanding_account_id.id, 'partner_id': False, 'debit': 891.78, 'credit': 0, 'reconciled': False},
+                            {'account_id': self.bank_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 891.78, 'reconciled': True},
                         ]
                     }),
                 ],
@@ -479,4 +496,46 @@ class TestPoSProductsWithTax(TestPoSCommon):
             {'account_id': self.tax_received_account.id,   'balance': -11.67, 'tax_ids': [],              'tax_tag_ids': self.tax_tag_invoice_tax.ids},
             {'account_id': self.tax_received_account.id,   'balance':  15.14, 'tax_ids': [],              'tax_tag_ids': self.tax_tag_refund_tax.ids},
             {'account_id': self.sale_account.id,           'balance':  72.07, 'tax_ids': tax_21_incl.ids, 'tax_tag_ids': self.tax_tag_refund_base.ids},
+        ])
+
+    def test_fixed_tax_positive_qty(self):
+
+        fixed_tax = self.env['account.tax'].create({
+            'name': 'fixed amount tax',
+            'amount_type': 'fixed',
+            'amount': 1,
+            'invoice_repartition_line_ids': [
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'tag_ids': [(6, 0, self.tax_tag_invoice_base.ids)],
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': self.tax_received_account.id,
+                    'tag_ids': [(6, 0, self.tax_tag_invoice_tax.ids)],
+                }),
+            ],
+        })
+
+        zero_amount_product = self.env['product.product'].create({
+            'name': 'Zero Amount Product',
+            'available_in_pos': True,
+            'list_price': 0,
+            'taxes_id': [(6, 0, [fixed_tax.id])],
+        })
+
+        self.open_new_session()
+        self.env['pos.order'].create_from_ui([self.create_ui_order_data([
+            (zero_amount_product, 1),
+        ])])
+        self.pos_session.action_pos_session_validate()
+
+        lines = self.pos_session.move_id.line_ids.sorted('balance')
+
+        self.assertRecordValues(lines, [
+            {'account_id': self.tax_received_account.id, 'balance': -1},
+            {'account_id': self.sale_account.id, 'balance': 0},
+            {'account_id': self.cash_pm1.receivable_account_id.id, 'balance': 1},
         ])

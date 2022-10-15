@@ -45,7 +45,7 @@ class TimesheetAttendance(models.Model):
                     NULL AS attendance,
                     ts.unit_amount AS timesheet,
                     ts.date AS date,
-                    NULL AS company_id
+                    ts.company_id AS company_id
                 FROM account_analytic_line AS ts
                 WHERE ts.project_id IS NOT NULL
             ) AS t

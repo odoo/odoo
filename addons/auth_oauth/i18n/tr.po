@@ -8,11 +8,11 @@
 # Levent Karakaş <levent@mektup.at>, 2021
 # Murat Kaplan <muratk@projetgrup.com>, 2021
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2021
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2021
 # Umur Akın <umura@projetgrup.com>, 2021
 # ANIL TAN SAĞIR <anils@projetgrup.com>, 2021
 # abc Def <hdogan1974@gmail.com>, 2021
 # Murat Durmuş <muratd@projetgrup.com>, 2021
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-21 10:46+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Murat Durmuş <muratd@projetgrup.com>, 2021\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,13 +61,8 @@ msgstr "İzin verildi"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__auth_endpoint
-msgid "Authentication URL"
-msgstr "Kimlik Doğrulama URL"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__body
-msgid "Body"
-msgstr "Gövde"
+msgid "Authorization URL"
+msgstr "Yetkilendirme URL'si"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__css_class
@@ -102,8 +97,8 @@ msgstr "Oluşturulma"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__data_endpoint
-msgid "Data URL"
-msgstr "Data URL"
+msgid "Data Endpoint"
+msgstr "Veri Uç Noktası"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__display_name
@@ -141,11 +136,6 @@ msgid "Last Updated on"
 msgstr "Son Güncelleme"
 
 #. module: auth_oauth
-#: model:ir.model.fields,help:auth_oauth.field_auth_oauth_provider__body
-msgid "Link text in Login Dialog"
-msgstr "Giriş İletişim Kutusunda metin bağlantısı"
-
-#. module: auth_oauth
 #: model:auth.oauth.provider,body:auth_oauth.provider_facebook
 msgid "Log in with Facebook"
 msgstr "Facebook ile giriş"
@@ -159,6 +149,11 @@ msgstr "Google ile giriş yap"
 #: model:auth.oauth.provider,body:auth_oauth.provider_openerp
 msgid "Log in with Odoo.com"
 msgstr "Odoo.com ile giriş yapın"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__body
+msgid "Login button label"
+msgstr "Giriş butonu etiketi"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users__oauth_access_token
@@ -238,14 +233,14 @@ msgid "System Parameter"
 msgstr "Sistem Parametreleri"
 
 #. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__validation_endpoint
+msgid "UserInfo URL"
+msgstr "UserInfo URL'si"
+
+#. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users
 msgid "Users"
 msgstr "Kullanıcılar"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__validation_endpoint
-msgid "Validation URL"
-msgstr "Onaylama  URL"
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:0
@@ -267,4 +262,4 @@ msgstr "arch"
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "e.g. 1234-xyz.apps.googleusercontent.com"
-msgstr "ör. 1234-xyz.apps.googleusercontent.com"
+msgstr "örn. 1234-xyz.apps.googleusercontent.com"

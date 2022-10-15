@@ -3,12 +3,12 @@
 # 	* stock
 # 
 # Translators:
-# Alexandra Jubert <aju@odoo.com>, 2021
+# Alexandra Jubert, 2021
 # f477e7ae9c75a2428d6113663a8354fe_bcd021c <0ff4ce060a36f446722508a48e99c22a_347081>, 2021
 # RHTodoo, 2021
 # Sebastien LANGE, 2021
-# Martin Trigaux, 2021
 # Thomas Deleval <thd@odoo.com>, 2021
+# Martin Trigaux, 2022
 # Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -1031,7 +1031,10 @@ msgid "As soon as possible"
 msgstr "Aussi vite que possible"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Assign"
 msgstr "Affecter"
 
@@ -1749,7 +1752,7 @@ msgstr "Créer un reliquat "
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Create Backorder?"
-msgstr "Créer un reliquat? "
+msgstr "Créer un reliquat ? "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_type_use_create_lots
@@ -2172,6 +2175,12 @@ msgid ""
 "Closet location: products/lots closest to the target location will be moved out first.\n"
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
+"Définit la méthode par défaut utilisée pour suggérer l'emplacement exact (étagère) où prendre les produits, quel lot, etc. pour cet emplacement. Cette méthode peut être appliquée au niveau de la catégorie de produits, et un repli est effectué sur les emplacements parents si aucun n'est défini ici.\n"
+"\n"
+"FIFO : les produits/lots stockés en premier seront sortis en premier.\n"
+"LIFO : les produits/lots stockés en dernier seront sortis en premier.\n"
+"Emplacement du placard : les produits/lots les plus proches de l'emplacement cible seront déplacés en premier.\n"
+"FEFO : les produits/lots dont la date de retrait est la plus proche seront retirés en premier (la disponibilité de cette méthode dépend du paramètre \"Dates d'expiration\")."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert_date
@@ -3384,6 +3393,12 @@ msgid "Immediate transfer?"
 msgstr "Transfert immédiat ?"
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Import"
+msgstr "Importer"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
 msgid "In Type"
 msgstr "Type d'entrée"
@@ -3683,7 +3698,7 @@ msgstr "Is Signed"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__return_location
 msgid "Is a Return Location?"
-msgstr "Est un emplacement de retour?"
+msgstr "Est un emplacement de retour ?"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__scrap_location
@@ -4674,12 +4689,12 @@ msgstr "Aucune opération faite sur ce lot"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_get_picking_type_operations
 msgid "No operations found. Let's create a tranfer !"
-msgstr "Aucun transfert trouvé, créez-en un!"
+msgstr "Aucun transfert trouvé, créez-en un !"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
 msgid "No product found. Let's create one!"
-msgstr "Aucun article trouvé. Créons-en un!"
+msgstr "Aucun article trouvé. Créons-en un !"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:0
@@ -4723,6 +4738,12 @@ msgid "No stock move found"
 msgstr "Aucun mouvement de stock trouvé"
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "No Stock On Hand"
+msgstr "Pas de stock disponible"
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_form
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_all
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_backorder
@@ -4732,7 +4753,7 @@ msgstr "Aucun mouvement de stock trouvé"
 #: model_terms:ir.actions.act_window,help:stock.action_picking_type_list
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_action_picking_type
 msgid "No transfer found. Let's create one!"
-msgstr "Pas de transfert trouvé. Créons-en un!"
+msgstr "Pas de transfert trouvé. Créons-en un !"
 
 #. module: stock
 #: code:addons/stock/report/report_stock_reception.py:0
@@ -5463,6 +5484,17 @@ msgstr "Routes préférées"
 #: model:ir.model.fields,help:stock.field_stock_move__route_ids
 msgid "Preferred route"
 msgstr "Route préférée"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"Press the CREATE button to define quantity for each product in your stock or"
+" import them from a spreadsheet throughout Favorites"
+msgstr ""
+"Appuyez sur le bouton CRÉER pour définir la quantité de chaque produit de "
+"votre stock ou importez-les à partir d'une feuille de calcul dans les "
+"Favoris"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -6934,6 +6966,12 @@ msgid ""
 "Closet location: products/lots closest to the target location will be moved out first.\n"
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
+"Définissez une stratégie de sortie spécifique qui sera utilisée quel que soit l'emplacement d'origine pour cette catégorie de produits.\n"
+"\n"
+"FIFO : les produits/lots stockés en premier seront sortis en premier.\n"
+"LIFO : les produits/lots stockés en dernier seront sortis en premier.\n"
+"Emplacement du placard : les produits/lots les plus proches de l'emplacement cible seront déplacés en premier.\n"
+"FEFO : les produits/lots dont la date de retrait est la plus proche seront retirés en premier (la disponibilité de cette méthode dépend du paramètre \"Dates d'expiration\")."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7167,7 +7205,7 @@ msgid ""
 "don't want to specify a serial or lot number for them?"
 msgstr ""
 "Certains articles de l'ajustement d'inventaire sont trackés. Etes-vous sûrs "
-"de ne pas vouloir ajouter un numéro de série ou de lot?"
+"de ne pas vouloir ajouter un numéro de série ou de lot ?"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.inventory_warning_set_view
@@ -7772,7 +7810,7 @@ msgstr "Le nom de l'entrepôt doit être unique par société !"
 #. module: stock
 #: code:addons/stock/wizard/stock_assign_serial_numbers.py:0
 #, python-format
-msgid "The number of Serial Numbers to generate must greater than zero."
+msgid "The number of Serial Numbers to generate must be greater than zero."
 msgstr "Le nombre de numéros de série à générer doit être supérieur à zéro."
 
 #. module: stock
@@ -7829,6 +7867,10 @@ msgid ""
 "precision defined on the unit of measure \"%s\". Please change the quantity "
 "done or the rounding precision of your unit of measure."
 msgstr ""
+"La quantité renseignée pour l' article \"%s\" ne respecte pas les règles "
+"d'arrondissement définies dans l'unité de mesure \"%s\". Veuillez changer la"
+" quantité renseignée ou les règles d'arrondissement de votre unité de "
+"mesure."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -7917,6 +7959,16 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
 msgid "There's no product move yet"
 msgstr "Il n'y a pas encore de mouvement d'article"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"This analysis gives you an overview of the current stock level of your "
+"products."
+msgstr ""
+"Cette analyse vous donne un aperçu du niveau de stock actuel de vos "
+"produits."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__name
@@ -8134,7 +8186,7 @@ msgstr ""
 msgid "This will discard all unapplied counts, do you want to proceed?"
 msgstr ""
 "Ceci va effacer tous les comptages non appliqués, est-ce vraiment ce que "
-"vous voulez faire?"
+"vous voulez faire ?"
 
 #. module: stock
 #: model:digest.tip,name:stock.digest_tip_stock_0
@@ -8416,7 +8468,10 @@ msgid "USPS Connector"
 msgstr "Connecteur USPSConnecteur USPS"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Unassign"
 msgstr "Désassigner"
 
@@ -8818,7 +8873,7 @@ msgstr "Avertissement sur les Colisages"
 #: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
 #, python-format
 msgid "Warning!"
-msgstr "Avertissement!"
+msgstr "Avertissement !"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -9015,7 +9070,7 @@ msgstr "Ecrire vos numéros de lot/série un par un ou copier/coller une liste."
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish
 msgid "You are good, no replenishment to perform!"
-msgstr "Vous êtes bons, pas de réapprovisionnement à effectuer!"
+msgstr "Vous êtes bons, pas de réapprovisionnement à effectuer !"
 
 #. module: stock
 #: code:addons/stock/models/stock_production_lot.py:0
@@ -9438,6 +9493,12 @@ msgstr ""
 "Vous trouverez ici des propositions basées sur vos projections d'inventaire.\n"
 "             Choisissez la quantité à acheter ou produire et créez des commandes en un click.\n"
 "              Pour gagner du temps à l'avenir, automatisez les règles."
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Your stock is currently empty"
+msgstr "Votre stock est actuellement vide"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__print_format__zpl

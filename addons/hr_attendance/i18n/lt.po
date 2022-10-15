@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2022
-# Jonas Zinkevicius <jozi@odoo.com>, 2022
 # Silvija Butko <silvija.butko@gmail.com>, 2022
 # grupoda2 <dmitrijus.ivanovas@gmail.com>, 2022
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2022
@@ -13,6 +12,8 @@
 # Martin Trigaux, 2022
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2022
 # Linas Versada <linaskrisiukenas@gmail.com>, 2022
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022
+# Jonas Zinkevicius <jozi@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2022\n"
+"Last-Translator: Jonas Zinkevicius <jozi@odoo.com>, 2022\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -88,6 +89,9 @@ msgid ""
 "                            Last Month\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            Paskutinis mėnesis\n"
+"                        </span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
@@ -127,6 +131,8 @@ msgid ""
 "<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle oe_hr_attendance_status_orange\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
 "                                    </span>"
 msgstr ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle oe_hr_attendance_status_orange\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
+"                                    </span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -144,7 +150,7 @@ msgstr ""
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "<span>Time Period </span>"
-msgstr ""
+msgstr "<span>Laiko rėžis </span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -765,7 +771,7 @@ msgstr "Nepasiekiama"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "OK"
-msgstr "OK"
+msgstr "Gerai"
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_user
@@ -775,7 +781,7 @@ msgstr "Vadovas"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__overtime_ids
 msgid "Overtime"
-msgstr ""
+msgstr "Viršvalandžiai"
 
 #. module: hr_attendance
 #. openerp-web
@@ -845,7 +851,7 @@ msgstr "Išsiregistruoti"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Start from"
-msgstr ""
+msgstr "Pradžia nuo"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:0
@@ -889,6 +895,14 @@ msgid ""
 msgstr ""
 "Norėdamas įsiregistruoti ar išsiregistruoti rankiniu būdu, vartotojas turės "
 "ekrane įvesti savo PIN."
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/models/hr_employee.py:0
+#, python-format
+msgid ""
+"To activate Kiosk mode without pin code, you must have access right as an "
+"Officer or above in the Attendance app. Please contact your administrator."
+msgstr ""
 
 #. module: hr_attendance
 #. openerp-web

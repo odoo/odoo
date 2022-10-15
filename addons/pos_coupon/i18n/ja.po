@@ -6,6 +6,8 @@
 # Martin Trigaux, 2022
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # Noma Yuki, 2022
+# 江口和志 <sandwhale1010@gmail.com>, 2022
+# Ryoko Tsuda <ryoko@quartile.co>, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-08 06:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Noma Yuki, 2022\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -184,7 +186,7 @@ msgstr "クーポン"
 #: code:addons/pos_coupon/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "Coupon Codes"
-msgstr ""
+msgstr "クーポンコード"
 
 #. module: pos_coupon
 #: model:ir.model,name:pos_coupon.model_coupon_program
@@ -196,7 +198,7 @@ msgstr ""
 #: model:ir.ui.menu,name:pos_coupon.menu_coupon_type_config
 #: model_terms:ir.ui.view,arch_db:pos_coupon.res_config_view_form_inherit_pos_coupon
 msgid "Coupon Programs"
-msgstr ""
+msgstr "クーポンプログラム"
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_pos_order_line__coupon_id
@@ -223,21 +225,21 @@ msgstr ""
 #. module: pos_coupon
 #: model_terms:ir.ui.view,arch_db:pos_coupon.pos_coupon_pos_config_view_form
 msgid "Define the coupon and promotion programs you can use in this PoS."
-msgstr ""
+msgstr "このPOSで使用できるクーポンやプロモーションプログラムを定義します。"
 
 #. module: pos_coupon
 #. openerp-web
 #: code:addons/pos_coupon/static/src/xml/ControlButtons/PromoCodeButton.xml:0
 #, python-format
 msgid "Enter Code"
-msgstr ""
+msgstr "コード入力"
 
 #. module: pos_coupon
 #. openerp-web
 #: code:addons/pos_coupon/static/src/js/ControlButtons/PromoCodeButton.js:0
 #, python-format
 msgid "Enter Promotion or Coupon Code"
-msgstr ""
+msgstr "プロモーションまたはクーポンコードを入力"
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_pos_order_line__is_program_reward
@@ -292,7 +294,7 @@ msgstr "POSオーダ"
 #: model_terms:ir.ui.view,arch_db:pos_coupon.pos_coupon_program_view_coupon_program_form
 #: model_terms:ir.ui.view,arch_db:pos_coupon.pos_coupon_program_view_promo_program_form
 msgid "PoS Sales"
-msgstr ""
+msgstr "POS販売"
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_coupon_coupon__pos_order_id
@@ -350,7 +352,7 @@ msgstr ""
 #: model:ir.ui.menu,name:pos_coupon.menu_promotion_type_config
 #: model_terms:ir.ui.view,arch_db:pos_coupon.res_config_view_form_inherit_pos_coupon
 msgid "Promotion Programs"
-msgstr ""
+msgstr "プロモーションプログラム"
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_pos_order_line__program_id
@@ -425,7 +427,7 @@ msgstr ""
 #: code:addons/pos_coupon/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "Valid until:"
-msgstr ""
+msgstr "有効期日: "
 
 #. module: pos_coupon
 #. openerp-web
@@ -442,7 +444,7 @@ msgstr ""
 #. module: pos_coupon
 #: model:mail.template,subject:pos_coupon.mail_coupon_template
 msgid "Your reward coupon from {{ object.program_id.company_id.name }} "
-msgstr ""
+msgstr " {{ object.program_id.company_id.name }} からのクーポンが届きました"
 
 #. module: pos_coupon
 #: model:mail.template,name:pos_coupon.mail_coupon_template
@@ -454,4 +456,4 @@ msgstr ""
 #: code:addons/pos_coupon/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "no expiration"
-msgstr ""
+msgstr "無期限"

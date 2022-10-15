@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -188,7 +188,7 @@ msgstr ""
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Aucune transaction trouvée correspondant à la référence %s."
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_acquirer
@@ -280,7 +280,7 @@ msgstr ""
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 #, python-format
 msgid "The transaction is not linked to a token."
-msgstr ""
+msgstr "La transaction n'est pas liée à un jeton."
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_payment_method_type

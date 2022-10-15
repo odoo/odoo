@@ -404,7 +404,7 @@ msgstr "# Anhänge"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__attribute_id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__attribute_id
 msgid "Attribute"
-msgstr "Attribut"
+msgstr "Merkmal"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__attribute_line_id
@@ -415,7 +415,7 @@ msgstr "Attributzeile"
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_line_form
 msgid "Attribute Name"
-msgstr "Attributname"
+msgstr "Bezeichnung Merkmal"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_value
@@ -430,7 +430,7 @@ msgstr "Attributwert"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__value_ids
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Attribute Values"
-msgstr "Attributwerte"
+msgstr "Merkmalswerte"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.attribute_action
@@ -454,7 +454,7 @@ msgstr "Frühester Beginn"
 #: model:ir.model.fields,field_description:product.field_product_product__barcode
 #: model:ir.model.fields,field_description:product.field_product_template__barcode
 msgid "Barcode"
-msgstr "Strichcode"
+msgstr "Barcode"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__barcode
@@ -524,7 +524,7 @@ msgstr "Kann eingekauft werden"
 #: model:ir.model.fields,field_description:product.field_product_template__sale_ok
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Can be Sold"
-msgstr "Kann verkauft werden"
+msgstr "Verkauf"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -678,7 +678,7 @@ msgstr "Kontakt"
 #: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid "Contact Us"
-msgstr "Kontakt"
+msgstr "Kontaktieren Sie uns"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__qty
@@ -808,7 +808,7 @@ msgstr "Währung"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__custom_value
 msgid "Custom Value"
-msgstr "Benutzerdefinierter Wert"
+msgstr "Benutzerdefiniert"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__partner_ref
@@ -878,7 +878,7 @@ msgstr "Gewichtseinheit definieren"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__delay
 msgid "Delivery Lead Time"
-msgstr "Tage bis Auslieferung"
+msgstr "Tage bis Lieferung"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__description
@@ -1430,7 +1430,7 @@ msgstr "Ist eine Produktvariante"
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_custom
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__is_custom
 msgid "Is custom value"
-msgstr "Ist benutzerdefinierter Wert"
+msgstr "Benutzerdefiniert"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__0
@@ -1521,9 +1521,9 @@ msgid ""
 "receipt of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
 msgstr ""
-"Zeitspanne in Tagen zwischen Bestätigung eines Beschaffungsauftrags und "
-"Warenlieferung. Wird für die automatische Erstellung von "
-"Beschaffungsvorschlägen für den Einkauf und die Fertigung benötigt."
+"Zeitspanne in Tagen zwischen Bestätigung einer Bestellung und "
+"Warenlieferung. Wird vom Scheduler für die automatische Berechnung der "
+"Bestellplanung verwendet."
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_1
@@ -1877,7 +1877,7 @@ msgid ""
 "Press a button and watch your desk glide effortlessly from sitting to "
 "standing height in seconds."
 msgstr ""
-"Drücken Sie einen Button und beobachten Sie, wie Ihr Schreibtisch in "
+"Drücken Sie einen Knopf und beobachten Sie, wie Ihr Schreibtisch in "
 "Sekundenschnelle mühelos von Sitz- auf Stehhöhe gleitet."
 
 #. module: product
@@ -2056,7 +2056,7 @@ msgstr "Produktattribut"
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_custom_value
 msgid "Product Attribute Custom Value"
-msgstr "Produktattribut benutzerdefinierter Wert"
+msgstr "Produktmerkmal Benutzerdefiniert"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__product_template_value_ids
@@ -2693,6 +2693,12 @@ msgstr ""
 "Die Produktvorlage wird archiviert, daher ist keine Kombination möglich."
 
 #. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "The product variant must be a variant of the product template."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
 msgid ""
 "The quantity to purchase from this vendor to benefit from the price, "
@@ -2943,7 +2949,7 @@ msgstr "Anzahl ungelesener Nachrichten"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "UoM"
-msgstr "UoM"
+msgstr "Mengeneinheit"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -3434,7 +3440,7 @@ msgstr "z. B. USD Wiederverkäufer"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "per"
-msgstr ""
+msgstr "pro"
 
 #. module: product
 #: code:addons/product/models/product.py:0

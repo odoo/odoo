@@ -246,6 +246,8 @@ class GoogleSync(models.AbstractModel):
         with google_calendar_token(self.env.user.sudo()) as token:
             if token:
                 try:
+                    send_updates = self._context.get('send_updates', True)
+                    google_service.google_service = google_service.google_service.with_context(send_updates=send_updates)
                     google_id = google_service.insert(values, token=token, timeout=timeout)
                     # Everything went smoothly
                     self.with_context(dont_notify=True).write({

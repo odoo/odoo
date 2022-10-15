@@ -3,17 +3,19 @@
 # 	* maintenance
 # 
 # Translators:
-# Jorunn D. Newth, 2019
-# Martin Trigaux, 2019
-# Marius Stedjan <marius@stedjan.com>, 2019
+# Marius Stedjan <marius@stedjan.com>, 2022
+# Jorunn D. Newth, 2022
+# Mads Søndergaard, 2022
+# Martin Trigaux, 2022
+# Lars Aam <lars.aam@vikenfiber.no>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
-"PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2019\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2021-09-14 12:23+0000\n"
+"Last-Translator: Lars Aam <lars.aam@vikenfiber.no>, 2022\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,11 +44,6 @@ msgid "<b>Serial Number:</b>"
 msgstr "<b>Serienummer:</b>"
 
 #. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
-msgid "<i class=\"fa fa-comments\" role=\"img\" aria-label=\"Unread Messages\"/>"
-msgstr ""
-
-#. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
@@ -54,7 +51,7 @@ msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "<span class=\"badge badge-warning float-right\">Canceled</span>"
-msgstr ""
+msgstr "<span class=\"badge badge-warning float-right\">Kansellert</span>"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -68,8 +65,8 @@ msgstr "<span>Rapportering</span>"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
-msgid "<span>View</span>"
-msgstr "<span>Visning</span>"
+msgid "<span>Requests</span>"
+msgstr ""
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.view_maintenance_equipment_category_kanban
@@ -87,8 +84,14 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Python-ordbok som vil brukes til å sette standardverdier når nye oppføringer"
-" opprettes for dette aliaset."
+"Python-dictionary som brukes til å sette standardverdier på nye poster for "
+"dette aliaset."
+
+#. module: maintenance
+#: model:maintenance.equipment,name:maintenance.equipment_computer3
+#: model:maintenance.equipment,name:maintenance.equipment_computer5
+msgid "Acer Laptop"
+msgstr "Bærbar pc fra Acer"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_needaction
@@ -113,13 +116,19 @@ msgstr "Aktiviteter"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_exception_decoration
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Dekorering for Aktivitetsunntak"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_state
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_state
 msgid "Activity State"
 msgstr "Aktivitetsstatus"
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_type_icon
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Ikon type Aktivitet"
 
 #. module: maintenance
 #: model:ir.actions.act_window,name:maintenance.mail_activity_type_action_config_maintenance
@@ -197,11 +206,13 @@ msgstr "En annen ressurs med dette serienummeret eksisterer allerede!"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__archive
 msgid "Archive"
-msgstr "Arkiver"
+msgstr "Arkivert"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_search
 msgid "Archived"
 msgstr "Arkivert"
@@ -244,7 +255,7 @@ msgstr "Blokkert"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Cancel"
-msgstr "Avbryt"
+msgstr "Kanseller"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__category_id
@@ -287,7 +298,13 @@ msgid "Company"
 msgstr "Firma"
 
 #. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_computer
+msgid "Computers"
+msgstr "Datamaskiner"
+
+#. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_maintenance_configuration
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Configuration"
 msgstr "Konfigurasjon"
 
@@ -333,6 +350,11 @@ msgstr "Opprettet"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__maintenance_open_count
 msgid "Current Maintenance"
 msgstr "Vedlikehold nå"
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_bounced_content
+msgid "Custom Bounced Message"
+msgstr ""
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_dashboard
@@ -434,7 +456,7 @@ msgstr "Effektiv dato"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
 msgid "Email Alias"
-msgstr "Epostalias"
+msgstr "E-postalias"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_id
@@ -484,7 +506,6 @@ msgstr "Utstyrssjef"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__name
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Equipment Name"
 msgstr "Utstyrsnavn"
 
@@ -496,12 +517,6 @@ msgstr "Utstyrsnavn"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Equipments"
 msgstr "Utstyr"
-
-#. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
-msgid "Exception Activities"
-msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__fold
@@ -528,18 +543,17 @@ msgid "Followers"
 msgstr "Følgere"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_channel_ids
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_channel_ids
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Følgere (kanaler)"
-
-#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_partner_ids
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_partner_ids
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Følgere (partnere)"
+
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__activity_type_icon
+#: model:ir.model.fields,help:maintenance.field_maintenance_request__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font Awesome-ikon, for eksempel fa-tasks"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -553,6 +567,24 @@ msgstr "Fremtidige aktiviteter"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Group by..."
 msgstr "Grupper etter..."
+
+#. module: maintenance
+#: model:maintenance.equipment,name:maintenance.equipment_printer1
+msgid "HP Inkjet printer"
+msgstr "HP blekkskriver"
+
+#. module: maintenance
+#: model:maintenance.equipment,name:maintenance.equipment_computer11
+#: model:maintenance.equipment,name:maintenance.equipment_computer9
+msgid "HP Laptop"
+msgstr "Bærbar pc fra HP"
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__has_message
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__has_message
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__has_message
+msgid "Has Message"
+msgstr "Har melding"
 
 #. module: maintenance
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__priority__3
@@ -590,7 +622,7 @@ msgstr "Ikon"
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__activity_exception_icon
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ikon for å indikere aktivitetsunntak."
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_needaction
@@ -600,21 +632,28 @@ msgstr ""
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_needaction
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_unread
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Hvis haket av, vil nye meldinger kreve din oppmerksomhet."
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_has_error
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_has_error
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_has_error
 msgid "If checked, some messages have a delivery error."
+msgstr "Hvis haket av, har enkelte meldinger leveringsfeil."
+
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_bounced_content
+msgid ""
+"If set, this content will automatically be sent out to unauthorized users "
+"instead of the default message."
 msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__kanban_state__normal
-#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 #: model:maintenance.stage,name:maintenance.stage_1
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "In Progress"
-msgstr "Under arbeid"
+msgstr "Pågår"
 
 #. module: maintenance
 #: model:maintenance.team,name:maintenance.equipment_team_maintenance
@@ -623,8 +662,8 @@ msgstr ""
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
-msgid "Internal Note ......."
-msgstr "Internt notat..."
+msgid "Internal Notes"
+msgstr "Interne notater"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_is_follower
@@ -679,7 +718,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__location
 msgid "Location"
-msgstr "Lokasjon"
+msgstr "Sted"
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_reports_losses
@@ -696,7 +735,7 @@ msgstr "Lav"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_main_attachment_id
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Hovedvedlegg"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__maintenance_ids
@@ -742,8 +781,8 @@ msgstr ""
 
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_request
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 #: model:mail.activity.type,name:maintenance.mail_act_maintenance_request
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Maintenance Request"
 msgstr "Forespørsel om vedlikehold"
 
@@ -826,7 +865,7 @@ msgstr "Vedlikehold: Generer forespørsler om forebyggende vedlikehold"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_has_error
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Melding ved leveringsfeil"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_ids
@@ -836,9 +875,25 @@ msgid "Messages"
 msgstr "Meldinger"
 
 #. module: maintenance
+#: model:maintenance.team,name:maintenance.equipment_team_metrology
+msgid "Metrology"
+msgstr ""
+
+#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__model
 msgid "Model"
 msgstr "Modell"
+
+#. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_monitor
+msgid "Monitors"
+msgstr "Skjermer"
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__my_activity_date_deadline
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr ""
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
@@ -863,10 +918,16 @@ msgid "New Request"
 msgstr "Ny forespørsel"
 
 #. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_calendar_event_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr ""
+
+#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_date_deadline
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Neste aktivitetsfrist"
+msgstr "Frist for neste aktivitet"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_summary
@@ -932,7 +993,7 @@ msgstr "Antall forespørsler med høy prioritet"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_has_error_counter
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Antall feil"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_needaction_counter
@@ -946,7 +1007,7 @@ msgstr "Antall meldinger som krever handling"
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_has_error_counter
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Antall meldinger med leveringsfeil"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_unread_counter
@@ -996,6 +1057,11 @@ msgid ""
 msgstr ""
 
 #. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_phone
+msgid "Phones"
+msgstr "Telefoner"
+
+#. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
@@ -1021,6 +1087,11 @@ msgid "Preventive Maintenance Frequency"
 msgstr "Frekvens for forebyggende vedlikehold"
 
 #. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_printer
+msgid "Printers"
+msgstr "Skrivere"
+
+#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__priority
 msgid "Priority"
 msgstr "Prioritet"
@@ -1043,12 +1114,12 @@ msgstr "Klar for neste stadium"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "Record Colour"
-msgstr "Farge på oppføring"
+msgstr "Farge på post"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_force_thread_id
 msgid "Record Thread ID"
-msgstr "Tråd-ID for oppføring"
+msgstr "Post-id på Tråd"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -1068,6 +1139,7 @@ msgstr "Rapportering"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__request_ids
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "Request"
@@ -1124,6 +1196,13 @@ msgid "Responsible User"
 msgstr "Ansvarlig bruker"
 
 #. module: maintenance
+#: model:maintenance.equipment,name:maintenance.equipment_monitor1
+#: model:maintenance.equipment,name:maintenance.equipment_monitor4
+#: model:maintenance.equipment,name:maintenance.equipment_monitor6
+msgid "Samsung Monitor 15\""
+msgstr "Samsung 15\" skjerm"
+
+#. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Scheduled"
 msgstr "Planlagt"
@@ -1167,15 +1246,15 @@ msgid ""
 msgstr "Arkiver for å skjule forespørselen om vedlikehold uten å slette den."
 
 #. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
-msgid "Settings"
-msgstr "Innstillinger"
-
-#. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Show all records which has next action date is before today"
-msgstr "Vis alle oppføringer som har en neste tiltak-dato før dagen i dag"
+msgstr "Vis alle poster som har neste handlingsdato før dagen i dag"
+
+#. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_software
+msgid "Software"
+msgstr "Programvare"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__stage_id
@@ -1211,6 +1290,11 @@ msgstr ""
 #: model:mail.message.subtype,description:maintenance.mt_req_status
 msgid "Status changed"
 msgstr "Status endret"
+
+#. module: maintenance
+#: model:maintenance.team,name:maintenance.equipment_team_subcontractor
+msgid "Subcontractor"
+msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__name
@@ -1276,11 +1360,6 @@ msgid "The user will be able to manage equipments."
 msgstr "Brukeren vil kunne administrere utstyr."
 
 #. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
-msgid "Title"
-msgstr "Tittel"
-
-#. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "To Do"
@@ -1309,7 +1388,7 @@ msgstr ""
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__activity_exception_decoration
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Type unntaks-aktivitet på posten."
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
@@ -1325,7 +1404,6 @@ msgstr "Under vedlikehold"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_unread
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_unread
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_unread
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Unread Messages"
@@ -1336,7 +1414,7 @@ msgstr "Uleste meldinger"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_unread_counter
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Teller for uleste meldinger"
+msgstr "Antall uleste meldinger"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -1384,6 +1462,26 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "days"
 msgstr "dager"
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
+msgid "e.g. Internal Maintenance"
+msgstr ""
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
+msgid "e.g. LED Monitor"
+msgstr ""
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
+msgid "e.g. Monitors"
+msgstr ""
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
+msgid "e.g. Screen not working"
+msgstr ""
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form

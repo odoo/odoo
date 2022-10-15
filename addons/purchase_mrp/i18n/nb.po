@@ -3,15 +3,16 @@
 # 	* purchase_mrp
 # 
 # Translators:
-# Martin Trigaux, 2019
+# Martin Trigaux, 2022
+# Marius Stedjan <marius@stedjan.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-09-14 12:25+0000\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2022\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,9 +21,48 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: purchase_mrp
+#: model_terms:ir.ui.view,arch_db:purchase_mrp.purchase_order_form_mrp
+msgid "<span class=\"o_stat_text\">Manufacturing</span>"
+msgstr ""
+
+#. module: purchase_mrp
+#: model_terms:ir.ui.view,arch_db:purchase_mrp.mrp_production_form_view_purchase
+msgid "<span class=\"o_stat_text\">Purchases</span>"
+msgstr ""
+
+#. module: purchase_mrp
+#: model:ir.model.fields,field_description:purchase_mrp.field_purchase_order__mrp_production_count
+msgid "Count of MO Source"
+msgstr ""
+
+#. module: purchase_mrp
+#: model:ir.model.fields,field_description:purchase_mrp.field_mrp_production__purchase_order_count
+msgid "Count of generated PO"
+msgstr ""
+
+#. module: purchase_mrp
+#: code:addons/purchase_mrp/models/purchase.py:0
+#, python-format
+msgid "Manufacturing Source of %s"
+msgstr ""
+
+#. module: purchase_mrp
+#: code:addons/purchase_mrp/models/stock_move.py:0
+#, python-format
+msgid ""
+"Odoo is not able to generate the anglo saxon entries. The total valuation of"
+" %s is zero."
+msgstr ""
+
+#. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_mrp_production
 msgid "Production Order"
 msgstr "Produksjonsordre"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_purchase_order
+msgid "Purchase Order"
+msgstr "Innkjøpsordre"
 
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_purchase_order_line
@@ -30,6 +70,12 @@ msgid "Purchase Order Line"
 msgstr "Innkjøpsordrelinje"
 
 #. module: purchase_mrp
+#: code:addons/purchase_mrp/models/mrp_production.py:0
+#, python-format
+msgid "Purchase Order generated from %s"
+msgstr ""
+
+#. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_stock_move
 msgid "Stock Move"
-msgstr "Lagerflytting"
+msgstr "Lagerbevegelse"

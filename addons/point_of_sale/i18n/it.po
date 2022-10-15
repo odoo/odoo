@@ -6,6 +6,7 @@
 # Martin Trigaux, 2021
 # Stefano Consolaro <stefano.consolaro@mymage.it>, 2022
 # Sergio Zanchetta <primes2h@gmail.com>, 2022
+# francesco.foresti <francesco.foresti@ooops404.com>, 2022
 # Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
@@ -20,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -746,7 +747,7 @@ msgstr "Estratto conto bancario"
 #: code:addons/point_of_sale/static/src/xml/Screens/ClientListScreen/ClientDetailsEdit.xml:0
 #, python-format
 msgid "Barcode"
-msgstr "Codice"
+msgstr "Codice a barre"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__barcode_nomenclature_id
@@ -2582,7 +2583,7 @@ msgstr "In corso"
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "In order to delete a sale, it must be new or cancelled."
-msgstr "Per cancellare una vendita, questa deve essere nuova o annullata."
+msgstr "Per eliminare una vendita, deve essere nuova o annullata."
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_update_stock_quantities__real
@@ -3335,6 +3336,7 @@ msgstr ""
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Chrome.js:0
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "No"
 msgstr "No"
@@ -4111,7 +4113,7 @@ msgstr "Numero prelievi"
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
 #, python-format
 msgid "Picking POS"
-msgstr ""
+msgstr "Prelievo POS"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -5534,6 +5536,13 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
+#, python-format
+msgid "Some Serial/Lot Numbers are missing"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/js/Chrome.js:0
 #, python-format
 msgid ""
@@ -6771,7 +6780,7 @@ msgstr "Utilizzo di un listino prezzi."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Use barcodes to scan products, customer cards, etc."
-msgstr "Utilizzo di codici a barre per lettura prodotti, tessere clienti ecc."
+msgstr "Utilizzo di Codici a barre per lettura prodotti, tessere clienti ecc."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -6821,7 +6830,7 @@ msgstr "Lotto prodotto valido"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #, python-format
 msgid "Validate"
-msgstr "Valida"
+msgstr "Convalida"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6919,7 +6928,9 @@ msgstr "Caricare i dati dimostrativi ?"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/models/pos_config.py:0
 #: code:addons/point_of_sale/static/src/js/Chrome.js:0
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "Yes"
 msgstr "Sì"
@@ -6940,6 +6951,17 @@ msgstr ""
 #, python-format
 msgid "You are not allowed to change this quantity"
 msgstr "Nessuna autorizzazione per cambiare la quantità"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
+#, python-format
+msgid ""
+"You are trying to sell products with serial/lot numbers, but some of them are not set.\n"
+"Would you like to proceed anyway?"
+msgstr ""
+"Stai cercando di vendere prodotti con numeri di serie/lotto, ma alcuni di essi non sono impostati.\n"
+"Vuoi procedere comunque?"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_bank_statement.py:0

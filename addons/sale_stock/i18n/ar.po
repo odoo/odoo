@@ -27,22 +27,22 @@ msgid ""
 "                Manual actions may be needed."
 msgstr ""
 ".\n"
-"                قد تحتاج للقيام بإجراءات يدويًا."
+"                قد تضطر إلى تنفيذ إجراءات يدوياً. "
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Preparation</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>التحضير</b> "
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-times\"/> <b>Cancelled</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-times\"/> <b>تم الإلغاء</b> "
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-truck\"/> <b>Shipped</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-truck\"/> <b>تم الشحن</b> "
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -51,9 +51,9 @@ msgid ""
 "specific.\" role=\"img\" aria-label=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"القيم المحددة هنا تُحدد حسب "
-"المؤسسة.\" role=\"img\" aria-label=\"القيم المحددة هنا تُحدد حسب المؤسسة.\" "
-"groups=\"base.group_multi_company\"/>"
+"<span class=\"fa fa-lg fa-building-o\" title=\"القيم المحددة هنا خاصة "
+"بالشركة فقط. \" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
@@ -78,13 +78,13 @@ msgstr "<strong>أوامر التوصيل</strong>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<strong>Incoterm: </strong>"
-msgstr "<strong>Incoterm: </strong>"
+msgstr "<strong>شرط التجارة الدولية: </strong>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterm:</strong>"
-msgstr ""
+msgstr "<strong>شرط التجارة الدولي:</strong> "
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__product_type
@@ -93,9 +93,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"المنتج القابل للتخزين هو المنتج الممكن إدارة مخزونه. يجب تثبيت تطبيق المخزون.\n"
-"المنتج الاستهلاكي هو المنتج الذي لا يمكن إدارة مخزونه.\n"
-"الخدمة هي منتج غير مادي تقوم بتوفيره."
+"المنتج القابل للتخزين هو المنتج الذي يمكن إدارة مخزونه. يجب أن يكون تطبيق المخزون مثبتاً.\n"
+"المنتج القابل للاستهلاء هو المنتج الذي لا يمكن إدارة مخزونه.\n"
+"الخدمة هي منتج غير مادي تقوم بتقديمه. "
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
@@ -106,11 +106,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"حسب إعدادات المنتج، يمكن حساب الكمية المستلمة بإحدى الطرق التالية:\n"
-"  - يدويًا: تُحسب الكمية يدويًا في البند\n"
-"  - تحليليًا من المصروفات: تكون الكمية هي مجموع الكمية من المصروفات المُرحلة\n"
-"  - سجل الأنشطة: تكون الكمية هي مجموع الساعات المستغرقة لإجراء المهام المرتبطة ببند المبيعات\n"
-"  - حركات المخزون: تأتي الكمية من الاستلامات المؤكدة\n"
+"حسب تهيئة المنتج، يمكن حساب الكمية التي تم توصيلها تلقائياً بإحدى الطرق التالية:\n"
+"  - يدوياً: تُحسب الكمية يدوياً في البند\n"
+"  - تحليلياً من النفقات: تكون الكمية هي مجموع الكمية من النفقات المُرحلة\n"
+"  - الجداول الزمنية: تكون الكمية هي مجموع الساعات المستغرقة لإجراء المهام المرتبطة ببند المبيعات\n"
+"  - حركات المخزون: تأتي الكمية من عمليات الانتقاء المؤكدة\n"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
@@ -122,12 +122,12 @@ msgstr "بعد البيع"
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "All planned operations included"
-msgstr ""
+msgstr "كافة العمليات المخطط لها مشمولة "
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Apply specific routes"
-msgstr ""
+msgstr "تطبيق مسارات محددة "
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__picking_policy__direct
@@ -153,7 +153,7 @@ msgstr "متوفر"
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "Available in stock"
-msgstr ""
+msgstr "متوفر في المخزون "
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -163,17 +163,17 @@ msgstr "اختر هذا الخيار لتطبيق المسارات المعين�
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
 msgid "Companies"
-msgstr "شركات"
+msgstr "الشركات "
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__effective_date
 msgid "Completion date of the first delivery order."
-msgstr "تاريخ إكمال أول طلب تسليم."
+msgstr "تاريخ إكمال أول طلب توصيل. "
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_config_settings
 msgid "Config Settings"
-msgstr "ضبط الاعدادات"
+msgstr "تهيئة الإعدادات "
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -183,17 +183,17 @@ msgstr "التاريخ:"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_users__property_warehouse_id
 msgid "Default Warehouse"
-msgstr ""
+msgstr "المستودع الافتراضي "
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Delivery"
-msgstr "التسليم"
+msgstr "التوصيل "
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel__display_delivery_alert
 msgid "Delivery Alert"
-msgstr ""
+msgstr "تنبيه التوصيل "
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
@@ -208,11 +208,15 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
+"تاريخ التوصيل الذي بوسعك الالتزام به لعميلك، والذي تم احتسابه من الحد الأدنى"
+" لمهلة بنود الطلب في حال كان الطلب عبارة عن خدمة. في حال الشحن، سوف يتم وضع "
+"سياسة شحن الطلب بعين الاعتبار لاستخدام إما الحد الأدنى أو الأقصى لمهلة بنود "
+"الطلب. "
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
 msgid "Display Qty Widget"
-msgstr ""
+msgstr "عرض أداة الكمية "
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_display_incoterm
@@ -229,7 +233,7 @@ msgstr "عرض الشروط التجارية على الطلبات والفوا�
 #, python-format
 msgid ""
 "Do not forget to change the partner on the following delivery orders: %s"
-msgstr ""
+msgstr "لا تنسَ تغيير الشريك في أوامر التوصيل التالية: %s "
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -239,23 +243,23 @@ msgstr "التوثيق"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
 msgid "Effective Date"
-msgstr "تاريخ التسليم الفعلي"
+msgstr "تاريخ التوصيل الفعلي "
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "Exception(s) occurred on the picking:"
-msgstr "حدث خطأ أثناء الاستلام:"
+msgstr "حدث استثناء (استثناءات) أثناء الاستلام: "
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s) occurred on the sale order(s):"
-msgstr "حدث خطأ في أوامر المبيعات:"
+msgstr "الاستثناء (الاستثناءات) الحاصلة في أمر (أوامر) البيع: "
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s):"
-msgstr "الأخطاء:"
+msgstr "الاستثناء (الاستثناءات): "
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__expected_date
@@ -267,34 +271,34 @@ msgstr "التاريخ المتوقع"
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "Expected Delivery"
-msgstr ""
+msgstr "التوصيل المتوقع "
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Expected:"
-msgstr ""
+msgstr "المتوقع: "
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__forecast_expected_date
 msgid "Forecast Expected Date"
-msgstr ""
+msgstr "التنبؤ بالتاريخ المتوقع "
 
 #. module: sale_stock
 #. openerp-web
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "Forecasted Stock"
-msgstr ""
+msgstr "المخزون المتوقع "
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__free_qty_today
 msgid "Free Qty Today"
-msgstr ""
+msgstr "الكمية المجانية اليوم "
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
 msgid "Has late picking"
-msgstr ""
+msgstr "يحتوي على استلام متأخر "
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__picking_policy
@@ -303,24 +307,24 @@ msgid ""
 "based on the greatest product lead time. Otherwise, it will be based on the "
 "shortest."
 msgstr ""
-"إذا قمت بتوصيل كافة المنتجات دفعةً واحدة، سيتم ترتيب جدولة عملية التسليم حسب"
-" مهلة التسليم الأعلى للمنتجات. وإلا ستكون حسب الأقصر."
+"إذا قمت بتوصيل كافة المنتجات دفعةً واحدة، ستتم جدولة عملية التوصيل بناءً على"
+" مهلة التوصيل الأعلى للمنتجات. وإلا ستكون مبنية على الأقصر. "
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Impacted Transfer(s):"
-msgstr "عمليات النقل المتأثرة:"
+msgstr "الشحنة (الشحنات) المتأثرة: "
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm
 msgid "Incoterm"
-msgstr "شرط تجاري"
+msgstr "شرط التجارة الدولي "
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_display_incoterm
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Incoterms"
-msgstr "الشروط التجارية"
+msgstr "شروط التجارة الدولية "
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__incoterm
@@ -334,12 +338,12 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_users_view_form
 msgid "Inventory"
-msgstr "الجرد"
+msgstr "المخزون "
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
 msgid "Inventory Routes"
-msgstr "مسارات الجرد"
+msgstr "مسارات المخزون "
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_invoiced
@@ -349,12 +353,12 @@ msgstr "الفوترة"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__is_mto
 msgid "Is Mto"
-msgstr ""
+msgstr "الإنتاج حسب الطلب "
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__json_popover
 msgid "JSON data for the popover widget"
-msgstr ""
+msgstr "بيانات JSON لأداة مانح الموافقة الذكية "
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_move
@@ -369,18 +373,18 @@ msgstr "عنصر اليومية"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_production_lot
 msgid "Lot/Serial"
-msgstr "اللوط/المسلسل"
+msgstr "رقم الدفعة/الرقم التسلسلي "
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid "Make To Order"
-msgstr "إنتاج عند الطلب"
+msgstr "الإنتاج حسب الطلب "
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Manual actions may be needed."
-msgstr "قد تحتاج للقيام بإجراءات يدويًا."
+msgstr "قد تضطر إلى تنفيذ إجراءات يدوياً. "
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_config_settings__use_security_lead
@@ -389,9 +393,9 @@ msgid ""
 "for delivery that many days earlier than the actual promised date, to cope "
 "with unexpected delays in the supply chain."
 msgstr ""
-"هامش التأخير عن الموعد المحدد للعميل. سيتم جدولة توريدات المنتجات وعمليات "
-"التسليم قبل تاريخ التسليم الفعلي المحدد مع العميل بهذا العدد من الأيام، "
-"لمواجهة أي تأخير غير محسوب في سلسلة التوريد."
+"هامش التأخير عن الموعد المحدد للعميل. ستتم جدولة عمليات توصيل المنتجات قبل "
+"تاريخ التسليم الفعلي المحدد مع العميل بهذا العدد من الأيام، لمواجهة أي تأخير"
+" غير متوقع في سلسلة التوريد. "
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company__security_lead
@@ -402,33 +406,33 @@ msgid ""
 "for procurement and delivery that many days earlier than the actual promised"
 " date, to cope with unexpected delays in the supply chain."
 msgstr ""
-"أيام إضافية لضمان عدم التأخير عن الموعد المحدد للعميل. سيتم جدولة توريدات "
-"المنتجات وعمليات التسليم بهذا العدد من الأيام قبل تاريخ التسليم الفعلي "
-"المحدد مع العميل، لمواجهة أي تأخير غير محسوب في سلسلة التوريد."
+"هامش التأخير عن الموعد المحدد للعميل. ستتم جدولة شراء المنتجات وعمليات توصيل"
+" المنتجات قبل تاريخ التسليم الفعلي المحدد مع العميل بهذا العدد من الأيام، "
+"لمواجهة أي تأخير غير متوقع في سلسلة التوريد. "
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr "طريقة تحديث الكمية المسلمة"
+msgstr "طريقة تحديث الكمية التي قد تم توصيلها "
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by"
-msgstr "تقديم تواريخ التسليم المتوقعة بمقدار"
+msgstr "تقديم تواريخ التوصيل المتوقعة بمقدار "
 
 #. module: sale_stock
 #. openerp-web
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "No enough future availaibility"
-msgstr ""
+msgstr "غير متاح بالقدر الكافي في المستقبل "
 
 #. module: sale_stock
 #. openerp-web
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "No future availaibility"
-msgstr ""
+msgstr "غير متاح في المستقبل "
 
 #. module: sale_stock
 #. openerp-web
@@ -441,7 +445,7 @@ msgstr "في"
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid "Ordered quantity decreased!"
-msgstr "تم تقليص المكمية المطلوبة!"
+msgstr "تم تقليل المكمية المطلوبة! "
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__default_picking_policy
@@ -452,7 +456,7 @@ msgstr "سياسة الاستلام"
 #: model:ir.model,name:sale_stock.model_procurement_group
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__procurement_group_id
 msgid "Procurement Group"
-msgstr "مجموعة التوريدات"
+msgstr "مجموعة الشراء "
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_template
@@ -467,12 +471,12 @@ msgstr "نوع المنتج"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_available_today
 msgid "Qty Available Today"
-msgstr ""
+msgstr "الكمية المتوفرة اليوم "
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
 msgid "Qty To Deliver"
-msgstr ""
+msgstr "الكمية بانتظار توصيلها "
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_report_product_product_replenishment
@@ -484,7 +488,7 @@ msgstr "عروض الأسعار"
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "Remaining demand available at"
-msgstr ""
+msgstr "الطلب المتبقي متاح في "
 
 #. module: sale_stock
 #. openerp-web
@@ -532,7 +536,7 @@ msgstr "أمر البيع"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_cancel
 msgid "Sales Order Cancel"
-msgstr ""
+msgstr "إلغاء أمر البيع "
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
@@ -557,7 +561,7 @@ msgstr "الأيام الكافية للتوصيل"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Schedule deliveries earlier to avoid delays"
-msgstr "قم بتحديد مواعيد مبكرة للتسليم لتتفادى التأخير"
+msgstr "قم بتحديد مواعيد مبكرة للتوصيل لتفادي التأخير "
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__scheduled_date
@@ -567,7 +571,7 @@ msgstr "التاريخ المجدول"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__security_lead
 msgid "Security Lead Time"
-msgstr "المهلة الأمنية"
+msgstr "مهلة الأمان "
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__use_security_lead
@@ -587,7 +591,7 @@ msgstr "شحن كافة المنتجات دفعة واحدة"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__direct
 msgid "Ship products as soon as available, with back orders"
-msgstr "تسليم كل منتج على حدة عند توافره"
+msgstr "شحن كل منتج على حدة عند توافره، مع الطلبات المؤجلة "
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
@@ -605,6 +609,8 @@ msgid ""
 "Some products have already been delivered. Returns can be created from the "
 "Delivery Orders."
 msgstr ""
+"لقد تم توصيل بعض المنتجات بالفعل. يمكن إنشاء أوامر الإرجاع من أوامر التوصيل."
+" "
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -620,7 +626,7 @@ msgstr "تحركات المخزون"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_product_product_replenishment
 msgid "Stock Replenishment Report"
-msgstr ""
+msgstr "تقرير تجديد المخزون "
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rule
@@ -642,7 +648,7 @@ msgstr "تقرير قاعدة المخزون"
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "The delivery"
-msgstr ""
+msgstr "التوصيل "
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -652,13 +658,16 @@ msgid ""
 "                        From <strong>\"%s\"</strong> To <strong>\"%s\"</strong>,\n"
 "                        You should probably update the partner on this document."
 msgstr ""
+"لقد تم تغيير عنوات التوصيل في أمر البيع<br/>\n"
+"                        من <strong>\"%s\"</strong> إلى <strong>\"%s\"</strong>،\n"
+"                        عليك تحديث الشريك في هذا المستند. "
 
 #. module: sale_stock
 #. openerp-web
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "This product is replenished on demand."
-msgstr ""
+msgstr "يتم تجديد هذا المنتج في المخزون حسب الطلب. "
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -673,26 +682,26 @@ msgstr "الشحنات"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_users
 msgid "Users"
-msgstr "المستخدمون"
+msgstr "المستخدمين "
 
 #. module: sale_stock
 #. openerp-web
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "View Forecast"
-msgstr ""
+msgstr "عرض التنبؤات "
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__virtual_available_at_date
 msgid "Virtual Available At Date"
-msgstr ""
+msgstr "متوفر إلكترونياً بتاريخ "
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__warehouse_id
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__warehouse_id
 #: model:ir.model.fields,field_description:sale_stock.field_sale_report__warehouse_id
 msgid "Warehouse"
-msgstr "المخزن"
+msgstr "المستودع "
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -703,7 +712,7 @@ msgstr "تحذير!"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__picking_policy__one
 msgid "When all products are ready"
-msgstr "عند توفر كل المنتجات"
+msgstr "عندما تكون كافة المنتجات جاهزة "
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -717,8 +726,8 @@ msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the delivery order if needed."
 msgstr ""
-"لقد قمت بتقليص الكمية المطلوبة! لا تنس أن تقوم بتحديث أمر التوصيل يدوياً إن "
-"لزم الأمر."
+"لقد قمت بتقليل الكمية المطلوبة! لا تنس تحديث أمر التوصيل يدوياً إن لزم "
+"الأمر. "
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -727,8 +736,8 @@ msgid ""
 "You cannot decrease the ordered quantity below the delivered quantity.\n"
 "Create a return first."
 msgstr ""
-"لا يمكنك اختيار قيمة للكمية المطلوبة أقل من الكمية المستلمة.\n"
-"قم بإنشاء أمر إرجاع أولًا."
+"لا يمكنك جعل الكمية المطلوبة أقل من الكمية التي تم توصيلها.\n"
+"قم بإنشاء أمر إرجاع أولاً. "
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
@@ -738,7 +747,7 @@ msgstr "ملغي"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "days"
-msgstr "يوم"
+msgstr "أيام "
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -761,4 +770,4 @@ msgstr "تمت معالجته بدلًا من"
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "will be late."
-msgstr ""
+msgstr "سيكون متأخراً. "

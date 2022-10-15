@@ -20,7 +20,7 @@
                             </div>
                             <div class="row">
                                 <label class="col-lg-3 o_light_label" string="API secret" for="twitter_api_secret"/>
-                                <field name="twitter_api_secret" class="oe_inline"/>
+                                <field name="twitter_api_secret" password="True" class="oe_inline"/>
                             </div>
                             <a data-toggle="collapse" href="#" data-target="#twitter_tutorial" aria-label="Twitter tutorial">
                                 <i class="fa fa-arrow-right"/>
@@ -30,21 +30,18 @@
                                 <blockquote class="small">
                                     <h2>How to configure the Twitter API access</h2>
                                     <ol>
-                                        <li>Create a new Twitter application on <a href="https://apps.twitter.com/app/new" target="new">https://apps.twitter.com/app/new</a>
-                                              with the following values:
+                                        <li>Log in or create an account on <a href="https://developer.twitter.com/" target="new"> https://developer.twitter.com/</a></li>
+                                        <li>Once connected, and if not already done, complete the Twitter portal access process on <a href="https://developer.twitter.com/portal/" target="new">https://developer.twitter.com/portal/</a></li>
+                                        <li>On the <a href="https://developer.twitter.com/portal/" target="new">Twitter Portal</a>, <strong>create a project</strong> with the following information:
                                             <ul>
                                                 <li><strong>Name: </strong> Odoo Twitter Integration</li>
-                                                <li><strong>Description: </strong> Odoo Twitter Integration </li>
-                                                <li><strong>Website: </strong>
-                                                <b><field name="twitter_server_uri" /></b></li>
-                                                <li><strong>Callback URL: </strong>Leave blank</li>
-                                                <li>Accept terms of use and click on the Create your Twitter application button at the bottom</li>
+                                                <li><strong>Use Case: </strong> Embedding Tweets in a website</li>
+                                                <li><strong>Description: </strong> Odoo Twitter Integration</li>
+                                                <li><strong>App Name: </strong> choose a unique name</li>
                                             </ul>
                                         </li>
-                                        <li>Switch to the API Keys tab: <br/>
-                                            <img src='/website_twitter/static/src/img/api_key.png' alt="API Key"/>
-                                        </li><br/>
-                                        <li>Copy/Paste Consumer Key (API Key) and Consumer Secret (API Secret) keys below.</li>
+                                        <li>Copy/Paste the API Key and API Key Secret values into the above fields</li>
+                                        <li>Get Elevated access by going to <a href="https://developer.twitter.com/en/portal/products" target="new">https://developer.twitter.com/en/portal/products</a>, click on <strong>Elevated</strong> then on <strong>Apply</strong> and finally complete the form.</li>
                                     </ol>
                                 </blockquote>
                             </div>

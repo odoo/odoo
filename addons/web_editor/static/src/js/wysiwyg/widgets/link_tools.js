@@ -28,12 +28,8 @@ const LinkTools = Link.extend({
     /**
      * @override
      */
-    init: function (parent, options, editable, data, $button, node) {
-        if (node && !$(node).is('a')) {
-            $(node).wrap('<a href="#"/>');
-            node = node.parentElement;
-        }
-        this._link = node || this.getOrCreateLink(editable);
+    init: function (parent, options, editable, data, $button, link) {
+        this._link = link;
         this._observer = new MutationObserver(() =>{
             this._setLinkContent = false;
             this._observer.disconnect();
@@ -49,35 +45,35 @@ const LinkTools = Link.extend({
      * @override
      */
     start: function () {
-        this.options.wysiwyg.odooEditor.observerUnactive();
-        this.$link.addClass('oe_edited_link');
-        this.$button.addClass('active');
+        const titleEls = this.el.querySelectorAll('we-title');
+        for (const titleEl of titleEls) {
+            // See _buildTitleElement for explanation
+            titleEl.textContent = titleEl.textContent.replace(/⌙/g, '└');
+        }
+        this._addHintClasses();
         return this._super(...arguments);
     },
     destroy: function () {
         if (!this.el) {
             return this._super(...arguments);
         }
-        $(this.options.wysiwyg.odooEditor.document).find('.oe_edited_link').removeClass('oe_edited_link');
         const $contents = this.$link.contents();
-        if (!this.$link.attr('href') && !this.colorCombinationClass) {
+        if (this.shouldUnlink()) {
             $contents.unwrap();
         }
-        this.$button.removeClass('active');
-        this.options.wysiwyg.odooEditor.observerActive();
-        this.applyLinkToDom(this._getData());
-        if (!this.options.wysiwyg.odooEditor.isDestroyed) {
-            this.options.wysiwyg.odooEditor.historyStep();
-        }
         this._observer.disconnect();
         this._super(...arguments);
+        this._removeHintClasses();
     },
-
+    shouldUnlink: function () {
+        return !this.$link.attr('href') && !this.colorCombinationClass
+    },
     applyLinkToDom() {
         this._observer.disconnect();
-        this.options.wysiwyg.odooEditor.observerActive();
+        this._removeHintClasses();
         this._super(...arguments);
-        this.options.wysiwyg.odooEditor.observerUnactive();
+        this.options.wysiwyg.odooEditor.historyStep();
+        this._addHintClasses();
         this._observer.observe(this._link, {subtree: true, childList: true, characterData: true});
     },
 
@@ -105,7 +101,6 @@ const LinkTools = Link.extend({
         if (data === null) {
             return;
         }
-        data.classes += ' oe_edited_link';
         this.applyLinkToDom(data);
     },
     /**
@@ -178,11 +173,21 @@ const LinkTools = Link.extend({
      */
     _getLinkCustomClasses: function () {
         let textClass = this.customColors['color'];
-        if (!computeColorClasses(this.colorpickers['color'].getColorNames(), 'text-').includes(textClass)) {
+        const colorPickerFg = this.colorpickers['color'];
+        if (
+            !textClass ||
+            !colorPickerFg ||
+            !computeColorClasses(colorPickerFg.getColorNames(), 'text-').includes(textClass)
+        ) {
             textClass = '';
         }
         let fillClass = this.customColors['background-color'];
-        if (!computeColorClasses(this.colorpickers['background-color'].getColorNames(), 'bg-').includes(fillClass)) {
+        const colorPickerBg = this.colorpickers['background-color'];
+        if (
+            !fillClass ||
+            !colorPickerBg ||
+            !computeColorClasses(colorPickerBg.getColorNames(), 'bg-').includes(fillClass)
+        ) {
             fillClass = '';
         }
         return ` ${textClass} ${fillClass}`;
@@ -330,6 +335,24 @@ const LinkTools = Link.extend({
             $colorPreview.css('background-color', isColorGradient(color) ? 'rgba(0, 0, 0, 0)' : color);
             $colorPreview.css('background-image', isColorGradient(color) ? color : '');
         }
+    },
+    /**
+     * Add hint to the classes of the link and button.
+     */
+    _addHintClasses () {
+        this.options.wysiwyg.odooEditor.observerUnactive("hint_classes");
+        this.$link.addClass('oe_edited_link');
+        this.$button.addClass('active');
+        this.options.wysiwyg.odooEditor.observerActive("hint_classes");
+    },
+    /**
+     * Remove hint to the classes of the link and button.
+     */
+    _removeHintClasses () {
+        this.options.wysiwyg.odooEditor.observerUnactive("hint_classes");
+        $(this.options.wysiwyg.odooEditor.document).find('.oe_edited_link').removeClass('oe_edited_link');
+        this.$button.removeClass('active');
+        this.options.wysiwyg.odooEditor.observerActive("hint_classes");
     },
 
     //--------------------------------------------------------------------------

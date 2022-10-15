@@ -8,6 +8,7 @@
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2022
 # Linas Versada <linaskrisiukenas@gmail.com>, 2022
 # Martin Trigaux, 2022
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,7 +36,7 @@ msgstr ""
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
 msgid "<span> days</span>"
-msgstr ""
+msgstr "<span>dienos</span>"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__alert_date
@@ -51,13 +52,13 @@ msgstr "Įspėjimo data pasiekta"
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__alert_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__alert_time
 msgid "Alert Time"
-msgstr ""
+msgstr "Perspėjimo laikas"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__use_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__use_time
 msgid "Best Before Time"
-msgstr ""
+msgstr "Geriausias iki laikas"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__use_date
@@ -67,7 +68,7 @@ msgstr "Geriausias iki"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
 msgid "Best before:"
-msgstr ""
+msgstr "Geriausias iki:"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_res_config_settings
@@ -82,7 +83,7 @@ msgstr "Patvirtinti"
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_expiry_picking_confirmation
 msgid "Confirm Expiry"
-msgstr ""
+msgstr "Patvirtinti galiojimo laiką"
 
 #. module: product_expiry
 #: code:addons/product_expiry/models/stock_picking.py:0
@@ -129,7 +130,7 @@ msgstr "Atmesti"
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_res_config_settings__group_expiry_date_on_delivery_slip
 msgid "Display Expiration Dates on Delivery Slips"
-msgstr ""
+msgstr "Atvaizduoti galiojimo datas pristatymo dokumente"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__display_name
@@ -156,22 +157,22 @@ msgstr "Galiojimo datos pabaiga"
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__expiration_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__expiration_time
 msgid "Expiration Time"
-msgstr ""
+msgstr "Galiojimo laikas"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.res_config_settings_view_form_stock
 msgid "Expiration dates will appear on the delivery slip"
-msgstr ""
+msgstr "Galiojimo datos atsiras važtaraštyje"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
 msgid "Expired Lot(s)"
-msgstr ""
+msgstr "Nebegaliojantys partijos numeris (-iai)"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_reminded
 msgid "Expiry has been reminded"
-msgstr ""
+msgstr "Galiojimo laikas jau buvo primintas"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__id
@@ -181,7 +182,7 @@ msgstr "ID"
 #. module: product_expiry
 #: model:res.groups,name:product_expiry.group_expiry_date_on_delivery_slip
 msgid "Include expiration dates on delivery slip"
-msgstr ""
+msgstr "Įtraukti galiojimo datas į važtaraštį"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation____last_update
@@ -216,6 +217,9 @@ msgid ""
 "stock after production) after which the goods may become dangerous and must "
 "not be consumed. It will be computed on the lot/serial number."
 msgstr ""
+"Dienų skaičius po produktų gavimo (iš tiekėjo arba iš gamybos), po kurio "
+"prekės gali tapti pavojingos ir nėra tinkamos vartojamos. Jis bus nustatomas"
+" pagal partijos/serijos numerį."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__alert_time
@@ -225,6 +229,8 @@ msgid ""
 "raised on the lot/serial number. It will be computed on the lot/serial "
 "number."
 msgstr ""
+"Dienų skaičius prieš, perspėjimui dėl galiojimo datos pabaigos. Jis bus "
+"apskaičiuojamas pagal partijos / serijos numerį."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__removal_time
@@ -233,6 +239,8 @@ msgid ""
 "Number of days before the Expiration Date after which the goods should be "
 "removed from the stock. It will be computed on the lot/serial number."
 msgstr ""
+"Dienų skaičius prieš galiojimo pabaigos datą, po kurios produktai turi būti "
+"pašalinami iš sandėlio. Apskaičiuojamas pagal partijos / serijos numerį."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__use_time
@@ -242,6 +250,9 @@ msgid ""
 "deteriorating, without being dangerous yet. It will be computed on the "
 "lot/serial number."
 msgstr ""
+"Dienų skaičius prieš galiojimo pabaigos datą, nuo kurios produkto kokybė "
+"pradeda prastėti, bet produktas išlaiko savo specifines savybes ir yra "
+"tinkamas naudoti. Apskaičiuojamas pagal partijos / serijos numerį."
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__picking_ids
@@ -293,12 +304,12 @@ msgstr "Pašalinimo data"
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__removal_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__removal_time
 msgid "Removal Time"
-msgstr ""
+msgstr "Pašalinimo laikas"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__show_lots
 msgid "Show Lots"
-msgstr ""
+msgstr "Atvaizduoti partijos numerius"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_move
@@ -308,7 +319,7 @@ msgstr "Atsargų perkėlimas"
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__product_expiry_alert
 msgid "The Expiration Date has been reached."
-msgstr ""
+msgstr "Pasiekta galiojimo data."
 
 #. module: product_expiry
 #: code:addons/product_expiry/models/production_lot.py:0
@@ -333,6 +344,8 @@ msgid ""
 "This is the date on which the goods with this Serial Number should be "
 "removed from the stock. This date will be used in FEFO removal strategy."
 msgstr ""
+"Tai data, kurią šiuo serijos numeriu pažymėtos prekės turi būti pašalintos "
+"iš atsargų. Ši data naudojama tik FEFO pašalinimo strategijoje."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__use_date
@@ -352,7 +365,7 @@ msgstr "Perkelti"
 #: model:ir.model.fields,field_description:product_expiry.field_stock_move__use_expiration_date
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__use_expiration_date
 msgid "Use Expiration Date"
-msgstr ""
+msgstr "Naudokite galiojimo pabaigos datą"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
@@ -378,6 +391,8 @@ msgid ""
 "You are going to deliver some product expired lots.\n"
 "Do you confirm you want to proceed ?"
 msgstr ""
+"Jūs ketinate pristatyti kai kurias produktų partijas/serijos numerius, kurių galiojimo laikas pasibaigęs.\n"
+"Patvirtinkite, ar tikrai norite tęsti?"
 
 #. module: product_expiry
 #: code:addons/product_expiry/wizard/confirm_expiry.py:0
@@ -386,3 +401,5 @@ msgid ""
 "You are going to deliver the product %(product_name)s, %(lot_name)s which is expired.\n"
 "Do you confirm you want to proceed ?"
 msgstr ""
+"Jūs ketinate pristatyti produktą %(product_name)s, su partijas/serijos  numeriu%(lot_name)s, kurio galiojimo laikas pasibaigęs.\n"
+"Patvirtinkite, ar tikrai norite tęsti?"

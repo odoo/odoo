@@ -162,6 +162,54 @@ QUnit.module("Search", (hooks) => {
         );
     });
 
+    QUnit.test("navigation with facets (2)", async function (assert) {
+        const controlPanel = await makeWithSearch({
+            serverData,
+            resModel: "partner",
+            Component: ControlPanel,
+            searchMenuTypes: ["groupBy"],
+            searchViewId: false,
+            context: {
+                search_default_date_group_by: 1,
+                search_default_foo: 1,
+            },
+        });
+
+        assert.containsN(controlPanel, ".o_searchview .o_searchview_facet", 2);
+        assert.strictEqual(
+            document.activeElement,
+            controlPanel.el.querySelector(".o_searchview input")
+        );
+
+        // press left to focus the rightmost facet
+        await triggerEvent(document.activeElement, null, "keydown", { key: "ArrowLeft" });
+        assert.strictEqual(
+            document.activeElement,
+            controlPanel.el.querySelector(".o_searchview .o_searchview_facet:nth-child(2)")
+        );
+
+        // press left to focus the leftmost facet
+        await triggerEvent(document.activeElement, null, "keydown", { key: "ArrowLeft" });
+        assert.strictEqual(
+            document.activeElement,
+            controlPanel.el.querySelector(".o_searchview .o_searchview_facet:nth-child(1)")
+        );
+
+        // press left to focus the input
+        await triggerEvent(document.activeElement, null, "keydown", { key: "ArrowLeft" });
+        assert.strictEqual(
+            document.activeElement,
+            controlPanel.el.querySelector(".o_searchview input")
+        );
+
+        // press left to focus the leftmost facet
+        await triggerEvent(document.activeElement, null, "keydown", { key: "ArrowRight" });
+        assert.strictEqual(
+            document.activeElement,
+            controlPanel.el.querySelector(".o_searchview .o_searchview_facet:nth-child(1)")
+        );
+    });
+
     QUnit.test("search date and datetime fields. Support of timezones", async function (assert) {
         assert.expect(4);
 

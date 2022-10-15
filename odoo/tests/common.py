@@ -29,7 +29,7 @@ import time
 import unittest
 import warnings
 from collections import defaultdict
-from contextlib import contextmanager
+from contextlib import contextmanager, ExitStack
 from datetime import datetime, date
 from itertools import zip_longest as izip_longest
 from unittest.mock import patch
@@ -415,17 +415,24 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
     @contextmanager
     def _assertRaises(self, exception, *, msg=None):
         """ Context manager that clears the environment upon failure. """
-        with super(BaseCase, self).assertRaises(exception, msg=msg) as cm:
+        with ExitStack() as init:
             if hasattr(self, 'env'):
-                with self.env.cr.savepoint():
-                    if issubclass(exception, AccessError):
-                        # The savepoint() above calls flush(), which leaves the
-                        # record cache with lots of data.  This can prevent
-                        # access errors to be detected. In order to avoid this
-                        # issue, we clear the cache before proceeding.
-                        self.env.cr.clear()
-                    yield cm
-            else:
+                init.enter_context(self.env.cr.savepoint())
+                if issubclass(exception, AccessError):
+                    # The savepoint() above calls flush(), which leaves the
+                    # record cache with lots of data.  This can prevent
+                    # access errors to be detected. In order to avoid this
+                    # issue, we clear the cache before proceeding.
+                    self.env.cr.clear()
+
+            with ExitStack() as inner:
+                cm = inner.enter_context(super().assertRaises(exception, msg=msg))
+                # *moves* the cleanups from init to inner, this ensures the
+                # savepoint gets rolled back when `yield` raises `exception`,
+                # but still allows the initialisation to be protected *and* not
+                # interfered with by `assertRaises`.
+                inner.push(init.pop_all())
+
                 yield cm
 
     def assertRaises(self, exception, func=None, *args, **kwargs):
@@ -670,12 +677,12 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
     def assertHTMLEqual(self, original, expected):
         return self._assertXMLEqual(original, expected, 'html')
 
-    def profile(self, **kwargs):
+    def profile(self, description='', **kwargs):
         test_method = getattr(self, '_testMethodName', 'Unknown test method')
         if not hasattr(self, 'profile_session'):
             self.profile_session = profiler.make_session(test_method)
         return profiler.Profiler(
-            description='%s %s %s' % (test_method, self.env.user.name, 'warm' if self.warm else 'cold'),
+            description='%s uid:%s %s %s' % (test_method, self.env.user.id, 'warm' if self.warm else 'cold', description),
             db=self.env.cr.dbname,
             profile_session=self.profile_session,
             **kwargs)
@@ -1215,6 +1222,8 @@ class ChromeBrowser():
     def _wait_ready(self, ready_code, timeout=60):
         self._logger.info('Evaluate ready code "%s"', ready_code)
         awaited_result = {'type': 'boolean', 'value': True}
+        # catch errors in ready code to prevent opening error dialogs
+        ready_code = "try { %s } catch {}" % ready_code
         ready_id = self._websocket_send('Runtime.evaluate', params={'expression': ready_code})
         promise_id = None
         last_bad_res = ''
@@ -1544,7 +1553,7 @@ class HttpCase(TransactionCase):
 
         return session
 
-    def browser_js(self, url_path, code, ready='', login=None, timeout=60, **kw):
+    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, **kw):
         """ Test js code running in the browser
         - optionnally log as 'login'
         - load page given by url_path
@@ -1576,6 +1585,9 @@ class HttpCase(TransactionCase):
             if self.browser.screencasts_dir:
                 self._logger.info('Starting screencast')
                 self.browser.start_screencast()
+            if cookies:
+                for name, value in cookies.items():
+                    self.browser.set_cookie(name, value, '/', HOST)
             self.browser.navigate_to(url, wait_stop=not bool(ready))
 
             # Needed because tests like test01.js (qunit tests) are passing a ready
@@ -1614,6 +1626,16 @@ class HttpCase(TransactionCase):
         code = kwargs.pop('code', "odoo.startTour('%s'%s)" % (tour_name, step_delay))
         ready = kwargs.pop('ready', "odoo.__DEBUG__.services['web_tour.tour'].tours['%s'].ready" % tour_name)
         return self.browser_js(url_path=url_path, code=code, ready=ready, **kwargs)
+
+    def profile(self, **kwargs):
+        """
+        for http_case, also patch _get_profiler_context_manager in order to profile all requests
+        """
+        sup = super()
+        _profiler = sup.profile(**kwargs)
+        def route_profiler(request):
+            return sup.profile(description=request.httprequest.full_path)
+        return profiler.Nested(_profiler, patch('odoo.http.Request._get_profiler_context_manager', route_profiler))
 
 
 # kept for backward compatibility
@@ -1927,8 +1949,11 @@ class Form(object):
             return O2MProxy(self, field)
         return v
 
-    def _get_modifier(self, field, modifier, default=False, modmap=None, vals=None):
-        d = (modmap or self._view['modifiers'])[field].get(modifier, default)
+    def _get_modifier(self, field, modifier, *, default=False, view=None, modmap=None, vals=None):
+        if view is None:
+            view = self._view
+
+        d = (modmap or view['modifiers'])[field].get(modifier, default)
         if isinstance(d, bool):
             return d
 
@@ -1969,7 +1994,7 @@ class Form(object):
                     # we're looking up the "current view" so bits might be
                     # missing when processing o2ms in the parent (see
                     # values_to_save:1450 or so)
-                    f_ = self._view['fields'].get(f, {'type': None})
+                    f_ = view['fields'].get(f, {'type': None})
                     if f_['type'] == 'many2many':
                         # field value should be [(6, _, ids)], we want just the ids
                         field_val = field_val[0][2] if field_val else []
@@ -2109,7 +2134,7 @@ class Form(object):
 
             get_modifier = functools.partial(
                 self._get_modifier,
-                f, modmap=view['modifiers'],
+                f, view=view,
                 vals=modifiers_values or record_values
             )
             descr = fields[f]
@@ -2339,11 +2364,11 @@ class O2MForm(Form):
             if hasattr(vals, '_changed'):
                 self._changed.update(vals._changed)
 
-    def _get_modifier(self, field, modifier, default=False, modmap=None, vals=None):
+    def _get_modifier(self, field, modifier, *, default=False, view=None, modmap=None, vals=None):
         if vals is None:
             vals = {**self._values, '•parent•': self._proxy._parent._values}
 
-        return super()._get_modifier(field, modifier, default=default, modmap=modmap, vals=vals)
+        return super()._get_modifier(field, modifier, default=default, view=view, modmap=modmap, vals=vals)
 
     def _onchange_values(self):
         values = super(O2MForm, self)._onchange_values()

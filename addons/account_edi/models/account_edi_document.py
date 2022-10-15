@@ -151,7 +151,7 @@ class AccountEdiDocument(models.Model):
                 move = document.move_id
                 move_result = edi_result.get(move, {})
                 if move_result.get('success') is True:
-                    old_attachment = document.attachment_id
+                    old_attachment = document.sudo().attachment_id
                     document.write({
                         'state': 'cancelled',
                         'error': False,
@@ -180,7 +180,7 @@ class AccountEdiDocument(models.Model):
 
             # Attachments that are not explicitly linked to a business model could be removed because they are not
             # supposed to have any traceability from the user.
-            attachments_to_unlink.unlink()
+            attachments_to_unlink.sudo().unlink()
 
         documents.edi_format_id.ensure_one()  # All account.edi.document of a job should have the same edi_format_id
         documents.move_id.company_id.ensure_one()  # All account.edi.document of a job should be from the same company
@@ -256,7 +256,7 @@ class AccountEdiDocument(models.Model):
 
         :param job_count: Limit explicitely the number of web service calls. If not provided, process all.
         '''
-        edi_documents = self.search([('state', 'in', ('to_send', 'to_cancel'))])
+        edi_documents = self.search([('state', 'in', ('to_send', 'to_cancel')), ('move_id.state', '=', 'posted')])
         nb_remaining_jobs = edi_documents._process_documents_web_services(job_count=job_count)
 
         # Mark the CRON to be triggered again asap since there is some remaining jobs to process.

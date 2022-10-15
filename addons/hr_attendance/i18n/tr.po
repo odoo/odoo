@@ -7,12 +7,11 @@
 # Martin Trigaux, 2021
 # Levent Karakaş <levent@mektup.at>, 2021
 # Murat Kaplan <muratk@projetgrup.com>, 2021
-# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2021
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2021
 # İlknur Püskül <ilknurpuskull@gmail.com>, 2021
 # Umur Akın <umura@projetgrup.com>, 2021
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
 # abc Def <hdogan1974@gmail.com>, 2021
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -20,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: abc Def <hdogan1974@gmail.com>, 2021\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +31,7 @@ msgstr ""
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 #, python-format
 msgid "\"Check Out\" time cannot be earlier than \"Check In\" time."
-msgstr "\"Check Out\" zamanı \"Check In\" zamanından önce olamaz."
+msgstr "\"Çıkış\" zamanı \"Giriş\" zamanından önce olamaz."
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:0
@@ -60,7 +59,7 @@ msgstr ""
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_kanban
 msgid "<i class=\"fa fa-calendar\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
-msgstr "<i class=\"fa fa-calendar\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
+msgstr "<i class=\"fa fa-calendar\" aria-label=\"Dönem\" role=\"img\" title=\"Dönem\"/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -69,9 +68,9 @@ msgid ""
 "specific.\" role=\"img\" aria-label=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" role=\"img\" aria-label=\"Values set here are company-"
-"specific.\" groups=\"base.group_multi_company\"/>"
+"<span class=\"fa fa-lg fa-building-o\" title=\"Burada belirlenen değerler "
+"şirkete özeldir.\" role=\"img\" aria-label=\"Burada belirlenen değerler "
+"şirkete özeldir.\" groups=\"base.group_multi_company\"/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -106,7 +105,7 @@ msgstr "<span class=\"o_stat_text\">Katıldığı Tarih</span>"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "<span class=\"o_stat_text\">Extra Hours</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Ekstra Saatler</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
@@ -122,8 +121,8 @@ msgid ""
 "title=\"Available\"/>"
 msgstr ""
 "<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle "
-"oe_hr_attendance_status_green\" role=\"img\" aria-label=\"Available\" "
-"title=\"Available\"/>"
+"oe_hr_attendance_status_green\" role=\"img\" aria-label=\"Uygun\" "
+"title=\"Uygun\"/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
@@ -131,13 +130,13 @@ msgid ""
 "<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle oe_hr_attendance_status_orange\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
 "                                    </span>"
 msgstr ""
-"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle oe_hr_attendance_status_orange\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle oe_hr_attendance_status_orange\" role=\"img\" aria-label=\"Uygun Değil\" title=\"Uygun Değil\">\n"
 "                                    </span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "<span> Minutes</span>"
-msgstr ""
+msgstr "<span> Tutanak</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -146,16 +145,19 @@ msgid ""
 "                                    <br/>\n"
 "                                    <br/>"
 msgstr ""
+"<span> Tutanak</span>\n"
+"                                    <br/>\n"
+"                                    <br/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "<span>Time Period </span>"
-msgstr ""
+msgstr "<span>Zaman Aralığı </span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Activate the count of employees' extra hours."
-msgstr ""
+msgstr "Çalışanların ekstra saatlerinin sayısını etkinleştirin."
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
@@ -182,6 +184,8 @@ msgid ""
 "Allow a period of time (around working hours) where extra time will not be "
 "counted, in benefit of the company"
 msgstr ""
+"Şirketin yararına, ekstra sürenin sayılmayacağı bir süre (çalışma saatleri "
+"civarında) izin verin"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -189,18 +193,20 @@ msgid ""
 "Allow a period of time (around working hours) where extra time will not be "
 "deducted, in benefit of the employee"
 msgstr ""
+"Çalışanın yararına, ek sürenin düşülmeyeceği bir süre (çalışma saatleri "
+"civarında) verin"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 msgid "Amount of extra hours"
-msgstr ""
+msgstr "Ekstra saat miktarı"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "An apple a day keeps the doctor away"
-msgstr "Günlük bir elma doktoru uzakta tutar."
+msgstr "Günlük bir elma doktoru uzakta tutar"
 
 #. module: hr_attendance
 #. openerp-web
@@ -226,13 +232,13 @@ msgstr "Devam Analizi"
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_overtime
 msgid "Attendance Overtime"
-msgstr ""
+msgstr "Fazla Mesai Katılıımı"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_report
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_graph
 msgid "Attendance Statistics"
-msgstr ""
+msgstr "Katılım İstatistikleri"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_state
@@ -283,7 +289,7 @@ msgid ""
 "already checked in on %(datetime)s"
 msgstr ""
 "Yeni katılım kaydı %(empl_name)s için oluşturulamaz, personel "
-"%(datetime)starihinde çoktan giriş yapmış."
+"%(datetime)starihinde çoktan giriş yapmış"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:0
@@ -376,7 +382,7 @@ msgstr "Şirket Logosu"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Compare attendance with working hours set on employee."
-msgstr ""
+msgstr "Katılımı çalışana ayarlanan çalışma saatleriyle karşılaştırın."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_config_settings
@@ -392,12 +398,12 @@ msgstr "Yapılandırma"
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__hr_attendance_overtime
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__hr_attendance_overtime
 msgid "Count Extra Hours"
-msgstr ""
+msgstr "Ekstra Saatleri Say"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Count of Extra Hours"
-msgstr ""
+msgstr "Ekstra Saat Sayısı"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -405,6 +411,8 @@ msgid ""
 "Count of extra hours is considered from this date. Potential extra hours "
 "prior to this date are not considered."
 msgstr ""
+"Bu tarihten itibaren fazladan saat sayısı dikkate alınır. Bu tarihten önceki"
+" olası ekstra saatler dikkate alınmaz."
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
@@ -447,7 +455,7 @@ msgstr "Görünüm Adı"
 #, python-format
 msgid "Early to bed and early to rise, makes a man healthy, wealthy and wise"
 msgstr ""
-"Erken yatmak ve erken kalkmak insanı sağlıklı, varlıklı ve akıllı yapar."
+"Erken yatmak ve erken kalkmak insanı sağlıklı, varlıklı ve akıllı yapar"
 
 #. module: hr_attendance
 #. openerp-web
@@ -455,8 +463,8 @@ msgstr ""
 #, python-format
 msgid "Eat breakfast as a king, lunch as a merchant and supper as a beggar"
 msgstr ""
-"Bir kral olarak kahvaltı yapın, bir tüccar olarak öğle yemeği yiyin ve bir "
-"dilenci olarak akşam yemeği yiyin."
+"Bir kral gibi kahvaltı yapın, bir tüccar gibi öğle yemeği yiyin ve bir "
+"dilenci gibi akşam yemeği yiyin"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_employee
@@ -503,30 +511,30 @@ msgstr "Hata: ilgili personel bulunamadı."
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__overtime_hours
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Extra Hours"
-msgstr ""
+msgstr "Ekstra Saatler"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__duration_real
 msgid "Extra Hours (Real)"
-msgstr ""
+msgstr "Ekstra Saat (Gerçek)"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_start_date
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_start_date
 msgid "Extra Hours Starting Date"
-msgstr ""
+msgstr "Ekstra Saat Başlangıç Tarihi"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance_overtime__duration_real
 msgid "Extra-hours including the threshold duration"
-msgstr ""
+msgstr "Eşik süresi dahil olmak üzere ekstra saatler"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "First come, first served"
-msgstr "İlk gelen, ilk hizmet edilen."
+msgstr "İlk gelen, ilk hizmet edilen"
 
 #. module: hr_attendance
 #. openerp-web
@@ -591,14 +599,14 @@ msgstr "Grupla"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
 msgid "HR Attendance Search"
-msgstr ""
+msgstr "İK Katılım Ara"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Have a good afternoon"
-msgstr "İyi günler dilerim."
+msgstr "İyi günler dilerim"
 
 #. module: hr_attendance
 #. openerp-web
@@ -612,14 +620,14 @@ msgstr "İyi günler!"
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Have a good evening"
-msgstr "İyi akşamlar dilerim."
+msgstr "İyi akşamlar dilerim"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Have a nice lunch!"
-msgstr "Öğle yemeğiniz iyi geçsin."
+msgstr "Öğle yemeğiniz iyi geçsin!"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
@@ -648,7 +656,7 @@ msgstr "Bugünkü Saatler"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__worked_hours
 msgid "Hours Worked"
-msgstr ""
+msgstr "Çalışılan Saatler"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -884,7 +892,7 @@ msgid ""
 "him to manage his own attendance."
 msgstr ""
 "Kullanıcı kendi katılımını yönetmek için insan kaynakları katılım menüsüne "
-"erişim kazanacaktır"
+"erişim kazanacaktır."
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_use_pin
@@ -908,21 +916,21 @@ msgstr "Bugünün çalışma saatleri:"
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_company_threshold
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Tolerance Time In Favor Of Company"
-msgstr ""
+msgstr "Tolerans Süresi Şirket Lehine"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_employee_threshold
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_employee_threshold
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Tolerance Time In Favor Of Employee"
-msgstr ""
+msgstr "Tolerans Süresi Çalışan Lehine"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__total_overtime
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__total_overtime
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__total_overtime
 msgid "Total Overtime"
-msgstr ""
+msgstr "Toplam Fazla Mesai"
 
 #. module: hr_attendance
 #. openerp-web
@@ -930,7 +938,7 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Total extra hours:"
-msgstr ""
+msgstr "Toplam ekstra saat:"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -1014,7 +1022,7 @@ msgstr "Bir katılımı çoğaltamazsınız."
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_overview
 msgid "Your attendance records will be displayed here."
-msgstr ""
+msgstr "Katılım kayıtlarınız burada görüntülenecektir."
 
 #. module: hr_attendance
 #. openerp-web
@@ -1037,7 +1045,7 @@ msgstr "çıkış"
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee__attendance_ids
 msgid "list of attendances for the employee"
-msgstr "Personel için katılım listesi"
+msgstr "personel için katılım listesi"
 
 #. module: hr_attendance
 #. openerp-web

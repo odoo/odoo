@@ -4,23 +4,23 @@
 # 
 # Translators:
 # 江口和志 <k_eguchi@enzantrades.co.jp>, 2022
-# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2022
 # Tim Siu Lai <tl@roomsfor.hk>, 2022
 # Martin Trigaux, 2022
 # Yoon Nankyung <nankyung.yoon@pro-spire.co.jp>, 2022
 # Tsuda Ryoko <ryoko04nov@gmail.com>, 2022
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
-# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # Noma Yuki, 2022
+# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2022
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-24 08:20+0000\n"
+"POT-Creation-Date: 2022-05-10 14:27+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2022\n"
+"Last-Translator: Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -236,7 +236,7 @@ msgstr "有効化"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Activate Stripe"
-msgstr ""
+msgstr "ストライプを有効化"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__active
@@ -596,7 +596,7 @@ msgstr "認証情報"
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_stripe
 msgid "Credit & Debit Card"
-msgstr ""
+msgstr "クレジットカード＆デビットカード"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_adyen
@@ -728,7 +728,7 @@ msgstr "Eメール"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Enable credit &amp; debit card payments supported by Stripe"
-msgstr ""
+msgstr "ストライプがサポートするクレジットカードとデビットカード支払を有効化"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__enabled
@@ -994,7 +994,7 @@ msgstr "最終更新日"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__last_state_change
 msgid "Last State Change Date"
-msgstr ""
+msgstr "最終ステータス変更日"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__write_uid
@@ -1026,7 +1026,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_meth_link
 msgid "Manage payment methods"
-msgstr ""
+msgstr "支払方法を管理"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__manual
@@ -1157,7 +1157,7 @@ msgstr "OK"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Online Payments"
-msgstr ""
+msgstr "オンライン支払"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_direct
@@ -1291,7 +1291,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__payment_amount
 msgid "Payment Amount"
-msgstr ""
+msgstr "支払金額"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
@@ -1463,6 +1463,12 @@ msgstr ""
 #: code:addons/payment/wizards/payment_link_wizard.py:0
 #, python-format
 msgid "Please set an amount smaller than %s."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/controllers/portal.py:0
+#, python-format
+msgid "Please switch to company '%s' to make this payment."
 msgstr ""
 
 #. module: payment
@@ -2139,7 +2145,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/post_processing.js:0
 #, python-format
 msgid "We are processing your payment, please wait ..."
-msgstr ""
+msgstr "お支払いを処理しています。少々お待ちください..."
 
 #. module: payment
 #. openerp-web
@@ -2184,6 +2190,12 @@ msgstr ""
 #: code:addons/payment/models/ir_ui_view.py:0
 #, python-format
 msgid "You cannot delete a view that is used by a payment acquirer."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/controllers/portal.py:0
+#, python-format
+msgid "You do not have access to this payment token."
 msgstr ""
 
 #. module: payment

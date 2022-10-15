@@ -3597,5 +3597,78 @@ QUnit.module("Views", (hooks) => {
             },
         });
         checkLabels(assert, graph, ["January 2016", "March 2016", "May 2016", "April 2016"]);
-    })
+    });
+
+    QUnit.test("graph_groupbys should be also used after first load", async function (assert) {
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            groupBy: ["date:quarter"],
+            arch: `<graph/>`,
+            irFilters: [
+                {
+                    user_id: [2, "Mitchell Admin"],
+                    name: "Favorite",
+                    id: 1,
+                    context: `{
+                        "group_by": [],
+                        "graph_measure": "revenue",
+                        "graph_mode": "bar",
+                        "graph_groupbys": ["color_id"],
+                    }`,
+                    sort: "[]",
+                    domain: "",
+                    is_default: false,
+                    model_id: "foo",
+                    action_id: false,
+                },
+            ],
+        });
+
+        checkModeIs(assert, graph, "bar");
+        checkLabels(assert, graph, ["Q1 2016", "Q2 2016", "Undefined"]);
+        checkLegend(assert, graph, "Count");
+
+        await toggleFavoriteMenu(graph);
+        await toggleMenuItem(graph, "Favorite");
+
+        checkModeIs(assert, graph, "bar");
+        checkLabels(assert, graph, ["Undefined", "red"]);
+        checkLegend(assert, graph, "Revenue");
+    });
+
+    QUnit.test("order='desc' on arch", async function (assert) {
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `
+                <graph order="desc">
+                    <field name="date"/>
+                </graph>
+            `,
+        });
+        checkDatasets(assert, graph, ["data", "label"], {
+            data: [2, 2, 2, 1, 1],
+            label: "Count",
+        });
+    });
+
+    QUnit.test("order='asc' on arch", async function (assert) {
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `
+                <graph order="asc">
+                    <field name="date"/>
+                </graph>
+            `,
+        });
+        checkDatasets(assert, graph, ["data", "label"], {
+            data: [1, 1, 2, 2, 2],
+            label: "Count",
+        });
+    });
 });

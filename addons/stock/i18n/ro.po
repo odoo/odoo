@@ -7,7 +7,7 @@
 # Cozmin Candea <office@terrabit.ro>, 2021
 # Foldi Robert <foldirobert@nexterp.ro>, 2021
 # Hongu Cosmin <cosmin513@gmail.com>, 2021
-# Martin Trigaux, 2021
+# Martin Trigaux, 2022
 # Dorin Hongu <dhongu@gmail.com>, 2022
 # 
 msgid ""
@@ -871,12 +871,12 @@ msgstr "Alocare"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__allow_new_product
 msgid "Allow New Product"
-msgstr ""
+msgstr "Permite produs nou"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__mixed
 msgid "Allow mixed products"
-msgstr ""
+msgstr "Permite mixt de produse"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_location_ids
@@ -976,7 +976,10 @@ msgid "As soon as possible"
 msgstr "Cât mai curând posibil"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Assign"
 msgstr "Alocă"
 
@@ -1151,12 +1154,12 @@ msgstr "Scanner de Coduri de bare"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
 msgid "Batch Transfers"
-msgstr "Transferuri lot"
+msgstr "Transferuri în lot"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__reservation_method__by_date
 msgid "Before scheduled date"
-msgstr ""
+msgstr "Înainte de data planificată"
 
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
@@ -1164,6 +1167,8 @@ msgid ""
 "Below text serves as a suggestion and doesn’t engage Odoo S.A. "
 "responsibility."
 msgstr ""
+"Textul de mai jos servește drept sugestie și nu implică responsabilitatea "
+"Odoo S.A."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__block
@@ -1278,12 +1283,12 @@ msgstr "Capacitate"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_form
 msgid "Capacity by Package"
-msgstr ""
+msgstr "Capacitate după pachete"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_form
 msgid "Capacity by Product"
-msgstr ""
+msgstr "Capacitate după produse"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1640,7 +1645,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_draft
 msgid "Count Picking Draft"
-msgstr "Contează proiectul de culegere"
+msgstr "Număr Ridicări Ciornă"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_late
@@ -1938,7 +1943,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move__date
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "Date Scheduled"
-msgstr "Data programată"
+msgstr "Data planificată"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__date_planned
@@ -2634,7 +2639,7 @@ msgstr ""
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Exp %s"
-msgstr "Exp %s"
+msgstr "Estimat %s"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__products_availability_state__expected
@@ -2644,7 +2649,7 @@ msgstr "Estimat"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "Expected Delivery:"
-msgstr ""
+msgstr "Livrare estimată:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_product_expiry
@@ -3121,7 +3126,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__same
 msgid "If all products are same"
-msgstr ""
+msgstr "Dacă toate produsele sunt la fel"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction
@@ -3176,7 +3181,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__empty
 msgid "If the location is empty"
-msgstr ""
+msgstr "Dacă locație este goală."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -3296,6 +3301,12 @@ msgid "Immediate transfer?"
 msgstr "Transfer imediat?"
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Import"
+msgstr "Importă"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
 msgid "In Type"
 msgstr "Tip intrare"
@@ -3325,7 +3336,7 @@ msgstr "Dată intrare"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 msgid "Incoming Draft Transfer"
-msgstr "Transfer de proiect primit"
+msgstr "Transfer de intrare ciornă"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__incoming_move_line_ids
@@ -4257,6 +4268,8 @@ msgid ""
 "Maximum number of days before scheduled date that priority picking products "
 "should be reserved."
 msgstr ""
+"Numărul maxim de zile înainte de data planificată în care ar trebui "
+"rezervate produsele transferate cu prioritate."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__reservation_days_before
@@ -4264,8 +4277,8 @@ msgid ""
 "Maximum number of days before scheduled date that products should be "
 "reserved."
 msgstr ""
-"Numărul maxim de zile înainte de data programată în care produsele ar trebui"
-" rezervate."
+"Numărul maxim de zile înainte de data planificată în care produsele ar "
+"trebui rezervate."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__max_weight
@@ -4617,6 +4630,12 @@ msgid "No stock move found"
 msgstr "Nu a fost găsită nicio mișcare de stoc"
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "No Stock On Hand"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_form
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_all
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_backorder
@@ -4964,7 +4983,7 @@ msgstr "Ieșiri"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 msgid "Outgoing Draft Transfer"
-msgstr "Transfer de proiect de ieșire"
+msgstr "Transfer de ieșire ciornă "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__outgoing_move_line_ids
@@ -5126,7 +5145,7 @@ msgstr "Tip pachet"
 #: model:ir.ui.menu,name:stock.menu_packaging_types
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_tree
 msgid "Package Types"
-msgstr ""
+msgstr "Tipuri de pachete"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__package_use
@@ -5136,7 +5155,7 @@ msgstr "Utilizare Pachet"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "Package type"
-msgstr ""
+msgstr "Tip pachet"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -5306,6 +5325,8 @@ msgstr "Probleme de planificare"
 #, python-format
 msgid "Please add 'Done' quantities to the picking to create a new pack."
 msgstr ""
+"Vă rugăm să adăugați cantitățile în câmpul  „Efectuat” din transfer pentru a"
+" crea un nou pachet."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -5346,6 +5367,14 @@ msgstr "Rute preferate"
 #: model:ir.model.fields,help:stock.field_stock_move__route_ids
 msgid "Preferred route"
 msgstr "Fișă tehnologică preferată"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"Press the CREATE button to define quantity for each product in your stock or"
+" import them from a spreadsheet throughout Favorites"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -6291,7 +6320,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Reserve before scheduled date"
-msgstr ""
+msgstr "Rezervă înainte de data planificată"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__product_uom_qty
@@ -6527,7 +6556,7 @@ msgstr "Eroare livrare SMS"
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
 msgid "STANDARD TERMS AND CONDITIONS OF SALE"
-msgstr ""
+msgstr "TERMENI ȘI CONDIȚII STANDARD DE VÂNZARE"
 
 #. module: stock
 #. openerp-web
@@ -6821,7 +6850,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Set quantities"
-msgstr ""
+msgstr "Setați cantități"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
@@ -7095,7 +7124,7 @@ msgstr "Cu steluță"
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__state
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_view_search
 msgid "State"
-msgstr "Județ"
+msgstr "Stare"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__state
@@ -7338,7 +7367,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_storage_categoty_capacity_config
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_capacity_tree
 msgid "Storage Category Capacity"
-msgstr ""
+msgstr "Capacitate Categorie Stocare"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_multi_locations
@@ -7358,7 +7387,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_out_id
 msgid "Store to sublocation"
-msgstr ""
+msgstr "Stocare în sublocația"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__supplied_wh_id
@@ -7526,6 +7555,9 @@ msgid ""
 "\n"
 "Is this expected? For example this can occur if a delivery operation is validated before its corresponding receipt operation is validated. In this case the issue will be solved automatically once all steps are completed. Otherwise, the serial number should be corrected to prevent inconsistent data."
 msgstr ""
+"Numărul de serie (%s) este deja folosit în aceste locații:%s .\n"
+"\n"
+"Este de așteptat acest lucru? De exemplu, acest lucru se poate întâmpla dacă o operațiune de livrare este validată înainte ca operațiunea de primire corespunzătoare să fie validată. În acest caz, problema va fi rezolvată automat odată ce toți pașii sunt finalizați. În caz contrar, numărul de serie ar trebui corectat pentru a preveni datele inconsecvente."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -7589,6 +7621,8 @@ msgid ""
 "The expected date of the created transfer will be computed based on this "
 "lead time."
 msgstr ""
+"Data estimată a transferului creat va fi calculată pe baza acestui termen de"
+" livrare."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__sequence
@@ -7621,8 +7655,8 @@ msgstr "Denumirea depozitului trebuie să fie unică pentru fiecare companie!"
 #. module: stock
 #: code:addons/stock/wizard/stock_assign_serial_numbers.py:0
 #, python-format
-msgid "The number of Serial Numbers to generate must greater than zero."
-msgstr "Numărul de numere seriale de generat trebuie să fie mai mare de zero."
+msgid "The number of Serial Numbers to generate must be greater than zero."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -7768,6 +7802,14 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
 msgid "There's no product move yet"
 msgstr "Momentan nu există mișcă de produse"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"This analysis gives you an overview of the current stock level of your "
+"products."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__name
@@ -8261,7 +8303,10 @@ msgid "USPS Connector"
 msgstr "Conector USPS"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Unassign"
 msgstr ""
 
@@ -9263,6 +9308,12 @@ msgstr ""
 "Veți găsi aici propuneri inteligente de reaprovizionare bazate pe prognozele de inventar.\n"
 "            Alegeți cantitatea de cumpărat sau de fabricat și lansați comenzile printr-un clic.\n"
 "            Pentru a economisi timp în viitor, setați regulile ca \"automated\"."
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Your stock is currently empty"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__print_format__zpl

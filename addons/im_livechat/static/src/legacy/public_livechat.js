@@ -221,6 +221,15 @@ var LivechatButton = Widget.extend({
                 this._renderMessages();
                 return;
             }
+            case 'mail.message/insert': {
+                const message = this._messages.find(message => message._id === payload.id);
+                if (!message) {
+                    return;
+                }
+                message._body = utils.Markup(payload.body);
+                this._renderMessages()
+                return;
+            }
         }
     },
     /**
@@ -701,7 +710,8 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
      * @returns {im_livechat.legacy.im_livechat.model.WebsiteLivechatMessage[]}
      */
     getMessages: function () {
-        return this._messages;
+        // ignore removed messages
+        return this._messages.filter(message => !message.isEmpty());
     },
     /**
      * @returns {Array}
@@ -2997,7 +3007,7 @@ var ThreadWidget = Widget.extend({
         this._currentThreadID = thread.getID();
 
         // copy so that reverse do not alter order in the thread object
-        var messages = _.clone(thread.getMessages({ domain: options.domain || [] }));
+        var messages = _.clone(thread.getMessages());
 
         var modeOptions = options.isCreateMode ? this._disabledOptions :
                                                     this._enabledOptions;

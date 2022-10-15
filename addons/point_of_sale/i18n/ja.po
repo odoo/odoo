@@ -4,18 +4,19 @@
 # 
 # Translators:
 # Tack Yabe <yabe@quartile.co>, 2022
-# Ryoko Tsuda <ryoko@quartile.co>, 2022
 # Shigekazu N. <shigekazu.noka@gmail.com>, 2022
 # Shunho Kin <s-kin@shonan-innovation.co.jp>, 2022
 # Hau Dao <hau@quartile.co>, 2022
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2022
 # Tsuda Ryoko <ryoko04nov@gmail.com>, 2022
 # NANIWA Masahiro <naniwa.masahiro@gmail.com>, 2022
 # Tim Siu Lai <tl@roomsfor.hk>, 2022
 # Noma Yuki, 2022
 # Martin Trigaux, 2022
-# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
+# 江口和志 <sandwhale1010@gmail.com>, 2022
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
+# Ryoko Tsuda <ryoko@quartile.co>, 2022
 # 
 msgid ""
 msgstr ""
@@ -23,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-10 07:16+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -408,7 +409,7 @@ msgstr "チップ追加"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Add a custom message to header and footer"
-msgstr "ヘッダーとフッターにカスタムメッセージを追加する"
+msgstr "ヘッダとフッタにカスタムメッセージを追加する"
 
 #. module: point_of_sale
 #. openerp-web
@@ -426,7 +427,7 @@ msgstr "新しい支払い方法を追加する"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Add notes on order lines to be printed on receipt and invoice"
-msgstr ""
+msgstr "領収書や請求書に印刷される注文行のメモの追加"
 
 #. module: point_of_sale
 #. openerp-web
@@ -514,7 +515,7 @@ msgstr ""
 msgid ""
 "Allow to write notes for customer on Orderlines. This will be shown in the "
 "receipt."
-msgstr ""
+msgstr "オーダ明細への顧客ノート入力を許可"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__allowed_pricelist_ids
@@ -606,7 +607,7 @@ msgstr "なるべく早く"
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_update_stock_quantities__closing
 msgid "At the session closing (recommended)"
-msgstr ""
+msgstr "セッション終了時（推奨）"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_update_stock_quantities
@@ -910,7 +911,7 @@ msgstr "キャッシュボックスの出金"
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMovePopup.xml:0
 #, python-format
 msgid "Cash In"
-msgstr ""
+msgstr "入金"
 
 #. module: point_of_sale
 #. openerp-web
@@ -930,7 +931,7 @@ msgstr "現金仕訳帳"
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMovePopup.xml:0
 #, python-format
 msgid "Cash Out"
-msgstr ""
+msgstr "出金"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_id
@@ -1118,7 +1119,7 @@ msgstr "市区町村"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Click here to close the session"
-msgstr ""
+msgstr "セッションを終了するにはここをクリックしてください"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__barcode_rule__type__client
@@ -1235,7 +1236,7 @@ msgstr "硬貨/紙幣"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #, python-format
 msgid "Coins/Bills"
-msgstr ""
+msgstr "硬貨/紙幣"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -1403,12 +1404,12 @@ msgstr "連絡先"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 #, python-format
 msgid "Continue Selling"
-msgstr "セッションに戻る"
+msgstr "販売継続"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Continue selling"
-msgstr ""
+msgstr "販売継続"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__currency_rate
@@ -1601,7 +1602,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_orderline_customer_notes
 msgid "Customer Notes"
-msgstr ""
+msgstr "顧客ノート"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1670,7 +1671,7 @@ msgstr "デフォルト会計ポジション"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Default Intermediary Account"
-msgstr ""
+msgstr "デフォルトの中間勘定科目"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pricelist_id
@@ -2293,12 +2294,12 @@ msgstr "オーダー参照の生成"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_gift_card
 msgid "Gift Cards"
-msgstr ""
+msgstr "ギフトカード"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Gift card"
-msgstr ""
+msgstr "ギフトカード"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2376,7 +2377,7 @@ msgstr "現金管理あり"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "メッセージあり"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__has_refundable_lines
@@ -2391,7 +2392,7 @@ msgstr "ヘッダ"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_header_or_footer
 msgid "Header & Footer"
-msgstr "ヘッダーとフッター"
+msgstr "ヘッダとフッタ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__hide_use_payment_terminal
@@ -2411,7 +2412,7 @@ msgstr "ホーム"
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/ReceiptScreen.xml:0
 #, python-format
 msgid "How would you like to receive your receipt"
-msgstr ""
+msgstr "領収書の受取方法を教えてください"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__id
@@ -2455,7 +2456,7 @@ msgstr "例外的なアクティビティを示唆するアイコン"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__split_transactions
 msgid "Identify Customer"
-msgstr ""
+msgstr "顧客を特定"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_needaction
@@ -2911,7 +2912,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__limited_partners_loading
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Limited Partners Loading"
-msgstr ""
+msgstr "パートナーのロード数を制限"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__limited_products_loading
@@ -2926,7 +2927,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Limited Products Loading"
-msgstr ""
+msgstr "プロダクトのロードを制限"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__name
@@ -3056,12 +3057,12 @@ msgstr "IoT Boxv18.12以降を使用していることを確認してくださ�
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Manage gift card"
-msgstr ""
+msgstr "ギフトカードを管理"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Manage gift card."
-msgstr ""
+msgstr "ギフトカードを管理。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3118,7 +3119,7 @@ msgstr "メッセージ"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__name
 msgid "Method"
-msgstr "償却方法"
+msgstr "支払方法"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_miscellaneous
@@ -3151,7 +3152,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 msgid "My Sessions"
-msgstr "私のセッション"
+msgstr "自分のセッション"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3253,6 +3254,7 @@ msgstr "次の注文リスト"
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Chrome.js:0
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "No"
 msgstr "いいえ"
@@ -3407,7 +3409,7 @@ msgstr "未読メッセージ件数"
 #: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
 #, python-format
 msgid "OPENING CASH CONTROL"
-msgstr ""
+msgstr "開始現金管理"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3474,12 +3476,12 @@ msgstr "現金にのみ丸めを適用する"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Only load a limited number of customers at the opening of the PoS."
-msgstr ""
+msgstr "PoSセッション開始時にロードする顧客の数を制限する"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Only load most common products at the opening of the PoS."
-msgstr ""
+msgstr "PoS開始時にもっとも人気のプロダクトのみをロードする"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3492,7 +3494,7 @@ msgstr "現金方式のみ"
 msgid ""
 "Only users with Manager access rights for PoS app can modify the product "
 "prices on orders."
-msgstr "PoSアプリのマネージャーアクセス権を持つユーザーのみが、注文の製品価格を変更できます。"
+msgstr "PoSアプリのマネージャーアクセス権を持つユーザのみが、注文の製品価格を変更できます。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3529,7 +3531,7 @@ msgstr "セッション開始"
 #: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
 #, python-format
 msgid "Open session"
-msgstr ""
+msgstr "セッション開始"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3585,7 +3587,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
 #, python-format
 msgid "Opening cash"
-msgstr ""
+msgstr "開始現金"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.account_cashbox_line_action
@@ -3786,7 +3788,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_search_view_pos
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_tree_view
 msgid "POS Product Category"
-msgstr ""
+msgstr "POS製品カテゴリ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__kpi_pos_total
@@ -4296,7 +4298,7 @@ msgstr "Pos Config"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users__pos_order_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_picking__pos_order_id
 msgid "Pos Order"
-msgstr "POSオーダー"
+msgstr "POSオーダ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__pos_order_count
@@ -5106,7 +5108,7 @@ msgstr "注文を選択してください"
 #: code:addons/point_of_sale/static/src/js/Popups/CashMovePopup.js:0
 #, python-format
 msgid "Select either Cash In or Cash Out before confirming."
-msgstr ""
+msgstr "確認の前に入金または出金を選択してください。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -5142,7 +5144,7 @@ msgstr "選択可能なカテゴリ"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Sell products and deliver them later."
-msgstr ""
+msgstr "プロダクトを販売し、後日配送する。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5266,7 +5268,7 @@ msgstr "顧客を選択"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__set_maximum_difference
 msgid "Set Maximum Difference"
-msgstr ""
+msgstr "最大差額を設定"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5280,14 +5282,14 @@ msgstr "重量を設定する"
 msgid ""
 "Set a maximum difference allowed between the expected and counted money "
 "during the closing of the session"
-msgstr ""
+msgstr "セッション終了時の計算上の金額と実際の金額の最大許容差額を設定"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__set_maximum_difference
 msgid ""
 "Set a maximum difference allowed between the expected and counted money "
 "during the closing of the session."
-msgstr ""
+msgstr "セッション終了時の計算上の金額と実際の金額の最大許容差額を設定。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5305,7 +5307,7 @@ msgstr "プロダクトに複数の価格や自動値引等を設定"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Set of coins/bills that will be used in opening and closing control"
-msgstr ""
+msgstr "開始または終了管理において使用される硬貨/紙幣のセット"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -5333,7 +5335,7 @@ msgstr "管理設定"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #, python-format
 msgid "Ship Later"
-msgstr ""
+msgstr "後日配送"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__picking_policy
@@ -5357,7 +5359,7 @@ msgstr "ショッピングカート"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Show checkout to customers through a second display"
-msgstr ""
+msgstr "別のディスプレイで顧客にお勘定を見せる"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_customer_facing_display_via_proxy
@@ -5420,6 +5422,13 @@ msgstr "小さな棚"
 msgid ""
 "Some Cash Registers are already posted. Please reset them to new in order to close the session.\n"
 "Cash Registers: %r"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
+#, python-format
+msgid "Some Serial/Lot Numbers are missing"
 msgstr ""
 
 #. module: point_of_sale
@@ -5727,7 +5736,7 @@ msgstr ""
 msgid ""
 "The Point of Sale only supports the \"add a rounding line\" rounding "
 "strategy."
-msgstr "POSは、'丸め線の追加'丸め戦略のみをサポートします。"
+msgstr "POSは、'丸め行の追加'丸め戦略のみをサポートします。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -6059,7 +6068,7 @@ msgstr ""
 msgid ""
 "This account is used as intermediary account when nothing is set in a "
 "payment method."
-msgstr ""
+msgstr "この勘定科目は支払方法に何も設定されていない時に中間勘定科目として使われます。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__amount_authorized_diff
@@ -6360,7 +6369,7 @@ msgstr "終了現金管理ラインの合計"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_balance_start
 msgid "Total of opening cash control lines."
-msgstr "開始現金管理ラインの合計"
+msgstr "開始現金管理明細の合計"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_line
@@ -6703,7 +6712,9 @@ msgstr "デモデータをロードしますか?"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/models/pos_config.py:0
 #: code:addons/point_of_sale/static/src/js/Chrome.js:0
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "Yes"
 msgstr "はい"
@@ -6722,6 +6733,15 @@ msgstr "それを使用するPOSセッションがすでに開かれている間
 #, python-format
 msgid "You are not allowed to change this quantity"
 msgstr "この数量を変更することはできません"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
+#, python-format
+msgid ""
+"You are trying to sell products with serial/lot numbers, but some of them are not set.\n"
+"Would you like to proceed anyway?"
+msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_bank_statement.py:0
@@ -6971,7 +6991,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #, python-format
 msgid "orders"
-msgstr "オーダー"
+msgstr "オーダ"
 
 #. module: point_of_sale
 #. openerp-web

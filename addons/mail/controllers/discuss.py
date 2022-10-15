@@ -8,7 +8,7 @@ from psycopg2 import IntegrityError
 from psycopg2.errorcodes import UNIQUE_VIOLATION
 
 from odoo import http
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 from odoo.http import request
 from odoo.tools import consteq, file_open
 from odoo.tools.misc import get_lang
@@ -207,6 +207,9 @@ class DiscussController(http.Controller):
     # Thread API (channel/chatter common)
     # --------------------------------------------------------------------------
 
+    def _get_allowed_message_post_params(self):
+        return {'attachment_ids', 'body', 'message_type', 'partner_ids', 'subtype_xmlid', 'parent_id'}
+
     @http.route('/mail/message/post', methods=['POST'], type='json', auth='public')
     def mail_message_post(self, thread_model, thread_id, post_data, **kwargs):
         if thread_model == 'mail.channel':
@@ -214,14 +217,13 @@ class DiscussController(http.Controller):
             thread = channel_partner_sudo.channel_id
         else:
             thread = request.env[thread_model].browse(int(thread_id)).exists()
-        allowed_params = {'attachment_ids', 'body', 'message_type', 'partner_ids', 'subtype_xmlid', 'parent_id'}
-        return thread.message_post(**{key: value for key, value in post_data.items() if key in allowed_params}).message_format()[0]
+        return thread.message_post(**{key: value for key, value in post_data.items() if key in self._get_allowed_message_post_params()}).message_format()[0]
 
     @http.route('/mail/message/update_content', methods=['POST'], type='json', auth='public')
     def mail_message_update_content(self, message_id, body, attachment_ids):
         guest = request.env['mail.guest']._get_guest_from_request(request)
         message_sudo = guest.env['mail.message'].browse(message_id).sudo().exists()
-        if not message_sudo.is_current_user_or_guest_author and not guest.env.user.has_group('base.group_system'):
+        if not message_sudo.is_current_user_or_guest_author and not guest.env.user._is_admin():
             raise NotFound()
         message_sudo._update_content(body=body, attachment_ids=attachment_ids)
         return {
@@ -251,17 +253,20 @@ class DiscussController(http.Controller):
         if channel_partner.env.user.share:
             # Only generate the access token if absolutely necessary (= not for internal user).
             vals['access_token'] = channel_partner.env['ir.attachment']._generate_access_token()
-        attachment = channel_partner.env['ir.attachment'].create(vals)
-        attachment._post_add_create()
-        attachmentData = {
-            'filename': ufile.filename,
-            'id': attachment.id,
-            'mimetype': attachment.mimetype,
-            'name': attachment.name,
-            'size': attachment.file_size
-        }
-        if attachment.access_token:
-            attachmentData['accessToken'] = attachment.access_token
+        try:
+            attachment = channel_partner.env['ir.attachment'].create(vals)
+            attachment._post_add_create()
+            attachmentData = {
+                'filename': ufile.filename,
+                'id': attachment.id,
+                'mimetype': attachment.mimetype,
+                'name': attachment.name,
+                'size': attachment.file_size
+            }
+            if attachment.access_token:
+                attachmentData['accessToken'] = attachment.access_token
+        except AccessError:
+            attachmentData = {'error': _("You are not allowed to upload an attachment here.")}
         return request.make_response(
             data=json.dumps(attachmentData),
             headers=[('Content-Type', 'application/json')]

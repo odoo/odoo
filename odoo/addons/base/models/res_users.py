@@ -226,7 +226,6 @@ class Groups(models.Model):
         # DLE P139
         if self.ids:
             self.env['ir.model.access'].call_cache_clearing_methods()
-            self.env['res.users'].has_group.clear_cache(self.env['res.users'])
         return super(Groups, self).write(vals)
 
 
@@ -448,8 +447,9 @@ class Users(models.Model):
 
     def _read(self, fields):
         super(Users, self)._read(fields)
-        canwrite = self.check_access_rights('write', raise_exception=False)
-        if not canwrite and set(USER_PRIVATE_FIELDS).intersection(fields):
+        if set(USER_PRIVATE_FIELDS).intersection(fields):
+            if self.check_access_rights('write', raise_exception=False):
+                return
             for record in self:
                 for f in USER_PRIVATE_FIELDS:
                     try:
@@ -817,8 +817,10 @@ class Users(models.Model):
     def has_group(self, group_ext_id):
         # use singleton's id if called on a non-empty recordset, otherwise
         # context uid
-        uid = self.id or self._uid
-        return self.with_user(uid)._has_group(group_ext_id)
+        uid = self.id
+        if uid and uid != self._uid:
+            self = self.with_user(uid)
+        return self._has_group(group_ext_id)
 
     @api.model
     @tools.ormcache('self._uid', 'group_ext_id')
@@ -837,8 +839,6 @@ class Users(models.Model):
                             (SELECT res_id FROM ir_model_data WHERE module=%s AND name=%s)""",
                          (self._uid, module, ext_id))
         return bool(self._cr.fetchone())
-    # for a few places explicitly clearing the has_group cache
-    has_group.clear_cache = _has_group.clear_cache
 
     def _action_show(self):
         """If self is a singleton, directly access the form view. If it is a recordset, open a tree view"""
@@ -1099,16 +1099,18 @@ class GroupsImplied(models.Model):
         """ Add the given group to the groups implied by the current group
         :param implied_group: the implied group to add
         """
-        if implied_group not in self.implied_ids:
-            self.write({'implied_ids': [Command.link(implied_group.id)]})
+        groups = self.filtered(lambda g: implied_group not in g.implied_ids)
+        groups.write({'implied_ids': [Command.link(implied_group.id)]})
 
     def _remove_group(self, implied_group):
         """ Remove the given group from the implied groups of the current group
         :param implied_group: the implied group to remove
         """
-        if implied_group in self.implied_ids:
-            self.write({'implied_ids': [Command.unlink(implied_group.id)]})
-            implied_group.write({'users': [Command.unlink(user.id) for user in self.users]})
+        groups = self.filtered(lambda g: implied_group in g.implied_ids)
+        if groups:
+            groups.write({'implied_ids': [Command.unlink(implied_group.id)]})
+            if groups.users:
+                implied_group.write({'users': [Command.unlink(user.id) for user in groups.users]})
 
 class UsersImplied(models.Model):
     _inherit = 'res.users'

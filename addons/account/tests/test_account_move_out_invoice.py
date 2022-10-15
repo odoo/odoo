@@ -3060,7 +3060,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         })
 
         self.assertEqual(len(invoice.invoice_line_ids), 1)
-        self.assertEqual(len(invoice.line_ids), 3)
+        self.assertEqual(len(invoice.line_ids), 2)
 
     def test_out_invoice_recomputation_receivable_lines(self):
         ''' Test a tricky specific case caused by some framework limitations. Indeed, when
@@ -3309,6 +3309,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'company_id': self.company_data['company'].id,
         })
         self.env.company.account_cash_basis_base_account_id = tax_base_amount_account
+        self.env.company.tax_exigibility = True
         tax_tags = defaultdict(dict)
         for line_type, repartition_type in [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]:
             tax_tags[line_type][repartition_type] = self.env['account.account.tag'].create({
@@ -3416,3 +3417,36 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'credit': value['debit'],
             })
         self.assertRecordValues(reversed_caba_move.line_ids, expected_values)
+
+    @freeze_time('2019-01-01')
+    def test_out_invoice_duplicate_currency_rate(self):
+        ''' Test the correct update of currency rate on invoice duplication'''
+        move_form = Form(self.invoice)
+        move_form.date = '2016-01-01'
+        move_form.currency_id = self.currency_data['currency']
+        move_form.save()
+
+        self.invoice.action_post()
+
+        # === Duplicate invoice. The currency conversion's rate should change to match today rate ===
+
+        copy = self.invoice.copy()
+        copy.action_post()
+
+        self.assertRecordValues(
+            copy.line_ids.filtered(lambda l: not l.exclude_from_invoice_tab),
+            [
+                {
+                    'currency_id': self.currency_data['currency'].id,
+                    'amount_currency': -1000.0,
+                    'debit': 0.0,
+                    'credit': 500.0,
+                },
+                {
+                    'currency_id': self.currency_data['currency'].id,
+                    'amount_currency': -200.0,
+                    'debit': 0.0,
+                    'credit': 100.0,
+                },
+            ],
+        )

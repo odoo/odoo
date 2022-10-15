@@ -6,7 +6,7 @@
             <field name="model">mail.compose.message</field>
             <field name="groups_id" eval="[Command.link(ref('base.group_user'))]"/>
             <field name="arch" type="xml">
-                <form string="Compose Email">
+                <form string="Compose Email" class="o_mail_composer_form">
                     <group>
                         <!-- truly invisible fields for control and options -->
                         <field name="composition_mode" invisible="1"/>
@@ -79,8 +79,9 @@
                         <button string="Send" attrs="{'invisible': [('is_log', '=', True)]}" name="action_send_mail" type="object" class="btn-primary o_mail_send" data-hotkey="q"/>
                         <button string="Log" attrs="{'invisible': [('is_log', '=', False)]}" name="action_send_mail" type="object" class="btn-primary" data-hotkey="q"/>
                         <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
-                        <button icon="fa-lg fa-save" type="object" groups="mail.group_mail_template_editor"
+                        <button icon="fa-lg fa-save" type="object"
                                 name="action_save_as_template" string="Save as new template"
+                                attrs="{'invisible': [('can_edit_body', '=', False)]}"
                                 class="float-right btn-secondary" help="Save as a new template"/>
                     </footer>
                 </form>

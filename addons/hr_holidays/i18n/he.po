@@ -9,15 +9,17 @@
 # Leandro Noijovich <eliel.sorcerer@gmail.com>, 2021
 # ilan kl <ilan@qaroads.co.il>, 2021
 # שהאב חוסיין <shhab89@gmail.com>, 2021
-# hed shefetr <hed@laylinetech.com>, 2021
+# hed shefer <hed@laylinetech.com>, 2021
 # דודי מלכה <Dudimalka6@gmail.com>, 2021
 # Ofir Blum <ofir.blum@gmail.com>, 2021
 # Martin Trigaux, 2021
 # Yihya Hugirat <hugirat@gmail.com>, 2021
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2021
 # Lilach Gilliam <lilach@apprcase.com>, 2021
-# Lilach Gilliam <lilach.gilliam@gmail.com>, 2021
 # Jonathan Spier, 2021
+# Sagi Ahiel, 2022
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
+# Netta Waizer, 2022
 # 
 msgid ""
 msgstr ""
@@ -25,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Jonathan Spier, 2021\n"
+"Last-Translator: Netta Waizer, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -164,7 +166,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "&gt;"
-msgstr ""
+msgstr "&gt;"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -646,7 +648,7 @@ msgstr "<strong>מחלקות ועובדים</strong>"
 msgid ""
 "A great way to keep track on employee’s PTOs, sick days, and approval "
 "status."
-msgstr ""
+msgstr "דרך מצוינת לעקוב אחר החופשה בתשלום של העובד, ימי מחלה וסטטוס האישור."
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_my
@@ -869,7 +871,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_date_from_period__pm
 msgid "Afternoon"
-msgstr "צהריים"
+msgstr "אחה\"צ"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_allocation_action_all
@@ -880,7 +882,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_dashboard
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_action_approve_department
 msgid "All Time Off"
-msgstr ""
+msgstr "כל החופש"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__duration_display
@@ -1771,7 +1773,7 @@ msgstr "פונט מדהים למשל עבור משימות fa-tasks"
 #: code:addons/hr_holidays/report/holidays_summary_report.py:0
 #, python-format
 msgid "Form content is missing, this report cannot be printed."
-msgstr ""
+msgstr "תוכן הטופס חסר, לא ניתן להדפיס דוח זה."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__frequency
@@ -2303,7 +2305,7 @@ msgstr "מאי"
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_action_approve_department
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_holiday_allocation_id
 msgid "Meet the time off dashboard."
-msgstr ""
+msgstr "הכירו את לוח המחוונים לחופשות."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__meeting_id
@@ -3273,6 +3275,8 @@ msgid ""
 "to the days allocated to the employee. If you need to change the "
 "configuration of the allocation, cancel and create a new one."
 msgstr ""
+"הקצאה זו כבר רצה פעם אחת, כל שינוי לא ייכנס לתוקף לימים שהוקצו לעובד. אם אתה"
+" צריך לשנות את אופן ההקצאה, בטל וצור אחת חדשה."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
@@ -3910,6 +3914,13 @@ msgid "You cannot delete an allocation request which is in %s state."
 msgstr ""
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid ""
+"You cannot delete an allocation request which has some validated leaves."
+msgstr ""
+
+#. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid ""
@@ -3928,6 +3939,20 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid ""
+"You have several allocations for those type and period.\n"
+"Please split your request to fit in their number of days."
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "You must be %s\\'s Manager to approve this leave"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
 "You must be either %s's manager or Time off Manager to approve this leave"
 msgstr ""
 
@@ -3939,6 +3964,8 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_added_value_greater_than_zero
 msgid "You must give a rate greater than 0 in accrual plan levels."
 msgstr ""

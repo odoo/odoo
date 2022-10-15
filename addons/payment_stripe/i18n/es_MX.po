@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Braulio D. López Vázquez <bdl@odoo.com>, 2021
-# Lucia Pacheco <lpo@odoo.com>, 2021
 # Martin Trigaux, 2022
 # Randall Castro, 2022
+# Lucia Pacheco <lpo@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -14,13 +14,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-22 14:45+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Randall Castro, 2022\n"
+"Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
@@ -36,7 +36,7 @@ msgstr "No se ha podido establecer la conexión con la API."
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
 msgid "Generate your webhook"
-msgstr "Genera tu webhook"
+msgstr "Genere su webhook"
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
@@ -197,7 +197,7 @@ msgstr "Secreto de webhook"
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid "You Stripe Webhook was successfully set up!"
-msgstr "¡Tu webhook con Stripe se configuró correctamente!"
+msgstr "¡Se configuró con éxito su webhook de Stripe!"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
@@ -205,8 +205,8 @@ msgstr "¡Tu webhook con Stripe se configuró correctamente!"
 msgid ""
 "You cannot create a Stripe Webhook if your Stripe Secret Key is not set."
 msgstr ""
-"No puede crear un webhook de Stripe si su clave secreta de Stripe no está "
-"configurada."
+"No puede crear un webhook de Stripe si no ha establecido su clave secreta de"
+" Stripe."
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
@@ -222,4 +222,4 @@ msgstr ""
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid "Your Stripe Webhook is already set up."
-msgstr "Tu webhook de Stripe ya está configurado."
+msgstr "Se configuró su webhook de Stripe."

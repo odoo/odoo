@@ -5,6 +5,7 @@ import {
     afterEach,
     afterNextRender,
     beforeEach,
+    isScrolledToBottom,
     nextAnimationFrame,
     start,
 } from '@mail/utils/test_utils';
@@ -1018,7 +1019,7 @@ QUnit.test('chat window: scroll conservation on toggle discuss', async function 
                 thread &&
                 thread.model === 'mail.channel' &&
                 thread.id === 20 &&
-                scrollTop === messageList.scrollHeight - messageList.clientHeight
+                isScrolledToBottom(messageList)
             );
         },
     });
@@ -1792,7 +1793,7 @@ QUnit.test('chat window with a thread: keep scroll position in message list on f
                 thread &&
                 thread.model === 'mail.channel' &&
                 thread.id === 20 &&
-                scrollTop === messageList.scrollHeight - messageList.clientHeight
+                isScrolledToBottom(messageList)
             );
         },
     });
@@ -1879,9 +1880,8 @@ QUnit.test('chat window should scroll to the newly posted message just after pos
         )
     );
     const messageList = document.querySelector('.o_MessageList');
-    assert.strictEqual(
-        messageList.scrollHeight - messageList.scrollTop,
-        messageList.clientHeight,
+    assert.ok(
+        isScrolledToBottom(messageList),
         "chat window should scroll to the newly posted message just after posting it"
     );
 });
@@ -1948,7 +1948,7 @@ QUnit.test('chat window with a thread: keep scroll position in message list on t
                 thread &&
                 thread.model === 'mail.channel' &&
                 thread.id === 20 &&
-                scrollTop === messageList.scrollHeight - messageList.clientHeight
+                isScrolledToBottom(messageList)
             );
         },
     });
@@ -2019,7 +2019,7 @@ QUnit.test('chat window with a thread: keep scroll position in message list on t
                 thread &&
                 thread.model === 'mail.channel' &&
                 thread.id === 20 &&
-                scrollTop === messageList.scrollHeight - messageList.clientHeight
+                isScrolledToBottom(messageList)
             );
         },
     });
@@ -2466,6 +2466,126 @@ QUnit.test('chat window should remain folded when new message is received', asyn
         "chat window should remain folded"
     );
 });
+
+QUnit.skip('chat window scroll position should remain the same after switching previous', async function (assert) {
+    assert.expect(2);
+
+    this.data['mail.channel'].records.push({
+        id: 20,
+        is_minimized: true,
+        state: 'open',
+    });
+    this.data['mail.channel'].records.push({
+        id: 21,
+        is_minimized: true,
+        state: 'open',
+    });
+    for (let i = 0; i < 10; i++) {
+        this.data['mail.message'].records.push({
+            body: "not empty",
+            model: 'mail.channel',
+            res_id: 20,
+        });
+    }
+    for (let i = 0; i < 10; i++) {
+        this.data['mail.message'].records.push({
+            body: "not empty",
+            model: 'mail.channel',
+            res_id: 21,
+        });
+    }
+    const { afterEvent } = await this.start();
+
+    const thread1LocalId = this.messaging.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    }).localId;
+    const thread2LocalId = this.messaging.models['mail.thread'].findFromIdentifyingData({
+        id: 21,
+        model: 'mail.channel',
+    }).localId;
+    document.querySelector(`.o_ChatWindow[data-thread-local-id="${thread1LocalId}"] .o_ThreadView_messageList`).scrollTop = 100;
+    document.querySelector(`.o_ChatWindow[data-thread-local-id="${thread2LocalId}"] .o_ThreadView_messageList`).scrollTop = 110;
+
+    await afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: () => document.querySelector('.o_ChatWindowHeader_commandShiftPrev').click(),
+        message: "Should wait until the scroll is adjusted after a command shift.",
+        predicate: ({ hint }) => {
+            return hint.type === 'adjust-scroll';
+        },
+    });
+    assert.strictEqual(
+        document.querySelector(`.o_ChatWindow[data-thread-local-id="${thread2LocalId}"] .o_ThreadView_messageList`).scrollTop,
+        110,
+        "Scroll position should remain the same after a chat window shift"
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ChatWindow[data-thread-local-id="${thread1LocalId}"] .o_ThreadView_messageList`).scrollTop,
+        100,
+        "Scroll position should remain the same after a chat window shift"
+    );
+});
+
+QUnit.skip('chat window scroll position should remain the same after switching next', async function (assert) {
+    assert.expect(2);
+
+    this.data['mail.channel'].records.push({
+        id: 20,
+        is_minimized: true,
+        state: 'open',
+    });
+    this.data['mail.channel'].records.push({
+        id: 21,
+        is_minimized: true,
+        state: 'open',
+    });
+    for (let i = 0; i < 10; i++) {
+        this.data['mail.message'].records.push({
+            body: "not empty",
+            model: 'mail.channel',
+            res_id: 20,
+        });
+    }
+    for (let i = 0; i < 10; i++) {
+        this.data['mail.message'].records.push({
+            body: "not empty",
+            model: 'mail.channel',
+            res_id: 21,
+        });
+    }
+    const { afterEvent } = await this.start();
+    const thread1LocalId = this.messaging.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    }).localId;
+    const thread2LocalId = this.messaging.models['mail.thread'].findFromIdentifyingData({
+        id: 21,
+        model: 'mail.channel',
+    }).localId;
+    document.querySelector(`.o_ChatWindow[data-thread-local-id="${thread1LocalId}"] .o_ThreadView_messageList`).scrollTop = 100;
+    document.querySelector(`.o_ChatWindow[data-thread-local-id="${thread2LocalId}"] .o_ThreadView_messageList`).scrollTop = 110;
+
+    await afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: () => document.querySelector('.o_ChatWindowHeader_commandShiftNext').click(),
+        message: "Should wait until the scroll is adjusted after a command shift.",
+        predicate: ({ hint }) => {
+            return hint.type === 'adjust-scroll';
+        },
+    });
+    assert.strictEqual(
+        document.querySelector(`.o_ChatWindow[data-thread-local-id="${thread2LocalId}"] .o_ThreadView_messageList`).scrollTop,
+        110,
+        "Scroll position should remain the same after a chat window shift"
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ChatWindow[data-thread-local-id="${thread1LocalId}"] .o_ThreadView_messageList`).scrollTop,
+        100,
+        "Scroll position should remain the same after a chat window shift"
+    );
+});
+
 
 });
 });

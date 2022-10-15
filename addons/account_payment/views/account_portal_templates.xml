@@ -1,13 +1,13 @@
 <odoo>
     <template id="portal_my_invoices_payment" name="Payment on My Invoices" inherit_id="account.portal_my_invoices">
         <xpath expr="//t[@t-call='portal.portal_table']/thead/tr/th[last()]" position="before">
-            <th class="text-center">Status</th>
+            <th></th>
         </xpath>
         <xpath expr="//t[@t-foreach='invoices']/tr/td[last()]" position="before">
             <td class="text-center">
                 <t t-set="tx_ids" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))"/>
                 <t t-set="pending_manual_txs" t-value="tx_ids.filtered(lambda tx: tx.state == 'pending' and tx.provider in ('none', 'transfer'))"/>
-                <a t-if="invoice.state == 'posted' and invoice.payment_state in ('not_paid', 'partial') and invoice.amount_total and invoice.move_type == 'out_invoice' and (pending_manual_txs or not tx_ids or invoice.amount_residual)"
+                <a t-if="invoice.state == 'posted' and invoice.payment_state in ('not_paid', 'partial') and invoice.amount_total and invoice.move_type == 'out_invoice' and (pending_manual_txs or not tx_ids or invoice.amount_paid &lt; invoice.amount_total)"
                     t-att-href="invoice.get_portal_url(anchor='portal_pay')" title="Pay Now" aria-label="Pay now" class="btn btn-sm btn-primary" role="button">
                     <i class="fa fa-arrow-circle-right"/><span class='d-none d-md-inline'> Pay Now</span>
                 </a>
@@ -67,7 +67,7 @@
             <t t-set="tx_ids" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))"/>
             <t t-set="pending_manual_txs" t-value="tx_ids.filtered(lambda tx: tx.state == 'pending' and tx.provider in ('none', 'transfer'))"/>
             <div>
-                <a href="#" t-if="invoice.state == 'posted' and invoice.payment_state in ('not_paid', 'partial') and invoice.amount_total and invoice.move_type == 'out_invoice' and (pending_manual_txs or not tx_ids or invoice.amount_residual)"
+                <a href="#" t-if="invoice.state == 'posted' and invoice.payment_state in ('not_paid', 'partial') and invoice.amount_total and invoice.move_type == 'out_invoice' and (pending_manual_txs or not tx_ids or invoice.amount_paid &lt; invoice.amount_total)"
 
                     class="btn btn-primary btn-block mb-2" data-toggle="modal" data-target="#pay_with">
                     <i class="fa fa-fw fa-arrow-circle-right"/> Pay Now

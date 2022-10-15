@@ -7,7 +7,9 @@ import re
 import time
 
 from lxml import etree
+
 from odoo import api, fields, models, tools, _
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -118,7 +120,7 @@ class Currency(models.Model):
 
     @api.depends('rate_ids.rate')
     def _compute_current_rate(self):
-        date = self._context.get('date') or fields.Date.today()
+        date = self._context.get('date') or fields.Date.context_today(self)
         company = self.env['res.company'].browse(self._context.get('company_id')) or self.env.company
         # the subquery selects the last rate before 'date' for the given currency/company
         currency_rates = self._get_rates(company, date)
@@ -330,7 +332,7 @@ class CurrencyRate(models.Model):
         compute="_compute_inverse_company_rate",
         inverse="_inverse_inverse_company_rate",
         group_operator="avg",
-        help="The currency of rate 1 to the rate of the currency.",
+        help="The rate of the currency to the currency of rate 1 ",
     )
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, required=True, ondelete="cascade")
     company_id = fields.Many2one('res.company', string='Company',
@@ -356,7 +358,10 @@ class CurrencyRate(models.Model):
         return super().create([self._sanitize_vals(vals) for vals in vals_list])
 
     def _get_latest_rate(self):
-        return self.currency_id.rate_ids.filtered(lambda x: (
+        # Make sure 'name' is defined when creating a new rate.
+        if not self.name:
+            raise UserError(_("The date for the current rate is empty.\nPlease set it."))
+        return self.currency_id.rate_ids.sudo().filtered(lambda x: (
             x.rate
             and x.company_id == (self.company_id or self.env.company)
             and x.name < (self.name or fields.Date.today())
@@ -364,7 +369,7 @@ class CurrencyRate(models.Model):
 
     def _get_last_rates_for_companies(self, companies):
         return {
-            company: company.currency_id.rate_ids.filtered(lambda x: (
+            company: company.currency_id.rate_ids.sudo().filtered(lambda x: (
                 x.rate
                 and x.company_id == company or not x.company_id
             )).sorted('name')[-1:].rate or 1

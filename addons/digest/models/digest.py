@@ -258,7 +258,7 @@ class Digest(models.Model):
             '|', ('group_id', 'in', user.groups_id.ids), ('group_id', '=', False)
         ], limit=tips_count)
         tip_descriptions = [
-            self.env['mail.render.mixin'].sudo()._render_template(tools.html_sanitize(tip.tip_description), 'digest.tip', tip.ids, post_process=True, engine="qweb")[tip.id]
+            tools.html_sanitize(self.env['mail.render.mixin'].sudo()._render_template(tip.tip_description, 'digest.tip', tip.ids, post_process=True, engine="qweb")[tip.id])
             for tip in tips
         ]
         if consumed:

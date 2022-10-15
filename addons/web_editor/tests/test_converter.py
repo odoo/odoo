@@ -145,6 +145,7 @@ class TestConvertBack(common.TransactionCase):
 
     def test_integer(self):
         self.field_roundtrip('integer', 42)
+        self.field_roundtrip('integer', 42000)
 
     def test_float(self):
         self.field_roundtrip('float', 42.567890)

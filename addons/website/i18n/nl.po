@@ -7,6 +7,7 @@
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2021
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
 # Martin Trigaux, 2022
+# Lukas Van Cauter <cvl@odoo.com>, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
@@ -3678,7 +3679,7 @@ msgstr "Afhankelijkheden"
 #: code:addons/website/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "Describe your field here."
-msgstr "Beschrijf hier je vakgebied."
+msgstr "Voer hier een omschrijving van het veld in."
 
 #. module: website
 #. openerp-web
@@ -5003,6 +5004,23 @@ msgid "Google Search Console"
 msgstr "Google Search console"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"Google deprecated both its \"Universal Analytics\" and \"Google Sign-In\" "
+"API. It means that only accounts and keys created before 2020 will be able "
+"to integrate their Analytics dashboard in Odoo (or any other website). This "
+"will be possible only up to mid 2023. After that, those services won't work "
+"anymore, at all."
+msgstr ""
+"Google zal zowel hun \"Universal Analytics\" als \"Google Sign-In\" APIs "
+"stopzetten. Dit betekent dat enkel accounts en keys aangemaakt voor 2020 hun"
+" Analytics dashboard nog zullen kunnen integreren in Odoo (of op andere "
+"websites). Dit zal enkel nog mogelijk zijn tot midden 2023. Nadien zullen "
+"deze diensten helemaal niet meer werken."
+
+#. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__google_search_console
 #: model:ir.model.fields,help:website.field_website__google_search_console
 msgid "Google key, or Enable to access first reply"
@@ -5871,12 +5889,18 @@ msgid "Is not equal to"
 msgstr "Is niet gelijk aan"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
+#, python-format
 msgid "Is not set"
 msgstr "Is niet ingesteld"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
+#, python-format
 msgid "Is set"
 msgstr "Is ingesteld"
 
@@ -6923,6 +6947,17 @@ msgstr "Netwerken"
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "New"
 msgstr "Nieuw"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"New Google Analytics accounts and keys are now using Google Analytics 4 "
+"which, for now, can't be integrated/embed in external websites."
+msgstr ""
+"Nieuwe Google Analytics accounts en keys gebruiken nu Google Analytics 4. "
+"Deze kunnen, voorlopig, niet geïntegreerd worden in externe websites."
 
 #. module: website
 #. openerp-web
@@ -9534,6 +9569,13 @@ msgid "There is no data currently available."
 msgstr "Er zijn momenteel geen gegevens beschikbaar."
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "There is no field available for this option."
+msgstr "Er is geen veld beschikbaar voor deze optie."
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid ""
 "There is no website available for this company. You could create a new one."
@@ -9650,6 +9692,12 @@ msgid "This page"
 msgstr "Deze pagina"
 
 #. module: website
+#: code:addons/website/models/website_visitor.py:0
+#, python-format
+msgid "This operator is not supported"
+msgstr "Deze operator is niet ondersteund"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.page_404
 msgid ""
 "This page does not exist, but you can create it as you are editor of this "
@@ -9685,6 +9733,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.report_viewhierarchy_children
 msgid "This view arch has been modified"
 msgstr "Deze kijkboog is aangepast"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"Those accounts should now check their Analytics dashboard in the Google "
+"platform directly."
+msgstr ""
+"Deze accounts moeten nu hun Analytics dashboard rechtstreeks op het Google "
+"platform raadplegen."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -11480,6 +11539,12 @@ msgid "eLearning"
 msgstr "eLearning"
 
 #. module: website
+#: code:addons/website/controllers/form.py:0
+#, python-format
+msgid "email"
+msgstr "e-mail"
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.xml:0
 #, python-format
@@ -11873,7 +11938,7 @@ msgstr "⌙ Vertraging"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options_template
 msgid "⌙ Desktop"
-msgstr "⌙ Bureaublad"
+msgstr "⌙ Desktop"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -11986,7 +12051,7 @@ msgstr "⌙ Stijl"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "⌙ UTM Campaign"
-msgstr "⌙ UTM-campagne"
+msgstr "⌙ UTM Campagne"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options

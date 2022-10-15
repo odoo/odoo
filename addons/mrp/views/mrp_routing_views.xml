@@ -77,7 +77,7 @@
                             <group name="description">
                                 <field name="active" invisible="1"/>
                                 <field name="name"/>
-                                <field name="sequence" groups="base.group_no_one"/>
+                                <field name="sequence" invisible="1"/>
                                 <field name="bom_id" invisible="context.get('bom_id_invisible', False)" domain="[]"/>
                                 <field name="workcenter_id" context="{'default_company_id': company_id}"/>
                                 <field name="possible_bom_product_template_attribute_value_ids" invisible="1"/>

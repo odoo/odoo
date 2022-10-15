@@ -145,7 +145,7 @@ class Channel(models.Model):
         if new_members:
             self.env['mail.channel.partner'].create(new_members)
         if outdated:
-            outdated.unlink()
+            outdated.sudo().unlink()
 
     def _search_channel_partner_ids(self, operator, operand):
         return [(
@@ -584,8 +584,13 @@ class Channel(models.Model):
     def _message_compute_parent_id(self, parent_id):
         # super() unravels the chain of parents to set parent_id as the first
         # ancestor. We don't want that in channel.
-        parent_message = self.env['mail.message'].search([('id', '=', parent_id), ('model', '=', 'mail.channel'), ('res_id', '=', self.id)])
-        return parent_message.id
+        if not parent_id:
+            return parent_id
+        return self.env['mail.message'].search(
+            [('id', '=', parent_id),
+             ('model', '=', self._name),
+             ('res_id', '=', self.id)
+            ]).id
 
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *, message_type='notification', **kwargs):

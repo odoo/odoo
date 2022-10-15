@@ -79,10 +79,8 @@
 
 <!-- TOOLS -->
 <template name="Buy Course Link" id="course_buy_course_link">
-    <a t-att-href="'/shop/cart/update?product_id=%s' % slide.channel_id.product_id.id">
-        Buy Course
-    </a>
-     to download resources
+    <a class="post_link" t-att-href="'/shop/cart/update?product_id=%s' % slide.channel_id.product_id.id">
+        Buy Course</a> to download resources
 </template>
 
 <template name="Buy Course Button" id="course_buy_course_button">

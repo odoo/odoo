@@ -143,13 +143,13 @@
                             <field name="company_currency_id" invisible="1"/>
                             <field name="sheet_is_editable" invisible="1"/>
                             <field name="product_id" required="1" attrs="{'readonly': [('sheet_is_editable', '=', False)]}" context="{'default_can_be_expensed': 1, 'tree_view_ref': 'hr_expense.product_product_expense_tree_view', 'form_view_ref': 'hr_expense.product_product_expense_form_view'}"/>
-                            <field name="unit_amount" required="1" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'invisible': [('product_has_cost', '=', False)], 'readonly': [('sheet_is_editable', '=', False)]}"/>
+                            <field name="unit_amount" required="1" force_save="1" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'invisible': [('product_has_cost', '=', False)], 'readonly': ['|', ('sheet_is_editable', '=', False), ('product_has_cost', '=', True)]}"/>
                             <field name="untaxed_amount" invisible="1" force_save="1"/>
                             <field name="product_uom_category_id" invisible="1"/>
                             <label for="quantity" attrs="{'invisible': [('product_has_cost', '=', False)]}"/>
                             <div class="o_row" attrs="{'invisible': [('product_has_cost', '=', False)]}">
-                                <field name="quantity" class="oe_inline" attrs="{'readonly': [('sheet_is_editable', '=', False)]}"/>
-                                <field name="product_uom_id" required="1" options="{'no_open': True, 'no_create': True}" class="oe_inline" groups="uom.group_uom"/>
+                                <field name="quantity" class="oe_inline" attrs="{'readonly': [('sheet_is_editable', '=', False)]}" style="width: auto !important;"/>
+                                <field name="product_uom_id" required="1" force_save="1" options="{'no_open': True, 'no_create': True}" class="oe_inline" groups="uom.group_uom"/>
                             </div>
                             <label for="total_amount" string="Total" attrs="{'invisible': [('product_has_cost', '=', True)]}"/>
                             <div class="o_row" attrs="{'invisible': [('product_has_cost', '=', True)]}">

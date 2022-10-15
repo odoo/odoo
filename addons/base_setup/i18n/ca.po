@@ -14,6 +14,7 @@
 # jabelchi, 2021
 # Harcogourmet, 2022
 # AncesLatino2004, 2022
+# marcescu, 2022
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: AncesLatino2004, 2022\n"
+"Last-Translator: marcescu, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,7 +51,7 @@ msgstr ""
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "<span class=\"fa fa-lg fa-users\" aria-label=\"Number of active users\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-lg fa-users\" aria-label=\"Number of active users\"/>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -62,6 +63,12 @@ msgid ""
 "                                            Active Users\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible':[('active_user_count', '&gt;', '1')]}\">\n"
+"                                          Usuari Actiu\n"
+"                                        </span>\n"
+"                                        <span class=\"o_form_label\" attrs=\"{'invisible':[('active_user_count', '&lt;=', '1')]}\">\n"
+"                                            Usuari Actius\n"
+"                                        </span>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -74,6 +81,13 @@ msgid ""
 "                                        </span>\n"
 "                                        <br/>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible':[('company_count', '&gt;', '1')]}\">\n"
+"                                            Empresa\n"
+"                                        </span>\n"
+"                                        <span class=\"o_form_label\" attrs=\"{'invisible':[('company_count', '&lt;=', '1')]}\">\n"
+"                                            Empreses\n"
+"                                        </span>\n"
+"                                        <br/>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -85,6 +99,12 @@ msgid ""
 "                                                Languages\n"
 "                                            </span>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible':[('language_count', '&gt;', '1')]}\">\n"
+"                                                Idioma\n"
+"                                            </span>\n"
+"                                            <span class=\"o_form_label\" attrs=\"{'invisible':[('language_count', '&lt;=', '1')]}\">\n"
+"                                                Idiomes\n"
+"                                            </span>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -92,6 +112,8 @@ msgid ""
 "<span class=\"o_form_label\">Document Layout</span>\n"
 "                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Diseny del Document</span>\n"
+"                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -99,12 +121,15 @@ msgid ""
 "<strong>Save</strong> this page and come back here to choose your Geo "
 "Provider."
 msgstr ""
+"<strong>Desa</strong>aquesta pàgina i torna aquí per triar el vostre "
+"proveïdor Geo. "
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
 "<strong>Save</strong> this page and come back here to set up reCaptcha."
 msgstr ""
+"<strong>Desa</strong> aquesta pàgina i torna aquí per configurar reCaptcha."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -137,14 +162,14 @@ msgstr "Activar el mode programador"
 #: code:addons/base_setup/static/src/xml/res_config_dev_tool.xml:0
 #, python-format
 msgid "Activate the developer mode (with assets)"
-msgstr ""
+msgstr "Activa el mode desenvolupador (amb actius)"
 
 #. module: base_setup
 #. openerp-web
 #: code:addons/base_setup/static/src/xml/res_config_dev_tool.xml:0
 #, python-format
 msgid "Activate the developer mode (with tests assets)"
-msgstr ""
+msgstr "Activa el mode de desenvolupador (amb actius de prova)"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -159,7 +184,7 @@ msgstr "Afegiu feedback divertit i motiveu els vostres empleats"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_mail_plugin
 msgid "Allow integration with the mail plugins"
-msgstr ""
+msgstr "Permet la integració amb els connectors de correu"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_calendar
@@ -170,6 +195,8 @@ msgstr "Permet als usuaris sincronitzar el seu calendari amb Google Calendar"
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_microsoft_calendar
 msgid "Allow the users to synchronize their calendar with Outlook Calendar"
 msgstr ""
+"Permet als usuaris sincronitzar el seu calendari amb el calendari de "
+"l'Outlook"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_import
@@ -204,6 +231,8 @@ msgid ""
 "Automatically generate counterpart documents for orders/invoices between "
 "companies"
 msgstr ""
+"Generar automàticament documents de contrapartida per a comandes/factures "
+"entre empreses"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -216,7 +245,7 @@ msgstr ""
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Choose the layout of your documents"
-msgstr ""
+msgstr "Triï el disseny dels seus documents"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_pad
@@ -236,7 +265,7 @@ msgstr "Empresa"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_informations
 msgid "Company Informations"
-msgstr ""
+msgstr "Informació de l'empresa"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_name
@@ -251,7 +280,7 @@ msgstr "Ajustos de configuració"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Configure Document Layout"
-msgstr ""
+msgstr "Configurar el disseny del document"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -272,7 +301,7 @@ msgstr "Contactes"
 #: code:addons/base_setup/static/src/xml/res_config_edition.xml:0
 #, python-format
 msgid "Copyright © 2004"
-msgstr ""
+msgstr "Copyright © 2004"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -282,7 +311,7 @@ msgstr "Crea i adjunta documents de Google Drive a qualsevol registre"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_email_server_default
 msgid "Custom Email Servers"
-msgstr ""
+msgstr "Servidors de correu electrònic personalitzats"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__report_footer
@@ -294,7 +323,7 @@ msgstr "Peu de pàgina personalitzat"
 #: code:addons/base_setup/static/src/xml/res_config_dev_tool.xml:0
 #, python-format
 msgid "Deactivate the developer mode"
-msgstr ""
+msgstr "Desactiva el mode desenvolupador"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__user_default_rights
@@ -306,14 +335,14 @@ msgstr "Drets d'accés per defecte"
 #: code:addons/base_setup/models/res_config_settings.py:0
 #, python-format
 msgid "Default User Template not found."
-msgstr ""
+msgstr "No s'ha trobat la plantilla d'usuari per defecte."
 
 #. module: base_setup
 #. openerp-web
 #: code:addons/base_setup/static/src/xml/res_config_dev_tool.xml:0
 #, python-format
 msgid "Developer Tools"
-msgstr ""
+msgstr "Eines per a desenvolupadors"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_report_layout_id
@@ -335,7 +364,7 @@ msgstr "Edita la disposició"
 #: code:addons/base_setup/static/src/js/res_config_invite_users.js:0
 #, python-format
 msgid "Email addresses already existing: %s."
-msgstr ""
+msgstr "Adreces de correu electrònic ja existents:%s."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -343,13 +372,15 @@ msgid ""
 "Enable the profiling tool. Profiling may impact performance while being "
 "active."
 msgstr ""
+"Habilitar l'eina de perfilat. La creació de perfils pot afectar el rendiment"
+" mentre està activa."
 
 #. module: base_setup
 #. openerp-web
 #: code:addons/base_setup/static/src/xml/res_config_invite_users.xml:0
 #, python-format
 msgid "Enter e-mail address"
-msgstr ""
+msgstr "Introdueixi l'adreça de correu electrònic"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -371,7 +402,7 @@ msgstr "Text mostrat al peu de pàgina de tots els informes."
 #: code:addons/base_setup/static/src/xml/res_config_edition.xml:0
 #, python-format
 msgid "GNU LGPL Licensed"
-msgstr ""
+msgstr "Llicenciat per GNU LGPL"
 
 #. module: base_setup
 #: model:ir.ui.menu,name:base_setup.menu_config
@@ -382,22 +413,22 @@ msgstr "Configuració General"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Geo Localization"
-msgstr ""
+msgstr "Geolocalització"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_geolocalize
 msgid "GeoLocalize"
-msgstr ""
+msgstr "GeoLocalitzar"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "GeoLocalize your partners"
-msgstr ""
+msgstr "GeoLocalitzar els vostres socis"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_product_images
 msgid "Get product pictures using barcode"
-msgstr ""
+msgstr "Obtenir imatges de productes fent servir el codi de barres"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -427,7 +458,7 @@ msgstr "Importar i exportar"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Integrate with mail client plugins"
-msgstr ""
+msgstr "Integración con plugins de clientes de correo"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -444,7 +475,7 @@ msgstr "Transaccions entre empreses"
 #: code:addons/base_setup/static/src/js/res_config_invite_users.js:0
 #, python-format
 msgid "Invalid email addresses: %s."
-msgstr ""
+msgstr "Adreces de correu electrònic no vàlides: %s."
 
 #. module: base_setup
 #. openerp-web
@@ -458,7 +489,7 @@ msgstr "Invitar"
 #: code:addons/base_setup/static/src/xml/res_config_invite_users.xml:0
 #, python-format
 msgid "Invite New Users"
-msgstr ""
+msgstr "Convida usuaris nous"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_ldap
@@ -486,17 +517,17 @@ msgstr "Carregar dades de prova"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Mail Plugin"
-msgstr ""
+msgstr "Connector de correu"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage API Keys"
-msgstr ""
+msgstr "Gestionar les claus de l'API"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage Companies"
-msgstr ""
+msgstr "Gestionar empreses"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_account_inter_company_rules
@@ -506,12 +537,12 @@ msgstr "Gestió entre empreses "
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage Languages"
-msgstr ""
+msgstr "Gestionar les llengües"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage Users"
-msgstr ""
+msgstr "Gestionar els usuaris"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__group_multi_currency
@@ -521,7 +552,7 @@ msgstr "Multi moneda"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__active_user_count
 msgid "Number of Active Users"
-msgstr ""
+msgstr "Nombre d'usuaris actius"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_count
@@ -531,7 +562,7 @@ msgstr "Nombre de companyies"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__language_count
 msgid "Number of Languages"
-msgstr ""
+msgstr "Nombre de llengües"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -565,19 +596,19 @@ msgstr "A Google Play"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Outlook Calendar"
-msgstr ""
+msgstr "Outlook Calendari"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_partner_autocomplete
 msgid "Partner Autocomplete"
-msgstr ""
+msgstr "Autocompletar per a socis"
 
 #. module: base_setup
 #. openerp-web
 #: code:addons/base_setup/static/src/xml/res_config_invite_users.xml:0
 #, python-format
 msgid "Pending Invitations:"
-msgstr ""
+msgstr "Invitacions pendents:"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -587,7 +618,7 @@ msgstr "Rendiment"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Permissions"
-msgstr ""
+msgstr "Permisos"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -597,12 +628,12 @@ msgstr "Vista prèvia del document"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__profiling_enabled_until
 msgid "Profiling enabled until"
-msgstr ""
+msgstr "S'ha habilitat el perfilatge fins"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Protect your forms from spam and abuse."
-msgstr ""
+msgstr "Protegiu els vostres formularis del correu brossa i l'abús."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -612,7 +643,7 @@ msgstr "Enviar SMS"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Send texts to your contacts"
-msgstr ""
+msgstr "Envia els textos als vostres contactes"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -637,7 +668,7 @@ msgstr "Sincronitza el teu calendari amb Google Calendar"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Synchronize your calendar with Outlook"
-msgstr ""
+msgstr "Sincronitza el calendari amb l'Outlook"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_gengo
@@ -652,7 +683,7 @@ msgstr "Biblioteca d'imatges d'Unsplash"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Update Info"
-msgstr ""
+msgstr "Actualitza la informació"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -701,4 +732,4 @@ msgstr "més"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_recaptcha
 msgid "reCAPTCHA"
-msgstr ""
+msgstr "reCAPTCHA"

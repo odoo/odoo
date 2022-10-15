@@ -28,6 +28,7 @@
 # Antti Oksman <antti.oksman@web-veistamo.fi>, 2021
 # Martin Trigaux, 2022
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
+# Joakim Weckman, 2022
 # 
 msgid ""
 msgstr ""
@@ -35,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022\n"
+"Last-Translator: Joakim Weckman, 2022\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -980,6 +981,11 @@ msgid "In Payment"
 msgstr "Maksussa"
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+msgid "Included in price taxes"
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Incoming Emails"
 msgstr "Saapuvat sähköpostit"
@@ -993,7 +999,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__payment_state__invoicing_legacy
 msgid "Invoicing App Legacy"
-msgstr ""
+msgstr "Vanha kirjaus"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_editable
@@ -1193,7 +1199,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "No attachment was provided"
-msgstr ""
+msgstr "Liitettä ei toimitettu"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_department_filtered
@@ -1334,7 +1340,7 @@ msgstr "Osittainen"
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__payment_state__partial
 msgid "Partially Paid"
-msgstr ""
+msgstr "Osasuoritus"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/account_move.py:0
@@ -1564,7 +1570,7 @@ msgstr "Vastuuhenkilö"
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__payment_state__reversed
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Reversed"
-msgstr ""
+msgstr "Palautettu"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_sms_error
@@ -1775,6 +1781,11 @@ msgstr "Käytettävä päiväkirja, jolle lopullinen kulu kohdistuu."
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__bank_journal_id
 msgid "The payment method used when the expense is paid by the company."
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense__tax_ids
+msgid "The taxes should be \"Included In Price\""
 msgstr ""
 
 #. module: hr_expense

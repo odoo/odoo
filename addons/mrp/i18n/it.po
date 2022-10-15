@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__state
@@ -88,12 +88,6 @@ msgstr "%i ordini di lavoro"
 #, python-format
 msgid "%s %s unbuilt in"
 msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/models/mrp_routing.py:0
-#, python-format
-msgid "%s (copy)"
-msgstr "%s (copia)"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -421,7 +415,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled."
-msgstr "Un ordine di produzione è gia' stato eseguito o cancellato."
+msgstr "Un ordine di produzione risulta già completato o annullato."
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:0
@@ -762,7 +756,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Barcode"
-msgstr "Codice"
+msgstr "Codice a barre"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_mode_batch
@@ -1112,11 +1106,9 @@ msgstr "Componenti"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
-"Component Lots must be unique for mass production. Please review consumption"
+"Component Lots must be unique for mass production. Please review reservation"
 " for:\n"
 msgstr ""
-"I lotti di componenti devono essere unici per la produzione di massa. Si "
-"prega di rivedere il consumo per:\n"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__components_availability
@@ -3053,13 +3045,20 @@ msgstr "Numero di messaggi con errore di consegna"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__capacity
 msgid ""
-"Number of pieces that can be produced in parallel. In case the work center "
-"has a capacity of 5 and you have to produce 10 units on your work order, the"
-" usual operation time will be multiplied by 2."
+"Number of pieces (in product UoM) that can be produced in parallel  (at the "
+"same time) at this work center. For example: the capacity is 5 and you need "
+"to produce 10 units, then the operation time listed on the BOM will be "
+"multiplied by two. However, note that both time before and after production "
+"will only be counted once. "
 msgstr ""
-"Numero di pezzi che è possibile produrre in parallelo. Se il centro di "
-"lavoro ha una capacità di 5 e nell'ordine devono essere prodotte 10 unità, "
-"il normale tempo di funzionamento viene moltiplicato per 2."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom__product_qty
+msgid ""
+"This should be the smallest quantity that this product can be produced in. "
+"If the BOM contains operations, make sure the work center capacity is "
+"accurate. "
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_source_count
@@ -4482,6 +4481,12 @@ msgstr ""
 " da quella usata nel form del prodotto."
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_workcenter.py:0
+#, python-format
+msgid "The Workorder (%s) cannot be started twice!"
+msgstr "Questo ordine di lavoro (%s) non può essere avviato due volte!"
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
@@ -4578,6 +4583,15 @@ msgstr "La quantità da produrre deve essere positiva!"
 #: model:ir.model.fields,help:mrp.field_mrp_document__res_id
 msgid "The record id this is attached to."
 msgstr "L'ID del record a cui è collegato."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#, python-format
+msgid ""
+"The selected serial number does not correspond to the one used in the "
+"manufacturing order, please select another one."
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -5146,7 +5160,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "Validate"
-msgstr "Valida"
+msgstr "Convalida"
 
 #. module: mrp
 #. openerp-web
@@ -5795,7 +5809,7 @@ msgstr "distinte base"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
 msgid "cancelled"
-msgstr "cancellato"
+msgstr "annullato"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action

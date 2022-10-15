@@ -126,8 +126,13 @@ odoo.define('web.CustomFilterItem', function (require) {
                     }
                     break;
                 case 'selection':
-                    const [firstValue] = this.fields[condition.field].selection[0];
-                    condition.value = firstValue;
+                    if (this.fields[condition.field].selection.length) {
+                        const [firstValue] = this.fields[condition.field].selection[0];
+                        condition.value = firstValue;
+                    }
+                    else {
+                        condition.value = "";
+                    }
                     break;
                 default:
                     condition.value = "";

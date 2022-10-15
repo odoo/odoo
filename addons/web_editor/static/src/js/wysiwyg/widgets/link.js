@@ -19,6 +19,7 @@ const Link = Widget.extend({
         'input': '_onAnyChange',
         'change': '_onAnyChange',
         'input input[name="url"]': '_onURLInput',
+        'change input[name="url"]': '_onURLInputChange',
     },
 
     /**
@@ -63,9 +64,6 @@ const Link = Widget.extend({
             this.data.range = range;
             this.$link = $(link);
             this.linkEl = link;
-        } else {
-            const selection = editable && editable.ownerDocument.getSelection();
-            this.data.range = selection && selection.rangeCount && selection.getRangeAt(0);
         }
 
         if (this.data.range) {
@@ -127,7 +125,7 @@ const Link = Widget.extend({
         for (const option of this._getLinkOptions()) {
             const $option = $(option);
             const value = $option.is('input') ? $option.val() : $option.data('value');
-            let active = false;
+            let active = true;
             if (value) {
                 const subValues = value.split(',');
                 let subActive = true;
@@ -136,8 +134,6 @@ const Link = Widget.extend({
                     subActive = subActive && classPrefix.test(this.data.iniClassName);
                 }
                 active = subActive;
-            } else {
-                active = !this.data.iniClassName || this.data.iniClassName.includes('btn-link') || !this.data.iniClassName.includes('btn-');
             }
             this._setSelectOption($option, active);
         }
@@ -145,6 +141,7 @@ const Link = Widget.extend({
             var match = /mailto:(.+)/.exec(this.data.url);
             this.$('input[name="url"]').val(match ? match[1] : this.data.url);
             this._onURLInput();
+            this._savedURLInputOnDestroy = false;
         }
 
         this._updateOptionsUI();
@@ -154,6 +151,15 @@ const Link = Widget.extend({
         }
 
         return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    destroy () {
+        if (this._savedURLInputOnDestroy) {
+            this._adaptPreview();
+        }
+        this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -192,7 +198,7 @@ const Link = Widget.extend({
             href: data.url,
             target: data.isNewWindow ? '_blank' : '',
         });
-        if (data.classes) {
+        if (typeof data.classes === "string") {
             data.classes = data.classes.replace(/o_default_snippet_text/, '');
             attrs.class = `${data.classes}`;
         }
@@ -207,49 +213,24 @@ const Link = Widget.extend({
         this._updateLinkContent(this.$link, data);
     },
     /**
-     * Return the link element to edit. Create one from selection if none was
-     * present in selection.
-     *
-     * @param {Node} editable
-     * @returns {Node}
-     */
-    getOrCreateLink: function (editable) {
-        const doc = editable.ownerDocument;
-        this.needLabel = this.needLabel || false;
-        let link = getInSelection(doc, 'a');
-        const $link = $(link);
-        const range = getDeepRange(editable, {splitText: true, select: true, correctTripleClick: true});
-        if (link && (!$link.has(range.startContainer).length || !$link.has(range.endContainer).length)) {
-            // Expand the current link to include the whole selection.
-            let before = link.previousSibling;
-            while (before !== null && range.intersectsNode(before)) {
-                link.insertBefore(before, link.firstChild);
-                before = link.previousSibling;
-            }
-            let after = link.nextSibling;
-            while (after !== null && range.intersectsNode(after)) {
-                link.appendChild(after);
-                after = link.nextSibling;
-            }
-        } else if (!link) {
-            link = document.createElement('a');
-            if (range.collapsed) {
-                range.insertNode(link);
-                this.needLabel = true;
-            } else {
-                link.appendChild(range.extractContents());
-                range.insertNode(link);
-            }
-        }
-        return link;
-    },
-    /**
      * Focuses the url input.
      */
     focusUrl() {
         const urlInput = this.el.querySelector('input[name="url"]');
         urlInput.focus();
         urlInput.select();
+    },
+
+    /**
+     * Return the link element to edit. Create one from selection if none was
+     * present in selection.
+     *
+     * @param {Node} [options.containerNode]
+     * @param {Node} [options.startNode]
+     * @returns {Object}
+     */
+    getOrCreateLink (options) {
+        Link.getOrCreateLink(options);
     },
 
     //--------------------------------------------------------------------------
@@ -271,7 +252,7 @@ const Link = Widget.extend({
             url = url.replace(/^tel:([0-9]+)$/, 'tel://$1');
         } else if (url.indexOf('@') !== -1 && url.indexOf(':') === -1) {
             url = 'mailto:' + url;
-        } else if (url.indexOf('://') === -1 && url[0] !== '/'
+        } else if (url && url.indexOf('://') === -1 && url[0] !== '/'
                     && url[0] !== '#' && url.slice(0, 2) !== '${') {
             url = 'http://' + url;
         }
@@ -486,20 +467,80 @@ const Link = Widget.extend({
     /**
      * @private
      */
-    _onAnyChange: function () {
-        this._adaptPreview();
+    _onAnyChange: function (e) {
+        if (!e.target.closest('input[type="text"]')) {
+            this._adaptPreview();
+        }
     },
     /**
      * @private
      */
     _onURLInput: function () {
+        this._savedURLInputOnDestroy = true;
         var $linkUrlInput = this.$('#o_link_dialog_url_input');
         let value = $linkUrlInput.val();
         let isLink = value.indexOf('@') < 0;
         this.$('input[name="is_new_window"]').closest('.form-group').toggleClass('d-none', !isLink);
         this.$('.o_strip_domain').toggleClass('d-none', value.indexOf(window.location.origin) !== 0);
+        this.options.wysiwyg && this.options.wysiwyg.odooEditor.historyPauseSteps('_onURLInput');
+        this._adaptPreview();
+        this.options.wysiwyg && this.options.wysiwyg.odooEditor.historyUnpauseSteps('_onURLInput');
+    },
+    _onURLInputChange: function () {
+        this._adaptPreview();
+        this._savedURLInputOnDestroy = false;
     },
 });
+
+/**
+ * Return the link element to edit. Create one from selection if none was
+ * present in selection.
+ *
+ * @param {Node} [options.containerNode]
+ * @param {Node} [options.startNode]
+ * @returns {Object}
+ */
+Link.getOrCreateLink = ({ containerNode, startNode } = {})  => {
+
+    if (startNode) {
+        if ($(startNode).is('a')) {
+            return { link: startNode, needLabel: false };
+        } else {
+            $(startNode).wrap('<a href="#"/>');
+            return { link: startNode.parentElement, needLabel: false };
+        }
+    }
+
+    const doc = containerNode && containerNode.ownerDocument || document;
+    let needLabel = false;
+    let link = getInSelection(doc, 'a');
+    const $link = $(link);
+    const range = getDeepRange(containerNode, {splitText: true, select: true, correctTripleClick: true});
+    const isContained = containerNode.contains(range.startContainer) && containerNode.contains(range.endContainer);
+    if (link && (!$link.has(range.startContainer).length || !$link.has(range.endContainer).length)) {
+        // Expand the current link to include the whole selection.
+        let before = link.previousSibling;
+        while (before !== null && range.intersectsNode(before)) {
+            link.insertBefore(before, link.firstChild);
+            before = link.previousSibling;
+        }
+        let after = link.nextSibling;
+        while (after !== null && range.intersectsNode(after)) {
+            link.appendChild(after);
+            after = link.nextSibling;
+        }
+    } else if (!link && isContained) {
+        link = document.createElement('a');
+        if (range.collapsed) {
+            range.insertNode(link);
+            needLabel = true;
+        } else {
+            link.appendChild(range.extractContents());
+            range.insertNode(link);
+        }
+    }
+    return { link, needLabel };
+};
 
 return Link;
 });

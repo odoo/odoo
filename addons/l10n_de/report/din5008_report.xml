@@ -104,7 +104,7 @@
                         <span t-else="">
                             <t t-set="o" t-value="docs[0]" t-if="not o" />
                             <span t-if="'l10n_de_document_title' in o"><t t-esc="o.l10n_de_document_title"/></span>
-                            <span t-else="" t-field="o.name"/>
+                            <span t-elif="'name' in o" t-field="o.name"/>
                         </span>
                     </h2>
                     <t t-out="0"/>

@@ -387,6 +387,7 @@ class ResourceCalendar(models.Model):
         assert start_dt.tzinfo and end_dt.tzinfo
         self.ensure_one()
         combine = datetime.combine
+        required_tz = tz
 
         resources_list = list(resources) + [self.env['resource.resource']]
         resource_ids = [r.id for r in resources_list]
@@ -404,7 +405,7 @@ class ResourceCalendar(models.Model):
         for attendance in self.env['resource.calendar.attendance'].search(domain):
             for resource in resources_list:
                 # express all dates and times in specified tz or in the resource's timezone
-                tz = tz if tz else timezone((resource or self).tz)
+                tz = required_tz if required_tz else timezone((resource or self).tz)
                 if (tz, start_dt) in cache_dates:
                     start = cache_dates[(tz, start_dt)]
                 else:
@@ -436,6 +437,10 @@ class ResourceCalendar(models.Model):
                     days = rrule(DAILY, start, until=until, byweekday=weekday)
 
                 for day in days:
+                    # We need to exclude incorrect days according to re-defined start previously
+                    # with weeks=-1 (Note: until is correctly handled)
+                    if (self.two_weeks_calendar and attendance.date_from and attendance.date_from > day.date()):
+                        continue
                     # attendance hours are interpreted in the resource's timezone
                     hour_from = attendance.hour_from
                     if (tz, day, hour_from) in cache_deltas:
@@ -984,7 +989,7 @@ class ResourceResource(models.Model):
             calendar_mapping[resource.calendar_id] |= resource
 
         for calendar, resources in calendar_mapping.items():
-            resources_unavailable_intervals = calendar._unavailable_intervals_batch(start_datetime, end_datetime, resources)
+            resources_unavailable_intervals = calendar._unavailable_intervals_batch(start_datetime, end_datetime, resources, tz=timezone(calendar.tz))
             resource_mapping.update(resources_unavailable_intervals)
         return resource_mapping
 

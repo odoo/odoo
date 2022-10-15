@@ -24,12 +24,29 @@
                                   groups="base.group_multi_company"/>
                             <div class="content-group">
                                 <div class="mt16">
+                                    <label for="l10n_es_edi_tax_agency" class="o_light_label"/>
                                     <field name="l10n_es_edi_tax_agency"/>
+                                    <div class="text-muted" attrs="{'invisible': [('l10n_es_edi_tax_agency', '!=', False)]}">
+                                        No tax agency selected: SII not activated.
+                                    </div>
+                                    <div class="text-muted" attrs="{'invisible': [('l10n_es_edi_tax_agency', '=', False)]}">
+                                        Tax agency selected: invoices will be sent by SII for journals where it is activated.
+                                    </div>
                                     <br/>
-                                    Check this box if test env: <field name="l10n_es_edi_test_env"/>
-                                    <p attrs="{'invisible': [('l10n_es_edi_certificate_ids', '!=', [])]}">
-                                        Go to Configuration > Certificates [ES] to add your certificate.
-                                    </p>
+                                    <div class="o_row">
+                                        <label for="l10n_es_edi_test_env" class="o_light_label"/>
+                                        <field name="l10n_es_edi_test_env"/>
+                                    </div>
+                                    <div class="text-muted" attrs="{'invisible': [('l10n_es_edi_test_env', '=', False)]}">
+                                        Test mode: EDI data is sent to separate test servers and is not considered official.
+                                    </div>
+                                    <div class="text-muted" attrs="{'invisible': [('l10n_es_edi_test_env', '!=', False)]}">
+                                        Production mode: EDI data is sent to the official agency servers.
+                                    </div>
+                                    <br/>
+                                    <div>
+                                        <button name="%(l10n_es_edi_certificate_action)d" type="action" class="oe_link">Manage certificates (SII/TicketBAI)</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

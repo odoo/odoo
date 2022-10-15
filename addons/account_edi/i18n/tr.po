@@ -6,11 +6,11 @@
 # Ediz Duman <neps1192@gmail.com>, 2021
 # Martin Trigaux, 2021
 # Levent Karakaş <levent@mektup.at>, 2021
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2021
 # Umur Akın <umura@projetgrup.com>, 2021
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
 # abc Def <hdogan1974@gmail.com>, 2021
 # Murat Kaplan <muratk@projetgrup.com>, 2022
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:19+0000\n"
-"Last-Translator: Murat Kaplan <muratk@projetgrup.com>, 2022\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,19 +30,19 @@ msgstr ""
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing error(s)"
-msgstr ""
+msgstr " Elektronik faturalandırma hatası(s)"
 
 #. module: account_edi
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing info(s)"
-msgstr ""
+msgstr " Elektronik faturalandırma bilgileri(s)"
 
 #. module: account_edi
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing warning(s)"
-msgstr ""
+msgstr " Elektronik faturalandırma uyarısı(s)"
 
 #. module: account_edi
 #: code:addons/account_edi/models/account_move.py:0
@@ -54,7 +54,7 @@ msgstr "EDI'nin iptali talep edildi."
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid "A request for cancellation of the EDI has been called off."
-msgstr ""
+msgstr "EDI'nin iptali talebi iptal edildi."
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_attachment
@@ -65,7 +65,7 @@ msgstr "Ek"
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__blocking_level
 msgid "Blocking Level"
-msgstr ""
+msgstr "Engelleme Seviyesi"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__blocking_level
@@ -75,11 +75,15 @@ msgid ""
 "  * Warning: there is an error that doesn't prevent the current Electronic Invoicing operation to succeed.\n"
 "  * Error: there is an error that blocks the current Electronic Invoicing operation."
 msgstr ""
+"Hata önem derecesine bağlı olarak belgenin geçerli çalışmasını engeller:\n"
+"  * Bilgi: belge engellenmedi ve her şey olması gerektiği gibi çalışıyor.\n"
+"  * Uyarı: Geçerli Elektronik Faturalandırma işleminin başarılı olmasını engellemeyen bir hata var.\n"
+"  * Hata: Geçerli Elektronik Faturalama işlemini engelleyen bir hata var."
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Call off EDI Cancellation"
-msgstr ""
+msgstr "EDI İptalini Durdurun"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__cancelled
@@ -94,8 +98,8 @@ msgid ""
 "Cannot deactivate (%s) on this journal because not all documents are "
 "synchronized"
 msgstr ""
-"Tüm belgeler senkronize olmadığı için bu günlükte (%s) devre dışı "
-"bırakılamaz"
+"Tüm belgeler senkronize edilmediğinden bu yevmiyede (%s) devre dışı "
+"bırakılamıyor"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_format__code
@@ -159,12 +163,12 @@ msgstr "Bu yevmiyedeki hareketleri destekleyen EDI formatı"
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_blocking_level
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_blocking_level
 msgid "Edi Blocking Level"
-msgstr ""
+msgstr "Edi Engelleme Seviyesi"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_content
 msgid "Edi Content"
-msgstr ""
+msgstr "Edi İçeriği"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_document_ids
@@ -185,7 +189,7 @@ msgstr "Edi Hata Sayısı"
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_error_message
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_error_message
 msgid "Edi Error Message"
-msgstr ""
+msgstr "Edi Hata Mesajı"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_id
@@ -197,7 +201,7 @@ msgstr "Edi Biçimi"
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_abandon_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_show_abandon_cancel_button
 msgid "Edi Show Abandon Cancel Button"
-msgstr ""
+msgstr "Edi Vazgeç İptal Düğmesini Göster"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_cancel_button
@@ -236,7 +240,7 @@ msgstr "Elektronik faturalama"
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_account_invoice_filter
 msgid "Electronic invoicing state"
-msgstr ""
+msgstr "Elektronik faturalandırma durumu"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_mail_template
@@ -282,6 +286,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Geçersiz fatura yapılandırması:\n"
+"\n"
+"%s"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_journal
@@ -341,7 +348,7 @@ msgstr "Ödemeler"
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 #: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
 msgid "Process now"
-msgstr ""
+msgstr "Şimdi işle"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_actions_report
@@ -388,7 +395,7 @@ msgstr "CRON tarafından işlenecek belgelerin görüntülendiği teknik alan"
 #: model:ir.model.fields,help:account_edi.field_account_move__edi_state
 #: model:ir.model.fields,help:account_edi.field_account_payment__edi_state
 msgid "The aggregated state of all the EDIs with web-service of this move"
-msgstr ""
+msgstr "Bu kaydın web hizmetine sahip tüm EDI'lerin toplu durumu"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__attachment_id
@@ -405,6 +412,7 @@ msgid ""
 "The invoice will be processed asynchronously by the following E-invoicing "
 "service :"
 msgstr ""
+"Fatura, aşağıdaki E-fatura hizmeti tarafından asenkron olarak işlenecektir:"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
@@ -412,13 +420,14 @@ msgid ""
 "The payment will be processed asynchronously by the following E-invoicing "
 "service :"
 msgstr ""
+"Ödeme, aşağıdaki E-fatura hizmeti tarafından asenkron olarak işlenecektir:"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__error
 msgid ""
 "The text of the last error that happened during Electronic Invoice "
 "operation."
-msgstr ""
+msgstr "Elektronik Fatura işlemi sırasında oluşan son hatanın metni."
 
 #. module: account_edi
 #: model:ir.model.constraint,message:account_edi.constraint_account_edi_format_unique_code
@@ -429,7 +438,7 @@ msgstr "Bu kod zaten var"
 #: code:addons/account_edi/models/account_edi_document.py:0
 #, python-format
 msgid "This document is being sent by another process already. "
-msgstr ""
+msgstr "Bu belge zaten başka bir işlem tarafından gönderiliyor."
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_cancel

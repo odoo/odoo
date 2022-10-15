@@ -1,6 +1,10 @@
 # coding: utf-8
+from lxml import html
+
 from odoo.addons.website.tools import MockRequest
 from odoo.tests import common, HttpCase, tagged
+from odoo.tests.common import HOST
+from odoo.tools import config
 from odoo.tools import mute_logger
 
 
@@ -263,3 +267,20 @@ class WithContext(HttpCase):
             r = self.url_open(self.page.url + '?debug=1')
             self.assertEqual(r.status_code, 500, "15/0 raise a 500 error page (2)")
             self.assertIn('ZeroDivisionError: division by zero', r.text, "Error should be shown in debug.")
+
+    def test_homepage_not_slash_url(self):
+        website = self.env['website'].browse([1])
+        # Set another page (/page_1) as homepage
+        website.write({
+            'homepage_id': self.page.id,
+            'domain': f"http://{HOST}:{config['http_port']}",
+        })
+        assert self.page.url != '/'
+
+        r = self.url_open('/')
+        r.raise_for_status()
+        self.assertEqual(r.status_code, 200,
+                         "There should be no crash when a public user is accessing `/` which is rerouting to another page with a different URL.")
+        root_html = html.fromstring(r.content)
+        canonical_url = root_html.xpath('//link[@rel="canonical"]')[0].attrib['href']
+        self.assertEqual(canonical_url, website.domain + "/")

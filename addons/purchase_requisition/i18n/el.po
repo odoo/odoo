@@ -1,25 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * purchase_requisition
+# 	* purchase_requisition
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Kostas Goutoudis <goutoudis@gmail.com>, 2018
-# Stefanos Nikou <stefanos.nikou@gmail.com>, 2018
-# George Tarasidis <george_tarasidis@yahoo.com>, 2018
+# Stefanos Nikou <stefanos.nikou@gmail.com>, 2022
+# George Tarasidis <george_tarasidis@yahoo.com>, 2022
+# Martin Trigaux, 2022
+# Kostas Goutoudis <goutoudis@gmail.com>, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2018\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-09-14 12:25+0000\n"
+"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>, 2022\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: purchase_requisition
+#: model:ir.actions.report,print_report_name:purchase_requisition.action_report_purchase_requisitions
+msgid "'Tender - %s' % (object.name)"
+msgstr ""
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -82,13 +88,38 @@ msgid "Action Needed"
 msgstr "Απαιτείται ενέργεια"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__date_end
-msgid "Agreement Deadline"
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__active
+msgid "Active"
+msgstr "Σε Ισχύ"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_ids
+msgid "Activities"
+msgstr "Δραστηριότητες"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_exception_decoration
+msgid "Activity Exception Decoration"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__name
-msgid "Agreement Reference"
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_state
+msgid "Activity State"
+msgstr "Κατάσταση Δραστηριότητας"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_type_icon
+msgid "Activity Type Icon"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_id
+msgid "Agreement"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__date_end
+msgid "Agreement Deadline"
 msgstr ""
 
 #. module: purchase_requisition
@@ -119,24 +150,25 @@ msgid "Analytic Tags"
 msgstr "Ετικέτες Αναλυτικής"
 
 #. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_search
+msgid "Archived"
+msgstr "Αρχειοθετημένα"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_attachment_count
 msgid "Attachment Count"
 msgstr ""
 
 #. module: purchase_requisition
-#: selection:purchase.requisition,state:0
-#: selection:purchase.requisition,state_blanket_order:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__open
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__open
 msgid "Bid Selection"
 msgstr ""
 
 #. module: purchase_requisition
 #: model:purchase.requisition.type,name:purchase_requisition.type_single
 msgid "Blanket Order"
-msgstr ""
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_id
-msgid "Blanket order"
 msgstr ""
 
 #. module: purchase_requisition
@@ -156,16 +188,21 @@ msgid "Cancel"
 msgstr "Ακύρωση"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition,state:0
-#: selection:purchase.requisition,state_blanket_order:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__cancel
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__cancel
 msgid "Cancelled"
 msgstr "Ακυρώθηκε"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:116
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "Cancelled by the agreement associated to this quotation."
 msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_uom_category_id
+msgid "Category"
+msgstr "Κατηγορία"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -173,8 +210,8 @@ msgid "Close"
 msgstr "Κλείσιμο"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition,state:0
-#: selection:purchase.requisition,state_blanket_order:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__done
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__done
 msgid "Closed"
 msgstr "Κλειστό"
 
@@ -190,14 +227,23 @@ msgid "Confirm"
 msgstr "Επιβεβαίωση"
 
 #. module: purchase_requisition
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__in_progress
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__in_progress
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-#: selection:purchase.requisition,state:0
-#: selection:purchase.requisition,state_blanket_order:0
 msgid "Confirmed"
 msgstr "Επιβεβαιώθηκε"
 
 #. module: purchase_requisition
-#: selection:product.template,purchase_requisition:0
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_line__product_uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Μετατροπή ανάμεσα σε Μονάδες Μέτρησης μπορεί να πραγματοποιηθεί μόνο αν "
+"ανήκουν στην ίδια κατηγορία. Η μετατροπή θα γίνει βάσει των αναλογιών."
+
+#. module: purchase_requisition
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__product_template__purchase_requisition__rfq
 msgid "Create a draft purchase order"
 msgstr ""
 
@@ -231,6 +277,11 @@ msgid "Currency"
 msgstr "Νόμισμα"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_description_variants
+msgid "Custom Description"
+msgstr ""
+
+#. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Data for new quotations"
 msgstr ""
@@ -253,7 +304,7 @@ msgid "Display Name"
 msgstr "Εμφάνιση Ονόματος"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition.type,line_copy:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__line_copy__none
 msgid "Do not create RfQ lines automatically"
 msgstr "Μην δημιουργείτε αυτόματα γραμμές για τις Αιτήσεις "
 
@@ -263,21 +314,11 @@ msgid "Done"
 msgstr "Ολοκληρωμένη"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__move_dest_id
-msgid "Downstream Move"
-msgstr ""
-
-#. module: purchase_requisition
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__draft
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__draft
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-#: selection:purchase.requisition,state:0
-#: selection:purchase.requisition,state_blanket_order:0
 msgid "Draft"
 msgstr "Προσχέδιο"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-msgid "End Date"
-msgstr "Ημερ. Λήξης"
 
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -293,27 +334,37 @@ msgid "Followers"
 msgstr "Ακόλουθοι"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Ακόλουθοι (Κανάλια)"
-
-#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Ακόλουθοι (Συνεργάτες)"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Γραμματοσειρά awesome  π.χ. fa-tasks"
 
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid ""
 "For a blanket order, you can record an agreement for a specifc period\n"
 "            (e.g. a year) and you order products within this agreement, benefiting\n"
-"            from the negociated prices."
+"            from the negotiated prices."
 msgstr ""
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "Future Activities"
+msgstr "Μελλοντικές Δραστηριότητες"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Group By"
 msgstr "Ομαδοποίηση κατά"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__has_message
+msgid "Has Message"
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__id
@@ -323,17 +374,24 @@ msgid "ID"
 msgstr "Κωδικός"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας"
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_exception_icon
+msgid "Icon"
+msgstr "Εικονίδιο"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_needaction
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_error
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
 
@@ -378,6 +436,11 @@ msgid "Last Updated on"
 msgstr "Τελευταία Ενημέρωση στις"
 
 #. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "Late Activities"
+msgstr "Καθυστερημένες Δραστηριότητες"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__line_copy
 msgid "Lines"
 msgstr "Γραμμές"
@@ -403,8 +466,18 @@ msgid "Multiple Requisitions"
 msgstr ""
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr ""
+
+#. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "My Agreements"
+msgstr ""
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
+msgid "Name, TIN, Email, or Reference"
 msgstr ""
 
 #. module: purchase_requisition
@@ -418,6 +491,26 @@ msgid "New Quotation"
 msgstr "Νέα Προσφορά"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Επόμενη Προθεσμία Δραστηριότητας"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_summary
+msgid "Next Activity Summary"
+msgstr "Σύνοψη Επόμενης Δραστηριότητας"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_type_id
+msgid "Next Activity Type"
+msgstr "Επόμενος Τύπος Δραστηριότητας"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction_counter
 msgid "Number of Actions"
 msgstr "Πλήθος ενεργειών"
@@ -429,7 +522,7 @@ msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error_counter
-msgid "Number of error"
+msgid "Number of errors"
 msgstr ""
 
 #. module: purchase_requisition
@@ -448,15 +541,10 @@ msgid "Number of unread messages"
 msgstr "Πλήθος μη αναγνωσμένων μηνυμάτων"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition,state:0
-#: selection:purchase.requisition,state_blanket_order:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__ongoing
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__ongoing
 msgid "Ongoing"
 msgstr ""
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__picking_type_id
-msgid "Operation Type"
-msgstr "Τύπος Λειτουργίας"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__qty_ordered
@@ -476,12 +564,8 @@ msgid "Procurement"
 msgstr "Προμήθειες"
 
 #. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_procurement_group
-msgid "Procurement Group"
-msgstr "Ομάδα Προμηθειών"
-
-#. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_product
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__product_id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_id
 msgid "Product"
 msgstr "Είδος"
@@ -508,7 +592,7 @@ msgid "Products to Purchase"
 msgstr "Είδη προς Αγορά"
 
 #. module: purchase_requisition
-#: selection:product.template,purchase_requisition:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__product_template__purchase_requisition__tenders
 msgid "Propose a call for tenders"
 msgstr ""
 
@@ -529,7 +613,6 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
 #: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_tree
 msgid "Purchase Agreements"
@@ -600,6 +683,12 @@ msgid "RFQs/Orders"
 msgstr "Αιτήσεις / Παραγγελίες"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__name
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "Reference"
+msgstr "Σχετικό"
+
+#. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.product_template_form_view_inherit
 msgid "Reordering"
 msgstr ""
@@ -625,19 +714,19 @@ msgid "Requisition"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_stock_move__requisition_line_ids
-msgid "Requisition Line"
-msgstr ""
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_stock_move__requistion_line_ids
-msgid "Requistion Line"
-msgstr ""
-
-#. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Reset to Draft"
 msgstr "Επαναφορά σε Προσχέδιο"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_user_id
+msgid "Responsible User"
+msgstr "Υπεύθυνος Χρήστης"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__schedule_date
@@ -650,12 +739,12 @@ msgid "Search Purchase Agreements"
 msgstr "Αναζήτηση Συμφωνιών Αγοράς"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition.type,exclusive:0
-msgid "Select multiple RFQ"
-msgstr "Επιλογή Πολλαπλών Αιτήσεων"
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__multiple
+msgid "Select multiple RFQ (non-exclusive)"
+msgstr ""
 
 #. module: purchase_requisition
-#: selection:purchase.requisition.type,exclusive:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__exclusive
 msgid "Select only one RFQ (exclusive)"
 msgstr "Επιλέξτε μόνο μία Αίτηση (αποκλειστικά)"
 
@@ -664,11 +753,8 @@ msgstr "Επιλέξτε μόνο μία Αίτηση (αποκλειστικά)
 msgid ""
 "Select only one RFQ (exclusive):  when a purchase order is confirmed, cancel the remaining purchase order.\n"
 "\n"
-"                    Select multiple RFQ: allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
+"                    Select multiple RFQ (non-exclusive): allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
 msgstr ""
-"Επιλέξτε μόνο μία Αίτηση (αποκλειστικά): όταν επιβεβαιωθεί μια εντολή αγοράς, ακυρώνει την υπόλοιπη εντολή αγοράς.\n"
-"\n"
-"                    Επιλογή πολλαπλών Αιτήσεων: επιτρέπει πολλαπλές εντολές αγοράς. Με την επιβεβαίωση της παραγγελίας δεν ακυρώνει τις υπόλοιπες παραγγελίες"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__sequence
@@ -676,14 +762,23 @@ msgid "Sequence"
 msgstr "Ακολουθία"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition.type,quantity_copy:0
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_type__active
+msgid ""
+"Set active to false to hide the Purchase Agreement Types without removing "
+"it."
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__quantity_copy__none
 msgid "Set quantities manually"
 msgstr ""
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-msgid "Source"
-msgstr "Πηγή"
+msgid "Show all records which has next action date is before today"
+msgstr ""
+"Εμφάνιση όλων των εγγραφών όπου η ημερομηνία επόμενης δράσης είναι πριν από "
+"σήμερα"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__origin
@@ -707,14 +802,17 @@ msgid "Status"
 msgstr "Κατάσταση"
 
 #. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_stock_move
-msgid "Stock Move"
-msgstr "Κίνηση Αποθέματος"
-
-#. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_stock_rule
-msgid "Stock Rule"
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
 msgstr ""
+"Κατάσταση βασισμένη σε δραστηριότητες\n"
+"Καθυστερημένη: Η ημερομηνία λήξης έχει ήδη περάσει\n"
+"Σήμερα: Η ημερομηνία δραστηριότητας είναι σήμερα\n"
+"Προγραμματισμένες: Μελλοντικές δραστηριότητες."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__supplier_info_ids
@@ -738,21 +836,21 @@ msgid ""
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:95
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid ""
-"There is already an open blanket order for this supplier. We suggest you to "
-"use to complete this open blanket order instead of creating a new one."
+"There is already an open blanket order for this supplier. We suggest you "
+"complete this open blanket order, instead of creating a new one."
 msgstr ""
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-msgid "Unassigned"
-msgstr "Μη Ανατεθειμένη"
+msgid "Today Activities"
+msgstr "Σημερινές Δραστηριότητες"
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-msgid "Unassigned  Requisition"
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_exception_decoration
+msgid "Type of the exception activity on record."
 msgstr ""
 
 #. module: purchase_requisition
@@ -771,12 +869,17 @@ msgid "Unread Messages Counter"
 msgstr "Μετρητής μη αναγνωσμένων μηνυμάτων"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition.type,line_copy:0
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "UoM"
+msgstr "ΜΜ"
+
+#. module: purchase_requisition
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__line_copy__copy
 msgid "Use lines of agreement"
 msgstr ""
 
 #. module: purchase_requisition
-#: selection:purchase.requisition.type,quantity_copy:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__quantity_copy__copy
 msgid "Use quantities of agreement"
 msgstr ""
 
@@ -791,12 +894,7 @@ msgid "Vendor"
 msgstr "Προμηθευτής"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__warehouse_id
-msgid "Warehouse"
-msgstr "Αποθήκη"
-
-#. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:94
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "Warning for %s"
 msgstr "Προειδοποίηση για %s"
@@ -812,33 +910,33 @@ msgid "Website communication history"
 msgstr "Ιστορικό επικοινωνίας ιστότοπου"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:178
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You can only delete draft requisitions."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:123
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm agreement '%s' because there is no product line."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:127
-#: code:addons/purchase_requisition/models/purchase_requisition.py:220
-#: code:addons/purchase_requisition/models/purchase_requisition.py:228
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm the blanket order without price."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:129
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm the blanket order without quantity."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:156
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid ""
 "You have to cancel or validate every RfQ before closing the purchase "

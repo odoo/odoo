@@ -128,7 +128,7 @@ def init_logger():
     warnings.simplefilter('default', category=DeprecationWarning)
     # ignore deprecation warnings from invalid escape (there's a ton and it's
     # pretty likely a super low-value signal)
-    warnings.filterwarnings('ignore', r'^invalid escape sequence \\.', category=DeprecationWarning)
+    warnings.filterwarnings('ignore', r'^invalid escape sequence \'?\\.', category=DeprecationWarning)
     # recordsets are both sequence and set so trigger warning despite no issue
     warnings.filterwarnings('ignore', r'^Sampling from a set', category=DeprecationWarning, module='odoo')
     # ignore a bunch of warnings we can't really fix ourselves

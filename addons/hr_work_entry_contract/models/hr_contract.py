@@ -48,6 +48,17 @@ class HrContract(models.Model):
                 return self._get_leave_work_entry_type_dates(leave[2], interval_start, interval_stop, self.employee_id)
         return self.env.ref('hr_work_entry_contract.work_entry_type_leave')
 
+    def _get_leave_domain(self, start_dt, end_dt):
+        self.ensure_one()
+        return [
+            ('time_type', '=', 'leave'),
+            ('calendar_id', 'in', [False, self.resource_calendar_id.id]),
+            ('resource_id', 'in', [False, self.employee_id.resource_id.id]),
+            ('date_from', '<=', end_dt),
+            ('date_to', '>=', start_dt),
+            ('company_id', 'in', [False, self.company_id.id]),
+        ]
+
     def _get_contract_work_entries_values(self, date_start, date_stop):
         contract_vals = []
         bypassing_work_entry_type_codes = self._get_bypassing_work_entry_type_codes()
@@ -69,17 +80,10 @@ class HrContract(models.Model):
             # in master.
             resources_list = [self.env['resource.resource'], resource]
             resource_ids = [False, resource.id]
-            leave_domain = [
-                ('time_type', '=', 'leave'),
-                # ('calendar_id', '=', self.id), --> Get all the time offs
-                ('resource_id', 'in', resource_ids),
-                ('date_from', '<=', datetime_to_string(end_dt)),
-                ('date_to', '>=', datetime_to_string(start_dt)),
-                ('company_id', '=', self.env.company.id),
-            ]
+            leave_domain = contract._get_leave_domain(start_dt, end_dt)
             result = defaultdict(lambda: [])
             tz_dates = {}
-            for leave in self.env['resource.calendar.leaves'].search(leave_domain):
+            for leave in self.env['resource.calendar.leaves'].sudo().search(leave_domain):
                 for resource in resources_list:
                     if leave.resource_id.id not in [False, resource.id]:
                         continue

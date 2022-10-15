@@ -7,6 +7,7 @@
 # 黎伟杰 <674416404@qq.com>, 2021
 # xu aaron, 2021
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,7 +61,7 @@ msgstr "<strong>→</strong>"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction
 msgid "Action Needed"
-msgstr "需要行动"
+msgstr "需要采取动作"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_ids
@@ -87,7 +88,7 @@ msgstr "活动类型图表"
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "Add Operations"
-msgstr "添加操作"
+msgstr "添加作业"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
@@ -111,7 +112,7 @@ msgstr "添加到波次"
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_to_batch_action_stock_picking
 msgid "Add to batch"
-msgstr "添加到批量"
+msgstr "添加到批"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_add_to_wave_action_stock_picking
@@ -181,7 +182,7 @@ msgstr "关联到此调拨的批"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
 msgid "Batches"
-msgstr "批量"
+msgstr "批"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_add_to_wave_form
@@ -199,7 +200,7 @@ msgstr "已取消"
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "Cannot create wave transfers"
-msgstr "不能创建波次传输"
+msgstr "不能创建波次调拨"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -227,12 +228,12 @@ msgstr "确认"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__count_picking_batch
 msgid "Count Picking Batch"
-msgstr "计数分拣批次"
+msgstr "拣货批数量"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__count_picking_wave
 msgid "Count Picking Wave"
-msgstr "分拣波次数量"
+msgstr "拣货波次数量"
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
@@ -242,7 +243,7 @@ msgstr "创建新批量调拨"
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 msgid "Create a new wave transfer"
-msgstr "创建一个新的波次分拣"
+msgstr "创建一个新的波次调拨"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__create_uid
@@ -261,7 +262,7 @@ msgstr "创建时间"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Detailed Operations"
-msgstr "详细作业"
+msgstr "作业详情"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__display_name
@@ -451,7 +452,7 @@ msgstr "下一活动类型"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction_counter
 msgid "Number of Actions"
-msgstr "动作个数"
+msgstr "动作数量"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error_counter
@@ -492,7 +493,7 @@ msgstr "此批量调拨负责人"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_add_to_wave__user_id
 msgid "Person responsible for this wave transfer"
-msgstr "负责这次波次分拣的人"
+msgstr "负责这次波次调拨的人"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__picking_ids
@@ -699,7 +700,7 @@ msgid ""
 "\n"
 "Incompatibilities: %s"
 msgstr ""
-"以下移动不能被添加到批量移动%s。请检查它们的状态和操作类型，如果它们不是即时转移。\n"
+"以下移动不能被添加到批量移动%s。请检查它们的状态和作业类型，如果它们不是即时调拨。\n"
 "\n"
 "不兼容的情况。%s"
 
@@ -711,7 +712,7 @@ msgid ""
 "            It may also be useful to assign jobs (one person = one batch) or\n"
 "            help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
-"批量调拨的目标是将可能出现的操作进行分组。\n"
+"批量调拨的目标是将可能出现的作业进行分组。\n"
 "            (需要)一起做，以提高其效率。\n"
 "            分配工作（一个人=一批人），也可能是有用的。\n"
 "            帮助业务的时间管理（下午1点要完成的任务）。"
@@ -724,16 +725,16 @@ msgid ""
 "                    It may also be useful to assign jobs (one person = one batch) or\n"
 "                    help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
-"波浪转移的目标是将不同转移的操作组合在一起，以提高其效率。\n"
-"                    的操作组合在一起，以提高其效率。\n"
+"波浪调拨的目标是将不同调拨的作业组合在一起，以提高其效率。\n"
+"                    的作业组合在一起，以提高其效率。\n"
 "                    它也可以用来分配工作（一个人=一个批次）或\n"
-"                    帮助操作的时间管理（任务要在下午1点完成）。"
+"                    帮助作业的时间管理（任务要在下午1点完成）。"
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "The selected operations should belong to a unique company."
-msgstr "选定的操作应属于同一个公司。"
+msgstr "选定的作业应属于同一个公司。"
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/wizard/stock_picking_to_batch.py:0
@@ -745,13 +746,13 @@ msgstr "所选拣货应属于一家独特的公司。"
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "The selected transfers should belong to a unique company."
-msgstr "选定的转移应属于同一个公司。"
+msgstr "选定的调拨应属于同一个公司。"
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "The selected transfers should belong to the same operation type"
-msgstr "所选的转移应属于同一个操作类型"
+msgstr "所选的调拨应属于同一个作业类型"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__is_wave
@@ -809,23 +810,23 @@ msgstr "验证"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__wave_id
 msgid "Wave Transfer"
-msgstr "波次转移"
+msgstr "波次调拨"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_add_to_wave
 msgid "Wave Transfer Lines"
-msgstr "波次转移明细"
+msgstr "波次调拨明细"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.action_picking_tree_wave
 #: model:ir.ui.menu,name:stock_picking_batch.stock_picking_wave_menu
 msgid "Wave Transfers"
-msgstr "波次转移"
+msgstr "波次调拨"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
 msgid "Waves"
-msgstr "波浪"
+msgstr "波次"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__website_message_ids
@@ -841,13 +842,13 @@ msgstr "网上沟通记录"
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "You cannot delete Done batch transfers."
-msgstr "你不能删除已完成的批量转移"
+msgstr "您不能删除已完成的批量调拨"
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "You have to set some pickings to batch."
-msgstr "你必须设置一些拣货为批量。"
+msgstr "您必须设置一些拣货为批量。"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__new
@@ -857,7 +858,7 @@ msgstr "新的批量调拨"
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__new
 msgid "a new wave transfer"
-msgstr "新的波次转移"
+msgstr "新的波次调拨"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__existing
@@ -867,4 +868,4 @@ msgstr "已存在的批量调拨"
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__existing
 msgid "an existing wave transfer"
-msgstr "现有的波次转移"
+msgstr "现有的波次调拨"

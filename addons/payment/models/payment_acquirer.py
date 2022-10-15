@@ -314,13 +314,6 @@ class PaymentAcquirer(models.Model):
             domain = expression.AND([domain, [('allow_tokenization', '=', True)]])
 
         compatible_acquirers = self.env['payment.acquirer'].search(domain)
-
-        # Prevent the public user from saving a token for acquirers that require tokenization.
-        if self.env.user._is_public():
-            compatible_acquirers = compatible_acquirers.filtered(
-                lambda acq: not self._is_tokenization_required(provider=acq.provider, **kwargs)
-            )
-
         return compatible_acquirers
 
     @api.model

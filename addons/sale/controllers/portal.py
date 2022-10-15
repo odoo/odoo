@@ -47,6 +47,13 @@ class CustomerPortal(portal.CustomerPortal):
     # Quotations and Sales Orders
     #
 
+    def _get_sale_searchbar_sortings(self):
+        return {
+            'date': {'label': _('Order Date'), 'order': 'date_order desc'},
+            'name': {'label': _('Reference'), 'order': 'name'},
+            'stage': {'label': _('Stage'), 'order': 'state'},
+        }
+
     @http.route(['/my/quotes', '/my/quotes/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_quotes(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
         values = self._prepare_portal_layout_values()
@@ -55,11 +62,7 @@ class CustomerPortal(portal.CustomerPortal):
 
         domain = self._prepare_quotations_domain(partner)
 
-        searchbar_sortings = {
-            'date': {'label': _('Order Date'), 'order': 'date_order desc'},
-            'name': {'label': _('Reference'), 'order': 'name'},
-            'stage': {'label': _('Stage'), 'order': 'state'},
-        }
+        searchbar_sortings = self._get_sale_searchbar_sortings()
 
         # default sortby order
         if not sortby:
@@ -102,11 +105,8 @@ class CustomerPortal(portal.CustomerPortal):
 
         domain = self._prepare_orders_domain(partner)
 
-        searchbar_sortings = {
-            'date': {'label': _('Order Date'), 'order': 'date_order desc'},
-            'name': {'label': _('Reference'), 'order': 'name'},
-            'stage': {'label': _('Stage'), 'order': 'state'},
-        }
+        searchbar_sortings = self._get_sale_searchbar_sortings()
+
         # default sortby order
         if not sortby:
             sortby = 'date'
@@ -186,6 +186,7 @@ class CustomerPortal(portal.CustomerPortal):
         # Payment values
         if order_sudo.has_to_be_paid():
             logged_in = not request.env.user._is_public()
+
             acquirers_sudo = request.env['payment.acquirer'].sudo()._get_compatible_acquirers(
                 order_sudo.company_id.id,
                 order_sudo.partner_id.id,
@@ -196,6 +197,14 @@ class CustomerPortal(portal.CustomerPortal):
                 ('acquirer_id', 'in', acquirers_sudo.ids),
                 ('partner_id', '=', order_sudo.partner_id.id)
             ]) if logged_in else request.env['payment.token']
+
+            # Make sure that the partner's company matches the order's company.
+            if not payment_portal.PaymentPortal._can_partner_pay_in_company(
+                order_sudo.partner_id, order_sudo.company_id
+            ):
+                acquirers_sudo = request.env['payment.acquirer'].sudo()
+                tokens = request.env['payment.token']
+
             fees_by_acquirer = {
                 acquirer: acquirer._compute_fees(
                     order_sudo.amount_total,
@@ -341,8 +350,8 @@ class PaymentPortal(payment_portal.PaymentPortal):
         :raise: ValidationError if the order id is invalid
         """
         # Cast numeric parameters as int or float and void them if their str value is malformed
-        amount = self.cast_as_float(amount)
-        sale_order_id = self.cast_as_int(sale_order_id)
+        amount = self._cast_as_float(amount)
+        sale_order_id = self._cast_as_int(sale_order_id)
         if sale_order_id:
             order_sudo = request.env['sale.order'].sudo().browse(sale_order_id).exists()
             if not order_sudo:

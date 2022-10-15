@@ -80,7 +80,7 @@ class EmbeddedSlide(models.Model):
     _description = 'Embedded Slides View Counter'
     _rec_name = 'slide_id'
 
-    slide_id = fields.Many2one('slide.slide', string="Presentation", required=True, index=True)
+    slide_id = fields.Many2one('slide.slide', string="Presentation", required=True, index=True, ondelete='cascade')
     url = fields.Char('Third Party Website URL', required=True)
     count_views = fields.Integer('# Views', default=1)
 
@@ -243,6 +243,12 @@ class Slide(models.Model):
     def _compute_questions_count(self):
         for slide in self:
             slide.questions_count = len(slide.question_ids)
+
+    def _has_additional_resources(self):
+        """Sudo required for public user to know if the course has additional
+        resources that they will be able to access once a member."""
+        self.ensure_one()
+        return bool(self.sudo().slide_resource_ids)
 
     @api.depends('website_message_ids.res_id', 'website_message_ids.model', 'website_message_ids.message_type')
     def _compute_comments_count(self):

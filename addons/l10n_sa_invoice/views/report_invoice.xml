@@ -18,13 +18,15 @@
                 </div>
             </div>
         </xpath>
-    </template>
 
-    <template id="external_layout_standard" inherit_id="l10n_gcc_invoice.external_layout_standard">
-        <xpath expr="//div[@name='qr_code']" position="inside">
-            <img t-if="o.l10n_sa_qr_code_str"
-                 style="display:block;margin:10% auto 0 auto;"
-                 t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s'%('QR', o.l10n_sa_qr_code_str, 150, 150)"/>
+        <xpath expr="//t[@t-set='address']" position="after">
+            <t t-set="information_block">
+                <p>
+                    <img t-if="o.l10n_sa_qr_code_str"
+                         style="display:block;"
+                         t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s'%('QR', o.l10n_sa_qr_code_str, 130, 130)"/>
+                </p>
+            </t>
         </xpath>
     </template>
 

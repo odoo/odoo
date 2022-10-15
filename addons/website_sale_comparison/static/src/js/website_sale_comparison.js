@@ -195,8 +195,12 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
         var self = this;
         this.$('.o_comparelist_products .o_product_row').remove();
         _.each(this.comparelist_product_ids, function (res) {
-            var $template = self.product_data[res].render;
-            self.$('.o_comparelist_products').append($template);
+            if (self.product_data.hasOwnProperty(res)) {
+                // It is possible that we do not have the required product_data for all IDs in
+                // comparelist_product_ids
+                var $template = self.product_data[res].render;
+                self.$('.o_comparelist_products').append($template);
+            }
         });
         if (force !== 'hide' && (this.comparelist_product_ids.length > 1 || force === 'show')) {
             $('#comparelist .o_product_panel_header').popover('show');
@@ -261,7 +265,7 @@ publicWidget.registry.ProductComparison = publicWidget.Widget.extend(cartHandler
     events: {
         'click .o_add_compare, .o_add_compare_dyn': '_onClickAddCompare',
         'click #o_comparelist_table tr': '_onClickComparelistTr',
-        'submit form[action="/shop/cart/update"]': '_onFormSubmit',
+        'submit .o_add_cart_form_compare': '_onFormSubmit',
     },
 
     /**

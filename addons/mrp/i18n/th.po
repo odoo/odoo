@@ -95,12 +95,6 @@ msgid "%s %s unbuilt in"
 msgstr "%s %s ยกเลิกการสร้างใน"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_routing.py:0
-#, python-format
-msgid "%s (copy)"
-msgstr "%s (สำเนา)"
-
-#. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "%s (new) %s"
@@ -1104,11 +1098,9 @@ msgstr "ส่วนประกอบ"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
-"Component Lots must be unique for mass production. Please review consumption"
+"Component Lots must be unique for mass production. Please review reservation"
 " for:\n"
 msgstr ""
-"ล็อตส่วนประกอบต้องไม่ซ้ำกันสำหรับการผลิตจำนวนมาก "
-"โปรดตรวจสอบปริมาณการใช้คสำหรับ:\n"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__components_availability
@@ -3026,12 +3018,20 @@ msgstr "จํานวนข้อความที่มีข้อผิด
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__capacity
 msgid ""
-"Number of pieces that can be produced in parallel. In case the work center "
-"has a capacity of 5 and you have to produce 10 units on your work order, the"
-" usual operation time will be multiplied by 2."
+"Number of pieces (in product UoM) that can be produced in parallel  (at the "
+"same time) at this work center. For example: the capacity is 5 and you need "
+"to produce 10 units, then the operation time listed on the BOM will be "
+"multiplied by two. However, note that both time before and after production "
+"will only be counted once. "
 msgstr ""
-"จำนวนชิ้นที่ผลิตได้แบบคู่ขนาน ในกรณีที่ศูนย์งานมีความจุ 5 หน่วย "
-"และคุณต้องผลิต 10 หน่วยตามคำสั่งงานของคุณ เวลาดำเนินการปกติจะถูกคูณด้วย 2"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom__product_qty
+msgid ""
+"This should be the smallest quantity that this product can be produced in. "
+"If the BOM contains operations, make sure the work center capacity is "
+"accurate. "
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_source_count
@@ -4449,6 +4449,12 @@ msgid ""
 msgstr "หน่วยวัดสินค้าที่คุณเลือกอยู่คนละหมวดหมู่กับที่อยู่ในแบบฟอร์มสินค้า"
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_workcenter.py:0
+#, python-format
+msgid "The Workorder (%s) cannot be started twice!"
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
@@ -4518,6 +4524,15 @@ msgstr ""
 "โปรดแก้ไขให้ถูกต้องเพื่อบันทึกคำสั่งงาน"
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The product has already been used at least once, editing its structure may "
+"lead to undesirable behaviours. You should rather archive the product and "
+"create a new one with a new bill of materials."
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "The quantity produced of by-products must be positive."
@@ -4535,6 +4550,15 @@ msgstr "จำนวนที่จะผลิตต้องเป็นบว
 #: model:ir.model.fields,help:mrp.field_mrp_document__res_id
 msgid "The record id this is attached to."
 msgstr "ไอดีบันทึกนี้แนบมา"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#, python-format
+msgid ""
+"The selected serial number does not correspond to the one used in the "
+"manufacturing order, please select another one."
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0

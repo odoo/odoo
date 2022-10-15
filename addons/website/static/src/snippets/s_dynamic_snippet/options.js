@@ -49,11 +49,14 @@ const dynamicSnippetOptions = options.Class.extend({
         }
         if (params.attributeName === 'numberOfRecords' && previewMode === false) {
             const dataSet = this.$target.get(0).dataset;
-            if (dataSet.numberOfElements > dataSet.numberOfRecords) {
-                dataSet.numberOfElements = dataSet.numberOfRecords;
+            const numberOfElements = parseInt(dataSet.numberOfElements);
+            const numberOfRecords = parseInt(dataSet.numberOfRecords);
+            const numberOfElementsSmallDevices = parseInt(dataSet.numberOfElementsSmallDevices);
+            if (numberOfElements > numberOfRecords) {
+                dataSet.numberOfElements = numberOfRecords;
             }
-            if (dataSet.numberOfElementsSmallDevices > dataSet.numberOfRecords) {
-                dataSet.numberOfElementsSmallDevices = dataSet.numberOfRecords;
+            if (numberOfElementsSmallDevices > numberOfRecords) {
+                dataSet.numberOfElementsSmallDevices = numberOfRecords;
             }
         }
     },
@@ -224,13 +227,11 @@ const dynamicSnippetOptions = options.Class.extend({
             if (!this.dynamicFilterTemplates[selectedTemplateId]) {
                 this.$target.get(0).dataset['templateKey'] = dynamicFilterTemplates[0].key;
                 this.isOptionDefault['templateKey'] = true;
-                setTimeout(() => {
-                    this._templateUpdated(dynamicFilterTemplates[0].key, selectedTemplateId);
-                    this._refreshPublicWidgets();
-                });
+                this._templateUpdated(dynamicFilterTemplates[0].key, selectedTemplateId);
+                await this._refreshPublicWidgets();
             }
         } else {
-            this._refreshPublicWidgets();
+            await this._refreshPublicWidgets();
         }
         const templatesSelectorEl = uiFragment.querySelector('[data-name="template_opt"]');
         return this._renderSelectUserValueWidgetButtons(templatesSelectorEl, this.dynamicFilterTemplates);

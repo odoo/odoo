@@ -5,7 +5,7 @@
 # Translators:
 # Martin Trigaux, 2021
 # f5f0a0dac17dde787a1d812a6989680e, 2021
-# Alexandra Jubert <aju@odoo.com>, 2021
+# Alexandra Jubert, 2021
 # Vallen Delobel <edv@odoo.com>, 2021
 # Geoffrey_GMF <gmf@odoo.com>, 2021
 # SADEBP <sarah.dereix@beproject.fr>, 2021
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_email_amount
@@ -65,8 +65,8 @@ msgid ""
 "<b>Congratulations!</b> May I recommend you to setup an <a "
 "href=\"%s\">onboarding plan?</a>"
 msgstr ""
-"<b>Félicitations!</b> Puis-je vous recommander de configurer un <a "
-"href=\"%s\">plan d'intégration?</a>"
+"<b>Félicitations !</b> Puis-je vous recommander de configurer un <a "
+"href=\"%s\">plan d'intégration ?</a>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -2328,7 +2328,7 @@ msgstr "Qualifier les besoins du client"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Ready to recruit more efficiently?"
-msgstr "Prêt à recruter plus efficacement?"
+msgstr "Prêt à recruter plus efficacement ?"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2949,7 +2949,7 @@ msgstr "Ce que nous offrons"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "What's great in the job?"
-msgstr "Qu'est-ce qui est génial dans ce travail?"
+msgstr "Qu'est-ce qui est génial dans ce travail ?"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__widower
@@ -3094,6 +3094,12 @@ msgstr ""
 #, python-format
 msgid "You cannot create recursive departments."
 msgstr "Vous ne pouvez pas créer des départements récursifs. "
+
+#. module: hr
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid "You do not have access to this document."
+msgstr "Vous n'avez pas accès à ce document."
 
 #. module: hr
 #: code:addons/hr/models/res_config_settings.py:0

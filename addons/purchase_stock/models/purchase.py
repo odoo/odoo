@@ -293,7 +293,7 @@ class PurchaseOrderLine(models.Model):
         self.ensure_one()
         moves = self.move_ids.filtered(lambda m: m.product_id == self.product_id)
         if self._context.get('accrual_entry_date'):
-            moves = moves.filtered(lambda r: fields.Date.to_date(r.date) <= self._context['accrual_entry_date'])
+            moves = moves.filtered(lambda r: fields.Date.context_today(r, r.date) <= self._context['accrual_entry_date'])
         return moves
 
     @api.depends('move_ids.state', 'move_ids.product_uom_qty', 'move_ids.product_uom')
@@ -318,13 +318,15 @@ class PurchaseOrderLine(models.Model):
                             pass
                         elif (
                             move.location_dest_id.usage == "internal"
-                            and move.to_refund
+                            and move.location_id.usage != "supplier"
+                            and move.warehouse_id
                             and move.location_dest_id
                             not in self.env["stock.location"].search(
                                 [("id", "child_of", move.warehouse_id.view_location_id.id)]
                             )
                         ):
-                            total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
+                            if move.to_refund:
+                                total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
                         else:
                             total += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
                 line._track_qty_received(total)
@@ -355,6 +357,11 @@ class PurchaseOrderLine(models.Model):
         lines = self.filtered(lambda l: l.order_id.state == 'purchase')
         previous_product_qty = {line.id: line.product_uom_qty for line in lines}
         result = super(PurchaseOrderLine, self).write(values)
+        if 'price_unit' in values:
+            for line in lines:
+                # Avoid updating kit components' stock.move
+                moves = line.move_ids.filtered(lambda s: s.state not in ('cancel', 'done') and s.product_id == line.product_id)
+                moves.write({'price_unit': line.price_unit})
         if 'product_qty' in values:
             lines.with_context(previous_product_qty=previous_product_qty)._create_or_update_picking()
         return result
@@ -523,6 +530,7 @@ class PurchaseOrderLine(models.Model):
             'product_uom_qty': product_uom_qty,
             'product_uom': product_uom.id,
             'product_packaging_id': self.product_packaging_id.id,
+            'sequence': self.sequence,
         }
 
     @api.model
@@ -563,7 +571,7 @@ class PurchaseOrderLine(models.Model):
             description_picking = values['product_description_variants']
         lines = self.filtered(
             lambda l: l.propagate_cancel == values['propagate_cancel']
-            and ((values['orderpoint_id'] and not values['move_dest_ids']) and l.orderpoint_id == values['orderpoint_id'] or True)
+            and (l.orderpoint_id == values['orderpoint_id'] if values['orderpoint_id'] and not values['move_dest_ids'] else True)
         )
 
         # In case 'product_description_variants' is in the values, we also filter on the PO line
@@ -607,4 +615,4 @@ class PurchaseOrderLine(models.Model):
     @api.model
     def _update_qty_received_method(self):
         """Update qty_received_method for old PO before install this module."""
-        self.search([])._compute_qty_received_method()
+        self.search(['!', ('state', 'in', ['purchase', 'done'])])._compute_qty_received_method()

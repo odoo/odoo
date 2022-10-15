@@ -977,7 +977,7 @@ class TestReports(TestReportsCommon):
         receipt.action_confirm()
 
         # Test compute _compute_forecast_information
-        self.assertEqual(delivery.move_lines.forecast_availability, 0.0)
+        self.assertEqual(delivery.move_lines.forecast_availability, -100.0)
         self.assertEqual(delivery2.move_lines.forecast_availability, 200)
         self.assertFalse(delivery.move_lines.forecast_expected_date)
         self.assertEqual(delivery2.move_lines.forecast_expected_date, receipt.move_lines.date)
@@ -1209,7 +1209,7 @@ class TestReports(TestReportsCommon):
         self.assertEqual(lines[3]['document_out'].id, delivery_manual.id)
 
         all_delivery = delivery_by_date | delivery_at_confirm | delivery_by_date_priority | delivery_manual
-        self.assertEqual(all_delivery.move_lines.mapped("forecast_availability"), [0, 0, 0, 0])
+        self.assertEqual(all_delivery.move_lines.mapped("forecast_availability"), [-3.0, -3.0, -3.0, -3.0])
 
         # Creation of one receipt to fulfill the 2 first deliveries delivery_by_date and delivery_at_confirm
         receipt_form = Form(self.env['stock.picking'])
@@ -1222,7 +1222,7 @@ class TestReports(TestReportsCommon):
         receipt1 = receipt_form.save()
         receipt1.action_confirm()
 
-        self.assertEqual(all_delivery.move_lines.mapped("forecast_availability"), [3, 3, 0, 0])
+        self.assertEqual(all_delivery.move_lines.mapped("forecast_availability"), [3, 3, -3.0, -3.0])
 
     def test_report_reception_1_one_receipt(self):
         """ Create 2 deliveries and 1 receipt where some of the products being received

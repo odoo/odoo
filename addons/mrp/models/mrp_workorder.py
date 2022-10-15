@@ -252,12 +252,27 @@ class MrpWorkorder(models.Model):
             workorder.date_planned_finished = workorder.leave_id.date_to
 
     def _set_dates_planned(self):
-        if self.leave_id and (not self[0].date_planned_start or not self[0].date_planned_finished):
+        if not self[0].date_planned_start or not self[0].date_planned_finished:
+            if not self.leave_id:
+                return
             raise UserError(_("It is not possible to unplan one single Work Order. "
                               "You should unplan the Manufacturing Order instead in order to unplan all the linked operations."))
         date_from = self[0].date_planned_start
         date_to = self[0].date_planned_finished
-        self.mapped('leave_id').sudo().write({
+        to_write = self.env['mrp.workorder']
+        for wo in self.sudo():
+            if wo.leave_id:
+                to_write |= wo
+            else:
+                wo.leave_id = wo.env['resource.calendar.leaves'].create({
+                    'name': wo.display_name,
+                    'calendar_id': wo.workcenter_id.resource_calendar_id.id,
+                    'date_from': date_from,
+                    'date_to': date_to,
+                    'resource_id': wo.workcenter_id.resource_id.id,
+                    'time_type': 'other',
+                })
+        to_write.leave_id.write({
             'date_from': date_from,
             'date_to': date_to,
         })
@@ -374,15 +389,6 @@ class MrpWorkorder(models.Model):
         for workorder in self:
             workorder.scrap_count = count_data.get(workorder.id, 0)
 
-    @api.onchange('date_planned_finished')
-    def _onchange_date_planned_finished(self):
-        if self.date_planned_start and self.date_planned_finished:
-            interval = self.workcenter_id.resource_calendar_id.get_work_duration_data(
-                self.date_planned_start, self.date_planned_finished,
-                domain=[('time_type', 'in', ['leave', 'other'])]
-            )
-            self.duration_expected = interval['hours'] * 60
-
     @api.onchange('operation_id')
     def _onchange_operation_id(self):
         if self.operation_id:
@@ -392,10 +398,25 @@ class MrpWorkorder(models.Model):
     @api.onchange('date_planned_start', 'duration_expected', 'workcenter_id')
     def _onchange_date_planned_start(self):
         if self.date_planned_start and self.duration_expected and self.workcenter_id:
-            self.date_planned_finished = self.workcenter_id.resource_calendar_id.plan_hours(
-                self.duration_expected / 60.0, self.date_planned_start,
-                compute_leaves=True, domain=[('time_type', 'in', ['leave', 'other'])]
-            )
+            self.date_planned_finished = self._calculate_date_planned_finished()
+
+    def _calculate_date_planned_finished(self, date_planned_start=False):
+        return self.workcenter_id.resource_calendar_id.plan_hours(
+            self.duration_expected / 60.0, date_planned_start or self.date_planned_start,
+            compute_leaves=True, domain=[('time_type', 'in', ['leave', 'other'])]
+        )
+
+    @api.onchange('date_planned_finished')
+    def _onchange_date_planned_finished(self):
+        if self.date_planned_start and self.date_planned_finished:
+            self.duration_expected = self._calculate_duration_expected()
+
+    def _calculate_duration_expected(self, date_planned_start=False, date_planned_finished=False):
+        interval = self.workcenter_id.resource_calendar_id.get_work_duration_data(
+            date_planned_start or self.date_planned_start, date_planned_finished or self.date_planned_finished,
+            domain=[('time_type', 'in', ['leave', 'other'])]
+        )
+        return interval['hours'] * 60
 
     @api.onchange('operation_id', 'workcenter_id', 'qty_production')
     def _onchange_expected_duration(self):
@@ -416,6 +437,16 @@ class MrpWorkorder(models.Model):
                 end_date = fields.Datetime.to_datetime(values.get('date_planned_finished')) or workorder.date_planned_finished
                 if start_date and end_date and start_date > end_date:
                     raise UserError(_('The planned end date of the work order cannot be prior to the planned start date, please correct this to save the work order.'))
+                if 'duration_expected' not in values and not self.env.context.get('bypass_duration_calculation'):
+                    if values.get('date_planned_start') and values.get('date_planned_finished'):
+                        computed_finished_time = workorder._calculate_date_planned_finished(start_date)
+                        values['date_planned_finished'] = computed_finished_time
+                    elif values.get('date_planned_start'):
+                        computed_duration = workorder._calculate_duration_expected(date_planned_start=start_date)
+                        values['duration_expected'] = computed_duration
+                    elif values.get('date_planned_finished'):
+                        computed_duration = workorder._calculate_duration_expected(date_planned_finished=end_date)
+                        values['duration_expected'] = computed_duration
                 # Update MO dates if the start date of the first WO or the
                 # finished date of the last WO is update.
                 if workorder == workorder.production_id.workorder_ids[0] and 'date_planned_start' in values:
@@ -436,6 +467,8 @@ class MrpWorkorder(models.Model):
         # Auto-confirm manually added workorders.
         # We need to go through `_action_confirm` for all workorders of the current productions to
         # make sure the links between them are correct.
+        if self.env.context.get('skip_confirm'):
+            return res
         to_confirm = res.filtered(lambda wo: wo.production_id.state in ("confirmed", "progress", "to_close"))
         to_confirm = to_confirm.production_id.workorder_ids
         to_confirm._action_confirm()
@@ -538,6 +571,8 @@ class MrpWorkorder(models.Model):
 
     def button_start(self):
         self.ensure_one()
+        if any(not time.date_end for time in self.time_ids.filtered(lambda t: t.user_id.id == self.env.user.id)):
+            return True
         # As button_start is automatically called in the new view
         if self.state in ('done', 'cancel'):
             return True
@@ -577,7 +612,7 @@ class MrpWorkorder(models.Model):
                 vals['date_planned_start'] = start_date
             if self.date_planned_finished and self.date_planned_finished < start_date:
                 vals['date_planned_finished'] = start_date
-            return self.write(vals)
+            return self.with_context(bypass_duration_calculation=True).write(vals)
 
     def button_finish(self):
         end_date = datetime.now()
@@ -647,6 +682,7 @@ class MrpWorkorder(models.Model):
 
     def action_cancel(self):
         self.leave_id.unlink()
+        self.end_all()
         return self.write({'state': 'cancel'})
 
     def action_replan(self):
@@ -719,7 +755,8 @@ class MrpWorkorder(models.Model):
             duration_expected_working = (self.duration_expected - self.workcenter_id.time_start - self.workcenter_id.time_stop) * self.workcenter_id.time_efficiency / (100.0 * cycle_number)
             if duration_expected_working < 0:
                 duration_expected_working = 0
-            return alternative_workcenter.time_start + alternative_workcenter.time_stop + cycle_number * duration_expected_working * 100.0 / alternative_workcenter.time_efficiency
+            alternative_wc_cycle_nb = float_round(qty_production / alternative_workcenter.capacity, precision_digits=0, rounding_method='UP')
+            return alternative_workcenter.time_start + alternative_workcenter.time_stop + alternative_wc_cycle_nb * duration_expected_working * 100.0 / alternative_workcenter.time_efficiency
         time_cycle = self.operation_id.time_cycle
         return self.workcenter_id.time_start + self.workcenter_id.time_stop + cycle_number * time_cycle * 100.0 / self.workcenter_id.time_efficiency
 

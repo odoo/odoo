@@ -18,7 +18,7 @@ options.registry.gallery = options.Class.extend({
         var self = this;
 
         // Make sure image previews are updated if images are changed
-        this.$target.on('image_changed', 'img', function (ev) {
+        this.$target.on('image_changed.gallery', 'img', function (ev) {
             var $img = $(ev.currentTarget);
             var index = self.$target.find('.carousel-item.active').index();
             self.$('.carousel:first li[data-target]:eq(' + index + ')')
@@ -27,12 +27,12 @@ options.registry.gallery = options.Class.extend({
 
         // When the snippet is empty, an edition button is the default content
         // TODO find a nicer way to do that to have editor style
-        this.$target.on('click', '.o_add_images', function (e) {
+        this.$target.on('click.gallery', '.o_add_images', function (e) {
             e.stopImmediatePropagation();
             self.addImages(false);
         });
 
-        this.$target.on('dropped', 'img', function (ev) {
+        this.$target.on('dropped.gallery', 'img', function (ev) {
             self.mode(null, self.getMode());
             if (!ev.target.height) {
                 $(ev.target).one('load', function () {
@@ -74,6 +74,13 @@ options.registry.gallery = options.Class.extend({
             this.$target.removeAttr('style');
         }
     },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        this.$target.off('.gallery');
+    },
 
     //--------------------------------------------------------------------------
     // Options
@@ -85,6 +92,11 @@ options.registry.gallery = options.Class.extend({
      * @see this.selectClass for parameters
      */
     addImages: function (previewMode) {
+        // Prevent opening dialog twice.
+        if (this.__imageDialogOpened) {
+            return Promise.resolve();
+        }
+        this.__imageDialogOpened = true;
         const $images = this.$('img');
         var $container = this.$('> .container, > .container-fluid, > .o_container_small');
         var dialog = new weWidgets.MediaDialog(this, {multiImages: true, onlyImages: true, mediaWidth: 1920});
@@ -107,7 +119,10 @@ options.registry.gallery = options.Class.extend({
                     this.trigger_up('cover_update');
                 }
             });
-            dialog.on('closed', this, () => resolve());
+            dialog.on('closed', this, () => {
+                this.__imageDialogOpened = false;
+                return resolve();
+            });
             dialog.open();
         });
     },

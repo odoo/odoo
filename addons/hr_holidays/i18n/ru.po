@@ -10,7 +10,7 @@
 # ILMIR <karamov@it-projects.info>, 2021
 # Ekaterina <nawsikaya@bk.ru>, 2021
 # Martin Trigaux, 2021
-# Ivan Yelizariev // IEL (ellui) <yelizariev@itpp.dev>, 2021
+# Ivan Kropotkin <yelizariev@itpp.dev>, 2021
 # Irina Fedulova <istartlin@gmail.com>, 2021
 # Evgeniia Kotova, 2022
 # Сергей Шебанин <sergey@shebanin.ru>, 2022
@@ -592,7 +592,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "<span class=\"o_stat_text\">Allocations</span>"
-msgstr "<span class=\"o_stat_text\">Резервирования</span>"
+msgstr "<span class=\"o_stat_text\">Отсутствия</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -788,7 +788,7 @@ msgstr "Активно"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Active Allocations"
-msgstr "Текущие резервирования"
+msgstr "Текущие отсутствия"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__active_employee
@@ -878,7 +878,7 @@ msgstr "днем"
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_allocation_action_all
 msgid "All Allocations"
-msgstr "Все резервирования"
+msgstr "Все отсутствия"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_dashboard
@@ -897,17 +897,17 @@ msgstr "Забронированы (Дни / часа)"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report__leave_type__allocation
 #: model:mail.message.subtype,name:hr_holidays.mt_leave_allocation
 msgid "Allocation"
-msgstr "Резервирование"
+msgstr "Отсутствие"
 
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_allocation_approval
 msgid "Allocation Approval"
-msgstr "Согласовать отпуск"
+msgstr "Согласовать отсутствие"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__private_name
 msgid "Allocation Description"
-msgstr "Описание резервирования"
+msgstr "Описание отсутствия"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__allocation_display
@@ -922,7 +922,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__holiday_type
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__holiday_type
 msgid "Allocation Mode"
-msgstr "Режим резервирования"
+msgstr "Вид отсутствия"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__allocation_notif_subtype_id
@@ -936,7 +936,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
 #, python-format
 msgid "Allocation Request"
-msgstr "Запрос на резервирование"
+msgstr "Запрос на отсутствие"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -944,18 +944,18 @@ msgstr "Запрос на резервирование"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_activity
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
 msgid "Allocation Requests"
-msgstr "Запросы на резервирование"
+msgstr "Запросы на отсутствие"
 
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_allocation_second_approval
 msgid "Allocation Second Approve"
-msgstr "Подтвердить отпуск"
+msgstr "Подтвердить отсутствие"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__allocation_type
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Allocation Type"
-msgstr "Тип резервирования"
+msgstr "Тип отсутствия"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__allocation_used_display
@@ -1010,14 +1010,14 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
 msgid "Allocation to Approve"
-msgstr "Резервирования для утверждения"
+msgstr "Отсутствие для согласования"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_allocation_action_approve_department
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_menu_manager_approve_allocations
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_departure_wizard_view_form
 msgid "Allocations"
-msgstr "Резервирования"
+msgstr "Отсутствия"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -1071,7 +1071,7 @@ msgstr "Одобрить"
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.ir_actions_server_approve_allocations
 msgid "Approve Allocations"
-msgstr "Согласовать резервирования"
+msgstr "Согласовать отсутствия"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__validate
@@ -1090,7 +1090,7 @@ msgstr "Одобрено"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Approved Allocations"
-msgstr "Согласованные резервирования"
+msgstr "Согласованные отсутствия"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
@@ -1249,8 +1249,8 @@ msgid ""
 "By Employee: Allocation/Request for individual Employee, By Employee Tag: "
 "Allocation/Request for group of employees in category"
 msgstr ""
-"По сотруднику: Резервирование/Запрос для каждого сотрудника, По тегу "
-"сотрудника: Резервирование/Запрос для группы сотрудников в категории"
+"По сотруднику: Отсутствие/Запрос для каждого сотрудника, По тегу сотрудника:"
+" Отсутствие/Запрос для группы сотрудников в категории"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__hr
@@ -1393,7 +1393,7 @@ msgstr "Обложка"
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_approve_department
 msgid "Create a new time off allocation"
-msgstr "Создать резервирование на плановый отпуск"
+msgstr "Создать запись о плановом отпуске"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_all
@@ -1442,7 +1442,7 @@ msgstr "Текущий год"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_unit_hours
 msgid "Custom Hours"
-msgstr "собственные часа"
+msgstr "С точностью до часа"
 
 #. module: hr_holidays
 #. openerp-web
@@ -1476,7 +1476,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__nextcall
 msgid "Date of the next accrual allocation"
-msgstr "Дата следующего резервирования по начислению"
+msgstr "Дата следующего отсутствия по начислению"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -1507,7 +1507,7 @@ msgstr "Дней запланировано"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_unit_custom
 msgid "Days-long custom hours"
-msgstr "Собственные часа длительных дней"
+msgstr "С точностью до дня"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__second_month__dec
@@ -1637,7 +1637,7 @@ msgstr "Редактировать"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 msgid "Edit Allocation"
-msgstr "Редактировать резервирование"
+msgstr "Редактировать отсутствие"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
@@ -1707,8 +1707,8 @@ msgid ""
 "Field allowing to see the allocation duration in days or hours depending on "
 "the type_request_unit"
 msgstr ""
-"Поле позволяет видеть длительность резервирования в днях или часах в "
-"зависимости от type_request_unit"
+"Поле позволяет видеть длительность отсутствия в днях или часах в зависимости"
+" от type_request_unit"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__duration_display
@@ -1862,7 +1862,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_unit_half
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__request_unit__half_day
 msgid "Half Day"
-msgstr "юга"
+msgstr "Пол дня"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__has_message
@@ -2388,7 +2388,7 @@ msgstr "Крайний срок моей активности "
 #: model:ir.ui.menu,name:hr_holidays.menu_open_allocation
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "My Allocations"
-msgstr "Мои резервирования"
+msgstr "Мои отсутствия"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
@@ -2449,7 +2449,7 @@ msgstr ""
 #: code:addons/hr_holidays/static/src/js/time_off_calendar_employee.js:0
 #, python-format
 msgid "New Allocation"
-msgstr "Новое резервирование"
+msgstr "Новое отсутствие"
 
 #. module: hr_holidays
 #. openerp-web
@@ -2733,14 +2733,14 @@ msgstr "Другое"
 #: code:addons/hr_holidays/static/src/components/thread_icon/thread_icon.xml:0
 #, python-format
 msgid "Out of office"
-msgstr ""
+msgstr "Не в офисе"
 
 #. module: hr_holidays
 #. openerp-web
 #: code:addons/hr_holidays/static/src/models/partner/partner.js:0
 #, python-format
 msgid "Out of office until %s"
-msgstr ""
+msgstr "Не в офисе до %s"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_dashboard
@@ -2794,12 +2794,12 @@ msgstr "Печать"
 #: model:ir.actions.act_window,name:hr_holidays.open_view_public_holiday
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_public_time_off_menu_configuration
 msgid "Public Holidays"
-msgstr ""
+msgstr "Праздники"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_form_inherit
 msgid "Public Time Off"
-msgstr ""
+msgstr "Общий выходной"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__added_value
@@ -2846,7 +2846,7 @@ msgstr "Отказано"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__allocation_type__regular
 msgid "Regular Allocation"
-msgstr "Регулярное резервирование"
+msgstr "Регулярное отсутствие"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__user_id
@@ -2972,7 +2972,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Search allocations"
-msgstr "Поиск резервирований"
+msgstr "Поиск отсутствий"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__second_approver_id
@@ -3934,6 +3934,13 @@ msgid "You cannot delete an allocation request which is in %s state."
 msgstr ""
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid ""
+"You cannot delete an allocation request which has some validated leaves."
+msgstr ""
+
+#. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid ""
@@ -3946,6 +3953,20 @@ msgstr ""
 #, python-format
 msgid ""
 "You don't have the rights to apply second approval on a time off request"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"You have several allocations for those type and period.\n"
+"Please split your request to fit in their number of days."
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "You must be %s\\'s Manager to approve this leave"
 msgstr ""
 
 #. module: hr_holidays

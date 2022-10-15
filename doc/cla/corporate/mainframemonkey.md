@@ -13,5 +13,6 @@ Yenthe Van Ginneken yenthevg@gmail.com https://github.com/Yenthe666
 List of contributors:
 
 Yenthe Van Ginneken yenthe@mainframemonkey.com https://github.com/Yenthe666
-
 Ward Marissen ward@mainframemonkey.com https://github.com/wardm95
+Swapnesh Shah swapnesh@mainframemonkey.com https://github.com/sswapnesh
+Vincent Adriaensen vincent@mainframemonkey.com https://github.com/vincentadriaensen

@@ -327,7 +327,7 @@ class AccountFrFec(models.TransientModel):
             ELSE REGEXP_REPLACE(replace(am.ref, '|', '/'), '[\\t\\r\\n]', ' ', 'g')
             END
             AS PieceRef,
-            TO_CHAR(am.date, 'YYYYMMDD') AS PieceDate,
+            TO_CHAR(COALESCE(am.invoice_date, am.date), 'YYYYMMDD') AS PieceDate,
             CASE WHEN aml.name IS NULL OR aml.name = '' THEN '/'
                 WHEN aml.name SIMILAR TO '[\\t|\\s|\\n]*' THEN '/'
                 ELSE REGEXP_REPLACE(replace(aml.name, '|', '/'), '[\\t\\n\\r]', ' ', 'g') END AS EcritureLib,

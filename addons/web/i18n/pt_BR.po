@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pt_BR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: web
 #. openerp-web
@@ -426,6 +426,13 @@ msgstr "Acesso a todos os aplicativos Enterprise"
 #. openerp-web
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
+msgid "Action"
+msgstr "Ação"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#, python-format
 msgid "Action ID:"
 msgstr "ID da Ação:"
 
@@ -568,6 +575,13 @@ msgstr "Adicionar marcador"
 #, python-format
 msgid "Add to Favorites"
 msgstr "Adicionar aos Favoritos"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#, python-format
+msgid "Additional actions"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -2653,8 +2667,8 @@ msgstr "Texto multilinha"
 #. openerp-web
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.js:0
 #, python-format
-msgid "My Odoo.com.account"
-msgstr ""
+msgid "My Odoo.com account"
+msgstr "Minha conta Odoo.com"
 
 #. module: web
 #. openerp-web
@@ -3415,6 +3429,13 @@ msgstr "Cor Primária"
 #, python-format
 msgid "Print"
 msgstr "Imprimir"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/legacy/xml/report.xml:0
+#, python-format
+msgid "Printing options"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -4869,6 +4890,12 @@ msgstr "Sim"
 #, python-format
 msgid "Yesterday"
 msgstr "Ontem"
+
+#. module: web
+#: code:addons/web/controllers/main.py:0
+#, python-format
+msgid "You are not allowed to upload an attachment here."
+msgstr ""
 
 #. module: web
 #. openerp-web

@@ -30,6 +30,8 @@ class TestFlows(PaymentCommon, PaymentHttpCommon):
             if key in route_values:
                 self.assertEqual(val, route_values[key])
 
+        self.assertIn(self.acquirer.id, tx_context['acquirer_ids'])
+
         # Route values are taken from tx_context result of /pay route to correctly simulate the flow
         route_values = {
             k: tx_context[k]
@@ -93,6 +95,9 @@ class TestFlows(PaymentCommon, PaymentHttpCommon):
     def test_10_direct_checkout_public(self):
         # No authentication needed, automatic fallback on public user
         self.user = self.public_user
+        # Make sure the company considered in payment/pay
+        # doesn't fall back on the public user main company (not the test one)
+        self.partner.company_id = self.env.company.id
         self._test_flow('direct')
 
     def test_11_direct_checkout_portal(self):
@@ -108,8 +113,10 @@ class TestFlows(PaymentCommon, PaymentHttpCommon):
         self._test_flow('direct')
 
     def test_20_redirect_checkout_public(self):
-        self.partner = self.default_partner
-        self.user = self.env.ref('base.public_user')
+        self.user = self.public_user
+        # Make sure the company considered in payment/pay
+        # doesn't fall back on the public user main company (not the test one)
+        self.partner.company_id = self.env.company.id
         self._test_flow('redirect')
 
     def test_21_redirect_checkout_portal(self):

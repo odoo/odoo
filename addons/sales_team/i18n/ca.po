@@ -12,6 +12,7 @@
 # Arnau Ros, 2021
 # Susanna Pujol, 2021
 # jabelchi, 2021
+# marcescu, 2022
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: jabelchi, 2021\n"
+"Last-Translator: marcescu, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,12 +37,12 @@ msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "<i class=\"fa fa-envelope mr-1\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope mr-1\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
 msgid "<span class=\"bg-error\">Archived</span>"
-msgstr ""
+msgstr "<span class=\"bg-error\">Arxivat</span>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
@@ -80,6 +81,8 @@ msgstr "Tipus d'activitats"
 msgid ""
 "Add members to automatically assign their documents to this sales team."
 msgstr ""
+"Afegeix membres per assignar automàticament els seus documents a aquest "
+"equip de vendes."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -88,6 +91,8 @@ msgid ""
 "Adding %(user_name)s in this team would remove him/her from its current team"
 " %(team_name)s."
 msgstr ""
+"Afegir%(user_name)s en aquest equip l'eliminaria del seu equip "
+"actual%(team_name)s."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team_member.py:0
@@ -96,6 +101,8 @@ msgid ""
 "Adding %(user_name)s in this team would remove him/her from its current "
 "teams %(team_names)s."
 msgstr ""
+"Afegir %(user_name)s en aquest equip l'eliminaria dels seus equips "
+"actuals%(team_names)s."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -104,6 +111,8 @@ msgid ""
 "Adding %(user_names)s in this team would remove them from their current "
 "teams (%(team_names)s)."
 msgstr ""
+"Afegir %(user_names)s en aquest equip els eliminarien dels seus equips "
+"actuals (%(team_names)s)."
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
@@ -134,18 +143,18 @@ msgstr "Avatar"
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Big Pretty Button :)"
-msgstr ""
+msgstr "Gran botó bonic :)"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_tag
 msgid "CRM Tag"
-msgstr ""
+msgstr "Etiqueta CRM"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Cannot delete default team \"%s\""
-msgstr ""
+msgstr "No es pot suprimir l'equip per defecte \"%s\""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__color
@@ -182,22 +191,22 @@ msgstr "Contacte"
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
 msgid "Create CRM Tags"
-msgstr ""
+msgstr "Crea etiquetes CRM"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
 msgid "Create a Sales Team"
-msgstr ""
+msgstr "Crea un equip de vendes"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_member_action
 msgid "Create a new salesman"
-msgstr ""
+msgstr "Crea un nou venedor"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
 msgid "Create an Activity Type"
-msgstr ""
+msgstr "Crea un tipus d'activitat"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__create_uid
@@ -221,18 +230,18 @@ msgstr "Divisa"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_button_name
 msgid "Dashboard Button"
-msgstr ""
+msgstr "Botó del tauler de control"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_data
 msgid "Dashboard Graph Data"
-msgstr ""
+msgstr "Dades del gràfic del tauler de control"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_sales
 msgid "Define a new sales team"
-msgstr ""
+msgstr "Defineix un equip de vendes nou"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor5
@@ -254,13 +263,15 @@ msgstr "Correu electrònic"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__favorite_user_ids
 msgid "Favorite Members"
-msgstr ""
+msgstr "Membres preferits"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__is_favorite
 msgid ""
 "Favorite teams to display them in the dashboard and access them easily."
 msgstr ""
+"Els equips preferits per mostrar-los al tauler de control i accedir-hi "
+"fàcilment."
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -313,6 +324,8 @@ msgid ""
 "If True, users may belong to several sales teams. Otherwise membership is "
 "limited to a single sales team."
 msgstr ""
+"Si és Veritable, els usuaris poden pertànyer a diversos equips de vendes. En"
+" cas contrari, la pertinença es limita a un sol equip de vendes."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
@@ -336,6 +349,8 @@ msgid ""
 "If set, this Sales Team will be used for sales and assignments related to "
 "this partner"
 msgstr ""
+"Si està establert, aquest equip de vendes s'utilitzarà per a les vendes i "
+"assignacions relacionades amb aquest soci"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__active
@@ -343,6 +358,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the Sales "
 "Team without removing it."
 msgstr ""
+"Si el camp actiu està establert a fals, us permetrà amagar l'equip de vendes"
+" sense eliminar-lo."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_1920
@@ -352,7 +369,7 @@ msgstr "Imatge"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_128
 msgid "Image (128)"
-msgstr ""
+msgstr "Imatge (128)"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor4
@@ -392,6 +409,8 @@ msgid ""
 "Link salespersons to sales teams. Set their monthly lead capacity\n"
 "                and configure automatic lead assignment."
 msgstr ""
+"Enllaça els venedors amb els equips de vendes. Estableix la seva capacitat de lideratge mensual\n"
+"                i configurar l'assignació automàtica de l'inici."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_main_attachment_id
@@ -405,16 +424,19 @@ msgid ""
 "Main user sales team. Used notably for pipeline, or to set sales team in "
 "invoicing or subscription."
 msgstr ""
+"Usuari principal de l'equip de vendes. S'utilitza especialment per al "
+"pipeline, o per a establir l'equip de vendes en la facturació o la "
+"subscripció."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_company_ids
 msgid "Member Company"
-msgstr ""
+msgstr "Empresa membre"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__member_warning
 msgid "Member Warning"
-msgstr ""
+msgstr "Avís membre"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -424,7 +446,7 @@ msgstr "Membres"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_warning
 msgid "Membership Issue Warning"
-msgstr ""
+msgstr "Advertiment sobre el nombre de membres"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error
@@ -447,7 +469,7 @@ msgstr "Mòbil"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_membership_multi
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__is_membership_multi
 msgid "Multiple Memberships Allowed"
-msgstr ""
+msgstr "Múltiples afiliacions permeses"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__name
@@ -502,7 +524,7 @@ msgstr "Punt de Venda"
 #. module: sales_team
 #: model:crm.team,name:sales_team.crm_team_1
 msgid "Pre-Sales"
-msgstr ""
+msgstr "Prevendes"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor1
@@ -518,12 +540,12 @@ msgstr "Vendes"
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_tree
 msgid "Sales Men"
-msgstr ""
+msgstr "Home de vendes"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
 msgid "Sales Person"
-msgstr ""
+msgstr "Persona de venda"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team
@@ -540,18 +562,18 @@ msgstr "Equip de vendes"
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team_member
 msgid "Sales Team Member"
-msgstr ""
+msgstr "Membre de l'equip de vendes"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__crm_team_member_ids
 #: model:ir.model.fields,field_description:sales_team.field_res_users__crm_team_member_ids
 msgid "Sales Team Members"
-msgstr ""
+msgstr "Membres de l'equip de vendes"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__crm_team_member_all_ids
 msgid "Sales Team Members (incl. inactive)"
-msgstr ""
+msgstr "Membres de l'equip de vendes (incl. inactiu)"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_config
@@ -594,7 +616,7 @@ msgstr "Serveis"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_favorite
 msgid "Show on dashboard"
-msgstr ""
+msgstr "Mostra al tauler de control"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor2
@@ -621,7 +643,7 @@ msgstr "Etiquetes"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Details"
-msgstr ""
+msgstr "Detalls de l'equip"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__user_id
@@ -642,12 +664,12 @@ msgstr "Equips"
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__color
 msgid "The color of the channel"
-msgstr ""
+msgstr "El color del canal"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__company_id
 msgid "The default company for this user."
-msgstr ""
+msgstr "L'empresa per defecte d'aquest usuari."
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
@@ -655,6 +677,8 @@ msgid ""
 "Those represent the different categories of things you have to do (e.g. "
 "\"Call\" or \"Prepare meeting\")."
 msgstr ""
+"Aquestes representen les diferents categories de coses que heu de fer (p. "
+"ex. \"Call\" o \"Preparar reunió\")."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -663,6 +687,8 @@ msgid ""
 "To add a Salesperson into multiple Teams, activate the Multi-Team option in "
 "settings."
 msgstr ""
+"Per afegir un venedor en diversos equips, activeu l'opció Multi-Team a la "
+"configuració."
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor6
@@ -674,19 +700,21 @@ msgstr "Formació"
 msgid ""
 "UX: Give users not to add in the currently chosen team to avoid duplicates"
 msgstr ""
+"UX: Doneu als usuaris que no afegeixin a l'equip actualment seleccionat per "
+"evitar duplicats"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_company_ids
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__user_company_ids
 msgid "UX: Limit to team company or all if no company"
-msgstr ""
+msgstr "team: Limitar a l'empresa d'equip o a tot si no és empresa"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Undefined graph model for Sales Team: %s"
-msgstr ""
+msgstr "Model de gràfic indefinit per a l'equip de vendes: %s"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_unread
@@ -705,6 +733,8 @@ msgstr "Comptador de missatges no llegits"
 msgid ""
 "Use Sales Teams to organize your sales departments and draw up reports."
 msgstr ""
+"Utilitzeu els equips de vendes per organitzar els vostres departaments de "
+"vendes i elaborar informes."
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
@@ -713,6 +743,8 @@ msgid ""
 "Use Sales Teams to organize your sales departments.\n"
 "                Each team will work with a separate pipeline."
 msgstr ""
+"Utilitzeu els equips de vendes per organitzar els vostres departaments de vendes.\n"
+"                Cada equip treballarà amb un conducte separat."
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
@@ -720,21 +752,23 @@ msgid ""
 "Use Tags to manage and track your Opportunities (product structure, sales "
 "type, ...)"
 msgstr ""
+"Utilitzi etiquetes per a gestionar i fer un seguiment de les seves "
+"oportunitats (estructura del producte, tipus de venda, ...)"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_company_ids
 msgid "User Company"
-msgstr ""
+msgstr "Empresa d'usuari"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_in_teams_ids
 msgid "User In Teams"
-msgstr ""
+msgstr "Usuari en equips"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
 msgid "User Sales Team"
-msgstr ""
+msgstr "Equip de vendes de l'usuari"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman_all_leads
@@ -754,7 +788,7 @@ msgstr "Usuaris"
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_ids
 msgid "Users assigned to this team."
-msgstr ""
+msgstr "Usuaris assignats a aquest equip."
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.salesteam_website_sales
@@ -768,21 +802,23 @@ msgid ""
 "You are trying to create duplicate membership(s). We found that "
 "%(duplicates)s already exist(s)."
 msgstr ""
+"Esteu intentant crear membres duplicats. Hem trobat %(duplicates)s ja "
+"existei(x)."
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "e.g. North America"
-msgstr ""
+msgstr "p. ex. Amèrica del Nord"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_form
 msgid "e.g. Services"
-msgstr ""
+msgstr "p. ex. Serveis"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.ebay_sales_team
 msgid "eBay"
-msgstr ""
+msgstr "eBay"
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman_all_leads

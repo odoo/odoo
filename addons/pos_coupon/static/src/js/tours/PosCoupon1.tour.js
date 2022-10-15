@@ -73,5 +73,21 @@ odoo.define('pos_coupon.tour.pos_coupon1', function (require) {
     PosCoupon.check.orderTotalIs('36.89')
     PosCoupon.exec.finalizeOrder('Cash', '50')
 
+    // code_promo_program_free_product
+    // applied programs:
+    //   - on cheapest product
+    //   - free product different from criterion product
+    //      (Buy 3 Whiteboard Pen, Take 1 Magnetic Board)
+    PosCoupon.do.enterCode('board')
+    ProductScreen.exec.addOrderline('Whiteboard Pen', '5') // 3.20 each
+    // User should manually add the free product to get the reward.
+    ProductScreen.exec.addOrderline('Magnetic Board', '1') // 1.98
+    PosCoupon.check.hasRewardLine('Free Product - Magnetic Board', '-1.98') // meaning 1 item
+    // cheapest product should point to Whiteboard Pen and not the added Magnetic Board
+    // even though Whiteboard Pen ($3.20) costs more than Magnetic Board ($1.98).
+    PosCoupon.check.hasRewardLine('90.0% discount on cheapest product', '-2.88')
+    PosCoupon.check.orderTotalIs('13.12')
+    PosCoupon.exec.finalizeOrder('Cash', '20')
+
     Tour.register('PosCouponTour1', { test: true, url: '/pos/web' }, getSteps());
 });

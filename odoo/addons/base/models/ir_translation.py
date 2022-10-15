@@ -44,8 +44,8 @@ class IrTranslationImport(object):
         # Note that Postgres will NOT inherit the constraints or indexes
         # of ir_translation, so this copy will be much faster.
         query = """ CREATE TEMP TABLE %s (
-                        imd_model VARCHAR(64),
-                        imd_name VARCHAR(128),
+                        imd_model VARCHAR,
+                        imd_name VARCHAR,
                         noupdate BOOLEAN
                     ) INHERITS (%s) """ % (self._table, self._model_table)
         self._cr.execute(query)
@@ -498,13 +498,13 @@ class IrTranslation(models.Model):
 
         # collect translated field records (model_ids) and other translations
         trans_ids = []
-        model_ids = defaultdict(list)
-        model_fields = defaultdict(list)
+        model_ids = defaultdict(set)
+        model_fields = defaultdict(set)
         for trans in self:
-            if trans.type == 'model':
+            if trans.type in ('model', 'model_terms'):
                 mname, fname = trans.name.split(',')
-                model_ids[mname].append(trans.res_id)
-                model_fields[mname].append(fname)
+                model_ids[mname].add(trans.res_id)
+                model_fields[mname].add(fname)
             else:
                 trans_ids.append(trans.id)
 
@@ -520,7 +520,7 @@ class IrTranslation(models.Model):
             records = self.env[mname].browse(ids).exists()
             records.check_access_rights(fmode)
             records.check_field_access_rights(fmode, model_fields[mname])
-            if mode == 'create' and set(records._ids) != set(ids):
+            if mode == 'create' and set(records._ids) != ids:
                 raise ValidationError(_("Creating translation on non existing records"))
             if not records:
                 continue

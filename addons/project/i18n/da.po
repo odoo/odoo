@@ -5,9 +5,9 @@
 # Translators:
 # jonas jensen <j.jensen@tcomp.dk>, 2021
 # Mads Søndergaard, 2021
-# lhmflexerp <lhm@flexerp.dk>, 2021
 # Mads Søndergaard, 2021
 # Martin Trigaux, 2021
+# lhmflexerp <lhm@flexerp.dk>, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2022\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -98,7 +98,7 @@ msgstr "%s Brug %s ikonet til at organisere dine daglige aktiviteter."
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "(+ %(child_count)s tasks)"
-msgstr ""
+msgstr "(+ %(child_count)s opgaver)"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -410,7 +410,7 @@ msgstr "<p><em>Antal opgaver: %(tasks_count)s</em></p>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-right\">Stage:</small>"
-msgstr ""
+msgstr "<small class=\"text-right\">Fase:</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -495,6 +495,9 @@ msgid ""
 "                                        <span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible': [('alias_name', '=', False)]}\">Create tasks by sending an email to </span>\n"
 "                                        <span class=\"font-weight-bold oe_edit_only\">Create tasks by sending an email to </span>"
 msgstr ""
+"<span class=\"oe_read_only\" attrs=\"{'invisible': [('alias_name', '!=', False)]}\"> Opret opgaver ved at sende en email til </span>\n"
+"                                        <span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible': [('alias_name', '=', False)]}\">Opret opgaver ved at sende en email til </span>\n"
+"                                        <span class=\"font-weight-bold oe_edit_only\">Opret opgaver ved at sende en email til </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -553,7 +556,7 @@ msgstr "<strong>Besked- og kommunikationshistorik</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task_planned_hours_template
 msgid "<strong>Planned Hours:</strong>"
-msgstr ""
+msgstr "<strong>Planlagte timer:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -667,6 +670,7 @@ msgid "Add Milestone"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Add a description..."
 msgstr "Tilføj en beskrivelse"
@@ -840,6 +844,7 @@ msgstr "Arkiv projekt"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
+#: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_search
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -864,7 +869,7 @@ msgstr "Er du sikker på du vil slette disse stadier ?"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Arrow"
-msgstr ""
+msgstr "Pil"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1572,11 +1577,20 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
 #: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
 msgid ""
-"Defines the visibility of the tasks of the project:\n"
-"- Invited employees: employees may only see the followed project and tasks.\n"
-"- All employees: employees may see all project and tasks.\n"
-"- Invited portal users and all employees: employees may see everything.   Invited portal users may see project and tasks followed by.\n"
-"   them or by someone of their company."
+"People to whom this project and its tasks will be visible.\n"
+"\n"
+"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
+"\n"
+"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"\n"
+"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+"\n"
+"When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks, but not edit them.\n"
+"When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n"
+"\n"
+"In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
 
 #. module: project
@@ -1619,7 +1633,7 @@ msgstr "Leveret"
 #: model:ir.model.fields,field_description:project.field_project_task__dependent_tasks_count
 #, python-format
 msgid "Dependent Tasks"
-msgstr ""
+msgstr "Afhængige opgaver"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__description
@@ -1646,7 +1660,7 @@ msgstr "Design"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Determine the order in which to perform tasks"
-msgstr ""
+msgstr "Bestem rækkefølgen for udførelsen af opgaver"
 
 #. module: project
 #. openerp-web
@@ -1767,6 +1781,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Edit"
 msgstr "Rediger"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project_kanban.js:0
+#, python-format
+msgid "Edit Personal Stage"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -2319,7 +2340,7 @@ msgstr "Inviterede medarbejdere"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid "Invited portal users and all employees"
-msgstr ""
+msgstr "Inviterede portalbrugere og alle medarbejdere"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__is_deadline_exceeded
@@ -2807,7 +2828,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Name of the tasks"
-msgstr ""
+msgstr "Navnet på opgaverne"
 
 #. module: project
 #: model:project.task,legend_blocked:project.project_task_10
@@ -2849,7 +2870,7 @@ msgstr "Ny"
 #: code:addons/project/static/src/js/right_panel/project_utils.js:0
 #, python-format
 msgid "New Milestone"
-msgstr ""
+msgstr "Ny milesten"
 
 #. module: project
 #. openerp-web
@@ -3022,7 +3043,7 @@ msgstr "Antal Gentagelser"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__tasks_count
 msgid "Number of Tasks"
-msgstr ""
+msgstr "Antal opgaver"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__recurrence_left
@@ -3146,7 +3167,7 @@ msgstr "Åbne opgaver"
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Open tasks"
-msgstr ""
+msgstr "Åbne opgaver"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_force_thread_id
@@ -3255,7 +3276,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_type_ids
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Personal Stage"
-msgstr ""
+msgstr "Personlig fase"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_id
@@ -3490,7 +3511,7 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_project_project_stage
 msgid "Project Stage"
-msgstr ""
+msgstr "Projektfase"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_stage_change
@@ -3523,7 +3544,7 @@ msgstr "Projekt opgaver"
 #: model:ir.model,name:project.model_project_update
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_form
 msgid "Project Update"
-msgstr ""
+msgstr "Projekt update"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_update_all_action
@@ -4441,6 +4462,7 @@ msgstr "Opgave Gentagelse"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
+#: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_tree
 msgid "Task Stage"
@@ -4557,7 +4579,7 @@ msgstr "Igangværende Opgaver"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Tasks Late"
-msgstr ""
+msgstr "Forsinkede opgaver"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -4876,7 +4898,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 msgid "Track the progress of your tasks from their creation to their closing."
-msgstr ""
+msgstr "Spor fremgangen på dine opgaver fra oprettelse til udførsel."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5024,7 +5046,7 @@ msgstr "Brug Dette til Mit Projekt"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
 msgid "Use tags to categorize your tasks."
-msgstr ""
+msgstr "Anvend tags til at kategorisere dine opgaver."
 
 #. module: project
 #. openerp-web
@@ -5206,6 +5228,8 @@ msgid ""
 "You cannot change the company of an analytic account if it is related to a "
 "project."
 msgstr ""
+"Du kan ikke ændre virksomheden på en analysekonto hvis den er relateret til "
+"at projekt."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -5229,6 +5253,8 @@ msgstr ""
 msgid ""
 "You cannot delete recurring tasks. Please disable the recurrence first."
 msgstr ""
+"Du kan ikke slette tilbagevendende opgaver. Venligst deaktivér gentagelsen "
+"først."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -5263,6 +5289,14 @@ msgstr "Du er blevet tildelt"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You have not write access of %s field."
+msgstr ""
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"You should at least have one personal stage. Create a new stage to which the"
+" tasks can be transferred after this one is deleted."
 msgstr ""
 
 #. module: project

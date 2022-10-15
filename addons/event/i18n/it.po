@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:54+0000\n"
+"POT-Creation-Date: 2021-11-16 16:40+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
 "Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_partner__event_count
@@ -970,7 +970,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_barcode
 msgid "Barcode"
-msgstr "Codice"
+msgstr "Codice a barre"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__before_event
@@ -1556,7 +1556,7 @@ msgid ""
 "                    usually based on the types of events you organize (e.g. \"Workshop\",\n"
 "                    \"Roadshow\", \"Online Webinar\", etc)."
 msgstr ""
-"I template di evento combinano configurazioni che usi spesso e sono\n"
+"I modelli di evento combinano configurazioni che usi spesso e sono\n"
 "solitamente basati sui tipi di eventi che organizzi (ad esempio \"Workshop\",\n"
 "\"Roadshow\", \"Webinar online\", ecc.)"
 
@@ -3215,13 +3215,9 @@ msgstr "Istruzioni extra biglietti"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__ticket_instructions
 #: model:ir.model.fields,field_description:event.field_event_type__ticket_instructions
+#: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Ticket Instructions"
 msgstr "Istruzioni per i biglietti"
-
-#. module: event
-#: model_terms:ir.ui.view,arch_db:event.view_event_form
-msgid "Ticket Intructions"
-msgstr "Istruzioni Biglietti"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
@@ -3394,8 +3390,7 @@ msgstr ""
 #, python-format
 msgid "Use the <b>breadcrumbs</b> to go back to your kanban overview."
 msgstr ""
-"Utilizza i <b>percorsi di navigazione</b> per ritornare alla panoramica del "
-"kanban."
+"Utilizza i <b>percorsi di navigazione</b> per ritornare alla vista kanban."
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_event_action_pivot
@@ -3526,7 +3521,7 @@ msgid ""
 "You can define here labels that will be displayed for the state instead\n"
 "                            of the default labels in the kanban view."
 msgstr ""
-"Qui è possibile indicare le etichette da visualizzare per lo stato kanban\n"
+"Qui è possibile indicare le etichette da visualizzare nella vista kanban\n"
 "                            al posto di quelle predefinite."
 
 #. module: event

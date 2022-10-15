@@ -16,6 +16,8 @@
 # trendspotter <jirka.p@volny.cz>, 2021
 # Martin Trigaux, 2021
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
+# Marek Záda, 2022
+# Tomas Bosek, 2022
 # 
 msgid ""
 msgstr ""
@@ -23,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2022\n"
+"Last-Translator: Tomas Bosek, 2022\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -91,12 +93,6 @@ msgstr ""
 #, python-format
 msgid "%s %s unbuilt in"
 msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/models/mrp_routing.py:0
-#, python-format
-msgid "%s (copy)"
-msgstr "%s (kopie)"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -305,7 +301,7 @@ msgstr "<span>Objednávky</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "<span>PLAN ORDERS</span>"
-msgstr ""
+msgstr "<span>PLÁNOVAT ZAKÁZKY</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_report_delivery_no_kit_section
@@ -938,7 +934,7 @@ msgstr "Po produktech"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__product_id
 msgid "By-product"
-msgstr ""
+msgstr "Vedlejší produkt"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -1099,7 +1095,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
-"Component Lots must be unique for mass production. Please review consumption"
+"Component Lots must be unique for mass production. Please review reservation"
 " for:\n"
 msgstr ""
 
@@ -2204,7 +2200,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_moves
 msgid "Inventory Moves"
-msgstr ""
+msgstr "Pohyby zásob"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__move_line_ids
@@ -3018,13 +3014,20 @@ msgstr "Počet zpráv s chybou při doručení"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__capacity
 msgid ""
-"Number of pieces that can be produced in parallel. In case the work center "
-"has a capacity of 5 and you have to produce 10 units on your work order, the"
-" usual operation time will be multiplied by 2."
+"Number of pieces (in product UoM) that can be produced in parallel  (at the "
+"same time) at this work center. For example: the capacity is 5 and you need "
+"to produce 10 units, then the operation time listed on the BOM will be "
+"multiplied by two. However, note that both time before and after production "
+"will only be counted once. "
 msgstr ""
-"Počet kusů, které lze vyrábět paralelně. V případě, že má pracovní středisko"
-" kapacitu 5 kusů a vy máte na zakázce vyrobit 10 kusů, bude obvyklá doba "
-"operace vynásobena 2."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom__product_qty
+msgid ""
+"This should be the smallest quantity that this product can be produced in. "
+"If the BOM contains operations, make sure the work center capacity is "
+"accurate. "
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_source_count
@@ -4429,6 +4432,12 @@ msgid ""
 msgstr "Měrná jednotka výrobku je jiné kategorie než ve formuláři výrobku."
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_workcenter.py:0
+#, python-format
+msgid "The Workorder (%s) cannot be started twice!"
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
@@ -4490,6 +4499,15 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The product has already been used at least once, editing its structure may "
+"lead to undesirable behaviours. You should rather archive the product and "
+"create a new one with a new bill of materials."
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "The quantity produced of by-products must be positive."
@@ -4507,6 +4525,15 @@ msgstr "Množství, které má být vyrobeno, musí být kladné!"
 #: model:ir.model.fields,help:mrp.field_mrp_document__res_id
 msgid "The record id this is attached to."
 msgstr "ID záznamu, ke kterému je připojen."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#, python-format
+msgid ""
+"The selected serial number does not correspond to the one used in the "
+"manufacturing order, please select another one."
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -4619,6 +4646,8 @@ msgid ""
 "This menu gives you the full traceability of inventory operations on a specific product.\n"
 "                You can filter on the product to see all the past movements for the product."
 msgstr ""
+"Toto menu Vám umožňuje sledovat pohyby zásob u specifických produktů inventáře.\n"
+"Můžete vyfitrovat pohyby zásob určitého produktu."
 
 #. module: mrp
 #: code:addons/mrp/models/stock_rule.py:0

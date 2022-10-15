@@ -25,11 +25,12 @@
                   <attribute name="attrs">{'invisible': [('activity_category', '=', 'meeting')]}</attribute>
             </xpath>
             <xpath expr="//button[@name='action_close_dialog']" position="before">
-                <button string="Open Calendar"
-                    attrs="{'invisible': ['|', ('activity_category', 'not in', ['meeting', 'phonecall']), ('id', '!=', False)]}"
-                    name="action_create_calendar_event"
-                    type="object"
-                    class="btn-primary"/>
+                  <field name="calendar_event_id" invisible="1" />
+                  <button string="Open Calendar"
+                        attrs="{'invisible': ['|', ('activity_category', 'not in', ['meeting', 'phonecall']), ('calendar_event_id', '!=', False)]}"
+                        name="action_create_calendar_event"
+                        type="object"
+                        class="btn-primary"/>
             </xpath>
         </field>
     </record>

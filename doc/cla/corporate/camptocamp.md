@@ -16,6 +16,7 @@ Luc Maurer luc.maurer@camptocamp.com https://github.com/lucmaurer
 Joël Grand-Guillaume joel.grandguillaume@camptocamp.com https://github.com/jgrandguillaume
 Guewen Baconnier guewen.baconnier@camptocamp.com https://github.com/guewen
 Yannick Vaucher yannick.vaucher@camptocamp.com https://github.com/yvaucher
+Yannick Payot yannick.payot@camptocamp.com https://github.com/yvaucher
 Nicolas Bessi nicolas.bessi@camptocamp.com https://github.com/nbessi
 Frédéric Clementi frederic.clementi@camptocamp.com https://github.com/fclementic2c
 Laurent Meuwly laurent.meuwly@camptocamp.com https://github.com/laurentmeuwly
@@ -44,3 +45,4 @@ Stéphane Mangin stephane.mangin@camptocamp.com https://github.com/StephaneMangi
 Anna Janiszewska anna.janiszewska@camptocamp.com https://github.com/ajaniszewska-dev
 Matthieu Mequignon matthieu.mequignon@camptocamp.com https://github.com/mmequignon
 Silvio Gregorini silvio.gregorini@camptocamp.com https://github.com/SilvioC2C
+Iryna Vyshnevska iryna.vyshnevska@camptocamp.com https://github.com/i-vyshnevska

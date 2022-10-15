@@ -12,6 +12,7 @@
 # Özlem Atalay <ozlema@eskayazilim.com.tr>, 2021
 # Levent Karakaş <levent@mektup.at>, 2021
 # omerfarukcakmak <omerfarukckmk@protonmail.com>, 2021
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: omerfarukcakmak <omerfarukckmk@protonmail.com>, 2021\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,12 +33,12 @@ msgstr ""
 #: code:addons/pos_sale/static/src/xml/ProductScreen/Orderline.xml:0
 #, python-format
 msgid "(tax incl.)"
-msgstr ""
+msgstr "(vergi dahil)"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.pos_config_view_form_pos_sale
 msgid "<span class=\"o_form_label\">Down Payment Product</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Peşinat Ürünü</span>"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.pos_config_view_form_pos_sale
@@ -54,7 +55,7 @@ msgstr "<span style=\"margin: 0px 5px;\">:</span>"
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Apply a down payment"
-msgstr ""
+msgstr "Peşinat uygula"
 
 #. module: pos_sale
 #. openerp-web
@@ -82,7 +83,7 @@ msgstr "İptal Edildi"
 #: code:addons/pos_sale/static/src/js/SetSaleOrderButton.js:0
 #, python-format
 msgid "Cannot access order management screen if offline."
-msgstr "Cannot access order management screen if offline."
+msgstr "Çevrimdışıysa sipariş yönetimi ekranına erişilemez."
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__currency_rate
@@ -108,25 +109,25 @@ msgstr "Tarih"
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.message_body
 msgid "Delivered from"
-msgstr ""
+msgstr "Şuradan teslim edildi"
 
 #. module: pos_sale
 #. openerp-web
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Do you want to load the SN/Lots linked to the Sales Order?"
-msgstr ""
+msgstr "Satış Siparişine bağlı SN/Lotları yüklemek istiyor musunuz?"
 
 #. module: pos_sale
 #: model:product.product,name:pos_sale.default_downpayment_product
 #: model:product.template,name:pos_sale.default_downpayment_product_product_template
 msgid "Down Payment (POS)"
-msgstr ""
+msgstr "Peşinat (POS)"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__down_payment_details
 msgid "Down Payment Details"
-msgstr ""
+msgstr "Peşinat Detayları"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_config__down_payment_product_id
@@ -138,7 +139,7 @@ msgstr "Peşinat verilecek ürün"
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
 #, python-format
 msgid "E.g. customer: Steward, date: 2020-05-09"
-msgstr "E.g. customer: Steward, date: 2020-05-09"
+msgstr "E.g. müşteri: Steward, tarih: 2020-05-09"
 
 #. module: pos_sale
 #. openerp-web
@@ -161,23 +162,25 @@ msgid ""
 "It seems that you didn't configure a down payment product in your point of sale.\n"
 "                        You can go to your point of sale configuration to choose one."
 msgstr ""
+"Satış noktanızda bir peşinat ürünü yapılandırmadığınız anlaşılıyor.\n"
+"                        Birini seçmek için satış noktası yapılandırmanıza gidebilirsiniz."
 
 #. module: pos_sale
 #: code:addons/pos_sale/models/sale_order.py:0
 #, python-format
 msgid "Linked POS Orders"
-msgstr ""
+msgstr "Bağlı POS Siparişleri"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_origin_id
 msgid "Linked Sale Order"
-msgstr ""
+msgstr "Bağlantılı Satış Siparişi"
 
 #. module: pos_sale
 #: code:addons/pos_sale/models/pos_order.py:0
 #, python-format
 msgid "Linked Sale Orders"
-msgstr ""
+msgstr "Bağlı Satış Siparişleri"
 
 #. module: pos_sale
 #. openerp-web
@@ -205,7 +208,7 @@ msgstr "Yeni"
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
 #, python-format
 msgid "Next Order List"
-msgstr "Next Order List"
+msgstr "Sonraki Sipariş Listesi"
 
 #. module: pos_sale
 #. openerp-web
@@ -220,7 +223,7 @@ msgstr "Hayır"
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "No down payment product"
-msgstr ""
+msgstr "Peşinat ürünü yok"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_sessions_open_count
@@ -244,7 +247,7 @@ msgstr "Sipariş"
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__pos_order_line_ids
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__pos_order_line_ids
 msgid "Order lines Transfered to Point of Sale"
-msgstr ""
+msgstr "Satış Noktasına Aktarılan Sipariş Satırları"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__paid
@@ -256,7 +259,7 @@ msgstr "Ödendi"
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Percentage of %s"
-msgstr ""
+msgstr "%s yüzdesi"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_config
@@ -266,7 +269,7 @@ msgstr "Satış Noktası Yapılandırması"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order_line
 msgid "Point of Sale Order Lines"
-msgstr "Point of Sale Order Lines"
+msgstr "Satış Noktası Sipariş Satırları"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order
@@ -299,14 +302,14 @@ msgstr "İşlenmiş"
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
 #, python-format
 msgid "Previous Order List"
-msgstr "Previous Order List"
+msgstr "Önceki Sipariş Listesi"
 
 #. module: pos_sale
 #. openerp-web
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Products not available in POS"
-msgstr ""
+msgstr "POS'ta bulunmayan ürünler"
 
 #. module: pos_sale
 #. openerp-web
@@ -327,14 +330,14 @@ msgstr "Teklif Gönderildi"
 #: code:addons/pos_sale/static/src/xml/SetSaleOrderButton.xml:0
 #, python-format
 msgid "Quotation/Order"
-msgstr ""
+msgstr "Fiyat Teklifi/Sipariş"
 
 #. module: pos_sale
 #. openerp-web
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "SN/Lots Loading"
-msgstr ""
+msgstr "SN/Lot Yükleme"
 
 #. module: pos_sale
 #. openerp-web
@@ -342,7 +345,7 @@ msgstr ""
 #: code:addons/pos_sale/static/src/xml/ProductScreen/Orderline.xml:0
 #, python-format
 msgid "SO"
-msgstr ""
+msgstr "SO"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__sale_order_count
@@ -420,7 +423,7 @@ msgstr "Devam Eden Oturumlar"
 #: code:addons/pos_sale/static/src/xml/SetSaleOrderButton.xml:0
 #, python-format
 msgid "Set Sale Order"
-msgstr ""
+msgstr "Satış Siparişini Ayarla"
 
 #. module: pos_sale
 #. openerp-web
@@ -430,18 +433,20 @@ msgid ""
 "Some of the products in your Sale Order are not available in POS, do you "
 "want to import them?"
 msgstr ""
+"Satış Siparişinizdeki bazı ürünler POS'ta mevcut değil, bunları içe aktarmak"
+" istiyor musunuz?"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_line_id
 msgid "Source Sale Order Line"
-msgstr ""
+msgstr "Kaynak Satış Sipariş Satırı"
 
 #. module: pos_sale
 #. openerp-web
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Settle the order"
-msgstr ""
+msgstr "Siparişi ver"
 
 #. module: pos_sale
 #. openerp-web
@@ -461,25 +466,23 @@ msgstr "Durumu"
 msgid ""
 "The rate of the currency to the currency of rate applicable at the date of "
 "the order"
-msgstr ""
-"The rate of the currency to the currency of rate applicable at the date of "
-"the order"
+msgstr "Para biriminin sipariş tarihinde geçerli olan para birimine oranı"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__crm_team_id
 #: model:ir.model.fields,help:pos_sale.field_pos_session__crm_team_id
 msgid "This Point of sale's sales will be related to this Sales Team."
-msgstr "This Point of sale's sales will be related to this Sales Team."
+msgstr "Bu Satış Noktasının satışları bu Satış Ekibi ile ilgili olacaktır."
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.pos_config_view_form_pos_sale
 msgid "This product will be applied when down payment is made"
-msgstr ""
+msgstr "Bu ürün peşinat yapıldığında uygulanacaktır."
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__down_payment_product_id
 msgid "This product will be used as down payment on a sale order."
-msgstr ""
+msgstr "Bu ürün bir satış siparişinde peşinat olarak kullanılacaktır."
 
 #. module: pos_sale
 #. openerp-web
@@ -494,21 +497,21 @@ msgstr "Toplam"
 msgid ""
 "Transfered<br/>\n"
 "                                from Sale"
-msgstr ""
+msgstr "Devredildi<br/>Satıştan"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_order_form_inherit_pos_sale
 msgid ""
 "Transfered<br/>\n"
 "                                to POS"
-msgstr ""
+msgstr "Devredildi<br/>POS'a"
 
 #. module: pos_sale
 #. openerp-web
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderFetcher.js:0
 #, python-format
 msgid "Unable to fetch orders if offline."
-msgstr "Unable to fetch orders if offline."
+msgstr "Çevrimdışıysa siparişler alınamıyor."
 
 #. module: pos_sale
 #: model:product.product,uom_name:pos_sale.default_downpayment_product

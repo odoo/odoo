@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
+import time
 
 from odoo.tests.common import TransactionCase
 from odoo.tools import float_compare, test_reports
@@ -82,6 +83,12 @@ class TestProductPricelist(TransactionCase):
 
         self.uom_unit_id = self.ref('uom.product_uom_unit')
         self.list0 = self.ref('product.list0')
+
+        self.new_currency = self.env['res.currency'].create({
+            'name': 'Wonderful Currency',
+            'symbol': ':)',
+            'rate_ids': [(0, 0, {'rate': 10, 'name': time.strftime('%Y-%m-%d')})],
+        })
 
         self.ipad_retina_display.write({'uom_id': self.uom_unit_id, 'categ_id': self.category_5_id})
         self.customer_pricelist = self.ProductPricelist.create({
@@ -201,4 +208,52 @@ class TestProductPricelist(TransactionCase):
             float_compare(monitor.price, monitor.lst_price/2, precision_digits=2), 0,
             msg)
 
+    def test_20_price_different_currency_pricelist(self):
+        pricelist = self.ProductPricelist.create({
+            'name': 'Currency Pricelist',
+            'currency_id': self.new_currency.id,
+            'item_ids': [(0, 0, {
+                'compute_price': 'formula',
+                'base': 'list_price',
+                'price_surcharge': 100
+            })]
+        })
+        product = self.monitor.with_context({
+            'pricelist': pricelist.id, 'quantity': 1
+        })
+        # product price use the currency of the pricelist
+        self.assertEqual(product.price, 10100)
 
+    def test_21_price_diff_cur_min_margin_pricelist(self):
+        pricelist = self.ProductPricelist.create({
+            'name': 'Currency with Margin Pricelist',
+            'currency_id': self.new_currency.id,
+            'item_ids': [(0, 0, {
+                'compute_price': 'formula',
+                'base': 'list_price',
+                'price_min_margin': 10,
+                'price_max_margin': 100,
+            })]
+        })
+        product = self.monitor.with_context({
+            'pricelist': pricelist.id, 'quantity': 1
+        })
+        # product price use the currency of the pricelist
+        self.assertEqual(product.price, 10010)
+
+    def test_22_price_diff_cur_max_margin_pricelist(self):
+        pricelist = self.ProductPricelist.create({
+            'name': 'Currency with Margin Pricelist',
+            'currency_id': self.new_currency.id,
+            'item_ids': [(0, 0, {
+                'compute_price': 'formula',
+                'base': 'list_price',
+                'price_surcharge': 100,
+                'price_max_margin': 90
+            })]
+        })
+        product = self.monitor.with_context({
+            'pricelist': pricelist.id, 'quantity': 1
+        })
+        # product price use the currency of the pricelist
+        self.assertEqual(product.price, 10090)

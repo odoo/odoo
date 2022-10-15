@@ -6,20 +6,21 @@
 # Martin Trigaux, 2021
 # Mateus Lopes <mateus1@gmail.com>, 2021
 # grazziano <gra.negocia@gmail.com>, 2021
+# douglas custodio <douglascstd@yahoo.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:42+0000\n"
+"POT-Creation-Date: 2022-01-24 09:03+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: grazziano <gra.negocia@gmail.com>, 2021\n"
+"Last-Translator: douglas custodio <douglascstd@yahoo.com>, 2022\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pt_BR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -625,6 +626,14 @@ msgstr ""
 "\n"
 "        Relatórios contábeis para Holanda\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_pk_reports
+msgid ""
+"\n"
+"        Accounting reports for Pakistan\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es_reports
@@ -1571,6 +1580,16 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_mx_edi_stock_extended
+msgid ""
+"\n"
+"    Bridge module to extend the delivery guide (Complemento XML Carta de Porte)\n"
+"    - exported goods (COMEX)\n"
+"    - extended address fields\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_mrp_workorder_iot
 msgid ""
 "\n"
@@ -1761,6 +1780,18 @@ msgstr ""
 msgid ""
 "\n"
 "    Support for invoice Export/Import in Factur-x format (1.0.04).\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_mx_edi_stock
+msgid ""
+"\n"
+"    The delivery guide (Complemento XML Carta de Porte) is needed as a proof\n"
+"    that you are sending goods between A and B.\n"
+"\n"
+"    It is only when a delivery order is validated that you can create the delivery\n"
+"    guide.\n"
 "    "
 msgstr ""
 
@@ -4578,6 +4609,15 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_gcc_pos
+msgid ""
+"\n"
+"GCC POS Localization\n"
+"=======================================================\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_gamification
 msgid ""
 "\n"
@@ -5045,6 +5085,15 @@ msgstr ""
 msgid ""
 "\n"
 "It allows for comparing products from the wishlist\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_sa_pos
+msgid ""
+"\n"
+"K.S.A. POS Localization\n"
+"=======================================================\n"
 "    "
 msgstr ""
 
@@ -9134,6 +9183,13 @@ msgstr ""
 "    "
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_pk
+msgid ""
+" This is the base module to manage chart of accounts and localization for "
+"the Pakistan "
+msgstr ""
+
+#. module: base
 #: code:addons/model.py:0
 #, python-format
 msgid ""
@@ -10495,6 +10551,11 @@ msgid "Account Holder Name"
 msgstr "Nome do titular da conta"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_account_intrastat_expiry
+msgid "Account Invoice Expiry"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract
 msgid "Account Invoice Extract"
 msgstr "Extrato da fatura da conta"
@@ -11011,6 +11072,11 @@ msgstr ""
 "Addison Olson trabalha no setor de TI <b> há 10 anos</b>. Ele é conhecido\n"
 "principalmente para vender armadilhas para ratos. Com aquele truque ele cortou\n"
 "Orçamento de TI quase pela metade nos últimos 2 anos."
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_report_measures
+msgid "Additional Measures in Reporting"
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -12543,6 +12609,11 @@ msgstr "Bielo-Rússia"
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat
 msgid "Belgian Intrastat Declaration"
 msgstr "Declaração Belgica Intrastat"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_report_measures
+msgid "Belgian Payroll - Addition Measures in Reporting"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_holiday_pay_recovery
@@ -18123,7 +18194,7 @@ msgstr "Vista em Grid"
 #: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
 #: model_terms:ir.ui.view,arch_db:base.view_groups_search
 msgid "Group"
-msgstr "Agrupar"
+msgstr "Grupo"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_search_view
@@ -18231,6 +18302,11 @@ msgstr "Guinea-Bissau"
 #. module: base
 #: model:res.country.group,name:base.gulf_cooperation_council
 msgid "Gulf Cooperation Council (GCC)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_gcc_pos
+msgid "Gulf Cooperation Council - Point of Sale"
 msgstr ""
 
 #. module: base
@@ -20086,6 +20162,11 @@ msgid "K.S.A. - Payroll with Accounting"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_sa_pos
+msgid "K.S.A. - Point of Sale"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_digest
 msgid "KPI Digests"
 msgstr "KPI Digests"
@@ -21639,6 +21720,16 @@ msgstr "México"
 #: model:ir.module.module,shortdesc:base.module_l10n_mx
 msgid "Mexico - Accounting"
 msgstr "México - Contabilidade"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_stock
+msgid "Mexico - Electronic Delivery Guide"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_stock_extended
+msgid "Mexico - Electronic Delivery Guide Comex"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.fm
@@ -24810,6 +24901,16 @@ msgstr "Largura da página (mm)"
 #: model:res.country,name:base.pk
 msgid "Pakistan"
 msgstr "Paquistão"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_pk
+msgid "Pakistan - Accounting"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_pk_reports
+msgid "Pakistan - Accounting Reports"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.pw
@@ -28625,6 +28726,11 @@ msgid "Sweden"
 msgstr "Suécia"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_se
+msgid "Sweden - Accounting"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_se_reports
 msgid "Sweden - Accounting Reports"
 msgstr "Sweden - Accounting Reports"
@@ -28633,11 +28739,6 @@ msgstr "Sweden - Accounting Reports"
 #: model:ir.module.module,shortdesc:base.module_pos_l10n_se
 msgid "Sweden Registered Cash Register"
 msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_se
-msgid "Swedish - Accounting"
-msgstr "Swedish - Accounting"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_language_install
@@ -29800,6 +29901,12 @@ msgstr ""
 #, python-format
 msgid "This method can only be accessed over HTTP"
 msgstr "Este método só pode ser acessado por HTTP"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_account_intrastat_expiry
+msgid ""
+"This module adds an expiry feature to transaction account intrastat codes."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_bot_hr
@@ -32524,6 +32631,12 @@ msgid "binary"
 msgstr "binary"
 
 #. module: base
+#: code:addons/base/models/ir_attachment.py:0
+#, python-format
+msgid "binary_field_real_user should be a res.users record."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__boolean
 msgid "boolean"
 msgstr "boolean"
@@ -32808,6 +32921,12 @@ msgstr "mail_bot_hr"
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2many
 msgid "many2many"
 msgstr "many2many"
+
+#. module: base
+#: code:addons/base/models/ir_actions.py:0
+#, python-format
+msgid "many2many fields cannot be evaluated by reference"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2one

@@ -13,12 +13,13 @@
 # Takuya Sawada <takuya@tuntunkun.com>, 2022
 # Shunho Kin <s-kin@shonan-innovation.co.jp>, 2022
 # Hau Dao <hau@quartile.co>, 2022
-# Martin Trigaux, 2022
 # Tim Siu Lai <tl@roomsfor.hk>, 2022
-# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
 # Noma Yuki, 2022
+# 江口和志 <sandwhale1010@gmail.com>, 2022
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -26,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,6 +61,8 @@ msgid ""
 "\n"
 "Transfers %s: You cannot validate these transfers if no quantities are reserved nor done. To force these transfers, switch in edit more and encode the done quantities."
 msgstr ""
+"\n"
+"\n"
 "転送%s:数量が予約または実行されていない場合、これらの転送を検証することはできません。これらの転送を強制するには、さらに編集を切り替えて、完了した数量をエンコードします。"
 
 #. module: stock
@@ -400,6 +403,8 @@ msgid ""
 "<span class=\"o_stat_text\">In:</span>\n"
 "                                <span class=\"o_stat_text\">Out:</span>"
 msgstr ""
+"<span class=\"o_stat_text\">入庫:</span>\n"
+"                                <span class=\"o_stat_text\">出庫:</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -528,7 +533,7 @@ msgstr "<strong>棚卸数量</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<strong>Delivered</strong>"
-msgstr ""
+msgstr "<strong>配送</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -578,7 +583,7 @@ msgstr "<strong>オーダ:</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<strong>Ordered</strong>"
-msgstr ""
+msgstr "<strong>注文</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
@@ -960,7 +965,10 @@ msgid "As soon as possible"
 msgstr "なるべく早く"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Assign"
 msgstr ""
 
@@ -1255,7 +1263,7 @@ msgstr "能力"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_form
 msgid "Capacity by Package"
-msgstr ""
+msgstr "梱包ごとの容量"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_form
@@ -1367,7 +1375,7 @@ msgstr "廃棄 / 破損品を置くためにこのロケーションを使用す
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Choose Labels Layout"
-msgstr ""
+msgstr "ラベルレイアウトを選択"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quantity_history__inventory_datetime
@@ -1677,7 +1685,7 @@ msgstr "新しいパッケージを作成する"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Create customizable worksheets for your quality checks"
-msgstr ""
+msgstr "品質検査のためのカスタマイズ可能なワークシートを作成"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_putaway_tree
@@ -1868,7 +1876,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
-msgstr ""
+msgstr "DHL Expressコネクタ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__date
@@ -2802,7 +2810,7 @@ msgstr "フォーマット"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 msgid "Free Stock"
-msgstr "無料在庫"
+msgstr "引当なし在庫"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__free_qty
@@ -2818,7 +2826,7 @@ msgstr "自由に使用できる数量"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "From"
-msgstr "開始日"
+msgstr "移動元"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__owner_id
@@ -2917,7 +2925,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__has_message
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "メッセージあり"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_line_exist
@@ -3212,6 +3220,12 @@ msgstr "今すぐ移動しますか？"
 #: model_terms:ir.ui.view,arch_db:stock.view_immediate_transfer
 msgid "Immediate transfer?"
 msgstr "今すぐ移動しますか？"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Import"
+msgstr "インポート"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
@@ -4088,7 +4102,7 @@ msgstr "プッシュ/プル在庫フローを管理"
 #. module: stock
 #: model:res.groups,name:stock.group_stock_storage_categories
 msgid "Manage Storage Categories"
-msgstr ""
+msgstr "ストレージカテゴリを管理"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -4249,7 +4263,7 @@ msgstr "パッケージ全体を移動する"
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__move_line_ids
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__move_line_ids
 msgid "Move Line"
-msgstr "仕訳明細"
+msgstr "移動明細"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__move_line_nosuggest_ids
@@ -4455,7 +4469,7 @@ msgstr "追跡なし"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "No allocation need found for incoming products."
-msgstr ""
+msgstr "入荷したプロダクトに割当の必要はありません。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -4516,6 +4530,12 @@ msgid "No stock move found"
 msgstr "在庫移動が見つかりません"
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "No Stock On Hand"
+msgstr "手持在庫がありません"
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_form
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_all
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_backorder
@@ -4531,7 +4551,7 @@ msgstr "転送が見つかりません。作ってみましょう!"
 #: code:addons/stock/report/report_stock_reception.py:0
 #, python-format
 msgid "No transfers selected or a delivery order selected"
-msgstr ""
+msgstr "運送または配送オーダが選択されていません"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__0
@@ -4598,7 +4618,7 @@ msgstr "エラー数"
 #: model:ir.model.fields,help:stock.field_product_product__nbr_moves_in
 #: model:ir.model.fields,help:stock.field_product_template__nbr_moves_in
 msgid "Number of incoming stock moves in the past 12 months"
-msgstr ""
+msgstr "過去12ヶ月の間に入庫した在庫移動の数"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction_counter
@@ -4618,7 +4638,7 @@ msgstr "配信エラーのメッセージ数"
 #: model:ir.model.fields,help:stock.field_product_product__nbr_moves_out
 #: model:ir.model.fields,help:stock.field_product_template__nbr_moves_out
 msgid "Number of outgoing stock moves in the past 12 months"
-msgstr ""
+msgstr "過去12ヶ月の間に出庫した在庫移動の数"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_unread_counter
@@ -5020,7 +5040,7 @@ msgstr "梱包タイプ"
 #: model:ir.ui.menu,name:stock.menu_packaging_types
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_tree
 msgid "Package Types"
-msgstr ""
+msgstr "梱包タイプ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__package_use
@@ -5239,6 +5259,14 @@ msgstr "希望ルート"
 #: model:ir.model.fields,help:stock.field_stock_move__route_ids
 msgid "Preferred route"
 msgstr "優先ルート"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"Press the CREATE button to define quantity for each product in your stock or"
+" import them from a spreadsheet throughout Favorites"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -5682,7 +5710,7 @@ msgstr "品質管理ロケーション"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_quality_control_worksheet
 msgid "Quality Worksheet"
-msgstr ""
+msgstr "品質ワークシート"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_adjustment_name__quant_ids
@@ -5833,7 +5861,7 @@ msgstr "製品のデフォルトの測定単位での、この数量の予約済
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_positive_quantity
 msgid "Quantity should be a positive number."
-msgstr ""
+msgstr "数量はプラスの数字でなければなりません。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__reserved_availability
@@ -5843,7 +5871,7 @@ msgstr "この移動のために既に予約されている数量"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_label_layout__picking_quantity
 msgid "Quantity to print"
-msgstr ""
+msgstr "印刷する数量"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_quant
@@ -5895,7 +5923,7 @@ msgstr "入荷ルート"
 #: model:stock.picking.type,name:stock.picking_type_in
 #, python-format
 msgid "Receipts"
-msgstr "領収書"
+msgstr "入荷"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -6148,7 +6176,7 @@ msgstr "引当"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_category__packaging_reserve_method__full
 msgid "Reserve Only Full Packagings"
-msgstr ""
+msgstr "全部パッケージ引当"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_category__packaging_reserve_method
@@ -6156,16 +6184,18 @@ msgid ""
 "Reserve Only Full Packagings: will not reserve partial packagings. If customer orders 2 pallets of 1000 units each and you only have 1600 in stock, then only 1000 will be reserved\n"
 "Reserve Partial Packagings: allow reserving partial packagings. If customer orders 2 pallets of 1000 units each and you only have 1600 in stock, then 1600 will be reserved"
 msgstr ""
+"全部パッケージ引当：部分パッケージを引当しません。顧客が1000単位を2パレット注文し、在庫が1600あった場合、1000のみが引き当てられます。\n"
+"部分パッケージ引当：部分パッケージ引当を許可します。顧客が1000単位を2パレット注文し、在庫が1600あった場合、1,600が引き当てられます。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__packaging_reserve_method
 msgid "Reserve Packagings"
-msgstr ""
+msgstr "パッケージ引当"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_category__packaging_reserve_method__partial
 msgid "Reserve Partial Packagings"
-msgstr ""
+msgstr "部分パッケージ引当"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -7157,7 +7187,7 @@ msgstr "在庫レベルを管理する実際の品目である在庫可能製品
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "Storage Capacities"
-msgstr ""
+msgstr "ストレージカテゴリ容量"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_storage_category
@@ -7166,7 +7196,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_tree
 msgid "Storage Categories"
-msgstr ""
+msgstr "ストレージカテゴリ"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_storage_category
@@ -7444,8 +7474,8 @@ msgstr "倉庫名は会社内で一意でないといけません。"
 #. module: stock
 #: code:addons/stock/wizard/stock_assign_serial_numbers.py:0
 #, python-format
-msgid "The number of Serial Numbers to generate must greater than zero."
-msgstr "生成するシリアル番号の数はゼロより大きくなければなりません。"
+msgid "The number of Serial Numbers to generate must be greater than zero."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -7573,6 +7603,14 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
 msgid "There's no product move yet"
 msgstr "製品の動きはまだありません"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"This analysis gives you an overview of the current stock level of your "
+"products."
+msgstr "この分析はプロダクトの現在の在庫レベル概要を表示します。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__name
@@ -7766,12 +7804,12 @@ msgstr "ヒント:バーコードを使用して在庫操作を高速化する"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "To"
-msgstr "終了日"
+msgstr "移動先"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "To Apply"
-msgstr ""
+msgstr "適用待ち"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_line__to_backorder
@@ -7907,7 +7945,7 @@ msgstr "運送"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__picking_quantity__picking
 msgid "Transfer Quantities"
-msgstr ""
+msgstr "配送数量"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_tree
@@ -7986,7 +8024,7 @@ msgstr "在庫がない場合は別のルールをトリガーする"
 #: code:addons/stock/static/src/js/report_stock_forecasted.js:0
 #, python-format
 msgid "Try to add some incoming or outgoing transfers."
-msgstr "いくつかの着信または発信転送を追加してみてください。"
+msgstr "入荷または出荷の運送を追加してみてください。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__type
@@ -8022,7 +8060,10 @@ msgid "USPS Connector"
 msgstr "USPSコネクタ"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Unassign"
 msgstr ""
 
@@ -8527,7 +8568,7 @@ msgid ""
 "When the virtual stock goes below the Min Quantity specified for this field,"
 " Odoo generates a procurement to bring the forecasted quantity to the Max "
 "Quantity."
-msgstr ""
+msgstr "仮想在庫がこのフィールドに指定された最小数量を下回ると、Odooは予測数量を最大数量にするための調達を生成します。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty
@@ -8945,14 +8986,20 @@ msgstr ""
 "将来の時間を節約するために、ルールを'自動化'として設定します。"
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Your stock is currently empty"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__print_format__zpl
 msgid "ZPL Labels"
-msgstr ""
+msgstr "ZPLラベル"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__print_format__zplxprice
 msgid "ZPL Labels with price"
-msgstr ""
+msgstr "ZPLラベル 価格あり"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule

@@ -11,14 +11,15 @@
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2022
 # Damian Brencic <brencicdamian12313@gmail.com>, 2022
+# Filip Hanes <filip.hanes@protonmail.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:54+0000\n"
+"POT-Creation-Date: 2021-11-16 16:40+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Damian Brencic <brencicdamian12313@gmail.com>, 2022\n"
+"Last-Translator: Filip Hanes <filip.hanes@protonmail.com>, 2022\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -266,6 +267,8 @@ msgid ""
 "<span class=\"text-muted\" states=\"done\">Attended</span>\n"
 "                                    <span class=\"text-muted\" states=\"cancel\">Canceled</span>"
 msgstr ""
+"<span class=\"text-muted\" states=\"done\">Zúčastnení</span>\n"
+"                                    <span class=\"text-muted\" states=\"cancel\">Zrušení</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
@@ -1098,7 +1101,7 @@ msgstr "Konferencia pre architektov"
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Conferences, workshops and trainings will be organized in 6 rooms:"
-msgstr ""
+msgstr "Konferencie, workshopy a školenia budú prebiehať v 6 miestnostiach:"
 
 #. module: event
 #: model:ir.model,name:event.model_res_config_settings
@@ -1236,6 +1239,8 @@ msgid ""
 "you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
 "as unlimited."
 msgstr ""
+"Určije počet dostupných lístkov. Ak budete mať priveľa registrácií, nebudeú "
+"sa dať predať ďalšie lístky. Nastavenie na  0 znamená neobmedzený počet."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__description
@@ -1475,7 +1480,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_tree
 msgid "Event Template"
-msgstr ""
+msgstr "Šablóna udalosti"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type_ticket
@@ -1486,14 +1491,14 @@ msgstr "Šablóna vstupenky udalosti"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_type_ticket_view_tree_from_type
 msgid "Event Template Tickets"
-msgstr ""
+msgstr "Šablóny vstupeniek na udalosti"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_type
 #: model:ir.ui.menu,name:event.menu_event_type
 #: model_terms:ir.ui.view,arch_db:event.event_type_view_search
 msgid "Event Templates"
-msgstr ""
+msgstr "Šablóny udalostí"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_type
@@ -1531,6 +1536,8 @@ msgid ""
 "Event stages are used to track the progress of an Event from its origin "
 "until its conclusion."
 msgstr ""
+"Fázy udalosti sa používajú na postupné sledovanie od začiatku až po "
+"ukončenie."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
@@ -1552,7 +1559,7 @@ msgstr "Udalosť: Registrácia"
 #. module: event
 #: model:mail.template,name:event.event_registration_mail_template_badge
 msgid "Event: Registration Badge"
-msgstr ""
+msgstr "Udalosť: Registračný odznak"
 
 #. module: event
 #: model:mail.template,name:event.event_reminder
@@ -1587,7 +1594,7 @@ msgstr "Poštové plánovače udalostí"
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_tree
 msgid "Events Stage"
-msgstr ""
+msgstr "Fáza udalostí"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__auto_confirm
@@ -1751,16 +1758,18 @@ msgstr "Celostránkový lístok"
 msgid ""
 "Full Page Ticket - {{ (object.event_id.name or 'Event').replace('/','') }}"
 msgstr ""
+"Vstupenka na celú stranu - {{ (object.event_id.name or "
+"'Event').replace('/','') }}"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_full_page_ticket
 msgid "Full Page Ticket Example"
-msgstr ""
+msgstr "Príklad vstupenky na celú stranu"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_done
 msgid "Fully ended"
-msgstr ""
+msgstr "Úplne ukončené"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -1843,7 +1852,7 @@ msgstr ""
 #. module: event
 #: model:event.event,name:event.event_5
 msgid "Hockey Tournament"
-msgstr ""
+msgstr "Hokejový zápas"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__hours
@@ -1941,7 +1950,7 @@ msgstr "Okamžite"
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
 msgid "Important ticket information"
-msgstr ""
+msgstr "Dôležité informácie o vstupenke"
 
 #. module: event
 #: code:addons/event/models/event_stage.py:0
@@ -1978,12 +1987,12 @@ msgstr "Úvod, CRM, riadenie predaja"
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "Invalid event / ticket choice"
-msgstr ""
+msgstr "Neplatná možnosť udalosti / vstupenky"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__sale_available
 msgid "Is Available"
-msgstr ""
+msgstr "Dostupná"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_expired
@@ -1993,7 +2002,7 @@ msgstr "Je ukončená platnosť"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_finished
 msgid "Is Finished"
-msgstr ""
+msgstr "Ukončená"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_is_follower
@@ -2004,12 +2013,12 @@ msgstr "Odberateľ"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_one_day
 msgid "Is One Day"
-msgstr ""
+msgstr "Jednodenná"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_ongoing
 msgid "Is Ongoing"
-msgstr ""
+msgstr "Prebieha"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__seats_max
@@ -2119,33 +2128,33 @@ msgstr "Omeškané aktivity"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Let's create your first <b>event</b>."
-msgstr ""
+msgstr "Poďme vytvoriť vašu prvú <b>udalosť</b>."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Limit Registrations"
-msgstr ""
+msgstr "Obmedzenie registrácií"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__has_seats_limitation
 msgid "Limited Seats"
-msgstr ""
+msgstr "Obmedzenie miest"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Live Broadcast"
-msgstr ""
+msgstr "Živé vysielanie"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_live
 msgid "Live Mode"
-msgstr ""
+msgstr "Režim naživo"
 
 #. module: event
 #: model:event.event,name:event.event_3
 msgid "Live Music Festival"
-msgstr ""
+msgstr "Festival živej hudby"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__notification_type__mail
@@ -2156,7 +2165,7 @@ msgstr "Správa"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_registration_ids
 msgid "Mail Registration"
-msgstr ""
+msgstr "Poštová registrácia"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_mail_ids
@@ -2198,7 +2207,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Mark as Attending"
-msgstr ""
+msgstr "Označiť, že sa zúčastním"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
@@ -2208,7 +2217,7 @@ msgstr "Marketing"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 msgid "Maximum"
-msgstr ""
+msgstr "Maximum"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_limited
@@ -2223,14 +2232,14 @@ msgstr "Maximálny poçet účastníkov"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__seats_max
 msgid "Maximum Registrations"
-msgstr ""
+msgstr "Maximum registrácií"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_max
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__seats_max
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Maximum Seats"
-msgstr ""
+msgstr "Maximum miest"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_medium_id
@@ -2263,7 +2272,7 @@ msgstr "Mesiace"
 #. module: event
 #: model:event.tag,name:event.event_tag_category_2_tag_2
 msgid "Music"
-msgstr ""
+msgstr "Hudba"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__my_activity_date_deadline
@@ -2616,7 +2625,7 @@ msgstr "Dátum registrácie"
 #. module: event
 #: model:res.groups,name:event.group_event_registration_desk
 msgid "Registration Desk"
-msgstr ""
+msgstr "Registračný pult"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__end_sale_datetime
@@ -3088,12 +3097,8 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__ticket_instructions
 #: model:ir.model.fields,field_description:event.field_event_type__ticket_instructions
-msgid "Ticket Instructions"
-msgstr ""
-
-#. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
-msgid "Ticket Intructions"
+msgid "Ticket Instructions"
 msgstr ""
 
 #. module: event

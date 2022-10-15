@@ -16,7 +16,7 @@
                 'o-squashed': messageView and messageView.isSquashed,
                 'o-starred': messageView and messageView.message.isStarred,
                 'mt-3': messageView and !messageView.isSquashed,
-            }" t-on-click="_onClick" t-on-mouseenter="state.isHovered = true" t-on-mouseleave="state.isHovered = false" t-att-data-message-local-id="messageView and messageView.message.localId"
+            }" role="group" t-att-aria-label="messageView and messageView.message.messageTypeText" t-on-click="_onClick" t-on-mouseenter="state.isHovered = true" t-on-mouseleave="state.isHovered = false" t-att-data-message-local-id="messageView and messageView.message.localId"
         >
             <t t-if="messageView" name="rootCondition">
                 <MessageInReplyToView t-if="messageView.messageInReplyToView" messageInReplyToViewLocalId="messageView.messageInReplyToView.localId"/>
@@ -28,7 +28,7 @@
                     <div class="o_Message_sidebar" t-att-class="{ 'o-message-squashed align-items-start': messageView.isSquashed }">
                         <t t-if="!messageView.isSquashed">
                             <div class="o_Message_authorAvatarContainer o_Message_sidebarItem">
-                                <img class="o_Message_authorAvatar rounded-circle" t-att-class="{ o_Message_authorRedirect: hasAuthorOpenChat, o_redirect: hasAuthorOpenChat }" t-att-src="avatar" t-on-click="_onClickAuthorAvatar" t-att-title="hasAuthorOpenChat ? OPEN_CHAT : ''" alt="Avatar"/>
+                                <img class="o_Message_authorAvatar rounded-circle" t-att-class="{ o_Message_authorRedirect: hasAuthorOpenChat, o_redirect: hasAuthorOpenChat }" t-att-src="avatar" role="button" tabindex="0" t-on-click="_onClickAuthorAvatar" t-att-title="hasAuthorOpenChat ? OPEN_CHAT : ''" t-att-alt="hasAuthorOpenChat ? OPEN_CHAT : ''"/>
                                 <t t-if="messageView.message.author and messageView.message.author.im_status">
                                     <PartnerImStatusIcon
                                         class="o_Message_partnerImStatusIcon"
@@ -57,7 +57,7 @@
                         <t t-if="!messageView.isSquashed">
                             <div class="o_Message_header ml-2">
                                 <t t-if="messageView.message.author">
-                                    <div class="o_Message_authorName o_Message_authorRedirect o_redirect text-truncate" t-on-click="_onClickAuthorName" title="Open profile">
+                                    <div class="o_Message_authorName o_Message_authorRedirect o_redirect text-truncate" role="link" tabindex="0" t-on-click="_onClickAuthorName" title="Open profile">
                                         <t t-if="messageView.message.originThread">
                                             <t t-esc="messageView.message.originThread.getMemberName(messageView.message.author)"/>
                                         </t>
@@ -101,8 +101,8 @@
                                 </t>
                                 <t t-if="threadView and messageView.message.originThread and messageView.message.originThread === threadView.thread and messageView.message.notifications.length > 0">
                                     <t t-if="messageView.message.failureNotifications.length > 0">
-                                        <span class="o_Message_notificationIconClickable o-error" t-on-click="_onClickFailure">
-                                            <i name="failureIcon" class="o_Message_notificationIcon fa fa-envelope"/>
+                                        <span class="o_Message_notificationIconClickable o-error" role="button" tabindex="0" t-on-click="_onClickFailure">
+                                            <i name="failureIcon" class="o_Message_notificationIcon fa fa-envelope" role="img" aria-label="Delivery failure"/>
                                         </span>
                                     </t>
                                     <t t-else="">
@@ -147,7 +147,7 @@
                                 <ul class="o_Message_trackingValues">
                                     <t t-foreach="trackingValues" t-as="value" t-key="value.id">
                                         <li>
-                                            <div class="o_Message_trackingValue">
+                                            <div class="o_Message_trackingValue" role="group">
                                                 <div class="o_Message_trackingValueFieldName o_Message_trackingValueItem" t-esc="value.changed_field"/>
                                                 <t t-if="value.old_value">
                                                     <div class="o_Message_trackingValueOldValue o_Message_trackingValueItem" t-esc="value.old_value"/>

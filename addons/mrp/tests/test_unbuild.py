@@ -686,3 +686,132 @@ class TestUnbuild(TestMrpCommon):
         uo.action_unbuild()
 
         self.assertEqual(uo.produce_line_ids.filtered(lambda sm: sm.product_id == compo).lot_ids, lot01 + lot02)
+
+    def test_unbuild_and_multilocations(self):
+        """
+        Basic flow: produce p_final, transfer it to a sub-location and then
+        unbuild it. The test ensures that the source/destination locations of an
+        unbuild order are applied on the stock moves
+        """
+        grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
+        self.env.user.write({'groups_id': [(4, grp_multi_loc.id, 0)]})
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        prod_location = self.env['stock.location'].search([('usage', '=', 'production'), ('company_id', '=', self.env.user.id)])
+        subloc01, subloc02, = self.stock_location.child_ids[:2]
+
+        mo, _, p_final, p1, p2 = self.generate_mo(qty_final=1, qty_base_1=1, qty_base_2=1)
+
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 1)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 1)
+        mo.action_assign()
+
+        mo_form = Form(mo)
+        mo_form.qty_producing = 1.0
+        mo = mo_form.save()
+        mo.button_mark_done()
+
+        # Transfer the finished product from WH/Stock to `subloc01`
+        internal_form = Form(self.env['stock.picking'])
+        internal_form.picking_type_id = warehouse.int_type_id
+        internal_form.location_id = self.stock_location
+        internal_form.location_dest_id = subloc01
+        with internal_form.move_ids_without_package.new() as move:
+            move.product_id = p_final
+            move.product_uom_qty = 1.0
+        internal_transfer = internal_form.save()
+        internal_transfer.action_confirm()
+        internal_transfer.action_assign()
+        internal_transfer.move_line_ids.qty_done = 1.0
+        internal_transfer.button_validate()
+
+        unbuild_order_form = Form(self.env['mrp.unbuild'])
+        unbuild_order_form.mo_id = mo
+        unbuild_order_form.location_id = subloc01
+        unbuild_order_form.location_dest_id = subloc02
+        unbuild_order = unbuild_order_form.save()
+        unbuild_order.action_unbuild()
+
+        self.assertRecordValues(unbuild_order.produce_line_ids, [
+            # pylint: disable=bad-whitespace
+            {'product_id': p_final.id,  'location_id': subloc01.id,         'location_dest_id': prod_location.id},
+            {'product_id': p2.id,       'location_id': prod_location.id,    'location_dest_id': subloc02.id},
+            {'product_id': p1.id,       'location_id': prod_location.id,    'location_dest_id': subloc02.id},
+        ])
+
+    def test_use_unbuilt_sn_in_mo(self):
+        """
+            use an unbuilt serial number in manufacturing order:
+            produce a tracked product, unbuild it and then use it as a component with the same SN in a mo.
+        """
+        product_1 = self.env['product.product'].create({
+            'name': 'Product tracked by sn',
+            'type': 'product',
+            'tracking': 'serial',
+        })
+        product_1_sn = self.env['stock.production.lot'].create({
+            'product_id': product_1.id,
+            'company_id': self.env.company.id})
+        component = self.env['product.product'].create({
+            'name': 'Product component',
+            'type': 'product',
+        })
+        bom_1 = self.env['mrp.bom'].create({
+            'product_id': product_1.id,
+            'product_tmpl_id': product_1.product_tmpl_id.id,
+            'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component.id, 'product_qty': 1}),
+            ],
+        })
+        product_2 = self.env['product.product'].create({
+            'name': 'finished Product',
+            'type': 'product',
+        })
+        self.env['mrp.bom'].create({
+            'product_id': product_2.id,
+            'product_tmpl_id': product_2.product_tmpl_id.id,
+            'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': product_1.id, 'product_qty': 1}),
+            ],
+        })
+        # mo1
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product_1
+        mo_form.bom_id = bom_1
+        mo_form.product_qty = 1.0
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        mo_form = Form(mo)
+        mo_form.qty_producing = 1.0
+        mo_form.lot_producing_id = product_1_sn
+        mo = mo_form.save()
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done', "Production order should be in done state.")
+
+        #unbuild order
+        unbuild_form = Form(self.env['mrp.unbuild'])
+        unbuild_form.mo_id = mo
+        unbuild_form.lot_id = product_1_sn
+        unbuild_form.save().action_unbuild()
+
+        #mo2
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product_2
+        mo2 = mo_form.save()
+        mo2.action_confirm()
+        details_operation_form = Form(mo2.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
+        with details_operation_form.move_line_ids.new() as ml:
+            ml.lot_id = product_1_sn
+            ml.qty_done = 1
+        details_operation_form.save()
+        mo_form = Form(mo2)
+        mo_form.qty_producing = 1
+        mo2 = mo_form.save()
+        mo2.button_mark_done()
+        self.assertEqual(mo2.state, 'done', "Production order should be in done state.")

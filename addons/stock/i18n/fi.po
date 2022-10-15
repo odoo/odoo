@@ -5,7 +5,6 @@
 # Translators:
 # Mikko Salmela <salmemik@gmail.com>, 2021
 # Sanna Edelman <direct@generare.com>, 2021
-# Kim Asplund <kim.asplund@gmail.com>, 2021
 # Sari Mäyrä <sari.mayra@sv-oy.fi>, 2021
 # Johanna Valkonen <miujohanna@gmail.com>, 2021
 # Petteri Torssonen <info@collapick.com>, 2021
@@ -17,7 +16,6 @@
 # Simo Suurla <simo@suurla.fi>, 2021
 # Jussi Heikkilä <jussi.heikkila@panimo.com>, 2021
 # Tommi Rintala <tommi.rintala@gmail.com>, 2021
-# Martin Trigaux, 2021
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2021
 # Miku Laitinen <miku.laitinen@gmail.com>, 2021
 # Jussi Lehto <jussi@gulfeo.com>, 2021
@@ -28,11 +26,13 @@
 # Timo Koukkari <ti.ko@netikka.fi>, 2021
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2021
 # Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2021
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
 # Janne Räty, 2021
 # Joni Winsten, 2021
 # Antti Oksman <antti.oksman@web-veistamo.fi>, 2021
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
+# Martin Trigaux, 2022
+# Kim Asplund <kim.asplund@gmail.com>, 2022
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -40,7 +40,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -149,7 +149,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 #: model_terms:ir.ui.view,arch_db:stock.view_immediate_transfer
 msgid "&gt;"
-msgstr ""
+msgstr "&gt;"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_inventory
@@ -967,7 +967,10 @@ msgid "As soon as possible"
 msgstr "Niin pian kuin mahdollista"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Assign"
 msgstr "Vastuuta"
 
@@ -1893,7 +1896,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
-msgstr ""
+msgstr "DHL Express Liitin"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__date
@@ -3256,6 +3259,12 @@ msgid "Immediate transfer?"
 msgstr "Välitön siirto?"
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Import"
+msgstr "Tuo"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
 msgid "In Type"
 msgstr "Saapuvien tyyppi"
@@ -4569,6 +4578,12 @@ msgid "No stock move found"
 msgstr "Varastosiirtoa ei löytynyt"
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "No Stock On Hand"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_form
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_all
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_backorder
@@ -5294,6 +5309,14 @@ msgstr "Suositellut reitit"
 #: model:ir.model.fields,help:stock.field_stock_move__route_ids
 msgid "Preferred route"
 msgstr "Suositeltu reitti"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"Press the CREATE button to define quantity for each product in your stock or"
+" import them from a spreadsheet throughout Favorites"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -7533,7 +7556,7 @@ msgstr "Varaston nimen tulee olla yksilöllinen yhden yrityksen sisällä!"
 #. module: stock
 #: code:addons/stock/wizard/stock_assign_serial_numbers.py:0
 #, python-format
-msgid "The number of Serial Numbers to generate must greater than zero."
+msgid "The number of Serial Numbers to generate must be greater than zero."
 msgstr ""
 
 #. module: stock
@@ -7677,6 +7700,14 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
 msgid "There's no product move yet"
 msgstr "Tuotetta ei ole vielä siirretty"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"This analysis gives you an overview of the current stock level of your "
+"products."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__name
@@ -8152,7 +8183,10 @@ msgid "USPS Connector"
 msgstr "USPS-liitin"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Unassign"
 msgstr ""
 
@@ -9106,6 +9140,12 @@ msgid ""
 "You'll find here smart replenishment propositions based on inventory forecasts.\n"
 "            Choose the quantity to buy or manufacture and launch orders in a click.\n"
 "            To save time in the future, set the rules as \"automated\"."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Your stock is currently empty"
 msgstr ""
 
 #. module: stock

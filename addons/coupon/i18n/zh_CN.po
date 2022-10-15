@@ -4,10 +4,10 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Jeffery CHEN <jeffery9@gmail.com>, 2021
 # inspur qiuguodong <qiuguodong@inspur.com>, 2021
 # 黎伟杰 <674416404@qq.com>, 2021
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -160,7 +160,7 @@ msgid ""
 "A promotion code is a code that is associated with a marketing discount. For"
 " example, a retailer might tell frequent customers to enter the promotion "
 "code 'THX001' to receive a 10%% discount on their whole order."
-msgstr "促销码是一个和市场折扣相关的码。例如，一个零售商可能告诉老客户来输入促销码“THX001”来获得整个订单10%的折扣。"
+msgstr "促销折扣可与营销政策相关联的。例如，零售商可能多次与客户进行促销折扣“thx001对整个订单获得10%%的折扣。"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__program_type
@@ -243,8 +243,8 @@ msgid ""
 "Build up promotion programs to attract more customers with discounts, free products, free delivery, etc.\n"
 "                You can share promotion codes or grant the promotions automatically if some conditions are met."
 msgstr ""
-"创建促销程序靠折扣来吸引更多客户，如免费产品、免费邮寄等。\n"
-"                你可以分享促销码或在一些条件满足时自动获得促销许可。"
+"创建促销方案靠折扣来吸引更多客户，如免费产品、免费邮寄等。\n"
+"                您可以分享促销码或在一些条件满足时自动获得促销许可。"
 
 #. module: coupon
 #: model:coupon.program,name:coupon.3_cabinets_plus_1_free
@@ -307,30 +307,30 @@ msgstr "优惠码"
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__coupon_count
 msgid "Coupon Count"
-msgstr "优惠数量"
+msgstr "优惠券数量"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_program
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__program_type__coupon_program
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Coupon Program"
-msgstr "促销程序"
+msgstr "优惠券方案"
 
 #. module: coupon
 #: model:ir.actions.act_window,name:coupon.coupon_program_action_coupon_program
 msgid "Coupon Programs"
-msgstr "促销程序"
+msgstr "优惠券方案"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_reward
 msgid "Coupon Reward"
-msgstr "促销回报"
+msgstr "优惠券奖励"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_rule
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_id
 msgid "Coupon Rule"
-msgstr "促销规则"
+msgstr "优惠券规则"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
@@ -341,33 +341,33 @@ msgstr "优惠券有效期"
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_date_to
 #: model:ir.model.fields,help:coupon.field_coupon_rule__rule_date_to
 msgid "Coupon program end date"
-msgstr "促销程序截止日期"
+msgstr "优惠券方案截止日期"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_date_from
 #: model:ir.model.fields,help:coupon.field_coupon_rule__rule_date_from
 msgid "Coupon program start date"
-msgstr "促销程序开始日期"
+msgstr "优惠券方案开始日期"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__sequence
 msgid ""
 "Coupon program will be applied based on given sequence if multiple programs "
 "are defined on same condition(For minimum amount)"
-msgstr "如果累积程序被定义为同一条件（最低金额），促销程序将基于给定的序列号来使用"
+msgstr "如果累积程序被定义为同一条件（最低金额），优惠券方案将基于给定的序列号来使用"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_partners_domain
 #: model:ir.model.fields,help:coupon.field_coupon_rule__rule_partners_domain
 msgid "Coupon program will work for selected customers only"
-msgstr "促销程序将只对选定的客户有效"
+msgstr "优惠券方案将只对选定的客户有效"
 
 #. module: coupon
 #: model:ir.actions.server,name:coupon.expire_coupon_cron_ir_actions_server
 #: model:ir.cron,cron_name:coupon.expire_coupon_cron
 #: model:ir.cron,name:coupon.expire_coupon_cron
 msgid "Coupon: expire coupon based on date"
-msgstr "促销：促销失效基于日期"
+msgstr "优惠券：优惠券失效基于日期"
 
 #. module: coupon
 #: model:ir.actions.act_window,name:coupon.coupon_action
@@ -376,17 +376,17 @@ msgstr "促销：促销失效基于日期"
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_view_form
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_view_tree
 msgid "Coupons"
-msgstr "促销"
+msgstr "优惠券"
 
 #. module: coupon
 #: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_coupon_program
 msgid "Create a new coupon program"
-msgstr "新建一个促销程序"
+msgstr "新建一个优惠券方案"
 
 #. module: coupon
 #: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_promo_program
 msgid "Create a new promotion program"
-msgstr "创建一个促销程序"
+msgstr "创建一个促销方案"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__create_uid
@@ -512,7 +512,7 @@ msgstr "固定金额"
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__partner_id
 msgid "For Customer"
-msgstr "对用户"
+msgstr "于客户"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_product_id
@@ -542,24 +542,24 @@ msgstr "生成"
 #: model:ir.model,name:coupon.model_coupon_generate_wizard
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
 msgid "Generate Coupon"
-msgstr "生成促销"
+msgstr "生成优惠券"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
 msgid "Generate Coupons"
-msgstr "生成促销"
+msgstr "生成优惠券"
 
 #. module: coupon
 #: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_coupon_program
 msgid ""
 "Generate and share coupon codes with your customers to get discounts or free"
 " products."
-msgstr "对你的顾客生成并分享促销码来获得折扣或免费产品。"
+msgstr "对您的顾客生成并分享促销码来获得折扣或免费产品。"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__coupon_ids
 msgid "Generated Coupons"
-msgstr "生成促销"
+msgstr "生成优惠券"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__generation_type
@@ -574,7 +574,7 @@ msgstr "有合作伙伴邮箱"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "Here is your reward from"
-msgstr "这是你的回报来自"
+msgstr "这是您的回报来自"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__id
@@ -688,12 +688,12 @@ msgstr "名称"
 #: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__nbr_coupons
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_generate_wizard__generation_type__nbr_coupon
 msgid "Number of Coupons"
-msgstr "促销数量"
+msgstr "优惠券数量"
 
 #. module: coupon
 #: model:ir.actions.act_window,name:coupon.coupon_generate_action
 msgid "Number of Coupons To Generate"
-msgstr "要生成的促销数量"
+msgstr "要生成的优惠券数量"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_generate_wizard__generation_type__nbr_customer
@@ -703,7 +703,7 @@ msgstr "选择的客户数量"
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_generate_wizard__nbr_coupons
 msgid "Number of coupons"
-msgstr "促销数量"
+msgstr "优惠券数量"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__discount_apply_on__cheapest_product
@@ -761,7 +761,7 @@ msgstr ""
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_coupon__discount_line_product_id
 msgid "Product used in the sales order to apply the discount."
-msgstr "销售订单中使用的产品将被应用折扣。"
+msgstr "销售订单中应用的产品将被应用折扣。"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__discount_line_product_id
@@ -769,7 +769,7 @@ msgstr "销售订单中使用的产品将被应用折扣。"
 msgid ""
 "Product used in the sales order to apply the discount. Each coupon program "
 "has its own reward product for reporting purpose"
-msgstr "销售订单中的使用的产品将应用这个折扣，每个促销程序有它自己的用于报表目的的回报产品"
+msgstr "销售订单中的应用的产品将应用这个折扣，每个优惠券方案有它自己的用于报表目的的回报产品"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_specific_product_ids
@@ -814,12 +814,12 @@ msgstr "优惠码"
 #. module: coupon
 #: model:ir.actions.act_window,name:coupon.coupon_program_action_promo_program
 msgid "Promotion Programs"
-msgstr "促销程序"
+msgstr "促销方案"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__program_type__promotion_program
 msgid "Promotional Program"
-msgstr "促销程序"
+msgstr "促销方案"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_product_quantity
@@ -845,13 +845,13 @@ msgstr "回报描述"
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_line_product_id
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__discount_line_product_id
 msgid "Reward Line Product"
-msgstr "回报明细产品"
+msgstr "奖励明细产品"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__reward_product_id
 #: model:ir.model.fields,help:coupon.field_coupon_reward__reward_product_id
 msgid "Reward Product"
-msgstr "回报产品"
+msgstr "奖励产品"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_type
@@ -920,7 +920,7 @@ msgstr "发送"
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_applicability__on_next_order
 msgid "Send a Coupon"
-msgstr "发送一个促销"
+msgstr "发送一个优惠券"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_view_form
@@ -1098,7 +1098,7 @@ msgstr "促销生成之后的有效期间"
 #: code:addons/coupon/models/coupon_program.py:0
 #, python-format
 msgid "You can not delete a program in active state"
-msgstr "你不能删除一个激活状态的程序"
+msgstr "您不能删除一个激活状态的程序"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
@@ -1128,4 +1128,4 @@ msgstr "关闭最便宜的产品"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "on your next order"
-msgstr "基于你的下一个订单"
+msgstr "基于您的下一个订单"

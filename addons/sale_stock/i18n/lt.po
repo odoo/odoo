@@ -9,11 +9,12 @@
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2022
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2022
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2022
-# Jonas Zinkevicius <jozi@odoo.com>, 2022
 # Sigitasvia <sigitas@vialaurea.lt>, 2022
 # Martin Trigaux, 2022
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2022
 # Linas Versada <linaskrisiukenas@gmail.com>, 2022
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022
+# Jonas Zinkevicius <jozi@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2022\n"
+"Last-Translator: Jonas Zinkevicius <jozi@odoo.com>, 2022\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,17 +42,17 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Preparation</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/><b>Ruošiama</b>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-times\"/> <b>Cancelled</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-times\"/><b>Atšaukta</b>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-truck\"/> <b>Shipped</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-truck\"/><b>Pristatyta</b>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -131,12 +132,12 @@ msgstr "Po pardavimo"
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "All planned operations included"
-msgstr ""
+msgstr "Įtrauktos visos suplanuotos operacijos"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Apply specific routes"
-msgstr ""
+msgstr "Pritaikyti specifines taisykles"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__picking_policy__direct
@@ -244,7 +245,7 @@ msgstr "Rodyti Incoterm sąlygas užsakymuose ir sąskaitose"
 #, python-format
 msgid ""
 "Do not forget to change the partner on the following delivery orders: %s"
-msgstr ""
+msgstr "Nepamiršite pakeisti partnerį sekančiuose pristatymo užsakymuose: %s"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -282,7 +283,7 @@ msgstr "Planuojama pristatymo data"
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "Expected Delivery"
-msgstr ""
+msgstr "Numatomas pristatymas"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
@@ -299,12 +300,12 @@ msgstr ""
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "Forecasted Stock"
-msgstr ""
+msgstr "Sandėlio prognozė"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__free_qty_today
 msgid "Free Qty Today"
-msgstr ""
+msgstr "Šiandien laisvas kiekis"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
@@ -365,7 +366,7 @@ msgstr "Apskaita"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__is_mto
 msgid "Is Mto"
-msgstr ""
+msgstr "Yra MTO"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__json_popover
@@ -483,12 +484,12 @@ msgstr "Produkto tipas"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_available_today
 msgid "Qty Available Today"
-msgstr ""
+msgstr "Pasiekiamas kiekis šiandien"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
 msgid "Qty To Deliver"
-msgstr ""
+msgstr "Pristatymo kiekis"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_report_product_product_replenishment
@@ -636,7 +637,7 @@ msgstr "Atsargų perkėlimai"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_product_product_replenishment
 msgid "Stock Replenishment Report"
-msgstr ""
+msgstr "Atsargų papildymo ataskaita"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rule
@@ -674,7 +675,7 @@ msgstr ""
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "This product is replenished on demand."
-msgstr ""
+msgstr "Šis produktas papildomas pagal poreikį."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking

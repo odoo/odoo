@@ -5,8 +5,8 @@
 # Translators:
 # Daniel Blanco <daniel@blancomartin.com.ar>, 2022
 # ramiadavid, 2022
-# marcescu, 2022
 # Martin Trigaux, 2022
+# marcescu, 2022
 # 
 msgid ""
 msgstr ""
@@ -14,13 +14,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:55+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: marcescu, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: portal
 #. openerp-web
@@ -185,7 +185,7 @@ msgstr ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
 "<tbody>\n"
-"    <!-- HEADER -->\n"
+"    <!-- CABEZILLA -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
@@ -201,7 +201,7 @@ msgstr ""
 "            </table>\n"
 "        </td>\n"
 "    </tr>\n"
-"    <!-- CONTENT -->\n"
+"    <!-- CONTENIDO -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
@@ -228,7 +228,7 @@ msgstr ""
 "            </table>\n"
 "        </td>\n"
 "    </tr>\n"
-"    <!-- FOOTER -->\n"
+"    <!-- PIE -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
@@ -250,7 +250,7 @@ msgstr ""
 "</tbody>\n"
 "</table>\n"
 "</td></tr>\n"
-"<!-- POWERED BY -->\n"
+"<!-- ECHO POR -->\n"
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
 "      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
@@ -266,7 +266,7 @@ msgstr ""
 #: code:addons/portal/static/src/js/portal.js:0
 #, python-format
 msgid "API Key Ready"
-msgstr ""
+msgstr "Clave API lista"
 
 #. module: portal
 #. openerp-web
@@ -492,7 +492,7 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_res_config_settings__portal_allow_api_keys
 msgid "Customer API Keys"
-msgstr ""
+msgstr "Claves API de los clientes"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
@@ -621,6 +621,8 @@ msgid ""
 "Here is your new API key, use it instead of a password for RPC access.\n"
 "                Your login is still necessary for interactive usage."
 msgstr ""
+"Esta es su clave de API nueva,  úsela en lugar de la contraseña para ingresar al RPC.\n"
+"Para darle un uso interactivo, inicie sesión."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -639,12 +641,26 @@ msgstr "ID"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Important:"
-msgstr ""
+msgstr "Importante:"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Internal User"
 msgstr "Usuario interno"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Internal Note"
+msgstr "Nota interna"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Internal notes are only displayed to internal users."
+msgstr "Las notas internas sólo se muestran a los usuarios internos."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -681,6 +697,8 @@ msgid ""
 "It is very important that this description be clear\n"
 "                and complete,"
 msgstr ""
+"Es muy importante que esta descripción sea clara\n"
+"                y esté completa"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share____last_update
@@ -718,7 +736,7 @@ msgstr "Escriba un comentario"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.res_config_settings_view_form
 msgid "Let your customers create developer API keys"
-msgstr ""
+msgstr "Deje que sus clientes creen claves API de desarrollador"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__share_link
@@ -798,7 +816,7 @@ msgstr "Logo de Odoo"
 #: code:addons/portal/models/res_users_apikeys_description.py:0
 #, python-format
 msgid "Only internal and portal users can create API keys"
-msgstr ""
+msgstr "Solo usuarios internos y del portal pueden crear claves API"
 
 #. module: portal
 #. openerp-web
@@ -1079,7 +1097,7 @@ msgstr ""
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "The key cannot be retrieved later and provides"
-msgstr ""
+msgstr "La clave no se puede recuperar después y brinda"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -1365,7 +1383,7 @@ msgstr "comentarios"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "full access"
-msgstr ""
+msgstr "acceso completo"
 
 #. module: portal
 #. openerp-web
@@ -1375,6 +1393,8 @@ msgid ""
 "it will be the only way to\n"
 "                identify the key once created"
 msgstr ""
+"Será la única forma de\n"
+"identificar la clave una vez que la cree."
 
 #. module: portal
 #. openerp-web
@@ -1415,4 +1435,4 @@ msgstr "escribir un comentario."
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "to your user account, it is very important to store it securely."
-msgstr ""
+msgstr "a su cuenta de usuario, es muy importante que guarde bien la clave."

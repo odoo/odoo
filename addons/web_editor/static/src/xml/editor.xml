@@ -118,7 +118,7 @@
             <div id="list" class="btn-group">
                 <div id="unordered" data-call="toggleList" data-arg1="UL" title="Toggle unordered list" class="oe-toggle-unordered fa fa-list-ul fa-fw btn"></div>
                 <div id="ordered" data-call="toggleList" data-arg1="OL" title="Toggle ordered list" class="oe-toggle-ordered fa fa-list-ol fa-fw btn"></div>
-                <div id="checklist" data-call="toggleList" data-arg1="CL" title="Toggle checklist" class="oe-toggle-checklist btn fa-fw">
+                <div id="checklist" data-call="toggleList" data-arg1="CL" title="Toggle checklist" class="oe-toggle-checklist btn fa fa-fw">
                     <div class="small">
                         <div class="fa fa-square-o d-block small"/>
                         <div class="fa fa-check-square d-block small"/>
@@ -266,6 +266,24 @@
                 </div>
             </div>
         </we-customizeblock-options>
+    </t>
+
+    <!-- Collaboration reset dialog -->
+    <t t-name="web_editor.collaboration-reset-dialog">
+        <div>
+            <div style="color: red;">
+                <p>
+                    There is a conflict between your version and the one in the database.
+                </p>
+                <p>
+                    The version from the database will be used.
+                    If you need to keep your changes, copy the content below and edit the new document.
+                </p>
+                <p style="font-weight: bold;">
+                    Warning: after closing this dialog, the version you were working on will be discarded and will never be available anymore.
+                </p>
+            </div>
+        </div>
     </t>
 
     <!--=================-->

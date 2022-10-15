@@ -1,28 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * analytic
+# 	* analytic
 # 
 # Translators:
-# Zahed Alfak <tamass4116@gmail.com>, 2018
-# Martin Trigaux, 2018
-# Morovat Guivi <tarjomac@gmail.com>, 2018
-# Hamid Darabi, 2018
-# Faraz Sadri Alamdari <ifarazir@gmail.com>, 2018
-# Sahar Daraye <sahar.daraye.1369@gmail.com>, 2018
-# Hamed Mohammadi <hamed@dehongi.com>, 2018
+# Hamid Reza Kaveh <hamidrkp@riseup.net>, 2022
+# Far Har <fhari1234@gmail.com>, 2022
+# Hamid Darabi, 2022
+# Martin Trigaux, 2022
+# Hamed Mohammadi <hamed@dehongi.com>, 2022
+# M.Hossein S.Farvashani <Farvashani@gmail.com>, 2022
+# Hanna Kheradroosta, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2018\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2021-09-14 12:20+0000\n"
+"Last-Translator: Hanna Kheradroosta, 2022\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fa\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+msgid "<span class=\"o_stat_text\">Gross Margin</span>"
+msgstr "حاشیه سود"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction
@@ -39,12 +45,12 @@ msgstr "فعال"
 #: model_terms:ir.actions.act_window,help:analytic.action_account_analytic_account_form
 #: model_terms:ir.actions.act_window,help:analytic.action_analytic_account_form
 msgid "Add a new analytic account"
-msgstr ""
+msgstr "افزودن یک حساب تحلیلی جدید"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_tag_action
 msgid "Add a new tag"
-msgstr ""
+msgstr "افزودن برچسب جدید"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__amount
@@ -66,16 +72,17 @@ msgstr "حساب تحلیلی"
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_distribution
 msgid "Analytic Account Distribution"
-msgstr ""
+msgstr "توزیع حساب های تحلیلی"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_group_action
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_group_form_view
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_group_tree_view
 msgid "Analytic Account Groups"
-msgstr ""
+msgstr "گروه های حساب تحلیلی"
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_res_config_settings__group_analytic_accounting
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
 msgstr "حسابداری تحلیلی"
@@ -83,7 +90,7 @@ msgstr "حسابداری تحلیلی"
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_tags
 msgid "Analytic Accounting Tags"
-msgstr ""
+msgstr "برچسب های حسابداری تحلیلی"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_account_analytic_account_form
@@ -95,7 +102,7 @@ msgstr "حساب های تحلیلی"
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_group
 msgid "Analytic Categories"
-msgstr ""
+msgstr "دسته بندی های تحلیلی"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__active_analytic_distribution
@@ -144,6 +151,9 @@ msgid "Analytic Tags"
 msgstr "برچسبهای تحلیلی"
 
 #. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_form_view
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_view_search
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Archived"
 msgstr "بایگانی شده"
@@ -156,7 +166,7 @@ msgstr "همکار مرتبط"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "تعداد پیوست"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__balance
@@ -170,6 +180,12 @@ msgid "Balance:"
 msgstr "تراز:"
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__category
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+msgid "Category"
+msgstr "دسته‌بندی"
+
+#. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_analytic_account_form
 msgid "Chart of Analytic Accounts"
 msgstr "جدول حساب های تحلیلی"
@@ -177,12 +193,12 @@ msgstr "جدول حساب های تحلیلی"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__children_ids
 msgid "Childrens"
-msgstr ""
+msgstr "فرزندان"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
 msgid "Click to add a new analytic account group."
-msgstr ""
+msgstr "برای افزودن یک گروه حساب تحلیلی جدید کلیک کنید."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__color
@@ -203,14 +219,18 @@ msgid "Complete Name"
 msgstr "نام کامل"
 
 #. module: analytic
-#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
-msgid "Cost/Revenue"
-msgstr "هزینه/درآمد"
+#: model:ir.model,name:analytic.model_res_config_settings
+msgid "Config Settings"
+msgstr "تنظیمات پیکربندی"
 
 #. module: analytic
-#: model:ir.actions.act_window,name:analytic.account_analytic_line_action
-msgid "Costs & Revenues"
-msgstr "هزینه‌ها و درآمدها"
+#: model:ir.model.fields,help:analytic.field_account_analytic_line__product_uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"تبدیل بین واحدهای اندازه‌گیری تنها در صورتی می تواند رخ دهد که به یک دسته "
+"تعلق داشته باشد. تبدیل بر اساس نسبت‌ها انجام خواهد شد."
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -219,6 +239,8 @@ msgid ""
 "Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets."
 msgstr ""
+"هنگامی که فاکتورهای تامین کننده، هزینه ها یا برگه های ساعت کارکرد را ثبت می کنید،\n"
+"                    هزینه ها به طور خودکار ایجاد می شود."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__create_uid
@@ -257,6 +279,7 @@ msgstr "مشتری"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__date
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Date"
 msgstr "تاریخ"
 
@@ -287,14 +310,14 @@ msgid "Followers"
 msgstr "دنبال‌کنندگان"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "پیروان (کانال ها)"
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "پیروان (شرکاء)"
+
+#. module: analytic
+#: model:ir.actions.act_window,name:analytic.account_analytic_line_action
+msgid "Gross Margin"
+msgstr "حاشیه سود"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__group_id
@@ -309,6 +332,11 @@ msgid "Group By..."
 msgstr "گروه بتدی بر اساس ..."
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__has_message
+msgid "Has Message"
+msgstr "دارای پیام"
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__id
@@ -318,13 +346,8 @@ msgid "ID"
 msgstr "شناسه"
 
 #. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_unread
-msgid "If checked new messages require your attention."
-msgstr ""
-"اگر این گزینه را انتخاب کنید، پیام‌های جدید به توجه شما نیاز خواهند داشت."
-
-#. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_unread
 msgid "If checked, new messages require your attention."
 msgstr ""
 "اگر این گزینه را انتخاب کنید، پیام‌های جدید به توجه شما نیاز خواهند داشت."
@@ -332,7 +355,7 @@ msgstr ""
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "در صورت انتخاب این گزینه، برخی پیام ها خطای تحویل دارند."
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__active
@@ -340,6 +363,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the account "
 "without removing it."
 msgstr ""
+"اگر فیلد فعال روی False تنظیم شود، به شما این امکان را می دهد تا حساب را "
+"بدون حذف آن مخفی کنید."
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -349,6 +374,9 @@ msgid ""
 "                analytic accounts. You can track costs and revenues to analyse\n"
 "                your margins easily."
 msgstr ""
+"در Odoo سفارشات و پروژه های فروش با استفاده از حساب های تحلیلی\n"
+"           اجرا می شوند. شما می توانید هزینه ها و درآمدها را پیگیری\n"
+"           کنید تا به راحتی حاشیه های خود را تجزیه و تحلیل کنید."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_is_follower
@@ -385,12 +413,12 @@ msgstr "آخرین به روز رسانی در"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "پیوست اصلی"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "خطای تحویل پیام"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_ids
@@ -407,12 +435,12 @@ msgstr "نام"
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid "No activity yet"
-msgstr ""
+msgstr "هنوز هیچ فعالیتی وجود ندارد"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
 msgid "No activity yet on this account"
-msgstr ""
+msgstr "هنوز هیچ فعالیتی در این حساب وجود ندارد"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction_counter
@@ -421,8 +449,8 @@ msgstr "تعداد اقدامات"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_error_counter
-msgid "Number of error"
-msgstr ""
+msgid "Number of errors"
+msgstr "تعداد خطاها"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction_counter
@@ -432,12 +460,17 @@ msgstr "تعداد پیام ها که نیاز به عمل"
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "تعداد پیامهای با خطای تحویل"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_unread_counter
 msgid "Number of unread messages"
 msgstr "تعداد پیام‌های خوانده نشده"
+
+#. module: analytic
+#: model:ir.model.fields.selection,name:analytic.selection__account_analytic_line__category__other
+msgid "Other"
+msgstr "دیگر"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__parent_id
@@ -447,12 +480,12 @@ msgstr "مادر"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__parent_path
 msgid "Parent Path"
-msgstr ""
+msgstr "مسیر والد"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__tag_id
 msgid "Parent tag"
-msgstr ""
+msgstr "برچسب والد"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__partner_id
@@ -484,6 +517,10 @@ msgid ""
 "                (fixed price invoices), on timesheets (based on the work done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
+"هنگام ایجاد فاکتورهای مشتری، درآمدها به طور خودکار ایجاد می شود.\n"
+"                    فاکتورهای مشتری را می توان بر اساس سفارشات فروش (فاکتورهای قیمت ثابت)،\n"
+"                    بر اساس جدول زمانی (بر اساس کار انجام شده) یا \n"
+"                   بر اساس هزینه ها (مانند صورتحساب مجدد هزینه های سفر) ایجاد کرد."
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
@@ -491,9 +528,14 @@ msgid "Search Analytic Lines"
 msgstr "جستجوی سطرها تحلیلی"
 
 #. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_view_search
+msgid "Search Analytic Tags"
+msgstr "جستجوی برچسب های تحلیلی"
+
+#. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_tag__active
 msgid "Set active to false to hide the Analytic Tag without removing it."
-msgstr ""
+msgstr "فعال را روی false قرار دهید تا برچسب تحلیلی بدون حذف آن پنهان شود."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__tag_ids
@@ -501,28 +543,25 @@ msgid "Tags"
 msgstr "برچسب‌ها"
 
 #. module: analytic
-#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
-msgid "Tasks Date"
-msgstr ""
-
-#. module: analytic
-#: sql_constraint:account.analytic.distribution:0
+#: model:ir.model.constraint,message:analytic.constraint_account_analytic_distribution_check_percentage
 msgid ""
 "The percentage of an analytic distribution should be between 0 and 100."
-msgstr ""
+msgstr "درصد توزیع تحلیلی باید بین 0 تا 100 باشد."
 
 #. module: analytic
-#: code:addons/analytic/models/analytic_account.py:195
+#: code:addons/analytic/models/analytic_account.py:0
 #, python-format
 msgid ""
-"The selected account belongs to another company that the one you're trying "
+"The selected account belongs to another company than the one you're trying "
 "to create an analytic item for"
 msgstr ""
+"حساب انتخاب شده متعلق به شرکت دیگری غیر از شرکتی است که می‌خواهید یک مورد "
+"تحلیلی برای آن ایجاد کنید"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
-msgid "This allows to classify your analytic accounts."
-msgstr ""
+msgid "This allows you to classify your analytic accounts."
+msgstr "این به شما امکان می دهد حساب های تحلیلی خود را طبقه بندی کنید."
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
@@ -543,6 +582,11 @@ msgstr "پیام های ناخوانده"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "شمارنده پیام‌های خوانده‌نشده"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_category_id
+msgid "UoM Category"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id

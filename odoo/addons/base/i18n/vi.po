@@ -10,14 +10,16 @@
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2021
 # Vo Thanh Thuy, 2022
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
+# Hoàng Đình Hiếu, 2022
+# Thin Tran <trvathin@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:42+0000\n"
+"POT-Creation-Date: 2022-01-24 09:03+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022\n"
+"Last-Translator: Thin Tran <trvathin@gmail.com>, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -635,6 +637,17 @@ msgid ""
 msgstr ""
 "\n"
 "        Báo cáo kế toán cho Hà Lan\n"
+"    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_pk_reports
+msgid ""
+"\n"
+"        Accounting reports for Pakistan\n"
+"    "
+msgstr ""
+"\n"
+"        Báo cáo kế toán cho Pakistan\n"
 "    "
 
 #. module: base
@@ -1592,6 +1605,16 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_mx_edi_stock_extended
+msgid ""
+"\n"
+"    Bridge module to extend the delivery guide (Complemento XML Carta de Porte)\n"
+"    - exported goods (COMEX)\n"
+"    - extended address fields\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_mrp_workorder_iot
 msgid ""
 "\n"
@@ -1769,6 +1792,18 @@ msgstr ""
 msgid ""
 "\n"
 "    Support for invoice Export/Import in Factur-x format (1.0.04).\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_mx_edi_stock
+msgid ""
+"\n"
+"    The delivery guide (Complemento XML Carta de Porte) is needed as a proof\n"
+"    that you are sending goods between A and B.\n"
+"\n"
+"    It is only when a delivery order is validated that you can create the delivery\n"
+"    guide.\n"
 "    "
 msgstr ""
 
@@ -4567,6 +4602,15 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_gcc_pos
+msgid ""
+"\n"
+"GCC POS Localization\n"
+"=======================================================\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_gamification
 msgid ""
 "\n"
@@ -5045,6 +5089,15 @@ msgstr ""
 msgid ""
 "\n"
 "It allows for comparing products from the wishlist\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_sa_pos
+msgid ""
+"\n"
+"K.S.A. POS Localization\n"
+"=======================================================\n"
 "    "
 msgstr ""
 
@@ -9187,6 +9240,13 @@ msgstr ""
 " "
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_pk
+msgid ""
+" This is the base module to manage chart of accounts and localization for "
+"the Pakistan "
+msgstr ""
+
+#. module: base
 #: code:addons/model.py:0
 #, python-format
 msgid ""
@@ -9597,7 +9657,7 @@ msgstr "9. %w              ==&gt; 5 ( Thứ 6 là ngày đứng thứ 6)"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "<b attrs=\"{'invisible': [('is_company', '=', False)]}\">Address</b>"
-msgstr ""
+msgstr "<b attrs=\"{'invisible': [('is_company', '=', False)]}\">Địa chỉ</b>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -9617,6 +9677,7 @@ msgstr ""
 msgid ""
 "<code>UserError</code>: Warning Exception to use with <code>raise</code>"
 msgstr ""
+"<code>UserError</code>: Warning Exception to use with <code>raise</code>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -9948,6 +10009,8 @@ msgstr "<strong>Điện thoại</strong>"
 msgid ""
 "<strong>Please enter your password to confirm you own this account</strong>"
 msgstr ""
+"<strong>Vui lòng nhập mật khẩu của bạn để xác nhận bạn sở hữu tài khoản "
+"này</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -10541,6 +10604,11 @@ msgid "Account Holder Name"
 msgstr "Tên chủ tài khoản"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_account_intrastat_expiry
+msgid "Account Invoice Expiry"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract
 msgid "Account Invoice Extract"
 msgstr "Trích xuất hóa đơn tài khoản"
@@ -11045,6 +11113,11 @@ msgid ""
 "Addison Olson works in IT sector <b>since 10 years</b>. He is known\n"
 "    notably for selling mouse traps. With that trick he cut\n"
 "    IT budget by almost half within the last 2 years."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_report_measures
+msgid "Additional Measures in Reporting"
 msgstr ""
 
 #. module: base
@@ -12059,7 +12132,7 @@ msgstr "Biểu đồ và thuế được chuẩn hóa của Áo"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_authentication
 msgid "Authenticate with"
-msgstr ""
+msgstr "Xác thực với"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_ldap
@@ -12196,7 +12269,7 @@ msgstr "Hình đại diện 512"
 #. module: base
 #: model:ir.model,name:base.model_avatar_mixin
 msgid "Avatar Mixin"
-msgstr ""
+msgstr "Avatar Mixin"
 
 #. module: base
 #: model:res.country,name:base.az
@@ -12567,6 +12640,11 @@ msgstr "Belarus"
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat
 msgid "Belgian Intrastat Declaration"
 msgstr "Belgian Intrastat Declaration"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_report_measures
+msgid "Belgian Payroll - Addition Measures in Reporting"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_holiday_pay_recovery
@@ -13462,7 +13540,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cl_edi
 msgid "Chile - E-invoicing"
-msgstr ""
+msgstr "Chile - Lập hóa đơn điện tử"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cl_edi_boletas
@@ -14749,7 +14827,7 @@ msgstr "Croatia - Kế toán (RRIF 2012)"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_trigger__cron_id
 msgid "Cron"
-msgstr ""
+msgstr "Cron"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_trigger_view_form
@@ -14760,7 +14838,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_trigger_view_search
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_trigger_view_tree
 msgid "Cron Triggers"
-msgstr ""
+msgstr "Cron Triggers"
 
 #. module: base
 #: model:res.country,name:base.cu
@@ -17939,7 +18017,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_purchase
 msgid "Germany - Purchase"
-msgstr ""
+msgstr "Germany - Purchase"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_repair
@@ -17949,7 +18027,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_sale
 msgid "Germany - Sale"
-msgstr ""
+msgstr "Germany - Sale"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_stock
@@ -18247,6 +18325,11 @@ msgid "Gulf Cooperation Council (GCC)"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_gcc_pos
+msgid "Gulf Cooperation Council - Point of Sale"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.gy
 msgid "Guyana"
 msgstr "Guyana"
@@ -18372,7 +18455,7 @@ msgstr "Hỗ trợ"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_helpdesk
 msgid "Helpdesk - CRM"
-msgstr ""
+msgstr "Helpdesk - CRM"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_account
@@ -19778,7 +19861,7 @@ msgstr "Khóa không hợp lệ: Chế độ xem QWeb phải có khóa"
 #: code:addons/template_inheritance.py:0
 #, python-format
 msgid "Invalid mode attribute:"
-msgstr ""
+msgstr "Thuộc tính mode không hợp lệ:"
 
 #. module: base
 #: code:addons/base/models/ir_actions.py:0
@@ -20095,6 +20178,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_hr_payroll_account
 msgid "K.S.A. - Payroll with Accounting"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_sa_pos
+msgid "K.S.A. - Point of Sale"
 msgstr ""
 
 #. module: base
@@ -21654,6 +21742,16 @@ msgid "Mexico - Accounting"
 msgstr "Mexico - Kế toán"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_stock
+msgid "Mexico - Electronic Delivery Guide"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_stock_extended
+msgid "Mexico - Electronic Delivery Guide Comex"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.fm
 msgid "Micronesia"
 msgstr "Micronesia"
@@ -22601,7 +22699,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
 msgid "No setting found"
-msgstr ""
+msgstr "Không tìm thấy cài đặt nào"
 
 #. module: base
 #: code:addons/base/models/ir_actions.py:0
@@ -24068,7 +24166,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_booth
 msgid "Online Event Booths"
-msgstr ""
+msgstr "Gian hàng sự kiện trực tuyến"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_sale
@@ -24808,6 +24906,16 @@ msgstr "Rộng trang (mm)"
 #: model:res.country,name:base.pk
 msgid "Pakistan"
 msgstr "Pakistan"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_pk
+msgid "Pakistan - Accounting"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_pk_reports
+msgid "Pakistan - Accounting Reports"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.pw
@@ -25675,7 +25783,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_hr_expense
 msgid "Project Expenses"
-msgstr ""
+msgstr "Chi phí dự án"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_mail_plugin
@@ -26989,12 +27097,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_ssl_certificate
 #: model:ir.model.fields.selection,name:base.selection__ir_mail_server__smtp_authentication__certificate
 msgid "SSL Certificate"
-msgstr ""
+msgstr "Chứng chỉ SSL"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_ssl_private_key
 msgid "SSL Private Key"
-msgstr ""
+msgstr "Khóa SSL bí mật"
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:0
@@ -27116,7 +27224,7 @@ msgstr "Bán"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_sms
 msgid "Sale - SMS"
-msgstr ""
+msgstr "Sale - SMS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_account_accountant
@@ -28054,7 +28162,7 @@ msgstr "Mạng xã hội Facebook"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_instagram
 msgid "Social Instagram"
-msgstr ""
+msgstr "Mạng xã hội Instagram"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_linkedin
@@ -28095,7 +28203,7 @@ msgstr "Mạng xã hội Twitter"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_youtube
 msgid "Social YouTube"
-msgstr ""
+msgstr "Mạng xã hội YouTube"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_social_media
@@ -28283,7 +28391,7 @@ msgstr "Bảng tính CRM mẫu"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__sql
 msgid "Sql"
-msgstr ""
+msgstr "Sql"
 
 #. module: base
 #: model:res.country,name:base.lk
@@ -28368,7 +28476,7 @@ msgstr "Trạng thái"
 #: code:addons/base/static/src/js/res_config_settings.js:0
 #, python-format
 msgid "Stay Here"
-msgstr ""
+msgstr "Ở lại đây"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__number_increment
@@ -28614,6 +28722,11 @@ msgid "Sweden"
 msgstr "Thụy Điển"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_se
+msgid "Sweden - Accounting"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_se_reports
 msgid "Sweden - Accounting Reports"
 msgstr "Thụy Điển - Báo cáo kế toán"
@@ -28622,11 +28735,6 @@ msgstr "Thụy Điển - Báo cáo kế toán"
 #: model:ir.module.module,shortdesc:base.module_pos_l10n_se
 msgid "Sweden Registered Cash Register"
 msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_se
-msgid "Swedish - Accounting"
-msgstr "Thụy Điển - Kế toán"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_language_install
@@ -29779,13 +29887,19 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_form
 msgid "This is your company's currency."
-msgstr ""
+msgstr "Đây là tiền tệ của công ty bạn."
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "This method can only be accessed over HTTP"
 msgstr "Phương thức này chỉ có thể được truy cập qua HTTP"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_account_intrastat_expiry
+msgid ""
+"This module adds an expiry feature to transaction account intrastat codes."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_bot_hr
@@ -30067,7 +30181,7 @@ msgstr "Thời gian biểu"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_timesheet_grid_holidays
 msgid "Timesheets And Timeoff"
-msgstr ""
+msgstr "Chấm công và Ngày nghỉ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_attendance
@@ -30387,7 +30501,7 @@ msgstr "Tree child can only have one of %(tags)s tag (not %(wrong_tag)s)"
 #. module: base
 #: model:ir.model,name:base.model_ir_cron_trigger
 msgid "Triggered actions"
-msgstr ""
+msgstr "Triggered actions"
 
 #. module: base
 #: model:res.country,name:base.tt
@@ -30529,7 +30643,7 @@ msgstr "U.A.E. - Kế toán"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_hr_payroll
 msgid "U.A.E. - Payroll"
-msgstr ""
+msgstr "U.A.E. - Lương"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_hr_payroll_account
@@ -30995,7 +31109,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_coupon
 msgid "Use coupons in Point of Sale"
-msgstr ""
+msgstr "Sử dụng các coupon trong Point of Sale"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_coupon
@@ -31010,12 +31124,12 @@ msgstr "Dùng phiếu giảm giá trong Đơn bán hàng"
 #. module: base
 #: model:ir.module.module,summary:base.module_gift_card
 msgid "Use gift card"
-msgstr ""
+msgstr "Sử dụng thẻ quà tặng"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_gift_card
 msgid "Use gift card in eCommerce"
-msgstr ""
+msgstr "Sử dụng thẻ quà tặng trong eCommerce"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_gift_card
@@ -32406,7 +32520,7 @@ msgstr "_Import"
 #: model:ir.module.category,name:base.module_category_services_account
 #: model:ir.module.category,name:base.module_category_services_payroll_account
 msgid "account"
-msgstr ""
+msgstr "account"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_qr_code_sepa
@@ -32450,6 +32564,12 @@ msgstr "tại"
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__binary
 msgid "binary"
 msgstr "nhị phân"
+
+#. module: base
+#: code:addons/base/models/ir_attachment.py:0
+#, python-format
+msgid "binary_field_real_user should be a res.users record."
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__boolean
@@ -32501,7 +32621,7 @@ msgstr "ngày"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_mondialrelay
 msgid "delivery_mondialrelay"
-msgstr ""
+msgstr "delivery_mondialrelay"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -32625,7 +32745,7 @@ msgstr "eLearning"
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_expenses
 msgid "expenses"
-msgstr ""
+msgstr "các chi phí"
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:0
@@ -32724,7 +32844,7 @@ msgstr "ir.actions.server"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_stock_ddt
 msgid "l10n_it_stock_ddt"
-msgstr ""
+msgstr "l10n_it_stock_ddt"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mail_bot_hr
@@ -32735,6 +32855,12 @@ msgstr "mail_bot_hr"
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2many
 msgid "many2many"
 msgstr "many2many"
+
+#. module: base
+#: code:addons/base/models/ir_actions.py:0
+#, python-format
+msgid "many2many fields cannot be evaluated by reference"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2one
@@ -32792,7 +32918,7 @@ msgstr "one2many"
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_payroll
 msgid "payroll"
-msgstr ""
+msgstr "lương"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_account_reports
@@ -32884,7 +33010,7 @@ msgstr "snailmail_account"
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_sales_subscriptions
 msgid "subscriptions"
-msgstr ""
+msgstr "đăng ký"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_data_module_install
@@ -32944,7 +33070,7 @@ msgstr "test-inherit"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_inherit_depends
 msgid "test-inherit-depends"
-msgstr ""
+msgstr "test-inherit-depends"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_inherits
@@ -33000,7 +33126,7 @@ msgstr "văn bản"
 #: model:ir.module.category,name:base.module_category_account_budget_sale_timesheet
 #: model:ir.module.category,name:base.module_category_account_sale_timesheet
 msgid "timesheet"
-msgstr ""
+msgstr "timesheet"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_config_installer
@@ -33015,7 +33141,7 @@ msgstr "web_dashboard"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_delivery_mondialrelay
 msgid "website_sale_delivery_mondialrelay"
-msgstr ""
+msgstr "website_sale_delivery_mondialrelay"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0

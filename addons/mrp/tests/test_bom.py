@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import exceptions, Command
+from odoo import exceptions, Command, fields
 from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.tools import float_compare, float_round, float_repr
 
+from freezegun import freeze_time
 
+
+@freeze_time(fields.Date.today())
 class TestBoM(TestMrpCommon):
 
     def test_01_explode(self):
@@ -424,6 +427,37 @@ class TestBoM(TestMrpCommon):
         self.product_2.invalidate_cache(fnames=['qty_available'], ids=self.product_2.ids)
         kit_product_qty, _ = (self.product_2 + self.product_3).mapped("qty_available")  # With product_3 in the prefetch
         self.assertEqual(float_repr(float_round(kit_product_qty, precision_digits=precision.digits), precision_digits=precision.digits), '-384.00000')
+
+    def test_13_bom_kit_qty_multi_uom(self):
+        uom_dozens = self.env.ref('uom.product_uom_dozen')
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        product_unit = self.env['product.product'].create({
+            'name': 'Test units',
+            'type': 'product',
+            'uom_id': uom_unit.id,
+        })
+        product_dozens = self.env['product.product'].create({
+            'name': 'Test dozens',
+            'type': 'product',
+            'uom_id': uom_dozens.id,
+        })
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': product_unit.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {
+                    'product_id': product_dozens.id,
+                    'product_qty': 1,
+                    'product_uom_id': uom_unit.id,
+                })
+            ]
+        })
+        location = self.env.ref('stock.stock_location_stock')
+        self.env['stock.quant']._update_available_quantity(product_dozens, location, 1.0)
+        self.assertEqual(product_unit.qty_available, 12.0)
 
     def test_20_bom_report(self):
         """ Simulate a crumble receipt with mrp and open the bom structure
@@ -1040,18 +1074,11 @@ class TestBoM(TestMrpCommon):
         customer_picking = picking_form.save()
         customer_picking.action_confirm()
 
-        # We check the created orderpoint without manufacturing route manufacturing
-        self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
+        # We check the created orderpoint
+        self.env['report.stock.quantity'].flush()
         self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
         orderpoint = self.env['stock.warehouse.orderpoint'].search([('product_id', '=', product_gram.id)])
-        self.assertEqual(orderpoint.qty_multiple, 0.0)
-        self.assertEqual(orderpoint.qty_to_order, 2300.0)
-
-        # We select the manufacturing route and check the impact on the quantities
         manufacturing_route_id = self.ref('mrp.route_warehouse0_manufacture')
-        manufacturing_route = self.env['stock.location.route'].search([('id', '=', manufacturing_route_id)])
-        orderpoint_form = Form(orderpoint)
-        orderpoint_form.route_id = manufacturing_route
-        orderpoint_form.save()
+        self.assertEqual(orderpoint.route_id.id, manufacturing_route_id)
         self.assertEqual(orderpoint.qty_multiple, 2000.0)
         self.assertEqual(orderpoint.qty_to_order, 4000.0)

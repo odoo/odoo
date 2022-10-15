@@ -8,6 +8,7 @@ from datetime import timedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools.misc import groupby
 from odoo.osv import expression
 from odoo.tools.float_utils import float_compare
 
@@ -101,12 +102,14 @@ class Location(models.Model):
                  'outgoing_move_line_ids.state', 'incoming_move_line_ids.state',
                  'outgoing_move_line_ids.product_id.weight', 'outgoing_move_line_ids.product_id.weight',
                  'quant_ids.quantity', 'quant_ids.product_id.weight')
+    @api.depends_context('exclude_sml_ids')
     def _compute_weight(self):
         for location in self:
             location.net_weight = 0
             quants = location.quant_ids.filtered(lambda q: q.product_id.type != 'service')
-            incoming_move_lines = location.incoming_move_line_ids.filtered(lambda ml: ml.product_id.type != 'service' and ml.state not in ['draft', 'done', 'cancel'])
-            outgoing_move_lines = location.outgoing_move_line_ids.filtered(lambda ml: ml.product_id.type != 'service' and ml.state not in ['draft', 'done', 'cancel'])
+            excluded_sml_ids = self._context.get('exclude_sml_ids', [])
+            incoming_move_lines = location.incoming_move_line_ids.filtered(lambda ml: ml.product_id.type != 'service' and ml.state not in ['draft', 'done', 'cancel'] and ml.id not in excluded_sml_ids)
+            outgoing_move_lines = location.outgoing_move_line_ids.filtered(lambda ml: ml.product_id.type != 'service' and ml.state not in ['draft', 'done', 'cancel'] and ml.id not in excluded_sml_ids)
             for quant in quants:
                 location.net_weight += quant.product_id.weight * quant.quantity
             location.forecast_weight = location.net_weight
@@ -133,7 +136,7 @@ class Location(models.Model):
                         if days_until_next_inventory <= 0:
                             location.next_inventory_date = fields.Date.today() + timedelta(days=1)
                         else:
-                            location.next_inventory_date = location.last_inventory_date + timedelta(days=days_until_next_inventory)
+                            location.next_inventory_date = location.last_inventory_date + timedelta(days=location.cyclic_inventory_frequency)
                     else:
                         location.next_inventory_date = fields.Date.today() + timedelta(days=location.cyclic_inventory_frequency)
                 except OverflowError:
@@ -234,6 +237,7 @@ class Location(models.Model):
         The quantity should be in the default UOM of the product, it is used when
         no package is specified.
         """
+        products = self.env.context.get('products', self.env['product.product'])
         # find package type on package or packaging
         package_type = self.env['stock.package.type']
         if package:
@@ -242,13 +246,23 @@ class Location(models.Model):
             package_type = packaging.package_type_id
 
         putaway_rules = self.env['stock.putaway.rule']
-        putaway_rules |= self.putaway_rule_ids.filtered(lambda x: x.product_id == product and (package_type in x.package_type_ids or package_type == x.package_type_ids))
+        putaway_rules |= self.putaway_rule_ids.filtered(lambda x: x.product_id in products or x.product_id == product)
         categ = product.categ_id
         while categ:
-            putaway_rules |= self.putaway_rule_ids.filtered(lambda x: x.category_id == categ and (package_type in x.package_type_ids or package_type == x.package_type_ids))
+            putaway_rules |= self.putaway_rule_ids.filtered(lambda x: x.category_id == categ)
             categ = categ.parent_id
         if package_type:
-            putaway_rules |= self.putaway_rule_ids.filtered(lambda x: not x.product_id and (package_type in x.package_type_ids or package_type == x.package_type_ids))
+            putaway_rules |= self.putaway_rule_ids.filtered(lambda pa: package_type in pa.package_type_ids or package_type == pa.package_type_ids)
+            for dummy, putaways in groupby(putaway_rules, key=lambda pa: (pa.location_out_id.id, pa.storage_category_id)):
+                putaways = self.env['stock.putaway.rule'].concat(*putaways)
+                if any(not p.product_id for p in putaways):
+                    continue
+                if set(products.ids).issubset(set(putaways.product_id.ids)):
+                    continue
+                putaway_rules -= putaways
+
+            # Put the priority on putaway with the same package_type
+            putaway_rules = putaway_rules.sorted(lambda pa: package_type in pa.package_type_ids or package_type == pa.package_type_ids, reverse=True)
 
         putaway_location = None
         locations = self.child_internal_location_ids
@@ -258,6 +272,7 @@ class Location(models.Model):
             if locations.storage_category_id:
                 if package and package.package_type_id:
                     move_line_data = self.env['stock.move.line'].read_group([
+                        ('id', 'not in', self._context.get('exclude_sml_ids', [])),
                         ('result_package_id.package_type_id', '=', package_type.id),
                         ('state', 'not in', ['draft', 'cancel', 'done']),
                     ], ['result_package_id:count_distinct'], ['location_dest_id'])
@@ -271,6 +286,7 @@ class Location(models.Model):
                         qty_by_location[values['location_id'][0]] += values['package_id']
                 else:
                     move_line_data = self.env['stock.move.line'].read_group([
+                        ('id', 'not in', self._context.get('exclude_sml_ids', [])),
                         ('product_id', '=', product.id),
                         ('location_dest_id', 'in', locations.ids),
                         ('state', 'not in', ['draft', 'done', 'cancel'])
@@ -336,15 +352,20 @@ class Location(models.Model):
         specified."""
         self.ensure_one()
         if self.storage_category_id:
-            # check weight
-            if self.storage_category_id.max_weight < self.forecast_weight + product.weight * quantity:
-                return False
             # check if enough space
             if package and package.package_type_id:
+                # check weight
+                package_smls = self.env['stock.move.line'].search([('result_package_id', '=', package.id)])
+                if self.storage_category_id.max_weight < self.forecast_weight + sum(package_smls.mapped(lambda sml: sml.product_qty * sml.product_id.weight)):
+                    return False
+                # check if enough space
                 package_capacity = self.storage_category_id.package_capacity_ids.filtered(lambda pc: pc.package_type_id == package.package_type_id)
                 if package_capacity and location_qty >= package_capacity.quantity:
                     return False
             else:
+                # check weight
+                if self.storage_category_id.max_weight < self.forecast_weight + product.weight * quantity:
+                    return False
                 product_capacity = self.storage_category_id.product_capacity_ids.filtered(lambda pc: pc.product_id == product)
                 # To handle new line without quantity in order to avoid suggesting a location already full
                 if product_capacity and location_qty >= product_capacity.quantity:

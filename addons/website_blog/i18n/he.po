@@ -10,6 +10,8 @@
 # דודי מלכה <Dudimalka6@gmail.com>, 2021
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2021
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2021
+# Netta Waizer, 2022
+# NoaFarkash, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2021\n"
+"Last-Translator: NoaFarkash, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -534,7 +536,7 @@ msgstr "שם בלוג"
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_search
 #, python-format
 msgid "Blog Post"
-msgstr ""
+msgstr "בלוג פוסט (פרסום פוסט בבלוג)"
 
 #. module: website_blog
 #: code:addons/website_blog/models/website.py:0
@@ -1108,6 +1110,7 @@ msgstr ""
 
 #. module: website_blog
 #: model:ir.filters,name:website_blog.dynamic_snippet_latest_blog_post_filter
+#: model:website.snippet.filter,name:website_blog.dynamic_filter_latest_blog_posts
 msgid "Latest Blog Posts"
 msgstr ""
 
@@ -1248,6 +1251,7 @@ msgstr ""
 
 #. module: website_blog
 #: model:ir.filters,name:website_blog.dynamic_snippet_most_viewed_blog_post_filter
+#: model:website.snippet.filter,name:website_blog.dynamic_filter_most_viewed_blog_posts
 msgid "Most Viewed Blog Posts"
 msgstr ""
 
@@ -1282,7 +1286,7 @@ msgstr ""
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "No results found for '"
-msgstr ""
+msgstr "לא נמצאו תוצאות עבור '"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_tags
@@ -1460,7 +1464,7 @@ msgstr "אפשרויות פרסום"
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__post_date
 msgid "Publishing date"
-msgstr ""
+msgstr "תאריך פרסום"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post
@@ -1560,7 +1564,7 @@ msgstr "בחר פריט בתפריט זה כדי ליצור פוסט חדש בב
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__seo_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__seo_name
 msgid "Seo name"
-msgstr ""
+msgstr "שם Seo "
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
@@ -2080,7 +2084,7 @@ msgstr "הודעות מאתר האינטרנט"
 #. module: website_blog
 #: model:ir.model,name:website_blog.model_website_snippet_filter
 msgid "Website Snippet Filter"
-msgstr ""
+msgstr "מסנן קטעי אתר"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__website_url

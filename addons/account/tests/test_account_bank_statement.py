@@ -294,6 +294,44 @@ class TestAccountBankStatement(TestAccountBankStatementCommon):
             'is_reconciled': True,
         }])
 
+    def test_bank_statement_with_difference(self):
+        """ Test that a bank statement with difference could be posted but not validated. """
+        bank_statement = self.env['account.bank.statement'].create({
+            'name': 'test_statement',
+            'date': '2019-01-01',
+            'journal_id': self.bank_journal_1.id,
+            'balance_start': 10.0,
+            'balance_end_real': 100.0,
+            'balance_end': 10.0,
+            'line_ids': [(0, 0, {
+                'date': fields.Date.to_date('2019-01-01'),
+                'payment_ref': 'transaction_abc',
+                'amount': 10,
+                'partner_id': self.partner_a.id,
+            })]
+        })
+        bank_statement.button_post()
+        # Check if the bank statement is well posted (No check on the balance as the balance could be edited after).
+        self.assertEqual(bank_statement.state, 'posted')
+
+        # Check that the bank statement couldn't be validated with balance_end != balance_end_real
+        with self.assertRaises(UserError):
+            bank_statement.button_validate()
+
+        # Check if we can validate the bank statement if balance_end == balance_end_real
+        bank_statement.balance_end_real = bank_statement.balance_end
+        for line in bank_statement.line_ids:
+            line.reconcile([{
+                'name': line.payment_ref,
+                'partner_id': line.partner_id.id,
+                'currency_id': self.currency_1.id,
+                'account_id': bank_statement.journal_id.suspense_account_id.id,
+                'debit': 10.0,
+                'credit': 0.0,
+                'amount_currency': 10.0,
+            }])
+        bank_statement.button_validate()
+        self.assertEqual(bank_statement.state, 'confirm')
 
 @tagged('post_install', '-at_install')
 class TestAccountBankStatementLine(TestAccountBankStatementCommon):
@@ -1135,6 +1173,32 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
             {'debit': 0.0,      'credit': 80.0,     'amount_currency': -80.0,       'currency_id': self.currency_1.id},
         )
 
+    def test_reconciliation_move_draft(self):
+        ''' Ensures that the account move of a reconciled statement cannot be set to draft
+        '''
+        statement = self.env['account.bank.statement'].create({
+            'name': 'test_statement',
+            'date': '2019-01-01',
+            'journal_id': self.bank_journal_1.id,
+            'line_ids': [
+                (0, 0, {
+                    'date': '2019-01-01',
+                    'payment_ref': 'line_1',
+                    'partner_id': self.partner_a.id,
+                    'amount': 100.0,
+                }),
+            ],
+        })
+
+        statement.button_post()
+        statement.line_ids[0].reconcile([{'name': 'test', 'account_id': self.company_data['default_account_revenue'].id, 'balance': -100}])
+
+        statement.button_validate_or_action()
+        account_move = statement.line_ids.move_id
+
+        with self.assertRaises(UserError):
+            account_move.button_draft()
+
     def test_reconciliation_statement_line_state(self):
         ''' Test the reconciliation on the bank statement line with a foreign currency on the journal:
         - Ensure the statement line is_reconciled field is well computed.
@@ -1546,4 +1610,31 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
 
         self.assertRecordValues(statement.line_ids, [{
             'partner_id': False,
+        }])
+
+    def test_statement_line_note_onchange_partner(self):
+        """
+        Check if narration field stays as it is when changing the partner
+        in reconciliation widget.
+        """
+        bank_stmt = self.env['account.bank.statement'].create({
+            'company_id': self.env.company.id,
+            'journal_id': self.bank_journal_1.id,
+            'name': 'test',
+        })
+
+        bank_stmt_line = self.env['account.bank.statement.line'].create({
+            'payment_ref': 'testLine',
+            'statement_id': bank_stmt.id,
+            'narration': 'This is a note',
+            'amount': 100,
+        })
+
+        bank_stmt_line.partner_id = self.partner_b
+
+        self.assertRecordValues(bank_stmt_line, [{
+            'payment_ref': 'testLine',
+            'statement_id': bank_stmt.id,
+            'narration': '<p>This is a note</p>',
+            'amount': 100,
         }])

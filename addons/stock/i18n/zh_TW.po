@@ -3,9 +3,9 @@
 # 	* stock
 # 
 # Translators:
-# Martin Trigaux, 2021
 # Benson <Benson.Dr@Gmail.com>, 2021
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -648,7 +648,7 @@ msgstr "<strong>數量</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Scheduled Date:</strong>"
-msgstr "<strong>已安排的日期 </strong>"
+msgstr "<strong>預定盤點日期 </strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -997,7 +997,10 @@ msgid "As soon as possible"
 msgstr "盡快"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Assign"
 msgstr "分配"
 
@@ -1671,7 +1674,7 @@ msgstr "盤點表"
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
 msgid "Counted Quantity"
-msgstr "預設數量"
+msgstr "盤點數量"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -3260,6 +3263,12 @@ msgid "Immediate transfer?"
 msgstr "立即調撥？"
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Import"
+msgstr "匯入"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
 msgid "In Type"
 msgstr "入庫類型"
@@ -4478,7 +4487,7 @@ msgstr "下一個預期庫存"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__inventory_date
 msgid "Next date the On Hand Quantity should be counted."
-msgstr "下一個日期應盤點。"
+msgstr "下一個應盤點日期。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -4564,6 +4573,12 @@ msgstr "庫存規則:%s沒有定義來源位置!"
 #: model_terms:ir.actions.act_window,help:stock.stock_move_action
 msgid "No stock move found"
 msgstr "未發現庫存移動"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "No Stock On Hand"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_form
@@ -5293,6 +5308,14 @@ msgstr "首選路線"
 #: model:ir.model.fields,help:stock.field_stock_move__route_ids
 msgid "Preferred route"
 msgstr "最優路線"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"Press the CREATE button to define quantity for each product in your stock or"
+" import them from a spreadsheet throughout Favorites"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -6474,7 +6497,7 @@ msgstr "銷售歷史"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Scheduled Date"
-msgstr "預定交貨日期"
+msgstr "預定盤點日期"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__date
@@ -7511,8 +7534,8 @@ msgstr "每個公司的倉庫名稱必須唯一!"
 #. module: stock
 #: code:addons/stock/wizard/stock_assign_serial_numbers.py:0
 #, python-format
-msgid "The number of Serial Numbers to generate must greater than zero."
-msgstr "要生成的序號數必須大於零。"
+msgid "The number of Serial Numbers to generate must be greater than zero."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -7640,6 +7663,14 @@ msgstr "在已建立的移動/補貨傳播的倉庫，它可以與此規則所�
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
 msgid "There's no product move yet"
 msgstr "還沒有產品移動"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"This analysis gives you an overview of the current stock level of your "
+"products."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__name
@@ -8087,7 +8118,10 @@ msgid "USPS Connector"
 msgstr "USPS 連接器"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Unassign"
 msgstr "取消分派"
 
@@ -9011,6 +9045,12 @@ msgstr ""
 "您將在此處找到基於庫存預測的智能補貨建議。\n"
 "            選擇要購買或製造的數量，然後點選下單。\n"
 "            如要在將來節省時間，請將規則設置為“自動”。"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Your stock is currently empty"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__print_format__zpl

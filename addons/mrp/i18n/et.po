@@ -100,12 +100,6 @@ msgid "%s %s unbuilt in"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_routing.py:0
-#, python-format
-msgid "%s (copy)"
-msgstr "%s (koopia)"
-
-#. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "%s (new) %s"
@@ -1111,7 +1105,7 @@ msgstr "Koostisosa"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
-"Component Lots must be unique for mass production. Please review consumption"
+"Component Lots must be unique for mass production. Please review reservation"
 " for:\n"
 msgstr ""
 
@@ -3030,12 +3024,20 @@ msgstr "Kohaletoimetamise veateatega sõnumite arv"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__capacity
 msgid ""
-"Number of pieces that can be produced in parallel. In case the work center "
-"has a capacity of 5 and you have to produce 10 units on your work order, the"
-" usual operation time will be multiplied by 2."
+"Number of pieces (in product UoM) that can be produced in parallel  (at the "
+"same time) at this work center. For example: the capacity is 5 and you need "
+"to produce 10 units, then the operation time listed on the BOM will be "
+"multiplied by two. However, note that both time before and after production "
+"will only be counted once. "
 msgstr ""
-"Paralleelselt toodetavate tükkide arv. Kui töökeskuse maht on 5 ja teil on "
-"töökäsuga vaja toota 10 tk, korrutatakse tavapärane tegevus 2ga."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom__product_qty
+msgid ""
+"This should be the smallest quantity that this product can be produced in. "
+"If the BOM contains operations, make sure the work center capacity is "
+"accurate. "
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_source_count
@@ -4453,6 +4455,12 @@ msgid ""
 msgstr "Valitud toote mõõtühikul on teine kategooria kui toote vormis."
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_workcenter.py:0
+#, python-format
+msgid "The Workorder (%s) cannot be started twice!"
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
@@ -4545,6 +4553,15 @@ msgstr "Toodetav kogus peab olema positiivne!"
 #: model:ir.model.fields,help:mrp.field_mrp_document__res_id
 msgid "The record id this is attached to."
 msgstr "Kirje id, millele see on lisatud."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#, python-format
+msgid ""
+"The selected serial number does not correspond to the one used in the "
+"manufacturing order, please select another one."
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0

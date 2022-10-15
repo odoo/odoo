@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.website_slides.tests import common
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError
 from odoo.tests import tagged
-from odoo.tests.common import users
 from odoo.tools import mute_logger
 
 
@@ -298,3 +299,55 @@ class TestAccessFeatures(common.SlidesCase):
         channel_superuser.invalidate_cache(['can_upload', 'can_publish'])
         self.assertTrue(channel_superuser.can_upload)
         self.assertTrue(channel_superuser.can_publish)
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.base.models.ir_rule', 'odoo.addons.base.models.ir_model')
+    def test_resource_access(self):
+        resource_values = {
+            'name': 'Image',
+            'slide_id': self.slide_3.id,
+            'data': base64.b64encode(b'Some content')
+        }
+        resource1, resource2 = self.env['slide.slide.resource'].with_user(self.user_officer).create(
+            [resource_values for _ in range(2)])
+
+        # No public access
+        with self.assertRaises(AccessError):
+            resource1.with_user(self.user_public).read(['name'])
+        with self.assertRaises(AccessError):
+            resource1.with_user(self.user_public).write({'name': 'other name'})
+
+        # No random portal access
+        with self.assertRaises(AccessError):
+            resource1.with_user(self.user_portal).read(['name'])
+
+        # Members can only read
+        self.env['slide.channel.partner'].create({
+            'channel_id': self.channel.id,
+            'partner_id': self.user_portal.partner_id.id,
+        })
+        resource1.with_user(self.user_portal).read(['name'])
+        with self.assertRaises(AccessError):
+            resource1.with_user(self.user_portal).write({'name': 'other name'})
+
+        # Other officers can only read
+        user_officer_other = mail_new_test_user(
+            self.env, name='Ornella Officer', login='user_officer_2', email='officer2@example.com',
+            groups='base.group_user,website_slides.group_website_slides_officer'
+        )
+        resource1.with_user(user_officer_other).read(['name'])
+        with self.assertRaises(AccessError):
+            resource1.with_user(user_officer_other).write({'name': 'Another name'})
+
+        with self.assertRaises(AccessError):
+            self.env['slide.slide.resource'].with_user(user_officer_other).create(resource_values)
+        with self.assertRaises(AccessError):
+            resource1.with_user(user_officer_other).unlink()
+
+        # Responsible officer can do anything on their own channels
+        resource1.with_user(self.user_officer).write({'name': 'other name'})
+        resource1.with_user(self.user_officer).unlink()
+
+        # Managers can do anything on all channels
+        resource2.with_user(self.user_manager).write({'name': 'Another name'})
+        resource2.with_user(self.user_manager).unlink()
+        self.env['slide.slide.resource'].with_user(self.user_manager).create(resource_values)

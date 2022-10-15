@@ -20,7 +20,7 @@ class SaleOrder(models.Model):
         for item in data:
             procurement_groups = self.env['procurement.group'].browse(item['ids'])
             mrp_count[item['sale_id'][0]] = len(
-                set(procurement_groups.stock_move_ids.created_production_id.ids) |
+                set(procurement_groups.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids.ids) |
                 set(procurement_groups.mrp_production_ids.ids))
         for sale in self:
             sale.mrp_production_count = mrp_count.get(sale.id)
@@ -28,7 +28,7 @@ class SaleOrder(models.Model):
     def action_view_mrp_production(self):
         self.ensure_one()
         procurement_groups = self.env['procurement.group'].search([('sale_id', 'in', self.ids)])
-        mrp_production_ids = set(procurement_groups.stock_move_ids.created_production_id.ids) |\
+        mrp_production_ids = set(procurement_groups.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids.ids) |\
             set(procurement_groups.mrp_production_ids.ids)
         action = {
             'res_model': 'mrp.production',
@@ -78,10 +78,9 @@ class SaleOrderLine(models.Model):
         for order_line in self:
             if order_line.qty_delivered_method == 'stock_move':
                 boms = order_line.move_ids.filtered(lambda m: m.state != 'cancel').mapped('bom_line_id.bom_id')
-                dropship = False
-                if not boms and any(m._is_dropshipped() for m in order_line.move_ids):
+                dropship = any(m._is_dropshipped() for m in order_line.move_ids)
+                if not boms and dropship:
                     boms = boms._bom_find(order_line.product_id, company_id=order_line.company_id.id, bom_type='phantom')[order_line.product_id]
-                    dropship = True
                 # We fetch the BoMs of type kits linked to the order_line,
                 # the we keep only the one related to the finished produst.
                 # This bom shoud be the only one since bom_line_id was written on the moves
@@ -154,10 +153,16 @@ class SaleOrderLine(models.Model):
     def _get_qty_procurement(self, previous_product_uom_qty=False):
         self.ensure_one()
         # Specific case when we change the qty on a SO for a kit product.
-        # We don't try to be too smart and keep a simple approach: we compare the quantity before
-        # and after update, and return the difference. We don't take into account what was already
-        # sent, or any other exceptional case.
+        # We don't try to be too smart and keep a simple approach: we use the quantity of entire
+        # kits that are currently in delivery
         bom = self.env['mrp.bom']._bom_find(self.product_id, bom_type='phantom')[self.product_id]
         if bom:
-            return previous_product_uom_qty and previous_product_uom_qty.get(self.id, 0.0) or self.qty_delivered
+            moves = self.move_ids.filtered(lambda r: r.state != 'cancel' and not r.scrapped)
+            filters = {
+                'incoming_moves': lambda m: m.location_dest_id.usage == 'customer' and (not m.origin_returned_move_id or (m.origin_returned_move_id and m.to_refund)),
+                'outgoing_moves': lambda m: m.location_dest_id.usage != 'customer' and m.to_refund
+            }
+            order_qty = self.product_uom._compute_quantity(self.product_uom_qty, bom.product_uom_id)
+            qty = moves._compute_kit_quantities(self.product_id, order_qty, bom, filters)
+            return bom.product_uom_id._compute_quantity(qty, self.product_uom)
         return super(SaleOrderLine, self)._get_qty_procurement(previous_product_uom_qty=previous_product_uom_qty)

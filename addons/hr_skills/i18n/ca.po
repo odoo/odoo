@@ -10,6 +10,7 @@
 # Arnau Ros, 2021
 # jabelchi, 2021
 # Harcogourmet, 2022
+# marcescu, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:49+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Harcogourmet, 2022\n"
+"Last-Translator: marcescu, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,19 +31,19 @@ msgstr ""
 #: code:addons/hr_skills/static/src/xml/resume_templates.xml:0
 #, python-format
 msgid "ADD"
-msgstr ""
+msgstr "AFEGEIX"
 
 #. module: hr_skills
 #. openerp-web
 #: code:addons/hr_skills/static/src/xml/resume_templates.xml:0
 #, python-format
 msgid "CREATE A NEW ENTRY"
-msgstr ""
+msgstr "CREA UNA ENTRADA NOVA"
 
 #. module: hr_skills
 #: model:ir.model.fields.selection,name:hr_skills.selection__hr_resume_line__display_type__classic
 msgid "Classic"
-msgstr ""
+msgstr "Clàssic"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__create_uid
@@ -186,7 +187,7 @@ msgstr "Progrés (%)"
 #: model:ir.model.fields,help:hr_skills.field_hr_employee_skill__level_progress
 #: model:ir.model.fields,help:hr_skills.field_hr_skill_level__level_progress
 msgid "Progress from zero knowledge (0%) to fully mastered (100%)."
-msgstr ""
+msgstr "Progrés des del coneixement zero (0%) al domini complet (100%)."
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_employee_public
@@ -207,26 +208,26 @@ msgstr " Currículum vitae"
 #. module: hr_skills
 #: model:ir.actions.act_window,name:hr_skills.hr_resume_type_action
 msgid "Resumé Line Types"
-msgstr ""
+msgstr "Resumir els tipus de línia"
 
 #. module: hr_skills
 #. openerp-web
 #: code:addons/hr_skills/static/src/xml/resume_templates.xml:0
 #, python-format
 msgid "Resumé empty"
-msgstr ""
+msgstr "Resumir buit"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_resume_line
 msgid "Resumé line of an employee"
-msgstr ""
+msgstr "Reprèn la línia d'un empleat"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee__resume_line_ids
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__resume_line_ids
 #: model:ir.model.fields,field_description:hr_skills.field_res_users__resume_line_ids
 msgid "Resumé lines"
-msgstr ""
+msgstr "Resumir linies"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line_type__sequence
@@ -237,20 +238,20 @@ msgstr "Seqüència"
 #: model:ir.model,name:hr_skills.model_hr_skill
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__skill_id
 msgid "Skill"
-msgstr ""
+msgstr "Habilitat"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_skill_level
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__skill_level_id
 #: model_terms:ir.ui.view,arch_db:hr_skills.employee_skill_level_view_form
 msgid "Skill Level"
-msgstr ""
+msgstr "Nivell d'habilitat"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.employee_skill_level_view_tree
 #: model_terms:ir.ui.view,arch_db:hr_skills.employee_skill_view_tree
 msgid "Skill Levels"
-msgstr ""
+msgstr "Nivells d'habilitat"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_skill_type
@@ -259,18 +260,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__skill_type_id
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_type_view_form
 msgid "Skill Type"
-msgstr ""
+msgstr "Tipus d'habilitat"
 
 #. module: hr_skills
 #: model:ir.actions.act_window,name:hr_skills.hr_skill_type_action
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_type_view_tree
 msgid "Skill Types"
-msgstr ""
+msgstr "Tipus d'habilitat"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_employee_skill
 msgid "Skill level for an employee"
-msgstr ""
+msgstr "Nivell d'habilitat per a un empleat"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee__employee_skill_ids
@@ -291,13 +292,15 @@ msgstr "Habilitats"
 #: code:addons/hr_skills/models/hr_skills.py:0
 #, python-format
 msgid "The skill %(name)s and skill type %(type)s doesn't match"
-msgstr ""
+msgstr "L'habilitat %(name)s i tipus d'habilitat %(type)s no coincideix"
 
 #. module: hr_skills
 #: code:addons/hr_skills/models/hr_skills.py:0
 #, python-format
 msgid "The skill level %(level)s is not valid for skill type: %(type)s"
 msgstr ""
+"El nivell d'habilitat %(level)s no és vàlid per al tipus "
+"d'habilitat:%(type)s"
 
 #. module: hr_skills
 #: model:ir.model.constraint,message:hr_skills.constraint_hr_resume_line_date_check
@@ -312,7 +315,7 @@ msgstr "Títol"
 #. module: hr_skills
 #: model:ir.model.constraint,message:hr_skills.constraint_hr_employee_skill__unique_skill
 msgid "Two levels for the same skill is not allowed"
-msgstr ""
+msgstr "No es permeten dos nivells per a la mateixa habilitat"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__line_type_id
@@ -322,12 +325,12 @@ msgstr "Tipus"
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_resume_line_type
 msgid "Type of a resumé line"
-msgstr ""
+msgstr "Tipus d'una línia a resumir"
 
 #. module: hr_skills
 #: model:ir.ui.menu,name:hr_skills.hr_resume_line_type_menu
 msgid "Types"
-msgstr ""
+msgstr "Tipus"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_res_users
@@ -337,9 +340,9 @@ msgstr "Usuaris"
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_type_view_form
 msgid "e.g. Languages"
-msgstr ""
+msgstr "p. ex. llengües"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_form
 msgid "e.g. Odoo Inc."
-msgstr ""
+msgstr "p. ex. Odoo Inc."

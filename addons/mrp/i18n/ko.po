@@ -87,12 +87,6 @@ msgid "%s %s unbuilt in"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_routing.py:0
-#, python-format
-msgid "%s (copy)"
-msgstr "%s (사본)"
-
-#. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "%s (new) %s"
@@ -1088,7 +1082,7 @@ msgstr "부품"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
-"Component Lots must be unique for mass production. Please review consumption"
+"Component Lots must be unique for mass production. Please review reservation"
 " for:\n"
 msgstr ""
 
@@ -2973,12 +2967,20 @@ msgstr "전송 오류 메시지 수"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__capacity
 msgid ""
-"Number of pieces that can be produced in parallel. In case the work center "
-"has a capacity of 5 and you have to produce 10 units on your work order, the"
-" usual operation time will be multiplied by 2."
+"Number of pieces (in product UoM) that can be produced in parallel  (at the "
+"same time) at this work center. For example: the capacity is 5 and you need "
+"to produce 10 units, then the operation time listed on the BOM will be "
+"multiplied by two. However, note that both time before and after production "
+"will only be counted once. "
 msgstr ""
-"병렬로 생산할 수 있는 조각 수. 작업장의 용량이 5이고 작업 지시에서 10 개의 제품을 생산해야 하는 경우, 일반적인 작업 시간에 2가"
-" 곱해집니다."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom__product_qty
+msgid ""
+"This should be the smallest quantity that this product can be produced in. "
+"If the BOM contains operations, make sure the work center capacity is "
+"accurate. "
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_source_count
@@ -4375,6 +4377,12 @@ msgid ""
 msgstr "상품 단위는 상품 양식과는 다른 범주를 선택합니다."
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_workcenter.py:0
+#, python-format
+msgid "The Workorder (%s) cannot be started twice!"
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
@@ -4435,6 +4443,15 @@ msgid ""
 msgstr "작업 지시의 계획된 종료 날짜가 계획된 시작 날짜 이전일 수 없습니다. 작업 지시를 저장하려면 이를 수정하십시오."
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The product has already been used at least once, editing its structure may "
+"lead to undesirable behaviours. You should rather archive the product and "
+"create a new one with a new bill of materials."
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "The quantity produced of by-products must be positive."
@@ -4452,6 +4469,15 @@ msgstr "생산량은 양수입니다!"
 #: model:ir.model.fields,help:mrp.field_mrp_document__res_id
 msgid "The record id this is attached to."
 msgstr "다음이 레코드 ID에 첨부됩니다."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#, python-format
+msgid ""
+"The selected serial number does not correspond to the one used in the "
+"manufacturing order, please select another one."
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0

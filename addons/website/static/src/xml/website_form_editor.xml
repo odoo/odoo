@@ -254,16 +254,17 @@
     <t t-name="website.form_field_selection">
         <t t-set="field.isCheck" t-value="true"/>
         <t t-call="website.form_field">
+            <t t-if="!field.records">
+                <input
+                    class="s_website_form_input"
+                    t-att-name="field.name"
+                    t-att-value="undefined"
+                    t-att-required="field.required || field.modelRequired || None"
+                    placeholder="No matching record !"
+                    disabled=""
+                />
+            </t>
             <div class="row s_col_no_resize s_col_no_bgcolor s_website_form_multiple" t-att-data-name="field.name" t-att-data-display="field.formatInfo.multiPosition">
-                <t t-if="!field.records">
-                    <input
-                        class="s_website_form_input"
-                        t-att-name="field.name"
-                        t-att-value="record.id"
-                        t-att-required="field.required || field.modelRequired || None"
-                        placeholder="No matching record !"
-                    />
-                </t>
                 <t t-foreach="field.records" t-as="record">
                     <t t-call="website.form_radio"/>
                 </t>
@@ -327,16 +328,17 @@
         <t t-if="field.relation != 'ir.attachment'">
             <t t-set="field.isCheck" t-value="true"/>
             <t t-call="website.form_field">
+                <t t-if="!field.records || field.records.length == 0">
+                    <input
+                        class="form-control s_website_form_input"
+                        t-att-name="field.name"
+                        t-att-value="undefined"
+                        t-att-required="field.required || field.modelRequired || None"
+                        placeholder="No matching record !"
+                        disabled=""
+                    />
+                </t>
                 <div class="row s_col_no_resize s_col_no_bgcolor s_website_form_multiple" t-att-data-name="field.name" t-att-data-display="field.formatInfo.multiPosition">
-                    <t t-if="!field.records">
-                        <input
-                            class="s_website_form_input"
-                            t-att-name="field.name"
-                            t-att-value="record.id"
-                            t-att-required="field.required || field.modelRequired || None"
-                            placeholder="No matching record !"
-                        />
-                    </t>
                     <t t-foreach="field.records" t-as="record">
                         <t t-call="website.form_checkbox"/>
                     </t>

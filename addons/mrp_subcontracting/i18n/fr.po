@@ -4,9 +4,11 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Cécile Collart <cco@odoo.com>, 2021
 # Ludvig Auvens <lau@odoo.com>, 2021
-# sakodoo <sak@odoo.com>, 2022
+# SAKodoo <sak@odoo.com>, 2022
+# Malika Berardi, 2022
+# Cécile Collart <cco@odoo.com>, 2022
+# Jolien De Paepe, 2022
 # 
 msgid ""
 msgstr ""
@@ -14,13 +16,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:20+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: sakodoo <sak@odoo.com>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_report_mrp_report_bom_structure
@@ -88,12 +90,12 @@ msgstr "Montrer l'action \"Enregistrer les composants\""
 #. module: mrp_subcontracting
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__facultative
 msgid "Facultative"
-msgstr ""
+msgstr "Facultatif"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__subcontracting_has_been_recorded
 msgid "Has been recorded?"
-msgstr ""
+msgstr "A été enregistré ?"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__hide
@@ -103,7 +105,7 @@ msgstr "Cacher"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_quant__is_subcontract
 msgid "Is Subcontract"
-msgstr ""
+msgstr "Est une sous-traitance"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
@@ -118,17 +120,20 @@ msgid ""
 "Make sure you validate or adapt the related resupply picking to your "
 "subcontractor in order to avoid inconsistencies in your stock."
 msgstr ""
+"Veillez à ce que vous validez ou adaptez le transfert de réassort "
+"correspondant de votre sous-traitant pour éviter des incohérences dans votre"
+" inventaire."
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__mandatory
 msgid "Mandatory"
-msgstr ""
+msgstr "Obligatoire"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_picking.py:0
 #, python-format
 msgid "Nothing to record"
-msgstr ""
+msgstr "Rien à enregistrer"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_quant.py:0
@@ -216,7 +221,7 @@ msgstr "Retour à la cueillette"
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence Resupply Subcontractor"
-msgstr ""
+msgstr "Séquence du réassort du sous-traitant"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
@@ -272,7 +277,7 @@ msgstr "Emplacement de sous-traitance"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.quant_subcontracting_search_view
 msgid "Subcontracting Locations"
-msgstr ""
+msgstr "Emplacement de sous-traitance"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_mto_pull_id
@@ -292,12 +297,12 @@ msgstr "Type d'opération sous-traitance"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_resupply_type_id
 msgid "Subcontracting Resupply Operation Type"
-msgstr ""
+msgstr "Type d'opération de réassort du sous-traitant"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.report_mrp_bom_line_inherit_mrp_subcontracting
 msgid "Subcontracting:"
-msgstr ""
+msgstr "Sous-traitance :"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/report/mrp_report_bom_structure.py:0
@@ -347,7 +352,7 @@ msgstr ""
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
 #, python-format
 msgid "This MO isn't related to a subcontracted move"
-msgstr ""
+msgstr "Cet OF n'est pas lié à un mouvement de sous-traitance"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
@@ -376,6 +381,8 @@ msgid ""
 "Wizard in case of consumption in warning/strict and more component has been "
 "used for a MO (related to the bom)"
 msgstr ""
+"Wizard en cas de consommation en alerte/stricte et si plus de composants ont"
+" été utilisés pour un OF (par rapport à la nomenclature)"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/mrp_bom.py:0
@@ -384,12 +391,14 @@ msgid ""
 "You can not set a Bill of Material with operations or by-product line as "
 "subcontracting."
 msgstr ""
+"Vous ne pouvez pas définir une nomenclature avec des opérations ou une ligne"
+" de sous-produits en sous-traitance."
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
 #, python-format
 msgid "You must enter a serial number for %s"
-msgstr ""
+msgstr "Vous devez entrer un numéro de série pour %s"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0

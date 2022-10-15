@@ -29,6 +29,6 @@ invoice and send propositions for membership renewal.
         'views/partner_views.xml',
         'report/report_membership_views.xml',
     ],
-    'website': 'https://www.odoo.com/app/forums',
+    'website': 'https://www.odoo.com/app/forum',
     'license': 'LGPL-3',
 }

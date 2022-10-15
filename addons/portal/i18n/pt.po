@@ -7,7 +7,6 @@
 # Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2021
 # Vitor Fernandes <vmlf01@gmail.com>, 2021
 # Joao Felix <jrmfelix@gmail.com>, 2021
-# Nuno Silva <nuno.silva@arxi.pt>, 2021
 # Diogo Fonseca <dsf@thinkopensolutions.pt>, 2021
 # Pedro Filipe <pedro2.10@hotmail.com>, 2021
 # Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2022
@@ -15,6 +14,8 @@
 # Daniel Reis, 2022
 # Martin Trigaux, 2022
 # Manuela Silva <mmsrs@sky.com>, 2022
+# Nuno Silva <nuno.silva@arxi.pt>, 2022
+# Luiz Fernando <lfpsgs@outlook.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -22,13 +23,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:55+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Manuela Silva <mmsrs@sky.com>, 2022\n"
+"Last-Translator: Luiz Fernando <lfpsgs@outlook.com>, 2022\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pt\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: portal
 #. openerp-web
@@ -568,6 +569,20 @@ msgid "Internal User"
 msgstr "Utilizador Interno"
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Internal Note"
+msgstr "Nota Interna"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Internal notes are only displayed to internal users."
+msgstr ""
+
+#. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
@@ -823,7 +838,7 @@ msgstr "Destinatários"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__resource_ref
 msgid "Related Document"
-msgstr ""
+msgstr "Documento Relacionado"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__res_id

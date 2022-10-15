@@ -3,6 +3,7 @@
 # 	* web
 # 
 # Translators:
+# Максим Дронь <dronmax@gmail.com>, 2021
 # Viktor Scorpion <victorscorpion2000@gmail.com>, 2021
 # Ye Ye <vrio.ua@gmail.com>, 2021
 # Илья Владимирович Кучаев <kuchaev.iv@gmail.com>, 2021
@@ -11,11 +12,8 @@
 # Viktor Pogrebniak <vp@aifil.ru>, 2021
 # Oleg Kuryan <oleg@ventor.tech>, 2021
 # sorin Rusu <to.rusu.sorin@gmail.com>, 2021
-# Максим Дронь <dronmax@gmail.com>, 2021
-# Martin Trigaux, 2021
 # Collex100, 2021
 # Андрей Гусев <gaussgss@gmail.com>, 2021
-# Ivan Yelizariev // IEL (ellui) <yelizariev@itpp.dev>, 2021
 # Sergey Vilizhanin, 2021
 # Max Belyanin <maxbelyanin@gmail.com>, 2021
 # Vasiliy Korobatov <korobatov@gmail.com>, 2021
@@ -23,6 +21,9 @@
 # Sergo S, 2021
 # Irina Fedulova <istartlin@gmail.com>, 2021
 # ILMIR <karamov@it-projects.info>, 2022
+# Martin Trigaux, 2022
+# Валерий Хохлов, 2022
+# Ivan Kropotkin <yelizariev@itpp.dev>, 2022
 # Сергей Шебанин <sergey@shebanin.ru>, 2022
 # 
 msgid ""
@@ -436,6 +437,13 @@ msgstr "Доступ ко всем Enterprise приложениям"
 #. openerp-web
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
+msgid "Action"
+msgstr "Действие"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#, python-format
 msgid "Action ID:"
 msgstr "ID действия:"
 
@@ -578,6 +586,13 @@ msgstr "Пометить"
 #, python-format
 msgid "Add to Favorites"
 msgstr "Добавить в избранное"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#, python-format
+msgid "Additional actions"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -1593,7 +1608,7 @@ msgstr "Отменить изменение записи"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Discard record"
-msgstr ""
+msgstr "Отменить"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__display_name
@@ -1668,7 +1683,7 @@ msgstr "Домен:"
 #: code:addons/web/static/src/core/ui/block_ui.js:0
 #, python-format
 msgid "Don't leave yet,"
-msgstr ""
+msgstr "Не уходите,"
 
 #. module: web
 #. openerp-web
@@ -1822,7 +1837,7 @@ msgstr "Esc для отмены"
 #: code:addons/web/static/src/legacy/js/views/calendar/calendar_model.js:0
 #, python-format
 msgid "Everybody's calendars"
-msgstr "Общий календарь"
+msgstr "Все календари"
 
 #. module: web
 #. openerp-web
@@ -2349,7 +2364,7 @@ msgstr ""
 #: code:addons/web/static/src/core/debug/debug_menu_items.js:0
 #, python-format
 msgid "Leave the Developer Tools"
-msgstr "Закрыть Инструменты разработчика"
+msgstr "Выключить режим разработки"
 
 #. module: web
 #. openerp-web
@@ -2663,8 +2678,8 @@ msgstr "Многострочный текст"
 #. openerp-web
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.js:0
 #, python-format
-msgid "My Odoo.com.account"
-msgstr ""
+msgid "My Odoo.com account"
+msgstr "Личный кабинет на Odoo.com"
 
 #. module: web
 #. openerp-web
@@ -3267,7 +3282,7 @@ msgstr "Настройки сводной таблицы"
 #: code:addons/web/static/src/core/ui/block_ui.js:0
 #, python-format
 msgid "Please be patient."
-msgstr ""
+msgstr "Будьте терпеливы."
 
 #. module: web
 #. openerp-web
@@ -3428,6 +3443,13 @@ msgstr "Основной цвет"
 #, python-format
 msgid "Print"
 msgstr "Печать"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/legacy/xml/report.xml:0
+#, python-format
+msgid "Printing options"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -3767,7 +3789,7 @@ msgstr "Сохранить и закрыть"
 #: code:addons/web/static/src/legacy/js/views/view_dialogs.js:0
 #, python-format
 msgid "Save & New"
-msgstr "Сохранить и создать"
+msgstr "Сохранить и создать ещё"
 
 #. module: web
 #. openerp-web
@@ -3803,7 +3825,7 @@ msgstr "Сохранить значения по умолчанию"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Save record"
-msgstr ""
+msgstr "Сохранить"
 
 #. module: web
 #. openerp-web
@@ -4886,6 +4908,12 @@ msgid "Yesterday"
 msgstr "Вчера"
 
 #. module: web
+#: code:addons/web/controllers/main.py:0
+#, python-format
+msgid "You are not allowed to upload an attachment here."
+msgstr ""
+
+#. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/widgets/model_field_selector.js:0
 #, python-format
@@ -5314,7 +5342,7 @@ msgstr "истинно"
 #: code:addons/web/static/src/core/ui/block_ui.js:0
 #, python-format
 msgid "it's still loading..."
-msgstr ""
+msgstr "загрузка продолжается..."
 
 #. module: web
 #. openerp-web

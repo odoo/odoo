@@ -56,7 +56,7 @@ MockServer.include({
     async _performFetch(resource, init) {
         if (resource === '/mail/attachment/upload') {
             const ufile = init.body.get('ufile');
-            const is_pending = init.body.get('is_pending');
+            const is_pending = init.body.get('is_pending') === 'true';
             const model = is_pending ? 'mail.compose.message' : init.body.get('thread_model');
             const id = is_pending ? 0 : parseInt(init.body.get('thread_id'));
             const attachmentId = this._mockCreate('ir.attachment', {
@@ -1838,10 +1838,10 @@ MockServer.include({
 
             // notify update of last_interest_dt
             const now = datetime_to_str(new Date());
-            this._mockWrite('mail.channel',
+            this._mockWrite('mail.channel', [
                 [channel.id],
                 { last_interest_dt: now },
-            );
+            ]);
             notifications.push({
                 type: 'mail.channel/last_interest_dt_changed',
                 payload: {
@@ -1870,7 +1870,7 @@ MockServer.include({
             ['res_id', 'in', ids],
             ['partner_id', 'in', partner_ids || []],
         ]);
-        this._mockUnlink(model, [followers.map(follower => follower.id)]);
+        this._mockUnlink('mail.followers', [followers.map(follower => follower.id)]);
     },
     /**
      * Simulates `_get_channels_as_member` on `res.partner`.
@@ -2065,19 +2065,29 @@ MockServer.include({
             [['id', 'in', ids]],
             { active_test: false }
         );
-        // Servers is also returning `user_id` and `is_internal_user` but not
+        // Servers is also returning `is_internal_user` but not
         // done here for simplification.
-        return new Map(partners.map(partner => [
-            partner.id,
-            {
+        return new Map(partners.map(partner => {
+            const users = this._getRecords('res.users', [['id', 'in', partner.user_ids]]);
+            const internalUsers = users.filter(user => !user.share);
+            let mainUser;
+            if (internalUsers.length > 0) {
+                mainUser = internalUsers[0];
+            } else if (users.length > 0) {
+                mainUser = users[0];
+            } else {
+                mainUser = [];
+            }
+            return [partner.id, {
                 "active": partner.active,
                 "display_name": partner.display_name,
                 "email": partner.email,
                 "id": partner.id,
                 "im_status": partner.im_status,
                 "name": partner.name,
-            }
-        ]));
+                "user_id": mainUser.id,
+            }];
+        }));
     },
     /**
      * Simulates `search_for_channel_invite` on `res.partner`.

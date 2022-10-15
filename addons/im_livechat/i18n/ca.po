@@ -15,13 +15,15 @@
 # Harcogourmet, 2022
 # Martin Trigaux, 2022
 # Jonatan Gk, 2022
+# marcescu, 2022
+# eriiikgt, 2022
 # jabelchi, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-24 08:19+0000\n"
+"POT-Creation-Date: 2022-08-24 01:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
 "Last-Translator: jabelchi, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
@@ -39,7 +41,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rating_count
 msgid "# Ratings"
-msgstr ""
+msgstr "# Valoracions"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__nbr_channel
@@ -329,9 +331,8 @@ msgid ""
 "Chat is private and unique between 2 persons. Group is private among invited"
 " persons. Channel can be freely joined (depending on its configuration)."
 msgstr ""
-"El xat és privat i únic entre dues persones. El grup és privat entre "
-"persones convidades. El canal es pot afegir lliurement (segons la seva "
-"configuració)."
+"El xat és privat i únic entre 2 persones. El grup és privat entre persones "
+"convidades. El canal es pot afegir lliurement (segons la seva configuració)."
 
 #. module: im_livechat
 #. openerp-web
@@ -468,7 +469,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:im_livechat.rating_rating_action_livechat_report
 #: model:ir.ui.menu,name:im_livechat.rating_rating_menu_livechat
 msgid "Customer Ratings"
-msgstr ""
+msgstr "Valoracions del client"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__day_number
@@ -632,9 +633,21 @@ msgid "Group By..."
 msgstr "Agrupa per..."
 
 #. module: im_livechat
+#: code:addons/im_livechat/models/im_livechat_channel.py:0
+#: model:im_livechat.channel,button_text:im_livechat.im_livechat_channel_data
+#, python-format
+msgid "Have a Question? Chat with us."
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__header_background_color
 msgid "Header Background Color"
 msgstr ""
+
+#. module: im_livechat
+#: model:im_livechat.channel,default_message:im_livechat.im_livechat_channel_data
+msgid "Hello, how may I help you?"
+msgstr "Hola, com puc ajudar-vos?"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__hide_button
@@ -824,7 +837,7 @@ msgstr ""
 #: model:ir.model,name:im_livechat.model_im_livechat_channel
 #: model_terms:ir.ui.view,arch_db:im_livechat.rating_rating_view_search_livechat
 msgid "Livechat Channel"
-msgstr ""
+msgstr "Canal de Livechat"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_channel_rule
@@ -1821,7 +1834,7 @@ msgstr "segons"
 #: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
 #, python-format
 msgid "unnamed"
-msgstr ""
+msgstr "sense nom"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template

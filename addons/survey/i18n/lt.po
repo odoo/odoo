@@ -16,10 +16,11 @@
 # Arunas Vaitekunas <vaitekunas@gmail.com>, 2022
 # Silvija Butko <silvija.butko@gmail.com>, 2022
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2022
-# Jonas Zinkevicius <jozi@odoo.com>, 2022
 # Martin Trigaux, 2022
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2022
 # Linas Versada <linaskrisiukenas@gmail.com>, 2022
+# Jonas Zinkevicius <jozi@odoo.com>, 2022
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -27,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2022\n"
+"Last-Translator: Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -484,6 +485,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('is_time_limited', '=', False)]}\"> "
 "seconds</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('is_time_limited', '=', False)]}\"> "
+"sekundės</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_inner
@@ -992,7 +995,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__answer_duration_avg
 msgid "Average Duration"
-msgstr ""
+msgstr "Vidutinė trukmė"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__answer_duration_avg
@@ -1349,7 +1352,7 @@ msgstr "Teisingai"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Correct Answer"
-msgstr ""
+msgstr "Teisingas atsakymas"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__answer_datetime
@@ -1448,17 +1451,17 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_question_id
 msgid "Current Question"
-msgstr ""
+msgstr "Dabartinis klausimas"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_question_start_time
 msgid "Current Question Start Time"
-msgstr ""
+msgstr "Dabartinio klausimo pradžios laikas"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_start_time
 msgid "Current Session Start Time"
-msgstr ""
+msgstr "Dabartinės sesijos pradžios laikas"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__is_time_limited
@@ -1497,17 +1500,19 @@ msgstr "Atsakymo data"
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__datetime
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input_line__answer_type__datetime
 msgid "Datetime"
-msgstr ""
+msgstr "Data ir laikas"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_datetime
 msgid "Datetime answer"
-msgstr ""
+msgstr "Atsakymo data ir laikas"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_user_input__deadline
 msgid "Datetime until customer can open the survey and submit answers"
 msgstr ""
+"Data ir laikas, iki kada klientas gali atsidaryti apklausą ir pateikti savo "
+"atsakymus"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__deadline
@@ -1541,6 +1546,8 @@ msgstr "Aprašymas"
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "Design easily your survey, send invitations and analyze answers."
 msgstr ""
+"Lengvai susikurkite savo apklausą, išsiųskite kvietimus ir analizuokite "
+"gautus atsakymus."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_2_choice_2
@@ -1551,7 +1558,7 @@ msgstr "Stalo kombinacija"
 #: model:ir.actions.act_window,name:survey.survey_user_input_line_action
 #: model:ir.ui.menu,name:survey.menu_survey_response_line_form
 msgid "Detailed Answers"
-msgstr ""
+msgstr "Išsamūs atsakymai"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q2_col2
@@ -1579,6 +1586,8 @@ msgid ""
 "Display images in addition to answer label. Valid only for simple / multiple"
 " choice questions."
 msgstr ""
+"Atvaizduoti nuotraukas prie atsakymų variantų. Galioja tik paprastiems/kelių"
+" pasirinkimų klausimams."
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_1
@@ -1588,7 +1597,7 @@ msgstr ""
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p2_q3
 msgid "Do you have any other comments, questions, or concerns ?"
-msgstr ""
+msgstr "Ar turite kitų klausimų, pastebėjimų ar pastabų?"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_5
@@ -1645,23 +1654,23 @@ msgstr "El. laiško šablonas"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_invite__email_from
 msgid "Email address of the sender."
-msgstr ""
+msgstr "Siuntėjo el.pašto adresas."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__description_done
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "End Message"
-msgstr ""
+msgstr "Pabaigos pranešimas"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__end_datetime
 msgid "End date and time"
-msgstr ""
+msgstr "Pabaigos data ir laikas"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_session_code
 msgid "Enter Session Code"
-msgstr ""
+msgstr "Įveskite sesijos kodą"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__constr_error_msg
@@ -1862,7 +1871,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Turi žinutę"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_3_choice_2
@@ -2601,7 +2610,7 @@ msgstr "Keli pasirinkimai eilutei"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Veiklos paskutinis terminas"
 
 #. module: survey
 #: model:gamification.badge,name:survey.vendor_certification_badge
@@ -3076,7 +3085,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__question_type
 msgid "Question Type"
-msgstr ""
+msgstr "Klausimo tipas"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__triggering_question_id
@@ -3153,7 +3162,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
 msgid "Resend Invitation"
-msgstr ""
+msgstr "Persiųsti pakvietimą"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_invite__existing_mode__resend
@@ -3288,7 +3297,7 @@ msgstr "Įvertinimas"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__scoring_type
 msgid "Scoring Type"
-msgstr ""
+msgstr "Vertinimo tipas"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__scoring_type__scoring_with_answers
@@ -3329,12 +3338,12 @@ msgstr "Sekcija"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__question_and_page_ids
 msgid "Sections and Questions"
-msgstr ""
+msgstr "Sekcijos ir klausimai"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "See results"
-msgstr ""
+msgstr "Pasižiūrėti rezultatus:"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_3
@@ -3344,7 +3353,7 @@ msgstr ""
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_2
 msgid "Select all the existing products"
-msgstr ""
+msgstr "Pasirinkite visus egzistuojančius produktus."
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_2_question_2
@@ -3397,7 +3406,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_state
 msgid "Session State"
-msgstr ""
+msgstr "Sesijos būsena"
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_session_code_unique
@@ -3423,7 +3432,7 @@ msgstr "Rodyti komentarų lauką"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_show_leaderboard
 msgid "Show Session Leaderboard"
-msgstr ""
+msgstr "Parodyti sesijos lyderius"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
@@ -3451,17 +3460,17 @@ msgstr ""
 #: code:addons/survey/wizard/survey_invite.py:0
 #, python-format
 msgid "Some emails you just entered are incorrect: %s"
-msgstr ""
+msgstr "El.pašto adresas nėra korektiškas:%s"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_header
 msgid "Sorry, no one answered this survey yet."
-msgstr ""
+msgstr "Atleiskite, bet niekas dar neatsakė į apklausą."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
 msgid "Sorry, you have not been fast enough."
-msgstr ""
+msgstr "Atleiskite, Jūs nebuvote pakankamai greitas!"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q4_sug4
@@ -3476,12 +3485,12 @@ msgstr "Pietų Korėja"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q1_sug3
 msgid "Space stations"
-msgstr ""
+msgstr "Kosminė stotis"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q6_sug1
 msgid "Spring"
-msgstr ""
+msgstr "Pavasaris"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p1
@@ -3501,7 +3510,7 @@ msgstr "Pradėti apklausą"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__start_datetime
 msgid "Start date and time"
-msgstr ""
+msgstr "Pradžios data ir laikas"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__state
@@ -3524,7 +3533,7 @@ msgstr ""
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q6_row2
 msgid "Strawberries"
-msgstr ""
+msgstr "Braškės"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__sub_model_object_field
@@ -3559,7 +3568,7 @@ msgstr "Pavyko"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__scoring_success_min
 msgid "Success %"
-msgstr ""
+msgstr "Sėkmės %"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__success_ratio
@@ -3595,7 +3604,7 @@ msgstr "Pasiūlymas"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q6_sug2
 msgid "Summer"
-msgstr ""
+msgstr "Vasara"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_survey
@@ -3644,7 +3653,7 @@ msgstr "Apklausos klausimas"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Survey Time Limit"
-msgstr ""
+msgstr "Apklausos laikas limituotas"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__survey_time_limit_reached
@@ -3690,12 +3699,12 @@ msgstr "Apklausa: išvalyti testinius atsakymus"
 #. module: survey
 #: model:mail.template,name:survey.mail_template_user_input_invite
 msgid "Survey: Invite"
-msgstr ""
+msgstr "Apklausa: pakviesti"
 
 #. module: survey
 #: model:mail.template,name:survey.mail_template_certification
 msgid "Survey: Send certification by email"
-msgstr ""
+msgstr "Apklausa: siųsti serifikatą el.paštu"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_form
@@ -3818,7 +3827,7 @@ msgstr "Atsakymas turi būti tinkamo tipo"
 #: model:survey.question,validation_error_msg:survey.vendor_certification_page_3_question_6
 #, python-format
 msgid "The answer you entered is not valid."
-msgstr ""
+msgstr "Atsakymas yra negaliojantis."
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_attempts_limit_check
@@ -3830,12 +3839,12 @@ msgstr ""
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_badge_uniq
 msgid "The badge for each survey should be unique!"
-msgstr ""
+msgstr "Kiekvienai apklausai turi būti unikalus ženkliukas!"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q2_row4
 msgid "The checkout process is clear and secure"
-msgstr ""
+msgstr "Apklausos procesas yra aiškus ir saugus."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__session_question_id
@@ -3847,14 +3856,14 @@ msgstr ""
 #: code:addons/survey/static/src/js/survey_form.js:0
 #, python-format
 msgid "The date you selected is greater than the maximum date: "
-msgstr ""
+msgstr "Data, kurią pasirinkote yra didesnė nei: "
 
 #. module: survey
 #. openerp-web
 #: code:addons/survey/static/src/js/survey_form.js:0
 #, python-format
 msgid "The date you selected is lower than the minimum date: "
-msgstr ""
+msgstr "Data, kurią pasirinkote yra mažesnė nei: "
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__description
@@ -3887,7 +3896,7 @@ msgstr ""
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q2_row1
 msgid "The new layout and design is fresh and up-to-date"
-msgstr ""
+msgstr "Išdėstymas ir dizainas yra nauji bei modernūs"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_403_page
@@ -3897,28 +3906,28 @@ msgstr "Puslapis, kurio ieškote, negalėjo būti patvirtintas."
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_scoring_success_min_check
 msgid "The percentage of success has to be defined between 0 and 100."
-msgstr ""
+msgstr "Teisingo apklausos užpildymo procentas turi būti tarp 1 ir 100."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__is_time_limited
 msgid "The question is limited in time"
-msgstr ""
+msgstr "Klausimo laikas yra ribotas"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
 msgid "The session will begin automatically when the host starts."
-msgstr ""
+msgstr "Sesija prasidės automatiškai, kai prisijungs apklausos vadovas."
 
 #. module: survey
 #: code:addons/survey/controllers/main.py:0
 #, python-format
 msgid "The survey has already started."
-msgstr ""
+msgstr "Apklausa jau prasidėjo."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__is_time_limited
 msgid "The survey is limited in time"
-msgstr ""
+msgstr "Apklausos laikas yra limituotas"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__session_question_start_time
@@ -3932,6 +3941,8 @@ msgstr ""
 msgid ""
 "The time limit needs to be a positive number if the survey is time limited."
 msgstr ""
+"Laiko apribojimas privalo būti teigiamas skaičius, jei apklausos pildymo "
+"laikas yra limituotas."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q2_row3
@@ -3942,7 +3953,7 @@ msgstr ""
 #: code:addons/survey/controllers/main.py:0
 #, python-format
 msgid "The user has not succeeded the certification"
-msgstr ""
+msgstr "Vartotojui nepavyko gauti sertifikatą"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
@@ -3968,12 +3979,12 @@ msgstr "Šis atsakymas privalo būti el. pašto adresas"
 #: code:addons/survey/static/src/js/survey_form.js:0
 #, python-format
 msgid "This answer must be an email address."
-msgstr ""
+msgstr "Atsakymo formatas - el.pašto adresas."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
 msgid "This certificate is presented to"
-msgstr ""
+msgstr "Sertifikatas priklauso"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_modern
@@ -3981,6 +3992,8 @@ msgid ""
 "This certificate is presented to\n"
 "                                <br/>"
 msgstr ""
+"Sertifikatas yra įteikiamas\n"
+"<br/>"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__session_code
@@ -3992,7 +4005,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
 msgid "This is a test survey."
-msgstr ""
+msgstr "Tai bandomoji apklausa."
 
 #. module: survey
 #. openerp-web
@@ -4116,7 +4129,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_closed_expired
 msgid "This survey is now closed. Thank you for your interest !"
-msgstr ""
+msgstr "Ši apklausa jau yra uždaryta. Dėkojame už Jūsų susidomėjimą!"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_auth_required
@@ -4153,7 +4166,7 @@ msgstr "Šiandienos veiklos"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p2_q2_sug2
 msgid "Tokyo"
-msgstr ""
+msgstr "Tokijas"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__scoring_total
@@ -4347,7 +4360,7 @@ msgstr "Vietnamas"
 msgid ""
 "We have registered your answer! Please wait for the host to go to the next "
 "question."
-msgstr ""
+msgstr "Jūs jau atsakėte! Palaukite leidimo pereiti prie kito klausimo."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__website_message_ids
@@ -4396,7 +4409,7 @@ msgstr ""
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p1_q1
 msgid "What is your email ?"
-msgstr ""
+msgstr "Koks Jūsų el. pašto adresas?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p1_q2
@@ -4506,12 +4519,12 @@ msgstr ""
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p1
 msgid "Who are you ?"
-msgstr ""
+msgstr "Kas Tu?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p3_q2
 msgid "Who is the architect of the Great Pyramid of Giza ?"
-msgstr ""
+msgstr "Kas yra Gizos piramidės architektas?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p4_q1
@@ -4533,7 +4546,7 @@ msgstr ""
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q6_sug4
 msgid "Winter"
-msgstr ""
+msgstr "Žiema"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form

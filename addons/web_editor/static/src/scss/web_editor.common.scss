@@ -1,5 +1,9 @@
 ///
-/// This file regroups basic style rules for web_editor enable page edition and backend utils.
+/// This file regroups basic style rules for web_editor enable page edition and
+/// backend utils.
+/// TODO many of those rules should probably not be declared for the backend.
+/// in particular the o_ccX rules, see code linked to the variable named
+/// 'prevent-backend-colors-alteration'.
 ///
 
 :root {
@@ -666,6 +670,35 @@ blockquote {
                     color: $dropdown-link-disabled-color !important;
                 }
             }
+            .btn-link {
+                // Some search autocomplete results use btn-link for extra
+                // information that can be navigated to. (e.g. products give
+                // access to their categories)
+                // These need to be reset in case a dark palette is applied.
+                color: $link-color;
+
+                &:hover {
+                    color: $link-hover-color;
+                }
+                &:disabled {
+                    color: $btn-link-disabled-color;
+                }
+            }
+        }
+        .dropdown-menu .dropdown-item-text .text-muted {
+            // Search autocomplete messages are shown as text-muted entries.
+            // These need to be reset in case a dark palette is applied.
+            color: $text-muted !important;
+
+            a {
+                // Search autocomplete's fuzzy matched term is shown as a link
+                // within an information message.
+                color: $link-color;
+
+                &:hover {
+                    color: $link-hover-color;
+                }
+            }
         }
     }
 }
@@ -853,6 +886,20 @@ section, .oe_img_bg, [data-oe-shape-data] {
     }
 }
 
+// Background Images
+.oe_img_bg {
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    &.o_bg_img_opt_repeat {
+        background-size: auto;
+        background-repeat: repeat;
+    }
+    &.o_bg_img_center {
+        background-position: center;
+    }
+}
+
 // Gradient
 // TODO should be in the editor lib since it is handled there... but could not
 // find the right place for it.
@@ -873,7 +920,7 @@ section, .oe_img_bg, [data-oe-shape-data] {
 
 /* QWEB */
 
-.odoo-editor, .o_readonly {
+.odoo-editor-editable, .o_readonly {
     t,
     [t-if],
     [t-elif],

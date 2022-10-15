@@ -6,10 +6,17 @@ import { registry } from "@web/core/registry";
 import { uiService, useActiveElement } from "@web/core/ui/ui_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { makeTestEnv } from "../../helpers/mock_env";
-import { getFixture, nextTick, patchWithCleanup, triggerHotkey } from "../../helpers/utils";
+import {
+    getFixture,
+    makeDeferred,
+    nextTick,
+    patchWithCleanup,
+    triggerHotkey,
+} from "../../helpers/utils";
 
-const { Component, mount, tags } = owl;
+const { Component, hooks, mount, tags } = owl;
 const { xml } = tags;
+const { useState } = hooks;
 const serviceRegistry = registry.category("services");
 
 let env;
@@ -44,6 +51,104 @@ QUnit.test("register / unregister", async (assert) => {
     await nextTick();
 
     assert.verifySteps([key]);
+});
+
+QUnit.test("[accesskey] attrs replaced by [data-hotkey]", async (assert) => {
+    const div = document.createElement("div");
+    div.className = "foo";
+    div.accessKey = "a";
+    div.onclick = () => assert.step("click");
+    div.textContent = "foo";
+    target.appendChild(div);
+
+    // div must only have [accesskey] attribute
+    assert.containsOnce(target, ".foo");
+    assert.containsOnce(target, ".foo[accesskey]");
+    assert.containsNone(target, ".foo[data-hotkey]");
+
+    // press any hotkey, i.e. the left arrow
+    triggerHotkey("arrowleft");
+    await nextTick();
+
+    // div should now only have [data-hotkey] attribute
+    assert.containsOnce(target, ".foo");
+    assert.containsOnce(target, ".foo[data-hotkey]");
+    assert.containsNone(target, ".foo[accesskey]");
+
+    // try to press the related hotkey, just to make sure it works
+    assert.verifySteps([]);
+    triggerHotkey("a", true);
+    await nextTick();
+    assert.verifySteps(["click"]);
+});
+
+QUnit.test("[accesskey] attrs replaced by [data-hotkey], part 2", async (assert) => {
+    class UIOwnershipTakerComponent extends Component {
+        setup() {
+            useActiveElement("bouh");
+        }
+    }
+    UIOwnershipTakerComponent.template = xml`<p class="owner" t-ref="bouh">bouh</p>`;
+    class MyComponent extends Component {
+        setup() {
+            this.state = useState({ foo: true });
+            this.step = assert.step.bind(assert);
+        }
+    }
+    MyComponent.components = { UIOwnershipTakerComponent };
+    MyComponent.template = xml`
+        <main>
+            <UIOwnershipTakerComponent t-if="state.foo" />
+            <div t-on-click="() => { this.step('click'); }" accesskey="a">foo</div>
+        </main>
+    `;
+    const comp = await mount(MyComponent, { env, target });
+
+    // UIOwnershipTakerComponent should be there and it should be the ui active element
+    assert.containsOnce(target, "main .owner");
+    assert.strictEqual(target.querySelector("main .owner"), env.services.ui.activeElement);
+
+    // div must only have [accesskey] attribute
+    assert.containsOnce(target, "main div");
+    assert.containsOnce(target, "main div[accesskey]");
+    assert.containsNone(target, "main div[data-hotkey]");
+
+    // press any hotkey, i.e. the left arrow
+    triggerHotkey("arrowleft");
+    await nextTick();
+
+    // div should now only have [data-hotkey] attribute
+    assert.containsOnce(target, "main div");
+    assert.containsOnce(target, "main div[data-hotkey]");
+    assert.containsNone(target, "main div[accesskey]");
+
+    // try to press the related hotkey, it should not work as the ui active element is different
+    assert.notEqual(
+        env.services.ui.getActiveElementOf(target.querySelector("main div")),
+        env.services.ui.activeElement
+    );
+    assert.verifySteps([]);
+    triggerHotkey("a", true);
+    await nextTick();
+    assert.verifySteps([]);
+
+    // remove the UIOwnershipTakerComponent
+    comp.state.foo = false;
+    await nextTick();
+    assert.strictEqual(
+        env.services.ui.getActiveElementOf(target.querySelector("main div")),
+        env.services.ui.activeElement
+    );
+
+    assert.containsNone(target, "main .owner");
+    assert.containsOnce(target, "main div");
+    assert.containsOnce(target, "main div[data-hotkey]");
+    assert.containsNone(target, "main div[accesskey]");
+
+    assert.verifySteps([]);
+    triggerHotkey("a", true);
+    await nextTick();
+    assert.verifySteps(["click"]);
 });
 
 QUnit.test("data-hotkey", async (assert) => {
@@ -673,6 +778,37 @@ QUnit.test("protects editable elements: can bypassEditableProtection", async (as
     );
 });
 
+QUnit.test("protects editable elements: an editable can allow hotkeys", async (assert) => {
+    class Comp extends Component {
+        setup() {
+            useHotkey("arrowleft", () => assert.step("called"));
+        }
+    }
+    Comp.template = xml`<div><input class="foo" data-allow-hotkeys="true"/><input class="bar"/></div>`;
+    await mount(Comp, { env, target });
+    const fooInput = target.querySelector(".foo");
+    const barInput = target.querySelector(".bar");
+
+    assert.verifySteps([]);
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true }));
+    await nextTick();
+    assert.verifySteps(["called"]);
+
+    fooInput.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true }));
+    await nextTick();
+    assert.verifySteps(
+        ["called"],
+        "the callback gets called as the foo editable allows it"
+    );
+
+    barInput.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true }));
+    await nextTick();
+    assert.verifySteps(
+        [],
+        "the callback does not get called as the bar editable does not explicitly allow hotkeys"
+    );
+});
+
 QUnit.test("ignore numpad keys", async (assert) => {
     assert.expect(3);
 
@@ -690,4 +826,35 @@ QUnit.test("ignore numpad keys", async (assert) => {
     window.dispatchEvent(keydown);
     await nextTick();
     assert.verifySteps(['1']);
+});
+
+QUnit.test("within iframes", async (assert) => {
+    assert.expect(5);
+    env.services.hotkey.add("enter", () => assert.step("called"));
+    await nextTick();
+
+    // Dispatch directly to target to show that the hotkey service works as expected
+    target.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+    await nextTick();
+    assert.verifySteps(["called"]);
+
+    // Append an iframe to target and wait until it is fully loaded.
+    const iframe = document.createElement("iframe");
+    iframe.srcdoc = "<h1>Hello world!</h1>";
+    const def = makeDeferred();
+    iframe.onload = def.resolve;
+    target.appendChild(iframe);
+    await def;
+
+    // Dispatch an hotkey from within the iframe
+    const h1 = iframe.contentDocument.querySelector("h1");
+    h1.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+    await nextTick();
+    assert.verifySteps([]);
+
+    // Register the iframe to the hotkey service
+    env.services.hotkey.registerIframe(iframe);
+    h1.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+    await nextTick();
+    assert.verifySteps(["called"]);
 });

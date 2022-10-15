@@ -80,6 +80,13 @@ class TestStructure(TransactionCase):
         # (for technical reasons due to ORM and res.company making related fields towards res.partner for country_id and vat)
         test_partner.write({'vat': '0477472701', 'country_id': None})
 
+    def test_vat_eu(self):
+        """ Foreign companies that trade with non-enterprises in the EU may have a VATIN starting with "EU" instead of
+        a country code.
+        """
+        test_partner = self.env['res.partner'].create({'name': "Turlututu", 'country_id': self.env.ref('base.fr').id})
+        test_partner.write({'vat': "EU528003646", 'country_id': None})
+
 
 @tagged('-standard', 'external')
 class TestStructureVIES(TestStructure):

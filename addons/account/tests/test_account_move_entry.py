@@ -135,6 +135,9 @@ class TestAccountMove(AccountTestInvoicingCommon):
             self.test_move.date = fields.Date.from_string('2018-01-01')
 
         with self.assertRaises(UserError), self.cr.savepoint():
+            self.test_move.name = "Othername"
+
+        with self.assertRaises(UserError), self.cr.savepoint():
             self.test_move.unlink()
 
         with self.assertRaises(UserError), self.cr.savepoint():
@@ -242,6 +245,9 @@ class TestAccountMove(AccountTestInvoicingCommon):
         # You can't remove the journal entry from a locked period.
         with self.assertRaises(UserError), self.cr.savepoint():
             self.test_move.date = fields.Date.from_string('2018-01-01')
+
+        with self.assertRaises(UserError), self.cr.savepoint():
+            self.test_move.name = "Othername"
 
         with self.assertRaises(UserError), self.cr.savepoint():
             self.test_move.unlink()
@@ -533,6 +539,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
             'company_id': self.company_data['company'].id,
         })
         self.env.company.account_cash_basis_base_account_id = tax_base_amount_account
+        self.env.company.tax_exigibility = True
         tax_tags = defaultdict(dict)
         for line_type, repartition_type in [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]:
             tax_tags[line_type][repartition_type] = self.env['account.account.tag'].create({
@@ -668,3 +675,33 @@ class TestAccountMove(AccountTestInvoicingCommon):
                 'credit': value['debit'],
             })
         self.assertRecordValues(reversed_caba_move.line_ids, expected_values)
+
+    def _get_cache_count(self, model_name='account.move', field_name='name'):
+        model = self.env[model_name]
+        field = model._fields[field_name]
+        return len(self.env.cache.get_records(model, field))
+
+    def test_cache_invalidation(self):
+        self.env['account.move'].invalidate_cache()
+        lines = self.test_move.line_ids
+        # prefetch
+        lines.mapped('move_id.name')
+        # check account.move cache
+        self.assertEqual(self._get_cache_count(), 1)
+        self.env['account.move.line'].invalidate_cache(ids=lines.ids)
+        self.assertEqual(self._get_cache_count(), 0)
+
+    def test_misc_prevent_edit_tax_on_posted_moves(self):
+        # You cannot remove journal items if the related journal entry is posted.
+        self.test_move.action_post()
+        with self.assertRaisesRegex(UserError, "You cannot modify the taxes related to a posted journal item"),\
+             self.cr.savepoint():
+            self.test_move.line_ids.filtered(lambda l: l.tax_ids).tax_ids = False
+
+        with self.assertRaisesRegex(UserError, "You cannot modify the taxes related to a posted journal item"),\
+             self.cr.savepoint():
+            self.test_move.line_ids.filtered(lambda l: l.tax_line_id).tax_line_id = False
+
+        # You can remove journal items if the related journal entry is draft.
+        self.test_move.button_draft()
+        self.assertTrue(self.test_move.line_ids.unlink())

@@ -991,6 +991,15 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         // If simulate is true, it means we want the option to be toggled but
         // not saved on the server yet
         if (!forceSave) {
+            // Add the 'o_dirty' class on an editable element specific to the
+            // page to notify the editor that the page should be saved,
+            // otherwise it won't save anything if it doesn't detect any change
+            // inside the #wrapwrap. (e.g. the header "over the content" option
+            // which adds a class on the #wrapwrap itself and not inside it).
+            const pageEl = document.querySelector(`.o_editable[data-oe-model="ir.ui.view"][data-oe-id="${mo.viewid}"]`);
+            if (pageEl) {
+                pageEl.classList.add('o_dirty');
+            }
             return Promise.resolve();
         }
 

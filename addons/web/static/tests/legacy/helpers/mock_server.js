@@ -165,7 +165,7 @@ var MockServer = Class.extend({
         }, function (result) {
             var message = result && result.message;
             var event = result && result.event;
-            var errorString = JSON.stringify(message || false);
+            var errorString = typeof message !== "string" ? JSON.stringify(message || false) : message;
             if (debug) {
                 console.warn(
                     '%c[rpc] response (error) %s%s, during test %s',
@@ -1643,9 +1643,13 @@ var MockServer = Class.extend({
                 delete group.__range;
             }
             // compute count key to match dumb server logic...
-            const countKey = kwargs.lazy
-                ? groupBy[0].split(":")[0] + "_count"
-                : "__count";
+            const groupByNoLeaf = kwargs.context ? "group_by_no_leaf" in kwargs.context : false;
+            let countKey;
+            if (kwargs.lazy && (groupBy.length >= 2 || !groupByNoLeaf)) {
+                countKey = groupBy[0].split(":")[0] + "_count";
+            } else {
+                countKey = "__count";
+            }
             group[countKey] = groupRecords.length;
             aggregateFields(group, groupRecords);
             readGroupResult.push(group);

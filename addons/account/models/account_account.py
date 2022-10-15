@@ -309,7 +309,7 @@ class AccountAccount(models.Model):
         balances = {
             read['account_id'][0]: read['balance']
             for read in self.env['account.move.line'].read_group(
-                domain=[('account_id', 'in', self.ids)],
+                domain=[('account_id', 'in', self.ids), ('parent_state', '=', 'posted')],
                 fields=['balance', 'account_id'],
                 groupby=['account_id'],
             )

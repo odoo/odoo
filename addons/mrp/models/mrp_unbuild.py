@@ -97,6 +97,19 @@ class MrpUnbuild(models.Model):
                 self.product_qty = 1
             else:
                 self.product_qty = self.mo_id.product_qty
+            if self.lot_id and self.lot_id not in self.mo_id.move_finished_ids.move_line_ids.lot_id:
+                return {'warning': {
+                    'title': _("Warning"),
+                    'message': _("The selected serial number does not correspond to the one used in the manufacturing order, please select another one.")
+                }}
+
+    @api.onchange('lot_id')
+    def _onchange_lot_id(self):
+        if self.mo_id and self.lot_id and self.lot_id not in self.mo_id.move_finished_ids.move_line_ids.lot_id:
+            return {'warning': {
+                'title': _("Warning"),
+                'message': _("The selected serial number does not correspond to the one used in the manufacturing order, please select another one.")
+            }}
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
@@ -207,7 +220,7 @@ class MrpUnbuild(models.Model):
                 finished_moves = unbuild.mo_id.move_finished_ids.filtered(lambda move: move.state == 'done')
                 factor = unbuild.product_qty / unbuild.mo_id.product_uom_id._compute_quantity(unbuild.mo_id.product_qty, unbuild.product_uom_id)
                 for finished_move in finished_moves:
-                    moves += unbuild._generate_move_from_existing_move(finished_move, factor, finished_move.location_dest_id, finished_move.location_id)
+                    moves += unbuild._generate_move_from_existing_move(finished_move, factor, unbuild.location_id, finished_move.location_id)
             else:
                 factor = unbuild.product_uom_id._compute_quantity(unbuild.product_qty, unbuild.bom_id.product_uom_id) / unbuild.bom_id.product_qty
                 moves += unbuild._generate_move_from_bom_line(self.product_id, self.product_uom_id, unbuild.product_qty)

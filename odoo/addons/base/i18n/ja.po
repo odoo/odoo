@@ -9,17 +9,18 @@
 # Martin Trigaux, 2022
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
 # Shigekazu N. <shigekazu.noka@gmail.com>, 2022
-# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # Noma Yuki, 2022
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2022
+# 江口和志 <sandwhale1010@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:42+0000\n"
+"POT-Creation-Date: 2022-01-24 09:03+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2022\n"
+"Last-Translator: 江口和志 <sandwhale1010@gmail.com>, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -620,6 +621,14 @@ msgid ""
 msgstr ""
 "\n"
 "        オランダ向けの会計レポート"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_pk_reports
+msgid ""
+"\n"
+"        Accounting reports for Pakistan\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es_reports
@@ -1561,6 +1570,16 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_mx_edi_stock_extended
+msgid ""
+"\n"
+"    Bridge module to extend the delivery guide (Complemento XML Carta de Porte)\n"
+"    - exported goods (COMEX)\n"
+"    - extended address fields\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_mrp_workorder_iot
 msgid ""
 "\n"
@@ -1748,6 +1767,18 @@ msgstr ""
 msgid ""
 "\n"
 "    Support for invoice Export/Import in Factur-x format (1.0.04).\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_mx_edi_stock
+msgid ""
+"\n"
+"    The delivery guide (Complemento XML Carta de Porte) is needed as a proof\n"
+"    that you are sending goods between A and B.\n"
+"\n"
+"    It is only when a delivery order is validated that you can create the delivery\n"
+"    guide.\n"
 "    "
 msgstr ""
 
@@ -4450,6 +4481,15 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_gcc_pos
+msgid ""
+"\n"
+"GCC POS Localization\n"
+"=======================================================\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_gamification
 msgid ""
 "\n"
@@ -4910,6 +4950,15 @@ msgstr ""
 msgid ""
 "\n"
 "It allows for comparing products from the wishlist\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_sa_pos
+msgid ""
+"\n"
+"K.S.A. POS Localization\n"
+"=======================================================\n"
 "    "
 msgstr ""
 
@@ -7915,10 +7964,11 @@ msgid ""
 "competing offers from different vendors and select the best ones. Blanket orders\n"
 "are agreements you have with vendors to benefit from a predetermined pricing.\n"
 msgstr ""
-"モジュールを使用すると、購入契約を管理できます。\n"
+"\n"
+"このモジュールを使用すると、購入契約を管理できます。\n"
 "===========================================================\n"
-"入札および一括注文の呼び出しを管理します。入札の呼びかけは、さまざまなベンダーから競合するオファーを取得し、\n"
-"最適なものを選択するために使用されます。一括注文は、事前に決定された価格設定の恩恵を受けるためにベンダーと締結している契約です。"
+"入札募集および包括注文を管理します。入札募集は、さまざまなベンダーから競合するオファーを取得し、\n"
+"最適なものを選択するために使用されます。包括注文は、事前に決定された価格設定の恩恵を受けるためにベンダーと締結している契約です。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_mass_mailing
@@ -8793,6 +8843,13 @@ msgid ""
 msgstr "これは、香港の会計およびローカリゼーションのチャートを管理するための基本モジュールです。"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_pk
+msgid ""
+" This is the base module to manage chart of accounts and localization for "
+"the Pakistan "
+msgstr ""
+
+#. module: base
 #: code:addons/model.py:0
 #, python-format
 msgid ""
@@ -9532,7 +9589,7 @@ msgstr "<strong>電話</strong>"
 #: model_terms:ir.ui.view,arch_db:base.identity_check_wizard
 msgid ""
 "<strong>Please enter your password to confirm you own this account</strong>"
-msgstr ""
+msgstr "<strong>あなた自身のアカウントであることを確認するために、パスワードを入力してください</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -10042,6 +10099,11 @@ msgid "Account Holder Name"
 msgstr "口座名義"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_account_intrastat_expiry
+msgid "Account Invoice Expiry"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract
 msgid "Account Invoice Extract"
 msgstr "アカウントの請求書の抜粋"
@@ -10546,6 +10608,11 @@ msgstr ""
 "Addison Olsonは、<b>10年以来</b>IT部門で働いています。\n"
 "彼は特にネズミ捕りを売ることで知られています。\n"
 "その技術で、彼は過去2年間でIT予算をほぼ半分に削減しました。"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_report_measures
+msgid "Additional Measures in Reporting"
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -11970,6 +12037,11 @@ msgid "Belgian Intrastat Declaration"
 msgstr "Belgian Intrastat Declaration"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_report_measures
+msgid "Belgian Payroll - Addition Measures in Reporting"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_holiday_pay_recovery
 msgid "Belgian Payroll - Holiday Pay Recovery"
 msgstr ""
@@ -13167,7 +13239,7 @@ msgstr "会社データ"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__company_details
 msgid "Company Details"
-msgstr ""
+msgstr "会社詳細"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__favicon
@@ -15259,7 +15331,7 @@ msgstr "ドロップダウンメニュー"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subcontracting_dropshipping
 msgid "Dropship and Subcontracting Management"
-msgstr "ドロップシップおよび下請け管理"
+msgstr "直送および外注管理"
 
 #. module: base
 #: code:addons/base/models/ir_rule.py:0
@@ -16445,7 +16517,7 @@ msgstr "フィールドタグには'名前'属性を定義する必要があり�
 #: code:addons/model.py:0
 #, python-format
 msgid "Field:"
-msgstr "項目："
+msgstr "項目:"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields
@@ -17493,6 +17565,11 @@ msgstr "ギニアビサウ共和国"
 #. module: base
 #: model:res.country.group,name:base.gulf_cooperation_council
 msgid "Gulf Cooperation Council (GCC)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_gcc_pos
+msgid "Gulf Cooperation Council - Point of Sale"
 msgstr ""
 
 #. module: base
@@ -19285,6 +19362,11 @@ msgid "K.S.A. - Payroll with Accounting"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_sa_pos
+msgid "K.S.A. - Point of Sale"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_digest
 msgid "KPI Digests"
 msgstr "KPI ダイジェスト"
@@ -19785,7 +19867,7 @@ msgstr "起動設定ウィザード"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__layout_background
 msgid "Layout Background"
-msgstr ""
+msgstr "レイアウト背景"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__address_format
@@ -20431,7 +20513,7 @@ msgstr "クラウド税計算の割引を管理します。"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_plm
 msgid "Manage engineering change orders on products, bills of material"
-msgstr ""
+msgstr "プロダクト、部品表の設計変更オーダを管理"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_event_booth
@@ -20826,6 +20908,16 @@ msgstr "メキシコ"
 #: model:ir.module.module,shortdesc:base.module_l10n_mx
 msgid "Mexico - Accounting"
 msgstr "メキシコ - 会計"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_stock
+msgid "Mexico - Electronic Delivery Guide"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_stock_extended
+msgid "Mexico - Electronic Delivery Guide Comex"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.fm
@@ -23840,6 +23932,16 @@ msgid "Pakistan"
 msgstr "パキスタン"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_pk
+msgid "Pakistan - Accounting"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_pk_reports
+msgid "Pakistan - Accounting Reports"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.pw
 msgid "Palau"
 msgstr "パラオ"
@@ -24039,7 +24141,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Password Management"
-msgstr ""
+msgstr "パスワード管理"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_password_policy
@@ -25026,7 +25128,7 @@ msgstr "購入マトリックス"
 #. module: base
 #: model:ir.module.module,summary:base.module_purchase_stock
 msgid "Purchase Orders, Receipts, Vendor Bills for Stock"
-msgstr "注文書、領収書、在庫のベンダー請求書"
+msgstr "注文書、入荷、在庫のベンダー請求書"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_requisition_stock
@@ -25046,7 +25148,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_stock
 msgid "Purchase Stock"
-msgstr "株式を購入する"
+msgstr "在庫購買管理"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_stock_enterprise
@@ -26007,7 +26109,7 @@ msgstr ""
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid "SSL certificate is missing for %s."
-msgstr ""
+msgstr "%sのSSL証明書がありません。"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server__smtp_ssl_certificate
@@ -26890,7 +26992,7 @@ msgstr "すべて表示する"
 #. module: base
 #: model:ir.actions.act_window,name:base.act_view_currency_rates
 msgid "Show Currency Rates"
-msgstr ""
+msgstr "通貨レートを表示"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_search
@@ -27313,7 +27415,7 @@ msgstr "設定を開始"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "State"
-msgstr "ステータス"
+msgstr "都道府県/州"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__code
@@ -27328,7 +27430,7 @@ msgstr "都道府県/州名"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__state_required
 msgid "State Required"
-msgstr "必要な状態"
+msgstr "都道府県/州必須"
 
 #. module: base
 #: model:res.country,name:base.ps
@@ -27362,7 +27464,7 @@ msgstr "ステータス"
 #: code:addons/base/static/src/js/res_config_settings.js:0
 #, python-format
 msgid "Stay Here"
-msgstr ""
+msgstr "このページに留まる"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__number_increment
@@ -27608,6 +27710,11 @@ msgid "Sweden"
 msgstr "スウェーデン"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_se
+msgid "Sweden - Accounting"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_se_reports
 msgid "Sweden - Accounting Reports"
 msgstr "スウェーデン-会計報告"
@@ -27616,11 +27723,6 @@ msgstr "スウェーデン-会計報告"
 #: model:ir.module.module,shortdesc:base.module_pos_l10n_se
 msgid "Sweden Registered Cash Register"
 msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_se
-msgid "Swedish - Accounting"
-msgstr "スウェーデン語-会計"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_language_install
@@ -28726,13 +28828,19 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_form
 msgid "This is your company's currency."
-msgstr ""
+msgstr "これはあなたの会社の通貨です。"
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "This method can only be accessed over HTTP"
 msgstr "このメソッドはHTTP経由でのみアクセスできます"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_account_intrastat_expiry
+msgid ""
+"This module adds an expiry feature to transaction account intrastat codes."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_bot_hr
@@ -31157,7 +31265,7 @@ msgstr "連絡先を親の1つにマージすることはできません。"
 msgid ""
 "You cannot reduce the number of decimal places of a currency already used on"
 " an accounting entry."
-msgstr ""
+msgstr "会計上ですでに使用されている通貨の小数点以下の桁数を減らすことはできません。"
 
 #. module: base
 #: code:addons/models.py:0
@@ -31338,6 +31446,12 @@ msgid "binary"
 msgstr "バイナリ"
 
 #. module: base
+#: code:addons/base/models/ir_attachment.py:0
+#, python-format
+msgid "binary_field_real_user should be a res.users record."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__boolean
 msgid "boolean"
 msgstr "ブーリアン"
@@ -31350,7 +31464,7 @@ msgstr "bpost配送"
 #. module: base
 #: model:ir.module.category,name:base.module_category_account_budget
 msgid "budget"
-msgstr ""
+msgstr "予算"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__char
@@ -31623,6 +31737,12 @@ msgid "many2many"
 msgstr "多2多"
 
 #. module: base
+#: code:addons/base/models/ir_actions.py:0
+#, python-format
+msgid "many2many fields cannot be evaluated by reference"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2one
 msgid "many2one"
 msgstr "多2一"
@@ -31663,7 +31783,7 @@ msgstr "mrp_subcontracting"
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "name"
-msgstr "名前"
+msgstr "　"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_form
@@ -31770,7 +31890,7 @@ msgstr "snailmail_account"
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_sales_subscriptions
 msgid "subscriptions"
-msgstr ""
+msgstr "サブスクリプション"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_data_module_install

@@ -3,12 +3,12 @@
 # 	* sale_timesheet
 # 
 # Translators:
-# Ryoko Tsuda <ryoko@quartile.co>, 2022
 # Manami Hashi <manami@roomsfor.hk>, 2022
 # Martin Trigaux, 2022
 # Noma Yuki, 2022
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
+# Ryoko Tsuda <ryoko@quartile.co>, 2022
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -105,6 +105,9 @@ msgid ""
 "                        Billable Time\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                        請求可能時間\n"
+"                        </span>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.account_invoice_view_form_inherit_sale_timesheet
@@ -135,7 +138,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid "<u>Profitability</u>"
-msgstr ""
+msgstr "<u>収益性</u>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
@@ -160,7 +163,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:project.project,name:sale_timesheet.project_support
 msgid "After-Sales Services"
-msgstr ""
+msgstr "アフターサービス"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_profitability_report__other_revenues
@@ -226,7 +229,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_policy__delivered_manual
 msgid "Based on Milestones"
-msgstr ""
+msgstr "マイルストーンに基づく"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_policy__delivered_timesheet
@@ -248,7 +251,7 @@ msgstr ""
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Billable Time"
-msgstr ""
+msgstr "請求可能時間"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_type
@@ -463,12 +466,12 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "Default Sales Order Item"
-msgstr ""
+msgstr "販売オーダのデフォルトアイテム"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "Default Service"
-msgstr ""
+msgstr "デフォルトサービス"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__display_create_order
@@ -686,7 +689,7 @@ msgstr "仕訳明細"
 #: model:product.product,name:sale_timesheet.product_service_deliver_timesheet_2
 #: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_2_product_template
 msgid "Junior Architect (Invoice on Timesheets)"
-msgstr ""
+msgstr "ジュニア開発者（タイムシート請求）"
 
 #. module: sale_timesheet
 #: model:product.product,name:sale_timesheet.product_service_deliver_manual
@@ -847,7 +850,7 @@ msgstr "予定済"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_policy__ordered_timesheet
 msgid "Prepaid/Fixed Price"
-msgstr ""
+msgstr "前払/固定金額"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__pricing_type
@@ -931,7 +934,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__project_template_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template__project_template_id
 msgid "Project Template"
-msgstr ""
+msgstr "プロジェクトテンプレート"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_update
@@ -973,7 +976,7 @@ msgstr "準備完了"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 #, python-format
 msgid "Remaining"
-msgstr "残金"
+msgstr "残り"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_sharing_inherit_project_task_view_form
@@ -998,7 +1001,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_task_view_form_inherit_sale_timesheet
 msgid "Remaining Hours on SO"
-msgstr ""
+msgstr "販売オーダの残存時間"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_timesheet_table_inherit
@@ -1020,7 +1023,7 @@ msgstr "収益"
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
 msgid ""
 "Review your timesheets by billing type and make sure your time is billable."
-msgstr ""
+msgstr "請求タイプ別にタイムシートをレビューし、タイムシートが請求可能であることを確認してください。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__sale_order_id
@@ -1035,7 +1038,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__sale_line_id
 msgid "Sale Order Item"
-msgstr ""
+msgstr "販売オーダアイテム"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__sale_line_id
@@ -1178,7 +1181,7 @@ msgstr "サービスを販売し、消費時間で請求書発行"
 #: model:product.product,name:sale_timesheet.product_service_deliver_timesheet_1
 #: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_1_product_template
 msgid "Senior Architect (Invoice on Timesheets)"
-msgstr ""
+msgstr "シニア開発者（タイムシート請求）"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__product_id
@@ -1245,7 +1248,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_tree
 msgid "Sum of Timesheet Cost"
-msgstr ""
+msgstr "タイムシート費用合計"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_task
@@ -1381,7 +1384,7 @@ msgstr "タイムシート費用"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_pivot_billing_rate
 msgid "Timesheet Costs"
-msgstr ""
+msgstr "タイムシート費用"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__timesheet_unit_amount
@@ -1446,7 +1449,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_billing_report
 msgid "Timesheets by Billing Type"
-msgstr ""
+msgstr "請求タイプ別タイムシート"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -1462,7 +1465,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Timesheets taken into account when invoicing your time"
-msgstr ""
+msgstr "時間を請求するときに考慮されるタイムシート"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_res_config_settings__invoice_policy
@@ -1479,7 +1482,7 @@ msgstr "合計"
 #: code:addons/sale_timesheet/static/src/xml/sale_project_templates.xml:0
 #, python-format
 msgid "Total Sold"
-msgstr ""
+msgstr "合計販売額"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_invoice__amount_to_invoice
@@ -1514,7 +1517,7 @@ msgstr "サービス追跡"
 msgid ""
 "Track your working hours by projects every day and invoice this time to your"
 " customers."
-msgstr ""
+msgstr "プロジェクトごとに毎日、作業時間を記録し、その時間を顧客に請求しましょう。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__price_unit
@@ -1548,7 +1551,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_product_timesheet_form
 msgid "Warn the salesperson for an upsell when work done exceeds"
-msgstr ""
+msgstr "作業量が超過した場合、販売担当者に追加請求するよう注意する"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__warning_employee_rate

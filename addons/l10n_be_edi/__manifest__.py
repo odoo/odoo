@@ -19,5 +19,6 @@ Belgian e-invoicing uses the UBL 2.0 using the e-fff protocol.
     ],
     'installable': True,
     'auto_install': True,
+    'post_init_hook': '_post_init_hook',
     'license': 'LGPL-3',
 }

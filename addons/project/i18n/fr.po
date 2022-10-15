@@ -5,13 +5,14 @@
 # Translators:
 # Melanie Bernard <mbe@odoo.com>, 2021
 # Xavier Belmere <Info@cartmeleon.com>, 2021
-# SBO-Sebastien <sebastien@sbo-solutions.fr>, 2021
+# SBO-Sebastien <sbo@irokoo.fr>, 2021
 # Sebastien LANGE, 2021
 # Martin Trigaux, 2021
 # Grégory Schreiner <gregory@mokatourisme.fr>, 2022
 # Camille Dantinne <cmd@odoo.com>, 2022
-# Alexandra Jubert <aju@odoo.com>, 2022
 # Cécile Collart <cco@odoo.com>, 2022
+# Alexandra Jubert, 2022
+# Jolien De Paepe, 2022
 # 
 msgid ""
 msgstr ""
@@ -19,13 +20,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: project
 #. openerp-web
@@ -595,7 +596,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
 msgid "<span>Are you sure you want to delete this project ?</span>"
-msgstr "<span>Voulez-vous vraiment supprimer ce projet?</span>"
+msgstr "<span>Voulez-vous vraiment supprimer ce projet ?</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -685,6 +686,16 @@ msgstr ""
 " de partage du projet. Veuillez supprimer les doublons et réessayer."
 
 #. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"A personal stage cannot be linked to a project because it is only visible to"
+" its corresponding user."
+msgstr ""
+"Une étape personnelle ne peut pas être liée à un projet car elle n'est "
+"visible que par son utilisateur correspondant."
+
+#. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
 msgid "A task can only have a single personal stage per user."
 msgstr ""
@@ -766,6 +777,7 @@ msgid "Add Milestone"
 msgstr "Ajouter un Jalon"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Add a description..."
 msgstr "Ajouter une description…"
@@ -942,6 +954,7 @@ msgstr "Archiver le projet"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
+#: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_search
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -956,12 +969,12 @@ msgstr "Archivé"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
 msgid "Are you sure you want to continue?"
-msgstr "Voulez-vous vraiment continuer?"
+msgstr "Voulez-vous vraiment continuer ?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid "Are you sure you want to delete those stages ?"
-msgstr "Voulez-vous vraiment supprimer ces étapes?"
+msgstr "Voulez-vous vraiment supprimer ces étapes ?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1688,16 +1701,35 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
 #: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
 msgid ""
-"Defines the visibility of the tasks of the project:\n"
-"- Invited employees: employees may only see the followed project and tasks.\n"
-"- All employees: employees may see all project and tasks.\n"
-"- Invited portal users and all employees: employees may see everything.   Invited portal users may see project and tasks followed by.\n"
-"   them or by someone of their company."
+"People to whom this project and its tasks will be visible.\n"
+"\n"
+"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
+"\n"
+"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"\n"
+"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+"\n"
+"When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks, but not edit them.\n"
+"When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n"
+"\n"
+"In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
-"Définie la visibilité des tâches du projet:\n"
-"- Employés invités: les employés peuvent seulement voir les projets et tâches auxquels ils sont abonnés.\n"
-"- Tous les employés: les employés peuvent voir tous les projets et tâches.\n"
-"- Utilisateurs portail et tous les employés: les employés peuvent tout voir. Les utilisateurs portail peuvent voir les projets et tâches auxquels ils (ou quelqu'un de leur société) sont abonnés.  "
+"Personnes pour lesquelles ce projet et ses tâches seront visibles.\n"
+"\n"
+"- Utilisateurs internes invités: lorsqu'ils sont abonnés à un projet, les utilisateurs internes auront accès à toutes ses tâches sans distinction. Autrement, ils auront uniquement accès aux tâches spécifiques auxquelles ils sont abonnés.\n"
+"Un utilisateur avec le niveau de droits d'accès projet > administrateur peut toujours accéder au projet et à ses tâches, même s'il ne fait pas explicitement partie des abonnés.\n"
+" \n"
+"- Tous les utilisateurs internes: tous les utilisateurs internes peuvent accéder au projet et à toutes ses tâches sans distinction.\n"
+"\n"
+"- Utilisateurs portail invités et tous les utilisateurs internes: tous les utilisateurs internes peuvent accéder au projet et à toutes ses tâches sans distinction.\n"
+"Lorsqu'ils sont abonnés à un projet, les utilisateurs portail auront accès à toutes ses tâches sans distinction. Autrement, ils auront uniquement accès aux tâches spécifiques auxquelles ils sont abonnés.\n"
+"\n"
+"Lorsqu'un projet est partagé en lecture seule, l'utilisateur portail est redirigé vers son portail. Il peut voir les tâches, mais pas les modifier.\n"
+"Lorsqu'un projet est partagé en édition, l'utilisateur portail est redirigé vers les vues kanban et liste des tâches. Ils peuvent modifier un certain nombre de champs sur les tâches.\n"
+"\n"
+"Dans tous les cas, un utilisateur interne qui n'a pas de droits d'accès à projet peut toujours accéder à une tâche, à condition qu'on lui ait donné l'URL correspondant (et qu'il fasse partie des abonnés si le projet est privé)."
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
@@ -1890,6 +1922,13 @@ msgid "Edit"
 msgstr "Modifier"
 
 #. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project_kanban.js:0
+#, python-format
+msgid "Edit Personal Stage"
+msgstr "Modifier étape personnelle"
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Edit recurring task"
 msgstr "Modifier la tâche récurrente"
@@ -1953,14 +1992,14 @@ msgstr "Date de fin"
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
 msgid "Error! Project start date must be before project end date."
 msgstr ""
-"Erreur! La date de début du projet doit être antérieure à la date de fin du "
-"projet."
+"Erreur ! La date de début du projet doit être antérieure à la date de fin du"
+" projet."
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Error! You cannot create a recursive hierarchy of tasks."
-msgstr "Erreur! Vous ne pouvez pas créer une hiérarche récursive de tâches."
+msgstr "Erreur ! Vous ne pouvez pas créer une hiérarchie récursive de tâches."
 
 #. module: project
 #. openerp-web
@@ -2212,7 +2251,7 @@ msgid ""
 "\n"
 "Don't forget to set up the email templates on the stages for which you want to get customer feedback."
 msgstr ""
-"Comment avoir un retour client?\n"
+"Comment avoir un retour client ?\n"
 "- évaluation lors d'un changement d'étape: un email sera envoyé lorsqu'une tâche est poussée dans une autre étape.\n"
 "- évaluation périodique: des emails seront envoyés périodiquement.\n"
 "\n"
@@ -2221,7 +2260,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "How’s this project going?"
-msgstr "Comment se passe ce projet?"
+msgstr "Comment se passe ce projet ?"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3093,20 +3132,20 @@ msgstr "Pas de données"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_milestone_all
 msgid "No milestones found. Let's create one!"
-msgstr "Pas de jalons trouvés. Créons-en un!"
+msgstr "Pas de jalons trouvés. Créons-en un !"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_config
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_group_stage
 msgid "No projects found. Let's create one!"
-msgstr "Aucuns projets trouvés. Créons-en un!"
+msgstr "Aucuns projets trouvés. Créons-en un !"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 #: model_terms:ir.actions.act_window,help:project.project_project_stage_configure
 msgid "No stages found. Let's create one!"
-msgstr "Pas d'étapes trouvées. Créons-en une!"
+msgstr "Pas d'étapes trouvées. Créons-en une !"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
@@ -3119,7 +3158,7 @@ msgstr "Aucunes étiquettes trouvées. Créons-en une!"
 #: model_terms:ir.actions.act_window,help:project.action_view_task
 #: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_action
 msgid "No tasks found. Let's create one!"
-msgstr "Aucunes tâches trouvées. Créons-en une!"
+msgstr "Aucunes tâches trouvées. Créons-en une !"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_update_all_action
@@ -3245,7 +3284,7 @@ msgstr "En retard"
 #. module: project
 #: model:project.project,name:project.project_project_1
 msgid "Office Design"
-msgstr ""
+msgstr "Office Design"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -3284,7 +3323,7 @@ msgstr "Ouvert"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
 msgid "Open Tasks"
-msgstr "Ouvrir la tâche"
+msgstr "Tâches ouvertes"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
@@ -3996,7 +4035,7 @@ msgstr "Modèle de document concerné"
 #. module: project
 #: model:project.project,name:project.project_project_3
 msgid "Renovations"
-msgstr ""
+msgstr "Rénovations"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_day
@@ -4087,7 +4126,7 @@ msgstr "Recherche"
 #. module: project
 #: model:project.project,name:project.project_project_2
 msgid "Research & Development"
-msgstr ""
+msgstr "Recherche & Développement"
 
 #. module: project
 #. openerp-web
@@ -4505,7 +4544,7 @@ msgstr "Impression de T-shirt"
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
 msgid "Tag name already exists!"
-msgstr "Ce nom d'étiquette existe déjà!"
+msgstr "Ce nom d'étiquette existe déjà !"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_tags_action
@@ -4602,6 +4641,7 @@ msgstr "Récurrence de tâche"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
+#: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_tree
 msgid "Task Stage"
@@ -5439,6 +5479,17 @@ msgstr "Vous avez été assigné à "
 #, python-format
 msgid "You have not write access of %s field."
 msgstr "Vous n'avez pas de droits d'écriture pour le champ %s ."
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"You should at least have one personal stage. Create a new stage to which the"
+" tasks can be transferred after this one is deleted."
+msgstr ""
+"Vous devez avoir au moins une étape personnelle. Créez une nouvelle étape "
+"dans laquelle les tâches pourront être transférées lorsque celle-ci est "
+"supprimée."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form

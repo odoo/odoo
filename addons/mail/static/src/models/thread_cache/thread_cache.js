@@ -58,7 +58,7 @@ function factory(dependencies) {
                 return;
             }
             const messageIds = this.fetchedMessages.map(message => message.id);
-            const fetchedMessages = this._loadMessages({ minId: Math.max(...messageIds) });
+            const fetchedMessages = this._loadMessages({ minId: Math.max(...messageIds, 0) });
             if (!fetchedMessages || fetchedMessages.length === 0) {
                 return;
             }

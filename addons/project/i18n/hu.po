@@ -3,7 +3,6 @@
 # 	* project
 # 
 # Translators:
-# Tamás Dombos, 2021
 # Zsolt Godó <zsolttokio@gmail.com>, 2021
 # Istvan <leki69@gmail.com>, 2021
 # Martin Trigaux, 2021
@@ -14,6 +13,8 @@
 # krnkris, 2021
 # Csaba Tóth <i3rendszerhaz@gmail.com>, 2021
 # Tamás Németh <ntomasz81@gmail.com>, 2022
+# Gergő Kertész <gergo.kertesz@maxflow.hu>, 2022
+# Tamás Dombos, 2022
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2022\n"
+"Last-Translator: Tamás Dombos, 2022\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -581,6 +582,14 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"A personal stage cannot be linked to a project because it is only visible to"
+" its corresponding user."
+msgstr ""
+
+#. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
 msgid "A task can only have a single personal stage per user."
 msgstr ""
@@ -661,6 +670,7 @@ msgid "Add Milestone"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Add a description..."
 msgstr "Új leírás..."
@@ -829,6 +839,7 @@ msgstr "Projekt archiválása"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
+#: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_search
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -1553,11 +1564,20 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
 #: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
 msgid ""
-"Defines the visibility of the tasks of the project:\n"
-"- Invited employees: employees may only see the followed project and tasks.\n"
-"- All employees: employees may see all project and tasks.\n"
-"- Invited portal users and all employees: employees may see everything.   Invited portal users may see project and tasks followed by.\n"
-"   them or by someone of their company."
+"People to whom this project and its tasks will be visible.\n"
+"\n"
+"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
+"\n"
+"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"\n"
+"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+"\n"
+"When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks, but not edit them.\n"
+"When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n"
+"\n"
+"In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
 
 #. module: project
@@ -1747,6 +1767,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Edit"
 msgstr "Szerkesztés"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project_kanban.js:0
+#, python-format
+msgid "Edit Personal Stage"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -3790,7 +3817,7 @@ msgstr "Elutasított"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__resource_ref
 msgid "Related Document"
-msgstr ""
+msgstr "Kapcsolódó Dokumentum"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__res_id
@@ -4408,6 +4435,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
+#: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_tree
 msgid "Task Stage"
@@ -4762,7 +4790,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_update__name
 #, python-format
 msgid "Title"
-msgstr "Megszólítás"
+msgstr "Név"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_form
@@ -5215,7 +5243,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You have been assigned to %s"
-msgstr ""
+msgstr "Ön lett a felelőse ennek: %s"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_message_user_assigned
@@ -5226,6 +5254,14 @@ msgstr "Ön hozzárendelt ehhez"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You have not write access of %s field."
+msgstr ""
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"You should at least have one personal stage. Create a new stage to which the"
+" tasks can be transferred after this one is deleted."
 msgstr ""
 
 #. module: project

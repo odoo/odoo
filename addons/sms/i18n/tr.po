@@ -6,7 +6,6 @@
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2021
 # Levent Karakaş <levent@mektup.at>, 2021
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2021
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2021
 # Mehmet Demirel <mdemirell@gmail.com>, 2021
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2021
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
@@ -16,9 +15,11 @@
 # Ediz Duman <neps1192@gmail.com>, 2021
 # Martin Trigaux, 2021
 # Murat Kaplan <muratk@projetgrup.com>, 2021
-# Tugay Hatıl <tugayh@projetgrup.com>, 2021
 # Murat Durmuş <muratd@projetgrup.com>, 2021
 # Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2021
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
+# Tugay Hatıl <tugayh@projetgrup.com>, 2022
+# Halil, 2022
 # 
 msgid ""
 msgstr ""
@@ -26,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2021\n"
+"Last-Translator: Halil, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,7 +57,7 @@ msgstr "%s (kopya)"
 #: code:addons/sms/static/src/js/fields_sms_widget.js:0
 #, python-format
 msgid "%s characters, fits in %s SMS (%s) "
-msgstr "%skarakter, %sSMS'e sığar (%s)"
+msgstr "%s karakterler, %s SMS'e uyar (%s) "
 
 #. module: sms
 #: code:addons/sms/wizard/sms_composer.py:0
@@ -69,7 +70,7 @@ msgstr "%s geçersiz alıcı"
 #, python-format
 msgid ""
 "%s out of the %s selected SMS Text Messages have successfully been resent."
-msgstr ""
+msgstr "%s seçilen SMS Metin Mesajlarından %s başarıyla yeniden gönderildi."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -104,6 +105,8 @@ msgid ""
 "<span class=\"text-warning\" attrs=\"{'invisible': [('no_record', '=', "
 "False)]}\">No records</span>"
 msgstr ""
+"<span class=\"text-warning\" attrs=\"{'invisible': [('no_record', '=', "
+"False)]}\">Kayıt yok</span>"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction
@@ -141,7 +144,7 @@ msgstr ""
 #: code:addons/sms/static/src/components/notification_group/notification_group.xml:0
 #, python-format
 msgid "An error occurred when sending an SMS."
-msgstr ""
+msgstr "SMS gönderilirken bir hata oluştu."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model_id
@@ -156,6 +159,8 @@ msgid ""
 "Are you sure you want to discard %s SMS delivery failures? You won't be able"
 " to re-send these SMS later!"
 msgstr ""
+"SMS teslim hatalarından %s atmak istediğinizden emin misiniz? Bu SMS'leri "
+"daha sonra tekrar gönderemezsiniz!"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_attachment_count
@@ -193,7 +198,7 @@ msgstr "Kredi Satınal"
 #: code:addons/sms/models/sms_api.py:0
 #, python-format
 msgid "Buy credits."
-msgstr ""
+msgstr "Kredi satın alın."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_cancel
@@ -282,7 +287,7 @@ msgstr "Müşteri: otomatik SMS"
 #. module: sms
 #: model:sms.template,body:sms.sms_template_demo_0
 msgid "Dear {{ object.display_name }} this is an automated SMS."
-msgstr ""
+msgstr "Sevgili {{ object.display_name }} bu otomatik bir SMS'tir."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__null_value
@@ -369,7 +374,7 @@ msgstr "Hata"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__failure_type
 msgid "Failure Type"
-msgstr ""
+msgstr "Başarısızlık türü"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__failure_type
@@ -440,7 +445,7 @@ msgstr "SMS hatası var"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__has_unregistered_account
 msgid "Has Unregistered Account"
-msgstr ""
+msgstr "Kayıtlı Olmayan Hesabı Var"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_mail_mail__has_sms_error
@@ -562,6 +567,7 @@ msgstr ""
 #: model:ir.model.fields,help:sms.field_sms_composer__comment_single_recipient
 msgid "Indicates if the SMS composer targets a single specific recipient"
 msgstr ""
+"SMS oluşturucunun belirli bir alıcıyı hedefleyip hedeflemediğini gösterir"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_credit
@@ -572,13 +578,13 @@ msgstr "Yetersiz Kredi"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Invalid phone number"
-msgstr ""
+msgstr "Geçersiz telefon numarası."
 
 #. module: sms
 #: code:addons/sms/wizard/sms_composer.py:0
 #, python-format
 msgid "Invalid recipient number. Please update it."
-msgstr ""
+msgstr "Geçersiz alıcı numarası. Lütfen güncelleyin."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_is_follower
@@ -588,7 +594,7 @@ msgstr "Takipçi mi"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_valid
 msgid "Is valid"
-msgstr ""
+msgstr "Geçerli mi"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_keep_log
@@ -638,7 +644,7 @@ msgstr "Son Güncelleme"
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_mass_keep_log
 #: model:ir.model.fields,field_description:sms.field_ir_cron__sms_mass_keep_log
 msgid "Log as Note"
-msgstr ""
+msgstr "Not olarak kaydet"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__mail_message_id
@@ -733,7 +739,7 @@ msgstr "Numara"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__number_field_name
 msgid "Number Field"
-msgstr ""
+msgstr "Sayı alanı"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction_counter
@@ -761,11 +767,13 @@ msgid ""
 "Number of recipients that will receive the SMS if sent in mass mode, without"
 " applying the Active Domain value"
 msgstr ""
+"Etkin Etki Alanı değerini uygulamadan toplu modda gönderilirse SMS'i alacak "
+"alıcı sayısı"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__active_domain_count
 msgid "Number of records found when searching with the value in Active Domain"
-msgstr ""
+msgstr "Etkin Domain içindeki değerle arama yaparken bulunan kayıt sayısı"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__message_unread_counter
@@ -775,7 +783,7 @@ msgstr "Okunmamış mesaj adedi"
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_optout
 msgid "Opted Out"
-msgstr ""
+msgstr "Devre Dışı Bırakıldı"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__lang
@@ -785,6 +793,10 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
+"E-posta gönderirken seçmek için isteğe bağlı çeviri dili (ISO kodu). "
+"Ayarlanmazsa, İngilizce sürüm kullanılacaktır. Bu genellikle uygun dili "
+"sağlayan bir yer tutucu ifadesi olmalıdır, örneğin {{ object.partner_id.lang"
+" }}."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__null_value
@@ -856,7 +868,7 @@ msgstr "Alıcı"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_number_itf
 msgid "Recipient Number"
-msgstr ""
+msgstr "Alıcı Numarası"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__recipient_ids
@@ -891,7 +903,7 @@ msgstr "İlgili modelin bağlamsal eylemini kaldırın"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "İşleme Modeli"
 
 #. module: sms
 #: model:ir.actions.server,name:sms.ir_actions_server_sms_sms_resend
@@ -1117,7 +1129,7 @@ msgstr "Gönderme Hataları"
 #: code:addons/sms/models/ir_actions.py:0
 #, python-format
 msgid "Sending SMS can only be done on a mail.thread model"
-msgstr "SMS gönderme yalnızca mail.thread üzerinde yapılabilir."
+msgstr "SMS gönderme yalnızca mail.thread modeli üzerinde yapılabilir"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__sent
@@ -1138,7 +1150,7 @@ msgstr "Sunucu Hatası"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Set up an account"
-msgstr ""
+msgstr "Hesap oluşturma"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__sidebar_action_id
@@ -1156,7 +1168,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__comment_single_recipient
 msgid "Single Mode"
-msgstr ""
+msgstr "Tek Mod"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_resend_id
@@ -1171,7 +1183,7 @@ msgstr "SMS Şablonu"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_number
 msgid "Stored Recipient Number"
-msgstr ""
+msgstr "Saklanan Alıcı Numarası"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__sub_model_object_field
@@ -1208,13 +1220,13 @@ msgstr "Şablonlar"
 #: code:addons/sms/models/sms_sms.py:0
 #, python-format
 msgid "The SMS Text Messages could not be resent."
-msgstr ""
+msgstr "SMS Metin Mesajları yeniden gönderilemedi."
 
 #. module: sms
 #: code:addons/sms/models/sms_api.py:0
 #, python-format
 msgid "The number you're trying to reach is not correctly formatted."
-msgstr ""
+msgstr "Ulaşmaya çalıştığınız sayı doğru biçimlendirilmemiş."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__model_id
@@ -1226,14 +1238,15 @@ msgstr "Bu şablon ile birlikte kullanılabilen belge türünü"
 #: code:addons/sms/models/sms_sms.py:0
 #, python-format
 msgid "There are no SMS Text Messages to resend."
-msgstr ""
+msgstr "Yeniden gönderilecek SMS Metin Mesajları yoktur."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.res_partner_view_form
 msgid ""
 "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
 msgstr ""
-"This phone number is blacklisted for SMS Marketing. Click to unblacklist."
+"Bu telefon numarası SMS Pazarlama için kara listeye alınmıştır. Kara listeyi"
+" kaldırmak için tıklayın."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_mail__message_type
@@ -1270,6 +1283,8 @@ msgid ""
 "UX field allowing to edit the recipient number. If changed it will be stored"
 " onto the recipient."
 msgstr ""
+"Alıcı numarasının düzenlenmesine izin veren UX alanı. Değiştirilirse alıcıda"
+" saklanır."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_unread
@@ -1363,13 +1378,13 @@ msgstr "Mesaja ve / veya ilgili belgeye erişiminiz yok."
 #: code:addons/sms/models/sms_api.py:0
 #, python-format
 msgid "You don't have an eligible IAP account."
-msgstr ""
+msgstr "Uygun bir IAP hesabınız yok."
 
 #. module: sms
 #: code:addons/sms/models/sms_api.py:0
 #, python-format
 msgid "You don't have enough credits on your IAP account."
-msgstr ""
+msgstr "IAP hesabınızda yeterli krediniz yok."
 
 #. module: sms
 #. openerp-web
@@ -1377,7 +1392,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Your SMS Text Message must include at least one non-whitespace character"
-msgstr ""
+msgstr "SMS Metin Mesajınız boşluk bırakmayan en az bir karakter içermelidir"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1392,17 +1407,17 @@ msgstr "örneğin; +1 415 555 0100"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "e.g. Calendar Reminder"
-msgstr ""
+msgstr "örneğin Takvim Hatırlatıcısı"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "e.g. Contact"
-msgstr ""
+msgstr "örneğin İletişim"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "e.g. en_US or {{ object.partner_id.lang }}"
-msgstr ""
+msgstr "örneğin en_US veya {{ object.partner_id.lang }}"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form

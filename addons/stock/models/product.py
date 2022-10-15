@@ -257,7 +257,7 @@ class Product(models.Model):
                 if isinstance(item, int):
                     ids.add(item)
                 else:
-                    domain = expression.OR([[('name', 'ilike', item)], domain])
+                    domain = expression.OR([[(self.env[model]._rec_name, 'ilike', item)], domain])
             if domain:
                 ids |= set(self.env[model].search(domain).ids)
             return ids
@@ -575,6 +575,8 @@ class Product(models.Model):
         owner_id = self.env['res.partner'].browse(owner_id)
         to_uom = self.env['uom.uom'].browse(to_uom)
         quants = self.env['stock.quant']._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
+        if lot_id:
+            quants = quants.filtered(lambda q: q.lot_id == lot_id)
         theoretical_quantity = sum([quant.quantity for quant in quants])
         if to_uom and product_id.uom_id != to_uom:
             theoretical_quantity = product_id.uom_id._compute_quantity(theoretical_quantity, to_uom)
@@ -722,7 +724,7 @@ class ProductTemplate(models.Model):
 
     def _compute_quantities_dict(self):
         variants_available = {
-            p['id']: p for p in self.product_variant_ids.read(['qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty'])
+            p['id']: p for p in self.product_variant_ids._origin.read(['qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty'])
         }
         prod_available = {}
         for template in self:
@@ -730,7 +732,7 @@ class ProductTemplate(models.Model):
             virtual_available = 0
             incoming_qty = 0
             outgoing_qty = 0
-            for p in template.product_variant_ids:
+            for p in template.product_variant_ids._origin:
                 qty_available += variants_available[p.id]["qty_available"]
                 virtual_available += variants_available[p.id]["virtual_available"]
                 incoming_qty += variants_available[p.id]["incoming_qty"]

@@ -15,9 +15,11 @@
             <xpath expr="//button[@id='account_invoice_payment_btn']" position="after">
                 <field name="authorized_transaction_ids" invisible="1"/>
                 <button name="payment_action_capture" type="object"
+                        groups="account.group_account_invoice"
                         string="Capture Transaction" class="oe_highlight" data-hotkey="shift+g"
                         attrs="{'invisible': ['|', '|', ('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')), ('state', '!=', 'posted'), ('authorized_transaction_ids', '=', [])]}"/>
                 <button name="payment_action_void" type="object"
+                        groups="account.group_account_invoice"
                         string="Void Transaction" data-hotkey="shift+v"
                         confirm="Are you sure you want to void the authorized transaction? This action can't be undone."
                         attrs="{'invisible': ['|', '|', ('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')), ('state', '!=', 'posted'), ('authorized_transaction_ids', '=', [])]}"/>

@@ -5,6 +5,7 @@ odoo.define('website.content.snippets.animation', function (require) {
  * Provides a way to start JS code for snippets' initialization and animations.
  */
 
+const ajax = require('web.ajax');
 var Class = require('web.Class');
 var config = require('web.config');
 var core = require('web.core');
@@ -12,6 +13,7 @@ const dom = require('web.dom');
 var mixins = require('web.mixins');
 var publicWidget = require('web.public.widget');
 var utils = require('web.utils');
+const wUtils = require('website.utils');
 
 var qweb = core.qweb;
 
@@ -596,7 +598,55 @@ registry.Parallax = Animation.extend({
     },
 });
 
-registry.mediaVideo = publicWidget.Widget.extend({
+const MobileYoutubeAutoplayMixin = {
+    /**
+     * Takes care of any necessary setup for autoplaying video. In practice,
+     * this method will load the youtube iframe API for mobile environments
+     * because mobile environments don't support the youtube autoplay param
+     * passed in the url.
+     *
+     * @private
+     * @param {string} src - The source url of the video
+     */
+    _setupAutoplay: function (src) {
+        let promise = Promise.resolve();
+
+        this.isYoutubeVideo = src.indexOf('youtube') >= 0;
+        this.isMobileEnv = config.device.size_class <= config.device.SIZES.LG && config.device.touch;
+
+        if (this.isYoutubeVideo && this.isMobileEnv && !window.YT) {
+            const oldOnYoutubeIframeAPIReady = window.onYouTubeIframeAPIReady;
+            promise = new Promise(resolve => {
+                window.onYouTubeIframeAPIReady = () => {
+                    if (oldOnYoutubeIframeAPIReady) {
+                        oldOnYoutubeIframeAPIReady();
+                    }
+                    return resolve();
+                };
+            });
+            ajax.loadJS('https://www.youtube.com/iframe_api');
+        }
+
+        return promise;
+    },
+    /**
+     * @private
+     * @param {DOMElement} iframeEl - the iframe containing the video player
+     */
+    _triggerAutoplay: function (iframeEl) {
+        // YouTube does not allow to auto-play video in mobile devices, so we
+        // have to play the video manually.
+        if (this.isMobileEnv && this.isYoutubeVideo) {
+            new window.YT.Player(iframeEl, {
+                events: {
+                    onReady: ev => ev.target.playVideo(),
+                }
+            });
+        }
+    },
+};
+
+registry.mediaVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
     selector: '.media_iframe_video',
 
     /**
@@ -606,15 +656,36 @@ registry.mediaVideo = publicWidget.Widget.extend({
         // TODO: this code should be refactored to make more sense and be better
         // integrated with Odoo (this refactoring should be done in master).
 
-        var def = this._super.apply(this, arguments);
-        if (this.$target.children('iframe').length) {
-            // There already is an <iframe/>, do nothing. This is the normal
-            // case. The whole code that follows is only there to ensure
-            // compatibility with videos added before bug fixes or new Odoo
-            // versions where the <iframe/> element is properly saved.
-            return def;
+        const proms = [this._super.apply(this, arguments)];
+        let iframeEl = this.$target[0].querySelector(':scope > iframe');
+
+        // The following code is only there to ensure compatibility with
+        // videos added before bug fixes or new Odoo versions where the
+        // <iframe/> element is properly saved.
+        if (!iframeEl) {
+            iframeEl = this._generateIframe();
         }
 
+        if (!iframeEl) {
+            // Something went wrong: no iframe is present in the DOM and the
+            // widget was unable to create one on the fly.
+            return Promise.all(proms);
+        }
+
+        proms.push(this._setupAutoplay(iframeEl.getAttribute('src')));
+        return Promise.all(proms).then(() => {
+            this._triggerAutoplay(iframeEl);
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _generateIframe: function () {
         // Bug fix / compatibility: empty the <div/> element as all information
         // to rebuild the iframe should have been saved on the <div/> element
         this.$target.empty();
@@ -634,25 +705,25 @@ registry.mediaVideo = publicWidget.Widget.extend({
         var m = src.match(/^(?:https?:)?\/\/([^/?#]+)/);
         if (!m) {
             // Unsupported protocol or wrong URL format, don't inject iframe
-            return def;
+            return;
         }
         var domain = m[1].replace(/^www\./, '');
         var supportedDomains = ['youtu.be', 'youtube.com', 'youtube-nocookie.com', 'instagram.com', 'vine.co', 'player.vimeo.com', 'vimeo.com', 'dailymotion.com', 'player.youku.com', 'youku.com'];
         if (!_.contains(supportedDomains, domain)) {
             // Unsupported domain, don't inject iframe
-            return def;
+            return;
         }
-        this.$target.append($('<iframe/>', {
+        const iframeEl = $('<iframe/>', {
             src: src,
             frameborder: '0',
             allowfullscreen: 'allowfullscreen',
-        }));
-
-        return def;
+        })[0];
+        this.$target.append(iframeEl);
+        return iframeEl;
     },
 });
 
-registry.backgroundVideo = publicWidget.Widget.extend({
+registry.backgroundVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
     selector: '.o_background_video',
     xmlDependencies: ['/website/static/src/xml/website.background.video.xml'],
     disabledInEditableMode: false,
@@ -665,26 +736,13 @@ registry.backgroundVideo = publicWidget.Widget.extend({
 
         this.videoSrc = this.el.dataset.bgVideoSrc;
         this.iframeID = _.uniqueId('o_bg_video_iframe_');
-
-        this.isYoutubeVideo = this.videoSrc.indexOf('youtube') >= 0;
-        this.isMobileEnv = config.device.size_class <= config.device.SIZES.LG && config.device.touch;
-        if (this.isYoutubeVideo && this.isMobileEnv) {
-            this.videoSrc = this.videoSrc + "&enablejsapi=1";
-
-            if (!window.YT) {
-                var oldOnYoutubeIframeAPIReady = window.onYouTubeIframeAPIReady;
-                proms.push(new Promise(resolve => {
-                    window.onYouTubeIframeAPIReady = () => {
-                        if (oldOnYoutubeIframeAPIReady) {
-                            oldOnYoutubeIframeAPIReady();
-                        }
-                        return resolve();
-                    };
-                }));
-                $('<script/>', {
-                    src: 'https://www.youtube.com/iframe_api',
-                }).appendTo('head');
-            }
+        proms.push(this._setupAutoplay(this.videoSrc));
+        if (this.isYoutubeVideo && this.isMobileEnv && !this.videoSrc.includes('enablejsapi=1')) {
+            // Compatibility: when choosing an autoplay youtube video via the
+            // media manager, the API was not automatically enabled before but
+            // only enabled here in the case of background videos.
+            // TODO migrate those old cases so this code can be removed?
+            this.videoSrc += '&enablejsapi=1';
         }
 
         var throttledUpdate = _.throttle(() => this._adjustIframe(), 50);
@@ -785,16 +843,7 @@ registry.backgroundVideo = publicWidget.Widget.extend({
         $oldContainer.remove();
 
         this._adjustIframe();
-
-        // YouTube does not allow to auto-play video in mobile devices, so we
-        // have to play the video manually.
-        if (this.isMobileEnv && this.isYoutubeVideo) {
-            new window.YT.Player(this.iframeID, {
-                events: {
-                    onReady: ev => ev.target.playVideo(),
-                }
-            });
-        }
+        this._triggerAutoplay(this.$iframe[0]);
     },
 });
 
@@ -1135,6 +1184,10 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
         // Render elements and trigger the animation then pause it in state 0.
         this.$animatedElements = this.$target.find('.o_animate');
         _.each(this.$animatedElements, el => {
+            if (el.closest('.dropdown')) {
+                el.classList.add('o_animate_in_dropdown');
+                return;
+            }
             this._resetAnimation($(el));
         });
         // Then we render all the elements, the ones which are invisible
@@ -1148,14 +1201,9 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
         this.__onScrollWebsiteAnimate = _.throttle(this._onScrollWebsiteAnimate.bind(this), 200);
         this.$scrollingElement[0].addEventListener('scroll', this.__onScrollWebsiteAnimate, {capture: true});
 
-        $(window).on('resize.o_animate, shown.bs.modal.o_animate, slid.bs.carousel.o_animate, shown.bs.dropdown.o_animate', () => {
+        $(window).on('resize.o_animate, shown.bs.modal.o_animate, slid.bs.carousel.o_animate, shown.bs.tab.o_animate, shown.bs.collapse.o_animate', () => {
             this.windowsHeight = $(window).height();
-            let $scrollingElement = this.$scrollingElement;
-            const $openDropdown = $('.dropdown-menu.show:has(.o_animate)');
-            if ($openDropdown.length) {
-                $scrollingElement = $openDropdown;
-            }
-            this._scrollWebsiteAnimate($scrollingElement[0]);
+            this._scrollWebsiteAnimate(this.$scrollingElement[0]);
         }).trigger("resize");
 
         return this._super(...arguments);
@@ -1166,7 +1214,7 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
     destroy() {
         this._super(...arguments);
         this.$target.find('.o_animate')
-            .removeClass('o_animating o_animated o_animate_preview')
+            .removeClass('o_animating o_animated o_animate_preview o_animate_in_dropdown')
             .css({
                 'animation-name': '',
                 'animation-play-state': '',
@@ -1253,7 +1301,7 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
         const direction = (scroll < this.lastScroll) ? -1 : 1;
         this.lastScroll = scroll;
 
-        _.each(this.$target.find('.o_animate'), el => {
+        _.each(this.$target.find('.o_animate:not(.o_animate_in_dropdown)'), el => {
             const $el = $(el);
             const elHeight = $el.height();
             const elOffset = direction * Math.max((elHeight * this.offsetRatio), this.offsetMin);
@@ -1290,6 +1338,73 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
      */
     _onScrollWebsiteAnimate(ev) {
         this._scrollWebsiteAnimate(ev.currentTarget);
+    },
+});
+
+/**
+ * The websites, by default, use image lazy loading via the loading="lazy"
+ * attribute on <img> elements. However, this does not work great on all
+ * browsers. This widget fixes the behaviors with as less code as possible.
+ */
+registry.ImagesLazyLoading = publicWidget.Widget.extend({
+    selector: '#wrapwrap',
+
+    /**
+     * @override
+     */
+    start() {
+        // For each image on the page, force a 1px min-height so that Chrome
+        // understands the image exists on different zoom sizes of the browser.
+        // Indeed, without this, on a 90% zoom, some images were never loaded.
+        // Once the image has been loaded, the 1px min-height is removed.
+        // Note: another possible solution without JS would be this CSS rule:
+        // ```
+        // [loading="lazy"] {
+        //     min-height: 1px;
+        // }
+        // ```
+        // This would solve the problem the same way with a CSS rule with a
+        // very small priority (any class setting a min-height would still have
+        // priority). However, the min-height would always be forced even once
+        // the image is loaded, which could mess with some layouts relying on
+        // the image intrinsic min-height.
+        const imgEls = this.$target[0].querySelectorAll('img[loading="lazy"]');
+        for (const imgEl of imgEls) {
+            // Write initial min-height on the dataset, so that it can also
+            // be properly restored on widget destroy.
+            imgEl.dataset.lazyLoadingInitialMinHeight = imgEl.style.minHeight;
+            imgEl.style.minHeight = '1px';
+            wUtils.onceAllImagesLoaded($(imgEl)).then(() => {
+                if (this.isDestroyed()) {
+                    return;
+                }
+                this._restoreImage(imgEl);
+            });
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        const imgEls = this.$target[0].querySelectorAll('img[data-lazy-loading-initial-min-height]');
+        for (const imgEl of imgEls) {
+            this._restoreImage(imgEl);
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {HTMLImageElement} imgEl
+     */
+    _restoreImage(imgEl) {
+        imgEl.style.minHeight = imgEl.dataset.lazyLoadingInitialMinHeight;
+        delete imgEl.dataset.lazyLoadingInitialMinHeight;
     },
 });
 

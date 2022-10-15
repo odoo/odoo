@@ -7,10 +7,10 @@
 # Martin Trigaux, 2021
 # Levent Karakaş <levent@mektup.at>, 2021
 # Murat Kaplan <muratk@projetgrup.com>, 2021
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2021
 # Umur Akın <umura@projetgrup.com>, 2021
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
 # ANIL TAN SAĞIR <anils@projetgrup.com>, 2021
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: ANIL TAN SAĞIR <anils@projetgrup.com>, 2021\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,8 +32,8 @@ msgid ""
 "1 credit is consumed per visitor matching the website traffic conditions and"
 " whose company can be identified.<br/>"
 msgstr ""
-"1 credit is consumed per visitor matching the website traffic conditions and"
-" whose company can be identified.<br/>"
+"Web sitesi trafik koşullarına uyan ve şirketi tanımlanabilen ziyaretçi "
+"başına 1 kredi tüketilir.<br/>"
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
@@ -69,7 +69,8 @@ msgstr "CRM Reveal View"
 #: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__lead_for
 msgid "Choose whether to track companies only or companies and their contacts"
 msgstr ""
-"Choose whether to track companies only or companies and their contacts"
+"Yalnızca şirketleri mi yoksa şirketleri ve kişilerini mi izleyeceğinizi "
+"seçin"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__lead_for__companies
@@ -79,22 +80,22 @@ msgstr "Şirketler"
 #. module: crm_iap_lead_website
 #: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__lead_for__people
 msgid "Companies and their Contacts"
-msgstr "Companies and their Contacts"
+msgstr "Şirketler ve Bağlantıları"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__company_size_min
 msgid "Company Size"
-msgstr "Company Size"
+msgstr "Şirket büyüklüğü"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__company_size_max
 msgid "Company Size Max"
-msgstr "Company Size Max"
+msgstr "Maksimum Şirket Büyüklüğü"
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "Contact Filter"
-msgstr "Contact Filter"
+msgstr "Kontak Filtresi"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__country_ids
@@ -109,14 +110,15 @@ msgstr "Oluşturma Tarihi"
 #. module: crm_iap_lead_website
 #: model_terms:ir.actions.act_window,help:crm_iap_lead_website.crm_reveal_rule_action
 msgid "Create a conversion rule"
-msgstr "Create a conversion rule"
+msgstr "Dönüşüm kuralı oluşturma"
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.actions.act_window,help:crm_iap_lead_website.crm_reveal_rule_action
 msgid ""
 "Create rules to generate B2B leads/opportunities from your website visitors."
 msgstr ""
-"Create rules to generate B2B leads/opportunities from your website visitors."
+"Web sitesi ziyaretçilerinizden B2B potansiyel müşteriler/fırsatlar "
+"oluşturmak için kurallar oluşturun."
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__create_uid
@@ -144,7 +146,7 @@ msgstr "Görünüm Adı"
 #: code:addons/crm_iap_lead_website/models/crm_reveal_rule.py:0
 #, python-format
 msgid "Enter Valid Regex."
-msgstr "Enter Valid Regex."
+msgstr "Geçerli Regex girin."
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__contact_filter_type
@@ -154,12 +156,12 @@ msgstr "Filter On"
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__filter_on_size
 msgid "Filter companies based on their size."
-msgstr "Filter companies based on their size."
+msgstr "Şirketleri büyüklüklerine göre filtreleyin."
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__filter_on_size
 msgid "Filter on Size"
-msgstr "Filter on Size"
+msgstr "Boyuta Göre Filtrele"
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
@@ -184,7 +186,7 @@ msgstr "Yüksek"
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_lead__reveal_iap_credits
 msgid "IAP Credits"
-msgstr "IAP Credits"
+msgstr "IAP Kredileri"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__id
@@ -246,7 +248,7 @@ msgstr "Aday Oluşturma Kuralı"
 #: model:ir.actions.act_window,name:crm_iap_lead_website.crm_reveal_view_action
 #: model:ir.ui.menu,name:crm_iap_lead_website.crm_reveal_view_menu_action
 msgid "Lead Generation Views"
-msgstr "Lead Generation Views"
+msgstr "Potansiyel Müşteri Oluşturma Görünümleri"
 
 #. module: crm_iap_lead_website
 #: code:addons/crm_iap_lead_website/models/crm_reveal_rule.py:0
@@ -255,15 +257,15 @@ msgid ""
 "Lead Generation requires a GeoIP resolver which could not be found on your "
 "system. Please consult https://pypi.org/project/GeoIP/."
 msgstr ""
-"Lead Generation requires a GeoIP resolver which could not be found on your "
-"system. Please consult https://pypi.org/project/GeoIP/."
+"Müşteri Adayı Oluşturma, sisteminizde bulunamayan bir GeoIP çözümleyici "
+"gerektirir. Lütfen https://pypi.org/project/GeoIP/ adresine bakın."
 
 #. module: crm_iap_lead_website
 #: model:ir.actions.server,name:crm_iap_lead_website.ir_cron_crm_reveal_lead_ir_actions_server
 #: model:ir.cron,cron_name:crm_iap_lead_website.ir_cron_crm_reveal_lead
 #: model:ir.cron,name:crm_iap_lead_website.ir_cron_crm_reveal_lead
 msgid "Lead Generation: Leads/Opportunities Generation"
-msgstr "Aday Oluşturma: Adaylar/Fırsatlar Oluşturma "
+msgstr "Aday Oluşturma: Adaylar/Fırsatlar Oluşturma"
 
 #. module: crm_iap_lead_website
 #: model:ir.model,name:crm_iap_lead_website.model_crm_lead
@@ -288,13 +290,13 @@ msgid ""
 "Make sure you know if you have to be GDPR compliant for storing personal "
 "data."
 msgstr ""
-"Make sure you know if you have to be GDPR compliant for storing personal "
-"data."
+"Kişisel verileri depolamak için GDPR uyumlu olmanız gerekip gerekmediğini "
+"bildiğinizden emin olun."
 
 #. module: crm_iap_lead_website
 #: model:ir.model.constraint,message:crm_iap_lead_website.constraint_crm_reveal_rule_limit_extra_contacts
 msgid "Maximum 5 contacts are allowed!"
-msgstr "Maximum 5 contacts are allowed!"
+msgstr "En fazla 5 kişiye izin verilir!"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__priority__1
@@ -305,7 +307,7 @@ msgstr "Mecra"
 #: code:addons/crm_iap_lead_website/models/crm_reveal_rule.py:0
 #, python-format
 msgid "Missing Library"
-msgstr "Missing Library"
+msgstr "Eksik Kütüphane"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_view__reveal_state__not_found
@@ -342,8 +344,8 @@ msgid ""
 "Only visitors of following states will be converted into "
 "leads/opportunities."
 msgstr ""
-"Only visitors of following states will be converted into "
-"leads/opportunities."
+"Yalnızca aşağıdaki eyaletlerin ziyaretçileri potansiyel "
+"müşterilere/fırsatlara dönüştürülecektir."
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__lead_type__opportunity
@@ -388,14 +390,14 @@ msgid ""
 "to target the homepage. Example: /page* to track all the pages which begin "
 "with /page"
 msgstr ""
-"Regex to track website pages. Leave empty to track the entire website, or / "
-"to target the homepage. Example: /page* to track all the pages which begin "
-"with /page"
+"Web sitesi sayfalarını izlemek için Regex. Web sitesinin tamamını izlemek "
+"veya / ana sayfayı hedeflemek için boş bırakın. Örnek: /page* /page ile "
+"başlayan tüm sayfaları izlemek için"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__website_id
 msgid "Restrict Lead generation to this website."
-msgstr "Restrict Lead generation to this website."
+msgstr "Müşteri adayı oluşturmayı bu web sitesiyle sınırlayın."
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__contact_filter_type__role
@@ -425,7 +427,7 @@ msgstr "Satış Temsilcisi"
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_view_search
 msgid "Search CRM Reveal Rule"
-msgstr "Search CRM Reveal Rule"
+msgstr "Arama CRM Gösterim Kuralı"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__seniority_id
@@ -465,9 +467,10 @@ msgid ""
 "criteria. Their details will show up in the history thread of generated "
 "leads/opportunities. One credit is consumed per tracked contact."
 msgstr ""
-"This is the number of contacts to track if their role/seniority match your "
-"criteria. Their details will show up in the history thread of generated "
-"leads/opportunities. One credit is consumed per tracked contact."
+"Bu, rollerinin / kıdemlerinin ölçütlerinizle eşleşip eşleşmediğini izlenecek"
+" ilgili kişi sayısıdır. Ayrıntıları, oluşturulan potansiyel müşterilerin / "
+"fırsatların geçmiş başlığında görünecektir. İzlenen kişi başına bir kredi "
+"kullanılır."
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__suffix
@@ -476,7 +479,7 @@ msgid ""
 "lead/opportunity is generated with this rule"
 msgstr ""
 "Bu, oluşturulan adayın ismine eklenmiş olacaktır, bu yüzden, bu rol ile "
-"oluşturulan adayı/fırsatı tanımlayabilirsiniz. "
+"oluşturulan adayı/fırsatı tanımlayabilirsiniz"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_view__reveal_state__to_process
@@ -516,7 +519,7 @@ msgstr "Çok Yüksek"
 #: model:ir.actions.act_window,name:crm_iap_lead_website.crm_reveal_rule_action
 #: model:ir.ui.menu,name:crm_iap_lead_website.crm_reveal_rule_menu_action
 msgid "Visits to Leads Rules"
-msgstr "Visits to Leads Rules"
+msgstr "Müşteri Adayları Kurallarına Ziyaretler"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__website_id
@@ -526,17 +529,17 @@ msgstr "Websitesi"
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "Website Traffic Conditions"
-msgstr "Website Traffic Conditions"
+msgstr "Web Sitesi Trafik Koşulları"
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "additional credit(s) are consumed if the company matches this rule."
-msgstr "additional credit(s) are consumed if the company matches this rule."
+msgstr "şirket bu kurala uyuyorsa ek kredi(ler) tüketilir."
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "e.g. /page"
-msgstr "e.g. /page"
+msgstr "örn. /page"
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
@@ -546,7 +549,7 @@ msgstr "örn. Amerikan Ziyaretçiler"
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "employees"
-msgstr "employees"
+msgstr "personel"
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form

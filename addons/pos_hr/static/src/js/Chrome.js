@@ -20,6 +20,9 @@ odoo.define('pos_hr.chrome', function (require) {
             shouldShowCashControl() {
                 return super.shouldShowCashControl() && this.env.pos.hasLoggedIn;
             }
+            _shouldResetIdleTimer() {
+                return super._shouldResetIdleTimer() && this.tempScreen.name !== 'LoginScreen';
+            }
         };
 
     Registries.Component.extend(Chrome, PosHrChrome);

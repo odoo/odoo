@@ -50,8 +50,8 @@ class _Cleaner(clean.Cleaner):
     _style_re = re.compile(r'''([\w-]+)\s*:\s*((?:[^;"']|"[^";]*"|'[^';]*')+)''')
 
     _style_whitelist = [
-        'font-size', 'font-family', 'font-weight', 'background-color', 'color', 'text-align',
-        'line-height', 'letter-spacing', 'text-transform', 'text-decoration', 'opacity',
+        'font-size', 'font-family', 'font-weight', 'font-style', 'background-color', 'color', 'text-align',
+        'line-height', 'letter-spacing', 'text-transform', 'text-decoration', 'text-decoration', 'opacity',
         'float', 'vertical-align', 'display',
         'padding', 'padding-top', 'padding-left', 'padding-bottom', 'padding-right',
         'margin', 'margin-top', 'margin-left', 'margin-bottom', 'margin-right',
@@ -265,7 +265,7 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
 # ----------------------------------------------------------
 
 URL_REGEX = r'(\bhref=[\'"](?!mailto:|tel:|sms:)([^\'"]+)[\'"])'
-TEXT_URL_REGEX = r'https?://[a-zA-Z0-9@:%._\+~#=/-]+(?:\?\S+)?'
+TEXT_URL_REGEX = r'https?://[\w@:%.+&~#=/-]+(?:\?\S+)?'
 # retrieve inner content of the link
 HTML_TAG_URL_REGEX = URL_REGEX + r'([^<>]*>([^<>]+)<\/)?'
 

@@ -256,10 +256,6 @@ class Lang(models.Model):
         langs = self.with_context(active_test=True).search([])
         return sorted([(lang.code, lang.name) for lang in langs], key=itemgetter(1))
 
-    def action_archive(self):
-        self.ensure_one()
-        self.active = False
-
     def toggle_active(self):
         super().toggle_active()
         # Automatically load translation

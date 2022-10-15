@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
@@ -250,12 +250,12 @@ msgstr "KPIs"
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_mail_message_total_value
 msgid "Kpi Mail Message Total Value"
-msgstr "KPI Valor total de mensajes"
+msgstr "Valor KPI total de mensajes"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_res_users_connected_value
 msgid "Kpi Res Users Connected Value"
-msgstr "Valor de Kpi de usuarios conectados"
+msgstr "Valor KPI de usuarios conectados"
 
 #. module: digest
 #: code:addons/digest/models/digest.py:0
@@ -557,7 +557,7 @@ msgstr "Su resumen periódico de Odoo"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "e.g. Your Weekly Digest"
-msgstr "ej. Tu resumen semanal"
+msgstr "Por ejemplo, Tu resumen semanal"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form

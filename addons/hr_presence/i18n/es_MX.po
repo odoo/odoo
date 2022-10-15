@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: hr_presence
 #: model:mail.template,body_html:hr_presence.mail_template_presence
@@ -33,7 +33,7 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"                    Estimado <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br/><br/>\n"
+"                    Apreciable <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br/><br/>\n"
 "                    Ignore esto si es un error de nuestra parte, parece ser que no está en su oficina y no hay ninguna solicitud de tiempo personal de su parte.<br/>\n"
 "                    Tome las medidas adecuadas para poder llevar a cabo esta ausencia laboral.<br/>\n"
 "                    No dude en contactar a su gerente o al departamento de recursos humanos.\n"
@@ -115,7 +115,7 @@ msgid ""
 "Please, take appropriate measures in order to carry out this work absence.\n"
 "Do not hesitate to contact your manager or the human resource department."
 msgstr ""
-"Excepción hecha si hubo un error de nuestra parte, parece que no está en su oficina y no hay alguna solicitud de tiempo personal de su parte.\n"
+"Haga caso omiso si hubo un error de nuestra parte, parece que no está en su oficina y no hay alguna solicitud de tiempo personal de su parte.\n"
 "Por favor, tome las medidas apropiadas con el fin de llevar a cabo esta ausencia laboral.\n"
 "No dude en contactar a su gerente o al departamento de recursos humanos."
 
@@ -124,19 +124,19 @@ msgstr ""
 #: model:ir.cron,cron_name:hr_presence.ir_cron_presence_control
 #: model:ir.cron,name:hr_presence.ir_cron_presence_control
 msgid "HR Presence: cron"
-msgstr "Presencia RRHH: cron"
+msgstr "Presencia RR. HH.: cron"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_last_compute_date
 msgid "Hr Presence Last Compute Date"
-msgstr "Presencia RRHH Última fecha de cálculo"
+msgstr "Presencia RR. HH. Última fecha de cálculo"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__hr_presence_state_display
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__hr_presence_state_display
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__hr_presence_state_display
 msgid "Hr Presence State Display"
-msgstr "Visualización de estado de Presencia RRHH "
+msgstr "Visualización de estado de Presencia RR. HH. "
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__ip

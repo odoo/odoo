@@ -27,12 +27,13 @@
 # Mariusz, 2021
 # Andrzej Donczew <a.donczew@hadron.eu.com>, 2021
 # Paweł Wodyński <pw@myodoo.pl>, 2021
-# Maksym <ms@myodoo.pl>, 2021
 # Jan Dziurz <jan.dziurzynski@openglobe.pl>, 2021
 # DanielDemedziuk <daniel.demedziuk@gmail.com>, 2021
 # Rafał Kozak <rafal.kozak@openglobe.pl>, 2021
 # Dawid Prus, 2021
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2022
+# Maksym <ms@myodoo.pl>, 2022
+# Jacek Michalski <michalski.jck@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -40,7 +41,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:20+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2022\n"
+"Last-Translator: Jacek Michalski <michalski.jck@gmail.com>, 2022\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -955,7 +956,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Choose between electronic signatures or online payments."
-msgstr ""
+msgstr "Wybierz pomiędzy podpisami elektronicznymi lub płatnościami online."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_open_sale_onboarding_payment_acquirer_wizard
@@ -1123,7 +1124,7 @@ msgstr "Utwórz nowy produkt"
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_with_onboarding
 #: model_terms:ir.actions.act_window,help:sale.action_sale_order_form_view
 msgid "Create a new quotation, the first step of a new sale!"
-msgstr ""
+msgstr "Utwórz nową ofertę, to pierwszy krok do nowej sprzedaży!"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -1519,6 +1520,12 @@ msgid "Down Payments"
 msgstr "Zaliczek"
 
 #. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid "Down payment"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
 msgid "Down payment (fixed amount)"
 msgstr "Zaliczki (ustalona kwota)"
@@ -1605,7 +1612,7 @@ msgstr "Przewidywana data"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Expected:"
-msgstr ""
+msgstr "Spodziewany:"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__expense_policy
@@ -1713,7 +1720,7 @@ msgstr "Przyszłe czynności"
 #. module: sale
 #: model:ir.model,name:sale.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
-msgstr ""
+msgstr "Wygeneruj link do płatności."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_generate_link
@@ -2356,7 +2363,7 @@ msgstr "Po potwierdzeniu nie można już edytować zamówień"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
 msgid "No orders to invoice found"
-msgstr ""
+msgstr "Nie znaleziono zamówień do zafakturowania"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
@@ -2459,6 +2466,8 @@ msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales "
 "order.<br> You will be able to create an invoice and collect the payment."
 msgstr ""
+"Po potwierdzeniu oferty przez klienta, staje się ona zamówieniem "
+"sprzedaży.<br> Będziesz mógł stworzyć fakturę i odebrać płatność."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders
@@ -2870,6 +2879,7 @@ msgstr "Warianty produktu"
 #, python-format
 msgid "Product prices have been recomputed according to pricelist <b>%s<b> "
 msgstr ""
+"Ceny produktów zostały ponownie obliczone zgodnie z cennikiem <b>%s<b> "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2977,7 +2987,7 @@ msgstr "Data oferty"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
 msgid "Quotation Layout"
-msgstr ""
+msgstr "Układ oferty"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__sent
@@ -3398,7 +3408,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
 msgid "Sample Quotation"
-msgstr ""
+msgstr "Przykładowa wycena"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -3480,7 +3490,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
 msgid "Send a quotation to test the customer portal."
-msgstr ""
+msgstr "Wyślij ofertę, aby przetestować portal klienta."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3490,7 +3500,7 @@ msgstr "Wyślij mailem"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
 msgid "Send sample"
-msgstr ""
+msgstr "Wyślij próbkę"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3529,7 +3539,7 @@ msgstr "Ustaw wiele cen za produkt, automatyczne rabaty itp."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Set payments"
-msgstr ""
+msgstr "Ustaw płatności"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3599,7 +3609,7 @@ msgstr "Podpisano przez"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signed_on
 msgid "Signed On"
-msgstr ""
+msgstr "Podpisano w dniu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__sales_count
@@ -4368,7 +4378,7 @@ msgstr "Historia komunikacji"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Write a company name to create one, or see suggestions."
-msgstr ""
+msgstr "Napisz nazwę firmy, aby ją stworzyć, lub zobaczyć sugestie."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_sale_form_view
@@ -4397,6 +4407,8 @@ msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "                or check every order and invoice them one by one."
 msgstr ""
+"Możesz wybrać wszystkie zamówienia i zafakturować je grupowo,<br>\n"
+"lub zaznaczyć każde zamówienie i fakturować je pojedynczo."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_acquirer__so_reference_type
@@ -4404,6 +4416,15 @@ msgid ""
 "You can set here the communication type that will appear on sales orders.The"
 " communication will be given to the customer when they choose the payment "
 "method."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+#, python-format
+msgid ""
+"You cannot change the product's type because it is already used in sales "
+"orders."
 msgstr ""
 
 #. module: sale
@@ -4429,7 +4450,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been confirmed."
-msgstr ""
+msgstr "Twoje zamówienie zostało potwierdzone."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template

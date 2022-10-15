@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_answers
@@ -3223,7 +3223,7 @@ msgstr "Sostenitore"
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_tag_view_form
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Tag"
-msgstr "Etichetta"
+msgstr "Tag"
 
 #. module: website_forum
 #: model:ir.model.constraint,message:website_forum.constraint_forum_tag_name_uniq
@@ -4051,7 +4051,7 @@ msgstr "domande su proposte di servizi Odoo particolari ecc."
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "tag"
-msgstr "come etichetta"
+msgstr "tag"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help

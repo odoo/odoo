@@ -1,11 +1,13 @@
 # # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import datetime, date
 from odoo.exceptions import ValidationError
+from odoo.tests import tagged
 from odoo.addons.hr_work_entry_holidays.tests.common import TestWorkEntryHolidaysBase
 
 
+@tagged('work_entry_multi_contract')
 class TestWorkEntryHolidaysMultiContract(TestWorkEntryHolidaysBase):
 
     def setUp(self):
@@ -117,3 +119,53 @@ class TestWorkEntryHolidaysMultiContract(TestWorkEntryHolidaysBase):
 
         leave._compute_number_of_hours_display()
         self.assertEqual(leave.number_of_hours_display, 14, "It should count hours according to the future contract.")
+
+    def test_leave_multi_contracts_same_schedule(self):
+        # Allow leaves overlapping multiple contracts if same
+        # resource calendar
+        leave = self.create_leave(datetime(2022, 6, 1, 7, 0, 0), datetime(2022, 6, 30, 18, 0, 0))
+        leave.action_approve()
+        self.contract_cdi.date_end = date(2022, 6, 15)
+
+        new_contract_cdi = self.env['hr.contract'].create({
+            'date_start': date(2022, 6, 16),
+            'name': 'New Contract for Jules',
+            'resource_calendar_id': self.calendar_35h.id,
+            'wage': 5000.0,
+            'employee_id': self.jules_emp.id,
+            'state': 'draft',
+            'kanban_state': 'normal',
+        })
+        new_contract_cdi.state = 'open'
+
+    def test_leave_multi_contracts_split(self):
+        # Check that setting a contract as running correctly
+        # splits the existing time off for this employee that
+        # are ovelapping with another contract with another
+        # working schedule
+        leave = self.create_leave(datetime(2022, 6, 1, 5, 0, 0), datetime(2022, 6, 30, 20, 0, 0))
+        leave.action_approve()
+        self.assertEqual(leave.number_of_days, 22)
+        self.assertEqual(leave.state, 'validate')
+
+        self.contract_cdi.date_end = date(2022, 6, 15)
+        new_contract_cdi = self.env['hr.contract'].create({
+            'date_start': date(2022, 6, 16),
+            'name': 'New Contract for Jules',
+            'resource_calendar_id': self.calendar_40h.id,
+            'wage': 5000.0,
+            'employee_id': self.jules_emp.id,
+            'state': 'draft',
+            'kanban_state': 'normal',
+        })
+        new_contract_cdi.state = 'open'
+
+        leaves = self.env['hr.leave'].search([('employee_id', '=', self.jules_emp.id)])
+        self.assertEqual(len(leaves), 3)
+        self.assertEqual(leave.state, 'refuse')
+        first_leave = leaves.filtered(lambda l: l.date_from.day == 1 and l.date_to.day == 15)
+        self.assertEqual(first_leave.state, 'validate')
+        self.assertEqual(first_leave.number_of_days, 11)
+        second_leave = leaves.filtered(lambda l: l.date_from.day == 16 and l.date_to.day == 30)
+        self.assertEqual(second_leave.state, 'validate')
+        self.assertEqual(second_leave.number_of_days, 11)

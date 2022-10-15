@@ -75,7 +75,13 @@ def extract_rfc2822_addresses(text):
     if not text:
         return []
     candidates = address_pattern.findall(ustr(text))
-    return [formataddr(('', c), charset='ascii') for c in candidates]
+    valid_addresses = []
+    for c in candidates:
+        try:
+            valid_addresses.append(formataddr(('', c), charset='ascii'))
+        except idna.IDNAError:
+            pass
+    return valid_addresses
 
 
 class IrMailServer(models.Model):
@@ -708,4 +714,4 @@ class IrMailServer(models.Model):
         Can be overridden in tests after mocking the SMTP lib to test in depth the
         outgoing mail server.
         """
-        return getattr(threading.currentThread(), 'testing', False) or self.env.registry.in_test_mode()
+        return getattr(threading.current_thread(), 'testing', False) or self.env.registry.in_test_mode()

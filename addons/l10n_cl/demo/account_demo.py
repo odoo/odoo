@@ -30,7 +30,7 @@ class AccountChartTemplate(models.Model):
         ref = self.env.ref
         cid = self.env.company.id
         model, data = super()._get_demo_data_move()
-        if self.env.company.country_code == "CL":
+        if self.env.company.account_fiscal_country_id.code == "CL":
             foreign = ref('l10n_cl.dc_fe_dte').id
             self.env['account.journal'].search([
                 ('type', '=', 'purchase'),

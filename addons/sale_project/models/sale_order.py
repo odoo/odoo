@@ -17,8 +17,8 @@ class SaleOrder(models.Model):
     project_id = fields.Many2one(
         'project.project', 'Project', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
         help='Select a non billable project on which tasks can be created.')
-    project_ids = fields.Many2many('project.project', compute="_compute_project_ids", string='Projects', copy=False, groups="project.group_project_user", help="Projects used in this sales order.")
-    project_count = fields.Integer(string='Number of Projects', compute='_compute_project_ids', groups='project.group_project_user')
+    project_ids = fields.Many2many('project.project', compute="_compute_project_ids", string='Projects', copy=False, groups="project.group_project_manager", help="Projects used in this sales order.")
+    project_count = fields.Integer(string='Number of Projects', compute='_compute_project_ids', groups='project.group_project_manager')
 
     @api.depends('order_line.product_id.project_id')
     def _compute_tasks_ids(self):
@@ -112,7 +112,7 @@ class SaleOrder(models.Model):
 
     def write(self, values):
         if 'state' in values and values['state'] == 'cancel':
-            self.project_id.sale_line_id = False
+            self.project_id.sudo().sale_line_id = False
         return super(SaleOrder, self).write(values)
 
 
@@ -355,8 +355,9 @@ class SaleOrderLine(models.Model):
         """
         values = super(SaleOrderLine, self)._prepare_invoice_line(**optional_values)
         if not values.get('analytic_account_id'):
-            if self.task_id.analytic_account_id:
-                values['analytic_account_id'] = self.task_id._get_task_analytic_account_id().id
+            task_analytic_account = self.task_id._get_task_analytic_account_id() if self.task_id else False
+            if task_analytic_account:
+                values['analytic_account_id'] = task_analytic_account.id
             elif self.project_id.analytic_account_id:
                 values['analytic_account_id'] = self.project_id.analytic_account_id.id
             elif self.is_service and not self.is_expense:

@@ -6,11 +6,11 @@
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2022
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2022
 # Arunas V. <arunas@devoro.com>, 2022
+# Silvija Butko <silvija.butko@gmail.com>, 2022
 # Aleksandr Jadov <a.jadov@tata.lt>, 2022
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2022
 # Anatolij, 2022
 # Martin Trigaux, 2022
-# Silvija Butko <silvija.butko@gmail.com>, 2022
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2022
 # Linas Versada <linaskrisiukenas@gmail.com>, 2022
 # 
@@ -61,13 +61,8 @@ msgstr "Leidžiama"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__auth_endpoint
-msgid "Authentication URL"
-msgstr "Autentifikacijos URL"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__body
-msgid "Body"
-msgstr "Turinys"
+msgid "Authorization URL"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__css_class
@@ -102,8 +97,8 @@ msgstr "Sukurta"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__data_endpoint
-msgid "Data URL"
-msgstr "Duomenų URL"
+msgid "Data Endpoint"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__display_name
@@ -141,11 +136,6 @@ msgid "Last Updated on"
 msgstr "Paskutinį kartą atnaujinta"
 
 #. module: auth_oauth
-#: model:ir.model.fields,help:auth_oauth.field_auth_oauth_provider__body
-msgid "Link text in Login Dialog"
-msgstr ""
-
-#. module: auth_oauth
 #: model:auth.oauth.provider,body:auth_oauth.provider_facebook
 msgid "Log in with Facebook"
 msgstr ""
@@ -158,6 +148,11 @@ msgstr ""
 #. module: auth_oauth
 #: model:auth.oauth.provider,body:auth_oauth.provider_openerp
 msgid "Log in with Odoo.com"
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__body
+msgid "Login button label"
 msgstr ""
 
 #. module: auth_oauth
@@ -238,14 +233,14 @@ msgid "System Parameter"
 msgstr "Sistemos parametrai"
 
 #. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__validation_endpoint
+msgid "UserInfo URL"
+msgstr ""
+
+#. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users
 msgid "Users"
 msgstr "Vartotojai"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__validation_endpoint
-msgid "Validation URL"
-msgstr "Patvirtinimo URL"
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:0

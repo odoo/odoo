@@ -11,11 +11,12 @@
 # Dung Nguyen Thi <dungnt@trobz.com>, 2021
 # Dao Nguyen <trucdao.uel@gmail.com>, 2021
 # Trần Hà <tranthuha13590@gmail.com>, 2021
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2021
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2021
-# Duy BQ <duybq86@gmail.com>, 2021
 # Vo Thanh Thuy, 2022
 # Martin Trigaux, 2022
+# Duy BQ <duybq86@gmail.com>, 2022
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
+# Hoàng Tiến Dũng, 2022
 # 
 msgid ""
 msgstr ""
@@ -23,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Hoàng Tiến Dũng, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -821,6 +822,7 @@ msgstr "Thêm biểu tượng cảm xúc"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/composer/composer.xml:0
+#: code:addons/mail/static/src/components/composer/composer.xml:0
 #, python-format
 msgid "Add attachment"
 msgstr "Thêm tệp đính kèm"
@@ -1103,6 +1105,7 @@ msgstr "Đang tải bộ đếm tệp đính kèm..."
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/attachment_box/attachment_box.xml:0
+#: code:addons/mail/static/src/components/chatter_topbar/chatter_topbar.xml:0
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__attachment_ids
 #: model:ir.model.fields,field_description:mail.field_mail_mail__attachment_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__attachment_ids
@@ -1195,8 +1198,6 @@ msgstr ""
 #. openerp-web
 #: code:addons/mail/static/src/components/channel_invitation_form/channel_invitation_form.xml:0
 #: code:addons/mail/static/src/components/channel_member_list/channel_member_list.xml:0
-#: code:addons/mail/static/src/components/follower/follower.xml:0
-#: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/components/rtc_call_participant_card/rtc_call_participant_card.xml:0
 #: code:addons/mail/static/src/components/rtc_invitation_card/rtc_invitation_card.xml:0
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
@@ -1448,7 +1449,7 @@ msgstr "Cc"
 #: model:ir.model.fields,field_description:mail.field_mail_activity__chaining_type
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__chaining_type
 msgid "Chaining Type"
-msgstr ""
+msgstr "Loại xâu chuỗi"
 
 #. module: mail
 #. openerp-web
@@ -1490,6 +1491,14 @@ msgstr "Đã thay đổi"
 #, python-format
 msgid "Channel"
 msgstr "Kênh"
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid ""
+"Channel \"%(channel_name)s\" only accepts members of group "
+"\"%(group_name)s\". Forbidden for: %(guest_names)s"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -2102,6 +2111,7 @@ msgstr "Đơn vị trễ"
 #. openerp-web
 #: code:addons/mail/static/src/components/delete_message_confirm_dialog/delete_message_confirm_dialog.xml:0
 #: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
+#: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
 #: code:addons/mail/static/src/xml/composer.xml:0
 #: code:addons/mail/static/src/xml/composer.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -2123,6 +2133,13 @@ msgstr "Xoá bản sao tin nhắn"
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__exception
 msgid "Delivery Failed"
 msgstr "Phát thư thất bại"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/message/message.xml:0
+#, python-format
+msgid "Delivery failure"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__description
@@ -2348,6 +2365,7 @@ msgstr "Hoàn thành & kế hoạch tiếp theo"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
+#: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
@@ -2436,6 +2454,7 @@ msgstr "Bộ tạo trình giữ chỗ động"
 #. openerp-web
 #: code:addons/mail/static/src/components/activity/activity.xml:0
 #: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
+#: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
 #, python-format
 msgid "Edit"
 msgstr "Sửa"
@@ -2454,6 +2473,7 @@ msgstr "Sửa đăng ký của"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/components/follower/follower.xml:0
 #: code:addons/mail/static/src/components/follower/follower.xml:0
 #, python-format
 msgid "Edit subscription"
@@ -2637,6 +2657,13 @@ msgstr "Mẫu email"
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tree
 msgid "Emails"
 msgstr "Email"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer/composer.xml:0
+#, python-format
+msgid "Emojis"
+msgstr "Emojis"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__is_internal
@@ -2906,6 +2933,8 @@ msgid "Follow"
 msgstr "Theo dõi"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/follower_list_menu/follower_list_menu.xml:0
 #: model:ir.actions.act_window,name:mail.action_view_followers
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_follower_ids
@@ -2916,6 +2945,7 @@ msgstr "Theo dõi"
 #: model:ir.model.fields,field_description:mail.field_res_users__message_follower_ids
 #: model:ir.ui.menu,name:mail.menu_email_followers
 #: model_terms:ir.ui.view,arch_db:mail.view_followers_tree
+#, python-format
 msgid "Followers"
 msgstr "Người theo dõi"
 
@@ -2979,6 +3009,7 @@ msgstr "Từ"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/components/composer/composer.xml:0
 #: code:addons/mail/static/src/components/composer/composer.xml:0
 #, python-format
 msgid "Full composer"
@@ -3345,10 +3376,9 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_mail__scheduled_date
 msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
-"the email will be send as soon as possible."
+"the email will be send as soon as possible. Unless a timezone is specified, "
+"it is considered as being in UTC timezone."
 msgstr ""
-"Nếu chọn, hệ thống quản lý sẽ gửi email sau ngày hôm đó. Nếu không được "
-"thiết lập, email sẽ được gửi càng sớm càng tốt."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__scheduled_date
@@ -4167,6 +4197,7 @@ msgstr "Đánh dấu hoàn tất"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
+#: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
 #: code:addons/mail/static/src/components/thread_needaction_preview/thread_needaction_preview.xml:0
 #: code:addons/mail/static/src/components/thread_preview/thread_preview.xml:0
 #, python-format
@@ -4175,6 +4206,7 @@ msgstr "Đánh dấu đã đọc"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
 #: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
 #, python-format
 msgid "Mark as Todo"
@@ -4225,6 +4257,8 @@ msgid "Merged with the following partners:"
 msgstr "Hợp nhất với các đối tác sau:"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/message/message.js:0
 #: model:ir.model,name:mail.model_mail_message
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_message_id
 #: model:ir.model.fields,field_description:mail.field_mail_message_reaction__message_id
@@ -4232,6 +4266,7 @@ msgstr "Hợp nhất với các đối tác sau:"
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__mail_message_id
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__message
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
+#, python-format
 msgid "Message"
 msgstr "Tin nhắn"
 
@@ -4785,10 +4820,13 @@ msgid "Normalized Email"
 msgstr "Email chuẩn hóa"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/message/message.js:0
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_note
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_note
 #: model:ir.model.fields,field_description:mail.field_mail_activity__note
 #: model:mail.message.subtype,name:mail.mt_note
+#, python-format
 msgid "Note"
 msgstr "Ghi chú"
 
@@ -5047,6 +5085,7 @@ msgstr ""
 "'mail.channel'"
 
 #. module: mail
+#: code:addons/mail/models/mail_render_mixin.py:0
 #: code:addons/mail/models/mail_render_mixin.py:0
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
@@ -5491,6 +5530,7 @@ msgstr "Bấm nút để cài đặt làm lối tắt push-to-talk"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
 #: code:addons/mail/static/src/components/mail_template/mail_template.xml:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -5834,6 +5874,8 @@ msgstr "Trường quan hệ"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
+#: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
+#: code:addons/mail/static/src/components/attachment_image/attachment_image.xml:0
 #: code:addons/mail/static/src/components/attachment_image/attachment_image.xml:0
 #, python-format
 msgid "Remove"
@@ -5852,6 +5894,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/components/follower/follower.xml:0
 #: code:addons/mail/static/src/components/follower/follower.xml:0
 #, python-format
 msgid "Remove this follower"
@@ -5872,6 +5915,7 @@ msgstr "Trả lời"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
 #: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
@@ -6669,8 +6713,11 @@ msgid "System Parameter"
 msgstr "Tham số hệ thống"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/message/message.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__message_type__notification
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__notification
+#, python-format
 msgid "System notification"
 msgstr "Thông báo hệ thống"
 
@@ -7159,7 +7206,7 @@ msgstr "Kiểm soát dữ liệu"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__triggered_next_type_id
 msgid "Trigger"
-msgstr "Bộ khởi động"
+msgstr "Khởi chạy"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__chaining_type__trigger
@@ -7599,6 +7646,13 @@ msgstr "Dạng hiển thị"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/components/attachment_image/attachment_image.xml:0
+#, python-format
+msgid "View image"
+msgstr ""
+
+#. module: mail
+#. openerp-web
 #: code:addons/mail/static/src/components/discuss_sidebar_category/discuss_sidebar_category.xml:0
 #, python-format
 msgid "View or join channels"
@@ -7715,6 +7769,11 @@ msgid "Wrong operation name (%s)"
 msgstr "Tên hoạt động sai (%s)"
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_form
+msgid "YYYY-MM-DD HH:MM:SS"
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/activity.js:0
 #: code:addons/mail/static/src/models/message/message.js:0
@@ -7758,6 +7817,12 @@ msgstr "Bạn đang trong một cuộc hội thoại riêng tư với <b>@%s</b>
 #, python-format
 msgid "You are in channel <b>#%s</b>."
 msgstr "Bạn đang ở kênh <b>#%s</b>."
+
+#. module: mail
+#: code:addons/mail/controllers/discuss.py:0
+#, python-format
+msgid "You are not allowed to upload an attachment here."
+msgstr "Bạn không có quyền tải lên file đính kèm ở đây."
 
 #. module: mail
 #. openerp-web
@@ -7995,7 +8060,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_from__current_date
 msgid "after completion date"
-msgstr ""
+msgstr "sau ngày xác nhận"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_from__previous_activity

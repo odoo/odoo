@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Friederike Fasterling-Nesselbosch, 2022
 # Sergio Zanchetta <primes2h@gmail.com>, 2022
+# Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,13 +13,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -233,7 +233,7 @@ msgstr "Movimenti a valle"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__module_stock_dropshipping
 msgid "Dropshipping"
-msgstr "Consegna diretta"
+msgstr "Spedizione diretta"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__effective_date
@@ -526,7 +526,7 @@ msgstr "Numero ordini di acquisto"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Receipt"
-msgstr "Ricezione"
+msgstr "Ricevuta"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -645,7 +645,7 @@ msgstr "Info fornitori"
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__default_location_dest_id_usage
 msgid "Technical field used to display the Drop Ship Address"
 msgstr ""
-"Campo tecnico utilizzato per visualizzare l'indirizzo di consegna diretta"
+"Campo tecnico utilizzato per visualizzare l'indirizzo di Spedizione diretta"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_product_product__purchase_order_line_ids
@@ -690,8 +690,8 @@ msgid ""
 "on-demand flow. The requested delivery address will be the customer delivery"
 " address and not your warehouse."
 msgstr ""
-"Aggiunge un percorso di consegna diretta da applicare ai prodotti, per "
-"richiedere ai fornitori di consegnare ai clienti. Un prodotto a consegna "
+"Aggiunge un percorso di Spedizione diretta da applicare ai prodotti, per "
+"richiedere ai fornitori di consegnare ai clienti. Un prodotto a Spedizione "
 "diretta genera una richiesta di preventivo per l'acquisto dopo la conferma "
 "dell'ordine di vendita. L'indirizzo di consegna richiesto corrisponde a "
 "quello del cliente e non al magazzino."

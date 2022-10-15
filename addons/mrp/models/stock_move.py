@@ -305,6 +305,7 @@ class StockMove(models.Model):
         if self.raw_material_production_id:
             action['views'] = [(self.env.ref('mrp.view_stock_move_operations_raw').id, 'form')]
             action['context']['show_destination_location'] = False
+            action['context']['active_mo_id'] = self.raw_material_production_id.id
         elif self.production_id:
             action['views'] = [(self.env.ref('mrp.view_stock_move_operations_finished').id, 'form')]
             action['context']['show_source_location'] = False
@@ -486,3 +487,8 @@ class StockMove(models.Model):
             self.move_line_ids = self._set_quantity_done_prepare_vals(quantity_done)
         else:
             super()._multi_line_quantity_done_set(quantity_done)
+
+    def _prepare_procurement_values(self):
+        res = super()._prepare_procurement_values()
+        res['bom_line_id'] = self.bom_line_id.id
+        return res

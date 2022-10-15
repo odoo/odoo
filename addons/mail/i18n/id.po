@@ -22,12 +22,14 @@
 # Deddy Ddr <deddy.ddr@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Bonny Useful <bonny.useful@gmail.com>, 2022
-# oon arfiandwi <oon.arfiandwi@gmail.com>, 2022
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2022
 # Altela Eleviansyah Pramardhika <altela_pramardhika@yahoo.com>, 2022
 # whenwesober, 2022
 # Gusti Rini <gustirini@gmail.com>, 2022
+# oon arfiandwi <oon.arfiandwi@gmail.com>, 2022
 # Ryanto The <ry.the77@gmail.com>, 2022
+# Abe Manyo, 2022
+# arfa simoncelli, 2022
 # 
 msgid ""
 msgstr ""
@@ -35,7 +37,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Ryanto The <ry.the77@gmail.com>, 2022\n"
+"Last-Translator: arfa simoncelli, 2022\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -144,7 +146,7 @@ msgstr ""
 #: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
 #, python-format
 msgid "%s connected"
-msgstr ""
+msgstr "%s terhubung"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -807,6 +809,7 @@ msgstr "Tambahkan sebuah emoji"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/composer/composer.xml:0
+#: code:addons/mail/static/src/components/composer/composer.xml:0
 #, python-format
 msgid "Add attachment"
 msgstr "Tambah lampiran"
@@ -1083,6 +1086,7 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/attachment_box/attachment_box.xml:0
+#: code:addons/mail/static/src/components/chatter_topbar/chatter_topbar.xml:0
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__attachment_ids
 #: model:ir.model.fields,field_description:mail.field_mail_mail__attachment_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__attachment_ids
@@ -1173,8 +1177,6 @@ msgstr ""
 #. openerp-web
 #: code:addons/mail/static/src/components/channel_invitation_form/channel_invitation_form.xml:0
 #: code:addons/mail/static/src/components/channel_member_list/channel_member_list.xml:0
-#: code:addons/mail/static/src/components/follower/follower.xml:0
-#: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/components/rtc_call_participant_card/rtc_call_participant_card.xml:0
 #: code:addons/mail/static/src/components/rtc_invitation_card/rtc_invitation_card.xml:0
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
@@ -1468,6 +1470,14 @@ msgstr "Diubah"
 #, python-format
 msgid "Channel"
 msgstr "Saluran"
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid ""
+"Channel \"%(channel_name)s\" only accepts members of group "
+"\"%(group_name)s\". Forbidden for: %(guest_names)s"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -2060,7 +2070,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/rtc_configuration_menu/rtc_configuration_menu.xml:0
 #, python-format
 msgid "Delay after releasing push-to-talk"
-msgstr ""
+msgstr "Delay setelah melepaskan tombol push-to-talk"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_unit
@@ -2070,6 +2080,7 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/delete_message_confirm_dialog/delete_message_confirm_dialog.xml:0
+#: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
 #: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
 #: code:addons/mail/static/src/xml/composer.xml:0
 #: code:addons/mail/static/src/xml/composer.xml:0
@@ -2092,6 +2103,13 @@ msgstr "Hapus Salinan Pesan"
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__exception
 msgid "Delivery Failed"
 msgstr "Pengiriman gagal"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/message/message.xml:0
+#, python-format
+msgid "Delivery failure"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__description
@@ -2315,6 +2333,7 @@ msgstr "Selesai & Jadwalkan Yang Berikutnya"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
+#: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
@@ -2403,6 +2422,7 @@ msgstr "Pembuat Placeholder Dinamik"
 #. openerp-web
 #: code:addons/mail/static/src/components/activity/activity.xml:0
 #: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
+#: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
 #, python-format
 msgid "Edit"
 msgstr "Sunting"
@@ -2421,6 +2441,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/components/follower/follower.xml:0
 #: code:addons/mail/static/src/components/follower/follower.xml:0
 #, python-format
 msgid "Edit subscription"
@@ -2599,6 +2620,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tree
 msgid "Emails"
 msgstr "Email"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer/composer.xml:0
+#, python-format
+msgid "Emojis"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__is_internal
@@ -2863,6 +2891,8 @@ msgid "Follow"
 msgstr "Ikuti"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/follower_list_menu/follower_list_menu.xml:0
 #: model:ir.actions.act_window,name:mail.action_view_followers
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_follower_ids
@@ -2873,6 +2903,7 @@ msgstr "Ikuti"
 #: model:ir.model.fields,field_description:mail.field_res_users__message_follower_ids
 #: model:ir.ui.menu,name:mail.menu_email_followers
 #: model_terms:ir.ui.view,arch_db:mail.view_followers_tree
+#, python-format
 msgid "Followers"
 msgstr "Pengikut"
 
@@ -2936,6 +2967,7 @@ msgstr "Dari"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/components/composer/composer.xml:0
 #: code:addons/mail/static/src/components/composer/composer.xml:0
 #, python-format
 msgid "Full composer"
@@ -3300,10 +3332,9 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_mail__scheduled_date
 msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
-"the email will be send as soon as possible."
+"the email will be send as soon as possible. Unless a timezone is specified, "
+"it is considered as being in UTC timezone."
 msgstr ""
-"Jika diatur, pengelola antrian akan mengirim email setelah tanggal tersebut."
-" Jika kosong, email akan dikirimkan secepatnya."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__scheduled_date
@@ -4111,6 +4142,7 @@ msgstr "Tandai sebagai Selesai"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
+#: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
 #: code:addons/mail/static/src/components/thread_needaction_preview/thread_needaction_preview.xml:0
 #: code:addons/mail/static/src/components/thread_preview/thread_preview.xml:0
 #, python-format
@@ -4119,6 +4151,7 @@ msgstr "Tandai sebagai Sudah Dibaca"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
 #: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
 #, python-format
 msgid "Mark as Todo"
@@ -4170,6 +4203,8 @@ msgid "Merged with the following partners:"
 msgstr "Gabung dengan rekanan berikut:"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/message/message.js:0
 #: model:ir.model,name:mail.model_mail_message
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_message_id
 #: model:ir.model.fields,field_description:mail.field_mail_message_reaction__message_id
@@ -4177,6 +4212,7 @@ msgstr "Gabung dengan rekanan berikut:"
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__mail_message_id
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__message
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
+#, python-format
 msgid "Message"
 msgstr "Pesan"
 
@@ -4730,10 +4766,13 @@ msgid "Normalized Email"
 msgstr ""
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/message/message.js:0
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_note
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_note
 #: model:ir.model.fields,field_description:mail.field_mail_activity__note
 #: model:mail.message.subtype,name:mail.mt_note
+#, python-format
 msgid "Note"
 msgstr "Catatan"
 
@@ -4988,6 +5027,7 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/models/mail_render_mixin.py:0
 #: code:addons/mail/models/mail_render_mixin.py:0
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
@@ -5414,9 +5454,12 @@ msgstr ""
 #, python-format
 msgid "Press a key to register it as the push-to-talk shortcut"
 msgstr ""
+"Pencet tombol keyboard apapun untuk mendaftarkan tombol tersebut sebagai "
+"shortcut push-to-talk"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
 #: code:addons/mail/static/src/components/mail_template/mail_template.xml:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -5500,7 +5543,7 @@ msgstr "Penerbit: Perbarui Notifikasi"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__push_to_talk_key
 msgid "Push-To-Talk shortcut"
-msgstr ""
+msgstr "Shortcut Push-To-Talk"
 
 #. module: mail
 #. openerp-web
@@ -5509,7 +5552,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/rtc_configuration_menu/rtc_configuration_menu.xml:0
 #, python-format
 msgid "Push-to-talk key"
-msgstr ""
+msgstr "Tombol Push-to-talk"
 
 #. module: mail
 #. openerp-web
@@ -5759,6 +5802,8 @@ msgstr "Kolom relasi"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
+#: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
+#: code:addons/mail/static/src/components/attachment_image/attachment_image.xml:0
 #: code:addons/mail/static/src/components/attachment_image/attachment_image.xml:0
 #, python-format
 msgid "Remove"
@@ -5777,6 +5822,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/components/follower/follower.xml:0
 #: code:addons/mail/static/src/components/follower/follower.xml:0
 #, python-format
 msgid "Remove this follower"
@@ -5797,6 +5843,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
 #: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
@@ -6171,7 +6218,7 @@ msgstr "Kirim Sekarang"
 #: code:addons/mail/static/src/components/chatter_topbar/chatter_topbar.xml:0
 #, python-format
 msgid "Send a message"
-msgstr ""
+msgstr "Kirim pesan"
 
 #. module: mail
 #. openerp-web
@@ -6590,8 +6637,11 @@ msgid "System Parameter"
 msgstr "Parameter Sistem"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/message/message.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__message_type__notification
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__notification
+#, python-format
 msgid "System notification"
 msgstr "Notifikasi sistem"
 
@@ -6895,7 +6945,7 @@ msgstr ""
 #: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
 #, python-format
 msgid "This is their first connection. Wish them luck."
-msgstr ""
+msgstr "Ini adalah koneksi pertama mereka. Semoga mereka beruntung."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__auto_delete
@@ -7303,7 +7353,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/rtc_configuration_menu/rtc_configuration_menu.xml:0
 #, python-format
 msgid "Use Push-to-talk"
-msgstr ""
+msgstr "Gunakan Push-to-talk"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__use_twilio_rtc_servers
@@ -7323,7 +7373,7 @@ msgstr "Menggunakan template"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__use_push_to_talk
 msgid "Use the push to talk feature"
-msgstr ""
+msgstr "Gunakan fitur push-to-talk"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_tracking_value__currency_id
@@ -7485,6 +7535,13 @@ msgstr "Tipe Tampilan"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/components/attachment_image/attachment_image.xml:0
+#, python-format
+msgid "View image"
+msgstr ""
+
+#. module: mail
+#. openerp-web
 #: code:addons/mail/static/src/components/discuss_sidebar_category/discuss_sidebar_category.xml:0
 #, python-format
 msgid "View or join channels"
@@ -7601,6 +7658,11 @@ msgid "Wrong operation name (%s)"
 msgstr ""
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_form
+msgid "YYYY-MM-DD HH:MM:SS"
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/activity.js:0
 #: code:addons/mail/static/src/models/message/message.js:0
@@ -7642,6 +7704,12 @@ msgstr "Anda dalam percakapan pribadi dengan <b>@%s</b>."
 #, python-format
 msgid "You are in channel <b>#%s</b>."
 msgstr "Anda berada di saluran <b>#%s</b>."
+
+#. module: mail
+#: code:addons/mail/controllers/discuss.py:0
+#, python-format
+msgid "You are not allowed to upload an attachment here."
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -8266,7 +8334,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/rtc_configuration_menu/rtc_configuration_menu.xml:0
 #, python-format
 msgid "toggle push-to-talk"
-msgstr ""
+msgstr "nyalakan push-to-talk"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_ice_server__server_type__turn
@@ -8277,7 +8345,7 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "unknown error"
-msgstr ""
+msgstr "eror tidak diketahui"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0

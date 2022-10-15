@@ -21,9 +21,11 @@ class ProjectCustomerPortal(CustomerPortal):
     def _prepare_home_portal_values(self, counters):
         values = super()._prepare_home_portal_values(counters)
         if 'project_count' in counters:
-            values['project_count'] = request.env['project.project'].search_count([])
+            values['project_count'] = request.env['project.project'].search_count([]) \
+                if request.env['project.project'].check_access_rights('read', raise_exception=False) else 0
         if 'task_count' in counters:
-            values['task_count'] = request.env['project.task'].search_count([])
+            values['task_count'] = request.env['project.task'].search_count([]) \
+                if request.env['project.task'].check_access_rights('read', raise_exception=False) else 0
         return values
 
     # ------------------------------------------------------------
@@ -167,6 +169,11 @@ class ProjectCustomerPortal(CustomerPortal):
         user_context = request.session.get_context() if request.session.uid else {}
         mods = conf.server_wide_modules or []
         qweb_checksum = HomeStaticTemplateHelpers.get_qweb_templates_checksum(debug=request.session.debug, bundle="project.assets_qweb")
+        if request.env.lang:
+            lang = request.env.lang
+            session_info['user_context']['lang'] = lang
+            # Update Cache
+            user_context['lang'] = lang
         lang = user_context.get("lang")
         translation_hash = request.env['ir.translation'].get_web_translations_hash(mods, lang)
         cache_hashes = {

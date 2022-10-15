@@ -18,6 +18,7 @@
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # Noma Yuki, 2022
 # Martin Trigaux, 2022
+# 江口和志 <sandwhale1010@gmail.com>, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2022
 # 
 msgid ""
@@ -647,12 +648,12 @@ msgstr "応募"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__application_count
 msgid "Applications with the same email"
-msgstr ""
+msgstr "同じEメールでの応募"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Applications<br/>"
-msgstr ""
+msgstr "応募<br/>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__job_id
@@ -699,7 +700,7 @@ msgstr "履歴書などの添付書類には自動でインデックスが付与
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__availability
 msgid "Availability"
-msgstr "利用可能"
+msgstr "就業開始可能日"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bachelor
@@ -1092,7 +1093,7 @@ msgstr "Eメールテンプレート"
 msgid ""
 "Email alias for this job position. New emails will automatically create new "
 "applicants for this job position."
-msgstr ""
+msgstr "この職種のEメールエイリアス。新規メールがこの職種の新規応募者を自動的に作成します。"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_cc
@@ -1272,12 +1273,12 @@ msgstr "担当者"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "メッセージあり"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__date_closed
 msgid "Hire Date"
-msgstr ""
+msgstr "採用日"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -1287,7 +1288,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__hired_stage
 msgid "Hired Stage"
-msgstr ""
+msgstr "採用ステージ"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__id
@@ -1333,7 +1334,7 @@ msgstr "チェックした場合、一部のメッセージで配信エラーが
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__hired_stage
 msgid ""
 "If checked, this stage is used to determine the hire date of an applicant"
-msgstr ""
+msgstr "チェックを付けると、このステージが応募者の採用日を決定するために使われます"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__template_id
@@ -1425,7 +1426,7 @@ msgstr "職務"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 #, python-format
 msgid "Job Applications"
-msgstr ""
+msgstr "応募"
 
 #. module: hr_recruitment
 #: model:utm.campaign,name:hr_recruitment.utm_campaign_job
@@ -1467,7 +1468,7 @@ msgstr "求人情報"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__job_ids
 msgid "Job Specific"
-msgstr ""
+msgstr "特定職位"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -1477,7 +1478,7 @@ msgstr "採用情報"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Jobs - Recruitment Form"
-msgstr "仕事 - 採用用紙"
+msgstr "仕事 - 採用情報フォーム"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_sources
@@ -1715,7 +1716,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
 msgid "New Applicants"
-msgstr ""
+msgstr "新規応募者"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_new_application
@@ -1737,17 +1738,17 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_employee_view_search
 msgid "Newly Hired"
-msgstr ""
+msgstr "新規雇用"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_employee_action_from_department
 msgid "Newly Hired Employees"
-msgstr ""
+msgstr "新規雇用従業員"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_employee__newly_hired_employee
 msgid "Newly hired employee"
-msgstr ""
+msgstr "新規雇用従業員"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_tree_activity
@@ -1911,7 +1912,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Other applications"
-msgstr ""
+msgstr "その他の応募"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_user_id
@@ -2067,7 +2068,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
 msgid "Recruitments"
-msgstr ""
+msgstr "採用"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__kanban_state__blocked
@@ -2261,7 +2262,7 @@ msgstr "応募者の情報源"
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__job_ids
 msgid ""
 "Specific jobs that uses this stage. Other jobs will not use this stage."
-msgstr ""
+msgstr "このステージを使用する特定の職位。他の職位はこのステージを使用しません。"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__stage_id
@@ -2371,7 +2372,7 @@ msgstr "応募者が志望しなくなった"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__availability
 msgid "The date at which the applicant will be available to start working"
-msgstr ""
+msgstr "応募者が就業を開始できる日"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
@@ -2442,7 +2443,7 @@ msgstr "このステージは、そのステージにレコードが表示され
 #: model:digest.tip,name:hr_recruitment.digest_tip_hr_recruitment_0
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
 msgid "Tip: Let candidates apply by email"
-msgstr ""
+msgstr "ヒント：候補者に電子メールで応募させる"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban

@@ -28,8 +28,8 @@ class SaleOrder(models.Model):
             order.order_line.sudo()._purchase_service_generation()
         return result
 
-    def action_cancel(self):
-        result = super(SaleOrder, self).action_cancel()
+    def _action_cancel(self):
+        result = super()._action_cancel()
         # When a sale person cancel a SO, he might not have the rights to write
         # on PO. But we need the system to create an activity on the PO (so 'write'
         # access), hence the `sudo`.
@@ -288,7 +288,7 @@ class SaleOrderLine(models.Model):
                 ], limit=1)
             if not purchase_order:
                 values = line._purchase_service_prepare_order_values(supplierinfo)
-                purchase_order = PurchaseOrder.create(values)
+                purchase_order = PurchaseOrder.with_context(mail_create_nosubscribe=True).create(values)
             else:  # update origin of existing PO
                 so_name = line.order_id.name
                 origins = []

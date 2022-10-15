@@ -23,6 +23,7 @@
 # Paweł Wodyński <pw@myodoo.pl>, 2022
 # Martin Trigaux, 2022
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2022
+# Jacek Michalski <michalski.jck@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -30,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2022\n"
+"Last-Translator: Jacek Michalski <michalski.jck@gmail.com>, 2022\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -233,7 +234,7 @@ msgstr "Wszyscy zatwierdzający"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_all
 msgid "All Expense Reports"
-msgstr ""
+msgstr "Wszystkie Raporty Wydatków"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_my_all
@@ -245,7 +246,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all
 msgid "All Reports"
-msgstr ""
+msgstr "Wszystkie Raporty"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__amount_residual
@@ -685,7 +686,7 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_expense.menu_hr_product
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Expense Products"
-msgstr ""
+msgstr "Produkty Wydatkowe"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
@@ -716,7 +717,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Expense Reports"
-msgstr ""
+msgstr "Raporty Wydatków"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_department_filtered
@@ -747,7 +748,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "Expense products can be reinvoiced to your customers."
-msgstr ""
+msgstr "Wydatki mogą być refakturowane na klientów."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -976,6 +977,11 @@ msgid "In Payment"
 msgstr "W trakcie płatności"
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+msgid "Included in price taxes"
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Incoming Emails"
 msgstr "Przychodzące emaile"
@@ -1127,14 +1133,14 @@ msgstr "Moje wydatki"
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_my_unsubmitted
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_my_expenses_to_submit
 msgid "My Expenses to Report"
-msgstr ""
+msgstr "Moje Wydatki do Zaraportowania"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_my_all
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_my_reports
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 msgid "My Reports"
-msgstr ""
+msgstr "Moje Raporty"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1200,7 +1206,7 @@ msgstr "Brak danych!"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "No expense products found. Let's create one!"
-msgstr ""
+msgstr "Nie znaleziono żadnego produktu związanego z wydatkami. Stwórzmy go!"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_all
@@ -1320,7 +1326,7 @@ msgstr "Zapłacona"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__payment_mode
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__payment_mode
 msgid "Paid By"
-msgstr ""
+msgstr "Zapłacone Przez"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -1330,7 +1336,7 @@ msgstr "Częściowo"
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__payment_state__partial
 msgid "Partially Paid"
-msgstr ""
+msgstr "Częściowo Opłacone"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/account_move.py:0
@@ -1533,12 +1539,12 @@ msgstr "Raportowanie"
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_approve
 msgid "Reports to Approve"
-msgstr ""
+msgstr "Raporty do Zatwierdzenia"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_pay
 msgid "Reports to Pay"
-msgstr ""
+msgstr "Raporty do Zapłaty"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_post
@@ -1776,6 +1782,11 @@ msgid "The payment method used when the expense is paid by the company."
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense__tax_ids
+msgid "The taxes should be \"Included In Price\""
+msgstr ""
+
+#. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "There are no expense reports to approve."
@@ -1844,7 +1855,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount
 msgid "Total In Currency"
-msgstr ""
+msgstr "Suma w Walucie"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__activity_exception_decoration
@@ -2093,19 +2104,19 @@ msgstr "km"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "to be reimbursed"
-msgstr ""
+msgstr "do zwrotu"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "to report"
-msgstr ""
+msgstr "do zgłoszenia"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "under validation"
-msgstr ""
+msgstr "w trakcie weryfikacji"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form

@@ -15,14 +15,15 @@
 # Christelle Wehbe <libanon_cristelle@hotmail.com>, 2021
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2021
 # Robert Frykelius <robert.frykelius@linserv.se>, 2021
-# STefan Rundgren <stefanrundgren@cellglas.com>, 2021
-# Kim Asplund <kim.asplund@gmail.com>, 2021
+# 3eec91a23d05c632ffac786ac42b81b8_b6fff7b <8985b7bc57db860af29969457dbb51b3_1018915>, 2021
 # Victor Ekström, 2021
 # Kristoffer Grundström <lovaren@gmail.com>, 2021
-# Simon S, 2021
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2021
+# emavertel, 2022
 # Robin Calvin, 2022
-# Emanuel Bergsten, 2022
+# Simon S, 2022
+# Daniel Löfgren, 2022
+# Kim Asplund <kim.asplund@gmail.com>, 2022
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2022
 # 
 msgid ""
@@ -65,7 +66,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "\"This Week\""
-msgstr ""
+msgstr "\"Den här veckan\""
 
 #. module: project
 #. openerp-web
@@ -82,7 +83,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
 msgid "# Ratings"
-msgstr ""
+msgstr "# Betyg"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner__task_count
@@ -530,7 +531,7 @@ msgstr "<strong class=\"d-block mb-2\">Bilagor</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Assignees</strong>"
-msgstr ""
+msgstr "<strong>Tilldelad</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -586,6 +587,14 @@ msgstr ""
 msgid ""
 "A collaborator cannot be selected more than once in the project sharing "
 "access. Please remove duplicate(s) and try again."
+msgstr ""
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"A personal stage cannot be linked to a project because it is only visible to"
+" its corresponding user."
 msgstr ""
 
 #. module: project
@@ -669,6 +678,7 @@ msgid "Add Milestone"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Add a description..."
 msgstr "Lägg på beskrivning..."
@@ -837,6 +847,7 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
+#: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_search
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -889,7 +900,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,help:project.project_sharing_project_task_view_kanban
 msgid " assignees"
-msgstr ""
+msgstr "tilldelad"
 
 #. module: project
 #. openerp-web
@@ -923,7 +934,7 @@ msgstr "Tilldelad"
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
 msgid "Assignees"
-msgstr ""
+msgstr "Tilldelad"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_assign
@@ -1364,7 +1375,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "Current stage of this task"
-msgstr ""
+msgstr "Aktivitetens nuvarande etapp"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_bounced_content
@@ -1557,11 +1568,20 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
 #: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
 msgid ""
-"Defines the visibility of the tasks of the project:\n"
-"- Invited employees: employees may only see the followed project and tasks.\n"
-"- All employees: employees may see all project and tasks.\n"
-"- Invited portal users and all employees: employees may see everything.   Invited portal users may see project and tasks followed by.\n"
-"   them or by someone of their company."
+"People to whom this project and its tasks will be visible.\n"
+"\n"
+"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
+"\n"
+"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"\n"
+"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+"\n"
+"When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks, but not edit them.\n"
+"When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n"
+"\n"
+"In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
 
 #. module: project
@@ -1752,6 +1772,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Edit"
 msgstr "Redigera"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project_kanban.js:0
+#, python-format
+msgid "Edit Personal Stage"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -2033,7 +2060,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Happy face"
-msgstr ""
+msgstr "Lyckligt ansikte"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__has_message
@@ -2587,7 +2614,7 @@ msgstr "Lista på CC från inkommande e-post"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Live"
-msgstr ""
+msgstr "Live"
 
 #. module: project
 #. openerp-web
@@ -2809,7 +2836,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Neutral face"
-msgstr ""
+msgstr "Neutralt ansikte"
 
 #. module: project
 #. openerp-web
@@ -2952,7 +2979,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:project.action_view_task
 #: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_action
 msgid "No tasks found. Let's create one!"
-msgstr ""
+msgstr "Ingen aktivitet hittad. Låt oss skapa en!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_update_all_action
@@ -3216,7 +3243,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
 msgid "Percentage of happy ratings"
-msgstr ""
+msgstr "Procent av glada betyg"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -3630,7 +3657,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_percentage_satisfaction
 msgid "Rating Satisfaction"
-msgstr ""
+msgstr "Betyggsättning"
 
 #. module: project
 #. openerp-web
@@ -3654,7 +3681,7 @@ msgstr "Betyg vid byte av etapp"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Betyg"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3717,7 +3744,7 @@ msgstr "Redo"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__done
 msgid "Ready for Next Stage"
-msgstr "Klar för nästa steg"
+msgstr "Klar för nästa etapp"
 
 #. module: project
 #: model:project.task.type,legend_done:project.project_stage_3
@@ -3941,7 +3968,7 @@ msgstr "SMS leveransfel"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Sad face"
-msgstr ""
+msgstr "Sorgset ansikte"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__sat
@@ -3982,13 +4009,13 @@ msgstr ""
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in All"
-msgstr ""
+msgstr "Sök på allt"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Assignees"
-msgstr ""
+msgstr "Sök i Tilldelade"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -4006,7 +4033,7 @@ msgstr ""
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Project"
-msgstr ""
+msgstr "Sök i projekt"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -4202,7 +4229,7 @@ msgstr ""
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
 msgid "Stage changed"
-msgstr "Steg ändrat"
+msgstr "Etapp ändrad"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__stages_active
@@ -4408,6 +4435,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
+#: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_tree
 msgid "Task Stage"
@@ -4528,7 +4556,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Tasks Management"
-msgstr ""
+msgstr "Aktivitetshantering"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__type_ids
@@ -4775,6 +4803,8 @@ msgid ""
 "To get things done, use activities and status on tasks.<br>\n"
 "                    Chat in real-time or by email to collaborate efficiently."
 msgstr ""
+"För att få saker gjorda, använd Aktiviteter och status på uppgifter.<br>\n"
+"Chatta i realtid eller via e-post för att samarbeta effektivt."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_action
@@ -5213,6 +5243,14 @@ msgid "You have not write access of %s field."
 msgstr ""
 
 #. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"You should at least have one personal stage. Create a new stage to which the"
+" tasks can be transferred after this one is deleted."
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
 #: model_terms:ir.ui.view,arch_db:project.quick_create_task_form
 msgid "e.g. New Design"
@@ -5236,7 +5274,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "for project:"
-msgstr ""
+msgstr "för projekt:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list

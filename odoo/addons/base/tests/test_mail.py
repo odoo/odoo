@@ -439,6 +439,7 @@ class TestEmailTools(BaseCase):
             ('admin@example.com', ['admin@example.com']),
             ('"Admin" <admin@example.com>, Demo <malformed email>', ['admin@example.com']),
             ('admin@éxample.com', ['admin@xn--xample-9ua.com']),
+            ('"admin@éxample.com" <admin@éxample.com>', ['admin@xn--xample-9ua.com']),
         ]
 
         for (rfc2822_email, expected) in tests:
@@ -512,6 +513,6 @@ class TestEmailMessage(TransactionCase):
         msg['References'] = '<345227342212345.1596730777.324691772483620-example-30453-other.reference@test-123.example.com>'
 
         smtp = FakeSMTP()
-        self.patch(threading.currentThread(), 'testing', False)
+        self.patch(threading.current_thread(), 'testing', False)
         self.env['ir.mail_server'].send_email(msg, smtp_session=smtp)
         self.assertTrue(smtp.email_sent)

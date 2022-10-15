@@ -13,7 +13,6 @@
 # Minj P <pminj322@gmail.com>, 2021
 # baaska sh <sh.baaskash@gmail.com>, 2021
 # Khoschuluu Khuderchuluu <khoschuluu@gmail.com>, 2021
-# Bayarkhuu Bataa, 2021
 # Martin Trigaux, 2021
 # Насан-Очир <nasaaskii@gmail.com>, 2021
 # Батмөнх Ганбат <batmunkh2522@gmail.com>, 2021
@@ -22,6 +21,8 @@
 # Otgonbayar.A <gobi.mn@gmail.com>, 2021
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2021
 # Sanjaajamts Badamjunai <b.sanjaajamtsfc@gmail.com>, 2021
+# Munkhbilguun Altankhuyag <munkhbilguunaltankhuyag@gmail.com>, 2022
+# Bayarkhuu Bataa, 2022
 # 
 msgid ""
 msgstr ""
@@ -29,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Sanjaajamts Badamjunai <b.sanjaajamtsfc@gmail.com>, 2021\n"
+"Last-Translator: Bayarkhuu Bataa, 2022\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -97,12 +98,6 @@ msgstr ""
 #, python-format
 msgid "%s %s unbuilt in"
 msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/models/mrp_routing.py:0
-#, python-format
-msgid "%s (copy)"
-msgstr "%s (хуулбар)"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -1108,7 +1103,7 @@ msgstr "Бүрдэл хэсэг"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
-"Component Lots must be unique for mass production. Please review consumption"
+"Component Lots must be unique for mass production. Please review reservation"
 " for:\n"
 msgstr ""
 
@@ -2152,12 +2147,12 @@ msgstr ""
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Immediate Production?"
-msgstr ""
+msgstr "Шууд үйлдвэрлэх үү?"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_immediate_production
 msgid "Immediate production?"
-msgstr ""
+msgstr "Шууд үйлдвэрлэх үү?"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -3013,9 +3008,19 @@ msgstr "Алдааны мэдэгдэл бүхий зурвасын тоо"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__capacity
 msgid ""
-"Number of pieces that can be produced in parallel. In case the work center "
-"has a capacity of 5 and you have to produce 10 units on your work order, the"
-" usual operation time will be multiplied by 2."
+"Number of pieces (in product UoM) that can be produced in parallel  (at the "
+"same time) at this work center. For example: the capacity is 5 and you need "
+"to produce 10 units, then the operation time listed on the BOM will be "
+"multiplied by two. However, note that both time before and after production "
+"will only be counted once. "
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom__product_qty
+msgid ""
+"This should be the smallest quantity that this product can be produced in. "
+"If the BOM contains operations, make sure the work center capacity is "
+"accurate. "
 msgstr ""
 
 #. module: mrp
@@ -3317,7 +3322,7 @@ msgstr "Төлөвлөлт"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Planning Issues"
-msgstr ""
+msgstr "Хоцролттой"
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_plastic_laminate
@@ -4418,6 +4423,12 @@ msgstr ""
 "нэгжээс ялгаатай ангилалтай байна."
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_workcenter.py:0
+#, python-format
+msgid "The Workorder (%s) cannot be started twice!"
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
@@ -4481,6 +4492,15 @@ msgstr ""
 " болохгүй тул ажлын захиалгыг хадгалахын тулд үүнийг засна уу."
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The product has already been used at least once, editing its structure may "
+"lead to undesirable behaviours. You should rather archive the product and "
+"create a new one with a new bill of materials."
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "The quantity produced of by-products must be positive."
@@ -4498,6 +4518,15 @@ msgstr "Үйлдвэрлэх тоо хэмжээ эерэг байх ёстой!
 #: model:ir.model.fields,help:mrp.field_mrp_document__res_id
 msgid "The record id this is attached to."
 msgstr "Хавсрагдсан бичлэгийн дугаар."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#, python-format
+msgid ""
+"The selected serial number does not correspond to the one used in the "
+"manufacturing order, please select another one."
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -4855,7 +4884,7 @@ msgstr "Задлах"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view_simplified
 msgid "Unbuild Order"
-msgstr "Задаргааны Захиалга"
+msgstr "Задаргааны захиалга"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
@@ -4869,7 +4898,7 @@ msgstr ""
 #: model:ir.ui.menu,name:mrp.menu_mrp_unbuild
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild Orders"
-msgstr "Задаргааны Захиалга"
+msgstr "Задаргааны захиалга"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -5563,6 +5592,9 @@ msgid ""
 "<i>apply</i> Odoo will produce all the finished products and consume all "
 "components."
 msgstr ""
+"Та <i>дууссан</i> тоо хэмжээг оруулаагүй байна, <i>хэрэгжүүлэх</i> товчийг "
+"дарвал Odoo бүх тоо хэмжээгээр бэлэн бүтээгдэхүүнийг орлогодож, шаардлагатай"
+" түүхий эдийг зарлагадах болно.."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0

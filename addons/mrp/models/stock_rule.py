@@ -58,7 +58,8 @@ class StockRule(models.Model):
             self.env['stock.move'].sudo().create(productions._get_moves_raw_values())
             self.env['stock.move'].sudo().create(productions._get_moves_finished_values())
             productions._create_workorder()
-            productions.filtered(lambda p: not p.orderpoint_id or not p.move_raw_ids).action_confirm()
+            productions.filtered(lambda p: (not p.orderpoint_id and p.move_raw_ids) or\
+                (p.move_dest_ids.procure_method != 'make_to_order' and not p.move_raw_ids and not p.workorder_ids)).action_confirm()
 
             for production in productions:
                 origin_production = production.move_dest_ids and production.move_dest_ids[0].raw_material_production_id or False
@@ -89,6 +90,10 @@ class StockRule(models.Model):
             if not warehouse_id:
                 warehouse_id = rule.location_id.warehouse_id
             if rule.picking_type_id == warehouse_id.sam_type_id:
+                if float_compare(procurement.product_qty, 0, precision_rounding=procurement.product_uom.rounding) < 0:
+                    procurement.values['group_id'] = procurement.values['group_id'].stock_move_ids.filtered(
+                        lambda m: m.state not in ['done', 'cancel']).move_orig_ids.group_id[:1]
+                    continue
                 manu_type_id = warehouse_id.manu_type_id
                 if manu_type_id:
                     name = manu_type_id.sequence_id.next_by_id()

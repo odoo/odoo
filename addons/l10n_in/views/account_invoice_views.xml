@@ -14,12 +14,12 @@
                 <group string="Export India" attrs="{'invisible': ['|', ('l10n_in_gst_treatment', 'not in', ['overseas', 'deemed_export']), ('move_type', 'not in', ['out_invoice', 'out_refund'])]}">
                     <field name="l10n_in_shipping_bill_number"/>
                     <field name="l10n_in_shipping_bill_date"/>
-                    <field name="l10n_in_shipping_port_code_id"/>
+                    <field name="l10n_in_shipping_port_code_id" attrs="{'readonly':[('state','!=', 'draft')]}"/>
                 </group>
                 <group string="Import India" attrs="{'invisible': ['|', ('l10n_in_gst_treatment', 'not in', ['overseas', 'special_economic_zone']), ('move_type', 'not in', ['in_invoice', 'in_refund'])]}">
                     <field name="l10n_in_shipping_bill_number" string="Bill of Entry Number"/>
                     <field name="l10n_in_shipping_bill_date" string="Bill of Entry Date"/>
-                    <field name="l10n_in_shipping_port_code_id"/>
+                    <field name="l10n_in_shipping_port_code_id" attrs="{'readonly':[('state','!=', 'draft')]}"/>
                 </group>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">

@@ -51,8 +51,7 @@ class AccountEdiFormat(models.Model):
                     # should not happen as the file has been checked by SdiCoop
                     _logger.info('Received file badly formatted, skipping: \n %s', file)
                     continue
-
-                invoice = self.env['account.move'].create({'move_type': 'in_invoice'})
+                invoice = self.env['account.move'].with_company(company).create({'move_type': 'in_invoice'})
                 attachment = self.env['ir.attachment'].create({
                     'name': fattura['filename'],
                     'raw': file,
@@ -111,7 +110,12 @@ class AccountEdiFormat(models.Model):
         """ _is_required_for_invoice for SdiCoop.
             OVERRIDE
         """
-        return invoice.is_sale_document() and invoice.country_code == 'IT'
+        is_self_invoice = self._l10n_it_edi_is_self_invoice(invoice)
+        return (
+            (invoice.is_sale_document() or (is_self_invoice and invoice.is_purchase_document()))
+            and invoice.l10n_it_send_state not in ('sent', 'delivered', 'delivered_accepted')
+            and invoice.country_code == 'IT'
+        )
 
     def _support_batching(self, move=None, state=None, company=None):
         # OVERRIDE
@@ -150,7 +154,7 @@ class AccountEdiFormat(models.Model):
                 invoice.message_post(
                     body=(_("Invoices for PA are not managed by Odoo, you can download the document and send it on your own."))
                 )
-                to_return[invoice] = {'attachment': attachment}
+                to_return[invoice] = {'attachment': attachment, 'success': True}
             else:
                 to_send[filename] = {
                     'invoice': invoice,
@@ -163,8 +167,9 @@ class AccountEdiFormat(models.Model):
                 'error': _("You must accept the terms and conditions in the settings to use FatturaPA."),
                 'blocking_level': 'error'} for invoice in invoices}
 
+        responses = {}
         if proxy_user._get_demo_state() == 'demo':
-            responses = {filename: {'id_transaction': 'demo'} for invoice in invoices}
+            responses = {i['data']['filename']: {'id_transaction': 'demo'} for i in to_send.values()}
         else:
             try:
                 responses = self._l10n_it_edi_upload([i['data'] for i in to_send.values()], proxy_user)
@@ -177,7 +182,7 @@ class AccountEdiFormat(models.Model):
             if 'id_transaction' in response:
                 invoice.l10n_it_edi_transaction = response['id_transaction']
                 to_return[invoice].update({
-                    'error': _('The invoice was successfully transmitted to the Public Administration and we are waiting for confirmation.'),
+                    'error': _('The invoice was sent to FatturaPA, but we are still awaiting a response. Click the link above to check for an update.'),
                     'blocking_level': 'info',
                 })
         return to_return
@@ -214,10 +219,9 @@ class AccountEdiFormat(models.Model):
             state = response['state']
             if state == 'awaiting_outcome':
                 to_return[invoice] = {
-                    'error': _('The invoice was successfully transmitted to the Public Administration and we are waiting for confirmation'),
+                    'error': _('The invoice was sent to FatturaPA, but we are still awaiting a response. Click the link above to check for an update.'),
                     'blocking_level': 'info',
                 }
-                proxy_acks.append(id_transaction)
                 continue
             elif state == 'not_found':
                 # Invoice does not exist on proxy. Either it does not belong to this proxy_user or it was not created correctly when
@@ -251,6 +255,13 @@ class AccountEdiFormat(models.Model):
                         ' Original message from the SDI: %s', errors[idx]))
                     to_return[invoice] = {'attachment': invoice.l10n_it_edi_attachment_id, 'success': True}
                 else:
+                    # Add helpful text if duplicated filename error
+                    if '00002' in error_codes:
+                        idx = error_codes.index('00002')
+                        errors[idx] = _(
+                            'The filename is duplicated. Try again (or adjust the FatturaPA Filename sequence).'
+                            ' Original message from the SDI: %s', [errors[idx]]
+                        )
                     to_return[invoice] = {'error': self._format_error_message(_('The invoice has been refused by the Exchange System'), errors), 'blocking_level': 'error'}
                     invoice.l10n_it_edi_transaction = False
             elif state == 'notificaMancataConsegna':
@@ -328,6 +339,9 @@ class AccountEdiFormat(models.Model):
             'EI02': {'error': _lt('Service momentarily unavailable'), 'blocking_level': 'warning'},
             'EI03': {'error': _lt('Unauthorized user'), 'blocking_level': 'error'},
         }
+
+        if not files:
+            return {}
 
         result = proxy_user._make_request(proxy_user._get_server_url() + '/api/l10n_it_edi/1/out/SdiRiceviFile', params={'files': files})
 

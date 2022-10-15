@@ -7,12 +7,12 @@
 # nle_odoo, 2021
 # Mark Lee <odoos@soti.33mail.com>, 2021
 # Seongseok Shin <shinss61@hotmail.com>, 2021
-# Martin Trigaux, 2021
 # Goh Gangtai <gangtai.goh@gmail.com>, 2021
 # JH CHOI <hwangtog@gmail.com>, 2021
 # Link Up링크업 <linkup.way@gmail.com>, 2021
 # Linkup <link-up@naver.com>, 2021
 # Heesoo Choi, 2021
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Heesoo Choi, 2021\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -965,7 +965,10 @@ msgid "As soon as possible"
 msgstr "가능한 빨리"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Assign"
 msgstr "할당"
 
@@ -3228,6 +3231,12 @@ msgid "Immediate transfer?"
 msgstr "즉시 이동하겠습니까?"
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Import"
+msgstr "가져오기"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
 msgid "In Type"
 msgstr "유형 있음"
@@ -4533,6 +4542,12 @@ msgid "No stock move found"
 msgstr "재고이동을 찾을수 없습니다"
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "No Stock On Hand"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_form
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_all
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_backorder
@@ -5257,6 +5272,14 @@ msgstr "선호 경로"
 #: model:ir.model.fields,help:stock.field_stock_move__route_ids
 msgid "Preferred route"
 msgstr "선호 경로"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"Press the CREATE button to define quantity for each product in your stock or"
+" import them from a spreadsheet throughout Favorites"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -7471,8 +7494,8 @@ msgstr "창고의 이름은 회사마다 고유해야 합니다!"
 #. module: stock
 #: code:addons/stock/wizard/stock_assign_serial_numbers.py:0
 #, python-format
-msgid "The number of Serial Numbers to generate must greater than zero."
-msgstr "생성할 일련번호의 수는 0보다 커야 합니다."
+msgid "The number of Serial Numbers to generate must be greater than zero."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -7603,6 +7626,14 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
 msgid "There's no product move yet"
 msgstr "아직 품목 이동내역이 없습니다."
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"This analysis gives you an overview of the current stock level of your "
+"products."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__name
@@ -8061,7 +8092,10 @@ msgid "USPS Connector"
 msgstr "USPS 연결기"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Unassign"
 msgstr ""
 
@@ -8993,6 +9027,12 @@ msgid ""
 "You'll find here smart replenishment propositions based on inventory forecasts.\n"
 "            Choose the quantity to buy or manufacture and launch orders in a click.\n"
 "            To save time in the future, set the rules as \"automated\"."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Your stock is currently empty"
 msgstr ""
 
 #. module: stock

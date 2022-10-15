@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_type.py:0
@@ -1320,7 +1320,7 @@ msgstr "Annulla permessi futuri"
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_departure_wizard__cancel_leaves
 msgid "Cancel all time off after this date."
-msgstr "Cancella tutte le ferie dopo questa data."
+msgstr "Annulla tutte le ferie dopo questa data."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__cancel
@@ -3897,7 +3897,7 @@ msgstr "Utenti"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_tree
 msgid "Validate"
-msgstr "Valida"
+msgstr "Convalida"
 
 #. module: hr_holidays
 #. openerp-web
@@ -3926,7 +3926,7 @@ msgstr "Inizio Validità"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
 msgid "Validity Stop"
-msgstr ""
+msgstr "Stop di validità"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__color_name__violet
@@ -4052,6 +4052,15 @@ msgstr ""
 " %s."
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid ""
+"You cannot delete an allocation request which has some validated leaves."
+msgstr ""
+"Non puoi eliminare una richiesta di assegnazione che ha delle foglie "
+"convalidate."
+
+#. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid ""
@@ -4069,6 +4078,14 @@ msgid ""
 msgstr ""
 "Diritti non sufficienti per applicare la seconda approvazione a una "
 "richiesta di ferie"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"You have several allocations for those type and period.\n"
+"Please split your request to fit in their number of days."
+msgstr ""
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0

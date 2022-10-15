@@ -109,16 +109,30 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         }
         var self = this;
         this._saving = true;
-        this.trigger_up('edition_will_stopped');
+        this.trigger_up('edition_will_stopped', {
+            // TODO adapt in master, this was added as a stable fix. This
+            // trigger to 'edition_will_stopped' was left by mistake
+            // during an editor refactoring + revert fail. It stops the public
+            // widgets at the wrong time, potentially dead-locking the editor.
+            // 'ready_to_clean_for_save' is the one in charge of stopping the
+            // widgets at the proper time.
+            noWidgetsStop: true,
+        });
         const destroy = () => {
             self.wysiwyg.destroy();
             self.trigger_up('edition_was_stopped');
             self.destroy();
         };
         if (!this.wysiwyg.isDirty()) {
-            return destroy();
+            destroy();
+            if (reload) {
+                window.location.reload();
+            }
+            return;
         }
+        this.wysiwyg.__edition_will_stopped_already_done = true; // TODO adapt in master, see above
         return this.wysiwyg.saveContent(false).then((result) => {
+            delete this.wysiwyg.__edition_will_stopped_already_done;
             var $wrapwrap = $('#wrapwrap');
             self.editableFromEditorMenu($wrapwrap).removeClass('o_editable');
             if (reload) {
@@ -296,9 +310,8 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                     continue;
                 }
                 $savable.not('.o_dirty').each(function () {
-                    const $el = $(this);
-                    if (!$el.closest('[data-oe-readonly]').length) {
-                        $el.addClass('o_dirty');
+                    if (!this.hasAttribute('data-oe-readonly')) {
+                        this.classList.add('o_dirty');
                     }
                 });
             }
@@ -314,7 +327,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                     characterData: true,
                 });
             }
-        }
+        };
         observe();
 
         this.wysiwyg.odooEditor.addEventListener('observerUnactive', () => {
@@ -322,8 +335,8 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 processRecords(this.observer.takeRecords());
                 this.observer.disconnect();
             }
-        })
-        this.wysiwyg.odooEditor.addEventListener('observerActive', observe)
+        });
+        this.wysiwyg.odooEditor.addEventListener('observerActive', observe);
 
         $('body').addClass('editor_started');
     },
@@ -332,6 +345,13 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         return $(this.savableSelector).not('input, [data-oe-readonly],[data-oe-type="monetary"],[data-oe-many2one-id], [data-oe-field="arch"]:empty').filter((_, el) => {
             return !$(el).closest('.o_not_editable').length;
         }).toArray();
+    },
+
+    _getReadOnlyAreas () {
+        return [];
+    },
+    _getUnremovableElements () {
+        return this._targetForEdition()[0].querySelectorAll("#top_menu a:not(.oe_unremovable)");
     },
     /**
      * Call preventDefault of an event.
@@ -416,6 +436,10 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             controlHistoryFromDocument: true,
             getContentEditableAreas: this._getContentEditableAreas.bind(this),
             powerboxCommands: this._getSnippetsCommands(),
+            bindLinkTool: true,
+            showEmptyElementHint: false,
+            getReadOnlyAreas: this._getReadOnlyAreas.bind(this),
+            getUnremovableElements: this._getUnremovableElements.bind(this),
         }, collaborationConfig);
         return wysiwygLoader.createWysiwyg(this,
             Object.assign(params, this.wysiwygOptions),
@@ -558,17 +582,20 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         });
     },
     /**
-     * Called when edition will stop. Notifies the
-     * WebsiteRoot that is should stop the public widgets.
+     * Called when edition will stop.
      *
      * @private
      * @param {OdooEvent} ev
      */
     _onEditionWillStop: function (ev) {
         this.$editorMessageElements && this.$editorMessageElements.removeAttr('data-editor-message');
-        this.trigger_up('widgets_stop_request', {
-            $target: this._targetForEdition(),
-        });
+
+        if (!ev.data.noWidgetsStop) { // TODO adapt in master, this was added as a stable fix.
+            this.trigger_up('widgets_stop_request', {
+                $target: this._targetForEdition(),
+            });
+        }
+
         if (this.observer) {
             this.observer.disconnect();
             this.observer = undefined;

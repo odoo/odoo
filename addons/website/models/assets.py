@@ -64,6 +64,8 @@ class Assets(models.AbstractModel):
         See web_editor.Assets._get_custom_attachment
         Extend to only return the attachments related to the current website.
         """
+        if self.env.user.has_group('website.group_website_designer'):
+            self = self.sudo()
         website = self.env['website'].get_current_website()
         res = super(Assets, self)._get_custom_attachment(custom_url, op=op)
         return res.with_context(website_id=website.id).filtered(lambda x: not x.website_id or x.website_id == website)
@@ -73,6 +75,10 @@ class Assets(models.AbstractModel):
         See web_editor.Assets._get_custom_asset
         Extend to only return the views related to the current website.
         """
+        if self.env.user.has_group('website.group_website_designer'):
+            # TODO: Remove me in master, see commit message, ACL added right to
+            #       unlink to designer but not working without -u in stable
+            self = self.sudo()
         website = self.env['website'].get_current_website()
         res = super(Assets, self)._get_custom_asset(custom_url)
         return res.with_context(website_id=website.id).filter_duplicate()

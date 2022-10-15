@@ -310,13 +310,6 @@ var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             var trans = self._getTranlationObject(this);
             trans.value = (trans.value ? trans.value : $node.html()).replace(/[ \t\n\r]+/, ' ');
         });
-        this._getEditableArea().prependEvent('click.translator', function (ev) {
-            if (ev.ctrlKey || !$(ev.target).is(':o_editable')) {
-                return;
-            }
-            ev.preventDefault();
-            ev.stopPropagation();
-        });
 
         // attributes
 
@@ -357,4 +350,11 @@ registry.category("website_navbar_widgets").add("TranslatePageMenu", {
     Widget: TranslatePageMenu,
     selector: '.o_menu_systray:has([data-action="translate"])',
 });
+
+return {
+    TranslatorInfoDialog: TranslatorInfoDialog,
+    AttributeTranslateDialog: AttributeTranslateDialog,
+    TranslatePageMenu: TranslatePageMenu,
+};
+
 });

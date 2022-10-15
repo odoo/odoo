@@ -8,7 +8,7 @@ from odoo.http import request
 class ProductConfiguratorController(http.Controller):
     @http.route(['/sale_product_configurator/configure'], type='json', auth="user", methods=['POST'])
     def configure(self, product_template_id, pricelist_id, **kw):
-        add_qty = int(kw.get('add_qty', 1))
+        add_qty = float(kw.get('add_qty', 1))
         product_template = request.env['product.template'].browse(int(product_template_id))
         pricelist = self._get_pricelist(pricelist_id)
 
@@ -39,7 +39,7 @@ class ProductConfiguratorController(http.Controller):
         return self._optional_product_items(product_id, pricelist, **kw)
 
     def _optional_product_items(self, product_id, pricelist, **kw):
-        add_qty = int(kw.get('add_qty', 1))
+        add_qty = float(kw.get('add_qty', 1))
         product = request.env['product.product'].browse(int(product_id))
 
         parent_combination = product.product_template_attribute_value_ids
@@ -59,7 +59,7 @@ class ProductConfiguratorController(http.Controller):
     def _show_advanced_configurator(self, product_id, variant_values, pricelist, handle_stock, **kw):
         product = request.env['product.product'].browse(int(product_id))
         combination = request.env['product.template.attribute.value'].browse(variant_values)
-        add_qty = int(kw.get('add_qty', 1))
+        add_qty = float(kw.get('add_qty', 1))
 
         no_variant_attribute_values = combination.filtered(
             lambda product_template_attribute_value: product_template_attribute_value.attribute_id.create_variant == 'no_variant'

@@ -5,18 +5,16 @@
 # Translators:
 # Martin Trigaux, 2021
 # Levent Karakaş <levent@mektup.at>, 2021
-# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2021
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
 # Buket Şeker <buket_skr@hotmail.com>, 2021
 # abc Def <hdogan1974@gmail.com>, 2021
 # Özlem Atalay <ozlema@eskayazilim.com.tr>, 2021
 # Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2021
 # Ediz Duman <neps1192@gmail.com>, 2021
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2021
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2021
 # Umur Akın <umura@projetgrup.com>, 2021
 # Tugay Hatıl <tugayh@projetgrup.com>, 2021
 # Murat Kaplan <muratk@projetgrup.com>, 2021
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -24,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Murat Kaplan <muratk@projetgrup.com>, 2021\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,7 +34,7 @@ msgstr ""
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 #, python-format
 msgid "%s Spent"
-msgstr ""
+msgstr "%s Harcanan"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
@@ -54,30 +52,32 @@ msgstr "(%s kalan günler)"
 #: model_terms:digest.tip,tip_description:hr_timesheet.digest_tip_hr_timesheet_0
 msgid "<b class=\"tip_title\">Tip: Record your Timesheets faster</b>"
 msgstr ""
+"<b class=\"tip_title\">İpucu: Çalışma çizelgelerinizi daha hızlı "
+"kaydedin</b>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "<em class=\"font-weight-normal text-muted\">Timesheets for employee:</em>"
 msgstr ""
-"<em class=\"font-weight-normal text-muted\"> Personel için zaman "
+"<em class=\"font-weight-normal text-muted\"> Personel için çalışma "
 "çizelgeleri:</em>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "<em class=\"font-weight-normal text-muted\">Timesheets for project:</em>"
-msgstr "<em class=\"font-weight-normal text-muted\">Proje zaman çizelgesi:</em>"
+msgstr "<em class=\"font-weight-normal text-muted\">Proje çalışma çizelgesi:</em>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "<em class=\"font-weight-normal text-muted\">Timesheets for task:</em>"
 msgstr ""
-"<em class=\"font-weight-normal text-muted\">Görev için zaman "
+"<em class=\"font-weight-normal text-muted\">Görev için çalışma "
 "çizelgeleri:</em>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "<em class=\"font-weight-normal text-muted\">Timesheets on </em>"
-msgstr "<em class=\"font-weight-normal text-muted\"> Zaman Çizelgeleride</em>"
+msgstr "<em class=\"font-weight-normal text-muted\"> Çalışma Çizelgelerinde</em>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
@@ -90,6 +90,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o \" title=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -108,7 +110,7 @@ msgstr "<span class=\"o_stat_text\">Kaydedilmiş</span>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_view_form_inherit_timesheet
 msgid "<span class=\"o_stat_text\">Timesheets</span>"
-msgstr "<span class=\"o_stat_text\">Zaman Çizelgeleri </span>"
+msgstr "<span class=\"o_stat_text\">Çalışma Çizelgeleri </span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
@@ -116,6 +118,8 @@ msgid ""
 "<span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', True)]}\">Hours Spent on Sub-tasks:</span>\n"
 "                                <span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', False)]}\">Days Spent on Sub-tasks:</span>"
 msgstr ""
+"<span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', True)]}\">Alt Görevler Harcanan Saatler</span>\n"
+"                                <span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', False)]}\">Alt Görevler Harcanan Günler</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -139,12 +143,12 @@ msgstr "<span style=\"margin-right: 15px;\">Toplam (Saat)</span>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_tasks_list_inherit
 msgid "<span> day(s)</span>"
-msgstr ""
+msgstr "<span> gün(ler)</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_tasks_list_inherit
 msgid "<span> hour(s)</span>"
-msgstr ""
+msgstr "<span> saat(ler)</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -174,7 +178,7 @@ msgstr "<span>Görev</span>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "<strong>Days recorded:</strong>"
-msgstr ""
+msgstr "<strong>Kaydedilen günler:</strong>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
@@ -184,17 +188,17 @@ msgstr "<strong>Süre: </strong>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "<strong>Hours recorded:</strong>"
-msgstr ""
+msgstr "<strong>Kaydedilen saatler:</strong>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task_planned_hours_template
 msgid "<strong>Planned Days:</strong>"
-msgstr ""
+msgstr "<strong>Planlanan Günler:</strong>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
 msgid "<strong>Progress:</strong>"
-msgstr ""
+msgstr "<strong>İlerleme:</strong>"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__analytic_account_active
@@ -216,12 +220,12 @@ msgstr "Tümü"
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_all
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_activity_all
 msgid "All Timesheets"
-msgstr "Tüm Zaman Çizelgeleri"
+msgstr "Tüm Çalışma Çizelgeleri"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__allow_timesheets
 msgid "Allow timesheets"
-msgstr "Zaman Çizelgelerine İzin Ver"
+msgstr "Çalışma Çizelgelerine İzin Ver"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/__init__.py:0
@@ -261,17 +265,17 @@ msgstr "Apple Uygulama Mağazası"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_view_form_inherit_timesheet
 msgid "Application Settings"
-msgstr ""
+msgstr "Uygulama Ayarları"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__timesheet_ids
 msgid "Associated Timesheets"
-msgstr "İlişkili Zaman Çizelgeleri"
+msgstr "İlişkili Çalışma Çizelgeleri"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__module_project_timesheet_synchro
 msgid "Awesome Timesheet"
-msgstr "Mükemmel Zaman Çizelgesi"
+msgstr "Mükemmel Çalışma Çizelgesi"
 
 #. module: hr_timesheet
 #: model:project.task.type,legend_blocked:hr_timesheet.internal_project_default_stage
@@ -296,7 +300,7 @@ msgstr "Görev"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_collaborator
 msgid "Collaborators in project shared"
-msgstr ""
+msgstr "Projedeki ortak çalışanlar paylaşıldı"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_res_company
@@ -316,7 +320,7 @@ msgstr "Yapılandırma"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_task_create_timesheet
 msgid "Create Timesheet from task"
-msgstr "Görevden Zaman Çizelgesi oluştur"
+msgstr "Görevden Çalışma Çizelgesi oluştur"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_create_timesheet__create_uid
@@ -353,13 +357,13 @@ msgstr "Harcanan Günler"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "Days recorded on sub-tasks:"
-msgstr ""
+msgstr "Alt görevlere kaydedilen günler:"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_res_company__internal_project_id
 msgid "Default project value for timesheet generated from time off type."
 msgstr ""
-"İzin türünden oluşturulan zaman çizelgesi için varsayılan proje değeri."
+"İzin türünden oluşturulan çalışma çizelgesi için varsayılan proje değeri."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_task_create_timesheet_view_form
@@ -375,7 +379,7 @@ msgstr "Departman"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_task_create_timesheet_view_form
 msgid "Describe your activity..."
-msgstr "Aktivitenizi tanımlayın... "
+msgstr "Aktivitenizi tanımlayın..."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
@@ -409,7 +413,7 @@ msgstr "Geçerli görevin ilerlemesini görüntüler."
 #: code:addons/hr_timesheet/static/src/js/timesheet_config_form_view.js:0
 #, python-format
 msgid "Download our App"
-msgstr "Download our App"
+msgstr "Uygulamamızı İndirin"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_task_create_timesheet_view_form
@@ -456,13 +460,13 @@ msgstr "Personel Hatırlatıcı"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__allow_timesheets
 msgid "Enable timesheeting on the project."
-msgstr "Projede zaman çizelgesini etkinleştirin."
+msgstr "Projede çalışma çizelgesini etkinleştirin."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__encode_uom_in_days
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__encode_uom_in_days
 msgid "Encode Uom In Days"
-msgstr "Encode Uom In Days"
+msgstr "Uom'u Günler İçinde Kodlayın"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__timesheet_encode_uom_id
@@ -477,7 +481,7 @@ msgstr "Kodlama Ölçü Birimi"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Generate timesheets upon time off validation"
-msgstr ""
+msgstr "İzin doğrulamasında çalışma çizelgeleri oluşturma"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -502,7 +506,7 @@ msgstr "HTTP Yönlendirme"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__has_planned_hours_tasks
 msgid "Has Planned Hours Tasks"
-msgstr ""
+msgstr "Görevlerin Planlanan Saatleri Vardır"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
@@ -522,7 +526,7 @@ msgstr "Harcanan Saatler"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "Hours recorded on sub-tasks:"
-msgstr ""
+msgstr "Alt görevlerde kaydedilen saatler:"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_create_timesheet__id
@@ -539,7 +543,7 @@ msgstr "İşaretliyse, tüm yöneticilere bir mail gönder"
 msgid ""
 "If checked, send an email to all users who have not recorded their timesheet"
 msgstr ""
-"İşaretliyse, zaman çizelgelerini kaydetmemiş olan tüm kullanıcılara bir "
+"İşaretliyse, çalışma çizelgelerini kaydetmemiş olan tüm kullanıcılara bir "
 "e-posta gönderin"
 
 #. module: hr_timesheet
@@ -581,7 +585,7 @@ msgstr "Uom Günlerini Kodla"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__is_internal_project
 msgid "Is Internal Project"
-msgstr ""
+msgstr "İç Proje"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_create_timesheet____last_update
@@ -619,7 +623,7 @@ msgstr "Geçen Yıl"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
 msgid "Log time on tasks"
-msgstr "Görevlerde zaman çizelgelerini kullanama"
+msgstr "Görevlerde çalışma çizelgelerini kullanama"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__reminder_manager_allow
@@ -640,13 +644,13 @@ msgstr "Menü"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_project_task_user_view_search
 msgid "My Team's Projects"
-msgstr ""
+msgstr "Ekibimin Projeleri"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_task_view_search
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_project_task_user_view_search
 msgid "My Team's Tasks"
-msgstr ""
+msgstr "Ekibimin Görevleri"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line
@@ -654,7 +658,7 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_activity_user
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "My Timesheets"
-msgstr "Zaman Çizelgelerim"
+msgstr "Çalışma Çizelgelerim"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
@@ -667,13 +671,13 @@ msgstr "En Yeni"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
 msgid "No activities found"
-msgstr ""
+msgstr "Etkinlik bulunamadı"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
 msgid "No activities found. Let's start a new one!"
-msgstr "Aktivite bulunamadı. Hadi yenisine başlayalım! "
+msgstr "Aktivite bulunamadı. Hadi yenisine başlayalım!"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
@@ -731,7 +735,7 @@ msgstr "Proje Zaman Birimi"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_project
 msgid "Project's Timesheets"
-msgstr "Projenin Zaman Çizelgeleri"
+msgstr "Projenin Çalışma Çizelgeleri"
 
 #. module: hr_timesheet
 #: model:project.task.type,legend_done:hr_timesheet.internal_project_default_stage
@@ -749,6 +753,8 @@ msgid ""
 "Record your timesheets in an instant by pressing Shift + the corresponding "
 "hotkey to add 15min to your projects."
 msgstr ""
+"Projelerinize 15 dakika eklemek için Shift + ilgili kısayol tuşuna basarak "
+"çalışma çizelgelerinizi anında kaydedin."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
@@ -765,7 +771,7 @@ msgstr "Kalan Günler"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "Remaining Days:"
-msgstr ""
+msgstr "Kalan Günler:"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__remaining_hours
@@ -780,12 +786,12 @@ msgstr "Kalan Saatleri"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "Remaining Hours:"
-msgstr ""
+msgstr "Kalan Saatler:"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__remaining_hours
 msgid "Remaining Invoiced Time"
-msgstr ""
+msgstr "Kalan Faturalama Süresi"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_timesheets_reports
@@ -807,7 +813,7 @@ msgstr "Zamanı kaydet"
 #: code:addons/hr_timesheet/static/src/xml/qr_modal_template.xml:0
 #, python-format
 msgid "Scan this QR code to get the Awesome Timesheet app:"
-msgstr "Scan this QR code to get the Awesome Timesheet app:"
+msgstr "Awesome Timesheet uygulamasını edinmek için bu QR kodunu tarayın:"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
@@ -844,17 +850,20 @@ msgstr "Görevde Ara"
 #: code:addons/hr_timesheet/models/project.py:0
 #, python-format
 msgid "See timesheet entries"
-msgstr "Zaman çizelgesi girişlerini görün"
+msgstr "Çalışma çizelgesi girişlerini görün"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Send a periodical email reminder to timesheets managers"
 msgstr ""
+"Çalışma çizelgesi yöneticilerine periyodik bir e-posta hatırlatıcısı "
+"gönderme"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Send a periodical email reminder to timesheets users"
 msgstr ""
+"Çalışma çizelgesi kullanıcılarına periyodik e-posta hatırlatıcısı gönderme"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.hr_timesheet_config_settings_action
@@ -899,7 +908,7 @@ msgstr "Müşteri siparişi oluşturduğumuz görev"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_task
 msgid "Task's Timesheets"
-msgstr "Görevin Zaman Çizelgeleri"
+msgstr "Görevin Çalışma Çizelgeleri"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_project_task_timesheet
@@ -927,12 +936,12 @@ msgstr "Bir şirketin İç Projesi o şirkette olmalıdır."
 #. module: hr_timesheet
 #: model:ir.model.constraint,message:hr_timesheet.constraint_project_task_create_timesheet_time_positive
 msgid "The timesheet's time must be positive"
-msgstr "Zaman çizelgesinin zamanı pozitif olmalıdır"
+msgstr "Çalışma çizelgesinin zamanı pozitif olmalıdır"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "There are no timesheets."
-msgstr "Zaman çizelgesi yok."
+msgstr "Çalışma çizelgesi yok."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
@@ -941,9 +950,9 @@ msgid ""
 "These projects have some timesheet entries referencing them. Before removing"
 " these projects, you have to remove these timesheet entries."
 msgstr ""
-"Bu projelerde kendilerine atıfta bulunan bazı zaman çizelgesi girişleri "
-"vardır. Bu projeleri kaldırmadan önce bu zaman çizelgesi girişlerini "
-"kaldırmanız gerekir. "
+"Bu projelerde kendilerine atıfta bulunan bazı çalışma çizelgesi girişleri "
+"vardır. Bu projeleri kaldırmadan önce bu çalışma çizelgesi girişlerini "
+"kaldırmanız gerekir."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
@@ -952,9 +961,9 @@ msgid ""
 "These tasks have some timesheet entries referencing them. Before removing "
 "these tasks, you have to remove these timesheet entries."
 msgstr ""
-"Bu görevlerin kendilerine başvuran bazı zaman çizelgesi girdileri vardır. Bu"
-" görevleri kaldırmadan önce bu zaman çizelgesi girişlerini kaldırmanız "
-"gerekir. "
+"Bu görevlerin kendilerine başvuran bazı çalışma çizelgesi girdileri vardır. "
+"Bu görevleri kaldırmadan önce bu çalışma çizelgesi girişlerini kaldırmanız "
+"gerekir."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
@@ -975,9 +984,9 @@ msgid ""
 "This project has some timesheet entries referencing it. Before removing this"
 " project, you have to remove these timesheet entries."
 msgstr ""
-"Bu proje, ona atıfta bulunan bazı zaman çizelgesi girişlerine sahiptir. Bu "
-"projeyi kaldırmadan önce bu zaman çizelgesi girişlerini kaldırmanız gerekir."
-" "
+"Bu proje, ona atıfta bulunan bazı çalışma çizelgesi girişlerine sahiptir. Bu"
+" projeyi kaldırmadan önce bu çalışma çizelgesi girişlerini kaldırmanız "
+"gerekir."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
@@ -986,8 +995,8 @@ msgid ""
 "This task has some timesheet entries referencing it. Before removing this "
 "task, you have to remove these timesheet entries."
 msgstr ""
-"Bu göreve başvuran bazı zaman çizelgesi girdileri var. Bu görevi kaldırmadan"
-" önce bu zaman çizelgesi girişlerini kaldırmanız gerekir. "
+"Bu göreve başvuran bazı çalışma çizelgesi girdileri var. Bu görevi "
+"kaldırmadan önce bu çalışma çizelgesi girişlerini kaldırmanız gerekir."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
@@ -996,7 +1005,7 @@ msgid ""
 "This task must be part of a project because there are some timesheets linked"
 " to it."
 msgstr ""
-"Bu görev bir projenin parçası olmalıdır, çünkü ona bağlı bazı zaman "
+"Bu görev bir projenin parçası olmalıdır, çünkü ona bağlı bazı çalışma "
 "çizelgeleri vardır."
 
 #. module: hr_timesheet
@@ -1013,8 +1022,8 @@ msgid ""
 "If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
 msgstr ""
 "Bu, projelerde ve görevlerde kullanılan ölçü birimini belirleyecektir. "
-"Projelere bağlı zaman çizelgesini kullanırsanız, personellerde doğru ölçüm "
-"birimini ayarlamayı unutmayın."
+"Projelere bağlı çalışma çizelgesini kullanırsanız, personellerde doğru ölçüm"
+" birimini ayarlamayı unutmayın."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__timesheet_encode_uom_id
@@ -1024,7 +1033,7 @@ msgid ""
 "This will set the unit of measure used to encode timesheet. This will simply provide tools\n"
 "        and widgets to help the encoding. All reporting will still be expressed in hours (default value)."
 msgstr ""
-"Bu, zaman çizelgesini kodlamak için kullanılan ölçü birimini ayarlar. Bu sadece araçlar sağlayacaktır\n"
+"Bu, çalışma çizelgesini kodlamak için kullanılan ölçü birimini ayarlar. Bu sadece araçlar sağlayacaktır\n"
 "        ve kodlamaya yardımcı olacak araçlar. Tüm raporlar yine de saat cinsinden ifade edilir (varsayılan değer)."
 
 #. module: hr_timesheet
@@ -1063,22 +1072,22 @@ msgstr "Harcanan Zaman (Saat)"
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__subtask_effective_hours
 msgid "Time spent on the sub-tasks (and their own sub-tasks) of this task."
 msgstr ""
-"Bu görevin alt görevlerinde (ve kendi alt görevlerinde) harcanan zaman. "
+"Bu görevin alt görevlerinde (ve kendi alt görevlerinde) harcanan zaman."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__effective_hours
 msgid "Time spent on this task, excluding its sub-tasks."
-msgstr "Alt görevleri hariç, bu görev için harcanan zaman. "
+msgstr "Alt görevleri hariç, bu görev için harcanan zaman."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__total_hours_spent
 msgid "Time spent on this task, including its sub-tasks."
-msgstr "Alt görevleri de dahil olmak üzere bu görev için harcanan zaman. "
+msgstr "Alt görevleri de dahil olmak üzere bu görev için harcanan zaman."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Time unit used to record your timesheets"
-msgstr "Zaman çizelgelerinizi kaydetmek için kullanılan zaman birimi "
+msgstr "Çalışma çizelgelerinizi kaydetmek için kullanılan çalışma birimi"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
@@ -1086,19 +1095,19 @@ msgstr "Zaman çizelgelerinizi kaydetmek için kullanılan zaman birimi "
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_graph_my
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_my_timesheet_line_pivot
 msgid "Timesheet"
-msgstr "Zaman Çizelgesi"
+msgstr "Çalışma Çizelgesi"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_tree
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Timesheet Activities"
-msgstr "Zaman Çizelgesi Aktiviteleri"
+msgstr "Çalışma Çizelgesi Aktiviteleri"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee__timesheet_cost
 msgid "Timesheet Cost"
-msgstr "Zaman Çizelgesi Maliyeti"
+msgstr "Çalışma Çizelgesi Maliyeti"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_graph
@@ -1107,18 +1116,18 @@ msgstr "Zaman Çizelgesi Maliyeti"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_pivot
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_my_timesheet_line_pivot
 msgid "Timesheet Costs"
-msgstr "Zaman Çizelgesi Maliyetleri"
+msgstr "Çalışma Çizelgesi Maliyetleri"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__timesheet_count
 msgid "Timesheet Count"
-msgstr ""
+msgstr "Çalışma Çizelgesi Sayısı"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__timesheet_encode_uom_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_company__timesheet_encode_uom_id
 msgid "Timesheet Encoding Unit"
-msgstr "Zaman Çizelgesi Kodlama Birimi"
+msgstr "Çalışma Çizelgesi Kodlama Birimi"
 
 #. module: hr_timesheet
 #: model:ir.actions.report,name:hr_timesheet.timesheet_report
@@ -1128,12 +1137,12 @@ msgstr "Zaman Çizelgesi Kodlama Birimi"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet_project
 msgid "Timesheet Entries"
-msgstr "Zaman Çizelgesi Girişleri"
+msgstr "Çalışma Çizelgesi Girişleri"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet by Date"
-msgstr "Tarihe Göre Zaman Çizelgesi"
+msgstr "Tarihe Göre Çalışma Çizelgesi"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
@@ -1159,37 +1168,37 @@ msgstr "Tarihe Göre Zaman Çizelgesi"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 #, python-format
 msgid "Timesheets"
-msgstr "Zaman Çizelgeleri"
+msgstr "Çalışma Çizelgeleri"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Timesheets Control"
-msgstr ""
+msgstr "Çalışma Çizelgeleri Kontrolü"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_report
 msgid "Timesheets by Employee"
-msgstr ""
+msgstr "Çalışanlara Göre Çalışma Çizelgeleri"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_project
 msgid "Timesheets by Project"
-msgstr ""
+msgstr "Projeye Göre Çalışma Çizelgeleri"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_task
 msgid "Timesheets by Task"
-msgstr ""
+msgstr "Göreve Göre Çalışma Çizelgeleri"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__allow_timesheets
 msgid "Timesheets can be logged on this task."
-msgstr "Zaman çizelgeleri bu göreve kaydedilebilir."
+msgstr "Çalışma çizelgeleri bu göreve kaydedilebilir."
 
 #. module: hr_timesheet
 #: model:digest.tip,name:hr_timesheet.digest_tip_hr_timesheet_0
 msgid "Tip: Record your Timesheets faster"
-msgstr ""
+msgstr "İpucu: Çalışma çizelgelerinizi daha hızlı kaydedin"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
@@ -1218,7 +1227,7 @@ msgstr "Toplam Saat"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__total_timesheet_time
 msgid "Total Timesheet Time"
-msgstr "Toplam Zaman Çizelgesi Süresi"
+msgstr "Toplam Çalışma Çizelgesi Süresi"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__total_timesheet_time
@@ -1226,7 +1235,7 @@ msgid ""
 "Total number of time (in the proper UoM) recorded in the project, rounded to"
 " the unit."
 msgstr ""
-"Projede kaydedilen toplam süre (uygun ölçü biriminde), birime yuvarlanır. "
+"Projede kaydedilen toplam süre (uygun ölçü biriminde), birime yuvarlanır."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__remaining_hours
@@ -1245,7 +1254,9 @@ msgstr "Toplam:"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Track your time from anywhere, even offline, with our web/mobile apps"
-msgstr "Track your time from anywhere, even offline, with our web/mobile apps"
+msgstr ""
+"Web/mobil uygulamalarımızla zamanınızı her yerden, hatta çevrimdışı olarak "
+"takip edin"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
@@ -1259,7 +1270,7 @@ msgid ""
 " customers."
 msgstr ""
 "Çalışma saatlerinizi her gün projelere göre takip edin ve bu zamanı "
-"müşterilerinize fatura edin. "
+"müşterilerinize fatura edin."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/res_company.py:0
@@ -1271,6 +1282,8 @@ msgstr "Eğitim"
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__has_planned_hours_tasks
 msgid "True if any of the project's task has a set planned hours"
 msgstr ""
+"Projenin görevlerinden herhangi birinin ayarlanmış planlanmış saatleri varsa"
+" doğru"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__user_id
@@ -1280,19 +1293,19 @@ msgstr "Kullanıcı"
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_hr_timesheet_approver
 msgid "User: all timesheets"
-msgstr ""
+msgstr "Kullanıcı: tüm çalışma çizelgeleri"
 
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_hr_timesheet_user
 msgid "User: own timesheets only"
-msgstr ""
+msgstr "Kullanıcı: yalnızca kendi çalışma çizelgeleri"
 
 #. module: hr_timesheet
 #. openerp-web
 #: code:addons/hr_timesheet/static/src/js/timesheet_config_form_view.js:0
 #, python-format
 msgid "View App"
-msgstr ""
+msgstr "Uygulamayı Görüntüle"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_uom_uom__timesheet_widget
@@ -1305,14 +1318,14 @@ msgid ""
 "Widget used in the webclient when this unit is the one used to encode "
 "timesheets."
 msgstr ""
-"Bu birim zaman çizelgelerini kodlamak için kullanılan birim olduğunda web "
+"Bu birim çalışma çizelgelerini kodlamak için kullanılan birim olduğunda web "
 "istemcisinde kullanılan araç."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 #, python-format
 msgid "You cannot access timesheets that are not yours."
-msgstr "Size ait olmayan zaman çizelgelerine erişemezsiniz."
+msgstr "Size ait olmayan çalışma çizelgelerine erişemezsiniz."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
@@ -1321,6 +1334,8 @@ msgid ""
 "You cannot add timesheets to a project linked to an inactive analytic "
 "account."
 msgstr ""
+"Etkin olmayan bir analitik hesaba bağlı bir projeye çalışma çizelgeleri "
+"ekleyemezsiniz."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
@@ -1329,6 +1344,8 @@ msgid ""
 "You cannot add timesheets to a project or a task linked to an inactive "
 "analytic account."
 msgstr ""
+"Etkin olmayan bir analitik hesaba bağlı bir projeye veya göreve çalışma "
+"çizelgeleri ekleyemezsiniz."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
@@ -1337,15 +1354,15 @@ msgid ""
 "analytic account. Please change this account, or reactivate the current one "
 "to timesheet on the project."
 msgstr ""
-"Etkin olmayan bir analitik hesaba bağlı olduğundan bu projede zaman "
+"Etkin olmayan bir analitik hesaba bağlı olduğundan bu projede çalışma "
 "çizelgelerini günlüğe kaydedemezsiniz. Lütfen bu hesabı değiştirin veya "
-"mevcut hesabı projede zaman çizelgesine göre yeniden etkinleştirin. "
+"mevcut hesabı projede çalışma çizelgesine göre yeniden etkinleştirin."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
 #, python-format
 msgid "You cannot use timesheets without an analytic account."
-msgstr ""
+msgstr "Çalışma çizelgelerini analitik hesap olmadan kullanamazsınız."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/res_company.py:0

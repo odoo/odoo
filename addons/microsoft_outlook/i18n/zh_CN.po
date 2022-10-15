@@ -1,0 +1,196 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* microsoft_outlook
+# 
+# Translators:
+# 稀饭~~ <wangwhai@qq.com>, 2022
+# Martin Trigaux, 2022
+# 智能科技奇客罗方 <alanljj@gmail.com>, 2022
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-03-30 11:00+0000\n"
+"PO-Revision-Date: 2022-05-17 12:42+0000\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
+msgid ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                        Connect your Outlook account"
+msgstr "连接您的Outlook账号"
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
+msgid ""
+"<i class=\"fa fa-cog\"/>\n"
+"                        Edit Settings"
+msgstr "编辑设置"
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
+msgid ""
+"<span attrs=\"{'invisible': ['|', ('use_microsoft_outlook_service', '=', False), ('microsoft_outlook_refresh_token', '=', False)]}\" class=\"badge badge-success\">\n"
+"                        Outlook Token Valid\n"
+"                    </span>"
+msgstr "Outlook的Token不正确"
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">Outlook Credentials</span>"
+msgstr "Outlook账号"
+
+#. module: microsoft_outlook
+#: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+#, python-format
+msgid "An error occurred when fetching the access token. %s"
+msgstr "获取登入token时发生错误。%s"
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_uri
+#: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_uri
+msgid "Authentication URI"
+msgstr "身份验证网址"
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
+msgid "Client ID"
+msgstr "客户ID"
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
+msgid "Client Secret"
+msgstr "客户密钥"
+
+#. module: microsoft_outlook
+#: model:ir.model,name:microsoft_outlook.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置设置"
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.microsoft_outlook_oauth_error
+msgid "Go back to your mail server"
+msgstr "返回您的邮件服务器"
+
+#. module: microsoft_outlook
+#: code:addons/microsoft_outlook/models/ir_mail_server.py:0
+#, python-format
+msgid ""
+"Incorrect Connection Security for Outlook mail server %r. Please set it to "
+"\"TLS (STARTTLS)\"."
+msgstr "Outlook邮件服务器安全设置错误 %r。请设置为\"TLS (STARTTLS)\"。"
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__is_microsoft_outlook_configured
+#: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__is_microsoft_outlook_configured
+msgid "Is Outlook Credential Configured"
+msgstr "Outlook安全凭证已配置"
+
+#. module: microsoft_outlook
+#: model:ir.model,name:microsoft_outlook.model_ir_mail_server
+msgid "Mail Server"
+msgstr "邮件服务器"
+
+#. module: microsoft_outlook
+#: model:ir.model,name:microsoft_outlook.model_microsoft_outlook_mixin
+msgid "Microsoft Outlook Mixin"
+msgstr "Microsoft Outlook Mixin"
+
+#. module: microsoft_outlook
+#: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+#, python-format
+msgid "Only the administrator can link an Outlook mail server."
+msgstr "只有管理员才能连接Outlook邮件服务器。"
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
+msgid "Outlook"
+msgstr "微软个人邮件"
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_access_token
+#: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_access_token
+msgid "Outlook Access Token"
+msgstr "Outlook Access Token"
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_access_token_expiration
+#: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_access_token_expiration
+msgid "Outlook Access Token Expiration Timestamp"
+msgstr "Outlook访问令牌时间戳到期"
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__use_microsoft_outlook_service
+#: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__use_microsoft_outlook_service
+msgid "Outlook Authentication"
+msgstr "Outlook 身份验证"
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_res_config_settings__microsoft_outlook_client_identifier
+msgid "Outlook Client Id"
+msgstr "Outlook客户端 ID"
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_res_config_settings__microsoft_outlook_client_secret
+msgid "Outlook Client Secret"
+msgstr "Outlook客户端密码"
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_refresh_token
+#: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_refresh_token
+msgid "Outlook Refresh Token"
+msgstr "Outlook 刷新令牌"
+
+#. module: microsoft_outlook
+#: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+#, python-format
+msgid "Please configure your Outlook credentials."
+msgstr "请配置您的 Outlook 凭据。"
+
+#. module: microsoft_outlook
+#: code:addons/microsoft_outlook/models/ir_mail_server.py:0
+#, python-format
+msgid ""
+"Please leave the password field empty for Outlook mail server %r. The OAuth "
+"process does not require it"
+msgstr "请将密码字段留空，以便将Outlook邮件服务器%r。OAuth 进程不需要它"
+
+#. module: microsoft_outlook
+#: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+#, python-format
+msgid "Please login your Outlook mail server before using it."
+msgstr "请在使用之前登录您的Outlook邮件服务器。"
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
+msgid "Send and receive email with your Outlook account."
+msgstr "使用您的 Outlook 帐户发送和接收电子邮件。"
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
+msgid ""
+"Setup your Outlook API credentials in the general settings to link a Outlook"
+" account."
+msgstr "在常规设置中设置 Outlook API 凭据以链接 Outlook 帐户。"
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,help:microsoft_outlook.field_ir_mail_server__microsoft_outlook_uri
+#: model:ir.model.fields,help:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_uri
+msgid "The URL to generate the authorization code from Outlook"
+msgstr "用于从 Outlook 生成授权代码的 URL"
+
+#. module: microsoft_outlook
+#: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+#, python-format
+msgid "Unknown error."
+msgstr "未知错误."

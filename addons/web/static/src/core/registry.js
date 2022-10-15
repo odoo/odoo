@@ -99,7 +99,7 @@ export class Registry extends EventBus {
             const content = Object.values(this.content).sort((el1, el2) => el1[0] - el2[0]);
             this.elements = content.map((elem) => elem[1]);
         }
-        return this.elements;
+        return this.elements.slice();
     }
 
     /**
@@ -112,7 +112,7 @@ export class Registry extends EventBus {
             const entries = Object.entries(this.content).sort((el1, el2) => el1[1][0] - el2[1][0]);
             this.entries = entries.map(([str, elem]) => [str, elem[1]]);
         }
-        return this.entries;
+        return this.entries.slice();
     }
 
     /**

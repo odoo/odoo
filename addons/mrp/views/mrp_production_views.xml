@@ -19,7 +19,7 @@
                     <field name="product_id" readonly="1" optional="show"/>
                     <field name="lot_producing_id" optional="hide"/>
                     <field name="bom_id" readonly="1" optional="hide"/>
-                    <field name="activity_ids" string="Next Activity" widget="list_activity" optional="show" nolabel="1"/>
+                    <field name="activity_ids" string="Next Activity" widget="list_activity" optional="show"/>
                     <field name="origin" optional="show"/>
                     <field name="user_id" optional="hide" widget="many2one_avatar_user"/>
                     <field name="components_availability_state" invisible="1" options='{"lazy": true}'/>
@@ -101,7 +101,7 @@
                             confirm="There are no components to consume. Are you still sure you want to continue?"/>
                     <button name="action_confirm" attrs="{'invisible': [('state', '!=', 'draft')]}" string="Confirm" type="object" class="oe_highlight" data-hotkey="v"/>
                     <button name="button_plan" attrs="{'invisible': ['|', '|', ('state', 'not in', ('confirmed', 'progress', 'to_close')), ('workorder_ids', '=', []), ('is_planned', '=', True)]}" type="object" string="Plan" class="oe_highlight" data-hotkey="x"/>
-                    <button name="button_unplan" type="object" string="Unplan" attrs="{'invisible': [('is_planned', '=', False)]}" data-hotkey="x"/>
+                    <button name="button_unplan" type="object" string="Unplan" attrs="{'invisible': ['|', ('is_planned', '=', False), ('state', '=', 'cancel')]}" data-hotkey="x"/>
                     <button name="action_assign" attrs="{'invisible': ['|', ('state', 'in', ('draft', 'done', 'cancel')), ('reserve_visible', '=', False)]}" string="Check availability" type="object" data-hotkey="q"/>
                     <button name="do_unreserve" type="object" string="Unreserve" attrs="{'invisible': [('unreserve_visible', '=', False)]}" data-hotkey="w"/>
                     <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': [('state', 'in', ('cancel', 'draft'))]}" data-hotkey="z"/>
@@ -327,7 +327,7 @@
                             </field>
                         </page>
                         <page string="Work Orders" name="operations" groups="mrp.group_mrp_routings">
-                            <field name="workorder_ids" attrs="{'readonly': [('state', 'in', ['cancel', 'done'])]}" context="{'tree_view_ref': 'mrp.mrp_production_workorder_tree_editable_view', 'default_product_uom_id': product_uom_id}"/>
+                            <field name="workorder_ids" attrs="{'readonly': [('state', 'in', ['cancel', 'done'])]}" context="{'tree_view_ref': 'mrp.mrp_production_workorder_tree_editable_view', 'default_product_uom_id': product_uom_id, 'from_manufacturing_order': True}"/>
                         </page>
                         <page string="By-Products" name="finished_products" groups="mrp.group_mrp_byproducts">
                             <field name="move_byproduct_ids" context="{'default_date': date_planned_finished, 'default_date_deadline': date_deadline, 'default_location_id': production_location_id, 'default_location_dest_id': location_src_id, 'default_state': 'draft', 'default_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id}" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" options="{'delete': [('state', '=', 'draft')]}">
@@ -572,7 +572,7 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
             <field name="domain">[('picking_type_id', '=', active_id)]</field>
-            <field name="context">{}</field>
+            <field name="context">{'default_picking_type_id': active_id}</field>
         </record>
 
         <record id="mrp_production_action_unreserve_tree" model="ir.actions.server">
@@ -603,7 +603,8 @@
                 'search_default_scheduled_date': 2,
                 'search_default_filter_confirmed': True,
                 'search_default_filter_planned': True,
-                'default_company_id': allowed_company_ids[0]
+                'default_company_id': allowed_company_ids[0],
+                'allowed_company_ids': allowed_company_ids
             }</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">

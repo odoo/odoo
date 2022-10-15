@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+// ensure component is registered beforehand.
+import '@mail/components/discuss/discuss';
 import { getMessagingComponent } from "@mail/utils/messaging_component";
 
 import AbstractAction from 'web.AbstractAction';
@@ -113,6 +115,7 @@ export const DiscussWidget = AbstractAction.extend({
             'o-show-rainbow-man',
             this._showRainbowManEventListener
         );
+        this._lastPushStateActiveThread = null;
     },
 
     //--------------------------------------------------------------------------

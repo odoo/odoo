@@ -9,9 +9,7 @@
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2021
 # Martin Trigaux, 2021
 # Levent Karakaş <levent@mektup.at>, 2021
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2021
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2021
-# Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
 # Buket Şeker <buket_skr@hotmail.com>, 2021
 # Ugur Yilmaz <ugurlu2001@hotmail.com>, 2021
 # Tugay Hatıl <tugayh@projetgrup.com>, 2021
@@ -21,14 +19,15 @@
 # omerfarukcakmak <omerfarukckmk@protonmail.com>, 2021
 # Umur Akın <umura@projetgrup.com>, 2022
 # Murat Kaplan <muratk@projetgrup.com>, 2022
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-24 08:20+0000\n"
+"POT-Creation-Date: 2022-05-10 14:27+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Murat Kaplan <muratk@projetgrup.com>, 2022\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +38,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard___data_fetched
 msgid " Data Fetched"
-msgstr "Alınan Veriler"
+msgstr " Getirilen Veriler"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -58,8 +57,8 @@ msgid ""
 "<h3>Please make a payment to: </h3><ul><li>Bank: %s</li><li>Account Number: "
 "%s</li><li>Account Holder: %s</li></ul>"
 msgstr ""
-"<h3>Lütfen bir ödeme yapma için: </h3><ul><li>Banka: %s</li><li>Hesap "
-"Numarası: %s</li><li>Hesap Sahibi: %s</li></ul>"
+"<h3>Lütfen Ödeme yapmak için: </h3><ul><li>Banka: %s</li><li>Hesap Numarası:"
+" %s</li><li>Hesap Sahibi: %s</li></ul>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -93,14 +92,14 @@ msgstr "<span class=\"o_stat_text\"> Kaydedilen Ödeme Yöntemleri </span>"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "<span><i class=\"fa fa-arrow-right\"/> Get my Stripe keys</span>"
-msgstr ""
+msgstr "<span><i j=\"0/\"> Stripe tuşlarımı al</i></span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid ""
 "<span><i class=\"fa fa-arrow-right\"/> How to configure your PayPal "
 "account</span>"
-msgstr ""
+msgstr "<span><i j=\"0/\"> PayPal hesabınızı yapılandırma</i></span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -115,7 +114,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_methods
 msgid "<strong>No suitable payment acquirer could be found.</strong>"
-msgstr ""
+msgstr "<strong>Uygun bir ödeme alıcısı bulunamadı.</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -123,6 +122,8 @@ msgid ""
 "<strong>No suitable payment option could be found.</strong><br/>\n"
 "                                If you believe that it is an error, please contact the website administrator."
 msgstr ""
+"<strong>Uygun bir ödeme seçeneği bulunamadı.</strong><br/>Bunun bir hata "
+"olduğunu düşünüyorsanız, lütfen web sitesi yöneticisine başvurun."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_refund_wizard_view_form
@@ -131,6 +132,9 @@ msgid ""
 "                        Wait a moment for it to be processed. If the refund is still pending in a\n"
 "                        few minutes, please check your payment acquirer configuration."
 msgstr ""
+"<strong>Uyarı!</strong> Bu ödeme için bekleyen bir geri ödeme vardır.\n"
+"                        İşlenmesi için bir dakika bekleyin. Geri ödeme hala beklemedeyse\n"
+"                        Birkaç dakika, lütfen ödeme alıcı yapılandırmanızı kontrol edin."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
@@ -138,6 +142,8 @@ msgid ""
 "<strong>Warning</strong> Creating a payment acquirer from the <em>CREATE</em> button is not supported.\n"
 "                        Please use the <em>Duplicate</em> action instead."
 msgstr ""
+"<strong>Uyarı</strong> OLUŞTUR düğmesinden bir ödeme alıcısı <em>oluşturma</em> desteklenmez.\n"
+"                        Lütfen bunun yerine <em>Kopyala</em> eylemini kullanın."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -145,6 +151,8 @@ msgid ""
 "<strong>Warning</strong> Make sure your are logged in as the right partner "
 "before making this payment."
 msgstr ""
+"<strong>Uyarı</strong> Bu ödemeyi yapmadan önce doğru iş ortağı olarak "
+"oturum açtığınızdan emin olun."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -161,7 +169,7 @@ msgstr ""
 #: code:addons/payment/models/account_payment.py:0
 #, python-format
 msgid "A payment transaction with reference %s already exists."
-msgstr ""
+msgstr "Referans %s olan bir ödeme işlemi zaten mevcut."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -170,6 +178,8 @@ msgid ""
 "A refund request of %(amount)s has been sent. The payment will be created "
 "soon. Refund transaction reference: %(ref)s (%(acq_name)s)."
 msgstr ""
+"%(amount)s tutarında bir geri ödeme talebi gönderildi. Ödeme yakında "
+"oluşturulacaktır. Geri ödeme işlemi referansı: %(ref)s (%(acq_name)s)."
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:0
@@ -182,7 +192,7 @@ msgstr "Yeni bir ödeme işlemi oluşturmak için bir jeton gereklidir."
 #, python-format
 msgid ""
 "A transaction with reference %(ref)s has been initiated (%(acq_name)s)."
-msgstr ""
+msgstr "%(ref)s referanslı bir işlem başlatılmıştır (%(acq_name)s)."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -191,6 +201,8 @@ msgid ""
 "A transaction with reference %(ref)s has been initiated using the payment "
 "method %(token_name)s (%(acq_name)s)."
 msgstr ""
+"%(ref)s referanslı bir işlem, %(token_name)s (%(acq_name)s) ödeme yöntemi "
+"kullanılarak başlatılmıştır."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__access_token
@@ -248,7 +260,7 @@ msgstr "Etkinleştir"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Activate Stripe"
-msgstr ""
+msgstr "Stripe'ı etkinleştir"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__active
@@ -291,7 +303,7 @@ msgstr "Tutar"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment__amount_available_for_refund
 msgid "Amount Available For Refund"
-msgstr ""
+msgstr "Geri Ödeme İçin Kullanılabilir Tutar"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount_max
@@ -347,7 +359,7 @@ msgstr "Authorize Mesajı"
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_authorize
 msgid "Authorize.net"
-msgstr ""
+msgstr "Authorize.net"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__authorized
@@ -395,12 +407,12 @@ msgstr "Geri Arama Dokuman Modeli"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_is_done
 msgid "Callback Done"
-msgstr ""
+msgstr "Geri Arama Tamamlandı"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_hash
 msgid "Callback Hash"
-msgstr "Geri Çağırma "
+msgstr "Geri Arama Şifresi"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_method
@@ -410,7 +422,7 @@ msgstr "Geri Çağırma Yöntemi"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_res_id
 msgid "Callback Record ID"
-msgstr ""
+msgstr "Geri Arama Kayıt Kimliği"
 
 #. module: payment
 #. openerp-web
@@ -428,7 +440,7 @@ msgstr "İptal Edildi"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__cancel_msg
 msgid "Canceled Message"
-msgstr ""
+msgstr "İptal Edilen Mesaj"
 
 #. module: payment
 #. openerp-web
@@ -455,6 +467,9 @@ msgid ""
 "Use this if you want to charge your customers cards only when\n"
 "you are sure you can ship the goods to them."
 msgstr ""
+"Teslimat tamamlandığında miktarı Odoo'dan yakalayın.\n"
+"Müşteri kartlarınızdan yalnızca şu durumlarda ücret almak istiyorsanız bunu kullanın:\n"
+"malları onlara gönderebileceğinizden eminsiniz."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -610,7 +625,7 @@ msgstr "Kimlik bilgileri"
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_stripe
 msgid "Credit & Debit Card"
-msgstr ""
+msgstr "Kredi ve Banka Kartı"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_adyen
@@ -677,7 +692,7 @@ msgstr "Müşteri"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__sequence
 msgid "Define the display order"
-msgstr ""
+msgstr "Görüntüleme sırasını tanımlama"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__description
@@ -687,7 +702,7 @@ msgstr "Açıklama"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__display_as
 msgid "Description of the acquirer for customers"
-msgstr ""
+msgstr "Müşteriler için satın alanın açıklaması"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__disabled
@@ -743,6 +758,8 @@ msgstr "E-Posta"
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Enable credit &amp; debit card payments supported by Stripe"
 msgstr ""
+"Stripe tarafından desteklenen kredi kartı ve banka kartı ödemelerini "
+"etkinleştirme"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__enabled
@@ -787,7 +804,7 @@ msgstr "Uluslararası sabit ücretler"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__acquirer_id
 msgid "Force Payment Acquirer"
-msgstr ""
+msgstr "Ödeme Alıcısını Zorla"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_link_wizard__acquirer_id
@@ -795,6 +812,9 @@ msgid ""
 "Force the customer to pay via the specified payment acquirer. Leave empty to"
 " allow the customer to choose among all acquirers."
 msgstr ""
+"Müşteriyi, belirtilen ödeme alıcısı aracılığıyla ödeme yapmaya zorlayın. "
+"Müşterinin tüm alıcılar arasından seçim yapmasına izin vermek için boş "
+"bırakın."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -836,17 +856,17 @@ msgstr "HTTP Yönlendirme"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__has_multiple_acquirers
 msgid "Has Multiple Acquirers"
-msgstr ""
+msgstr "Birden fazla alıcısı vardır"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__has_pending_refund
 msgid "Has a pending refund"
-msgstr ""
+msgstr "Bekleyen bir geri ödeme var"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__is_post_processed
 msgid "Has the payment been post-processed"
-msgstr ""
+msgstr "Ödeme sonradan işlendi mi"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__pre_msg
@@ -892,6 +912,8 @@ msgid ""
 "If you believe that it is an error, please contact the website "
 "administrator."
 msgstr ""
+"Bunun bir hata olduğunu düşünüyorsanız, lütfen web sitesi yöneticisine "
+"başvurun."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__image_128
@@ -902,7 +924,7 @@ msgstr "Görsel"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__image_payment_form
 msgid "Image displayed on the payment form"
-msgstr "Ödeme formu üzerinde görülen resim "
+msgstr "Ödeme formunda görüntülenen resim"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_payment_method_line__payment_acquirer_state
@@ -911,11 +933,13 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the acquirer."
 msgstr ""
+"Test modunda, sahte bir ödeme bir test ödeme arayüzü aracılığıyla işlenir.\n"
+"Bu mod, alıcıyı ayarlarken önerilir."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__inline_form_view_id
 msgid "Inline Form Template"
-msgstr ""
+msgstr "Satır İçi Form Şablonu"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
@@ -960,14 +984,14 @@ msgstr "Faturaların Sayısı"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_post_processed
 msgid "Is Post-processed"
-msgstr ""
+msgstr "Son işleniyor mu"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
 msgid "It is currently linked to the following documents:"
-msgstr ""
+msgstr "Şu anda aşağıdaki belgelerle bağlantılıdır:"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_journal
@@ -987,7 +1011,7 @@ msgstr "Yeni bitti"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__landing_route
 msgid "Landing Route"
-msgstr ""
+msgstr "İniş Rotası"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_lang
@@ -1008,7 +1032,7 @@ msgstr "Son Düzenleme"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__last_state_change
 msgid "Last State Change Date"
-msgstr ""
+msgstr "Son Durum Değişiklik Tarihi"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__write_uid
@@ -1035,7 +1059,7 @@ msgstr "Son Güncelleme"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Leave empty to allow all acquirers"
-msgstr ""
+msgstr "Tüm alıcılara izin vermek için boş bırakın"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_meth_link
@@ -1050,7 +1074,7 @@ msgstr "Manuel"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__amount_available_for_refund
 msgid "Maximum Refund Allowed"
-msgstr ""
+msgstr "İzin Verilen Maksimum Geri Ödeme"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_seller_account
@@ -1076,14 +1100,14 @@ msgstr "Yöntem"
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_mollie
 msgid "Mollie"
-msgstr ""
+msgstr "Mollie"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Multiple payment options selected"
-msgstr ""
+msgstr "Birden fazla ödeme seçeneği seçildi"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__name
@@ -1097,7 +1121,7 @@ msgstr "Adı"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__provider__none
 msgid "No Provider Set"
-msgstr ""
+msgstr "Sağlayıcı Kümesi Yok"
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0
@@ -1139,6 +1163,8 @@ msgid ""
 "Note that only tokens from acquirers allowing to capture the amount are "
 "available."
 msgstr ""
+"Yalnızca miktarı yakalamaya izin veren alıcılardan gelen belirteçlerin "
+"mevcut olduğunu unutmayın."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_payment_register__payment_token_id
@@ -1146,8 +1172,8 @@ msgid ""
 "Note that tokens from acquirers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
 msgstr ""
-"Not: Alıcılardan gelen fişlerin sadece yetkili işlemler(tutarı yakalama "
-"yerine) olarak ayarlanması mümkün değil"
+"Satın alanların yalnızca işlemleri yetkilendirmek üzere ayarlanmış "
+"belirteçlerinin (tutarı yakalamak yerine) kullanılamadığını unutmayın."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__module_to_buy
@@ -1157,7 +1183,7 @@ msgstr "Odoo Enterprise Modül"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__offline
 msgid "Offline payment by token"
-msgstr ""
+msgstr "Token ile çevrimdışı ödeme"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_ogone
@@ -1175,27 +1201,27 @@ msgstr "Tamam"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Online Payments"
-msgstr ""
+msgstr "Online Ödemeler"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_direct
 msgid "Online direct payment"
-msgstr ""
+msgstr "Online doğrudan ödeme"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_token
 msgid "Online payment by token"
-msgstr ""
+msgstr "Token ile online ödeme"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_redirect
 msgid "Online payment with redirection"
-msgstr ""
+msgstr "Yeniden yönlendirme ile online ödeme"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Online payments enabled"
-msgstr ""
+msgstr "Online ödemeler etkin"
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0
@@ -1207,19 +1233,19 @@ msgstr "Bu verilere yalnızca yöneticiler erişebilir."
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Only authorized transactions can be captured."
-msgstr ""
+msgstr "Yalnızca yetkili işlemler yakalanabilir."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Only authorized transactions can be voided."
-msgstr ""
+msgstr "Yalnızca yetkili işlemler iptal edilebilir."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Only confirmed transactions can be refunded."
-msgstr ""
+msgstr "Yalnızca onaylanmış işlemler iade edilebilir."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__operation
@@ -1304,7 +1330,7 @@ msgstr "Ödeme Alıcıları"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__available_acquirer_ids
 msgid "Payment Acquirers Available"
-msgstr ""
+msgstr "Ödeme Alıcıları Mevcut"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__payment_amount
@@ -1366,7 +1392,7 @@ msgstr "Ödeme Ref"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_refund_wizard
 msgid "Payment Refund Wizard"
-msgstr ""
+msgstr "Ödeme Geri Ödeme Sihirbazı"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_token
@@ -1378,7 +1404,7 @@ msgstr "Ödeme Belirteci"
 #: model:ir.model.fields,field_description:payment.field_res_partner__payment_token_count
 #: model:ir.model.fields,field_description:payment.field_res_users__payment_token_count
 msgid "Payment Token Count"
-msgstr ""
+msgstr "Ödeme Token Sayısı"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_token
@@ -1411,7 +1437,7 @@ msgstr "Ödeme İşlemleri"
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_transaction_linked_to_token
 msgid "Payment Transactions Linked To Token"
-msgstr ""
+msgstr "Token ile Bağlantılı Ödeme İşlemleri"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_acquirer_onboarding_wizard
@@ -1421,7 +1447,7 @@ msgstr "Ödeme alıcısı sihirbazı paneli"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__payment_acquirer_selection
 msgid "Payment acquirer selected"
-msgstr ""
+msgstr "Ödeme alıcısı seçildi"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_payment
@@ -1468,14 +1494,14 @@ msgstr "Telefon"
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Please select a payment option."
-msgstr ""
+msgstr "Lütfen bir ödeme seçeneği belirleyin."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Please select only one payment option."
-msgstr ""
+msgstr "Lütfen yalnızca bir ödeme seçeneği belirleyin."
 
 #. module: payment
 #: code:addons/payment/wizards/payment_link_wizard.py:0
@@ -1484,9 +1510,15 @@ msgid "Please set an amount smaller than %s."
 msgstr "Lütfen daha düşük bir tutar belirleyin %s."
 
 #. module: payment
+#: code:addons/payment/controllers/portal.py:0
+#, python-format
+msgid "Please switch to company '%s' to make this payment."
+msgstr "Bu ödemeyi yapmak için lütfen şirket '%s' birimine geçin."
+
+#. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
 msgid "Please use the following transfer details"
-msgstr "Lütfen devam eden transfer detaylarını kullanın."
+msgstr "Lütfen aşağıdaki transfer bilgilerini kullanın"
 
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
@@ -1503,7 +1535,7 @@ msgstr "Lütfen bekleyin ..."
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "Processed by"
-msgstr "Tarafından işlenen "
+msgstr "Tarafından işlendi"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__provider
@@ -1524,12 +1556,12 @@ msgstr "Sebep:"
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Reason: %s"
-msgstr ""
+msgstr "Sebep: %s"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__redirect_form_view_id
 msgid "Redirect Form Template"
-msgstr ""
+msgstr "Form Şablonunu Yeniden Yönlendirme"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__reference
@@ -1556,12 +1588,12 @@ msgstr "İade/Fiyat Farkı"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__amount_to_refund
 msgid "Refund Amount"
-msgstr ""
+msgstr "İade Tutarı"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__refunded_amount
 msgid "Refunded Amount"
-msgstr ""
+msgstr "İade Edilen Tutar"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -1573,7 +1605,7 @@ msgstr "İadeler"
 #: model:ir.model.fields,field_description:payment.field_account_payment__refunds_count
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__refunds_count
 msgid "Refunds Count"
-msgstr ""
+msgstr "Geri Ödeme Sayısı"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_payment_register
@@ -1598,7 +1630,7 @@ msgstr "SEPA Doğrudan Ödeme"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_account_journal_form
 msgid "SETUP"
-msgstr ""
+msgstr "KURULUM"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.manage
@@ -1608,12 +1640,12 @@ msgstr "Ödeme Yöntemini Kaydet"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.checkout
 msgid "Save my payment details"
-msgstr ""
+msgstr "Ödeme bilgilerimi kaydet"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment__payment_token_id
 msgid "Saved Payment Token"
-msgstr ""
+msgstr "Ödeme Token'ı kaydet"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment_register__payment_token_id
@@ -1656,42 +1688,42 @@ msgstr "Sunucu hatası:"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_allow_tokenization
 msgid "Show Allow Tokenization"
-msgstr ""
+msgstr "Tokenizasyona İzin Ver'i Göster"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_auth_msg
 msgid "Show Auth Msg"
-msgstr ""
+msgstr "Yetkilendirme Mesajını Göster"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_cancel_msg
 msgid "Show Cancel Msg"
-msgstr ""
+msgstr "İptal Mesajını Göster"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_credentials_page
 msgid "Show Credentials Page"
-msgstr ""
+msgstr "Kimlik Bilgileri Sayfasını Göster"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_done_msg
 msgid "Show Done Msg"
-msgstr ""
+msgstr "Bitti Mesajını Göster"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_payment_icon_ids
 msgid "Show Payment Icon"
-msgstr ""
+msgstr "Ödeme Simgesini Göster"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_pending_msg
 msgid "Show Pending Msg"
-msgstr ""
+msgstr "Bekleyen Mesajını Göster"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_pre_msg
 msgid "Show Pre Msg"
-msgstr ""
+msgstr "Ön Mesajı Göster"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_sips
@@ -1701,12 +1733,12 @@ msgstr "Sips"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment__source_payment_id
 msgid "Source Payment"
-msgstr ""
+msgstr "Kaynak Ödeme"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__source_transaction_id
 msgid "Source Transaction"
-msgstr ""
+msgstr "Kaynak İşlem"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment_method_line__payment_acquirer_state
@@ -1748,7 +1780,7 @@ msgstr "Stripe Gizli Şifre"
 #: model:ir.model.fields,field_description:payment.field_account_payment__suitable_payment_token_ids
 #: model:ir.model.fields,field_description:payment.field_account_payment_register__suitable_payment_token_ids
 msgid "Suitable Payment Token"
-msgstr ""
+msgstr "Uygun Ödeme Token'ı"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_icon_ids
@@ -1760,6 +1792,8 @@ msgstr "Desteklenen Ödeme İkonları"
 #: model:ir.model.fields,help:payment.field_account_payment_register__use_electronic_payment_method
 msgid "Technical field used to hide or show the payment_token_id if needed."
 msgstr ""
+"Gerekirse payment_token_id gizlemek veya göstermek için kullanılan teknik "
+"alan."
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_test
@@ -1779,7 +1813,7 @@ msgstr "Test Modu"
 #: model:ir.model.fields,help:payment.field_payment_token__provider
 #: model:ir.model.fields,help:payment.field_payment_transaction__provider
 msgid "The Payment Service Provider to use with this acquirer"
-msgstr ""
+msgstr "Bu alıcı ile birlikte kullanılacak Ödeme Hizmeti Sağlayıcısı"
 
 #. module: payment
 #: code:addons/payment/controllers/portal.py:0
@@ -1790,34 +1824,34 @@ msgstr "Erişim belirteci geçersiz."
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__acquirer_ref
 msgid "The acquirer reference of the token of the transaction"
-msgstr ""
+msgstr "İşlemin belirtecinin alıcı referansı"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__acquirer_reference
 msgid "The acquirer reference of the transaction"
-msgstr ""
+msgstr "İşlemin alıcı referansı"
 
 #. module: payment
 #: code:addons/payment/wizards/payment_refund_wizard.py:0
 #, python-format
 msgid ""
 "The amount to be refunded must be positive and cannot be superior to %s."
-msgstr ""
+msgstr "İade edilecek tutar pozitif olmalı ve %s değerinden fazla olamaz."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__name
 msgid "The anonymized acquirer reference of the payment method"
-msgstr ""
+msgstr "Ödeme yönteminin anonimleştirilmiş alıcı referansı"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__color
 msgid "The color of the card in kanban view"
-msgstr ""
+msgstr "Kanban görünümünde kartın rengi"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__state_message
 msgid "The complementary information message about the state"
-msgstr ""
+msgstr "Durum hakkında tamamlayıcı bilgi mesajı"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__country_ids
@@ -1825,65 +1859,68 @@ msgid ""
 "The countries for which this payment acquirer is available.\n"
 "If none is set, it is available for all countries."
 msgstr ""
+"Bu ödeme alıcısının kullanılabildiği ülkeler.\n"
+"Hiçbiri ayarlanmamışsa, tüm ülkeler tarafından kullanılabilir."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__description
 msgid "The description shown in the card in kanban view "
-msgstr ""
+msgstr "Kanban görünümünde kartta gösterilen açıklama "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__fees
 msgid "The fees amount; set by the system as it depends on the acquirer"
 msgstr ""
+"Ücretler tutarı; satın alana bağlı olduğu için sistem tarafından ayarlanır"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "The following fields must be filled: %s"
-msgstr ""
+msgstr "Aşağıdaki alanlar doldurulmalıdır: %s"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__reference
 msgid "The internal reference of the transaction"
-msgstr ""
+msgstr "İşlemin dahili referansı"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__journal_id
 msgid "The journal in which the successful transactions are posted"
-msgstr ""
+msgstr "Başarılı işlemlerin kaydedildiği yevmiye"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__acquirer_ids
 msgid "The list of acquirers supporting this payment icon"
-msgstr ""
+msgstr "Bu ödeme simgesini destekleyen alıcıların listesi"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__auth_msg
 msgid "The message displayed if payment is authorized"
-msgstr ""
+msgstr "Ödeme onaylanmışsa görüntülenen mesaj"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__cancel_msg
 msgid ""
 "The message displayed if the order is canceled during the payment process"
-msgstr ""
+msgstr "Ödeme işlemi sırasında sipariş iptal edilirse görüntülenen mesaj"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__done_msg
 msgid ""
 "The message displayed if the order is successfully done after the payment "
 "process"
-msgstr ""
+msgstr "Ödeme işleminden sonra sipariş başarıyla yapılırsa görüntülenen mesaj"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__pending_msg
 msgid "The message displayed if the order pending after the payment process"
-msgstr ""
+msgstr "Ödeme işleminden sonra sipariş beklemede ise görüntülenen mesaj"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__pre_msg
 msgid "The message displayed to explain and help the payment process"
-msgstr ""
+msgstr "Ödeme sürecini açıklamak ve yardımcı olmak için görüntülenen mesaj"
 
 #. module: payment
 #: code:addons/payment/controllers/portal.py:0
@@ -1891,27 +1928,28 @@ msgstr ""
 msgid ""
 "The payment should either be direct, with redirection, or made by a token."
 msgstr ""
+"Ödeme, yeniden yönlendirme ile doğrudan veya bir token ile yapılmalıdır."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "The related payment is posted: %s"
-msgstr ""
+msgstr "İlgili ödeme onaylandı: %s"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__landing_route
 msgid "The route the user is redirected to after the transaction"
-msgstr ""
+msgstr "İşlemden sonra kullanıcının yönlendirildiği yol"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_payment__source_payment_id
 msgid "The source payment of related refund payments"
-msgstr ""
+msgstr "İlgili geri ödeme ödemelerinin kaynak ödemesi"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__source_transaction_id
 msgid "The source transaction of related refund transactions"
-msgstr ""
+msgstr "İlgili geri ödeme işlemlerinin kaynak işlemi"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__redirect_form_view_id
@@ -1919,12 +1957,14 @@ msgid ""
 "The template rendering a form submitted to redirect the user when making a "
 "payment"
 msgstr ""
+"Ödeme yaparken kullanıcıyı yeniden yönlendirmek için gönderilen formu "
+"oluşturan şablon"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__inline_form_view_id
 msgid ""
 "The template rendering the inline payment form when making a direct payment"
-msgstr ""
+msgstr "Doğrudan ödeme yaparken satır içi ödeme formunu oluşturan şablon"
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -1933,6 +1973,8 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s encountered an error "
 "(%(acq_name)s)."
 msgstr ""
+"%(amount)s için %(ref)s referanslı işlem bir hatayla (%(acq_name)s) "
+"karşılaştı."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -1941,6 +1983,7 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s has been authorized "
 "(%(acq_name)s)."
 msgstr ""
+"%(amount)s için %(ref)s referanslı işleme izin verilmiştir (%(acq_name)s)."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -1949,6 +1992,7 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s has been confirmed "
 "(%(acq_name)s)."
 msgstr ""
+"%(amount)s için %(ref)s referanslı işlem onaylanmıştır (%(acq_name)s)."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -1956,7 +2000,7 @@ msgstr ""
 msgid ""
 "The transaction with reference %(ref)s for %(amount)s is canceled "
 "(%(acq_name)s)."
-msgstr ""
+msgstr "%(amount)s için %(ref)s referanslı işlem iptal edilir (%(acq_name)s)."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -1964,7 +2008,7 @@ msgstr ""
 msgid ""
 "The transaction with reference %(ref)s for %(amount)s is pending "
 "(%(acq_name)s)."
-msgstr ""
+msgstr "%(amount)s için %(ref)s referanslı işlem beklemede (%(acq_name)s)."
 
 #. module: payment
 #: code:addons/payment/wizards/payment_link_wizard.py:0
@@ -1980,7 +2024,7 @@ msgstr "Gösterilecek işlem yok"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "There is nothing to pay."
-msgstr ""
+msgstr "Ödeyecek bir şey yok."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__allow_tokenization
@@ -1989,6 +2033,9 @@ msgid ""
 "A payment token is an anonymous link to the payment method details saved in the\n"
 "acquirer's database, allowing the customer to reuse it for a next purchase."
 msgstr ""
+"Bu, müşterilerin ödeme yöntemlerini ödeme tokenları olarak kaydedip kaydedemeyeceğini kontrol eder.\n"
+"Ödeme tokenı,ödeme yöntemi ayrıntılarına kaydedilen anonim bir bağlantıdır.\n"
+"Alıcının veritabanı, müşterinin bir sonraki satın alma işlemi için onu yeniden kullanmasına izin verir."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__image
@@ -1996,6 +2043,8 @@ msgstr ""
 msgid ""
 "This field holds the image used for this payment icon, limited to 64x64 px"
 msgstr ""
+"Bu alanda, bu ödeme simgesi için kullanılan resim 64x64 piksel ile "
+"sınırlıdır"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
@@ -2010,17 +2059,17 @@ msgstr ""
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "This payment has not been processed yet."
-msgstr ""
+msgstr "Bu ödeme henüz işleme alınmadı."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
 msgid "This payment method has been verified by our system."
-msgstr ""
+msgstr "Bu ödeme yöntemi sistemimiz tarafından doğrulanmıştır."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
 msgid "This payment method has not been verified by our system."
-msgstr ""
+msgstr "Bu ödeme yöntemi sistemimiz tarafından doğrulanmamıştır."
 
 #. module: payment
 #. openerp-web
@@ -2032,7 +2081,7 @@ msgstr "Bu işlem iptal edildi."
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__support_tokenization
 msgid "Tokenization Supported"
-msgstr ""
+msgstr "Tokenizasyon Destekli"
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -2041,6 +2090,7 @@ msgid ""
 "Transaction authorization is not supported by the following payment "
 "acquirers: %s"
 msgstr ""
+"İşlem yetkilendirmesi aşağıdaki ödeme alıcıları tarafından desteklenmez: %s"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_bank_statement_line__transaction_ids
@@ -2053,7 +2103,7 @@ msgstr "İşlemler"
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__support_refund
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__support_refund
 msgid "Type of Refund Supported"
-msgstr ""
+msgstr "Desteklenen Geri Ödeme Türü"
 
 #. module: payment
 #. openerp-web
@@ -2077,7 +2127,7 @@ msgstr "Elektronik Ödeme Yöntemi Kullan"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__validation
 msgid "Validation of the payment method"
-msgstr ""
+msgstr "Ödeme yönteminin doğrulanması"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_dom_var
@@ -2088,7 +2138,7 @@ msgstr "Değişken yerel ücretler (yüzde olarak)"
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "Variable fees must always be positive and below 100%."
-msgstr ""
+msgstr "Değişken ücretler her zaman pozitif ve% 100'ün altında olmalıdır."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_int_var
@@ -2131,7 +2181,7 @@ msgstr "Uyarı!"
 #: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
 msgid "We are not able to delete your payment method."
-msgstr ""
+msgstr "Ödeme yönteminizi silemeyiz."
 
 #. module: payment
 #. openerp-web
@@ -2145,14 +2195,14 @@ msgstr "Ödemenizi bulamıyoruz, ancak endişelenmeyin."
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "We are not able to process your payment."
-msgstr ""
+msgstr "Ödemenizi işleme koyamıyoruz."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
 msgid "We are not able to save your payment method."
-msgstr ""
+msgstr "Ödeme yönteminizi kaydedemiyoruz."
 
 #. module: payment
 #. openerp-web
@@ -2174,11 +2224,12 @@ msgid ""
 "Whether a payment token should be created when post-processing the "
 "transaction"
 msgstr ""
+"İşlemi sonradan işlerken bir ödeme tokenının oluşturulup oluşturulmayacağı"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__callback_is_done
 msgid "Whether the callback has already been executed"
-msgstr ""
+msgstr "Geri aramanın zaten yürütülüp yürütülmediği"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_transfer
@@ -2199,12 +2250,20 @@ msgid ""
 "You can't delete a payment method that is linked to an acquirer in the enabled or test state.\n"
 "Linked acquirer(s): %s"
 msgstr ""
+"Etkin veya test durumundaki bir alıcıya bağlı bir ödeme yöntemini silemezsiniz.\n"
+"Bağlantılı alıcı(lar): %s"
 
 #. module: payment
 #: code:addons/payment/models/ir_ui_view.py:0
 #, python-format
 msgid "You cannot delete a view that is used by a payment acquirer."
-msgstr ""
+msgstr "Ödeme alan tarafından kullanılan bir görünümü silemezsiniz."
+
+#. module: payment
+#: code:addons/payment/controllers/portal.py:0
+#, python-format
+msgid "You do not have access to this payment token."
+msgstr "Bu ödeme tokenına erişiminiz yok."
 
 #. module: payment
 #. openerp-web
@@ -2350,7 +2409,7 @@ msgstr "PK"
 #: model:ir.cron,cron_name:payment.cron_post_process_payment_tx
 #: model:ir.cron,name:payment.cron_post_process_payment_tx
 msgid "payment: post-process transactions"
-msgstr ""
+msgstr "ödeme: işlem sonrası işlemler"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.icon_list

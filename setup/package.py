@@ -395,7 +395,7 @@ class KVM(object):
             "-net", "nic,model=e1000e,macaddr=52:54:00:d3:38:5e",
             "-net", "user,hostfwd=tcp:127.0.0.1:10022-:22,hostfwd=tcp:127.0.0.1:18069-:8069,hostfwd=tcp:127.0.0.1:15432-:5432",
             "-m", "2048",
-            "-drive", "file=%s,snapshot=on" % self.image,
+            "-drive", f"if=virtio,file={self.image},snapshot=on",
             "-nographic",
             "-serial", "none",
         ]

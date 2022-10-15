@@ -6,7 +6,8 @@
 # Jordy Blankestijn <jblankestijn@erpopen.nl>, 2021
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2021
-# Martin Trigaux, 2021
+# Martin Trigaux, 2022
+# Pauline Thiry <pth@odoo.com>, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
@@ -627,7 +628,7 @@ msgstr "<strong>Min aantal:</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>On hand Quantity</strong>"
-msgstr "<strong>Aanwezige hoeveelheid</strong>"
+msgstr "<strong>Werkelijke hoeveelheid</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -1029,7 +1030,10 @@ msgid "As soon as possible"
 msgstr "Zo snel mogelijk"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Assign"
 msgstr "Toewijzen"
 
@@ -3394,6 +3398,12 @@ msgid "Immediate transfer?"
 msgstr "Directe verplaatsing?"
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Import"
+msgstr "Importeren"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
 msgid "In Type"
 msgstr "In type"
@@ -3742,7 +3752,7 @@ msgid ""
 "It is not possible to unreserve more products of %s than you have in stock."
 msgstr ""
 "Het is niet mogelijk om de reservering ongedaan te maken voor meer producten"
-" van %s dan je op voorraad heeft."
+" van %s dan je op voorraad hebt."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -4607,7 +4617,7 @@ msgstr "Nieuwe verplaatsing:"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__new_quantity
 msgid "New Quantity on Hand"
-msgstr "Nieuwe voorraad"
+msgstr "Nieuwe werkelijke voorraad"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_form
@@ -4646,7 +4656,7 @@ msgstr "Volgende verwachte voorraad"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__inventory_date
 msgid "Next date the On Hand Quantity should be counted."
-msgstr "De volgende datum moet de beschikbare hoeveelheid worden geteld."
+msgstr "De volgende datum moet de werkelijke voorraad worden geteld."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -4734,6 +4744,12 @@ msgstr "Geen bronlocatie gedefinieerd op voorraadregel: %s!"
 #: model_terms:ir.actions.act_window,help:stock.stock_move_action
 msgid "No stock move found"
 msgstr "Geen voorraadverplaatsing gevonden"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "No Stock On Hand"
+msgstr "Geen beschikbare voorraad"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_form
@@ -4866,7 +4882,7 @@ msgstr "Beschikbaar"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "On Hand Quantity"
-msgstr "Beschikbare hoeveelheid"
+msgstr "Werkelijke voorraad"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__available_quantity
@@ -4874,7 +4890,7 @@ msgid ""
 "On hand quantity which hasn't been reserved on a transfer, in the default "
 "unit of measure of the product"
 msgstr ""
-"Beschikbare hoeveelheid die niet is gereserveerd op een verplaatsing, in de "
+"Werkelijke voorraad die niet is gereserveerd op een verplaatsing, in de "
 "standaard maateenheid van het product"
 
 #. module: stock
@@ -5475,6 +5491,16 @@ msgid "Preferred route"
 msgstr "Voorkeursroute"
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"Press the CREATE button to define quantity for each product in your stock or"
+" import them from a spreadsheet throughout Favorites"
+msgstr ""
+"Druk op de knop AANMAKEN om de hoeveelheid voor elk product in de voorraad "
+"te definiëren of importeer ze vanuit een spreadsheet in Favorieten"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Print"
 msgstr "Afdrukken"
@@ -5938,7 +5964,8 @@ msgstr "Aantal"
 #, python-format
 msgid "Quant's creation is restricted, you can't do this operation."
 msgstr ""
-"Hoeveelheden creatie is beperkt, je kunt deze bewerking niet uitvoeren."
+"Het aanmaken van hoeveelheden is niet mogelijk, je kunt deze bewerking niet "
+"uitvoeren."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -6001,7 +6028,7 @@ msgstr "Veelvoud"
 #: model:ir.model.fields,field_description:stock.field_product_template__qty_available
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
 msgid "Quantity On Hand"
-msgstr "Aanwezige voorraad"
+msgstr "Werkelijke voorraad"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__reserved_availability
@@ -7778,7 +7805,7 @@ msgstr "De naam van het magazijn moet uniek zijn per bedrijf!"
 #. module: stock
 #: code:addons/stock/wizard/stock_assign_serial_numbers.py:0
 #, python-format
-msgid "The number of Serial Numbers to generate must greater than zero."
+msgid "The number of Serial Numbers to generate must be greater than zero."
 msgstr "Het aantal te genereren serienummers moet groter zijn dan nul."
 
 #. module: stock
@@ -7927,6 +7954,15 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
 msgid "There's no product move yet"
 msgstr "Er is nog geen product verplaatsing"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"This analysis gives you an overview of the current stock level of your "
+"products."
+msgstr ""
+"Deze analyse geeft u een overzicht van de actuele voorraad van uw producten."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__name
@@ -8427,7 +8463,10 @@ msgid "USPS Connector"
 msgstr "USPS connector"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Unassign"
 msgstr "Toewijzing ongedaan maken"
 
@@ -8673,7 +8712,7 @@ msgstr "Leverancierslocaties"
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__view
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "View"
-msgstr "Bekijk"
+msgstr "Weergave"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -9334,7 +9373,7 @@ msgid ""
 "lot/serial numbers by doing an inventory adjustment."
 msgstr ""
 "Je hebt product(en) op voorraad die geen partij/serienummer hebben. Je kunt "
-"lot- /serienummers toewijzen door een voorraadaanpassing uit te voeren."
+"een partij/serienummers toewijzen door een voorraadaanpassing uit te voeren."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -9448,6 +9487,12 @@ msgstr ""
 "Je vindt hier slimme aanvullingsvoorstellen op basis van voorraadprognoses.\n"
 "Kies het aantal dat je wilt kopen of produceren en start aanvulorders met één klik.\n"
 "Om in de toekomst tijd te besparen, stel je de regels in als \"Automatiseer orders\"."
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Your stock is currently empty"
+msgstr "Je hebt momenteel geen voorraad"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__print_format__zpl

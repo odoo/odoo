@@ -79,7 +79,7 @@
             <field name="name">account.analytic.line.timesheet.manager</field>
             <field name="model_id" ref="analytic.model_account_analytic_line"/>
             <field name="domain_force">[('project_id', '!=', False)]</field>
-            <field name="groups" eval="[(4, ref('group_timesheet_manager'))]"/>
+            <field name="groups" eval="[(4, ref('group_timesheet_manager')), (4, ref('project.group_project_manager'))]"/>
         </record>
 
         <record id="project.group_project_manager" model="res.groups">

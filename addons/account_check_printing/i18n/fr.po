@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:0
@@ -220,6 +220,12 @@ msgid ""
 "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
+"Manuel : Payez ou soyez payé par n'importe quelle méthode en dehors d'Odoo.\n"
+"Acquéreurs de paiement : Chaque acquéreur de paiement a sa propre méthode de paiement. Demandez une transaction sur/vers une carte grâce à un jeton de paiement enregistré par le partenaire lors d'un achat ou d'un abonnement en ligne.\n"
+"Chèque : Payez vos factures par chèque et imprimez-le depuis Odoo.\n"
+"Dépôt par lot : Collectez plusieurs chèques clients en une seule fois en générant et en soumettant un dépôt par lot à votre banque. Le module account_batch_payment est nécessaire.\n"
+"Virement SEPA : Payez dans la zone SEPA en soumettant un fichier de virement SEPA à votre banque. Le module account_sepa est nécessaire.\n"
+"Prélèvement SEPA : Soyez payé dans la zone SEPA grâce à un mandat que votre partenaire vous aura accordé. Le module account_sepa est nécessaire.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub

@@ -10,20 +10,21 @@
 # Manami Hashi <manami@roomsfor.hk>, 2022
 # 江口和志 <k_eguchi@enzantrades.co.jp>, 2022
 # Yoon Nankyung <nankyung.yoon@pro-spire.co.jp>, 2022
-# Martin Trigaux, 2022
 # Tsuda Ryoko <ryoko04nov@gmail.com>, 2022
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2022
 # Tim Siu Lai <tl@roomsfor.hk>, 2022
-# Noma Yuki, 2022
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
+# Noma Yuki, 2022
+# 江口和志 <sandwhale1010@gmail.com>, 2022
+# Martin Trigaux, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2022-07-26 11:51+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
 "Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
@@ -67,7 +68,7 @@ msgstr "&amp; 出荷"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "'. Showing results for '"
-msgstr ""
+msgstr "'. 右記の結果を表示しています'"
 
 #. module: website_sale
 #: model:product.template.attribute.value,name:website_sale.product_1_attribute_3_value_1
@@ -102,6 +103,9 @@ msgid ""
 "                30-day money-back guarantee<br/>\n"
 "                Shipping: 2-3 Business Days"
 msgstr ""
+"<br/>\n"
+"                30日返金保証<br/>\n"
+"                発送: 2-3 営業日"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
@@ -139,7 +143,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_footer
 msgid "<i class=\"fa fa-chevron-left\"/> Return to Cart"
-msgstr ""
+msgstr "<i class=\"fa fa-chevron-left\"/> カートに戻る"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
@@ -168,7 +172,7 @@ msgstr "<i class=\"fa fa-print\"/> 印刷"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "<i class=\"fa fa-shopping-cart mr-2\"/>ADD TO CART"
-msgstr ""
+msgstr "<i class=\"fa fa-shopping-cart mr-2\"/>カートに追加"
 
 #. module: website_sale
 #: code:addons/website_sale/models/crm_team.py:0
@@ -212,6 +216,7 @@ msgid ""
 "<span class=\"d-none d-lg-inline font-weight-bold text-muted\">Sort "
 "By:</span>"
 msgstr ""
+"<span class=\"d-none d-lg-inline font-weight-bold text-muted\">並び替え:</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
@@ -346,6 +351,13 @@ msgstr "<span>オーダ</span>"
 #: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
 msgid "<span>Process Checkout</span>"
 msgstr "<span>チェックアウトする</span>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid ""
+"<span>Unfortunately your order can not be confirmed as the amount of your payment does not match the amount of your cart.\n"
+"                        Please contact the responsible of the shop for more information.</span>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -560,6 +572,11 @@ msgid "Acceptable file size"
 msgstr "ファイル容量上限"
 
 #. module: website_sale
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_cross_selling_accessories
+msgid "Accessories for Product"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__accessory_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_template__accessory_product_ids
 msgid ""
@@ -593,7 +610,7 @@ msgstr "1つ追加"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Add price per base unit of measure on your Products"
-msgstr ""
+msgstr "プロダクトに基本単価を追加する"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_add_to_cart
@@ -607,7 +624,7 @@ msgstr "カートに追加"
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_banner
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_borderless_2
 msgid "Add to Cart <i class=\"fa fa-fw fa-shopping-cart\"/>"
-msgstr ""
+msgstr "カートに追加 <i class=\"fa fa-fw fa-shopping-cart\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
@@ -704,7 +721,7 @@ msgstr "銀行名"
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_count
 #: model:ir.model.fields,field_description:website_sale.field_product_template__base_unit_count
 msgid "Base Unit Count"
-msgstr ""
+msgstr "基本単位"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_name
@@ -715,13 +732,13 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_show_uom_price
 msgid "Base Unit Price"
-msgstr ""
+msgstr "基本単価"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.base_unit_action
 #: model:ir.ui.menu,name:website_sale.website_base_unit_menu
 msgid "Base Units"
-msgstr ""
+msgstr "基本単位"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -933,6 +950,14 @@ msgstr "アカウントにドキュメントが発行された後は、会社名
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
 msgid "Children Categories"
 msgstr "子分類"
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once invoices have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr "アカウントの請求書が発行されると、あなたの名前の変更は許可されません。 この操作については、直接お問い合わせください。"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_open_website_sale_onboarding_payment_acquirer_wizard
@@ -1150,7 +1175,7 @@ msgstr "顧客"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "DHL Express Connector"
-msgstr ""
+msgstr "DHL Expressコネクタ"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__currency_id
@@ -1247,7 +1272,7 @@ msgstr "カート追加時にオプションプロダクトを提案"
 msgid ""
 "Display base unit price on your eCommerce pages. Set to 0 to hide it for "
 "this product."
-msgstr ""
+msgstr "eコマースページで基本単価を表示。このプロダクトの基本単価を非表示にするには０をセットします。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -1414,7 +1439,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Featured"
-msgstr ""
+msgstr "人気順"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1773,6 +1798,7 @@ msgstr "マイカート"
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__name
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__name
 #: model_terms:ir.ui.view,arch_db:website_sale.address
+#: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_view_tree
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Name"
 msgstr "名称"
@@ -1797,13 +1823,14 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.filters,name:website_sale.dynamic_snippet_newest_products_filter
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_newest_products
 msgid "Newest Products"
 msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Newest arrivals"
-msgstr ""
+msgstr "新着順"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -1880,7 +1907,7 @@ msgstr "放棄カート数"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Number of Columns"
-msgstr ""
+msgstr "カラムの数"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_ppr
@@ -2192,12 +2219,12 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Price - High to Low"
-msgstr ""
+msgstr "価格 - 降順"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Price - Low to High"
-msgstr ""
+msgstr "価格 - 昇順"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_price
@@ -2293,7 +2320,7 @@ msgstr "プロダクト名"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_website_sale_website_form
 msgid "Product Page Extra Fields"
-msgstr ""
+msgstr "プロダクトページ追加項目"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2335,7 +2362,7 @@ msgstr "プロダクトバリアント"
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__visitor_product_count
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_view_form
 msgid "Product Views"
-msgstr ""
+msgstr "プロダクト閲覧"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.website_sale_visitor_product_action
@@ -2374,6 +2401,11 @@ msgstr "プロダクト"
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_recently_sold_with_action
 msgid "Products Recently Sold With"
+msgstr ""
+
+#. module: website_sale
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_cross_selling_recently_sold_with
+msgid "Products Recently Sold With Product"
 msgstr ""
 
 #. module: website_sale
@@ -2461,7 +2493,7 @@ msgstr "最後の評価フィードバック"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_last_image
 msgid "Rating Last Image"
-msgstr ""
+msgstr "最後の評価イメージ"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_last_value
@@ -2480,18 +2512,20 @@ msgstr "評価の理由"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_sold_products_action
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_sold_products
 msgid "Recently Sold Products"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_viewed_products_action
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_viewed_products
 msgid "Recently Viewed Products"
 msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Recovery Email Sent"
-msgstr ""
+msgstr "リカバリEメール送信済"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
@@ -2977,6 +3011,12 @@ msgid "The #1"
 msgstr ""
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The access token is invalid."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_url
 #: model:ir.model.fields,help:website_sale.field_product_template__website_url
 msgid "The full URL to access the document through the website."
@@ -3000,6 +3040,12 @@ msgstr ""
 msgid ""
 "The mode selected here applies as invoicing policy of any new product "
 "created but not of products already existing."
+msgstr ""
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The order has been canceled."
 msgstr ""
 
 #. module: website_sale
@@ -3500,12 +3546,12 @@ msgstr "eコマースカテゴリ"
 #: model_terms:ir.ui.view,arch_db:website_sale.attribute_tree_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_attribute_view_form
 msgid "eCommerce Filter Visibility"
-msgstr ""
+msgstr "eコマースのフィルタ表示"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total
 msgid "eCommerce Sales"
-msgstr ""
+msgstr "eコマース販売"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_delivery
@@ -3515,7 +3561,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "eCommerce Shop"
-msgstr ""
+msgstr "eコマースサイト"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.search_count_box
@@ -3547,7 +3593,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "item(s))"
-msgstr ""
+msgstr "アイテム"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address

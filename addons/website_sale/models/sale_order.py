@@ -91,7 +91,7 @@ class SaleOrder(models.Model):
         product = self.env['product.product'].browse(product_id)
 
         # split lines with the same product if it has untracked attributes
-        if product and (product.product_tmpl_id.has_dynamic_attributes() or product.product_tmpl_id._has_no_variant_attributes()) and not line_id:
+        if product and (product.product_tmpl_id.has_dynamic_attributes() or product.product_tmpl_id._has_no_variant_attributes()) and not line_id and not kwargs.get('force_search', False):
             return self.env['sale.order.line']
 
         domain = [('order_id', '=', self.id), ('product_id', '=', product_id)]
@@ -143,7 +143,7 @@ class SaleOrder(models.Model):
         else:
             pu = product.price
             if order.pricelist_id and order.partner_id:
-                order_line = order._cart_find_product_line(product.id)
+                order_line = order._cart_find_product_line(product.id, force_search=True)
                 if order_line:
                     pu = self.env['account.tax']._fix_tax_included_price_company(pu, product.taxes_id, order_line[0].tax_id, self.company_id)
 
@@ -164,7 +164,10 @@ class SaleOrder(models.Model):
         SaleOrderLineSudo = self.env['sale.order.line'].sudo().with_context(product_context)
         # change lang to get correct name of attributes/values
         product_with_context = self.env['product.product'].with_context(product_context)
-        product = product_with_context.browse(int(product_id))
+        product = product_with_context.browse(int(product_id)).exists()
+
+        if not product or (not line_id and not product._is_add_to_cart_allowed()):
+            raise UserError(_("The given product does not exist therefore it cannot be added to cart."))
 
         try:
             if add_qty:
@@ -186,9 +189,6 @@ class SaleOrder(models.Model):
 
         # Create line if no line with product_id can be located
         if not order_line:
-            if not product:
-                raise UserError(_("The given product does not exist therefore it cannot be added to cart."))
-
             no_variant_attribute_values = kwargs.get('no_variant_attribute_values') or []
             received_no_variant_values = product.env['product.template.attribute.value'].browse([int(ptav['value']) for ptav in no_variant_attribute_values])
             received_combination = product.product_template_attribute_value_ids | received_no_variant_values
@@ -375,7 +375,7 @@ class SaleOrderLine(models.Model):
 
     name_short = fields.Char(compute="_compute_name_short")
 
-    linked_line_id = fields.Many2one('sale.order.line', string='Linked Order Line', domain="[('order_id', '=', order_id)]", ondelete='cascade', copy=False)
+    linked_line_id = fields.Many2one('sale.order.line', string='Linked Order Line', domain="[('order_id', '=', order_id)]", ondelete='cascade', copy=False, index=True)
     option_line_ids = fields.One2many('sale.order.line', 'linked_line_id', string='Options Linked')
 
     def get_sale_order_line_multiline_description_sale(self, product):

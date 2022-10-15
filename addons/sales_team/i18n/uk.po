@@ -29,12 +29,12 @@ msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "<i class=\"fa fa-envelope mr-1\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope mr-1\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
 msgid "<span class=\"bg-error\">Archived</span>"
-msgstr ""
+msgstr "<span class=\"bg-error\">Заархівовано</span>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
@@ -73,6 +73,8 @@ msgstr "Типи дії"
 msgid ""
 "Add members to automatically assign their documents to this sales team."
 msgstr ""
+"Додайте учасників, щоб автоматично призначати свої документи цій команді з "
+"продажу."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -81,6 +83,8 @@ msgid ""
 "Adding %(user_name)s in this team would remove him/her from its current team"
 " %(team_name)s."
 msgstr ""
+"Додавання %(user_name)s у цій команді вилучить його/її з поточної команди "
+"%(team_name)s."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team_member.py:0
@@ -89,6 +93,8 @@ msgid ""
 "Adding %(user_name)s in this team would remove him/her from its current "
 "teams %(team_names)s."
 msgstr ""
+"Додавання %(user_name)s у цій команді вилучить його/її зі своїх поточних "
+"команд %(team_names)s."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -97,6 +103,8 @@ msgid ""
 "Adding %(user_names)s in this team would remove them from their current "
 "teams (%(team_names)s)."
 msgstr ""
+"Додавання %(user_names)s у цій команді вилучить їх із поточних команд "
+"(%(team_names)s)."
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
@@ -175,12 +183,12 @@ msgstr "Контакт"
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
 msgid "Create CRM Tags"
-msgstr ""
+msgstr "Створіть теги CRM"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
 msgid "Create a Sales Team"
-msgstr ""
+msgstr "Створити команду продажу"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_member_action
@@ -190,7 +198,7 @@ msgstr "Створити нового продавця"
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
 msgid "Create an Activity Type"
-msgstr ""
+msgstr "Створити тип дії"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__create_uid
@@ -308,6 +316,8 @@ msgid ""
 "If True, users may belong to several sales teams. Otherwise membership is "
 "limited to a single sales team."
 msgstr ""
+"Якщо значення True, користувачі можуть належати до кількох команд продажу. В"
+" іншому випадку членство обмежується однією командою продажів."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
@@ -350,7 +360,7 @@ msgstr "Зображення"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_128
 msgid "Image (128)"
-msgstr ""
+msgstr "Зображення (128)"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor4
@@ -390,6 +400,8 @@ msgid ""
 "Link salespersons to sales teams. Set their monthly lead capacity\n"
 "                and configure automatic lead assignment."
 msgstr ""
+"Зв’яжіть продавців із відділами продажів. Встановіть їх місячну кількість \n"
+"потенційних клієнтів і налаштуйте автоматичне призначення потенційних клієнтів."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_main_attachment_id
@@ -403,16 +415,19 @@ msgid ""
 "Main user sales team. Used notably for pipeline, or to set sales team in "
 "invoicing or subscription."
 msgstr ""
+"Головна команда продажів користувачів. Використовується, зокрема, для "
+"конвеєра або для налаштування відділу продажів у виставленні рахунків або "
+"передплаті."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_company_ids
 msgid "Member Company"
-msgstr ""
+msgstr "Компанія члена"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__member_warning
 msgid "Member Warning"
-msgstr ""
+msgstr "Попередження члена"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -422,7 +437,7 @@ msgstr "Учасники"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_warning
 msgid "Membership Issue Warning"
-msgstr ""
+msgstr "Попередження проблеми членства"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error
@@ -445,7 +460,7 @@ msgstr "Мобільний"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_membership_multi
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__is_membership_multi
 msgid "Multiple Memberships Allowed"
-msgstr ""
+msgstr "Дозволено кілька членств"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__name
@@ -500,7 +515,7 @@ msgstr "Точка продажу"
 #. module: sales_team
 #: model:crm.team,name:sales_team.crm_team_1
 msgid "Pre-Sales"
-msgstr ""
+msgstr "Попередні продажі"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor1
@@ -544,12 +559,12 @@ msgstr "Член команди продажу"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__crm_team_member_ids
 #: model:ir.model.fields,field_description:sales_team.field_res_users__crm_team_member_ids
 msgid "Sales Team Members"
-msgstr ""
+msgstr "Члени команди продажу"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__crm_team_member_all_ids
 msgid "Sales Team Members (incl. inactive)"
-msgstr ""
+msgstr "Члени команди продажу (включно з неактивними)"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_config
@@ -619,7 +634,7 @@ msgstr "Теги"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Details"
-msgstr ""
+msgstr "Деталі команди"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__user_id
@@ -653,6 +668,8 @@ msgid ""
 "Those represent the different categories of things you have to do (e.g. "
 "\"Call\" or \"Prepare meeting\")."
 msgstr ""
+"Вони представляють різні категорії речей, які вам потрібно зробити "
+"(наприклад, \"Дзвонити\" або \"Підготувати зустріч\")."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -661,6 +678,8 @@ msgid ""
 "To add a Salesperson into multiple Teams, activate the Multi-Team option in "
 "settings."
 msgstr ""
+"Щоб додати продавця до кількох команд, активуйте опцію Мультикоманди в "
+"налаштуваннях."
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor6
@@ -672,12 +691,14 @@ msgstr "Тренінг"
 msgid ""
 "UX: Give users not to add in the currently chosen team to avoid duplicates"
 msgstr ""
+"UX: дайте користувачам не додаватись у вибрану команду, щоб уникнути "
+"дублювання"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_company_ids
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__user_company_ids
 msgid "UX: Limit to team company or all if no company"
-msgstr ""
+msgstr "UX: обмежити команду або всі, якщо немає компанії"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -703,6 +724,8 @@ msgstr "Кількість непрочитаних повідомлень"
 msgid ""
 "Use Sales Teams to organize your sales departments and draw up reports."
 msgstr ""
+"Використовуйте команди продажів, щоб організувати свої відділи продажів і "
+"скласти звіти."
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
@@ -720,6 +743,8 @@ msgid ""
 "Use Tags to manage and track your Opportunities (product structure, sales "
 "type, ...)"
 msgstr ""
+"Використовуйте теги, щоб керувати та відстежувати свої нагоди (структура "
+"птовару, тип продажів, ...)"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_company_ids
@@ -729,7 +754,7 @@ msgstr "Компанія користувача"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_in_teams_ids
 msgid "User In Teams"
-msgstr ""
+msgstr "Користувач у командах"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
@@ -754,7 +779,7 @@ msgstr "Користувачі"
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_ids
 msgid "Users assigned to this team."
-msgstr ""
+msgstr "Користувач призначений цій команді"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.salesteam_website_sales
@@ -768,16 +793,18 @@ msgid ""
 "You are trying to create duplicate membership(s). We found that "
 "%(duplicates)s already exist(s)."
 msgstr ""
+"Ви намагаєтеся створити дублікат членства. Ми знайшли, що %(duplicates)s вже"
+" існує."
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "e.g. North America"
-msgstr ""
+msgstr "напр. Північна Америка"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_form
 msgid "e.g. Services"
-msgstr ""
+msgstr "напр. Послуги"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.ebay_sales_team

@@ -24,11 +24,11 @@
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
 # Buket Şeker <buket_skr@hotmail.com>, 2021
 # Ugur Yilmaz <ugurlu2001@hotmail.com>, 2021
-# Tugay Hatıl <tugayh@projetgrup.com>, 2021
 # Murat Durmuş <muratd@projetgrup.com>, 2021
 # Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2021
 # abc Def <hdogan1974@gmail.com>, 2021
 # Ediz Duman <neps1192@gmail.com>, 2022
+# Tugay Hatıl <tugayh@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -36,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2022\n"
+"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,6 +62,8 @@ msgid ""
 "%(base)s with a %(discount)s %% discount and %(surcharge)s extra fee\n"
 "Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
 msgstr ""
+"%(base)s with a %(discount)s %% discount and %(surcharge)s extra fee\n"
+"Örnek: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -85,7 +87,7 @@ msgstr "%s (kopya)"
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "%s : end date (%s) should be greater than start date (%s)"
-msgstr ""
+msgstr "%s : bitiş tarihi (%s) başlangıç tarihinden (%s) büyük olmalıdır"
 
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_template_label
@@ -128,7 +130,7 @@ msgstr "160x80cm, geniş bacak."
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__2x7xprice
 msgid "2 x 7 with price"
-msgstr ""
+msgstr "2x7 fiyat ile"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_6
@@ -138,17 +140,17 @@ msgstr "2 yıl"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x12
 msgid "4 x 12"
-msgstr ""
+msgstr "4 x 12"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x12xprice
 msgid "4 x 12 with price"
-msgstr ""
+msgstr "4 x 12 fiyat ile"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x7xprice
 msgid "4 x 7 with price"
-msgstr ""
+msgstr "4 x 7 fiyat ile"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -156,6 +158,8 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow "
 "icon\" title=\"Arrow\"/>"
 msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow "
+"icon\" title=\"Arrow\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
@@ -207,14 +211,14 @@ msgstr "<strong>Miktar: </strong>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "<strong>Sales Order Line Quantities (price per unit)</strong>"
-msgstr ""
+msgstr "<strong>Satış sipariş satır miktarları (birim başına fiyat)</strong>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid ""
 "<strong>Save</strong> this page and come back\n"
 "                                    here to set up the feature."
-msgstr ""
+msgstr "<strong>Kaydet</strong> özelliği ayarlamk için buraya geri gelin."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -634,7 +638,7 @@ msgstr "Koşullar"
 #: model:product.product,name:product.product_product_11b
 #: model:product.template,name:product.product_product_11_product_template
 msgid "Conference Chair"
-msgstr ""
+msgstr "Konferans Koltuğu"
 
 #. module: product
 #: model:product.product,description_sale:product.consu_delivery_02
@@ -675,6 +679,8 @@ msgid ""
 "Consumables are physical products for which you don't manage the inventory "
 "level: they are always available."
 msgstr ""
+"Sarf malzemeleri, envanter düzeyini yönetmediğiniz fiziksel ürünlerdir: her "
+"zaman kullanılabilirler."
 
 #. module: product
 #: model:ir.model,name:product.model_res_partner
@@ -698,7 +704,7 @@ msgstr "İçerdiği Miktar"
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_packaging_positive_qty
 msgid "Contained Quantity should be positive."
-msgstr ""
+msgstr "İçerdiği Miktar pozitif olmalıdır."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
@@ -709,7 +715,7 @@ msgstr "İçerdiği Miktar"
 #: model:product.product,name:product.product_product_13
 #: model:product.template,name:product.product_product_13_product_template
 msgid "Corner Desk Left Sit"
-msgstr ""
+msgstr "Sol Köşe Çalışma Masası"
 
 #. module: product
 #: model:product.product,name:product.product_product_5
@@ -1015,7 +1021,7 @@ msgstr "Süre"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__dymo
 msgid "Dymo"
-msgstr ""
+msgstr "Dymo"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__dynamic
@@ -1182,7 +1188,7 @@ msgstr "Fiyat Listesi Raporu Oluştur"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Get product pictures using Barcode"
-msgstr ""
+msgstr "Barkod kullanarak ürün resimleri alın"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__packaging_ids
@@ -1199,7 +1205,7 @@ msgstr "Ürün listesi gösterildiğinde sıralama emri ver."
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Google Images"
-msgstr ""
+msgstr "Google Görüntüleri"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
@@ -1366,6 +1372,10 @@ msgid ""
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"Standart Fiyat ve AVCO'da: ürünün değeri (AVCO'da otomatik olarak hesaplanır).\n"
+"FIFO'da: stoktan ayrılacak bir sonraki birimin değeri (otomatik olarak hesaplanır).\n"
+"Satın alma maliyeti bilinmediğinde (örneğin sayım farkları) ürünü değerlendirmek için kullanılır.\n"
+"Satış siparişlerindeki marjları hesaplamak için kullanılır."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
@@ -1663,7 +1673,7 @@ msgstr "Adı"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__no_variant
 msgid "Never (option)"
-msgstr ""
+msgstr "Asla (seçenek)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_calendar_event_id
@@ -1709,7 +1719,7 @@ msgstr "Not:"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__number_related_products
 msgid "Number Related Products"
-msgstr ""
+msgstr "İlişkili Ürünlerin Numarası"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction_counter
@@ -1826,7 +1836,7 @@ msgstr "Yüzde Fiyatı"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__pills
 msgid "Pills"
-msgstr ""
+msgstr "Haplar"
 
 #. module: product
 #. openerp-web
@@ -2675,6 +2685,12 @@ msgid "The product template is archived so no combination is possible."
 msgstr "Ürün şablonunun arşivlenir, böylece hiçbir kombinasyon yapılamaz."
 
 #. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "The product variant must be a variant of the product template."
+msgstr "Ürün varyantı, ürün şablonunun bir varyantı olmalıdır."
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
 msgid ""
 "The quantity to purchase from this vendor to benefit from the price, "
@@ -2731,6 +2747,8 @@ msgid ""
 "to no possible variant. Please archive or delete your product directly if "
 "intended."
 msgstr ""
+"Ürün niteliklerinin, değerlerinin ve hariç tutulanların bu yapılandırması, olası bir varyasyona yol açmaz.\n"
+"Lütfen istenirse ürününüzü doğrudan arşivleyin veya silin."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
@@ -2765,6 +2783,9 @@ msgid ""
 "This may cause inconsistencies in computations.\n"
 "Please set a precision between %s and 1."
 msgstr ""
+"Bu yuvarlama hassasiyeti, Ondalık Doğruluktan (%s basamak) daha yüksektir.\n"
+"Bu, hesaplamalarda tutarsızlıklara neden olabilir.\n"
+"Lütfen %s ve 1 arasında bir hassasiyet ayarlayın."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
@@ -2920,7 +2941,7 @@ msgstr "Ölçü Birimi"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Upsell & Cross-Sell"
-msgstr ""
+msgstr "Ek Satış ve Çapraz Satış"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
@@ -3171,12 +3192,16 @@ msgid ""
 "This may cause inconsistencies in computations.\n"
 "Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
 msgstr ""
+"Ölçü biriminden daha az hassas bir Ondalık Doğruluk ayarlıyorsunuz:\n"
+"%s\n"
+"Bu, hesaplamalarda tutarsızlıklara neden olabilir.\n"
+"Lütfen bu ölçü birimlerinin yuvarlamasını veya bu Ondalık Doğruluğun basamaklarını artırın."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__percent_price
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_discount
 msgid "You can apply a mark-up by setting a negative discount."
-msgstr ""
+msgstr "Negatif bir indirim ayarlayarak kar marjı uygulayabilirsiniz."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -3306,6 +3331,8 @@ msgid ""
 "You cannot disable a pricelist rule, please delete it or archive its "
 "pricelist instead."
 msgstr ""
+"Bir fiyat listesi kuralını devre dışı bırakamazsınız, lütfen silin veya "
+"bunun yerine fiyat listesini arşivleyin."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -3369,7 +3396,7 @@ msgstr "gün"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "e.g. Cheese Burger"
-msgstr ""
+msgstr "e.g. Cheese Burger"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view

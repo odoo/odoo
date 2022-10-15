@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
+# Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,13 +12,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_cover
@@ -44,6 +45,8 @@ msgstr "Une erreur est survenue lors de l'envoi de la lettre par la poste."
 #, python-format
 msgid "An error occurred when sending the document by post.<br>Error: %s"
 msgstr ""
+"Une erreur est survenue lors de l'envoi du document par la poste. <br> "
+"Erreur: %s"
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
@@ -65,8 +68,8 @@ msgid ""
 "Are you sure you want to discard %s snailmail delivery failures? You won't "
 "be able to re-send these letters later!"
 msgstr ""
-"Êtes-vous sûr(e) de vouloir annuler %s échecs d'envoi de courriers? Vous ne "
-"pourrez plus renvoyer ces lettres après!"
+"Êtes-vous sûr(e) de vouloir annuler %s échecs d'envoi de courriers ? Vous ne"
+" pourrez plus renvoyer ces lettres après !"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__attachment_id
@@ -769,7 +772,7 @@ msgstr "Code postal"
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
 msgid "by post. Are you sure you want to continue?"
-msgstr "par la poste. Voulez-vous vraiment continuer?"
+msgstr "par la poste. Voulez-vous vraiment continuer ?"
 
 #. module: snailmail
 #. openerp-web

@@ -8,11 +8,12 @@
 # Martin Trigaux, 2021
 # fanha99 <fanha99@hotmail.com>, 2021
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2021
-# Duy BQ <duybq86@gmail.com>, 2021
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2021
 # Trần Hà <tranthuha13590@gmail.com>, 2021
 # Mountain Tran <mountain.tran@viindoo.com>, 2021
 # Vo Thanh Thuy, 2022
+# Duy BQ <duybq86@gmail.com>, 2022
+# Thanh Nguyễn Văn, 2022
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Vo Thanh Thuy, 2022\n"
+"Last-Translator: Thanh Nguyễn Văn, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2432,7 +2433,7 @@ msgstr "Phân bổ của tôi"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "My Department"
-msgstr ""
+msgstr "Phòng ban của tôi"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
@@ -2690,7 +2691,7 @@ msgstr "Nghỉ cho đến"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "Off Today"
-msgstr ""
+msgstr "Nghỉ hôm nay"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__hr_icon_display__presence_holiday_absent
@@ -2785,7 +2786,7 @@ msgstr "Khác"
 #: code:addons/hr_holidays/static/src/components/thread_icon/thread_icon.xml:0
 #, python-format
 msgid "Out of office"
-msgstr ""
+msgstr "Không ở văn phòng"
 
 #. module: hr_holidays
 #. openerp-web
@@ -3288,6 +3289,8 @@ msgid ""
 "The following employees are not supposed to work during that period:\n"
 " %s"
 msgstr ""
+"Những nhân viên sau đây không được phép làm việc trong thời gian đó:\n"
+" %s"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__added_value
@@ -3849,7 +3852,7 @@ msgstr "Người dùng đang online"
 #: code:addons/hr_holidays/static/src/components/partner_im_status_icon/partner_im_status_icon.xml:0
 #, python-format
 msgid "User is out of office"
-msgstr ""
+msgstr "Người dùng văn mặt ở văn phòng"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_res_users
@@ -3925,7 +3928,7 @@ msgstr "Đang chờ Chấp thuận Thứ hai"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "Waiting for Approval"
-msgstr ""
+msgstr "Chờ phê duyệt"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__wed
@@ -4015,6 +4018,13 @@ msgid "You cannot delete an allocation request which is in %s state."
 msgstr "Bạn không thể xóa một yêu phân bổ ở trạng thái %s."
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid ""
+"You cannot delete an allocation request which has some validated leaves."
+msgstr ""
+
+#. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid ""
@@ -4030,6 +4040,20 @@ msgstr ""
 msgid ""
 "You don't have the rights to apply second approval on a time off request"
 msgstr "Bạn không có quyền thực hiện phê duyệt lần 2 cho yêu cầu nghỉ phép"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"You have several allocations for those type and period.\n"
+"Please split your request to fit in their number of days."
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "You must be %s\\'s Manager to approve this leave"
+msgstr ""
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0

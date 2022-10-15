@@ -3,16 +3,18 @@
 # 	* website_sale
 # 
 # Translators:
-# Martin Trigaux, 2021
+# Robert Förster <hello@suppliot.eu>, 2022
+# Martin Trigaux, 2022
 # Friederike Fasterling-Nesselbosch, 2022
+# Jan Suhr, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2022-07-26 11:51+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Jan Suhr, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -192,7 +194,7 @@ msgid ""
 "<span class=\"\">Process Checkout</span>\n"
 "                                        <span class=\"fa fa-chevron-right\"/>"
 msgstr ""
-"<span class=\"\">Prozess Checkout</span>\n"
+"<span class=\"\">Zur Kasse</span>\n"
 "                                        <span class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
@@ -201,7 +203,7 @@ msgid ""
 "<span class=\"\">Process Checkout</span>\n"
 "                                    <span class=\"fa fa-chevron-right\"/>"
 msgstr ""
-"<span class=\"\">Prozess Checkout</span>\n"
+"<span class=\"\">Zur Kasse</span>\n"
 "                                    <span class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
@@ -357,7 +359,7 @@ msgstr "<span>Auftrag</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
 msgid "<span>Process Checkout</span>"
-msgstr "<span>Prozess Checkout</span>"
+msgstr "<span>Zur Kasse</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -671,6 +673,11 @@ msgid "Acceptable file size"
 msgstr "Zulässige Dateigröße"
 
 #. module: website_sale
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_cross_selling_accessories
+msgid "Accessories for Product"
+msgstr "Zubehör für Produkt"
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__accessory_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_template__accessory_product_ids
 msgid ""
@@ -842,7 +849,7 @@ msgstr "Grundeinheiten"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Be aware!"
-msgstr "Sei vorsichtig!"
+msgstr "Achtung!"
 
 #. module: website_sale
 #: model:res.country.group,name:website_sale.benelux
@@ -1060,6 +1067,16 @@ msgid "Children Categories"
 msgstr "Unterkategorien"
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once invoices have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr ""
+"Der Name darf nicht geändert werden, sobald eine Rechnung für Sie erzeugt "
+"wurde. Bitte wenden Sie sich direkt an uns."
+
+#. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_open_website_sale_onboarding_payment_acquirer_wizard
 msgid "Choose a payment method"
 msgstr "Wählen Sie eine Zahlungsmethode"
@@ -1242,7 +1259,7 @@ msgstr "Erstellt am"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Creation Date"
-msgstr "Erzeugt am"
+msgstr "Erstellungsdatum"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
@@ -1373,9 +1390,7 @@ msgstr "Anzeigename"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Display a prompt with optional products when adding to cart"
-msgstr ""
-"Zeigen Sie eine Eingabeaufforderung mit optionalen Produkten an, wenn diese "
-"in den Warenkorb gelegt werden"
+msgstr "Anzeige optionaler Produkte beim Hinzufügen zum Warenkorb"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__base_unit_count
@@ -1636,7 +1651,7 @@ msgstr "Gitter"
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Group By"
-msgstr "Gruppieren"
+msgstr "Gruppieren nach"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_ir_http
@@ -1925,6 +1940,7 @@ msgstr "Mein Warenkorb"
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__name
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__name
 #: model_terms:ir.ui.view,arch_db:website_sale.address
+#: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_view_tree
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Name"
 msgstr "Name"
@@ -1949,6 +1965,7 @@ msgstr "Neu!"
 
 #. module: website_sale
 #: model:ir.filters,name:website_sale.dynamic_snippet_newest_products_filter
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_newest_products
 msgid "Newest Products"
 msgstr "Neueste Produkte"
 
@@ -2188,14 +2205,14 @@ msgstr "Aufträge Follow-up"
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.sale_order_action_to_invoice
 msgid "Orders To Invoice"
-msgstr "Aufträge zur Rechnung"
+msgstr "Aufträge zur Abrechnung"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Orders to Invoice"
-msgstr "Aufträge zur Rechnung"
+msgstr "Aufträge zur Abrechnung"
 
 #. module: website_sale
 #. openerp-web
@@ -2253,7 +2270,7 @@ msgstr "Zahlungsanbieter"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_acquirers
 msgid "Payment Acquirers"
-msgstr "Zahlungsanbieter"
+msgstr "Zahlungsdienstleister"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_icons
@@ -2515,7 +2532,7 @@ msgstr "Anzeigte Produktpreise im Webkatalog"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_ribbon
 msgid "Product ribbon"
-msgstr ""
+msgstr "Produkt-Band"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_template_action_website
@@ -2535,6 +2552,11 @@ msgstr "Produkte"
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_recently_sold_with_action
 msgid "Products Recently Sold With"
 msgstr "Kürzlich verkaufte Produkte mit"
+
+#. module: website_sale
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_cross_selling_recently_sold_with
+msgid "Products Recently Sold With Product"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_count
@@ -2646,18 +2668,20 @@ msgstr "Begründung der Bewertung"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_sold_products_action
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_sold_products
 msgid "Recently Sold Products"
 msgstr "Kürzlich verkaufte Produkte"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_viewed_products_action
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_viewed_products
 msgid "Recently Viewed Products"
 msgstr "Kürzlich angesehene Produkte"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Recovery Email Sent"
-msgstr "Wiederherstellungs-E-Mail senden"
+msgstr "Wiederherstellungs-E-Mail versendet"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
@@ -2703,7 +2727,7 @@ msgstr "Bestellung überprüfen"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_ribbon_id
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Ribbon"
-msgstr ""
+msgstr "Band"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__bg_color
@@ -2718,7 +2742,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__html
 msgid "Ribbon html"
-msgstr ""
+msgstr "Ribbon html"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__text_color
@@ -2951,12 +2975,12 @@ msgstr "Versand-Management"
 #: model:website.menu,name:website_sale.menu_shop
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Shop"
-msgstr "Geschäft"
+msgstr "Shop"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
 msgid "Shop - Checkout"
-msgstr "Shop-Abmelden"
+msgstr "Shop - zur Kasse"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -3154,6 +3178,12 @@ msgid "The #1"
 msgstr "Die #1"
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The access token is invalid."
+msgstr "Das Zugangs-Token ist ungültig."
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_url
 #: model:ir.model.fields,help:website_sale.field_product_template__website_url
 msgid "The full URL to access the document through the website."
@@ -3185,6 +3215,12 @@ msgid ""
 msgstr ""
 "Der hier ausgewählte Modus gilt als Bestimmung zur Rechnungsstellung für "
 "alle neu erstellten Produkte, jedoch nicht für bestehende Produkte."
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The order has been canceled."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__public_categ_ids
@@ -3231,7 +3267,7 @@ msgstr "Kein zuletzt bestätigter Auftrag vorhanden."
 #: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_unpaid_quotation_tree
 msgid "There is no unpaid order from the website yet"
-msgstr "Es gibt noch keine unbezahlte Bestellung von der Website"
+msgstr "Es liegt noch keine unbezahlte Bestellung auf der Website vor"
 
 #. module: website_sale
 #. openerp-web
@@ -3357,7 +3393,7 @@ msgstr "Unbezahlt"
 #: model:ir.ui.menu,name:website_sale.menu_orders_unpaid_orders
 #, python-format
 msgid "Unpaid Orders"
-msgstr "Offene Bestellungen"
+msgstr "Unbezahlte Bestellungen"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item
@@ -3452,8 +3488,9 @@ msgid ""
 "promising to repair or replace it if necessary within a specified period of "
 "time."
 msgstr ""
-"Garantie, die vom Hersteller dem Käufer gewährt wird, um ein defektes "
-"Produkt in einer bestimmten Zeit zu ersetzen oder zu reparieren."
+"Garantie, die der Hersteller dem Käufer eines Artikels gewährt, indem er "
+"sich verpflichtet, den Artikel innerhalb eines bestimmten Zeitraums zu "
+"reparieren oder zu ersetzen, falls erforderlich."
 
 #. module: website_sale
 #. openerp-web
@@ -3596,7 +3633,7 @@ msgstr ""
 #, python-format
 msgid "With this action, '%s' website would not have any pricelist available."
 msgstr ""
-"Mit dieser Aktion, '%s' hätte die Website keine Preisliste zur Verfügung."
+"Mit dieser Aktion, hätte die '%s' Website keine Preisliste zur Verfügung."
 
 #. module: website_sale
 #: code:addons/website_sale/models/website_snippet_filter.py:0
@@ -3767,7 +3804,7 @@ msgstr "Geschäftsbedingungen"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "to follow your order."
-msgstr "um ihrer bestellung zu folgen."
+msgstr "um Ihrer Bestellung zu folgen."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options

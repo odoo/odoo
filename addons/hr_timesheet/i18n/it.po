@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
@@ -254,7 +254,7 @@ msgstr "App Store di Apple"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_view_form_inherit_timesheet
 msgid "Application Settings"
-msgstr ""
+msgstr "Impostazioni applicazione"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__timesheet_ids
@@ -1183,6 +1183,12 @@ msgid "Timesheets can be logged on this task."
 msgstr "Consente di registrare i fogli ore per questo lavoro."
 
 #. module: hr_timesheet
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#, python-format
+msgid "Timesheets must be created with an active employee."
+msgstr ""
+
+#. module: hr_timesheet
 #: model:digest.tip,name:hr_timesheet.digest_tip_hr_timesheet_0
 msgid "Tip: Record your Timesheets faster"
 msgstr "Suggerimento: Registra i tuoi fogli ore più velocemente"
@@ -1344,6 +1350,12 @@ msgstr ""
 "Impossibile registrare fogli ore sul progetto, è collegato a un conto "
 "analitico non attivo. Cambiare il conto oppure riattivare quello corrente a "
 "foglio ore sul progetto."
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#, python-format
+msgid "You cannot set an archived employee to the existing timesheets."
+msgstr ""
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0

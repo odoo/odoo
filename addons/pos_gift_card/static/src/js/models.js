@@ -2,6 +2,8 @@ odoo.define("pos_gift_card.gift_card", function (require) {
   "use strict";
 
   const models = require("point_of_sale.models");
+  const core = require('web.core');
+  const _t = core._t;
 
   models.load_fields("pos.order.line", "generated_gift_card_ids");
   models.load_fields("pos.order.line", "redeem_pos_order_line_ids");
@@ -28,15 +30,20 @@ odoo.define("pos_gift_card.gift_card", function (require) {
 
   var _order_super = models.Order.prototype;
   models.Order = models.Order.extend({
+    //@override
     set_orderline_options: function (orderline, options) {
       _order_super.set_orderline_options.apply(this, [orderline, options]);
       if (options && options.generated_gift_card_ids) {
         orderline.generated_gift_card_ids = [options.generated_gift_card_ids];
       }
       if (options && options.gift_card_id) {
+        if (orderline.order.orderlines.find((line) => line.gift_card_id === options.gift_card_id)) {
+            throw new Error(_t('This gift card is already applied'));
+        }
         orderline.gift_card_id = options.gift_card_id;
       }
     },
+    //@override
     wait_for_push_order: function () {
         if(this.pos.config.use_gift_card) {
             let giftProduct = this.pos.db.product_by_id[this.pos.config.gift_card_product_id[0]];
@@ -47,6 +54,14 @@ odoo.define("pos_gift_card.gift_card", function (require) {
         }
         return _order_super.wait_for_push_order.apply(this, arguments);
     },
+    //@override
+    _reduce_total_discount_callback: function(sum, orderLine) {
+        if (this.pos.config.gift_card_product_id[0] === orderLine.product.id) {
+            return sum;
+        }
+        return _order_super._reduce_total_discount_callback.apply(this, arguments);
+    },
+
   });
 
   var _super_orderline = models.Orderline;

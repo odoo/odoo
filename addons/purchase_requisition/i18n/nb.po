@@ -3,17 +3,19 @@
 # 	* purchase_requisition
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Jorunn D. Newth, 2019
-# Marius Stedjan <marius@stedjan.com>, 2019
+# Jorunn D. Newth, 2022
+# Mads Søndergaard, 2022
+# Marius Stedjan <marius@stedjan.com>, 2022
+# Martin Trigaux, 2022
+# Lars Aam <lars.aam@vikenfiber.no>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-09-14 12:25+0000\n"
+"Last-Translator: Lars Aam <lars.aam@vikenfiber.no>, 2022\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -87,6 +89,11 @@ msgid "Action Needed"
 msgstr "Handling påkrevd"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__active
+msgid "Active"
+msgstr "Aktiv"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_ids
 msgid "Activities"
 msgstr "Aktiviteter"
@@ -94,12 +101,17 @@ msgstr "Aktiviteter"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Dekorering for Aktivitetsunntak"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_state
 msgid "Activity State"
 msgstr "Aktivitetsstatus"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Ikon type Aktivitet"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_id
@@ -136,7 +148,13 @@ msgstr "Analytisk konto"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_tag_ids
 msgid "Analytic Tags"
-msgstr ""
+msgstr "Analytiske etiketter"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_search
+msgid "Archived"
+msgstr "Arkivert"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_attachment_count
@@ -168,7 +186,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Cancel"
-msgstr "Avbryt"
+msgstr "Kanseller"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__cancel
@@ -196,7 +214,7 @@ msgstr "Lukk"
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__done
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__done
 msgid "Closed"
-msgstr "Avsluttet"
+msgstr "Lukket"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__company_id
@@ -222,6 +240,8 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
+"Konvertering mellom enheter fungerer kun når de tilhører samme kategori. "
+"Konverteringen gjøres basert på forholdet mellom enhetene."
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__product_template__purchase_requisition__rfq
@@ -258,14 +278,19 @@ msgid "Currency"
 msgstr "Valuta"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_description_variants
+msgid "Custom Description"
+msgstr "Tilpasset beskrivelse"
+
+#. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Data for new quotations"
-msgstr "Data for nye pristilbud"
+msgstr "Data for nye tilbud"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__schedule_date
 msgid "Delivery Date"
-msgstr "Leveransedato"
+msgstr "Leveringsdato"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__description
@@ -303,19 +328,9 @@ msgid ""
 msgstr ""
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-msgid "Exception Activities"
-msgstr ""
-
-#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_follower_ids
 msgid "Followers"
 msgstr "Følgere"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Følgere (kanaler)"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_partner_ids
@@ -323,11 +338,16 @@ msgid "Followers (Partners)"
 msgstr "Følgere (partnere)"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font Awesome-ikon, for eksempel fa-tasks"
+
+#. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid ""
 "For a blanket order, you can record an agreement for a specifc period\n"
 "            (e.g. a year) and you order products within this agreement, benefiting\n"
-"            from the negociated prices."
+"            from the negotiated prices."
 msgstr ""
 
 #. module: purchase_requisition
@@ -339,6 +359,11 @@ msgstr "Fremtidige aktiviteter"
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Group By"
 msgstr "Grupper etter"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__has_message
+msgid "Has Message"
+msgstr "Har melding"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__id
@@ -355,19 +380,19 @@ msgstr "Ikon"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ikon for å indikere aktivitetsunntak."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_needaction
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_unread
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Hvis haket av, vil nye meldinger kreve din oppmerksomhet."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_error
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Hvis haket av, har enkelte meldinger leveringsfeil."
 
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -422,12 +447,12 @@ msgstr "Linjer"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Hovedvedlegg"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Melding ved leveringsfeil"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_ids
@@ -440,8 +465,18 @@ msgid "Multiple Requisitions"
 msgstr ""
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr ""
+
+#. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "My Agreements"
+msgstr ""
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
+msgid "Name, TIN, Email, or Reference"
 msgstr ""
 
 #. module: purchase_requisition
@@ -452,12 +487,17 @@ msgstr "Nye avtaler"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "New Quotation"
-msgstr "Nytt pristilbud"
+msgstr "Nytt tilbud"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Neste aktivitetsfrist"
+msgstr "Frist for neste aktivitet"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_summary
@@ -482,7 +522,7 @@ msgstr "Antall ordrer"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Antall feil"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_needaction_counter
@@ -492,7 +532,7 @@ msgstr "Antall meldinger som krever handling"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Antall meldinger med leveringsfeil"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_unread_counter
@@ -537,7 +577,7 @@ msgstr "Produktmal"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_uom_id
 msgid "Product Unit of Measure"
-msgstr "Enhet for produkt"
+msgstr "Produktenhet"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -601,7 +641,7 @@ msgstr "Innkjøpsordre med rekvisisjon"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__user_id
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Purchase Representative"
-msgstr ""
+msgstr "Innkjøper"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition
@@ -650,7 +690,7 @@ msgstr "Referanse"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.product_template_form_view_inherit
 msgid "Reordering"
-msgstr "Gjenbestilling"
+msgstr "Bestilling"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_to_so
@@ -685,7 +725,7 @@ msgstr "Ansvarlig bruker"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "SMS Leveringsfeil"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__schedule_date
@@ -699,7 +739,7 @@ msgstr "Søk i innkjøpsavtaler"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__multiple
-msgid "Select multiple RFQ"
+msgid "Select multiple RFQ (non-exclusive)"
 msgstr ""
 
 #. module: purchase_requisition
@@ -712,13 +752,20 @@ msgstr ""
 msgid ""
 "Select only one RFQ (exclusive):  when a purchase order is confirmed, cancel the remaining purchase order.\n"
 "\n"
-"                    Select multiple RFQ: allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
+"                    Select multiple RFQ (non-exclusive): allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
 msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__sequence
 msgid "Sequence"
 msgstr "Sekvens"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_type__active
+msgid ""
+"Set active to false to hide the Purchase Agreement Types without removing "
+"it."
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__quantity_copy__none
@@ -728,7 +775,7 @@ msgstr "Sett antall manuelt"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Show all records which has next action date is before today"
-msgstr "Vis alle oppføringer som har en neste tiltak-dato før dagen i dag"
+msgstr "Vis alle poster som har neste handlingsdato før dagen i dag"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__origin
@@ -772,7 +819,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_supplierinfo
 msgid "Supplier Pricelist"
-msgstr "Leverandør prisliste"
+msgstr "Leverandørprisliste"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -789,8 +836,8 @@ msgstr ""
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid ""
-"There is already an open blanket order for this supplier. We suggest you to "
-"use to complete this open blanket order instead of creating a new one."
+"There is already an open blanket order for this supplier. We suggest you "
+"complete this open blanket order, instead of creating a new one."
 msgstr ""
 
 #. module: purchase_requisition
@@ -801,7 +848,7 @@ msgstr "Dagens aktiviteter"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Type unntaks-aktivitet på posten."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__price_unit
@@ -816,12 +863,12 @@ msgstr "Uleste meldinger"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Teller for uleste meldinger"
+msgstr "Antall uleste meldinger"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "UoM"
-msgstr ""
+msgstr "Enhet"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__line_copy__copy
@@ -857,7 +904,7 @@ msgstr "Meldinger fra nettsted"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__website_message_ids
 msgid "Website communication history"
-msgstr "Historikk for kommunikasjon på nettsted"
+msgstr " Kommunikasjonshistorikk for nettsted"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0

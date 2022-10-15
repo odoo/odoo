@@ -219,7 +219,10 @@ class HrEmployeePrivate(models.Model):
         """
         if self.check_access_rights('read', raise_exception=False):
             return super(HrEmployeePrivate, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
-        ids = self.env['hr.employee.public']._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
+        try:
+            ids = self.env['hr.employee.public']._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
+        except ValueError:
+            raise AccessError(_('You do not have access to this document.'))
         if not count and isinstance(ids, Query):
             # the result is expected from this table, so we should link tables
             ids = super(HrEmployeePrivate, self.sudo())._search([('id', 'in', ids)])

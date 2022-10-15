@@ -42,7 +42,11 @@ export const localizationService = {
             throw new Error("Error while fetching translations");
         }
 
-        const { lang_parameters: userLocalization, modules: modules } = await response.json();
+        const {
+            lang_parameters: userLocalization,
+            modules: modules,
+            multi_lang: multiLang,
+        } = await response.json();
 
         // FIXME We flatten the result of the python route.
         // Eventually, we want a new python route to return directly the good result.
@@ -83,7 +87,7 @@ export const localizationService = {
             decimalPoint: userLocalization.decimal_point,
             direction: userLocalization.direction,
             grouping,
-            multiLang: userLocalization.multi_lang,
+            multiLang,
             thousandsSep: userLocalization.thousands_sep,
             weekStart: userLocalization.week_start,
         });

@@ -185,7 +185,7 @@ class TestSaleMrpKitBom(TransactionCase):
         aluminium_legs = self.env['product.attribute.value'].create(
             {'attribute_id': attributes.id, 'name': 'Aluminium'})
 
-        product = self.env['product.product'].create({
+        product_template = self.env['product.template'].create({
             'name': 'test product',
             'categ_id': product_category.id,
             'attribute_line_ids': [(0, 0, {
@@ -193,9 +193,7 @@ class TestSaleMrpKitBom(TransactionCase):
                 'value_ids': [(6, 0, [steel_legs.id, aluminium_legs.id])]
             })]
         })
-        product_variant_ids = product.product_variant_ids.search([('id', '!=', product.id)])
-        product_variant_ids[0].categ_id.property_cost_method = 'average'
-        product_variant_ids[1].categ_id.property_cost_method = 'average'
+        product_variant_ids = product_template.product_variant_ids
         # BoM 1 with component_1
         self.env['mrp.bom'].create({
             'product_id': product_variant_ids[0].id,
@@ -225,7 +223,7 @@ class TestSaleMrpKitBom(TransactionCase):
             'order_id': so.id,
         })
         so.action_confirm()
-        so.action_cancel()
+        so._action_cancel()
         so.action_draft()
         with Form(so) as so_form:
             with so_form.order_line.edit(0) as order_line_change:
@@ -410,3 +408,145 @@ class TestSaleMrpKitBom(TransactionCase):
 
         # Checks the delivery amount (must be 1).
         self.assertEqual(so.order_line.qty_delivered, 1)
+
+    def test_sale_kit_show_kit_in_delivery(self):
+        """Create a kit with 2 product and activate 2 steps
+            delivery and check that every stock move contains
+            a bom_line_id
+        """
+
+        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        wh.write({'delivery_steps': 'pick_ship'})
+
+        kitA = self._create_product('Kit Product', 'product', 0.00)
+        compA = self._create_product('ComponentA', 'product', 0.00)
+        compB = self._create_product('ComponentB', 'product', 0.00)
+
+        # Create BoM for KitB
+        bom_product_formA = Form(self.env['mrp.bom'])
+        bom_product_formA.product_id = kitA
+        bom_product_formA.product_tmpl_id = kitA.product_tmpl_id
+        bom_product_formA.product_qty = 1.0
+        bom_product_formA.type = 'phantom'
+        with bom_product_formA.bom_line_ids.new() as bom_line:
+            bom_line.product_id = compA
+            bom_line.product_qty = 1
+        with bom_product_formA.bom_line_ids.new() as bom_line:
+            bom_line.product_id = compB
+            bom_line.product_qty = 1
+        bom_product_formA.save()
+
+        customer = self.env['res.partner'].create({
+            'name': 'customer',
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': customer.id,
+            'order_line': [
+                (0, 0, {
+                    'name': kitA.name,
+                    'product_id': kitA.id,
+                    'product_uom_qty': 1.0,
+                    'product_uom': kitA.uom_id.id,
+                    'price_unit': 1,
+                    'tax_id': False,
+                })]
+        })
+        so.action_confirm()
+
+        pick = so.picking_ids[0]
+        ship = so.picking_ids[1]
+
+        self.assertTrue(pick.move_ids_without_package[0].bom_line_id, "All component from kits should have a bom line")
+        self.assertTrue(pick.move_ids_without_package[1].bom_line_id, "All component from kits should have a bom line")
+        self.assertTrue(ship.move_ids_without_package[0].bom_line_id, "All component from kits should have a bom line")
+        self.assertTrue(ship.move_ids_without_package[1].bom_line_id, "All component from kits should have a bom line")
+
+    def test_qty_delivered_with_bom_using_kit2(self):
+        """Create 2 kits products that have common components and activate 2 steps delivery
+           Then create a sale order with these 2 products, and put everything in a pack in
+           the first step of the delivery. After the shipping is done, check the done quantity
+           is correct for each products.
+        """
+
+        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        wh.write({'delivery_steps': 'pick_ship'})
+
+        kitAB = self._create_product('Kit AB', 'product', 0.00)
+        kitABC = self._create_product('Kit ABC', 'product', 0.00)
+        compA = self._create_product('ComponentA', 'product', 0.00)
+        compB = self._create_product('ComponentB', 'product', 0.00)
+        compC = self._create_product('ComponentC', 'product', 0.00)
+
+        # Create BoM for KitB
+        bom_product_formA = Form(self.env['mrp.bom'])
+        bom_product_formA.product_id = kitAB
+        bom_product_formA.product_tmpl_id = kitAB.product_tmpl_id
+        bom_product_formA.product_qty = 1.0
+        bom_product_formA.type = 'phantom'
+        with bom_product_formA.bom_line_ids.new() as bom_line:
+            bom_line.product_id = compA
+            bom_line.product_qty = 1
+        with bom_product_formA.bom_line_ids.new() as bom_line:
+            bom_line.product_id = compB
+            bom_line.product_qty = 1
+        bom_product_formA.save()
+
+        # Create BoM for KitA
+        bom_product_formB = Form(self.env['mrp.bom'])
+        bom_product_formB.product_id = kitABC
+        bom_product_formB.product_tmpl_id = kitABC.product_tmpl_id
+        bom_product_formB.product_qty = 1.0
+        bom_product_formB.type = 'phantom'
+        with bom_product_formB.bom_line_ids.new() as bom_line:
+            bom_line.product_id = compA
+            bom_line.product_qty = 1
+        with bom_product_formB.bom_line_ids.new() as bom_line:
+            bom_line.product_id = compB
+            bom_line.product_qty = 1
+        with bom_product_formB.bom_line_ids.new() as bom_line:
+            bom_line.product_id = compC
+            bom_line.product_qty = 1
+        bom_product_formB.save()
+
+        customer = self.env['res.partner'].create({
+            'name': 'customer',
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': customer.id,
+            'order_line': [
+                (0, 0, {
+                    'name': kitAB.name,
+                    'product_id': kitAB.id,
+                    'product_uom_qty': 1.0,
+                    'product_uom': kitAB.uom_id.id,
+                    'price_unit': 1,
+                    'tax_id': False,
+                }),
+                (0, 0, {
+                    'name': kitABC.name,
+                    'product_id': kitABC.id,
+                    'product_uom_qty': 1.0,
+                    'product_uom': kitABC.uom_id.id,
+                    'price_unit': 1,
+                    'tax_id': False,
+                })],
+        })
+        so.action_confirm()
+
+        pick = so.picking_ids[0]
+        ship = so.picking_ids[1]
+
+        pick.move_lines[0].quantity_done = 2
+        pick.move_lines[1].quantity_done = 2
+        pick.move_lines[2].quantity_done = 1
+
+        pick.action_put_in_pack()
+        pick.button_validate()
+
+        ship.package_level_ids.write({'is_done': True})
+        ship.package_level_ids._set_is_done()
+
+        for move in ship.move_line_ids:
+            self.assertEqual(move.product_uom_qty, move.qty_done, "Quantity done should be equal to the quantity reserved in the move line")

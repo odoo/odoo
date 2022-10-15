@@ -5,7 +5,7 @@
 # Translators:
 # Martin Trigaux, 2021
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
-# Lucia Pacheco <lpo@odoo.com>, 2021
+# Lucia Pacheco <lpo@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,13 +13,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2021\n"
+"Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
@@ -69,6 +69,13 @@ msgstr "Empresas"
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social_left
 msgid "Contact"
 msgstr "Contacto"
+
+#. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:0
+#, python-format
+msgid "Display Thanks Button"
+msgstr "Mostrar el botón de agradecimiento"
 
 #. module: website_mass_mailing
 #. openerp-web

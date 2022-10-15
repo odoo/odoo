@@ -133,6 +133,18 @@
             </field>
         </record>
 
+        <record id="account_move_line_view_kanban_mobile" model="ir.ui.view">
+            <field name="inherit_id" ref="account_move_line_view_kanban"/>
+            <field name="mode">primary</field>
+            <field name="model">account.move.line</field>
+            <field name="name">account.move.line.kanban.mobile</field>
+            <field name="arch" type="xml">
+                <xpath expr="//kanban[hasclass('o_kanban_mobile')]" position="attributes">
+                    <attribute name="create">true</attribute>
+                </xpath>
+            </field>
+        </record>
+
         <record id="view_move_line_pivot" model="ir.ui.view">
             <field name="name">account.move.line.pivot</field>
             <field name="model">account.move.line</field>
@@ -420,6 +432,7 @@
                 <tree string="Invoices"
                       js_class="account_tree"
                       decoration-info="state == 'draft'"
+                      decoration-muted="state == 'cancel'"
                       sample="1">
                     <header>
                         <button name="action_register_payment" type="object" string="Register Payment"
@@ -653,13 +666,23 @@
                     </div>
                     <div groups="account.group_account_invoice,account.group_account_readonly"
                          class="alert alert-info mb-0" role="alert"
-                         attrs="{'invisible': ['|', '|', ('move_type', 'not in', ('out_invoice', 'out_refund')), ('invoice_has_outstanding', '=', False), ('payment_state', 'not in', ('not_paid', 'partial'))]}">
-                        You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding payments</a></bold> for this customer. You can allocate them to mark this invoice as paid.
+                         attrs="{'invisible': ['|', '|', ('move_type', '!=', 'out_invoice'), ('invoice_has_outstanding', '=', False), ('payment_state', 'not in', ('not_paid', 'partial'))]}">
+                        You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding credits</a></bold> for this customer. You can allocate them to mark this invoice as paid.
                     </div>
                     <div groups="account.group_account_invoice,account.group_account_readonly"
                          class="alert alert-info mb-0" role="alert"
-                         attrs="{'invisible': ['|', '|', ('move_type', 'not in', ('in_invoice', 'in_refund')), ('invoice_has_outstanding', '=', False), ('payment_state', 'not in', ('not_paid', 'partial'))]}">
+                         attrs="{'invisible': ['|', '|', ('move_type', '!=', 'in_invoice'), ('invoice_has_outstanding', '=', False), ('payment_state', 'not in', ('not_paid', 'partial'))]}">
                         You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding debits</a></bold> for this vendor. You can allocate them to mark this bill as paid.
+                    </div>
+                    <div groups="account.group_account_invoice,account.group_account_readonly"
+                         class="alert alert-info mb-0" role="alert"
+                         attrs="{'invisible': ['|', '|', ('move_type', '!=', 'out_refund'), ('invoice_has_outstanding', '=', False), ('payment_state', 'not in', ('not_paid', 'partial'))]}">
+                        You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding debits</a></bold> for this customer. You can allocate them to mark this credit note as paid.
+                    </div>
+                    <div groups="account.group_account_invoice,account.group_account_readonly"
+                         class="alert alert-info mb-0" role="alert"
+                         attrs="{'invisible': ['|', '|', ('move_type', '!=', 'in_refund'), ('invoice_has_outstanding', '=', False), ('payment_state', 'not in', ('not_paid', 'partial'))]}">
+                        You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding credits</a></bold> for this vendor. You can allocate them to mark this credit note as paid.
                     </div>
                     <div class="alert alert-info mb-0" role="alert"
                          attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('auto_post', '=', False)]}">
@@ -773,6 +796,7 @@
                                        context="{
                                             'res_partner_search_mode': (context.get('default_move_type', 'entry') in ('out_invoice', 'out_refund', 'out_receipt') and 'customer') or (context.get('default_move_type', 'entry') in ('in_invoice', 'in_refund', 'in_receipt') and 'supplier') or False,
                                             'show_address': 1, 'default_is_company': True, 'show_vat': True}"
+                                       domain="[('type', '!=', 'private'), ('company_id', 'in', (False, company_id))]"
                                        options='{"always_reload": True, "no_quick_create": True}'
                                        attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
                                 <label for="ref" string="Bill Reference"
@@ -1020,7 +1044,7 @@
                                             </group>
                                             <group>
                                                 <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
-                                                <field name="account_id" options="{'no_create': True}" domain="[('company_id', '=', company_id)]" readonly="1"/>
+                                                <field name="account_id" options="{'no_create': True}" domain="[('company_id', '=', company_id)]" />
                                                 <field name="tax_ids" widget="many2many_tags"/>
                                                 <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                                             </group>
@@ -1035,24 +1059,26 @@
                                         </sheet>
                                     </form>
                                 </field>
-                                <group col="4">
-                                    <group colspan="3">
+                                <group col="12" class="oe_invoice_lines_tab">
+                                    <group colspan="8">
                                         <field name="narration" placeholder="Terms and Conditions" class="oe_inline" nolabel="1"/>
                                     </group>
                                     <!-- Totals (only invoices / receipts) -->
-                                    <group class="oe_subtotal_footer oe_right"
-                                        attrs="{'invisible': ['|', ('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')),
-                                                                   ('payment_state' ,'=', 'invoicing_legacy')]}">
+                                    <group colspan="4">
+                                        <group class="oe_subtotal_footer oe_right"
+                                            attrs="{'invisible': ['|', ('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')),
+                                                                       ('payment_state' ,'=', 'invoicing_legacy')]}">
 
-                                        <field name="tax_totals_json" widget="account-tax-totals-field" nolabel="1" colspan="2"/>
+                                            <field name="tax_totals_json" widget="account-tax-totals-field" nolabel="1" colspan="2"/>
 
-                                        <field name="invoice_payments_widget" colspan="2" nolabel="1" widget="payment"/>
-                                        <field name="amount_residual" class="oe_subtotal_footer_separator" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                                            <field name="invoice_payments_widget" colspan="2" nolabel="1" widget="payment"/>
+                                            <field name="amount_residual" class="oe_subtotal_footer_separator" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                                        </group>
+                                        <field name="invoice_outstanding_credits_debits_widget"
+                                            class="oe_invoice_outstanding_credits_debits"
+                                            colspan="2" nolabel="1" widget="payment"
+                                            attrs="{'invisible': ['|', ('state', '!=', 'posted'), ('move_type', 'in', ('out_receipt', 'in_receipt'))]}"/>
                                     </group>
-                                    <field name="invoice_outstanding_credits_debits_widget"
-                                        class="oe_invoice_outstanding_credits_debits"
-                                        colspan="2" nolabel="1" widget="payment"
-                                        attrs="{'invisible': ['|', ('state', '!=', 'posted'), ('move_type', 'in', ('out_receipt', 'in_receipt'))]}"/>
                                 </group>
                             </page>
                             <page id="aml_tab" string="Journal Items" groups="account.group_account_readonly">
@@ -1061,7 +1087,7 @@
                                 </div>
                                 <field name="line_ids"
                                        mode="tree,kanban"
-                                       context="{'default_move_type': context.get('default_move_type'), 'line_ids': line_ids, 'journal_id': journal_id, 'default_partner_id': commercial_partner_id, 'default_currency_id': currency_id or company_currency_id}"
+                                       context="{'default_move_type': context.get('default_move_type'), 'line_ids': line_ids, 'journal_id': journal_id, 'default_partner_id': commercial_partner_id, 'default_currency_id': currency_id or company_currency_id, 'kanban_view_ref': 'account.account_move_line_view_kanban_mobile'}"
                                        attrs="{'invisible': [('payment_state', '=', 'invoicing_legacy'), ('move_type', '!=', 'entry')]}">
                                     <tree editable="bottom" string="Journal Items" decoration-muted="display_type in ('line_section', 'line_note')" default_order="sequence, date desc, move_name desc, id">
                                         <!-- Displayed fields -->
@@ -1358,7 +1384,7 @@
         <record id="action_move_line_select" model="ir.actions.act_window">
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
-            <field name="context">{'search_default_account_id': [active_id]}</field>
+            <field name="context">{'search_default_account_id': [active_id], 'search_default_posted': 1}</field>
         </record>
 
         <record id="action_automatic_entry" model="ir.actions.server">

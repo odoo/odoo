@@ -20,8 +20,11 @@
 # Ofir Blum <ofir.blum@gmail.com>, 2021
 # Lilach Gilliam <lilach@apprcase.com>, 2021
 # david danilov, 2021
-# Sagi Ahiel, 2022
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
+# Netta Waizer, 2022
+# NoaFarkash, 2022
+# Roy Sayag, 2022
+# Sagi Ahiel, 2022
 # 
 msgid ""
 msgstr ""
@@ -29,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2022\n"
+"Last-Translator: Sagi Ahiel, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -289,14 +292,14 @@ msgstr "<span class=\"o_stat_text\">נרכש</span>"
 msgid ""
 "<span class=\"text-muted\" attrs=\"{'invisible': "
 "[('mail_reception_confirmed','=', False)]}\">(confirmed by vendor)</span>"
-msgstr ""
+msgstr "התקבלו"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid ""
 "<span class=\"text-muted\" attrs=\"{'invisible': "
 "[('mail_reminder_confirmed', '=', False)]}\">(confirmed by vendor)</span>"
-msgstr ""
+msgstr "תזכורת אושרה"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -308,12 +311,12 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
 msgid "<span> day(s) before</span>"
-msgstr ""
+msgstr "<span> ימים לפני</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "<span>Ask confirmation</span>"
-msgstr "בקש אישור"
+msgstr "<span>בקש אישור</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -387,7 +390,7 @@ msgstr "<strong>כמות</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<strong>Receipt Date:</strong>"
-msgstr "תאריך קבלת משלוח"
+msgstr "<strong>תאריך קבלת משלוח</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -423,7 +426,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Unit Price</strong>"
-msgstr "מחיר יחידה"
+msgstr "<strong>מחיר יחידה</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -480,7 +483,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_accrued_expense_entry
 msgid "Accrued Expense Entry"
-msgstr ""
+msgstr "רישום הוצאות נצבר"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction
@@ -550,7 +553,7 @@ msgstr "הכל"
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "All Draft RFQs"
-msgstr ""
+msgstr "כל הבקשות להצעת מחיר הנמצאות במצב טיוטה"
 
 #. module: purchase
 #. openerp-web
@@ -564,7 +567,7 @@ msgstr ""
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "All RFQs"
-msgstr ""
+msgstr "כל הבקשות להצעת מחיר"
 
 #. module: purchase
 #. openerp-web
@@ -690,14 +693,14 @@ msgstr "עלות ממוצעת"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__avg_days_to_purchase
 msgid "Average Days to Purchase"
-msgstr ""
+msgstr "ימים ממוצעים לרכישה"
 
 #. module: purchase
 #. openerp-web
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "Avg Order Value ("
-msgstr ""
+msgstr "ערך הזמנה ממוצע ("
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.mail_notification_confirm
@@ -860,7 +863,7 @@ msgstr "אשר הזמנה"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Confirm Receipt Date"
-msgstr ""
+msgstr "אשר את תאריך הקבלה"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_double_validation__one_step
@@ -872,7 +875,7 @@ msgstr "אשר את הזמנות הרכש בשלב אחד"
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Confirm your purchase."
-msgstr ""
+msgstr "אשר את הרכישה שלך."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_approve
@@ -921,12 +924,12 @@ msgstr "צור חשבונית"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 msgid "Create Bills"
-msgstr ""
+msgstr "צור חשבונית ספק"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_purchase_batch_bills
 msgid "Create Vendor Bills"
-msgstr ""
+msgstr "יצירת חשבונות ספק"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_product_action
@@ -971,7 +974,7 @@ msgstr "תאריך"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_calendar_start
 msgid "Date Calendar Start"
-msgstr ""
+msgstr "תאריך התחלה"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0
@@ -997,7 +1000,7 @@ msgstr "ימים"
 #: model:ir.model.fields,field_description:purchase.field_res_partner__reminder_date_before_receipt
 #: model:ir.model.fields,field_description:purchase.field_res_users__reminder_date_before_receipt
 msgid "Days Before Receipt"
-msgstr ""
+msgstr "ימים לפני הקבלה"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__delay
@@ -1099,7 +1102,7 @@ msgstr "בקשות להצעת מחיר בטיוטה"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__dest_address_id
 msgid "Dropship Address"
-msgstr ""
+msgstr "כתובת דרופשיפינג (drop shipping)"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_mail_compose_message
@@ -1157,7 +1160,7 @@ msgstr "פעילויות עתידיות"
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_double_validation__two_step
 msgid "Get 2 levels of approvals to confirm a purchase order"
-msgstr "קבל שתי רמות אישורים לאישור הזמנת רכש"
+msgstr "קבל 2 רמות אישורים לאישור הזמנת רכש"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1349,7 +1352,7 @@ msgstr "בקשות להצעת מחיר בחריגה"
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "Lead Time to Purchase"
-msgstr ""
+msgstr "זמן אספקה לרכישה"
 
 #. module: purchase
 #. openerp-web
@@ -1521,7 +1524,7 @@ msgstr "הרכישות שלי"
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "My RFQs"
-msgstr ""
+msgstr "הבקשות להצעת מחיר שלי"
 
 #. module: purchase
 #. openerp-web
@@ -1577,7 +1580,7 @@ msgstr "אין הודעה"
 #: model_terms:ir.actions.act_window,help:purchase.purchase_action_dashboard_kanban
 #: model_terms:ir.actions.act_window,help:purchase.purchase_action_dashboard_list
 msgid "No RFQs to display"
-msgstr ""
+msgstr "אין בקשות להצעת מחיר להצגה"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -1592,7 +1595,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_rfq
 msgid "No request for quotation found. Let's create one!"
-msgstr ""
+msgstr "לא נמצאה בקשה להצעת מחיר. בואו ניצור אחת!"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.mail_notification_confirm
@@ -1635,7 +1638,7 @@ msgstr "מספר פעולות"
 #: model:ir.model.fields,help:purchase.field_res_partner__reminder_date_before_receipt
 #: model:ir.model.fields,help:purchase.field_res_users__reminder_date_before_receipt
 msgid "Number of days to send reminder email before the promised receipt date"
-msgstr ""
+msgstr "מספר הימים לשליחת דוא\"ל תזכורת לפני תאריך הקבלה המובטח"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error_counter
@@ -1998,7 +2001,7 @@ msgstr "שורת הזמנת רכש"
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchase_line_warn
 #: model:ir.model.fields,field_description:purchase.field_product_template__purchase_line_warn
 msgid "Purchase Order Line Warning"
-msgstr ""
+msgstr "אזהרת שורת הזמנת רכש"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2109,7 +2112,7 @@ msgstr "נרכש"
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "Purchased Last 7 Days ("
-msgstr ""
+msgstr "נרכש ב-7 הימים האחרונים ("
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
@@ -2213,7 +2216,7 @@ msgstr "בקשות להצעת מחיר"
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "RFQs Sent Last 7 Days"
-msgstr ""
+msgstr "בקשות להצעות מחיר שנשלחו ב-7 הימים האחרונים"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
@@ -2377,6 +2380,10 @@ msgid ""
 "Requests for quotation are documents that will be sent to your suppliers to request prices for different products you consider buying.\n"
 "                Once an agreement has been found with the supplier, they will be confirmed and turned into purchase orders."
 msgstr ""
+"בקשות להצעת מחיר הן מסמכים שיישלחו לספקים שלך כדי לבקש מחירים עבור מוצרים שונים שאתה שוקל לקנות. לאחר שנמצא הסכם עם הספק, הם יאושרו ויהפכו להזמנות רכש.\n"
+" \n"
+"\n"
+" "
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_user_id
@@ -2466,12 +2473,12 @@ msgstr "שלח הזמנת רכש בדוא\"ל"
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_purchase_send_reminder
 msgid "Send Reminder"
-msgstr ""
+msgstr "שלח תזכורת"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_send_reminder
 msgid "Send an automatic reminder email to confirm delivery"
-msgstr ""
+msgstr "שלח אימייל תזכורת אוטומטית לאישור משלוח"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2765,7 +2772,7 @@ msgstr "כמות לחיוב"
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "To Send"
-msgstr ""
+msgstr "בטיוטה "
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -3110,7 +3117,7 @@ msgstr "סגור"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "day(s) before"
-msgstr ""
+msgstr "<span> ימים לפני</span>"
 
 #. module: purchase
 #: model:mail.template,subject:purchase.email_template_edi_purchase

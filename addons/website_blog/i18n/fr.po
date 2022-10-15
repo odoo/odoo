@@ -4,8 +4,9 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Alexandra Jubert <aju@odoo.com>, 2021
+# Alexandra Jubert, 2021
 # Cécile Collart <cco@odoo.com>, 2022
+# Jolien De Paepe, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,13 +14,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_blog
 #: code:addons/website_blog/models/website_blog.py:0
@@ -113,7 +114,7 @@ msgid ""
 "<b>That's it, your blog post is published!</b> Discover more features "
 "through the <i>Customize</i> menu."
 msgstr ""
-"<b>Ca y est, c'est publié!</b> Découvrez plus de fonctionnalités à travers "
+"<b>Ca y est, c'est publié !</b> Découvrez plus de fonctionnalités à travers "
 "le menu <i>Personnaliser</i>."
 
 #. module: website_blog
@@ -393,7 +394,7 @@ msgstr "Seul dans l'océan"
 #: model_terms:blog.post,content:website_blog.blog_post_6
 msgid "Along those lines, how difficult is the set up and break down?"
 msgstr ""
-"Dans cette optique, quelle est la difficulté de mise en place et de panne?"
+"Dans cette optique, quelle est la difficulté de mise en place et de panne ?"
 
 #. module: website_blog
 #. openerp-web
@@ -624,7 +625,7 @@ msgstr "Le post blog <b>%s</b> semble contenir un lien vers cette page !"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_complete
 msgid "Blog Post Cover"
-msgstr ""
+msgstr "Couverture de l'article de blog"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_complete
@@ -698,14 +699,14 @@ msgid ""
 "interests at all. How do you know that the features that are important to "
 "the reviewer are important to you?"
 msgstr ""
-"Mais comment passer en revue l'ensemble des choix proposés? Et plus "
+"Mais comment passer en revue l'ensemble des choix proposés ? Et plus "
 "important encore, faites-vous vraiment confiance aux photographies et aux "
 "descriptions que les hôtels ont mis en place avec la motivation d'obtenir "
-"davantage de réservations? Les avis des voyageurs peuvent être utiles, mais "
-"vous devez faire preuve de prudence. Ils sont souvent biaisés, parfois "
+"davantage de réservations ? Les avis des voyageurs peuvent être utiles, mais"
+" vous devez faire preuve de prudence. Ils sont souvent biaisés, parfois "
 "obsolètes et peuvent ne pas servir du tout vos intérêts. Comment savoir que "
 "les éléments qui sont importants pour le réviseur, le sont également pour "
-"vous?"
+"vous ?"
 
 #. module: website_blog
 #: model:blog.post,name:website_blog.blog_post_6
@@ -1041,15 +1042,15 @@ msgid ""
 " step in the evolution of your passion for astronomy."
 msgstr ""
 "Quelle est la complexité du télescope et aurez-vous des problèmes de "
-"maintenance? Essayez de réseauter pour obtenir les réponses à ces questions "
-"et à d'autres. Si vous faites vos recherches, vous trouverez le bon "
+"maintenance ? Essayez de réseauter pour obtenir les réponses à ces questions"
+" et à d'autres. Si vous faites vos recherches, vous trouverez le bon "
 "télescope pour cette prochaine étape dans l'évolution de votre passion pour "
 "l'astronomie."
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_6
 msgid "How mobile must your telescope be?"
-msgstr "À quel point votre télescope doit-il être mobile?"
+msgstr "À quel point votre télescope doit-il être mobile ?"
 
 #. module: website_blog
 #: model:blog.post,name:website_blog.blog_post_3
@@ -1254,6 +1255,7 @@ msgstr "Le dernier"
 
 #. module: website_blog
 #: model:ir.filters,name:website_blog.dynamic_snippet_latest_blog_post_filter
+#: model:website.snippet.filter,name:website_blog.dynamic_filter_latest_blog_posts
 msgid "Latest Blog Posts"
 msgstr "Derniers articles du blog"
 
@@ -1425,10 +1427,11 @@ msgstr ""
 "est de savoir si l'hôtel propose un service de baby-sitter. Pour le voyageur"
 " d'affaires qui souhaite échapper aux enfants, cela est bien sûr également "
 "très pertinent - peut-être qu'un hôtel qui n'est pas adapté aux enfants "
-"serait plus approprié!"
+"serait plus approprié !"
 
 #. module: website_blog
 #: model:ir.filters,name:website_blog.dynamic_snippet_most_viewed_blog_post_filter
+#: model:website.snippet.filter,name:website_blog.dynamic_filter_most_viewed_blog_posts
 msgid "Most Viewed Blog Posts"
 msgstr "Articles du blog les plus consultés"
 
@@ -1713,7 +1716,7 @@ msgstr "Échantillon"
 #: code:addons/website_blog/models/website_snippet_filter.py:0
 #, python-format
 msgid "Satellites"
-msgstr ""
+msgstr "Satellites"
 
 #. module: website_blog
 #. openerp-web
@@ -1909,7 +1912,7 @@ msgstr ""
 #: code:addons/website_blog/models/website_snippet_filter.py:0
 #, python-format
 msgid "Spotting the fauna"
-msgstr ""
+msgstr "Repérer la faune"
 
 #. module: website_blog
 #. openerp-web
@@ -1967,7 +1970,7 @@ msgstr "Liste d'étiquettes"
 #. module: website_blog
 #: model:ir.model.constraint,message:website_blog.constraint_blog_tag_category_name_uniq
 msgid "Tag category already exists !"
-msgstr "La catégorie d'étiquette existe déjà!"
+msgstr "La catégorie d'étiquette existe déjà !"
 
 #. module: website_blog
 #: model:ir.model.constraint,message:website_blog.constraint_blog_tag_name_uniq
@@ -2383,7 +2386,7 @@ msgstr "Utilisé dans :"
 #: code:addons/website_blog/models/website_snippet_filter.py:0
 #, python-format
 msgid "Viewpoints"
-msgstr ""
+msgstr "Points de vue"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.post_info
@@ -2421,7 +2424,7 @@ msgstr "Messages du site web"
 #. module: website_blog
 #: model:ir.model,name:website_blog.model_website_snippet_filter
 msgid "Website Snippet Filter"
-msgstr ""
+msgstr "Filtre des snippets du site web"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__website_url
@@ -2487,7 +2490,7 @@ msgstr ""
 #: code:addons/website_blog/models/website_snippet_filter.py:0
 #, python-format
 msgid "With a View"
-msgstr ""
+msgstr "Avec une vue"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.sidebar_blog_index

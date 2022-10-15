@@ -36,7 +36,7 @@ var Apps = AbstractAction.extend({
                 };
             });
             var ts = new Date().getTime();
-            i.src = _.str.sprintf('%s/web/static/img/sep-a.gif?%s', client.origin, ts);
+            i.src = _.str.sprintf('%s/web/static/src/img/sep-a.gif?%s', client.origin, ts);
             return def;
         };
         if (apps_client) {

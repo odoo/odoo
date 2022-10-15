@@ -325,7 +325,7 @@ class AccountTax(models.Model):
         # default value for custom amount_type
         return 0.0
 
-    def json_friendly_compute_all(self, price_unit, currency_id=None, quantity=1.0, product_id=None, partner_id=None, is_refund=False):
+    def json_friendly_compute_all(self, price_unit, currency_id=None, quantity=1.0, product_id=None, partner_id=None, is_refund=False, include_caba_tags=False):
         """ Called by the reconciliation to compute taxes on writeoff during bank reconciliation
         """
         if currency_id:
@@ -339,7 +339,8 @@ class AccountTax(models.Model):
         tax_type = self and self[0].type_tax_use
         is_refund = is_refund or (tax_type == 'sale' and price_unit < 0) or (tax_type == 'purchase' and price_unit > 0)
 
-        rslt = self.compute_all(price_unit, currency=currency_id, quantity=quantity, product=product_id, partner=partner_id, is_refund=is_refund)
+        rslt = self.with_context(caba_no_transition_account=True)\
+                   .compute_all(price_unit, currency=currency_id, quantity=quantity, product=product_id, partner=partner_id, is_refund=is_refund, include_caba_tags=include_caba_tags)
 
         return rslt
 
@@ -622,7 +623,9 @@ class AccountTax(models.Model):
                     'amount': sign * line_amount,
                     'base': round(sign * tax_base_amount, precision_rounding=prec),
                     'sequence': tax.sequence,
-                    'account_id': tax.cash_basis_transition_account_id.id if tax.tax_exigibility == 'on_payment' else repartition_line.account_id.id,
+                    'account_id': tax.cash_basis_transition_account_id.id if tax.tax_exigibility == 'on_payment' \
+                                                                             and not self._context.get('caba_no_transition_account')\
+                                                                          else repartition_line.account_id.id,
                     'analytic': tax.analytic,
                     'price_include': price_include,
                     'tax_exigibility': tax.tax_exigibility,

@@ -55,6 +55,7 @@
                         <t t-if="messaging.rtc.sendDisplay"><t t-set="displayTitle">Stop screen sharing</t></t>
                         <t t-else=""><t t-set="displayTitle">Share screen</t></t>
                         <button class="o_RtcController_button o_RtcController_videoButton"
+                            t-if="!env.device.isMobileDevice"
                             t-att-class="{
                                 'o-isActive': messaging.rtc.sendDisplay,
                                 'o-isSmall': rtcController.isSmall,

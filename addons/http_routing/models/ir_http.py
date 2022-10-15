@@ -134,7 +134,7 @@ def unslug_url(s):
 def url_lang(path_or_uri, lang_code=None):
     ''' Given a relative URL, make it absolute and add the required lang or
         remove useless lang.
-        Nothing will be done for absolute URL.
+        Nothing will be done for absolute or invalid URL.
         If there is only one language installed, the lang will not be handled
         unless forced with `lang` parameter.
 
@@ -144,9 +144,13 @@ def url_lang(path_or_uri, lang_code=None):
     Lang = request.env['res.lang']
     location = pycompat.to_text(path_or_uri).strip()
     force_lang = lang_code is not None
-    url = werkzeug.urls.url_parse(location)
+    try:
+        url = werkzeug.urls.url_parse(location)
+    except ValueError:
+        # e.g. Invalid IPv6 URL, `werkzeug.urls.url_parse('http://]')`
+        url = False
     # relative URL with either a path or a force_lang
-    if not url.netloc and not url.scheme and (url.path or force_lang):
+    if url and not url.netloc and not url.scheme and (url.path or force_lang):
         location = werkzeug.urls.url_join(request.httprequest.path, location)
         lang_url_codes = [url_code for _, url_code, *_ in Lang.get_available()]
         lang_code = pycompat.to_text(lang_code or request.context['lang'])
@@ -173,7 +177,7 @@ def url_lang(path_or_uri, lang_code=None):
 
 def url_for(url_from, lang_code=None, no_rewrite=False):
     ''' Return the url with the rewriting applied.
-        Nothing will be done for absolute URL, or short URL from 1 char.
+        Nothing will be done for absolute URL, invalid URL, or short URL from 1 char.
 
         :param url_from: The URL to convert.
         :param lang_code: Must be the lang `code`. It could also be something
@@ -537,8 +541,13 @@ class IrHttp(models.AbstractModel):
             raise Exception("Rerouting limit exceeded")
         request.httprequest.environ['PATH_INFO'] = path
         # void werkzeug cached_property. TODO: find a proper way to do this
-        for key in ('path', 'full_path', 'url', 'base_url'):
+        for key in ('full_path', 'url', 'base_url'):
             request.httprequest.__dict__.pop(key, None)
+        # since werkzeug 2.0 `path`` became an attribute and is not a cached property anymore
+        if hasattr(type(request.httprequest), 'path'): # cached property
+            request.httprequest.__dict__.pop('path', None)
+        else: # direct attribute
+            request.httprequest.path = '/' + path.lstrip('/')
 
         return cls._dispatch()
 

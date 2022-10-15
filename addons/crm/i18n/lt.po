@@ -17,9 +17,10 @@
 # Arunas Vaitekunas <vaitekunas@gmail.com>, 2022
 # Arunas V. <arunas@devoro.com>, 2022
 # Andrius Laukavičius <andrius@focusate.eu>, 2022
-# Jonas Zinkevicius <jozi@odoo.com>, 2022
 # Martin Trigaux, 2022
 # Linas Versada <linaskrisiukenas@gmail.com>, 2022
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022
+# Jonas Zinkevicius <jozi@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -27,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2022\n"
+"Last-Translator: Jonas Zinkevicius <jozi@odoo.com>, 2022\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,7 +44,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__calendar_event_count
 msgid "# Meetings"
-msgstr "Susitikimų sk."
+msgstr "Susitikimo nr."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_recurring_plan__number_of_months
@@ -151,6 +152,8 @@ msgid ""
 "<i class=\"fa fa-gear\" role=\"img\" title=\"Switch to automatic "
 "probability\" aria-label=\"Switch to automatic probability\"/>"
 msgstr ""
+"<i class=\"fa fa-gear\" role=\"img\" title=\"Switch to automatic "
+"probability\" aria-label=\"Switch to automatic probability\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -208,6 +211,8 @@ msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('calendar_event_count', '&lt;', 2)]}\"> Meetings</span>\n"
 "                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('calendar_event_count', '&gt;', 1)]}\"> Meeting</span>"
 msgstr ""
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('calendar_event_count', '&lt;', 2)]}\"> Susitikimai</span>\n"
+"                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('calendar_event_count', '&gt;', 1)]}\"> Susitikimas</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -215,6 +220,8 @@ msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('duplicate_lead_count', '&lt;', 2)]}\">Similar Leads</span>\n"
 "                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('duplicate_lead_count', '&gt;', 1)]}\">Similar Lead</span>"
 msgstr ""
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('duplicate_lead_count', '&lt;', 2)]}\">Panašios iniciatyvos</span>\n"
+"                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('duplicate_lead_count', '&gt;', 1)]}\">Panaši iniciatyva</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_form
@@ -380,7 +387,7 @@ msgstr "Aktyvus"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__lead_tomerge_ids
 msgid "Active Leads"
-msgstr ""
+msgstr "Aktyvios iniciatyvos"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_report_action
@@ -570,7 +577,7 @@ msgstr "Priskirta"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_open
 msgid "Assignment Date"
-msgstr ""
+msgstr "Paskyrimo data"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_domain
@@ -1208,6 +1215,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_forecast
 msgid "Easily set expected closing dates and overview your revenue streams."
 msgstr ""
+"Lengvai nurodykite prognozuojamas laimėjimo datas ir apžvelkite Jūsų pajamų "
+"šaltinius."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -1246,12 +1255,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__lead_enrich_auto__auto
 msgid "Enrich all leads automatically"
-msgstr ""
+msgstr "Praturtinti visas iniciatyvas automatiškai"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_enrich_auto
 msgid "Enrich lead automatically"
-msgstr ""
+msgstr "Praturtinti iniciatyvas automatiškai"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__lead_enrich_auto__manual
@@ -1294,7 +1303,7 @@ msgstr "Numanoma data, kada bus laimėta pardavimų galimybė"
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Expected Closing"
-msgstr "Numatomas uždarymas"
+msgstr "Prognozuojama laimėjimo data"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue_monthly
@@ -1325,7 +1334,7 @@ msgstr "Papildoma informacija"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Extra Information"
-msgstr ""
+msgstr "Papildoma informacija"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
@@ -1461,7 +1470,7 @@ msgstr "Grupuoti pagal"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Turi žinutę"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__priority__2
@@ -1754,7 +1763,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Lead Enrichment"
-msgstr ""
+msgstr "Iniciatyvų praturtinimas"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -1818,7 +1827,7 @@ msgstr "Iniciatyva/Galimybė"
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_create
 msgid "Lead/Opportunity created"
-msgstr ""
+msgstr "Iniciatyva/Galimybė sukurta"
 
 #. module: crm
 #: code:addons/crm/models/crm_lost_reason.py:0
@@ -1935,7 +1944,7 @@ msgstr ""
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "Let's <b>Schedule an Activity.</b>"
-msgstr ""
+msgstr "Suplanuokime <b>Veiklą</b>"
 
 #. module: crm
 #. openerp-web
@@ -2192,7 +2201,7 @@ msgstr "Mano veiklos"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Veiklos paskutinis terminas"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
@@ -2580,7 +2589,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "Organization / Contact"
-msgstr ""
+msgstr "Organizacija / Kontaktas"
 
 #. module: crm
 #: model:crm.recurring.plan,name:crm.crm_recurring_plan_over_3_years
@@ -2874,7 +2883,7 @@ msgstr "Reikalavimai"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Reschedule"
-msgstr ""
+msgstr "Perplanuoti"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_user_id
@@ -3499,7 +3508,7 @@ msgstr "Neperskaitytų žinučių skaičiavimas"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_search_forecast
 msgid "Upcoming Closings"
-msgstr ""
+msgstr "Artėjantys laimėjimai"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_pls_update_action

@@ -11,11 +11,12 @@
 # Ekaterina <nawsikaya@bk.ru>, 2021
 # Denis Baranov <baranov@itlibertas.com>, 2021
 # Martin Trigaux, 2021
-# Ivan Yelizariev // IEL (ellui) <yelizariev@itpp.dev>, 2021
+# Ivan Kropotkin <yelizariev@itpp.dev>, 2021
 # ILMIR <karamov@it-projects.info>, 2021
 # Ꚁemetron <d.v.selitsky@gmail.com>, 2021
 # Irina Fedulova <istartlin@gmail.com>, 2021
 # Диляра Дельтаева <dilya.kz93@gmail.com>, 2021
+# Валерий Хохлов, 2022
 # Сергей Шебанин <sergey@shebanin.ru>, 2022
 # 
 msgid ""
@@ -617,7 +618,7 @@ msgstr "Условия"
 #: model:product.product,name:product.product_product_11b
 #: model:product.template,name:product.product_product_11_product_template
 msgid "Conference Chair"
-msgstr "Конференц-кресло"
+msgstr "Стул для конференций"
 
 #. module: product
 #: model:product.product,description_sale:product.consu_delivery_02
@@ -692,13 +693,13 @@ msgstr "заполненная количество"
 #: model:product.product,name:product.product_product_13
 #: model:product.template,name:product.product_product_13_product_template
 msgid "Corner Desk Left Sit"
-msgstr ""
+msgstr "Угловой офисный стол (в левую сторону)"
 
 #. module: product
 #: model:product.product,name:product.product_product_5
 #: model:product.template,name:product.product_product_5_product_template
 msgid "Corner Desk Right Sit"
-msgstr "Угловой стол с правым сиденьем"
+msgstr "Угловой офисный стол (в правую сторону)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__standard_price
@@ -815,7 +816,7 @@ msgstr "Справка клиента"
 #: model:product.product,name:product.product_product_4d
 #: model:product.template,name:product.product_product_4_product_template
 msgid "Customizable Desk"
-msgstr "настраиваемый стол"
+msgstr "Настраиваемый стол"
 
 #. module: product
 #: model:product.product,uom_name:product.expense_hotel
@@ -884,13 +885,13 @@ msgstr "Описание"
 #: model:product.product,name:product.product_product_3
 #: model:product.template,name:product.product_product_3_product_template
 msgid "Desk Combination"
-msgstr "комбинация стола"
+msgstr "Комбинированный стол"
 
 #. module: product
 #: model:product.product,name:product.product_product_22
 #: model:product.template,name:product.product_product_22_product_template
 msgid "Desk Stand with Screen"
-msgstr "Настольная подставка с экраном"
+msgstr "Разделительный экран для офисного стола"
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_3
@@ -977,13 +978,13 @@ msgstr "Документация"
 #: model:product.product,name:product.product_product_27
 #: model:product.template,name:product.product_product_27_product_template
 msgid "Drawer"
-msgstr "ящик"
+msgstr "Комод"
 
 #. module: product
 #: model:product.product,name:product.product_product_16
 #: model:product.template,name:product.product_product_16_product_template
 msgid "Drawer Black"
-msgstr "черный ящик"
+msgstr "Черный комод"
 
 #. module: product
 #: model_terms:product.product,description:product.product_product_27
@@ -1088,7 +1089,7 @@ msgstr "Фиксированная цена"
 #: model:product.product,name:product.product_product_20
 #: model:product.template,name:product.product_product_20_product_template
 msgid "Flipover"
-msgstr "перевернуть"
+msgstr "Лекционный плакат"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_follower_ids
@@ -1420,13 +1421,13 @@ msgstr "Килограммы "
 #: model:product.product,name:product.product_product_6
 #: model:product.template,name:product.product_product_6_product_template
 msgid "Large Cabinet"
-msgstr "большой шкаф"
+msgstr "Большой шкаф"
 
 #. module: product
 #: model:product.product,name:product.product_product_8
 #: model:product.template,name:product.product_product_8_product_template
 msgid "Large Desk"
-msgstr "большой стол"
+msgstr "Большой стол"
 
 #. module: product
 #: model:product.product,name:product.consu_delivery_02
@@ -1663,6 +1664,14 @@ msgid "Next Activity Type"
 msgstr "Тип следующего действия"
 
 #. module: product
+#: code:addons/product/wizard/product_label_layout.py:0
+#, python-format
+msgid ""
+"No product to print, if the product is archived please unarchive it before "
+"printing its label."
+msgstr ""
+
+#. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid "No vendor pricelist found"
 msgstr ""
@@ -1788,7 +1797,7 @@ msgstr "Родительский путь"
 #: model:product.product,name:product.product_product_9
 #: model:product.template,name:product.product_product_9_product_template
 msgid "Pedal Bin"
-msgstr "Свалку с педалью"
+msgstr "Мусорное ведро с педалью"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__percent_price
@@ -2102,7 +2111,7 @@ msgstr "Упаковка товара (PDF)"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_stock_packaging
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_tree_view
 msgid "Product Packagings"
-msgstr "упаковка товара"
+msgstr "Товары в упаковках"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template
@@ -2320,7 +2329,7 @@ msgstr "Ответственный"
 #: model:product.product,name:product.expense_product
 #: model:product.template,name:product.expense_product_product_template
 msgid "Restaurant Expenses"
-msgstr "расходы ресторана"
+msgstr "Расходы на ресторан"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2644,6 +2653,12 @@ msgid "The product template is archived so no combination is possible."
 msgstr "Шаблон товара архивируется, поэтому комбинация невозможна."
 
 #. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "The product variant must be a variant of the product template."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
 msgid ""
 "The quantity to purchase from this vendor to benefit from the price, "
@@ -2760,7 +2775,7 @@ msgstr ""
 #: model:product.product,name:product.consu_delivery_01
 #: model:product.template,name:product.consu_delivery_01_product_template
 msgid "Three-Seat Sofa"
-msgstr "диван трехместный"
+msgstr "Трехместный диван"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
@@ -3210,6 +3225,12 @@ msgid ""
 msgstr ""
 "Вы не можете определить десятичную точность 'Аккаунта' как более высокую, "
 "чем коэффициент округления основной валюты компании"
+
+#. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "You cannot delete the %s product category."
+msgstr ""
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0

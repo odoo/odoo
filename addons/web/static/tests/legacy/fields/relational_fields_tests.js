@@ -2281,6 +2281,68 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('radio field is editable in an editable form', async function (assert) {
+        assert.expect(2);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form edit="1">' +
+                    '<field name="product_id" widget="radio"/>' +
+                '</form>',
+        });
+
+        assert.containsN(form, '.o_field_radio input:enabled', 2,
+            "the field should be editable");
+
+        await testUtils.form.clickSave(form);
+
+        assert.containsN(form, '.o_field_radio input:enabled', 2,
+            "the field should be editable");
+
+        form.destroy();
+    });
+
+    QUnit.test('radio field is not editable in a readonly form', async function (assert) {
+        assert.expect(1);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form edit="0">' +
+                    '<field name="product_id" widget="radio"/>' +
+                '</form>',
+            viewOptions: {
+               mode: 'readonly',
+            },
+        });
+
+        assert.containsN(form, '.o_field_radio input:disabled', 2,
+            "the field should not be editable");
+
+        form.destroy();
+    });
+
+    QUnit.test('radio field is not editable with a readonly modifier', async function (assert) {
+        assert.expect(1);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="product_id" widget="radio" readonly="1"/>' +
+                '</form>',
+        });
+
+        assert.containsN(form, '.o_field_radio input:disabled', 2,
+            "the field should not be editable");
+
+        form.destroy();
+    });
+
     QUnit.test('fieldradio change value by onchange', async function (assert) {
         assert.expect(4);
 
@@ -4100,6 +4162,56 @@ QUnit.module('relational_fields', {
         assert.strictEqual(document.activeElement, form.$('.o_field_widget[name="int_field"]')[0],
             "last input should now be focused");
 
+        form.destroy();
+    });
+    QUnit.test('Check onchange with two consecutive many2one', async function (assert) {
+        assert.expect(2);
+        this.data.product.fields.product_partner_ids = { string: "User", type: 'one2many', relation: 'partner' };
+        this.data.product.records[0].product_partner_ids = [1];
+        this.data.product.records[1].product_partner_ids = [2];
+        this.data.turtle.fields.product_ids = { string: "Product", type: "one2many", relation: 'product' };
+        this.data.turtle.fields.user_ids = { string: "Product", type: "one2many", relation: 'user' };
+        this.data.turtle.onchanges = {
+            turtle_trululu: function (record) {
+                record.product_ids = [37];
+                record.user_ids = [17, 19];
+            },
+        };
+        var form = await createView({
+            View: FormView,
+            model: 'turtle',
+            data: this.data,
+            arch: 
+                '<form string="Turtles">' +
+                    '<field string="Product" name="turtle_trululu"/>' +
+                    '<field readonly="1" string="Related field" name="product_ids">' +
+                        '<tree>' +
+                            '<field widget="many2many_tags" name="product_partner_ids"/>' +
+                        '</tree>' +
+                    '</field>' +
+                    '<field readonly="1" string="Second related field" name="user_ids">' +
+                        '<tree>' +
+                            '<field widget="many2many_tags" name="partner_ids"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        await testUtils.form.clickEdit(form);
+        await testUtils.fields.many2one.clickOpenDropdown("turtle_trululu");
+        await testUtils.fields.many2one.searchAndClickItem('turtle_trululu', {search: 'first record'});
+
+        const getElementTextContent = name => [...document.querySelectorAll(`.o_field_many2manytags[name="${name}"] .badge.o_tag_color_0 > span`)]
+            .map(x=>x.textContent);
+        assert.deepEqual(
+            getElementTextContent('product_partner_ids'),
+            ['first record'],
+            "should have the correct value in the many2many tag widget");
+        assert.deepEqual(
+            getElementTextContent('partner_ids'),
+            ['first record', 'second record'],
+            "should have the correct values in the many2many tag widget");
         form.destroy();
     });
 });

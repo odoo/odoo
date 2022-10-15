@@ -12,7 +12,7 @@
                 t-attf-data-target="#{{ datePickerId }}"
                 t-att-readonly="props.readonly"
                 t-ref="input"
-                t-on-change="onDateChange"
+                t-on-change="() => this.onDateChange()"
                 t-on-click="onInputClick"
             />
             <span t-if="props.warn_future and state.warning" class="fa fa-exclamation-triangle text-danger o_tz_warning o_datepicker_warning">
