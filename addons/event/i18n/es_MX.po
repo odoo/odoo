@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_partner__event_count
@@ -165,7 +165,7 @@ msgid ""
 "</div>"
 msgstr ""
 "<div>\n"
-"    Estimado ${object.name},<br/>\n"
+"    Apreciable ${object.name},<br/>\n"
 "    Gracias por su consulta.<br/>\n"
 "    Aquí está su insignia para el evento ${object.event_id.name}.<br/>\n"
 "    Contáctenos si tiene alguna pregunta.\n"
