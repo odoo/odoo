@@ -7,6 +7,7 @@ odoo.define('point_of_sale.Orderline', function(require) {
     class Orderline extends PosComponent {
         selectLine() {
             this.trigger('select-line', { orderline: this.props.line });
+            this.trigger('new-orderline-selected');
         }
         lotIconClicked() {
             this.trigger('edit-pack-lot-lines', { orderline: this.props.line });
