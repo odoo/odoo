@@ -16,19 +16,19 @@
 # Mandy Choy <mnc@odoo.com>, 2019
 # youring <youring@gmail.com>, 2020
 # liAnGjiA <liangjia@qq.com>, 2021
-# 稀饭~~ <wangwhai@qq.com>, 2021
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # Jeffery CHEN <jeffery9@gmail.com>, 2021
 # Martin Trigaux, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# 稀饭~~ <wangwhai@qq.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-30 06:07+0000\n"
+"POT-Creation-Date: 2022-09-02 08:12+0000\n"
 "PO-Revision-Date: 2016-08-05 13:06+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Last-Translator: 稀饭~~ <wangwhai@qq.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -293,6 +293,13 @@ msgstr "可用于退款的金额"
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount_max
 msgid "Amount Max"
 msgstr "金额最大值"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_bank_statement_line__amount_paid
+#: model:ir.model.fields,field_description:payment.field_account_move__amount_paid
+#: model:ir.model.fields,field_description:payment.field_account_payment__amount_paid
+msgid "Amount paid"
+msgstr "支付金额"
 
 #. module: payment
 #. openerp-web
@@ -1747,6 +1754,13 @@ msgstr "已经存在一个单号%s的支付交易。"
 #: model:ir.model.fields,help:payment.field_payment_transaction__acquirer_reference
 msgid "The acquirer reference of the transaction"
 msgstr "交易的收购方参考"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_account_bank_statement_line__amount_paid
+#: model:ir.model.fields,help:payment.field_account_move__amount_paid
+#: model:ir.model.fields,help:payment.field_account_payment__amount_paid
+msgid "The amount already paid for this invoice."
+msgstr ""
 
 #. module: payment
 #: code:addons/payment/wizards/payment_refund_wizard.py:0

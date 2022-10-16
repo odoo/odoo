@@ -5,18 +5,18 @@
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
-# Bert Burggraaf, 2021
+# 04a2cd0fd6ee22172c36ea91f27a38c5_60041bf, 2021
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2022
 # Martin Trigaux, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-19 13:58+0000\n"
+"POT-Creation-Date: 2022-09-02 08:13+0000\n"
 "PO-Revision-Date: 2019-03-20 15:01+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +28,7 @@ msgstr ""
 #: code:addons/website_slides_survey/models/survey_survey.py:0
 #, python-format
 msgid "- %s (Courses - %s)"
-msgstr ""
+msgstr "- %s (Cursussen - %s)"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_kanban
@@ -178,6 +178,16 @@ msgid "Allow Preview"
 msgstr "Sta voorbeeld toe"
 
 #. module: website_slides_survey
+#: code:addons/website_slides_survey/models/survey_survey.py:0
+#, python-format
+msgid ""
+"Any Survey listed below is currently used as a Course Certification and cannot be deleted:\n"
+"%s"
+msgstr ""
+"Elke onderstaande enquête wordt momenteel gebruikt als cursuscertificering en kan niet worden verwijderd:\n"
+"%s"
+
+#. module: website_slides_survey
 #: model_terms:ir.actions.act_window,help:website_slides_survey.survey_survey_action_slides
 msgid ""
 "Assess the level of understanding of your attendees\n"
@@ -232,7 +242,7 @@ msgstr "Certificatiecursussen"
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_slide_partner_view_search
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_slide_partner_view_tree
 msgid "Certification Passed"
-msgstr ""
+msgstr "Certificering geslaagd"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__slide_ids
@@ -428,14 +438,6 @@ msgstr "Enquête gebruikersinvoer"
 #, python-format
 msgid "Test Certification"
 msgstr "Test certificering"
-
-#. module: website_slides_survey
-#: code:addons/website_slides_survey/models/survey_survey.py:0
-#, python-format
-msgid ""
-"Any Survey listed below is currently used as a Course Certification and cannot be deleted:\n"
-"%s"
-msgstr ""
 
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_slide_slide__is_preview
