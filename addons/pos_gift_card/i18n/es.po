@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2021
 # marcescu, 2022
+# Michael Epstein, 2022
 # 
 msgid ""
 msgstr ""
@@ -12,13 +13,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: marcescu, 2022\n"
+"Last-Translator: Michael Epstein, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: pos_gift_card
 #: model_terms:ir.ui.view,arch_db:pos_gift_card.gift_card_template
@@ -256,6 +257,13 @@ msgstr "Escanear tarjeta de regalo"
 #, python-format
 msgid "This gift card has already been sold"
 msgstr "Ya se vendió esta tarjeta de regalo"
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/js/models.js:0
+#, python-format
+msgid "This gift card is already applied"
+msgstr "Esta tarjeta de regalo ya se aplicó"
 
 #. module: pos_gift_card
 #: model:ir.model.fields,help:pos_gift_card.field_pos_config__gift_card_product_id
