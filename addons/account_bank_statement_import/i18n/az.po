@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Jumshud Sultanov <cumshud@gmail.com>, 2022
+# erpgo translator <jumshud@erpgo.az>, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:08+0000\n"
-"Last-Translator: Jumshud Sultanov <cumshud@gmail.com>, 2022\n"
+"Last-Translator: erpgo translator <jumshud@erpgo.az>, 2022\n"
 "Language-Team: Azerbaijani (https://www.transifex.com/odoo/teams/41243/az/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,24 +25,24 @@ msgstr ""
 #: code:addons/account_bank_statement_import/static/src/js/account_bank_statement_import.js:0
 #, python-format
 msgid " Import Template for Bank Statements"
-msgstr ""
+msgstr " Bank Çıxarışları üçün Şablon Yaradın"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid "%d transactions had already been imported and were ignored."
-msgstr ""
+msgstr "%d əməliyyatlar artıq göndərilib və imtina edilib."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid "1 transaction had already been imported and was ignored."
-msgstr ""
+msgstr "1 əməliyyat artıq göndərilib və imtina edilib."
 
 #. module: account_bank_statement_import
 #: model:ir.model.constraint,message:account_bank_statement_import.constraint_account_bank_statement_line_unique_import_id
 msgid "A bank account transactions can be imported only once !"
-msgstr ""
+msgstr "Bank hesabı əməliyyatları yalnız bir dəfə göndərilə bilər!"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__company_partner_id
@@ -91,7 +92,7 @@ msgstr "Fəaliyyət Statusu"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_id
 msgid "Alias"
-msgstr ""
+msgstr "Qoşma Ad"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_name
@@ -107,7 +108,7 @@ msgstr "Alias domeni"
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid "Already imported items"
-msgstr ""
+msgstr "Artıq göndərilən məhsullar"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__at_least_one_inbound
@@ -144,7 +145,7 @@ msgstr "Bank fidləri"
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 msgid "Bank Journal Name"
-msgstr ""
+msgstr "Bank Jurnalının Adı"
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_line
@@ -169,6 +170,8 @@ msgid ""
 "Cannot find in which journal import this statement. Please manually select a"
 " journal."
 msgstr ""
+"Bu çıxarışın hansı jurnalda göndərildiyi tapılmadı. Zəhmət olmasa manual "
+"olaraq jurnal seçin."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence
@@ -211,6 +214,8 @@ msgid ""
 "Could not make sense of the given file.\n"
 "Did you install the module to support this type of file ?"
 msgstr ""
+"Verilən fayl başa düşülmədi.\n"
+"Bu tip faylları dəstəkləmək üçün modulu quraşdırmısınız?"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__create_uid
@@ -273,7 +278,7 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__attachment_ids
 msgid "Files"
-msgstr ""
+msgstr "Fayllar"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_follower_ids
@@ -306,6 +311,8 @@ msgid ""
 "Get you bank statements in electronic format from your bank and select them "
 "here."
 msgstr ""
+"Bank çıxarışlarınızı bankınızdan elektron formatda əldə edin və buradan "
+"seçin."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__id
@@ -341,7 +348,7 @@ msgstr "Yoxlanılıbsa, bəzi mesajların çatdırılmasında xəta var."
 msgid ""
 "If it contains transactions for more than one account, it must be imported "
 "on each of them."
-msgstr ""
+msgstr "Birdən çox hesab üzrə əməliyyatlar varsa, hər birinə göndərilməlidir."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__restrict_mode_hash_table
@@ -357,27 +364,27 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
 #, python-format
 msgid "Import"
-msgstr ""
+msgstr "İmport"
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_import
 msgid "Import Bank Statement"
-msgstr ""
+msgstr "Bank Çıxarışını Tərtib edin"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_line__unique_import_id
 msgid "Import ID"
-msgstr ""
+msgstr "İmport ID nömrəsi"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
 msgid "Import Statement"
-msgstr ""
+msgstr "İmport operatoru"
 
 #. module: account_bank_statement_import
 #: model:ir.actions.act_window,name:account_bank_statement_import.install_more_import_formats_action
 msgid "Install Import Format"
-msgstr ""
+msgstr "İmport formatını qur"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_is_follower
@@ -410,12 +417,12 @@ msgstr "Jurnal"
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 #, python-format
 msgid "Journal Creation"
-msgstr ""
+msgstr "Jurnalın Tərtibi"
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_import_journal_creation
 msgid "Journal Creation on Bank Statement Import"
-msgstr ""
+msgstr "Bank Çıxarışı İmportunda Jurnalın Hazırlanması"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__journal_group_ids
@@ -438,6 +445,8 @@ msgid ""
 "Just click OK to create the account/journal and finish the upload. If this "
 "was a mistake, hit cancel to abort the upload."
 msgstr ""
+"Hesab / jurnal yaratmaq və yükləməni bitirmək üçün sadəcə OK düyməsini "
+"vurun.  Xəta yaranarsa , yükləməni ləğv etmək üçün Ləğv et düyməsini vurun."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__kanban_dashboard
@@ -526,13 +535,13 @@ msgstr "Yeni Fəaliyyət Növü"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence_number_next
 msgid "Next Number"
-msgstr ""
+msgstr "Növbəti Rəqəm"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid "No currency found matching '%s'."
-msgstr ""
+msgstr "%s' -lə uyğunlaşan valyuta tapılmadı."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_needaction_counter
@@ -605,7 +614,7 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Select Files"
-msgstr ""
+msgstr "Faylları Seçin"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence
@@ -652,13 +661,15 @@ msgid ""
 "In order to proceed with the upload, you need to create a bank journal for "
 "this account."
 msgstr ""
+"Yüklədiyiniz çıxarış hesabı hələ Odoo-da qeyd olunmayıb. Yükləməni davam "
+"etdirmək üçün bu hesabın bank jurnalını yaratmalısınız."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid ""
 "The account of this statement (%s) is not the same as the journal (%s)."
-msgstr ""
+msgstr "Bu çıxarış (%s) jurnaldakı ilə (%s) eyni deyil."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
@@ -667,6 +678,7 @@ msgid ""
 "The currency of the bank statement (%s) is not the same as the currency of "
 "the journal (%s)."
 msgstr ""
+"(%s) bank çıxarışının valyutası jurnaldakı (%s) valyuta ilə eyni deyil."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__currency_id
@@ -706,13 +718,13 @@ msgstr ""
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid "This file doesn't contain any statement for account %s."
-msgstr ""
+msgstr "Bu faylda %s hesabı üçün heç bir çıxarış yoxdur."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid "This file doesn't contain any transaction for account %s."
-msgstr ""
+msgstr "Bu faylda %s hesabı üçün heç bir əməliyyat yoxdur."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__type
@@ -738,12 +750,12 @@ msgstr "Oxunmamış Mesaj Hesablayıcısı"
 #: model:ir.actions.act_window,name:account_bank_statement_import.action_account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Upload"
-msgstr ""
+msgstr "Yükləyin"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Upload Bank Statements"
-msgstr ""
+msgstr "Bank Çıxarışlarını Yükləyin"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence
@@ -787,7 +799,7 @@ msgstr "Bu jurnalın idarə panelində göstərilib-göstərilməməsi"
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid "You already have imported that file."
-msgstr ""
+msgstr "Siz bu faylı artıq import etmişsiniz."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__invoice_reference_model
@@ -812,7 +824,7 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "You can upload your bank statement using:"
-msgstr ""
+msgstr "Bank çıxarışını :istifadə edərək yükləyə bilərsiniz."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
@@ -825,4 +837,4 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
 msgid "or"
-msgstr ""
+msgstr "və yaxud"

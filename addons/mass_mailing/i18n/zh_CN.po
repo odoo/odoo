@@ -20,10 +20,11 @@
 # ChinaMaker <liuct@chinamaker.net>, 2019
 # Felix Yuen <fyu@odoo.com>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
 # Jeffery CHEN <jeffery9@gmail.com>, 2020
 # 深圳市耀影科技有限公司_QQ1006399173, 2021
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# 陕西_jack, 2022
 # 
 msgid ""
 msgstr ""
@@ -31,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: 深圳市耀影科技有限公司_QQ1006399173, 2021\n"
+"Last-Translator: 陕西_jack, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -204,6 +205,8 @@ msgid ""
 "<span attrs=\"{'invisible': "
 "[('mailing_model_name','!=','mailing.list')]}\">Mailing Contact</span>"
 msgstr ""
+"<span attrs=\"{'invisible': "
+"[('mailing_model_name','!=','mailing.list')]}\">邮件联系人</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social
@@ -218,7 +221,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span name=\"failed_text\">emails could not be sent.</span>"
-msgstr ""
+msgstr "<span name=\"failed_text\">邮件未能发送。</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -230,14 +233,14 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span name=\"next_departure_text\">This mailing is scheduled for </span>"
-msgstr ""
+msgstr "<span name=\"next_departure_text\">该邮件已安排</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid ""
 "<span name=\"scheduled_text\">emails are in queue and will be sent "
 "soon.</span>"
-msgstr ""
+msgstr "<span name=\"scheduled_text\">邮件在队列中将会很快发送。</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount2
@@ -337,7 +340,7 @@ msgstr "支持 A/B 测试"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Allow recipients to blacklist themselves"
-msgstr ""
+msgstr "允许收件人将自己列入黑名单"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_res_config_settings__show_blacklist_buttons
@@ -420,7 +423,7 @@ msgstr "已归档"
 msgid ""
 "At least one of the mailing list you are trying to archive is used in an "
 "ongoing mailing campaign."
-msgstr ""
+msgstr "你试图存档的邮件列表中至少有一个是用于正在进行的邮件活动。"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -464,7 +467,7 @@ msgstr "黑名单"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__show_blacklist_buttons
 msgid "Blacklist Option when Unsubscribing"
-msgstr ""
+msgstr "退订时黑名单选项"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__body_arch
@@ -526,7 +529,7 @@ msgstr "营销"
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_utm_campaigns
 msgid ""
 "Campaigns are the perfect tool to track results across multiple mailings."
-msgstr ""
+msgstr "营销活动是跨邮件跟踪结果的完美工具。"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_merge_view_form
@@ -677,12 +680,12 @@ msgstr "创造链接跟踪"
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_utm_campaigns
 msgid "Create a mailing campaign"
-msgstr ""
+msgstr "创建邮件活动"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_contacts
 msgid "Create a mailing contact"
-msgstr ""
+msgstr "创建邮件联系人"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_create_mass_mailings_from_campaign
@@ -814,7 +817,7 @@ msgstr "已送货"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Delivered to"
-msgstr ""
+msgstr "送货至"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__medium_id
@@ -1259,7 +1262,7 @@ msgstr "邮件营销"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_contact
 msgid "Mailing Contact"
-msgstr ""
+msgstr "邮件联系人"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_list
@@ -1283,13 +1286,13 @@ msgstr "邮件列表联系人"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_subscription_view_form
 msgid "Mailing List Subscription"
-msgstr ""
+msgstr "邮件列表订阅"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_subscription_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_subscription_view_tree
 msgid "Mailing List Subscriptions"
-msgstr ""
+msgstr "邮件列表订阅"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_lists
@@ -1307,7 +1310,7 @@ msgstr "邮件列表"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_trace
 msgid "Mailing Statistics"
-msgstr ""
+msgstr "邮件统计"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
@@ -1324,19 +1327,19 @@ msgstr "邮件测试"
 #: model:ir.actions.act_window,name:mass_mailing.mailing_trace_action
 #: model:ir.ui.menu,name:mass_mailing.menu_email_statistics
 msgid "Mailing Traces"
-msgstr ""
+msgstr "邮件跟踪"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mailing_type
 msgid "Mailing Type"
-msgstr ""
+msgstr "邮件类型"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_contacts
 msgid ""
 "Mailing contacts allow you to separate your marketing audience from your "
 "business contact directory."
-msgstr ""
+msgstr "邮寄联系人允许你将你的营销受众与你的业务联系目录分开。"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_create_mass_mailings_from_campaign
@@ -1375,7 +1378,7 @@ msgstr "管理群发邮件营销"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Manage mass mailing campaigns"
-msgstr ""
+msgstr "管理群发邮件活动"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_form
@@ -1560,7 +1563,7 @@ msgstr "快讯"
 #: model:mailing.mailing,name:mass_mailing.mass_mail_1
 #: model:utm.source,name:mass_mailing.mass_mail_1_utm_source
 msgid "Newsletter 1"
-msgstr ""
+msgstr "快讯1"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_date_deadline
@@ -1611,7 +1614,7 @@ msgstr "联系人人数"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__mailing_mail_count
 msgid "Number of Mass Mailing"
-msgstr ""
+msgstr "群发邮件的数量"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_merge_view_form
@@ -1707,7 +1710,7 @@ msgstr "退出"
 msgid ""
 "Opt out flag for a specific mailing list.This field should not be used in a "
 "view without a unique and active mailing list context."
-msgstr ""
+msgstr "某个特定邮件列表的退出标志。这个字段不应该用在没有独特和活跃的邮件列表背景的视图中。"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_steps
@@ -1924,7 +1927,7 @@ msgstr "安排的日期"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__schedule_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing_schedule_date__schedule_date
 msgid "Scheduled for"
-msgstr ""
+msgstr "预定发布于"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mailing_contact.py:0
@@ -1958,7 +1961,7 @@ msgstr "发送"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__email_from
 msgid "Send From"
-msgstr ""
+msgstr "发送自"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
@@ -1983,7 +1986,7 @@ msgstr "发送新群发邮件"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_schedule_date_view_form
 msgid "Send on"
-msgstr ""
+msgstr "发给"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__state__sending
@@ -2147,7 +2150,7 @@ msgstr "谢谢您！您的反馈已经成功发送！"
 #. module: mass_mailing
 #: model_terms:mailing.list,toast_content:mass_mailing.mass_mail_list_2
 msgid "Thanks for subscribing!"
-msgstr ""
+msgstr "感谢订阅！"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_paragraph
@@ -2199,7 +2202,7 @@ msgstr "收件人<strong>取消订阅%s</strong>邮件列表"
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "There are no recipients selected."
-msgstr ""
+msgstr "没有选择收件人。"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__email_normalized
@@ -2345,7 +2348,7 @@ msgstr "在 8 月 1 日之前使用此促销代码"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Use a dedicated server for mailings"
-msgstr ""
+msgstr "使用专用的邮件服务器"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__mail_server_id
@@ -2452,6 +2455,8 @@ msgid ""
 "You don't need to import your mailing lists, you can easily\n"
 "                send emails<br> to any contact saved in other Odoo apps."
 msgstr ""
+"你不需要导入你的邮件列表，你可以轻松地\n"
+"               <br>向保存在其他Odoo应用程序中的任何联系人</br>发送电子邮件<br>。</br>"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_lists
@@ -2502,7 +2507,7 @@ msgstr "您已成功<strong> 取消订阅</strong>!"
 msgid ""
 "You were still subscribed to those newsletters. You will not receive any "
 "news from them anymore:"
-msgstr ""
+msgstr "你仍然订阅了这些新闻简报。你将不会再收到他们的任何消息。"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_banner
