@@ -21,7 +21,6 @@ import argparse
 import gzip
 import itertools
 import json
-import operator
 import re
 import string
 

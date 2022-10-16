@@ -6,7 +6,6 @@ from __future__ import print_function
 import subprocess
 import glob
 import re
-import pprint
 
 
 cla_glob = "doc/cla/*/*.md"
