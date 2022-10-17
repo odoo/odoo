@@ -1,12 +1,12 @@
 /** @odoo-module */
 
 import { DataSources } from "@spreadsheet/data_sources/data_sources";
-import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
 import { migrate } from "@spreadsheet/o_spreadsheet/migration";
 import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
 import { browser } from "@web/core/browser/browser";
 import spreadsheet from "../o_spreadsheet/o_spreadsheet_extended";
+import { _t } from "@web/core/l10n/translation";
 
 const { Model } = spreadsheet;
 
@@ -41,8 +41,9 @@ async function waitForDataLoaded(model) {
                     if (
                         cell.evaluated &&
                         cell.evaluated.type === "error" &&
-                        cell.evaluated.error instanceof LoadingDataError
+                        cell.evaluated.error.message === _t("Data is loading")
                     ) {
+                        model.dispatch("EVALUATE_CELLS");
                         return;
                     }
                 }
