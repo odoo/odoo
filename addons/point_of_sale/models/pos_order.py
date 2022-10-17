@@ -927,6 +927,10 @@ class PosOrderLine(models.Model):
     refunded_orderline_id = fields.Many2one('pos.order.line', 'Refunded Order Line', help='If this orderline is a refund, then the refunded orderline is specified in this field.')
     refunded_qty = fields.Float('Refunded Quantity', compute='_compute_refund_qty', help='Number of items refunded in this orderline.')
 
+    def _is_not_sellable_line(self):
+        # True if the line is a computed line (reward, delivery, ...) that user cannot add manually
+        return False
+
     @api.depends('refund_orderline_ids')
     def _compute_refund_qty(self):
         for orderline in self:
