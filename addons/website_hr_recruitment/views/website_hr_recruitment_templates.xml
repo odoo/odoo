@@ -79,42 +79,55 @@
     <t t-call="website.layout">
         <t t-set="additional_title">Job Detail</t>
         <div id="wrap" class="js_hr_recruitment">
-            <!-- Breadcrumb -->
-            <section class="bg-200">
-                <div class="container">
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb ps-0">
-                            <li class="breadcrumb-item"><a href="/jobs" class="text-secondary fw-bold">Jobs</a></li>
-                            <li class="breadcrumb-item active" aria-current="page"><span t-field="job.name"/></li>
-                        </ol>
-                    </nav>
-                </div>
-            </section>
-            <!-- Job name -->
-            <section class="pb32">
-                <div class="container">
-                    <div class="mt32">
-                        <div class="float-end">
-                            <a role="button" t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg float-end">Apply Now!</a>
-                        </div>
-                        <h1 t-field="job.name"/>
-                        <h5 class="fw-light" t-field="job.address_id" t-options='{
-                            "widget": "contact",
-                            "fields": ["city"],
-                            "no_tag_br": True
-                        }'/>
-                    </div>
-                </div>
-            </section>
+            <div itemscope="itemscope" itemtype="https://schema.org/JobPosting">
+                <meta t-if="job.contract_type_id" itemprop="employmentType" t-att-content="job.contract_type_id.sudo().name"/>
+                <meta t-if="job.published_date" itemprop="datePosted" t-att-content="job.published_date"/>
+                <meta itemprop="directApply" content="true"/>
+                <span itemprop="hiringOrganization" itemscope="itemscope" itemtype="https://schema.org/Organization">
+                    <meta itemprop="name" t-att-content="job.company_id.name"/>
+                    <meta itemprop="logo" t-attf-content="/logo.png?company=#{job.company_id.id}"/>
+                </span>
+                <span itemprop="jobLocation" itemscope="itemscope" itemtype="https://schema.org/Place">
+                    <meta itemprop="address" t-att-content="job.address_id.sudo().contact_address"/>
+                </span>
 
-            <div t-field="job.website_description"/>
-
-            <div class="oe_structure">
-                <section class="o_job_bottom_bar mt32 mb32">
-                    <div class="text-center">
-                        <a role="button" t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg">Apply Now!</a>
+                <!-- Breadcrumb -->
+                <section class="bg-200">
+                    <div class="container">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb ps-0">
+                                <li class="breadcrumb-item"><a href="/jobs" class="text-secondary fw-bold">Jobs</a></li>
+                                <li class="breadcrumb-item active" aria-current="page"><span itemprop="title" t-field="job.name"/></li>
+                            </ol>
+                        </nav>
                     </div>
                 </section>
+                <!-- Job name -->
+                <section class="pb32">
+                    <div class="container">
+                        <div class="mt32">
+                            <div class="float-end">
+                                <a role="button" t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg float-end">Apply Now!</a>
+                            </div>
+                            <h1 t-field="job.name"/>
+                            <h5 class="fw-light" t-field="job.address_id" t-options='{
+                                "widget": "contact",
+                                "fields": ["city"],
+                                "no_tag_br": True
+                            }'/>
+                        </div>
+                    </div>
+                </section>
+
+                <div t-field="job.website_description"/>
+
+                <div class="oe_structure">
+                    <section class="o_job_bottom_bar mt32 mb32">
+                        <div class="text-center">
+                            <a role="button" t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg">Apply Now!</a>
+                        </div>
+                    </section>
+                </div>
             </div>
         </div>
     </t>
@@ -306,7 +319,7 @@
     <section class="pt32">
         <div class="container">
             <div class="row">
-                <div class="col-lg-8 pb32">
+                <div class="col-lg-8 pb32" itemprop="description">
                     <p class="lead">
                         As an employee of our company, you will <b>collaborate with each department
                         to create and deploy disruptive products.</b> Come work at a growing company
@@ -401,7 +414,7 @@
                 <div class="col-lg-4 s_col_no_bgcolor pt16 pb16" data-name="Box">
                     <div class="card text-bg-primary">
                         <h4 class="card-header">Responsibilities</h4>
-                        <ul class="list-group list-group-flush">
+                        <ul class="list-group list-group-flush" itemprop="responsibilities">
                             <li class="list-group-item">Lead the entire sales cycle</li>
                             <li class="list-group-item">Achieve monthly sales objectives</li>
                             <li class="list-group-item">Qualify the customer needs</li>
@@ -413,7 +426,7 @@
                 <div class="col-lg-4 s_col_no_bgcolor pt16 pb16" data-name="Box">
                     <div class="card text-bg-primary">
                         <h4 class="card-header">Must Have</h4>
-                        <ul class="list-group list-group-flush">
+                        <ul class="list-group list-group-flush" itemprop="skills">
                             <li class="list-group-item">Bachelor Degree or Higher</li>
                             <li class="list-group-item">Passion for software products</li>
                             <li class="list-group-item">Perfect written English</li>
@@ -464,7 +477,7 @@
     </section>
     <!-- What we offer -->
     <section class="s_features pt40 pb40 bg-200" data-name="Features" data-snippet="s_features">
-        <div class="container">
+        <div class="container" itemprop="employerOverview">
             <h2>What We Offer</h2>
             <br/>
             <p class="lead">
