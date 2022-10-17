@@ -47,6 +47,9 @@ registerModel({
     },
     fields: {
         component: attr(),
+        isOpen: attr({
+            default: false,
+        }),
         /**
          * Reference of the dropup list. Useful to auto-set max height based on
          * browser screen height.

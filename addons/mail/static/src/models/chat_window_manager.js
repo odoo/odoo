@@ -55,7 +55,7 @@ registerModel({
             }
         },
         closeHiddenMenu() {
-            this.update({ isHiddenMenuOpen: false });
+            this.hiddenMenuView.update({ isOpen: false });
         },
         /**
          * Closes all chat windows related to the given thread.
@@ -74,14 +74,14 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickHiddenMenuToggler(ev) {
-            if (this.isHiddenMenuOpen) {
+            if (this.hiddenMenuView.isOpen) {
                 this.closeHiddenMenu();
             } else {
                 this.openHiddenMenu();
             }
         },
         openHiddenMenu() {
-            this.update({ isHiddenMenuOpen: true });
+            this.hiddenMenuView.update({ isOpen: true });
         },
         openNewMessage() {
             if (!this.newMessageChatWindow) {
@@ -214,9 +214,6 @@ registerModel({
         }),
         hiddenMenuWidth: attr({
             default: 170, // max width, including width of dropup list items
-        }),
-        isHiddenMenuOpen: attr({
-            default: false,
         }),
         lastVisible: one('ChatWindow', {
             compute() {
