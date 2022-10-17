@@ -19,6 +19,14 @@ registerModel({
             const height = device.globalWindowInnerHeight / 2;
             this.listRef.el.style['max-height'] = `${height}px`;
         },
+        applyOffset() {
+            const textDirection = this.messaging.locale.textDirection;
+            const offsetFrom = textDirection === 'rtl' ? 'left' : 'right';
+            const oppositeFrom = offsetFrom === 'right' ? 'left' : 'right';
+            const offset = this.owner.visual.hiddenMenuOffset;
+            this.component.root.el.style[offsetFrom] = `${offset}px`;
+            this.component.root.el.style[oppositeFrom] = 'auto';
+        },
         /**
          * Closes the menu when clicking outside.
          * Must be done as capture to avoid stop propagation.
