@@ -259,7 +259,7 @@ function useMagicLegacyReload() {
             widget.reload = function (...args) {
                 manualReload = true;
                 legacyReloadProm = controllerReload.call(widget, ...args);
-                return legacyReloadProm.then(() => {
+                return legacyReloadProm.finally(() => {
                     if (manualReload) {
                         legacyReloadProm = null;
                         manualReload = false;
@@ -273,7 +273,7 @@ function useMagicLegacyReload() {
                 if (manualUpdate) {
                     legacyReloadProm = updateProm;
                 }
-                return updateProm.then(() => {
+                return updateProm.finally(() => {
                     if (manualUpdate) {
                         legacyReloadProm = null;
                     }
