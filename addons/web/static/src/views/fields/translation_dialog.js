@@ -29,13 +29,8 @@ export class TranslationDialog extends Component {
             this.terms = translations.map((term) => {
                 const relatedLanguage = languages.find((l) => l[0] === term.lang);
                 return {
-                    id: term.id,
-                    lang: term.lang,
+                    ...term,
                     langName: relatedLanguage[1],
-                    source: term.source,
-                    // we set the translation value coming from the database, except for the language
-                    // the user is currently utilizing. Then we set the translation value coming
-                    // from the value of the field in the form
                     value:
                         term.lang === this.user.lang &&
                         !this.props.showSource &&
