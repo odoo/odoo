@@ -154,6 +154,9 @@ export class AnalyticDistribution extends Component {
         if (existing_account_ids.length) {
             args['existing_account_ids'] = existing_account_ids;
         }
+        if (this.props.record.data.company_id) {
+            args['company_id'] = this.props.record.data.company_id[0];
+        }
         return args;
     }
 
