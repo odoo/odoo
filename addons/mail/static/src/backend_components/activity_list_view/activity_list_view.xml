@@ -35,6 +35,7 @@
                     <t t-foreach="activityListView.plannedActivityListViewItems" t-as="activityListViewItem" t-key="activityListViewItem">
                         <ActivityListViewItem record="activityListViewItem"/>
                     </t>
+                </t>
             </div>
             <button class="o_ActivityListView_addActivityButton btn btn-secondary p-3 text-center" t-on-click="activityListView.onClickAddActivityButton">
                 <i class="fa fa-plus fa-fw"></i><strong>Schedule an activity</strong>
