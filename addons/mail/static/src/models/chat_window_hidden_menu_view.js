@@ -2,6 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
+import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ChatWindowHiddenMenuView',
@@ -55,6 +56,14 @@ registerModel({
                 return this.owner.hiddenChatWindowHeaderViews.map(chatWindowHeaderView => ({ chatWindowHeaderView }));
             },
             inverse: 'owner',
+        }),
+        lastItem: one('ChatWindowHiddenMenuItemView', {
+            compute() {
+                if (this.items.length === 0) {
+                    return clear();
+                }
+                return this.items[this.items.length - 1];
+            },
         }),
         /**
          * Reference of the dropup list. Useful to auto-set max height based on

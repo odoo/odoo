@@ -16,16 +16,7 @@ export class ChatWindowHiddenMenuItem extends Component {
 }
 
 Object.assign(ChatWindowHiddenMenuItem, {
-    defaultProps: {
-        isLast: false,
-    },
-    props: {
-        isLast: {
-            type: Boolean,
-            optional: true,
-        },
-        record: Object,
-    },
+    props: { record: Object },
     template: 'mail.ChatWindowHiddenMenuItem',
 });
 
