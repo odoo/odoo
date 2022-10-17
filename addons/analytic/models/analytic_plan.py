@@ -134,7 +134,9 @@ class AccountAnalyticPlan(models.Model):
             This list is computed based on the applicabilities of root plans. """
         list_plans = []
         set_plan_ids = {}
-        all_plans = self.search([('parent_id', '=', False), '|', ('account_ids', '!=', False), ('children_ids.account_ids', '!=', False)])
+        company_id = kwargs.get('company_id', self.env.company.id)
+        all_plans = self.search([('parent_id', '=', False), '|', ('account_ids', '!=', False), ('children_ids.account_ids', '!=', False),
+                                 '|', ('company_id', '=', company_id), ('company_id', '=', False)])
         for plan in all_plans:
             applicability = plan._get_applicability(**kwargs)
             if applicability != 'unavailable':
