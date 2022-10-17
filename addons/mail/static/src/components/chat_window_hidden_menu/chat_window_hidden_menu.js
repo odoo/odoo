@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component, onMounted, onPatched, onWillUnmount, useRef } = owl;
@@ -11,6 +12,7 @@ export class ChatWindowHiddenMenu extends Component {
      */
     setup() {
         super.setup();
+        useComponentToModel({ fieldName: 'component' });
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
         /**
          * Reference of the dropup list. Useful to auto-set max height based on
