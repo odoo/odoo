@@ -165,6 +165,7 @@ var PaymentAdyen = PaymentInterface.extend({
             // represented by true.
             if (! ignore_error && data !== true) {
                 self._show_error(_t('Cancelling the payment failed. Please cancel it manually on the payment terminal.'));
+                self.was_cancelled = !!self.polling;
             }
         });
     },
