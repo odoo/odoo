@@ -18,7 +18,7 @@
                 animationOnMove="false"
                 animationType="'forwards'"
                 swipeDistanceRatio="6">
-            <div class="settings">
+            <div class="settings" t-ref="settings">
                 <t t-slot="NoContentHelper" t-if="props.slots['NoContentHelper'].isVisible"/>
                 <t t-slot="default" selectedTab="state.selectedTab"/>
             </div>

@@ -1526,4 +1526,65 @@ QUnit.module("SettingsFormView", (hooks) => {
             `focusin: <input type="text" class="o_searchview_input" accesskey="Q" placeholder="Search..." role="searchbox">`,
         ]);
     });
+
+    QUnit.test("settings form keeps scrolling by app", async (assert) => {
+        const oldHeight = target.style.getPropertyValue("height");
+        target.style.setProperty("height", "200px");
+        registerCleanup(() => {
+            target.style.setProperty("height", oldHeight);
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "res.config.settings",
+            serverData,
+            arch: `
+            <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+            <div class="o_setting_container">
+                <div class="settings">
+                    <div class="app_settings_block" string="CRM" data-key="crm">
+                        <h2>Title of group Bar</h2>
+                        <div class="row mt16 o_settings_container">
+                                <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                                <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                                <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                                <div id="deepDivCrm" />
+                        </div>
+                    </div>
+
+                    <div class="app_settings_block" string="OtherApp" data-key="otherapp">
+                        <h2>Title of group Other</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                                <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                                <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                                <div id="deepDivOther" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>`,
+        });
+
+        // constrain o_content to have height for its children to be scrollable
+        target.querySelector(".o_content").style.setProperty("height", "200px");
+
+        const scrollingEl = target.querySelector(".settings");
+        assert.strictEqual(scrollingEl.scrollTop, 0);
+
+        await click(target.querySelector(".settings_tab [data-key='otherapp']"));
+        assert.strictEqual(scrollingEl.scrollTop, 0);
+        target.querySelector("#deepDivOther").scrollIntoView();
+
+        const scrollTop = scrollingEl.scrollTop;
+        assert.ok(scrollTop > 0);
+
+        await click(target.querySelector(".settings_tab [data-key='crm']"));
+        assert.strictEqual(scrollingEl.scrollTop, 0);
+
+        await click(target.querySelector(".settings_tab [data-key='otherapp']"));
+        assert.strictEqual(scrollingEl.scrollTop, scrollTop);
+    });
 });
