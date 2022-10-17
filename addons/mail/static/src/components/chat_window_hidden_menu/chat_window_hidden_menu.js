@@ -1,9 +1,10 @@
 /** @odoo-module **/
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-const { Component, onMounted, onPatched, useRef } = owl;
+const { Component, onMounted, onPatched } = owl;
 
 export class ChatWindowHiddenMenu extends Component {
 
@@ -13,11 +14,7 @@ export class ChatWindowHiddenMenu extends Component {
     setup() {
         super.setup();
         useComponentToModel({ fieldName: 'component' });
-        /**
-         * Reference of the dropup list. Useful to auto-set max height based on
-         * browser screen height.
-         */
-        this._listRef = useRef('list');
+        useRefToModel({ fieldName: 'listRef', refName: 'list' });
         onMounted(() => this._mounted());
         onPatched(() => this._patched());
     }
@@ -64,7 +61,7 @@ export class ChatWindowHiddenMenu extends Component {
     _applyListHeight() {
         const device = this.messaging.device;
         const height = device.globalWindowInnerHeight / 2;
-        this._listRef.el.style['max-height'] = `${height}px`;
+        this.chatWindowHiddenMenuView.listRef.el.style['max-height'] = `${height}px`;
     }
 
     /**

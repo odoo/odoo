@@ -30,6 +30,11 @@ registerModel({
     },
     fields: {
         component: attr(),
+        /**
+         * Reference of the dropup list. Useful to auto-set max height based on
+         * browser screen height.
+         */
+        listRef: attr(),
         owner: one('ChatWindowManager', {
             identifying: true,
             inverse: 'hiddenMenuView',
