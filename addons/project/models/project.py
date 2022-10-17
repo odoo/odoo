@@ -2,12 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
-from datetime import timedelta, datetime
+from collections import defaultdict
+from datetime import timedelta
 from random import randint
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
-from odoo.exceptions import UserError, AccessError, ValidationError, RedirectWarning
-from odoo.tools.misc import format_date, get_lang
+from odoo.exceptions import UserError, ValidationError
 from odoo.osv.expression import OR
 
 from .project_task_recurrence import DAYS, WEEKS
@@ -1094,6 +1094,18 @@ class Task(models.Model):
         for task in tasks:
             if task.project_id.privacy_visibility == 'portal':
                 task._portal_ensure_token()
+        return tasks
+
+    def _load_records_create(self, values):
+        tasks = super()._load_records_create(values)
+        stage_ids_per_project = defaultdict(list)
+        for task in tasks:
+            if task.stage_id and task.stage_id not in task.project_id.type_ids and task.stage_id.id not in stage_ids_per_project[task.project_id]:
+                stage_ids_per_project[task.project_id].append(task.stage_id.id)
+
+        for project, stage_ids in stage_ids_per_project.items():
+            project.write({'type_ids': [(4, stage_id) for stage_id in stage_ids]})
+
         return tasks
 
     def write(self, vals):
