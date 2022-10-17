@@ -756,12 +756,11 @@
                         </div>
                         <group>
                             <group id="header_left_group">
-                                <div class="o_td_label">
-                                    <label for="partner_id" string="Customer" style="font-weight:bold;"
-                                           attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))]}"/>
-                                    <label for="partner_id" string="Vendor" style="font-weight:bold;"
-                                           attrs="{'invisible': [('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}"/>
-                                </div>
+
+                                <label for="partner_id" string="Customer" style="font-weight:bold;"
+                                       attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))]}"/>
+                                <label for="partner_id" string="Vendor" style="font-weight:bold;"
+                                       attrs="{'invisible': [('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}"/>
                                 <field name="partner_id" widget="res_partner_many2one" nolabel="1"
                                        context="{
                                             'res_partner_search_mode': (context.get('default_move_type', 'entry') in ('out_invoice', 'out_refund', 'out_receipt') and 'customer') or (context.get('default_move_type', 'entry') in ('in_invoice', 'in_refund', 'in_receipt') and 'supplier') or False,
@@ -769,6 +768,7 @@
                                        domain="[('type', '!=', 'private'), ('company_id', 'in', (False, company_id))]"
                                        options='{"always_reload": True, "no_quick_create": True}'
                                        attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
+
                                 <field name="partner_shipping_id"
                                        groups="account.group_delivery_invoice_address"
                                        attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))], 'readonly': [('state', '!=', 'draft')]}"/>
@@ -788,13 +788,12 @@
                                        options="{'no_create': True}" context="{'show_total_amount': True}"/>
                             </group>
                             <group id="header_right_group">
+
                                 <!-- Invoice date (only invoices / receipts) -->
-                                <div class="o_td_label">
-                                    <label for="invoice_date" string="Invoice Date" style="font-weight:bold;"
-                                           attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))]}"/>
-                                    <label for="invoice_date" string="Bill Date" style="font-weight:bold;"
-                                           attrs="{'invisible': [('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}"/>
-                                </div>
+                                <label for="invoice_date" string="Invoice Date" style="font-weight:bold;"
+                                       attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))]}"/>
+                                <label for="invoice_date" string="Bill Date" style="font-weight:bold;"
+                                       attrs="{'invisible': [('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}"/>
                                 <field name="invoice_date" nolabel="1" options="{'datepicker': {'warn_future': true}}"
                                        attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
 
