@@ -663,7 +663,7 @@ class AccountBankStatementLine(models.Model):
                         aml.partner_id = partner.id
                         AND partner.name IS NOT NULL
                         AND partner.active
-                        AND (''' + ') OR ('.join(sub_queries) + ''')
+                        AND ((''' + ') OR ('.join(sub_queries) + '''))
                     WHERE aml.company_id = %s
                     LIMIT 1
                 ''',
