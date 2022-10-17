@@ -14,6 +14,11 @@ registerModel({
         },
     },
     recordMethods: {
+        applyListHeight() {
+            const device = this.messaging.device;
+            const height = device.globalWindowInnerHeight / 2;
+            this.listRef.el.style['max-height'] = `${height}px`;
+        },
         /**
          * Closes the menu when clicking outside.
          * Must be done as capture to avoid stop propagation.

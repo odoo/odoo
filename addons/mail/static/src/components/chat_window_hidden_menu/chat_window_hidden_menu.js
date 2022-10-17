@@ -51,17 +51,8 @@ export class ChatWindowHiddenMenu extends Component {
         if (!this.messaging) {
             return;
         }
-        this._applyListHeight();
+        this.chatWindowHiddenMenuView.applyListHeight();
         this._applyOffset();
-    }
-
-    /**
-     * @private
-     */
-    _applyListHeight() {
-        const device = this.messaging.device;
-        const height = device.globalWindowInnerHeight / 2;
-        this.chatWindowHiddenMenuView.listRef.el.style['max-height'] = `${height}px`;
     }
 
     /**
