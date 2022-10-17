@@ -2757,6 +2757,37 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_dialog .o_form_view", "the dialog has been closed");
     });
 
+    QUnit.test(
+        "form views in dialogs closes on discard on existing record",
+        async function (assert) {
+            serverData.models.partner.records[0].foo = undefined;
+            delete serverData.models.partner.fields.foo.default;
+            serverData.views = {
+                "partner,false,form": `
+                <form>
+                    <field name="foo" required="1"/>
+                </form>`,
+            };
+            serverData.actions = {
+                1: {
+                    id: 1,
+                    name: "Partner",
+                    res_model: "partner",
+                    type: "ir.actions.act_window",
+                    views: [[false, "form"]],
+                    target: "new",
+                    res_id: 1,
+                },
+            };
+            const webClient = await createWebClient({ serverData });
+            await doAction(webClient, 1);
+            assert.containsOnce(target, ".o_dialog .o_form_view", "the dialog has been opened");
+
+            await click(target.querySelector(".o_dialog .o_form_button_cancel"));
+            assert.containsNone(target, ".o_dialog .o_form_view", "the dialog has been closed");
+        }
+    );
+
     QUnit.test("form views in dialogs do not have class o_xxl_form_view", async function (assert) {
         const bus = new EventBus();
         registry.category("services").add("ui", {
@@ -12495,15 +12526,9 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.strictEqual(
-            target.querySelector(".o_form_status_indicator").textContent,
-            ""
-        );
+        assert.strictEqual(target.querySelector(".o_form_status_indicator").textContent, "");
         await editInput(target, ".o_field_widget input", "");
-        assert.strictEqual(
-            target.querySelector(".o_form_status_indicator").textContent,
-            ""
-        );
+        assert.strictEqual(target.querySelector(".o_form_status_indicator").textContent, "");
         await clickSave(target);
         assert.strictEqual(
             target.querySelector(".o_form_status_indicator").textContent.trim(),

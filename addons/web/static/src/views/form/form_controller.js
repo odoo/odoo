@@ -441,7 +441,7 @@ export class FormController extends Component {
         if (this.props.onDiscard) {
             this.props.onDiscard(this.model.root);
         }
-        if (this.model.root.isVirtual) {
+        if (this.model.root.isVirtual || this.env.inDialog) {
             this.env.config.historyBack();
         }
     }
