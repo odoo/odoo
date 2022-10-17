@@ -15780,4 +15780,30 @@ QUnit.module("Views", (hooks) => {
             ["Value 3", "Value 2", "Value 1", "Value 1"]
         );
     });
+
+    QUnit.test("view's context is passed down as evalContext", async (assert) => {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            context: {
+                default_global_key: "some_value",
+            },
+            arch: `
+                <tree editable="bottom">
+                    <field name="m2o" domain="[['someField', '=', context.get('default_global_key', 'nope')]]"/>
+                </tree>
+            `,
+            mockRPC(_, args) {
+                if (args.method === "name_search") {
+                    assert.step(`name_search`);
+                    assert.deepEqual(args.kwargs.args, [["someField", "=", "some_value"]]);
+                }
+            },
+        });
+
+        await click(target, ".o_data_row:nth-child(1) td.o_list_many2one");
+        await click(target, ".o_field_many2one_selection .o-autocomplete--input");
+        assert.verifySteps(["name_search"]);
+    });
 });
