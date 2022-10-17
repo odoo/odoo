@@ -71,23 +71,10 @@ registerModel({
             this.callView.update({ isSidebarOpen: true });
         },
         onComponentUpdate() {
-            if (!this.component.root.el) {
+            if (!this.exists()) {
                 return;
             }
-            if (!this.tileContainerRef.el) {
-                return;
-            }
-            const { width, height } = this.tileContainerRef.el.getBoundingClientRect();
-            const { tileWidth, tileHeight } = this.calculateTessellation({
-                aspectRatio: this.callView.aspectRatio,
-                containerHeight: height,
-                containerWidth: width,
-                tileCount: this.tileContainerRef.el.children.length,
-            });
-            this.update({
-                tileHeight,
-                tileWidth,
-            });
+            this._updateLayout();
         },
         /**
          * @param {MouseEvent} ev
@@ -127,6 +114,12 @@ registerModel({
                 showOverlayTimer: clear(),
             });
         },
+        onResize() {
+            if (!this.exists()) {
+                return;
+            }
+            this._updateLayout();
+        },
         onShowOverlayTimeout() {
             this.update({
                 showOverlay: false,
@@ -147,6 +140,22 @@ registerModel({
             this.update({
                 showOverlay: true,
                 showOverlayTimer: { doReset: this.showOverlayTimer ? true : undefined },
+            });
+        },
+        _updateLayout() {
+            if (!this.component.root.el || !this.tileContainerRef.el) {
+                return;
+            }
+            const { width, height } = this.tileContainerRef.el.getBoundingClientRect();
+            const { tileWidth, tileHeight } = this.calculateTessellation({
+                aspectRatio: this.callView.aspectRatio,
+                containerHeight: height,
+                containerWidth: width,
+                tileCount: this.tileContainerRef.el.children.length,
+            });
+            this.update({
+                tileHeight,
+                tileWidth,
             });
         },
     },
