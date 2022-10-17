@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="exception_tracker.JSONFieldWidget" owl="1">
+        <div class="overflow-auto w-100" style="font-family: monospace;">
+            <t t-set="currentObject" t-value="value"/>
+            <t t-set="depth" t-value="0"/>
+            <t t-set="currentPath" t-value="''"/>
+            <t t-call="exception_tracker.JSONFieldWidgetDepth" />
+        </div>
+    </t>
+
+    <t t-name="exception_tracker.JSONFieldWidgetDepth" owl="1">
+        <span t-if="isDict(currentObject) and depth != 0">{ <span class="json_field_widget--close-toglable" t-on-click="() => this.removePath(currentPath)">close</span> </span>
+        <span t-if="isArray(currentObject) and depth != 0">[ <span class="json_field_widget--close-toglable " t-on-click="() => this.removePath(currentPath)">close</span> </span>
+        <t t-set="startCurrentObject" t-value="currentObject" />
+        <t t-set="startCurrentPath" t-value="currentPath" />
+        <t t-foreach="Object.entries(startCurrentObject)" t-as="entry" t-key="entry_index">
+           <div class="mb-1" t-attf-style="padding-left: {{1 * depth}}em;">
+              <t t-if="!isArray(startCurrentObject)">
+                 <span t-esc="formatKey(entry[0], value)"/>:
+              </t>
+              <t t-if="isTogglable(entry[1]) and isOpened(currentPath + '/' + entry[0])">
+                 <t t-set="currentObject" t-value="entry[1]" />
+                 <t t-set="depth" t-value="depth + 1" />
+                 <t t-set="currentPath" t-value="currentPath + '/' + entry[0]" />
+                 <t t-call="exception_tracker.JSONFieldWidgetDepth" />
+                 <t t-set="depth" t-value="depth - 1" />
+                 <t t-set="currentPath" t-value="startCurrentPath" />
+              </t>
+              <t t-elif="isInBlackList(currentPath + '/' + entry[0]) and !isOpened(currentPath + '/' + entry[0])">
+               <span t-on-click="() => this.addPath(currentPath + '/' + entry[0])" class="json_field_widget--value json_field_widget--togglable-value">
+                  ...
+               </span>
+               </t>
+              <t t-else="">
+               <t t-if="isInBlackList(currentPath + '/' + entry[0]) and isOpened(currentPath + '/' + entry[0])">
+                  <span class="json_field_widget--close-toglable " t-on-click="() => this.removePath(currentPath + '/' + entry[0])">close</span><div style="padding-left: 1em"><t t-esc="formatValue(entry[1])" /></div>
+               </t>
+                <span t-elif="!isToggableEmpty(entry[1])" t-on-click="() => this.addPath(currentPath + '/' + entry[0])" t-att-class="{ 'json_field_widget--togglable-value': isTogglable(entry[1]) }" class="json_field_widget--value">
+                    <t t-esc="formatValue(entry[1])" />
+                 </span>
+                 <span t-else="">
+                    <t t-esc="formatEmptyValue(entry[1])" />
+                 </span>
+              </t>
+           </div>
+        </t>
+        <div t-if="depth != 0">
+           <span t-if="isDict(startCurrentObject)">}</span>
+           <span t-if="isArray(startCurrentObject)">]</span>
+        </div>
+     </t>
+
+</templates>

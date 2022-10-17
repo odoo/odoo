@@ -1,0 +1,41 @@
+<odoo>
+  <data>
+    <record model="ir.ui.view" id="exception_tracker.list_view">
+      <field name="name">exception list</field>
+      <field name="model">exception_tracker.exception</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="message"/>
+        </tree>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="exception_tracker.form_view">
+      <field name="name">exception form</field>
+      <field name="model">exception_tracker.exception</field>
+      <field name="arch" type="xml">
+        <form>
+          <sheet>
+            <group>
+                <field name="name"/>
+                <field name="message"/>
+                <field name="traceback" widget="traceback" />
+                <field name="user_context" widget="json" />
+                <field name="action_context" widget="json" />
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="exception_tracker.action_window">
+      <field name="name">Exceptions</field>
+      <field name="res_model">exception_tracker.exception</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="exception_tracker.menu_root" name="Exceptions" action="exception_tracker.action_window" sequence="1" />
+
+  </data>
+</odoo>
