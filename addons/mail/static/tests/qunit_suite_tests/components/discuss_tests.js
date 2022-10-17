@@ -3361,7 +3361,7 @@ QUnit.test('receive new chat message: out of odoo focus (notification, channel)'
         },
     });
     await openDiscuss();
-    env.bus.on('set_title_part', null, payload => {
+    env.bus.addEventListener('set_title_part', ({ detail: payload }) => {
         assert.step('set_title_part');
         assert.strictEqual(payload.part, '_chat');
         assert.strictEqual(payload.title, "1 Message");
@@ -3393,7 +3393,7 @@ QUnit.test('receive new chat message: out of odoo focus (notification, chat)', a
         },
     });
     await openDiscuss();
-    env.bus.on('set_title_part', null, payload => {
+    env.bus.addEventListener('set_title_part', ({ detail: payload }) => {
         assert.step('set_title_part');
         assert.strictEqual(payload.part, '_chat');
         assert.strictEqual(payload.title, "1 Message");
@@ -3429,7 +3429,7 @@ QUnit.test('receive new chat messages: out of odoo focus (tab title)', async fun
         },
     });
     await openDiscuss();
-    env.bus.on('set_title_part', null, payload => {
+    env.bus.addEventListener('set_title_part', ({ detail: payload }) => {
         step++;
         assert.step('set_title_part');
         assert.strictEqual(payload.part, '_chat');
