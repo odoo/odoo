@@ -995,6 +995,7 @@ class WebsiteSale(http.Controller):
 
     def _get_shop_payment_values(self, order, **kwargs):
         logged_in = not request.env.user._is_public()
+        # tests
         acquirers_sudo = request.env['payment.acquirer'].sudo()._get_compatible_acquirers(
             order.company_id.id,
             order.partner_id.id,

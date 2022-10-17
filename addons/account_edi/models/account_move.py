@@ -673,6 +673,7 @@ class AccountMoveLine(models.Model):
         return res
 
     def reconcile(self):
+        #test
         # OVERRIDE
         # In some countries, the payments must be sent to the government under some condition. One of them could be
         # there is at least one reconciled invoice to the payment. Then, we need to update the state of the edi
