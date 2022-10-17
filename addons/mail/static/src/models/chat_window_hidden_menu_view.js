@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'ChatWindowHiddenMenuView',
@@ -49,6 +49,12 @@ registerModel({
         component: attr(),
         isOpen: attr({
             default: false,
+        }),
+        items: many('ChatWindowHiddenMenuItemView', {
+            compute() {
+                return this.owner.hiddenChatWindowHeaderViews.map(chatWindowHeaderView => ({ chatWindowHeaderView }));
+            },
+            inverse: 'owner',
         }),
         /**
          * Reference of the dropup list. Useful to auto-set max height based on

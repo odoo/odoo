@@ -12,6 +12,14 @@ export class ChatWindowHiddenMenuItem extends Component {
      get chatWindowHeaderView() {
         return this.props.chatWindowHeaderView;
     }
+
+    /**
+     * @returns {ChatWindowHiddenMenuItemView}
+     */
+    get chatWindowHiddenMenuItemView() {
+        return this.props.record;
+    }
+
 }
 
 Object.assign(ChatWindowHiddenMenuItem, {
@@ -24,6 +32,7 @@ Object.assign(ChatWindowHiddenMenuItem, {
             type: Boolean,
             optional: true,
         },
+        record: Object,
     },
     template: 'mail.ChatWindowHiddenMenuItem',
 });
