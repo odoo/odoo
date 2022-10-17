@@ -56,6 +56,14 @@
         <field name="view_id" ref="snailmail_letter_list" />
     </record>
 
+    <record id="action_reset_to_pending" model="ir.actions.server">
+      <field name="name">Reset to pending</field>
+      <field name="model_id" ref="snailmail.model_snailmail_letter"/>
+      <field name="binding_model_id" ref="snailmail.model_snailmail_letter"/>
+      <field name="state">code</field>
+      <field name="code">records.action_reset_to_pending()</field>
+    </record>
+
     <menuitem id="menu_snailmail_letters" parent="base.menu_email" action="action_mail_letters"
               sequence="50"/>
 </odoo>

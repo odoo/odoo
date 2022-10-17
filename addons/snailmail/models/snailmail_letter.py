@@ -114,6 +114,10 @@ class SnailmailLetter(models.Model):
 
         return letters
 
+    def action_reset_to_pending(self):
+        for rec in self:
+            rec.write({'state': 'pending'})
+
     def _fetch_attachment(self):
         """
         This method will check if we have any existent attachement matching the model
@@ -413,7 +417,7 @@ class SnailmailLetter(models.Model):
             ('state', '=', 'pending'),
             '&',
             ('state', '=', 'error'),
-            ('error_code', 'in', ['TRIAL_ERROR', 'CREDIT_ERROR', 'ATTACHMENT_ERROR', 'MISSING_REQUIRED_FIELDS'])
+            ('error_code', 'in', ['TRIAL_ERROR', 'ATTACHMENT_ERROR', 'MISSING_REQUIRED_FIELDS'])
         ])
         for letter in letters_send:
             letter._snailmail_print()
