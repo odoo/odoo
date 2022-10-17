@@ -3077,10 +3077,9 @@ class BaseModel(metaclass=MetaModel):
         :param str field_name: field name
         :param list langs: languages
 
-        :return: list of dicts like [{"lang": lang, "source": source_term, "value": value_term}]
-        In the UI, translation_dialog.js
-        for model: val_en will be shown as the translation
-        for model term: val_en will be shown as the src
+        :return: (translations, context) where
+            translations: list of dicts like [{"lang": lang, "source": source_term, "value": value_term}]
+            context: {"translation_type": "text"/"char", "translation_show_source": True/False}
         """
         self.ensure_one()
         field = self._fields[field_name]
@@ -3105,9 +3104,7 @@ class BaseModel(metaclass=MetaModel):
                 for lang, term_lang in translations.items()]
         context = {}
         context['translation_type'] = 'text' if field.type in ['text', 'html'] else 'char'
-        context['translation_show_source'] = False
-        if callable(field.translate):
-            context['translation_show_source'] = True
+        context['translation_show_source'] = callable(field.translate)
 
         return translations, context
 
