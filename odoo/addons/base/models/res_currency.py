@@ -9,6 +9,7 @@ from lxml import etree
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
 from odoo.tools import parse_date
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 
 _logger = logging.getLogger(__name__)
 
@@ -107,7 +108,7 @@ class Currency(models.Model):
                                   LIMIT 1), 1.0) AS rate
                    FROM res_currency c
                    WHERE c.id IN %s"""
-        self._cr.execute(query, (date, company.id, tuple(self.ids)))
+        self._cr.execute(query, (date.strftime(DF), company.id, tuple(self.ids)))
         currency_rates = dict(self._cr.fetchall())
         return currency_rates
 

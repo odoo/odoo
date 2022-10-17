@@ -2,6 +2,9 @@
 
 <templates>
     <t t-name="account.AccountAsynchronousDashboard" owl="1">
+        <div t-if="state.isLoading">
+            <i class="fa fa-spin fa-circle-o-notch"></i>
+        </div>
         <t t-if='Object.keys(dashboard).length != 0'>
             <t t-slot="default" t-props="dashboard"/>
         </t>

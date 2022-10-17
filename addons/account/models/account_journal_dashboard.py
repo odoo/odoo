@@ -17,6 +17,7 @@ class account_journal(models.Model):
     _inherit = "account.journal"
 
     def _kanban_dashboard(self):
+        # import time; time.sleep(10)
         for journal in self:
             journal.kanban_dashboard = json.dumps(journal.get_journal_dashboard_datas())
 
@@ -117,7 +118,7 @@ class account_journal(models.Model):
             return ['', _('Bank: Balance')]
 
     # Below method is used to get data of bank and cash statemens
-    @profile('/temp/dashboard_line_graph.profile')
+    # @profile('/temp/dashboard_line_graph.profile')
     def get_line_graph_datas(self):
         """Computes the data used to display the graph for bank and cash journals in the accounting dashboard"""
         currency = self.currency_id or self.company_id.currency_id
@@ -178,7 +179,7 @@ class account_journal(models.Model):
 
         return [{'values': data, 'title': graph_title, 'key': graph_key, 'area': True, 'color': color, 'is_sample_data': is_sample_data}]
 
-    @profile('/temp/dashboard_bar_graph.profile')
+    # @profile('/temp/dashboard_bar_graph.profile')
     def get_bar_graph_datas(self):
         data = []
         today = fields.Date.today()
@@ -259,7 +260,7 @@ class account_journal(models.Model):
             'journal_id': self.id
         })
 
-    @profile('/temp/dashboard_data.profile')
+    # @profile('/temp/dashboard_data.profile')
     def get_journal_dashboard_datas(self):
         currency = self.currency_id or self.company_id.currency_id
         number_to_reconcile = number_to_check = last_balance = 0
@@ -346,6 +347,7 @@ class account_journal(models.Model):
             'bank_statements_source': self.bank_statements_source,
             'title': title,
             'is_sample_data': is_sample_data,
+            'journal_type': self.type,
             'company_count': len(self.env.companies)
         }
 
@@ -361,7 +363,8 @@ class account_journal(models.Model):
                 move.currency_id AS currency,
                 move.move_type,
                 move.invoice_date,
-                move.company_id
+                move.company_id,
+                move.amount_total_in_currency_signed as in_currency
             FROM account_move move
             WHERE move.journal_id = %(journal_id)s
             AND move.state = 'posted'
@@ -381,7 +384,8 @@ class account_journal(models.Model):
                 move.currency_id AS currency,
                 move.move_type,
                 move.invoice_date,
-                move.company_id
+                move.company_id,
+                move.amount_total_in_currency_signed AS in_currency
             FROM account_move move
             WHERE move.journal_id = %(journal_id)s
             AND move.state = 'draft'
@@ -396,7 +400,8 @@ class account_journal(models.Model):
                 currency_id AS currency,
                 move_type,
                 invoice_date,
-                company_id
+                company_id,
+                move.amount_total_in_currency_signed AS in_currency
             FROM account_move move
             WHERE journal_id = %(journal_id)s
             AND invoice_date_due < %(today)s
@@ -410,27 +415,13 @@ class account_journal(models.Model):
         their amount_total field (expressed in the given target currency).
         amount_total must be signed !
         """
-        rslt_count = 0
-        rslt_sum = 0.0
         # Create a cache with currency rates to avoid unnecessary SQL requests. Do not copy
         # curr_cache on purpose, so the dictionary is modified and can be re-used for subsequent
         # calls of the method.
-        curr_cache = {} if curr_cache is None else curr_cache
-        for result in results_dict:
-            cur = self.env['res.currency'].browse(result.get('currency'))
-            company = self.env['res.company'].browse(result.get('company_id')) or self.env.company
-            rslt_count += 1
-            date = result.get('invoice_date') or fields.Date.context_today(self)
+        rslt_count, rslt_sum = len(results_dict), 0
 
-            amount = result.get('amount_total', 0) or 0
-            if cur != target_currency:
-                key = (cur, target_currency, company, date)
-                # Using setdefault will call _get_conversion_rate, so we explicitly check the
-                # existence of the key in the cache instead.
-                if key not in curr_cache:
-                    curr_cache[key] = self.env['res.currency']._get_conversion_rate(*key)
-                amount *= curr_cache[key]
-            rslt_sum += target_currency.round(amount)
+        for result in results_dict:
+            rslt_sum += result['in_currency']
         return (rslt_count, rslt_sum)
 
     def _get_move_action_context(self):

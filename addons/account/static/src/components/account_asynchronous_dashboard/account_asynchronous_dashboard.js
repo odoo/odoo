@@ -9,7 +9,8 @@ export class AccountAsynchronousDashboard extends Component {
         this.orm = useService('orm');
         onMounted(this.fetchData);
         this.state = useState({
-            info: {}
+            info: {},
+            isLoading : true,
         })
     }
 
@@ -17,7 +18,6 @@ export class AccountAsynchronousDashboard extends Component {
         const data = await this.orm.silent.read('account.journal', [this.props.journalId],['kanban_dashboard'], {});
         console.log(this.props);
         this.formatData(data.find((d) => d.id === this.props.journalId));
-        console.log('finish');
     }
 
     get dashboard() {
@@ -26,7 +26,7 @@ export class AccountAsynchronousDashboard extends Component {
 
     formatData(props) {
         this.state.info = JSON.parse(props.kanban_dashboard);
-        console.log(this.state.info);
+        this.state.isLoading = false;
     }
 
 }
