@@ -471,6 +471,7 @@ export class Record extends DataPoint {
         return {
             // ...
             ...this.dataContext,
+            ...this.context,
             active_id: this.resId || false,
             active_ids: this.resId ? [this.resId] : [],
             active_model: this.resModel,
