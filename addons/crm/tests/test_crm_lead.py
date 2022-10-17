@@ -683,10 +683,14 @@ class TestCRMLead(TestCrmCommon):
             lead_3,
             'Should behave like a text field'
         )
-        self.assertEqual(
+        self.assertFalse(
             self.env['crm.lead'].search([('phone_mobile_search', 'like', 'Hello')]),
+            'Should behave like a text field (case sensitive)'
+        )
+        self.assertEqual(
+            self.env['crm.lead'].search([('phone_mobile_search', 'ilike', 'Hello')]),
             lead_3,
-            'Should behave like a text field'
+            'Should behave like a text field (case insensitive)'
         )
         self.assertEqual(
             self.env['crm.lead'].search([('phone_mobile_search', 'like', 'hello123')]),
