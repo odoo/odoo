@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
-import { useUpdate } from '@mail/component_hooks/use_update';
+import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 import { useService } from "@web/core/utils/hooks";
@@ -17,7 +17,7 @@ export class ComposerSuggestedRecipient extends Component {
     setup() {
         super.setup();
         useRefToModel({ fieldName: 'checkboxRef', refName: 'checkbox' });
-        useUpdate({ func: () => this._update() });
+        useUpdateToModel({ methodName: 'onComponentUpdate' });
         this.dialogService = useService("dialog");
     }
 
@@ -30,19 +30,6 @@ export class ComposerSuggestedRecipient extends Component {
      */
     get composerSuggestedRecipientView() {
         return this.props.record;
-    }
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _update() {
-        if (this.composerSuggestedRecipientView.checkboxRef.el && this.composerSuggestedRecipientView.suggestedRecipientInfo) {
-            this.composerSuggestedRecipientView.checkboxRef.el.checked = this.composerSuggestedRecipientView.suggestedRecipientInfo.isSelected;
-        }
     }
 
     //--------------------------------------------------------------------------

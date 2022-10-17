@@ -5,6 +5,13 @@ import { attr, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'ComposerSuggestedRecipientView',
+    recordMethods: {
+        onComponentUpdate() {
+            if (this.checkboxRef.el && this.suggestedRecipientInfo) {
+                this.checkboxRef.el.checked = this.suggestedRecipientInfo.isSelected;
+            }
+        },
+    },
     fields: {
         /**
          * Reference of the checkbox. Useful to know whether it was checked or
