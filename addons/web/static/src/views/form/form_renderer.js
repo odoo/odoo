@@ -39,8 +39,8 @@ export class FormRenderer extends Component {
         onMounted(() => browser.addEventListener("resize", this.onResize));
         onWillUnmount(() => browser.removeEventListener("resize", this.onResize));
 
-        const { autofocusFieldId, disableAutofocus } = archInfo;
-        if (!disableAutofocus) {
+        const { autofocusFieldId } = archInfo;
+        if (this.shouldAutoFocus) {
             const rootRef = useRef("compiled_view_root");
             useEffect(
                 (isVirtual, rootEl) => {
@@ -60,6 +60,10 @@ export class FormRenderer extends Component {
                 () => [this.props.record.isVirtual, rootRef.el]
             );
         }
+    }
+
+    get shouldAutoFocus() {
+        return !this.props.archInfo.disableAutofocus;
     }
 
     evalDomainFromRecord(record, expr) {

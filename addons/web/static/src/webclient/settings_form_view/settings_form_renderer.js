@@ -24,6 +24,10 @@ export class SettingsFormRenderer extends FormRenderer {
         this.searchState = useState(this.env.searchState);
     }
 
+    get shouldAutoFocus() {
+        return false;
+    }
+
     get compileParams() {
         return {
             ...super.compileParams,
