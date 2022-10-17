@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.tools import mute_logger
 from odoo.tools.translate import html_translate
 
@@ -33,6 +33,12 @@ class Job(models.Model):
             <span class="text-muted small">Days to get an Offer</span>
             <h6>4 Days after Interview</h6>
         """)
+    published_date = fields.Date(compute='_compute_published_date', store=True)
+
+    @api.depends('website_published')
+    def _compute_published_date(self):
+        for job in self:
+            job.published_date = job.website_published and fields.Date.today()
 
     def _compute_website_url(self):
         super(Job, self)._compute_website_url()
