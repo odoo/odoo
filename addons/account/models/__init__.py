@@ -37,5 +37,7 @@ from . import ir_actions_report
 from . import ir_module
 from . import res_currency
 from . import account_report
+from . import onboarding_onboarding
+from . import onboarding_onboarding_step
 from . import template_generic_coa
 from . import uom_uom

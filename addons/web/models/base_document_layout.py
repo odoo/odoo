@@ -246,14 +246,6 @@ class BaseDocumentLayout(models.TransientModel):
 
         return tools.rgb_to_hex(primary), tools.rgb_to_hex(secondary)
 
-    @api.model
-    def action_open_base_document_layout(self, action_ref=None):
-        if not action_ref:
-            action_ref = 'web.action_base_document_layout_configurator'
-        res = self.env["ir.actions.actions"]._for_xml_id(action_ref)
-        self.env[res["res_model"]].check_access_rights('write')
-        return res
-
     def document_layout_save(self):
         # meant to be overridden
         return self.env.context.get('report_action') or {'type': 'ir.actions.act_window_close'}

@@ -60,7 +60,7 @@ class FinancialYearOpeningWizard(models.TransientModel):
         return super().write(vals)
 
     def action_save_onboarding_fiscal_year(self):
-        self.env.company.sudo().set_onboarding_step_done('account_setup_fy_data_state')
+        return self.env['onboarding.onboarding.step'].action_validate_step('account.onboarding_onboarding_step_fiscal_year')
 
 
 class SetupBarBankConfigWizard(models.TransientModel):
@@ -146,7 +146,7 @@ class SetupBarBankConfigWizard(models.TransientModel):
                 selected_journal.name = record.new_journal_name
 
     def validate(self):
-        """ Called by the validation button of this wizard. Serves as an
+        """Called by the validation button of this wizard. Serves as an
         extension hook in account_bank_statement_import.
         """
-        self.linked_journal_id.mark_bank_setup_as_done_action()
+        return self.env["onboarding.onboarding.step"].action_validate_step("account.onboarding_onboarding_step_bank_account")

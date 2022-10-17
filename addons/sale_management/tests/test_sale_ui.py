@@ -11,8 +11,8 @@ class TestUi(HttpCase):
         self.start_tour("/web", 'sale_tour', login="admin", step_delay=100)
 
     def test_02_sale_tour_company_onboarding_done(self):
-        self.env.company.set_onboarding_step_done('base_onboarding_company_state')
-        self.start_tour("/web", 'sale_tour', login="admin", step_delay=100)
+        self.env["onboarding.onboarding.step"].action_validate_step("account.onboarding_onboarding_step_company_data")
+        self.start_tour("/web", "sale_tour", login="admin", step_delay=100)
 
     def test_03_sale_quote_tour(self):
         self.env['res.partner'].create({'name': 'Agrolait', 'email': 'agro@lait.be'})
