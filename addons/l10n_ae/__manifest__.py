@@ -4,6 +4,7 @@
     'name': 'U.A.E. - Accounting',
     'author': 'Tech Receptives',
     'category': 'Accounting/Localizations/Account Charts',
+    'summary': 'UAE - Accounting',
     'description': """
 United Arab Emirates accounting chart and localization.
 =======================================================
