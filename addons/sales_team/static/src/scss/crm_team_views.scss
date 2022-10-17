@@ -17,7 +17,9 @@ $o-kanban-medium-record-width: 350px;
     }
     .o_kanban_record {
         width: $o-kanban-medium-record-width;
-        min-height: 100px;
+        &:not(.o_kanban_ghost){
+            min-height: 100px;
+        }
     }
     .ribbon {
         &::before, &::after {
