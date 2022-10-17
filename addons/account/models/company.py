@@ -83,12 +83,12 @@ class ResCompany(models.Model):
     income_currency_exchange_account_id = fields.Many2one(
         comodel_name='account.account',
         string="Gain Exchange Rate Account",
-        domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash', 'liability_credit_card')), ('deprecated', '=', False), ('company_id', '=', id), \
+        domain="[('deprecated', '=', False), ('company_id', '=', id), \
                 ('account_type', 'in', ('income', 'income_other'))]")
     expense_currency_exchange_account_id = fields.Many2one(
         comodel_name='account.account',
         string="Loss Exchange Rate Account",
-        domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash', 'liability_credit_card')), ('deprecated', '=', False), ('company_id', '=', id), \
+        domain="[('deprecated', '=', False), ('company_id', '=', id), \
                 ('account_type', '=', 'expense')]")
     anglo_saxon_accounting = fields.Boolean(string="Use anglo-saxon accounting")
     property_stock_account_input_categ_id = fields.Many2one('account.account', string="Input Account for Stock Valuation")
