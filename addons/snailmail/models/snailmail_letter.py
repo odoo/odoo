@@ -360,6 +360,8 @@ class SnailmailLetter(models.Model):
         ])
         for letter in letters_send:
             letter._snailmail_print()
+            if letter.error_code == 'CREDIT_ERROR':
+                break  # avoid spam
             # Commit after every letter sent to avoid to send it again in case of a rollback
             if autocommit:
                 self.env.cr.commit()
