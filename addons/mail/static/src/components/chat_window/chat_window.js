@@ -15,10 +15,6 @@ export class ChatWindow extends Component {
         useUpdateToModel({ methodName: 'onComponentUpdate' });
     }
 
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
     /**
      * @returns {ChatWindow}
      */
