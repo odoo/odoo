@@ -60,7 +60,7 @@ export class ComposerSuggestedRecipient extends Component {
                         force_email: true,
                         ref: 'compound_context',
                     },
-                    onRecordSaved: () => this._onDialogSaved(),
+                    onRecordSaved: () => this.composerSuggestedRecipientView.onDialogSaved(),
                     resModel: "res.partner",
                     title: this.composerSuggestedRecipientView.suggestedRecipientInfo.dialogText,
                 });
@@ -68,22 +68,6 @@ export class ComposerSuggestedRecipient extends Component {
         }
     }
 
-    /**
-     * @private
-     */
-    _onDialogSaved() {
-        if (!this.composerSuggestedRecipientView.exists()) {
-            return;
-        }
-        const thread = (
-            this.composerSuggestedRecipientView.suggestedRecipientInfo &&
-            this.composerSuggestedRecipientView.suggestedRecipientInfo.thread
-        );
-        if (!thread) {
-            return;
-        }
-        thread.fetchData(['suggestedRecipients']);
-    }
 }
 
 Object.assign(ComposerSuggestedRecipient, {

@@ -11,6 +11,19 @@ registerModel({
                 this.checkboxRef.el.checked = this.suggestedRecipientInfo.isSelected;
             }
         },
+        onDialogSaved() {
+            if (!this.exists()) {
+                return;
+            }
+            const thread = (
+                this.suggestedRecipientInfo &&
+                this.suggestedRecipientInfo.thread
+            );
+            if (!thread) {
+                return;
+            }
+            thread.fetchData(['suggestedRecipients']);
+        },
     },
     fields: {
         /**
