@@ -22,8 +22,12 @@ project.
         """,
     'data': [
         'data/transifex_data.xml',
-        'data/ir_translation_view.xml',
     ],
-    'depends': ['base'],
+    'assets': {
+        'web.assets_backend': [
+            'transifex/static/src/views/fields/translation_dialog.xml',
+        ],
+    },
+    'depends': ['base', 'web'],
     'license': 'LGPL-3',
 }
