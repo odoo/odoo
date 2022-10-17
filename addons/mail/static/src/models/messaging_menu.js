@@ -144,7 +144,7 @@ registerModel({
                 }
                 return clear();
             },
-            inverse: 'ownerAsAllTab',
+            inverse: 'ownerAsAll',
         }),
         channelTab: one('MessagingMenuTabView', {
             compute() {
@@ -153,7 +153,7 @@ registerModel({
                 }
                 return clear();
             },
-            inverse: 'ownerAsChannelTab',
+            inverse: 'ownerAsChannel',
         }),
         chatTab: one('MessagingMenuTabView', {
             compute() {
@@ -162,7 +162,7 @@ registerModel({
                 }
                 return clear();
             },
-            inverse: 'ownerAsChatTab',
+            inverse: 'ownerAsChat',
         }),
         component: attr(),
         /**

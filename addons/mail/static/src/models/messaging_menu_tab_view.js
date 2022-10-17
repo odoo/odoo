@@ -11,58 +11,58 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClick(ev) {
-            this.messaging.messagingMenu.update({ activeTabId: this.tabId });
+            this.messaging.messagingMenu.update({ activeTabId: this.id });
         },
     },
     fields: {
-        isActiveTab: attr({
-            compute() {
-                return this.messaging.messagingMenu.activeTab === this;
-            },
-        }),
-        ownerAsAllTab: one('MessagingMenu', {
-            identifying: true,
-            inverse: 'allTab',
-        }),
-        ownerAsChannelTab: one('MessagingMenu', {
-            identifying: true,
-            inverse: 'channelTab',
-        }),
-        ownerAsChatTab: one('MessagingMenu', {
-            identifying: true,
-            inverse: 'chatTab',
-        }),
         /**
          * Note: when possible, better use the relations with MessagingMenu
          * rather than these hardcoded IDs.
          */
-        tabId: attr({
+        id: attr({
             compute() {
-                if (this.ownerAsAllTab) {
+                if (this.ownerAsAll) {
                     return 'all';
                 }
-                if (this.ownerAsChannelTab) {
+                if (this.ownerAsChannel) {
                     return 'channel';
                 }
-                if (this.ownerAsChatTab) {
+                if (this.ownerAsChat) {
                     return 'chat';
                 }
             },
             required: true,
         }),
-        tabName: attr({
+        isActive: attr({
             compute() {
-                if (this.ownerAsAllTab) {
+                return this.messaging.messagingMenu.activeTab === this;
+            },
+        }),
+        name: attr({
+            compute() {
+                if (this.ownerAsAll) {
                     return this.env._t("All");
                 }
-                if (this.ownerAsChannelTab) {
+                if (this.ownerAsChannel) {
                     return this.env._t("Channels");
                 }
-                if (this.ownerAsChatTab) {
+                if (this.ownerAsChat) {
                     return this.env._t("Chats");
                 }
             },
             required: true,
+        }),
+        ownerAsAll: one('MessagingMenu', {
+            identifying: true,
+            inverse: 'allTab',
+        }),
+        ownerAsChannel: one('MessagingMenu', {
+            identifying: true,
+            inverse: 'channelTab',
+        }),
+        ownerAsChat: one('MessagingMenu', {
+            identifying: true,
+            inverse: 'chatTab',
         }),
     },
 });
