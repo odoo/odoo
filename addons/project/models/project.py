@@ -10,7 +10,7 @@ from random import randint
 from odoo import api, Command, fields, models, tools, SUPERUSER_ID, _, _lt
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools import format_amount
-from odoo.osv.expression import OR
+from odoo.osv.expression import OR, TRUE_LEAF, FALSE_LEAF
 
 from .project_task_recurrence import DAYS, WEEKS
 from .project_update import STATUS_COLOR
@@ -1639,13 +1639,13 @@ class Task(models.Model):
             # only take field name when having ':' e.g 'date_deadline:week' => 'date_deadline'
             fields_list += [f.split(':')[0] for f in fields_groupby]
         if domain:
-            fields_list += [term[0].split('.')[0] for term in domain if isinstance(term, (tuple, list))]
+            fields_list += [term[0].split('.')[0] for term in domain if isinstance(term, (tuple, list)) and term not in [TRUE_LEAF, FALSE_LEAF]]
         self._ensure_fields_are_accessible(fields_list)
         return super(Task, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
-        fields_list = {term[0] for term in args if isinstance(term, (tuple, list))}
+        fields_list = {term[0] for term in args if isinstance(term, (tuple, list)) and term not in [TRUE_LEAF, FALSE_LEAF]}
         self._ensure_fields_are_accessible(fields_list)
         return super(Task, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
 
@@ -1657,7 +1657,7 @@ class Task(models.Model):
         return super(Task, self).mapped(func)
 
     def filtered_domain(self, domain):
-        fields_list = [term[0] for term in domain if isinstance(term, (tuple, list))]
+        fields_list = [term[0] for term in domain if isinstance(term, (tuple, list)) and term not in [TRUE_LEAF, FALSE_LEAF]]
         self._ensure_fields_are_accessible(fields_list)
         return super(Task, self).filtered_domain(domain)
 
