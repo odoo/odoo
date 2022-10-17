@@ -1,12 +1,13 @@
 /** @odoo-module **/
 
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { useUpdate } from '@mail/component_hooks/use_update';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 import { useService } from "@web/core/utils/hooks";
 import { FormViewDialog } from '@web/views/view_dialogs/form_view_dialog';
 
-const { Component, useRef } = owl;
+const { Component } = owl;
 
 export class ComposerSuggestedRecipient extends Component {
 
@@ -15,13 +16,8 @@ export class ComposerSuggestedRecipient extends Component {
      */
     setup() {
         super.setup();
+        useRefToModel({ fieldName: 'checkboxRef', refName: 'checkbox' });
         useUpdate({ func: () => this._update() });
-        /**
-         * Reference of the checkbox. Useful to know whether it was checked or
-         * not, to properly update the corresponding state in the record or to
-         * prompt the user with the partner creation dialog.
-         */
-        this._checkboxRef = useRef('checkbox');
         this.dialogService = useService("dialog");
     }
 
@@ -44,8 +40,8 @@ export class ComposerSuggestedRecipient extends Component {
      * @private
      */
     _update() {
-        if (this._checkboxRef.el && this.composerSuggestedRecipientView.suggestedRecipientInfo) {
-            this._checkboxRef.el.checked = this.composerSuggestedRecipientView.suggestedRecipientInfo.isSelected;
+        if (this.composerSuggestedRecipientView.checkboxRef.el && this.composerSuggestedRecipientView.suggestedRecipientInfo) {
+            this.composerSuggestedRecipientView.checkboxRef.el.checked = this.composerSuggestedRecipientView.suggestedRecipientInfo.isSelected;
         }
     }
 
@@ -60,7 +56,7 @@ export class ComposerSuggestedRecipient extends Component {
         if (!this.composerSuggestedRecipientView.exists()) {
             return;
         }
-        const isChecked = this._checkboxRef.el.checked;
+        const isChecked = this.composerSuggestedRecipientView.checkboxRef.el.checked;
         this.composerSuggestedRecipientView.suggestedRecipientInfo.update({ isSelected: isChecked });
         if (!this.composerSuggestedRecipientView.suggestedRecipientInfo.partner) {
             // Recipients must always be partners. On selecting a suggested
