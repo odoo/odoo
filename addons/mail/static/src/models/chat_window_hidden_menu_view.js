@@ -27,6 +27,10 @@ registerModel({
             this.component.root.el.style[offsetFrom] = `${offset}px`;
             this.component.root.el.style[oppositeFrom] = 'auto';
         },
+        onComponentUpdate() {
+            this.applyListHeight();
+            this.applyOffset();
+        },
         /**
          * Closes the menu when clicking outside.
          * Must be done as capture to avoid stop propagation.
