@@ -52,8 +52,9 @@ class PhoneMixin(models.AbstractModel):
             raise UserError(_('Please enter at least 3 characters when searching a Phone/Mobile number.'))
 
         pattern = r'[\s\\./\(\)\-]'
-        if value.startswith('+') or value.startswith('00'):
-            # searching on +32485112233 should also finds 0032485112233 (and vice versa)
+        if value.startswith('+') or value.startswith('00') or value.startswith('0'):
+            # searching on +32485112233 should also finds 0032485112233(and vice versa)
+            # search on 0312345678 should also finds %312345678
             # we therefore remove it from input value and search for both of them in db
             query = f"""
                 SELECT model.id
@@ -61,17 +62,25 @@ class PhoneMixin(models.AbstractModel):
                 WHERE
                     model.phone IS NOT NULL AND (
                         REGEXP_REPLACE(model.phone, %s, '', 'g') ILIKE %s OR
+                        REGEXP_REPLACE(model.phone, %s, '', 'g') ILIKE %s OR
+                        REGEXP_REPLACE(model.phone, %s, '', 'g') ILIKE %s OR
                         REGEXP_REPLACE(model.phone, %s, '', 'g') ILIKE %s
                     ) OR
                     model.mobile IS NOT NULL AND (
                         REGEXP_REPLACE(model.mobile, %s, '', 'g') ILIKE %s OR
+                        REGEXP_REPLACE(model.mobile, %s, '', 'g') ILIKE %s OR
+                        REGEXP_REPLACE(model.mobile, %s, '', 'g') ILIKE %s OR
                         REGEXP_REPLACE(model.mobile, %s, '', 'g') ILIKE %s
                     );
             """
-            term = re.sub(pattern, '', value[1 if value.startswith('+') else 2:]) + '%'
+            term = re.sub(pattern, '', value[2 if value.startswith('00') else 1:]) + '%'
             self._cr.execute(query, (
+                pattern, '%' + term,
+                pattern, '0' + term,
                 pattern, '00' + term,
                 pattern, '+' + term,
+                pattern, '%' + term,
+                pattern, '0' + term,
                 pattern, '00' + term,
                 pattern, '+' + term
             ))
