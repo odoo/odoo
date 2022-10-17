@@ -12,10 +12,16 @@ registerModel({
     recordMethods: {
         onClickEditActivityButton() {
             const popoverViewOwner = this.activityListViewOwner.popoverViewOwner;
+            const reloadFunc = this.reloadFunc;
             const webRecord = this.webRecord;
             const thread = this.activity.thread;
             this.activity.edit().then(() => {
-                webRecord.model.load({ resId: thread.id });
+                if (reloadFunc) {
+                    reloadFunc();
+                }
+                if (webRecord) {
+                    webRecord.model.load({ resId: thread.id });
+                }
             });
             popoverViewOwner.delete();
         },
@@ -117,11 +123,15 @@ registerModel({
         markDoneView: one('ActivityMarkDonePopoverContentView', {
             inverse: 'activityListViewItemOwner',
         }),
+        reloadFunc: attr({
+            compute() {
+                return this.activityListViewOwner.reloadFunc ? this.activityListViewOwner.reloadFunc : clear();
+            },
+        }),
         webRecord: attr({
             compute() {
-                return this.activityListViewOwner.webRecord;
+                return this.activityListViewOwner.webRecord ? this.activityListViewOwner.webRecord : clear();
             },
-            required: true,
         }),
     },
 });

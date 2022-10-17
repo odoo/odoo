@@ -50,9 +50,13 @@ registerModel({
             identifying: true,
             inverse: 'activityListPopoverView',
         }),
+        activityCellViewOwnerAsActivityList: one('ActivityCellView', {
+            identifying: true,
+            inverse: 'activityListPopoverView',
+        }),
         activityListView: one('ActivityListView', {
             compute() {
-                return this.activityButtonViewOwnerAsActivityList ? {} : clear();
+                return this.activityButtonViewOwnerAsActivityList || this.activityCellViewOwnerAsActivityList ? {} : clear();
             },
             inverse: 'popoverViewOwner',
         }),
@@ -91,6 +95,9 @@ registerModel({
                 }
                 if (this.activityButtonViewOwnerAsActivityList) {
                     return this.activityButtonViewOwnerAsActivityList.buttonRef;
+                }
+                if (this.activityCellViewOwnerAsActivityList) {
+                    return this.activityCellViewOwnerAsActivityList.contentRef;
                 }
                 if (this.messageActionViewOwnerAsReaction) {
                     return this.messageActionViewOwnerAsReaction.actionRef;
@@ -171,7 +178,7 @@ registerModel({
                 if (this.emojiPickerView) {
                     return this.emojiPickerView;
                 }
-                if (this.activityButtonViewOwnerAsActivityList) {
+                if (this.activityButtonViewOwnerAsActivityList || this.activityCellViewOwnerAsActivityList) {
                     return this.activityListView;
                 }
                 if (this.messageNotificationPopoverContentView) {
@@ -217,7 +224,7 @@ registerModel({
                 if (this.emojiPickerView) {
                     return 'EmojiPickerView';
                 }
-                if (this.activityButtonViewOwnerAsActivityList) {
+                if (this.activityButtonViewOwnerAsActivityList || this.activityCellViewOwnerAsActivityList) {
                     return 'ActivityListView';
                 }
                 if (this.messageNotificationPopoverContentView) {
@@ -294,6 +301,9 @@ registerModel({
                     return 'top';
                 }
                 if (this.activityButtonViewOwnerAsActivityList) {
+                    return 'bottom-start';
+                }
+                if (this.activityCellViewOwnerAsActivityList) {
                     return 'bottom-start';
                 }
                 if (this.messageActionViewOwnerAsReaction) {
