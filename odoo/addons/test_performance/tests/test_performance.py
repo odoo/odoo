@@ -71,6 +71,19 @@ class TestPerformance(SavepointCaseWithUserDemo):
 
     @users('__system__', 'demo')
     @warmup
+    def test_read_base_one2many(self):
+        records = self.env['test_performance.base'].search([])
+        self.assertEqual(len(records), 5)
+
+        # add one line on each record
+        records.write({'line_ids': [Command.create({})]})
+        self.env.invalidate_all()
+
+        with self.assertQueryCount(2):
+            records.line_ids
+
+    @users('__system__', 'demo')
+    @warmup
     def test_reversed_read_base(self):
         records = self.env['test_performance.base'].search([])
         self.assertEqual(len(records), 5)
@@ -101,6 +114,31 @@ class TestPerformance(SavepointCaseWithUserDemo):
         with self.assertQueryCount(1):
             for record in records:
                 self.assertEqual(record.with_context(key=3).value_ctx, 3)
+
+    @warmup
+    def test_search_read(self):
+        """ Search and fetch all at once. """
+        Model = self.env['test_performance.base']
+        records = Model.search([])
+        self.assertEqual(len(records), 5)
+
+        # one query for search, one query for read, one query for display_name
+        expected = records.read(['partner_id', 'value_pc'])
+        with self.assertQueryCount(3):
+            self.env.invalidate_all()
+            self.assertEqual(
+                Model.search_read([], ['partner_id', 'value_pc']),
+                expected,
+            )
+
+        # one query for search, one query for read
+        expected = records.read(['partner_id', 'value_pc'], load=False)
+        with self.assertQueryCount(2):
+            self.env.invalidate_all()
+            self.assertEqual(
+                Model.search_read([], ['partner_id', 'value_pc'], load=False),
+                expected,
+            )
 
     @users('__system__', 'demo')
     @warmup
@@ -257,13 +295,13 @@ class TestPerformance(SavepointCaseWithUserDemo):
         """ Write on many2many field. """
         rec1 = self.env['test_performance.base'].create({'name': 'X'})
 
-        # create N tags on rec1: O(N) queries
-        with self.assertQueryCount(4):
+        # create N tags on rec1: O(1) queries
+        with self.assertQueryCount(3):
             self.env.invalidate_all()
             rec1.write({'tag_ids': [Command.create({'name': 0})]})
         self.assertEqual(len(rec1.tag_ids), 1)
 
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(3):
             self.env.invalidate_all()
             rec1.write({'tag_ids': [Command.create({'name': val}) for val in range(1, 12)]})
         self.assertEqual(len(rec1.tag_ids), 12)
@@ -311,12 +349,12 @@ class TestPerformance(SavepointCaseWithUserDemo):
         rec2 = self.env['test_performance.base'].create({'name': 'X'})
 
         # link N tags from rec1 to rec2: O(1) queries
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(2):
             self.env.invalidate_all()
             rec2.write({'tag_ids': [Command.link(tag.id) for tag in tags[0]]})
         self.assertEqual(rec2.tag_ids, tags[0])
 
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(2):
             self.env.invalidate_all()
             rec2.write({'tag_ids': [Command.link(tag.id) for tag in tags[1:]]})
         self.assertEqual(rec2.tag_ids, tags)
@@ -339,7 +377,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
         self.assertFalse(rec2.tag_ids)
 
         # set N tags in rec2: O(1) queries
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(2):
             self.env.invalidate_all()
             rec2.write({'tag_ids': [Command.set(tags.ids)]})
         self.assertEqual(rec2.tag_ids, tags)
@@ -349,12 +387,12 @@ class TestPerformance(SavepointCaseWithUserDemo):
             rec2.write({'tag_ids': [Command.set(tags[:8].ids)]})
         self.assertEqual(rec2.tag_ids, tags[:8])
 
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(3):
             self.env.invalidate_all()
             rec2.write({'tag_ids': [Command.set(tags[4:].ids)]})
         self.assertEqual(rec2.tag_ids, tags[4:])
 
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(2):
             self.env.invalidate_all()
             rec2.write({'tag_ids': [Command.set(tags.ids)]})
         self.assertEqual(rec2.tag_ids, tags)
@@ -388,8 +426,8 @@ class TestPerformance(SavepointCaseWithUserDemo):
         with self.assertQueryCount(2):
             self.env['test_performance.base'].create({'name': 'X'})
 
-        # create N tags: add O(N) queries
-        with self.assertQueryCount(4):
+        # create N tags: add O(1) queries
+        with self.assertQueryCount(3):
             self.env['test_performance.base'].create({
                 'name': 'X',
                 'tag_ids': [Command.create({'name': val}) for val in range(10)],
@@ -398,7 +436,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
         # link N tags: add O(1) queries
         tags = self.env['test_performance.tag'].create([{'name': val} for val in range(10)])
 
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(2):
             self.env['test_performance.base'].create({
                 'name': 'X',
                 'tag_ids': [Command.link(tag.id) for tag in tags],
@@ -410,7 +448,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
                 'tag_ids': [Command.set([])],
             })
 
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(2):
             self.env['test_performance.base'].create({
                 'name': 'X',
                 'tag_ids': [Command.set(tags.ids)],

@@ -3477,7 +3477,7 @@ class TestSelectionUpdates(common.TransactionCase):
             self.env[self.MODEL_BASE].create({})
         with self.assertQueryCount(1):
             record = self.env[self.MODEL_BASE].create({'my_selection': 'foo'})
-        with self.assertQueryCount(1):  # SELECT, SELECT (related field), UPDATE
+        with self.assertQueryCount(1):
             record.my_selection = 'bar'
 
     def test_selection_related_readonly(self):
