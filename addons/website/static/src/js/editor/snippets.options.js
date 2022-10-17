@@ -2645,29 +2645,6 @@ options.registry.CookiesBar = options.registry.SnippetPopup.extend({
 
         $content.empty().append($template);
     },
-    /**
-     * @override
-     */
-    onTargetShow: async function () {
-        // @see this.onTargetHide
-        this.$target.parent('#website_cookies_bar').show();
-        this._super(...arguments);
-
-    },
-    /**
-     * @override
-     */
-    onTargetHide: async function () {
-        // We hide the parent because contenteditable="true" would force the bar to stay visible in hidden mode.
-        this.$target.parent('#website_cookies_bar').hide();
-        this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    cleanForSave: function () {
-        this.$target.parent('#website_cookies_bar').show();
-    },
 });
 
 /**
