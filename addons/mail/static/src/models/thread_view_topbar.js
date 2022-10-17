@@ -15,6 +15,9 @@ registerModel({
         },
     },
     recordMethods: {
+        onClickAvatarUpload() {
+            this.avatarFileUploader.openBrowserFileUploader();
+        },
         /**
          * @param {MouseEvent} ev
          */
@@ -297,6 +300,12 @@ registerModel({
                     break;
             }
         },
+        onMouseEnterAvatar(ev) {
+            if (!this.exists()) {
+                return;
+            }
+            this.update({ isAvatarHovered: true });
+        },
         /**
          * Handles mouseenter on the "thread name" of this top bar.
          *
@@ -329,6 +338,12 @@ registerModel({
                 return;
             }
             this.update({ isMouseOverUserName: true });
+        },
+        onMouseLeaveAvatar(ev) {
+            if (!this.exists()) {
+                return;
+            }
+            this.update({ isAvatarHovered: false });
         },
         /**
          * Handles mouseleave on the "thread name" of this top bar.
@@ -466,6 +481,12 @@ registerModel({
         },
     },
     fields: {
+        avatarFileUploader: one('FileUploader', {
+            default: {},
+            inverse: 'threadViewTopbarOwner',
+            isCausal: true,
+            readonly: true,
+        }),
         /**
          * States the URL of the profile picture of the current user.
          */
@@ -612,6 +633,9 @@ registerModel({
          */
         invitePopoverView: one('PopoverView', {
             inverse: 'threadViewTopbarOwnerAsInvite',
+        }),
+        isAvatarHovered: attr({
+            default: false,
         }),
         /**
          * States whether this thread description is highlighted.

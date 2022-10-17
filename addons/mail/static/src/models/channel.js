@@ -52,6 +52,28 @@ registerModel({
             }
             this.update(channelData);
         },
+        async onFileUploaded(attachments) {
+            if (!attachments || attachments.length !== 1 || !attachments[0].isImage) {
+                this.messaging.notify({
+                    message: this.env._t('You can only choose one image file as the avatar.'),
+                    sticky: true,
+                    type: 'danger',
+                });
+                return;
+            }
+            this.messaging.rpc({
+                route: '/mail/channel/update_avatar',
+                params: {
+                    channel_id: this.id,
+                    attachment_id: attachments[0].id,
+                },
+            }).then(() => {
+                this.messaging.notify({
+                    message: this.env._t('The avatar has been updated!'),
+                    type: 'success',
+                });
+            });
+        },
     },
     fields: {
         activeRtcSession: one('RtcSession'),
@@ -64,6 +86,20 @@ registerModel({
          * Cache key to force a reload of the avatar when avatar is changed.
          */
         avatarCacheKey: attr(),
+        avatarUrl: attr({
+            compute() {
+                switch (this.channel_type) {
+                    case 'channel':
+                    case 'group':
+                        return `/web/image/mail.channel/${this.id}/avatar_128?unique=${this.avatarCacheKey}`;
+                    case 'chat':
+                        if (this.correspondent) {
+                            return this.correspondent.avatarUrl;
+                        }
+                }
+                return '/mail/static/src/img/smiley/avatar.jpg';
+            },
+        }),
         callParticipants: many('ChannelMember', {
             compute() {
                 if (!this.thread) {

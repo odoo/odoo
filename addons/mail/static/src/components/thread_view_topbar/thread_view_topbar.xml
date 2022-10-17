@@ -5,7 +5,24 @@
         <t t-if="threadViewTopbar">
             <div class="o_ThreadViewTopbar d-flex flex-shrink-0 w-100 px-3 bg-100" t-attf-class="{{ className }}" t-ref="root">
                 <t t-if="threadViewTopbar.threadIconView">
-                    <ThreadIcon className="'o_ThreadViewTopbar_threadIcon me-2 align-self-center'" record="threadViewTopbar.threadIconView"/>
+                    <t t-if="threadViewTopbar.thread.channel">
+                        <span class="o_ThreadViewTopbar_channelAvatarContainer position-relative align-self-center align-items-center me-2" t-on-mouseenter="threadViewTopbar.onMouseEnterAvatar" t-on-mouseleave="threadViewTopbar.onMouseLeaveAvatar">
+                            <img class="o_ThreadViewTopbar_channelAvatar rounded-circle w-100 h-100" t-att-src="threadViewTopbar.thread.channel.avatarUrl" alt="Channel Avatar"/>
+                            <span class="o_ThreadViewTopbar_channelAvatarStatusIcon position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center">
+                                <t t-if="threadViewTopbar.thread.channel.channel_type === 'group' and threadViewTopbar.isAvatarHovered">
+                                    <i class="o_ThreadViewTopbar_channelAvatarUploadBackground fa fa-circle fa-stack-1x text-white"/>
+                                    <i class="o_ThreadViewTopbar_channelAvatarUploadIcon fa fa-camera text-black fa-stack-1x" title="Upload Avatar" t-on-click="threadViewTopbar.onClickAvatarUpload"/>
+                                </t>
+                                <t t-if="threadViewTopbar.thread.channel.channel_type !== 'group' and threadViewTopbar.thread.channel.channel_type !== 'channel'">
+                                    <i class="o_ThreadViewTopbar_threadIconBackground fa fa-circle fa-stack-1x text-white"/>
+                                    <ThreadIcon className="'o_ThreadViewTopbar_threadIcon me-2 align-self-center fa-stack-1x'" record="threadViewTopbar.threadIconView"/>
+                                </t>
+                            </span>
+                        </span>
+                    </t>
+                    <t t-if="!threadViewTopbar.thread.channel">
+                        <ThreadIcon className="'o_ThreadViewTopbar_threadIcon me-2 align-self-center'" record="threadViewTopbar.threadIconView"/>
+                    </t>
                 </t>
                 <div class="o_ThreadViewTopbar_title d-flex flex-grow-1 align-self-center align-items-center">
                     <t t-if="threadViewTopbar.thread">

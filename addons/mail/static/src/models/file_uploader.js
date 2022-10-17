@@ -106,6 +106,7 @@ registerModel({
                 this.activityView && this.activityView.activity ||
                 this.activityListViewItemOwner && this.activityListViewItemOwner.activity
             ); // save before async
+            const topbarChannel = this.threadViewTopbarOwner && this.threadViewTopbarOwner.thread.channel; // save before async
             const uploadingAttachments = new Map();
             for (const file of files) {
                 uploadingAttachments.set(file, this.messaging.models['Attachment'].insert({
@@ -157,6 +158,9 @@ registerModel({
             }
             if (activity && activity.exists()) {
                 activity.markAsDone({ attachments });
+            }
+            if (topbarChannel && topbarChannel.exists()) {
+                topbarChannel.onFileUploaded(attachments);
             }
         },
     },
@@ -212,9 +216,16 @@ registerModel({
                 if (this.composerView) {
                     return this.composerView.composer.activeThread;
                 }
+                if (this.threadViewTopbarOwner) {
+                    return this.threadViewTopbarOwner.thread;
+                }
                 return clear();
             },
             required: true,
-        })
+        }),
+        threadViewTopbarOwner: one('ThreadViewTopbar', {
+            identifying: true,
+            inverse: 'avatarFileUploader',
+        }),
     },
 });

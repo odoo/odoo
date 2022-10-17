@@ -316,6 +316,16 @@ class DiscussController(http.Controller):
                 raise NotFound()
         attachment_sudo._delete_and_notify()
 
+    @http.route('/mail/channel/update_avatar', methods=['POST'], type='json', auth='public')
+    def mail_channel_avatar_update(self, channel_id, attachment_id):
+        channel = request.env['mail.channel'].browse(int(channel_id)).exists()
+        attachment = request.env['ir.attachment'].browse(int(attachment_id)).exists()
+        if not channel or not attachment:
+            raise NotFound()
+        channel.write({
+            'image_128': attachment.datas,
+        })
+
     @http.route('/mail/message/add_reaction', methods=['POST'], type='json', auth='public')
     def mail_message_add_reaction(self, message_id, content):
         guest_sudo = request.env['mail.guest']._get_guest_from_request(request).sudo()

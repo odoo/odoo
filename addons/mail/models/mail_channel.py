@@ -57,6 +57,7 @@ class Channel(models.Model):
     description = fields.Text('Description')
     image_128 = fields.Image("Image", max_width=128, max_height=128)
     avatar_128 = fields.Image("Avatar", max_width=128, max_height=128, compute='_compute_avatar_128')
+    is_avatar_editable = fields.Boolean('Is Avatar Editable', compute='_compute_is_avatar_editable')
     channel_partner_ids = fields.Many2many(
         'res.partner', string='Partners',
         compute='_compute_channel_partner_ids', inverse='_inverse_channel_partner_ids',
@@ -111,6 +112,14 @@ class Channel(models.Model):
     def _compute_avatar_128(self):
         for record in self:
             record.avatar_128 = record.image_128 or record._generate_avatar()
+
+    @api.depends('channel_type', 'is_member')
+    def _compute_is_avatar_editable(self):
+        for channel in self:
+            if channel.channel_type == 'channel':
+                channel.is_avatar_editable = self.env.is_admin()
+            else:
+                channel.is_avatar_editable = channel.is_member if channel.channel_type == 'group' else False
 
     def _generate_avatar(self):
         if self.channel_type not in ('channel', 'group'):
