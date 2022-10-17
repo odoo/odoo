@@ -73,4 +73,5 @@ Print product labels with barcode.
         ],
     },
     'license': 'LGPL-3',
+    'post_init_hook': '_post_init_hook',
 }
