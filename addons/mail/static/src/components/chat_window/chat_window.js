@@ -13,13 +13,6 @@ export class ChatWindow extends Component {
     setup() {
         super.setup();
         useUpdate({ func: () => this._update() });
-        /**
-         * Reference of the autocomplete input (new_message chat window only).
-         * Useful when focusing this chat window, which consists of focusing
-         * this input.
-         */
-        this._inputRef = { el: null };
-        // the following are passed as props to children
     }
 
     //--------------------------------------------------------------------------
