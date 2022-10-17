@@ -2347,7 +2347,8 @@ class AccountMoveLine(models.Model):
                         'account': line.account_id.id,
                         'business_domain': line.move_id.move_type in ['out_invoice', 'out_refund', 'out_receipt'] and 'invoice'
                                            or line.move_id.move_type in ['in_invoice', 'in_refund', 'in_receipt'] and 'bill'
-                                           or 'general'
+                                           or 'general',
+                        'company_id': self.company_id.id,
                         }) if plan['applicability'] == 'mandatory']
             if not mandatory_plans_ids:
                 continue
