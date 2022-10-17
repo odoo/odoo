@@ -1386,7 +1386,7 @@ class AccountMoveLine(models.Model):
     def create(self, vals_list):
         moves = self.env['account.move'].browse({vals['move_id'] for vals in vals_list})
         container = {'records': self}
-        move_container = {'records': moves, 'self': self}
+        move_container = {'records': moves}
         with moves._check_balanced(move_container),\
              moves._sync_dynamic_lines(move_container),\
              self._sync_invoice(container):
@@ -1435,7 +1435,7 @@ class AccountMoveLine(models.Model):
             if any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in protected_fields['reconciliation']):
                 line._check_reconciliation()
 
-        move_container = {'records': self.move_id, 'self': self, 'line_to_write': line_to_write}
+        move_container = {'records': self.move_id}
         with self.move_id._check_balanced(move_container),\
              self.move_id._sync_dynamic_lines(move_container),\
              self._sync_invoice({'records': self}):
@@ -1521,7 +1521,7 @@ class AccountMoveLine(models.Model):
         # Check the tax lock date.
         self._check_tax_lock_date()
 
-        move_container = {'records': self.move_id, 'self': self}
+        move_container = {'records': self.move_id}
         with self.move_id._check_balanced(move_container),\
              self.move_id._sync_dynamic_lines(move_container):
             res = super().unlink()
