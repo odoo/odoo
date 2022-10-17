@@ -15,7 +15,6 @@ export class ComposerSuggestedRecipient extends Component {
      */
     setup() {
         super.setup();
-        this.id = _.uniqueId('o_ComposerSuggestedRecipient_');
         useUpdate({ func: () => this._update() });
         /**
          * Reference of the checkbox. Useful to know whether it was checked or
