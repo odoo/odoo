@@ -2,6 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
+import { clear } from '@mail/model/model_field_command';
 
 import session from 'web.session';
 
@@ -29,13 +30,22 @@ registerModel({
     },
     recordMethods: {
         onClickAddActivityButton() {
+            const reloadFunc = this.reloadFunc;
             const thread = this.thread;
             const webRecord = this.webRecord;
             this.messaging.openActivityForm({
+                defaultActivityTypeId: this.popoverViewOwner.activityCellViewOwnerAsActivityList
+                    ? this.popoverViewOwner.activityCellViewOwnerAsActivityList.activityType.id
+                    : undefined,
                 thread,
             }).then(() => {
                 thread.fetchData(['activities']);
-                webRecord.model.load({ resId: thread.id });
+                if (reloadFunc) {
+                    reloadFunc();
+                }
+                if (webRecord) {
+                    webRecord.model.load({ resId: thread.id });
+                }
             });
             this.popoverViewOwner.delete();
         },
@@ -43,6 +53,9 @@ registerModel({
     fields: {
         activities: many('Activity', {
             compute() {
+                if (this.popoverViewOwner.activityCellViewOwnerAsActivityList) {
+                    return this.popoverViewOwner.activityCellViewOwnerAsActivityList.filteredActivities;
+                }
                 return this.thread && this.thread.activities;
             },
             sort: [
@@ -70,9 +83,20 @@ registerModel({
             identifying: true,
             inverse: 'activityListView',
         }),
+        reloadFunc: attr({
+            compute() {
+                return this.popoverViewOwner.activityCellViewOwnerAsActivityList ? this.popoverViewOwner.activityCellViewOwnerAsActivityList.reloadFunc : clear();
+            },
+        }),
         thread: one('Thread', {
             compute() {
-                return this.popoverViewOwner.activityButtonViewOwnerAsActivityList.thread;
+                if (this.popoverViewOwner.activityButtonViewOwnerAsActivityList) {
+                    return this.popoverViewOwner.activityButtonViewOwnerAsActivityList.thread;
+                }
+                if (this.popoverViewOwner.activityCellViewOwnerAsActivityList) {
+                    return this.popoverViewOwner.activityCellViewOwnerAsActivityList.thread;
+                }
+                return clear();
             },
             required: true,
         }),
@@ -81,9 +105,11 @@ registerModel({
         }),
         webRecord: attr({
             compute() {
-                return this.popoverViewOwner.activityButtonViewOwnerAsActivityList.webRecord;
+                if (this.popoverViewOwner.activityButtonViewOwnerAsActivityList) {
+                    return this.popoverViewOwner.activityButtonViewOwnerAsActivityList.webRecord;
+                }
+                return clear();
             },
-            required: true,
         }),
     },
 });

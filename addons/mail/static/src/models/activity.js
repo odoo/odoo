@@ -179,7 +179,6 @@ registerModel({
         /**
          * @param {Object} param0
          * @param {string} param0.feedback
-         * @returns {Object}
          */
         async markAsDoneAndScheduleNext({ feedback }) {
             const thread = this.thread;
@@ -198,17 +197,18 @@ registerModel({
             if (!action) {
                 return;
             }
-            this.env.services.action.doAction(
-                action,
-                {
-                    onClose: () => {
-                        if (!thread.exists()) {
-                            return;
-                        }
-                        thread.fetchData(['activities']);
+            await new Promise(resolve => {
+                this.env.services.action.doAction(
+                    action,
+                    {
+                        onClose: resolve,
                     },
-                },
-            );
+                );
+            });
+            if (!thread.exists()) {
+                return;
+            }
+            thread.fetchData(['activities']);
         },
     },
     fields: {

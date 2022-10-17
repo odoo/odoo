@@ -59,7 +59,7 @@ export class KanbanFieldActivityViewContainer extends Component {
         const kanbanFieldActivityView = messaging.models['KanbanFieldActivityView'].insert({
             id: this.kanbanFieldActivityViewId,
             thread: {
-                activities: this.props.value.records.map(activityData => {
+                activities: props.value.records.map(activityData => {
                     return {
                         id: activityData.resId,
                     };

@@ -135,7 +135,7 @@ QUnit.test('activity view: simple activity rendering', async function (assert) {
 
     var today = activityDateFormat(new Date());
 
-    assert.ok($activity.find('table tbody tr:first td:nth-child(2).today .o_closest_deadline:contains(' + today + ')').length,
+    assert.ok($activity.find('table tbody tr:first td:nth-child(2).today .o_ActivityCellView_closestDeadline:contains(' + today + ')').length,
         'should contain an activity for today in second cell of first line ' + today);
     var td = 'table tbody tr:nth-child(1) td.o_activity_empty_cell';
     assert.containsN($activity, td, 2, 'should contain an empty cell as no activity scheduled yet.');
@@ -263,26 +263,27 @@ QUnit.test('activity view: activity widget', async function (assert) {
         },
     });
 
-    await testUtils.dom.click(document.querySelector('.today .o_closest_deadline'));
-    assert.hasClass(document.querySelector('.today .dropdown-menu.o_activity'), 'show', "dropdown should be displayed");
-    assert.ok(document.querySelector('.o_activity_color_today').textContent.includes('Today'), "Title should be today");
-    assert.ok([...document.querySelectorAll('.today .o_activity_title_entry')].filter(el => el.textContent.includes('Template1')).length,
+    await testUtils.dom.click(document.querySelector('.today .o_ActivityCellView_closestDeadline'));
+    assert.containsOnce(document.body, '.o_ActivityListView', "dropdown should be displayed");
+    assert.ok(document.querySelector('.o_ActivityListView_todayTitle').textContent.includes('Today'), "Title should be today");
+    assert.ok([...document.querySelectorAll('.o_MailTemplate_name')].filter(el => el.textContent.includes('Template1')).length,
         "Template1 should be available");
-    assert.ok([...document.querySelectorAll('.today .o_activity_title_entry')].filter(el => el.textContent.includes('Template2')).length,
+    assert.ok([...document.querySelectorAll('.o_MailTemplate_name')].filter(el => el.textContent.includes('Template2')).length,
         "Template2 should be available");
 
-    await testUtils.dom.click(document.querySelector('.o_activity_title_entry[data-activity-id="2"] .o_activity_template_preview'));
-    await testUtils.dom.click(document.querySelector('.o_activity_title_entry[data-activity-id="2"] .o_activity_template_send'));
-    await testUtils.dom.click(document.querySelector('.overdue .o_closest_deadline'));
-    assert.notOk(document.querySelector('.overdue .o_activity_template_preview'),
+    await testUtils.dom.click(document.querySelector('.o_MailTemplate_preview'));
+    await testUtils.dom.click(document.querySelector('.today .o_ActivityCellView_closestDeadline'));
+    await testUtils.dom.click(document.querySelector('.o_MailTemplate_send'));
+    await testUtils.dom.click(document.querySelector('.overdue .o_ActivityCellView_closestDeadline'));
+    assert.containsNone(document.body, '.o_MailTemplate_name',
         "No template should be available");
 
-    await testUtils.dom.click(document.querySelector('.overdue .o_schedule_activity'));
-    await testUtils.dom.click(document.querySelector('.overdue .o_closest_deadline'));
-    await testUtils.dom.click(document.querySelector('.overdue .o_mark_as_done'));
-    document.querySelector('.overdue #activity_feedback').value = "feedback2";
+    await testUtils.dom.click(document.querySelector('.o_ActivityListView_addActivityButton'));
+    await testUtils.dom.click(document.querySelector('.overdue .o_ActivityCellView_closestDeadline'));
+    await testUtils.dom.click(document.querySelector('.o_ActivityListViewItem_markAsDone'));
+    document.querySelector('.o_ActivityMarkDonePopoverContent_feedback').value = "feedback2";
 
-    await testUtils.dom.click(document.querySelector('.overdue .o_activity_popover_done_next'));
+    await testUtils.dom.click(document.querySelector('.o_ActivityMarkDonePopoverContent_doneScheduleNextButton'));
     assert.verifySteps([
         "do_action_compose",
         "activity_send_mail",

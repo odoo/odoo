@@ -34,6 +34,7 @@ registerModel({
          */
         async onClickDone() {
             const chatter = this.activityViewOwner && this.activityViewOwner.activityBoxView.chatter;
+            const reloadFunc = this.reloadFunc;
             const webRecord = this.webRecord;
             const thread = this.activity.thread;
             await this.activity.markAsDone({
@@ -41,6 +42,9 @@ registerModel({
             });
             if (chatter && chatter.exists() && chatter.component) {
                 chatter.reloadParentView();
+            }
+            if (reloadFunc) {
+                reloadFunc();
             }
             if (webRecord) {
                 webRecord.model.load({ resId: thread.id });
@@ -51,20 +55,24 @@ registerModel({
          */
         async onClickDoneAndScheduleNext() {
             const chatter = this.activityViewOwner && this.activityViewOwner.activityBoxView.chatter;
+            const reloadFunc = this.reloadFunc;
             const webRecord = this.webRecord;
             const thread = this.activity.thread;
             const activityListViewOwner = this.activityListViewItemOwner && this.activityListViewItemOwner.activityListViewOwner;
-            await this.activity.markAsDoneAndScheduleNext({
-                feedback: this.feedbackTextareaRef.el.value,
-            });
+            const activity = this.activity;
+            const feedback = this.feedbackTextareaRef.el.value;
+            if (activityListViewOwner && activityListViewOwner.exists()) {
+                activityListViewOwner.popoverViewOwner.delete();
+            }
+            await activity.markAsDoneAndScheduleNext({ feedback });
             if (chatter && chatter.exists() && chatter.component) {
                 chatter.reloadParentView();
             }
+            if (reloadFunc) {
+                reloadFunc();
+            }
             if (webRecord) {
                 webRecord.model.load({ resId: thread.id });
-            }
-            if (activityListViewOwner && activityListViewOwner.exists()) {
-                activityListViewOwner.popoverViewOwner.delete();
             }
         },
         /**
@@ -140,6 +148,14 @@ registerModel({
         popoverViewOwner: one('PopoverView', {
             identifying: true,
             inverse: 'activityMarkDonePopoverContentView',
+        }),
+        reloadFunc: attr({
+            compute() {
+                if (this.activityListViewItemOwner) {
+                    return this.activityListViewItemOwner.reloadFunc;
+                }
+                return clear();
+            },
         }),
         webRecord: attr({
             compute() {

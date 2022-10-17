@@ -4,11 +4,10 @@
         thead > tr > th:first-of-type {
             min-width: 300px;
         }
-        tbody > tr > td, tfoot > tr > td {
-            cursor: pointer;
-        }
     }
     .o_activity_summary_cell {
+        padding: 0; // to cancel unwanted padding of <td> coming from bootstrap
+
         &.planned {
             background-color: map-get($theme-colors, 'success');
         }
@@ -17,19 +16,6 @@
         }
         &.today {
             background-color: map-get($theme-colors, 'warning');
-        }
-        .o_kanban_inline_block {
-            min-height: 42px;
-        }
-        .dropdown-toggle {
-            cursor: pointer;
-            .o_closest_deadline {
-                height: 42px;
-                width: 100%;
-                color: #FFF;
-                text-align: center;
-                line-height: 42px;
-            }
         }
         &.o_activity_empty_cell {
             > i {
@@ -42,19 +28,6 @@
                     color: gray;
                     display: block;
                 }
-            }
-        }
-        .o_activity_btn > .badge {
-            @include o-position-absolute($bottom: 0, $right: 0);
-
-            &.planned {
-                @extend .text-success;
-            }
-            &.overdue {
-                @extend .text-danger;
-            }
-            &.today {
-                @extend .text-warning;
             }
         }
     }
@@ -169,4 +142,8 @@
             }
         }
     }
+}
+
+.o_activity_view_table {
+    height: 1px; // this value is ignored on the table but it is necessary to ensure h-100 works on descendants to vertically center content inside cells
 }

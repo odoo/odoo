@@ -94,6 +94,7 @@ registerModel({
          * @returns {Promise}
          */
         async _performUpload({ files }) {
+            const reloadFunc = this.activityListViewItemOwner && this.activityListViewItemOwner.reloadFunc;
             const webRecord = this.activityListViewItemOwner && this.activityListViewItemOwner.webRecord;
             const composer = this.composerView && this.composerView.composer; // save before async
             const thread = this.thread; // save before async
@@ -149,14 +150,17 @@ registerModel({
                     }
                 }
             }
+            if (activity && activity.exists()) {
+                await activity.markAsDone({ attachments });
+            }
+            if (reloadFunc) {
+                reloadFunc();
+            }
             if (webRecord) {
                 webRecord.model.load({ resId: thread.id });
             }
             if (chatter && chatter.exists() && chatter.shouldReloadParentFromFileChanged) {
                 chatter.reloadParentView();
-            }
-            if (activity && activity.exists()) {
-                activity.markAsDone({ attachments });
             }
         },
     },

@@ -14,6 +14,7 @@ var _t = core._t;
 var ActivityController = BasicController.extend({
     custom_events: _.extend({}, BasicController.prototype.custom_events, {
         empty_cell_clicked: '_onEmptyCell',
+        reload_data: '_onReloadData',
         send_mail_template: '_onSendMailTemplate',
         schedule_activity: '_onScheduleActivity',
     }),
@@ -53,6 +54,12 @@ var ActivityController = BasicController.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     */
+    _onReloadData() {
+        this.trigger_up('reload');
+    },
     /**
      * @private
      */
