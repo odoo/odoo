@@ -6,6 +6,81 @@ const dom = require('web.dom');
 const publicWidget = require('web.public.widget');
 const utils = require('web.utils');
 
+// TODO In master, export this class too or merge it with PopupWidget
+const SharedPopupWidget = publicWidget.Widget.extend({
+    selector: '.s_popup',
+    disabledInEditableMode: false,
+    events: {
+        // A popup element is composed of a `.s_popup` parent containing the
+        // actual `.modal` BS modal. Our internal logic and events are hiding
+        // and showing this inner `.modal` modal element without considering its
+        // `.s_popup` parent. It means that when the `.modal` is hidden, its
+        // `.s_popup` parent is not touched and kept visible.
+        // It might look like it's not an issue as it would just be an empty
+        // element (its only child is hidden) but it leads to some issues as for
+        // instance on chrome this div will have a forced `height` due to its
+        // `contenteditable=true` attribute in edit mode. It will result in a
+        // ugly white bar.
+        // tl;dr: this is keeping those 2 elements visibility synchronized.
+        'show.bs.modal': '_onModalShow',
+        'hidden.bs.modal': '_onModalHidden',
+    },
+
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+
+        if (!this._isNormalCase()) {
+            return;
+        }
+
+        // Popup are always closed when entering/leaving edit mode (see
+        // PopupWidget), this allows to make sure the class is sync on the
+        // .s_popup parent after that moment too.
+        this.el.classList.add('d-none');
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * This whole widget was added as a stable fix, this function allows to
+     * be a bit more stable friendly. TODO remove in master.
+     */
+    _isNormalCase() {
+        return this.el.children.length === 1
+            && this.el.firstElementChild.classList.contains('modal');
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onModalShow() {
+        if (!this._isNormalCase()) {
+            return;
+        }
+        this.el.classList.remove('d-none');
+    },
+    /**
+     * @private
+     */
+    _onModalHidden() {
+        if (!this._isNormalCase()) {
+            return;
+        }
+        this.el.classList.add('d-none');
+    },
+});
+
+publicWidget.registry.SharedPopup = SharedPopupWidget;
+
 const PopupWidget = publicWidget.Widget.extend({
     selector: '.s_popup',
     events: {
