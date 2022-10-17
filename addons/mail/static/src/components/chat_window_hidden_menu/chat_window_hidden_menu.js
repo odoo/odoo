@@ -3,7 +3,7 @@
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-const { Component, onMounted, onPatched, onWillUnmount, useRef } = owl;
+const { Component, onMounted, onPatched, useRef } = owl;
 
 export class ChatWindowHiddenMenu extends Component {
 
@@ -13,7 +13,6 @@ export class ChatWindowHiddenMenu extends Component {
     setup() {
         super.setup();
         useComponentToModel({ fieldName: 'component' });
-        this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
         /**
          * Reference of the dropup list. Useful to auto-set max height based on
          * browser screen height.
@@ -21,7 +20,6 @@ export class ChatWindowHiddenMenu extends Component {
         this._listRef = useRef('list');
         onMounted(() => this._mounted());
         onPatched(() => this._patched());
-        onWillUnmount(() => this._willUnmount());
     }
 
     _mounted() {
@@ -29,7 +27,6 @@ export class ChatWindowHiddenMenu extends Component {
             return;
         }
         this._apply();
-        document.addEventListener('click', this._onClickCaptureGlobal, true);
     }
 
     _patched() {
@@ -37,10 +34,6 @@ export class ChatWindowHiddenMenu extends Component {
             return;
         }
         this._apply();
-    }
-
-    _willUnmount() {
-        document.removeEventListener('click', this._onClickCaptureGlobal, true);
     }
 
     /**
@@ -84,24 +77,6 @@ export class ChatWindowHiddenMenu extends Component {
         const offset = this.messaging.chatWindowManager.visual.hiddenMenuOffset;
         this.root.el.style[offsetFrom] = `${offset}px`;
         this.root.el.style[oppositeFrom] = 'auto';
-    }
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * Closes the menu when clicking outside.
-     * Must be done as capture to avoid stop propagation.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickCaptureGlobal(ev) {
-        if (!this.root.el || this.root.el.contains(ev.target)) {
-            return;
-        }
-        this.messaging.chatWindowManager.closeHiddenMenu();
     }
 
 }
