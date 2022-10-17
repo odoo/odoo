@@ -206,6 +206,12 @@ registerModel({
                 return clear();
             },
         }),
+        hiddenMenuView: one('ChatWindowHiddenMenuView', {
+            compute() {
+                return this.visual.isHiddenMenuVisible ? {} : clear();
+            },
+            inverse: 'owner',
+        }),
         hiddenMenuWidth: attr({
             default: 170, // max width, including width of dropup list items
         }),

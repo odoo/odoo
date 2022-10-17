@@ -41,6 +41,13 @@ export class ChatWindowHiddenMenu extends Component {
         document.removeEventListener('click', this._onClickCaptureGlobal, true);
     }
 
+    /**
+     * @returns {ChatWindowHiddenMenuView}
+     */
+    get chatWindowHiddenMenuView() {
+        return this.props.record;
+    }
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -98,7 +105,7 @@ export class ChatWindowHiddenMenu extends Component {
 }
 
 Object.assign(ChatWindowHiddenMenu, {
-    props: {},
+    props: { record: Object },
     template: 'mail.ChatWindowHiddenMenu',
 });
 
