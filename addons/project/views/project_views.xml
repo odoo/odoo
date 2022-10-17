@@ -1197,7 +1197,7 @@
                         <page name="sub_tasks_page" string="Sub-tasks" attrs="{'invisible': [('allow_subtasks', '=', False)]}">
                             <field name="child_ids"
                                    context="{'search_view_ref' : 'project.view_task_search_form_extended', 'default_project_id': project_id if not parent_id or not display_project_id else display_project_id, 'default_user_ids': user_ids, 'default_parent_id': id,
-                                    'default_partner_id': partner_id, 'default_milestone_id': allow_milestones and milestone_id, 'search_default_display_project_id': project_id }"
+                                    'default_partner_id': partner_id, 'default_milestone_id': allow_milestones and milestone_id, 'search_default_display_project_id': project_id, 'search_default_open_tasks': 1 }"
                                    widget="many2many"
                                    domain="['!', ('id', 'parent_of', id)]">
                                 <tree editable="bottom" decoration-muted="is_closed == True">
@@ -1327,7 +1327,7 @@
                             <group>
                                 <group>
                                     <field name="is_analytic_account_id_changed" invisible="1"/>
-                                    <field name="parent_id" attrs="{'invisible': [('allow_subtasks', '=', False)]}" groups="base.group_no_one"/>
+                                    <field name="parent_id" attrs="{'invisible': [('allow_subtasks', '=', False)]}" groups="base.group_no_one" context="{'search_view_ref' : 'project.view_task_search_form_extended','search_default_display_project_id': project_id}"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" context="{'default_partner_id': partner_id}"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                     <field name="sequence" groups="base.group_no_one"/>
@@ -1662,6 +1662,18 @@
             </field>
         </record>
 
+        <record id="open_view_my_tasks_list_view" model="ir.ui.view">
+            <field name="name">open.view.my.tasks.list.view</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="view_task_tree2"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <field name="stage_id" position="replace">
+                    <field name="stage_display" optional="show"/>
+                </field>
+            </field>
+        </record>
+
         <record id="open_view_task_list_kanban" model="ir.actions.act_window.view">
             <field name="sequence" eval="0"/>
             <field name="view_mode">kanban</field>
@@ -1682,6 +1694,7 @@
         <record id="open_view_all_task_list_tree" model="ir.actions.act_window.view">
             <field name="sequence" eval="20"/>
             <field name="view_mode">tree</field>
+            <field name="view_id" ref="open_view_my_tasks_list_view"/>
             <field name="act_window_id" ref="action_view_all_task"/>
         </record>
         <record id="open_view_all_task_list_calendar" model="ir.actions.act_window.view">
