@@ -11,8 +11,10 @@ $o-onboarding-step-width: map-get($container-max-widths, 'lg') / 4 !default;
     }
 
     .o_onboarding_completed_message {
+        opacity: 0;
         box-shadow: 0 -7px 20px -5px rgba(#000, 0.3);
-        animation: o_onboarding_slideInUp $o-onboarding-base-time ease-out;
+        animation: o_onboarding_slideInUpDownOut;
+        animation-duration: 6s;
     }
 
     // = Step Design
@@ -112,6 +114,11 @@ $o-onboarding-step-width: map-get($container-max-widths, 'lg') / 4 !default;
             transform: translate3d(0, 20%, 0);
             opacity: 0;
         }
+    }
+
+    @keyframes o_onboarding_slideInUpDownOut {
+        25%, 85% { transform: translate3d(0, -80%, 0); opacity: 1; }
+        0%, 100% { transform: translate3d(0, 0, 0); }
     }
 
     @keyframes o_onboarding_zoomIn {

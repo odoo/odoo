@@ -620,7 +620,7 @@ class account_journal(models.Model):
         """ This function is called by the "Import" button of Vendor Bills,
         visible on dashboard if no bill has been created yet.
         """
-        self.env.company.sudo().set_onboarding_step_done('account_setup_bill_state')
+        self.env['onboarding.onboarding.step'].action_validate_step('account.onboarding_onboarding_step_setup_bill')
 
         new_wizard = self.env['account.tour.upload.bill'].create({})
         view_id = self.env.ref('account.account_tour_upload_bill').id
@@ -777,14 +777,3 @@ class account_journal(models.Model):
     def create_internal_transfer(self):
         """return action to create a internal transfer"""
         return self.open_payments_action('transfer', mode='form')
-
-    #####################
-    # Setup Steps Stuff #
-    #####################
-    def mark_bank_setup_as_done_action(self):
-        """ Marks the 'bank setup' step as done in the setup bar and in the company."""
-        self.company_id.sudo().set_onboarding_step_done('account_setup_bank_data_state')
-
-    def unmark_bank_setup_as_done_action(self):
-        """ Marks the 'bank setup' step as not done in the setup bar and in the company."""
-        self.company_id.account_setup_bank_data_state = 'not_done'

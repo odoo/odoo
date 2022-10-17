@@ -5,8 +5,9 @@
     'version': '2.0',
     'category': 'Hidden',
     'summary': "The payment engine used by payment provider modules.",
-    'depends': ['portal'],
+    'depends': ['onboarding', 'portal'],
     'data': [
+        'data/onboarding_data.xml',
         'data/payment_method_data.xml',
         'data/payment_provider_data.xml',
         'data/payment_cron.xml',

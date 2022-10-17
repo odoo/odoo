@@ -6,10 +6,6 @@ from odoo import api, fields, models
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
-    payment_provider_onboarding_state = fields.Selection(
-        string="State of the onboarding payment provider step",
-        selection=[('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")],
-        default='not_done')
     payment_onboarding_payment_method = fields.Selection(
         string="Selected onboarding payment method",
         selection=[
@@ -56,15 +52,3 @@ class ResCompany(models.Model):
         modules_sudo = self.env['ir.module.module'].sudo().search([('name', 'in', module_names)])
         STATES = ['installed', 'to install', 'to upgrade']
         modules_sudo.filtered(lambda m: m.state not in STATES).button_immediate_install()
-
-    def _mark_payment_onboarding_step_as_done(self):
-        """ Mark the payment onboarding step as done.
-
-        :return: None
-        """
-        self.set_onboarding_step_done('payment_provider_onboarding_state')
-
-    def get_account_invoice_onboarding_steps_states_names(self):
-        """ Override of account. """
-        steps = super().get_account_invoice_onboarding_steps_states_names()
-        return steps + ['payment_provider_onboarding_state']
