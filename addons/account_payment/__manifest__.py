@@ -9,6 +9,7 @@
     'auto_install': ['account'],
     'data': [
         'data/ir_config_parameter.xml',
+        'data/onboarding_data.xml',
 
         'security/ir.model.access.csv',
         'security/ir_rules.xml',
@@ -19,7 +20,6 @@
         'views/account_move_views.xml',
         'views/account_journal_views.xml',
         'views/account_payment_views.xml',
-        'views/onboarding_templates.xml',
         'views/payment_provider_views.xml',
         'views/payment_transaction_views.xml',
 
