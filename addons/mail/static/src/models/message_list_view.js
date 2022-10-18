@@ -33,6 +33,16 @@ registerModel({
             }
             this.thread.cache.loadMoreMessages();
         },
+        /**
+         * @param {integer} value
+         */
+        setScrollTop(value) {
+            if (this.getScrollableElement().scrollTop === value) {
+                return;
+            }
+            this.update({ isLastScrollProgrammatic: true });
+            this.getScrollableElement().scrollTop = value;
+        }
     },
     fields: {
         clientHeight: attr(),
