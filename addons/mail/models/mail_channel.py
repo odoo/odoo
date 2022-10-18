@@ -968,13 +968,33 @@ class Channel(models.Model):
         if not last_message:
             return
         self._set_last_seen_message(last_message)
-        data = {
-            'channel_id': self.id,
-            'last_message_id': last_message.id,
-            'partner_id': self.env.user.partner_id.id,
-        }
         target = self if self.channel_type == 'chat' else self.env.user.partner_id
-        self.env['bus.bus']._sendone(target, 'mail.channel.member/seen', data)
+
+        notifications = []
+        payload = {
+            'ThreadPartnerSeenInfo': {
+                'lastSeenMessage': [('insert-and-replace', {'id': last_message.id})],
+                'partner': [('insert-and-replace', self.env.user.partner_id.mail_partner_format().get(self.env.user.partner_id))],
+                'thread': [('insert-and-replace', {'id': self.id, 'model': 'mail.channel'})],
+            },
+            'MessageSeenIndicator': {
+                'message': [('insert-and-replace', {'id': last_message.id})],
+                'thread': [('insert-and-replace', {'id': self.id, 'model': 'mail.channel'})],
+            }
+        }
+        notifications.append((target, 'mail.record/insert', payload))
+        notifications.append((
+            self.env.user.partner_id,
+            'mail.record/insert',
+            {
+                'Thread': {
+                    'id': self.id,
+                    'model': 'mail.channel',
+                    'pendingSeenMessageId': [('clear',)],
+                    'rawLastSeenByCurrentPartnerMessageId': last_message.id,
+                }
+            }))
+        self.env['bus.bus']._sendmany(notifications)
         return last_message.id
 
     def _set_last_seen_message(self, last_message):

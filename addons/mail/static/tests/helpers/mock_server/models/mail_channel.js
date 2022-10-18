@@ -474,10 +474,28 @@ patch(MockServer.prototype, 'mail/models/mail_channel', {
             return;
         }
         this._mockMailChannel_SetLastSeenMessage([channel.id], last_message_id);
-        this.pyEnv['bus.bus']._sendone(channel.channel_type === 'chat' ? channel : this.pyEnv.currentPartner, 'mail.channel.member/seen', {
-            'channel_id': channel.id,
-            'last_message_id': last_message_id,
-            'partner_id': this.currentPartnerId,
+        this.pyEnv['bus.bus']._sendone(
+            channel.channel_type === 'chat' ? channel : this.pyEnv.currentPartner,
+            'mail.record/insert',
+            {
+                'ThreadPartnerSeenInfo': {
+                    'lastSeenMessage': [['insert-and-replace', { 'id': last_message_id }]],
+                    'partner': [['insert-and-replace', this._mockResPartnerMailPartnerFormat([this.pyEnv.currentPartner.id]).get(this.pyEnv.currentPartner.id)]],
+                    'thread': [['insert-and-replace', { 'id': channel.id, 'model': 'mail.channel' }]],
+                },
+                'MessageSeenIndicator': {
+                    'message': [['insert-and-replace', { 'id': last_message_id }]],
+                    'thread': [['insert-and-replace', { 'id': channel.id, 'model': 'mail.channel' }]],
+                },
+            }
+        );
+        this.pyEnv['bus.bus']._sendone(this.pyEnv.currentPartner, 'mail.record/insert', {
+            'Thread': {
+                'id': channel.id,
+                'model': 'mail.channel',
+                'pendingSeenMessageId': [['clear',]],
+                'rawLastSeenByCurrentPartnerMessageId': last_message_id,
+            }
         });
     },
     /**
