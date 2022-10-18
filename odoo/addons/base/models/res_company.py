@@ -258,6 +258,23 @@ class Company(models.Model):
             self.invalidate_model(company_address_fields)
         return res
 
+    @api.constrains('active')
+    def _check_active(self):
+        for company in self:
+            if not company.active:
+                company_active_users = self.env['res.users'].search_count([
+                    ('company_id', '=', company.id),
+                    ('active', '=', True),
+                ])
+                if company_active_users:
+                    # You cannot disable companies with active users
+                    raise ValidationError(_(
+                        'The company %(company_name)s cannot be archived because it is still used '
+                        'as the default company of %(active_users)s users.',
+                        company_name=company.name,
+                        active_users=company_active_users,
+                    ))
+
     @api.constrains('parent_id')
     def _check_parent_id(self):
         if not self._check_recursion():
