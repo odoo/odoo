@@ -2773,6 +2773,7 @@
             /
             <t t-esc="env.model.getters.getSearchMatches().length"/>
           </div>
+          <div t-elif="state.toSearch !== ''" class="o-input-count">0 / 0</div>
         </div>
         <div>
           <!-- TODO: go through this css, the group misses a padding and could profit from BootStrap -->
