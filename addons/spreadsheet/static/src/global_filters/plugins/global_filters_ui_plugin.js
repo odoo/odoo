@@ -4,11 +4,6 @@
  * @typedef {import("@spreadsheet/data_sources/metadata_repository").Field} Field
  * @typedef {import("./global_filters_core_plugin").GlobalFilter} GlobalFilter
  *
- * @typedef {Object} FieldMatching
- * @property {string} chain
- * @property {string} type Type of the last field of the chain
- * @property {number} [offset] offset to apply to the field (for date filters)
- *
  */
 
 import { _t } from "@web/core/l10n/translation";
@@ -135,6 +130,9 @@ export default class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
     getGlobalFilterDomain(filterId, fieldMatching) {
         /** @type {GlobalFilter} */
         const filter = this.getters.getGlobalFilter(filterId);
+        if (!filter) {
+            return new Domain();
+        }
         switch (filter.type) {
             case "text":
                 return this._getTextDomain(filter, fieldMatching);

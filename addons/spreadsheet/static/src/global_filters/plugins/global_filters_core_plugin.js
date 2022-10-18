@@ -4,8 +4,8 @@
  * @typedef {"year"|"month"|"quarter"|"relative"} RangeType
  *
 /**
- * @typedef {Object} FilterMatchingField
- * @property {string} field name of the field
+ * @typedef {Object} FieldMatching
+ * @property {string} chain name of the field
  * @property {string} type type of the field
  * @property {number} [offset] offset to apply to the field (for date filters)
  *

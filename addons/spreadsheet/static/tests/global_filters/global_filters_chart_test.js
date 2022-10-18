@@ -107,6 +107,11 @@ QUnit.module("spreadsheet > Global filters chart", {}, () => {
             type: "date",
         };
         assert.deepEqual(model.getters.getChartFieldMatch(chartId)[filter.id], matching);
+        assert.deepEqual(model.getters.getChartDataSource(chartId).getComputedDomain(), [
+            "&",
+            ["date", ">=", "2021-01-01"],
+            ["date", "<=", "2021-12-31"],
+        ]);
         model.dispatch("REMOVE_GLOBAL_FILTER", {
             id: filter.id,
         });
@@ -115,9 +120,16 @@ QUnit.module("spreadsheet > Global filters chart", {}, () => {
             undefined,
             "it should have removed the chart and its fieldMatching and datasource altogether"
         );
+        assert.deepEqual(model.getters.getChartDataSource(chartId).getComputedDomain(), []);
         model.dispatch("REQUEST_UNDO");
         assert.deepEqual(model.getters.getChartFieldMatch(chartId)[filter.id], matching);
+        assert.deepEqual(model.getters.getChartDataSource(chartId).getComputedDomain(), [
+            "&",
+            ["date", ">=", "2021-01-01"],
+            ["date", "<=", "2021-12-31"],
+        ]);
         model.dispatch("REQUEST_REDO");
         assert.deepEqual(model.getters.getChartFieldMatch(chartId)[filter.id], undefined);
+        assert.deepEqual(model.getters.getChartDataSource(chartId).getComputedDomain(), []);
     });
 });
