@@ -105,13 +105,13 @@ const PosRestaurantPosGlobalState = (PosGlobalState) => class PosRestaurantPosGl
         }
         this.config.iface_printers = !!this.unwatched.printers.length;
     }
-    async _getTableOrdersFromServer(tableId) {
+    async _getTableOrdersFromServer(tableIds) {
         this.set_synch('connecting', 1);
         try {
             const orders = await this.env.services.rpc({
                 model: 'pos.order',
                 method: 'get_table_draft_orders',
-                args: [tableId],
+                args: [tableIds],
             }, {
                 timeout: TIMEOUT,
                 shadow: true,
@@ -199,21 +199,31 @@ const PosRestaurantPosGlobalState = (PosGlobalState) => class PosRestaurantPosGl
      */
     async _syncTableOrdersFromServer(tableId) {
         await this._removeOrdersFromServer(); // in case we were offline and we deleted orders in the mean time
-        const ordersJsons = await this._getTableOrdersFromServer(tableId);
+        const ordersJsons = await this._getTableOrdersFromServer([tableId]);
         const tableOrders = this.getTableOrders(tableId);
-
-        tableOrders.forEach(order => {
+        this._replaceOrders(tableOrders, ordersJsons);
+    }
+    async _syncAllOrdersFromServer() {
+        await this._removeOrdersFromServer(); // in case we were offline and we deleted orders in the mean time
+        const tableIds = [].concat(...this.floors.map(floor => floor.tables.map(table => table.id)));
+        const ordersJsons = await this._getTableOrdersFromServer(tableIds); // get all orders
+        await this._syncTableOrdersToServer(); // to prevent losing the transferred orders
+        const allOrders = [...this.get_order_list()];
+        this._replaceOrders(allOrders, ordersJsons);
+    }
+    _replaceOrders(ordersToReplace, newOrdersJsons) {
+        ordersToReplace.forEach(order => {
             // We don't remove the validated orders because we still want to see them in the ticket screen.
             // Orders in 'ReceiptScreen' or 'TipScreen' are validated orders.
             if (order.server_id && !order.finalized && !this.transferredOrdersSet.has(order)){
                 this.removeOrder(order, false);
             }
         });
-        ordersJsons.forEach(json => {
+        newOrdersJsons.forEach(json => {
             // Because of the offline feature, some draft orders fetched from the backend will appear
             // to belong in different table, but in fact they are already moved.
             const transferredOrder = [...this.transferredOrdersSet].find(order => order.uid === json.uid)
-            const isSameTable = transferredOrder && transferredOrder.tableId === tableId;
+            const isSameTable = transferredOrder && transferredOrder.tableId === json.tableId;
             if (isSameTable) {
                 // this means we transferred back to the original table, we'll prioritize the server state
                 this.removeOrder(transferredOrder, false);
@@ -223,6 +233,9 @@ const PosRestaurantPosGlobalState = (PosGlobalState) => class PosRestaurantPosGl
                 this.orders.add(order);
             }
         });
+    }
+    setLoadingOrderState(bool) {
+        this.loadingOrderState = bool;
     }
     loadRestaurantFloor() {
         // we do this in the front end due to the circular/recursive reference needed
