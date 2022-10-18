@@ -139,8 +139,8 @@ class AccountAnalyticLine(models.Model):
         user_ids = []
         employee_ids = []
         # 1/ Collect the user_ids and employee_ids from each timesheet vals
+        vals_list = self._timesheet_preprocess(vals_list)
         for vals in vals_list:
-            vals.update(self._timesheet_preprocess(vals))
             if not vals.get('project_id'):
                 continue
             if not vals.get('name'):
@@ -211,7 +211,7 @@ class AccountAnalyticLine(models.Model):
     def write(self, values):
         self._check_can_write(values)
 
-        values = self._timesheet_preprocess(values)
+        values = self._timesheet_preprocess([values])[0]
         if values.get('employee_id'):
             employee = self.env['hr.employee'].browse(values['employee_id'])
             if not employee.active:
@@ -271,42 +271,64 @@ class AccountAnalyticLine(models.Model):
                     ('task_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
                 ('task_id.project_id.privacy_visibility', '=', 'portal')]
 
-    def _timesheet_preprocess(self, vals):
+    def _timesheet_preprocess(self, vals_list):
         """ Deduce other field values from the one given.
             Overrride this to compute on the fly some field that can not be computed fields.
-            :param values: dict values for `create`or `write`.
+            :param vals_list: list of dict from `create`or `write`.
         """
-        project = self.env['project.project'].browse(vals.get('project_id', False))
-        task = self.env['project.task'].browse(vals.get('task_id', False))
-        # task implies project
-        if task and not project:
-            project = task.project_id
-            if not project:
-                raise ValidationError(_('You cannot create a timesheet on a private task.'))
-            vals['project_id'] = project.id
-        # task implies analytic account and tags
-        if task and not vals.get('account_id'):
-            task_analytic_account_id = task._get_task_analytic_account_id()
-            vals['account_id'] = task_analytic_account_id.id
-            vals['company_id'] = task_analytic_account_id.company_id.id or task.company_id.id
-            if not task_analytic_account_id.active:
-                raise UserError(_('You cannot add timesheets to a project or a task linked to an inactive analytic account.'))
-        # project implies analytic account
-        elif project and not vals.get('account_id'):
-            vals['account_id'] = project.analytic_account_id.id
-            vals['company_id'] = project.analytic_account_id.company_id.id or project.company_id.id
-            if not project.analytic_account_id.active:
-                raise UserError(_('You cannot add timesheets to a project linked to an inactive analytic account.'))
-        # force customer partner, from the task or the project
-        if project and not vals.get('partner_id'):
-            partner_id = task.partner_id.id if task else project.partner_id.id
-            if partner_id:
-                vals['partner_id'] = partner_id
-        # set timesheet UoM from the AA company (AA implies uom)
-        if not vals.get('product_uom_id') and all(v in vals for v in ['account_id', 'project_id']):  # project_id required to check this is timesheet flow
-            analytic_account = self.env['account.analytic.account'].sudo().browse(vals['account_id'])
-            vals['product_uom_id'] = analytic_account.company_id.project_time_mode_id.id
-        return vals
+        timesheet_indices = set()
+        task_ids, project_ids, account_ids = set(), set(), set()
+        for index, vals in enumerate(vals_list):
+            if not vals.get('project_id') and not vals.get('task_id'):
+                continue
+            timesheet_indices.add(index)
+            if vals.get('task_id'):
+                task_ids.add(vals['task_id'])
+            elif vals.get('project_id'):
+                project_ids.add(vals['project_id'])
+            if vals.get('account_id'):
+                account_ids.add(vals['account_id'])
+
+        task_per_id = {}
+        if task_ids:
+            tasks = self.env['project.task'].sudo().browse(task_ids)
+            for task in tasks:
+                task_per_id[task.id] = task
+                if not task.project_id:
+                    raise ValidationError(_('Timesheets cannot be created on a private task.'))
+            account_ids = account_ids.union(tasks.analytic_account_id.ids)
+
+        project_per_id = {}
+        if project_ids:
+            projects = self.env['project.project'].sudo().browse(project_ids)
+            account_ids = account_ids.union(projects.analytic_account_id.ids)
+            project_per_id = {p.id: p for p in projects}
+
+        accounts = self.env['account.analytic.account'].sudo().browse(account_ids)
+        account_per_id = {account.id: account for account in accounts}
+
+        uom_id_per_company = {
+            company: company.project_time_mode_id.id
+            for company in accounts.company_id
+        }
+
+        for index in timesheet_indices:
+            vals = vals_list[index]
+            data = task_per_id[vals['task_id']] if vals.get('task_id') else project_per_id[vals['project_id']]
+            if not vals.get('project_id'):
+                vals['project_id'] = data.project_id.id
+            if not vals.get('account_id'):
+                account_id = data.analytic_account_id.id
+                account = account_per_id[account_id]
+                if not account or not account.active:
+                    raise ValidationError(_('Timesheets must be created on a project or a task with an active analytic account.'))
+                vals['account_id'] = account_id
+                vals['company_id'] = account.company_id.id or data.company_id.id
+            if not vals.get('partner_id'):
+                vals['partner_id'] = data.partner_id.id
+            if not vals.get('product_uom_id'):
+                vals['product_uom_id'] = uom_id_per_company[account_per_id[vals['account_id']].company_id]
+        return vals_list
 
     def _timesheet_postprocess(self, values):
         """ Hook to update record one by one according to the values of a `write` or a `create`. """
