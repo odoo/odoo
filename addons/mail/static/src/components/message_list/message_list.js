@@ -31,10 +31,8 @@ export class MessageList extends Component {
         this._lastRenderedValues = useRenderedValues(() => {
             const messageListView = this.messageListView;
             const threadView = messageListView.threadViewOwner;
-            const thread = threadView && threadView.thread;
             const threadCache = threadView && threadView.threadCache;
             return {
-                thread,
                 threadCache,
                 threadCacheInitialScrollHeight: threadView && threadView.threadCacheInitialScrollHeight,
                 threadCacheInitialScrollPosition: threadView && threadView.threadCacheInitialScrollPosition,
@@ -260,7 +258,6 @@ export class MessageList extends Component {
      */
     _onScrollThrottled(ev) {
         const {
-            thread,
             threadCache,
         } = this._lastRenderedValues();
         if (!this.messageListView.exists()) {
@@ -274,7 +271,7 @@ export class MessageList extends Component {
         this.messaging.messagingBus.trigger('o-component-message-list-scrolled', {
             orderedMessages: this.messageListView.threadViewOwner.threadCache.orderedMessages,
             scrollTop,
-            thread,
+            thread: this.messageListView.threadViewOwner.thread,
             threadViewer: this.messageListView.threadViewOwner.threadViewer,
         });
         this.messageListView.update({
