@@ -48,25 +48,6 @@ export class MessageList extends Component {
     }
 
     //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @returns {boolean}
-     */
-    _isLoadMoreVisible() {
-        const loadMore = this.messageListView.loadMoreRef.el;
-        if (!loadMore) {
-            return false;
-        }
-        const loadMoreRect = loadMore.getBoundingClientRect();
-        const elRect = this.messageListView.getScrollableElement().getBoundingClientRect();
-        const isInvisible = loadMoreRect.top > elRect.bottom || loadMoreRect.bottom < elRect.top;
-        return !isInvisible;
-    }
-
-    //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
