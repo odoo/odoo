@@ -1,4 +1,5 @@
 /** @odoo-module */
+
 import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
 const { coreTypes } = spreadsheet;
 
