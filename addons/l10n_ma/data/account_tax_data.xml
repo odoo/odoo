@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record model="account.tax.template" id="tva_exo">
-        <field name="name">Exonere de TVA VENTES</field>
-        <field name="description">Exonere de TVA VENTES</field>
+        <field name="name">VAT exempt SALES</field>
+        <field name="description">VAT exempt SALES</field>
         <field name="type_tax_use">sale</field>
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
         <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
-        <field name="tax_group_id" ref="tax_group_tva_0"/>
+        <field name="tax_group_id" ref="tax_group_vat_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {'repartition_type': 'tax'})         ]"/>
@@ -16,13 +16,13 @@
             (0,0, {'repartition_type': 'tax'})         ]"/>
     </record>
     <record model="account.tax.template" id="tva_exo1">
-        <field name="name">Exonere de TVA ACHATS</field>
-        <field name="description">Exonere de TVA ACHATS</field>
+        <field name="name">VAT exempt PURCHASES</field>
+        <field name="description">VAT exempt PURCHASES</field>
         <field name="type_tax_use">purchase</field>
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
         <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
-        <field name="tax_group_id" ref="tax_group_tva_0"/>
+        <field name="tax_group_id" ref="tax_group_vat_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {'repartition_type': 'tax'}),
@@ -33,286 +33,286 @@
         ]"/>
     </record>
     <record model="account.tax.template" id="tva_vt20">
-        <field name="name">TVA 20% VENTES</field>
-        <field name="description">TVA 20% VENTES</field>
+        <field name="name">VAT 20% SALES</field>
+        <field name="description">VAT 20% SALES</field>
         <field name="type_tax_use">sale</field>
         <field name="amount">20</field>
         <field name="amount_type">percent</field>
         <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
-        <field name="tax_group_id" ref="tax_group_tva_20"/>
+        <field name="tax_group_id" ref="tax_group_vat_20"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('tax_report_taux_normal_20_tag')],
+                'plus_report_expression_ids': [ref('tax_report_standard_rate_20_balance')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('ma_4455'),
-                'plus_report_expression_ids': [ref('tax_report_taux_normal_tva_20_tag')],
+                'plus_report_expression_ids': [ref('tax_report_standard_rate_vat_20_balance')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('tax_report_taux_normal_20_tag')],
+                'minus_report_expression_ids': [ref('tax_report_standard_rate_20_balance')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('ma_4455'),
-                'minus_report_expression_ids': [ref('tax_report_taux_normal_tva_20_tag')],
+                'minus_report_expression_ids': [ref('tax_report_standard_rate_vat_20_balance')],
             }),
         ]"/>
     </record>
     <record model="account.tax.template" id="tva_vt14">
-        <field name="name">TVA 14% VENTES</field>
-        <field name="description">TVA 14% VENTES</field>
+        <field name="name">VAT 14% SALES</field>
+        <field name="description">VAT 14% SALES</field>
         <field name="type_tax_use">sale</field>
         <field name="amount">14</field>
         <field name="amount_type">percent</field>
         <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
-        <field name="tax_group_id" ref="tax_group_tva_14"/>
+        <field name="tax_group_id" ref="tax_group_vat_14"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('tax_report_taux_reduit_ht_14_tag')],
+                'plus_report_expression_ids': [ref('tax_report_reduced_rate_14_balance')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('ma_4455'),
-                'plus_report_expression_ids': [ref('tax_report_taux_rediut_tva_14_tag')],
+                'plus_report_expression_ids': [ref('tax_report_reduced_rate_vat_14_balance')],
             }),]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('tax_report_taux_reduit_ht_14_tag')],
+                'minus_report_expression_ids': [ref('tax_report_reduced_rate_14_balance')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('ma_4455'),
-                'minus_report_expression_ids': [ref('tax_report_taux_rediut_tva_14_tag')],
+                'minus_report_expression_ids': [ref('tax_report_reduced_rate_vat_14_balance')],
             }),
         ]"/>
     </record>
     <record model="account.tax.template" id="tva_vt10">
-        <field name="name">TVA 10% VENTES</field>
-        <field name="description">TVA 10% VENTES</field>
+        <field name="name">VAT 10% SALES</field>
+        <field name="description">VAT 10% SALES</field>
         <field name="type_tax_use">sale</field>
         <field name="amount">10</field>
         <field name="amount_type">percent</field>
         <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
-        <field name="tax_group_id" ref="tax_group_tva_10"/>
+        <field name="tax_group_id" ref="tax_group_vat_10"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('account_report_taux_reduit_base_ht_10_tag')],
+                'plus_report_expression_ids': [ref('tax_report_reduced_rate_10_balance')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('ma_4455'),
-                'plus_report_expression_ids': [ref('tax_report_taux_reduit_tva_10_tag')],
+                'plus_report_expression_ids': [ref('tax_report_reduced_rate_vat_10_balance')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('account_report_taux_reduit_base_ht_10_tag')],
+                'minus_report_expression_ids': [ref('tax_report_reduced_rate_10_balance')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('ma_4455'),
-                'minus_report_expression_ids': [ref('tax_report_taux_reduit_tva_10_tag')],
+                'minus_report_expression_ids': [ref('tax_report_reduced_rate_vat_10_balance')],
             }),
         ]"/>
     </record>
     <record model="account.tax.template" id="tva_vt07">
-        <field name="name">TVA 7% VENTES</field>
-        <field name="description">TVA 7% VENTES</field>
+        <field name="name">VAT 7% SALES</field>
+        <field name="description">VAT 7% SALES</field>
         <field name="type_tax_use">sale</field>
         <field name="amount">7</field>
         <field name="amount_type">percent</field>
         <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
-        <field name="tax_group_id" ref="tax_group_tva_7"/>
+        <field name="tax_group_id" ref="tax_group_vat_7"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('tax_report_taux_reduit_ht_7_tag')],
+                'plus_report_expression_ids': [ref('tax_report_reduced_rate_7_balance')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('ma_4455'),
-                'plus_report_expression_ids': [ref('tax_report_taux_reduit_tva_7_tag')],
+                'plus_report_expression_ids': [ref('tax_report_reduced_rate_vat_7_balance')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('tax_report_taux_reduit_ht_7_tag')],
+                'minus_report_expression_ids': [ref('tax_report_reduced_rate_7_balance')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('ma_4455'),
-                'minus_report_expression_ids': [ref('tax_report_taux_reduit_tva_7_tag')],
+                'minus_report_expression_ids': [ref('tax_report_reduced_rate_vat_7_balance')],
             }),
         ]"/>
     </record>
     <record model="account.tax.template" id="tva_ac20">
-        <field name="name">TVA 20% ACHATS</field>
-        <field name="description">TVA 20% ACHATS</field>
+        <field name="name">VAT 20% PURCHASES</field>
+        <field name="description">VAT 20% PURCHASES</field>
         <field name="type_tax_use">purchase</field>
         <field name="amount">20</field>
         <field name="amount_type">percent</field>
         <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
-        <field name="tax_group_id" ref="tax_group_tva_20"/>
+        <field name="tax_group_id" ref="tax_group_vat_20"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('tax_report_achats_ht_20_tag')],
+                'plus_report_expression_ids': [ref('tax_report_purchases_20_balance')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('ma_34552'),
-                'plus_report_expression_ids': [ref('tax_report_achats_tva_20_tag')],
+                'plus_report_expression_ids': [ref('tax_report_purchase_vat_20_balance')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('tax_report_achats_ht_20_tag')],
+                'minus_report_expression_ids': [ref('tax_report_purchases_20_balance')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('ma_34552'),
-                'minus_report_expression_ids': [ref('tax_report_achats_tva_20_tag')],
+                'minus_report_expression_ids': [ref('tax_report_purchase_vat_20_balance')],
             }),
         ]"/>
     </record>
     <record model="account.tax.template" id="tva_acim">
-        <field name="name">TVA 20% ACHATS (immobilisation)</field>
-        <field name="description">TVA 20% ACHATS (immobilisation)</field>
+        <field name="name">VAT 20% PURCHASES (fixed assets)</field>
+        <field name="description">VAT 20% PURCHASES (fixed assets)</field>
         <field name="type_tax_use">purchase</field>
         <field name="amount">20</field>
         <field name="amount_type">percent</field>
         <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
-        <field name="tax_group_id" ref="tax_group_tva_20"/>
+        <field name="tax_group_id" ref="tax_group_vat_20"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('tax_report_immobilisations_base_ht_tag')],
+                'plus_report_expression_ids': [ref('tax_report_fixed_assets_balance')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('ma_34551'),
-                'plus_report_expression_ids': [ref('tax_report_immobilisations_deductible_tva_tag')],
+                'plus_report_expression_ids': [ref('tax_report_fixed_assets_vat_balance')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('tax_report_immobilisations_base_ht_tag')],
+                'minus_report_expression_ids': [ref('tax_report_fixed_assets_balance')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('ma_34551'),
-                'minus_report_expression_ids': [ref('tax_report_immobilisations_deductible_tva_tag')],
+                'minus_report_expression_ids': [ref('tax_report_fixed_assets_vat_balance')],
             }),
         ]"/>
     </record>
     <record model="account.tax.template" id="tva_ac14">
-        <field name="name">TVA 14% ACHATS</field>
-        <field name="description">TVA 14% ACHATS</field>
+        <field name="name">VAT 14% PURCHASES</field>
+        <field name="description">VAT 14% PURCHASES</field>
         <field name="type_tax_use">purchase</field>
         <field name="amount">14</field>
         <field name="amount_type">percent</field>
         <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
-        <field name="tax_group_id" ref="tax_group_tva_14"/>
+        <field name="tax_group_id" ref="tax_group_vat_14"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('tax_report_achats_ht_14_tag')],
+                'plus_report_expression_ids': [ref('tax_report_purchases_14_balance')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('ma_34552'),
-                'plus_report_expression_ids': [ref('tax_report_achats_tva_14_tag')],
+                'plus_report_expression_ids': [ref('tax_report_purchase_vat_14_balance')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('tax_report_achats_ht_14_tag')],
+                'minus_report_expression_ids': [ref('tax_report_purchases_14_balance')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('ma_34552'),
-                'minus_report_expression_ids': [ref('tax_report_achats_tva_14_tag')],
+                'minus_report_expression_ids': [ref('tax_report_purchase_vat_14_balance')],
             }),
         ]"/>
     </record>
     <record model="account.tax.template" id="tva_ac10">
-        <field name="name">TVA 10% ACHATS</field>
-        <field name="description">TVA 10% ACHATS</field>
+        <field name="name">VAT 10% PURCHASES</field>
+        <field name="description">VAT 10% PURCHASES</field>
         <field name="type_tax_use">purchase</field>
         <field name="amount">10</field>
         <field name="amount_type">percent</field>
         <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
-        <field name="tax_group_id" ref="tax_group_tva_10"/>
+        <field name="tax_group_id" ref="tax_group_vat_10"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('tax_report_achats_ht_10_tag')],
+                'plus_report_expression_ids': [ref('tax_report_purchases_10_balance')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('ma_34552'),
-                'plus_report_expression_ids': [ref('tax_report_achats_tva_10_tag')],
+                'plus_report_expression_ids': [ref('tax_report_purchase_vat_10_balance')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('tax_report_achats_ht_10_tag')],
+                'minus_report_expression_ids': [ref('tax_report_purchases_10_balance')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('ma_34552'),
-                'minus_report_expression_ids': [ref('tax_report_achats_tva_10_tag')],
+                'minus_report_expression_ids': [ref('tax_report_purchase_vat_10_balance')],
             }),
         ]"/>
     </record>
     <record model="account.tax.template" id="tva_ac07">
-        <field name="name">TVA 7% ACHATS</field>
-        <field name="description">TVA 7% ACHATS</field>
+        <field name="name">VAT 7% PURCHASES</field>
+        <field name="description">VAT 7% PURCHASES</field>
         <field name="type_tax_use">purchase</field>
         <field name="amount">7</field>
         <field name="amount_type">percent</field>
         <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
-        <field name="tax_group_id" ref="tax_group_tva_7"/>
+        <field name="tax_group_id" ref="tax_group_vat_7"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('tax_report_achats_ht_7_tag')],
+                'plus_report_expression_ids': [ref('tax_report_purchases_7_balance')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('ma_34552'),
-                'plus_report_expression_ids': [ref('tax_report_achats_tva_7_tag')],
+                'plus_report_expression_ids': [ref('tax_report_purchase_vat_7_balance')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('tax_report_achats_ht_7_tag')],
+                'minus_report_expression_ids': [ref('tax_report_purchases_7_balance')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('ma_34552'),
-                'minus_report_expression_ids': [ref('tax_report_achats_tva_7_tag')],
+                'minus_report_expression_ids': [ref('tax_report_purchase_vat_7_balance')],
             }),
         ]"/>
     </record>
     <record model="account.tax.template" id="tax_import_fee">
-        <field name="name">DROITS DE DOUANE</field>
-        <field name="description">DROITS DE DOUANE</field>
+        <field name="name">TARIFF</field>
+        <field name="description">TARIFF</field>
         <field name="type_tax_use">purchase</field>
         <field name="amount">5</field>
         <field name="amount_type">percent</field>
@@ -340,8 +340,8 @@
         ]"/>
     </record>
     <record model="account.tax.template" id="tax_import">
-        <field name="name">TAXE PARAFISCALE A L'IMPORTATION</field>
-        <field name="description">TAXE PARAFISCALE A L'IMPORTATION</field>
+        <field name="name">PARAFISCAL CHARGE ON IMPORTS</field>
+        <field name="description">PARAFISCAL CHARGE ON IMPORTS</field>
         <field name="type_tax_use">purchase</field>
         <field name="amount">0.25</field>
         <field name="amount_type">percent</field>
