@@ -1,7 +1,6 @@
 /** @odoo-module */
 
 /**
- * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_ui_plugin").FieldMatching} FieldMatching
  *
  * @typedef {Object} PivotDefinition
  * @property {Array<string>} colGroupBys
@@ -20,6 +19,7 @@
  * @property {PivotDefinition} definition
  * @property {Object} fieldMatching
  *
+ * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").FieldMatching} FieldMatching
  */
 
 import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
@@ -68,9 +68,6 @@ export default class PivotCorePlugin extends CorePlugin {
                 if (cmd.id !== this.nextId.toString()) {
                     return CommandResult.InvalidNextId;
                 }
-                break;
-            case "REMOVE_GLOBAL_FILTER":
-                this._removeGlobalFilter(cmd.id);
                 break;
         }
         return CommandResult.Success;
@@ -258,11 +255,6 @@ export default class PivotCorePlugin extends CorePlugin {
     // -------------------------------------------------------------------------
     // Private
     // -------------------------------------------------------------------------
-    _removeGlobalFilter(filterId) {
-        for (const pivotId of this.getters.getPivotIds()) {
-            this.history.update("pivots", pivotId, "fieldMatching", filterId, undefined);
-        }
-    }
 
     /**
      *
@@ -275,9 +267,8 @@ export default class PivotCorePlugin extends CorePlugin {
     /**
      * Sets the current pivotFieldMatching on a pivot
      *
-     * @param {string} pivotId
      * @param {string} filterId
-     * @param {FieldMatching} fieldMatching
+     * @param {Record<string,FieldMatching>} pivotFieldMatches
      */
     _setPivotFieldMatching(filterId, pivotFieldMatches) {
         const pivots = { ...this.pivots };

@@ -8,7 +8,7 @@ import {
 } from "@spreadsheet/../tests/utils/getters";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/utils/pivot";
 import CommandResult from "@spreadsheet/o_spreadsheet/cancelled_reason";
-import { setCellContent } from "@spreadsheet/../tests/utils/commands";
+import { addGlobalFilter, setCellContent } from "@spreadsheet/../tests/utils/commands";
 import {
     createModelWithDataSource,
     waitForDataSourcesLoaded,
@@ -675,5 +675,51 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             domain: [["foo", "in", [55]]],
         });
         assert.deepEqual(model.exportData().pivots["1"].domain, [["foo", "in", [55]]]);
+    });
+
+    QUnit.test("field matching is removed when filter is deleted", async function (assert) {
+        const { model } = await createSpreadsheetWithPivot();
+        await addGlobalFilter(
+            model,
+            {
+                filter: {
+                    id: "42",
+                    type: "relation",
+                    label: "test",
+                    defaultValue: [41],
+                    modelName: undefined,
+                    rangeType: undefined,
+                },
+            },
+            {
+                pivot: { 1: { chain: "product_id", type: "many2one" } },
+            }
+        );
+        const [filter] = model.getters.getGlobalFilters();
+        const matching = {
+            chain: "product_id",
+            type: "many2one",
+        };
+        assert.deepEqual(model.getters.getPivotFieldMatching("1", filter.id), matching);
+        assert.deepEqual(model.getters.getPivotDataSource("1").getComputedDomain(), [
+            ["product_id", "in", [41]],
+        ]);
+        model.dispatch("REMOVE_GLOBAL_FILTER", {
+            id: filter.id,
+        });
+        assert.deepEqual(
+            model.getters.getPivotFieldMatching("1", filter.id),
+            undefined,
+            "it should have removed the pivot and its fieldMatching and datasource altogether"
+        );
+        assert.deepEqual(model.getters.getPivotDataSource("1").getComputedDomain(), []);
+        model.dispatch("REQUEST_UNDO");
+        assert.deepEqual(model.getters.getPivotFieldMatching("1", filter.id), matching);
+        assert.deepEqual(model.getters.getPivotDataSource("1").getComputedDomain(), [
+            ["product_id", "in", [41]],
+        ]);
+        model.dispatch("REQUEST_REDO");
+        assert.deepEqual(model.getters.getPivotFieldMatching("1", filter.id), undefined);
+        assert.deepEqual(model.getters.getPivotDataSource("1").getComputedDomain(), []);
     });
 });
