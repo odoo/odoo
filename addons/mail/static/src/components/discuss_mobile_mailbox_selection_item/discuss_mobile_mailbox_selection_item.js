@@ -6,10 +6,6 @@ const { Component } = owl;
 
 export class DiscussMobileMailboxSelectionItem extends Component {
 
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
     /**
      * @returns {DiscussMobileMailboxSelectionItemView}
      */
