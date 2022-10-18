@@ -159,6 +159,53 @@ registerModel({
             }
             this.update({ isLastScrollProgrammatic: true });
             this.getScrollableElement().scrollTop = value;
+        },
+        /**
+         * @private
+         */
+        _onThrottledScroll() {
+            if (!this.exists()) {
+                return;
+            }
+            if (!this.getScrollableElement()) {
+                // could be unmounted in the meantime (due to throttled behavior)
+                return;
+            }
+            const scrollTop = this.getScrollableElement().scrollTop;
+            this.messaging.messagingBus.trigger('o-component-message-list-scrolled', {
+                orderedMessages: this.threadViewOwner.threadCache.orderedMessages,
+                scrollTop,
+                thread: this.threadViewOwner.thread,
+                threadViewer: this.threadViewOwner.threadViewer,
+            });
+            this.update({
+                clientHeight: this.getScrollableElement().clientHeight,
+                scrollHeight: this.getScrollableElement().scrollHeight,
+                scrollTop: this.getScrollableElement().scrollTop,
+            });
+            if (!this.isLastScrollProgrammatic) {
+                // Automatically scroll to new received messages only when the list is
+                // currently fully scrolled.
+                const hasAutoScrollOnMessageReceived = this.isAtEnd;
+                this.threadViewOwner.update({ hasAutoScrollOnMessageReceived });
+            }
+            this.threadViewOwner.threadViewer.saveThreadCacheScrollHeightAsInitial(
+                this.getScrollableElement().scrollHeight,
+                this.threadViewOwner.threadCache,
+            );
+            this.threadViewOwner.threadViewer.saveThreadCacheScrollPositionsAsInitial(
+                scrollTop,
+                this.threadViewOwner.threadCache,
+            );
+            if (
+                !this.isLastScrollProgrammatic &&
+                this.component._isLoadMoreVisible() &&
+                this.threadViewOwner.threadCache
+            ) {
+                this.threadViewOwner.threadCache.loadMoreMessages();
+            }
+            this.checkMostRecentMessageIsVisible();
+            this.update({ isLastScrollProgrammatic: false });
         }
     },
     fields: {
@@ -235,6 +282,12 @@ registerModel({
             inverse: 'messageListViewOwner',
         }),
         scrollHeight: attr(),
+        scrollThrottle: one('Throttle', {
+            compute() {
+                return { func: () => this._onThrottledScroll() };
+            },
+            inverse: 'messageListViewAsScroll',
+        }),
         scrollTop: attr(),
         thread: one('Thread', {
             related: 'threadViewOwner.thread',
