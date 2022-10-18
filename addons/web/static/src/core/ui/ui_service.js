@@ -92,7 +92,7 @@ export const MEDIAS_BREAKPOINTS = [
     { maxWidth: 474 },
     { minWidth: 475, maxWidth: 575 },
     { minWidth: 576, maxWidth: 767 },
-    { minWidth: 769, maxWidth: 991 },
+    { minWidth: 768, maxWidth: 991 },
     { minWidth: 992, maxWidth: 1199 },
     { minWidth: 1200, maxWidth: 1533 },
     { minWidth: 1534 },
