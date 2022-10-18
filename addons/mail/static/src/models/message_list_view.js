@@ -7,6 +7,62 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'MessageListView',
     recordMethods: {
+        /**
+         * Update the scroll position of the message list.
+         * This is not done in patched/mounted hooks because scroll position is
+         * dependent on UI globally. To illustrate, imagine following UI:
+         *
+         * +----------+ < viewport top = scrollable top
+         * | message  |
+         * |   list   |
+         * |          |
+         * +----------+ < scrolltop = viewport bottom = scrollable bottom
+         *
+         * Now if a composer is mounted just below the message list, it is shrinked
+         * and scrolltop is altered as a result:
+         *
+         * +----------+ < viewport top = scrollable top
+         * | message  |
+         * |   list   | < scrolltop = viewport bottom  <-+
+         * |          |                                  |-- dist = composer height
+         * +----------+ < scrollable bottom            <-+
+         * +----------+
+         * | composer |
+         * +----------+
+         *
+         * Because of this, the scroll position must be changed when whole UI
+         * is rendered. To make this simpler, this is done when <ThreadView/>
+         * component is patched. This is acceptable when <ThreadView/> has a
+         * fixed height, which is the case for the moment. task-2358066
+         */
+        adjustFromComponentHints() {
+            for (const hint of this.threadViewOwner.componentHintList) {
+                switch (hint.type) {
+                    case 'change-of-thread-cache':
+                    case 'member-list-hidden':
+                    case 'adjust-scroll':
+                        // thread just became visible, the goal is to restore its
+                        // saved position if it exists or scroll to the end
+                        this.adjustScrollFromModel();
+                        break;
+                    case 'message-posted':
+                    case 'message-received':
+                    case 'messages-loaded':
+                    case 'new-messages-loaded':
+                        // messages have been added at the end, either scroll to the
+                        // end or keep the current position
+                        this.adjustScrollForExtraMessagesAtTheEnd();
+                        break;
+                    case 'more-messages-loaded':
+                        // messages have been added at the start, keep the current
+                        // position
+                        this.adjustScrollForExtraMessagesAtTheStart();
+                        break;
+                }
+                this.threadViewOwner.markComponentHintProcessed(hint);
+            }
+            this.component._willPatchSnapshot = undefined;
+        },
         adjustScrollForExtraMessagesAtTheEnd() {
             if (!this.getScrollableElement() || !this.hasScrollAdjust) {
                 return;
