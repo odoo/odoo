@@ -8,7 +8,7 @@
         </xpath>
         <xpath expr="//div[hasclass('order-row')]//div[@name='delete']" position="before">
             <div t-if="env.pos.config.iface_floorplan" class="col" name="table">
-                <t t-if="order.table">
+                <t t-if="order.tableId">
                     <div t-if="env.isMobile">Table</div>
                     <div><t t-esc="getTable(order)"></t></div>
                 </t>

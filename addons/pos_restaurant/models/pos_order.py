@@ -149,7 +149,7 @@ class PosOrder(models.Model):
         ]
 
     @api.model
-    def get_table_draft_orders(self, table_id):
+    def get_table_draft_orders(self, table_ids):
         """Generate an object of all draft orders for the given table.
 
         Generate and return an JSON object with all draft orders for the given table, to send to the
@@ -160,7 +160,7 @@ class PosOrder(models.Model):
         :returns: list -- list of dict representing the table orders
         """
         table_orders = self.search_read(
-                domain=[('state', '=', 'draft'), ('table_id', '=', table_id)],
+                domain=[('state', '=', 'draft'), ('table_id', 'in', table_ids)],
                 fields=self._get_fields_for_draft_order())
 
         self._get_order_lines(table_orders)
