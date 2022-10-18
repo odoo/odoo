@@ -78,6 +78,11 @@ registerModel({
             default: false,
         }),
         /**
+         * Reference of the "load more" item. Useful to trigger load more
+         * on scroll when it becomes visible.
+         */
+        loadMoreRef: attr(),
+        /**
          * States the message views used to display this thread view owner's messages.
          */
         messageListViewItems: many('MessageListViewItem', {

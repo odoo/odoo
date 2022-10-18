@@ -1,13 +1,14 @@
 /** @odoo-module **/
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { useRenderedValues } from '@mail/component_hooks/use_rendered_values';
 import { useUpdate } from '@mail/component_hooks/use_update';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 import { Transition } from "@web/core/transition";
 
-const { Component, onWillPatch, useRef } = owl;
+const { Component, onWillPatch } = owl;
 
 export class MessageList extends Component {
 
@@ -17,11 +18,7 @@ export class MessageList extends Component {
     setup() {
         super.setup();
         useComponentToModel({ fieldName: 'component' });
-        /**
-         * Reference of the "load more" item. Useful to trigger load more
-         * on scroll when it becomes visible.
-         */
-        this._loadMoreRef = useRef('loadMore');
+        useRefToModel({ fieldName: 'loadMoreRef', refName: 'loadMore' });
         /**
          * Snapshot computed during willPatch, which is used by patched.
          */
@@ -244,7 +241,7 @@ export class MessageList extends Component {
      */
     _isLoadMoreVisible() {
         const { messageListView } = this._lastRenderedValues();
-        const loadMore = this._loadMoreRef.el;
+        const loadMore = this.messageListView.loadMoreRef.el;
         if (!loadMore) {
             return false;
         }
