@@ -34,7 +34,6 @@ export class MessageList extends Component {
             const thread = threadView && threadView.thread;
             const threadCache = threadView && threadView.threadCache;
             return {
-                order: threadView && threadView.order,
                 orderedMessages: threadCache ? [...threadCache.orderedMessages] : [],
                 thread,
                 threadCache,
@@ -149,14 +148,11 @@ export class MessageList extends Component {
      * @private
      */
     _adjustScrollForExtraMessagesAtTheEnd() {
-        const {
-            order,
-        } = this._lastRenderedValues();
         if (!this.messageListView.getScrollableElement() || !this.messageListView.hasScrollAdjust) {
             return;
         }
         if (!this.messageListView.threadViewOwner.hasAutoScrollOnMessageReceived) {
-            if (order === 'desc' && this._willPatchSnapshot) {
+            if (this.messageListView.threadViewOwner.order === 'desc' && this._willPatchSnapshot) {
                 const { scrollHeight, scrollTop } = this._willPatchSnapshot;
                 this.setScrollTop(this.messageListView.getScrollableElement().scrollHeight - scrollHeight + scrollTop);
             }
@@ -169,14 +165,11 @@ export class MessageList extends Component {
      * @private
      */
     _adjustScrollForExtraMessagesAtTheStart() {
-        const {
-            order,
-        } = this._lastRenderedValues();
         if (
             !this.messageListView.getScrollableElement() ||
             !this.messageListView.hasScrollAdjust ||
             !this._willPatchSnapshot ||
-            order === 'desc'
+            this.messageListView.threadViewOwner.order === 'desc'
         ) {
             return;
         }
@@ -240,8 +233,7 @@ export class MessageList extends Component {
      * @private
      */
     _scrollToEnd() {
-        const { order } = this._lastRenderedValues();
-        this.setScrollTop(order === 'asc' ? this.messageListView.getScrollableElement().scrollHeight - this.messageListView.getScrollableElement().clientHeight : 0);
+        this.setScrollTop(this.messageListView.threadViewOwner.order === 'asc' ? this.messageListView.getScrollableElement().scrollHeight - this.messageListView.getScrollableElement().clientHeight : 0);
     }
 
     /**
