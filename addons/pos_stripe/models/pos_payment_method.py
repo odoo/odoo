@@ -124,6 +124,30 @@ class PosPaymentMethod(models.Model):
         _logger.error("Unexpected stripe_capture_payment response: %s", resp.status_code)
         raise UserError(_("Unexpected error between us and Stripe."))
 
+    @api.model
+    def stripe_refund(self, transaction_id):
+        """Refund payment identified by transaction_id
+
+        :param transaction_id: the id of the payment to refund
+        :param amount: without this parameter the entire
+                       amount is refunded.
+        """
+        if not self.env.user.has_group('point_of_sale.group_pos_user'):
+            raise AccessError(_("Do not have access to fetch token from Stripe"))
+
+        endpoint = 'https://api.stripe.com/v1/refunds'
+        data = {
+            "payment_intent": transaction_id,
+        }
+
+        try:
+            resp = requests.post(endpoint, data=data, auth=(self.sudo()._get_stripe_secret_key(), ''), timeout=TIMEOUT)
+        except requests.exceptions.RequestException:
+            _logger.exception("Failed to call stripe_refunds endpoint")
+            raise UserError(_("There are some issues between us and Stripe, try again later."))
+
+        return resp.json()
+
     def action_stripe_key(self):
         res_id = self.env['payment.provider'].search([('code', '=', 'stripe')], limit=1).id
         # Redirect

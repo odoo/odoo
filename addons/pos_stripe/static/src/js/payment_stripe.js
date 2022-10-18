@@ -12,6 +12,7 @@ const _t = core._t;
 let PaymentStripe = PaymentInterface.extend({
     init: function (pos, payment_method) {
         this._super(...arguments);
+        this.enable_reversals();
         this.terminal = StripeTerminal.create({
           onFetchConnectionToken: this.stripeFetchConnectionToken.bind(this),
           onUnexpectedReaderDisconnect: this.stripeUnexpectedDisconnect.bind(this),
@@ -175,6 +176,28 @@ let PaymentStripe = PaymentInterface.extend({
         if (stripeCancel) {
             line.set_payment_status('retry');
             return true;
+        }
+    },
+
+    send_payment_reversal: async function () {
+        this._super.apply(this, arguments);
+        let line = this.pos.get_order().selected_paymentline;
+        line.set_payment_status('reversing');
+        try {
+            let data = await rpc.query({
+                model: 'pos.payment.method',
+                method: 'stripe_refund',
+                args: [line.transaction_id],
+            }, {
+                silent: true,
+            });
+            if (data.error) {
+                throw data.error;
+            }
+            return true;
+        } catch (error) {
+            this._showError(error.message);
+            return false;
         }
     },
 
