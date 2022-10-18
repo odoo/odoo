@@ -57,6 +57,10 @@
             }
         }
     }
+    // Hack to fix an issue in Chrome where CSS backgrounds with SVG are
+    // sometimes positioned a few pixels too high or too low (due to a
+    // roundness handling issue) leaving a thin space between two sections.
+    margin: -2px 0px;
 }
 @include media-breakpoint-down(sm) {
     .o_we_shape {
