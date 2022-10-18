@@ -724,6 +724,19 @@
             </field>
         </record>
 
+        <record id="quick_create_project_form" model="ir.ui.view">
+            <field name="name">project.form.quick_create</field>
+            <field name="model">project.project</field>
+            <field name="priority">1000</field>
+            <field name="arch" type="xml">
+                <form class="o_form_project_project">
+                    <group>
+                        <field name="name" string="Project Title" placeholder="e.g. Office Party"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
         <record id="project_view_kanban" model="ir.ui.view">
             <field name="name">project.project.kanban</field>
             <field name="model">project.project</field>
@@ -812,6 +825,7 @@
                     js_class="project_project_kanban"
                     on_create="project.open_create_project"
                     action="action_view_tasks" type="object"
+		    quick_create_view="project.quick_create_project_form"
                     sample="1"
                     default_order="is_favorite desc, sequence, name, id"
                 >
@@ -1595,7 +1609,7 @@
                     <field name="date_deadline"/>
                     <field name="tag_ids" widget="many2many_tags" attrs="{'invisible': [('tag_ids', '=', [])]}"/>
                     <field name="stage_id"/>
-                    <field name="kanban_state"/>
+                    <field name="kanban_state" widget="state_selection"/>
                 </calendar>
             </field>
         </record>
