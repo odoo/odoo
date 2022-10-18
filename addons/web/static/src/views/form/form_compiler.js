@@ -31,10 +31,7 @@ function appendAttf(el, attr, string) {
 function appendToExpr(expr, string) {
     const re = /{{.*}}/;
     const oldString = re.exec(expr);
-    if (oldString) {
-        string = `${oldString} ${string}`;
-    }
-    return `{{${string} }}`;
+    return oldString ? `${oldString} {{${string} }}` : `{{${string} }}`;
 }
 
 /**
