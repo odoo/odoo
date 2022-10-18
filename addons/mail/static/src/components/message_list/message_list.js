@@ -31,9 +31,7 @@ export class MessageList extends Component {
         this._lastRenderedValues = useRenderedValues(() => {
             const messageListView = this.messageListView;
             const threadView = messageListView.threadViewOwner;
-            const threadCache = threadView && threadView.threadCache;
             return {
-                threadCache,
                 threadCacheInitialScrollHeight: threadView && threadView.threadCacheInitialScrollHeight,
                 threadCacheInitialScrollPosition: threadView && threadView.threadCacheInitialScrollPosition,
             };
@@ -257,9 +255,6 @@ export class MessageList extends Component {
      * @param {ScrollEvent} ev
      */
     _onScrollThrottled(ev) {
-        const {
-            threadCache,
-        } = this._lastRenderedValues();
         if (!this.messageListView.exists()) {
             return;
         }
@@ -285,15 +280,14 @@ export class MessageList extends Component {
             const hasAutoScrollOnMessageReceived = this.messageListView.isAtEnd;
             this.messageListView.threadViewOwner.update({ hasAutoScrollOnMessageReceived });
         }
-        this.messageListView.threadViewOwner.threadViewer.saveThreadCacheScrollHeightAsInitial(this.messageListView.getScrollableElement().scrollHeight, threadCache);
-        this.messageListView.threadViewOwner.threadViewer.saveThreadCacheScrollPositionsAsInitial(scrollTop, threadCache);
+        this.messageListView.threadViewOwner.threadViewer.saveThreadCacheScrollHeightAsInitial(this.messageListView.getScrollableElement().scrollHeight, this.messageListView.threadViewOwner.threadCache);
+        this.messageListView.threadViewOwner.threadViewer.saveThreadCacheScrollPositionsAsInitial(scrollTop, this.messageListView.threadViewOwner.threadCache);
         if (
             !this.messageListView.isLastScrollProgrammatic &&
             this._isLoadMoreVisible() &&
-            threadCache &&
-            threadCache.exists()
+            this.messageListView.threadViewOwner.threadCache
         ) {
-            threadCache.loadMoreMessages();
+            this.messageListView.threadViewOwner.threadCache.loadMoreMessages();
         }
         this._checkMostRecentMessageIsVisible();
         this.messageListView.update({ isLastScrollProgrammatic: false });
