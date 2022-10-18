@@ -11,6 +11,8 @@ const { CorePlugin } = spreadsheet;
  * @typedef {Object} Chart
  * @property {string} dataSourceId
  * @property {Object} fieldMatching
+ *
+ * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").FieldMatching} FieldMatching
  */
 
 export default class OdooChartCorePlugin extends CorePlugin {
@@ -187,9 +189,8 @@ export default class OdooChartCorePlugin extends CorePlugin {
     /**
      * Sets the current pivotFieldMatching of a chart
      *
-     * @param {string} chartId
      * @param {string} filterId
-     * @param {FieldMatching} fieldMatching
+     * @param {Record<string,FieldMatching>} chartFieldMatches
      */
     _setOdooChartFieldMatching(filterId, chartFieldMatches) {
         const charts = { ...this.charts };
