@@ -48,14 +48,13 @@ registerModel({
             ev.dataTransfer.dropEffect = 'copy';
         },
         /**
-          * Trigger callback 'props.onDropzoneFilesDropped' with event when new files are dropped
-          * on the dropzone, and then removes the visual drop effect.
-          *
-          * The parents should handle this event to process the files as they wish,
-          * such as uploading them.
-          *
-          * @param {DragEvent} ev
-          */
+         * Removes the visual drop effect.
+         *
+         * The parents should handle this event to process the files as they wish,
+         * such as uploading them.
+         *
+         * @param {DragEvent} ev
+         */
         async onDrop(ev) {
             if (!this.exists()) {
                 return;

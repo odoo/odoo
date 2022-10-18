@@ -20,13 +20,7 @@ export class DropZone extends Component {
 }
 
 Object.assign(DropZone, {
-    props: {
-        record: Object,
-        onDropzoneFilesDropped: {
-            type: Function,
-            optional: true,
-        },
-    },
+    props: { record: Object },
     template: 'mail.DropZone',
 });
 
