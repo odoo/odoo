@@ -17,20 +17,10 @@ export class DiscussMobileMailboxSelectionItem extends Component {
         return this.props.record;
     }
 
-    /**
-     * @returns {DiscussView}
-     */
-    get discussView() {
-        return this.props.discussView;
-    }
-
 }
 
 Object.assign(DiscussMobileMailboxSelectionItem, {
-    props: {
-        discussView: Object,
-        record: Object,
-    },
+    props: { record: Object },
     template: 'mail.DiscussMobileMailboxSelectionItem',
 });
 
