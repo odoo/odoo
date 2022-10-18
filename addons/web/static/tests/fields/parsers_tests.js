@@ -120,7 +120,7 @@ QUnit.module("Fields", (hooks) => {
         // same tests with a different thousand separator
         assert.strictEqual(parseMonetary("1'000.00"), 1000);
         assert.strictEqual(parseMonetary("1'000'000.00"), 1000000);
-        assert.strictEqual(parseMonetary("$&nbsp;125'000.00", { currencyId: 3 }), 125);
+        assert.strictEqual(parseMonetary("$&nbsp;125'000.00", { currencyId: 3 }), 125000);
         assert.strictEqual(parseMonetary("1'000.00&nbsp;€", { currencyId: 1 }), 1000);
 
         assert.throws(() => parseMonetary("&nbsp;", { currencyId: 3 }));
