@@ -31,21 +31,21 @@ registerModel({
                 const { shadow: silent, ...rpcSettings } = options;
                 return this.env.services.rpc(route, rpcParameters, { silent, ...rpcSettings });
             } else {
-                const { args, method, model, kwargs = {} } = params;
-                const { domain, fields, groupBy } = kwargs;
+                const { args = [], method, model, kwargs = {} } = params;
+                const { domain, fields, groupBy, ...remainingKwargs } = kwargs;
 
                 const ormService = 'shadow' in options ? this.env.services.orm.silent : this.env.services.orm;
                 switch (method) {
                     case 'create':
                         return ormService.create(model, args[0], kwargs);
                     case 'read':
-                        return ormService.read(model, args[0], args.length > 1 ? args[1] : undefined, kwargs);
+                        return ormService.read(model, args[0], args[1] || fields, remainingKwargs);
                     case 'read_group':
-                        return ormService.readGroup(model, domain, fields, groupBy, kwargs);
+                        return ormService.readGroup(model, args[0] || domain, args[1] || fields, args[2] || groupBy, remainingKwargs);
                     case 'search':
-                        return ormService.search(model, args[0], kwargs);
+                        return ormService.search(model, args[0] || domain, remainingKwargs);
                     case 'search_read':
-                        return ormService.searchRead(model, domain, fields, kwargs);
+                        return ormService.searchRead(model, args[0] || domain, args[1] || fields, remainingKwargs);
                     case 'unlink':
                         return ormService.unlink(model, args[0], kwargs);
                     case 'write':
