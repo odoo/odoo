@@ -54,11 +54,7 @@ class PosPaymentMethod(models.Model):
             _logger.exception("Failed to call stripe_connection_token endpoint")
             raise UserError(_("There are some issues between us and Stripe, try again later."))
 
-        if resp.ok:
-            return resp.json()
-
-        _logger.error("Unexpected stripe_connection_token response: %s", resp.status_code)
-        raise UserError(_("Unexpected error between us and Stripe."))
+        return resp.json()
 
     def _stripe_calculate_amount(self, amount):
         currency = self.journal_id.currency_id or self.company_id.currency_id
@@ -85,11 +81,7 @@ class PosPaymentMethod(models.Model):
             _logger.exception("Failed to call stripe_payment_intent endpoint")
             raise UserError(_("There are some issues between us and Stripe, try again later."))
 
-        if resp.ok:
-            return resp.json()
-
-        _logger.error("Unexpected stripe_payment_intent response: %s", resp.status_code)
-        raise UserError(_("Unexpected error between us and Stripe."))
+        return resp.json()
 
     @api.model
     def stripe_capture_payment(self, paymentIntentId, amount=None):
@@ -118,11 +110,7 @@ class PosPaymentMethod(models.Model):
             _logger.exception("Failed to call stripe_capture_payment endpoint")
             raise UserError(_("There are some issues between us and Stripe, try again later."))
 
-        if resp.ok:
-            return resp.json()
-
-        _logger.error("Unexpected stripe_capture_payment response: %s", resp.status_code)
-        raise UserError(_("Unexpected error between us and Stripe."))
+        return resp.json()
 
     def action_stripe_key(self):
         res_id = self.env['payment.provider'].search([('code', '=', 'stripe')], limit=1).id
