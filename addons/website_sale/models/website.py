@@ -373,6 +373,23 @@ class Website(models.Model):
                 if line.exists():
                     sale_order._cart_update(product_id=line.product_id.id, line_id=line.id, add_qty=0)
 
+        public_user = self.env.ref("base.public_user", raise_if_not_found=False)
+        public_partner = public_user.sudo().partner_id
+        if sale_order and sale_order.partner_id != public_partner:
+            existing_orders = (
+                self.env["sale.order"]
+                .sudo()
+                .search(
+                    [
+                        ("partner_id", "=", sale_order.partner_id.id),
+                        ("website_id", "=", sale_order.website_id.id),
+                        ("state", "=", "draft"),
+                        ("id", "!=", sale_order.id),
+                    ]
+                )
+            )
+            if existing_orders:
+                existing_orders.action_cancel()
         return sale_order
 
     def sale_reset(self):
