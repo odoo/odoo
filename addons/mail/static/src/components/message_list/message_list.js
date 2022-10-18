@@ -96,7 +96,7 @@ export class MessageList extends Component {
                 case 'more-messages-loaded':
                     // messages have been added at the start, keep the current
                     // position
-                    this._adjustScrollForExtraMessagesAtTheStart();
+                    this.messageListView.adjustScrollForExtraMessagesAtTheStart();
                     break;
             }
             this.messageListView.threadViewOwner.markComponentHintProcessed(hint);
@@ -114,22 +114,6 @@ export class MessageList extends Component {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _adjustScrollForExtraMessagesAtTheStart() {
-        if (
-            !this.messageListView.getScrollableElement() ||
-            !this.messageListView.hasScrollAdjust ||
-            !this._willPatchSnapshot ||
-            this.messageListView.threadViewOwner.order === 'desc'
-        ) {
-            return;
-        }
-        const { scrollHeight, scrollTop } = this._willPatchSnapshot;
-        this.messageListView.setScrollTop(this.messageListView.getScrollableElement().scrollHeight - scrollHeight + scrollTop);
-    }
 
     /**
      * @private

@@ -20,6 +20,18 @@ registerModel({
             }
             this.scrollToEnd();
         },
+        adjustScrollForExtraMessagesAtTheStart() {
+            if (
+                !this.getScrollableElement() ||
+                !this.hasScrollAdjust ||
+                !this.component._willPatchSnapshot ||
+                this.threadViewOwner.order === 'desc'
+            ) {
+                return;
+            }
+            const { scrollHeight, scrollTop } = this.component._willPatchSnapshot;
+            this.setScrollTop(this.getScrollableElement().scrollHeight - scrollHeight + scrollTop);
+        },
         adjustScrollFromModel() {
             if (!this.getScrollableElement() || !this.hasScrollAdjust) {
                 return;
