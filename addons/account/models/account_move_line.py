@@ -17,7 +17,7 @@ class AccountMoveLine(models.Model):
     _name = "account.move.line"
     _inherit = "analytic.mixin"
     _description = "Journal Item"
-    _order = "date desc, move_name desc, sequence, id"
+    _order = "date desc, move_name desc, id"
     _check_company_auto = True
     _rec_names_search = ['name', 'move_id', 'product_id']
 
@@ -78,6 +78,7 @@ class AccountMoveLine(models.Model):
         compute='_compute_account_id', store=True, readonly=False, precompute=True,
         inverse='_inverse_account_id',
         index=True,
+        auto_join=True,
         ondelete="cascade",
         domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('is_off_balance', '=', False)]",
         check_company=True,
@@ -143,16 +144,19 @@ class AccountMoveLine(models.Model):
         comodel_name='account.payment',
         string="Originator Payment",
         related='move_id.payment_id', store=True,
+        auto_join=True,
         index='btree_not_null',
         help="The payment that created this entry")
     statement_line_id = fields.Many2one(
         comodel_name='account.bank.statement.line',
         string="Originator Statement Line",
         related='move_id.statement_line_id', store=True,
+        auto_join=True,
         index='btree_not_null',
         help="The statement line that created this entry")
     statement_id = fields.Many2one(
         related='statement_line_id.statement_id', store=True,
+        auto_join=True,
         index='btree_not_null',
         copy=False,
         help="The bank statement used for bank reconciliation")
