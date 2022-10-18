@@ -207,7 +207,6 @@ export const TimeOffCalendarController = CalendarController.extend({
 
     _getAllocationContext() {
         return {
-            'default_state': 'confirm',
             'lang': this.context.lang,
             'form_view_ref': this._getFormViewId()
         };
