@@ -83,7 +83,7 @@ export class MessageList extends Component {
                 case 'adjust-scroll':
                     // thread just became visible, the goal is to restore its
                     // saved position if it exists or scroll to the end
-                    this._adjustScrollFromModel();
+                    this.messageListView.adjustScrollFromModel();
                     break;
                 case 'message-posted':
                 case 'message-received':
@@ -129,24 +129,6 @@ export class MessageList extends Component {
         }
         const { scrollHeight, scrollTop } = this._willPatchSnapshot;
         this.messageListView.setScrollTop(this.messageListView.getScrollableElement().scrollHeight - scrollHeight + scrollTop);
-    }
-
-    /**
-     * @private
-     */
-    _adjustScrollFromModel() {
-        if (!this.messageListView.getScrollableElement() || !this.messageListView.hasScrollAdjust) {
-            return;
-        }
-        if (
-            this.messageListView.threadViewOwner.threadCacheInitialScrollPosition !== undefined &&
-            this.messageListView.getScrollableElement().scrollHeight === this.messageListView.threadViewOwner.threadCacheInitialScrollHeight
-        ) {
-            this.messageListView.setScrollTop(this.messageListView.threadViewOwner.threadCacheInitialScrollPosition);
-            return;
-        }
-        this.messageListView.scrollToEnd();
-        return;
     }
 
     /**

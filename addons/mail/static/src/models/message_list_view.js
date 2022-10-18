@@ -20,6 +20,19 @@ registerModel({
             }
             this.scrollToEnd();
         },
+        adjustScrollFromModel() {
+            if (!this.getScrollableElement() || !this.hasScrollAdjust) {
+                return;
+            }
+            if (
+                this.threadViewOwner.threadCacheInitialScrollPosition !== undefined &&
+                this.getScrollableElement().scrollHeight === this.threadViewOwner.threadCacheInitialScrollHeight
+            ) {
+                this.setScrollTop(this.threadViewOwner.threadCacheInitialScrollPosition);
+                return;
+            }
+            this.scrollToEnd();
+        },
         /**
          * @returns {Element|undefined}
          */
