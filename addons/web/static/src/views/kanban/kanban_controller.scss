@@ -447,7 +447,7 @@
         }
 
         .oe_kanban_text_red {
-            color: o-text-color('danger');
+            color: o-text-color("danger");
             font-weight: $font-weight-bold;
         }
 
@@ -474,10 +474,12 @@
         .o_kanban_record {
             width: 100%;
         }
-        
+
         @include media-breakpoint-up(md) {
             &.o_kanban_small_column .o_kanban_group:not(.o_column_folded) {
-                flex-basis: calc(var(--KanbanRecord--small-width) + (2 * var(--KanbanGroup-padding-h)));
+                flex-basis: calc(
+                    var(--KanbanRecord--small-width) + (2 * var(--KanbanGroup-padding-h))
+                );
             }
         }
     }
@@ -488,6 +490,9 @@
         padding: 0 var(--KanbanGroup-padding-h) var(--KanbanGroup-padding-bottom);
 
         .o_kanban_header > .o_kanban_header_title {
+            // Makes the title come on top of the "no-content" background gradient.
+            z-index: 2;
+
             &:hover .o_kanban_config,
             .o_kanban_config.show {
                 visibility: visible;
