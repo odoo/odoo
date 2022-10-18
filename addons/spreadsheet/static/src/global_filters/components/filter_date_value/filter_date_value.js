@@ -35,6 +35,9 @@ export class DateFilterValue extends Component {
         return this.period === periodId;
     }
 
+    /**
+     * @param {Event & { target: HTMLSelectElement }} ev
+     */
     onPeriodChanged(ev) {
         this.period = ev.target.value;
         this._updateFilter();
@@ -58,7 +61,7 @@ DateFilterValue.components = { YearPicker };
 
 DateFilterValue.props = {
     // See @spreadsheet_edition/bundle/global_filters/filters_plugin.RangeType
-    type: { validate: (t) => ["year", "month", "quarter"].includes(t) },
+    type: { validate: (/**@type {string} */ t) => ["year", "month", "quarter"].includes(t) },
     onTimeRangeChanged: Function,
     yearOffset: { type: Number, optional: true },
     period: { type: String, optional: true },

@@ -15,6 +15,7 @@
  * @property {string} type "text" | "date" | "relation"
  * @property {RangeType} [rangeType]
  * @property {boolean} [defaultsToCurrentPeriod]
+ * @property {boolean} [automaticDefaultValue]
  * @property {string|Array<string>|Object} defaultValue Default Value
  * @property {number} [modelID] ID of the related model
  * @property {string} [modelName] Name of the related model
@@ -143,7 +144,7 @@ export class GlobalFiltersCorePlugin extends spreadsheet.CorePlugin {
     /**
      * Remove a global filter
      *
-     * @param {number} id Id of the filter to remove
+     * @param {string} id Id of the filter to remove
      */
     _removeGlobalFilter(id) {
         const globalFilters = { ...this.globalFilters };
@@ -153,7 +154,7 @@ export class GlobalFiltersCorePlugin extends spreadsheet.CorePlugin {
     /**
      * Edit a global filter
      *
-     * @param {number} id Id of the filter to update
+     * @param {string} id Id of the filter to update
      * @param {GlobalFilter} newFilter
      */
     _editGlobalFilter(id, newFilter) {
