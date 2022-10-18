@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { clear, increment } from '@mail/model/model_field_command';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 registerModel({
@@ -17,6 +17,26 @@ registerModel({
                 highlightTimer: { doReset: this.highlightTimer ? true : undefined },
                 isHighlighted: true,
             });
+        },
+        /**
+         * Tell whether the message is partially visible on browser window or not.
+         *
+         * @returns {boolean}
+         */
+        isPartiallyVisible() {
+            if (!this.component || !this.component.root.el) {
+                return false;
+            }
+            const elRect = this.component.root.el.getBoundingClientRect();
+            if (!this.component.root.el.parentNode) {
+                return false;
+            }
+            const parentRect = this.component.root.el.parentNode.getBoundingClientRect();
+            // intersection with 5px offset
+            return (
+                elRect.top < parentRect.bottom + 5 &&
+                parentRect.top < elRect.bottom + 5
+            );
         },
         /**
          * @param {MouseEvent} ev
@@ -115,8 +135,28 @@ registerModel({
                 this.highlight();
                 this.update({ doHighlight: clear() });
             }
-            if (this.threadViewOwnerAsLastMessageView && this.component && this.component.isPartiallyVisible()) {
+            if (this.threadViewOwnerAsLastMessageView && this.isPartiallyVisible()) {
                 this.threadViewOwnerAsLastMessageView.handleVisibleMessage(this.message);
+            }
+            if (this.component._prettyBodyRef.el && this.message.prettyBody !== this.lastPrettyBody) {
+                this.component._update();
+                this.update({ lastPrettyBody: this.message.prettyBody });
+            }
+            if (!this.component._prettyBodyRef.el) {
+                this.update({ lastPrettyBody: clear() });
+            }
+            // Remove all readmore before if any before reinsert them with insertReadMoreLess.
+            // This is needed because insertReadMoreLess is working with direct DOM mutations
+            // which are not sync with Owl.
+            if (this.contentRef.el) {
+                for (const el of this.contentRef.el.querySelectorAll(':scope .o_Message_readMoreLess')) {
+                    el.remove();
+                }
+                this.update({ lastReadMoreIndex: clear() });
+                this.insertReadMoreLess($(this.contentRef.el));
+                this.messaging.messagingBus.trigger('o-component-message-read-more-less-inserted', {
+                    message: this.message,
+                });
             }
         },
         onHighlightTimerTimeout() {
@@ -139,6 +179,93 @@ registerModel({
                 isHovered: false,
                 messagingAsClickedMessageView: clear(),
             });
+        },
+        /**
+         * Modifies the message to add the 'read more/read less' functionality
+         * All element nodes with 'data-o-mail-quote' attribute are concerned.
+         * All text nodes after a ``#stopSpelling`` element are concerned.
+         * Those text nodes need to be wrapped in a span (toggle functionality).
+         * All consecutive elements are joined in one 'read more/read less'.
+         *
+         * FIXME This method should be rewritten (task-2308951)
+         *
+         * @param {jQuery} $element
+         */
+        insertReadMoreLess($element) {
+            const groups = [];
+            let readMoreNodes;
+
+            // nodeType 1: element_node
+            // nodeType 3: text_node
+            const $children = $element.contents()
+                .filter((index, content) =>
+                    content.nodeType === 1 || (content.nodeType === 3 && content.nodeValue.trim())
+                );
+
+            for (const child of $children) {
+                let $child = $(child);
+
+                // Hide Text nodes if "stopSpelling"
+                if (
+                    child.nodeType === 3 &&
+                    $child.prevAll('[id*="stopSpelling"]').length > 0
+                ) {
+                    // Convert Text nodes to Element nodes
+                    $child = $('<span>', {
+                        text: child.textContent,
+                        'data-o-mail-quote': '1',
+                    });
+                    child.parentNode.replaceChild($child[0], child);
+                }
+
+                // Create array for each 'read more' with nodes to toggle
+                if (
+                    $child.attr('data-o-mail-quote') ||
+                    (
+                        $child.get(0).nodeName === 'BR' &&
+                        $child.prev('[data-o-mail-quote="1"]').length > 0
+                    )
+                ) {
+                    if (!readMoreNodes) {
+                        readMoreNodes = [];
+                        groups.push(readMoreNodes);
+                    }
+                    $child.hide();
+                    readMoreNodes.push($child);
+                } else {
+                    readMoreNodes = undefined;
+                    this.insertReadMoreLess($child);
+                }
+            }
+
+            for (const group of groups) {
+                const index = this.update({ lastReadMoreIndex: increment() });
+                // Insert link just before the first node
+                const $readMoreLess = $('<a>', {
+                    class: 'o_Message_readMoreLess d-block',
+                    href: '#',
+                    text: this.readMoreText,
+                }).insertBefore(group[0]);
+
+                // Toggle All next nodes
+                if (!this.isReadMoreByIndex.has(index)) {
+                    this.isReadMoreByIndex.set(index, true);
+                }
+                const updateFromState = () => {
+                    const isReadMore = this.isReadMoreByIndex.get(index);
+                    for (const $child of group) {
+                        $child.hide();
+                        $child.toggle(!isReadMore);
+                    }
+                    $readMoreLess.text(isReadMore ? this.readMoreText : this.readLessText);
+                };
+                $readMoreLess.click(e => {
+                    e.preventDefault();
+                    this.isReadMoreByIndex.set(index, !this.isReadMoreByIndex.get(index));
+                    updateFromState();
+                });
+                updateFromState();
+            }
         },
         /**
          * Action to initiate reply to current messageView.
@@ -234,6 +361,10 @@ registerModel({
         composerViewInEditing: one('ComposerView', {
             inverse: 'messageViewInEditing',
         }),
+        /**
+         * Reference to the content of the message.
+         */
+        contentRef: attr(),
         /**
          * States the time elapsed since date up to now.
          */
@@ -410,6 +541,19 @@ registerModel({
             },
         }),
         /**
+         * Determines whether each "read more" is opened or closed. The keys are
+         * index, which is determined by their order of appearance in the DOM.
+         * If body changes so that "read more" count is different, their default
+         * value will be "wrong" at the next render but this is an acceptable
+         * limitation. It's more important to save the state correctly in a
+         * typical non-changing situation.
+         */
+        isReadMoreByIndex: attr({
+            compute() {
+                return new Map();
+            },
+        }),
+        /**
          * Determines if the author name is displayed.
          */
         isShowingAuthorName: attr({
@@ -455,6 +599,19 @@ registerModel({
                 return clear();
             },
             default: false,
+        }),
+        /**
+         * Value of the last rendered prettyBody. Useful to compare to new value
+         * to decide if it has to be updated.
+         */
+        lastPrettyBody: attr(),
+        /**
+         * States the index of the last "read more" that was inserted.
+         * Useful to remember the state for each "read more" even if their DOM
+         * is re-rendered.
+         */
+        lastReadMoreIndex: attr({
+            default: 0,
         }),
         linkPreviewListView: one('LinkPreviewListView', {
             compute() {
@@ -547,6 +704,16 @@ registerModel({
                 return this.message.author && this.message.author.isImStatusSet ? {} : clear();
             },
             inverse: 'messageViewOwner',
+        }),
+        readLessText: attr({
+            compute() {
+                return this.env._t("Read Less");
+            },
+        }),
+        readMoreText: attr({
+            compute() {
+                return this.env._t("Read More");
+            },
         }),
         /**
          * States whether this message view is the last one of its thread view.
