@@ -34,7 +34,6 @@ export class MessageList extends Component {
             const thread = threadView && threadView.thread;
             const threadCache = threadView && threadView.threadCache;
             return {
-                hasAutoScrollOnMessageReceived: threadView && threadView.hasAutoScrollOnMessageReceived,
                 order: threadView && threadView.order,
                 orderedMessages: threadCache ? [...threadCache.orderedMessages] : [],
                 thread,
@@ -151,13 +150,12 @@ export class MessageList extends Component {
      */
     _adjustScrollForExtraMessagesAtTheEnd() {
         const {
-            hasAutoScrollOnMessageReceived,
             order,
         } = this._lastRenderedValues();
         if (!this.messageListView.getScrollableElement() || !this.messageListView.hasScrollAdjust) {
             return;
         }
-        if (!hasAutoScrollOnMessageReceived) {
+        if (!this.messageListView.threadViewOwner.hasAutoScrollOnMessageReceived) {
             if (order === 'desc' && this._willPatchSnapshot) {
                 const { scrollHeight, scrollTop } = this._willPatchSnapshot;
                 this.setScrollTop(this.messageListView.getScrollableElement().scrollHeight - scrollHeight + scrollTop);
