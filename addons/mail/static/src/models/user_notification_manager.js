@@ -104,7 +104,7 @@ registerModel({
                 const audioElement = new Audio();
                 audioElement.src = audioElement.canPlayType("audio/ogg; codecs=vorbis")
                     ? url('/mail/static/src/audio/ting.ogg')
-                    : url('mail/static/src/audio/ting.mp3');
+                    : url('/mail/static/src/audio/ting.mp3');
                 return audioElement;
             },
         }),
