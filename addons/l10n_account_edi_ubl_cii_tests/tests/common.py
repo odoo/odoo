@@ -2,6 +2,7 @@
 import base64
 
 from freezegun import freeze_time
+from collections import Counter
 
 from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
 from odoo import fields
@@ -108,7 +109,10 @@ class TestUBLCommon(AccountEdiTestCommon):
             'amount_tax': amount_tax,
             'currency_id': currency_id,
         }])
-        self.assertEqual(invoice.invoice_line_ids.mapped('price_subtotal'), list_line_subtotals)
+        self.assertEqual(
+            Counter(invoice.invoice_line_ids.mapped('price_subtotal')),
+            Counter(list_line_subtotals),
+        )
 
     # -------------------------------------------------------------------------
     # EXPORT HELPERS
