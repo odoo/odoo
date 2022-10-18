@@ -11,6 +11,9 @@ const { useRef, useEffect } = owl;
  * reference in the current component. It can be placed directly on an
  * input or an element containing multiple inputs that require the
  * behavior
+ *
+ * NOTE: Special consideration for the input type = "number". In this
+ * case, whatever the user types, we let the browser's default behavior.
  */
 export function useNumpadDecimal() {
     const decimalPoint = localization.decimalPoint;
@@ -19,12 +22,18 @@ export function useNumpadDecimal() {
     const handler = (ev) => {
         if (
             !([".", ","].includes(ev.key) && ev.code === "NumpadDecimal") ||
-            ev.key === decimalPoint
+            ev.key === decimalPoint ||
+            ev.target.type === "number"
         ) {
             return;
         }
         ev.preventDefault();
-        ev.target.value += decimalPoint;
+        ev.target.setRangeText(
+            decimalPoint,
+            ev.target.selectionStart,
+            ev.target.selectionEnd,
+            "end"
+        );
     };
     useEffect(
         (el) => {
