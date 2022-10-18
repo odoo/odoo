@@ -627,15 +627,16 @@ class HolidaysAllocation(models.Model):
         return True
 
     def action_confirm(self):
-        if self.filtered(lambda holiday: holiday.state != 'draft'):
+        if self.filtered(lambda holiday: holiday.state != 'draft' and holiday.validation_type != 'no'):
             raise UserError(_('Allocation request must be in Draft state ("To Submit") in order to confirm it.'))
         res = self.write({'state': 'confirm'})
         self.activity_update()
+        self.filtered(lambda holiday: holiday.validation_type == 'no').action_validate()
         return res
 
     def action_validate(self):
         current_employee = self.env.user.employee_id
-        if any(holiday.state != 'confirm' for holiday in self):
+        if any(holiday.state != 'confirm' and holiday.validation_type != 'no' for holiday in self):
             raise UserError(_('Allocation request must be confirmed in order to approve it.'))
 
         self.write({

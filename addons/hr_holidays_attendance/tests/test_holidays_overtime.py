@@ -45,6 +45,7 @@ class TestHolidaysOvertime(TransactionCase):
             'company_id': cls.company.id,
             'requires_allocation': 'yes',
             'employee_requests': 'yes',
+            'allocation_validation_type': 'officer',
             'overtime_deductible': True,
         })
 
@@ -183,6 +184,7 @@ class TestHolidaysOvertime(TransactionCase):
                 'company_id': self.company.id,
                 'requires_allocation': 'yes',
                 'employee_requests': 'yes',
+                'allocation_validation_type': 'officer',
                 'overtime_deductible': False,
             })
 
