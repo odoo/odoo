@@ -34,7 +34,6 @@ export class MessageList extends Component {
             const thread = threadView && threadView.thread;
             const threadCache = threadView && threadView.threadCache;
             return {
-                componentHintList: threadView ? [...threadView.componentHintList] : [],
                 hasAutoScrollOnMessageReceived: threadView && threadView.hasAutoScrollOnMessageReceived,
                 order: threadView && threadView.order,
                 orderedMessages: threadCache ? [...threadCache.orderedMessages] : [],
@@ -94,11 +93,10 @@ export class MessageList extends Component {
      * fixed height, which is the case for the moment. task-2358066
      */
     adjustFromComponentHints() {
-        const { componentHintList } = this._lastRenderedValues();
         if (!this.messageListView.exists()) {
             return;
         }
-        for (const hint of componentHintList) {
+        for (const hint of this.messageListView.threadViewOwner.componentHintList) {
             switch (hint.type) {
                 case 'change-of-thread-cache':
                 case 'member-list-hidden':
