@@ -17,6 +17,12 @@ registerModel({
             }
             this._backupFeedback();
         },
+        onMounted() {
+            this.feedbackTextareaRef.el.focus();
+            if (this.activity.feedbackBackup) {
+                this.feedbackTextareaRef.el.value = this.activity.feedbackBackup;
+            }
+        },
         /**
          * Handles click on this "Discard" button.
          */

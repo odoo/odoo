@@ -3,7 +3,7 @@
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-const { Component, onMounted, useRef } = owl;
+const { Component, onMounted } = owl;
 
 export class ActivityMarkDonePopoverContent extends Component {
 
@@ -13,19 +13,7 @@ export class ActivityMarkDonePopoverContent extends Component {
     setup() {
         super.setup();
         useRefToModel({ fieldName: 'feedbackTextareaRef', refName: 'feedbackTextarea' });
-        this._feedbackTextareaRef = useRef('feedbackTextarea');
-        onMounted(() => this._mounted());
-    }
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    _mounted() {
-        this._feedbackTextareaRef.el.focus();
-        if (this.activityMarkDonePopoverContentView.activity.feedbackBackup) {
-            this._feedbackTextareaRef.el.value = this.activityMarkDonePopoverContentView.activity.feedbackBackup;
-        }
+        onMounted(this.activityMarkDonePopoverContentView.onMounted);
     }
 
     /**

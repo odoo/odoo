@@ -61,17 +61,6 @@ registerModel({
             this.discuss.onInputQuickSearch(this.sidebar.quickSearchInputRef.el.value);
         },
         /**
-         * Called when clicking on a mailbox selection item.
-         *
-         * @param {Mailbox} mailbox
-         */
-        onClickMobileMailboxSelectionItem(mailbox) {
-            if (!mailbox.exists()) {
-                return;
-            }
-            mailbox.thread.open();
-        },
-        /**
          * @param {Event} ev
          * @param {Object} ui
          * @param {Object} ui.item

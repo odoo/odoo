@@ -3,8 +3,8 @@
 
     <t t-name="mail.DiscussMobileMailboxSelection" owl="1">
         <div class="o_DiscussMobileMailboxSelection d-flex" t-attf-class="{{ className }}" t-ref="root">
-            <t t-foreach="discussMobileMailboxSelectionView.owner.orderedMailboxes" t-as="mailbox" t-key="mailbox.localId">
-                <DiscussMobileMailboxSelectionItem discussView="discussMobileMailboxSelectionView.owner" mailbox="mailbox"/>
+            <t t-foreach="discussMobileMailboxSelectionView.items" t-as="item" t-key="item.localId">
+                <DiscussMobileMailboxSelectionItem record="item"/>
             </t>
         </div>
     </t>
