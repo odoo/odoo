@@ -45,9 +45,25 @@ export default class ListUIPlugin extends spreadsheet.UIPlugin {
                 break;
             case "ADD_GLOBAL_FILTER":
             case "EDIT_GLOBAL_FILTER":
+            case "REMOVE_GLOBAL_FILTER":
             case "SET_GLOBAL_FILTER_VALUE":
             case "CLEAR_GLOBAL_FILTER_VALUE":
                 this._addDomains();
+                break;
+            case "UNDO":
+            case "REDO":
+                if (
+                    cmd.commands.find((command) =>
+                        [
+                            "ADD_GLOBAL_FILTER",
+                            "EDIT_GLOBAL_FILTER",
+                            "REMOVE_GLOBAL_FILTER",
+                        ].includes(command.type)
+                    )
+                ) {
+                    this._addDomains();
+                }
+                break;
         }
     }
 
