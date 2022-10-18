@@ -160,6 +160,9 @@ registerModel({
             }
             this.adjustFromComponentHints();
         },
+        onScroll() {
+            this.scrollThrottle.do();
+        },
         scrollToEnd() {
             this.setScrollTop(this.threadViewOwner.order === 'asc' ? this.getScrollableElement().scrollHeight - this.getScrollableElement().clientHeight : 0);
         },

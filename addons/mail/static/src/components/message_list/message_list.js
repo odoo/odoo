@@ -47,14 +47,6 @@ export class MessageList extends Component {
         return this.props.record;
     }
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    onScroll() {
-        this.messageListView.scrollThrottle.do();
-    }
-
 }
 
 Object.assign(MessageList, {
