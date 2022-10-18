@@ -132,6 +132,15 @@ registerModel({
             default: 0,
         }),
         listRef: attr(),
+        loadingScreenView: one('EmojiGridLoadingScreen', {
+            compute() {
+                if (!this.messaging.emojiRegistry.isLoaded) {
+                    return {};
+                }
+                return clear();
+            },
+            inverse: 'emojiGridViewOwner',
+        }),
         nonSearchRowRegistry: one('EmojiGridViewRowRegistry', {
             default: {},
             inverse: 'emojiGridViewOwnerAsNonSearch',
