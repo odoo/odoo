@@ -2,7 +2,7 @@
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
-import { useUpdate } from '@mail/component_hooks/use_update';
+import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 import { Transition } from "@web/core/transition";
@@ -18,15 +18,12 @@ export class MessageList extends Component {
         super.setup();
         useComponentToModel({ fieldName: 'component' });
         useRefToModel({ fieldName: 'loadMoreRef', refName: 'loadMore' });
+        useUpdateToModel({ methodName: 'onComponentUpdate' });
         /**
          * Snapshot computed during willPatch, which is used by patched.
          */
         this._willPatchSnapshot = undefined;
         this._onScrollThrottled = _.throttle(this._onScrollThrottled.bind(this), 100);
-        // useUpdate must be defined after useRenderedValues, indeed they both
-        // use onMounted/onPatched, and the calls from useRenderedValues must
-        // happen first to save the values before useUpdate accesses them.
-        useUpdate({ func: () => this._update() });
         onWillPatch(() => this._willPatch());
     }
 
@@ -81,16 +78,6 @@ export class MessageList extends Component {
         const elRect = this.messageListView.getScrollableElement().getBoundingClientRect();
         const isInvisible = loadMoreRect.top > elRect.bottom || loadMoreRect.bottom < elRect.top;
         return !isInvisible;
-    }
-
-    /**
-     * @private
-     */
-    _update() {
-        if (!this.messageListView.exists()) {
-            return;
-        }
-        this.messageListView.adjustFromComponentHints();
     }
 
     //--------------------------------------------------------------------------
