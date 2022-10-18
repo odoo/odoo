@@ -69,7 +69,7 @@
         <record id="mail_template_channel_completed" model="mail.template">
             <field name="name">Elearning: Completed Course</field>
             <field name="model_id" ref="model_slide_channel_partner"/>
-            <field name="subject">Congratulation! You completed {{ object.channel_id.name }}</field>
+            <field name="subject">Congratulations! You completed {{ object.channel_id.name }}</field>
             <field name="email_from">{{ (object.channel_id.user_id.email_formatted or object.channel_id.user_id.company_id.catchall_formatted) }}</field>
             <field name="partner_to">{{ object.partner_id.id }}</field>
             <field name="description">Sent to attendees once they've completed the course</field>
