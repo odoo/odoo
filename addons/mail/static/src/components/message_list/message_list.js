@@ -32,7 +32,6 @@ export class MessageList extends Component {
             const messageListView = this.messageListView;
             const threadView = messageListView.threadViewOwner;
             return {
-                threadCacheInitialScrollHeight: threadView && threadView.threadCacheInitialScrollHeight,
                 threadCacheInitialScrollPosition: threadView && threadView.threadCacheInitialScrollPosition,
             };
         });
@@ -177,7 +176,6 @@ export class MessageList extends Component {
      */
     _adjustScrollFromModel() {
         const {
-            threadCacheInitialScrollHeight,
             threadCacheInitialScrollPosition,
         } = this._lastRenderedValues();
         if (!this.messageListView.getScrollableElement() || !this.messageListView.hasScrollAdjust) {
@@ -185,7 +183,7 @@ export class MessageList extends Component {
         }
         if (
             threadCacheInitialScrollPosition !== undefined &&
-            this.messageListView.getScrollableElement().scrollHeight === threadCacheInitialScrollHeight
+            this.messageListView.getScrollableElement().scrollHeight === this.messageListView.threadViewOwner.threadCacheInitialScrollHeight
         ) {
             this.setScrollTop(threadCacheInitialScrollPosition);
             return;
