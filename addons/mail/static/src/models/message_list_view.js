@@ -101,6 +101,20 @@ registerModel({
             }
             this.scrollToEnd();
         },
+        checkMostRecentMessageIsVisible() {
+            if (!this.exists()) {
+                return;
+            }
+            if (
+                this.threadViewOwner.lastMessageView &&
+                this.threadViewOwner.lastMessageView.component &&
+                this.threadViewOwner.lastMessageView.component.isPartiallyVisible()
+            ) {
+                this.threadViewOwner.handleVisibleMessage(
+                    this.threadViewOwner.lastMessageView.message,
+                );
+            }
+        },
         /**
          * @returns {Element|undefined}
          */

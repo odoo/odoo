@@ -54,19 +54,6 @@ export class MessageList extends Component {
 
     /**
      * @private
-     */
-    _checkMostRecentMessageIsVisible() {
-        if (!this.messageListView.exists()) {
-            return;
-        }
-        const { lastMessageView } = this.messageListView.threadViewOwner;
-        if (lastMessageView && lastMessageView.component && lastMessageView.component.isPartiallyVisible()) {
-            this.messageListView.threadViewOwner.handleVisibleMessage(lastMessageView.message);
-        }
-    }
-
-    /**
-     * @private
      * @returns {boolean}
      */
     _isLoadMoreVisible() {
@@ -131,7 +118,7 @@ export class MessageList extends Component {
         ) {
             this.messageListView.threadViewOwner.threadCache.loadMoreMessages();
         }
-        this._checkMostRecentMessageIsVisible();
+        this.messageListView.checkMostRecentMessageIsVisible();
         this.messageListView.update({ isLastScrollProgrammatic: false });
     }
 
