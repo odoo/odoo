@@ -2,7 +2,6 @@
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
-import { useRenderedValues } from '@mail/component_hooks/use_rendered_values';
 import { useUpdate } from '@mail/component_hooks/use_update';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
@@ -24,17 +23,6 @@ export class MessageList extends Component {
          */
         this._willPatchSnapshot = undefined;
         this._onScrollThrottled = _.throttle(this._onScrollThrottled.bind(this), 100);
-        /**
-         * State used by the component at the time of the render. Useful to
-         * properly handle async code.
-         */
-        this._lastRenderedValues = useRenderedValues(() => {
-            const messageListView = this.messageListView;
-            const threadView = messageListView.threadViewOwner;
-            return {
-                threadCacheInitialScrollPosition: threadView && threadView.threadCacheInitialScrollPosition,
-            };
-        });
         // useUpdate must be defined after useRenderedValues, indeed they both
         // use onMounted/onPatched, and the calls from useRenderedValues must
         // happen first to save the values before useUpdate accesses them.
@@ -175,17 +163,14 @@ export class MessageList extends Component {
      * @private
      */
     _adjustScrollFromModel() {
-        const {
-            threadCacheInitialScrollPosition,
-        } = this._lastRenderedValues();
         if (!this.messageListView.getScrollableElement() || !this.messageListView.hasScrollAdjust) {
             return;
         }
         if (
-            threadCacheInitialScrollPosition !== undefined &&
+            this.messageListView.threadViewOwner.threadCacheInitialScrollPosition !== undefined &&
             this.messageListView.getScrollableElement().scrollHeight === this.messageListView.threadViewOwner.threadCacheInitialScrollHeight
         ) {
-            this.setScrollTop(threadCacheInitialScrollPosition);
+            this.setScrollTop(this.messageListView.threadViewOwner.threadCacheInitialScrollPosition);
             return;
         }
         this._scrollToEnd();
