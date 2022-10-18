@@ -91,8 +91,9 @@ export class AutoComplete extends Component {
                 source.options = options.map((option) => this.makeOption(option));
             }
         }
-        this.sources = sources;
+
         Promise.all(proms).then(() => {
+            this.sources = sources;
             this.navigate(0);
         });
     }
