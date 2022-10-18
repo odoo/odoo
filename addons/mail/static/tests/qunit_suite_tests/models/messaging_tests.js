@@ -99,6 +99,213 @@ QUnit.test('openChat: open existing chat for user', async function (assert) {
     assert.strictEqual(existingChat.thread.threadViews.length, 1, 'the chat should now be displayed in a `ThreadView`');
 });
 
+QUnit.test('rpc: create from args', async function (assert) {
+    assert.expect(1);
+
+    const { messaging, pyEnv } = await start();
+    const partnerId = await messaging.rpc({
+        method: 'create',
+        model: 'res.partner',
+        args: [[{ name: 'foo' }]],
+    });
+    const [partner] = pyEnv['res.partner'].searchRead([['id', '=', partnerId]]);
+    assert.strictEqual('foo', partner.name);
+});
+
+QUnit.test('rpc: create from kwargs', async function (assert) {
+    assert.expect(1);
+
+    const { messaging, pyEnv } = await start();
+    const partnerId = await messaging.rpc({
+        method: 'create',
+        model: 'res.partner',
+        kwargs: {
+            vals_list: [{ name: 'foo' }],
+        },
+    });
+    const [partner] = pyEnv['res.partner'].searchRead([['id', '=', partnerId]]);
+    assert.strictEqual('foo', partner.name);
+});
+
+QUnit.test('rpc: read from args', async function (assert) {
+    assert.expect(2);
+
+    const { messaging, pyEnv } = await start();
+    const partnerId = pyEnv['res.partner'].create({ name: 'foo' });
+    const [partner] = await messaging.rpc({
+        method: 'read',
+        model: 'res.partner',
+        args: [[partnerId], ['id', 'name']],
+    });
+    assert.strictEqual(partner.name, 'foo');
+    assert.strictEqual(Object.keys(partner).length, 2);
+});
+
+QUnit.test('rpc: read from kwargs', async function (assert) {
+    assert.expect(2);
+
+    const { messaging, pyEnv } = await start();
+    const partnerId = pyEnv['res.partner'].create({ name: 'foo' });
+    const [partner] = await messaging.rpc({
+        method: 'read',
+        model: 'res.partner',
+        args: [[partnerId]],
+        kwargs: {
+            fields: ['id', 'name'],
+        }
+    });
+    assert.strictEqual(partner.name, 'foo');
+    assert.strictEqual(Object.keys(partner).length, 2);
+});
+
+QUnit.test('rpc: readGroup from args', async function (assert) {
+    assert.expect(4);
+
+    const { messaging, pyEnv } = await start();
+    const partnerIds = pyEnv['res.partner'].create([
+        { name: 'foo' },
+        { name: 'foo' },
+        { name: 'bar' },
+        { name: 'bar' },
+    ]);
+    const readGroupDomain = [['id', 'in', partnerIds]];
+    const readGroupFields = ['name'];
+    const readGroupGroupBy = ['name'];
+
+    const [firstGroup, secondGroup] = await messaging.rpc({
+        method: 'read_group',
+        model: 'res.partner',
+        args: [readGroupDomain, readGroupFields, readGroupGroupBy],
+    });
+    assert.strictEqual(firstGroup.name, 'bar');
+    assert.strictEqual(firstGroup.name_count, 2);
+    assert.strictEqual(secondGroup.name, 'foo');
+    assert.strictEqual(secondGroup.name_count, 2);
+});
+
+QUnit.test('rpc: readGroup from kwargs', async function (assert) {
+    assert.expect(4);
+
+    const { messaging, pyEnv } = await start();
+    const partnerIds = pyEnv['res.partner'].create([
+        { name: 'foo' },
+        { name: 'foo' },
+        { name: 'bar' },
+        { name: 'bar' },
+    ]);
+    const readGroupDomain = [['id', 'in', partnerIds]];
+    const readGroupFields = ['name'];
+    const readGroupGroupBy = ['name'];
+
+    const [firstGroup, secondGroup] = await messaging.rpc({
+        method: 'read_group',
+        model: 'res.partner',
+        kwargs: {
+            domain: readGroupDomain,
+            fields: readGroupFields,
+            groupBy: readGroupGroupBy,
+        },
+    });
+    assert.strictEqual(firstGroup.name, 'bar');
+    assert.strictEqual(firstGroup.name_count, 2);
+    assert.strictEqual(secondGroup.name, 'foo');
+    assert.strictEqual(secondGroup.name_count, 2);
+});
+
+QUnit.test('rpc: search from args', async function (assert) {
+    assert.expect(1);
+
+    const { messaging, pyEnv } = await start();
+    const partnerIds = pyEnv['res.partner'].create([{ name: 'foo' }, { name: 'bar' }]);
+    const searchDomain = [['id', 'in', partnerIds]];
+
+    const serverPartnerIds = await messaging.rpc({
+        model: 'res.partner',
+        method: 'search',
+        args: [searchDomain],
+    });
+    assert.deepEqual(partnerIds, serverPartnerIds);
+});
+
+QUnit.test('rpc: search from kwargs', async function (assert) {
+    assert.expect(1);
+
+    const { messaging, pyEnv } = await start();
+    const partnerIds = pyEnv['res.partner'].create([{ name: 'foo' }, { name: 'bar' }]);
+    const searchDomain = [['id', 'in', partnerIds]];
+
+    const serverPartnerIds = await messaging.rpc({
+        model: 'res.partner',
+        method: 'search',
+        kwargs: {
+            domain: searchDomain,
+        },
+    });
+    assert.deepEqual(partnerIds, serverPartnerIds);
+});
+
+QUnit.test('rpc: searchRead from args', async function (assert) {
+    assert.expect(2);
+
+    const { messaging, pyEnv } = await start();
+    const partnerIds = pyEnv['res.partner'].create([{ name: 'foo' }, { name: 'bar' }]);
+    const searchReadDomain = [['id', 'in', partnerIds]];
+    const searchReadFields = ['id', 'name'];
+
+    const [firstPartner, secondPartner] = await messaging.rpc({
+        model: 'res.partner',
+        method: 'search_read',
+        args: [searchReadDomain, searchReadFields],
+    });
+    assert.strictEqual(firstPartner.name, 'foo');
+    assert.strictEqual(secondPartner.name, 'bar');
+});
+
+QUnit.test('rpc: write from args', async function (assert) {
+    assert.expect(1);
+
+    const { messaging, pyEnv } = await start();
+    const partnerId = pyEnv['res.partner'].create({ name: 'foo' });
+    await messaging.rpc({
+        method: 'write',
+        model: 'res.partner',
+        args: [[partnerId], { name: 'bar' }],
+    });
+    const [partner] = pyEnv['res.partner'].searchRead([['id', '=', partnerId]]);
+    assert.strictEqual(partner.name, 'bar');
+});
+
+QUnit.test('rpc: write from kwargs', async function (assert) {
+    assert.expect(1);
+
+    const { messaging, pyEnv } = await start();
+    const partnerId = pyEnv['res.partner'].create({ name: 'foo' });
+    await messaging.rpc({
+        method: 'write',
+        model: 'res.partner',
+        args: [[partnerId]],
+        kwargs: {
+            vals: { name: 'bar' },
+        },
+    });
+    const [partner] = pyEnv['res.partner'].searchRead([['id', '=', partnerId]]);
+    assert.strictEqual(partner.name, 'bar');
+});
+
+QUnit.test('rpc: unlink', async function (assert) {
+    assert.expect(1);
+
+    const { messaging, pyEnv } = await start();
+    const partnerId = pyEnv['res.partner'].create({ name: 'foo' });
+    await messaging.rpc({
+        method: 'unlink',
+        model: 'res.partner',
+        args: [[partnerId]],
+    });
+    const searchReadResults = pyEnv['res.partner'].searchRead([['id', '=', partnerId]]);
+    assert.strictEqual(searchReadResults.length, 0);
+});
+
 });
 });
 });
