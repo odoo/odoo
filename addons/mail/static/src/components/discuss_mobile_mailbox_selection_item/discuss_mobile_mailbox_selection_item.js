@@ -6,31 +6,17 @@ const { Component } = owl;
 
 export class DiscussMobileMailboxSelectionItem extends Component {
 
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
     /**
-     * @returns {DiscussView}
+     * @returns {DiscussMobileMailboxSelectionItemView}
      */
-    get discussView() {
-        return this.props.discussView;
-    }
-
-    /**
-     * @returns {Mailbox}
-     */
-    get mailbox() {
-        return this.props.mailbox;
+    get discussMobileMailboxSelectionItemView() {
+        return this.props.record;
     }
 
 }
 
 Object.assign(DiscussMobileMailboxSelectionItem, {
-    props: {
-        discussView: Object,
-        mailbox: Object,
-    },
+    props: { record: Object },
     template: 'mail.DiscussMobileMailboxSelectionItem',
 });
 
