@@ -129,7 +129,7 @@ export class MessageList extends Component {
             }
             return;
         }
-        this._scrollToEnd();
+        this.messageListView.scrollToEnd();
     }
 
     /**
@@ -162,7 +162,7 @@ export class MessageList extends Component {
             this.messageListView.setScrollTop(this.messageListView.threadViewOwner.threadCacheInitialScrollPosition);
             return;
         }
-        this._scrollToEnd();
+        this.messageListView.scrollToEnd();
         return;
     }
 
@@ -192,15 +192,6 @@ export class MessageList extends Component {
         const elRect = this.messageListView.getScrollableElement().getBoundingClientRect();
         const isInvisible = loadMoreRect.top > elRect.bottom || loadMoreRect.bottom < elRect.top;
         return !isInvisible;
-    }
-
-    /**
-     * Scrolls to the end of the list.
-     *
-     * @private
-     */
-    _scrollToEnd() {
-        this.messageListView.setScrollTop(this.messageListView.threadViewOwner.order === 'asc' ? this.messageListView.getScrollableElement().scrollHeight - this.messageListView.getScrollableElement().clientHeight : 0);
     }
 
     /**

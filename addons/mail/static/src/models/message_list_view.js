@@ -33,6 +33,9 @@ registerModel({
             }
             this.thread.cache.loadMoreMessages();
         },
+        scrollToEnd() {
+            this.setScrollTop(this.threadViewOwner.order === 'asc' ? this.getScrollableElement().scrollHeight - this.getScrollableElement().clientHeight : 0);
+        },
         /**
          * @param {integer} value
          */
