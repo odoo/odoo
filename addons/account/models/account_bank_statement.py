@@ -223,20 +223,24 @@ class AccountBankStatement(models.Model):
     def _get_invalid_statement_ids(self, all_statements=None):
         """ Returns the statements that are invalid for _compute and _search methods."""
 
-        self.line_ids.flush_model(['statement_id', 'internal_index'])
-        self.flush_model(['balance_start', 'balance_end_real', 'first_line_index'])
+        self.env['account.bank.statement.line'].flush_model(['statement_id', 'internal_index'])
+        self.env['account.bank.statement'].flush_model(['balance_start', 'balance_end_real', 'first_line_index'])
 
-        self._cr.execute('''
-        SELECT id
-          FROM account_bank_statement st, 
-               LATERAL (
-                SELECT balance_end_real 
-                  FROM account_bank_statement st_lookup 
-                 WHERE st_lookup.first_line_index < st.first_line_index 
-                   AND st_lookup.journal_id = st.journal_id
-                 ORDER BY st_lookup.first_line_index desc
-                 LIMIT 1 ) prev
-         WHERE prev.balance_end_real != st.balance_start
-           ''' + ('AND st.id IN %s' if all_statements else ''), (tuple(self.ids),))
+        self.env.cr.execute(f"""
+            SELECT id
+              FROM account_bank_statement st,
+                   LATERAL (
+                       SELECT balance_end_real
+                         FROM account_bank_statement st_lookup
+                        WHERE st_lookup.first_line_index < st.first_line_index
+                          AND st_lookup.journal_id = st.journal_id
+                     ORDER BY st_lookup.first_line_index desc
+                        LIMIT 1
+                   ) prev
+             WHERE prev.balance_end_real != st.balance_start
+               {"" if all_statements else "AND st.id IN %(ids)s"}
+        """, {
+            'ids': tuple(self.ids)
+        })
         res = self.env.cr.fetchall()
         return [r[0] for r in res]
