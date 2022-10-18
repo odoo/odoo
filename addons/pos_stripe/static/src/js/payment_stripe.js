@@ -24,18 +24,23 @@ let PaymentStripe = PaymentInterface.extend({
         this._showError(_t('Reader disconnected'));
     },
 
-    stripeFetchConnectionToken: function () {
+    stripeFetchConnectionToken: async function () {
         // Do not cache or hardcode the ConnectionToken.
-        return rpc.query({
-            model: 'pos.payment.method',
-            method: 'stripe_connection_token',
-        }, {
-            silent: true,
-        }).catch(function (error) {
-            this._showError(_t('error'));
-        }).then(function (data) {
+        try {
+            let data = await rpc.query({
+                model: 'pos.payment.method',
+                method: 'stripe_connection_token',
+            }, {
+                silent: true,
+            });
+            if (data.error) {
+                throw data.error;
+            }
             return data.secret;
-        });
+        } catch (error) {
+            this._showError(error.message);
+            return false;
+        };
     },
 
     discoverReaders: async function () {
@@ -90,11 +95,19 @@ let PaymentStripe = PaymentInterface.extend({
                 }
             }
         }
+        this._showError(_.str.sprintf(
+            this.env._t('Stripe readers %s not listed in your account'), 
+            this.payment_method.stripe_serial_number
+        ));
     },
 
     collectPayment: async function (amount) {
         let line = this.pos.get_order().selected_paymentline;
         let clientSecret = await this.fetchPaymentIntentClientSecret(line.payment_method, amount);
+        if (!clientSecret) {
+            line.set_payment_status('retry');
+            return false;
+        }
         line.set_payment_status('waitingCard');
         let collectPaymentMethod = await this.terminal.collectPaymentMethod(clientSecret);
         if (collectPaymentMethod.error) {
@@ -120,35 +133,46 @@ let PaymentStripe = PaymentInterface.extend({
 
     captureAfterPayment: async function (processPayment, line) {
         let capturePayment = await this.capturePayment(processPayment.paymentIntent.id);
+        line.card_type = capturePayment.charges.data[0].payment_method_details.card_present.brand;
         line.transaction_id = capturePayment.id;
     },
 
-    capturePayment: function (paymentIntentId) {
-        let self = this;
-        return rpc.query({
-            model: 'pos.payment.method',
-            method: 'stripe_capture_payment',
-            args: [paymentIntentId],
-        }, {
-            silent: true,
-        }).catch(function (error) {
-            self._showError(_t('error'));
-        });
+    capturePayment: async function (paymentIntentId) {
+        try {
+            let data = await rpc.query({
+                model: 'pos.payment.method',
+                method: 'stripe_capture_payment',
+                args: [paymentIntentId],
+            }, {
+                silent: true,
+            });
+            if (data.error) {
+                throw data.error;
+            }
+            return data;
+        } catch (error) {
+            this._showError(error.message);
+            return false;
+        };
     },
 
-    fetchPaymentIntentClientSecret: function (payment_method, amount) {
-        let self = this;
-        return rpc.query({
-            model: 'pos.payment.method',
-            method: 'stripe_payment_intent',
-            args: [[payment_method.id], amount],
-        }, {
-            silent: true,
-        }).catch(function (error) {
-            self._showError(_t('error'));
-        }).then(function (data) {
+    fetchPaymentIntentClientSecret: async function (payment_method, amount) {
+        try {
+            let data = await rpc.query({
+                model: 'pos.payment.method',
+                method: 'stripe_payment_intent',
+                args: [[payment_method.id], amount],
+            }, {
+                silent: true,
+            });
+            if (data.error) {
+                throw data.error;
+            }
             return data.client_secret;
-        });
+        } catch (error) {
+            this._showError(error.message);
+            return false;
+        };
     },
 
     send_payment_request: async function (cid) {
