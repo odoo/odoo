@@ -53,6 +53,7 @@ class AccountMove(models.Model):
     _mail_post_access = 'read'
     _check_company_auto = True
     _sequence_index = "journal_id"
+    _rec_names_search = ['name', 'partner_id.name', 'ref']
 
     @property
     def _sequence_monthly_regex(self):
@@ -3060,6 +3061,11 @@ class AccountMove(models.Model):
             name += '(* %s)' % str(self.id)
         else:
             name += self.name
+            if self.env.context.get('input_full_display_name'):
+                if self.partner_id:
+                    name += f', {self.partner_id.name}'
+                if self.date:
+                    name += f', {format_date(self.env, self.date)}'
         return name + (f" ({shorten(self.ref, width=50)})" if show_ref and self.ref else '')
 
     def _get_reconciled_amls(self):
