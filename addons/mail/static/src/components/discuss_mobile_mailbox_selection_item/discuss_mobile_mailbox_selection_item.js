@@ -24,19 +24,11 @@ export class DiscussMobileMailboxSelectionItem extends Component {
         return this.props.discussView;
     }
 
-    /**
-     * @returns {Mailbox}
-     */
-    get mailbox() {
-        return this.props.mailbox;
-    }
-
 }
 
 Object.assign(DiscussMobileMailboxSelectionItem, {
     props: {
         discussView: Object,
-        mailbox: Object,
         record: Object,
     },
     template: 'mail.DiscussMobileMailboxSelectionItem',
