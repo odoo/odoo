@@ -334,7 +334,13 @@ async function applyModifications(img, dataOptions = {}) {
     ctx.fillRect(0, 0, result.width, result.height);
 
     // Quality
-    return result.toDataURL(mimetype, quality / 100);
+    const dataURL = result.toDataURL(mimetype, quality / 100);
+    const newSize = getDataURLBinarySize(dataURL);
+    const originalSize = _getImageSizeFromCache(originalSrc);
+    const isChanged = !!perspective || !!glFilter ||
+        original.width !== result.width || original.height !== result.height ||
+        original.width !== croppedImg.width || original.height !== croppedImg.height;
+    return (isChanged || originalSize >= newSize) ? dataURL : await _loadImageDataURL(originalSrc);
 }
 
 /**
@@ -391,8 +397,17 @@ async function _updateImageData(src, key = 'objectURL') {
     } else {
         value = URL.createObjectURL(blob);
     }
-    imageCache.set(src, Object.assign(currentImageData || {}, {[key]: value}));
+    imageCache.set(src, Object.assign(currentImageData || {}, {[key]: value, size: blob.size}));
     return value;
+}
+/**
+ * Returns the size of a cached image.
+ *
+ * @param {String} src used as a key on the image cache map.
+ * @returns {Number} size of the image in bytes.
+ */
+function _getImageSizeFromCache(src) {
+    return imageCache.get(src).size;
 }
 /**
  * Activates the cropper on a given image.

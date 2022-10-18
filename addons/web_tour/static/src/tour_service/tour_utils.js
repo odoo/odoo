@@ -211,6 +211,9 @@ export class RunningTourActionHelper {
     text_blur(text, element) {
         this._text_blur(this._get_action_values(element), text);
     }
+    range(text, element) {
+        this._range(this._get_action_values(element), text);
+    }
     drag_and_drop(to, element) {
         this._drag_and_drop_jquery(this._get_action_values(element), to);
     }
@@ -312,6 +315,10 @@ export class RunningTourActionHelper {
         this._text(values, text);
         values.$element.trigger("focusout");
         values.$element.trigger("blur");
+    }
+    _range(values, text) {
+        values.$element[0].value = text;
+        values.$element[0].dispatchEvent(new Event('change', { bubbles: true, cancelable: false }));
     }
     _calculateCenter($el, selector) {
         const center = $el.offset();
