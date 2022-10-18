@@ -7554,6 +7554,70 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(getCardTexts(), ["2", "4", "1", "3"]);
     });
 
+    QUnit.test(
+        "resequence all when create(ing) a new record + partial resequencing",
+        async (assert) => {
+            let resequenceOffset;
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: /* xml */ `
+                <kanban>
+                    <field name="product_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="id"/></div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+                groupBy: ["product_id"],
+                mockRPC(route, params) {
+                    if (route === "/web/dataset/resequence") {
+                        assert.step(JSON.stringify({ ids: params.ids, offset: params.offset }));
+                        resequenceOffset = params.offset || 0;
+                        return true;
+                    }
+                    if (params.method === "read") {
+                        // Important to simulate the server returning the new sequence.
+                        const [ids, fields] = params.args;
+                        return ids.map((id, index) => ({
+                            id,
+                            [fields[0]]: resequenceOffset + index,
+                        }));
+                    }
+                },
+            });
+
+            await createColumn();
+            await editColumnName("foo");
+            await validateColumn();
+            assert.verifySteps([JSON.stringify({ ids: [3, 5, 6] })]);
+
+            await editColumnName("bar");
+            await validateColumn();
+            assert.verifySteps([JSON.stringify({ ids: [3, 5, 6, 7] })]);
+
+            await editColumnName("baz");
+            await validateColumn();
+            assert.verifySteps([JSON.stringify({ ids: [3, 5, 6, 7, 8] })]);
+
+            await editColumnName("boo");
+            await validateColumn();
+            assert.verifySteps([JSON.stringify({ ids: [3, 5, 6, 7, 8, 9] })]);
+
+            // When rearranging, only resequence the affected records. In this example,
+            // dragging column 2 to column 4 should only resequence [5, 6, 7] to [6, 7, 5]
+            // with offset 1.
+            await dragAndDrop(
+                ".o_kanban_group:nth-child(2) .o_column_title",
+                ".o_kanban_group:nth-child(4)"
+            );
+            assert.verifySteps([JSON.stringify({ ids: [6, 7, 5], offset: 1 })]);
+        }
+    );
+
     QUnit.test("prevent resequence columns if groups_draggable=false", async (assert) => {
         serverData.models.product.fields.sequence = { type: "integer" };
 

@@ -1706,18 +1706,21 @@ class DynamicList extends DataPoint {
         // Determine what records need to be modified
         const firstIndex = Math.min(fromIndex, toIndex);
         const lastIndex = Math.max(fromIndex, toIndex) + 1;
-        let reorderAll = false;
-        let lastSequence = (asc ? -1 : 1) * Infinity;
-        for (let index = 0; index < records.length; index++) {
-            const sequence = getSequence(records[index]);
-            if (
-                ((index < firstIndex || index >= lastIndex) &&
-                    ((asc && lastSequence >= sequence) || (!asc && lastSequence <= sequence))) ||
-                (index >= firstIndex && index < lastIndex && lastSequence === sequence)
-            ) {
-                reorderAll = true;
+        let reorderAll = records.some((record) => record.data[handleField] === undefined);
+        if (!reorderAll) {
+            let lastSequence = (asc ? -1 : 1) * Infinity;
+            for (let index = 0; index < records.length; index++) {
+                const sequence = getSequence(records[index]);
+                if (
+                    ((index < firstIndex || index >= lastIndex) &&
+                        ((asc && lastSequence >= sequence) ||
+                            (!asc && lastSequence <= sequence))) ||
+                    (index >= firstIndex && index < lastIndex && lastSequence === sequence)
+                ) {
+                    reorderAll = true;
+                }
+                lastSequence = sequence;
             }
-            lastSequence = sequence;
         }
 
         // Perform the resequence in the list of records
