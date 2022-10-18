@@ -52,8 +52,6 @@ registerModel({
                             break;
                         case 'ir.attachment/delete':
                             return this._handleNotificationAttachmentDelete(message.payload);
-                        case 'mail.channel.member/seen':
-                            return this._handleNotificationChannelMemberSeen(message.payload);
                         case 'mail.channel.member/fetched':
                             return this._handleNotificationChannelMemberFetched(message.payload);
                         case 'mail.channel.member/typing_status':
@@ -291,49 +289,6 @@ registerModel({
                 if (channel.channel_type !== 'channel' && !this.messaging.device.isSmall && !channel.thread.chatWindow) {
                     this.messaging.chatWindowManager.openThread(channel.thread);
                 }
-            }
-        },
-        /**
-         * Called when a channel has been seen, and the server responds with the
-         * last message seen. Useful in order to track last message seen.
-         *
-         * @private
-         * @param {Object} param1
-         * @param {integer} param1.channel_id
-         * @param {integer} param1.last_message_id
-         * @param {integer} param1.partner_id
-         */
-        async _handleNotificationChannelMemberSeen({
-            channel_id: channelId,
-            last_message_id,
-            partner_id,
-        }) {
-            const channel = this.messaging.models['Channel'].findFromIdentifyingData({ id: channelId });
-            if (!channel) {
-                // for example seen from another browser, the current one has no
-                // knowledge of the channel
-                return;
-            }
-            const lastMessage = this.messaging.models['Message'].insert({ id: last_message_id });
-            // restrict computation of seen indicator for "non-channel" channels
-            // for performance reasons
-            const shouldComputeSeenIndicators = channel.channel_type !== 'channel';
-            if (shouldComputeSeenIndicators) {
-                this.messaging.models['ThreadPartnerSeenInfo'].insert({
-                    lastSeenMessage: lastMessage,
-                    partner: { id: partner_id },
-                    thread: channel.thread,
-                });
-                this.messaging.models['MessageSeenIndicator'].insert({
-                    message: lastMessage,
-                    thread: channel.thread,
-                });
-            }
-            if (this.messaging.currentPartner && this.messaging.currentPartner.id === partner_id) {
-                channel.thread.update({
-                    pendingSeenMessageId: undefined,
-                    rawLastSeenByCurrentPartnerMessageId: last_message_id,
-                });
             }
         },
         /**

@@ -332,11 +332,21 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
     const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId]])[0];
     // Simulate received channel seen notification
     await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/seen', {
-            'channel_id': mailChannelId,
-            'last_message_id': 100,
-            'partner_id': resPartnerId,
-        });
+        pyEnv['bus.bus']._sendone(
+            mailChannel1,
+            'mail.record/insert',
+            {
+                'ThreadPartnerSeenInfo': {
+                    'lastSeenMessage': [['insert-and-replace', { 'id': 100 }]],
+                    'partner': [['insert-and-replace', { id: resPartnerId }]],
+                    'thread': [['insert-and-replace', { 'id': mailChannelId, 'model': 'mail.channel' }]],
+                },
+                'MessageSeenIndicator': {
+                    'message': [['insert-and-replace', { 'id': 100 }]],
+                    'thread': [['insert-and-replace', { 'id': mailChannelId, 'model': 'mail.channel' }]],
+                },
+            }
+        );
     });
     assert.containsN(
         document.body,
@@ -401,11 +411,21 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received are correc
 
     // Simulate received channel seen notification
     await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/seen', {
-            'channel_id': mailChannelId,
-            'last_message_id': 100,
-            'partner_id': resPartnerId,
-        });
+        pyEnv['bus.bus']._sendone(
+            mailChannel1,
+            'mail.record/insert',
+            {
+                'ThreadPartnerSeenInfo': {
+                    'lastSeenMessage': [['insert-and-replace', { 'id': 100 }]],
+                    'partner': [['insert-and-replace', { id: resPartnerId }]],
+                    'thread': [['insert-and-replace', { 'id': mailChannelId, 'model': 'mail.channel' }]],
+                },
+                'MessageSeenIndicator': {
+                    'message': [['insert-and-replace', { 'id': 100 }]],
+                    'thread': [['insert-and-replace', { 'id': mailChannelId, 'model': 'mail.channel' }]],
+                },
+            }
+        );
     });
     assert.containsN(
         document.body,
