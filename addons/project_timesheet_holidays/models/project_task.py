@@ -30,9 +30,9 @@ class Task(models.Model):
         leave_type_read_group = self.env['hr.leave.type']._read_group(
             [('timesheet_task_id', '!=', False)],
             ['timesheet_task_ids:array_agg(timesheet_task_id)'],
-            [],
+            [], limit=1
         )
-        timeoff_task_ids = leave_type_read_group[0]['timesheet_task_ids'] if leave_type_read_group[0]['timesheet_task_ids'] else []
+        timeoff_task_ids = leave_type_read_group[0]['timesheet_task_ids'] or []
         if self.env.company.leave_timesheet_task_id:
             timeoff_task_ids.append(self.env.company.leave_timesheet_task_id.id)
         if operator == '!=':
