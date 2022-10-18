@@ -151,7 +151,12 @@ class ImageProcess():
         if output_image.mode not in ["1", "L", "P", "RGB", "RGBA"] or (output_format == 'JPEG' and output_image.mode == 'RGBA'):
             output_image = output_image.convert("RGB")
 
-        return image_apply_opt(output_image, **opt)
+        output_bytes = image_apply_opt(output_image, **opt)
+        if len(output_bytes) >= len(self.source) and self.original_format == output_format and not self.operationsCount:
+            # Format has not changed and image content is unchanged but the
+            # reached binary is bigger: rather use the original.
+            return self.source
+        return output_bytes
 
     def resize(self, max_width=0, max_height=0):
         """Resize the image.

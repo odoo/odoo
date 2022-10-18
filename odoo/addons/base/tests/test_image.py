@@ -177,6 +177,19 @@ class TestImage(TransactionCase):
         res = tools.image_process(self.img_1920x1080_jpeg)
         self.assertLessEqual(len(res), len(self.img_1920x1080_jpeg))
 
+        # CASE: JPEG optimize + bigger size => original
+        pil_image = Image.new('RGB', (1920, 1080), color=self.bg_color)
+        # Drawing non trivial content so that optimization matters.
+        ImageDraw.Draw(pil_image).ellipse(xy=[
+            (400, 0),
+            (1500, 1080)
+        ], fill=self.fill_color, outline=(240, 25, 40), width=10)
+        image = tools.image_apply_opt(pil_image, 'JPEG')
+        res = tools.image_process(image, quality=50)
+        self.assertLess(len(res), len(image), "Low quality image should be smaller than original")
+        res = tools.image_process(image, quality=99)
+        self.assertEqual(len(res), len(image), "Original should be returned if size increased")
+
         # CASE: GIF doesn't apply quality, just optimize
         image = tools.image_apply_opt(Image.new('RGB', (1080, 1920)), 'GIF')
         res = tools.image_process(image)
