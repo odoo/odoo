@@ -525,3 +525,11 @@ class TestChannelInternals(MailCommon):
                 allowed_company_ids=self.company_admin.ids
             ).channel_get(self.partner_employee_c2.ids)
             self.assertTrue(initial_channel_info, 'should be able to chat with multi company user')
+
+    @users('employee')
+    def test_create_chat_channel_should_only_pin_the_channel_for_the_current_user(self):
+        chat = self.env['mail.channel'].channel_get(partners_to=self.test_partner.ids)
+        member_of_current_user = self.env['mail.channel.partner'].search([('channel_id', '=', chat['id']), ('partner_id', '=', self.env.user.partner_id.id)])
+        member_of_correspondent = self.env['mail.channel.partner'].search([('channel_id', '=', chat['id']), ('partner_id', '=', self.test_partner.id)])
+        self.assertTrue(member_of_current_user.is_pinned)
+        self.assertFalse(member_of_correspondent.is_pinned)
