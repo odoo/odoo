@@ -906,6 +906,13 @@ class Channel(models.Model):
             # create a new one
             channel = self.create({
                 'channel_partner_ids': [Command.link(partner_id) for partner_id in partners_to],
+                'channel_member_ids': [
+                    Command.create({
+                        'partner_id': partner_id,
+                        # only pin for the current user, so the chat does not show up for the correspondent until a message has been sent
+                        'is_pinned': partner_id == self.env.user.partner_id.id
+                    }) for partner_id in partners_to
+                ],
                 'channel_type': 'chat',
                 'name': ', '.join(self.env['res.partner'].sudo().browse(partners_to).mapped('name')),
             })
