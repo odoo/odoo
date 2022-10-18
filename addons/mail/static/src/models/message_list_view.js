@@ -7,6 +7,19 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'MessageListView',
     recordMethods: {
+        adjustScrollForExtraMessagesAtTheEnd() {
+            if (!this.getScrollableElement() || !this.hasScrollAdjust) {
+                return;
+            }
+            if (!this.threadViewOwner.hasAutoScrollOnMessageReceived) {
+                if (this.threadViewOwner.order === 'desc' && this.component._willPatchSnapshot) {
+                    const { scrollHeight, scrollTop } = this.component._willPatchSnapshot;
+                    this.setScrollTop(this.getScrollableElement().scrollHeight - scrollHeight + scrollTop);
+                }
+                return;
+            }
+            this.scrollToEnd();
+        },
         /**
          * @returns {Element|undefined}
          */

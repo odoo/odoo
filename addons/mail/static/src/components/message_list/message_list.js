@@ -91,7 +91,7 @@ export class MessageList extends Component {
                 case 'new-messages-loaded':
                     // messages have been added at the end, either scroll to the
                     // end or keep the current position
-                    this._adjustScrollForExtraMessagesAtTheEnd();
+                    this.messageListView.adjustScrollForExtraMessagesAtTheEnd();
                     break;
                 case 'more-messages-loaded':
                     // messages have been added at the start, keep the current
@@ -114,23 +114,6 @@ export class MessageList extends Component {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _adjustScrollForExtraMessagesAtTheEnd() {
-        if (!this.messageListView.getScrollableElement() || !this.messageListView.hasScrollAdjust) {
-            return;
-        }
-        if (!this.messageListView.threadViewOwner.hasAutoScrollOnMessageReceived) {
-            if (this.messageListView.threadViewOwner.order === 'desc' && this._willPatchSnapshot) {
-                const { scrollHeight, scrollTop } = this._willPatchSnapshot;
-                this.messageListView.setScrollTop(this.messageListView.getScrollableElement().scrollHeight - scrollHeight + scrollTop);
-            }
-            return;
-        }
-        this.messageListView.scrollToEnd();
-    }
 
     /**
      * @private
