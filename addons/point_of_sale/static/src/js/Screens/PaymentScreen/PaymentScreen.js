@@ -396,7 +396,8 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                 // the current order is fully paid and due is zero.
                 if (
                     this.currentOrder.is_paid() &&
-                    utils.float_is_zero(this.currentOrder.get_due(), this.env.pos.currency.decimal_places)
+                    utils.float_is_zero(this.currentOrder.get_due(), this.env.pos.currency.decimal_places) &&
+                    this.env.pos.config.auto_validate_terminal_payment
                 ) {
                     this.trigger('validate-order');
                 }
