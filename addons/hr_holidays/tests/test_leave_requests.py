@@ -81,7 +81,6 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             }
         )
 
-
     @classmethod
     def set_employee_create_date(cls, _id, newdate):
         """ This method is a hack in order to be able to define/redefine the create_date
