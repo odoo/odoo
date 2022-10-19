@@ -274,48 +274,52 @@ class Message(models.Model):
         # Rules do not apply to administrator
         if self.env.is_superuser():
             return super()._search(domain, offset, limit, order, access_rights_uid)
+
         # Non-employee see only messages with a subtype and not internal
         if not self.env['res.users'].has_group('base.group_user'):
-            domain = expression.AND([self._get_search_domain_share(), domain])
-        # Perform a super with count as False, to have the ids, not a counter
-        ids = super()._search(domain, offset, limit, order, access_rights_uid)
-        if not ids:
-            return ids
+            domain = self._get_search_domain_share() + domain
 
-        pid = self.env.user.partner_id.id
-        author_ids, partner_ids, allowed_ids = set([]), set([]), set([])
-        model_ids = {}
+        # make the search query with the default rules
+        query = super()._search(domain, offset, limit, order, access_rights_uid)
 
-        # check read access rights before checking the actual rules on the given ids
-        super(Message, self.with_user(access_rights_uid or self._uid)).check_access_rights('read')
-
+        # retrieve matching records and determine which ones are truly accessible
         self.flush_model(['model', 'res_id', 'author_id', 'message_type', 'partner_ids'])
         self.env['mail.notification'].flush_model(['mail_message_id', 'res_partner_id'])
-        for sub_ids in self._cr.split_for_in_conditions(ids):
-            self._cr.execute("""
-                SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, m.message_type,
-                                COALESCE(partner_rel.res_partner_id, needaction_rel.res_partner_id)
-                FROM "%s" m
-                LEFT JOIN "mail_message_res_partner_rel" partner_rel
-                ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = %%(pid)s
-                LEFT JOIN "mail_notification" needaction_rel
-                ON needaction_rel.mail_message_id = m.id AND needaction_rel.res_partner_id = %%(pid)s
-                WHERE m.id = ANY (%%(ids)s)""" % self._table, dict(pid=pid, ids=list(sub_ids)))
-            for msg_id, rmod, rid, author_id, message_type, partner_id in self._cr.fetchall():
-                if author_id == pid:
-                    author_ids.add(msg_id)
-                elif partner_id == pid:
-                    partner_ids.add(msg_id)
-                elif rmod and rid and message_type != 'user_notification':
-                    model_ids.setdefault(rmod, {}).setdefault(rid, set()).add(msg_id)
 
-        allowed_ids = self._find_allowed_doc_ids(model_ids)
+        pid = self.env.user.partner_id.id
+        ids = []
+        allowed_ids = set()
+        model_ids = defaultdict(lambda: defaultdict(set))
 
-        final_ids = author_ids | partner_ids | allowed_ids
+        rel_alias = query.left_join(
+            self._table, 'id', 'mail_message_res_partner_rel', 'mail_message_id', 'partner_ids',
+            '{rhs}.res_partner_id = %s', [pid],
+        )
+        notif_alias = query.left_join(
+            self._table, 'id', 'mail_notification', 'mail_message_id', 'notification_ids',
+            '{rhs}.res_partner_id = %s', [pid],
+        )
+        query_str, params = query.select(
+            f'"{self._table}"."id"',
+            f'"{self._table}"."model"',
+            f'"{self._table}"."res_id"',
+            f'"{self._table}"."author_id"',
+            f'"{self._table}"."message_type"',
+            f'COALESCE("{rel_alias}"."res_partner_id", "{notif_alias}"."res_partner_id")',
+        )
+        self.env.cr.execute(query_str, params)
+        for id_, model, res_id, author_id, message_type, partner_id in self.env.cr.fetchall():
+            ids.append(id_)
+            if author_id == pid:
+                allowed_ids.add(id_)
+            elif partner_id == pid:
+                allowed_ids.add(id_)
+            elif model and res_id and message_type != 'user_notification':
+                model_ids[model][res_id].add(id_)
 
-        # re-construct a list based on ids, because set did not keep the original order
-        id_list = [id for id in ids if id in final_ids]
-        return self.browse(id_list)._as_query(order)
+        allowed_ids.update(self._find_allowed_doc_ids(model_ids))
+        allowed = self.browse(id_ for id_ in ids if id_ in allowed_ids)
+        return allowed._as_query(order)
 
     @api.model
     def _find_allowed_model_wise(self, doc_model, doc_dict):
@@ -373,6 +377,10 @@ class Message(models.Model):
 
         if self.env.is_superuser():
             return
+
+        # just in case there are ir.rules
+        super().check_access_rule(operation)
+
         # Non employees see only messages with a subtype (aka, not internal logs)
         if not self.env['res.users'].has_group('base.group_user'):
             self._cr.execute('''SELECT DISTINCT message.id, message.subtype_id, subtype.internal
@@ -639,6 +647,15 @@ class Message(models.Model):
         self.check_access_rule('read')
         return super(Message, self).read(fields=fields, load=load)
 
+    def fetch(self, field_names):
+        # This freaky hack is aimed at reading data without the overhead of
+        # checking that "self" is accessible, which is already done above in
+        # methods read() and _search(). It reproduces the existing behavior
+        # before the introduction of method fetch(), where the low-lever
+        # reading method _read() did not enforce any actual permission.
+        self = self.sudo()
+        return super().fetch(field_names)
+
     def write(self, vals):
         record_changed = 'model' in vals or 'res_id' in vals
         if record_changed or 'message_type' in vals:
@@ -828,7 +845,6 @@ class Message(models.Model):
 
     def _message_format(self, fnames, format_reply=True, legacy=False):
         """Reads values from messages and formats them for the web client."""
-        self.check_access_rule('read')
         vals_list = self._read_format(fnames)
 
         thread_ids_by_model_name = defaultdict(set)
@@ -951,6 +967,7 @@ class Message(models.Model):
                     'parentMessage': {...}, # formatted message that this message is a reply to. Only present if format_reply is True
                 }
         """
+        self.check_access_rule('read')
         vals_list = self._message_format(self._get_message_format_fields(), format_reply=format_reply)
 
         com_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
