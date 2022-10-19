@@ -4855,6 +4855,7 @@ class AccountMoveLine(models.Model):
             exchange_diff_move_vals['date'] = max(exchange_diff_move_vals['date'], company._get_user_fiscal_lock_date())
 
             exchange_move = self.env['account.move'].create(exchange_diff_move_vals)
+            exchange_move.line_ids.write({'tax_exigible': True}) # Enforce exigibility in case some cash basis adjustments were made in this exchange difference
         else:
             return None
 
