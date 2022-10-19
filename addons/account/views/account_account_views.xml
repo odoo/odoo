@@ -123,11 +123,11 @@
                                         <strong><field name="name"/></strong>
                                     </div>
                                     <div class="col-6 text-end">
-                                        <span class="badge rounded-pill"><t t-esc="record.code.value"/></span>
+                                        <span class="badge rounded-pill"><t t-out="record.code.value"/></span>
                                     </div>
                                 </div>
                                 <div>
-                                    <strong>Type: </strong><t t-esc="record.account_type"/>
+                                    <strong>Type: </strong><t t-out="record.account_type"/>
                                 </div>
                             </div>
                         </t>

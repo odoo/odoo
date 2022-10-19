@@ -11,10 +11,10 @@
         <xpath expr="//t[@t-set='address']" position="inside">
             <t t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.l10n_in_state_id" class="mt16">
                 <t t-if="o.move_type in ('in_invoice', 'in_refund')">
-                    Destination of supply: <span t-esc="o.l10n_in_state_id.name"/>
+                    Destination of supply: <span t-out="o.l10n_in_state_id.name"/>
                 </t>
                 <t t-if="o.move_type in ('out_invoice', 'out_refund')">
-                    Place of supply: <span t-esc="o.l10n_in_state_id.name"/>
+                    Place of supply: <span t-out="o.l10n_in_state_id.name"/>
                 </t>
             </t>
         </xpath>

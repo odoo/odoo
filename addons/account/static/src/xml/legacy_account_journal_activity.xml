@@ -7,11 +7,11 @@
             <div class="row">
                 <div class="col-8 o_mail_activity">
                     <a href="#" t-att-class="(activity.status == 'late' ? 'o_activity_color_overdue ' : ' ') + (activity.activity_category == 'tax_report' ? 'o_open_vat_report' : 'see_activity')" t-att-data-res-id="activity.res_id" t-att-data-id="activity.id" t-att-data-model="activity.res_model">
-                        <t t-esc="activity.name"/>
+                        <t t-out="activity.name"/>
                     </a>
                 </div>
                 <div class="col-4 text-end">
-                    <span><t t-esc="activity.date"/></span>
+                    <span><t t-out="activity.date"/></span>
                 </div>
             </div>
         </t>

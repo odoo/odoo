@@ -73,11 +73,11 @@
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                                 <div class="row mb4">
                                     <div class="col-6">
-                                        <strong><span><t t-esc="record.name.value"/></span></strong>
+                                        <strong><span><t t-out="record.name.value"/></span></strong>
                                     </div>
                                     <div class="col-6 text-end">
-                                        <span class="badge rounded-pill"><t t-esc="record.type_tax_use.value"/></span>
-                                        <span class="badge rounded-pill"><t t-esc="record.tax_scope.value"/></span>
+                                        <span class="badge rounded-pill"><t t-out="record.type_tax_use.value"/></span>
+                                        <span class="badge rounded-pill"><t t-out="record.tax_scope.value"/></span>
                                     </div>
                                 </div>
                             </div>

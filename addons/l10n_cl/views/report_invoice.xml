@@ -25,7 +25,7 @@
                     <br/>
                     <span name="company_activity" class="fst-italic" t-field="o.company_id.report_header"/>
                     <div/>
-                    <t t-esc="' - '.join([item for item in [
+                    <t t-out="' - '.join([item for item in [
                         ', '.join([item for item in [header_address.street, header_address.street2] if item]),
                         header_address.city,
                         header_address.state_id and header_address.state_id.name,
@@ -35,10 +35,10 @@
                         <br/>
                     </span>
                     <span t-if="header_address.phone" style="white-space: nowrap;"
-                          t-esc="'Tel: ' + header_address.phone"/>
+                          t-out="'Tel: ' + header_address.phone"/>
                     <span t-if="header_address.website">
                         <span t-att-style="'color: %s;' % o.company_id.primary_color"
-                              t-esc="'- Web: %s' %' - '.join([item for item in [header_address.website.replace('https://', '').replace('http://', ''), header_address.email] if item])"/>
+                              t-out="'- Web: %s' %' - '.join([item for item in [header_address.website.replace('https://', '').replace('http://', ''), header_address.email] if item])"/>
                     </span>
                 </div>
                 <div name="right-upper-side" class="col-4">
@@ -50,12 +50,12 @@
                                         <strong t-att-style="'color: %s;' % o.company_id.primary_color">
                                             <br/>
                                             <span style="line-height: 180%;">RUT:</span>
-                                            <span t-esc="o.company_id.partner_id._format_dotted_vat_cl(o.company_id.partner_id.vat)"/>
+                                            <span t-out="o.company_id.partner_id._format_dotted_vat_cl(o.company_id.partner_id.vat)"/>
                                             <br/>
-                                            <span class="text-uppercase" t-esc="report_name"/>
+                                            <span class="text-uppercase" t-out="report_name"/>
                                             <br/>
                                             <span>Nº:</span>
-                                            <span style="line-height: 200%;" t-esc="report_number"/>
+                                            <span style="line-height: 200%;" t-out="report_number"/>
                                         </strong>
                                     </h6>
                                 </div>
@@ -80,7 +80,7 @@
                 <strong>
                     <span t-att-style="'color: %s;' % o.company_id.secondary_color">Date:</span>
                 </strong>
-                <span t-esc="o.invoice_date" t-options='{"widget": "date"}'/>
+                <span t-out="o.invoice_date" t-options='{"widget": "date"}'/>
                 <br/>
 
                 <strong>Customer:</strong>
@@ -89,25 +89,25 @@
 
                 <t t-if="o.partner_id.vat and o.partner_id.l10n_latam_identification_type_id">
                     <strong>
-                        <t t-esc="o.partner_id.l10n_latam_identification_type_id.name or o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>:
+                        <t t-out="o.partner_id.l10n_latam_identification_type_id.name or o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>:
                     </strong>
-                    <span t-esc="o.partner_id.vat"/>
+                    <span t-out="o.partner_id.vat"/>
                     <br/>
                 </t>
                 <strong>GIRO:</strong>
-                <span t-esc="o.partner_id.industry_id.name or ''"/>
+                <span t-out="o.partner_id.industry_id.name or ''"/>
                 <br/>
             </div>
             <div class="col-6">
                 <strong>Due Date:</strong>
-                <span t-esc="o.invoice_date_due" t-options='{"widget": "date"}'/>
+                <span t-out="o.invoice_date_due" t-options='{"widget": "date"}'/>
                 <br/>
                 <strong>Address:</strong>
                 <span t-field="o.partner_id"
                       t-options="{'widget': 'contact', 'fields': ['address'], 'no_marker': True}"/>
 
                 <strong>Payment Terms:</strong>
-                <span t-esc="o.invoice_payment_term_id.name or ''"/>
+                <span t-out="o.invoice_payment_term_id.name or ''"/>
 
 
                 <t t-if="o.invoice_incoterm_id">
@@ -144,12 +144,12 @@
 
         <xpath expr="//span[@t-field='line.price_unit']" position="attributes">
             <attribute name="t-field"></attribute>
-            <attribute name="t-esc">line.price_unit</attribute>
+            <attribute name="t-out">line.price_unit</attribute>
             <attribute name="t-options">{"widget": "monetary", "display_currency": o.currency_id}</attribute>
         </xpath>
 
         <xpath expr="//span[@id='line_tax_ids']" position="attributes">
-            <attribute name="t-esc">', '.join(map(lambda x: (x.description or x.name), line.tax_lines))</attribute>
+            <attribute name="t-out">', '.join(map(lambda x: (x.description or x.name), line.tax_lines))</attribute>
         </xpath>
 
         <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" position="attributes">
@@ -162,7 +162,7 @@
 
         <span t-field="line.price_subtotal" position="attributes">
             <attribute name="t-field"></attribute>
-            <attribute name="t-esc">l10n_cl_values['price_subtotal']</attribute>
+            <attribute name="t-out">l10n_cl_values['price_subtotal']</attribute>
             <attribute name="t-options">{"widget": "monetary", "display_currency": o.currency_id}</attribute>
         </span>
 
