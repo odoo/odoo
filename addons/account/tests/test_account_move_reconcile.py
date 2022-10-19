@@ -2113,6 +2113,157 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             {'debit': 0.0,      'credit': 50.0,     'currency_id': currency_id,     'account_id': self.cash_basis_base_account.id},
         ])
 
+    def test_reconcile_cash_basis_refund_multicurrency(self):
+        self.env.company.tax_exigibility = True
+        rates_data = self.setup_multi_currency_data(default_values={
+            'name': 'Playmock',
+            'symbol': '🦌',
+            'rounding': 0.01,
+            'currency_unit_label': 'Playmock',
+            'currency_subunit_label': 'Cent',
+        }, rate2016=0.5, rate2017=0.33333333333333333)
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'currency_id': rates_data['currency'].id,
+            'invoice_date': '2016-01-01',
+            'invoice_line_ids': [(0, 0, {
+                'name': 'dudu',
+                'account_id': self.company_data['default_account_revenue'].id,
+                'price_unit': 100.0,
+                'tax_ids': [(6, 0, self.cash_basis_tax_a_third_amount.ids)],
+            })],
+        })
+
+        refund = self.env['account.move'].create({
+            'move_type': 'out_refund',
+            'partner_id': self.partner_a.id,
+            'currency_id': rates_data['currency'].id,
+            'invoice_date': '2017-01-01',
+            'invoice_line_ids': [(0, 0, {
+                'name': 'dudu',
+                'account_id': self.company_data['default_account_revenue'].id,
+                'price_unit': 100.0,
+                'tax_ids': [(6, 0, self.cash_basis_tax_a_third_amount.ids)],
+            })],
+        })
+
+        invoice.action_post()
+        refund.action_post()
+
+        (refund + invoice).line_ids.filtered(lambda x: x.account_id.user_type_id.type == 'receivable').reconcile()
+
+        # Check the cash basis moves
+        self.assertRecordValues(
+            self.env['account.move'].search([('tax_cash_basis_origin_move_id', '=', invoice.id)]).line_ids,
+            [
+                {
+                    'debit': 200,
+                    'credit': 0,
+                    'amount_currency': 100,
+                    'currency_id': rates_data['currency'].id,
+                    'tax_ids': [],
+                    'tax_repartition_line_id': None,
+                    'tax_tag_ids': [],
+                },
+                {
+                    'debit': 0,
+                    'credit': 200,
+                    'amount_currency': -100,
+                    'currency_id': rates_data['currency'].id,
+                    'tax_ids': self.cash_basis_tax_a_third_amount.ids,
+                    'tax_repartition_line_id': None,
+                    'tax_tag_ids': self.tax_tags[0].ids,
+                },
+                {
+                    'debit': 66.66,
+                    'credit': 0,
+                    'amount_currency': 33.33,
+                    'currency_id': rates_data['currency'].id,
+                    'tax_ids': [],
+                    'tax_repartition_line_id': None,
+                    'tax_tag_ids': [],
+                },
+                {
+                    'debit': 0,
+                    'credit': 66.66,
+                    'amount_currency': -33.33,
+                    'currency_id': rates_data['currency'].id,
+                    'tax_ids': [],
+                    'tax_repartition_line_id': self.cash_basis_tax_a_third_amount.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
+                    'tax_tag_ids': self.tax_tags[1].ids,
+                },
+            ]
+        )
+
+        self.assertRecordValues(
+            self.env['account.move'].search([('tax_cash_basis_origin_move_id', '=', refund.id)]).line_ids,
+            [
+                {
+                    'debit': 0,
+                    'credit': 300,
+                    'amount_currency': -100,
+                    'currency_id': rates_data['currency'].id,
+                    'tax_ids': [],
+                    'tax_repartition_line_id': None,
+                    'tax_tag_ids': [],
+                },
+                {
+                    'debit': 300,
+                    'credit': 0,
+                    'amount_currency': 100,
+                    'currency_id': rates_data['currency'].id,
+                    'tax_ids': self.cash_basis_tax_a_third_amount.ids,
+                    'tax_repartition_line_id': None,
+                    'tax_tag_ids': self.tax_tags[2].ids,
+                },
+                {
+                    'debit': 0,
+                    'credit': 99.99,
+                    'amount_currency': -33.33,
+                    'currency_id': rates_data['currency'].id,
+                    'tax_ids': [],
+                    'tax_repartition_line_id': None,
+                    'tax_tag_ids': [],
+                },
+                {
+                    'debit': 99.99,
+                    'credit': 0,
+                    'amount_currency': 33.33,
+                    'currency_id': rates_data['currency'].id,
+                    'tax_ids': [],
+                    'tax_repartition_line_id': self.cash_basis_tax_a_third_amount.refund_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
+                    'tax_tag_ids': self.tax_tags[3].ids,
+                },
+            ]
+        )
+
+        # Check the exchange difference move, to be sure no cash basis rounding data was added into it
+        self.assertRecordValues(
+            invoice.line_ids.full_reconcile_id.exchange_move_id.line_ids,
+            [
+                {
+                    'debit': 133.33,
+                    'credit': 0,
+                    'amount_currency': 0,
+                    'currency_id': rates_data['currency'].id,
+                    'tax_ids': [],
+                    'tax_repartition_line_id': None,
+                    'tax_tag_ids': [],
+                },
+                {
+                    'debit': 0,
+                    'credit': 133.33,
+                    'amount_currency': 0,
+                    'currency_id': rates_data['currency'].id,
+                    'tax_ids': [],
+                    'tax_repartition_line_id': None,
+                    'tax_tag_ids': [],
+                },
+            ]
+        )
+
     def test_reconcile_cash_basis_revert(self):
         ''' Ensure the cash basis journal entry can be reverted. '''
         self.env.company.tax_exigibility = True
