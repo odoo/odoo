@@ -1338,3 +1338,33 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             self.bank_line_1.id: {'aml_ids': []},
             self.bank_line_2.id: {'aml_ids': [self.invoice_line_3.id], 'model': self.rule_1, 'partner': self.bank_line_2.partner_id},
         }, statements=self.bank_st)
+
+    def test_auto_reconcile_multicurrency(self):
+        curr2 = self.setup_multi_currency_data({
+            'name': 'My Dark Chocolate Coin',
+            'symbol': '🍫',
+            'currency_unit_label': 'Dark Choco',
+            'currency_subunit_label': 'Dark Cacao Powder',
+        }, rate2016=10.0, rate2017=1.25)['currency']
+
+        reconciliation_model = self._create_reconcile_model(
+            auto_reconcile=True,
+            line_ids=[{}],
+            match_same_currency=True,
+        )
+
+        invoice_line = self._create_invoice_line(100.0, self.partner_a, 'in_invoice', curr2, inv_date='2019-01-01', ref='ref666')
+        statement_line = self._create_st_line(amount=-80, amount_currency=-100, foreign_currency_id=curr2.id, payment_ref='ref666')
+
+        self._check_statement_matching(
+            reconciliation_model,
+            {statement_line.id: {'aml_ids': invoice_line.ids, 'model': reconciliation_model, 'partner': self.partner_a, 'status': 'reconciled'}},
+            statements=statement_line.statement_id,
+        )
+
+        self.assertRecordValues(statement_line.line_ids, [
+            {'amount_currency': -80.0, 'currency_id': self.company.currency_id.id, 'partner_id': self.partner_a.id, 'debit': 0.0, 'credit': 80.0, 'account_id': self.bank_journal.default_account_id.id, 'reconciled': False},
+            {'amount_currency': 100.0, 'currency_id': curr2.id, 'partner_id': self.partner_a.id, 'debit': 80.0, 'credit': 0.0, 'account_id': self.account_pay.id, 'reconciled': True},
+        ])
+
+        self.assertRecordValues(invoice_line, [{'amount_residual': 0.0}])
