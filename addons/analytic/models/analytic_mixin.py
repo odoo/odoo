@@ -11,7 +11,7 @@ class AnalyticMixin(models.AbstractModel):
     analytic_distribution = fields.Json(
         'Analytic',
         compute="_compute_analytic_distribution", store=True, copy=True, readonly=False,
-        precompute=True
+        precompute=True, index=True
     )
 
     def init(self):
