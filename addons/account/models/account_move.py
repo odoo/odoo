@@ -289,6 +289,7 @@ class AccountMove(models.Model):
     always_tax_exigible = fields.Boolean(
         compute='_compute_always_tax_exigible',
         store=True,
+        readonly=False,
         help="Technical field used by cash basis taxes, telling the lines of the move are always exigible. "
              "This happens if the move contains no payable or receivable line.")
 
@@ -5363,6 +5364,7 @@ class AccountMoveLine(models.Model):
             'date': date.min,
             'journal_id': journal.id,
             'line_ids': [],
+            'always_tax_exigible': True, # Enforce exigibility in case some cash basis adjustments were made in this exchange difference
         }
 
         # Fix residual amounts.
