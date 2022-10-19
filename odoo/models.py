@@ -25,6 +25,7 @@ import collections
 import contextlib
 import copy
 import datetime
+from typing import Generator
 import dateutil
 import fnmatch
 import functools
@@ -160,6 +161,11 @@ def merge_trigger_trees(trees: list, select=bool) -> dict:
 
     return result_tree
 
+def _order_spec_splitter(order_spec: str) -> Generator[(str, str, str)]:
+    for order_part in order_spec.split(','):
+        field_spec, _, direction = order_part.strip().partition(' ')
+        direction = direction.strip().upper() if direction else "ASC"
+        yield f"{field_spec} {direction}", field_spec, direction
 
 class MetaModel(api.Meta):
     """ The metaclass of all model classes.
@@ -1976,9 +1982,7 @@ class BaseModel(metaclass=MetaModel):
             for gb in annotated_groupbys
             for key in ('field', 'groupby')
         }
-        for order_part in orderby.split(','):
-            order_split = order_part.split()  # potentially ["field:group_func", "desc"]
-            order_field = order_split[0]
+        for order_part, order_field, direction in _order_spec_splitter(orderby):
             is_many2one_id = order_field.endswith(".id")
             if is_many2one_id:
                 order_field = order_field[:-3]
@@ -1991,11 +1995,9 @@ class BaseModel(metaclass=MetaModel):
                         orderby_terms.append(order_clause)
                         groupby_terms += [order_term.split()[0] for order_term in order_clause.split(',')]
                 else:
-                    order_split[0] = '"%s"' % groupby_fields.get(order_field, order_field)
-                    orderby_terms.append(' '.join(order_split))
+                    orderby_terms.append(f'"{groupby_fields.get(order_field, order_field)}" {direction}')
             elif order_field in aggregated_fields:
-                order_split[0] = '"%s"' % order_field
-                orderby_terms.append(' '.join(order_split))
+                orderby_terms.append(f'"{order_field}" {direction}')
             elif order_field not in self._fields:
                 raise ValueError("Invalid field %r on model %r" % (order_field, self._name))
             elif order_field == 'sequence':
@@ -2312,7 +2314,7 @@ class BaseModel(metaclass=MetaModel):
         for gb in annotated_groupbys:
             select_terms.append('%s as "%s" ' % (gb['qualified_field'], gb['groupby']))
 
-        self._flush_search(domain, fields=fnames + groupby_fields)
+        self._flush_search(domain, fields=fnames + groupby_fields)  # TODO: take in account the order
 
         groupby_terms, orderby_terms = self._read_group_prepare(order, aggregated_fields, annotated_groupbys, query)
         from_clause, where_clause, where_clause_params = query.get_sql()
@@ -4460,10 +4462,7 @@ class BaseModel(metaclass=MetaModel):
         self._check_qorder(order_spec)
 
         order_by_elements = []
-        for order_part in order_spec.split(','):
-            order_split = order_part.strip().split(' ')
-            order_field = order_split[0].strip()
-            order_direction = order_split[1].strip().upper() if len(order_split) == 2 else ''
+        for __, order_field, order_direction in _order_spec_splitter(order_spec):
             if reverse_direction:
                 order_direction = 'ASC' if order_direction == 'DESC' else 'DESC'
             do_reverse = order_direction == 'DESC'
@@ -4566,13 +4565,13 @@ class BaseModel(metaclass=MetaModel):
 
         # flush the order fields
         order_spec = order or self._order
-        for order_part in order_spec.split(','):
-            order_field = order_part.split()[0]
-            field = self._fields.get(order_field)
-            if field is not None:
-                to_flush[self._name].add(order_field)
-                if field.relational:
-                    self.env[field.comodel_name]._flush_search([], seen=seen)
+        for __, order_field, __ in _order_spec_splitter(order_spec):
+            if order_field not in self._fields:
+                raise ValueError("Invalid field %r (order) on model %r" % (order_field, self._name))
+            field = self._fields[order_field]
+            to_flush[self._name].add(order_field)
+            if field.relational:
+                self.env[field.comodel_name]._flush_search([], seen=seen)
 
         if self._active_name:
             to_flush[self._name].add(self._active_name)
