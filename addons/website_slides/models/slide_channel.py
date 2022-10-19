@@ -187,7 +187,7 @@ class Channel(models.Model):
     _name = 'slide.channel'
     _description = 'Course'
     _inherit = [
-        'mail.thread', 'rating.mixin',
+        'rating.mixin',
         'mail.activity.mixin',
         'image.mixin',
         'website.cover_properties.mixin',
