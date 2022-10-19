@@ -53,28 +53,6 @@ export class Message extends Component {
         return this.props.record;
     }
 
-    /**
-     * Make this message viewable in its enclosing scroll environment (usually
-     * message list).
-     *
-     * @param {Object} [param0={}]
-     * @param {string} [param0.behavior='auto']
-     * @param {string} [param0.block='end']
-     * @returns {Promise}
-     */
-    async scrollIntoView({ behavior = 'auto', block = 'end' } = {}) {
-        this.root.el.scrollIntoView({
-            behavior,
-            block,
-            inline: 'nearest',
-        });
-        if (behavior === 'smooth') {
-            return new Promise(resolve => setTimeout(resolve, 500));
-        } else {
-            return Promise.resolve();
-        }
-    }
-
 }
 
 Object.assign(Message, {
