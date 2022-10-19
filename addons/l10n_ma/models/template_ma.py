@@ -9,11 +9,11 @@ class AccountChartTemplate(models.AbstractModel):
     @template('ma')
     def _get_ma_template_data(self):
         return {
+            'code_digits': '6',
             'property_account_receivable_id': 'pcg_34211',
-            'property_account_payable_id': 'pcg_4411',
+            'property_account_payable_id': 'pcg_44111',
             'property_account_income_categ_id': 'pcg_7111',
             'property_account_expense_categ_id': 'pcg_6111',
-            'code_digits': '6',
         }
 
     @template('ma', 'res.company')
@@ -22,10 +22,15 @@ class AccountChartTemplate(models.AbstractModel):
             self.env.company.id: {
                 'account_fiscal_country_id': 'base.ma',
                 'bank_account_code_prefix': '5141',
-                'cash_account_code_prefix': '5161',
+                'cash_account_code_prefix': '51611',
                 'transfer_account_code_prefix': '5115',
-                'account_default_pos_receivable_account_id': 'pcg_3489',
-                'income_currency_exchange_account_id': 'pcg_733',
-                'expense_currency_exchange_account_id': 'pcg_633',
+                'account_default_pos_receivable_account_id': 'pcg_34218',
+                'income_currency_exchange_account_id': 'pcg_7331',
+                'expense_currency_exchange_account_id': 'pcg_6331',
+                'account_journal_suspense_account_id': 'pcg_3497',
+                'default_cash_difference_income_account_id': 'pcg_73861',
+                'default_cash_difference_expense_account_id': 'pcg_63861',
+                'account_journal_early_pay_discount_gain_account_id': 'pcg_73862',
+                'account_journal_early_pay_discount_loss_account_id': 'pcg_63862',
             },
         }
