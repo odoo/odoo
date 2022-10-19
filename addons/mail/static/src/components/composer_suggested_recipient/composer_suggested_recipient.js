@@ -62,7 +62,7 @@ export class ComposerSuggestedRecipient extends Component {
             return;
         }
         const isChecked = this._checkboxRef.el.checked;
-        this.composerSuggestedRecipientView.suggestedRecipientInfo.update({ isSelected: isChecked });
+        this.composerSuggestedRecipientView.suggestedRecipientInfo.update({ isChecked });
         if (!this.composerSuggestedRecipientView.suggestedRecipientInfo.partner) {
             // Recipients must always be partners. On selecting a suggested
             // recipient that does not have a partner, the partner creation form
