@@ -11,7 +11,7 @@ import { registerCleanup } from "../../helpers/cleanup";
 import { makeFakeLocalizationService } from "../../helpers/mock_services";
 import { templates } from "@web/core/assets";
 
-const { App, Component, useState, xml } = owl;
+import { App, Component, useState, xml } from "@odoo/owl";
 
 const mainComponents = registry.category("main_components");
 

@@ -3,7 +3,7 @@
 import { useService } from "@web/core/utils/hooks";
 import { uuid } from "../../utils";
 
-const { Component, useState, useRef, useEffect } = owl;
+import { Component, useState, useRef, useEffect } from "@odoo/owl";
 
 export class PropertyDefinitionSelection extends Component {
     setup() {

@@ -7,7 +7,7 @@ import { formatMany2one } from "@web/views/fields/formatters";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
-const { Component, onWillStart, useState } = owl;
+import { Component, onWillStart, useState } from "@odoo/owl";
 
 const debugRegistry = registry.category("debug");
 

@@ -3,7 +3,7 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { registry } from "@web/core/registry";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 const errorHandlerRegistry = registry.category("error_handlers");
 
 export class FormErrorDialog extends Component {

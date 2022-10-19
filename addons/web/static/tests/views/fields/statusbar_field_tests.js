@@ -14,7 +14,7 @@ import {
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
-const { EventBus } = owl;
+import { EventBus } from "@odoo/owl";
 
 let serverData;
 let target;

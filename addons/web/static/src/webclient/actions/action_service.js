@@ -15,7 +15,7 @@ import { ActionDialog } from "./action_dialog";
 import { CallbackRecorder } from "./action_hook";
 import { ReportAction } from "./reports/report_action";
 
-const { Component, markup, onMounted, onWillUnmount, onError, useChildSubEnv, xml, reactive } = owl;
+import { Component, markup, onMounted, onWillUnmount, onError, useChildSubEnv, xml, reactive } from "@odoo/owl";
 
 const actionHandlersRegistry = registry.category("action_handlers");
 const actionRegistry = registry.category("actions");

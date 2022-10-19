@@ -4,7 +4,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { formatDate } from "@web/core/l10n/dates";
 import { getColor } from "../colors";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class CalendarYearPopover extends Component {
     get recordGroups() {

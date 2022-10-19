@@ -5,7 +5,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { FACET_ICONS } from "../utils/misc";
 import { useBus } from "@web/core/utils/hooks";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class ComparisonMenu extends Component {
     setup() {

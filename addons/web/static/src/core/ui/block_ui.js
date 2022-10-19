@@ -2,7 +2,7 @@
 
 import { browser } from "@web/core/browser/browser";
 
-const { EventBus, Component, useState, xml } = owl;
+import { EventBus, Component, useState, xml } from "@odoo/owl";
 
 export class BlockUI extends Component {
     setup() {

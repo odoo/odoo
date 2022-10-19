@@ -18,7 +18,7 @@ import { useSetupView } from "@web/views/view_hook";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { FormStatusIndicator } from "./form_status_indicator/form_status_indicator";
 
-const { Component, onWillStart, useEffect, useRef, onRendered, useState, toRaw } = owl;
+import { Component, onWillStart, useEffect, useRef, onRendered, useState, toRaw } from "@odoo/owl";
 
 const viewRegistry = registry.category("views");
 

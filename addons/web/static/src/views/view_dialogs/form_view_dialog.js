@@ -4,7 +4,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { useChildRef } from "@web/core/utils/hooks";
 import { View } from "@web/views/view";
 
-const { Component, onMounted } = owl;
+import { Component, onMounted } from "@odoo/owl";
 
 export class FormViewDialog extends Component {
     setup() {

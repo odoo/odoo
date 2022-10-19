@@ -6,7 +6,7 @@ import { Record } from "@web/views/record";
 import { click, getFixture, mount } from "../helpers/utils";
 import { setupViewRegistries } from "../views/helpers";
 
-const { Component, xml, useState } = owl;
+import { Component, xml, useState } from "@odoo/owl";
 
 let serverData;
 let target;

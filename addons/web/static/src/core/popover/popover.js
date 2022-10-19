@@ -2,7 +2,7 @@
 
 import { usePosition } from "../position_hook";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class Popover extends Component {
     setup() {

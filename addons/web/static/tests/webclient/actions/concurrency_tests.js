@@ -23,7 +23,7 @@ import {
     loadState,
 } from "@web/../tests/webclient/helpers";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 const actionRegistry = registry.category("actions");
 
 let serverData;

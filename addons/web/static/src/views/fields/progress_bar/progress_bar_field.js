@@ -7,7 +7,7 @@ import { useNumpadDecimal } from "../numpad_decimal_hook";
 import { parseFloat } from "../parsers";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component, onWillUpdateProps, useRef, useState, useExternalListener } = owl;
+import { Component, onWillUpdateProps, useRef, useState, useExternalListener } from "@odoo/owl";
 const formatters = registry.category("formatters");
 const parsers = registry.category("parsers");
 

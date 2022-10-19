@@ -18,7 +18,7 @@ import { KeepLast } from "@web/core/utils/concurrency";
  * @property {string} string
  */
 
-const { EventBus, markRaw } = owl;
+import { EventBus, markRaw } from "@odoo/owl";
 
 const FALSE = Symbol("false");
 

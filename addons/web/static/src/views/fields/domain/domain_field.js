@@ -9,7 +9,7 @@ import { Domain } from "@web/core/domain";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component, onWillStart, onWillUpdateProps, useState } = owl;
+import { Component, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
 
 export class DomainField extends Component {
     setup() {

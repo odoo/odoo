@@ -9,7 +9,7 @@ import { useModel } from "@web/views/model";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { useSetupView } from "@web/views/view_hook";
 
-const { Component, useRef } = owl;
+import { Component, useRef } from "@odoo/owl";
 
 export class GraphController extends Component {
     setup() {

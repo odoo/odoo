@@ -7,7 +7,7 @@ import { registry } from "../registry";
 import { useService } from "@web/core/utils/hooks";
 import { capitalize } from "../utils/strings";
 
-const { Component, useState } = owl;
+import { Component, useState } from "@odoo/owl";
 
 // This props are added by the error handler
 export const standardErrorDialogProps = {

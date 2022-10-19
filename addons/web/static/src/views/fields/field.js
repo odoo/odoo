@@ -10,7 +10,7 @@ import {
 } from "@web/views/utils";
 import { getTooltipInfo } from "./field_tooltip";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 
 const viewRegistry = registry.category("views");
 const fieldRegistry = registry.category("fields");

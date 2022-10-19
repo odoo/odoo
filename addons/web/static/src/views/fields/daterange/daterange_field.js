@@ -6,7 +6,7 @@ import { luxonToMoment, momentToLuxon } from "@web/core/l10n/dates";
 import { useService } from "@web/core/utils/hooks";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component, onWillStart, useExternalListener, useRef, useEffect } = owl;
+import { Component, onWillStart, useExternalListener, useRef, useEffect } from "@odoo/owl";
 const formatters = registry.category("formatters");
 const parsers = registry.category("parsers");
 

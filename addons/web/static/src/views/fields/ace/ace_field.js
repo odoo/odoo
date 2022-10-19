@@ -8,7 +8,7 @@ import { useService } from '@web/core/utils/hooks';
 import { formatText } from "../formatters";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component, onWillStart, onWillUpdateProps, useEffect, useRef } = owl;
+import { Component, onWillStart, onWillUpdateProps, useEffect, useRef } from "@odoo/owl";
 
 export class AceField extends Component {
     setup() {

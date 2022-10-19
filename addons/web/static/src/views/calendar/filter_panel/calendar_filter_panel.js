@@ -8,7 +8,7 @@ import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 
-const { Component, useState } = owl;
+import { Component, useState } from "@odoo/owl";
 
 class FilterAutoComplete extends Component {
     setup() {

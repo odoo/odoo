@@ -1,7 +1,7 @@
 /** @odoo-module */
 import { useService } from '@web/core/utils/hooks';
 
-const { Component, useState } = owl;
+import { Component, useState } from "@odoo/owl";
 
 export class ProgressBar extends Component {
     get progress() {

@@ -56,7 +56,7 @@ import { ConnectionAbortedError } from "@web/core/network/rpc_service";
 import { CustomFavoriteItem } from "@web/search/favorite_menu/custom_favorite_item";
 import { standaloneAdapter } from "web.OwlCompatibility";
 
-const { Component, onMounted, xml } = owl;
+import { Component, onMounted, xml } from "@odoo/owl";
 
 const actionRegistry = registry.category("actions");
 const serviceRegistry = registry.category("services");

@@ -6,7 +6,7 @@ import { formView } from "@web/views/form/form_view";
 import { SettingsConfirmationDialog } from "./settings_confirmation_dialog";
 import { SettingsFormRenderer } from "./settings_form_renderer";
 
-const { useSubEnv, useState, useRef, useEffect } = owl;
+import { useSubEnv, useState, useRef, useEffect } from "@odoo/owl";
 
 export class SettingsFormController extends formView.Controller {
     setup() {

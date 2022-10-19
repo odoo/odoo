@@ -2,7 +2,7 @@
 
 import { browser } from "@web/core/browser/browser";
 
-const { Component, useEffect, useExternalListener, useState } = owl;
+import { Component, useEffect, useExternalListener, useState } from "@odoo/owl";
 
 /**
  * @typedef Common

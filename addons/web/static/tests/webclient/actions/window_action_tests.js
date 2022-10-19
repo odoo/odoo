@@ -27,7 +27,7 @@ import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { makeFakeUserService, fakeCookieService } from "@web/../tests/helpers/mock_services";
 import * as cpHelpers from "@web/../tests/search/helpers";
 
-const { onMounted } = owl;
+import { onMounted } from "@odoo/owl";
 let serverData;
 let target;
 const serviceRegistry = registry.category("services");

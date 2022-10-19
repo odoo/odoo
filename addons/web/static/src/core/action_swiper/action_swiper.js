@@ -3,7 +3,7 @@ import { browser } from "@web/core/browser/browser";
 import { localization } from "@web/core/l10n/localization";
 import { clamp } from "@web/core/utils/numbers";
 
-const { Component, onMounted, onWillUnmount, useRef, useState } = owl;
+import { Component, onMounted, onWillUnmount, useRef, useState } from "@odoo/owl";
 
 const isScrollSwipable = (scrollables) => {
     return {

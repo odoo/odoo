@@ -9,7 +9,7 @@ import { isVisible } from "@web/core/utils/ui";
 import { registerCleanup } from "./cleanup";
 import { templates } from "@web/core/assets";
 
-const { App, onMounted, onPatched, useComponent } = owl;
+import { App, onMounted, onPatched, useComponent } from "@odoo/owl";
 
 /**
  * Patch the native Date object

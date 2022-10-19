@@ -5,7 +5,7 @@ import { _lt } from "@web/core/l10n/translation";
 import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class UrlField extends Component {
     setup() {

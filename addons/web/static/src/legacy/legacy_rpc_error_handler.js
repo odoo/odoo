@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import { ConnectionLostError, RPCError } from "../core/network/rpc_service";
 import { lostConnectionHandler, rpcErrorHandler } from "@web/core/errors/error_handlers";
 
-const { OwlError } = owl;
+import { OwlError } from "@odoo/owl";
 
 const errorHandlerRegistry = registry.category("error_handlers");
 

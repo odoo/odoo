@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 import { DROPDOWN } from "@web/core/dropdown/dropdown";
 
 export class KanbanDropdownMenuWrapper extends Component {

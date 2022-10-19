@@ -2,7 +2,7 @@
 
 import { useService } from "@web/core/utils/hooks";
 
-const { useEffect } = owl;
+import { useEffect } from "@odoo/owl";
 
 /**
  * @typedef {import("./command_service").CommandOptions} CommandOptions

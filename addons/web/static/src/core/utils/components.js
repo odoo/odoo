@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-const { Component, onError, xml, useSubEnv } = owl;
+import { Component, onError, xml, useSubEnv } from "@odoo/owl";
 
 export class ErrorHandler extends Component {
     setup() {

@@ -8,7 +8,7 @@ import { fuzzyLookup } from "@web/core/utils/search";
 import { useSortable } from "@web/core/utils/sortable";
 import { useDebounced } from "@web/core/utils/timing";
 
-const { Component, useRef, useState, onMounted, onWillStart, onWillUnmount } = owl;
+import { Component, useRef, useState, onMounted, onWillStart, onWillUnmount } from "@odoo/owl";
 
 class DeleteExportListDialog extends Component {
     async onDelete() {

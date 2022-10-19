@@ -2,7 +2,7 @@
 
 import { SERVICES_METADATA } from "@web/env";
 
-const { status, useComponent, useEffect, useRef, onWillUnmount } = owl;
+import { status, useComponent, useEffect, useRef, onWillUnmount } from "@odoo/owl";
 
 /**
  * This file contains various custom hooks.

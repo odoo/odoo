@@ -6,7 +6,7 @@ import { makeTestEnv } from "../helpers/mock_env";
 import { makeFakeRouterService } from "../helpers/mock_services";
 import { nextTick, patchWithCleanup } from "../helpers/utils";
 
-const { EventBus } = owl;
+import { EventBus } from "@odoo/owl";
 
 async function createRouter(params = {}) {
     const env = params.env || {};

@@ -22,7 +22,7 @@ import {
     serializeDateTime,
 } from "@web/core/l10n/dates";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 /**
  * Represent one property value.

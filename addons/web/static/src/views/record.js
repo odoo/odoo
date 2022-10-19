@@ -3,7 +3,7 @@
 import { useService } from "@web/core/utils/hooks";
 import { useModel } from "@web/views/model";
 import { RelationalModel } from "@web/views/relational_model";
-const { Component, xml, onWillStart, onWillUpdateProps } = owl;
+import { Component, xml, onWillStart, onWillUpdateProps } from "@odoo/owl";
 
 class _Record extends Component {
     setup() {

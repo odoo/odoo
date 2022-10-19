@@ -23,7 +23,7 @@ function getDomain(controlPanel) {
     return controlPanel.env.searchModel.domain;
 }
 
-const { onWillUpdateProps } = owl;
+import { onWillUpdateProps } from "@odoo/owl";
 
 let target;
 let serverData;

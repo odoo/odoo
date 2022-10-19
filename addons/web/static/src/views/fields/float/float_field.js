@@ -8,7 +8,7 @@ import { formatFloat } from "../formatters";
 import { parseFloat } from "../parsers";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class FloatField extends Component {
     setup() {

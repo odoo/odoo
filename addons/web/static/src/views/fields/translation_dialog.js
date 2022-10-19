@@ -5,7 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { loadLanguages } from "@web/core/l10n/translation";
 
-const { Component, onWillStart } = owl;
+import { Component, onWillStart } from "@odoo/owl";
 
 export class TranslationDialog extends Component {
     setup() {

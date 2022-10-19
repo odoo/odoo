@@ -26,7 +26,7 @@ import legacyViewRegistry from "web.view_registry";
 import { browser } from "@web/core/browser/browser";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { xml } = owl;
+import { xml } from "@odoo/owl";
 const serviceRegistry = registry.category("services");
 const viewRegistry = registry.category("views");
 

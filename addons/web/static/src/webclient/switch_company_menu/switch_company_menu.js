@@ -7,7 +7,7 @@ import { registry } from "@web/core/registry";
 import { browser } from "@web/core/browser/browser";
 import { symmetricalDifference } from "@web/core/utils/arrays";
 
-const { Component, useState } = owl;
+import { Component, useState } from "@odoo/owl";
 
 export class SwitchCompanyMenu extends Component {
     setup() {

@@ -5,7 +5,7 @@ import { useDebounced } from "@web/core/utils/timing";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position_hook";
 
-const { Component, useExternalListener, useRef, useState } = owl;
+import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
 
 export class AutoComplete extends Component {
     setup() {

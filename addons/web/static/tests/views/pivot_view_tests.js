@@ -42,7 +42,7 @@ import { browser } from "@web/core/browser/browser";
 
 const serviceRegistry = registry.category("services");
 
-const { markup } = owl;
+import { markup } from "@odoo/owl";
 
 /**
  * Helper function that returns, given a pivot instance, the values of the

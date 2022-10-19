@@ -1,7 +1,7 @@
 /** @odoo-module **/
 import { DROPDOWN } from "./dropdown";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 /**
  * @enum {string}

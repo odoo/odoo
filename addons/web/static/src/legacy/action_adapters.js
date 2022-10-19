@@ -11,7 +11,7 @@ import { ViewNotFoundError } from "@web/views/view";
 import { cleanDomFromBootstrap, wrapSuccessOrFail, useLegacyRefs } from "./utils";
 import { mapDoActionOptionAPI } from "./backend_utils";
 
-const {
+import {
     Component,
     onMounted,
     onWillUnmount,
@@ -21,7 +21,7 @@ const {
     useExternalListener,
     useComponent,
     xml,
-} = owl;
+} from "@odoo/owl";
 
 class WarningDialog extends Component {}
 WarningDialog.template = xml`<Dialog title="props.title">

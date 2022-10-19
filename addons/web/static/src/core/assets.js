@@ -248,7 +248,7 @@ export const loadBundle = function (desc) {
     return assets.loadBundle(desc);
 };
 
-const { Component, xml, onWillStart } = owl;
+import { Component, xml, onWillStart } from "@odoo/owl";
 /**
  * Utility component that loads an asset bundle before instanciating a component
  */

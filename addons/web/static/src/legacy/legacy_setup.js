@@ -17,7 +17,7 @@ import * as session from "web.session";
 import * as makeLegacyWebClientService from "web.pseudo_web_client";
 import { templates } from "@web/core/assets";
 
-const { Component, whenReady } = owl;
+import { Component, whenReady } from "@odoo/owl";
 
 let legacySetupResolver;
 export const legacySetupProm = new Promise((resolve) => {

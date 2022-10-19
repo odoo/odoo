@@ -7,7 +7,7 @@ import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
-const { Component, useState } = owl;
+import { Component, useState } from "@odoo/owl";
 
 const { DateTime } = luxon;
 

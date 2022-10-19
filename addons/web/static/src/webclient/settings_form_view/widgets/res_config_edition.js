@@ -3,7 +3,7 @@
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 const { DateTime } = luxon;
 
 /**

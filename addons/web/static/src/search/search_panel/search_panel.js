@@ -2,7 +2,7 @@
 
 import { useBus } from "@web/core/utils/hooks";
 
-const { Component, onMounted, onWillUpdateProps, onWillStart, useRef, useState } = owl;
+import { Component, onMounted, onWillUpdateProps, onWillStart, useRef, useState } from "@odoo/owl";
 
 //-------------------------------------------------------------------------
 // Helpers

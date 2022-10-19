@@ -16,7 +16,7 @@ import {
     patchWithCleanup,
 } from "../../helpers/utils";
 
-const { Component, markup, xml } = owl;
+import { Component, markup, xml } from "@odoo/owl";
 const serviceRegistry = registry.category("services");
 const mainComponentRegistry = registry.category("main_components");
 

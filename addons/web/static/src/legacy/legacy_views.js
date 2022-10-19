@@ -16,7 +16,7 @@ import { getBundle, loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { LegacyComponent } from "./legacy_component";
 
-const { xml, onWillStart } = owl;
+import { xml, onWillStart } from "@odoo/owl";
 const viewRegistry = registry.category("views");
 
 function getJsClassWidget(fieldsInfo) {

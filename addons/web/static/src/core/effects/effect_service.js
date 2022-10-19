@@ -4,7 +4,7 @@ import { registry } from "../registry";
 import { EffectContainer } from "./effect_container";
 import { RainbowMan } from "./rainbow_man";
 
-const { EventBus } = owl;
+import { EventBus } from "@odoo/owl";
 
 const effectRegistry = registry.category("effects");
 

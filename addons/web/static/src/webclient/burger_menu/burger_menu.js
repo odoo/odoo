@@ -6,7 +6,7 @@ import { useService } from "@web/core/utils/hooks";
 import { BurgerUserMenu } from "./burger_user_menu/burger_user_menu";
 import { MobileSwitchCompanyMenu } from "./mobile_switch_company_menu/mobile_switch_company_menu";
 
-const { Component, onMounted, useState } = owl;
+import { Component, onMounted, useState } from "@odoo/owl";
 
 /**
  * This file includes the widget Menu in mobile to render the BurgerMenu which

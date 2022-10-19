@@ -11,7 +11,7 @@ import { makeTestEnv } from "../helpers/mock_env";
 import { click, getFixture, triggerEvent, mount, editInput } from "../helpers/utils";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 
 let target;
 let serverData;

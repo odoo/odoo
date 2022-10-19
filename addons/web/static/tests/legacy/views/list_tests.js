@@ -35,7 +35,7 @@ const { getFixture, click, legacyExtraNextTick } = require("@web/../tests/helper
 const { createWebClient, doAction, loadState } = require('@web/../tests/webclient/helpers');
 
 const { _t } = core;
-const { markup, onMounted, onWillUnmount, xml } = owl;
+const { markup, onMounted, onWillUnmount, xml } = require("@odoo/owl");
 
 let serverData;
 let target;

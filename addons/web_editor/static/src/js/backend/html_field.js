@@ -22,7 +22,7 @@ import {
 } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 import { toInline } from 'web_editor.convertInline';
 import { loadJS } from '@web/core/assets';
-const {
+import {
     markup,
     Component,
     useRef,
@@ -33,7 +33,7 @@ const {
     onWillUpdateProps,
     useEffect,
     onWillUnmount,
-} = owl;
+} from "@odoo/owl";
 
 export class HtmlFieldWysiwygAdapterComponent extends ComponentAdapter {
     setup() {

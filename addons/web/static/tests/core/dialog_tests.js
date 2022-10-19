@@ -9,7 +9,7 @@ import { makeTestEnv } from "../helpers/mock_env";
 import { click, destroy, getFixture, mount } from "../helpers/utils";
 import { makeFakeDialogService } from "../helpers/mock_services";
 
-const { Component, useState, onMounted, xml } = owl;
+import { Component, useState, onMounted, xml } from "@odoo/owl";
 const serviceRegistry = registry.category("services");
 let parent;
 let target;

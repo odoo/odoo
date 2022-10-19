@@ -39,7 +39,7 @@ import { kanbanView } from "@web/views/kanban/kanban_view";
 import { DynamicRecordList } from "@web/views/relational_model";
 import { ViewButton } from "@web/views/view_button/view_button";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 
 const serviceRegistry = registry.category("services");
 const viewWidgetRegistry = registry.category("view_widgets");

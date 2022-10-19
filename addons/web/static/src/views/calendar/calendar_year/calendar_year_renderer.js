@@ -7,7 +7,7 @@ import { getColor } from "../colors";
 import { useCalendarPopover, useFullCalendar } from "../hooks";
 import { CalendarYearPopover } from "./calendar_year_popover";
 
-const { Component, useEffect, useRef, onRendered } = owl;
+import { Component, useEffect, useRef, onRendered } from "@odoo/owl";
 
 export class CalendarYearRenderer extends Component {
     setup() {

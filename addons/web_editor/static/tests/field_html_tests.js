@@ -13,7 +13,7 @@ var LinkDialog = require('wysiwyg.widgets.LinkDialog');
 
 const { legacyExtraNextTick, patchWithCleanup } = require("@web/../tests/helpers/utils");
 
-const { useEffect } = owl;
+const { useEffect } = require("@odoo/owl");
 
 var _t = core._t;
 

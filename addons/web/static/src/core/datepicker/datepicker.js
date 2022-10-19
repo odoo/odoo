@@ -14,7 +14,7 @@ import { localization } from "@web/core/l10n/localization";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { isIOS } from "@web/core/browser/feature_detection";
 
-const {
+import {
     Component,
     onMounted,
     onWillUpdateProps,
@@ -22,7 +22,7 @@ const {
     useExternalListener,
     useRef,
     useState,
-} = owl;
+} from "@odoo/owl";
 const { DateTime } = luxon;
 
 let datePickerId = 0;

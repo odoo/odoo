@@ -8,7 +8,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { sprintf } from "@web/core/utils/strings";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 class PropertyTagsColorListPopover extends Component {}
 PropertyTagsColorListPopover.template = "web.PropertyTagsColorListPopover";

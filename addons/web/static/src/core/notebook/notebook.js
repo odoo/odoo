@@ -2,7 +2,7 @@
 
 import { scrollTo } from "@web/core/utils/scrolling";
 
-const { Component, onWillDestroy, onWillUpdateProps, useEffect, useRef, useState } = owl;
+import { Component, onWillDestroy, onWillUpdateProps, useEffect, useRef, useState } from "@odoo/owl";
 
 /**
  * A notebook component that will render only the current page and allow

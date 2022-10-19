@@ -3,7 +3,7 @@
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { useBus } from "@web/core/utils/hooks";
 
-const { useComponent, useEffect, useRef, useEnv } = owl;
+import { useComponent, useEffect, useRef, useEnv } from "@odoo/owl";
 
 /**
  * This hook is meant to be used by field components that use an input or

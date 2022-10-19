@@ -16,7 +16,7 @@ import { TagsList } from "./tags_list";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 
-const { Component, useRef } = owl;
+import { Component, useRef } from "@odoo/owl";
 
 class Many2ManyTagsFieldColorListPopover extends Component {}
 Many2ManyTagsFieldColorListPopover.template = "web.Many2ManyTagsFieldColorListPopover";
