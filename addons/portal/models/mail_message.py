@@ -8,6 +8,7 @@ class MailMessage(models.Model):
     _inherit = 'mail.message'
 
     def portal_message_format(self):
+        self.check_access_rule('read')
         return self._portal_message_format([
             'id', 'body', 'date', 'author_id', 'email_from',  # base message fields
             'message_type', 'subtype_id', 'is_internal', 'subject',  # message specific
