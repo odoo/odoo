@@ -26,6 +26,7 @@ class Team(models.Model):
     lead_month_count = fields.Integer(
         'Leads (30 days)', compute='_compute_lead_month_count',
         help='Lead assigned to this member those last 30 days')
+    active = fields.Boolean(string='Active', related="user_id.active")
 
     @api.depends('user_id', 'crm_team_id')
     def _compute_lead_month_count(self):

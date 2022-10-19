@@ -207,7 +207,7 @@ class TestCRMPLS(TransactionCase):
         leads.invalidate_cache()
         lead_13_no_team_proba = leads[13].automated_probability
         self.assertTrue(lead_13_team_3_proba != leads[13].automated_probability, "Probability for leads with no team should be different than if they where in their own team.")
-        self.assertEqual(tools.float_compare(lead_13_no_team_proba, 36.65, 2), 0)
+        self.assertEqual(tools.float_compare(lead_13_no_team_proba, 30.76, 2), 0)
 
         # Test frequencies
         lead_4_stage_0_freq = LeadScoringFrequency.search([('team_id', '=', leads[4].team_id.id), ('variable', '=', 'stage_id'), ('value', '=', stage_ids[0])])

@@ -164,7 +164,7 @@ class TestCRMLeadMultiCompany(TestCrmCommon):
         lead_4_auto = LeadUnsyncCids.sudo().create({
             'name': 'My Lead MC 4 Auto',
         })
-        self.assertEqual(lead_4_auto.team_id, self.sales_team_1,
+        self.assertEqual(lead_4_auto.team_id, self.team_company2,
                          '[Auto/4] As no team has current user as member nor current company as company_id, first available team should have been assigned.')
         self.assertEqual(lead_4_auto.company_id, self.company_2,
                          '[Auto/4] Current company should be set on the lead as no company was given by team and company is allowed for user.')
@@ -174,7 +174,7 @@ class TestCRMLeadMultiCompany(TestCrmCommon):
         })
         self.assertEqual(lead_4_manual.company_id, self.company_2,
                          '[Manual/4] As no team has current user as member nor current company as company_id, first available team should have been assigned.')
-        self.assertEqual(lead_4_manual.team_id, self.sales_team_1,
+        self.assertEqual(lead_4_manual.team_id, self.team_company2,
                          '[Manual/4] Current company should be set on the lead as no company was given by team and company is allowed for user.')
         self.assertEqual(lead_4_manual.user_id, self.user_sales_manager_mc,
                          '[Manual/4] Current user should have been assigned.')

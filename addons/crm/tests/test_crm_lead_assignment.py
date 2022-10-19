@@ -122,7 +122,7 @@ class TestLeadAssign(TestLeadAssignCommon):
         self.assertInitialData()
 
         # archived members should not be taken into account
-        self.sales_team_1_m1.action_archive()
+        self.sales_team_1_m1.user_id.write({'active': False})
         # assignment_max = 0 means opt_out
         self.sales_team_1_m2.assignment_max = 0
 
