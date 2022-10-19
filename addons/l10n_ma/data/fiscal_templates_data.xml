@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Fiscal Position Templates -->
+    <record id="fiscal_position_domestic" model="account.fiscal.position.template">
+		<field name="sequence">1</field>
+        <field name="name">Domestic</field>
+        <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="vat_required" eval="True"/>
+        <field name="country_id" ref="base.ma"/>
+    </record>
+    <record id="fiscal_position_abroad" model="account.fiscal.position.template">
+        <field name="sequence">1</field>
+        <field name="name">Abroad</field>
+        <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="vat_required" eval="True"/>
+        <field name="country_id" ref="base.ma"/>
+    </record>
+
+    <!-- Account mapping -->
+    <record id="fiscal_position_account_template_1" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="account_src_id" ref="l10n_ma.ma_7111"/>
+        <field name="account_dest_id" ref="l10n_ma.ma_7113"/>
+    </record>
+	<record id="fiscal_position_account_template_2" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="account_src_id" ref="l10n_ma.ma_7121"/>
+        <field name="account_dest_id" ref="l10n_ma.ma_7122"/>
+    </record>
+	<record id="fiscal_position_account_template_3" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="account_src_id" ref="l10n_ma.ma_71211"/>
+        <field name="account_dest_id" ref="l10n_ma.ma_71221"/>
+    </record>
+	<record id="fiscal_position_account_template_4" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="account_src_id" ref="l10n_ma.ma_71212"/>
+        <field name="account_dest_id" ref="l10n_ma.ma_71222"/>
+    </record>
+	<record id="fiscal_position_account_template_5" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="account_src_id" ref="l10n_ma.ma_7124"/>
+        <field name="account_dest_id" ref="l10n_ma.ma_7125"/>
+    </record>
+	<record id="fiscal_position_account_template_6" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="account_src_id" ref="l10n_ma.ma_71241"/>
+        <field name="account_dest_id" ref="l10n_ma.ma_71251"/>
+    </record>
+	<record id="fiscal_position_account_template_7" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="account_src_id" ref="l10n_ma.ma_71242"/>
+        <field name="account_dest_id" ref="l10n_ma.ma_71252"/>
+    </record>
+	<record id="fiscal_position_account_template_8" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="account_src_id" ref="l10n_ma.ma_71243"/>
+        <field name="account_dest_id" ref="l10n_ma.ma_71253"/>
+    </record>
+	<record id="fiscal_position_account_template_9" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="account_src_id" ref="l10n_ma.ma_71291"/>
+        <field name="account_dest_id" ref="l10n_ma.ma_71292"/>
+    </record>
+	<record id="fiscal_position_account_template_10" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="account_src_id" ref="l10n_ma.ma_71294"/>
+        <field name="account_dest_id" ref="l10n_ma.ma_71295"/>
+    </record>
+
+	<!-- Tax mapping -->
+    <record id="fiscal_position_tax_template_1" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat20_dom"/>
+        <field name="tax_dest_id" ref="tva_vat20_imp"/>
+    </record>
+    <record id="fiscal_position_tax_template_2" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat14_dom"/>
+        <field name="tax_dest_id" ref="tva_vat14_imp"/>
+    </record>
+    <record id="fiscal_position_tax_template_3" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat10_dom"/>
+        <field name="tax_dest_id" ref="tva_vat10_imp"/>
+    </record>
+    <record id="fiscal_position_tax_template_4" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat7_dom"/>
+        <field name="tax_dest_id" ref="tva_vat7_imp"/>
+    </record>
+    <record id="fiscal_position_tax_template_5" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat20_prod"/>
+        <field name="tax_dest_id" ref="tva_vat20_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_6" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat20_services"/>
+        <field name="tax_dest_id" ref="tva_vat20_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_7" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat20_liberal"/>
+        <field name="tax_dest_id" ref="tva_vat20_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_8" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat20_leasing"/>
+        <field name="tax_dest_id" ref="tva_vat20_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_9" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat20_construction"/>
+        <field name="tax_dest_id" ref="tva_vat20_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_10" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat20_second_hand"/>
+        <field name="tax_dest_id" ref="tva_vat20_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_11" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat20_self_construction"/>
+        <field name="tax_dest_id" ref="tva_vat20_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_12" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat20_other"/>
+        <field name="tax_dest_id" ref="tva_vat20_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_13" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat14_butter"/>
+        <field name="tax_dest_id" ref="tva_vat14_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_14" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat14_transport"/>
+        <field name="tax_dest_id" ref="tva_vat14_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_15" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat14_electricity"/>
+        <field name="tax_dest_id" ref="tva_vat14_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_16" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat14_other"/>
+        <field name="tax_dest_id" ref="tva_vat14_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_17" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat14_salesman"/>
+        <field name="tax_dest_id" ref="tva_vat14_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_18" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat10_heater"/>
+        <field name="tax_dest_id" ref="tva_vat10_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_19" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat10_livestock_food"/>
+        <field name="tax_dest_id" ref="tva_vat10_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_20" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat10_agricultural_equipment"/>
+        <field name="tax_dest_id" ref="tva_vat10_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_21" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat10_wood"/>
+        <field name="tax_dest_id" ref="tva_vat10_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_22" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat10_fishing"/>
+        <field name="tax_dest_id" ref="tva_vat10_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_23" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat10_catering"/>
+        <field name="tax_dest_id" ref="tva_vat10_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_24" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat10_hotel"/>
+        <field name="tax_dest_id" ref="tva_vat10_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_25" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat10_salt"/>
+        <field name="tax_dest_id" ref="tva_vat10_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_26" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat10_rice"/>
+        <field name="tax_dest_id" ref="tva_vat10_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_27" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat10_oil"/>
+        <field name="tax_dest_id" ref="tva_vat10_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_28" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat10_securities"/>
+        <field name="tax_dest_id" ref="tva_vat10_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_29" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat10_banking"/>
+        <field name="tax_dest_id" ref="tva_vat10_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_30" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat10_shares"/>
+        <field name="tax_dest_id" ref="tva_vat10_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_31" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat10_art"/>
+        <field name="tax_dest_id" ref="tva_vat10_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_32" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat10_lawyer"/>
+        <field name="tax_dest_id" ref="tva_vat10_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_33" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat10_gas"/>
+        <field name="tax_dest_id" ref="tva_vat10_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_34" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat10_petrol"/>
+        <field name="tax_dest_id" ref="tva_vat10_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_35" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat10_other"/>
+        <field name="tax_dest_id" ref="tva_vat10_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_36" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat7_water"/>
+        <field name="tax_dest_id" ref="tva_vat7_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_37" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat7_meter"/>
+        <field name="tax_dest_id" ref="tva_vat7_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_38" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat7_medecine"/>
+        <field name="tax_dest_id" ref="tva_vat7_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_39" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat7_school"/>
+        <field name="tax_dest_id" ref="tva_vat7_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_40" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat7_sugar"/>
+        <field name="tax_dest_id" ref="tva_vat7_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_41" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat7_cans"/>
+        <field name="tax_dest_id" ref="tva_vat7_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_42" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat7_milk"/>
+        <field name="tax_dest_id" ref="tva_vat7_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_43" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat7_soap"/>
+        <field name="tax_dest_id" ref="tva_vat7_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_44" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat7_car"/>
+        <field name="tax_dest_id" ref="tva_vat7_export"/>
+    </record>
+    <record id="fiscal_position_tax_template_45" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_abroad"/>
+        <field name="tax_src_id" ref="tva_vat7_other"/>
+        <field name="tax_dest_id" ref="tva_vat7_export"/>
+    </record>
+</odoo>
