@@ -189,7 +189,7 @@ class AccountMove(models.Model):
 
     # used by cash basis taxes, telling the lines of the move are always
     # exigible. This happens if the move contains no payable or receivable line.
-    always_tax_exigible = fields.Boolean(compute='_compute_always_tax_exigible', store=True)
+    always_tax_exigible = fields.Boolean(compute='_compute_always_tax_exigible', store=True, readonly=False)
 
     # === Misc fields === #
     auto_post = fields.Selection(
