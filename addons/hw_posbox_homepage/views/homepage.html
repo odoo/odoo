@@ -187,12 +187,6 @@
             <td class="heading">Server</td>
             <td><a href='{{ server_status }}' target=_blank>{{ server_status }}<a class="btn btn-sm float-end" href='/server'>configure</a></td>
         </tr>
-        {% if server_status != "Not Configured" %}
-        <tr>
-            <td class="heading">Six payment terminal</td>
-            <td>{{ six_terminal }} <a class="btn btn-sm float-end" href='/six_payment_terminal'>configure</a></td>
-        </tr>
-        {% endif %}
         <tr>
             <td class="heading">IOT Device</td>
             <td>
