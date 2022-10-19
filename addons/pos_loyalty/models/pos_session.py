@@ -74,14 +74,15 @@ class PosSession(models.Model):
             query = self.env['loyalty.card']._search(
                 [('program_id', '=', self.config_id.loyalty_program_id.id), ('partner_id', 'in', partner_ids)]
             )
-            query_str, params = query.select('id', 'partner_id', 'points')
-            self.env.cr.execute(query_str, params)
-            for res in self.env.cr.dictfetchall():
-                # The result of where_calc also includes partner_id is null.
-                if not res.get('partner_id'):
-                    continue
-                res_by_id[res['partner_id']]['loyalty_points'] = res['points']
-                res_by_id[res['partner_id']]['loyalty_card_id'] = res['id']
+            if query:
+                query_str, params = query.select('id', 'partner_id', 'points')
+                self.env.cr.execute(query_str, params)
+                for res in self.env.cr.dictfetchall():
+                    # The result of where_calc also includes partner_id is null.
+                    if not res.get('partner_id'):
+                        continue
+                    res_by_id[res['partner_id']]['loyalty_points'] = res['points']
+                    res_by_id[res['partner_id']]['loyalty_card_id'] = res['id']
         return result
 
     def _loader_params_product_product(self):
