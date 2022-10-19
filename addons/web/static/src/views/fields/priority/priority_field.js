@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component, useState } = owl;
+import { Component, useState } from "@odoo/owl";
 
 export class PriorityField extends Component {
     setup() {

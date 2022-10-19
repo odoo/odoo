@@ -9,7 +9,7 @@ import { isBinarySize } from "@web/core/utils/binary";
 import { FileUploader } from "../file_handler";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component, useState, onWillUpdateProps } = owl;
+import { Component, useState, onWillUpdateProps } from "@odoo/owl";
 const { DateTime } = luxon;
 
 export const fileTypeMagicWordMap = {

@@ -33,7 +33,7 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
  * @property {Function | null} onDelete
  */
 
-const { Component, useComponent, useEffect, useEnv, useSubEnv, onWillUpdateProps } = owl;
+import { Component, useComponent, useEffect, useEnv, useSubEnv, onWillUpdateProps } from "@odoo/owl";
 
 //
 // Commons

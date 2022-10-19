@@ -7,7 +7,7 @@ import { FACET_ICONS, GROUPABLE_TYPES } from "../utils/misc";
 import { sortBy } from "@web/core/utils/arrays";
 import { useBus } from "@web/core/utils/hooks";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class GroupByMenu extends Component {
     setup() {

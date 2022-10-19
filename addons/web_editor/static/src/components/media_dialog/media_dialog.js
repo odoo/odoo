@@ -9,7 +9,7 @@ import { DocumentSelector } from './document_selector';
 import { IconSelector } from './icon_selector';
 import { VideoSelector } from './video_selector';
 
-const { Component, useState, onRendered, xml } = owl;
+import { Component, useState, onRendered, xml } from "@odoo/owl";
 
 export const TABS = {
     IMAGES: {

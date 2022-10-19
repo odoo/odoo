@@ -8,7 +8,7 @@ import { Layout } from "@web/search/layout";
 import { getDefaultConfig } from "@web/views/view";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 
-const { Component, xml, useChildSubEnv } = owl;
+import { Component, xml, useChildSubEnv } from "@odoo/owl";
 
 const serviceRegistry = registry.category("services");
 

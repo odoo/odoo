@@ -2,7 +2,7 @@
 
 import { browser } from "@web/core/browser/browser";
 
-const { onWillUnmount, useComponent } = owl;
+import { onWillUnmount, useComponent } from "@odoo/owl";
 
 /**
  * Creates a version of the function where only the last call between two

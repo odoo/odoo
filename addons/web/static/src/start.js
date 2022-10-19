@@ -9,7 +9,7 @@ import { renderToString } from "./core/utils/render";
 import { setLoadXmlDefaultApp, templates } from "@web/core/assets";
 import { hasTouch } from "@web/core/browser/feature_detection";
 
-const { App, whenReady } = owl;
+import { App, whenReady } from "@odoo/owl";
 
 /**
  * Function to start a webclient.

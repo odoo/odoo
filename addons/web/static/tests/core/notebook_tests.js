@@ -4,7 +4,7 @@ import { Notebook } from "@web/core/notebook/notebook";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { click, getFixture, mount, nextTick } from "@web/../tests/helpers/utils";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 let target;
 
 QUnit.module("Components", (hooks) => {

@@ -3,7 +3,7 @@
 import { registry } from "../registry";
 import { PopoverContainer } from "./popover_container";
 
-const { EventBus } = owl;
+import { EventBus } from "@odoo/owl";
 
 export const popoverService = {
     start() {

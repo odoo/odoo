@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class TagsList extends Component {
     get visibleTags() {

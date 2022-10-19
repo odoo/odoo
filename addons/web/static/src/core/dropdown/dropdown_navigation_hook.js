@@ -5,7 +5,7 @@ import { browser } from "../browser/browser";
 import { localization } from "@web/core/l10n/localization";
 import { scrollTo } from "../utils/scrolling";
 
-const { useComponent, useEffect, useRef } = owl;
+import { useComponent, useEffect, useRef } from "@odoo/owl";
 
 /**
  * @typedef {{

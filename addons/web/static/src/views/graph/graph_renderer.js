@@ -9,7 +9,7 @@ import { loadJS } from "@web/core/assets";
 import { renderToString } from "@web/core/utils/render";
 import { useService } from "@web/core/utils/hooks";
 
-const { Component, onWillUnmount, useEffect, useRef, onWillStart } = owl;
+import { Component, onWillUnmount, useEffect, useRef, onWillStart } from "@odoo/owl";
 
 const NO_DATA = _lt("No data");
 
