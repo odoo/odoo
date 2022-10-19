@@ -61,8 +61,8 @@ QUnit.module("Fields", (hooks) => {
         // style returns the value in the rgb format
         assert.strictEqual(
             target.querySelector(".o_field_color div").style.backgroundColor,
-            "rgb(0, 0, 0)",
-            "field has the default color set as background if no value has been selected"
+            "initial",
+            "field has the transparent background if no color value has been selected"
         );
 
         assert.strictEqual(target.querySelector(".o_field_color input").value, "#000000");
@@ -100,6 +100,25 @@ QUnit.module("Fields", (hooks) => {
         assert.doesNotHaveClass(target.querySelector(".o_data_row"), "o_selected_row");
     });
 
+    QUnit.test("read-only color field in editable list view", async function (assert) {
+        await makeView({
+            type: "list",
+            serverData,
+            resModel: "partner",
+            arch: `
+                <tree editable="bottom">
+                    <field name="hex_color" readonly="1" widget="color" />
+                </tree>`,
+        });
+
+        assert.containsN(
+            target,
+            '.o_field_color input:disabled',
+            2,
+            "the field should not be editable"
+        );
+    });
+
     QUnit.test("color field change via another field's onchange", async (assert) => {
         serverData.models.partner.onchanges = {
             foo: (rec) => {
@@ -125,8 +144,8 @@ QUnit.module("Fields", (hooks) => {
 
         assert.strictEqual(
             target.querySelector(".o_field_color div").style.backgroundColor,
-            "rgb(0, 0, 0)",
-            "field has the default color set as background if no value has been selected"
+            "initial",
+            "field has transparent background if no color value has been selected"
         );
         assert.strictEqual(target.querySelector(".o_field_color input").value, "#000000");
         await editInput(target, ".o_field_char[name='foo'] input", "someValue");
