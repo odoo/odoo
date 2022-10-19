@@ -14,7 +14,7 @@ class MailTestPortal(models.Model):
         'mail.thread',
     ]
 
-    name = fields.Char()
+    name = fields.Char('Name')
     partner_id = fields.Many2one('res.partner', 'Customer')
     user_id = fields.Many2one(comodel_name='res.users', string="Salesperson")
 
@@ -42,26 +42,25 @@ class MailTestPortalNoPartner(models.Model):
 
 
 class MailTestRating(models.Model):
-    """ A model inheriting from mail.thread with some fields used for SMS
+    """ A model inheriting from rating.mixin (which inherits from mail.thread) with some fields used for SMS
     gateway, like a partner, a specific mobile phone, ... """
     _description = 'Rating Model (ticket-like)'
     _name = 'mail.test.rating'
     _inherit = [
-        'mail.thread',
-        'mail.activity.mixin',
         'rating.mixin',
+        'mail.activity.mixin',
         'portal.mixin',
     ]
     _mailing_enabled = True
     _order = 'name asc, id asc'
 
-    name = fields.Char()
-    subject = fields.Char()
+    name = fields.Char('Name')
+    subject = fields.Char('Subject')
     company_id = fields.Many2one('res.company', 'Company')
     customer_id = fields.Many2one('res.partner', 'Customer')
-    email_from = fields.Char(compute='_compute_email_from', precompute=True, readonly=False, store=True)
-    mobile_nbr = fields.Char(compute='_compute_mobile_nbr', precompute=True, readonly=False, store=True)
-    phone_nbr = fields.Char(compute='_compute_phone_nbr', precompute=True, readonly=False, store=True)
+    email_from = fields.Char('From', compute='_compute_email_from', precompute=True, readonly=False, store=True)
+    mobile_nbr = fields.Char('Mobile', compute='_compute_mobile_nbr', precompute=True, readonly=False, store=True)
+    phone_nbr = fields.Char('Phone Number', compute='_compute_phone_nbr', precompute=True, readonly=False, store=True)
     user_id = fields.Many2one('res.users', 'Responsible', tracking=1)
 
     @api.depends('customer_id')
@@ -96,3 +95,27 @@ class MailTestRating(models.Model):
 
     def _rating_get_partner(self):
         return self.customer_id
+
+
+class MailTestRatingThread(models.Model):
+    """A model inheriting from mail.thread with minimal fields for testing
+     rating submission without the rating mixin but with the same test code:
+
+     - partner_id: value returned by the base _rating_get_partner method
+     - user_id: value returned by the base _rating_get_operator method
+     """
+
+    _description = 'Model for testing rating without the rating mixin'
+    _name = 'mail.test.rating.thread'
+    _inherit = 'mail.thread'
+    _order = 'name asc, id asc'
+
+    name = fields.Char('Name')
+    customer_id = fields.Many2one('res.partner', 'Customer')
+    user_id = fields.Many2one('res.users', 'Responsible', tracking=1)
+
+    def _mail_get_partner_fields(self):
+        return ['customer_id']
+
+    def _rating_get_partner(self):
+        return self.customer_id or super()._rating_get_partner()
