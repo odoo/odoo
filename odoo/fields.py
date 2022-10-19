@@ -4720,7 +4720,7 @@ class Many2many(_RelationalMulti):
                     {order_by}
                 """.format(rel=self.relation, id1=self.column1, id2=self.column2,
                            tbl=comodel._table, from_c=from_c, where_c=where_c or '1=1',
-                           order_by=order_by)
+                           order_by=f"ORDER BY {order_by}" if order_by else '')
         where_params.append(tuple(records.ids))
 
         # retrieve lines and group them by record

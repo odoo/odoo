@@ -1979,7 +1979,6 @@ class BaseModel(metaclass=MetaModel):
                 order_field_name = order_field.split(':')[0]
                 if self._fields[order_field_name].type == 'many2one' and not is_many2one_id:
                     order_clause = self._generate_order_by(order_part, query)
-                    order_clause = order_clause.replace('ORDER BY ', '')
                     if order_clause:
                         orderby_terms.append(order_clause)
                         groupby_terms += [order_term.split()[0] for order_term in order_clause.split(',')]
@@ -2405,7 +2404,7 @@ class BaseModel(metaclass=MetaModel):
         :return: qualified name of field, to be used in SELECT clause
         """
         # INVARIANT: alias is the SQL alias of model._table in query
-        model, field = self, self._fields[fname]
+        field = self._fields[fname]
         while field.inherited:
             # retrieve the parent model where field is inherited from
             parent_model = self.env[field.related_field.model_name]
@@ -2414,7 +2413,7 @@ class BaseModel(metaclass=MetaModel):
             parent_alias = query.left_join(
                 alias, parent_fname, parent_model._table, 'id', parent_fname,
             )
-            model, alias, field = parent_model, parent_alias, field.related_field
+            alias, field = parent_alias, field.related_field
 
         if field.type == 'many2many':
             # special case for many2many fields: prepare a query on the comodel
@@ -4468,9 +4467,6 @@ class BaseModel(metaclass=MetaModel):
         # figure out the applicable order_by for the m2o
         dest_model = self.env[field.comodel_name]
         m2o_order = dest_model._order
-        if not regex_order.match(m2o_order):
-            # _order is complex, can't use it here, so we default to _rec_name
-            m2o_order = dest_model._rec_name
 
         # Join the dest m2o table if it's not joined yet. We use [LEFT] OUTER join here
         # as we don't want to exclude results that have NULL values for the m2o
@@ -4531,9 +4527,9 @@ class BaseModel(metaclass=MetaModel):
         if order_spec:
             order_by_elements = self._generate_order_by_inner(self._table, order_spec, query)
             if order_by_elements:
-                order_by_clause = ",".join(order_by_elements)
+                order_by_clause = ", ".join(order_by_elements)
 
-        return order_by_clause and (' ORDER BY %s ' % order_by_clause) or ''
+        return order_by_clause
 
     @api.model
     def _flush_search(self, domain, fields=None, order=None, seen=None):
@@ -4654,7 +4650,7 @@ class BaseModel(metaclass=MetaModel):
             self._cr.execute(query_str, params)
             return self._cr.fetchone()[0]
 
-        query.order = self._generate_order_by(order, query).replace('ORDER BY ', '')
+        query.order = self._generate_order_by(order, query)
         query.offset = offset
 
         return query
