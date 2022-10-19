@@ -387,6 +387,15 @@ registerModel({
         }),
         scrollPanelRef: attr(),
         /**
+         * Determines whether the view should reload after file changed in this chatter,
+         * such as from a file upload.
+         */
+        shouldReloadParentFromFileChanged: attr({
+            compute() {
+                return this.hasParentReloadOnAttachmentsChanged;
+            },
+        }),
+        /**
          * Determines the `Thread` that should be displayed by `this`.
          */
         thread: one('Thread'),
