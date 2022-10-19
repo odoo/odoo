@@ -111,7 +111,7 @@
                 There was an error processing your payment: transaction failed.<br />
                 <t t-set="tx_id" t-value="invoice.get_portal_last_transaction()"/>
                 <t t-if="tx_id and tx_id.state_message">
-                    <t t-esc="tx_id.state_message"/>
+                    <t t-out="tx_id.state_message"/>
                 </t>
             </t>
             <t t-if="error == 'pay_invoice_tx_token'">
@@ -127,7 +127,7 @@
                 <t t-set="payment_tx_id" t-value="invoice.get_portal_last_transaction()"/>
                 <span t-if='payment_tx_id.provider_id.sudo().done_msg' t-out="payment_tx_id.provider_id.sudo().done_msg"/>
                 <div t-if="payment_tx_id.provider_id.sudo().pending_msg and payment_tx_id.provider_code == 'custom' and invoice.ref">
-                    <b>Communication: </b><span t-esc='invoice.ref'/>
+                    <b>Communication: </b><span t-out='invoice.ref'/>
                 </div>
             </t>
             <t t-if="success == 'pay_invoice' and invoice.payment_state in ('paid', 'in_payment')">

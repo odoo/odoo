@@ -71,7 +71,7 @@
                                         <t t-out="address"/>
                                     </div>
                                     <div t-else="fallback_address">
-                                        <t t-esc="fallback_address"
+                                        <t t-out="fallback_address"
                                            t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}' />
                                     </div>
                                 </div>
@@ -82,7 +82,7 @@
                                     <t t-if="o and 'l10n_din5008_template_data' in o" t-set="template_data" t-value="o.l10n_din5008_template_data"/>
                                     <table>
                                         <t t-foreach="template_data" t-as="row">
-                                            <tr><td><t t-esc="row[0]"/></td><td><t t-esc="row[1]"/></td></tr>
+                                            <tr><td><t t-out="row[0]"/></td><td><t t-out="row[1]"/></td></tr>
                                         </t>
                                     </table>
                                 </div>
@@ -92,18 +92,18 @@
                             <t t-foreach="o.l10n_din5008_addresses" t-as="doc_address">
                                 <td>
                                     <div class="shipping_address">
-                                        <strong><t t-esc="doc_address[0]"/></strong>
-                                        <div t-esc="doc_address[1]" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
+                                        <strong><t t-out="doc_address[0]"/></strong>
+                                        <div t-out="doc_address[1]" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
                                     </div>
                                 </td>
                             </t>
                         </tr>
                     </table>
                     <h2>
-                        <span t-if="not o and not docs"><t t-esc="company.l10n_din5008_document_title"/></span>
+                        <span t-if="not o and not docs"><t t-out="company.l10n_din5008_document_title"/></span>
                         <span t-else="">
                             <t t-set="o" t-value="docs[0]" t-if="not o" />
-                            <span t-if="'l10n_din5008_document_title' in o"><t t-esc="o.l10n_din5008_document_title"/></span>
+                            <span t-if="'l10n_din5008_document_title' in o"><t t-out="o.l10n_din5008_document_title"/></span>
                             <span t-elif="'name' in o" t-field="o.name"/>
                         </span>
                     </h2>
@@ -137,7 +137,7 @@
                                 </td>
                                 <td>
                                     <ul class="list-inline">
-                                        <li t-if="company.vat"><t t-esc="company.account_fiscal_country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
+                                        <li t-if="company.vat"><t t-out="company.account_fiscal_country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
                                         <li>HRB Nr: <span t-field="company.company_registry"/></li>
                                     </ul>
                                 </td>
@@ -164,7 +164,7 @@
                         &amp;.header {
                             .company_header {
                                 .name_container {
-                                    color: <t t-esc='primary'/>;
+                                    color: <t t-out='primary'/>;
                                 }
                             }
                         }
@@ -172,17 +172,17 @@
                             td {
                                 .address {
                                     > span {
-                                        color: <t t-esc='secondary'/>;
+                                        color: <t t-out='secondary'/>;
                                     }
                                 }
                             }
                             h2 {
-                                color: <t t-esc='primary'/>;
+                                color: <t t-out='primary'/>;
                             }
                             .page {
                                 [name=invoice_line_table], [name=stock_move_table], .o_main_table {
                                     th {
-                                        color: <t t-esc='secondary'/>;
+                                        color: <t t-out='secondary'/>;
                                     }
                                 }
                             }
