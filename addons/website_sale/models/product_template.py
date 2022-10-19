@@ -10,11 +10,11 @@ from odoo.osv import expression
 
 class ProductTemplate(models.Model):
     _inherit = [
+        'rating.mixin',
         "product.template",
         "website.seo.metadata",
         'website.published.multi.mixin',
         'website.searchable.mixin',
-        'rating.mixin',
     ]
     _name = 'product.template'
     _mail_post_access = 'read'
