@@ -400,3 +400,20 @@ class PaymentProvider(models.Model):
         self.ensure_one()
 
         return {}
+
+    #=== BUSINESS METHODS - GETTERS ===#
+
+    def _stripe_get_publishable_key(self):
+        """ Return the publishable key of the provider.
+
+        This getter allows fetching the publishable key from a QWeb template and through Stripe's
+        utils.
+
+        Note: `self.ensure_one()
+
+        :return: The publishable key.
+        :rtype: str
+        """
+        self.ensure_one()
+
+        return stripe_utils.get_publishable_key(self.sudo())
