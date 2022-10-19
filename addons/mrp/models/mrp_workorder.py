@@ -416,7 +416,7 @@ class MrpWorkorder(models.Model):
 
     @api.onchange('date_planned_start', 'duration_expected', 'workcenter_id')
     def _onchange_date_planned_start(self):
-        if self.date_planned_start and self.duration_expected and self.workcenter_id:
+        if self.date_planned_start and self.workcenter_id:
             self.date_planned_finished = self._calculate_date_planned_finished()
 
     def _calculate_date_planned_finished(self, date_planned_start=False):
@@ -503,7 +503,7 @@ class MrpWorkorder(models.Model):
         # Plan only suitable workorders
         if self.state not in ['pending', 'waiting', 'ready']:
             return
-        if self.date_planned_start:
+        if self.leave_id:
             if replan:
                 self.leave_id.unlink()
             else:
