@@ -26,12 +26,3 @@ class AccountAnalyticDistributionModel(models.Model):
     def _create_domain(self, fname, value):
         if not fname == 'account_prefix':
             return super()._create_domain(fname, value)
-
-    def _check_score(self, key, value):
-        if key == 'account_prefix':
-            if value.startswith(self.account_prefix):
-                return 1
-            else:
-                return -1
-        else:
-            return super()._check_score(key, value)
