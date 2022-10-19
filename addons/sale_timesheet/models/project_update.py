@@ -31,7 +31,6 @@ class ProjectUpdate(models.Model):
         total_sold, total_effective, total_remaining = 0, 0, 0
         sols = self.env['sale.order.line'].search(
             project._get_sale_items_domain([
-                ('is_service', '=', True),
                 ('is_downpayment', '=', False),
             ]),
         )
