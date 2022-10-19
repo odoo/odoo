@@ -14,7 +14,7 @@ import { CalendarFilterPanel } from "./filter_panel/calendar_filter_panel";
 import { CalendarMobileFilterPanel } from "./mobile_filter_panel/calendar_mobile_filter_panel";
 import { CalendarQuickCreate } from "./quick_create/calendar_quick_create";
 
-const { Component, useState } = owl;
+import { Component, useState } from "@odoo/owl";
 
 const SCALE_LABELS = {
     day: _lt("Day"),

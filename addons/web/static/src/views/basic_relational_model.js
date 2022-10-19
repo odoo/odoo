@@ -18,7 +18,7 @@ import { localization } from "@web/core/l10n/localization";
 import BasicModel from "web.BasicModel";
 import Context from "web.Context";
 
-const { markup, toRaw } = owl;
+import { markup, toRaw } from "@odoo/owl";
 
 const DEFAULT_HANDLE_FIELD = "sequence";
 

@@ -2,7 +2,7 @@
 
 import { ErrorHandler, WithEnv } from "../utils/components";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 
 export class DialogContainer extends Component {
     handleError(error, dialog) {

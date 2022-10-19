@@ -9,7 +9,7 @@ import { useNumpadDecimal } from "../numpad_decimal_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { session } from "@web/session";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class MonetaryField extends Component {
     setup() {

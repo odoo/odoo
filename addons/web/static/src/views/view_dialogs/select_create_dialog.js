@@ -7,7 +7,7 @@ import { escape } from "@web/core/utils/strings";
 
 import { FormViewDialog } from "./form_view_dialog";
 
-const { Component, markup, useState } = owl;
+import { Component, markup, useState } from "@odoo/owl";
 
 export class SelectCreateDialog extends Component {
     setup() {

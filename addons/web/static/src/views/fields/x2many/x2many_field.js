@@ -16,7 +16,7 @@ import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { evalDomain } from "@web/views/utils";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class X2ManyField extends Component {
     setup() {

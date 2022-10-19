@@ -5,7 +5,7 @@ import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class BooleanField extends Component {
     get isReadonly() {

@@ -6,7 +6,7 @@ import { fuzzyLookup } from "@web/core/utils/search";
 import { computeAppsAndMenuItems } from "@web/webclient/menus/menu_helpers";
 import { DefaultCommandItem } from "@web/core/commands/command_palette";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 class AppIconCommand extends Component {}
 AppIconCommand.template = "web.AppIconCommand";

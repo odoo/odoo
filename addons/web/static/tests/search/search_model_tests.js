@@ -3,7 +3,7 @@
 import { patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { makeWithSearch, setupControlPanelServiceRegistry } from "./helpers";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 
 class TestComponent extends Component {}
 TestComponent.template = xml`<div class="o_test_component"/>`;

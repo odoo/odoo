@@ -14,7 +14,7 @@ import { sprintf } from "@web/core/utils/strings";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { reposition } from '@web/core/position_hook';
 
-const { Component, useRef, useState, useEffect, onWillStart } = owl;
+import { Component, useRef, useState, useEffect, onWillStart } from "@odoo/owl";
 
 export class PropertiesField extends Component {
     setup() {

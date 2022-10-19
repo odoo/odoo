@@ -4,7 +4,7 @@ import { DomainSelectorBranchNode } from "./domain_selector_branch_node";
 import { DomainSelectorBranchOperator } from "./domain_selector_branch_operator";
 import { DomainSelectorLeafNode } from "./domain_selector_leaf_node";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class DomainSelectorRootNode extends Component {
     get hasNode() {

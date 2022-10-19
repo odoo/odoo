@@ -15,7 +15,7 @@ const {Markup} = require('web.utils');
 const { config: transitionConfig } = require("@web/core/transition");
 
 var _t = core._t;
-const { markup } = owl;
+const { markup } = require("@odoo/owl");
 
 var RUNNING_TOUR_TIMEOUT = 10000;
 

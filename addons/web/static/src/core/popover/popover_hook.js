@@ -2,7 +2,7 @@
 
 import { useService } from "@web/core/utils/hooks";
 
-const { onWillUnmount, status, useComponent } = owl;
+import { onWillUnmount, status, useComponent } from "@odoo/owl";
 
 export function usePopover() {
     const removeFns = new Set();

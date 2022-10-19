@@ -13,7 +13,7 @@ import { patchWithCleanup } from "./utils";
 import { uiService } from "@web/core/ui/ui_service";
 import { ConnectionAbortedError } from "../../src/core/network/rpc_service";
 
-const { Component, status } = owl;
+import { Component, status } from "@odoo/owl";
 
 // -----------------------------------------------------------------------------
 // Mock Services

@@ -37,7 +37,7 @@ const { mapLegacyEnvToWowlEnv } = require("@web/legacy/utils");
 const { scrollerService } = require("@web/core/scroller_service");
 const { LegacyComponent } = require("@web/legacy/legacy_component");
 
-const { onMounted, onWillUnmount, xml } = owl;
+const { onMounted, onWillUnmount, xml } = require("@odoo/owl");
 
 let serverData;
 let target;

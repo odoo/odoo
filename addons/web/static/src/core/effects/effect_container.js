@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-const { EventBus, Component, xml, onWillDestroy } = owl;
+import { EventBus, Component, xml, onWillDestroy } from "@odoo/owl";
 
 export class EffectContainer extends Component {
     setup() {

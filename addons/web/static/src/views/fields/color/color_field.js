@@ -3,7 +3,7 @@
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component, useState, onWillUpdateProps } = owl;
+import { Component, useState, onWillUpdateProps } from "@odoo/owl";
 
 export class ColorField extends Component {
     setup() {

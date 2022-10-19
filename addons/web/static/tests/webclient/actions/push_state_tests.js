@@ -14,7 +14,7 @@ import {
 } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 
 let serverData;
 let target;

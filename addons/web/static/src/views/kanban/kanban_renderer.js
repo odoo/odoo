@@ -19,7 +19,7 @@ import { KanbanColumnQuickCreate } from "./kanban_column_quick_create";
 import { KanbanRecord } from "./kanban_record";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
 
-const { Component, useState, useRef, onWillDestroy } = owl;
+import { Component, useState, useRef, onWillDestroy } from "@odoo/owl";
 
 const DRAGGABLE_GROUP_TYPES = ["many2one"];
 const MOVABLE_RECORD_TYPES = ["char", "boolean", "integer", "selection", "many2one"];

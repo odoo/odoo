@@ -19,7 +19,7 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { useBounceButton } from "@web/views/view_hook";
 import { Widget } from "@web/views/widgets/widget";
 
-const {
+import {
     Component,
     onMounted,
     onPatched,
@@ -29,7 +29,7 @@ const {
     useRef,
     useState,
     useEffect,
-} = owl;
+} from "@odoo/owl";
 
 const formatters = registry.category("formatters");
 

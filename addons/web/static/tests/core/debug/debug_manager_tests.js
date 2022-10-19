@@ -30,7 +30,7 @@ import { createWebClient, doAction, getActionManagerServerData } from "../../web
 import { openViewItem } from "@web/webclient/debug_items";
 import { editSearchView, editView, setDefaults } from "@web/views/debug_items";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 const { prepareRegistriesWithCleanup } = utils;
 
 export class DebugMenuParent extends Component {

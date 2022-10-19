@@ -21,7 +21,7 @@ import { FilterMenu } from "@web/search/filter_menu/filter_menu";
 import { GroupByMenu } from "@web/search/group_by_menu/group_by_menu";
 import { SearchPanel } from "@web/search/search_panel/search_panel";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 
 const serviceRegistry = registry.category("services");
 

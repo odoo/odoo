@@ -5,7 +5,7 @@ import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { swipeLeft, swipeRight } from "@web/../tests/mobile/helpers";
 import { registry } from "@web/core/registry";
 
-const { EventBus } = owl;
+import { EventBus } from "@odoo/owl";
 
 let serverData, target;
 
