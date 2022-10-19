@@ -21,31 +21,6 @@ export class Message extends Component {
         useUpdateToModel({ methodName: 'onComponentUpdate' });
     }
 
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * Tell whether the message is partially visible on browser window or not.
-     *
-     * @returns {boolean}
-     */
-    isPartiallyVisible() {
-        if (!this.root.el) {
-            return false;
-        }
-        const elRect = this.root.el.getBoundingClientRect();
-        if (!this.root.el.parentNode) {
-            return false;
-        }
-        const parentRect = this.root.el.parentNode.getBoundingClientRect();
-        // intersection with 5px offset
-        return (
-            elRect.top < parentRect.bottom + 5 &&
-            parentRect.top < elRect.bottom + 5
-        );
-    }
-
     /**
      * @returns {MessageView}
      */

@@ -19,6 +19,26 @@ registerModel({
             });
         },
         /**
+         * Tell whether the message is partially visible on browser window or not.
+         *
+         * @returns {boolean}
+         */
+        isPartiallyVisible() {
+            if (!this.component || !this.component.root.el) {
+                return false;
+            }
+            const elRect = this.component.root.el.getBoundingClientRect();
+            if (!this.component.root.el.parentNode) {
+                return false;
+            }
+            const parentRect = this.component.root.el.parentNode.getBoundingClientRect();
+            // intersection with 5px offset
+            return (
+                elRect.top < parentRect.bottom + 5 &&
+                parentRect.top < elRect.bottom + 5
+            );
+        },
+        /**
          * @param {MouseEvent} ev
          */
         async onClick(ev) {
@@ -115,7 +135,7 @@ registerModel({
                 this.highlight();
                 this.update({ doHighlight: clear() });
             }
-            if (this.threadViewOwnerAsLastMessageView && this.component && this.component.isPartiallyVisible()) {
+            if (this.threadViewOwnerAsLastMessageView && this.isPartiallyVisible()) {
                 this.threadViewOwnerAsLastMessageView.handleVisibleMessage(this.message);
             }
             if (this.prettyBodyRef.el && this.message.prettyBody !== this.lastPrettyBody) {
