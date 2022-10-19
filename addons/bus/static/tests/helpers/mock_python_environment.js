@@ -104,6 +104,12 @@ let pyEnv;
     }
     pyEnv = new Proxy(
         {
+            get currentPartner() {
+                if ('res.partner' in this.mockServer.models) {
+                    return this.mockServer.getRecords('res.partner', [['id', '=', this.currentPartnerId]])[0];
+                }
+                return undefined;
+            },
             getData() {
                 return this.mockServer.models;
             },
