@@ -4,7 +4,7 @@ import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _lt } from "@web/core/l10n/translation";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export default class ToursDialog extends Component {
     setup() {

@@ -4,7 +4,7 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { SearchModel } from "@web/search/search_model";
 import { CallbackRecorder, useSetupAction } from "@web/webclient/actions/action_hook";
 
-const { Component, onWillStart, onWillUpdateProps, toRaw, useSubEnv } = owl;
+import { Component, onWillStart, onWillUpdateProps, toRaw, useSubEnv } from "@odoo/owl";
 
 export const SEARCH_KEYS = ["comparison", "context", "domain", "groupBy", "orderBy"];
 

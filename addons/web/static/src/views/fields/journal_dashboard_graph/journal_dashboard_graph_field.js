@@ -6,7 +6,7 @@ import { getColor, hexToRGBA } from "@web/views/graph/colors";
 import { standardFieldProps } from "../standard_field_props";
 import { useService } from "@web/core/utils/hooks";
 
-const { Component, onWillStart, useEffect, useRef } = owl;
+import { Component, onWillStart, useEffect, useRef } from "@odoo/owl";
 
 export class JournalDashboardGraphField extends Component {
     setup() {

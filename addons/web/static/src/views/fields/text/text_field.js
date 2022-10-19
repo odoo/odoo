@@ -8,7 +8,7 @@ import { TranslationButton } from "../translation_button";
 import { useDynamicPlaceholder } from "../dynamicplaceholder_hook";
 import { parseInteger } from '../parsers';
 
-const { Component, useEffect, onMounted, onWillUnmount, useRef } = owl;
+import { Component, useEffect, onMounted, onWillUnmount, useRef } from "@odoo/owl";
 
 export class TextField extends Component {
     setup() {

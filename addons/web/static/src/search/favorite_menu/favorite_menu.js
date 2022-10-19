@@ -7,7 +7,7 @@ import { FACET_ICONS } from "../utils/misc";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 const favoriteMenuRegistry = registry.category("favoriteMenu");
 
 export class FavoriteMenu extends Component {

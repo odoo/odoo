@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import { DomainSelectorFieldInput } from "./domain_selector_field_input";
 import { DomainSelectorFieldInputWithTags } from "./domain_selector_field_input_with_tags";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 const dsf = registry.category("domain_selector/fields");
 const dso = registry.category("domain_selector/operator");

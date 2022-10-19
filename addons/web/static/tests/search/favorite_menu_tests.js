@@ -19,7 +19,7 @@ import {
     toggleMenuItem,
 } from "@web/../tests/search/helpers";
 
-const { Component, onWillUpdateProps, xml } = owl;
+import { Component, onWillUpdateProps, xml } from "@odoo/owl";
 const serviceRegistry = registry.category("services");
 const viewRegistry = registry.category("views");
 const favoriteMenuRegistry = registry.category("favoriteMenu");

@@ -3,7 +3,7 @@
 import { HighlightText } from "./../highlight_text/highlight_text";
 import { escapeRegExp } from "@web/core/utils/strings";
 
-const { Component, useState, useRef, useEffect, onWillRender, useChildSubEnv } = owl;
+import { Component, useState, useRef, useEffect, onWillRender, useChildSubEnv } from "@odoo/owl";
 
 export class SettingsContainer extends Component {
     setup() {

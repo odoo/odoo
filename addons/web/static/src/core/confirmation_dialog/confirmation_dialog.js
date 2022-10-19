@@ -4,7 +4,7 @@ import { Dialog } from "../dialog/dialog";
 import { _lt } from "../l10n/translation";
 import { useChildRef } from "@web/core/utils/hooks";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class ConfirmationDialog extends Component {
     setup() {

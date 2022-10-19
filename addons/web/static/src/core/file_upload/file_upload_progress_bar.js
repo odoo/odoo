@@ -4,7 +4,7 @@ import { useService } from "../utils/hooks";
 import { sprintf } from "../utils/strings";
 import { ConfirmationDialog } from "../confirmation_dialog/confirmation_dialog";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class FileUploadProgressBar extends Component {
     setup() {

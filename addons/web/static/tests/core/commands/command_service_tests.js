@@ -21,7 +21,7 @@ import {
     triggerHotkey,
 } from "../../helpers/utils";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 
 let env;
 let target;

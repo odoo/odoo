@@ -11,7 +11,7 @@ import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relat
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import * as BarcodeScanner from "@web/webclient/barcode/barcode_scanner";
 
-const { Component, onWillUpdateProps, useState } = owl;
+import { Component, onWillUpdateProps, useState } from "@odoo/owl";
 
 class CreateConfirmationDialog extends Component {
     get title() {
