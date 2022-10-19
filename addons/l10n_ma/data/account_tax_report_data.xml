@@ -13,114 +13,114 @@
             </record>
         </field>
         <field name="line_ids">
-            <record id="tax_report_ventilation_chiffre_affaires_imposable" model="account.report.line">
-                <field name="name">Ventilation du chiffre d’affaires imposable</field>
+            <record id="tax_report_breakdown_taxable_turnover" model="account.report.line">
+                <field name="name">Breakdown of taxable turnover</field>
                 <field name="aggregation_formula">MATAXB_1.balance + MATAXB_2.balance + MATAXB_3.balance + MATAXB_4.balance + MATAXB_5.balance + MATAXB_6.balance + MATAXB_7.balance + MATAXB_8.balance</field>
                 <field name="children_ids">
-                    <record id="tax_report_taux_normal_20" model="account.report.line">
-                        <field name="name">TAUX NORMAL DE 20% (Base HT)</field>
+                    <record id="tax_report_standard_rate_20" model="account.report.line">
+                        <field name="name">STANDARD RATE OF 20% (excl. tax)</field>
                         <field name="code">MATAXB_1</field>
                         <field name="expression_ids">
-                            <record id="tax_report_taux_normal_20_tag" model="account.report.expression">
+                            <record id="tax_report_standard_rate_20_balance" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">TAUX NORMAL DE 20% (Base HT)</field>
+                                <field name="formula">STANDARD RATE OF 20% (excl. tax)</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_taux_normal_tva_20" model="account.report.line">
-                        <field name="name">TAUX NORMAL DE 20% (TVA exigible)</field>
+                    <record id="tax_report_standard_rate_vat_20" model="account.report.line">
+                        <field name="name">STANDARD RATE OF 20% (VAT payable)</field>
                         <field name="code">MATAXB_2</field>
                         <field name="expression_ids">
-                            <record id="tax_report_taux_normal_tva_20_tag" model="account.report.expression">
+                            <record id="tax_report_standard_rate_vat_20_balance" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">TAUX NORMAL DE 20% (TVA exigible)</field>
+                                <field name="formula">STANDARD RATE OF 20% (VAT payable)</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_tauz_reduit_ht_14" model="account.report.line">
-                        <field name="name">TAUX REDUIT DE 14% (Base HT)</field>
+                    <record id="tax_report_reduced_rate_14" model="account.report.line">
+                        <field name="name">REDUCED RATE OF 14% (excl. tax)</field>
                         <field name="code">MATAXB_3</field>
                         <field name="expression_ids">
-                            <record id="tax_report_tauz_reduit_ht_14_tag" model="account.report.expression">
+                            <record id="tax_report_reduced_rate_14_balance" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">TAUX REDUIT DE 14% (Base HT)</field>
+                                <field name="formula">REDUCED RATE OF 14% (excl. tax)</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_taux_rediut_tva_14" model="account.report.line">
-                        <field name="name">TAUX REDUIT DE 14% (TVA exigible)</field>
+                    <record id="tax_report_reduced_rate_vat_14" model="account.report.line">
+                        <field name="name">REDUCED RATE OF 14% (VAT payable)</field>
                         <field name="code">MATAXB_4</field>
                         <field name="expression_ids">
-                            <record id="tax_report_taux_rediut_tva_14_tag" model="account.report.expression">
+                            <record id="tax_report_reduced_rate_vat_14_balance" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">TAUX REDUIT DE 14% (TVA exigible)</field>
+                                <field name="formula">REDUCED RATE OF 14% (VAT payable)</field>
                             </record>
                         </field>
                     </record>
-                    <record id="account_report_taux_reduit_base_ht_10" model="account.report.line">
-                        <field name="name">TAUX REDUIT DE 1O% (Base HT)</field>
+                    <record id="tax_report_reduced_rate_10" model="account.report.line">
+                        <field name="name">REDUCED RATE OF 10% (excl. tax)</field>
                         <field name="code">MATAXB_5</field>
                         <field name="expression_ids">
-                            <record id="account_report_taux_reduit_base_ht_10_tag" model="account.report.expression">
+                            <record id="tax_report_reduced_rate_10_balance" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">TAUX REDUIT DE 1O% (Base HT)</field>
+                                <field name="formula">REDUCED RATE OF 10% (excl. tax)</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_taux_reduit_tva_10" model="account.report.line">
-                        <field name="name">TAUX REDUIT DE 1O% (TVA exigible)</field>
+                    <record id="tax_report_reduced_rate_vat_10" model="account.report.line">
+                        <field name="name">REDUCED RATE OF 10% (VAT payable)</field>
                         <field name="code">MATAXB_6</field>
                         <field name="expression_ids">
-                            <record id="tax_report_taux_reduit_tva_10_tag" model="account.report.expression">
+                            <record id="tax_report_reduced_rate_vat_10_balance" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">TAUX REDUIT DE 1O% (TVA exigible)</field>
+                                <field name="formula">REDUCED RATE OF 10% (VAT payable)</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_taux_reduit_ht_7" model="account.report.line">
-                        <field name="name">TAUX REDUIT DE 7% (Base HT)</field>
+                    <record id="tax_report_reduced_rate_7" model="account.report.line">
+                        <field name="name">REDUCED RATE OF 7% (excl. tax)</field>
                         <field name="code">MATAXB_7</field>
                         <field name="expression_ids">
-                            <record id="tax_report_taux_reduit_ht_7_tag" model="account.report.expression">
+                            <record id="tax_report_reduced_rate_7_balance" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">TAUX REDUIT DE 7% (Base HT)</field>
+                                <field name="formula">REDUCED RATE OF 7% (excl. tax)</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_taux_reduit_tva_7" model="account.report.line">
-                        <field name="name">TAUX REDUIT DE 7% (TVA exigible)</field>
+                    <record id="tax_report_reduced_rate_vat_7" model="account.report.line">
+                        <field name="name">REDUCED RATE OF 7% (VAT payable)</field>
                         <field name="code">MATAXB_8</field>
                         <field name="expression_ids">
-                            <record id="tax_report_taux_reduit_tva_7_tag" model="account.report.expression">
+                            <record id="tax_report_reduced_rate_vat_7_balance" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">TAUX REDUIT DE 7% (TVA exigible)</field>
+                                <field name="formula">REDUCED RATE OF 7% (VAT payable)</field>
                             </record>
                         </field>
                     </record>
                 </field>
             </record>
-            <record id="tax_report_ventilation_des_deductions" model="account.report.line">
-                <field name="name">Ventilation des déductions</field>
-                <field name="aggregation_formula">1ACHATS_NON_IMMOBILISES_BASE_HT.balance + 1ACHATS_NON_IMMOBILISES_TVA_DEDUCTIBLE.balance + IMMOBILISATIONS_BASE_HT.balance + IMMOBILISATIONS_TVA_DEDUCTIBLE.balance</field>
+            <record id="tax_report_breakdown_deductions" model="account.report.line">
+                <field name="name">Breakdown of deductions</field>
+                <field name="aggregation_formula">NON_FIXED_PURCHASES.balance + NON_FIXED_PURCHASES_VAT.balance + FIXED_ASSETS.balance + FIXED_ASSETS_VAT.balance</field>
                 <field name="children_ids">
-                    <record id="tax_report_achats_non_immobilises_ht" model="account.report.line">
-                        <field name="name">1-ACHATS NON IMMOBILISES (Base HT)</field>
-                        <field name="code">1ACHATS_NON_IMMOBILISES_BASE_HT</field>
-                        <field name="aggregation_formula">TRAVAUX_A_FACONS_HT.balance + SOUSTRAITANCE_TRAVAUX_IMMOBILIERS_HT.balance + BIENS_MATERIELS_BASE_HT.balance + PRESTATIONS_DE_SERVICES_BASE_HT.balance</field>
+                    <record id="tax_report_purchases_non_fixed" model="account.report.line">
+                        <field name="name">1-NON FIXED ASSET PURCHASES (excl. tax)</field>
+                        <field name="code">NON_FIXED_PURCHASES</field>
+                        <field name="aggregation_formula">CONTRACT_WORK.balance + SUBCONTRACTING.balance + MATERIAL_ASSETS.balance + SERVICES.balance</field>
                         <field name="children_ids">
-                            <record id="tax_report_travaux_facons_ht" model="account.report.line">
-                                <field name="name">Travaux à façons (HT)</field>
-                                <field name="code">TRAVAUX_A_FACONS_HT</field>
+                            <record id="tax_report_contract_work" model="account.report.line">
+                                <field name="name">Contract Work (excl. tax)</field>
+                                <field name="code">CONTRACT_WORK</field>
                                 <field name="expression_ids">
-                                    <record id="tax_report_travaux_facons_ht_formula" model="account.report.expression">
+                                    <record id="tax_report_contract_work_balance" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -128,11 +128,11 @@
                                     </record>
                                 </field>
                             </record>
-                            <record id="tax_report_sous_traitance_immobiliers_ht" model="account.report.line">
-                                <field name="name">Sous-traitance (travaux immobiliers) (HT)</field>
-                                <field name="code">SOUSTRAITANCE_TRAVAUX_IMMOBILIERS_HT</field>
+                            <record id="tax_report_subcontracting" model="account.report.line">
+                                <field name="name">Subcontracting (real estate works) (excl. taxes)</field>
+                                <field name="code">SUBCONTRACTING</field>
                                 <field name="expression_ids">
-                                    <record id="tax_report_sous_traitance_immobiliers_ht_formula" model="account.report.expression">
+                                    <record id="tax_report_subcontracting_balance" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -140,106 +140,62 @@
                                     </record>
                                 </field>
                             </record>
-                            <record id="tax_report_biens_materiels_ht" model="account.report.line">
-                                <field name="name">Biens matériels (Base HT)</field>
-                                <field name="code">BIENS_MATERIELS_BASE_HT</field>
-                                <field name="aggregation_formula">ACHATS_A_LIMPORTATION_20_HT.balance + ACHATS_A_LINTERIEUR_20_HT.balance + ACHATS_A_LIMPORTATION_14_HT.balance + ACHATS_A_LINTERIEUR_14_HT.balance + ACHATS_A_LIMPORTATION_10_HT.balance + ACHATS_A_LINTERIEUR_10_HT.balance + ACHAT_A_LIMPORTATION_7_HT.balance + ACHAT_A_LINTERIEUR_7_HT.balance</field>
+                            <record id="tax_report_material_assets" model="account.report.line">
+                                <field name="name">Material Assets (excl. tax)</field>
+                                <field name="code">MATERIAL_ASSETS</field>
+                                <field name="aggregation_formula">PURCHASES_20.balance + PURCHASES_14.balance + PURCHASES_10.balance + PURCHASES_7.balance</field>
                                 <field name="children_ids">
-                                    <record id="tax_report_achats_importation_ht_20" model="account.report.line">
-                                        <field name="name">Achats à l'importation (20%) (HT)</field>
-                                        <field name="code">ACHATS_A_LIMPORTATION_20_HT</field>
+                                    <record id="tax_report_purchases_20" model="account.report.line">
+                                        <field name="name">Purchases (20%) (excl. tax)</field>
+                                        <field name="code">PURCHASES_20</field>
                                         <field name="expression_ids">
-                                            <record id="tax_report_achats_importation_ht_20_tag" model="account.report.expression">
+                                            <record id="tax_report_purchases_20_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
-                                                <field name="formula">Achats à l'importation (20%) (HT)</field>
+                                                <field name="formula">Purchases (20%) (excl. tax)</field>
                                             </record>
                                         </field>
                                     </record>
-                                    <record id="tax_report_achats_interieur_ht_20" model="account.report.line">
-                                        <field name="name">Achats à l'intérieur (20%) (HT)</field>
-                                        <field name="code">ACHATS_A_LINTERIEUR_20_HT</field>
+                                    <record id="tax_report_purchases_14" model="account.report.line">
+                                        <field name="name">Purchases (14%) (excl. tax)</field>
+                                        <field name="code">PURCHASES_14</field>
                                         <field name="expression_ids">
-                                            <record id="tax_report_achats_interieur_ht_20_tag" model="account.report.expression">
+                                            <record id="tax_report_purchases_14_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
-                                                <field name="formula">Achats à l'intérieur (20%) (HT)</field>
+                                                <field name="formula">Purchases (14%) (excl. tax)</field>
                                             </record>
                                         </field>
                                     </record>
-                                    <record id="tax_report_achats_importation_ht_14" model="account.report.line">
-                                        <field name="name">Achats à l'importation (14%) (HT)</field>
-                                        <field name="code">ACHATS_A_LIMPORTATION_14_HT</field>
+                                    <record id="tax_report_purchases_10" model="account.report.line">
+                                        <field name="name">Purchases (10%) (excl. tax)</field>
+                                        <field name="code">PURCHASES_10</field>
                                         <field name="expression_ids">
-                                            <record id="tax_report_achats_importation_ht_14_tag" model="account.report.expression">
+                                            <record id="tax_report_purchases_10_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
-                                                <field name="formula">Achats à l'importation (14%) (HT)</field>
+                                                <field name="formula">Purchases (10%) (excl. tax)</field>
                                             </record>
                                         </field>
                                     </record>
-                                    <record id="tax_report_achats_interieur_ht_14" model="account.report.line">
-                                        <field name="name">Achats à l'intérieur (14%) (HT)</field>
-                                        <field name="code">ACHATS_A_LINTERIEUR_14_HT</field>
+                                    <record id="tax_report_purchases_7" model="account.report.line">
+                                        <field name="name">Purchases (7%) (excl. tax)</field>
+                                        <field name="code">PURCHASES_7</field>
                                         <field name="expression_ids">
-                                            <record id="tax_report_achats_interieur_ht_14_tag" model="account.report.expression">
+                                            <record id="tax_report_purchases_7_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
-                                                <field name="formula">Achats à l'intérieur (14%) (HT)</field>
-                                            </record>
-                                        </field>
-                                    </record>
-                                    <record id="tax_report_achats_importation_ht_10" model="account.report.line">
-                                        <field name="name">Achats à l'importation (10%) (HT)</field>
-                                        <field name="code">ACHATS_A_LIMPORTATION_10_HT</field>
-                                        <field name="expression_ids">
-                                            <record id="tax_report_achats_importation_ht_10_tag" model="account.report.expression">
-                                                <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">Achats à l'importation (10%) (HT)</field>
-                                            </record>
-                                        </field>
-                                    </record>
-                                    <record id="tax_report_achats_interieur_ht_10" model="account.report.line">
-                                        <field name="name">Achats à l'intérieur (10%) (HT)</field>
-                                        <field name="code">ACHATS_A_LINTERIEUR_10_HT</field>
-                                        <field name="expression_ids">
-                                            <record id="tax_report_achats_interieur_ht_10_tag" model="account.report.expression">
-                                                <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">Achats à l'intérieur (10%) (HT)</field>
-                                            </record>
-                                        </field>
-                                    </record>
-                                    <record id="tax_report_achat_importation_ht_7" model="account.report.line">
-                                        <field name="name">Achat à l'importation (7%) (HT)</field>
-                                        <field name="code">ACHAT_A_LIMPORTATION_7_HT</field>
-                                        <field name="expression_ids">
-                                            <record id="tax_report_achat_importation_ht_7_tag" model="account.report.expression">
-                                                <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">Achat à l'importation (7%) (HT)</field>
-                                            </record>
-                                        </field>
-                                    </record>
-                                    <record id="tax_report_achats_interieur_ht_7" model="account.report.line">
-                                        <field name="name">Achat à l'intérieur (7%) (HT)</field>
-                                        <field name="code">ACHAT_A_LINTERIEUR_7_HT</field>
-                                        <field name="expression_ids">
-                                            <record id="tax_report_achats_interieur_ht_7_tag" model="account.report.expression">
-                                                <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">Achat à l'intérieur (7%) (HT)</field>
+                                                <field name="formula">Purchases (7%) (excl. tax)</field>
                                             </record>
                                         </field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="tax_report_prestations_services_ht_1" model="account.report.line">
-                                <field name="name">Prestations de services (Base HT)</field>
-                                <field name="code">PRESTATIONS_DE_SERVICES_BASE_HT</field>
+                            <record id="tax_report_services" model="account.report.line">
+                                <field name="name">Provision of services (base excl. taxes)</field>
+                                <field name="code">SERVICES</field>
                                 <field name="expression_ids">
-                                    <record id="tax_report_prestations_services_ht_1_formula" model="account.report.expression">
+                                    <record id="tax_report_services_balance" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -249,16 +205,16 @@
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_achats_immobilises_deductible_tva" model="account.report.line">
-                        <field name="name">1-ACHATS NON IMMOBILISES (TVA déductible)</field>
-                        <field name="code">1ACHATS_NON_IMMOBILISES_TVA_DEDUCTIBLE</field>
-                        <field name="aggregation_formula">TRAVAUX_A_FACONS_TVA_DEDUCTIBLE.balance + SOUSTRAITANCE_TRAVAUX_IMMOBILIERS_TVA_DEDUCTIBLE.balance + BIENS_MATERIELS_TVA_DEDUCTIBLE.balance + PRESTATIONS_DE_SERVICES_TVA_DEDUCTIBLE.balance</field>
+                    <record id="tax_report_non_fixed_purchase_vat" model="account.report.line">
+                        <field name="name">1-NON FIXED PURCHASES (deductible VAT)</field>
+                        <field name="code">NON_FIXED_PURCHASES_VAT</field>
+                        <field name="aggregation_formula">CONTRACT_WORK_VAT.balance + SUBCONTRACTING_VAT.balance + MATERIAL_ASSETS_VAT.balance + SERVICES_VAT.balance</field>
                         <field name="children_ids">
-                            <record id="tax_report_travaux_facons_tva" model="account.report.line">
-                                <field name="name">Travaux à façons (TVA déductible)</field>
-                                <field name="code">TRAVAUX_A_FACONS_TVA_DEDUCTIBLE</field>
+                            <record id="tax_report_contract_work_vat" model="account.report.line">
+                                <field name="name">Contract work (deductible VAT)</field>
+                                <field name="code">CONTRACT_WORK_VAT</field>
                                 <field name="expression_ids">
-                                    <record id="tax_report_travaux_facons_tva_formula" model="account.report.expression">
+                                    <record id="tax_report_contract_work_vat_balance" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -266,11 +222,11 @@
                                     </record>
                                 </field>
                             </record>
-                            <record id="tax_report_sous_traitance_immobiliers_tva" model="account.report.line">
-                                <field name="name">Sous-traitance (travaux immobiliers) (TVA déductible)</field>
-                                <field name="code">SOUSTRAITANCE_TRAVAUX_IMMOBILIERS_TVA_DEDUCTIBLE</field>
+                            <record id="tax_report_subcontracting_vat" model="account.report.line">
+                                <field name="name">Subcontracting (real estate works) (deductible VAT)</field>
+                                <field name="code">SUBCONTRACTING_VAT</field>
                                 <field name="expression_ids">
-                                    <record id="tax_report_sous_traitance_immobiliers_tva_formula" model="account.report.expression">
+                                    <record id="tax_report_subcontracting_vat_balance" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -278,106 +234,97 @@
                                     </record>
                                 </field>
                             </record>
-                            <record id="tax_report_biens_materiels_tva" model="account.report.line">
-                                <field name="name">Biens matériels (TVA déductible)</field>
-                                <field name="code">BIENS_MATERIELS_TVA_DEDUCTIBLE</field>
-                                <field name="aggregation_formula">ACHATS_A_LIMPORTATION_20_TVA.balance + ACHATS_A_LINTERIEUR_20_TVA.balance + ACHATS_A_LIMPORTATION_14_TVA.balance + ACHATS_A_LINTERIEUR_14_TVA.balance + ACHATS_A_LIMPORTATION_10_TVA.balance + ACHATS_A_LINTERIEUR_10_TVA.balance + ACHAT_A_LIMPORTATION_7_TVA.balance + ACHAT_A_LINTERIEUR_7_TVA.balance</field>
+                            <record id="tax_report_material_assets_vat" model="account.report.line">
+                                <field name="name">Material assets (deductible VAT)</field>
+                                <field name="code">MATERIAL_ASSETS_VAT</field>
+                                <field name="aggregation_formula">PURCHASES_20_VAT.balance + PURCHASES_14_VAT.balance + PURCHASES_10_VAT.balance + PURCHASES_7_VAT.balance + IMPORT.balance</field>
                                 <field name="children_ids">
-                                    <record id="tax_report_achats_importation_tva_20" model="account.report.line">
-                                        <field name="name">Achats à l'importation (20%) (TVA)</field>
-                                        <field name="code">ACHATS_A_LIMPORTATION_20_TVA</field>
+                                    <record id="tax_report_purchases_vat_20" model="account.report.line">
+                                        <field name="name">Purchases (20%) (VAT)</field>
+                                        <field name="code">PURCHASES_20_VAT</field>
                                         <field name="expression_ids">
-                                            <record id="tax_report_achats_importation_tva_20_tag" model="account.report.expression">
+                                            <record id="tax_report_purchase_vat_20_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
-                                                <field name="formula">Achats à l'importation (20%) (TVA)</field>
+                                                <field name="formula">Purchases (20%) (VAT)</field>
                                             </record>
                                         </field>
                                     </record>
-                                    <record id="tax_report_achats_interieur_tva_20" model="account.report.line">
-                                        <field name="name">Achats à l'intérieur (20%) (TVA)</field>
-                                        <field name="code">ACHATS_A_LINTERIEUR_20_TVA</field>
+                                    <record id="tax_report_purchases_vat_14" model="account.report.line">
+                                        <field name="name">Purchases (14%) (VAT)</field>
+                                        <field name="code">PURCHASES_14_VAT</field>
                                         <field name="expression_ids">
-                                            <record id="tax_report_achats_interieur_tva_20_tag" model="account.report.expression">
+                                            <record id="tax_report_purchase_vat_14_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
-                                                <field name="formula">Achats à l'intérieur (20%) (TVA)</field>
+                                                <field name="formula">Purchases (14%) (VAT)</field>
                                             </record>
                                         </field>
                                     </record>
-                                    <record id="tax_report_achats_importation_tva_14" model="account.report.line">
-                                        <field name="name">Achats à l'importation (14%) (TVA)</field>
-                                        <field name="code">ACHATS_A_LIMPORTATION_14_TVA</field>
+                                    <record id="tax_report_purchases_vat_10" model="account.report.line">
+                                        <field name="name">Purchases (10%) (VAT)</field>
+                                        <field name="code">PURCHASES_10_VAT</field>
                                         <field name="expression_ids">
-                                            <record id="tax_report_achats_importation_tva_14_tag" model="account.report.expression">
+                                            <record id="tax_report_purchase_vat_10_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
-                                                <field name="formula">Achats à l'importation (14%) (TVA)</field>
+                                                <field name="formula">Purchases (10%) (VAT)</field>
                                             </record>
                                         </field>
                                     </record>
-                                    <record id="tax_report_achats_interieur_tva_14" model="account.report.line">
-                                        <field name="name">Achats à l'intérieur (14%) (TVA)</field>
-                                        <field name="code">ACHATS_A_LINTERIEUR_14_TVA</field>
+                                    <record id="tax_report_purchases_vat_7" model="account.report.line">
+                                        <field name="name">Purchases (7%) (VAT)</field>
+                                        <field name="code">PURCHASES_7_VAT</field>
                                         <field name="expression_ids">
-                                            <record id="tax_report_achats_interieur_tva_14_tag" model="account.report.expression">
+                                            <record id="tax_report_purchase_vat_7_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
-                                                <field name="formula">Achats à l'intérieur (14%) (TVA)</field>
+                                                <field name="formula">Purchases (7%) (VAT)</field>
                                             </record>
                                         </field>
                                     </record>
-                                    <record id="tax_report_achats_importation_tva_10" model="account.report.line">
-                                        <field name="name">Achats à l'importation (10%) (TVA)</field>
-                                        <field name="code">ACHATS_A_LIMPORTATION_10_TVA</field>
+                                    <record id="tax_report_import" model="account.report.line">
+                                        <field name="name">Import taxes</field>
+                                        <field name="code">IMPORT</field>
                                         <field name="expression_ids">
-                                            <record id="tax_report_achats_importation_tva_10_tag" model="account.report.expression">
+                                            <record id="tax_report_import_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">Achats à l'importation (10%) (TVA)</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">CUSTOM_FEES.balance + IMPORT_FEES.balance</field>
                                             </record>
                                         </field>
-                                    </record>
-                                    <record id="tax_report_achats_interieur_tva_10" model="account.report.line">
-                                        <field name="name">Achats à l'intérieur (10%) (TVA)</field>
-                                        <field name="code">ACHATS_A_LINTERIEUR_10_TVA</field>
-                                        <field name="expression_ids">
-                                            <record id="tax_report_achats_interieur_tva_10_tag" model="account.report.expression">
-                                                <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">Achats à l'intérieur (10%) (TVA)</field>
+                                        <field name="children_ids">
+                                            <record id="tax_report_custom_fees" model="account.report.line">
+                                                <field name="name">Tariff</field>
+                                                <field name="code">CUSTOM_FEES</field>
+                                                <field name="expression_ids">
+                                                    <record id="tax_report_custom_fees_balance" model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">TARIFF</field>
+                                                    </record>
+                                                </field>
                                             </record>
-                                        </field>
-                                    </record>
-                                    <record id="tax_report_achats_importation_tva_7" model="account.report.line">
-                                        <field name="name">Achat à l'importation (7%) (TVA)</field>
-                                        <field name="code">ACHAT_A_LIMPORTATION_7_TVA</field>
-                                        <field name="expression_ids">
-                                            <record id="tax_report_achats_importation_tva_7_tag" model="account.report.expression">
-                                                <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">Achat à l'importation (7%) (TVA)</field>
-                                            </record>
-                                        </field>
-                                    </record>
-                                    <record id="tax_report_achats_interieur_tva_7" model="account.report.line">
-                                        <field name="name">Achat à l'intérieur (7%) (TVA)</field>
-                                        <field name="code">ACHAT_A_LINTERIEUR_7_TVA</field>
-                                        <field name="expression_ids">
-                                            <record id="tax_report_achats_interieur_tva_7_tag" model="account.report.expression">
-                                                <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">Achat à l'intérieur (7%) (TVA)</field>
+                                            <record id="tax_report_import_fees" model="account.report.line">
+                                                <field name="name">Parafiscal charge on imports</field>
+                                                <field name="code">IMPORT_FEES</field>
+                                                <field name="expression_ids">
+                                                    <record id="tax_report_import_fees_balance" model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">PARAFISCAL CHARGE ON IMPORTS</field>
+                                                    </record>
+                                                </field>
                                             </record>
                                         </field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="tax_report_prestations_service_deductible_tva" model="account.report.line">
-                                <field name="name">Prestations de services (TVA déductible)</field>
-                                <field name="code">PRESTATIONS_DE_SERVICES_TVA_DEDUCTIBLE</field>
+                            <record id="tax_report_services_vat" model="account.report.line">
+                                <field name="name">Provision of services (deductible VAT)</field>
+                                <field name="code">SERVICES_VAT</field>
                                 <field name="expression_ids">
-                                    <record id="tax_report_prestations_service_deductible_tva_formula" model="account.report.expression">
+                                    <record id="tax_report_services_vat_balance" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -387,25 +334,25 @@
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_immobilisations_base_ht" model="account.report.line">
-                        <field name="name">2-IMMOBILISATIONS (Base HT)</field>
-                        <field name="code">IMMOBILISATIONS_BASE_HT</field>
+                    <record id="tax_report_fixed_assets" model="account.report.line">
+                        <field name="name">2-FIXED ASSETS (base excl. tax)</field>
+                        <field name="code">FIXED_ASSETS</field>
                         <field name="expression_ids">
-                            <record id="tax_report_immobilisations_base_ht_tag" model="account.report.expression">
+                            <record id="tax_report_fixed_assets_balance" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">Immobilisations (Base HT)</field>
+                                <field name="formula">Fixed assets (base excl. tax)</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_immobilisations_deductible_tva" model="account.report.line">
-                        <field name="name">2-IMMOBILISATIONS (TVA déductible)</field>
-                        <field name="code">IMMOBILISATIONS_TVA_DEDUCTIBLE</field>
+                    <record id="tax_report_fixed_assets_vat" model="account.report.line">
+                        <field name="name">2-FIXED ASSETS (deductible VAT)</field>
+                        <field name="code">FIXED_ASSETS_VAT</field>
                         <field name="expression_ids">
-                            <record id="tax_report_immobilisations_deductible_tva_tag" model="account.report.expression">
+                            <record id="tax_report_fixed_assets_vat_balance" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">Immobilisations (TVA déductible)</field>
+                                <field name="formula">Fixed assets (deductible VAT)</field>
                             </record>
                         </field>
                     </record>
