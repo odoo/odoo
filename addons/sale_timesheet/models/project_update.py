@@ -44,11 +44,11 @@ class ProjectUpdate(models.Model):
         company_uom = self.env.company.timesheet_encode_uom_id
         for sol in sols:
             #We only want to consider hours and days for this calculation
-            is_unit = sol.product_uom == product_uom_unit
-            if sol.product_uom.category_id == company_uom.category_id or is_unit:
-                product_uom_qty = sol.product_uom._compute_quantity(sol.product_uom_qty, company_uom, raise_if_failure=False)
-                qty_delivered = sol.product_uom._compute_quantity(sol.qty_delivered, company_uom, raise_if_failure=False)
-                unit = sol.product_uom if is_unit else company_uom
+            is_unit = sol.uom_id == product_uom_unit
+            if sol.uom_id.category_id == company_uom.category_id or is_unit:
+                product_uom_qty = sol.uom_id._compute_quantity(sol.product_uom_qty, company_uom, raise_if_failure=False)
+                qty_delivered = sol.uom_id._compute_quantity(sol.qty_delivered, company_uom, raise_if_failure=False)
+                unit = sol.uom_id if is_unit else company_uom
                 services.append({
                     'name': name_by_sol[sol.id],
                     'sold_value': product_uom_qty,
@@ -59,7 +59,7 @@ class ProjectUpdate(models.Model):
                     'is_hour': unit == product_uom_hour,
                     'sol': sol,
                 })
-                if sol.product_uom.category_id == company_uom.category_id:
+                if sol.uom_id.category_id == company_uom.category_id:
                     total_sold += product_uom_qty
                     total_effective += qty_delivered
         total_remaining = total_sold - total_effective

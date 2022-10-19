@@ -27,7 +27,7 @@ class SaleOrder(models.Model):
             'product_id': reward.discount_line_product_id.id,
             'price_unit': -min(max_discount, delivery_line.price_unit or 0),
             'product_uom_qty': 1,
-            'product_uom': reward.discount_line_product_id.uom_id.id,
+            'uom_id': reward.discount_line_product_id.uom_id.id,
             'order_id': self.id,
             'is_reward_line': True,
             'tax_id': [(Command.CLEAR, 0, 0)] + [(Command.LINK, tax.id, False) for tax in taxes],

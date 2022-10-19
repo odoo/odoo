@@ -147,7 +147,7 @@ class TestSaleProject(TransactionCase):
         sale_line_1_order_2 = SaleOrderLine.create({
             'product_id': self.product_order_service1.id,
             'product_uom_qty': 10,
-            'product_uom': self.product_order_service1.uom_id.id,
+            'uom_id': self.product_order_service1.uom_id.id,
             'price_unit': self.product_order_service1.list_price,
             'order_id': sale_order_2.id,
         })
@@ -176,7 +176,7 @@ class TestSaleProject(TransactionCase):
         self.assertEqual(sale_items_data['total'], len(sale_order_lines))
         expected_sale_line_dict = {
             sol_read['id']: sol_read
-            for sol_read in sale_order_lines.read(['display_name', 'product_uom_qty', 'qty_delivered', 'qty_invoiced', 'product_uom'])
+            for sol_read in sale_order_lines.read(['display_name', 'product_uom_qty', 'qty_delivered', 'qty_invoiced', 'uom_id'])
         }
         actual_sol_ids = []
         for line in sale_items_data['data']:
@@ -199,7 +199,7 @@ class TestSaleProject(TransactionCase):
             'name': self.product_order_service3.name,
             'product_id': self.product_order_service3.id,
             'product_uom_qty': 5,
-            'product_uom': self.product_order_service3.uom_id.id,
+            'uom_id': self.product_order_service3.uom_id.id,
             'price_unit': self.product_order_service3.list_price
         })
         self.assertFalse(sale_order_line.is_service, "As the product is consumable, the SOL should not be a service")

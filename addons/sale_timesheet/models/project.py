@@ -184,15 +184,15 @@ class Project(models.Model):
             ], limit=1)
             project.sale_line_id = sol or project.sale_line_employee_ids.sale_line_id[:1]  # get the first SOL containing in the employee mappings if no sol found in the search
 
-    @api.depends('sale_line_id.product_uom_qty', 'sale_line_id.product_uom')
+    @api.depends('sale_line_id.product_uom_qty', 'sale_line_id.uom_id')
     def _compute_allocated_hours(self):
         sol_ids = self._fetch_sale_order_item_ids()
         sols_read_group = self.env['sale.order.line']._read_group([
             ('id', 'in', sol_ids), ('is_service', '=', True),
             ('is_downpayment', '=', False),
             ('product_id.service_tracking', 'in', ['task_in_project', 'project_only'])],
-            ['project_id', 'product_uom_qty', 'product_uom'],
-            ['project_id', 'product_uom'],
+            ['project_id', 'product_uom_qty', 'uom_id'],
+            ['project_id', 'uom_id'],
             lazy=False)
 
         uom_hour = self.env.ref('uom.product_uom_hour')
@@ -200,7 +200,7 @@ class Project(models.Model):
         uom_ids = set(self.timesheet_encode_uom_id.ids)
 
         for result in sols_read_group:
-            uom_id = result['product_uom'] and result['product_uom'][0]
+            uom_id = result['uom_id'] and result['uom_id'][0]
             if uom_id:
                 uom_ids.add(uom_id)
             if result.get('project_id'):

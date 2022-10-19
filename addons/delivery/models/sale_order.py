@@ -107,7 +107,7 @@ class SaleOrder(models.Model):
             'order_id': self.id,
             'name': so_description,
             'product_uom_qty': 1,
-            'product_uom': carrier.product_id.uom_id.id,
+            'uom_id': carrier.product_id.uom_id.id,
             'product_id': carrier.product_id.id,
             'tax_id': [(6, 0, taxes_ids)],
             'is_delivery': True,
@@ -161,13 +161,13 @@ class SaleOrderLine(models.Model):
     def _is_not_sellable_line(self):
         return self.is_delivery or super(SaleOrderLine, self)._is_not_sellable_line()
 
-    @api.depends('product_id', 'product_uom', 'product_uom_qty')
+    @api.depends('product_id', 'uom_id', 'product_uom_qty')
     def _compute_product_qty(self):
         for line in self:
-            if not line.product_id or not line.product_uom or not line.product_uom_qty:
+            if not line.product_id or not line.uom_id or not line.product_uom_qty:
                 line.product_qty = 0.0
                 continue
-            line.product_qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
+            line.product_qty = line.uom_id._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
 
     def unlink(self):
         for line in self:

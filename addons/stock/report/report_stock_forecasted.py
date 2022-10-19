@@ -183,7 +183,8 @@ class ReplenishmentReport(models.AbstractModel):
             product_rounding = product.uom_id.rounding
             for out in reserved_outs_per_product.get(product, []):
                 # Reconcile with reserved stock.
-                reserved = out.product_uom._compute_quantity(out.reserved_availability, product.uom_id)
+                current = currents[product.id]
+                reserved = out.uom_id._compute_quantity(out.reserved_availability, product.uom_id)
                 currents[product.id] -= reserved
                 lines.append(self._prepare_report_line(reserved, move_out=out, reservation=True))
 
@@ -192,7 +193,7 @@ class ReplenishmentReport(models.AbstractModel):
                 # Reconcile with the current stock.
                 reserved = 0.0
                 if out.state in ('partially_available', 'assigned'):
-                    reserved = out.product_uom._compute_quantity(out.reserved_availability, product.uom_id)
+                    reserved = out.uom_id._compute_quantity(out.reserved_availability, product.uom_id)
                 demand = out.product_qty - reserved
 
                 if float_is_zero(demand, precision_rounding=product_rounding):

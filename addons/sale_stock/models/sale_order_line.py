@@ -28,12 +28,12 @@ class SaleOrderLine(models.Model):
         compute='_compute_customer_lead', store=True, readonly=False, precompute=True,
         inverse='_inverse_customer_lead')
 
-    @api.depends('product_type', 'product_uom_qty', 'qty_delivered', 'state', 'move_ids', 'product_uom')
+    @api.depends('product_type', 'product_uom_qty', 'qty_delivered', 'state', 'move_ids', 'uom_id')
     def _compute_qty_to_deliver(self):
         """Compute the visibility of the inventory widget."""
         for line in self:
             line.qty_to_deliver = line.product_uom_qty - line.qty_delivered
-            if line.state in ('draft', 'sent', 'sale') and line.product_type == 'product' and line.product_uom and line.qty_to_deliver > 0:
+            if line.state in ('draft', 'sent', 'sale') and line.product_type == 'product' and line.uom_id and line.qty_to_deliver > 0:
                 if line.state == 'sale' and not line.move_ids:
                     line.display_qty_widget = False
                 else:
@@ -42,7 +42,7 @@ class SaleOrderLine(models.Model):
                 line.display_qty_widget = False
 
     @api.depends(
-        'product_id', 'customer_lead', 'product_uom_qty', 'product_uom', 'order_id.commitment_date',
+        'product_id', 'customer_lead', 'product_uom_qty', 'uom_id', 'order_id.commitment_date',
         'move_ids', 'move_ids.forecast_expected_date', 'move_ids.forecast_availability')
     def _compute_qty_at_date(self):
         """ Compute the quantity forecasted of product at delivery date. There are
@@ -61,8 +61,8 @@ class SaleOrderLine(models.Model):
             line.qty_available_today = 0
             line.free_qty_today = 0
             for move in moves:
-                line.qty_available_today += move.product_uom._compute_quantity(move.reserved_availability, line.product_uom)
-                line.free_qty_today += move.product_id.uom_id._compute_quantity(move.forecast_availability, line.product_uom)
+                line.qty_available_today += move.uom_id._compute_quantity(move.reserved_availability, line.uom_id)
+                line.free_qty_today += move.product_id.uom_id._compute_quantity(move.forecast_availability, line.uom_id)
             line.scheduled_date = line.order_id.commitment_date or line._expected_date()
             line.virtual_available_at_date = False
             treated |= line
@@ -94,11 +94,11 @@ class SaleOrderLine(models.Model):
                 line.virtual_available_at_date = virtual_available_at_date - qty_processed_per_product[line.product_id.id]
                 line.forecast_expected_date = False
                 product_qty = line.product_uom_qty
-                if line.product_uom and line.product_id.uom_id and line.product_uom != line.product_id.uom_id:
-                    line.qty_available_today = line.product_id.uom_id._compute_quantity(line.qty_available_today, line.product_uom)
-                    line.free_qty_today = line.product_id.uom_id._compute_quantity(line.free_qty_today, line.product_uom)
-                    line.virtual_available_at_date = line.product_id.uom_id._compute_quantity(line.virtual_available_at_date, line.product_uom)
-                    product_qty = line.product_uom._compute_quantity(product_qty, line.product_id.uom_id)
+                if line.uom_id and line.product_id.uom_id and line.uom_id != line.product_id.uom_id:
+                    line.qty_available_today = line.product_id.uom_id._compute_quantity(line.qty_available_today, line.uom_id)
+                    line.free_qty_today = line.product_id.uom_id._compute_quantity(line.free_qty_today, line.uom_id)
+                    line.virtual_available_at_date = line.product_id.uom_id._compute_quantity(line.virtual_available_at_date, line.uom_id)
+                    product_qty = line.uom_id._compute_quantity(product_qty, line.product_id.uom_id)
                 qty_processed_per_product[line.product_id.id] += product_qty
             treated |= lines
         remaining = (self - treated)
@@ -147,7 +147,7 @@ class SaleOrderLine(models.Model):
             if not line.is_expense and line.product_id.type in ['consu', 'product']:
                 line.qty_delivered_method = 'stock_move'
 
-    @api.depends('move_ids.state', 'move_ids.scrapped', 'move_ids.product_uom_qty', 'move_ids.product_uom')
+    @api.depends('move_ids.state', 'move_ids.scrapped', 'move_ids.product_uom_qty', 'move_ids.uom_id')
     def _compute_qty_delivered(self):
         super(SaleOrderLine, self)._compute_qty_delivered()
 
@@ -158,11 +158,11 @@ class SaleOrderLine(models.Model):
                 for move in outgoing_moves:
                     if move.state != 'done':
                         continue
-                    qty += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
+                    qty += move.uom_id._compute_quantity(move.product_uom_qty, line.uom_id, rounding_method='HALF-UP')
                 for move in incoming_moves:
                     if move.state != 'done':
                         continue
-                    qty -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
+                    qty -= move.uom_id._compute_quantity(move.product_uom_qty, line.uom_id, rounding_method='HALF-UP')
                 line.qty_delivered = qty
 
     @api.model_create_multi
@@ -255,9 +255,9 @@ class SaleOrderLine(models.Model):
         qty = 0.0
         outgoing_moves, incoming_moves = self._get_outgoing_incoming_moves()
         for move in outgoing_moves:
-            qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
+            qty += move.uom_id._compute_quantity(move.product_uom_qty, self.uom_id, rounding_method='HALF-UP')
         for move in incoming_moves:
-            qty -= move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
+            qty -= move.uom_id._compute_quantity(move.product_uom_qty, self.uom_id, rounding_method='HALF-UP')
         return qty
 
     def _get_outgoing_incoming_moves(self):
@@ -324,7 +324,7 @@ class SaleOrderLine(models.Model):
             values = line._prepare_procurement_values(group_id=group_id)
             product_qty = line.product_uom_qty - qty
 
-            line_uom = line.product_uom
+            line_uom = line.uom_id
             quant_uom = line.product_id.uom_id
             product_qty, procurement_uom = line_uom._adjust_uom_quantities(product_qty, quant_uom)
             procurements.append(self.env['procurement.group'].Procurement(

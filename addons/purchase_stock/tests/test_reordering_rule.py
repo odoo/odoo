@@ -234,7 +234,7 @@ class TestReorderingRule(TransactionCase):
         move = self.env['stock.move'].create({
             'name': 'move out',
             'product_id': product.id,
-            'product_uom': product.uom_id.id,
+            'uom_id': product.uom_id.id,
             'product_uom_qty': 10,
             'location_id': outside_loc.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
@@ -751,7 +751,7 @@ class TestReorderingRule(TransactionCase):
         out_move = self.env['stock.move'].create({
             'name': self.product_01.name,
             'product_id': self.product_01.id,
-            'product_uom': self.product_01.uom_id.id,
+            'uom_id': self.product_01.uom_id.id,
             'product_uom_qty': 5,
             'location_id': stock_location_id,
             'location_dest_id': customer_location_id,

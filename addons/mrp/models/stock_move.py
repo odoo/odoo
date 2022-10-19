@@ -216,14 +216,14 @@ class StockMove(models.Model):
                 moves_with_reference |= move
         super(StockMove, self - moves_with_reference)._compute_reference()
 
-    @api.depends('raw_material_production_id.qty_producing', 'product_uom_qty', 'product_uom')
+    @api.depends('raw_material_production_id.qty_producing', 'product_uom_qty', 'uom_id')
     def _compute_should_consume_qty(self):
         for move in self:
             mo = move.raw_material_production_id
-            if not mo or not move.product_uom:
+            if not mo or not move.uom_id:
                 move.should_consume_qty = 0
                 continue
-            move.should_consume_qty = float_round((mo.qty_producing - mo.qty_produced) * move.unit_factor, precision_rounding=move.product_uom.rounding)
+            move.should_consume_qty = float_round((mo.qty_producing - mo.qty_produced) * move.unit_factor, precision_rounding=move.uom_id.rounding)
 
     @api.onchange('product_uom_qty')
     def _onchange_product_uom_qty(self):
@@ -332,9 +332,9 @@ class StockMove(models.Model):
                 moves_ids_to_return.add(move.id)
                 continue
             if move.picking_id.immediate_transfer:
-                factor = move.product_uom._compute_quantity(move.quantity_done, bom.product_uom_id) / bom.product_qty
+                factor = move.uom_id._compute_quantity(move.quantity_done, bom.product_uom_id) / bom.product_qty
             else:
-                factor = move.product_uom._compute_quantity(move.product_uom_qty, bom.product_uom_id) / bom.product_qty
+                factor = move.uom_id._compute_quantity(move.product_uom_qty, bom.product_uom_id) / bom.product_qty
             boms, lines = bom.sudo().explode(move.product_id, factor, picking_type=bom.picking_type_id)
             for bom_line, line_data in lines:
                 if move.picking_id.immediate_transfer:
@@ -387,7 +387,7 @@ class StockMove(models.Model):
         return {
             'picking_id': self.picking_id.id if self.picking_id else False,
             'product_id': bom_line.product_id.id,
-            'product_uom': bom_line.product_uom_id.id,
+            'uom_id': bom_line.product_uom_id.id,
             'product_uom_qty': product_qty,
             'quantity_done': quantity_done,
             'state': 'draft',  # will be confirmed below
@@ -441,7 +441,7 @@ class StockMove(models.Model):
         if self.state in ('done', 'cancel'):
             return True
         # Do not update extra product quantities
-        if float_is_zero(self.product_uom_qty, precision_rounding=self.product_uom.rounding):
+        if float_is_zero(self.product_uom_qty, precision_rounding=self.uom_id.rounding):
             return True
         if (not self.raw_material_production_id.use_auto_consume_components_lots and self.has_tracking != 'none') or self.manual_consumption or self._origin.manual_consumption:
             return True

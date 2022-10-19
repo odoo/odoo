@@ -97,7 +97,7 @@ class ProviderGrid(models.Model):
                 continue
             if line.product_id.type == "service":
                 continue
-            qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
+            qty = line.uom_id._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
             weight += (line.product_id.weight or 0.0) * qty
             volume += (line.product_id.volume or 0.0) * qty
             quantity += qty

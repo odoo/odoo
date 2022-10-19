@@ -175,7 +175,7 @@ class MrpUnbuild(models.Model):
                     'lot_id': self.lot_id.id,
                     'qty_done': finished_move.product_uom_qty,
                     'product_id': finished_move.product_id.id,
-                    'product_uom_id': finished_move.product_uom.id,
+                    'product_uom_id': finished_move.uom_id.id,
                     'location_id': finished_move.location_id.id,
                     'location_dest_id': finished_move.location_dest_id.id,
                 })
@@ -208,7 +208,7 @@ class MrpUnbuild(models.Model):
                         needed_quantity -= taken_quantity
                         qty_already_used[move_line] += taken_quantity
             else:
-                move.quantity_done = float_round(move.product_uom_qty, precision_rounding=move.product_uom.rounding)
+                move.quantity_done = float_round(move.product_uom_qty, precision_rounding=move.uom_id.rounding)
 
         finished_moves._action_done()
         consume_moves._action_done()
@@ -266,7 +266,7 @@ class MrpUnbuild(models.Model):
             'date': self.create_date,
             'product_id': move.product_id.id,
             'product_uom_qty': move.product_uom_qty * factor,
-            'product_uom': move.product_uom.id,
+            'uom_id': move.uom_id.id,
             'procure_method': 'make_to_stock',
             'location_dest_id': location_dest_id.id,
             'location_id': location_id.id,
@@ -287,7 +287,7 @@ class MrpUnbuild(models.Model):
             'byproduct_id': byproduct_id,
             'product_id': product.id,
             'product_uom_qty': quantity,
-            'product_uom': product_uom.id,
+            'uom_id': product_uom.id,
             'procure_method': 'make_to_stock',
             'location_dest_id': location_dest_id.id,
             'location_id': location_id.id,

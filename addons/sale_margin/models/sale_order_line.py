@@ -17,7 +17,7 @@ class SaleOrderLine(models.Model):
         digits='Product Price', store=True, precompute=True,
         groups="base.group_user")
 
-    @api.depends('product_id', 'company_id', 'currency_id', 'product_uom')
+    @api.depends('product_id', 'company_id', 'currency_id', 'uom_id')
     def _compute_purchase_price(self):
         for line in self:
             if not line.product_id:
@@ -43,7 +43,7 @@ class SaleOrderLine(models.Model):
                 return product_cost
         from_currency = self.product_id.cost_currency_id
         to_cur = self.currency_id or self.order_id.currency_id
-        to_uom = self.product_uom
+        to_uom = self.uom_id
         if to_uom and to_uom != from_uom:
             product_cost = from_uom._compute_price(
                 product_cost,

@@ -41,7 +41,7 @@ class StockRule(models.Model):
     def _run_manufacture(self, procurements):
         productions_values_by_company = defaultdict(list)
         for procurement, rule in procurements:
-            if float_compare(procurement.product_qty, 0, precision_rounding=procurement.product_uom.rounding) <= 0:
+            if float_compare(procurement.product_qty, 0, precision_rounding=procurement.uom_id.rounding) <= 0:
                 # If procurement contains negative quantity, don't create a MO that would be for a negative value.
                 continue
             bom = rule._get_matching_bom(procurement.product_id, procurement.company_id, procurement.values)
@@ -83,7 +83,7 @@ class StockRule(models.Model):
             if not warehouse_id:
                 warehouse_id = rule.location_dest_id.warehouse_id
             if rule.picking_type_id == warehouse_id.sam_type_id:
-                if float_compare(procurement.product_qty, 0, precision_rounding=procurement.product_uom.rounding) < 0:
+                if float_compare(procurement.product_qty, 0, precision_rounding=procurement.uom_id.rounding) < 0:
                     procurement.values['group_id'] = procurement.values['group_id'].stock_move_ids.filtered(
                         lambda m: m.state not in ['done', 'cancel']).move_orig_ids.group_id[:1]
                     continue
@@ -203,7 +203,7 @@ class ProcurementGroup(models.Model):
         for procurement in procurements:
             bom_kit = kits_by_company[procurement.company_id].get(procurement.product_id)
             if bom_kit:
-                order_qty = procurement.product_uom._compute_quantity(procurement.product_qty, bom_kit.product_uom_id, round=False)
+                order_qty = procurement.uom_id._compute_quantity(procurement.product_qty, bom_kit.product_uom_id, round=False)
                 qty_to_produce = (order_qty / bom_kit.product_qty)
                 boms, bom_sub_lines = bom_kit.explode(procurement.product_id, qty_to_produce)
                 for bom_line, bom_line_data in bom_sub_lines:

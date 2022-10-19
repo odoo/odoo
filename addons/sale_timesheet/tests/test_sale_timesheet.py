@@ -643,7 +643,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         sale_order_line = self.env['sale.order.line'].create({
             'order_id': sale_order.id,
             'product_id': self.product_order_timesheet3.id,
-            'product_uom': uom_days.id,
+            'uom_id': uom_days.id,
         })
         sale_order.action_confirm()
         task = sale_order_line.task_id
@@ -704,7 +704,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'name': self.product_delivery_timesheet2.name,
             'product_id': self.product_delivery_timesheet2.id,
             'product_uom_qty': 50,
-            'product_uom': self.product_delivery_timesheet2.uom_id.id,
+            'uom_id': self.product_delivery_timesheet2.uom_id.id,
             'price_unit': self.product_delivery_timesheet2.list_price,
             'order_id': sale_order.id,
         })

@@ -12,12 +12,12 @@
                     <tr>
                         <td><strong>Forecasted Stock</strong><br /><small>On <span t-esc="data.delivery_date"/></small></td>
                         <td><b t-esc='data.virtual_available_at_date'/>
-                        <t t-esc='data.product_uom.data.display_name'/></td>
+                        <t t-esc='data.uom_id.data.display_name'/></td>
                     </tr>
                     <tr>
                         <td><strong>Available</strong><br /><small>All planned operations included</small></td>
                         <td><b t-esc='data.free_qty_today' t-att-class="!data.will_be_fulfilled ? 'text-danger': ''"/>
-                        <t t-esc='data.product_uom.data.display_name'/></td>
+                        <t t-esc='data.uom_id.data.display_name'/></td>
                     </tr>
                 </t>
                 <t t-elif="data.is_mto and ['draft', 'sent'].includes(data.state)">
@@ -35,7 +35,7 @@
                             <strong>Reserved</strong><br/>
                         </td>
                         <td style="min-width: 50px; text-align: right;">
-                            <b t-esc='data.qty_available_today'/> <t t-esc='data.product_uom.data.display_name'/>
+                            <b t-esc='data.qty_available_today'/> <t t-esc='data.uom_id.data.display_name'/>
                         </td>
                     </tr>
                     <tr t-if="data.qty_available_today &lt; data.qty_to_deliver">

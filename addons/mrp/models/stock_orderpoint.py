@@ -98,7 +98,7 @@ class StockWarehouseOrderpoint(models.Model):
             # For a kit, the quantity in progress is :
             #  (the quantity if we have received all in-progress components) - (the quantity using only available components)
             product_qty = min(ratios_total or [0]) - min(ratios_qty_available or [0])
-            res[orderpoint.id] = orderpoint.product_id.uom_id._compute_quantity(product_qty, orderpoint.product_uom, round=False)
+            res[orderpoint.id] = orderpoint.product_id.uom_id._compute_quantity(product_qty, orderpoint.uom_id, round=False)
 
         bom_manufacture = self.env['mrp.bom']._bom_find(orderpoints_without_kit.product_id, bom_type='normal')
         bom_manufacture = self.env['mrp.bom'].concat(*bom_manufacture.values())
@@ -110,7 +110,7 @@ class StockWarehouseOrderpoint(models.Model):
             uom = self.env['uom.uom'].browse(p['product_uom_id'][0])
             orderpoint = self.env['stock.warehouse.orderpoint'].browse(p['orderpoint_id'][0])
             res[orderpoint.id] += uom._compute_quantity(
-                p['product_qty'], orderpoint.product_uom, round=False)
+                p['product_qty'], orderpoint.uom_id, round=False)
         return res
 
     def _get_qty_multiple_to_order(self):
@@ -120,7 +120,7 @@ class StockWarehouseOrderpoint(models.Model):
         qty_multiple_to_order = super()._get_qty_multiple_to_order()
         if 'manufacture' in self.rule_ids.mapped('action'):
             bom = self.env['mrp.bom']._bom_find(self.product_id, bom_type='normal')[self.product_id]
-            return bom.product_uom_id._compute_quantity(bom.product_qty, self.product_uom)
+            return bom.product_uom_id._compute_quantity(bom.product_qty, self.uom_id)
         return qty_multiple_to_order
 
     def _set_default_route_id(self):

@@ -48,7 +48,7 @@ class TestPurchaseOrderProcess(PurchaseTestCommon):
                 (0, 0, {
                     'product_id': product.id,
                     'product_qty': 1.0,
-                    'product_uom': product.uom_id.id,
+                    'uom_id': product.uom_id.id,
                     'product_packaging_id': packaging.id,
                 })],
         })

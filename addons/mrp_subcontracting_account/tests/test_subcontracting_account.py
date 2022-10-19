@@ -22,7 +22,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.env.company.subcontracting_location_id.id,
             'product_id': self.comp1.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 10.0,
             'price_unit': 10.0,
         })
@@ -35,7 +35,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.env.company.subcontracting_location_id.id,
             'product_id': self.comp2.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 10.0,
             'price_unit': 20.0,
         })

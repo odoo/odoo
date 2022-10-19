@@ -22,7 +22,7 @@
         <field name="name" model="sale.order.line" eval="obj().env.ref('website_sale_slides.product_course_channel_6').get_product_multiline_description_sale()"/>
         <field name="product_id" ref="website_sale_slides.product_course_channel_6"/>
         <field name="product_uom_qty">1</field>
-        <field name="product_uom" ref="uom.product_uom_unit"/>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
         <field name="price_unit">100.0</field>
     </record>
 
@@ -43,7 +43,7 @@
         <field name="name" model="sale.order.line" eval="obj().env.ref('website_sale_slides.product_course_channel_1').get_product_multiline_description_sale()"/>
         <field name="product_id" ref="website_sale_slides.product_course_channel_1"/>
         <field name="product_uom_qty">1</field>
-        <field name="product_uom" ref="uom.product_uom_unit"/>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
         <field name="price_unit">150.0</field>
     </record>
     <record id="sale_order_course_2_line_2" model="sale.order.line">
@@ -51,7 +51,7 @@
         <field name="name" model="sale.order.line" eval="obj().env.ref('website_sale_slides.product_course_channel_6').get_product_multiline_description_sale()"/>
         <field name="product_id" ref="website_sale_slides.product_course_channel_6"/>
         <field name="product_uom_qty">1</field>
-        <field name="product_uom" ref="uom.product_uom_unit"/>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
         <field name="price_unit">100.0</field>
     </record>
 

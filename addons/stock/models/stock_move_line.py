@@ -83,12 +83,12 @@ class StockMoveLine(models.Model):
     origin = fields.Char(related='move_id.origin', string='Source')
     description_picking = fields.Text(string="Description picking")
 
-    @api.depends('product_uom_id.category_id', 'product_id.uom_id.category_id', 'move_id.product_uom', 'product_id.uom_id')
+    @api.depends('product_uom_id.category_id', 'product_id.uom_id.category_id', 'move_id.uom_id', 'product_id.uom_id')
     def _compute_product_uom_id(self):
         for line in self:
             if not line.product_uom_id or line.product_uom_id.category_id != line.product_id.uom_id.category_id:
-                if line.move_id.product_uom:
-                    line.product_uom_id = line.move_id.product_uom.id
+                if line.move_id.uom_id:
+                    line.product_uom_id = line.move_id.uom_id.id
                 else:
                     line.product_uom_id = line.product_id.uom_id.id
 
@@ -749,7 +749,7 @@ class StockMoveLine(models.Model):
 
         def get_aggregated_properties(move_line=False, move=False):
             move = move or move_line.move_id
-            uom = move.product_uom or move_line.product_uom_id
+            uom = move.uom_id or move_line.product_uom_id
             name = move.product_id.display_name
             description = move.description_picking
             if description == name or description == move.product_id.name:
@@ -790,7 +790,7 @@ class StockMoveLine(models.Model):
                                                    'description': description,
                                                    'qty_done': qty_done,
                                                    'qty_ordered': qty_ordered or qty_done,
-                                                   'product_uom': uom,
+                                                   'uom_id': uom,
                                                    'product': move_line.product_id}
             else:
                 aggregated_move_lines[line_key]['qty_ordered'] += qty_done
@@ -803,7 +803,7 @@ class StockMoveLine(models.Model):
         pickings = (self.picking_id | backorders)
         for empty_move in pickings.move_ids:
             if not (empty_move.state == "cancel" and empty_move.product_uom_qty
-                    and float_is_zero(empty_move.quantity_done, precision_rounding=empty_move.product_uom.rounding)):
+                    and float_is_zero(empty_move.quantity_done, precision_rounding=empty_move.uom_id.rounding)):
                 continue
             line_key, name, description, uom = get_aggregated_properties(move=empty_move)
 
@@ -814,7 +814,7 @@ class StockMoveLine(models.Model):
                     'description': description,
                     'qty_done': False,
                     'qty_ordered': qty_ordered,
-                    'product_uom': uom,
+                    'uom_id': uom,
                     'product': empty_move.product_id,
                 }
             else:
@@ -833,7 +833,7 @@ class StockMoveLine(models.Model):
             'name': _('New Move:') + self.product_id.display_name,
             'product_id': self.product_id.id,
             'product_uom_qty': 0 if self.picking_id and self.picking_id.state != 'done' else self.qty_done,
-            'product_uom': self.product_uom_id.id,
+            'uom_id': self.product_uom_id.id,
             'description_picking': self.description_picking,
             'location_id': self.picking_id.location_id.id,
             'location_dest_id': self.picking_id.location_dest_id.id,
@@ -862,7 +862,7 @@ class StockMoveLine(models.Model):
         return {
             'name':_('%s [reverted]', self.reference),
             'product_id': self.product_id.id,
-            'product_uom': self.product_uom_id.id,
+            'uom_id': self.product_uom_id.id,
             'product_uom_qty': self.qty_done,
             'company_id': self.company_id.id or self.env.company.id,
             'state': 'confirmed',

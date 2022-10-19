@@ -237,7 +237,7 @@ class StockMove(models.Model):
         # Init a dict that will group the moves by valuation type, according to `move._is_valued_type`.
         valued_moves = {valued_type: self.env['stock.move'] for valued_type in self._get_valued_types()}
         for move in self:
-            if float_is_zero(move.quantity_done, precision_rounding=move.product_uom.rounding):
+            if float_is_zero(move.quantity_done, precision_rounding=move.uom_id.rounding):
                 continue
             for valued_type in self._get_valued_types():
                 if getattr(move, '_is_%s' % valued_type)():
@@ -402,7 +402,7 @@ class StockMove(models.Model):
             return False
 
         if self.state != 'done':
-            unit_amount = self.product_uom._compute_quantity(
+            unit_amount = self.uom_id._compute_quantity(
                 self.quantity_done, self.product_id.uom_id)
             # Falsy in FIFO but since it's an estimation we don't require exact correct cost. Otherwise
             # we would have to recompute all the analytic estimation at each out.

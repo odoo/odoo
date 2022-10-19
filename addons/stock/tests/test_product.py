@@ -34,7 +34,7 @@ class TestVirtualAvailable(TestStockCommon):
             'name': 'a move',
             'product_id': cls.product_3.id,
             'product_uom_qty': 3.0,
-            'product_uom': cls.product_3.uom_id.id,
+            'uom_id': cls.product_3.uom_id.id,
             'picking_id': cls.picking_out.id,
             'location_id': cls.env.ref('stock.stock_location_stock').id,
             'location_dest_id': cls.env.ref('stock.stock_location_customers').id})
@@ -46,7 +46,7 @@ class TestVirtualAvailable(TestStockCommon):
             'name': 'another move',
             'product_id': cls.product_3.id,
             'product_uom_qty': 5.0,
-            'product_uom': cls.product_3.uom_id.id,
+            'uom_id': cls.product_3.uom_id.id,
             'picking_id': cls.picking_out_2.id,
             'location_id': cls.env.ref('stock.stock_location_stock').id,
             'location_dest_id': cls.env.ref('stock.stock_location_customers').id})

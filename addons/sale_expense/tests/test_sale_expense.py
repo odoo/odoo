@@ -21,7 +21,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
                 'name': self.company_data['product_delivery_no'].name,
                 'product_id': self.company_data['product_delivery_no'].id,
                 'product_uom_qty': 2,
-                'product_uom': self.company_data['product_delivery_no'].uom_id.id,
+                'uom_id': self.company_data['product_delivery_no'].uom_id.id,
                 'price_unit': self.company_data['product_delivery_no'].list_price,
             })],
             'pricelist_id': self.env.ref('product.list0').id,

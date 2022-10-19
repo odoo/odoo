@@ -43,7 +43,7 @@ class TestSaleStockMultiCompany(TestSaleCommon, ValuationReconciliationTestCommo
                 'name': product.name,
                 'product_id': product.id,
                 'product_uom_qty': 10,
-                'product_uom': product.uom_id.id,
+                'uom_id': product.uom_id.id,
                 'price_unit': product.list_price})],
             'pricelist_id': self.company_data['default_pricelist'].id,
         }
@@ -62,7 +62,7 @@ class TestSaleStockMultiCompany(TestSaleCommon, ValuationReconciliationTestCommo
                 'name': product.name,
                 'product_id': product.id,
                 'product_uom_qty': 10,
-                'product_uom': product.uom_id.id,
+                'uom_id': product.uom_id.id,
                 'price_unit': product.list_price})],
             'pricelist_id': self.company_data['default_pricelist'].id,
         }
@@ -78,7 +78,7 @@ class TestSaleStockMultiCompany(TestSaleCommon, ValuationReconciliationTestCommo
                 'name': product.name,
                 'product_id': product.id,
                 'product_uom_qty': 10,
-                'product_uom': product.uom_id.id,
+                'uom_id': product.uom_id.id,
                 'price_unit': product.list_price})],
             'pricelist_id': self.company_data['default_pricelist'].id,
         }

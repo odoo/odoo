@@ -839,7 +839,7 @@ class MrpWorkorder(models.Model):
                     'location_dest_id': putaway_location.id,
                 })
         else:
-            rounding = production_move.product_uom.rounding
+            rounding = production_move.uom_id.rounding
             production_move._set_quantity_done(
                 float_round(self.qty_producing, precision_rounding=rounding)
             )

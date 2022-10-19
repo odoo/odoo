@@ -7,7 +7,7 @@ class ReportBomStructure(models.AbstractModel):
     _inherit = 'report.mrp.report_bom_structure'
 
     def _get_subcontracting_line(self, bom, seller, level, bom_quantity):
-        ratio_uom_seller = seller.product_uom.ratio / bom.product_uom_id.ratio
+        ratio_uom_seller = seller.uom_id.ratio / bom.product_uom_id.ratio
         return {
             'name': seller.partner_id.display_name,
             'partner_id': seller.partner_id.id,

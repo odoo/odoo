@@ -24,7 +24,7 @@ class TestLandedCosts(TestStockLandedCostsCommon):
             'name': cls.product_refrigerator.name,
             'product_id': cls.product_refrigerator.id,
             'product_uom_qty': 5,
-            'product_uom': cls.product_refrigerator.uom_id.id,
+            'uom_id': cls.product_refrigerator.uom_id.id,
             'picking_id': cls.picking_in.id,
             'location_id': cls.supplier_location_id,
             'location_dest_id': cls.warehouse.lot_stock_id.id})
@@ -32,7 +32,7 @@ class TestLandedCosts(TestStockLandedCostsCommon):
             'name': cls.product_oven.name,
             'product_id': cls.product_oven.id,
             'product_uom_qty': 10,
-            'product_uom': cls.product_oven.uom_id.id,
+            'uom_id': cls.product_oven.uom_id.id,
             'picking_id': cls.picking_in.id,
             'location_id': cls.supplier_location_id,
             'location_dest_id': cls.warehouse.lot_stock_id.id})
@@ -46,7 +46,7 @@ class TestLandedCosts(TestStockLandedCostsCommon):
             'name': cls.product_refrigerator.name,
             'product_id': cls.product_refrigerator.id,
             'product_uom_qty': 2,
-            'product_uom': cls.product_refrigerator.uom_id.id,
+            'uom_id': cls.product_refrigerator.uom_id.id,
             'picking_id': cls.picking_out.id,
             'location_id': cls.warehouse.lot_stock_id.id,
             'location_dest_id': cls.customer_location_id})

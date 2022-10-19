@@ -240,7 +240,7 @@ class TestPurchase(AccountTestInvoicingCommon):
 
     def test_with_different_uom(self):
         """ This test ensures that the unit price is correctly computed"""
-        # Required for `product_uom` to be visibile in the view
+        # Required for `uom_id` to be visibile in the view
         self.env.user.groups_id += self.env.ref('uom.group_uom')
         uom_units = self.env.ref('uom.product_uom_unit')
         uom_dozens = self.env.ref('uom.product_uom_dozen')
@@ -267,7 +267,7 @@ class TestPurchase(AccountTestInvoicingCommon):
             po_line.product_id = product_01
         with po_form.order_line.new() as po_line:
             po_line.product_id = product_02
-            po_line.product_uom = uom_dozens
+            po_line.uom_id = uom_dozens
         po = po_form.save()
 
         self.assertEqual(po.order_line[0].price_unit, 200)

@@ -38,7 +38,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
             'location_id': stock_location.id,
             'location_dest_id': customer_location.id,
             'product_id': product_test.id,
-            'product_uom': unit,
+            'uom_id': unit,
             'product_uom_qty': 10.0,
             'price_unit': 10,
         })
@@ -69,7 +69,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
             'location_id': stock_location.id,
             'location_dest_id': customer_location.id,
             'product_id': product_test.id,
-            'product_uom': unit,
+            'uom_id': unit,
             'product_uom_qty': 10.0,
             'price_unit': 10
         })
@@ -91,7 +91,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
             'location_id': stock_location.id,
             'location_dest_id': customer_location.id,
             'product_id': product_test.id,
-            'product_uom': unit,
+            'uom_id': unit,
             'product_uom_qty': 10.0,
             'price_unit': 10
         })
@@ -163,7 +163,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
             'location_id': stock_location.id,
             'location_dest_id': customer_location.id,
             'product_id': product_1.id,
-            'product_uom': unit,
+            'uom_id': unit,
             'product_uom_qty': 10.0,
             'price_unit': 100,
         })
@@ -173,7 +173,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
             'location_id': stock_location.id,
             'location_dest_id': customer_location.id,
             'product_id': product_2.id,
-            'product_uom': unit,
+            'uom_id': unit,
             'product_uom_qty': 10.0,
             'price_unit': 100,
         })
@@ -188,7 +188,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
                 'name': product_2.name,
                 'product_id': product_2.id,
                 'product_qty': 5.0,
-                'product_uom': product_2.uom_po_id.id,
+                'uom_id': product_2.uom_po_id.id,
             })
         ]})
         order_line = self.env['purchase.order.line'].search([

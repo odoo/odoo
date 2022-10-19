@@ -283,7 +283,7 @@ class TestPosMargin(TestPoSCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product1.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2,
             'price_unit': 3,
         }).sudo()
@@ -297,7 +297,7 @@ class TestPosMargin(TestPoSCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product1.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1,
             'price_unit': 7,
         }).sudo()
@@ -343,7 +343,7 @@ class TestPosMargin(TestPoSCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product1.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2,
             'price_unit': 3,
         }).sudo()
@@ -357,7 +357,7 @@ class TestPosMargin(TestPoSCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product1.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1,
             'price_unit': 6,
         }).sudo()

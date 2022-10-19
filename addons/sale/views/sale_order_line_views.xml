@@ -14,7 +14,7 @@
                 <field name="qty_delivered"/>
                 <field name="qty_invoiced"/>
                 <field name="qty_to_invoice"/>
-                <field name="product_uom" string="Unit of Measure" groups="uom.group_uom"/>
+                <field name="uom_id" string="Unit of Measure" groups="uom.group_uom"/>
                 <field name="price_subtotal" sum="Total" widget="monetary"/>
                 <field name="currency_id" invisible="1"/>
             </tree>
@@ -40,7 +40,7 @@
                             <field name="product_uom_qty" readonly="1"/>
                             <field name="qty_delivered" readonly="1"/>
                             <field name="qty_invoiced"/>
-                            <field name="product_uom" readonly="1"/>
+                            <field name="uom_id" readonly="1"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                             <field name="order_partner_id" invisible="1"/>
                             <field name="display_type" invisible="1"/>

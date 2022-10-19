@@ -364,7 +364,7 @@ class MrpProduction(models.Model):
             production.production_capacity = production.product_qty
             moves = production.move_raw_ids.filtered(lambda move: move.unit_factor and move.product_id.type != 'consu')
             if moves:
-                production_capacity = min(moves.mapped(lambda move: move.product_id.uom_id._compute_quantity(move.product_id.qty_available, move.product_uom) / move.unit_factor))
+                production_capacity = min(moves.mapped(lambda move: move.product_id.uom_id._compute_quantity(move.product_id.qty_available, move.uom_id) / move.unit_factor))
                 production.production_capacity = min(production.product_qty, float_round(production_capacity, precision_rounding=production.product_id.uom_id.rounding))
 
     @api.depends('move_finished_ids.date_deadline')
@@ -508,7 +508,7 @@ class MrpProduction(models.Model):
                 production.state = 'progress'
             elif production.product_uom_id and not float_is_zero(production.qty_producing, precision_rounding=production.product_uom_id.rounding):
                 production.state = 'progress'
-            elif any(not float_is_zero(move.quantity_done, precision_rounding=move.product_uom.rounding or move.product_id.uom_id.rounding) for move in production.move_raw_ids):
+            elif any(not float_is_zero(move.quantity_done, precision_rounding=move.uom_id.rounding or move.product_id.uom_id.rounding) for move in production.move_raw_ids):
                 production.state = 'progress'
 
     @api.depends('bom_id', 'product_id', 'product_qty', 'product_uom_id')
@@ -910,7 +910,7 @@ class MrpProduction(models.Model):
         return {
             'product_id': product_id,
             'product_uom_qty': product_uom_qty,
-            'product_uom': product_uom,
+            'uom_id': product_uom,
             'operation_id': operation_id,
             'byproduct_id': byproduct_id,
             'name': _('New'),
@@ -1007,7 +1007,7 @@ class MrpProduction(models.Model):
             'picking_type_id': self.picking_type_id.id,
             'product_id': product_id.id,
             'product_uom_qty': product_uom_qty,
-            'product_uom': product_uom.id,
+            'uom_id': product_uom.id,
             'location_id': source_location.id,
             'location_dest_id': self.product_id.with_company(self.company_id).property_stock_production.id,
             'raw_material_production_id': self.id,
@@ -1038,12 +1038,12 @@ class MrpProduction(models.Model):
                 self.qty_producing = self.product_id.uom_id._compute_quantity(1, self.product_uom_id, rounding_method='HALF-UP')
 
         for move in (self.move_raw_ids | self.move_finished_ids.filtered(lambda m: m.product_id != self.product_id)):
-            if move._should_bypass_set_qty_producing() or not move.product_uom:
+            if move._should_bypass_set_qty_producing() or not move.uom_id:
                 continue
 
-            new_qty = float_round((self.qty_producing - self.qty_produced) * move.unit_factor, precision_rounding=move.product_uom.rounding)
+            new_qty = float_round((self.qty_producing - self.qty_produced) * move.unit_factor, precision_rounding=move.uom_id.rounding)
             if self.use_auto_consume_components_lots and move.has_tracking in ('lot', 'serial'):
-                if float_compare(move.reserved_availability, 0, precision_rounding=move.product_uom.rounding) <= 0:
+                if float_compare(move.reserved_availability, 0, precision_rounding=move.uom_id.rounding) <= 0:
                     continue
                 else:
                     new_qty = min(new_qty, move.reserved_availability)
@@ -1059,7 +1059,7 @@ class MrpProduction(models.Model):
         procurements = []
         for move in self.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel')):
             old_qty = move.product_uom_qty
-            new_qty = float_round(old_qty * factor, precision_rounding=move.product_uom.rounding, rounding_method='UP')
+            new_qty = float_round(old_qty * factor, precision_rounding=move.uom_id.rounding, rounding_method='UP')
             if new_qty > 0:
                 move.write({'product_uom_qty': new_qty})
                 if move._should_bypass_reservation() \
@@ -1070,7 +1070,7 @@ class MrpProduction(models.Model):
                     procurement_qty = new_qty - old_qty
                     values = move._prepare_procurement_values()
                     procurements.append(self.env['procurement.group'].Procurement(
-                        move.product_id, procurement_qty, move.product_uom,
+                        move.product_id, procurement_qty, move.uom_id,
                         move.location_id, move.name, move.origin, move.company_id, values))
                 update_info.append((move, old_qty, new_qty))
             else:
@@ -1241,8 +1241,8 @@ class MrpProduction(models.Model):
                 })
                 for move_finish in production.move_finished_ids.filtered(lambda m: m.product_id == production.product_id):
                     move_finish.write({
-                        'product_uom_qty': move_finish.product_uom._compute_quantity(move_finish.product_uom_qty, move_finish.product_id.uom_id),
-                        'product_uom': move_finish.product_id.uom_id
+                        'product_uom_qty': move_finish.uom_id._compute_quantity(move_finish.product_uom_qty, move_finish.product_id.uom_id),
+                        'uom_id': move_finish.product_id.uom_id
                     })
             production.move_raw_ids._adjust_procure_method()
             (production.move_raw_ids | production.move_finished_ids)._action_confirm(merge=False)
@@ -1356,13 +1356,13 @@ class MrpProduction(models.Model):
             expected_qty_by_product = defaultdict(float)
             for move_values in expected_move_values:
                 move_product = self.env['product.product'].browse(move_values['product_id'])
-                move_uom = self.env['uom.uom'].browse(move_values['product_uom'])
+                move_uom = self.env['uom.uom'].browse(move_values['uom_id'])
                 move_product_qty = move_uom._compute_quantity(move_values['product_uom_qty'], move_product.uom_id)
                 expected_qty_by_product[move_product] += move_product_qty * order.qty_producing / order.product_qty
 
             done_qty_by_product = defaultdict(float)
             for move in order.move_raw_ids:
-                qty_done = move.product_uom._compute_quantity(move.quantity_done, move.product_id.uom_id)
+                qty_done = move.uom_id._compute_quantity(move.quantity_done, move.product_id.uom_id)
                 rounding = move.product_id.uom_id.rounding
                 if not (move.product_id in expected_qty_by_product or float_is_zero(qty_done, precision_rounding=rounding)):
                     issues.append((order, move.product_id, qty_done, 0.0))
@@ -1693,7 +1693,7 @@ class MrpProduction(models.Model):
                     quantity -= taken_qty
                     move_qty_to_reserve -= taken_qty
 
-                    if float_compare(move_qty_to_reserve, 0, precision_rounding=move.product_uom.rounding) <= 0:
+                    if float_compare(move_qty_to_reserve, 0, precision_rounding=move.uom_id.rounding) <= 0:
                         assigned_moves.add(move.id)
                         move = moves and moves.pop(0)
                         move_qty_to_reserve = move and move.product_qty or 0
@@ -1978,7 +1978,7 @@ class MrpProduction(models.Model):
         if self.product_id.tracking != 'serial':
             return
         if self.reservation_state != 'assigned':
-            missing_components = {move.product_id for move in self.move_raw_ids if float_compare(move.reserved_availability, move.product_uom_qty, precision_rounding=move.product_uom.rounding) < 0}
+            missing_components = {move.product_id for move in self.move_raw_ids if float_compare(move.reserved_availability, move.product_uom_qty, precision_rounding=move.uom_id.rounding) < 0}
             message = _("Make sure enough quantities of these components are reserved to do the production:\n")
             message += "\n".join(component.name for component in missing_components)
             raise UserError(message)

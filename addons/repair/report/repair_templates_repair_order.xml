@@ -74,7 +74,7 @@
                                     </td>
                                     <td class="text-end">
                                         <span t-field="line.product_uom_qty"/>
-                                        <span groups="uom.group_uom" t-field="line.product_uom.name"/>
+                                        <span groups="uom.group_uom" t-field="line.uom_id.name"/>
                                     </td>
                                     <t t-if="(line.repair_id.invoice_method != 'none')">
                                         <td class="text-end">
@@ -97,7 +97,7 @@
                                     </td>
                                     <td class="text-end">
                                         <span t-field="fees.product_uom_qty"/>
-                                        <span groups="uom.group_uom" t-field="fees.product_uom.name"/>
+                                        <span groups="uom.group_uom" t-field="fees.uom_id.name"/>
                                     </td>
                                     <t t-if="(fees.repair_id.invoice_method != 'none')">
                                         <td class="text-end">

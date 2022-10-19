@@ -1015,7 +1015,7 @@ class UoM(models.Model):
                     " or are currently reserved."
                 )
                 if self.env['stock.move'].sudo().search_count([
-                    ('product_uom', 'in', changed.ids),
+                    ('uom_id', 'in', changed.ids),
                     ('state', 'not in', ('cancel', 'done'))
                 ]):
                     raise UserError(error_msg)

@@ -30,7 +30,7 @@ class PurchaseReport(models.Model):
     product_id = fields.Many2one('product.product', 'Product', readonly=True)
     partner_id = fields.Many2one('res.partner', 'Vendor', readonly=True)
     date_approve = fields.Datetime('Confirmation Date', readonly=True)
-    product_uom = fields.Many2one('uom.uom', 'Reference Unit of Measure', required=True)
+    uom_id = fields.Many2one('uom.uom', 'Reference Unit of Measure', required=True)
     company_id = fields.Many2one('res.company', 'Company', readonly=True)
     currency_id = fields.Many2one('res.currency', 'Currency', readonly=True)
     user_id = fields.Many2one('res.users', 'Purchase Representative', readonly=True)
@@ -110,7 +110,7 @@ class PurchaseReport(models.Model):
                 join res_partner partner on po.partner_id = partner.id
                     left join product_product p on (l.product_id=p.id)
                         left join product_template t on (p.product_tmpl_id=t.id)
-                left join uom_uom line_uom on (line_uom.id=l.product_uom)
+                left join uom_uom line_uom on (line_uom.id=l.uom_id)
                 left join uom_uom product_uom on (product_uom.id=t.uom_id)
                 left join currency_rate cr on (cr.currency_id = po.currency_id and
                     cr.company_id = po.company_id and
@@ -133,7 +133,7 @@ class PurchaseReport(models.Model):
                 l.price_unit,
                 po.date_approve,
                 l.date_planned,
-                l.product_uom,
+                l.uom_id,
                 po.dest_address_id,
                 po.fiscal_position_id,
                 l.product_id,

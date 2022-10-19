@@ -170,7 +170,7 @@ class SaleOrderLine(models.Model):
         if self.event_ticket_id and self.event_id:
             event_ticket = self.event_ticket_id.with_context(
                 pricelist=self.order_id.pricelist_id.id,
-                uom=self.product_uom.id
+                uom=self.uom_id.id
             )
             if self.order_id.pricelist_id.discount_policy == 'with_discount':
                 return event_ticket.price_reduce

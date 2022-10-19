@@ -145,7 +145,7 @@ class SaleOrder(models.Model):
             'coupon_id': coupon.id,
             'points_cost': cost,
             'reward_identifier_code': _generate_random_reward_code(),
-            'product_uom': product.uom_id.id,
+            'uom_id': product.uom_id.id,
             'tax_id': [(Command.CLEAR, 0, 0)] + [(Command.LINK, tax.id, False) for tax in taxes]
         }]
 
@@ -314,7 +314,7 @@ class SaleOrder(models.Model):
                 'product_id': reward.discount_line_product_id.id,
                 'price_unit': -min(max_discount, discountable),
                 'product_uom_qty': 1.0,
-                'product_uom': reward.discount_line_product_id.uom_id.id,
+                'uom_id': reward.discount_line_product_id.uom_id.id,
                 'reward_id': reward.id,
                 'coupon_id': coupon.id,
                 'points_cost': point_cost,
@@ -331,7 +331,7 @@ class SaleOrder(models.Model):
             'product_id': reward.discount_line_product_id.id,
             'price_unit': -(price * discount_factor),
             'product_uom_qty': 1.0,
-            'product_uom': reward.discount_line_product_id.uom_id.id,
+            'uom_id': reward.discount_line_product_id.uom_id.id,
             'reward_id': reward.id,
             'coupon_id': coupon.id,
             'points_cost': 0,

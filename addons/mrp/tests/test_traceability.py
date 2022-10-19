@@ -507,7 +507,7 @@ class TestTraceability(TestMrpCommon):
             'name': 'Picking A move',
             'product_id': endproductA.id,
             'product_uom_qty': 1,
-            'product_uom': endproductA.uom_id.id,
+            'uom_id': endproductA.uom_id.id,
             'picking_id': pickingA_out.id,
             'location_id': stock_location.id,
             'location_dest_id': customer_location.id})

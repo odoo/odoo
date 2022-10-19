@@ -51,7 +51,7 @@ class ChangeProductionQty(models.TransientModel):
 
     @api.model
     def _need_quantity_propagation(self, move, qty):
-        return move.move_dest_ids and not float_is_zero(qty, precision_rounding=move.product_uom.rounding)
+        return move.move_dest_ids and not float_is_zero(qty, precision_rounding=move.uom_id.rounding)
 
     def change_prod_qty(self):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')

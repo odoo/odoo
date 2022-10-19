@@ -36,7 +36,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'name': self.product.name,
                     'product_id': self.product.id,
                     'product_uom_qty': 2.0,
-                    'product_uom': self.product.uom_id.id,
+                    'uom_id': self.product.uom_id.id,
                     'price_unit': 12,
                     'tax_id': False,  # no love taxes amls
                 })],
@@ -51,7 +51,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             'product_id': self.product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
-            'product_uom': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'product_uom_qty': 1,
             'price_unit': 8,
         })
@@ -63,7 +63,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             'product_id': self.product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
-            'product_uom': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'product_uom_qty': 1,
             'price_unit': 10,
         })
@@ -496,7 +496,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                 'name': product.name,
                 'product_id': product.id,
                 'product_uom_qty': 5.0,
-                'product_uom': product.uom_id.id,
+                'uom_id': product.uom_id.id,
                 'price_unit': product.list_price})],
         })
         so.action_confirm()
@@ -530,7 +530,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'picking_id': picking.id,
             'product_id': product.id,
-            'product_uom': product.uom_id.id,
+            'uom_id': product.uom_id.id,
             'quantity_done': 1,
         })
         picking.button_validate()
@@ -925,7 +925,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             'product_id': self.product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
-            'product_uom': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'product_uom_qty': 8,
             'price_unit': 10,
         })
@@ -941,7 +941,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'name': self.product.name,
                     'product_id': self.product.id,
                     'product_uom_qty': 10.0,
-                    'product_uom': self.product.uom_id.id,
+                    'uom_id': self.product.uom_id.id,
                     'price_unit': 12,
                     'tax_id': False,  # no love taxes amls
                 })],
@@ -958,7 +958,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             'product_id': self.product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
-            'product_uom': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'product_uom_qty': 2,
             'price_unit': 12,
         })
@@ -1001,7 +1001,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             'product_id': self.product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
-            'product_uom': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'product_uom_qty': 5,
             'price_unit': 8,
         })
@@ -1015,7 +1015,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             'product_id': self.product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
-            'product_uom': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'product_uom_qty': 8,
             'price_unit': 12,
         })
@@ -1031,7 +1031,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'name': self.product.name,
                     'product_id': self.product.id,
                     'product_uom_qty': 1,
-                    'product_uom': self.product.uom_id.id,
+                    'uom_id': self.product.uom_id.id,
                     'price_unit': 20,
                     'tax_id': False,
                 })],
@@ -1050,7 +1050,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'name': self.product.name,
                     'product_id': self.product.id,
                     'product_uom_qty': 6,
-                    'product_uom': self.product.uom_id.id,
+                    'uom_id': self.product.uom_id.id,
                     'price_unit': 20,
                     'tax_id': False,
                 })],
@@ -1079,7 +1079,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             'product_id': self.product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
-            'product_uom': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'product_uom_qty': 8,
             'price_unit': 10,
         })
@@ -1095,7 +1095,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'name': self.product.name,
                     'product_id': self.product.id,
                     'product_uom_qty': 10.0,
-                    'product_uom': self.product.uom_id.id,
+                    'uom_id': self.product.uom_id.id,
                     'price_unit': 12,
                     'tax_id': False,  # no love taxes amls
                 })],
@@ -1116,7 +1116,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             'product_id': self.product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
-            'product_uom': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'product_uom_qty': 2,
             'price_unit': 12,
         })
@@ -1141,7 +1141,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             'product_id': self.product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
-            'product_uom': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'product_uom_qty': 2,
             'price_unit': 10,
         })
@@ -1175,7 +1175,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'name': self.product.name,
                     'product_id': self.product.id,
                     'product_uom_qty': 1.0,
-                    'product_uom': self.product.uom_id.id,
+                    'uom_id': self.product.uom_id.id,
                     'price_unit': 12,
                     'tax_id': False,  # no love taxes amls
                 })],
@@ -1190,7 +1190,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             'product_id': self.product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
-            'product_uom': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'product_uom_qty': 1,
             'price_unit': 20,
         })
@@ -1271,7 +1271,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'name': self.product.name,
                     'product_id': self.product.id,
                     'product_uom_qty': 1,
-                    'product_uom': unit_12.id,
+                    'uom_id': unit_12.id,
                     'price_unit': 18,
                     'tax_id': False,  # no love taxes amls
                 })],
@@ -1315,7 +1315,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             'product_id': self.product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
-            'product_uom': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'product_uom_qty': quantity,
             'price_unit': 1.0,
         })
@@ -1331,7 +1331,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'name': self.product.name,
                     'product_id': self.product.id,
                     'product_uom_qty': 1,
-                    'product_uom': unit_12.id,
+                    'uom_id': unit_12.id,
                     'price_unit': 18,
                     'tax_id': False,  # no love taxes amls
                 })],
@@ -1382,7 +1382,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             'product_id': self.product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
-            'product_uom': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'product_uom_qty': 1,
             'price_unit': p,
         } for p in [10, 20, 60]])
@@ -1398,7 +1398,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'name': self.product.name,
                     'product_id': self.product.id,
                     'product_uom_qty': 3.0,
-                    'product_uom': self.product.uom_id.id,
+                    'uom_id': self.product.uom_id.id,
                     'price_unit': 100,
                     'tax_id': False,
                 })],
@@ -1426,7 +1426,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             'product_id': self.product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
-            'product_uom': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'product_uom_qty': 1,
             'price_unit': 100,
         })

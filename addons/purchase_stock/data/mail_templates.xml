@@ -14,8 +14,8 @@
                       <t t-set="order_line" t-value="exception[0]"/>
                       <t t-set="new_qty" t-value="exception[1][0]"/>
                       <t t-set="old_qty" t-value="exception[1][1]"/>
-                      <t t-esc="new_qty"/> <t t-esc="order_line.product_uom.name"/> of <t t-esc="order_line.product_id.name"/>
-                      ordered instead of <t t-esc="old_qty"/> <t t-esc="order_line.product_uom.name"/>
+                      <t t-esc="new_qty"/> <t t-esc="order_line.uom_id.name"/> of <t t-esc="order_line.product_id.name"/>
+                      ordered instead of <t t-esc="old_qty"/> <t t-esc="order_line.uom_id.name"/>
                   </li>
               </ul>
           </div>

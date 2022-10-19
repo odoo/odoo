@@ -36,7 +36,7 @@ class AccountMove(models.Model):
                 inv = total_invs.pop(0)
                 # Match all moves and related invoice lines FIFO looking for when the matched invoice_line matches line
                 for move in done_moves_related.sorted(lambda m: (m.date, m.id)):
-                    rounding = move.product_uom.rounding
+                    rounding = move.uom_id.rounding
                     move_qty = move.product_qty
                     while (float_compare(move_qty, 0, precision_rounding=rounding) > 0):
                         if float_compare(inv[0], move_qty, precision_rounding=rounding) > 0:

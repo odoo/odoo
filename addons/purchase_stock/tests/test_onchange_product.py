@@ -27,7 +27,7 @@ class TestOnchangeProductId(TransactionCase):
         cls.supplierinfo_model = cls.env["product.supplierinfo"]
 
     def test_onchange_product_id(self):
-        # Required for `product_uom` to be visible in the view
+        # Required for `uom_id` to be visible in the view
         self.env.user.groups_id += self.env.ref('uom.group_uom')
 
         uom_id = self.product_uom_model.search([('name', '=', 'Units')])[0]
@@ -66,7 +66,7 @@ class TestOnchangeProductId(TransactionCase):
                     'name': product_id.name,
                     'product_id': product_id.id,
                     'product_qty': 1.0,
-                    'product_uom': uom_id.id,
+                    'uom_id': uom_id.id,
                     'price_unit': 121.0,
                     'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 })],
@@ -81,7 +81,7 @@ class TestOnchangeProductId(TransactionCase):
         po_line.write({'product_qty': 20})
         self.assertEqual(0, po_line.price_unit, "Unit price should be reset to 0 since the supplier supplies minimum of 24 quantities")
 
-        po_line.write({'product_qty': 3, 'product_uom': self.ref("uom.product_uom_dozen")})
+        po_line.write({'product_qty': 3, 'uom_id': self.ref("uom.product_uom_dozen")})
         self.assertEqual(1200, po_line.price_unit, "Unit price should be 1200 for one Dozen")
         ipad_uom = self.env['uom.category'].create({'name': 'Ipad Unit'})
         ipad_lot = self.env['uom.uom'].create({
@@ -108,7 +108,7 @@ class TestOnchangeProductId(TransactionCase):
             'product_id': product_ipad.id,
             'order_id': po.id,
             'product_qty': 5,
-            'product_uom': ipad_uom.id,
+            'uom_id': ipad_uom.id,
             'date_planned': fields.Date().today()
         })
 
@@ -117,6 +117,6 @@ class TestOnchangeProductId(TransactionCase):
 
         po_form = Form(po)
         with po_form.order_line.edit(1) as order_line:
-            order_line.product_uom = ipad_lot_10
+            order_line.uom_id = ipad_lot_10
         po_form.save()
-        self.assertEqual(1000, po_line2.price_unit, "The product_uom is multiplied by 10, hence unit price should be set to 1000")
+        self.assertEqual(1000, po_line2.price_unit, "The uom_id is multiplied by 10, hence unit price should be set to 1000")

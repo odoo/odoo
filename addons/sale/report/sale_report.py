@@ -18,7 +18,7 @@ class SaleReport(models.Model):
     name = fields.Char('Order Reference', readonly=True)
     date = fields.Datetime('Order Date', readonly=True)
     product_id = fields.Many2one('product.product', 'Product Variant', readonly=True)
-    product_uom = fields.Many2one('uom.uom', 'Unit of Measure', readonly=True)
+    uom_id = fields.Many2one('uom.uom', 'Unit of Measure', readonly=True)
     product_uom_qty = fields.Float('Qty Ordered', readonly=True)
     qty_to_deliver = fields.Float('Qty To Deliver', readonly=True)
     qty_delivered = fields.Float('Qty Delivered', readonly=True)
@@ -65,7 +65,7 @@ class SaleReport(models.Model):
         select_ = f"""
             COALESCE(min(l.id), -s.id) AS id,
             l.product_id AS product_id,
-            t.uom_id AS product_uom,
+            t.uom_id AS uom_id,
             CASE WHEN l.product_id IS NOT NULL THEN SUM(l.product_uom_qty / u.factor * u2.factor) ELSE 0 END AS product_uom_qty,
             CASE WHEN l.product_id IS NOT NULL THEN SUM(l.qty_delivered / u.factor * u2.factor) ELSE 0 END AS qty_delivered,
             CASE WHEN l.product_id IS NOT NULL THEN SUM((l.product_uom_qty - l.qty_delivered) / u.factor * u2.factor) ELSE 0 END AS qty_to_deliver,
@@ -145,7 +145,7 @@ class SaleReport(models.Model):
             JOIN res_partner partner ON s.partner_id = partner.id
             LEFT JOIN product_product p ON l.product_id=p.id
             LEFT JOIN product_template t ON p.product_tmpl_id=t.id
-            LEFT JOIN uom_uom u ON u.id=l.product_uom
+            LEFT JOIN uom_uom u ON u.id=l.uom_id
             LEFT JOIN uom_uom u2 ON u2.id=t.uom_id
             JOIN {currency_table} ON currency_table.company_id = s.company_id
             """.format(

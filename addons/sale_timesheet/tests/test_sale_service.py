@@ -94,7 +94,7 @@ class TestSaleService(TestCommonSaleTimesheet):
             'order_id': self.sale_order.id,
             'product_id': self.product_delivery_timesheet3.id,
             'product_uom_qty': 5,
-            'product_uom': uom_days.id,
+            'uom_id': uom_days.id,
         })
         self.sale_order.action_confirm()
         task = self.env['project.task'].search([('sale_line_id', '=', sale_order_line.id)])
@@ -633,7 +633,7 @@ class TestSaleService(TestCommonSaleTimesheet):
             sol_vals.update({
                 'name': uom_name,
                 'product_id': product.id,
-                'product_uom': uom_id.id,
+                'uom_id': uom_id.id,
             })
             SaleOrderLine.create(sol_vals)
 
@@ -665,7 +665,7 @@ class TestSaleService(TestCommonSaleTimesheet):
             'name': product_create.name,
             'product_id': product_create.id,
             'product_uom_qty': 5,
-            'product_uom': product_create.uom_id.id,
+            'uom_id': product_create.uom_id.id,
             'price_unit': product_create.list_price,
         })
         self.sale_order.action_confirm()
@@ -677,7 +677,7 @@ class TestSaleService(TestCommonSaleTimesheet):
             'name': product_add.name,
             'product_id': product_add.id,
             'product_uom_qty': 5,
-            'product_uom': product_add.uom_id.id,
+            'uom_id': product_add.uom_id.id,
             'price_unit': product_add.list_price,
             'task_id': sale_order_line_create.task_id.id,
         })

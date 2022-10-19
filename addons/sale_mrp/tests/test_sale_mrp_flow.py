@@ -225,7 +225,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
             f.location_id = self.env.ref('stock.stock_location_suppliers')
             f.location_dest_id = warehouse.lot_stock_id
             f.product_id = comp
-            f.product_uom = qty_to_process[comp][1]
+            f.uom_id = qty_to_process[comp][1]
             f.product_uom_qty = qty_to_process[comp][0]
             move = f.save()
             move._action_confirm()
@@ -298,7 +298,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         order_form.partner_id = self.env['res.partner'].create({'name': 'My Test Partner'})
         with order_form.order_line.new() as line:
             line.product_id = product_a
-            line.product_uom = self.uom_dozen
+            line.uom_id = self.uom_dozen
             line.product_uom_qty = 10
         order = order_form.save()
         order.action_confirm()
@@ -358,7 +358,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         moves = self.StockMove.search([
             ('raw_material_production_id', '=', mnf_product_a.id),
             ('product_id', '=', product_c.id),
-            ('product_uom', '=', self.uom_kg.id)])
+            ('uom_id', '=', self.uom_kg.id)])
 
         # Check total consume line with product c and uom kg.
         self.assertEqual(len(moves), 1, 'Production move lines are not generated proper.')
@@ -374,7 +374,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         move = self.StockMove.search([
             ('raw_material_production_id', '=', mnf_product_a.id),
             ('product_id', '=', product_c.id),
-            ('product_uom', '=', self.uom_gm.id)])
+            ('uom_id', '=', self.uom_gm.id)])
 
         # Check total consume line of product c with gm.
         self.assertEqual(len(move), 1, 'Production move lines are not generated proper.')
@@ -407,7 +407,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
 
         move = self.StockMove.search([('raw_material_production_id', '=', mnf_product_d.id), ('product_id', '=', product_c.id)])
         self.assertEqual(move.product_uom_qty, 20, "Wrong product quantity in 'To consume line' of manufacturing order.")
-        self.assertEqual(move.product_uom.id, self.uom_kg.id, "Wrong unit of measure in 'To consume line' of manufacturing order.")
+        self.assertEqual(move.uom_id.id, self.uom_kg.id, "Wrong unit of measure in 'To consume line' of manufacturing order.")
         self.assertEqual(move.state, 'confirmed', "Wrong state in 'To consume line' of manufacturing order.")
 
         # -------------------------------
@@ -658,7 +658,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
                 'name': self.finished_product.name,
                 'product_id': self.finished_product.id,
                 'product_uom_qty': 3,
-                'product_uom': self.finished_product.uom_id.id,
+                'uom_id': self.finished_product.uom_id.id,
                 'price_unit': self.finished_product.list_price
             })],
             'pricelist_id': self.env.ref('product.list0').id,
@@ -1076,7 +1076,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         self.assertEqual(kit_parent_wh1.virtual_available, 1)
 
         # Check there arn't enough quantities available for the sale order
-        self.assertTrue(float_compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0, precision_rounding=line.product_uom.rounding) == -1)
+        self.assertTrue(float_compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0, precision_rounding=line.uom_id.rounding) == -1)
 
         # We receive enoug of each component in Warehouse 2 to make 3 kit_parent
         qty_to_process = {
@@ -1099,7 +1099,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         self.assertEqual(kit_parent_wh1.virtual_available, 1)
 
         # Check there arn't enough quantities available for the sale order
-        self.assertTrue(float_compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0, precision_rounding=line.product_uom.rounding) == -1)
+        self.assertTrue(float_compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0, precision_rounding=line.uom_id.rounding) == -1)
 
         # We receive enough of each component in Warehouse 2 to make 7 kit_parent
         qty_to_process = {
@@ -1183,7 +1183,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         # Check that the quantities on the picking are the one expected for each components
         for move in move_ids:
             corr_bom_line = bom_kit_uom_1.bom_line_ids.filtered(lambda b: b.product_id.id == move.product_id.id)
-            computed_qty = move.product_uom._compute_quantity(move.product_uom_qty, corr_bom_line.product_uom_id)
+            computed_qty = move.uom_id._compute_quantity(move.product_uom_qty, corr_bom_line.product_uom_id)
             self.assertEqual(computed_qty, order_line.product_uom_qty * corr_bom_line.product_qty)
 
         # Processe enough componenents in the picking to make 2 kit_uom_1
@@ -1312,7 +1312,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         self.assertEqual(virtual_available_wh_order, 1)
 
         # Check there arn't enough quantities available for the sale order
-        self.assertTrue(float_compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0, precision_rounding=line.product_uom.rounding) == -1)
+        self.assertTrue(float_compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0, precision_rounding=line.uom_id.rounding) == -1)
 
         # We receive enough of each component in Warehouse 1 to make 3 kit_uom_in_kit.
         # Moves are created instead of only updating the quant quantities in order to trigger every compute fields.
@@ -1325,7 +1325,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         self._create_move_quantities(qty_to_process, components, warehouse_1)
 
         # Check there arn't enough quantities available for the sale order
-        self.assertTrue(float_compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0, precision_rounding=line.product_uom.rounding) == -1)
+        self.assertTrue(float_compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0, precision_rounding=line.uom_id.rounding) == -1)
         kit_uom_in_kit.with_context(warehouse=warehouse_1.id)._compute_quantities()
         virtual_available_wh_order = kit_uom_in_kit.virtual_available
         self.assertEqual(virtual_available_wh_order, 3)
@@ -1411,7 +1411,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         order_form.partner_id = self.env['res.partner'].create({'name': 'My Test Partner'})
         with order_form.order_line.new() as line:
             line.product_id = kit_1
-            line.product_uom = self.uom_unit
+            line.uom_id = self.uom_unit
             line.product_uom_qty = 5
         order = order_form.save()
         order.action_confirm()
@@ -1470,7 +1470,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         order_form.warehouse_id = warehouse_1
         with order_form.order_line.new() as line:
             line.product_id = kit_1
-            line.product_uom = self.uom_unit
+            line.uom_id = self.uom_unit
             line.product_uom_qty = 2
         order = order_form.save()
         order.action_confirm()
@@ -1521,7 +1521,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
             line.name = finished_product.name
             line.product_id = finished_product
             line.product_uom_qty = 1.0
-            line.product_uom = self.uom_unit
+            line.uom_id = self.uom_unit
             line.price_unit = 10.0
         sale_order = sale_form.save()
 
@@ -1569,7 +1569,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
             line.name = finished_product.name
             line.product_id = finished_product
             line.product_uom_qty = 1.0
-            line.product_uom = self.uom_unit
+            line.uom_id = self.uom_unit
             line.price_unit = 10.0
         sale_order = sale_form.save()
 
@@ -1623,7 +1623,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
             line.name = finished_product.name
             line.product_id = finished_product
             line.product_uom_qty = 1.0
-            line.product_uom = self.uom_unit
+            line.uom_id = self.uom_unit
             line.price_unit = 10.0
         sale_order = sale_form.save()
 
@@ -1887,13 +1887,13 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
                 'name': self.variant_KIT.name,
                 'product_id': self.variant_KIT.id,
                 'product_uom_qty': 1,
-                'product_uom': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'price_unit': 100,
             }), (0, 0, {
                 'name': self.variant_NOKIT.name,
                 'product_id': self.variant_NOKIT.id,
                 'product_uom_qty': 1,
-                'product_uom': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'price_unit': 50
             })],
             'pricelist_id': self.env.ref('product.list0').id,
@@ -2024,7 +2024,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         with so_form.order_line.new() as line:
             line.product_id = self.kit_3
             line.product_uom_qty = 7
-            line.product_uom = self.uom_ten
+            line.uom_id = self.uom_ten
         so = so_form.save()
         so.action_confirm()
 

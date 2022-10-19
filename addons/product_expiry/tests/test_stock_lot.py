@@ -56,7 +56,7 @@ class TestStockLot(TestStockCommon):
             'name': self.productAAA.name,
             'product_id': self.productAAA.id,
             'product_uom_qty': 33,
-            'product_uom': self.productAAA.uom_id.id,
+            'uom_id': self.productAAA.uom_id.id,
             'picking_id': picking_in.id,
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location
@@ -151,7 +151,7 @@ class TestStockLot(TestStockCommon):
             'name': self.productBBB.name,
             'product_id': self.productBBB.id,
             'product_uom_qty': 44,
-            'product_uom': self.productBBB.uom_id.id,
+            'uom_id': self.productBBB.uom_id.id,
             'picking_id': picking_in.id,
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location})
@@ -198,7 +198,7 @@ class TestStockLot(TestStockCommon):
             'name': self.productCCC.name,
             'product_id': self.productCCC.id,
             'product_uom_qty': 44,
-            'product_uom': self.productCCC.uom_id.id,
+            'uom_id': self.productCCC.uom_id.id,
             'picking_id': picking_in.id,
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location})

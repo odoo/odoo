@@ -33,7 +33,7 @@ class StockMove(models.Model):
         for move in self:
             if not move.is_subcontract:
                 continue
-            if float_is_zero(move.quantity_done, precision_rounding=move.product_uom.rounding):
+            if float_is_zero(move.quantity_done, precision_rounding=move.uom_id.rounding):
                 continue
             productions = move._get_subcontract_production()
             if not productions or (productions[:1].consumption == 'strict' and not productions[:1]._has_tracked_component()):
@@ -154,7 +154,7 @@ class StockMove(models.Model):
             bom = move._get_subcontract_bom()
             if not bom:
                 continue
-            if float_is_zero(move.product_qty, precision_rounding=move.product_uom.rounding) and\
+            if float_is_zero(move.product_qty, precision_rounding=move.uom_id.rounding) and\
                     move.picking_id.immediate_transfer is True:
                 raise UserError(_("To subcontract, use a planned transfer."))
             subcontract_details_per_picking[move.picking_id].append((move, bom))
@@ -162,7 +162,7 @@ class StockMove(models.Model):
                 'is_subcontract': True,
                 'location_id': move.picking_id.partner_id.with_company(move.company_id).property_stock_subcontractor.id
             })
-            if float_compare(move.product_qty, 0, precision_rounding=move.product_uom.rounding) <= 0:
+            if float_compare(move.product_qty, 0, precision_rounding=move.uom_id.rounding) <= 0:
                 # If a subcontracted amount is decreased, don't create a MO that would be for a negative value.
                 # We don't care if the MO decreases even when done since everything is handled through picking
                 continue

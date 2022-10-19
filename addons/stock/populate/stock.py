@@ -498,7 +498,7 @@ class StockMove(models.Model):
                         move_line.qty_done = move_line.reserved_uom_qty
                     # Create move line for remaining qty
                     missing_to_do = move.product_qty - move.quantity_done
-                    missing_to_do = move.product_uom._compute_quantity(missing_to_do, move.product_uom, rounding_method='HALF-UP')
+                    missing_to_do = move.uom_id._compute_quantity(missing_to_do, move.uom_id, rounding_method='HALF-UP')
                     if move.product_id.tracking == 'serial':
                         for i in range(int(missing_to_do)):
                             lot_values.append({
@@ -607,7 +607,7 @@ class StockMove(models.Model):
 
         return [
             ('product_id', populate.randomize(product_ids)),
-            ('product_uom', populate.compute(get_product_uom)),
+            ('uom_id', populate.compute(get_product_uom)),
             ('product_uom_qty', populate.randint(1, 10)),
             ('sequence', populate.randint(1, 1000)),
             ('_attach_to_record', _attach_to_record),

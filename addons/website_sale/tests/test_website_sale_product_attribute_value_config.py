@@ -263,7 +263,7 @@ class TestWebsiteSaleProductPricelist(TestSaleProductAttributeValueCommon):
             'name': product_template.name,
             'product_id': product.id,
             'product_uom_qty': 1,
-            'product_uom': product_template.uom_id.id,
+            'uom_id': product_template.uom_id.id,
             'price_unit': product_template.list_price,
             'order_id': so.id,
             'tax_id': [(6, 0, [tax10.id])],

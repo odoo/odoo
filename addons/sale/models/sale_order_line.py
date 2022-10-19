@@ -21,10 +21,10 @@ class SaleOrderLine(models.Model):
 
     _sql_constraints = [
         ('accountable_required_fields',
-            "CHECK(display_type IS NOT NULL OR (product_id IS NOT NULL AND product_uom IS NOT NULL))",
+            "CHECK(display_type IS NOT NULL OR (product_id IS NOT NULL AND uom_id IS NOT NULL))",
             "Missing required fields on accountable sale order line."),
         ('non_accountable_null_fields',
-            "CHECK(display_type IS NULL OR (product_id IS NULL AND price_unit = 0 AND product_uom_qty = 0 AND product_uom IS NULL AND customer_lead = 0))",
+            "CHECK(display_type IS NULL OR (product_id IS NULL AND price_unit = 0 AND product_uom_qty = 0 AND uom_id IS NULL AND customer_lead = 0))",
             "Forbidden values on non-accountable sale order line"),
     ]
 
@@ -110,7 +110,7 @@ class SaleOrderLine(models.Model):
         compute='_compute_product_uom_qty',
         digits='Product Unit of Measure', default=1.0,
         store=True, readonly=False, required=True, precompute=True)
-    product_uom = fields.Many2one(
+    uom_id = fields.Many2one(
         comodel_name='uom.uom',
         string="Unit of Measure",
         compute='_compute_product_uom',
@@ -351,15 +351,15 @@ class SaleOrderLine(models.Model):
             packaging_uom = line.product_packaging_id.product_uom_id
             qty_per_packaging = line.product_packaging_id.qty
             product_uom_qty = packaging_uom._compute_quantity(
-                line.product_packaging_qty * qty_per_packaging, line.product_uom)
-            if float_compare(product_uom_qty, line.product_uom_qty, precision_rounding=line.product_uom.rounding) != 0:
+                line.product_packaging_qty * qty_per_packaging, line.uom_id)
+            if float_compare(product_uom_qty, line.product_uom_qty, precision_rounding=line.uom_id.rounding) != 0:
                 line.product_uom_qty = product_uom_qty
 
     @api.depends('product_id')
     def _compute_product_uom(self):
         for line in self:
-            if not line.product_uom or (line.product_id.uom_id.id != line.product_uom.id):
-                line.product_uom = line.product_id.uom_id
+            if not line.uom_id or (line.product_id.uom_id.id != line.uom_id.id):
+                line.uom_id = line.product_id.uom_id
 
     @api.depends('product_id')
     def _compute_tax_id(self):
@@ -388,7 +388,7 @@ class SaleOrderLine(models.Model):
                 # If company_id is set, always filter taxes by the company
                 line.tax_id = result
 
-    @api.depends('product_id', 'product_uom', 'product_uom_qty')
+    @api.depends('product_id', 'uom_id', 'product_uom_qty')
     def _compute_pricelist_item_id(self):
         for line in self:
             if not line.product_id or line.display_type or not line.order_id.pricelist_id:
@@ -397,18 +397,18 @@ class SaleOrderLine(models.Model):
                 line.pricelist_item_id = line.order_id.pricelist_id._get_product_rule(
                     line.product_id,
                     line.product_uom_qty or 1.0,
-                    uom=line.product_uom,
+                    uom=line.uom_id,
                     date=line.order_id.date_order,
                 )
 
-    @api.depends('product_id', 'product_uom', 'product_uom_qty')
+    @api.depends('product_id', 'uom_id', 'product_uom_qty')
     def _compute_price_unit(self):
         for line in self:
             # check if there is already invoiced amount. if so, the price shouldn't change as it might have been
             # manually edited
             if line.qty_invoiced > 0:
                 continue
-            if not line.product_uom or not line.product_id or not line.order_id.pricelist_id:
+            if not line.uom_id or not line.product_id or not line.order_id.pricelist_id:
                 line.price_unit = 0.0
             else:
                 price = line.with_company(line.company_id)._get_display_price()
@@ -460,7 +460,7 @@ class SaleOrderLine(models.Model):
         order_date = self.order_id.date_order or fields.Date.today()
         product = self.product_id.with_context(**self._get_product_price_context())
         qty = self.product_uom_qty or 1.0
-        uom = self.product_uom or self.product_id.uom_id
+        uom = self.uom_id or self.product_id.uom_id
 
         price = pricelist_rule._compute_price(
             product, qty, uom, order_date, currency=self.currency_id)
@@ -503,7 +503,7 @@ class SaleOrderLine(models.Model):
         order_date = self.order_id.date_order or fields.Date.today()
         product = self.product_id.with_context(**self._get_product_price_context())
         qty = self.product_uom_qty or 1.0
-        uom = self.product_uom
+        uom = self.uom_id
 
         if pricelist_rule:
             pricelist_item = pricelist_rule
@@ -527,7 +527,7 @@ class SaleOrderLine(models.Model):
 
         return price
 
-    @api.depends('product_id', 'product_uom', 'product_uom_qty')
+    @api.depends('product_id', 'uom_id', 'product_uom_qty')
     def _compute_discount(self):
         for line in self:
             if not line.product_id or line.display_type:
@@ -608,25 +608,25 @@ class SaleOrderLine(models.Model):
         for line in self:
             line.price_reduce_taxinc = line.price_total / line.product_uom_qty if line.product_uom_qty else 0.0
 
-    @api.depends('product_id', 'product_uom_qty', 'product_uom')
+    @api.depends('product_id', 'product_uom_qty', 'uom_id')
     def _compute_product_packaging_id(self):
         for line in self:
             # remove packaging if not match the product
             if line.product_packaging_id.product_id != line.product_id:
                 line.product_packaging_id = False
             # Find biggest suitable packaging
-            if line.product_id and line.product_uom_qty and line.product_uom:
+            if line.product_id and line.product_uom_qty and line.uom_id:
                 line.product_packaging_id = line.product_id.packaging_ids.filtered(
-                    'sales')._find_suitable_product_packaging(line.product_uom_qty, line.product_uom)
+                    'sales')._find_suitable_product_packaging(line.product_uom_qty, line.uom_id)
 
-    @api.depends('product_packaging_id', 'product_uom', 'product_uom_qty')
+    @api.depends('product_packaging_id', 'uom_id', 'product_uom_qty')
     def _compute_product_packaging_qty(self):
         for line in self:
             if not line.product_packaging_id:
                 line.product_packaging_qty = False
             else:
                 packaging_uom = line.product_packaging_id.product_uom_id
-                packaging_uom_qty = line.product_uom._compute_quantity(line.product_uom_qty, packaging_uom)
+                packaging_uom_qty = line.uom_id._compute_quantity(line.product_uom_qty, packaging_uom)
                 line.product_packaging_qty = float_round(
                     packaging_uom_qty / line.product_packaging_id.qty,
                     precision_rounding=packaging_uom.rounding)
@@ -716,8 +716,8 @@ class SaleOrderLine(models.Model):
             so_line = lines_map[so_line_id]
             result.setdefault(so_line_id, 0.0)
             uom = product_uom_map.get(item['product_uom_id'][0])
-            if so_line.product_uom.category_id == uom.category_id:
-                qty = uom._compute_quantity(item['unit_amount'], so_line.product_uom, rounding_method='HALF-UP')
+            if so_line.uom_id.category_id == uom.category_id:
+                qty = uom._compute_quantity(item['unit_amount'], so_line.uom_id, rounding_method='HALF-UP')
             else:
                 qty = item['unit_amount']
             result[so_line_id] += qty
@@ -737,9 +737,9 @@ class SaleOrderLine(models.Model):
             for invoice_line in line._get_invoice_lines():
                 if invoice_line.move_id.state != 'cancel' or invoice_line.move_id.payment_state == 'invoicing_legacy':
                     if invoice_line.move_id.move_type == 'out_invoice':
-                        qty_invoiced += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
+                        qty_invoiced += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.uom_id)
                     elif invoice_line.move_id.move_type == 'out_refund':
-                        qty_invoiced -= invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
+                        qty_invoiced -= invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.uom_id)
             line.qty_invoiced = qty_invoiced
 
     def _get_invoice_lines(self):
@@ -917,8 +917,8 @@ class SaleOrderLine(models.Model):
     @api.onchange('product_packaging_id')
     def _onchange_product_packaging_id(self):
         if self.product_packaging_id and self.product_uom_qty:
-            newqty = self.product_packaging_id._check_qty(self.product_uom_qty, self.product_uom, "UP")
-            if float_compare(newqty, self.product_uom_qty, precision_rounding=self.product_uom.rounding) != 0:
+            newqty = self.product_packaging_id._check_qty(self.product_uom_qty, self.uom_id, "UP")
+            if float_compare(newqty, self.product_uom_qty, precision_rounding=self.uom_id.rounding) != 0:
                 return {
                     'warning': {
                         'title': _('Warning'),
@@ -927,7 +927,7 @@ class SaleOrderLine(models.Model):
                             pack_size=self.product_packaging_id.qty,
                             pack_name=self.product_id.uom_id.name,
                             quantity=newqty,
-                            unit=self.product_uom.name
+                            unit=self.uom_id.name
                         ),
                     },
                 }
@@ -987,7 +987,7 @@ class SaleOrderLine(models.Model):
 
     def _get_protected_fields(self):
         return [
-            'product_id', 'name', 'price_unit', 'product_uom', 'product_uom_qty',
+            'product_id', 'name', 'price_unit', 'uom_id', 'product_uom_qty',
             'tax_id', 'analytic_distribution'
         ]
 
@@ -1060,7 +1060,7 @@ class SaleOrderLine(models.Model):
             'sequence': self.sequence,
             'name': self.name,
             'product_id': self.product_id.id,
-            'product_uom_id': self.product_uom.id,
+            'product_uom_id': self.uom_id.id,
             'quantity': self.qty_to_invoice,
             'discount': self.discount,
             'price_unit': self.price_unit,

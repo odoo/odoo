@@ -64,7 +64,7 @@ class TestDeliveryCost(common.TransactionCase):
                 'name': 'PC Assamble + 2GB RAM',
                 'product_id': self.product_4.id,
                 'product_uom_qty': 1,
-                'product_uom': self.product_uom_unit.id,
+                'uom_id': self.product_uom_unit.id,
                 'price_unit': 750.00,
             })],
         })
@@ -123,13 +123,13 @@ class TestDeliveryCost(common.TransactionCase):
                 'name': 'Service on demand',
                 'product_id': self.product_consultant.id,
                 'product_uom_qty': 24,
-                'product_uom': self.product_uom_hour.id,
+                'uom_id': self.product_uom_hour.id,
                 'price_unit': 75.00,
             }), (0, 0, {
                 'name': 'On Site Assistance',
                 'product_id': self.product_2.id,
                 'product_uom_qty': 30,
-                'product_uom': self.product_uom_hour.id,
+                'uom_id': self.product_uom_hour.id,
                 'price_unit': 38.25,
             })],
         })
@@ -179,7 +179,7 @@ class TestDeliveryCost(common.TransactionCase):
                 'name': 'PC Assamble + 2GB RAM',
                 'product_id': self.product_4.id,
                 'product_uom_qty': 1,
-                'product_uom': self.product_uom_unit.id,
+                'uom_id': self.product_uom_unit.id,
                 'price_unit': 750.00,
             })],
         })
@@ -221,7 +221,7 @@ class TestDeliveryCost(common.TransactionCase):
                 'name': 'PC Assamble + 2GB RAM',
                 'product_id': self.product_4.id,
                 'product_uom_qty': 1,
-                'product_uom': self.product_uom_unit.id,
+                'uom_id': self.product_uom_unit.id,
                 'price_unit': 750.00,
             })],
         })
@@ -281,7 +281,7 @@ class TestDeliveryCost(common.TransactionCase):
         with order_form.order_line.new() as line:
             line.product_id = self.normal_delivery.product_id
             line.product_uom_qty = 1.0
-            line.product_uom = self.product_uom_unit
+            line.uom_id = self.product_uom_unit
         sale_order = order_form.save()
 
         self.assertRecordValues(sale_order.order_line, [{'price_subtotal': 9.09, 'price_total': 10.45}])

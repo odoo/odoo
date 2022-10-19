@@ -301,7 +301,7 @@
                                         <field name="product_updatable" invisible="1"/>
                                         <field name="product_id"
                                             domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
-                                            context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
+                                            context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':uom_id, 'company_id': parent.company_id}"
                                             attrs="{
                                                 'readonly': [('product_updatable', '=', False)],
                                                 'required': [('display_type', '=', False)],
@@ -320,11 +320,11 @@
                                         <label for="product_uom_qty"/>
                                         <div class="o_row" name="ordered_qty">
                                             <field
-                                                context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'uom_qty_change':True, 'company_id': parent.company_id}"
+                                                context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':uom_id, 'uom_qty_change':True, 'company_id': parent.company_id}"
                                                 name="product_uom_qty"/>
-                                            <field name="product_uom" invisible="1" groups="!uom.group_uom"/>
+                                            <field name="uom_id" invisible="1" groups="!uom.group_uom"/>
                                             <field
-                                                name="product_uom"
+                                                name="uom_id"
                                                 force_save="1"
                                                 groups="uom.group_uom"
                                                 class="oe_no_button"
@@ -406,7 +406,7 @@
                                         'partner_id': parent.partner_id,
                                         'quantity': product_uom_qty,
                                         'pricelist': parent.pricelist_id,
-                                        'uom':product_uom,
+                                        'uom':uom_id,
                                         'company_id': parent.company_id,
                                         'default_lst_price': price_unit,
                                         'default_description_sale': name
@@ -428,7 +428,7 @@
                                         'partner_id': parent.partner_id,
                                         'quantity': product_uom_qty,
                                         'pricelist': parent.pricelist_id,
-                                        'uom':product_uom,
+                                        'uom':uom_id,
                                         'company_id': parent.company_id,
                                         'default_list_price': price_unit,
                                         'default_description_sale': name
@@ -450,7 +450,7 @@
                                         'partner_id': parent.partner_id,
                                         'quantity': product_uom_qty,
                                         'pricelist': parent.pricelist_id,
-                                        'uom': product_uom,
+                                        'uom': uom_id,
                                         'company_id': parent.company_id
                                     }"
                                 />
@@ -474,9 +474,9 @@
                                 />
                                 <field name="qty_to_invoice" invisible="1"/>
                                 <field name="product_uom_readonly" invisible="1"/>
-                                <field name="product_uom" invisible="1" groups="!uom.group_uom"/>
+                                <field name="uom_id" invisible="1" groups="!uom.group_uom"/>
                                 <field
-                                    name="product_uom"
+                                    name="uom_id"
                                     force_save="1"
                                     string="UoM"
                                     attrs="{
@@ -522,7 +522,7 @@
                                 <field name="name"/>
                                 <field name="product_id"/>
                                 <field name="product_uom_qty"/>
-                                <field name="product_uom"/>
+                                <field name="uom_id"/>
                                 <field name="price_subtotal"/>
                                 <field name="price_total"/>
                                 <field name="price_tax" invisible="1"/>
@@ -554,7 +554,7 @@
                                                             <div class="col-12 text-muted">
                                                                 Quantity:
                                                                 <t t-out="record.product_uom_qty.value"/>
-                                                                <t t-out="record.product_uom.value"/>
+                                                                <t t-out="record.uom_id.value"/>
                                                             </div>
                                                         </div>
                                                         <div class="row">

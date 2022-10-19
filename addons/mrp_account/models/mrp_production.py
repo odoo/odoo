@@ -93,7 +93,7 @@ class MrpProduction(models.Model):
                 time_lines.write({'cost_already_recorded': True})
                 work_center_cost += (duration / 60.0) * \
                     work_order.workcenter_id.costs_hour
-            qty_done = finished_move.product_uom._compute_quantity(
+            qty_done = finished_move.uom_id._compute_quantity(
                 finished_move.quantity_done, finished_move.product_id.uom_id)
             extra_cost = self.extra_cost * qty_done
             total_cost = (sum(-m.stock_valuation_layer_ids.value for m in consumed_moves.sudo()) + work_center_cost + extra_cost)
@@ -104,7 +104,7 @@ class MrpProduction(models.Model):
                     continue
                 byproduct_cost_share += byproduct.cost_share
                 if byproduct.product_id.cost_method in ('fifo', 'average'):
-                    byproduct.price_unit = total_cost * byproduct.cost_share / 100 / byproduct.product_uom._compute_quantity(byproduct.quantity_done, byproduct.product_id.uom_id)
+                    byproduct.price_unit = total_cost * byproduct.cost_share / 100 / byproduct.uom_id._compute_quantity(byproduct.quantity_done, byproduct.product_id.uom_id)
             if finished_move.product_id.cost_method in ('fifo', 'average'):
                 finished_move.price_unit = total_cost * float_round(1 - byproduct_cost_share / 100, precision_rounding=0.0001) / qty_done
         return True

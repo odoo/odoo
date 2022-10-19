@@ -42,7 +42,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
                 'name': 'finished',
                 'product_id': self.finished.id,
                 'product_qty': 1.0,
-                'product_uom': self.finished.uom_id.id,
+                'uom_id': self.finished.uom_id.id,
                 'price_unit': 50.0}
             )],
         })
@@ -68,7 +68,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
                 'name': 'finished',
                 'product_id': self.finished.id,
                 'product_qty': product_qty,
-                'product_uom': self.finished.uom_id.id,
+                'uom_id': self.finished.uom_id.id,
                 'price_unit': 50.0}
             )],
         })
@@ -117,7 +117,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
                 'name': self.finished2.name,
                 'product_id': self.finished2.id,
                 'product_uom_qty': 10,
-                'product_uom': self.finished2.uom_id.id,
+                'uom_id': self.finished2.uom_id.id,
                 'price_unit': 1,
             })],
         })
@@ -159,7 +159,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
                 'name': self.finished2.name,
                 'product_id': self.finished2.id,
                 'product_uom_qty': 10,
-                'product_uom': self.finished2.uom_id.id,
+                'uom_id': self.finished2.uom_id.id,
                 'price_unit': 1,
             })],
         })

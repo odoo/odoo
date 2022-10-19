@@ -34,7 +34,7 @@ class TestSaleStockLeadTime(TestSaleCommon, ValuationReconciliationTestCommon):
             'order_line': [(0, 0, {
                 'product_id': self.test_product_order.id,
                 'product_uom_qty': 10,
-                'product_uom': self.env.ref('uom.product_uom_unit').id,
+                'uom_id': self.env.ref('uom.product_uom_unit').id,
             })]
         })
 
@@ -73,7 +73,7 @@ class TestSaleStockLeadTime(TestSaleCommon, ValuationReconciliationTestCommon):
             'order_line': [(0, 0, {'name': self.test_product_order.name,
                                    'product_id': self.test_product_order.id,
                                    'product_uom_qty': 5,
-                                   'product_uom': self.env.ref('uom.product_uom_unit').id,
+                                   'uom_id': self.env.ref('uom.product_uom_unit').id,
                                    'customer_lead': self.test_product_order.sale_delay})]})
 
         # Confirm our standard sale order
@@ -145,7 +145,7 @@ class TestSaleStockLeadTime(TestSaleCommon, ValuationReconciliationTestCommon):
             'order_line': [(0, 0, {'name': self.test_product_order.name,
                                    'product_id': self.test_product_order.id,
                                    'product_uom_qty': 5,
-                                   'product_uom': self.env.ref('uom.product_uom_unit').id,
+                                   'uom_id': self.env.ref('uom.product_uom_unit').id,
                                    'customer_lead': self.test_product_order.sale_delay})]})
 
         # Confirm our standard sale order
@@ -222,7 +222,7 @@ class TestSaleStockLeadTime(TestSaleCommon, ValuationReconciliationTestCommon):
         order_line = self.env['sale.order.line'].create({
             'product_id': self.test_product_order.id,
             'product_uom_qty': 10,
-            'product_uom': self.env.ref('uom.product_uom_unit').id,
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
             'order_id': order.id,
         })
 

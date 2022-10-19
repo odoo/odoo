@@ -901,7 +901,7 @@ class StockQuant(models.Model):
         return {
             'name': self.env.context.get('inventory_name') or name,
             'product_id': self.product_id.id,
-            'product_uom': self.product_uom_id.id,
+            'uom_id': self.product_uom_id.id,
             'product_uom_qty': qty,
             'company_id': self.company_id.id or self.env.company.id,
             'state': 'confirmed',

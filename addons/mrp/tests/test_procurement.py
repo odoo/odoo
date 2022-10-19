@@ -219,7 +219,7 @@ class TestProcurement(TestMrpCommon):
         move_dest = self.env['stock.move'].create({
             'name': 'move_orig',
             'product_id': product_1.id,
-            'product_uom': self.ref('uom.product_uom_unit'),
+            'uom_id': self.ref('uom.product_uom_unit'),
             'location_id': self.ref('stock.stock_location_stock'),
             'location_dest_id': self.ref('stock.stock_location_output'),
             'product_uom_qty': 10,
@@ -279,7 +279,7 @@ class TestProcurement(TestMrpCommon):
         move_dest = self.env['stock.move'].create({
             'name': 'move_bottle',
             'product_id': product_bottle.id,
-            'product_uom': self.ref('uom.product_uom_unit'),
+            'uom_id': self.ref('uom.product_uom_unit'),
             'location_id': self.ref('stock.stock_location_stock'),
             'location_dest_id': self.ref('stock.stock_location_output'),
             'product_uom_qty': 10,
@@ -317,7 +317,7 @@ class TestProcurement(TestMrpCommon):
         move_dest = self.env['stock.move'].create({
             'name': 'Customer MTO Move',
             'product_id': product.id,
-            'product_uom': self.ref('uom.product_uom_unit'),
+            'uom_id': self.ref('uom.product_uom_unit'),
             'location_id': self.ref('stock.stock_location_stock'),
             'location_dest_id': self.ref('stock.stock_location_output'),
             'product_uom_qty': 10,
@@ -448,7 +448,7 @@ class TestProcurement(TestMrpCommon):
             'move_ids': [(0, 0, {
                 'name': '/',
                 'product_id': product_1.id,
-                'product_uom': product_1.uom_id.id,
+                'uom_id': product_1.uom_id.id,
                 'product_uom_qty': 10.00,
                 'procure_method': 'make_to_stock',
                 'location_id': self.warehouse.lot_stock_id.id,
