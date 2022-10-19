@@ -59,7 +59,7 @@ class MailActivity(models.Model):
         index=True, ondelete='cascade', required=True)
     res_model = fields.Char(
         'Related Document Model',
-        index=True, related='res_model_id.model', compute_sudo=True, store=True, readonly=True)
+        index=True, related='res_model_id.model', precompute=True, store=True, readonly=True)
     res_id = fields.Many2oneReference(string='Related Document ID', index=True, model_field='res_model')
     res_name = fields.Char(
         'Document Name', compute='_compute_res_name', compute_sudo=True, store=True,
@@ -323,17 +323,6 @@ class MailActivity(models.Model):
             ])
         return activities
 
-    def read(self, fields=None, load='_classic_read'):
-        """ When reading specific fields, read calls _read that manually applies ir rules
-        (_apply_ir_rules), instead of calling check_access_rule.
-
-        Meaning that our custom rules enforcing from '_filter_access_rules' and
-        '_filter_access_rules_python' are bypassed in that case.
-        To make sure we apply our custom security rules, we force a call to 'check_access_rule'. """
-
-        self.check_access_rule('read')
-        return super(MailActivity, self).read(fields=fields, load=load)
-
     def write(self, values):
         if values.get('user_id'):
             user_changes = self.filtered(lambda activity: activity.user_id.id != values.get('user_id'))
@@ -383,46 +372,37 @@ class MailActivity(models.Model):
         if self.env.is_superuser():
             return super()._search(domain, offset, limit, order, access_rights_uid)
 
-        ids = super()._search(domain, offset, limit, order, access_rights_uid)
-        if not ids:
-            return ids
-
-        # check read access rights before checking the actual rules on the given ids
-        super(MailActivity, self.with_user(access_rights_uid or self._uid)).check_access_rights('read')
-
+        # retrieve activities and their corresponding res_model, res_id
         self.flush_model(['res_model', 'res_id'])
-        activities_to_check = []
-        for sub_ids in self._cr.split_for_in_conditions(ids):
-            self._cr.execute("""
-                SELECT DISTINCT activity.id, activity.res_model, activity.res_id
-                FROM "%s" activity
-                WHERE activity.id = ANY (%%(ids)s) AND activity.res_id != 0""" % self._table, dict(ids=list(sub_ids)))
-            activities_to_check += self._cr.dictfetchall()
+        query = super()._search(domain, offset, limit, order, access_rights_uid)
+        query_str, params = query.select(
+            f'"{self._table}"."id"',
+            f'"{self._table}"."res_model"',
+            f'"{self._table}"."res_id"',
+        )
+        self.env.cr.execute(query_str, params)
+        rows = self.env.cr.fetchall()
 
-        activity_to_documents = {}
-        for activity in activities_to_check:
-            activity_to_documents.setdefault(activity['res_model'], set()).add(activity['res_id'])
+        # group res_ids by model, and determine accessible records
+        model_ids = defaultdict(set)
+        for _id, res_model, res_id in rows:
+            model_ids[res_model].add(res_id)
 
-        allowed_ids = set()
-        for doc_model, doc_ids in activity_to_documents.items():
+        allowed_ids = defaultdict(set)
+        for res_model, res_ids in model_ids.items():
+            records = self.env[res_model].with_user(access_rights_uid or self._uid).browse(res_ids)
             # fall back on related document access right checks. Use the same as defined for mail.thread
             # if available; otherwise fall back on read
-            if hasattr(self.env[doc_model], '_mail_post_access'):
-                doc_operation = self.env[doc_model]._mail_post_access
-            else:
-                doc_operation = 'read'
-            DocumentModel = self.env[doc_model].with_user(access_rights_uid or self._uid)
-            right = DocumentModel.check_access_rights(doc_operation, raise_exception=False)
-            if right:
-                valid_docs = DocumentModel.browse(doc_ids)._filter_access_rules(doc_operation)
-                valid_doc_ids = set(valid_docs.ids)
-                allowed_ids.update(
-                    activity['id'] for activity in activities_to_check
-                    if activity['res_model'] == doc_model and activity['res_id'] in valid_doc_ids)
+            operation = getattr(records, '_mail_post_access', 'read')
+            if records.check_access_rights(operation, raise_exception=False):
+                allowed_ids[res_model] = set(records._filter_access_rules(operation)._ids)
 
-        # re-construct a list based on ids, because 'allowed_ids' does not keep the original order
-        id_list = [id for id in ids if id in allowed_ids]
-        return self.browse(id_list)._as_query(order)
+        activities = self.browse(
+            id_
+            for id_, res_model, res_id in rows
+            if res_id in allowed_ids[res_model]
+        )
+        return activities._as_query(order)
 
     @api.model
     def _read_group_raw(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):

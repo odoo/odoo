@@ -389,7 +389,7 @@ class TestDiscuss(TestMailCommon, TestRecipients):
         )
 
         with self.assertRaises(exceptions.AccessError):
-            notification_msg.with_env(self.env)._message_format(['id', 'body', 'date', 'author_id', 'email_from'])
+            notification_msg.with_env(self.env).message_format(['id', 'body', 'date', 'author_id', 'email_from'])
 
         channel_message = self.env['mail.message'].sudo().search([('model', '=', 'mail.channel'), ('res_id', 'in', channel.ids)])
         self.assertEqual(len(channel_message), 1, "Test message should have been posted")
