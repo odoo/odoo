@@ -91,8 +91,11 @@ class SaleOrder(models.Model):
 
     def _create_delivery_line(self, carrier, price_unit):
         SaleOrderLine = self.env['sale.order.line']
+        context = {}
         if self.partner_id:
             # set delivery detail in the customer language
+            # used in local scope translation process
+            context['lang'] = self.partner_id.lang
             carrier = carrier.with_context(lang=self.partner_id.lang)
 
         # Apply fiscal position
@@ -102,12 +105,12 @@ class SaleOrder(models.Model):
             taxes_ids = self.fiscal_position_id.map_tax(taxes, carrier.product_id, self.partner_id).ids
 
         # Create the sales order line
-        carrier_with_partner_lang = carrier.with_context(lang=self.partner_id.lang)
-        if carrier_with_partner_lang.product_id.description_sale:
-            so_description = '%s: %s' % (carrier_with_partner_lang.name,
-                                        carrier_with_partner_lang.product_id.description_sale)
+
+        if carrier.product_id.description_sale:
+            so_description = '%s: %s' % (carrier.name,
+                                        carrier.product_id.description_sale)
         else:
-            so_description = carrier_with_partner_lang.name
+            so_description = carrier.name
         values = {
             'order_id': self.id,
             'name': so_description,
@@ -127,6 +130,7 @@ class SaleOrder(models.Model):
         if self.order_line:
             values['sequence'] = self.order_line[-1].sequence + 1
         sol = SaleOrderLine.sudo().create(values)
+        del context
         return sol
 
     def _format_currency_amount(self, amount):
