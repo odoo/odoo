@@ -289,6 +289,7 @@ class AccountMove(models.Model):
     always_tax_exigible = fields.Boolean(
         compute='_compute_always_tax_exigible',
         store=True,
+        readonly=False,
         help="Technical field used by cash basis taxes, telling the lines of the move are always exigible. "
              "This happens if the move contains no payable or receivable line.")
 
@@ -5081,6 +5082,7 @@ class AccountMoveLine(models.Model):
             'date': max(exchange_date or date.min, company._get_user_fiscal_lock_date() + timedelta(days=1)),
             'journal_id': journal.id,
             'line_ids': [],
+            'always_tax_exigible': True,
         }
         to_reconcile = []
 
