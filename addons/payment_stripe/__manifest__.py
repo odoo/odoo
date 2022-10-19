@@ -21,6 +21,7 @@
         'web.assets_frontend': [
             'payment_stripe/static/src/js/express_checkout_form.js',
             'payment_stripe/static/src/js/payment_form.js',
+            'payment_stripe/static/src/js/stripe_options.js',
         ],
     },
     'license': 'LGPL-3',
