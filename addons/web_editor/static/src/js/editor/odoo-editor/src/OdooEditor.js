@@ -3277,7 +3277,7 @@ export class OdooEditor extends EventTarget {
             // Move selection if next character is zero-width space
             if (nextCharacter === '\u200B') {
                 focusOffset += 1;
-                while (focusNode && !focusNode.textContent[focusOffset] || !closestElement(focusNode).isContentEditable) {
+                while (focusNode && (!focusNode.textContent[focusOffset] || !closestElement(focusNode).isContentEditable)) {
                     focusNode = nextLeaf(focusNode);
                     focusOffset = 0;
                 }
