@@ -361,7 +361,7 @@ class PaymentTransactionStripe(models.Model):
         _logger.info('_create_stripe_refund: Sending values to stripe URL, values:\n%s', pprint.pformat(refund_params))
         # Create an idempotency key using the hash of the transaction reference and the database UUID
         database_uuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
-        idempotency_key = sha1((database_uuid + self.reference).encode("utf-8")).hexdigest()
+        idempotency_key = sha1((database_uuid + self.reference + 'refunds').encode("utf-8")).hexdigest()
         res = self.acquirer_id._stripe_request('refunds', refund_params, idempotency_key=idempotency_key)
         _logger.info('_create_stripe_refund: Values received:\n%s', pprint.pformat(res))
 
