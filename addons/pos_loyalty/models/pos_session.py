@@ -56,6 +56,67 @@ class PosSession(models.Model):
     def _get_pos_ui_loyalty_reward(self, params):
         return self.env['loyalty.reward'].search_read(**params['search_params'])
 
+<<<<<<< HEAD
+||||||| parent of 10d6f3eafdd0... temp
+    def _get_pos_ui_res_partner(self, params):
+        result = super()._get_pos_ui_res_partner(params)
+        # In order to make loyalty programs work offline we load the partner's point into
+        # a non-existant field 'loyalty_points'.
+        if self.config_id.loyalty_program_id:
+            # collect ids in a list, group by id and default points to 0
+            partner_ids = []
+            res_by_id = {}
+            for res in result:
+                partner_ids.append(res['id'])
+                res_by_id[res['id']] = res
+                res['loyalty_points'] = 0
+                res['loyalty_card_id'] = False
+            # Direct query to avoid loading loyalty cards in the cache for no reason.
+            # There is no context where we would need to flush.
+            query = self.env['loyalty.card']._search(
+                [('program_id', '=', self.config_id.loyalty_program_id.id), ('partner_id', 'in', partner_ids)]
+            )
+            query_str, params = query.select('id', 'partner_id', 'points')
+            self.env.cr.execute(query_str, params)
+            for res in self.env.cr.dictfetchall():
+                # The result of where_calc also includes partner_id is null.
+                if not res.get('partner_id'):
+                    continue
+                res_by_id[res['partner_id']]['loyalty_points'] = res['points']
+                res_by_id[res['partner_id']]['loyalty_card_id'] = res['id']
+        return result
+
+=======
+    def _get_pos_ui_res_partner(self, params):
+        result = super()._get_pos_ui_res_partner(params)
+        # In order to make loyalty programs work offline we load the partner's point into
+        # a non-existant field 'loyalty_points'.
+        if self.config_id.loyalty_program_id:
+            # collect ids in a list, group by id and default points to 0
+            partner_ids = []
+            res_by_id = {}
+            for res in result:
+                partner_ids.append(res['id'])
+                res_by_id[res['id']] = res
+                res['loyalty_points'] = 0
+                res['loyalty_card_id'] = False
+            # Direct query to avoid loading loyalty cards in the cache for no reason.
+            # There is no context where we would need to flush.
+            query = self.env['loyalty.card']._search(
+                [('program_id', '=', self.config_id.loyalty_program_id.id), ('partner_id', 'in', partner_ids)]
+            )
+            if query:
+                query_str, params = query.select('id', 'partner_id', 'points')
+                self.env.cr.execute(query_str, params)
+                for res in self.env.cr.dictfetchall():
+                    # The result of where_calc also includes partner_id is null.
+                    if not res.get('partner_id'):
+                        continue
+                    res_by_id[res['partner_id']]['loyalty_points'] = res['points']
+                    res_by_id[res['partner_id']]['loyalty_card_id'] = res['id']
+        return result
+
+>>>>>>> 10d6f3eafdd0... temp
     def _loader_params_product_product(self):
         result = super(PosSession, self)._loader_params_product_product()
         config = self.config_id
