@@ -2,14 +2,16 @@
 <templates xml:space="preserve">
 
     <t t-name="mrp.SlidesViewer" t-inherit="web.CharField">
-        <xpath expr="//input" position="after">
-            <iframe class="o_embed_iframe w-100"
-                alt="Slides viewer"
-                t-att-src="url"
-                t-att-name="props.name"
-                t-on-error="onLoadFailed"
-            />
-        </xpath>
-    </t>
+        <xpath expr="//t[@t-else='']" position="after">
+            <t t-if="url">
+                <iframe class="o_embed_iframe w-100"
+                    alt="Slides viewer"
+                    t-att-src="url"
+                    t-att-name="props.name"
+                    t-on-error="onLoadFailed"
+                    />
+            </t>
+            </xpath>
+        </t>
 
 </templates>
