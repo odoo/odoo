@@ -13,7 +13,7 @@ import {
     triggerEvent,
 } from "../helpers/utils";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 let container;
 
 /**

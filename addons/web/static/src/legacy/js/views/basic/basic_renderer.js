@@ -20,12 +20,12 @@ const { WidgetAdapterMixin } = require('web.OwlCompatibility');
 const FieldWrapper = require('web.FieldWrapper');
 const WidgetWrapper = require("web.WidgetWrapper");
 
-const { Component } = owl;
+const { Component } = require("@odoo/owl");
 
 var qweb = core.qweb;
 const _t = core._t;
 
-const { status } = owl;
+const { status } = require("@odoo/owl");
 
 var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
     custom_events: {

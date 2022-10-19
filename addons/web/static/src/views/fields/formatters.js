@@ -8,7 +8,7 @@ import { escape, intersperse, nbsp, sprintf } from "@web/core/utils/strings";
 import { isBinarySize } from "@web/core/utils/binary";
 import { session } from "@web/session";
 
-const { markup } = owl;
+import { markup } from "@odoo/owl";
 
 // -----------------------------------------------------------------------------
 // Helpers

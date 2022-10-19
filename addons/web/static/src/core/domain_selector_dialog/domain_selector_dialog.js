@@ -4,7 +4,7 @@ import { Dialog } from "../dialog/dialog";
 import { DomainSelector } from "../domain_selector/domain_selector";
 import { _t } from "../l10n/translation";
 
-const { Component, useState } = owl;
+import { Component, useState } from "@odoo/owl";
 
 export class DomainSelectorDialog extends Component {
     setup() {

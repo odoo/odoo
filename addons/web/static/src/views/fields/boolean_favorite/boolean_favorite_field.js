@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 import { archParseBoolean } from "@web/views/utils";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class BooleanFavoriteField extends Component {}
 

@@ -4,7 +4,7 @@ import { useService } from "@web/core/utils/hooks";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
-const { useEnv, useSubEnv } = owl;
+import { useEnv, useSubEnv } from "@odoo/owl";
 
 function disableButtons(el) {
     // WOWL: can we do this non-imperatively?

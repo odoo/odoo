@@ -2,7 +2,7 @@
 
 import { localization } from "@web/core/l10n/localization";
 
-const { useRef, useEffect } = owl;
+import { useRef, useEffect } from "@odoo/owl";
 
 /**
  * This hook replaces the decimal separator of the numpad decimal key

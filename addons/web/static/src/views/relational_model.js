@@ -24,7 +24,7 @@ import { Model } from "@web/views/model";
 import { archParseBoolean, evalDomain, isNumeric, isRelational, isX2Many } from "@web/views/utils";
 
 const { DateTime } = luxon;
-const { markRaw, markup, toRaw } = owl;
+import { markRaw, markup, toRaw } from "@odoo/owl";
 
 const preloadedDataRegistry = registry.category("preloadedData");
 

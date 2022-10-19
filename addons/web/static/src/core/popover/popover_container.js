@@ -2,7 +2,7 @@
 
 import { Popover } from "./popover";
 
-const { Component, onMounted, onWillUnmount, useExternalListener, useState, xml } = owl;
+import { Component, onMounted, onWillUnmount, useExternalListener, useState, xml } from "@odoo/owl";
 
 class PopoverController extends Component {
     setup() {

@@ -17,7 +17,7 @@ import {
 } from "../../helpers/utils";
 import { registerCleanup } from "../../helpers/cleanup";
 
-const { Component, useRef, useState, xml } = owl;
+import { Component, useRef, useState, xml } from "@odoo/owl";
 const serviceRegistry = registry.category("services");
 
 let env;

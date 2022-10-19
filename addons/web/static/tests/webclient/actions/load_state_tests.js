@@ -27,7 +27,7 @@ import {
 } from "./../helpers";
 import { errorService } from "@web/core/errors/error_service";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 
 let serverData;
 let target;

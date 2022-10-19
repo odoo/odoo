@@ -15,7 +15,7 @@ import { PropertyTags } from "./property_tags";
 import { sprintf } from "@web/core/utils/strings";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 
-const { Component, useState, onWillUpdateProps, useEffect, useRef } = owl;
+import { Component, useState, onWillUpdateProps, useEffect, useRef } from "@odoo/owl";
 
 export class PropertyDefinition extends Component {
     setup() {

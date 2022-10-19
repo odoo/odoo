@@ -24,7 +24,7 @@ var QWeb = core.qweb;
 var KANBAN_RECORD_COLORS = require('web.basic_fields').FieldColorPicker.prototype.RECORD_COLORS;
 var NB_KANBAN_RECORD_COLORS = KANBAN_RECORD_COLORS.length;
 
-const { Component } = owl;
+const { Component } = require("@odoo/owl");
 
 const { DateTime } = luxon;
 // As the name suggests, this is a hack that allows archs that work in the new
