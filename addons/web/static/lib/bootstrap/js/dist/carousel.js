@@ -513,8 +513,10 @@
     _setActiveIndicatorElement(element) {
       if (this._indicatorsElement) {
         const activeIndicator = SelectorEngine__default.default.findOne(SELECTOR_ACTIVE, this._indicatorsElement);
-        activeIndicator.classList.remove(CLASS_NAME_ACTIVE);
-        activeIndicator.removeAttribute('aria-current');
+        if (activeIndicator) {
+            activeIndicator.classList.remove(CLASS_NAME_ACTIVE);
+            activeIndicator.removeAttribute('aria-current');
+        }
         const indicators = SelectorEngine__default.default.find(SELECTOR_INDICATOR, this._indicatorsElement);
 
         for (let i = 0; i < indicators.length; i++) {
