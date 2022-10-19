@@ -1172,14 +1172,15 @@ const Wysiwyg = Widget.extend({
                 link = linkWidget.$link[0];
                 this.odooEditor.setContenteditableLink(linkWidget.$link[0]);
                 setSelection(link, 0, link, link.childNodes.length, false);
-                // Focus the link after the dialog element is removed because
-                // if the dialog element is still in the DOM at the time of
-                // doing link.focus(), because there is the attribute tabindex
-                // on the dialog element, the focus cannot occurs.
-                // Using a microtask to set the focus is hackish and might break
-                // if another microtask wich focus an elemen in the dom occurs
-                // at the same time (but this case seems unlikely).
-                Promise.resolve().then(() => link.focus());
+                // Trigger a blur event after the dialog element is removed
+                // in order to trigger a view update, because at this time
+                // a modal is still open, which blocks the event propagation.
+                // Using a microtask to trigger a blur event is hackish and
+                // might break if another microtask which focuses an element
+                // in the DOM occurs at the same time (but this seems unlikely).
+                Promise.resolve().then(() => {
+                    this.trigger_up('wysiwyg_blur');
+                });
             });
             linkDialog.on('closed', this, function () {
                 // If the linkDialog content has been saved
@@ -1303,6 +1304,10 @@ const Wysiwyg = Widget.extend({
             } else if (element) {
                 this.odooEditor.execCommand('insertHTML', element.outerHTML);
             }
+            // Same reasoning as linkDialog.on('save')
+            Promise.resolve().then(() => {
+                this.trigger_up('wysiwyg_blur');
+            });
         });
         mediaDialog.on('closed', this, function () {
             // if the mediaDialog content has been saved
