@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <function model="account.chart.template" name="try_loading">
-            <value eval="[ref('l10n_ma.l10n_kzc_temp_chart')]"/>
-        </function>
+        <record id="l10nma_chart_template" model="account.chart.template">
+            <field name="name">Moroccan Chart of Accounts</field>
+            <field name="code_digits">6</field>
+            <field name="country_id" ref="base.ma"/>
+            <field name="currency_id" ref="base.MAD"/>
+            <field name="bank_account_code_prefix">5141</field>
+            <field name="cash_account_code_prefix">51611</field>
+            <field name="transfer_account_code_prefix">5115</field>
+            <field name="spoken_languages" eval="'ar_001;fr_FR'"/>
+        </record>
     </data>
 </odoo>
