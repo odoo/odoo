@@ -444,11 +444,12 @@ class Project(models.Model):
         for project in self:
             project.milestone_count = mapped_count.get(project.id, 0)
 
-    @api.depends('milestone_ids', 'milestone_ids.is_reached', 'milestone_ids.deadline')
+    @api.depends('milestone_ids', 'milestone_ids.is_reached', 'milestone_ids.deadline', 'allow_milestones')
     def _compute_is_milestone_exceeded(self):
         today = fields.Date.context_today(self)
         read_group = self.env['project.milestone'].read_group([
             ('project_id', 'in', self.ids),
+            ('project_id.allow_milestones', '=', True),
             ('is_reached', '=', False),
             ('deadline', '<', today)], ['project_id'], ['project_id'])
         mapped_count = {group['project_id'][0]: group['project_id_count'] for group in read_group}
@@ -467,6 +468,7 @@ class Project(models.Model):
               FROM project_project P
          LEFT JOIN project_milestone M ON P.id = M.project_id
              WHERE M.is_reached IS false
+               AND P.allow_milestones IS NOT false
                AND M.deadline < CAST(now() AS date)
         """
         if (operator == '=' and value is True) or (operator == '!=' and value is False):
