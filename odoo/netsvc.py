@@ -139,7 +139,6 @@ def init_logger():
         'ofxparse',# ofxparse importing ABC from collections
         'astroid',  # deprecated imp module (fixed in 2.5.1)
         'requests_toolbelt', # importing ABC from collections (fixed in 0.9)
-        'firebase_admin', # deprecated method_whitelist
     ]:
         warnings.filterwarnings('ignore', category=DeprecationWarning, module=module)
 
