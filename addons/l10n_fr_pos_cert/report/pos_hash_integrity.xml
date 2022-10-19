@@ -9,7 +9,7 @@
                             <div class="row" id="hash_header">
                                 <div class="col-12">
                                     <br/>
-                                    <h2>Résultat du test d'intégrité - <span t-esc="data['printing_date']"/></h2>
+                                    <h2>Résultat du test d'intégrité - <span t-out="data['printing_date']"/></h2>
                                     <br/>
                                 </div>
                             </div>
@@ -58,15 +58,15 @@
                                                 <t t-if="data['result'] != 'None'">
                                                     <t t-if="data['result']['first_order_hash'] != 'None'">
                                                         <tr>
-                                                            <td><span t-esc="data['result']['first_order_hash']"/></td>
+                                                            <td><span t-out="data['result']['first_order_hash']"/></td>
                                                             <td>
-                                                                <span t-esc="data['result']['first_order_name']"/> <br/>
-                                                                <span t-esc="data['result']['first_order_date']"/>
+                                                                <span t-out="data['result']['first_order_name']"/> <br/>
+                                                                <span t-out="data['result']['first_order_date']"/>
                                                             </td>
-                                                            <td><span t-esc="data['result']['last_order_hash']"/></td>
+                                                            <td><span t-out="data['result']['last_order_hash']"/></td>
                                                             <td>
-                                                                <span t-esc="data['result']['last_order_name']"/> <br/>
-                                                                <span t-esc="data['result']['last_order_date']"/>
+                                                                <span t-out="data['result']['last_order_name']"/> <br/>
+                                                                <span t-out="data['result']['last_order_date']"/>
                                                             </td>
                                                         </tr>
                                                     </t>
@@ -80,7 +80,7 @@
                                         <h5>
                                             Données corrompues sur la commande du point de vente:
                                         </h5>
-                                        <span t-esc="data['corrupted_orders']"/> <br/>
+                                        <span t-out="data['corrupted_orders']"/> <br/>
                                     </t>
                                 </div>
                                 <div class="row" id="hash_last_div">

@@ -530,7 +530,7 @@
                                         </strong>
                                     </div>
                                     <div class="col-6 text-end">
-                                        <strong><i class="fa fa-clock-o" aria-label="Date" role="img" title="Date"/> <t t-esc="record.date.value"/></strong>
+                                        <strong><i class="fa fa-clock-o" aria-label="Date" role="img" title="Date"/> <t t-out="record.date.value"/></strong>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -935,23 +935,23 @@
                                                             <div class="col-10">
                                                                 <div class="row">
                                                                     <div class="col">
-                                                                        <strong t-esc="record.product_id.value"/>
+                                                                        <strong t-out="record.product_id.value"/>
                                                                     </div>
                                                                     <div class="col-auto">
                                                                         <strong class="float-end text-end">
-                                                                            <t t-esc="record.price_subtotal.value" groups="account.group_show_line_subtotals_tax_excluded"/>
-                                                                            <t t-esc="record.price_total.value" groups="account.group_show_line_subtotals_tax_included"/>
+                                                                            <t t-out="record.price_subtotal.value" groups="account.group_show_line_subtotals_tax_excluded"/>
+                                                                            <t t-out="record.price_total.value" groups="account.group_show_line_subtotals_tax_included"/>
                                                                         </strong>
                                                                     </div>
                                                                 </div>
                                                                 <div class="text-muted">
                                                                     Quantity:
-                                                                    <t t-esc="record.quantity.value"/>
-                                                                    <t t-esc="record.product_uom_id.value"/>
+                                                                    <t t-out="record.quantity.value"/>
+                                                                    <t t-out="record.product_uom_id.value"/>
                                                                 </div>
                                                                 <div class="text-muted">
                                                                     Unit Price:
-                                                                    <t t-esc="record.price_unit.value"/>
+                                                                    <t t-out="record.price_unit.value"/>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -959,7 +959,7 @@
                                                     <t t-if="record.display_type.raw_value === 'line_section' || record.display_type.raw_value === 'line_note'">
                                                         <div class="row">
                                                             <div class="col-12">
-                                                                <t t-esc="record.name.value"/>
+                                                                <t t-out="record.name.value"/>
                                                             </div>
                                                         </div>
                                                     </t>

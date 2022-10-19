@@ -29,7 +29,7 @@
                     <table class="o_list_table table table-sm table-hover o_analytic_table mb-2 table-borderless" t-attf-id="plan_{{plan.id}}">
                         <tr class="border-bottom">
                             <th class="o_analytic_account_name">
-                                <t t-esc="plan.name"/>
+                                <t t-out="plan.name"/>
                                 <t t-if="plan.account_count === 0"> (no accounts)</t>
                                 <span t-if="plan.applicability === 'mandatory'" t-attf-class="o_status d-inline-block o_analytic_status_{{groupStatus(plan.id)}}" t-att-title="statusDescription(plan.id)"/>
                             </th>

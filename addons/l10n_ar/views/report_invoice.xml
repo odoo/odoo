@@ -11,16 +11,16 @@
                 <div name="center-upper" class="col-2 text-center" t-att-style="'color: %s;' % o.company_id.primary_color">
                     <span style="display: inline-block; text-align: center; line-height: 8px;">
                         <h1 style="line-height: 25px;">
-                            <strong><span t-esc="not pre_printed_report and document_letter or '&#160;'"/></strong>
+                            <strong><span t-out="not pre_printed_report and document_letter or '&#160;'"/></strong>
                         </h1>
-                        <span style="font-size: x-small;" t-esc="not pre_printed_report and document_legend or '&#160;'"/>
+                        <span style="font-size: x-small;" t-out="not pre_printed_report and document_legend or '&#160;'"/>
                     </span>
                 </div>
                 <div name="right-upper-side" class="col-5 text-end" style="padding-left: 0px;" t-if="not pre_printed_report">
 
                     <!-- (6) Titulo de Documento -->
                     <h4 t-att-style="'color: %s;' % o.company_id.primary_color"><strong>
-                        <span t-esc="report_name"/>
+                        <span t-out="report_name"/>
                     </strong></h4>
 
                 </div>
@@ -36,26 +36,26 @@
                         <br/>
                         <div></div>
                         <!-- we dont use the address widget as it adds a new line on the phone and we want to reduce at maximum lines qty -->
-                        <t t-esc="' - '.join([item for item in [
+                        <t t-out="' - '.join([item for item in [
                             ', '.join([item for item in [header_address.street, header_address.street2] if item]),
                             header_address.city,
                             header_address.state_id and header_address.state_id.name,
                             header_address.zip,
-                            header_address.country_id and header_address.country_id.name] if item])"/><span t-if="header_address.phone"> - </span><span t-if="header_address.phone" style="white-space: nowrap;" t-esc="'Tel: ' + header_address.phone"/>
+                            header_address.country_id and header_address.country_id.name] if item])"/><span t-if="header_address.phone"> - </span><span t-if="header_address.phone" style="white-space: nowrap;" t-out="'Tel: ' + header_address.phone"/>
                         <br/>
-                        <span t-att-style="'color: %s;' % o.company_id.primary_color" t-esc="' - '.join([item for item in [(header_address.website or '').replace('https://', '').replace('http://', ''), header_address.email] if item])"/>
+                        <span t-att-style="'color: %s;' % o.company_id.primary_color" t-out="' - '.join([item for item in [(header_address.website or '').replace('https://', '').replace('http://', ''), header_address.email] if item])"/>
                     </t>
                 </div>
                 <div class="col-6 text-end" style="padding-left: 0px;">
 
                     <t t-if="not pre_printed_report">
                         <!-- (7) Numero punto venta - (8) numero de documento -->
-                        <span t-att-style="'color: %s;' % o.company_id.secondary_color">Nro: </span><span t-esc="report_number"/>
+                        <span t-att-style="'color: %s;' % o.company_id.secondary_color">Nro: </span><span t-out="report_number"/>
                     </t>
                     <br/>
 
                     <!-- (9) Fecha -->
-                    <span t-att-style="'color: %s;' % o.company_id.secondary_color">Date: </span><span t-esc="report_date" t-options='{"widget": "date"}'/>
+                    <span t-att-style="'color: %s;' % o.company_id.secondary_color">Date: </span><span t-out="report_date" t-options='{"widget": "date"}'/>
 
                     <t t-if="not pre_printed_report">
                         <!-- (5) Condicion de IVA / Responsabilidad -->
@@ -65,7 +65,7 @@
 
                         <!-- (11) IIBB: -->
                         <!-- (12) Inicio de actividades -->
-                        <br/><span t-att-style="'color: %s;' % o.company_id.secondary_color">IIBB: </span><span t-esc="o.company_id.l10n_ar_gross_income_type == 'exempt' and 'Exento' or o.company_id.l10n_ar_gross_income_number"/><span t-att-style="'color: %s;' % o.company_id.secondary_color"> - Activities Start: </span><span t-field="o.company_id.l10n_ar_afip_start_date"/>
+                        <br/><span t-att-style="'color: %s;' % o.company_id.secondary_color">IIBB: </span><span t-out="o.company_id.l10n_ar_gross_income_type == 'exempt' and 'Exento' or o.company_id.l10n_ar_gross_income_number"/><span t-att-style="'color: %s;' % o.company_id.secondary_color"> - Activities Start: </span><span t-field="o.company_id.l10n_ar_afip_start_date"/>
                     </t>
 
                 </div>
@@ -119,7 +119,7 @@
         </t>
         <xpath expr="//span[@t-field='line.price_unit']" position="attributes">
             <attribute name="t-field"></attribute>
-            <attribute name="t-esc">l10n_ar_values['price_unit']</attribute>
+            <attribute name="t-out">l10n_ar_values['price_unit']</attribute>
             <attribute name="t-options">{"widget": "monetary", "display_currency": o.currency_id}</attribute>
         </xpath>
         <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" position="attributes">
@@ -135,13 +135,13 @@
         </xpath>
         <span t-field="line.price_subtotal" position="attributes">
             <attribute name="t-field"></attribute>
-            <attribute name="t-esc">l10n_ar_values['price_subtotal']</attribute>
+            <attribute name="t-out">l10n_ar_values['price_subtotal']</attribute>
             <attribute name="t-options">{"widget": "monetary", "display_currency": o.currency_id}</attribute>
         </span>
         <!-- if b2c we still wants the latam subtotal -->
         <span t-field="line.price_total" position="attributes">
             <attribute name="t-field"></attribute>
-            <attribute name="t-esc">l10n_ar_values['price_subtotal']</attribute>
+            <attribute name="t-out">l10n_ar_values['price_subtotal']</attribute>
             <attribute name="t-options">{"widget": "monetary", "display_currency": o.currency_id}</attribute>
         </span>
 
@@ -162,7 +162,7 @@
             <attribute name="t-if">not o._l10n_ar_include_vat()</attribute>
         </xpath>
         <span id="line_tax_ids" position="attributes">
-            <attribute name="t-esc">', '.join(map(lambda x: (x.description or x.name), line.tax_ids.filtered(lambda x: x.tax_group_id.l10n_ar_vat_afip_code)))</attribute>
+            <attribute name="t-out">', '.join(map(lambda x: (x.description or x.name), line.tax_ids.filtered(lambda x: x.tax_group_id.l10n_ar_vat_afip_code)))</attribute>
         </span>
 
         <!-- remove payment reference that is not used in Argentina -->
@@ -187,7 +187,7 @@
 
                     <!-- (17) CUIT -->
                     <t t-if="o.partner_id.vat and o.partner_id.l10n_latam_identification_type_id and o.partner_id.l10n_latam_identification_type_id.l10n_ar_afip_code != '99'">
-                        <br/><strong><t t-esc="o.partner_id.l10n_latam_identification_type_id.name or o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>:</strong> <span t-esc="o.partner_id.l10n_ar_formatted_vat if o.partner_id.l10n_latam_identification_type_id.is_vat else o.partner_id.vat"/>
+                        <br/><strong><t t-out="o.partner_id.l10n_latam_identification_type_id.name or o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>:</strong> <span t-out="o.partner_id.l10n_ar_formatted_vat if o.partner_id.l10n_latam_identification_type_id.is_vat else o.partner_id.vat"/>
                     </t>
 
                 </div>
@@ -236,12 +236,12 @@
                     <strong>Invoiced period: </strong><span t-field="o.l10n_ar_afip_service_start"/> to <span t-field="o.l10n_ar_afip_service_end"/>
                 </t>
                 <t t-if="o.currency_id != o.company_id.currency_id">
-                    <br/><strong>Currency: </strong><span t-esc="'%s - %s' % (o.currency_id.name, o.currency_id.currency_unit_label)"/>
+                    <br/><strong>Currency: </strong><span t-out="'%s - %s' % (o.currency_id.name, o.currency_id.currency_unit_label)"/>
                     <br/><strong>Exchange rate: </strong> <span t-field="o.l10n_ar_currency_rate"/>
                 </t>
                 <!-- Show CBU for FACTURA DE CREDITO ELECTRONICA MiPyMEs and NOTA DE DEBITO ELECTRONICA MiPyMEs -->
                 <t t-if="o.l10n_latam_document_type_id.code in ['201', '206', '211', '202', '207', '212'] and o.partner_bank_id">
-                    <br/><strong>CBU for payment: </strong><span t-esc="o.partner_bank_id.acc_number or '' if o.partner_bank_id.acc_type == 'cbu' else ''"/>
+                    <br/><strong>CBU for payment: </strong><span t-out="o.partner_bank_id.acc_number or '' if o.partner_bank_id.acc_type == 'cbu' else ''"/>
                 </t>
 
             </div>
@@ -251,7 +251,7 @@
          http://biblioteca.afip.gob.ar/dcp/LEY_C_027440_2018_05_09 article 5.f -->
         <xpath expr="//div[@id='total']/div/table" position="after">
             <t t-if="o.l10n_latam_document_type_id.code in ['201', '202', '203', '206', '207', '208', '211', '212', '213']">
-                <strong>Son: </strong><span t-esc="o.currency_id.with_context(lang='es_AR').amount_to_text(o.amount_total)"/>
+                <strong>Son: </strong><span t-out="o.currency_id.with_context(lang='es_AR').amount_to_text(o.amount_total)"/>
             </t>
         </xpath>
 

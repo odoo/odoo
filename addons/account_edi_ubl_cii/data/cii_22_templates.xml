@@ -23,10 +23,10 @@
                             t-if="line.product_id and line.product_id.default_code"
                             t-out="line.product_id.default_code"/>
                         <!-- TODO:
-                        <ram:Name t-esc="line.product_id.name or line.name"/>
-                        <ram:Description t-esc="line.name" t-if="line.name != line.product_id.name"/>
+                        <ram:Name t-out="line.product_id.name or line.name"/>
+                        <ram:Description t-out="line.name" t-if="line.name != line.product_id.name"/>
                         -->
-                        <ram:Name t-esc="line.name"/>
+                        <ram:Name t-out="line.name"/>
                     </ram:SpecifiedTradeProduct>
 
                     <!-- Amounts. -->
@@ -99,12 +99,12 @@
                 </ram:SpecifiedLegalOrganization>
 
                 <ram:DefinedTradeContact t-if="not hide_dtc">
-                    <ram:PersonName t-esc="partner.name"/>
+                    <ram:PersonName t-out="partner.name"/>
                     <ram:TelephoneUniversalCommunication t-if="partner.phone or partner.mobile">
-                        <ram:CompleteNumber t-esc="partner.phone or partner.mobile"/>
+                        <ram:CompleteNumber t-out="partner.phone or partner.mobile"/>
                     </ram:TelephoneUniversalCommunication>
                     <ram:EmailURIUniversalCommunication t-if="partner.email">
-                        <ram:URIID schemeID='SMTP' t-esc="partner.email"/>
+                        <ram:URIID schemeID='SMTP' t-out="partner.email"/>
                     </ram:EmailURIUniversalCommunication>
                 </ram:DefinedTradeContact>
 
@@ -311,7 +311,7 @@
                     <rdf:Description xmlns:dc="http://purl.org/dc/elements/1.1/" rdf:about="">
                         <dc:title>
                             <rdf:Alt>
-                                <rdf:li t-att="{'xml:lang': 'x-default'}" t-esc="title"/>
+                                <rdf:li t-att="{'xml:lang': 'x-default'}" t-out="title"/>
                             </rdf:Alt>
                         </dc:title>
                         <dc:creator>
@@ -330,8 +330,8 @@
                     </rdf:Description>
                     <rdf:Description xmlns:xmp="http://ns.adobe.com/xap/1.0/" rdf:about="">
                         <xmp:CreatorTool>Odoo</xmp:CreatorTool>
-                        <xmp:CreateDate t-esc="date"/>
-                        <xmp:ModifyDate t-esc="date"/>
+                        <xmp:CreateDate t-out="date"/>
+                        <xmp:ModifyDate t-out="date"/>
                     </rdf:Description>
                     <rdf:Description xmlns:pdfaExtension="http://www.aiim.org/pdfa/ns/extension/"
                                      xmlns:pdfaSchema="http://www.aiim.org/pdfa/ns/schema#"

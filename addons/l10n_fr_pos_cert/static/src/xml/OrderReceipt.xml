@@ -4,7 +4,7 @@
         <xpath expr="//div[hasclass('pos-receipt-order-data')]" position="inside">
             <t t-if="receipt.l10n_fr_hash !== false">
                 <br/>
-                <div style="word-wrap:break-word;"><t t-esc="receipt.l10n_fr_hash"/></div>
+                <div style="word-wrap:break-word;"><t t-out="receipt.l10n_fr_hash"/></div>
             </t>
         </xpath>
     </t>
@@ -16,7 +16,7 @@
                     Old unit price:
                     <span class="oldPrice">
                         <s>
-                            <t t-esc="env.pos.format_currency(line.fixed_lst_price, 'Product Price')" /> / Units
+                            <t t-out="env.pos.format_currency(line.fixed_lst_price, 'Product Price')" /> / Units
                         </s>
                     </span>
                 </div>

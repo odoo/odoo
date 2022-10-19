@@ -256,10 +256,10 @@
                             <t t-if="dashboard.number_to_check > 0">
                                 <div class="row">
                                     <div class="col overflow-hidden text-start">
-                                        <a type="object" name="open_action" context="{'action_name': 'action_move_journal_line', 'search_default_to_check': True}"><t t-esc="dashboard.number_to_check"/> to check</a>
+                                        <a type="object" name="open_action" context="{'action_name': 'action_move_journal_line', 'search_default_to_check': True}"><t t-out="dashboard.number_to_check"/> to check</a>
                                     </div>
                                     <div class="col-auto text-end">
-                                        <span><t t-esc="dashboard.to_check_balance"/></span>
+                                        <span><t t-out="dashboard.to_check_balance"/></span>
                                     </div>
                                 </div>
                             </t>
@@ -290,7 +290,7 @@
                                     <span title="Balance in General Ledger">Balance in GL</span>
                                 </div>
                                 <div class="col-auto text-end">
-                                    <span><t t-esc="dashboard.account_balance"/></span>
+                                    <span><t t-out="dashboard.account_balance"/></span>
                                 </div>
                             </div>
                             <div class="row" t-if="dashboard.nb_lines_outstanding_pay_account_balance > 0">
@@ -298,7 +298,7 @@
                                     <span title="Outstanding Payments/Receipts">Outstanding Payments/Receipts</span>
                                 </div>
                                 <div class="col-auto text-end">
-                                    <span><t t-esc="dashboard.outstanding_pay_account_balance"/></span>
+                                    <span><t t-out="dashboard.outstanding_pay_account_balance"/></span>
                                 </div>
                             </div>
                             <t t-if="dashboard.has_at_least_one_statement and dashboard.account_balance != dashboard.last_balance">
@@ -307,7 +307,7 @@
                                         <span title="Latest Statement">Latest Statement</span>
                                     </div>
                                     <div class="col-auto text-end">
-                                        <span><t t-esc="dashboard.last_balance"/></span>
+                                        <span><t t-out="dashboard.last_balance"/></span>
                                     </div>
                                 </div>
                             </t>
@@ -341,48 +341,48 @@
                             <div class="row" t-if="dashboard.number_draft">
                                 <div class="col overflow-hidden text-start">
                                     <a type="object" name="open_action" context="{'search_default_draft': '1'}">
-                                        <span t-if="journal_type == 'sale'" title="Invoices to Validate"><t t-esc="dashboard.number_draft"/> Invoices to Validate</span>
-                                        <span t-if="journal_type == 'purchase'" title="Bills to Validate"><t t-esc="dashboard.number_draft"/> Bills to Validate</span>
+                                        <span t-if="journal_type == 'sale'" title="Invoices to Validate"><t t-out="dashboard.number_draft"/> Invoices to Validate</span>
+                                        <span t-if="journal_type == 'purchase'" title="Bills to Validate"><t t-out="dashboard.number_draft"/> Bills to Validate</span>
                                     </a>
                                 </div>
                                 <div class="col-auto text-end">
-                                    <span><t t-esc="dashboard.sum_draft"/></span>
+                                    <span><t t-out="dashboard.sum_draft"/></span>
                                 </div>
                             </div>
                             <div class="row" t-if="dashboard.number_waiting">
                                 <div class="col overflow-hidden text-start">
                                     <a type="object" t-if="journal_type == 'sale'" name="open_action"
                                     context="{'search_default_open':1, 'search_default_posted':1, 'search_default_partial': 1}" id="account_dashboard_sale_pay_link">
-                                        <t t-esc="dashboard.number_waiting"/> Unpaid Invoices
+                                        <t t-out="dashboard.number_waiting"/> Unpaid Invoices
                                     </a>
 
                                     <a type="object" t-if="journal_type == 'purchase'" name="open_action"
                                     context="{'search_default_open':1, 'search_default_posted':1, 'search_default_partial': 1}" id="account_dashboard_purchase_pay_link">
-                                        <t t-esc="dashboard.number_waiting"/> Bills to Pay
+                                        <t t-out="dashboard.number_waiting"/> Bills to Pay
                                     </a>
                                 </div>
                                 <div class="col-auto text-end">
-                                    <span><t t-esc="dashboard.sum_waiting"/></span>
+                                    <span><t t-out="dashboard.sum_waiting"/></span>
                                 </div>
                             </div>
                             <div class="row" t-if="dashboard.number_late">
                                 <div class="col overflow-hidden text-start">
                                     <a type="object" name="open_action" context="{'search_default_late': '1'}">
-                                        <span t-if="journal_type == 'sale'" title="Late Invoices"><t t-esc="dashboard.number_late"/> Late Invoices</span>
-                                        <span t-if="journal_type == 'purchase'" title="Late Bills"><t t-esc="dashboard.number_late"/> Late Bills</span>
+                                        <span t-if="journal_type == 'sale'" title="Late Invoices"><t t-out="dashboard.number_late"/> Late Invoices</span>
+                                        <span t-if="journal_type == 'purchase'" title="Late Bills"><t t-out="dashboard.number_late"/> Late Bills</span>
                                     </a>
                                 </div>
                                 <div class="col-auto text-end">
-                                    <span><t t-esc="dashboard.sum_late"/></span>
+                                    <span><t t-out="dashboard.sum_late"/></span>
                                 </div>
                             </div>
                             <t t-if="dashboard.number_to_check > 0">
                                 <div class="row">
                                     <div class="col overflow-hidden text-start">
-                                        <a type="object" name="open_action" context="{'search_default_to_check': True}"><t t-esc="dashboard.number_to_check"/> to check</a>
+                                        <a type="object" name="open_action" context="{'search_default_to_check': True}"><t t-out="dashboard.number_to_check"/> to check</a>
                                     </div>
                                     <div class="col-auto text-end">
-                                        <span><t t-esc="dashboard.to_check_balance"/></span>
+                                        <span><t t-out="dashboard.to_check_balance"/></span>
                                     </div>
                                 </div>
                             </t>
