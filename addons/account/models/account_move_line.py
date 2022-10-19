@@ -1916,6 +1916,7 @@ class AccountMoveLine(models.Model):
             'date': max(exchange_date or date.min, company._get_user_fiscal_lock_date() + timedelta(days=1)),
             'journal_id': journal.id,
             'line_ids': [],
+            'always_tax_exigible': True,
         }
         to_reconcile = []
 
