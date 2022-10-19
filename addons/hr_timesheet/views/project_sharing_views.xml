@@ -89,11 +89,11 @@
                             </button>
                             <field name="subtask_effective_hours" class="mt-2" widget="timesheet_uom"
                                   attrs="{'invisible' : ['|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0)]}" nolabel="1"/>
-                            <span>
+                            <span id="total_hours_spent_label" attrs="{'invisible': ['|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0)]}">
                                 <label class="fw-bold" for="total_hours_spent" string="Total Hours"
-                                      attrs="{'invisible': ['|', '|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0), ('encode_uom_in_days', '=', True)]}"/>
+                                      attrs="{'invisible': [('encode_uom_in_days', '=', True)]}"/>
                                 <label class="fw-bold" for="total_hours_spent" string="Total Days"
-                                      attrs="{'invisible': ['|', '|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0), ('encode_uom_in_days', '=', False)]}"/>
+                                      attrs="{'invisible': [('encode_uom_in_days', '=', False)]}"/>
                             </span>
                             <field name="total_hours_spent" widget="timesheet_uom" class="oe_subtotal_footer_separator" nolabel="1"
                                   attrs="{'invisible' : ['|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0)]}" />
