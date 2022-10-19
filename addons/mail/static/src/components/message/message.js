@@ -26,29 +26,6 @@ export class Message extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * Tell whether the bottom of this message is visible or not.
-     *
-     * @param {Object} param0
-     * @param {integer} [offset=0]
-     * @returns {boolean}
-     */
-    isBottomVisible({ offset = 0 } = {}) {
-        if (!this.root.el) {
-            return false;
-        }
-        const elRect = this.root.el.getBoundingClientRect();
-        if (!this.root.el.parentNode) {
-            return false;
-        }
-        const parentRect = this.root.el.parentNode.getBoundingClientRect();
-        // bottom with (double) 10px offset
-        return (
-            elRect.bottom < parentRect.bottom + offset &&
-            parentRect.top < elRect.bottom + offset
-        );
-    }
-
-    /**
      * Tell whether the message is partially visible on browser window or not.
      *
      * @returns {boolean}
