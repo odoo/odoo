@@ -143,7 +143,7 @@ class Digest(models.Model):
         for digest in to_slowdown:
             digest.periodicity = digest._get_next_periodicity()[0]
 
-    def _action_send_to_user(self, user, tips_count=1, consume_tips=True):
+    def _action_send_to_user(self, user, tips_count=1, consume_tips=True, force_send=False):
         unsubscribe_token = self._get_unsubscribe_token(user.id)
 
         rendered_body = self.env['mail.render.mixin']._render_template(
@@ -198,7 +198,9 @@ class Digest(models.Model):
             'state': 'outgoing',
             'subject': '%s: %s' % (user.company_id.name, self.name),
         }
-        self.env['mail.mail'].sudo().create(mail_values)
+        mail = self.env['mail.mail'].sudo().create(mail_values)
+        if force_send:
+            mail.send()
         return True
 
     @api.model

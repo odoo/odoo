@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="digest_digest_preview_view_form" model="ir.ui.view">
+        <field name="name">digest.digest.preview.form</field>
+        <field name="model">digest.digest.preview</field>
+        <field name="arch" type="xml">
+            <form string="Send a Digest Preview">
+                <p class="text-muted">Send a digest preview for testing purpose to the address below.</p>
+                <group>
+                    <field name="email_to" placeholder="email1@example.com&#10;email2@example.com"/>
+                </group>
+                <footer>
+                    <button string="Send" name="send_digest_preview" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_open_digest_preview_wizard" model="ir.actions.act_window">
+        <field name="name">Test Digest</field>
+        <field name="res_model">digest.digest.preview</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{
+            'default_digest_id': active_id,
+            'dialog_size': 'medium',
+        }</field>
+    </record>
+</odoo>

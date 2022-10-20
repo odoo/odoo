@@ -28,6 +28,7 @@
                     <button type="object" name="action_activate" string="Activate"
                         class="oe_highlight"
                         attrs="{'invisible': [('state','=','activated')]}" groups="base.group_system"/>
+                    <button type="action" name="%(action_open_digest_preview_wizard)d" string="Test" class="btn-secondary"/>
                     <field name="state" widget="statusbar" statusbar_visible="0"/>
                 </header>
                 <sheet>

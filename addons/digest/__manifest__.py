@@ -19,6 +19,7 @@ Send KPI Digests periodically
         'data/digest_tips_data.xml',
         'data/ir_cron_data.xml',
         'data/res_config_settings_data.xml',
+        'wizard/digest_preview_views.xml',
         'views/digest_views.xml',
         'views/digest_templates.xml',
         'views/res_config_settings_views.xml',
