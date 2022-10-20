@@ -34,8 +34,7 @@
                 </div>
             </div>
         </field>
-        <field name="report_template" ref="loyalty.report_gift_card"/>
-        <field name="report_name">Your Gift Card</field>
+        <field name="report_template_ids" eval="[(4, ref('loyalty.report_gift_card'))]"/>
         <field name="auto_delete" eval="True"/>
     </record>
 
@@ -96,8 +95,7 @@
 </tr>
 </tbody></table>
         </field>
-        <field name="report_template" ref="loyalty.report_loyalty_card"/>
-        <field name="report_name">Your Coupon Code</field>
+        <field name="report_template_ids" eval="[(4, ref('loyalty.report_loyalty_card'))]"/>
         <field name="auto_delete" eval="True"/>
     </record>
 </odoo>

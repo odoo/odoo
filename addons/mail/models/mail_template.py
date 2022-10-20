@@ -7,6 +7,7 @@ import logging
 from odoo import _, api, fields, models, tools, Command
 from odoo.exceptions import UserError
 from odoo.tools import is_html_empty
+from odoo.tools.safe_eval import safe_eval, time
 
 _logger = logging.getLogger(__name__)
 
@@ -63,10 +64,12 @@ class MailTemplate(models.Model):
                                       'attachment_id', 'Attachments',
                                       help="You may attach files to this template, to be added to all "
                                            "emails created from this template")
-    report_name = fields.Char('Report Filename', translate=True, prefetch=True,
-                              help="Name to use for the generated report file (may contain placeholders)\n"
-                                   "The extension can be omitted and will then come from the report type.")
-    report_template = fields.Many2one('ir.actions.report', 'Optional report to print and attach')
+    report_template_ids = fields.Many2many(
+        'ir.actions.report', relation='mail_template_ir_actions_report_rel',
+        column1='mail_template_id',
+        column2='ir_actions_report_id',
+        string='Reports to print and attach',
+        domain="[('model', '=', model)]")
     # options
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing Mail Server', readonly=False,
                                      help="Optional preferred server for outgoing mails. If not set, the highest "
@@ -198,14 +201,14 @@ class MailTemplate(models.Model):
     def _generate_template_attachments(self, res_ids, render_fields,
                                        render_results=None):
         """ Render attachments of template 'self', returning values for records
-        given by 'res_ids'. Note that ``report_template`` returns values for
+        given by 'res_ids'. Note that ``report_template_ids`` returns values for
         'attachments', as we have a list of tuple (report_name, base64 value)
         for those reports. It is considered as being the job of callers to
         transform those attachments into valid ``ir.attachment`` records.
 
         :param list res_ids: list of record IDs on which template is rendered;
         :param list render_fields: list of fields to render on template which
-          are specific to attachments, e.g. attachment_ids or report_template;
+          are specific to attachments, e.g. attachment_ids or report_template_ids;
         :param dict render_results: res_ids-based dictionary of render values.
           For each res_id, a dict of values based on render_fields is given
 
@@ -215,6 +218,11 @@ class MailTemplate(models.Model):
         if render_results is None:
             render_results = {}
 
+        # generating reports is done on a per-record basis, better ensure cache
+        # is filled up to avoid rendering and browsing in a loop
+        if res_ids and 'report_template_ids' in render_fields and self.report_template_ids:
+            self.env[self.model].browse(res_ids)
+
         for res_id in res_ids:
             values = render_results.setdefault(res_id, {})
 
@@ -223,27 +231,33 @@ class MailTemplate(models.Model):
                 values['attachment_ids'] = self.attachment_ids.ids
 
             # generate attachments (reports)
-            if 'report_template' in render_fields and self.report_template:
-                report = self.report_template
-
-                if report.report_type in ['qweb-html', 'qweb-pdf']:
-                    report_content, report_format = self.env['ir.actions.report']._render_qweb_pdf(report, [res_id])
-                else:
-                    render_res = self.env['ir.actions.report']._render(report, [res_id])
-                    if not render_res:
-                        raise UserError(_('Unsupported report type %s found.', report.report_type))
-                    report_content, report_format = render_res
-                report_content = base64.b64encode(report_content)
-
-                report_name = self._render_field('report_name', [res_id])[res_id]
-                if not report_name:
-                    report_name = 'report.' + report.report_name
-                ext = "." + report_format
-                if not report_name.endswith(ext):
-                    report_name += ext
-
-                values['attachments'] = [(report_name, report_content)]
-            elif 'report_template' in render_fields:
+            if 'report_template_ids' in render_fields and self.report_template_ids:
+                for report in self.report_template_ids:
+                    # generate content
+                    if report.report_type in ['qweb-html', 'qweb-pdf']:
+                        report_content, report_format = self.env['ir.actions.report']._render_qweb_pdf(report, [res_id])
+                    else:
+                        render_res = self.env['ir.actions.report']._render(report, [res_id])
+                        if not render_res:
+                            raise UserError(_('Unsupported report type %s found.', report.report_type))
+                        report_content, report_format = render_res
+                    report_content = base64.b64encode(report_content)
+                    # generate name
+                    if report.print_report_name:
+                        report_name = safe_eval(
+                            report.print_report_name,
+                            {
+                                'object': self.env[self.model].browse(res_id),
+                                'time': time,
+                            }
+                        )
+                    else:
+                        report_name = _('Report')
+                    extension = "." + report_format
+                    if not report_name.endswith(extension):
+                        report_name += extension
+                    values.setdefault('attachments', []).append((report_name, report_content))
+            elif 'report_template_ids' in render_fields:
                 values['attachments'] = []
 
         # hook for attachments-specific computation, used currently only for accounting
@@ -436,7 +450,7 @@ class MailTemplate(models.Model):
             'email_cc',  # recipients
             'email_to',  # recipients
             'partner_to',  # recipients
-            'report_template',  # attachments
+            'report_template_ids',  # attachments
             'scheduled_date',  # specific
             # not rendered (static)
             'auto_delete',
@@ -482,7 +496,7 @@ class MailTemplate(models.Model):
             )
 
             # generate attachments if requested
-            if render_fields_set & {'attachment_ids', 'report_template'}:
+            if render_fields_set & {'attachment_ids', 'report_template_ids'}:
                 template._generate_template_attachments(
                     template_res_ids,
                     render_fields_set,
@@ -533,7 +547,7 @@ class MailTemplate(models.Model):
              'model',
              'partner_to',
              'reply_to',
-             'report_template',
+             'report_template_ids',
              'res_id',
              'scheduled_date',
              'subject',

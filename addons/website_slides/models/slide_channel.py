@@ -145,7 +145,7 @@ class ChannelUsersRelation(models.Model):
                  'model',
                  'partner_to',
                  'reply_to',
-                 'report_template',
+                 'report_template_ids',
                  'res_id',
                  'scheduled_date',
                  'subject',

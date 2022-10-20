@@ -79,8 +79,7 @@
     </table>
 </div>
             </field>
-            <field name="report_template" ref="certification_report"/>
-            <field name="report_name">Certification Document</field>
+            <field name="report_template_ids" eval="[(4, ref('survey.certification_report'))]"/>
             <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>

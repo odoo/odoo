@@ -120,7 +120,7 @@ class TestEventFullCommon(EventCrmCase, TestSalesCommon, MockVisitor):
         # ------------------------------------------------------------
         test_registration_report = cls.env.ref('test_event_full.event_registration_report_test')
         subscription_template = cls.env.ref('event.event_subscription')
-        subscription_template.write({'report_template': test_registration_report.id})
+        subscription_template.write({'report_template_ids': [(6, 0, test_registration_report.ids)]})
         cls.test_event_type = cls.env['event.type'].create({
             'auto_confirm': True,
             'default_timezone': 'Europe/Paris',

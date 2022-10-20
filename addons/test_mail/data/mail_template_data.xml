@@ -33,6 +33,17 @@
         </t>
     </template>
 
+    <template id="mail_test_ticket_test_template_2">
+        <t t-call="web.html_container">
+            <t t-set="o" t-value="res_company"/>
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <p>This is another sample of an external report.</p>
+                </div>
+            </t>
+        </t>
+    </template>
+
     <template id="mail_template_simple_test">
         <p>Hello <t t-out="partner.name"/>, this comes from <t t-out="object.name"/>.</p>
     </template>
