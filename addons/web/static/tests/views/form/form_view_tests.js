@@ -4916,8 +4916,14 @@ QUnit.module("Views", (hooks) => {
 
         await editInput(target, ".o_field_widget[name=foo] input", "");
         await click(target.querySelector(".o_pager_next"));
-        assert.strictEqual(target.querySelector(".breadcrumb-item > span").innerText, "first record");
-        assert.strictEqual(target.querySelector(".breadcrumb-item > .o_form_status_indicator").innerText.trim(), "Unable to save");
+        assert.strictEqual(
+            target.querySelector(".breadcrumb-item > span").innerText,
+            "first record"
+        );
+        assert.strictEqual(
+            target.querySelector(".breadcrumb-item > .o_form_status_indicator").innerText.trim(),
+            "Unable to save"
+        );
         assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
         assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "2");
         assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "o_field_invalid");
@@ -4947,8 +4953,14 @@ QUnit.module("Views", (hooks) => {
         await editInput(target, ".o_field_widget[name=foo] input", "");
         triggerHotkey("alt+n");
         await nextTick();
-        assert.strictEqual(target.querySelector(".breadcrumb-item > span").innerText, "first record");
-        assert.strictEqual(target.querySelector(".breadcrumb-item > .o_form_status_indicator").innerText.trim(), "Unable to save");
+        assert.strictEqual(
+            target.querySelector(".breadcrumb-item > span").innerText,
+            "first record"
+        );
+        assert.strictEqual(
+            target.querySelector(".breadcrumb-item > .o_form_status_indicator").innerText.trim(),
+            "Unable to save"
+        );
         assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
         assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "2");
         assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "o_field_invalid");
@@ -12861,6 +12873,11 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test("Can't use FormRenderer implementation details in arch", async (assert) => {
+        // using t-esc in form view archs isn't accepted, so it displays a warning
+        // in the console
+        patchWithCleanup(console, {
+            warn: () => assert.step("warn"),
+        });
         await makeView({
             type: "form",
             resModel: "partner",
@@ -12876,5 +12893,6 @@ QUnit.module("Views", (hooks) => {
                 </form>`,
         });
         assert.strictEqual(target.querySelector(".o_form_nosheet").innerHTML, "<div></div>");
+        assert.verifySteps(["warn", "warn", "warn", "warn"]);
     });
 });
