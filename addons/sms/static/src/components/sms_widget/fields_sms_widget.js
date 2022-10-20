@@ -12,6 +12,7 @@ import { registry } from "@web/core/registry";
 export class SmsWidget extends EmojisTextField {
     setup() {
         super.setup();
+        this._emojiAdded = () => this.props.update(this.targetEditElement.el.value);
         this.notification = useService('notification');
     }
 
@@ -88,10 +89,10 @@ export class SmsWidget extends EmojisTextField {
      * @private
      */
     async onInput(ev) {
-        await this.props.update(this.targetEditElement.el.value);
         super.onInput(...arguments);
+        await this.props.update(this.targetEditElement.el.value);
     }
 }
 SmsWidget.template = 'sms.SmsWidget';
-SmsWidget.additionalClasses = [...(EmojisTextField.additionalClasses || []), 'o_field_text'];
+SmsWidget.additionalClasses = [...(EmojisTextField.additionalClasses || []), 'o_field_text', 'o_field_text_emojis'];
 registry.category("fields").add("sms_widget", SmsWidget);

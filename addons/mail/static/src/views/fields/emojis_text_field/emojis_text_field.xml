@@ -5,9 +5,8 @@
         <xpath expr="//span[1]" position="attributes">
             <attribute name="t-ref">targetReadonlyElement</attribute>
         </xpath>
-        <xpath expr="/*[last()]/*[last()]" position="after">
-            <EmojisDropdown onEmojiClick="onEmojiClick" type="'text'"
-                enable_emojis="props.enable_emojis" readonly="props.readonly"/>
+        <xpath expr="//textarea" position="after">
+            <t t-call="mail.EmojisFieldButton"/>
         </xpath>
     </t>
 </templates>
