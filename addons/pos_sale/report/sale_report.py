@@ -52,6 +52,7 @@ class SaleReport(models.Model):
             pos.name AS name,
             pos.date_order AS date,
             CASE WHEN pos.state = 'draft' THEN 'pos_draft' WHEN pos.state = 'done' THEN 'pos_done' else pos.state END AS state,
+            NULL as invoice_status,
             pos.partner_id AS partner_id,
             pos.user_id AS user_id,
             pos.company_id AS company_id,

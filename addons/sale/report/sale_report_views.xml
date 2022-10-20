@@ -38,6 +38,7 @@
                 <field name="price_subtotal" optional="hide" sum="Sum of Untaxed Total"/>
                 <field name="price_total" optional="show" sum="Sum of Total"/>
                 <field name="state" optional="hide"/>
+                <field name="invoice_status" optional="hide"/>
             </tree>
         </field>
     </record>
@@ -58,6 +59,8 @@
                 <field name="team_id"/>
                 <field name="product_id"/>
                 <field name="categ_id"/>
+                <filter name="to_invoice" string="To Invoice" domain="[('invoice_status', '=', 'to invoice')]"/>
+                <filter name="fully_invoiced" string="Fully Invoiced" domain="[('invoice_status', '=', 'invoiced')]"/>
                 <field name="partner_id"/>
                 <field name="country_id"/>
                 <field name="industry_id"/>
