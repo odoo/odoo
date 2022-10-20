@@ -3189,6 +3189,14 @@ const SnippetOptionWidget = Widget.extend({
      * @param {boolean} previewMode - @see this.selectClass
      * @param {string} widgetValue
      * @param {Object} params
+     * @param {string} [params.forceStyle] if undefined, the method will not
+     *      set the inline style (and thus even remove it) if the item would
+     *      already have the given style without it (thanks to a CSS rule for
+     *      example). If defined (as a string), it acts as the "priority" param
+     *      of @see CSSStyleDeclaration.setProperty: it should be 'important' to
+     *      set the style as important or '' otherwise. Note that if forceStyle
+     *      is undefined, the style is set as important only if required to have
+     *      an effect.
      * @returns {Promise|undefined}
      */
     selectStyle: async function (previewMode, widgetValue, params) {
@@ -3310,6 +3318,11 @@ const SnippetOptionWidget = Widget.extend({
         hasUserValue = applyCSS.call(this, cssProps[0], values.join(' '), styles) || hasUserValue;
 
         function applyCSS(cssProp, cssValue, styles) {
+            if (typeof params.forceStyle !== 'undefined') {
+                this.$target[0].style.setProperty(cssProp, cssValue, params.forceStyle);
+                return true;
+            }
+
             // This condition requires extraClass to NOT be set.
             if (!weUtils.areCssValuesEqual(styles[cssProp], cssValue, cssProp, this.$target[0])) {
                 // Property must be set => extraClass will be enabled.
