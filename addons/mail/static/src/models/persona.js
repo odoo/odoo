@@ -6,6 +6,17 @@ Model({
     name: 'Persona',
     identifyingMode: 'xor',
     fields: {
+        avatarUrl: attr({
+            compute() {
+                if (this.guest) {
+                    return this.guest.avatarUrl || clear();
+                }
+                if (this.partner) {
+                    return this.partner.avatarUrl || clear();
+                }
+                return clear();
+            },
+        }),
         channelMembers: many('ChannelMember', { inverse: 'persona', isCausal: true }),
         guest: one('Guest', { identifying: true, inverse: 'persona' }),
         im_status: attr({

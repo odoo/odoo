@@ -75,7 +75,7 @@ Model({
         }),
         backgroundOpacity: attr({
             compute() {
-                if (this.attachmentViewer) {
+                if (this.attachmentViewer || this.messageContextMenu) {
                     return 0.7;
                 }
                 return 0.5;
@@ -111,6 +111,9 @@ Model({
                 }
                 if (this.linkPreviewDeleteConfirmView) {
                     return 'LinkPreviewDeleteConfirmView';
+                }
+                if (this.messageContextMenu) {
+                    return 'MessageContextMenu';
                 }
                 return clear();
             },
@@ -153,6 +156,15 @@ Model({
             },
         }),
         messageActionViewOwnerAsDeleteConfirm: one('MessageActionView', { identifying: true, inverse: 'deleteConfirmDialog' }),
+        messageContextMenu: one('MessageContextMenu', { inverse: 'owner',
+            compute() {
+                if (this.messageViewOwnerAsContextMenu) {
+                    return {};
+                }
+                return clear();
+            },
+        }),
+        messageViewOwnerAsContextMenu: one('MessageView', { identifying: true, inverse: 'contextMenuDialog' }),
         /**
          * Content of dialog that is directly linked to a record that models
          * a UI component, such as AttachmentViewer. These records must be
@@ -169,11 +181,14 @@ Model({
                 if (this.deleteMessageConfirmView) {
                     return this.deleteMessageConfirmView;
                 }
+                if (this.followerSubtypeList) {
+                    return this.followerSubtypeList;
+                }
                 if (this.linkPreviewDeleteConfirmView) {
                     return this.linkPreviewDeleteConfirmView;
                 }
-                if (this.followerSubtypeList) {
-                    return this.followerSubtypeList;
+                if (this.messageContextMenu) {
+                    return this.messageContextMenu;
                 }
             },
         }),
