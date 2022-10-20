@@ -1389,7 +1389,23 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
             } else if (weUtils.isColorCombinationName(this._value)) {
                 this.colorPreviewEl.classList.add('o_cc', `o_cc${this._value}`);
             } else {
-                this.colorPreviewEl.classList.add(`bg-${this._value}`);
+                // Checking if the className actually exists seems overkill but
+                // it is actually needed to prevent a crash. As an example, if a
+                // colorpicker widget is linked to a SnippetOption instance's
+                // `selectStyle` method designed to handle the "border-color"
+                // property of an element, the value received can be split if
+                // the item uses different colors for its top/right/bottom/left
+                // borders. For instance, you could receive "red blue" if the
+                // item as red top and bottom borders and blue left and right
+                // borders, in which case you would reach this `else` and try to
+                // add the class "bg-red blue" which would crash because of the
+                // space inside). In that case, we simply do not show any color.
+                // We could choose to handle this split-value case specifically
+                // but it was decided that this is enough for the moment.
+                const className = `bg-${this._value}`;
+                if (classes.includes(className)) {
+                    this.colorPreviewEl.classList.add(className);
+                }
             }
         }
     },
