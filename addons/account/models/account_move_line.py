@@ -15,9 +15,9 @@ INTEGRITY_HASH_LINE_FIELDS = ('debit', 'credit', 'account_id', 'partner_id')
 
 class AccountMoveLine(models.Model):
     _name = "account.move.line"
-    _inherit = 'analytic.mixin'
+    _inherit = "analytic.mixin"
     _description = "Journal Item"
-    _order = "date desc, move_name desc, sequence, id"
+    _order = "date desc, move_name desc, id"
     _check_company_auto = True
     _rec_names_search = ['name', 'move_id', 'product_id']
 
@@ -78,6 +78,7 @@ class AccountMoveLine(models.Model):
         compute='_compute_account_id', store=True, readonly=False, precompute=True,
         inverse='_inverse_account_id',
         index=True,
+        auto_join=True,
         ondelete="cascade",
         domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('is_off_balance', '=', False)]",
         check_company=True,
@@ -143,16 +144,19 @@ class AccountMoveLine(models.Model):
         comodel_name='account.payment',
         string="Originator Payment",
         related='move_id.payment_id', store=True,
+        auto_join=True,
         index='btree_not_null',
         help="The payment that created this entry")
     statement_line_id = fields.Many2one(
         comodel_name='account.bank.statement.line',
         string="Originator Statement Line",
         related='move_id.statement_line_id', store=True,
+        auto_join=True,
         index='btree_not_null',
         help="The statement line that created this entry")
     statement_id = fields.Many2one(
         related='statement_line_id.statement_id', store=True,
+        auto_join=True,
         index='btree_not_null',
         copy=False,
         help="The bank statement used for bank reconciliation")
@@ -352,6 +356,9 @@ class AccountMoveLine(models.Model):
         comodel_name='account.analytic.line', inverse_name='move_line_id',
         string='Analytic lines',
     )
+    analytic_distribution = fields.Json(
+        inverse="_inverse_analytic_distribution",
+    ) # add the inverse function used to trigger the creation/update of the analytic lines accordingly (field originally defined in the analytic mixin)
 
     # === Early Pay fields === #
     discount_date = fields.Date(
@@ -1071,10 +1078,10 @@ class AccountMoveLine(models.Model):
                 line.term_key = False
 
     @api.depends('account_id', 'partner_id', 'product_id')
-    def _compute_analytic_distribution_stored_char(self):
+    def _compute_analytic_distribution(self):
         for line in self:
             if line.display_type == 'product' or not line.move_id.is_invoice(include_receipts=True):
-                distribution = self.env['account.analytic.distribution.model']._get_distributionjson({
+                distribution = self.env['account.analytic.distribution.model']._get_distribution({
                     "product_id": line.product_id.id,
                     "product_categ_id": line.product_id.categ_id.id,
                     "partner_id": line.partner_id.id,
@@ -1082,8 +1089,7 @@ class AccountMoveLine(models.Model):
                     "account_prefix": line.account_id.code,
                     "company_id": line.company_id.id,
                 })
-                line.analytic_distribution_stored_char = distribution or line.analytic_distribution_stored_char
-            line._compute_analytic_distribution()
+                line.analytic_distribution = distribution or line.analytic_distribution
 
     # -------------------------------------------------------------------------
     # INVERSE METHODS
@@ -1125,7 +1131,6 @@ class AccountMoveLine(models.Model):
     @api.onchange('analytic_distribution')
     def _inverse_analytic_distribution(self):
         """ Unlink and recreate analytic_lines when modifying the distribution."""
-        super()._inverse_analytic_distribution()
         lines_to_modify = self.env['account.move.line'].browse([
             line.id for line in self if line.parent_state == "posted"
         ])
@@ -2344,7 +2349,7 @@ class AccountMoveLine(models.Model):
                 continue
             distribution_by_root_plan = {}
             for analytic_account_id, percentage in (line.analytic_distribution or {}).items():
-                root_plan = self.env['account.analytic.account'].browse(analytic_account_id).root_plan_id
+                root_plan = self.env['account.analytic.account'].browse(int(analytic_account_id)).root_plan_id
                 distribution_by_root_plan[root_plan.id] = distribution_by_root_plan.get(root_plan.id, 0) + percentage
 
             for plan_id in mandatory_plans_ids:
@@ -2365,7 +2370,6 @@ class AccountMoveLine(models.Model):
     def _prepare_analytic_lines(self):
         self.ensure_one()
         analytic_line_vals = []
-        self._compute_analytic_distribution()
         if self.analytic_distribution:
             # distribution_on_each_plan corresponds to the proportion that is distributed to each plan to be able to
             # give the real amount when we achieve a 100% distribution

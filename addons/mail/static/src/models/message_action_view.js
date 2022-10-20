@@ -175,6 +175,9 @@ registerModel({
                     case this.messageAction.messageActionListOwnerAsToggleCompact:
                         return this.env._t("Compact");
                     case this.messageAction.messageActionListOwnerAsToggleStar:
+                        if (this.messageAction.messageActionListOwner.message.isStarred) {
+                            return this.env._t("Remove from Todo");
+                        }
                         return this.env._t("Mark as Todo");
                     default:
                         return clear();

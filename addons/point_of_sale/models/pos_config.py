@@ -173,6 +173,7 @@ class PosConfig(models.Model):
                                                    "In the meantime, you can use the 'Load Customers' button to load partners from database.")
     limited_partners_amount = fields.Integer(default=100)
     partner_load_background = fields.Boolean(default=True)
+    auto_validate_terminal_payment = fields.Boolean(default=True, help="Automatically validates orders paid with a payment terminal.")
 
     @api.depends('payment_method_ids')
     def _compute_cash_control(self):
@@ -495,7 +496,7 @@ class PosConfig(models.Model):
         # check if there's any product for this PoS
         domain = [('available_in_pos', '=', True)]
         if self.limit_categories and self.iface_available_categ_ids:
-            domain.append(('pos_categ_id', 'in', self.iface_available_categ_ids))
+            domain.append(('pos_categ_id', 'in', self.iface_available_categ_ids.ids))
         if not self.env['product.product'].search(domain):
             return {
                 'name': _("There is no products linked to your PoS"),

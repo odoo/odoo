@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, tools, api
+from odoo import fields, models, tools
 
 
 class ActivityReport(models.Model):
@@ -33,6 +33,7 @@ class ActivityReport(models.Model):
         selection=[('lead', 'Lead'), ('opportunity', 'Opportunity')],
         help="Type is used to separate Leads and Opportunities")
     active = fields.Boolean('Active', readonly=True)
+    tag_ids = fields.Many2many(related="lead_id.tag_ids", readonly=True)
 
     def _select(self):
         return """

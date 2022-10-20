@@ -1928,7 +1928,7 @@ QUnit.test('chat window should remain folded when new message is received', asyn
     );
 });
 
-QUnit.test('should not have chat window hidden menu in mobile (transition from 2 chat windows in desktop to mobile)', async function (assert) {
+QUnit.test('should not have chat window hidden menu in mobile (transition from 3 chat windows in desktop to mobile)', async function (assert) {
     /**
      * computation uses following info:
      * ([mocked] global window width: 900px)
@@ -1939,27 +1939,32 @@ QUnit.test('should not have chat window hidden menu in mobile (transition from 2
      * - hidden menu width: 170px
      * - global width: 1080px
      *
-     * Not enough space for 2 visible chat windows:
-     *  10 + 340 + 5 + 340 + 10 = 705 > 600
-     * Enough space for 1 visible chat window + hidden menu:
-     *  10 + 340 + 5 + 170 + 10 = 535 < 600
+     * Not enough space for 3 visible chat windows:
+     *  10 + 340 + 5 + 340 + 5 + 340 + 10 = 1050 > 900
+     * Enough space for 2 visible chat windows + hidden menu:
+     *  10 + 340 + 5 + 340 + 5 + 170 + 10 = 880 < 900
      */
     assert.expect(1);
 
     const pyEnv = await startServer();
-    const [mailChannelId1, mailChannelId2] = pyEnv['mail.channel'].create([{ name: 'mailChannel1' }, { name: 'mailChannel1' }]);
-    patchUiSize({ width: 600 }); // enough to fit 1 chat window + hidden menu
+    const [mailChannelId1, mailChannelId2, mailChannelId3] = pyEnv['mail.channel'].create([{ name: 'mailChannel1' }, { name: 'mailChannel2' }, { name: 'mailChannel3' }]);
+    patchUiSize({ width: 900 }); // enough to fit 2 chat windows + hidden menu
     const { click, messaging } = await start();
-    // open, from systray menu, chat windows of channels with id 1, 2
+    // open, from systray menu, chat windows of channels with id 1, 2, 3
     await click('.o_MessagingMenu_toggler');
     await click(`
         .o_MessagingMenu_dropdownMenu
         .o_ChannelPreviewView[data-channel-id="${mailChannelId1}"]
     `);
-    await click('.o_ChatWindowHeader_commandBack');
+    await click('.o_MessagingMenu_toggler');
     await click(`
         .o_MessagingMenu_dropdownMenu
         .o_ChannelPreviewView[data-channel-id="${mailChannelId2}"]
+    `);
+    await click('.o_MessagingMenu_toggler');
+    await click(`
+        .o_MessagingMenu_dropdownMenu
+        .o_ChannelPreviewView[data-channel-id="${mailChannelId3}"]
     `);
     // simulate resize to go into mobile
     await afterNextRender(
@@ -1973,7 +1978,7 @@ QUnit.test('should not have chat window hidden menu in mobile (transition from 2
     assert.containsNone(
         document.body,
         '.o_ChatWindowManager_hiddenMenu',
-        "should not have any chat window hidden menu in mobile (transition from desktop having 2 visible chat windows)",
+        "should not have any chat window hidden menu in mobile (transition from desktop having 3 chat windows (2 visible, 1 hidden)",
     );
 });
 

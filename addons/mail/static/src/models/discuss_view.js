@@ -58,7 +58,7 @@ registerModel({
          */
         onInputQuickSearch(ev) {
             ev.stopPropagation();
-            this.discuss.onInputQuickSearch(this.quickSearchInputRef.el.value);
+            this.discuss.onInputQuickSearch(this.sidebar.quickSearchInputRef.el.value);
         },
         /**
          * Called when clicking on a mailbox selection item.
@@ -160,15 +160,28 @@ registerModel({
             },
             inverse: 'discussViewOwnerAsMobileAddItemHeader',
         }),
+        mobileMailboxSelectionView: one('DiscussMobileMailboxSelectionView', {
+            compute() {
+                if (this.messaging.device.isSmall && this.discuss.activeMobileNavbarTabId === 'mailbox') {
+                    return {};
+                }
+                return clear();
+            },
+            inverse: 'owner',
+        }),
         orderedMailboxes: many('Mailbox', {
             related: 'messaging.allMailboxes',
             sort: [['smaller-first', 'sequence']],
         }),
-        /**
-         * Reference of the quick search input. Useful to filter channels and
-         * chats based on this input content.
-         */
-        quickSearchInputRef: attr(),
+        sidebar: one('DiscussSidebarView', {
+            compute() {
+                if (!this.messaging.device.isSmall) {
+                    return {};
+                }
+                return clear();
+            },
+            inverse: 'owner',
+        }),
         starredView: one('DiscussSidebarMailboxView', {
             default: {},
             inverse: 'discussViewOwnerAsStarred',

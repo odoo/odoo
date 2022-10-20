@@ -1811,14 +1811,14 @@ QUnit.test('restore thread scroll position', async function (assert) {
         "should have scrolled to bottom of channel 1 initially"
     );
 
-    await afterNextRender(() => afterEvent({
+    await afterEvent({
         eventName: 'o-component-message-list-scrolled',
         func: () => document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`).scrollTop = 0,
         message: "should wait until channel 1 changed its scroll position to top",
         predicate: ({ thread }) => {
             return thread && thread.channel && thread.channel.id === mailChannelId1;
         },
-    }));
+    });
     assert.strictEqual(
         document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`).scrollTop,
         0,
@@ -3361,7 +3361,7 @@ QUnit.test('receive new chat message: out of odoo focus (notification, channel)'
         },
     });
     await openDiscuss();
-    env.bus.on('set_title_part', null, payload => {
+    env.bus.addEventListener('set_title_part', ({ detail: payload }) => {
         assert.step('set_title_part');
         assert.strictEqual(payload.part, '_chat');
         assert.strictEqual(payload.title, "1 Message");
@@ -3393,7 +3393,7 @@ QUnit.test('receive new chat message: out of odoo focus (notification, chat)', a
         },
     });
     await openDiscuss();
-    env.bus.on('set_title_part', null, payload => {
+    env.bus.addEventListener('set_title_part', ({ detail: payload }) => {
         assert.step('set_title_part');
         assert.strictEqual(payload.part, '_chat');
         assert.strictEqual(payload.title, "1 Message");
@@ -3429,7 +3429,7 @@ QUnit.test('receive new chat messages: out of odoo focus (tab title)', async fun
         },
     });
     await openDiscuss();
-    env.bus.on('set_title_part', null, payload => {
+    env.bus.addEventListener('set_title_part', ({ detail: payload }) => {
         step++;
         assert.step('set_title_part');
         assert.strictEqual(payload.part, '_chat');

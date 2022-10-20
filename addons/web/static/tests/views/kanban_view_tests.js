@@ -38,10 +38,8 @@ import { KanbanAnimatedNumber } from "@web/views/kanban/kanban_animated_number";
 import { kanbanView } from "@web/views/kanban/kanban_view";
 import { DynamicRecordList } from "@web/views/relational_model";
 import { ViewButton } from "@web/views/view_button/view_button";
-import AbstractField from "web.AbstractField";
-import legacyFieldRegistry from "web.field_registry";
 
-const { Component, onWillStart, xml } = owl;
+const { Component, xml } = owl;
 
 const serviceRegistry = registry.category("services");
 const viewWidgetRegistry = registry.category("view_widgets");
@@ -6703,7 +6701,7 @@ QUnit.module("Views", (hooks) => {
 
         await toggleColumnActions(0);
 
-        assert.containsNone(target, '[tabindex]:not([tabindex="-1"])');
+        assert.containsN(target, ".o_kanban_record", 16);
         assert.hasClass(document.activeElement, "o_searchview_input");
 
         await triggerEvent(document.activeElement, null, "keydown", { key: "ArrowDown" });
@@ -7556,6 +7554,70 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(getCardTexts(), ["2", "4", "1", "3"]);
     });
 
+    QUnit.test(
+        "resequence all when create(ing) a new record + partial resequencing",
+        async (assert) => {
+            let resequenceOffset;
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: /* xml */ `
+                <kanban>
+                    <field name="product_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="id"/></div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+                groupBy: ["product_id"],
+                mockRPC(route, params) {
+                    if (route === "/web/dataset/resequence") {
+                        assert.step(JSON.stringify({ ids: params.ids, offset: params.offset }));
+                        resequenceOffset = params.offset || 0;
+                        return true;
+                    }
+                    if (params.method === "read") {
+                        // Important to simulate the server returning the new sequence.
+                        const [ids, fields] = params.args;
+                        return ids.map((id, index) => ({
+                            id,
+                            [fields[0]]: resequenceOffset + index,
+                        }));
+                    }
+                },
+            });
+
+            await createColumn();
+            await editColumnName("foo");
+            await validateColumn();
+            assert.verifySteps([JSON.stringify({ ids: [3, 5, 6] })]);
+
+            await editColumnName("bar");
+            await validateColumn();
+            assert.verifySteps([JSON.stringify({ ids: [3, 5, 6, 7] })]);
+
+            await editColumnName("baz");
+            await validateColumn();
+            assert.verifySteps([JSON.stringify({ ids: [3, 5, 6, 7, 8] })]);
+
+            await editColumnName("boo");
+            await validateColumn();
+            assert.verifySteps([JSON.stringify({ ids: [3, 5, 6, 7, 8, 9] })]);
+
+            // When rearranging, only resequence the affected records. In this example,
+            // dragging column 2 to column 4 should only resequence [5, 6, 7] to [6, 7, 5]
+            // with offset 1.
+            await dragAndDrop(
+                ".o_kanban_group:nth-child(2) .o_column_title",
+                ".o_kanban_group:nth-child(4)"
+            );
+            assert.verifySteps([JSON.stringify({ ids: [6, 7, 5], offset: 1 })]);
+        }
+    );
+
     QUnit.test("prevent resequence columns if groups_draggable=false", async (assert) => {
         serverData.models.product.fields.sequence = { type: "integer" };
 
@@ -8164,62 +8226,6 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(getCard(2).querySelector(".o_widget").innerText, '{"foo":"gnap"}');
-    });
-
-    QUnit.test("subwidgets with on_attach_callback when changing record color", async (assert) => {
-        // Note: since the OWL refactor the 'on_attach_callback' is only called
-        // once since the card is not entirely re-rendered. Instead we check that
-        // the data displayed in the widget field is correctly updated.
-        let counter = 0;
-        legacyFieldRegistry.add(
-            "test_widget",
-            AbstractField.extend({
-                on_attach_callback: () => counter++,
-                _renderReadonly() {
-                    this.el.innerText = this.record.data.color;
-                },
-            })
-        );
-
-        await makeView({
-            type: "kanban",
-            resModel: "category",
-            serverData,
-            arch:
-                "<kanban>" +
-                '<field name="color"/>' +
-                "<templates>" +
-                '<t t-name="kanban-box">' +
-                '<div color="color">' +
-                '<div class="o_dropdown_kanban dropdown">' +
-                '<a class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" href="#">' +
-                '<span class="fa fa-bars fa-lg"/>' +
-                "</a>" +
-                '<ul class="dropdown-menu" role="menu">' +
-                "<li>" +
-                '<ul class="oe_kanban_colorpicker"/>' +
-                "</li>" +
-                "</ul>" +
-                "</div>" +
-                '<field name="name" widget="test_widget"/>' +
-                "</div>" +
-                "</t>" +
-                "</templates>" +
-                "</kanban>",
-        });
-
-        // counter should be 2 as there are 2 records
-        assert.strictEqual(counter, 2, "on_attach_callback should have been called twice");
-        assert.deepEqual(getCardTexts(), ["2", "5"]);
-
-        // set a color to kanban record
-        await toggleRecordDropdown(0);
-        await click(getCard(0), ".oe_kanban_colorpicker a.oe_kanban_color_9");
-
-        // first record has replaced its $el with a new one
-        assert.hasClass(getCard(0), "oe_kanban_color_9");
-        assert.deepEqual(getCardTexts(), ["9", "5"]);
-        assert.strictEqual(counter, 2, "on_attach_callback should have been called twice");
     });
 
     QUnit.test("column progressbars properly work", async (assert) => {
@@ -9407,201 +9413,6 @@ QUnit.module("Views", (hooks) => {
             await triggerEvent(firstCard, null, "keydown", { key: "Enter" });
         }
     );
-
-    QUnit.test("asynchronous rendering of a field widget (ungrouped)", async (assert) => {
-        let fooFieldDef = makeDeferred();
-        legacyFieldRegistry.add(
-            "asyncwidget",
-            AbstractField.extend({
-                async willStart() {
-                    await Promise.all([this._super(...arguments), fooFieldDef]);
-                },
-                async start() {
-                    this.el.innerText = "LOADED";
-                    return this._super(...arguments);
-                },
-            })
-        );
-
-        const makeViewProm = makeView({
-            type: "kanban",
-            resModel: "partner",
-            serverData,
-            arch:
-                '<kanban><templates><t t-name="kanban-box">' +
-                '<div><field name="foo" widget="asyncwidget"/></div>' +
-                "</t></templates></kanban>",
-        });
-        await nextTick();
-
-        assert.containsNone(target, ".o_kanban_record", "kanban view is not ready yet");
-
-        fooFieldDef.resolve();
-        const kanban = await makeViewProm;
-
-        assert.deepEqual(getCardTexts(), ["LOADED", "LOADED", "LOADED", "LOADED"]);
-
-        // reload with a domain
-        fooFieldDef = makeDeferred();
-        await reload(kanban, { domain: [["id", "=", 1]] });
-
-        assert.deepEqual(getCardTexts(), ["LOADED", "LOADED", "LOADED", "LOADED"]);
-
-        fooFieldDef.resolve();
-        await nextTick();
-
-        assert.deepEqual(getCardTexts(), ["LOADED"]);
-    });
-
-    QUnit.test("asynchronous rendering of a field widget (grouped)", async (assert) => {
-        let fooFieldDef = makeDeferred();
-        legacyFieldRegistry.add(
-            "asyncwidget",
-            AbstractField.extend({
-                async willStart() {
-                    await Promise.all([this._super(...arguments), fooFieldDef]);
-                },
-                async start() {
-                    this.el.innerText = "LOADED";
-                    return this._super(...arguments);
-                },
-            })
-        );
-
-        const makeViewProm = makeView({
-            type: "kanban",
-            resModel: "partner",
-            serverData,
-            arch:
-                '<kanban><templates><t t-name="kanban-box">' +
-                '<div><field name="foo" widget="asyncwidget"/></div>' +
-                "</t></templates></kanban>",
-            groupBy: ["foo"],
-        });
-        await nextTick();
-
-        assert.containsNone(target, ".o_kanban_record", "kanban view is not ready yet");
-
-        fooFieldDef.resolve();
-        const kanban = await makeViewProm;
-
-        assert.deepEqual(getCardTexts(), ["LOADED", "LOADED", "LOADED", "LOADED"]);
-
-        // reload with a domain
-        fooFieldDef = makeDeferred();
-        await reload(kanban, { domain: [["id", "=", 1]] });
-
-        assert.deepEqual(getCardTexts(), ["LOADED", "LOADED", "LOADED", "LOADED"]);
-
-        fooFieldDef.resolve();
-        await nextTick();
-
-        assert.deepEqual(getCardTexts(), ["LOADED"]);
-    });
-
-    QUnit.test("asynchronous rendering of a field widget with display attr", async (assert) => {
-        const fooFieldDef = makeDeferred();
-        const CharField = legacyFieldRegistry.get("char");
-        legacyFieldRegistry.add(
-            "asyncwidget",
-            CharField.extend({
-                async willStart() {
-                    await Promise.all([this._super(...arguments), fooFieldDef]);
-                },
-                async start() {
-                    this.el.innerText = "LOADED";
-                },
-            })
-        );
-
-        const makeViewProm = makeView({
-            type: "kanban",
-            resModel: "partner",
-            serverData,
-            arch:
-                '<kanban><templates><t t-name="kanban-box">' +
-                '<div><field name="foo" display="right" widget="asyncwidget"/></div>' +
-                "</t></templates></kanban>",
-        });
-        await nextTick();
-
-        assert.containsNone(target, ".o_kanban_record", "kanban view is not ready yet");
-
-        fooFieldDef.resolve();
-        await makeViewProm;
-
-        assert.deepEqual(getCardTexts(), ["LOADED", "LOADED", "LOADED", "LOADED"]);
-        assert.hasClass(getCard(0).querySelector(".o_field_asyncwidget"), "float-end");
-    });
-
-    QUnit.test("asynchronous rendering of a widget", async (assert) => {
-        const widgetDef = makeDeferred();
-        class AsyncWidget extends Component {
-            setup() {
-                onWillStart(async () => {
-                    await widgetDef;
-                });
-            }
-        }
-        AsyncWidget.template = xml`<div>LOADED</div>`;
-        viewWidgetRegistry.add("asyncwidget", AsyncWidget);
-
-        const makeViewProm = makeView({
-            type: "kanban",
-            resModel: "partner",
-            serverData,
-            arch:
-                '<kanban><templates><t t-name="kanban-box">' +
-                '<div><widget name="asyncwidget"/></div>' +
-                "</t></templates></kanban>",
-        });
-        await nextTick();
-
-        assert.containsNone(target, ".o_kanban_record", "kanban view is not ready yet");
-
-        widgetDef.resolve();
-        await makeViewProm;
-
-        assert.deepEqual(getCardTexts(), ["LOADED", "LOADED", "LOADED", "LOADED"]);
-    });
-
-    QUnit.test("update kanban with asynchronous field widget", async (assert) => {
-        const fooFieldDef = makeDeferred();
-        legacyFieldRegistry.add(
-            "asyncwidget",
-            AbstractField.extend({
-                async willStart() {
-                    await Promise.all([this._super(...arguments), fooFieldDef]);
-                },
-                async start() {
-                    this.el.innerText = "LOADED";
-                    return this._super(...arguments);
-                },
-            })
-        );
-
-        const kanban = await makeView({
-            type: "kanban",
-            resModel: "partner",
-            serverData,
-            arch:
-                '<kanban><templates><t t-name="kanban-box">' +
-                '<div><field name="foo" widget="asyncwidget"/></div>' +
-                "</t></templates></kanban>",
-            domain: [["id", "=", "0"]], // no record matches this domain
-        });
-
-        assert.containsNone(target, ".o_kanban_record:not(.o_kanban_ghost)");
-
-        reload(kanban, { domain: [] }); // this rendering will be async
-
-        assert.containsNone(target, ".o_kanban_record:not(.o_kanban_ghost)");
-
-        fooFieldDef.resolve();
-        await nextTick();
-
-        assert.deepEqual(getCardTexts(), ["LOADED", "LOADED", "LOADED", "LOADED"]);
-    });
 
     QUnit.test("set cover image", async (assert) => {
         assert.expect(10);
@@ -12195,4 +12006,66 @@ QUnit.module("Views", (hooks) => {
             ["1", "2", "3"]
         );
     });
+
+    QUnit.test(
+        "drag & drop records grouped by m2o with m2o displayed in records",
+        async (assert) => {
+            const prom = makeDeferred();
+            const readIds = [[2], [1, 3, 2]];
+
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <kanban>
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div>
+                                    <field name="product_id" widget="many2one"/>
+                                </div>
+                            </t>
+                        </templates>
+                    </kanban>
+                `,
+                groupBy: ["product_id"],
+                mockRPC: async (route, args) => {
+                    assert.step(args.method || route);
+                    if (args.method === "read") {
+                        assert.deepEqual(args.args[0], readIds.shift());
+                        await prom;
+                    }
+                },
+            });
+
+            assert.verifySteps([
+                "get_views",
+                "web_read_group",
+                "web_search_read",
+                "web_search_read",
+            ]);
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_kanban_record")].map((el) => el.innerText),
+                ["hello", "hello", "xmo", "xmo"]
+            );
+
+            await dragAndDrop(
+                ".o_kanban_group:nth-child(2) .o_kanban_record",
+                ".o_kanban_group:first-child"
+            );
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_kanban_record")].map((el) => el.innerText),
+                ["hello", "hello", "hello", "xmo"]
+            );
+
+            prom.resolve();
+            await nextTick();
+
+            assert.verifySteps(["write", "read", "/web/dataset/resequence", "read"]);
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_kanban_record")].map((el) => el.innerText),
+                ["hello", "hello", "hello", "xmo"]
+            );
+        }
+    );
 });

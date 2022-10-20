@@ -1173,7 +1173,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'code': 'TEST'
         })
 
-        analytic_distribution = {analytic_account.id: 100}
+        analytic_distribution = {str(analytic_account.id): 100.00}
 
         move_form = Form(self.invoice)
         with move_form.invoice_line_ids.edit(0) as line_form:
@@ -1291,7 +1291,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'code': 'TEST1'
         })
 
-        analytic_distribution = {analytic_account.id: 100}
+        analytic_distribution = {str(analytic_account.id): 100.00}
 
         self.invoice.write({'invoice_line_ids': [(1, self.invoice.invoice_line_ids.ids[0], {
             'analytic_distribution': analytic_distribution,

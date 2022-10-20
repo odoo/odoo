@@ -181,8 +181,14 @@ class TestSaleToInvoice(TestSaleCommon):
         for line in self.sale_order.order_line:
             self.assertTrue(float_is_zero(line.untaxed_amount_invoiced, precision_digits=2), "The invoiced amount should be zero, as the line is in draft state")
 
-        self.assertEqual(self.sol_serv_order.untaxed_amount_to_invoice, 297, "The untaxed amount to invoice is wrong")
-        self.assertEqual(self.sol_serv_deliver.untaxed_amount_to_invoice, self.sol_serv_deliver.qty_delivered * self.sol_serv_deliver.price_reduce, "The untaxed amount to invoice should be qty deli * price reduce, so 4 * (180 - 36)")
+        self.assertEqual(
+            self.sol_serv_order.untaxed_amount_to_invoice,
+            297,
+            "The untaxed amount to invoice is wrong")
+        self.assertEqual(
+            self.sol_serv_deliver.untaxed_amount_to_invoice,
+            576,
+            "The untaxed amount to invoice should be qty deli * price reduce, so 4 * (180 - 36)")
         # 'untaxed_amount_to_invoice' is invalid when 'sale_stock' is installed.
         # self.assertEqual(self.sol_prod_deliver.untaxed_amount_to_invoice, 140, "The untaxed amount to invoice should be qty deli * price reduce, so 4 * (180 - 36)")
 
@@ -447,7 +453,7 @@ class TestSaleToInvoice(TestSaleCommon):
         down_payment.create_invoices()
 
         aml = self.env['account.move.line'].search([('move_id', 'in', so.invoice_ids.ids)])[0]
-        self.assertRecordValues(aml, [{'analytic_distribution': {analytic_account_default.id: 100}}])
+        self.assertRecordValues(aml, [{'analytic_distribution': {str(analytic_account_default.id): 100}}])
 
     def test_invoice_analytic_account_so_not_default(self):
         """ Tests whether, when an analytic account rule is set and the so has an analytic account,
@@ -486,7 +492,7 @@ class TestSaleToInvoice(TestSaleCommon):
         down_payment.create_invoices()
 
         aml = self.env['account.move.line'].search([('move_id', 'in', so.invoice_ids.ids)])[0]
-        self.assertRecordValues(aml, [{'analytic_distribution': {analytic_account_default.id: 100, analytic_account_so.id: 100}}])
+        self.assertRecordValues(aml, [{'analytic_distribution': {str(analytic_account_default.id): 100, str(analytic_account_so.id): 100}}])
 
     def test_invoice_after_product_return_price_not_default(self):
         so = self.env['sale.order'].create({

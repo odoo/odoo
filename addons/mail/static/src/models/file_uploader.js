@@ -152,7 +152,7 @@ registerModel({
             if (webRecord) {
                 webRecord.model.load({ resId: thread.id });
             }
-            if (chatter && chatter.exists() && chatter.hasParentReloadOnAttachmentsChanged) {
+            if (chatter && chatter.exists() && chatter.shouldReloadParentFromFileChanged) {
                 chatter.reloadParentView();
             }
             if (activity && activity.exists()) {

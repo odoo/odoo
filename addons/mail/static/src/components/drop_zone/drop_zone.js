@@ -17,26 +17,10 @@ export class DropZone extends Component {
         return this.props.record;
     }
 
-    /**
-     * Returns whether the given node is self or a children of self.
-     *
-     * @param {Node} node
-     * @returns {boolean}
-     */
-    contains(node) {
-        return Boolean(this.root.el && this.root.el.contains(node));
-    }
-
 }
 
 Object.assign(DropZone, {
-    props: {
-        record: Object,
-        onDropzoneFilesDropped: {
-            type: Function,
-            optional: true,
-        },
-    },
+    props: { record: Object },
     template: 'mail.DropZone',
 });
 

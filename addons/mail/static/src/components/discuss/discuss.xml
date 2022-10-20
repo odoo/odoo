@@ -7,8 +7,8 @@
                 t-att-class="{ 'o-isDeviceSmall flex-column align-items-center bg-view': messaging.device.isSmall }"
                 t-ref="root"
             >
-                <t t-if="!messaging.device.isSmall">
-                    <DiscussSidebar className="'o_Discuss_sidebar flex-shrink-0 h-100 pt-3 border-end bg-light'" record="discussView"/>
+                <t t-if="discussView.sidebar">
+                    <DiscussSidebar className="'o_Discuss_sidebar flex-shrink-0 h-100 pt-3 border-end bg-light'" record="discussView.sidebar"/>
                 </t>
                 <t t-if="messaging.device.isSmall" t-call="mail.Discuss.content"/>
                 <t t-else="">
@@ -21,8 +21,8 @@
     </t>
 
     <t t-name="mail.Discuss.content" owl="1">
-        <t t-if="messaging.device.isSmall and discussView.discuss.activeMobileNavbarTabId === 'mailbox'">
-            <DiscussMobileMailboxSelection className="'o_Discuss_mobileMailboxSelection w-100 border-bottom'" record="discussView"/>
+        <t t-if="discussView.mobileMailboxSelectionView">
+            <DiscussMobileMailboxSelection className="'o_Discuss_mobileMailboxSelection w-100 border-bottom'" record="discussView.mobileMailboxSelectionView"/>
         </t>
         <t t-if="discussView.mobileAddItemHeaderAutocompleteInputView">
             <div class="o_Discuss_mobileAddItemHeader d-flex justify-content-center w-100 p-3 border-bottom bg-light">

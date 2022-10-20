@@ -142,11 +142,6 @@ class SaleOrderLine(models.Model):
         digits='Discount',
         store=True, readonly=False, precompute=True)
 
-    price_reduce = fields.Float(
-        string="Price Reduce",
-        compute='_compute_price_reduce',
-        digits='Product Price',
-        store=True, precompute=True)
     price_subtotal = fields.Monetary(
         string="Subtotal",
         compute='_compute_amount',
@@ -563,11 +558,6 @@ class SaleOrderLine(models.Model):
                     # otherwise it's a surcharge which shouldn't be shown to the customer
                     line.discount = discount
 
-    @api.depends('price_unit', 'discount')
-    def _compute_price_reduce(self):
-        for line in self:
-            line.price_reduce = line.price_unit * (1.0 - line.discount / 100.0)
-
     def _convert_to_tax_base_line_dict(self):
         """ Convert the current record to a dictionary in order to use the generic taxes computation method
         defined on account.tax.
@@ -593,7 +583,9 @@ class SaleOrderLine(models.Model):
         Compute the amounts of the SO line.
         """
         for line in self:
-            tax_results = self.env['account.tax']._compute_taxes([line._convert_to_tax_base_line_dict()])
+            tax_results = self.env['account.tax']._compute_taxes([
+                line._convert_to_tax_base_line_dict()
+            ])
             totals = list(tax_results['totals'].values())[0]
             amount_untaxed = totals['amount_untaxed']
             amount_tax = totals['amount_tax']
@@ -827,7 +819,7 @@ class SaleOrderLine(models.Model):
                         amount_invoiced -= invoice_line.currency_id._convert(invoice_line.price_subtotal, line.currency_id, line.company_id, invoice_date)
             line.untaxed_amount_invoiced = amount_invoiced
 
-    @api.depends('state', 'price_reduce', 'product_id', 'untaxed_amount_invoiced', 'qty_delivered', 'product_uom_qty')
+    @api.depends('state', 'product_id', 'untaxed_amount_invoiced', 'qty_delivered', 'product_uom_qty')
     def _compute_untaxed_amount_to_invoice(self):
         """ Total of remaining amount to invoice on the sale order line (taxes excl.) as
                 total_sol - amount already invoiced
@@ -876,18 +868,17 @@ class SaleOrderLine(models.Model):
             line.untaxed_amount_to_invoice = amount_to_invoice
 
     @api.depends('order_id.partner_id', 'product_id')
-    def _compute_analytic_distribution_stored_char(self):
+    def _compute_analytic_distribution(self):
         for line in self:
             if not line.display_type and line.state == 'draft':
-                distribution = line.env['account.analytic.distribution.model']._get_distributionjson({
+                distribution = line.env['account.analytic.distribution.model']._get_distribution({
                     "product_id": line.product_id.id,
                     "product_categ_id": line.product_id.categ_id.id,
                     "partner_id": line.order_id.partner_id.id,
                     "partner_category_id": line.order_id.partner_id.category_id.ids,
                     "company_id": line.company_id.id,
                 })
-                line.analytic_distribution_stored_char = distribution or line.analytic_distribution_stored_char
-                line._compute_analytic_distribution()
+                line.analytic_distribution = distribution or line.analytic_distribution
 
     @api.depends('product_id', 'state', 'qty_invoiced', 'qty_delivered')
     def _compute_product_updatable(self):
@@ -997,7 +988,7 @@ class SaleOrderLine(models.Model):
     def _get_protected_fields(self):
         return [
             'product_id', 'name', 'price_unit', 'product_uom', 'product_uom_qty',
-            'tax_id', 'analytic_distribution_stored_char'
+            'tax_id', 'analytic_distribution'
         ]
 
     def _update_line_quantity(self, values):

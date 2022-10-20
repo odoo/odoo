@@ -63,7 +63,7 @@ QUnit.module("Analytic", (hooks) => {
                     fields: {
                         label: { string: "Label", type: "char" },
                         amount: { string: "Amount", type: "float" },
-                        analytic_distribution: { string: "Analytic", type: "char" },
+                        analytic_distribution: { string: "Analytic", type: "json" },
                         move_id: { string: "Account Move", type: "many2one", relation: "move" },
                     },
                     records: [
@@ -81,6 +81,15 @@ QUnit.module("Analytic", (hooks) => {
                         { id: 1, display_name: "INV0001", line_ids: [1, 2]},
                         { id: 2, display_name: "INV0002", line_ids: [3, 4]},
                     ],
+                },
+                "decimal.precision": {
+                    fields: {
+                        name: { string: "Name", type: "char" },
+                        digits: { string: "Digits", type: "int" },
+                    },
+                    records: [
+                        { id: 1, name: "Percentage Analytic", digits: 2}
+                    ]
                 }
             },
         };
@@ -115,7 +124,7 @@ QUnit.module("Analytic", (hooks) => {
             },
         });
 
-        assert.containsOnce(target, ".analytic_distribution", "widget should be visible");
+        assert.containsOnce(target, ".o_field_analytic_distribution", "widget should be visible");
         assert.containsN(target, ".badge", 2, "should contain 2 tags");
         assert.strictEqual(target.querySelector(".badge .o_tag_badge_text").textContent, "RD 30.3%",
             "should have rendered 'RD 30.3%'"

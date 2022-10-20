@@ -1131,18 +1131,17 @@ class PurchaseOrderLine(models.Model):
             return datetime.today() + relativedelta(days=seller.delay if seller else 0)
 
     @api.depends('product_id', 'order_id.partner_id')
-    def _compute_analytic_distribution_stored_char(self):
+    def _compute_analytic_distribution(self):
         for line in self:
             if not line.display_type:
-                distribution = self.env['account.analytic.distribution.model']._get_distributionjson({
+                distribution = self.env['account.analytic.distribution.model']._get_distribution({
                     "product_id": line.product_id.id,
                     "product_categ_id": line.product_id.categ_id.id,
                     "partner_id": line.order_id.partner_id.id,
                     "partner_category_id": line.order_id.partner_id.category_id.ids,
                     "company_id": line.company_id.id,
                 })
-                line.analytic_distribution_stored_char = distribution or line.analytic_distribution_stored_char
-                line._compute_analytic_distribution()
+                line.analytic_distribution = distribution or line.analytic_distribution
 
     @api.onchange('product_id')
     def onchange_product_id(self):
