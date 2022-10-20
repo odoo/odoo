@@ -823,9 +823,7 @@ class TestComposerInternals(TestMailComposer):
                 # values are reset with default_get call / compute field
                 if composition_mode == 'comment' and not batch:
                     self.assertFalse(composer.body)
-                    # self.assertFalse(composer.mail_server_id.id)
-                    self.assertEqual(composer.mail_server_id, self.mail_server_global,
-                                     'TODO: Values are kept (should be reset ?)')
+                    self.assertFalse(composer.mail_server_id.id)
                     self.assertEqual(composer.record_name, 'Manual update',
                                      'MailComposer: record name does not depend on template')
                     # self.assertFalse(composer.scheduled_date)
@@ -836,9 +834,7 @@ class TestComposerInternals(TestMailComposer):
                                   'Check effective content')
                 else:
                     self.assertFalse(composer.body)
-                    # self.assertFalse(composer.mail_server_id.id)
-                    self.assertEqual(composer.mail_server_id, self.mail_server_global,
-                                     'TODO: Values are kept (should be reset ?)')
+                    self.assertFalse(composer.mail_server_id.id)
                     self.assertEqual(composer.record_name, 'Manual update',
                                      'MailComposer: record name does not depend on template')
                     # self.assertFalse(composer.scheduled_date)
