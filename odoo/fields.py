@@ -16,6 +16,7 @@ import enum
 import itertools
 import json
 import logging
+import typing
 import uuid
 import warnings
 from typing import Any, TypeVar, Generic
@@ -2827,6 +2828,18 @@ class _Relational(Generic[_T], Field[_T]):
             return super().__get__(records, owner)
         # multirecord case: use mapped
         return self.mapped(records)
+
+    def setup(self, model):
+        if not self.comodel_name:
+            # Auto initialize the comodel name from the generic type's var if used
+            # This allows to get the comodel from the type when the field is declared
+            # as `partner = fields.Many2one[Partner]()`
+            type_args = typing.get_args(getattr(self, "__orig_class__", None))
+            if type_args and issubclass(type_args[0], BaseModel):
+                self.comodel_name = type_args[0]._name
+            # TODO We could error out if the comodel attribute is set and is
+            # incompatible with the type.
+        return super().setup(model)
 
     def setup_nonrelated(self, model):
         super().setup_nonrelated(model)
