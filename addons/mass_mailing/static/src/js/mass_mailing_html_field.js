@@ -429,12 +429,14 @@ export class MassMailingHtmlField extends HtmlField {
             .removeClass('d-none')
             .addClass('d-inline-block');
 
-        // Hide or show the help message if some templates are visible
+        // Hide or show the help message and preview wrapper based on whether there are any relevant templates
         if (sameModelTemplates.length) {
             iframeContent.find('.o_mailing_template_message').addClass('d-none');
+            iframeContent.find('.o_mailing_template_preview_wrapper').removeClass('d-none');
         } else {
             iframeContent.find('.o_mailing_template_message').removeClass('d-none');
             iframeContent.find('.o_mailing_template_message span').text(this.props.record.data.mailing_model_id[1]);
+            iframeContent.find('.o_mailing_template_preview_wrapper').addClass('d-none');
         }
     }
     /**
