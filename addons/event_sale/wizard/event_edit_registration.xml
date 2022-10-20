@@ -8,7 +8,7 @@
                 <form string="Registration">
                     <sheet>
                         <p>Before updating the linked registrations of <field name="sale_order_id" readonly="1" class="oe_inline"/>
-                        please give attendee details.</p>
+                        please provide attendee details.</p>
                         <field name="event_registration_ids">
                             <tree string="Registration" editable="top" create="false" delete="false">
                                 <field name="event_id" readonly='1' force_save="1"/>
@@ -17,13 +17,13 @@
                                 <field name="name"/>
                                 <field name="email"/>
                                 <field name="phone" class="o_force_ltr"/>
+                                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                                 <field name="sale_order_line_id" column_invisible="True"/>
                             </tree>
                         </field>
                     </sheet>
                     <footer>
                         <button string="Create/Update registrations" name="action_make_registration" type="object" class="btn-primary" data-hotkey="q"/>
-                        <button string="Skip" class="btn-secondary" special="cancel" data-hotkey="x"/>
                     </footer>
                 </form>
             </field>

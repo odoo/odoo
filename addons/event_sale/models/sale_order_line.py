@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 
 class SaleOrderLine(models.Model):
@@ -11,10 +12,17 @@ class SaleOrderLine(models.Model):
         compute="_compute_event_id", store=True, readonly=False, precompute=True,
         help="Choose an event and it will automatically create a registration for this event.")
     event_ticket_id = fields.Many2one(
-        'event.event.ticket', string='Event Ticket',
+        'event.event.ticket', string='Ticket Type',
         compute="_compute_event_ticket_id", store=True, readonly=False, precompute=True,
         help="Choose an event ticket and it will automatically create a registration for this event ticket.")
     registration_ids = fields.One2many('event.registration', 'sale_order_line_id', string="Registrations")
+
+    @api.constrains('event_id', 'event_ticket_id', 'product_id')
+    def _check_event_registration_ticket(self):
+        for so_line in self:
+            if so_line.product_id.detailed_type == "event" and (not so_line.event_id or not so_line.event_ticket_id):
+                raise ValidationError(
+                    _("The sale order line with the product %(product_name)s needs an event and a ticket.", product_name=so_line.product_id.name))
 
     @api.depends('state', 'event_id')
     def _compute_product_uom_readonly(self):

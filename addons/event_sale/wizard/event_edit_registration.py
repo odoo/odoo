@@ -76,6 +76,7 @@ class RegistrationEditorLine(models.TransientModel):
     editor_id = fields.Many2one('registration.editor')
     sale_order_line_id = fields.Many2one('sale.order.line', string='Sales Order Line')
     event_id = fields.Many2one('event.event', string='Event', required=True)
+    company_id = fields.Many2one(related="event_id.company_id")
     registration_id = fields.Many2one('event.registration', 'Original Registration')
     event_ticket_id = fields.Many2one('event.event.ticket', string='Event Ticket')
     email = fields.Char(string='Email')
