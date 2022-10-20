@@ -4014,3 +4014,103 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             {'balance':     1.0, 'tax_line_id':    False},
             {'balance':    -1.0, 'tax_line_id': tax_b.id},
         ])
+
+    def test_cash_basis_taxline_without_account(self):
+        """
+        Make sure that cash basis taxlines that don't have an account are handled properly.
+        """
+        self.env.company.tax_exigibility = True
+
+        tax = self.env['account.tax'].create({
+            'name': 'cash basis 20%',
+            'type_tax_use': 'purchase',
+            'amount': 20,
+            'tax_exigibility': 'on_payment',
+            'cash_basis_transition_account_id': self.cash_basis_transfer_account.id,
+            'invoice_repartition_line_ids': [
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 40,
+                    'account_id': self.tax_account_1.id,
+                    'repartition_type': 'tax',
+                }),
+
+                (0, 0, {
+                    'factor_percent': 60,
+                    'repartition_type': 'tax',
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 40,
+                    'account_id': self.tax_account_1.id,
+                    'repartition_type': 'tax',
+                }),
+
+                (0, 0, {
+                    'factor_percent': 60,
+                    'repartition_type': 'tax',
+                }),
+            ],
+        })
+
+        # create invoice
+        move_form = Form(self.env['account.move'].with_context(
+            default_move_type='in_invoice'))
+        move_form.partner_id = self.partner_a
+        move_form.invoice_date = fields.Date.from_string('2017-01-01')
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = self.product_a
+            line_form.tax_ids.clear()
+            line_form.tax_ids.add(tax)
+        invoice = move_form.save()
+        invoice.action_post()
+
+        # make payment
+        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+            'payment_date': invoice.date,
+        })._create_payments()
+
+        # check caba move
+        partial_rec = invoice.mapped('line_ids.matched_debit_ids')
+        caba_move = self.env['account.move'].search(
+            [('tax_cash_basis_rec_id', '=', partial_rec.id)])
+        expected_values = [
+            {
+                'account_id': self.cash_basis_base_account.id,
+                'debit': 0.0,
+                'credit': 800.0
+            },
+            {
+                'account_id': self.cash_basis_base_account.id,
+                'debit': 800.0,
+                'credit': 0.0
+            },
+            {
+                'account_id': self.cash_basis_transfer_account.id,
+                'debit': 0.0,
+                'credit': 64.0
+            },
+            {
+                'account_id': self.tax_account_1.id,
+                'debit': 64.0,
+                'credit': 0.0},
+            {
+                'account_id': self.cash_basis_transfer_account.id,
+                'debit': 0.0,
+                'credit': 96.0
+            },
+            {
+                'account_id': self.cash_basis_base_account.id,
+                'debit': 96.0,
+                'credit': 0.0
+            }
+        ]
+        self.assertRecordValues(caba_move.line_ids, expected_values)
