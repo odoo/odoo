@@ -394,7 +394,7 @@
                     <attribute name="options">{'no_open': true}</attribute>
                 </field>
                 <field name="product_tag_ids" position="after">
-                    <field name="additional_product_tag_ids" options="{'color_field': 'color', 'no_edit_color': 1}"/>
+                    <field name="additional_product_tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_edit_color': 1}"/>
                 </field>
             </field>
         </record>
