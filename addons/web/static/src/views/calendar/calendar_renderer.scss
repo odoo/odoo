@@ -235,8 +235,7 @@
             }
 
             // Expand tiny events on hover/select
-            .fc-event:not(.fc-h-event).o_cw_custom_highlight,
-            .fc-event:not(.fc-h-event).o_cw_custom_hover {
+            .fc-event:not(.fc-h-event).o_cw_custom_highlight {
                 transition: margin 0.1s 0.3s, left 0.1s 0.3s, right 0.1s 0.3s;
                 margin: 0 !important;
                 right: 1px !important;
@@ -340,16 +339,6 @@
                     @include text-truncate();
                 }
 
-                &.o_cw_nobg {
-                    &.o_cw_custom_hover,
-                    &.o_cw_custom_highlight,
-                    &:hover {
-                        .fc-bg {
-                            visibility: visible;
-                        }
-                    }
-                }
-
                 &.fc-not-start {
                     border-right-width: 3px;
 
@@ -385,10 +374,6 @@
 
             @for $i from 1 through length($o-colors-complete) {
                 $color: nth($o-colors-complete, $i);
-
-                .fc-bgevent.o_calendar_striked {
-                    background: linear-gradient(transparent 0 40%, $color 40% 60%, transparent 60% 100%);
-                }
 
                 .o_cw_popover_link.o_calendar_color_#{$i - 1} {
                     border: solid 2px;
@@ -563,44 +548,19 @@ $o-filter_colors: lighten(#000, 46.7%), #f06050, #f4a460, #f7cd1f, #6cc1ed, #814
     $color: nth($o-filter_colors, $i);
 
     .o_calendar_renderer .fc-view {
-        .o_calendar_hatched_#{$i - 1} {
-            background: repeating-linear-gradient(
-                45deg,
-                $color,
-                $color 10px,
-                rgba($color, 0.4) 10px,
-                rgba($color, 0.4) 20px
-            ) !important;
-
-            .fc-bg {
-                background: repeating-linear-gradient(
-                    45deg,
-                    $color,
-                    $color 10px,
-                    rgba($color, 0.5) 10px,
-                    rgba($color, 0.5) 20px
-                );
-            }
-        }
-        .o_calendar_striked_#{$i - 1} {
-            background: linear-gradient(transparent 0 45%, $color 45% 55%, transparent 55% 100%);
-
-            .fc-bg {
-                background: none;
-            }
-        }
         .fc-bgevent.o_calendar_color_#{$i - 1} {
             border-color: $color;
             background-color: $color;
             opacity: 0.5;
         }
-        .fc-event.o_calendar_striked_#{$i - 1} {
-            border: none;
-        }
         .fc-event.o_calendar_color_#{$i - 1} {
             border-color: $color;
             color: darken($color, 45%);
             opacity: 1;
+            background: scale-color($color, $lightness: 50%);
+            .fc-bg {
+                background: scale-color($color, $lightness: 50%);
+            }
 
             &.o_event_highlight {
                 opacity: 1;
@@ -610,14 +570,6 @@ $o-filter_colors: lighten(#000, 46.7%), #f06050, #f4a460, #f7cd1f, #6cc1ed, #814
                 }
             }
 
-            &:not(.o_calendar_hatched):not(.o_calendar_striked) {
-                background: scale-color($color, $lightness: 50%);
-                .fc-bg {
-                    background: scale-color($color, $lightness: 50%);
-                }
-            }
-
-            &.o_cw_custom_hover,
             &.o_cw_custom_highlight {
                 box-shadow: 0 12px 12px -5px rgba($color, 0.3);
                 color: color-contrast($color);
