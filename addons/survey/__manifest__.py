@@ -18,6 +18,7 @@ sent mails with personal token for the invitation of the survey.
     'website': 'https://www.odoo.com/app/surveys',
     'depends': [
         'auth_signup',
+        'digest',
         'http_routing',
         'mail',
         'web_tour',
@@ -25,9 +26,11 @@ sent mails with personal token for the invitation of the survey.
     'data': [
         'views/survey_report_templates.xml',
         'views/survey_reports.xml',
+        'data/digest_data.xml',
         'data/mail_template_data.xml',
         'security/survey_security.xml',
         'security/ir.model.access.csv',
+        'views/digest_views.xml',
         'views/survey_menus.xml',
         'views/survey_survey_views.xml',
         'views/survey_user_views.xml',
