@@ -1013,14 +1013,12 @@ class TestComposerInternals(TestMailComposer):
                 if composition_mode == 'comment' and not batch:
                     self.assertEqual(composer.partner_ids, self.partner_admin,
                                      'TODO: Values are kept (should be reset ?)')
-                    self.assertEqual(composer.reply_to, 'info@test.example.com',
-                                     'TODO: Values are kept (should be reset ?)')
+                    self.assertFalse(composer.reply_to)
                     self.assertFalse(composer.reply_to_force_new)
                 else:
                     self.assertEqual(composer.partner_ids, self.partner_admin,
                                      'TODO: Values are kept (should be reset ?)')
-                    self.assertEqual(composer.reply_to, self.template.reply_to,
-                                     'TODO: Values are kept (should be reset ?)')
+                    self.assertFalse(composer.reply_to)
                     self.assertFalse(composer.reply_to_force_new)
 
                 # 2. check with default
