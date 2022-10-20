@@ -25,6 +25,8 @@ registerModel({
                 // case it should be re-opened to simulate it was always
                 // there in the background.
                 this.messaging.messagingMenu.update({ isOpen: true });
+            } else if (this.messaging.device.isSmall) {
+                this.messaging.discuss.update({ thread: clear() });
             }
             // Flux specific: 'closed' fold state should only be saved on the
             // server when manually closing the chat window. Delete at destroy
@@ -89,6 +91,14 @@ registerModel({
         makeActive(options) {
             this.makeVisible();
             this.unfold(options);
+            if (this.messaging.discuss.discussView) {
+                // Either on a mobile device or on small screen. Discuss
+                // thread should be updated: when the page size will
+                // increase, discuss should replace this chat window and
+                // the active thread needs to be set to match what was
+                // displayed.
+                this.messaging.discuss.update({ thread: this.thread });
+            }
             if ((options && options.focus !== undefined) ? options.focus : !this.messaging.device.isMobileDevice) {
                 this.focus();
             }
