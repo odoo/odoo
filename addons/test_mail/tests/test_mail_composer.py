@@ -820,8 +820,7 @@ class TestComposerInternals(TestMailComposer):
                 # currently onchange necessary
                 composer._onchange_template_id_wrapper()
 
-                # values are reset with default_get call, if it returns value
-                # (aka subject for comment mode)
+                # values are reset with default_get call / compute field
                 if composition_mode == 'comment' and not batch:
                     self.assertFalse(composer.body)
                     # self.assertFalse(composer.mail_server_id.id)
@@ -845,9 +844,7 @@ class TestComposerInternals(TestMailComposer):
                     # self.assertFalse(composer.scheduled_date)
                     self.assertEqual(composer.scheduled_date, '{{ datetime.datetime(2023, 1, 10, 10, 0, 0) }}',
                                      'TODO: Values are kept (should be reset ?)')
-                    # self.assertFalse(composer.subject)
-                    self.assertEqual(composer.subject, 'Back to my amazing subject for {{ record.name }}',
-                                     'TODO: Values are kept (should be reset ?)')
+                    self.assertFalse(composer.subject)
 
                 # 2. check with default
                 ctx['default_template_id'] = self.template.id
