@@ -3203,9 +3203,12 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         # Exchange difference
         # 66.67 amount residual on the payment line after reconciling receivable line of the cash basis move with the payment counterpart
         # 50.00 difference of the cash_basis_move base line and the CABA entry created by the system
+        # 16.67 will also be created in the exchange move to compensate for the difference on cash basis transition account, for tax lines.
         self.assertRecordValues(res['full_reconcile'].exchange_move_id.line_ids, [
-            {'debit': 50.0,     'credit': 0.0,      'currency_id': currency_id,     'account_id': self.cash_basis_base_account.id},
-            {'debit': 0.0,      'credit': 50.0,     'currency_id': currency_id,     'account_id': self.cash_basis_base_account.id},
+            {'debit': 50.0,     'credit': 0.0,      'currency_id': currency_id,     'account_id': self.cash_basis_base_account.id, 'tax_ids': self.cash_basis_tax_a_third_amount.ids, 'tax_line_id': None},
+            {'debit': 0.0,      'credit': 50.0,     'currency_id': currency_id,     'account_id': self.cash_basis_base_account.id, 'tax_ids': [], 'tax_line_id': None},
+            {'debit': 16.67,    'credit': 0.0,      'currency_id': currency_id,     'account_id': self.tax_account_1.id, 'tax_ids': [], 'tax_line_id': self.cash_basis_tax_a_third_amount.id},
+            {'debit': 0.0,      'credit': 16.67,    'currency_id': currency_id,     'account_id': cash_basis_transition_account.id, 'tax_ids': [], 'tax_line_id': None},
         ])
 
     def test_reconcile_cash_basis_revert(self):
@@ -3263,20 +3266,9 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         self.assertFullReconcile(res['full_reconcile'], receivable_lines)
         self.assertEqual(len(res.get('tax_cash_basis_moves', [])), 1)
 
-        # == Check the reconciliation of invoice with tax cash basis journal entry.
-        # /!\ We make the assumption the tax cash basis journal entry is well created.
-
-        tax_cash_basis_move = res['tax_cash_basis_moves']
-
-        taxes_lines = (invoice_move.line_ids + tax_cash_basis_move.line_ids.filtered('debit'))\
-            .filtered(lambda line: line.account_id == self.cash_basis_transfer_account)
-        taxes_full_reconcile = taxes_lines.matched_debit_ids.full_reconcile_id
-
-        self.assertTrue(taxes_full_reconcile)
-        self.assertFullReconcile(taxes_full_reconcile, taxes_lines)
-
         # == Check the reconciliation after the reverse ==
 
+        tax_cash_basis_move = res['tax_cash_basis_moves']
         tax_cash_basis_move_reverse = tax_cash_basis_move._reverse_moves(cancel=True)
 
         self.assertFullReconcile(res['full_reconcile'], receivable_lines)
