@@ -205,7 +205,6 @@ Help your customers with this chat, and analyse their feedback.
             'web/static/src/core/utils/transitions.scss',
 
             'mail/static/src/utils/*.js',
-            'mail/static/src/js/emojis.js',
             'mail/static/src/component_hooks/*.js',
             ('include', 'im_livechat.assets_public_livechat'),
             'mail/static/src/services/messaging_service.js',

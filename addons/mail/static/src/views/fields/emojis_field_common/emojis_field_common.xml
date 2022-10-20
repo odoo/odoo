@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<templates>
+    <t t-name="mail.EmojisFieldButton" owl="1">
+        <div class="position-relative d-inline">
+            <button
+                class="btn position-absolute end-0"
+                t-attf-class="{{positionCenter ? 'pb-0 pt-0' : 'bottom-0'}}"
+                t-ref="emojisButton"
+                t-on-click="() => this.emojiTextField.toggleEmojiPopover()">
+                <i class="fa fa-smile-o" role="img" aria-label="Emojis"/>
+            </button>
+        </div>
+    </t>
+</templates>

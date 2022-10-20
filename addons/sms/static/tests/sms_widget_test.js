@@ -1,16 +1,146 @@
 /** @odoo-module **/
 
+import { addFakeModel } from '@bus/../tests/helpers/model_definitions_helpers';
+import { click, getFixture } from "@web/../tests/helpers/utils";
 import FormView from 'web.FormView';
 import ListView from 'web.ListView';
+import { setupViewRegistries } from "@web/../tests/views/helpers";
+import { start, startServer } from '@mail/../tests/helpers/test_utils';
 import testUtils from 'web.test_utils';
-import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
-import { getFixture } from "@web/../tests/helpers/utils";
 
 const createView = testUtils.createView;
 
-QUnit.module('fields', {
-    beforeEach: function () {
-        this.data = {
+
+
+QUnit.module('SmsWidget', (hooks) => {
+
+    let target = undefined;
+    let pyEnv = undefined;
+
+    addFakeModel('fields.sms.emojis.partner', {
+        message: {string: "message", type: "text"},
+    });
+
+    /**
+     * Open the correct view based on inputs
+     *
+     * @param {string} model full name of the model to display
+     * @param {string} viewArch layout of the view in xml
+     * @param {number} recordId id of the record to open, new record created if falsy
+     * @param {boolean} debug
+     */
+    async function openTestView(model, viewArch, recordId = null) {
+        const views = {};
+        const resModel = model;
+        views[`${resModel},false,form`] = viewArch;
+        const startParams = {serverData: {views}};
+        const { openView } = await start(startParams);
+        const openViewParams = {
+            res_model: resModel,
+            views: [[false, 'form']],
+        };
+        if (recordId) {
+            openViewParams.res_id = recordId;
+        }
+        await openView(openViewParams);
+    }
+
+    hooks.beforeEach(async () => {
+        pyEnv = await startServer();
+        target = getFixture();
+    });
+
+    QUnit.test('Sms widgets are correctly rendered', async function (assert) {
+        assert.expect(9);
+        await openTestView('fields.sms.emojis.partner', `<form><sheet><field name="message" widget="sms_widget"/></sheet></form>`);
+
+        assert.containsOnce(target, '.o_sms_count', "Should have a sms counter");
+        assert.strictEqual(target.querySelector('.o_sms_count').textContent, "0 characters, fits in 0 SMS (GSM7) ");
+        // GSM-7
+        await testUtils.fields.editAndTrigger(target.querySelector('.o_input'), "Hello from Odoo", 'input');
+        assert.strictEqual(target.querySelector('.o_sms_count').textContent, "15 characters, fits in 1 SMS (GSM7) ");
+        // GSM-7 with \n => this one count as 2 characters
+        await testUtils.fields.editAndTrigger(target.querySelector('.o_input'), "Hello from Odoo\n", 'input');
+        assert.strictEqual(target.querySelector('.o_sms_count').textContent, "17 characters, fits in 1 SMS (GSM7) ");
+        // Unicode => ê
+        await testUtils.fields.editAndTrigger(target.querySelector('.o_input'), "Hêllo from Odoo", 'input');
+        assert.strictEqual(target.querySelector('.o_sms_count').textContent, "15 characters, fits in 1 SMS (UNICODE) ");
+        // GSM-7 with 160c
+        var text = Array(161).join('a');
+        await testUtils.fields.editAndTrigger(target.querySelector('.o_input'), text, 'input');
+        assert.strictEqual(target.querySelector('.o_sms_count').textContent, "160 characters, fits in 1 SMS (GSM7) ");
+        // GSM-7 with 161c
+        text = Array(162).join('a');
+        await testUtils.fields.editAndTrigger(target.querySelector('.o_input'), text, 'input');
+        assert.strictEqual(target.querySelector('.o_sms_count').textContent, "161 characters, fits in 2 SMS (GSM7) ");
+        // Unicode with 70c
+        text = Array(71).join('ê');
+        await testUtils.fields.editAndTrigger(target.querySelector('.o_input'), text, 'input');
+        assert.strictEqual(target.querySelector('.o_sms_count').textContent, "70 characters, fits in 1 SMS (UNICODE) ");
+        // Unicode with 71c
+        text = Array(72).join('ê');
+        await testUtils.fields.editAndTrigger(target.querySelector('.o_input'), text, 'input');
+        assert.strictEqual(target.querySelector('.o_sms_count').textContent, "71 characters, fits in 2 SMS (UNICODE) ");
+    });
+
+    QUnit.test('SMS widgets update with emoji picker', async function (assert) {
+        assert.expect(3);
+        await openTestView('fields.sms.emojis.partner', `<form><sheet><field name="message" widget="sms_widget"/></sheet></form>`);
+
+        assert.containsOnce(target, '.o_sms_count', "Should have a sms counter");
+
+        // insert some text
+        const baseString = "Hello from Odoo";
+        await testUtils.fields.editAndTrigger(target.querySelector('.o_input'), baseString, 'input');
+
+        // insert an emoji
+        await click(target, ".o_field_sms_widget button");
+        let emojiItem = target.querySelector(".o_EmojiGridRowView_item");
+        let emojiItemCharacter = emojiItem.textContent;
+        await click(emojiItem);
+
+        // check everything is there
+        let stringLength = baseString.length + emojiItemCharacter.length;
+        assert.strictEqual(target.querySelector('.o_sms_count').textContent, `${stringLength} characters, fits in 1 SMS (UNICODE) `,
+                           "Should have included the length of the new emoji");
+
+        // check insertion after selection (replacing selection)
+        target.querySelector('.o_input').setSelectionRange(0, stringLength);
+        await click(target, ".o_field_sms_widget button");
+        emojiItem = target.querySelector(".o_EmojiGridRowView_item");
+        emojiItemCharacter = emojiItem.textContent;
+        await click(emojiItem);
+        stringLength = emojiItemCharacter.length;
+        assert.strictEqual(target.querySelector('.o_sms_count').textContent, `${stringLength} characters, fits in 1 SMS (UNICODE) `,
+                           "Should have included the length of the new emoji and removed the length of the replaced characters");
+
+    });
+
+    QUnit.test('Sms widgets with non-empty initial value', async function (assert) {
+        assert.expect(1);
+        const recordId = pyEnv['fields.sms.emojis.partner'].create({ message: '123test' });
+        await openTestView('fields.sms.emojis.partner', `<form><sheet><field name="message" widget="sms_widget" readonly="true"/></sheet></form>`, recordId);
+
+        assert.strictEqual(target.querySelector('.o_field_text span').textContent, '123test', 'Should have the initial value');
+
+    });
+
+    QUnit.test('Sms widgets with empty initial value', async function (assert) {
+        const recordId = pyEnv['fields.sms.emojis.partner'].create({ message: '' });
+        assert.expect(1);
+        await openTestView('fields.sms.emojis.partner', `<form><sheet><field name="message" widget="sms_widget" readonly="true"/></sheet></form>`, recordId);
+
+        assert.strictEqual(target.querySelector('.o_field_text span').textContent, '',
+            'Should have the empty initial value');
+
+    });
+});
+
+QUnit.module('PhoneWidget', (hooks) => {
+
+    let data = undefined;
+    hooks.beforeEach(() => {
+        data = {
             partner: {
                 fields: {
                     message: {string: "message", type: "text"},
@@ -26,103 +156,11 @@ QUnit.module('fields', {
                     id: 2,
                     message: "",
                     foo: 'bayou',
-                }]
-            },
-            visitor: {
-                fields: {
-                    mobile: {string: "mobile", type: "text"},
-                },
-                records: [{
-                    id: 1,
-                    mobile: "+32494444444",
-                }]
+                }],
             },
         };
         setupViewRegistries();
-        this.target = getFixture();
-    }
-}, function () {
-
-    QUnit.module('SmsWidget');
-
-    QUnit.test('Sms widgets are correctly rendered', async function (assert) {
-        assert.expect(9);
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData: { models: this.data },
-            arch: /* xml */ `<form><sheet><field name="message" widget="sms_widget"/></sheet></form>`,
-        });
-
-        assert.containsOnce(this.target, '.o_sms_count', "Should have a sms counter");
-        assert.strictEqual(this.target.querySelector('.o_sms_count').textContent, '0 characters, fits in 0 SMS (GSM7) ',
-            'Should be "0 characters, fits in 0 SMS (GSM7) " by default');
-        // GSM-7
-        await testUtils.fields.editAndTrigger(this.target.querySelector('.o_input'), "Hello from Odoo", 'input');
-        assert.strictEqual(this.target.querySelector('.o_sms_count').textContent, '15 characters, fits in 1 SMS (GSM7) ',
-            'Should be "15 characters, fits in 1 SMS (GSM7) " for "Hello from Odoo"');
-        // GSM-7 with \n => this one count as 2 characters
-        await testUtils.fields.editAndTrigger(this.target.querySelector('.o_input'), "Hello from Odoo\n", 'input');
-        assert.strictEqual(this.target.querySelector('.o_sms_count').textContent, '17 characters, fits in 1 SMS (GSM7) ',
-            'Should be "17 characters, fits in 1 SMS (GSM7) " for "Hello from Odoo\\n"');
-        // Unicode => ê
-        await testUtils.fields.editAndTrigger(this.target.querySelector('.o_input'), "Hêllo from Odoo", 'input');
-        assert.strictEqual(this.target.querySelector('.o_sms_count').textContent, '15 characters, fits in 1 SMS (UNICODE) ',
-            'Should be "15 characters, fits in 1 SMS (UNICODE) " for "Hêllo from Odoo"');
-        // GSM-7 with 160c
-        var text = Array(161).join('a');
-        await testUtils.fields.editAndTrigger(this.target.querySelector('.o_input'), text, 'input');
-        assert.strictEqual(this.target.querySelector('.o_sms_count').textContent, '160 characters, fits in 1 SMS (GSM7) ',
-            'Should be "160 characters, fits in 1 SMS (GSM7) " for 160 x "a"');
-        // GSM-7 with 161c
-        text = Array(162).join('a');
-        await testUtils.fields.editAndTrigger(this.target.querySelector('.o_input'), text, 'input');
-        assert.strictEqual(this.target.querySelector('.o_sms_count').textContent, '161 characters, fits in 2 SMS (GSM7) ',
-            'Should be "161 characters, fits in 2 SMS (GSM7) " for 161 x "a"');
-        // Unicode with 70c
-        text = Array(71).join('ê');
-        await testUtils.fields.editAndTrigger(this.target.querySelector('.o_input'), text, 'input');
-        assert.strictEqual(this.target.querySelector('.o_sms_count').textContent, '70 characters, fits in 1 SMS (UNICODE) ',
-            'Should be "70 characters, fits in 1 SMS (UNICODE) " for 70 x "ê"');
-        // Unicode with 71c
-        text = Array(72).join('ê');
-        await testUtils.fields.editAndTrigger(this.target.querySelector('.o_input'), text, 'input');
-        assert.strictEqual(this.target.querySelector('.o_sms_count').textContent, '71 characters, fits in 2 SMS (UNICODE) ',
-            'Should be "71 characters, fits in 2 SMS (UNICODE) " for 71 x "ê"');
-
     });
-
-    QUnit.test('Sms widgets with non-empty initial value', async function (assert) {
-        assert.expect(1);
-        await makeView({
-            type: "form",
-            resModel: "visitor",
-            resId: 1,
-            serverData: { models: this.data },
-            arch: /* xml */ `<form><sheet><field name="mobile" widget="sms_widget" readonly="true"/></sheet></form>`,
-        });
-
-        assert.strictEqual(this.target.querySelector('.o_field_text span').textContent, '+32494444444',
-            'Should have the initial value');
-
-    });
-
-    QUnit.test('Sms widgets with empty initial value', async function (assert) {
-        assert.expect(1);
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            resId: 1,
-            serverData: { models: this.data },
-            arch: /* xml */ `<form><sheet><field name="message" widget="sms_widget" readonly="true"/></sheet></form>`,
-        });
-
-        assert.strictEqual(this.target.querySelector('.o_field_text span').textContent, '',
-            'Should have the empty initial value');
-
-    });
-
-    QUnit.module('PhoneWidget');
 
     QUnit.test('phone field in editable list view on normal screens', async function (assert) {
         assert.expect(11);
@@ -131,8 +169,8 @@ QUnit.module('fields', {
         var list = await createView({
             View: ListView,
             model: 'partner',
-            data: this.data,
-            debug:true,
+            data: data,
+            debug: true,
             arch: '<tree editable="bottom"><field name="foo" widget="phone"/></tree>',
             intercepts: {
                 do_action(ev) {
@@ -183,7 +221,7 @@ QUnit.module('fields', {
         const form = await createView({
             View: FormView,
             model: 'partner',
-            data: this.data,
+            data: data,
             arch: '<form string="Partners">' +
                 '<sheet>' +
                 '<group>' +
