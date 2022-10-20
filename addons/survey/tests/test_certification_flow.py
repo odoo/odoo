@@ -128,7 +128,8 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
         self.assertIn("User Certification for SO lines", certification_email.subject)
         self.assertIn("employee@example.com", certification_email.email_to)
         self.assertEqual(len(certification_email.attachment_ids), 1)
-        self.assertEqual(certification_email.attachment_ids[0].name, 'Certification Document.html')
+        self.assertEqual(certification_email.attachment_ids[0].name, f'Certification - {certification.title}.html',
+                         'Default certification report print_report_name is "Certification - %s" % (object.survey_id.display_name)')
 
     def test_randomized_certification(self):
         # Step: survey user creates the randomized certification
