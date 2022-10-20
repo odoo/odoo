@@ -99,18 +99,17 @@
 
         <!-- Answers -->
         <t t-set="question_answered" t-value="question_data['answer_input_done_ids']"/>
-        <div t-if="not question_answered" class="alert alert-secondary m-3" role="alert">
-            No one answered this question.
+        <div t-if="not question_answered" class="o_survey_no_answers text-center fw-bold">
+            <p> No answers yet! </p>
         </div>
-
-        <t t-if="question_answered and question.question_type in ['text_box', 'char_box']"
-           t-call="survey.question_result_text"/>
-        <t t-elif="question_answered and question.question_type in ['numerical_box', 'date', 'datetime']"
-           t-call="survey.question_result_number_or_date_or_datetime"/>
+        <t t-elif="question.question_type in ['text_box', 'char_box']"
+            t-call="survey.question_result_text"/>
+        <t t-elif="question.question_type in ['numerical_box', 'date', 'datetime']"
+            t-call="survey.question_result_number_or_date_or_datetime"/>
         <t t-elif="question.question_type in ['simple_choice', 'multiple_choice']"
-           t-call="survey.question_result_choice"/>
+            t-call="survey.question_result_choice"/>
         <t t-elif="question.question_type in ['matrix']"
-           t-call="survey.question_result_matrix"/>
+            t-call="survey.question_result_matrix"/>
         </div>
     </template>
 
