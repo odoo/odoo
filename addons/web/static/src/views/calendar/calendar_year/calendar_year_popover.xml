@@ -21,11 +21,11 @@
                 <i class="fa fa-close small" />
             </span>
         </div>
-        <div class="o_cw_body">
+        <div class="o_cw_body popover-body">
             <t t-call="{{ constructor.subTemplates.body }}" />
-        </div>
-        <div t-if="props.model.canCreate" class="mt-2">
-            <t t-call="{{ constructor.subTemplates.footer }}" />
+            <div t-if="props.model.canCreate" class="mt-2">
+                <t t-call="{{ constructor.subTemplates.footer }}" />
+            </div>
         </div>
     </t>
 
@@ -56,7 +56,8 @@
         <a
             href="#"
             t-on-click.prevent="() => this.onRecordClick(record)"
-            t-attf-class="o_cw_popover_link btn-link d-block"
+            t-attf-style="{{ getRecordStyle(record) }}"
+            t-attf-class="o_cw_popover_link btn-link d-block {{ getRecordClass(record) }}"
             t-att-data-id="record.id"
             t-att-data-title="record.title"
         >
