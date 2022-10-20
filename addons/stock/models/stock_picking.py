@@ -636,11 +636,7 @@ class Picking(models.Model):
     @api.depends('state', 'move_ids')
     def _compute_show_mark_as_todo(self):
         for picking in self:
-            if not picking.move_ids and not picking.package_level_ids:
-                picking.show_mark_as_todo = False
-            elif not picking.immediate_transfer and picking.state == 'draft':
-                picking.show_mark_as_todo = True
-            elif picking.state != 'draft' or not picking.id:
+            if picking.immediate_transfer or picking.state != 'draft':
                 picking.show_mark_as_todo = False
             else:
                 picking.show_mark_as_todo = True
