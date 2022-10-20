@@ -59,13 +59,21 @@ class TestMailComposer(TestMailCommon, TestRecipients):
             additional_values={'user_id': cls.user_employee_2.id}
         )
 
-        cls.test_report = cls.env['ir.actions.report'].create({
-            'name': 'Test Report on mail test ticket',
-            'model': 'mail.test.ticket',
-            'report_type': 'qweb-pdf',
-            'report_name': 'test_mail.mail_test_ticket_test_template',
-        })
-        cls.test_record_report = cls.env['ir.actions.report']._render_qweb_pdf(cls.test_report, cls.test_record.ids)
+        cls.test_report, cls.test_report_2 = cls.env['ir.actions.report'].create([
+            {
+                'name': 'Test Report on Mail Test Ticket',
+                'model': 'mail.test.ticket',
+                'print_report_name': "'TestReport for %s' % object.name",
+                'report_type': 'qweb-pdf',
+                'report_name': 'test_mail.mail_test_ticket_test_template',
+            }, {
+                'name': 'Test Report 2 on Mail Test Ticket',
+                'model': 'mail.test.ticket',
+                'print_report_name': "'TestReport2 for %s' % object.name",
+                'report_type': 'qweb-pdf',
+                'report_name': 'test_mail.mail_test_ticket_test_template_2',
+            }
+        ])
 
         cls.test_from = '"John Doe" <john@example.com>'
 
@@ -142,14 +150,13 @@ class TestComposerForm(TestMailComposer):
         attachment_data = self._generate_attachments_data(2, res_id=self.template.id, res_model=self.template._name)
         template_1 = self.template.copy({
             'attachment_ids': [(0, 0, a) for a in attachment_data],
-            'report_name': 'TestReport for {{ object.name }}.html',  # test cursor forces html
-            'report_template': self.test_report.id,
+            'report_template_ids': [(6, 0, (self.test_report + self.test_report_2).ids)],
         })
         template_1_attachments = template_1.attachment_ids
         self.assertEqual(len(template_1_attachments), 2)
         template_2 = self.template.copy({
             'attachment_ids': False,
-            'report_template': self.test_report.id,
+            'report_template_ids': [(6, 0, self.test_report.ids)],
         })
 
         # begins without attachments
@@ -158,12 +165,12 @@ class TestComposerForm(TestMailComposer):
         ))
         self.assertEqual(len(composer_form.attachment_ids), 0)
 
-        # change template: 2 static (attachment_ids) and 1 dynamic (report)
+        # change template: 2 static (attachment_ids) and 2 dynamic (reports)
         composer_form.template_id = template_1
-        self.assertEqual(len(composer_form.attachment_ids), 3)
+        self.assertEqual(len(composer_form.attachment_ids), 4)
         report_attachments = [att for att in composer_form.attachment_ids if att not in template_1_attachments]
-        self.assertEqual(len(report_attachments), 1)
-        tpl_attachments = composer_form.attachment_ids[:] - report_attachments[0]
+        self.assertEqual(len(report_attachments), 2)
+        tpl_attachments = composer_form.attachment_ids[:] - self.env['ir.attachment'].concat(*report_attachments)
         self.assertEqual(tpl_attachments, template_1_attachments)
 
         # change template: 0 static (attachment_ids) and 1 dynamic (report)
@@ -171,15 +178,15 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(len(composer_form.attachment_ids), 1)
         report_attachments = [att for att in composer_form.attachment_ids if att not in template_1_attachments]
         self.assertEqual(len(report_attachments), 1)
-        tpl_attachments = composer_form.attachment_ids[:] - report_attachments[0]
+        tpl_attachments = composer_form.attachment_ids[:] - self.env['ir.attachment'].concat(*report_attachments)
         self.assertFalse(tpl_attachments)
 
         # change back to template 1
         composer_form.template_id = template_1
-        self.assertEqual(len(composer_form.attachment_ids), 3)
+        self.assertEqual(len(composer_form.attachment_ids), 4)
         report_attachments = [att for att in composer_form.attachment_ids if att not in template_1_attachments]
-        self.assertEqual(len(report_attachments), 1)
-        tpl_attachments = composer_form.attachment_ids[:] - report_attachments[0]
+        self.assertEqual(len(report_attachments), 2)
+        tpl_attachments = composer_form.attachment_ids[:] - self.env['ir.attachment'].concat(*report_attachments)
         self.assertEqual(tpl_attachments, template_1_attachments)
 
         # reset template
@@ -354,8 +361,7 @@ class TestComposerInternals(TestMailComposer):
         attachment_data = self._generate_attachments_data(3, res_id=self.template.id, res_model=self.template._name)
         self.template.write({
             'attachment_ids': [(0, 0, a) for a in attachment_data],
-            'report_name': 'TestReport for {{ object.name }}.html',  # test cursor forces html
-            'report_template': self.test_report.id,
+            'report_template_ids': [(6, 0, self.test_report.ids)],
         })
         attachs = self.env['ir.attachment'].search([('name', 'in', [a['name'] for a in attachment_data])])
         self.assertEqual(len(attachs), 3)
@@ -722,8 +728,7 @@ class TestComposerInternals(TestMailComposer):
     def test_mail_composer_rights_attachments(self):
         """ Ensure a user without write access to a template can send an email"""
         template_1 = self.template.copy({
-            'report_name': 'TestReport for {{ object.name }} (thanks TDE).html',  # test cursor forces html
-            'report_template': self.test_report.id,
+            'report_template_ids': [(6, 0, self.test_report.ids)],
         })
         attachment_data = self._generate_attachments_data(2, res_id=self.template.id, res_model=self.template._name)
         template_1.write({
@@ -735,7 +740,7 @@ class TestComposerInternals(TestMailComposer):
 
         template_1_attachments = template_1.attachment_ids
         self.assertEqual(len(template_1_attachments), 2)
-        template_1_attachment_name = list(template_1_attachments.mapped('name')) + ["TestReport for TestRecord (thanks TDE).html"]
+        template_1_attachment_name = list(template_1_attachments.mapped('name')) + [f"TestReport for {self.test_record.name}.html"]
 
         composer = self.env['mail.compose.message'].with_context(
             self._get_web_context(self.test_record)
@@ -965,8 +970,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
             'email_to': '%s, %s, %s' % (email_to_1, email_to_2, email_to_3),
             'email_cc': email_cc_1,
             'partner_to': '%s, {{ object.customer_id.id if object.customer_id else "" }}' % self.partner_admin.id,
-            'report_name': 'TestReport for {{ object.name }}',  # test cursor forces html
-            'report_template': self.test_report.id,
+            'report_template_ids': [(6, 0, self.test_report.ids)],
         })
         attachs = self.env['ir.attachment'].search([('name', 'in', [a['name'] for a in attachment_data])])
         self.assertEqual(len(attachs), 2)
@@ -1222,8 +1226,7 @@ class TestComposerResultsMass(TestMailComposer):
             'email_to': '%s, %s, %s' % (email_to_1, email_to_2, email_to_3),
             'email_cc': email_cc_1,
             'partner_to': '%s, {{ object.customer_id.id if object.customer_id else "" }}' % self.partner_admin.id,
-            'report_name': 'TestReport for {{ object.name }}',  # test cursor forces html
-            'report_template': self.test_report.id,
+            'report_template_ids': [(6, 0, self.test_report.ids)],
         })
         attachs = self.env['ir.attachment'].search([('name', 'in', [a['name'] for a in attachment_data])])
         self.assertEqual(len(attachs), 2)

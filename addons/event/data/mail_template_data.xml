@@ -22,8 +22,7 @@
         <t t-out="object.event_id.user_id.signature or ''">--<br/>Mitchell Admin</t>
     </t>
 </div></field>
-            <field name="report_template" ref="action_report_event_registration_foldable_badge"/>
-            <field name="report_name">Foldable Badge - {{ (object.event_id.name or 'Event').replace('/','_') }}</field>
+            <field name="report_template_ids" eval="[(4, ref('event.action_report_event_registration_foldable_badge'))]"/>
             <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
@@ -253,8 +252,7 @@
 </td></tr>
 </table>
             </field>
-            <field name="report_template" ref="action_report_event_registration_full_page_ticket"/>
-            <field name="report_name">Full Page Ticket - {{ (object.event_id.name or 'Event').replace('/','') }}</field>
+            <field name="report_template_ids" eval="[(4, ref('event.action_report_event_registration_full_page_ticket'))]"/>
             <field name="lang">{{ object.partner_id.lang }}</field>
         </record>
 

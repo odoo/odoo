@@ -530,7 +530,7 @@ class MailComposer(models.TransientModel):
                  'email_cc',
                  'mail_server_id',
                  'partner_ids',
-                 'report_template',
+                 'report_template_ids',
                  'scheduled_date',
                 )
             )
@@ -762,7 +762,7 @@ class MailComposer(models.TransientModel):
                  'mail_server_id',
                  'partner_ids',
                  'reply_to',
-                 'report_template',
+                 'report_template_ids',
                  'scheduled_date',
                  'subject',
                 )
@@ -843,7 +843,7 @@ class MailComposer(models.TransientModel):
         self.ensure_one()
 
         # some fields behave / are named differently on template model
-        mapping = {'attachments': 'report_template',
+        mapping = {'attachments': 'report_template_ids',
                    'body': 'body_html',
                    'partner_ids': 'partner_to',
                   }

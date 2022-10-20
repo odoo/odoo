@@ -30,8 +30,7 @@
         </t>
     </p>
 </div></field>
-            <field name="report_template" ref="report_purchase_quotation"/>
-            <field name="report_name">RFQ_{{ (object.name or '').replace('/','_') }}</field>
+            <field name="report_template_ids" eval="[(4, ref('purchase.report_purchase_quotation'))]"/>
             <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
@@ -69,8 +68,7 @@
         <br/><br/>
     </p>
 </div></field>
-            <field name="report_template" ref="action_report_purchase_order"/>
-            <field name="report_name">PO_{{ (object.name or '').replace('/','_') }}</field>
+            <field name="report_template_ids" eval="[(4, ref('purchase.action_report_purchase_order'))]"/>
             <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
@@ -109,8 +107,7 @@
         <br/><br/>
     </p>
 </div></field>
-            <field name="report_template" ref="action_report_purchase_order"/>
-            <field name="report_name">PO_{{ (object.name or '').replace('/','_') }}</field>
+            <field name="report_template_ids" eval="[(4, ref('purchase.action_report_purchase_order'))]"/>
             <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
