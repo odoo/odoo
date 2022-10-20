@@ -68,11 +68,15 @@ export class QuestionPageListRenderer extends ListRenderer {
             }
         }
 
-        const colspan = columns.length - sectionColumns.length;
+        const colspan = Math.max(columns.length - sectionColumns.length - 1, 1);
         const titleCol = columns.find(
             (col) => col.type === "field" && col.name === this.titleField
         );
+        const fillingCol = columns.find(
+            (col) => col.type !== "field"
+        );
         sectionColumns.splice(titleColumnIndex, 0, { ...titleCol, colspan });
+        sectionColumns.splice(columns.length - 2, 0, { ...fillingCol});
 
         return sectionColumns;
     }
