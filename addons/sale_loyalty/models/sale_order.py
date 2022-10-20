@@ -947,6 +947,8 @@ class SaleOrder(models.Model):
                 not coupon.program_id.reward_ids or\
                 not coupon.program_id.filtered_domain(self._get_program_domain()):
                 return {'error': _('This code is invalid (%s).', code), 'not_found': True}
+            elif coupon.partner_id and coupon.partner_id != self.partner_id:
+                return {'error': _('Invalid partner.')}
             elif coupon.expiration_date and coupon.expiration_date < fields.Date.today():
                 return {'error': _('This coupon is expired.')}
             elif coupon.points < min(coupon.program_id.reward_ids.mapped('required_points')):
