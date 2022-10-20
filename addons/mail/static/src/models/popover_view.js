@@ -171,6 +171,9 @@ registerModel({
                 if (this.emojiPickerView) {
                     return this.emojiPickerView;
                 }
+                if (this.messageContextMenuView) {
+                    return this.messageContextMenuView;
+                }
                 if (this.activityButtonViewOwnerAsActivityList) {
                     return this.activityListView;
                 }
@@ -192,6 +195,9 @@ registerModel({
                 }
                 if (this.emojiPickerView) {
                     return 'o_PopoverView_emojiPickerView';
+                }
+                if (this.messageContextMenuView) {
+                    return 'o_PopoverView_messageContextMenuView';
                 }
                 return clear();
             },
@@ -216,6 +222,9 @@ registerModel({
                 }
                 if (this.emojiPickerView) {
                     return 'EmojiPickerView';
+                }
+                if (this.messageContextMenuView) {
+                    return 'MessageContextMenu';
                 }
                 if (this.activityButtonViewOwnerAsActivityList) {
                     return 'ActivityListView';
@@ -252,6 +261,13 @@ registerModel({
             },
             inverse: 'popoverViews',
         }),
+        messageContextMenuView: one('MessageContextMenu', {
+            compute() {
+                    return {};
+            },
+            inverse: 'messageContextPopoverView',
+        }),
+
         /**
          * If set, this popover view is owned by a message action view.
          */

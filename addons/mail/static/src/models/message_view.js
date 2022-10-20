@@ -141,6 +141,17 @@ registerModel({
             });
         },
         /**
+         * This listens to the right click event, and used to redirect the event
+         * as a click on the popover.
+         *
+         * @param {Event} ev
+         */
+         async onContextMenu(ev) {
+            ev.stopPropagation();
+            return this.messageContextMenu.update({ messageContextPopoverView: {} });
+      
+        },
+        /**
          * Action to initiate reply to current messageView.
          */
         replyTo() {
