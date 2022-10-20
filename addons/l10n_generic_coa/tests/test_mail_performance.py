@@ -269,10 +269,8 @@ class TestAccountComposerPerformance(BaseMailAccountPerformance):
         self.assertEqual(len(print_msg.attachment_ids), 3)
         self.assertNotIn(self.attachments, print_msg.attachment_ids,
                          'Attachments should be duplicated, not just linked')
-        self.assertEqual(print_msg.author_id, self.env.user.partner_id,
-                         'TODO: not synchronized with email_from choice')
-        # self.assertEqual(print_msg.author_id, self.user_account_other.partner_id,
-        #                  'Should take invoice_user_id partner')
+        self.assertEqual(print_msg.author_id, self.user_account_other.partner_id,
+                         'Should take invoice_user_id partner')
         self.assertEqual(print_msg.email_from, self.user_account_other.email_formatted,
                          'Should take invoice_user_id email')
         self.assertEqual(print_msg.notified_partner_ids, test_customer + self.user_accountman.partner_id)
@@ -285,7 +283,7 @@ class TestAccountComposerPerformance(BaseMailAccountPerformance):
         self.assertMailMail(
             test_customer,
             'sent',
-            author=self.user_account.partner_id,  # author: current user, not synchronized with email_from of template
+            author=self.user_account_other.partner_id,  # author: synchronized with email_from of template
             content=f'TemplateBody for {test_move.name}',
             email_values={
                 'attachments_info': [
@@ -373,10 +371,8 @@ class TestAccountComposerPerformance(BaseMailAccountPerformance):
         self.assertEqual(len(print_msg.attachment_ids), 3)
         self.assertNotIn(self.attachments, print_msg.attachment_ids,
                          'Attachments should be duplicated, not just linked')
-        self.assertEqual(print_msg.author_id, self.env.user.partner_id,
-                         'TODO: not synchronized with email_from choice')
-        # self.assertEqual(print_msg.author_id, self.user_account_other.partner_id,
-        #                  'Should take invoice_user_id partner')
+        self.assertEqual(print_msg.author_id, self.user_account_other.partner_id,
+                         'Should take invoice_user_id partner')
         self.assertEqual(print_msg.email_from, self.user_account_other.email_formatted,
                          'Should take invoice_user_id email')
         self.assertEqual(print_msg.notified_partner_ids, test_customer + self.user_accountman.partner_id)
@@ -389,7 +385,7 @@ class TestAccountComposerPerformance(BaseMailAccountPerformance):
         self.assertMailMail(
             test_customer,
             'sent',
-            author=self.user_account.partner_id,  # author: current user, not synchronized with email_from of template
+            author=self.user_account_other.partner_id,  # author: synchronized with email_from of template
             content=f'SpanishBody for {test_move.name}',  # translated version
             email_values={
                 'attachments_info': [

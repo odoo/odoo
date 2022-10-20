@@ -9,7 +9,7 @@ import logging
 from odoo import _, api, fields, models, tools, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import email_re
+from odoo.tools import email_re, is_html_empty
 
 _logger = logging.getLogger(__name__)
 
@@ -64,16 +64,6 @@ class MailComposer(models.TransientModel):
             raise ValueError(_("Deprecated usage of 'default_res_id', should use 'default_res_ids'."))
 
         result = super().default_get(fields_list)
-
-        # author
-        missing_author = 'author_id' in fields_list and 'author_id' not in result
-        missing_email_from = 'email_from' in fields_list and 'email_from' not in result
-        if missing_author or missing_email_from:
-            author_id, email_from = self.env['mail.thread']._message_compute_author(result.get('author_id'), result.get('email_from'), raise_on_email=False)
-            if missing_email_from:
-                result['email_from'] = email_from
-            if missing_author:
-                result['author_id'] = author_id
 
         # record context management
         if 'model' in fields_list and 'model' not in result:
@@ -134,9 +124,12 @@ class MailComposer(models.TransientModel):
     email_layout_xmlid = fields.Char('Email Notification Layout', copy=False)
     email_add_signature = fields.Boolean(default=True)
     # origin
-    email_from = fields.Char('From', help="Email address of the sender. This field is set when no matching partner is found and replaces the author_id field in the chatter.")
+    email_from = fields.Char(
+        'From', compute='_compute_authorship', readonly=False, store=True,
+        help="Email address of the sender. This field is set when no matching partner is found and replaces the author_id field in the chatter.")
     author_id = fields.Many2one(
-        'res.partner', 'Author',
+        'res.partner', string='Author',
+        compute='_compute_authorship', readonly=False, store=True,
         help="Author of the message. If not set, email_from may hold an email address that did not match any partner.")
     # composition
     composition_mode = fields.Selection(
@@ -213,6 +206,47 @@ class MailComposer(models.TransientModel):
         as a Falsy leaf. """
         for composer in self:
             composer._evaluate_res_domain()
+
+    @api.depends('composition_mode', 'email_from', 'model',
+                 'res_domain', 'res_ids', 'template_id')
+    def _compute_authorship(self):
+        """ Computation is coming either from template, either from context.
+        When having a template with a value set, copy it (in batch mode) or
+        render it (in monorecord comment mode) on the composer. Otherwise
+        try to take current user's email. When removing the template, fallback
+        on default thread behavior (which is current user's email).
+
+        Author is not controllable from the template currently. We therefore
+        try to synchronize it with the given email_from (in rendered mode to
+        avoid trying to find partner based on qweb expressions), or fallback
+        on current user. """
+        Thread = self.env['mail.thread'].with_context(active_test=False)
+        for composer in self:
+            rendering_mode = composer.composition_mode == 'comment' and not composer.composition_batch
+            updated_author_id = None
+
+            # update email_from first as it is the main used field currently
+            if composer.template_id.email_from:
+                composer._set_value_from_template('email_from')
+            # removing template or void from -> fallback on current user as default
+            elif not composer.template_id or not composer.email_from:
+                composer.email_from = self.env.user.email_formatted
+                updated_author_id = self.env.user.partner_id.id
+
+            # Update author. When being in rendered mode: link with rendered
+            # email_from or fallback on current user if email does not match.
+            # When changing template in raw mode or resetting also fallback.
+            if composer.email_from and rendering_mode and not updated_author_id:
+                updated_author_id, _ = Thread._message_compute_author(
+                    None, composer.email_from, raise_on_email=False,
+                )
+                if not updated_author_id:
+                    updated_author_id = self.env.user.partner_id.id
+            if not rendering_mode or not composer.template_id:
+                updated_author_id = self.env.user.partner_id.id
+
+            if updated_author_id:
+                composer.author_id = updated_author_id
 
     @api.depends('res_domain', 'res_ids')
     def _compute_composition_batch(self):
@@ -349,8 +383,7 @@ class MailComposer(models.TransientModel):
             template = self.env['mail.template'].browse(template_id)
             values = dict(
                 (field, template[field])
-                for field in ('email_from',
-                              'reply_to',
+                for field in ('reply_to',
                               'scheduled_date',
                               'subject',
                              )
@@ -372,7 +405,6 @@ class MailComposer(models.TransientModel):
                 ('attachment_ids',
                  'body_html',
                  'email_cc',
-                 'email_from',
                  'email_to',
                  'mail_server_id',
                  'partner_ids',
@@ -405,7 +437,6 @@ class MailComposer(models.TransientModel):
             ).default_get(['attachment_ids',
                            'body',
                            'composition_mode',
-                           'email_from',
                            'mail_server_id',
                            'model',
                            'parent_id',
@@ -419,7 +450,6 @@ class MailComposer(models.TransientModel):
                 (key, default_values[key])
                 for key in ('attachment_ids',
                             'body',
-                            'email_from',
                             'mail_server_id',
                             'partner_ids',
                             'reply_to',
@@ -1144,3 +1174,37 @@ class MailComposer(models.TransientModel):
         if not tools.is_list_of(res_ids, int):
             raise ValidationError(error_msg)
         return res_ids
+
+    def _set_value_from_template(self, template_fname, composer_fname=False):
+        """ Set composer value from its template counterpart. In monorecord
+        comment mode, we get directly the rendered value, giving the real
+        value to the user. Otherwise we get the raw (unrendered) value from
+        template, as it will be rendered at send time (for mass mail, whatever
+        the number of contextual records to mail) or before posting on records
+        (for comment in batch).
+
+        :param str template_fname: name of field on template model, used to
+          fetch the value (and maybe render it);
+        :param str composer_fname: name of field on composer model, when field
+          names do not match (e.g. body_html on template used to populate body
+          on composer);
+        """
+        self.ensure_one()
+        composer_fname = composer_fname or template_fname
+
+        # fetch template value, check if void
+        template_value = self.template_id[template_fname] if self.template_id else False
+        if template_value and template_fname == 'body_html':
+            template_value = template_value if not is_html_empty(template_value) else False
+
+        if template_value:
+            if self.composition_mode == 'comment' and not self.composition_batch:
+                res_ids = self._evaluate_res_ids()
+                rendering_res_ids = res_ids or [0]
+                self[composer_fname] = self.template_id._generate_template(
+                    rendering_res_ids,
+                    {template_fname},
+                )[rendering_res_ids[0]][template_fname]
+            else:
+                self[composer_fname] = self.template_id[template_fname]
+        return self[composer_fname]
