@@ -104,7 +104,7 @@ export class CalendarYearRenderer extends Component {
         };
     }
     openPopover(target, date, records) {
-        this.popover.open(target, this.getPopoverProps(date, records));
+        this.popover.open(target, this.getPopoverProps(date, records), "o_cw_popover");
     }
     unselect() {
         for (const fc of Object.values(this.fcs)) {
