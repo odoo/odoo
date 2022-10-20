@@ -13,6 +13,10 @@ class AnalyticMixin(models.AbstractModel):
         compute="_compute_analytic_distribution", store=True, copy=True, readonly=False,
         precompute=True
     )
+    analytic_precision = fields.Integer(
+        store=False,
+        default=lambda self: self.env['decimal.precision'].precision_get("Percentage Analytic"),
+    )
 
     def init(self):
         # Add a gin index for json search on the keys, on the models that actually have a table
