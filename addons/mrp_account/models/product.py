@@ -80,7 +80,7 @@ class ProductProduct(models.Model):
             duration_expected = (
                 opt.workcenter_id.time_start +
                 opt.workcenter_id.time_stop +
-                opt.time_cycle)
+                opt.time_cycle * 100 / opt.workcenter_id.time_efficiency)
             total += (duration_expected / 60) * opt.workcenter_id.costs_hour
 
         for line in bom.bom_line_ids:
