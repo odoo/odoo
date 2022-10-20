@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': "pos_hr",
+    'name': "POS - HR",
     'category': "Hidden",
     'summary': 'Link module between Point of Sale and HR',
 

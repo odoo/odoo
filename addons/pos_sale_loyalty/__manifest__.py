@@ -3,7 +3,7 @@
 
 
 {
-    'name': 'pos_sale_loyalty',
+    'name': 'POS - Sales Loyality',
     'version': '1.0',
     'category': 'Hidden',
     'sequence': 6,
