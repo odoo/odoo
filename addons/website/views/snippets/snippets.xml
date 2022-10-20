@@ -1196,6 +1196,26 @@
             <we-button data-select-class="o_full_screen_height" title="Full screen" data-name="full_height_opt" data-show-scroll-button="true">100%</we-button>
         </we-button-group>
 
+        <we-input string="Height" class="o_we_sublevel_1"
+            data-name="fixed_height_opt"
+            data-dependencies="minheight_auto_opt"
+            data-select-style=""
+            data-unit="px"
+            data-css-property="height"
+            data-force-style=""/>
+            <!--    ↑ ↑ ↑
+            For this setting, we need to always force the style (= if the block
+            is naturally 800px tall and the user enters 800px for this setting,
+            we set 800px as inline style anyway). Indeed, this snippet's style
+            is based on the height that is forced but once the related public
+            widgets are started, the inner carousel items receive a min-height
+            which makes it so the snippet "natural" height is equal to the
+            initially forced height... so if the style is not forced, it would
+            ultimately be removed by mistake thinking it is not necessary.
+            Note: this is forced as not important as we still need the height to
+            be reset to 'auto' in mobile (generic css rules).
+            -->
+
         <we-checkbox string="Scroll down button"
                      data-toggle-button="true"
                      data-no-preview="true"
