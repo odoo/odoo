@@ -308,7 +308,8 @@
                 </xpath>
                 <xpath expr="//div[hasclass('o_project_kanban_boxes')]" position="after">
                     <t t-set="badgeColor" t-value="'border-success'"/>
-                    <t t-set="badgeColor" t-value="'border-danger'" t-if="record.remaining_hours.raw_value &lt; 0"/>
+                    <t t-set="badgeColor" t-value="'border-warning'" t-if="record.remaining_hours.raw_value / record.allocated_hours.raw_value &lt; 0.2 and record.remaining_hours.raw_value / record.allocated_hours.raw_value &gt; 0"/>
+                    <t t-set="badgeColor" t-value="'border-danger'" t-elif="record.remaining_hours.raw_value &lt; 0"/>
                     <t t-set="title" t-value="'Remaining days'" t-if="record.encode_uom_in_days.raw_value"/>
                     <t t-set="title" t-value="'Remaining hours'" t-else=""/>
                     <div t-if="record.allocated_hours.raw_value &gt; 0"

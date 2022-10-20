@@ -1239,7 +1239,8 @@
                             </field>
                         </page>
                         <page name="task_dependencies" string="Blocked By" attrs="{'invisible': [('allow_task_dependencies', '=', False)]}" groups="project.group_project_task_dependencies">
-                            <field name="depend_on_ids" nolabel="1" context="{'default_project_id' : project_id}">
+                            <field name="depend_on_ids" nolabel="1"
+                                   context="{'default_project_id' : project_id, 'search_view_ref' : 'project.view_task_search_form_extended', 'search_default_display_project_id': project_id, 'search_default_open_tasks': 1}">
                                 <tree editable="bottom" decoration-muted="is_closed == True">
                                     <field name="allow_milestones" invisible="1"/>
                                     <field name="parent_id" invisible="1" />
