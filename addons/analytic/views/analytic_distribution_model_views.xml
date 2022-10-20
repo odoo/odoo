@@ -20,7 +20,7 @@
             <form string="Analytic Distribution Model">
                 <sheet>
                     <group>
-                        <group string="Simultaneous conditions to meet" colspan="2">
+                        <group string="Conditions to meet" colspan="2">
                             <group>
                                 <field name="partner_id"/>
                                 <field name="partner_category_id"/>
@@ -29,9 +29,10 @@
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                         </group>
-                        <group string="Analytic distribution to apply" colspan="2">
+                        <group string="Distribution to apply" colspan="2">
                             <field name="analytic_distribution" widget="analytic_distribution"
-                                   options="{'force_applicability': 'optional', 'disable_save': true}"/>
+                                   options="{'force_applicability': 'optional', 'disable_save': true}"
+                                   class="w-50"/>
                         </group>
                     </group>
                 </sheet>
