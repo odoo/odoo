@@ -776,7 +776,7 @@ class MrpProduction(models.Model):
         # Remove from `move_finished_ids` the by-product moves and then move `move_byproduct_ids`
         # into `move_finished_ids` to avoid duplicate and inconsistency.
         if values.get('move_finished_ids', False):
-            values['move_finished_ids'] = list(filter(lambda move: move[2]['byproduct_id'] is False, values['move_finished_ids']))
+            values['move_finished_ids'] = list(filter(lambda move: move[2].get('byproduct_id', False) is False, values['move_finished_ids']))
         if values.get('move_byproduct_ids', False):
             values['move_finished_ids'] = values.get('move_finished_ids', []) + values['move_byproduct_ids']
             del values['move_byproduct_ids']
