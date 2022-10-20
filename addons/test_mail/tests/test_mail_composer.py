@@ -79,7 +79,7 @@ class TestMailComposer(TestMailCommon, TestRecipients):
             }
         ])
 
-        cls.test_from = '"John Doe" <john@example.com>'
+        cls.test_from = '"John Doe" <john.doe@test.example.com>'
 
         cls.template = cls.env['mail.template'].create({
             'auto_delete': True,
@@ -207,7 +207,8 @@ class TestComposerForm(TestMailComposer):
         ))
         self.assertTrue(composer_form.auto_delete, 'Should take template value')
         self.assertFalse(composer_form.auto_delete_keep_log, 'MailComposer: keep_log makes no sense in comment mode, only auto_delete')
-        self.assertEqual(composer_form.author_id, self.env.user.partner_id)
+        self.assertEqual(composer_form.author_id, self.user_employee_2.partner_id,
+                         'MailComposer: author is synchronized with email_from when possible')
         self.assertEqual(composer_form.body, f'<p>TemplateBody {self.test_record.name}</p>')
         self.assertFalse(composer_form.composition_batch)
         self.assertEqual(composer_form.composition_mode, 'comment')
@@ -579,52 +580,54 @@ class TestComposerInternals(TestMailComposer):
 
                 # changing template should update its email_from
                 composer.write({'template_id': self.template.id})
-                # currently onchange necessary
-                composer._onchange_template_id_wrapper()
 
                 if composition_mode == 'comment' and not batch:
-                    self.assertEqual(composer.author_id, self.partner_1,
-                                     'MailComposer: TODO: should try to synchronize with email_from')
+                    self.assertEqual(composer.author_id, self.test_record.user_id.partner_id,
+                                     f'MailComposer: should try to link in rendered mode: {composer.author_id.name}, expected {self.env.user.name}')
                     self.assertEqual(composer.email_from, self.test_record.user_id.email_formatted,
-                                     f'MailComposer: should take email_from rendered from template ({composition_mode}-{batch})')
+                                     'MailComposer: should take email_from rendered from template')
                 else:
-                    self.assertEqual(composer.author_id, self.partner_1,
-                                     'MailComposer: TODO: email_from is raw, what to do with it ?')
+                    self.assertEqual(composer.author_id, self.env.user.partner_id,
+                                     f'MailComposer: should reset to current user in raw mode: {composer.author_id.name}, expected {self.env.user.name}')
                     self.assertEqual(composer.email_from, self.template.email_from,
-                                     f'MailComposer: should take email_from raw from template ({composition_mode}-{batch})')
+                                     'MailComposer: should take email_from raw from template')
 
-                # manual values are kept over template values
+                # manual values are kept over template values; if email does not
+                # match any author, reset author
                 composer.write({'email_from': self.test_from})
-                self.assertEqual(composer.author_id, self.partner_1)
-                self.assertEqual(composer.email_from, self.test_from,
-                                 'MailComposer: TODO: author / email_from are not synchronized')
+                if composition_mode == 'comment' and not batch:
+                    self.assertEqual(composer.author_id, self.test_record.user_id.partner_id,
+                                     'MailComposer: TODO: compute not called')
+                    self.assertEqual(composer.email_from, self.test_from,
+                                     'MailComposer: manual values should be kept')
+                else:
+                    self.assertEqual(composer.author_id, self.env.user.partner_id,
+                                     'MailComposer: TODO: compute not called')
+                    self.assertEqual(composer.email_from, self.test_from,
+                                     'MailComposer: manual values should be kept')
 
                 # update with template with void values: void value is not forced in
                 # rendering mode as well as when copying template values
                 composer.write({'template_id': template_void.id})
-                # currently onchange necessary
-                composer._onchange_template_id_wrapper()
 
                 if composition_mode == 'comment' and not batch:
-                    self.assertEqual(composer.author_id, self.partner_1,
+                    self.assertEqual(composer.author_id, self.env.user.partner_id,
                                      'MailComposer: TODO: author / email_from are not synchronized')
                     self.assertEqual(composer.email_from, self.test_from)
                 else:
-                    self.assertEqual(composer.author_id, self.partner_1,
+                    self.assertEqual(composer.author_id, self.env.user.partner_id,
                                      'MailComposer: TODO: author / email_from are not synchronized')
                     self.assertEqual(composer.email_from, self.test_from)
 
                 # reset template: values are reset due to call to default_get
                 composer.write({'template_id': False})
-                # currently onchange necessary
-                composer._onchange_template_id_wrapper()
 
                 if composition_mode == 'comment' and not batch:
-                    self.assertEqual(composer.author_id, self.partner_1,
+                    self.assertEqual(composer.author_id, self.env.user.partner_id,
                                      'MailComposer: TODO: author / email_from are not synchronized')
                     self.assertEqual(composer.email_from, self.env.user.email_formatted)
                 else:
-                    self.assertEqual(composer.author_id, self.partner_1,
+                    self.assertEqual(composer.author_id, self.env.user.partner_id,
                                      'MailComposer: TODO: author / email_from are not synchronized')
                     self.assertEqual(composer.email_from, self.env.user.email_formatted)
 
@@ -1412,7 +1415,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                                      'Author cannot be synchronized with a raw email_from')
                     self.assertEqual(composer.email_from, self.template.email_from)
                 else:
-                    author = self.env.user.partner_id
+                    author = self.partner_employee_2
                     self.assertEqual(composer.author_id, author,
                                      'Author cannot be synchronized with a raw email_from')
                     self.assertEqual(composer.email_from, self.partner_employee_2.email_formatted)
@@ -1488,7 +1491,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                     message = test_record.message_ids[0]
                     self.assertMailMail(self.partner_employee_2, 'sent',
                                         mail_message=message,
-                                        author=author,  # author != email_from (template sets only email_from)
+                                        author=author,  # author is different in batch and monorecord mode (raw or rendered email_from)
                                         email_values={
                                             'body_content': f'TemplateBody {test_record.name}',
                                             'email_from': test_record.user_id.email_formatted,  # set by template
@@ -1506,7 +1509,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                                        )
                     self.assertMailMail(test_record.customer_id + new_partners, 'sent',
                                         mail_message=message,
-                                        author=author,  # author != email_from (template sets only email_from)
+                                        author=author,  # author is different in batch and monorecord mode (raw or rendered email_from)
                                         email_values={
                                             'body_content': f'TemplateBody {test_record.name}',
                                             'email_from': test_record.user_id.email_formatted,  # set by template
@@ -1627,7 +1630,7 @@ class TestComposerResultsCommentStatus(TestMailComposer):
                 self.assertMailMail(
                     recipient, 'sent',
                     mail_message=message,
-                    author=self.partner_employee,  # author != email_from (template sets only email_from)
+                    author=self.partner_employee_2,  # author synchronized with email_from
                     email_values={
                         'email_from': self.user_employee_2.email_formatted,  # set by template
                     },
