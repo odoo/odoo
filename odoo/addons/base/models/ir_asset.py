@@ -272,7 +272,7 @@ class IrAsset(models.Model):
         return misc.topological_sort({manif['name']: manif['depends'] for manif in manifs})
 
     @api.model
-    @tools.ormcache_context(keys='install_module')
+    @tools.ormcache_context(keys=('install_module',))
     def _get_installed_addons_list(self):
         """
         Returns the list of all installed addons.
@@ -282,6 +282,15 @@ class IrAsset(models.Model):
         # Second source of modules: server wide modules
         # Third source: the currently loading module from the context (similar to ir_ui_view)
         return self.env.registry._init_modules.union(odoo.conf.server_wide_modules or []).union(self.env.context.get('install_module', []))
+
+    @api.model
+    @tools.ormcache()
+    def _get_cache_longterm_key(self):
+        self.env.cr.execute("""SELECT SUM(extract(epoch from write_date)), array_agg(id) FROM ir_asset""")
+        write_sum, ids = self.env.cr.fetchone()
+        self.env.cr.execute("""SELECT SUM(extract(epoch from write_date)), array_agg(id) FROM ir_attachment WHERE url LIKE '%/web/assets/%' """)
+        attachment_write_sum, attachment_ids = self.env.cr.fetchone()
+        return write_sum, frozenset(ids or ()), attachment_write_sum, frozenset(attachment_ids or ())
 
     def _get_paths(self, path_def, installed, extensions=None):
         """

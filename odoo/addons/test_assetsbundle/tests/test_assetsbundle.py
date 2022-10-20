@@ -110,6 +110,8 @@ class TestJavascriptAssetsBundle(FileTouchable):
         super(TestJavascriptAssetsBundle, self).setUp()
         self.jsbundle_name = 'test_assetsbundle.bundle1'
         self.cssbundle_name = 'test_assetsbundle.bundle2'
+        # unlink generated asset form _pregenerate_assets_bundles
+        self.env['ir.attachment'].search([('name', 'like', '%test_assetsbundle%')]).unlink()
         self.env['res.lang']._activate_lang('ar_SY')
 
     def _get_asset(self, bundle, env=None):

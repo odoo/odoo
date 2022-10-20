@@ -621,6 +621,9 @@ class IrAttachment(models.Model):
             return True
         self.check('unlink')
 
+        if any(a.name.endswith('.css') or a.name.endswith('.js') for a in self):
+            self.clear_caches()
+
         # First delete in the database, *then* in the filesystem if the
         # database allowed it. Helps avoid errors when concurrent transactions
         # are deleting the same file, and some of the transactions are

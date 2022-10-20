@@ -27,6 +27,7 @@ class ormcache_counter(object):
 
 # statistic counters dictionary, maps (dbname, modelname, method) to counter
 STAT = defaultdict(ormcache_counter)
+STAT_LONGTERM = defaultdict(ormcache_counter)
 
 
 class ormcache(object):
@@ -116,12 +117,34 @@ class ormcache_context(ormcache):
         sign = signature(self.method)
         args = str(sign)[1:-1]
         cont_expr = "(context or {})" if 'context' in sign.parameters else "self._context"
-        keys_expr = "tuple(%s.get(k) for k in %r)" % (cont_expr, self.keys)
+        if isinstance(self.keys, str):
+            keys_expr = "tuple(%s.get(k) for k in %s)" % (cont_expr, self.keys)
+        else:
+            keys_expr = "tuple(%s.get(k) for k in %r)" % (cont_expr, self.keys)
         if self.args:
             code = "lambda %s: (%s, %s)" % (args, ", ".join(self.args), keys_expr)
         else:
             code = "lambda %s: (%s,)" % (args, keys_expr)
         self.key = unsafe_eval(code)
+
+
+class ormcache_longterm(ormcache):
+    """Long-term LRU cache decorator, using a dedicated cache
+
+    The long-term cache is meant to hold data that is more expensive to compute
+    and is nerver be invalidate.
+    """
+    def lru(self, model):
+        counter = STAT_LONGTERM[(model.pool.db_name, model._name, self.method)]
+        return model.pool._Registry__cache_longterm, (model._name, self.method), counter
+
+    def clear(self, model, *args):
+        """ Override clear cache, raise error."""
+        raise ValueError("Should not clear the cache longterm.")
+
+
+class ormcache_longterm_context(ormcache_context, ormcache_longterm):
+    pass
 
 
 class ormcache_multi(ormcache):
@@ -204,18 +227,24 @@ def log_ormcache_stats(sig=None, frame=None):
     me = threading.current_thread()
     me_dbname = getattr(me, 'dbname', 'n/a')
 
-    for dbname, reg in sorted(Registry.registries.d.items()):
-        # set logger prefix to dbname
-        me.dbname = dbname
-        entries = Counter(k[:2] for k in reg._Registry__cache.d)
+    def _log_cache_stats(cache, stats, suffix=None):
+        entries = Counter(k[:2] for k in cache)
         # show entries sorted by model name, method name
         for key in sorted(entries, key=lambda key: (key[0], key[1].__name__)):
             model, method = key
-            stat = STAT[(dbname, model, method)]
+            stat = stats[(dbname, model, method)]
             _logger.info(
-                "%6d entries, %6d hit, %6d miss, %6d err, %4.1f%% ratio, for %s.%s",
+                "%6d entries, %6d hit, %6d miss, %6d err, %4.1f%% ratio, for %s.%s%s",
                 entries[key], stat.hit, stat.miss, stat.err, stat.ratio, model, method.__name__,
+                suffix or '',
             )
+
+    for dbname, reg in sorted(Registry.registries.d.items()):
+        # set logger prefix to dbname
+        me.dbname = dbname
+        # show entries sorted by model name, method name
+        _log_cache_stats(reg._Registry__cache.d, STAT)
+        _log_cache_stats(reg._Registry__cache_longterm.d, STAT_LONGTERM, suffix="(LT)")
 
     me.dbname = me_dbname
 

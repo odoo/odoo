@@ -549,6 +549,7 @@ class IrQWeb(models.AbstractModel):
             * ``inherit_branding_auto`` (bool) add the branding on fields
             * ``minimal_qcontext``(bool) To use the minimum context and options
                 from ``_prepare_environment``
+            * ``preserve_comments``(bool) To preserve xml comment in the final render
 
         :returns: bytes marked as markup-safe (decode to :class:`markupsafe.Markup`
                   instead of `str`)
@@ -572,37 +573,32 @@ class IrQWeb(models.AbstractModel):
     # assume cache will be invalidated by third party on write to ir.ui.view
     def _get_template_cache_keys(self):
         """ Return the list of context keys to use for caching ``_compile``. """
-        return ['lang', 'inherit_branding', 'edit_translations', 'profile']
+        return ['lang', 'inherit_branding', 'edit_translations', 'profile', 'preserve_comments']
 
-    @tools.conditional(
-        'xml' not in tools.config['dev_mode'],
-        tools.ormcache('template', 'tuple(self.env.context.get(k) for k in self._get_template_cache_keys())'),
-    )
-    def _get_view_id(self, template):
-        try:
-            return self.env['ir.ui.view'].sudo().with_context(load_all_views=True)._get_view_id(template)
-        except Exception:
-            return None
+    def _get_cache_longterm_key(self, view_id):
+        return ((view_id,)
+            + self.env["ir.ui.view"]._get_cache_longterm_key(view_id)
+            + tuple(self.env.context.get(k) for k in self._get_template_cache_keys()))
 
     @QwebTracker.wrap_compile
-    def _compile(self, template):
+    def _compile(self, template, cache=None):
+        ref, cache_key = None, None
         if isinstance(template, etree._Element):
             self = self.with_context(is_t_cache_disabled=True)
-            ref = None
         else:
-            ref = self._get_view_id(template)
-
-        # define the base key cache for code in cache and t-cache feature
-        base_key_cache = None
-        if ref:
-            base_key_cache = self._get_cache_key(tuple([ref] + [self.env.context.get(k) for k in self._get_template_cache_keys()]))
-        self = self.with_context(__qweb_base_key_cache=base_key_cache)
+            try:
+                ref = self.env['ir.ui.view'].sudo().with_context(load_all_views=True)._get_view_id(template)
+                # define the base key cache for code in cache and t-cache feature
+                cache_key = ref and self._get_cache_longterm_key(ref)
+            except Exception:
+                pass
 
         # generate the template functions and the root function name
         def generate_functions():
             code, options, def_name = self._generate_code(template)
             code = '\n'.join([
                 "def generate_functions():",
+                f"    cache_longterm_key = {cache_key!r}",
                 "    template_functions = {}",
                 indent_code(code, 1),
                 f"    template_functions['options'] = {options if self.env.context.get('profile') else None!r}",
@@ -621,7 +617,7 @@ class IrQWeb(models.AbstractModel):
                 raise QWebException("Error when compiling xml template",
                     self, template, code=code, ref=ref) from e
 
-        return self._load_values(base_key_cache, generate_functions)
+        return self._load_values(cache_key, generate_functions, cache)
 
     def _generate_code(self, template):
         """ Compile the given template into a rendering function (generator)::
@@ -1608,7 +1604,7 @@ class IrQWeb(models.AbstractModel):
                                     ref, function_name, cached_values = item
                                     t_nocache_function = values['__qweb_loaded_values'].get(function_name)
                                     if not t_nocache_function:
-                                        t_call_template_functions, def_name = self._compile(ref)
+                                        t_call_template_functions, def_name = self._compile(ref, values.get('__qweb_loaded_values'))
                                         t_nocache_function = t_call_template_functions[function_name]
 
                                     nocache_values = values['__qweb_root_values'].copy()
@@ -2106,7 +2102,7 @@ class IrQWeb(models.AbstractModel):
             template = {template}
             if template.isnumeric():
                 template = int(template)
-            t_call_template_functions, def_name = irQweb._compile(template)
+            t_call_template_functions, def_name = irQweb._compile(template, values.get('__qweb_loaded_values'))
             render_template = t_call_template_functions[def_name]
             yield from render_template(irQweb, t_call_values)
             """, level))
@@ -2123,6 +2119,11 @@ class IrQWeb(models.AbstractModel):
         """ This special 't-call-assets' tag can be used in order to aggregate/minify javascript and css assets"""
         if len(el) > 0:
             raise SyntaxError("t-call-assets cannot contain children nodes")
+
+        if not compile_context.get('call_assets_nocache'):
+            compile_context['call_assets_nocache'] = True
+            el.attrib['t-nocache'] = ''
+            return self._compile_node(el, compile_context, level)
 
         code = self._flush_text(compile_context, level)
         xmlid = el.attrib.pop('t-call-assets')
@@ -2203,7 +2204,7 @@ class IrQWeb(models.AbstractModel):
         code.append(indent_code(f"""
             template_cache_key = {self._compile_expr(expr)} if not self.env.context.get('is_t_cache_disabled') else None
             cache_key = self._get_cache_key(template_cache_key) if template_cache_key else None
-            uniq_cache_key = cache_key and ({str(self.env.context['__qweb_base_key_cache'])!r}, '{def_name}_cache', cache_key)
+            uniq_cache_key = cache_key and (cache_longterm_key, '{def_name}_cache', cache_key)
             loaded_values = values['__qweb_loaded_values']
             def {def_name}_cache():
                 content = []
@@ -2229,7 +2230,7 @@ class IrQWeb(models.AbstractModel):
                         ref, function_name, cached_values = item
                         t_nocache_function = loaded_values.get(function_name)
                         if not t_nocache_function:
-                            t_call_template_functions, def_name = self._compile(ref)
+                            t_call_template_functions, def_name = self._compile(ref, values.get('__qweb_loaded_values'))
                             t_nocache_function = t_call_template_functions[function_name]
 
                         nocache_values = values['__qweb_root_values'].copy()
@@ -2408,15 +2409,18 @@ class IrQWeb(models.AbstractModel):
             cache_key = (cache_key,)
         keys = []
         for item in cache_key:
-            try:
-                # use try catch instead of isinstance to detect lazy values
-                keys.append(item._name)
-                keys.append(tuple(item.ids))
-                dates = item.mapped('write_date')
-                if dates:
-                    keys.append(max(dates).timestamp())
-            except AttributeError:
-                keys.append(repr(item))
+            if hasattr(item, '_get_qweb_t_cache_key'):
+                keys.append(item._get_qweb_t_cache_key())
+            else:
+                try:
+                    # use try catch instead of isinstance to detect lazy values
+                    keys.append(item._name)
+                    keys.append(tuple(item.ids))
+                    dates = item.mapped('write_date')
+                    if dates:
+                        keys.append(max(dates).timestamp())
+                except AttributeError:
+                    keys.append(repr(item))
         return tuple(keys)
 
     def _load_values(self, cache_key, get_value, loaded_values=None):
@@ -2435,7 +2439,7 @@ class IrQWeb(models.AbstractModel):
     # in '_compile' method contains the write_date of all inherited views.
     @tools.conditional(
         'xml' not in tools.config['dev_mode'],
-        tools.ormcache('cache_key'),
+        tools.ormcache_longterm('cache_key'),
     )
     def _get_cached_values(self, cache_key, get_value):
         """ generate value from the function if the result is not cached. """
@@ -2446,12 +2450,20 @@ class IrQWeb(models.AbstractModel):
         # in non-xml-debug mode we want assets to be cached forever, and the admin can force a cache clear
         # by restarting the server after updating the source code (or using the "Clear server cache" in debug tools)
         'xml' not in tools.config['dev_mode'],
-        tools.ormcache('bundle', 'css', 'js', 'debug', 'async_load', 'defer_load', 'lazy_load', 'media', 'tuple(self.env.context.get(k) for k in self._get_template_cache_keys())'),
+        tools.ormcache_longterm_context(
+            'frozenset(self.env.registry._init_modules)',
+            'self.env["ir.asset"]._get_cache_longterm_key()',
+            'bundle', 'css', 'js', 'debug', 'async_load', 'defer_load', 'lazy_load', 'media',
+            keys='self._get_template_cache_keys()'),
     )
     def _generate_asset_nodes_cache(self, bundle, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
         return self._generate_asset_nodes(bundle, css, js, debug, async_load, defer_load, lazy_load, media)
 
-    @tools.ormcache('bundle', 'defer_load', 'lazy_load', 'media', 'tuple(self.env.context.get(k) for k in self._get_template_cache_keys())')
+    @tools.ormcache_longterm_context(
+        'frozenset(self.env.registry._init_modules)',
+        'self.env["ir.asset"]._get_cache_longterm_key()',
+        'bundle', 'defer_load', 'lazy_load', 'media',
+        keys='self._get_template_cache_keys()')
     def _get_asset_content(self, bundle, defer_load=False, lazy_load=False, media=None):
         asset_paths = self.env['ir.asset']._get_asset_paths(bundle=bundle, css=True, js=True)
 
