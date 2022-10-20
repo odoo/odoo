@@ -7,6 +7,7 @@
             <field name="model">mrp.routing.workcenter</field>
             <field name="arch" type="xml">
                 <tree string="Routing Work Centers" multi_edit="1">
+                    <field name="company_id" invisible="1"/>
                     <field name="name"/>
                     <field name="bom_id"/>
                     <field name="workcenter_id"/>
@@ -53,6 +54,7 @@
                 <xpath expr="//field[@name='blocked_by_operation_ids']" position="replace">
                 </xpath>
                 <xpath expr="//field[@name='name']" position="after">
+                    <field name="bom_id" invisible="1"/>
                     <field name="blocked_by_operation_ids" widget="many2many_tags" optional="hide" attrs="{'column_invisible': [('parent.allow_operation_dependencies', '=', False)]}"/>
                 </xpath>
             </field>
