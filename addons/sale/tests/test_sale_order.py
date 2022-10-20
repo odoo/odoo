@@ -205,6 +205,47 @@ class TestSaleOrder(SaleCommon):
         so_form.save()
         self.assertEqual(so.order_line.product_uom_qty, 12)
 
+        packaging_pack_of_10 = self.env['product.packaging'].create({
+            'name': "PackOf10",
+            'product_id': self.product.id,
+            'qty': 10.0,
+        })
+        packaging_pack_of_20 = self.env['product.packaging'].create({
+            'name': "PackOf20",
+            'product_id': self.product.id,
+            'qty': 20.0,
+        })
+
+        so2 = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+        })
+        so2_form = Form(so2)
+        with so2_form.order_line.new() as line:
+            line.product_id = self.product
+            line.product_uom_qty = 10
+        so2_form.save()
+        self.assertEqual(so2.order_line.product_packaging_id.id, packaging_pack_of_10.id)
+        self.assertEqual(so2.order_line.product_packaging_qty, 1.0)
+
+        with so2_form.order_line.edit(0) as line:
+            line.product_packaging_qty = 2
+        so2_form.save()
+        self.assertEqual(so2.order_line.product_uom_qty, 20)
+        # we should have 2 pack of 10, as we've set the package_qty manually,
+        # we shouldn't recompute the packaging_id, since the package_qty is protected,
+        # therefor cannot be recomputed during the same transaction, which could lead
+        # to an incorrect line like (qty=20,pack_qty=2,pack_id=PackOf20)
+        self.assertEqual(so2.order_line.product_packaging_qty, 2)
+        self.assertEqual(so2.order_line.product_packaging_id.id, packaging_pack_of_10.id)
+
+        with so2_form.order_line.edit(0) as line:
+            line.product_packaging_id = packaging_pack_of_20
+        so2_form.save()
+        self.assertEqual(so2.order_line.product_uom_qty, 20)
+        # we should have 1 pack of 20, as we've set the package type manually
+        self.assertEqual(so2.order_line.product_packaging_qty, 1)
+        self.assertEqual(so2.order_line.product_packaging_id.id, packaging_pack_of_20.id)
+
     def _create_sale_order(self):
         """Create dummy sale order (without lines)"""
         return self.env['sale.order'].with_context(
