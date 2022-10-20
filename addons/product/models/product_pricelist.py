@@ -107,10 +107,10 @@ class Pricelist(models.Model):
         """
         self.ensure_one()
         return self._compute_price_rule(
-            product, quantity, uom=uom, date=date, **kwargs
+            product, quantity, uom=uom, date=date, compute_price=False, **kwargs
         )[product.id][1]
 
-    def _compute_price_rule(self, products, qty, uom=None, date=False, **kwargs):
+    def _compute_price_rule(self, products, qty, uom=None, date=False, compute_price=True, **kwargs):
         """ Low-level method - Mono pricelist, multi products
         Returns: dict{product_id: (price, suitable_rule) for the given pricelist}
 
@@ -120,6 +120,7 @@ class Pricelist(models.Model):
             If not specified, prices returned are expressed in product uoms
         :param date: date to use for price computation and currency conversions
         :type date: date or datetime
+        :param bool compute_price: whether the price should be computed (default: True)
 
         :returns: product_id: (price, pricelist_rule)
         :rtype: dict
@@ -155,8 +156,11 @@ class Pricelist(models.Model):
                     suitable_rule = rule
                     break
 
-            kwargs['pricelist'] = self
-            price = suitable_rule._compute_price(product, qty, target_uom, date=date, currency=self.currency_id)
+            if compute_price:
+                price = suitable_rule._compute_price(product, qty, target_uom, date=date, currency=self.currency_id)
+            else:
+                # Skip price computation when only the rule is requested.
+                price = 0.0
             results[product.id] = (price, suitable_rule.id)
 
         return results
