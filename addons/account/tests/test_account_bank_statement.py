@@ -878,6 +878,7 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
             {'amount': 8, 'statement_id': statement1.id},
         ])
 
+<<<<<<< HEAD
         # Split on a line adjutant to another statement
         self.env['account.bank.statement.line'].invalidate_model(['running_balance'])
         statement2 = self.env['account.bank.statement'].with_context({'split_line_id': line6.id}).create({})
@@ -903,6 +904,116 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
                 {'amount': 6, 'running_balance': 21, 'statement_id': statement2.id},
                 {'amount': 7, 'running_balance': 15, 'statement_id': statement1.id},
                 {'amount': 8, 'running_balance': 8,  'statement_id': statement1.id},
+||||||| parent of 31c873ac85ca... temp
+        # The statement line is no longer in the 'to_check' mode.
+        # Reconciling again should raise an error.
+        with self.assertRaises(UserError), self.cr.savepoint():
+            self.statement_line.reconcile([
+                {'name': 'whatever', 'account_id': random_acc_1.id, 'balance': -100.0},
+            ])
+
+    def test_conversion_rate_rounding_issue(self):
+        ''' Ensure the reconciliation is well handling the rounding issue due to multiple currency conversion rates.
+
+        In this test, the resulting journal entry after reconciliation is:
+        {'amount_currency': 7541.66,    'debit': 6446.97,   'credit': 0.0}
+        {'amount_currency': 226.04,     'debit': 193.22,    'credit': 0.0}
+        {'amount_currency': -7767.70,   'debit': 0.0,       'credit': 6640.19}
+        ... but 226.04 / 1.1698 = 193.23. In this situation, 0.01 has been removed from this write-off line in order to
+        avoid an unecessary open-balance line being an exchange difference issue.
+        '''
+        self.bank_journal_2.currency_id = self.currency_2
+        self.currency_data['rates'][-1].rate = 1.1698
+
+        statement = self.env['account.bank.statement'].create({
+            'name': 'test_statement',
+            'date': '2017-01-01',
+            'journal_id': self.bank_journal_2.id,
+            'line_ids': [
+                (0, 0, {
+                    'date': '2019-01-01',
+                    'payment_ref': 'line_1',
+                    'partner_id': self.partner_a.id,
+                    'amount': 7541.66,
+                }),
+=======
+        # The statement line is no longer in the 'to_check' mode.
+        # Reconciling again should raise an error.
+        with self.assertRaises(UserError), self.cr.savepoint():
+            self.statement_line.reconcile([
+                {'name': 'whatever', 'account_id': random_acc_1.id, 'balance': -100.0},
+            ])
+
+    def test_reconciliation_statement_line_foreign_currency(self):
+        statement = self.env['account.bank.statement'].create({
+            'name': 'test_statement',
+            'date': '2019-01-01',
+            'journal_id': self.bank_journal_1.id,
+            'line_ids': [
+                (0, 0, {
+                    'date': '2019-01-01',
+                    'payment_ref': 'line_1',
+                    'partner_id': self.partner_a.id,
+                    'foreign_currency_id': self.currency_2.id,
+                    'amount': -80.0,
+                    'amount_currency': -120.0,
+                }),
+            ],
+        })
+        statement.button_post()
+        statement_line = statement.line_ids
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'invoice_date': '2019-01-01',
+            'date': '2019-01-01',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_2.id,
+            'invoice_line_ids': [
+                (0, None, {
+                    'name': 'counterpart line, same amount',
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'quantity': 1,
+                    'price_unit': 120.0,
+                }),
+            ],
+        })
+        invoice.action_post()
+        invoice_line = invoice.line_ids.filtered(lambda line: line.account_internal_type == 'payable')
+
+        statement_line.reconcile([{'id': invoice_line.id}], allow_partial=True)
+
+        self.assertRecordValues(statement_line.line_ids, [
+            # pylint: disable=bad-whitespace
+            {'amount_currency': -80.0, 'currency_id': self.currency_1.id,   'balance': -80.0,   'reconciled': False},
+            {'amount_currency': 120.0, 'currency_id': self.currency_2.id,   'balance': 80.0,    'reconciled': True},
+        ])
+
+    def test_conversion_rate_rounding_issue(self):
+        ''' Ensure the reconciliation is well handling the rounding issue due to multiple currency conversion rates.
+
+        In this test, the resulting journal entry after reconciliation is:
+        {'amount_currency': 7541.66,    'debit': 6446.97,   'credit': 0.0}
+        {'amount_currency': 226.04,     'debit': 193.22,    'credit': 0.0}
+        {'amount_currency': -7767.70,   'debit': 0.0,       'credit': 6640.19}
+        ... but 226.04 / 1.1698 = 193.23. In this situation, 0.01 has been removed from this write-off line in order to
+        avoid an unecessary open-balance line being an exchange difference issue.
+        '''
+        self.bank_journal_2.currency_id = self.currency_2
+        self.currency_data['rates'][-1].rate = 1.1698
+
+        statement = self.env['account.bank.statement'].create({
+            'name': 'test_statement',
+            'date': '2017-01-01',
+            'journal_id': self.bank_journal_2.id,
+            'line_ids': [
+                (0, 0, {
+                    'date': '2019-01-01',
+                    'payment_ref': 'line_1',
+                    'partner_id': self.partner_a.id,
+                    'amount': 7541.66,
+                }),
+>>>>>>> 31c873ac85ca... temp
             ],
         )
 
