@@ -4,6 +4,8 @@ from itertools import groupby
 from re import search
 from functools import partial
 
+import pytz
+
 from odoo import api, fields, models
 
 
@@ -168,11 +170,12 @@ class PosOrder(models.Model):
         self._get_order_lines(table_orders)
         self._get_payment_lines(table_orders)
 
+        timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
         for order in table_orders:
             order['pos_session_id'] = order['session_id'][0]
             order['uid'] = search(r"\d{5,}-\d{3,}-\d{4,}", order['pos_reference']).group(0)
             order['name'] = order['pos_reference']
-            order['creation_date'] = order['create_date']
+            order['creation_date'] = order['create_date'].astimezone(timezone)
             order['server_id'] = order['id']
             if order['fiscal_position_id']:
                 order['fiscal_position_id'] = order['fiscal_position_id'][0]
