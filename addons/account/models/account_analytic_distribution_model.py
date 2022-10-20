@@ -8,7 +8,7 @@ class AccountAnalyticDistributionModel(models.Model):
 
     account_prefix = fields.Char(
         string='Accounts Prefix',
-        help="Prefix that defines which accounts from the financial accounting this model should apply on.",
+        help="This analytic distribution will apply to all financial accounts sharing the prefix specified.",
     )
     product_id = fields.Many2one(
         'product.product',
