@@ -128,12 +128,12 @@ async function toggleArchive(model, resModel, resIds, doArchive, context) {
 
 async function unselectRecord(editedRecord, abandonRecord) {
     if (editedRecord) {
-        const isValid = await editedRecord.checkValidity();
+        await editedRecord.askChanges();
         const canBeAbandoned = editedRecord.canBeAbandoned;
-        if (isValid && !canBeAbandoned) {
-            return editedRecord.switchMode("readonly");
-        } else if (canBeAbandoned) {
+        if (canBeAbandoned) {
             return abandonRecord(editedRecord.id);
+        } else {
+            return editedRecord.switchMode("readonly");
         }
     }
 }
@@ -579,11 +579,15 @@ export class Record extends DataPoint {
         this.invalidateCache();
     }
 
+    async askChanges() {
+        const proms = [];
+        this.model.env.bus.trigger("RELATIONAL_MODEL:NEED_LOCAL_CHANGES", { proms });
+        await Promise.all([...proms, this.model.mutex.getUnlockedDef()]);
+    }
+
     async checkValidity() {
         if (!this._urgentSave) {
-            const proms = [];
-            this.model.env.bus.trigger("RELATIONAL_MODEL:NEED_LOCAL_CHANGES", { proms });
-            await Promise.all([...proms, this.model.mutex.getUnlockedDef()]);
+            await this.askChanges();
         }
         return this._checkValidity();
     }
@@ -1442,10 +1446,12 @@ class DynamicList extends DataPoint {
                         isSaved = await editedRecord.save();
                     } catch (e) {
                         this.editedRecord = editedRecord;
+                        this.model.notify();
                         throw e;
                     }
                     if (!isSaved) {
                         this.editedRecord = editedRecord;
+                        this.model.notify();
                         return false;
                     }
                 }
