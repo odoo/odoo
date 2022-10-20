@@ -148,6 +148,9 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
         selectPaymentLine(event) {
             const { cid } = event.detail;
             const line = this.paymentLines.find((line) => line.cid === cid);
+            if (line) {
+                line.can_be_reversed = line.payment_method.payment_terminal.supports_reversals;
+            }
             this.currentOrder.select_paymentline(line);
             NumberBuffer.reset();
             this.render(true);
