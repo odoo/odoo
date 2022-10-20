@@ -2902,10 +2902,30 @@ options.registry.ScrollButton = options.Class.extend({
     /**
      * @override
      */
+    _renderCustomXML(uiFragment) {
+        // TODO We should have a better way to change labels depending on some
+        // condition (maybe a dedicated way in updateUI...)
+        if (this.$target[0].dataset.snippet === 's_image_gallery') {
+            const minHeightEl = uiFragment.querySelector('[data-name="minheight_auto_opt"]');
+            minHeightEl.parentElement.setAttribute('string', _t("Min-Height"));
+        }
+    },
+    /**
+     * @override
+     */
     _computeWidgetState: function (methodName, params) {
         switch (methodName) {
             case 'toggleButton':
                 return !!this.$button.parent().length;
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === 'fixed_height_opt') {
+            return (this.$target[0].dataset.snippet === 's_image_gallery');
         }
         return this._super(...arguments);
     },
