@@ -42,6 +42,7 @@ class ResConfigSettings(models.TransientModel):
     module_delivery_usps = fields.Boolean("USPS Connector")
     module_delivery_bpost = fields.Boolean("bpost Connector")
     module_delivery_easypost = fields.Boolean("Easypost Connector")
+    module_delivery_shiprocket = fields.Boolean("Shiprocket Connector")
 
     module_product_email_template = fields.Boolean("Specific Email")
     module_sale_coupon = fields.Boolean("Coupons & Promotions")
