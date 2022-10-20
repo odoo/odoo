@@ -1319,7 +1319,7 @@ actual arch.
         return True
 
     def _editable_tag_tree(self, node, name_manager):
-        return node.get('editable')
+        return node.get('editable') or node.get('multi_edit')
 
     def _editable_tag_field(self, node, name_manager):
         field = name_manager.model._fields.get(node.get('name'))

@@ -286,7 +286,7 @@ export class MockServer {
                 }
                 const defaultValues = {};
                 const stateExceptions = {}; // what is this ?
-                (editableView && modifiersNames || ["invisible"]).forEach((attr) => {
+                ((editableView && modifiersNames) || ["invisible"]).forEach((attr) => {
                     stateExceptions[attr] = [];
                     defaultValues[attr] = !!field[attr];
                 });
@@ -467,7 +467,7 @@ export class MockServer {
             case "form":
                 return true;
             case "tree":
-                return !!node.getAttribute("editable");
+                return node.getAttribute("editable") || node.getAttribute("multi_edit");
             case "field": {
                 const fname = node.getAttribute("name");
                 const field = this.models[modelName].fields[fname];
@@ -489,11 +489,9 @@ export class MockServer {
     _onchangeAbleView(node) {
         if (node.tagName === "form") {
             return true;
-        }
-        else if (node.tagName === "tree") {
+        } else if (node.tagName === "tree") {
             return true;
-        }
-        else if (node.tagName === "kanban") {
+        } else if (node.tagName === "kanban") {
             return true;
         }
     }
