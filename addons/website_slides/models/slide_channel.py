@@ -24,6 +24,7 @@ class ChannelUsersRelation(models.Model):
     channel_id = fields.Many2one('slide.channel', index=True, required=True, ondelete='cascade')
     completed = fields.Boolean('Is Completed', help='Channel validated, even if slides / lessons are added once done.')
     completion = fields.Integer('% Completed Slides')
+    completion_date = fields.Datetime('Completion date', help='Completion date')
     completed_slides_count = fields.Integer('# Completed Slides')
     partner_id = fields.Many2one('res.partner', index=True, required=True, ondelete='cascade')
     partner_email = fields.Char(related='partner_id.email', readonly=True)
@@ -79,6 +80,13 @@ class ChannelUsersRelation(models.Model):
         if uncompleted_records:
             uncompleted_records._set_as_completed(completed=False)
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('completed', False):
+                vals['completion_date'] = fields.Datetime.now()
+        return super(ChannelUsersRelation, self).create(vals_list)
+
     def unlink(self):
         """
         Override unlink method :
@@ -95,6 +103,11 @@ class ChannelUsersRelation(models.Model):
         if removed_slide_partner_domain:
             self.env['slide.slide.partner'].search(removed_slide_partner_domain).unlink()
         return super(ChannelUsersRelation, self).unlink()
+
+    def write(self, vals):
+        if vals.get('completed', False):
+            vals['completion_date'] = fields.Datetime.now()
+        return super(ChannelUsersRelation, self).write(vals)
 
     def _set_as_completed(self, completed=True):
         """ Set record as completed and compute karma gains
