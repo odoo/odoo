@@ -14701,6 +14701,13 @@ QUnit.module("Views", (hooks) => {
         };
         const webClient = await createWebClient({ serverData });
 
+        patchWithCleanup(webClient.env.services.notification, {
+            add: (message, options) => {
+                assert.step(options.title.toString());
+                assert.step(message.toString());
+            },
+        });
+
         await doAction(webClient, 1);
         assert.deepEqual(
             [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
@@ -14709,13 +14716,15 @@ QUnit.module("Views", (hooks) => {
 
         await click(target.querySelector(".o_data_cell"));
         await editInput(target, '.o_data_cell [name="foo"] input', "");
-        await assert.rejects(doAction(webClient, 2));
+        await doAction(webClient, 2);
         assert.deepEqual(
             [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
             ["", "blip", "gnap", "blip"]
         );
         assert.hasClass(target.querySelector('.o_data_cell [name="foo"]'), "o_field_invalid");
         assert.containsN(target, ".o_data_row", 4);
+
+        assert.verifySteps(["Invalid fields: ", "<ul><li>Foo</li></ul>"]);
     });
 
     QUnit.test("Auto save: add a record and change page", async function (assert) {
