@@ -12,7 +12,7 @@ from odoo import api, Command, fields, models, tools, SUPERUSER_ID, _, _lt
 from odoo.addons.rating.models import rating_data
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.osv import expression
-from odoo.tools.misc import get_lang
+from odoo.tools.misc import get_lang, format_date
 
 from .project_task_recurrence import DAYS, WEEKS
 from .project_update import STATUS_COLOR
@@ -761,6 +761,12 @@ class Project(models.Model):
         action['display_name'] = _("%(name)s's Updates", name=self.name)
         return action
 
+    def action_project_sharing(self):
+        self.ensure_one()
+        action = self.env['ir.actions.act_window']._for_xml_id('project.project_sharing_project_task_action')
+        action['display_name'] = self.name
+        return action
+
     def toggle_favorite(self):
         favorite_projects = not_fav_projects = self.env['project.project'].sudo()
         for project in self:
@@ -1046,7 +1052,7 @@ class Task(models.Model):
     _date_name = "date_assign"
     _inherit = ['portal.mixin', 'mail.thread.cc', 'mail.activity.mixin', 'rating.mixin']
     _mail_post_access = 'read'
-    _order = "priority desc, sequence, id desc"
+    _order = "priority desc, date_deadline asc, sequence, id desc"
     _primary_email = 'email_from'
     _check_company_auto = True
 
@@ -1502,7 +1508,9 @@ class Task(models.Model):
             else:
                 recurrence_title = _('A new task will be created on the following dates:')
             task.recurrence_message = '<p><span class="fa fa-check-circle"></span> %s</p><ul>' % recurrence_title
-            task.recurrence_message += ''.join(['<li>%s</li>' % date.strftime(date_format) for date in recurring_dates[:5]])
+            task.recurrence_message += ''.join(['<li>%s %s</li>' % (
+                format_date(self.env, date, date_format="EEE"), date.strftime(date_format)
+            ) for date in recurring_dates[:5]])
             if task.repeat_type == 'after' and recurrence_left > 5 or task.repeat_type == 'forever' or len(recurring_dates) > 5:
                 task.recurrence_message += '<li>...</li>'
             task.recurrence_message += '</ul>'

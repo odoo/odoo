@@ -99,7 +99,7 @@ class TestProjectrecurrence(TransactionCase):
         tasks = self.env['project.task'].search(domain)
         self.assertEqual(len(tasks), 3)
 
-        self.assertTrue(bool(tasks[2].date_deadline))
+        self.assertTrue(bool(tasks[0].date_deadline))
         self.assertFalse(tasks[1].date_deadline, "Deadline should not be copied")
 
         for f in self.env['project.task.recurrence']._get_recurring_fields():
@@ -143,7 +143,7 @@ class TestProjectrecurrence(TransactionCase):
         tasks = self.env['project.task'].search(domain)
         self.assertEqual(len(tasks), 3)
 
-        self.assertTrue(bool(tasks[2].date_deadline))
+        self.assertTrue(bool(tasks[0].date_deadline))
         self.assertFalse(tasks[1].date_deadline, "Deadline should not be copied")
 
         for f in self.env['project.task.recurrence']._get_recurring_fields():
@@ -200,7 +200,7 @@ class TestProjectrecurrence(TransactionCase):
         tasks = self.env['project.task'].search(domain)
         self.assertEqual(len(tasks), 4)
 
-        self.assertTrue(bool(tasks[3].date_deadline))
+        self.assertTrue(bool(tasks[0].date_deadline))
         self.assertFalse(tasks[1].date_deadline, "Deadline should not be copied")
 
         for f in self.env['project.task.recurrence']._get_recurring_fields():
@@ -612,8 +612,7 @@ class TestProjectrecurrence(TransactionCase):
 
         tasks = self.env['project.task'].search(domain)
         self.assertEqual(len(tasks), 4)
-
-        self.assertTrue(bool(tasks[2].date_deadline))
+        self.assertTrue(bool(tasks[0].date_deadline))
         self.assertFalse(tasks[1].date_deadline, "Deadline should not be copied")
 
         for f in self.env['project.task.recurrence']._get_recurring_fields():
@@ -778,10 +777,10 @@ class TestProjectrecurrence(TransactionCase):
         all_tasks = self.env['project.task'].search(domain)
         self.assertEqual(len(all_tasks), 21)
         deadlines = all_tasks.sorted('create_date').mapped('date_deadline')
-        self.assertTrue(bool(deadlines[-4]))
-        self.assertTrue(bool(deadlines[-3]))
-        del deadlines[-4]
-        del deadlines[-3]
+        self.assertTrue(bool(deadlines[0]))
+        self.assertTrue(bool(deadlines[1]))
+        del deadlines[1]
+        del deadlines[0]
         self.assertTrue(not any(deadlines), "Deadline should not be copied")
 
         bottom_genealogy = all_tasks.filtered(lambda t: not t.child_ids.exists())
@@ -789,6 +788,5 @@ class TestProjectrecurrence(TransactionCase):
         self.assertEqual(bottom_genealogy_name.count('Child task 1'), 1)
         self.assertEqual(bottom_genealogy_name.count('Grandchild task 1 (recurrent)'), 10)
         self.assertEqual(bottom_genealogy_name.count('Grandchild task 5'), 1)
-
         for f in self.env['project.task.recurrence']._get_recurring_fields():
-            self.assertTrue(all_tasks[0][f] == all_tasks[1][f] == all_tasks[2][f], "Field %s should have been copied" % f)
+            self.assertTrue(all_tasks[2][f] == all_tasks[3][f] == all_tasks[4][f], "Field %s should have been copied" % f)
