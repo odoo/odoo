@@ -109,6 +109,9 @@ Model({
                 if (this.composerViewOwnerAsEmoji) {
                     return this.composerViewOwnerAsEmoji.buttonEmojisRef;
                 }
+                if (this.emojiTextFieldViewOwner) {
+                    return this.emojiTextFieldViewOwner.buttonEmojisRef;
+                }
                 if (this.activityButtonViewOwnerAsActivityList) {
                     return this.activityButtonViewOwnerAsActivityList.buttonRef;
                 }
@@ -256,16 +259,19 @@ Model({
                 return clear();
             },
         }),
+        emojiTextFieldViewOwner: one('EmojiTextFieldView', {
+            identifying: true,
+            inverse: 'emojisPopoverView'
+        }),
         /**
          * If set, the content of this popover view is a list of emojis.
          */
         emojiPickerView: one("EmojiPickerView", {
             inverse: "popoverViewOwner",
             compute() {
-                if (this.composerViewOwnerAsEmoji) {
-                    return {};
-                }
-                if (this.messageActionViewOwnerAsReaction) {
+                if (this.composerViewOwnerAsEmoji
+                    || this.emojiTextFieldViewOwner
+                    || this.messageActionViewOwnerAsReaction) {
                     return {};
                 }
                 return clear();
@@ -321,6 +327,9 @@ Model({
                 }
                 if (this.composerViewOwnerAsEmoji) {
                     return "top";
+                }
+                if (this.emojiTextFieldViewOwner) {
+                    return "bottom";
                 }
                 if (this.activityButtonViewOwnerAsActivityList) {
                     return "bottom-start";

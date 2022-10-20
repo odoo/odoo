@@ -25,6 +25,10 @@ Model({
                 );
                 return;
             }
+            if (this.emojiPickerViewOwner.popoverViewOwner.emojiTextFieldViewOwner) {
+                this.emojiPickerViewOwner.popoverViewOwner.emojiTextFieldViewOwner.onClickEmoji(ev);
+                return;
+            }
         },
         /**
          * @param {MouseEvent} ev
