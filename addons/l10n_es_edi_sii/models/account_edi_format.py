@@ -231,6 +231,9 @@ class AccountEdiFormat(models.Model):
         if (not partner.country_id or partner.country_id.code == 'ES') and partner.vat:
             # ES partner with VAT.
             partner_info['NIF'] = partner.vat[2:] if partner.vat.startswith('ES') else partner.vat
+            if self.env.context.get('error_1117'):
+                partner_info['IDOtro'] = {'IDType': '07', 'ID': IDOtro_ID}
+
         elif partner.country_id.code in eu_country_codes and partner.vat:
             # European partner.
             partner_info['IDOtro'] = {'IDType': '02', 'ID': IDOtro_ID}
@@ -564,6 +567,11 @@ class AccountEdiFormat(models.Model):
                 results[inv] = {'success': True}
                 inv.message_post(body=_("We saw that this invoice was sent correctly before, but we did not treat "
                                         "the response.  Make sure it is not because of a wrong configuration."))
+
+            elif respl.CodigoErrorRegistro == 1117 and not self.env.context.get('error_1117'):
+                return self.with_context(error_1117=True)._post_invoice_edi(invoices)
+
+
             else:
                 results[inv] = {
                     'error': _("[%s] %s", respl.CodigoErrorRegistro, respl.DescripcionErrorRegistro),
