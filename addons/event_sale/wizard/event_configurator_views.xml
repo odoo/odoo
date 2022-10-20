@@ -5,7 +5,15 @@
         <field name="model">event.event.configurator</field>
         <field name="arch" type="xml">
             <form js_class="event_configurator_form">
-                <group>
+                <field name="has_available_tickets" invisible="1"/>
+                <div invisible="has_available_tickets">
+                    We could not find a matching event ticket for this product. <br/>
+                    <a role="button" class="btn btn-link" target="_blank"
+                        href="/web#view_type=kanban&amp;model=event.event&amp;action=event.action_event_view">
+                        <i class="fa fa-arrow-right"/> Configure Events &amp; Tickets
+                    </a>
+                </div>
+                <group invisible="not has_available_tickets">
                     <field
                         name="event_id"
                         domain="[
@@ -26,15 +34,19 @@
                     <field name="product_id" invisible="1"/>
                 </group>
                 <footer>
-                    <button string="Ok" class="btn-primary o_event_sale_js_event_configurator_ok" special="save" data-hotkey="q"/>
-                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    <button string="Add" invisible="not has_available_tickets"
+                        class="btn-primary o_event_sale_js_event_configurator_ok" special="save" data-hotkey="q"/>
+                    <button string="Discard" invisible="not has_available_tickets"
+                        class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    <button string="Close" invisible="has_available_tickets"
+                        class="btn-secondary" special="cancel" data-hotkey="x"/>
                 </footer>
             </form>
         </field>
     </record>
 
     <record id="event_configurator_action" model="ir.actions.act_window">
-        <field name="name">Configure an event</field>
+        <field name="name">Select an Event</field>
         <field name="res_model">event.event.configurator</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
