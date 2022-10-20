@@ -2258,7 +2258,7 @@ class Image(Binary):
     :param int max_height: the maximum height of the image (default: ``0``, no limit)
     :param bool verify_resolution: whether the image resolution should be verified
         to ensure it doesn't go over the maximum image resolution (default: ``True``).
-        See :class:`odoo.tools.image.ImageProcess` for maximum image resolution (default: ``45e6``).
+        See :class:`odoo.tools.image.ImageProcess` for maximum image resolution (default: ``50e6``).
 
     .. note::
 
