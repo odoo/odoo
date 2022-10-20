@@ -235,6 +235,11 @@ class SaleOrderLine(models.Model):
             )
 
         result = super(SaleOrderLine, self).write(values)
+
+        # Don't recompute the package_id if we are setting the quantity of the items and the quantity of packages
+        if 'product_uom_qty' in values and 'product_packaging_qty' in values and 'product_packaging_id' not in values:
+            self.env.remove_to_compute(self._fields['product_packaging_id'], self)
+
         return result
 
     order_id = fields.Many2one('sale.order', string='Order Reference', required=True, ondelete='cascade', index=True, copy=False)
