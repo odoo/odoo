@@ -15,7 +15,7 @@ class MailTemplatePreview(models.TransientModel):
                              'email_from',
                              'email_to',
                              'partner_to',
-                             'report_template',
+                             'report_template_ids',
                              'reply_to',
                              'scheduled_date',
                             ]
@@ -94,9 +94,9 @@ class MailTemplatePreview(models.TransientModel):
 
     def _set_mail_attributes(self, values=None):
         for field in self._MAIL_TEMPLATE_FIELDS:
-            if field in ('partner_to', 'report_template'):
+            if field in ('partner_to', 'report_template_ids'):
                 # partner_to is used to generate partner_ids, handled here below
-                # report_template generates attachments, no usage here
+                # report_template_ids generates attachments, no usage here
                 continue
             field_value = values.get(field, False) if values else self.mail_template_id[field]
             self[field] = field_value
