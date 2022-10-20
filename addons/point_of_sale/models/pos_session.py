@@ -1479,11 +1479,6 @@ class PosSession(models.Model):
         if notes:
             message += notes.replace('\n', '<br/>')
         if message:
-            self.env['mail.message'].create({
-                        'body': message,
-                        'model': self._name,
-                        'res_id': self.id,
-                    })
             self.message_post(body=message)
 
     def action_view_order(self):
