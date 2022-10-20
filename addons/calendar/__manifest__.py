@@ -5,7 +5,7 @@
     'name': 'Calendar',
     'version': '1.1',
     'sequence': 165,
-    'depends': ['base', 'mail'],
+    'depends': ['base', 'digest', 'mail'],
     'summary': "Schedule employees' meetings",
     'description': """
 This is a full-featured calendar system.
@@ -26,10 +26,12 @@ If you need to manage your meetings, you should install the CRM module.
         'security/ir.model.access.csv',
         'security/calendar_security.xml',
         'data/calendar_cron.xml',
+        'data/digest_data.xml',
         'data/mail_template_data.xml',
         'data/calendar_data.xml',
         'data/mail_activity_type_data.xml',
         'data/mail_message_subtype_data.xml',
+        'views/digest_views.xml',
         'views/mail_activity_views.xml',
         'views/calendar_templates.xml',
         'views/calendar_views.xml',
