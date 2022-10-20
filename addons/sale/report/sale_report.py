@@ -47,6 +47,13 @@ class SaleReport(models.Model):
         ('done', 'Sales Done'),
         ('cancel', 'Cancelled'),
         ], string='Status', readonly=True)
+    invoice_status = fields.Selection(
+        selection=[
+            ('upselling', "Upselling Opportunity"),
+            ('invoiced', "Fully Invoiced"),
+            ('to invoice', "To Invoice"),
+            ('no', "Nothing to Invoice"),
+        ], string="Invoice Status", readonly=True)
     weight = fields.Float('Gross Weight', readonly=True)
     volume = fields.Float('Volume', readonly=True)
 
@@ -95,6 +102,7 @@ class SaleReport(models.Model):
             s.name AS name,
             s.date_order AS date,
             s.state AS state,
+            s.invoice_status as invoice_status,
             s.partner_id AS partner_id,
             s.user_id AS user_id,
             s.company_id AS company_id,
@@ -171,6 +179,7 @@ class SaleReport(models.Model):
             s.partner_id,
             s.user_id,
             s.state,
+            s.invoice_status,
             s.company_id,
             s.campaign_id,
             s.medium_id,
