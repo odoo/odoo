@@ -224,6 +224,10 @@ export class ViewCompiler {
         ];
         this.templates = templates;
         this.ctx = { readonly: "props.readonly" };
+
+        this.owlDirectiveRegexesWhitelist = this.constructor.OWL_DIRECTIVE_WHITELIST.map(
+            (d) => new RegExp(d)
+        );
         this.setup();
     }
 
@@ -276,6 +280,7 @@ export class ViewCompiler {
             return createTextNode(node.nodeValue);
         }
 
+        this.validateNode(node);
         let invisible;
         if (evalInvisible) {
             invisible = getModifier(node, "invisible");
@@ -447,7 +452,19 @@ export class ViewCompiler {
     isAlwaysInvisible(invisibleModifer, params) {
         return !params.enableInvisible && typeof invisibleModifer === "boolean" && invisibleModifer;
     }
+
+    validateNode(node) {
+        // detect attributes not in whitelist, starting with t-
+        const attributes = Object.values(node.attributes).map((attr) => attr.name);
+        const regexes = this.owlDirectiveRegexesWhitelist;
+        for (const attr of attributes) {
+            if (attr.startsWith("t-") && !regexes.some((regex) => regex.test(attr))) {
+                console.warn(`Forbidden directive ${attr} used in arch`);
+            }
+        }
+    }
 }
+ViewCompiler.OWL_DIRECTIVE_WHITELIST = [];
 
 let templateIds = Object.create(null);
 /**
