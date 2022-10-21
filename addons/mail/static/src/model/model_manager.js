@@ -51,12 +51,12 @@ export class ModelManager {
              * executed a first time.
              */
             newCompute: new Set(),
+            /**
+             * Set of records that have been created during the current update
+             * cycle and for which the _created method still has to be executed.
+             */
+            newCreated: new Set(),
         };
-        /**
-         * Set of records that have been created during the current update
-         * cycle and for which the _created method still has to be executed.
-         */
-        this._createdRecordsCreated = new Set();
         /**
          * Set of records that have been created during the current update
          * cycle and for which the onChange methods still have to be executed
@@ -732,7 +732,7 @@ export class ModelManager {
          * the end of the update cycle.
          */
         this.cycle.newCompute.add(record);
-        this._createdRecordsCreated.add(record);
+        this.cycle.newCreated.add(record);
         this._createdRecordsOnChange.add(record);
         for (const [listener, infoList] of this._listenersObservingAllByModel.get(model)) {
             this._markListenerToNotify(listener, {
@@ -774,7 +774,7 @@ export class ModelManager {
         }
         model.__recordsIndex.removeRecord(record);
         this.cycle.newCompute.delete(record);
-        this._createdRecordsCreated.delete(record);
+        this.cycle.newCreated.delete(record);
         this._createdRecordsOnChange.delete(record);
         this._updatedRecordsCheckRequired.delete(record);
         for (const [listener, infoList] of record.__listenersObservingRecord) {
@@ -871,10 +871,10 @@ export class ModelManager {
      * Executes the _created method of the created records.
      */
     _executeCreatedRecordsCreated() {
-        for (const record of this._createdRecordsCreated) {
+        for (const record of this.cycle.newCreated) {
             // Delete at every step to avoid recursion, indeed _created might
             // trigger an update cycle itself.
-            this._createdRecordsCreated.delete(record);
+            this.cycle.newCreated.delete(record);
             if (!record.exists()) {
                 throw Error(`Cannot call _created for already deleted ${record}.`);
             }
