@@ -159,7 +159,7 @@ export class ModelManager {
      */
     delete(record) {
         this._delete(record);
-        this._flushUpdateCycle();
+        this.flush();
     }
 
     /**
@@ -246,7 +246,7 @@ export class ModelManager {
     insert(model, data) {
         const isMulti = typeof data[Symbol.iterator] === 'function';
         const records = this._insert(model, isMulti ? data : [data]);
-        this._flushUpdateCycle();
+        this.flush();
         return isMulti ? records : records[0];
     }
 
@@ -273,7 +273,7 @@ export class ModelManager {
             const isMulti = typeof recordsData[Symbol.iterator] === 'function';
             this._insert(this.models[modelName], isMulti ? recordsData : [recordsData]);
         }
-        this._flushUpdateCycle();
+        this.flush();
     }
 
     /**
@@ -352,7 +352,7 @@ export class ModelManager {
      */
     update(record, data) {
         const res = this._update(record, data);
-        this._flushUpdateCycle();
+        this.flush();
         return res;
     }
 
@@ -581,7 +581,7 @@ export class ModelManager {
             }
         }
         if (hasChanged) {
-            this._flushUpdateCycle();
+            this.flush();
         }
     }
 
@@ -656,10 +656,8 @@ export class ModelManager {
     /**
      * Terminates an update cycle by executing its pending operations: execute
      * computed fields, execute life-cycle hooks, update rev numbers.
-     *
-     * @private
      */
-    _flushUpdateCycle() {
+    flush() {
         this._executeCreatedRecordsComputes();
         this._notifyListenersInUpdateCycle();
         this._executeUpdatedRecordsCheckRequired();
@@ -779,7 +777,7 @@ export class ModelManager {
             listener.onChange(infoList);
         }
         if (hasChanged) {
-            this._flushUpdateCycle();
+            this.flush();
         }
     }
 
