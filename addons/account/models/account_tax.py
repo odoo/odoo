@@ -193,12 +193,14 @@ class AccountTax(models.Model):
         return '%'.join(list(name))
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
-        return super().name_search(name=AccountTax._parse_name_search(name), args=args, operator=operator, limit=limit)
+    def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
+        if operator in ("ilike", "like"):
+            name = AccountTax._parse_name_search(name)
+        return super()._name_search(name, args, operator, limit, name_get_uid)
 
     def _search_name(self, operator, value):
         if operator not in ("ilike", "like") or not isinstance(value, str):
-            return super()._search_name(operator, value)
+            return [('name', operator, value)]
         return [('name', operator, AccountTax._parse_name_search(value))]
 
     def _check_repartition_lines(self, lines):
