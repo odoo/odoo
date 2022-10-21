@@ -430,7 +430,7 @@ export class ModelManager {
         for (const field of model.__fieldList) {
             if (field.fieldType === 'relation') {
                 if (field.relationType === 'many') {
-                    record.__values.set(field.fieldName, new RelationSet(record, field));
+                    record.__values.set(field.fieldName, new RelationSet(this, record, field));
                 }
             }
         }
