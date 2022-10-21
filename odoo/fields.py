@@ -16,10 +16,11 @@ import enum
 import itertools
 import json
 import logging
+import re
 import typing
 import uuid
 import warnings
-from typing import Any, TypeVar, Generic
+from typing import Any, TypeVar, Generic, ForwardRef
 
 _T = TypeVar("_T", bound=Any)
 
@@ -61,6 +62,10 @@ _schema = logging.getLogger(__name__[:-7] + '.schema')
 
 NoneType = type(None)
 Default = object()                      # default value for __init__() methods
+
+
+def camel_case_to_dot_case(name):
+    return re.sub(r"(?<!^)(?=[A-Z])", ".", name).lower()
 
 
 def first(records):
@@ -2835,8 +2840,11 @@ class _Relational(Generic[_T], Field[_T]):
             # This allows to get the comodel from the type when the field is declared
             # as `partner = fields.Many2one[Partner]()`
             type_args = typing.get_args(getattr(self, "__orig_class__", None))
-            if type_args and issubclass(type_args[0], BaseModel):
-                self.comodel_name = type_args[0]._name
+            if type_args:
+                if type_args[0].__class__ == ForwardRef:
+                    self.comodel_name = camel_case_to_dot_case(type_args[0].__forward_arg__)
+                elif  issubclass(type_args[0], BaseModel):
+                    self.comodel_name = type_args[0]._name
             # TODO We could error out if the comodel attribute is set and is
             # incompatible with the type.
         return super().setup(model)
