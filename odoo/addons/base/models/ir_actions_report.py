@@ -888,7 +888,7 @@ class IrActionsReport(models.Model):
         return data
 
     @api.model
-    def _render(self, report_ref, res_ids, data):
+    def _render(self, report_ref, res_ids, data=None):
         report = self._get_report(report_ref)
         report_type = report.report_type.lower().replace('-', '_')
         render_func = getattr(self, '_render_' + report_type, None)
