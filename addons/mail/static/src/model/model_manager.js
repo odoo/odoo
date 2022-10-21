@@ -87,7 +87,7 @@ export class ModelManager {
          * Map between model and a set of listeners that are using all() on that
          * model.
          */
-        this._listenersObservingAllByModel = new Map();
+        this.listenersAll = new Map();
         /**
          * All generated models. Keys are model name, values are model class.
          */
@@ -132,7 +132,7 @@ export class ModelManager {
     all(model, filterFunc) {
         for (const listener of this._listeners) {
             listener.alls.add(model);
-            const entry = this._listenersObservingAllByModel.get(model);
+            const entry = this.listenersAll.get(model);
             const info = {
                 listener,
                 reason: this.isDebug && `all() - ${model}`,
@@ -312,7 +312,7 @@ export class ModelManager {
             }
         }
         for (const model of listener.alls) {
-            this._listenersObservingAllByModel.get(model).delete(listener);
+            this.listenersAll.get(model).delete(listener);
         }
         listener.records.clear();
         listener.fields.clear();
@@ -409,7 +409,7 @@ export class ModelManager {
                     return new ModelIndexXor(model);
             }
         })();
-        this._listenersObservingAllByModel.set(model, new Map());
+        this.listenersAll.set(model, new Map());
         this.models[model.name] = model;
     }
 
@@ -734,7 +734,7 @@ export class ModelManager {
         this.cycle.newCompute.add(record);
         this.cycle.newCreated.add(record);
         this.cycle.newOnChange.add(record);
-        for (const [listener, infoList] of this._listenersObservingAllByModel.get(model)) {
+        for (const [listener, infoList] of this.listenersAll.get(model)) {
             this._markListenerToNotify(listener, {
                 listener,
                 reason: this.isDebug && `_create: allByModel - ${record}`,
@@ -784,7 +784,7 @@ export class ModelManager {
                 infoList,
             });
         }
-        for (const [listener, infoList] of this._listenersObservingAllByModel.get(model)) {
+        for (const [listener, infoList] of this.listenersAll.get(model)) {
             this._markListenerToNotify(listener, {
                 listener,
                 reason: this.isDebug && `_delete: allByModel - ${record}`,
