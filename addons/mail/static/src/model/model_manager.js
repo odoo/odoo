@@ -199,7 +199,7 @@ export class ModelManager {
      * @returns {Record|undefined}
      */
     findFromIdentifyingData(model, data = {}) {
-        this._preInsertIdentifyingFieldsFromData(model, data);
+        this.preinsert(model, data);
         const record = model.__recordsIndex.findRecord(data);
         if (!record) {
             return;
@@ -682,7 +682,7 @@ export class ModelManager {
             let record = this.findFromIdentifyingData(model, data);
             if (!record) {
                 const data2 = this._addDefaultData(model, data);
-                this._preInsertIdentifyingFieldsFromData(model, data2);
+                this.preinsert(model, data2);
                 record = this._create(model);
                 model.__recordsIndex.addRecord(record, data2);
                 this._update(record, data2, { ...options, allowWriteReadonly: true });
@@ -789,7 +789,7 @@ export class ModelManager {
      * @param {Object} model
      * @param {Object} data
      */
-    _preInsertIdentifyingFieldsFromData(model, data) {
+    preinsert(model, data) {
         for (const fieldName of model.__identifyingFieldNames) {
             if (data[fieldName] === undefined) {
                 continue;
