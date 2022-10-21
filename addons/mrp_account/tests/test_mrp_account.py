@@ -32,7 +32,7 @@ class TestMrpAccount(TestMrpCommon):
         cls.planning_bom = cls.env['mrp.bom'].create({
             'product_id': cls.product_4.id,
             'product_tmpl_id': cls.product_4.product_tmpl_id.id,
-            'product_uom_id': cls.uom_unit.id,
+            'uom_id': cls.uom_unit.id,
             'product_qty': 4.0,
             'consumption': 'flexible',
             'operation_ids': [
@@ -73,7 +73,7 @@ class TestMrpAccount(TestMrpCommon):
         })
         cls.mrp_bom_desk = cls.env['mrp.bom'].create({
             'product_tmpl_id': cls.dining_table.product_tmpl_id.id,
-            'product_uom_id': cls.env.ref('uom.product_uom_unit').id,
+            'uom_id': cls.env.ref('uom.product_uom_unit').id,
             'sequence': 3,
             'consumption': 'flexible',
             'operation_ids': [
@@ -85,25 +85,25 @@ class TestMrpAccount(TestMrpCommon):
                 (0, 0, {
                     'product_id': cls.product_table_sheet.id,
                     'product_qty': 1,
-                    'product_uom_id': cls.env.ref('uom.product_uom_unit').id,
+                    'uom_id': cls.env.ref('uom.product_uom_unit').id,
                     'sequence': 1,
                     'operation_id': cls.mrp_bom_desk.operation_ids.id}),
                 (0, 0, {
                     'product_id': cls.product_table_leg.id,
                     'product_qty': 4,
-                    'product_uom_id': cls.env.ref('uom.product_uom_unit').id,
+                    'uom_id': cls.env.ref('uom.product_uom_unit').id,
                     'sequence': 2,
                     'operation_id': cls.mrp_bom_desk.operation_ids.id}),
                 (0, 0, {
                     'product_id': cls.product_bolt.id,
                     'product_qty': 4,
-                    'product_uom_id': cls.env.ref('uom.product_uom_unit').id,
+                    'uom_id': cls.env.ref('uom.product_uom_unit').id,
                     'sequence': 3,
                     'operation_id': cls.mrp_bom_desk.operation_ids.id}),
                 (0, 0, {
                     'product_id': cls.product_screw.id,
                     'product_qty': 10,
-                    'product_uom_id': cls.env.ref('uom.product_uom_unit').id,
+                    'uom_id': cls.env.ref('uom.product_uom_unit').id,
                     'sequence': 4,
                     'operation_id': cls.mrp_bom_desk.operation_ids.id}),
             ]

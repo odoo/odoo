@@ -39,7 +39,7 @@ class StockGenerate(TransactionCase):
         for i in range(nbre_of_lines):
             move_lines_val.append({
                 'product_id': self.product_serial.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'reserved_uom_qty': 1,
                 'location_id': self.location.id,
                 'location_dest_id': self.location_dest.id

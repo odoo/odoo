@@ -10,7 +10,7 @@
 ^FO100,100
 ^A0N,44,33^FD<t t-esc="packaging.product_id.display_name"/>^FS
 ^FO100,150
-^A0N,44,33^FDQty: <t t-esc="packaging.qty"/> <t t-esc="packaging.product_uom_id.name" groups="uom.group_uom"/>^FS
+^A0N,44,33^FDQty: <t t-esc="packaging.qty"/> <t t-esc="packaging.uom_id.name" groups="uom.group_uom"/>^FS
 <t t-if="packaging.barcode">
 ^FO100,200^BY3
 ^BCN,100,Y,N,N

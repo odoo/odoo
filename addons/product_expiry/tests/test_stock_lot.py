@@ -406,7 +406,7 @@ class TestStockLot(TestStockCommon):
             'location_dest_id': delivery_1.move_ids.location_dest_id.id,
             'lot_id': good_lot.id,
             'product_id': self.apple_product.id,
-            'product_uom_id': self.apple_product.uom_id.id,
+            'uom_id': self.apple_product.uom_id.id,
             'qty_done': 4,
         })]
         res = delivery_1.button_validate()
@@ -431,7 +431,7 @@ class TestStockLot(TestStockCommon):
             'location_dest_id': delivery_2.move_ids.location_dest_id.id,
             'lot_id': good_lot.id,
             'product_id': self.apple_product.id,
-            'product_uom_id': self.apple_product.uom_id.id,
+            'uom_id': self.apple_product.uom_id.id,
             'qty_done': 4,
         }), (0, 0, {
             'company_id': self.env.company.id,
@@ -439,7 +439,7 @@ class TestStockLot(TestStockCommon):
             'location_dest_id': delivery_2.move_ids.location_dest_id.id,
             'lot_id': expired_lot_1.id,
             'product_id': self.apple_product.id,
-            'product_uom_id': self.apple_product.uom_id.id,
+            'uom_id': self.apple_product.uom_id.id,
             'qty_done': 4,
         })]
         res = delivery_2.button_validate()
@@ -464,7 +464,7 @@ class TestStockLot(TestStockCommon):
             'location_dest_id': delivery_3.move_ids.location_dest_id.id,
             'lot_id': expired_lot_1.id,
             'product_id': self.apple_product.id,
-            'product_uom_id': self.apple_product.uom_id.id,
+            'uom_id': self.apple_product.uom_id.id,
             'qty_done': 4,
         })]
         res = delivery_3.button_validate()
@@ -519,7 +519,7 @@ class TestStockLot(TestStockCommon):
             'location_dest_id': self.stock_location,
             'product_id': self.apple_product.id,
             'qty_done': 3,
-            'product_uom_id': self.apple_product.uom_id.id,
+            'uom_id': self.apple_product.uom_id.id,
             'lot_id': lot.id,
             'company_id': self.env.company.id,
         })

@@ -59,8 +59,8 @@ class StockPicking(models.Model):
             if len(production) > 1:
                 raise UserError("It shouldn't happen to have multiple production to record for the same subcontracted move")
             # Manage additional quantities
-            quantity_done_move = move.uom_id._compute_quantity(move.quantity_done, production.product_uom_id)
-            if float_compare(production.product_qty, quantity_done_move, precision_rounding=production.product_uom_id.rounding) == -1:
+            quantity_done_move = move.uom_id._compute_quantity(move.quantity_done, production.uom_id)
+            if float_compare(production.product_qty, quantity_done_move, precision_rounding=production.uom_id.rounding) == -1:
                 change_qty = self.env['change.production.qty'].create({
                     'mo_id': production.id,
                     'product_qty': quantity_done_move
@@ -133,7 +133,7 @@ class StockPicking(models.Model):
             'subcontractor_id': subcontract_move.picking_id.partner_id.commercial_partner_id.id,
             'picking_ids': [subcontract_move.picking_id.id],
             'product_id': product.id,
-            'product_uom_id': subcontract_move.uom_id.id,
+            'uom_id': subcontract_move.uom_id.id,
             'bom_id': bom.id,
             'location_src_id': subcontract_move.picking_id.partner_id.with_company(subcontract_move.company_id).property_stock_subcontractor.id,
             'location_dest_id': subcontract_move.picking_id.partner_id.with_company(subcontract_move.company_id).property_stock_subcontractor.id,

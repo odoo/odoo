@@ -22,7 +22,7 @@ class TestSaleStockReports(TestReportsCommon):
         # Put some quantity in stock.
         quant_vals = {
             'product_id': self.product.id,
-            'product_uom_id': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'location_id': self.stock_location.id,
             'quantity': 5,
             'reserved_quantity': 0,

@@ -253,7 +253,7 @@
                     <field name="is_locked" invisible="1"/>
                     <field name="picking_code" invisible="1"/>
                     <field name="qty_done" attrs="{'readonly': ['|', '&amp;', ('state', '=', 'done'), ('is_locked', '=', True), '&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}"/>
-                    <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"
+                    <field name="uom_id" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"
                         attrs="{'readonly': ['|', '|', ('reserved_uom_qty', '!=', 0.0),
                                                 '&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True),
                                                 '&amp;', ('state', '=', 'done'), ('id', '!=', False)]}"/>
@@ -289,7 +289,7 @@
                     <field name="reserved_uom_qty" readonly="1" attrs="{'column_invisible': ['|',('parent.immediate_transfer', '=', True),('parent.picking_type_code','=','incoming')]}" optional="show"/>
                     <field name="is_locked" invisible="1"/>
                     <field name="qty_done" attrs="{'readonly': [('state', 'in', ('done', 'cancel')), ('is_locked', '=', True)]}" force_save="1"/>
-                    <field name="product_uom_id" force_save="1" attrs="{'readonly': [('state', '!=', 'draft'), ('id', '!=', False)]}" groups="uom.group_uom"/>
+                    <field name="uom_id" force_save="1" attrs="{'readonly': [('state', '!=', 'draft'), ('id', '!=', False)]}" groups="uom.group_uom"/>
                 </tree>
             </field>
         </record>

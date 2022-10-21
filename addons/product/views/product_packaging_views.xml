@@ -10,7 +10,7 @@
                 <field name="product_id"/>
                 <field name="name" string="Packaging"/>
                 <field name="qty"/>
-                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
+                <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
                 <field name="barcode" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hide"/>
             </tree>
@@ -50,7 +50,7 @@
                             <label for="qty" string="Contained quantity"/>
                             <div class="o_row">
                                 <field name="qty"/>
-                                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
+                                <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
                             </div>
                             <field name="barcode"/>
                             <field name="company_id" groups="base.group_multi_company"/>

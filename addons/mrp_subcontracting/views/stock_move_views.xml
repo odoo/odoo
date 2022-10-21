@@ -26,7 +26,7 @@
                 <field name="qty_done" 
                     decoration-warning="reserved_uom_qty &lt; qty_done"
                     decoration-success="reserved_uom_qty == qty_done"/>
-                <field name="product_uom_id" groups="uom.group_uom"/>
+                <field name="uom_id" groups="uom.group_uom"/>
             </tree>
         </field>
     </record>
@@ -113,7 +113,7 @@
                             <field name="company_id" invisible="1"/>
                             <field name="state" invisible="1"/>
                             <field name="tracking" invisible="1"/>
-                            <field name="product_uom_id" invisible="1"/>
+                            <field name="uom_id" invisible="1"/>
                             <field name="product_uom_category_id" invisible="1"/>
                             <field name="picking_id" invisible="1"/>
                             <field name="move_id" invisible="1"/>

@@ -717,7 +717,7 @@ class ProductProduct(models.Model):
         for sml in stock_moves.move_line_ids:
             if not sml.owner_id or sml.owner_id == sml.company_id.partner_id:
                 continue
-            qty_to_take_on_candidates -= sml.product_uom_id._compute_quantity(sml.qty_done, self.uom_id, rounding_method='HALF-UP')
+            qty_to_take_on_candidates -= sml.uom_id._compute_quantity(sml.qty_done, self.uom_id, rounding_method='HALF-UP')
         if float_compare(qty_to_take_on_candidates, 0, precision_rounding=self.uom_id.rounding) > 0:
             negative_stock_value = self.standard_price * qty_to_take_on_candidates
             tmp_value += negative_stock_value

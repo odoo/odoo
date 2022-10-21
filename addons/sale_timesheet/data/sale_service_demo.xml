@@ -1011,7 +1011,7 @@
             <field name="date" eval="(DateTime.now() + relativedelta(days=0)).strftime('%Y-%m-%d')"/>
             <field name="amount">-300.00</field>
             <field name="product_id" ref="product.product_product_3"/>
-            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="unit_amount">10.00</field>
         </record>
 
@@ -1023,7 +1023,7 @@
             <field name="date" eval="(DateTime.now() + relativedelta(days=0)).strftime('%Y-%m-%d')"/>
             <field name="amount">-100.00</field>
             <field name="product_id" ref="product.expense_product"/>
-            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="unit_amount">1.00</field>
         </record>
 
@@ -1035,7 +1035,7 @@
             <field name="date" eval="(DateTime.now() + relativedelta(days=0)).strftime('%Y-%m-%d')"/>
             <field name="amount">-400.00</field>
             <field name="product_id" ref="product.product_product_3"/>
-            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="unit_amount">15.00</field>
         </record>
 
@@ -1047,7 +1047,7 @@
             <field name="date" eval="(DateTime.now() + relativedelta(days=0)).strftime('%Y-%m-%d')"/>
             <field name="amount">-75.00</field>
             <field name="product_id" ref="product.expense_hotel"/>
-            <field name="product_uom_id" ref="uom.product_uom_day"/>
+            <field name="uom_id" ref="uom.product_uom_day"/>
             <field name="unit_amount">1.00</field>
         </record>
 

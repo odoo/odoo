@@ -24,7 +24,7 @@ class Repair(models.Model):
             bom = self.env['mrp.bom'].sudo()._bom_find(op.product_id, company_id=op.company_id.id, bom_type='phantom')[op.product_id]
             if not bom:
                 continue
-            factor = op.uom_id._compute_quantity(op.product_uom_qty, bom.product_uom_id) / bom.product_qty
+            factor = op.uom_id._compute_quantity(op.product_uom_qty, bom.uom_id) / bom.product_qty
             _boms, lines = bom.sudo().explode(op.product_id, factor, picking_type=bom.picking_type_id)
             for bom_line, line_data in lines:
                 if bom_line.product_id.type != 'service':
@@ -42,7 +42,7 @@ class RepairLine(models.Model):
     def _prepare_phantom_line_vals(self, bom_line, qty):
         self.ensure_one()
         product = bom_line.product_id
-        uom = bom_line.product_uom_id
+        uom = bom_line.uom_id
         partner = self.repair_id.partner_id
         price = self.repair_id.pricelist_id._get_product_price(product, qty, uom=uom)
         tax = self.env['account.tax']

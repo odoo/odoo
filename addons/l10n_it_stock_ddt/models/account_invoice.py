@@ -32,7 +32,7 @@ class AccountMove(models.Model):
             else:
                 total_invoices = done_moves_related.mapped('sale_line_id.invoice_lines').filtered(
                     lambda l: l.move_id.state == 'posted' and l.move_id.move_type == 'out_invoice').sorted(lambda l: (l.move_id.invoice_date, l.move_id.id))
-                total_invs = [(i.product_uom_id._compute_quantity(i.quantity, i.product_id.uom_id), i) for i in total_invoices]
+                total_invs = [(i.uom_id._compute_quantity(i.quantity, i.product_id.uom_id), i) for i in total_invoices]
                 inv = total_invs.pop(0)
                 # Match all moves and related invoice lines FIFO looking for when the matched invoice_line matches line
                 for move in done_moves_related.sorted(lambda m: (m.date, m.id)):

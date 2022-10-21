@@ -52,7 +52,7 @@
                     <field name="name"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
-                    <field name="product_uom_id"/>
+                    <field name="uom_id"/>
                     <field name="state"/>
                     <field name="location_id"/>
                     <field name="activity_state"/>
@@ -64,7 +64,7 @@
                                     <div class="o_kanban_record_headings mt4">
                                         <strong class="o_kanban_record_title"><span><field name="name"/></span></strong>
                                     </div>
-                                    <strong><t t-esc="record.product_qty.value"/> <small><t t-esc="record.product_uom_id.value"/></small></strong>
+                                    <strong><t t-esc="record.product_qty.value"/> <small><t t-esc="record.uom_id.value"/></small></strong>
                                 </div>
                                 <div class="row">
                                     <div class="col-8 text-muted">
@@ -109,7 +109,7 @@
                                 <label for="product_qty"/>
                                 <div class="o_row">
                                     <field name="product_qty" attrs="{'readonly': ['|', ('has_tracking', '=', 'serial'), ('state', '=', 'done')]}"/>
-                                    <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" attrs="{'readonly': ['|', ('mo_id', '!=', False), ('state', '=', 'done')]}" force_save="1"/>
+                                    <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" attrs="{'readonly': ['|', ('mo_id', '!=', False), ('state', '=', 'done')]}" force_save="1"/>
                                 </div>
                             </group>
                             <group>
@@ -148,7 +148,7 @@
                                 <label for="product_qty"/>
                                 <div class="o_row">
                                     <field name="product_qty" attrs="{'readonly': [('has_tracking', '=', 'serial')]}"/>
-                                    <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" attrs="{'readonly': [('mo_id', '!=', False)]}" force_save="1"/>
+                                    <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" attrs="{'readonly': [('mo_id', '!=', False)]}" force_save="1"/>
                                 </div>
                             </group>
                             <group>
@@ -181,7 +181,7 @@
                     <field name="mo_id"/>
                     <field name="lot_id" groups="stock.group_production_lot"/>
                     <field name="product_qty"/>
-                    <field name="product_uom_id" groups="uom.group_uom"/>
+                    <field name="uom_id" groups="uom.group_uom"/>
                     <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                     <field name="company_id" groups="base.group_multi_company"/>

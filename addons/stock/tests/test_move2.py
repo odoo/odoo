@@ -2220,7 +2220,7 @@ class TestSinglePicking(TestStockCommon):
             'move_line_ids': [(0, 0, {
                 'product_id': self.productA.id,
                 'qty_done': 10,
-                'product_uom_id': self.productA.uom_id.id,
+                'uom_id': self.productA.uom_id.id,
                 'location_id': self.pack_location,
                 'location_dest_id': self.customer_location,
             })]
@@ -2241,7 +2241,7 @@ class TestSinglePicking(TestStockCommon):
             'immediate_transfer': True,
             'move_line_ids': [(0, 0, {
                 'product_id': self.productA.id,
-                'product_uom_id': self.productA.uom_id.id,
+                'uom_id': self.productA.uom_id.id,
                 'location_id': self.supplier_location,
                 'location_dest_id': self.stock_location,
                 'qty_done': 1,
@@ -2309,7 +2309,7 @@ class TestStockUOM(TestStockCommon):
         self.env['stock.move.line'].create({
             'move_id': move.id,
             'product_id': T_TEST.id,
-            'product_uom_id': T_LBS.id,
+            'uom_id': T_LBS.id,
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location,
             'qty_done': 42760.00,
@@ -2608,7 +2608,7 @@ class TestRoutes(TestStockCommon):
         replenish_wizard = self.env['product.replenish'].create({
             'product_id': self.product1.id,
             'product_tmpl_id': self.product1.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'quantity': self.product_uom_qty,
             'warehouse_id': self.wh.id,
         })
@@ -2704,7 +2704,7 @@ class TestRoutes(TestStockCommon):
             'uom_id': self.uom_unit.id,
             'move_line_ids': [(0, 0, {
                 'product_id': product.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'location_id': self.supplier_location,
                 'location_dest_id': self.env.ref('stock.stock_location_stock').id,
                 'qty_done': 1.00,

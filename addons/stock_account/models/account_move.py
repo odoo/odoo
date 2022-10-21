@@ -157,7 +157,7 @@ class AccountMove(models.Model):
                     'move_id': move.id,
                     'partner_id': move.commercial_partner_id.id,
                     'product_id': line.product_id.id,
-                    'product_uom_id': line.product_uom_id.id,
+                    'uom_id': line.uom_id.id,
                     'quantity': line.quantity,
                     'price_unit': price_unit,
                     'amount_currency': -amount_currency,
@@ -172,7 +172,7 @@ class AccountMove(models.Model):
                     'move_id': move.id,
                     'partner_id': move.commercial_partner_id.id,
                     'product_id': line.product_id.id,
-                    'product_uom_id': line.product_uom_id.id,
+                    'uom_id': line.uom_id.id,
                     'quantity': line.quantity,
                     'price_unit': -price_unit,
                     'amount_currency': amount_currency,
@@ -268,7 +268,7 @@ class AccountMoveLine(models.Model):
             line = line.with_company(line.company_id)
             move = line.move_id.with_company(line.move_id.company_id)
             po_line = line.purchase_line_id
-            uom = line.product_uom_id or line.product_id.uom_id
+            uom = line.uom_id or line.product_id.uom_id
 
             # Don't create value for more quantity than received
             quantity = po_line.qty_received - (po_line.qty_invoiced - line.quantity)
@@ -320,7 +320,7 @@ class AccountMoveLine(models.Model):
         invoice_lines = po_line.invoice_lines - self
         invoices_qty = 0
         for invoice_line in invoice_lines:
-            invoices_qty += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, invoice_line.product_id.uom_id)
+            invoices_qty += invoice_line.uom_id._compute_quantity(invoice_line.quantity, invoice_line.product_id.uom_id)
         layers_to_correct = {}
         for layer in layers:
             if layer.quantity <= invoices_qty:
@@ -373,10 +373,10 @@ class AccountMoveLine(models.Model):
             return self.price_unit
         original_line = self.move_id.reversed_entry_id.line_ids.filtered(
             lambda l: l.display_type == 'cogs' and l.product_id == self.product_id and
-            l.product_uom_id == self.product_uom_id and l.price_unit >= 0)
+            l.uom_id == self.uom_id and l.price_unit >= 0)
         original_line = original_line and original_line[0]
         return original_line.price_unit if original_line \
-            else self.product_id.with_company(self.company_id)._stock_account_get_anglo_saxon_price_unit(uom=self.product_uom_id)
+            else self.product_id.with_company(self.company_id)._stock_account_get_anglo_saxon_price_unit(uom=self.uom_id)
 
     @api.onchange('product_id')
     def _inverse_product_id(self):

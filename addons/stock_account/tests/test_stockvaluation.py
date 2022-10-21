@@ -231,7 +231,7 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move1_valuation_aml.credit, 0)
         self.assertEqual(move1_valuation_aml.product_id.id, self.product1.id)
         self.assertEqual(move1_valuation_aml.quantity, 10)
-        self.assertEqual(move1_valuation_aml.product_uom_id.id, self.uom_unit.id)
+        self.assertEqual(move1_valuation_aml.uom_id.id, self.uom_unit.id)
 
         output_aml = self._get_stock_output_move_lines()
         self.assertEqual(len(output_aml), 0)
@@ -272,7 +272,7 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move2_valuation_aml.credit, 0)
         self.assertEqual(move2_valuation_aml.product_id.id, self.product1.id)
         self.assertEqual(move2_valuation_aml.quantity, 10)
-        self.assertEqual(move2_valuation_aml.product_uom_id.id, self.uom_unit.id)
+        self.assertEqual(move2_valuation_aml.uom_id.id, self.uom_unit.id)
 
         output_aml = self._get_stock_output_move_lines()
         self.assertEqual(len(output_aml), 0)
@@ -309,7 +309,7 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move3_valuation_aml.product_id.id, self.product1.id)
         # FIXME sle
         #self.assertEqual(move3_valuation_aml.quantity, -3)
-        self.assertEqual(move3_valuation_aml.product_uom_id.id, self.uom_unit.id)
+        self.assertEqual(move3_valuation_aml.uom_id.id, self.uom_unit.id)
 
         output_aml = self._get_stock_output_move_lines()
         move3_output_aml = output_aml[-1]
@@ -342,7 +342,7 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move1_correction_valuation_aml.credit, 0)
         self.assertEqual(move1_correction_valuation_aml.product_id.id, self.product1.id)
         self.assertEqual(move1_correction_valuation_aml.quantity, 2)
-        self.assertEqual(move1_correction_valuation_aml.product_uom_id.id, self.uom_unit.id)
+        self.assertEqual(move1_correction_valuation_aml.uom_id.id, self.uom_unit.id)
 
         output_aml = self._get_stock_output_move_lines()
         self.assertEqual(len(output_aml), 1)
@@ -380,7 +380,7 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move4_valuation_aml.product_id.id, self.product1.id)
         # FIXME sle
         #self.assertEqual(move4_valuation_aml.quantity, -9)
-        self.assertEqual(move4_valuation_aml.product_uom_id.id, self.uom_unit.id)
+        self.assertEqual(move4_valuation_aml.uom_id.id, self.uom_unit.id)
 
         output_aml = self._get_stock_output_move_lines()
         move4_output_aml = output_aml[-1]
@@ -421,7 +421,7 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move5_valuation_aml.credit, 184)
         self.assertEqual(move5_valuation_aml.product_id.id, self.product1.id)
         #self.assertEqual(move5_valuation_aml.quantity, -20)
-        self.assertEqual(move5_valuation_aml.product_uom_id.id, self.uom_unit.id)
+        self.assertEqual(move5_valuation_aml.uom_id.id, self.uom_unit.id)
 
         output_aml = self._get_stock_output_move_lines()
         move5_output_aml = output_aml[-1]
@@ -459,7 +459,7 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(vacuum_valuation_aml.balance, -20)
         self.assertEqual(vacuum_valuation_aml.product_id.id, self.product1.id)
         self.assertEqual(vacuum_valuation_aml.quantity, 0)
-        self.assertEqual(vacuum_valuation_aml.product_uom_id.id, self.uom_unit.id)
+        self.assertEqual(vacuum_valuation_aml.uom_id.id, self.uom_unit.id)
 
         output_aml = self._get_stock_output_move_lines()
         vacuum_output_aml = output_aml[-1]
@@ -488,7 +488,7 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move6_correction_valuation_aml.product_id.id, self.product1.id)
         # FIXME sle
         #self.assertEqual(move6_correction_valuation_aml.quantity, -2)
-        self.assertEqual(move6_correction_valuation_aml.product_uom_id.id, self.uom_unit.id)
+        self.assertEqual(move6_correction_valuation_aml.uom_id.id, self.uom_unit.id)
 
         # -----------------------------------------------------------
         # receive 4 to counterbalance now
@@ -521,7 +521,7 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move6_correction2_valuation_aml.credit, 10)
         self.assertEqual(move6_correction2_valuation_aml.product_id.id, self.product1.id)
         self.assertEqual(move6_correction2_valuation_aml.quantity, 0)
-        self.assertEqual(move6_correction_valuation_aml.product_uom_id.id, self.uom_unit.id)
+        self.assertEqual(move6_correction_valuation_aml.uom_id.id, self.uom_unit.id)
 
         # ---------------------------------------------------------------------
         # Ending
@@ -1005,7 +1005,7 @@ class TestStockValuation(TransactionCase):
                 'product_id': self.product1.id,
                 'location_id': self.stock_location.id,
                 'location_dest_id': self.customer_location.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'qty_done': 50.0,
             })]
         })
@@ -1042,7 +1042,7 @@ class TestStockValuation(TransactionCase):
                 'product_id': self.product1.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'qty_done': 40.0,
             })]
         })
@@ -1085,7 +1085,7 @@ class TestStockValuation(TransactionCase):
                 'product_id': self.product1.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'qty_done': 20.0
             })]
         })
@@ -1149,7 +1149,7 @@ class TestStockValuation(TransactionCase):
                 'product_id': self.product1.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'qty_done': 10.0,
             })]
         })
@@ -1188,7 +1188,7 @@ class TestStockValuation(TransactionCase):
                 'product_id': self.product1.id,
                 'location_id': self.stock_location.id,
                 'location_dest_id': self.customer_location.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'qty_done': 12.0,
             })]
         })
@@ -1251,7 +1251,7 @@ class TestStockValuation(TransactionCase):
                 'product_id': self.product1.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'qty_done': 2.0,
             })]
         })
@@ -1305,7 +1305,7 @@ class TestStockValuation(TransactionCase):
                 'product_id': self.product1.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'qty_done': 10.0,
             })]
         })
@@ -1343,7 +1343,7 @@ class TestStockValuation(TransactionCase):
                 'product_id': self.product1.id,
                 'location_id': self.stock_location.id,
                 'location_dest_id': self.customer_location.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'qty_done': 10.0,
             })]
         })
@@ -1382,7 +1382,7 @@ class TestStockValuation(TransactionCase):
                 'product_id': self.product1.id,
                 'location_id': self.stock_location.id,
                 'location_dest_id': self.customer_location.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'qty_done': 21.0,
             })]
         })
@@ -1474,7 +1474,7 @@ class TestStockValuation(TransactionCase):
                 'product_id': self.product1.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'qty_done': 10.0,
             })]
         })
@@ -1503,7 +1503,7 @@ class TestStockValuation(TransactionCase):
                 'product_id': self.product2.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'qty_done': 10.0,
             })]
         })
@@ -1554,7 +1554,7 @@ class TestStockValuation(TransactionCase):
                 'product_id': self.product2.id,
                 'location_id': self.stock_location.id,
                 'location_dest_id': self.customer_location.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'qty_done': 11.0,
             })]
         })
@@ -1589,7 +1589,7 @@ class TestStockValuation(TransactionCase):
         #        'product_id': self.product2.id,
         #        'location_id': self.stock_location.id,
         #        'location_dest_id': self.customer_location.id,
-        #        'product_uom_id': self.uom_unit.id,
+        #        'uom_id': self.uom_unit.id,
         #        'qty_done': 1.0,
         #    })]
         #})
@@ -1644,7 +1644,7 @@ class TestStockValuation(TransactionCase):
         #        'product_id': self.product2.id,
         #        'location_id': self.supplier_location.id,
         #        'location_dest_id': self.stock_location.id,
-        #        'product_uom_id': self.uom_unit.id,
+        #        'uom_id': self.uom_unit.id,
         #        'qty_done': 2.0,
         #    })]
         #})
@@ -1689,7 +1689,7 @@ class TestStockValuation(TransactionCase):
                 'product_id': self.product1.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'qty_done': 10.0,
             })]
         })
@@ -1711,7 +1711,7 @@ class TestStockValuation(TransactionCase):
             'move_id': move1.id,
             'product_id': move1.product_id.id,
             'qty_done': 10,
-            'product_uom_id': move1.uom_id.id,
+            'uom_id': move1.uom_id.id,
             'location_id': move1.location_id.id,
             'location_dest_id': move1.location_dest_id.id,
         })
@@ -1750,7 +1750,7 @@ class TestStockValuation(TransactionCase):
                 'product_id': self.product1.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'qty_done': 10.0,
             })]
         })
@@ -1792,7 +1792,7 @@ class TestStockValuation(TransactionCase):
                 'product_id': self.product1.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'qty_done': 10.0,
             })]
         })
@@ -1835,7 +1835,7 @@ class TestStockValuation(TransactionCase):
                 'product_id': self.product1.id,
                 'location_id': self.stock_location.id,
                 'location_dest_id': self.customer_location.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'qty_done': 8.0,
             })]
         })
@@ -1917,7 +1917,7 @@ class TestStockValuation(TransactionCase):
                 'product_id': self.product1.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'qty_done': 10.0,
             })]
         })
@@ -1944,7 +1944,7 @@ class TestStockValuation(TransactionCase):
                 'product_id': self.product1.id,
                 'location_id': self.stock_location.id,
                 'location_dest_id': self.customer_location.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'qty_done': 10.0,
             })]
         })
@@ -3171,14 +3171,14 @@ class TestStockValuation(TransactionCase):
                 'qty_done': 1,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': subloc1.id,
-                'product_uom_id': self.uom_unit.id
+                'uom_id': self.uom_unit.id
             }),
             (0, None, {
                 'product_id': self.product1.id,
                 'qty_done': 1,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': subloc2.id,
-                'product_uom_id': self.uom_unit.id
+                'uom_id': self.uom_unit.id
             }),
         ]})
 
@@ -3207,14 +3207,14 @@ class TestStockValuation(TransactionCase):
                 'qty_done': 1,
                 'location_id': subloc1.id,
                 'location_dest_id': self.supplier_location.id,
-                'product_uom_id': self.uom_unit.id
+                'uom_id': self.uom_unit.id
             }),
             (0, None, {
                 'product_id': self.product1.id,
                 'qty_done': 1,
                 'location_id': subloc2.id,
                 'location_dest_id': self.supplier_location.id,
-                'product_uom_id': self.uom_unit.id
+                'uom_id': self.uom_unit.id
             }),
         ]})
         move2._action_done()
@@ -3250,14 +3250,14 @@ class TestStockValuation(TransactionCase):
                 'qty_done': 1,
                 'location_id': self.stock_location.id,
                 'location_dest_id': self.stock_location.id,
-                'product_uom_id': self.uom_unit.id
+                'uom_id': self.uom_unit.id
             }),
             (0, None, {
                 'product_id': self.product1.id,
                 'qty_done': 1,
                 'location_id': self.stock_location.id,
                 'location_dest_id': scrap.id,
-                'product_uom_id': self.uom_unit.id
+                'uom_id': self.uom_unit.id
             }),
         ]})
         self.assertEqual(move1._is_out(), True)
@@ -3290,14 +3290,14 @@ class TestStockValuation(TransactionCase):
                 'qty_done': 1,
                 'location_id': customer1.id,
                 'location_dest_id': self.stock_location.id,
-                'product_uom_id': self.uom_unit.id
+                'uom_id': self.uom_unit.id
             }),
             (0, None, {
                 'product_id': self.product1.id,
                 'qty_done': 1,
                 'location_id': self.stock_location.id,
                 'location_dest_id': customer1.id,
-                'product_uom_id': self.uom_unit.id
+                'uom_id': self.uom_unit.id
             }),
         ]})
         self.assertEqual(move2._is_in(), True)

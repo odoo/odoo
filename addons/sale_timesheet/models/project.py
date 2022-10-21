@@ -212,7 +212,7 @@ class Project(models.Model):
             project_id = project.id or project._origin.id
             # sale order line may be stored in a different unit of measure, so first
             # we convert all of them to the reference unit
-            # if the sol has no product_uom_id then we take the one of the project
+            # if the sol has no uom_id then we take the one of the project
             allocated_hours = sum([
                 product_uom_qty * uoms_dict.get(product_uom, project.timesheet_encode_uom_id.id).factor_inv
                 for product_uom, product_uom_qty in sol_qty_dict[project_id]
@@ -579,7 +579,7 @@ class ProjectTask(models.Model):
             if timesheet.so_line == timesheet.task_id.sale_line_id:
                 delta -= timesheet.unit_amount
             if delta:
-                mapped_remaining_hours[timesheet.task_id._origin.id] += timesheet.product_uom_id._compute_quantity(delta, uom_hour)
+                mapped_remaining_hours[timesheet.task_id._origin.id] += timesheet.uom_id._compute_quantity(delta, uom_hour)
 
         for task in self:
             task.remaining_hours_so = mapped_remaining_hours[task._origin.id]

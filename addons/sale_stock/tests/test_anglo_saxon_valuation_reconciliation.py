@@ -42,7 +42,7 @@ class TestValuationReconciliationCommon(ValuationReconciliationTestCommon):
                 'price_unit': 66.0,
                 'quantity': quantity,
                 'discount': 0.0,
-                'product_uom_id': product.uom_id.id,
+                'uom_id': product.uom_id.id,
                 'product_id': product.id,
                 'sale_line_ids': [(6, 0, sale_order.order_line.ids)],
             })],

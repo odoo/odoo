@@ -314,7 +314,7 @@ class ReceptionReport(models.AbstractModel):
                             break
                         if move_line_id.reserved_qty > reserved_amount_to_remain:
                             new_move_line = move_line_id.copy({'reserved_uom_qty': 0, 'qty_done': 0})
-                            new_move_line.reserved_uom_qty = out.product_id.uom_id._compute_quantity(move_line_id.reserved_qty - reserved_amount_to_remain, move_line_id.product_uom_id, rounding_method='HALF-UP')
+                            new_move_line.reserved_uom_qty = out.product_id.uom_id._compute_quantity(move_line_id.reserved_qty - reserved_amount_to_remain, move_line_id.uom_id, rounding_method='HALF-UP')
                             move_line_id.reserved_uom_qty -= new_move_line.reserved_uom_qty
                             new_move_line.move_id = out
                             break

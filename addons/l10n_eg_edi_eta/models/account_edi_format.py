@@ -240,7 +240,7 @@ class AccountEdiFormat(models.Model):
                 'description': line.name,
                 'itemType': item_code.startswith('EG') and 'EGS' or 'GS1',
                 'itemCode': item_code,
-                'unitType': line.product_uom_id.l10n_eg_unit_code_id.code,
+                'unitType': line.uom_id.l10n_eg_unit_code_id.code,
                 'quantity': line.quantity,
                 'internalCode': line.product_id.default_code or '',
                 'valueDifference': 0.0,
@@ -341,7 +341,7 @@ class AccountEdiFormat(models.Model):
             errors.append(_("Please add all the required fields in the branch details"))
         if not self._l10n_eg_validate_info_address(invoice.partner_id, invoice=invoice):
             errors.append(_("Please add all the required fields in the customer details"))
-        if not all(aml.product_uom_id.l10n_eg_unit_code_id.code for aml in invoice.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_note', 'line_section'))):
+        if not all(aml.uom_id.l10n_eg_unit_code_id.code for aml in invoice.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_note', 'line_section'))):
             errors.append(_("Please make sure the invoice lines UoM codes are all set up correctly"))
         if not all(tax.l10n_eg_eta_code for tax in invoice.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_note', 'line_section')).tax_ids):
             errors.append(_("Please make sure the invoice lines taxes all have the correct ETA tax code"))

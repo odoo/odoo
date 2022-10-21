@@ -53,7 +53,7 @@ class MrpImmediateProduction(models.TransientModel):
             error_msg = ""
             if production.product_tracking in ('lot', 'serial') and not production.lot_producing_id:
                 production.action_generate_serial()
-            if production.product_tracking == 'serial' and float_compare(production.qty_producing, 1, precision_rounding=production.product_uom_id.rounding) == 1:
+            if production.product_tracking == 'serial' and float_compare(production.qty_producing, 1, precision_rounding=production.uom_id.rounding) == 1:
                 production.qty_producing = 1
             else:
                 production.qty_producing = production.product_qty - production.qty_produced

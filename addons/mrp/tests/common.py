@@ -32,7 +32,7 @@ class TestMrpCommon(common2.TestStockCommon):
         bom_1 = cls.env['mrp.bom'].create({
             'product_id': product_to_build.id,
             'product_tmpl_id': product_to_build.product_tmpl_id.id,
-            'product_uom_id': cls.uom_unit.id,
+            'uom_id': cls.uom_unit.id,
             'product_qty': 1.0,
             'type': 'normal',
             'consumption': consumption if consumption else 'flexible',
@@ -93,8 +93,8 @@ class TestMrpCommon(common2.TestStockCommon):
             notification_type='inbox',
             groups='mrp.group_mrp_manager, stock.group_stock_user, mrp.group_mrp_byproducts, uom.group_uom',
         )
-        # Required for `product_uom_id` to be visible in the view
-        # This class is used by a lot of tests which sets `product_uom_id` on `mrp.production`
+        # Required for `uom_id` to be visible in the view
+        # This class is used by a lot of tests which sets `uom_id` on `mrp.production`
         cls.env.user.groups_id += cls.env.ref('uom.group_uom')
 
         cls.workcenter_1 = cls.env['mrp.workcenter'].create({
@@ -122,7 +122,7 @@ class TestMrpCommon(common2.TestStockCommon):
         cls.bom_1 = cls.env['mrp.bom'].create({
             'product_id': cls.product_4.id,
             'product_tmpl_id': cls.product_4.product_tmpl_id.id,
-            'product_uom_id': cls.uom_unit.id,
+            'uom_id': cls.uom_unit.id,
             'product_qty': 4.0,
             'consumption': 'flexible',
             'operation_ids': [
@@ -135,7 +135,7 @@ class TestMrpCommon(common2.TestStockCommon):
         cls.bom_2 = cls.env['mrp.bom'].create({
             'product_id': cls.product_5.id,
             'product_tmpl_id': cls.product_5.product_tmpl_id.id,
-            'product_uom_id': cls.product_5.uom_id.id,
+            'uom_id': cls.product_5.uom_id.id,
             'consumption': 'flexible',
             'product_qty': 1.0,
             'operation_ids': [
@@ -150,7 +150,7 @@ class TestMrpCommon(common2.TestStockCommon):
         cls.bom_3 = cls.env['mrp.bom'].create({
             'product_id': cls.product_6.id,
             'product_tmpl_id': cls.product_6.product_tmpl_id.id,
-            'product_uom_id': cls.uom_dozen.id,
+            'uom_id': cls.uom_dozen.id,
             'ready_to_produce': 'asap',
             'consumption': 'flexible',
             'product_qty': 2.0,

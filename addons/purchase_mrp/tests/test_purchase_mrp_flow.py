@@ -465,7 +465,7 @@ class TestPurchaseMrpFlow(TransactionCase):
         self.env['mrp.bom'].create({
             'product_id': finished.id,
             'product_tmpl_id': finished.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_qty': 1.0,
             'consumption': 'flexible',
             'operation_ids': [

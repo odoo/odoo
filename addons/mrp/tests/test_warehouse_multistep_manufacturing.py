@@ -354,16 +354,16 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         self.env['mrp.bom'].create({
             'product_tmpl_id': finished_product.product_tmpl_id.id,
             'product_qty': 1,
-            'product_uom_id': two_units_uom.id,
+            'uom_id': two_units_uom.id,
             'bom_line_ids': [(0, 0, {
                 'product_id': component.id,
                 'product_qty': 1,
-                'product_uom_id': one_unit_uom.id,
+                'uom_id': one_unit_uom.id,
             })],
             'byproduct_ids': [(0, 0, {
                 'product_id': secondary_product.id,
                 'product_qty': 1,
-                'product_uom_id': four_units_uom.id,
+                'uom_id': four_units_uom.id,
             })],
         })
 

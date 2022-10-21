@@ -17,7 +17,7 @@ class TestUBLCommon(AccountEdiTestCommon):
     def setUpClass(cls, chart_template_ref=None, edi_format_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref, edi_format_ref=edi_format_ref)
 
-        # Required for `product_uom_id` to be visible in the form views
+        # Required for `uom_id` to be visible in the form views
         cls.env.user.groups_id += cls.env.ref('uom.group_uom')
 
         # Ensure the testing currency is using a valid ISO code.
@@ -60,7 +60,7 @@ class TestUBLCommon(AccountEdiTestCommon):
             'price_unit': line.price_unit,
             'discount': line.discount,
             'product_id': line.product_id.id,
-            'product_uom_id': line.product_uom_id.id,
+            'uom_id': line.uom_id.id,
             **invoice_line_kwargs,
         } for line, invoice_line_kwargs in zip(invoice1.invoice_line_ids, invoice_line_kwargs_list)])
 

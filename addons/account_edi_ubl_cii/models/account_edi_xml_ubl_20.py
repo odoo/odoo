@@ -586,7 +586,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         }
         self._import_fill_invoice_line_values(tree, xpath_dict, invoice_line, qty_factor)
 
-        if not invoice_line.product_uom_id:
+        if not invoice_line.uom_id:
             logs.append(
                 _("Could not retrieve the unit of measure for line with label '%s'. Did you install the inventory "
                   "app and enabled the 'Units of Measure' option ?", invoice_line.name))

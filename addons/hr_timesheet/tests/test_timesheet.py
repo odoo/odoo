@@ -132,7 +132,7 @@ class TestTimesheet(TestCommonTimesheet):
         self.assertEqual(timesheet1.account_id, self.project_customer.analytic_account_id, 'Analytic account should be the same as the project')
         self.assertEqual(timesheet1.employee_id, self.empl_employee, 'Employee should be the one of the current user')
         self.assertEqual(timesheet1.partner_id, self.task1.partner_id, 'Customer of task should be the same of the one set on new timesheet')
-        self.assertEqual(timesheet1.product_uom_id, timesheet_uom, "The UoM of the timesheet should be the one set on the company of the analytic account.")
+        self.assertEqual(timesheet1.uom_id, timesheet_uom, "The UoM of the timesheet should be the one set on the company of the analytic account.")
 
         # employee 1 cannot log timesheet for employee 2
         with self.assertRaises(AccessError):
@@ -153,7 +153,7 @@ class TestTimesheet(TestCommonTimesheet):
             'employee_id': self.empl_employee2.id,
         })
         self.assertEqual(timesheet3.user_id, self.user_employee2, 'Timesheet user should be the one linked to the given employee')
-        self.assertEqual(timesheet3.product_uom_id, timesheet_uom, "The UoM of the timesheet 3 should be the one set on the company of the analytic account.")
+        self.assertEqual(timesheet3.uom_id, timesheet_uom, "The UoM of the timesheet 3 should be the one set on the company of the analytic account.")
 
         # employee 1 log some timesheet on project (no task)
         timesheet4 = Timesheet.with_user(self.user_employee).create({
@@ -470,17 +470,17 @@ class TestTimesheet(TestCommonTimesheet):
 
         timesheet1, timesheet2 = self.env['account.analytic.line'].with_user(self.user_employee).create([
             {'unit_amount': 1.0, 'project_id': self.project_customer.id},
-            {'unit_amount': 3.0, 'project_id': self.project_customer.id, 'product_uom_id': False},
+            {'unit_amount': 3.0, 'project_id': self.project_customer.id, 'uom_id': False},
         ])
         self.assertEqual(
-            timesheet1.product_uom_id,
+            timesheet1.uom_id,
             self.project_customer.analytic_account_id.company_id.timesheet_encode_uom_id,
             'The default UoM set on the timesheet should be the one set on the company of AA.'
         )
         self.assertEqual(
-            timesheet2.product_uom_id,
+            timesheet2.uom_id,
             self.project_customer.analytic_account_id.company_id.timesheet_encode_uom_id,
-            'Even if the product_uom_id field is empty in the vals, the product_uom_id should have a UoM by default,'
+            'Even if the uom_id field is empty in the vals, the uom_id should have a UoM by default,'
             ' otherwise the `total_timesheet_time` in project should not included the timesheet.'
         )
         self.assertEqual(self.project_customer.timesheet_ids, timesheet1 + timesheet2)

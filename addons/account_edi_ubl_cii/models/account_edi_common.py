@@ -98,9 +98,9 @@ class AccountEdiCommon(models.AbstractModel):
         list of codes: https://docs.peppol.eu/poacc/billing/3.0/codelist/UNECERec20/
         or https://unece.org/fileadmin/DAM/cefact/recommendations/bkup_htm/add2c.htm (sorted by letter)
         """
-        xmlid = line.product_uom_id.get_external_id()
-        if xmlid and line.product_uom_id.id in xmlid:
-            return UOM_TO_UNECE_CODE.get(xmlid[line.product_uom_id.id], 'C62')
+        xmlid = line.uom_id.get_external_id()
+        if xmlid and line.uom_id.id in xmlid:
+            return UOM_TO_UNECE_CODE.get(xmlid[line.uom_id.id], 'C62')
         return 'C62'
 
     # -------------------------------------------------------------------------
@@ -399,7 +399,7 @@ class AccountEdiCommon(models.AbstractModel):
     def _import_fill_invoice_line_values(self, tree, xpath_dict, invoice_line, qty_factor):
         """
         Read the xml invoice, extract the invoice line values, compute the odoo values
-        to fill an invoice line form: quantity, price_unit, discount, product_uom_id.
+        to fill an invoice line form: quantity, price_unit, discount, uom_id.
 
         The way of computing invoice line is quite complicated:
         https://docs.peppol.eu/poacc/billing/3.0/bis/#_calculation_on_line_level (same as in factur-x documentation)
@@ -521,7 +521,7 @@ class AccountEdiCommon(models.AbstractModel):
         # quantity
         invoice_line.quantity = billed_qty * qty_factor
         if product_uom_id is not None:
-            invoice_line.product_uom_id = product_uom_id
+            invoice_line.uom_id = product_uom_id
 
         # price_unit
         if gross_price_unit is not None:

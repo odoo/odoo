@@ -12,11 +12,11 @@ class SaleOrderTemplateLine(models.Model):
 
     _sql_constraints = [
         ('accountable_product_id_required',
-            "CHECK(display_type IS NOT NULL OR (product_id IS NOT NULL AND product_uom_id IS NOT NULL))",
+            "CHECK(display_type IS NOT NULL OR (product_id IS NOT NULL AND uom_id IS NOT NULL))",
             "Missing required product and UoM on accountable sale quote line."),
 
         ('non_accountable_fields_null',
-            "CHECK(display_type IS NULL OR (product_id IS NULL AND product_uom_qty = 0 AND product_uom_id IS NULL))",
+            "CHECK(display_type IS NULL OR (product_id IS NULL AND product_uom_qty = 0 AND uom_id IS NULL))",
             "Forbidden product, quantity and UoM on non-accountable sale quote line"),
     ]
 
@@ -45,7 +45,7 @@ class SaleOrderTemplateLine(models.Model):
         required=True,
         translate=True)
 
-    product_uom_id = fields.Many2one(
+    uom_id = fields.Many2one(
         comodel_name='uom.uom',
         string="Unit of Measure",
         compute='_compute_product_uom_id',
@@ -74,7 +74,7 @@ class SaleOrderTemplateLine(models.Model):
     @api.depends('product_id')
     def _compute_product_uom_id(self):
         for option in self:
-            option.product_uom_id = option.product_id.uom_id
+            option.uom_id = option.product_id.uom_id
 
     #=== CRUD METHODS ===#
 
@@ -82,7 +82,7 @@ class SaleOrderTemplateLine(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             if vals.get('display_type', self.default_get(['display_type'])['display_type']):
-                vals.update(product_id=False, product_uom_qty=0, product_uom_id=False)
+                vals.update(product_id=False, product_uom_qty=0, uom_id=False)
         return super().create(vals_list)
 
     def write(self, values):
@@ -105,5 +105,5 @@ class SaleOrderTemplateLine(models.Model):
             'name': self.name,
             'product_id': self.product_id.id,
             'product_uom_qty': self.product_uom_qty,
-            'uom_id': self.product_uom_id.id,
+            'uom_id': self.uom_id.id,
         }

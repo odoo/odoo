@@ -22,7 +22,7 @@ class TestMrpValuationCommon(TestStockValuationCommon):
         cls.bom = cls.env['mrp.bom'].create({
             'product_id': cls.product1.id,
             'product_tmpl_id': cls.product1.product_tmpl_id.id,
-            'product_uom_id': cls.uom_unit.id,
+            'uom_id': cls.uom_unit.id,
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [
@@ -102,7 +102,7 @@ class TestMrpValuationStandard(TestMrpValuationCommon):
             'categ_id': self.product1.product_tmpl_id.categ_id.id,
         })
         self.bom.write({
-            'byproduct_ids': [(0, 0, {'product_id': byproduct.id, 'product_uom_id': self.uom_unit.id, 'product_qty': 1, 'cost_share': byproduct_cost_share})]
+            'byproduct_ids': [(0, 0, {'product_id': byproduct.id, 'uom_id': self.uom_unit.id, 'product_qty': 1, 'cost_share': byproduct_cost_share})]
         })
 
         mo = self._make_mo(self.bom, 2)

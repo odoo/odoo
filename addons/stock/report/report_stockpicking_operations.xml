@@ -93,7 +93,7 @@
                                             <td>
                                                 <span t-if="o.state != 'done'" t-field="ml.reserved_uom_qty"/>
                                                 <span t-if="o.state == 'done'" t-field="ml.qty_done"/>
-                                                <span t-field="ml.product_uom_id" groups="uom.group_uom"/>
+                                                <span t-field="ml.uom_id" groups="uom.group_uom"/>
                                             </td>
                                             <td t-if="o.picking_type_id.code != 'incoming'" groups="stock.group_stock_multi_locations">
                                                 <span t-esc="ml.location_id.display_name"/>

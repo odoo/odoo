@@ -348,7 +348,7 @@ class SaleOrderLine(models.Model):
 
             if not line.product_packaging_id:
                 continue
-            packaging_uom = line.product_packaging_id.product_uom_id
+            packaging_uom = line.product_packaging_id.uom_id
             qty_per_packaging = line.product_packaging_id.qty
             product_uom_qty = packaging_uom._compute_quantity(
                 line.product_packaging_qty * qty_per_packaging, line.uom_id)
@@ -625,7 +625,7 @@ class SaleOrderLine(models.Model):
             if not line.product_packaging_id:
                 line.product_packaging_qty = False
             else:
-                packaging_uom = line.product_packaging_id.product_uom_id
+                packaging_uom = line.product_packaging_id.uom_id
                 packaging_uom_qty = line.uom_id._compute_quantity(line.product_uom_qty, packaging_uom)
                 line.product_packaging_qty = float_round(
                     packaging_uom_qty / line.product_packaging_id.qty,
@@ -657,7 +657,7 @@ class SaleOrderLine(models.Model):
         'qty_delivered_method',
         'analytic_line_ids.so_line',
         'analytic_line_ids.unit_amount',
-        'analytic_line_ids.product_uom_id')
+        'analytic_line_ids.uom_id')
     def _compute_qty_delivered(self):
         """ This method compute the delivered quantity of the SO lines: it covers the case provide by sale module, aka
             expense/vendor bills (sum of unit_amount of AAL), and manual case.
@@ -700,22 +700,22 @@ class SaleOrderLine(models.Model):
         domain = expression.AND([[('so_line', 'in', self.ids)], additional_domain])
         data = self.env['account.analytic.line'].read_group(
             domain,
-            ['so_line', 'unit_amount', 'product_uom_id'], ['product_uom_id', 'so_line'], lazy=False
+            ['so_line', 'unit_amount', 'uom_id'], ['uom_id', 'so_line'], lazy=False
         )
 
         # convert uom and sum all unit_amount of analytic lines to get the delivered qty of SO lines
         # browse so lines and product uoms here to make them share the same prefetch
         lines = self.browse([item['so_line'][0] for item in data])
         lines_map = {line.id: line for line in lines}
-        product_uom_ids = [item['product_uom_id'][0] for item in data if item['product_uom_id']]
+        product_uom_ids = [item['uom_id'][0] for item in data if item['uom_id']]
         product_uom_map = {uom.id: uom for uom in self.env['uom.uom'].browse(product_uom_ids)}
         for item in data:
-            if not item['product_uom_id']:
+            if not item['uom_id']:
                 continue
             so_line_id = item['so_line'][0]
             so_line = lines_map[so_line_id]
             result.setdefault(so_line_id, 0.0)
-            uom = product_uom_map.get(item['product_uom_id'][0])
+            uom = product_uom_map.get(item['uom_id'][0])
             if so_line.uom_id.category_id == uom.category_id:
                 qty = uom._compute_quantity(item['unit_amount'], so_line.uom_id, rounding_method='HALF-UP')
             else:
@@ -737,9 +737,9 @@ class SaleOrderLine(models.Model):
             for invoice_line in line._get_invoice_lines():
                 if invoice_line.move_id.state != 'cancel' or invoice_line.move_id.payment_state == 'invoicing_legacy':
                     if invoice_line.move_id.move_type == 'out_invoice':
-                        qty_invoiced += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.uom_id)
+                        qty_invoiced += invoice_line.uom_id._compute_quantity(invoice_line.quantity, line.uom_id)
                     elif invoice_line.move_id.move_type == 'out_refund':
-                        qty_invoiced -= invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.uom_id)
+                        qty_invoiced -= invoice_line.uom_id._compute_quantity(invoice_line.quantity, line.uom_id)
             line.qty_invoiced = qty_invoiced
 
     def _get_invoice_lines(self):
@@ -1060,7 +1060,7 @@ class SaleOrderLine(models.Model):
             'sequence': self.sequence,
             'name': self.name,
             'product_id': self.product_id.id,
-            'product_uom_id': self.uom_id.id,
+            'uom_id': self.uom_id.id,
             'quantity': self.qty_to_invoice,
             'discount': self.discount,
             'price_unit': self.price_unit,

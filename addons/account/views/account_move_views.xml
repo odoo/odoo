@@ -889,7 +889,7 @@
                                                business_domain_compute="parent.move_type in ['out_invoice', 'out_refund', 'out_receipt'] and 'invoice' or parent.move_type in ['in_invoice', 'in_refund', 'in_receipt'] and 'bill' or 'general'"/>
                                         <field name="quantity" optional="show"/>
                                         <field name="product_uom_category_id" invisible="1"/>
-                                        <field name="product_uom_id" string="UoM" groups="uom.group_uom" optional="show"/>
+                                        <field name="uom_id" string="UoM" groups="uom.group_uom" optional="show"/>
                                         <field name="price_unit" string="Price"/>
                                         <field name="discount" string="Disc.%" optional="hide"/>
                                         <field name="tax_ids" widget="many2many_tags"
@@ -912,7 +912,7 @@
                                         <field name="display_type" force_save="1" invisible="1"/>
                                         <!-- /l10n_in_edi.test_edi_json -->
                                         <!-- required for @api.onchange('product_id') -->
-                                        <field name="product_uom_id" invisible="1"/>
+                                        <field name="uom_id" invisible="1"/>
                                     </tree>
                                     <kanban class="o_kanban_mobile">
                                         <!-- Displayed fields -->
@@ -922,7 +922,7 @@
                                         <field name="price_total" groups="account.group_show_line_subtotals_tax_included"/>
                                         <field name="quantity"/>
                                         <field name="product_uom_category_id" invisible="1"/>
-                                        <field name="product_uom_id" groups="uom.group_uom"/>
+                                        <field name="uom_id" groups="uom.group_uom"/>
                                         <field name="price_unit"/>
                                         <templates>
                                             <t t-name="kanban-box">
@@ -947,7 +947,7 @@
                                                                 <div class="text-muted">
                                                                     Quantity:
                                                                     <t t-esc="record.quantity.value"/>
-                                                                    <t t-esc="record.product_uom_id.value"/>
+                                                                    <t t-esc="record.uom_id.value"/>
                                                                 </div>
                                                                 <div class="text-muted">
                                                                     Unit Price:
@@ -983,7 +983,7 @@
                                                 <field name="product_id" widget="many2one_barcode"/>
                                                 <field name="quantity"/>
                                                 <field name="product_uom_category_id" invisible="1"/>
-                                                <field name="product_uom_id" groups="uom.group_uom"/>
+                                                <field name="uom_id" groups="uom.group_uom"/>
                                                 <field name="price_unit"/>
                                                 <field name="discount" string="Disc.%"/>
                                             </group>

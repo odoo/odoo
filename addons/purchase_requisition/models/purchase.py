@@ -90,9 +90,9 @@ class PurchaseOrder(models.Model):
             taxes_ids = fpos.map_tax(line.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == requisition.company_id)).ids
 
             # Compute quantity and price_unit
-            if line.product_uom_id != line.product_id.uom_po_id:
-                product_qty = line.product_uom_id._compute_quantity(line.product_qty, line.product_id.uom_po_id)
-                price_unit = line.product_uom_id._compute_price(line.price_unit, line.product_id.uom_po_id)
+            if line.uom_id != line.product_id.uom_po_id:
+                product_qty = line.uom_id._compute_quantity(line.product_qty, line.product_id.uom_po_id)
+                price_unit = line.uom_id._compute_price(line.price_unit, line.product_id.uom_po_id)
             else:
                 product_qty = line.product_qty
                 price_unit = line.price_unit
@@ -253,7 +253,7 @@ class PurchaseOrderLine(models.Model):
                 continue
             for line in pol.order_id.requisition_id.line_ids:
                 if line.product_id == pol.product_id:
-                    pol.price_unit = line.product_uom_id._compute_price(line.price_unit, pol.uom_id)
+                    pol.price_unit = line.uom_id._compute_price(line.price_unit, pol.uom_id)
                     partner = pol.order_id.partner_id or pol.order_id.requisition.vendor_id
                     product_ctx = {'seller_id': partner.id, 'lang': get_lang(pol.env, partner.lang).code}
                     name = pol._get_product_purchase_description(pol.product_id.with_context(product_ctx))

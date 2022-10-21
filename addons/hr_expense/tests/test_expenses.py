@@ -434,7 +434,7 @@ class TestExpenses(TestExpenseCommon):
         expense_form.product_id = product
         expense = expense_form.save()
         self.assertEqual(expense.name, product.display_name)
-        self.assertEqual(expense.product_uom_id, product.uom_id)
+        self.assertEqual(expense.uom_id, product.uom_id)
         self.assertEqual(expense.tax_ids, product.supplier_taxes_id)
         self.assertEqual(expense.account_id, product._get_product_accounts()['expense'])
 

@@ -314,7 +314,7 @@ class AccountEdiFormat(models.Model):
             "IsServc": line.product_id.type == "service" and "Y" or "N",
             "HsnCd": self._l10n_in_edi_extract_digits(line.product_id.l10n_in_hsn_code),
             "Qty": self._l10n_in_round_value(line.quantity or 0.0, 3),
-            "Unit": line.product_uom_id.l10n_in_code and line.product_uom_id.l10n_in_code.split("-")[0] or "OTH",
+            "Unit": line.uom_id.l10n_in_code and line.uom_id.l10n_in_code.split("-")[0] or "OTH",
             # Unit price in company currency and tax excluded so its different then price_unit
             "UnitPrice": self._l10n_in_round_value(unit_price_in_inr, 3),
             # total amount is before discount
@@ -445,8 +445,8 @@ class AccountEdiFormat(models.Model):
                 "tax": tax,
                 "base_product_id": invl.product_id,
                 "tax_product_id": invl.product_id,
-                "base_product_uom_id": invl.product_uom_id,
-                "tax_product_uom_id": invl.product_uom_id,
+                "base_product_uom_id": invl.uom_id,
+                "tax_product_uom_id": invl.uom_id,
                 "line_code": line_code,
             }
 

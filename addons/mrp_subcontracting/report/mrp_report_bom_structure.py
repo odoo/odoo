@@ -7,12 +7,12 @@ class ReportBomStructure(models.AbstractModel):
     _inherit = 'report.mrp.report_bom_structure'
 
     def _get_subcontracting_line(self, bom, seller, level, bom_quantity):
-        ratio_uom_seller = seller.uom_id.ratio / bom.product_uom_id.ratio
+        ratio_uom_seller = seller.uom_id.ratio / bom.uom_id.ratio
         return {
             'name': seller.partner_id.display_name,
             'partner_id': seller.partner_id.id,
             'quantity': bom_quantity,
-            'uom': bom.product_uom_id.name,
+            'uom': bom.uom_id.name,
             'prod_cost': seller.price / ratio_uom_seller * bom_quantity,
             'bom_cost': seller.price / ratio_uom_seller * bom_quantity,
             'level': level or 0
@@ -21,7 +21,7 @@ class ReportBomStructure(models.AbstractModel):
     def _get_bom_data(self, bom, warehouse, product=False, line_qty=False, bom_line=False, level=0, parent_bom=False, index=0, product_info=False, ignore_stock=False):
         res = super()._get_bom_data(bom, warehouse, product, line_qty, bom_line, level, parent_bom, index, product_info, ignore_stock)
         if bom.type == 'subcontract' and not self.env.context.get('minimized', False):
-            seller = res['product']._select_seller(quantity=res['quantity'], uom_id=bom.product_uom_id, params={'subcontractor_ids': bom.subcontractor_ids})
+            seller = res['product']._select_seller(quantity=res['quantity'], uom_id=bom.uom_id, params={'subcontractor_ids': bom.subcontractor_ids})
             if seller:
                 res['subcontracting'] = self._get_subcontracting_line(bom, seller, level + 1, res['quantity'])
                 if not self.env.context.get('minimized', False):

@@ -45,7 +45,7 @@ class MrpProduction(models.Model):
             for move in production.move_raw_ids:
                 move.move_line_ids = line_by_product.pop(move.product_id, self.env['stock.move.line'])
             for product_id, lines in line_by_product.items():
-                qty = sum(line.product_uom_id._compute_quantity(line.qty_done, product_id.uom_id) for line in lines)
+                qty = sum(line.uom_id._compute_quantity(line.qty_done, product_id.uom_id) for line in lines)
                 move = production._get_move_raw_values(product_id, qty, product_id.uom_id)
                 move['additional'] = True
                 production.move_raw_ids = [(0, 0, move)]
@@ -67,7 +67,7 @@ class MrpProduction(models.Model):
         self.ensure_one()
         if not self._get_subcontract_move():
             raise UserError(_("This MO isn't related to a subcontracted move"))
-        if float_is_zero(self.qty_producing, precision_rounding=self.product_uom_id.rounding):
+        if float_is_zero(self.qty_producing, precision_rounding=self.uom_id.rounding):
             return {'type': 'ir.actions.act_window_close'}
         if self.product_tracking != 'none' and not self.lot_producing_id:
             raise UserError(_('You must enter a serial number for %s') % self.product_id.name)
@@ -116,7 +116,7 @@ class MrpProduction(models.Model):
                 move_lines = subcontract_move_id.move_line_ids.filtered(lambda ml: not ml.lot_id)
             # Update reservation and quantity done
             for ml in move_lines:
-                rounding = ml.product_uom_id.rounding
+                rounding = ml.uom_id.rounding
                 if float_compare(quantity, 0, precision_rounding=rounding) <= 0:
                     break
                 quantity_to_process = min(quantity, ml.reserved_uom_qty - ml.qty_done)
@@ -143,7 +143,7 @@ class MrpProduction(models.Model):
                         'qty_done': 0
                     })
 
-            if float_compare(quantity, 0, precision_rounding=self.product_uom_id.rounding) > 0:
+            if float_compare(quantity, 0, precision_rounding=self.uom_id.rounding) > 0:
                 self.env['stock.move.line'].create({
                     'move_id': subcontract_move_id.id,
                     'picking_id': subcontract_move_id.picking_id.id,
@@ -151,14 +151,14 @@ class MrpProduction(models.Model):
                     'location_id': subcontract_move_id.location_id.id,
                     'location_dest_id': subcontract_move_id.location_dest_id.id,
                     'reserved_uom_qty': 0,
-                    'product_uom_id': self.product_uom_id.id,
+                    'uom_id': self.uom_id.id,
                     'qty_done': quantity,
                     'lot_id': self.lot_producing_id and self.lot_producing_id.id,
                 })
             if not self._get_quantity_to_backorder():
                 ml_reserved = subcontract_move_id.move_line_ids.filtered(lambda ml:
-                    float_is_zero(ml.qty_done, precision_rounding=ml.product_uom_id.rounding) and
-                    not float_is_zero(ml.reserved_uom_qty, precision_rounding=ml.product_uom_id.rounding))
+                    float_is_zero(ml.qty_done, precision_rounding=ml.uom_id.rounding) and
+                    not float_is_zero(ml.reserved_uom_qty, precision_rounding=ml.uom_id.rounding))
                 ml_reserved.unlink()
                 for ml in subcontract_move_id.move_line_ids:
                     ml.reserved_uom_qty = ml.qty_done

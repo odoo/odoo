@@ -174,7 +174,7 @@ class StockMove(models.Model):
             valued_move_lines = move._get_out_move_lines()
             valued_quantity = 0
             for valued_move_line in valued_move_lines:
-                valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.qty_done, move.product_id.uom_id)
+                valued_quantity += valued_move_line.uom_id._compute_quantity(valued_move_line.qty_done, move.product_id.uom_id)
             if float_is_zero(forced_quantity or valued_quantity, precision_rounding=move.product_id.uom_id.rounding):
                 continue
             svl_vals = move.product_id._prepare_out_svl_vals(forced_quantity or valued_quantity, move.company_id)
@@ -197,7 +197,7 @@ class StockMove(models.Model):
             valued_move_lines = move.move_line_ids
             valued_quantity = 0
             for valued_move_line in valued_move_lines:
-                valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.qty_done, move.product_id.uom_id)
+                valued_quantity += valued_move_line.uom_id._compute_quantity(valued_move_line.qty_done, move.product_id.uom_id)
             quantity = forced_quantity or valued_quantity
 
             unit_cost = move._get_price_unit()
@@ -304,7 +304,7 @@ class StockMove(models.Model):
             valued_move_lines = move._get_in_move_lines()
             qty_done = 0
             for valued_move_line in valued_move_lines:
-                qty_done += valued_move_line.product_uom_id._compute_quantity(valued_move_line.qty_done, move.product_id.uom_id)
+                qty_done += valued_move_line.uom_id._compute_quantity(valued_move_line.qty_done, move.product_id.uom_id)
 
             qty = forced_qty or qty_done
             if float_is_zero(product_tot_qty_available, precision_rounding=rounding):
@@ -359,7 +359,7 @@ class StockMove(models.Model):
             valued_move_lines = move._get_in_move_lines()
             valued_quantity = 0
             for valued_move_line in valued_move_lines:
-                valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.qty_done, move.product_id.uom_id)
+                valued_quantity += valued_move_line.uom_id._compute_quantity(valued_move_line.qty_done, move.product_id.uom_id)
             unit_cost = move.product_id.standard_price
             if move.product_id.cost_method != 'standard':
                 unit_cost = abs(move._get_price_unit())  # May be negative (i.e. decrease an out move).
@@ -434,7 +434,7 @@ class StockMove(models.Model):
             'account_id': account_id.id,
             'unit_amount': unit_amount,
             'product_id': self.product_id.id,
-            'product_uom_id': self.product_id.uom_id.id,
+            'uom_id': self.product_id.uom_id.id,
             'company_id': self.company_id.id,
             'ref': self._description,
             'category': 'other',
@@ -447,7 +447,7 @@ class StockMove(models.Model):
             'name': description,
             'product_id': self.product_id.id,
             'quantity': qty,
-            'product_uom_id': self.product_id.uom_id.id,
+            'uom_id': self.product_id.uom_id.id,
             'ref': description,
             'partner_id': partner_id,
             'balance': debit_value,
@@ -458,7 +458,7 @@ class StockMove(models.Model):
             'name': description,
             'product_id': self.product_id.id,
             'quantity': qty,
-            'product_uom_id': self.product_id.uom_id.id,
+            'uom_id': self.product_id.uom_id.id,
             'ref': description,
             'partner_id': partner_id,
             'balance': -credit_value,
@@ -477,7 +477,7 @@ class StockMove(models.Model):
                 'name': self.name,
                 'product_id': self.product_id.id,
                 'quantity': qty,
-                'product_uom_id': self.product_id.uom_id.id,
+                'uom_id': self.product_id.uom_id.id,
                 'ref': description,
                 'partner_id': partner_id,
                 'credit': diff_amount > 0 and diff_amount or 0,

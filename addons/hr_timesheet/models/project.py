@@ -137,14 +137,14 @@ class Project(models.Model):
     def _compute_total_timesheet_time(self):
         timesheets_read_group = self.env['account.analytic.line'].read_group(
             [('project_id', 'in', self.ids)],
-            ['project_id', 'unit_amount', 'product_uom_id'],
-            ['project_id', 'product_uom_id'],
+            ['project_id', 'unit_amount', 'uom_id'],
+            ['project_id', 'uom_id'],
             lazy=False)
         timesheet_time_dict = defaultdict(list)
         uom_ids = set(self.timesheet_encode_uom_id.ids)
 
         for result in timesheets_read_group:
-            uom_id = result['product_uom_id'] and result['product_uom_id'][0]
+            uom_id = result['uom_id'] and result['uom_id'][0]
             if uom_id:
                 uom_ids.add(uom_id)
             timesheet_time_dict[result['project_id'][0]].append((uom_id, result['unit_amount']))
@@ -153,7 +153,7 @@ class Project(models.Model):
         for project in self:
             # Timesheets may be stored in a different unit of measure, so first
             # we convert all of them to the reference unit
-            # if the timesheet has no product_uom_id then we take the one of the project
+            # if the timesheet has no uom_id then we take the one of the project
             total_time = sum([
                 unit_amount * uoms_dict.get(product_uom_id, project.timesheet_encode_uom_id).factor_inv
                 for product_uom_id, unit_amount in timesheet_time_dict[project.id]

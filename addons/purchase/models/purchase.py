@@ -1023,9 +1023,9 @@ class PurchaseOrderLine(models.Model):
             for inv_line in line._get_invoice_lines():
                 if inv_line.move_id.state not in ['cancel'] or inv_line.move_id.payment_state == 'invoicing_legacy':
                     if inv_line.move_id.move_type == 'in_invoice':
-                        qty += inv_line.product_uom_id._compute_quantity(inv_line.quantity, line.uom_id)
+                        qty += inv_line.uom_id._compute_quantity(inv_line.quantity, line.uom_id)
                     elif inv_line.move_id.move_type == 'in_refund':
-                        qty -= inv_line.product_uom_id._compute_quantity(inv_line.quantity, line.uom_id)
+                        qty -= inv_line.uom_id._compute_quantity(inv_line.quantity, line.uom_id)
             line.qty_invoiced = qty
 
             # compute qty_to_invoice
@@ -1270,7 +1270,7 @@ class PurchaseOrderLine(models.Model):
             if not line.product_packaging_id:
                 line.product_packaging_qty = 0
             else:
-                packaging_uom = line.product_packaging_id.product_uom_id
+                packaging_uom = line.product_packaging_id.uom_id
                 packaging_uom_qty = line.uom_id._compute_quantity(line.product_qty, packaging_uom)
                 line.product_packaging_qty = float_round(packaging_uom_qty / line.product_packaging_id.qty, precision_rounding=packaging_uom.rounding)
 
@@ -1278,7 +1278,7 @@ class PurchaseOrderLine(models.Model):
     def _compute_product_qty(self):
         for line in self:
             if line.product_packaging_id:
-                packaging_uom = line.product_packaging_id.product_uom_id
+                packaging_uom = line.product_packaging_id.uom_id
                 qty_per_packaging = line.product_packaging_id.qty
                 product_qty = packaging_uom._compute_quantity(line.product_packaging_qty * qty_per_packaging, line.uom_id)
                 if float_compare(product_qty, line.product_qty, precision_rounding=line.uom_id.rounding) != 0:
@@ -1334,7 +1334,7 @@ class PurchaseOrderLine(models.Model):
             'display_type': self.display_type or 'product',
             'name': '%s: %s' % (self.order_id.name, self.name),
             'product_id': self.product_id.id,
-            'product_uom_id': self.uom_id.id,
+            'uom_id': self.uom_id.id,
             'quantity': self.qty_to_invoice,
             'price_unit': self.currency_id._convert(self.price_unit, aml_currency, self.company_id, date, round=False),
             'tax_ids': [(6, 0, self.taxes_id.ids)],

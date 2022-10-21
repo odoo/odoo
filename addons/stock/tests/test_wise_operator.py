@@ -66,7 +66,7 @@ class TestWiseOperator(TransactionCase):
         })
         new_pack1 = self.env['stock.move.line'].create({
             'product_id': product_wise.id,
-            'product_uom_id': self.ref('uom.product_uom_unit'),
+            'uom_id': self.ref('uom.product_uom_unit'),
             'picking_id': pick1_wise.id,
             'qty_done': 6.0,
             'location_id': self.ref('stock.stock_location_suppliers'),

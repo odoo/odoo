@@ -43,7 +43,7 @@ class AccountInvoiceReport(models.Model):
     # ==== Invoice line fields ====
     quantity = fields.Float(string='Product Quantity', readonly=True)
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
-    product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', readonly=True)
+    uom_id = fields.Many2one('uom.uom', string='Unit of Measure', readonly=True)
     product_categ_id = fields.Many2one('product.category', string='Product Category', readonly=True)
     invoice_date_due = fields.Date(string='Due Date', readonly=True)
     account_id = fields.Many2one('account.account', string='Revenue/Expense Account', readonly=True, domain=[('deprecated', '=', False)])
@@ -58,7 +58,7 @@ class AccountInvoiceReport(models.Model):
         ],
         'account.move.line': [
             'quantity', 'price_subtotal', 'price_total', 'amount_residual', 'balance', 'amount_currency',
-            'move_id', 'product_id', 'product_uom_id', 'account_id',
+            'move_id', 'product_id', 'uom_id', 'account_id',
             'journal_id', 'company_id', 'currency_id', 'partner_id',
         ],
         'product.product': ['product_tmpl_id'],
@@ -93,7 +93,7 @@ class AccountInvoiceReport(models.Model):
                 move.payment_state,
                 move.invoice_date,
                 move.invoice_date_due,
-                uom_template.id                                             AS product_uom_id,
+                uom_template.id                                             AS uom_id,
                 template.categ_id                                           AS product_categ_id,
                 line.quantity / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0) * (CASE WHEN move.move_type IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END)
                                                                             AS quantity,
@@ -116,7 +116,7 @@ class AccountInvoiceReport(models.Model):
                 LEFT JOIN product_product product ON product.id = line.product_id
                 LEFT JOIN account_account account ON account.id = line.account_id
                 LEFT JOIN product_template template ON template.id = product.product_tmpl_id
-                LEFT JOIN uom_uom uom_line ON uom_line.id = line.product_uom_id
+                LEFT JOIN uom_uom uom_line ON uom_line.id = line.uom_id
                 LEFT JOIN uom_uom uom_template ON uom_template.id = template.uom_id
                 INNER JOIN account_move move ON move.id = line.move_id
                 LEFT JOIN res_partner commercial_partner ON commercial_partner.id = move.commercial_partner_id

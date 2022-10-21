@@ -32,7 +32,7 @@ class StockScrap(models.Model):
     product_id = fields.Many2one(
         'product.product', 'Product', domain="[('type', 'in', ['product', 'consu']), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         required=True, states={'done': [('readonly', True)]}, check_company=True)
-    product_uom_id = fields.Many2one(
+    uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
         required=True, states={'done': [('readonly', True)]}, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
@@ -78,7 +78,7 @@ class StockScrap(models.Model):
         if self.product_id:
             if self.tracking == 'serial':
                 self.scrap_qty = 1
-            self.product_uom_id = self.product_id.uom_id.id
+            self.uom_id = self.product_id.uom_id.id
             # Check if we can get a more precise location instead of
             # the default location (a location corresponding to where the
             # reserved product is stored)
@@ -130,14 +130,14 @@ class StockScrap(models.Model):
             'origin': self.origin or self.picking_id.name or self.name,
             'company_id': self.company_id.id,
             'product_id': self.product_id.id,
-            'uom_id': self.product_uom_id.id,
+            'uom_id': self.uom_id.id,
             'state': 'draft',
             'product_uom_qty': self.scrap_qty,
             'location_id': self.location_id.id,
             'scrapped': True,
             'location_dest_id': self.scrap_location_id.id,
             'move_line_ids': [(0, 0, {'product_id': self.product_id.id,
-                                           'product_uom_id': self.product_uom_id.id, 
+                                           'uom_id': self.uom_id.id, 
                                            'qty_done': self.scrap_qty,
                                            'location_id': self.location_id.id,
                                            'location_dest_id': self.scrap_location_id.id,
@@ -180,7 +180,7 @@ class StockScrap(models.Model):
                                                             self.package_id,
                                                             self.owner_id,
                                                             strict=True).mapped('quantity'))
-        scrap_qty = self.product_uom_id._compute_quantity(self.scrap_qty, self.product_id.uom_id)
+        scrap_qty = self.uom_id._compute_quantity(self.scrap_qty, self.product_id.uom_id)
         if float_compare(available_qty, scrap_qty, precision_digits=precision) >= 0:
             return self.do_scrap()
         else:

@@ -62,7 +62,7 @@ class StorageCategoryProductCapacity(models.Model):
     product_id = fields.Many2one('product.product', 'Product', domain=lambda self: self._domain_product_id(), ondelete='cascade', check_company=True)
     package_type_id = fields.Many2one('stock.package.type', 'Package Type', ondelete='cascade', check_company=True)
     quantity = fields.Float('Quantity', required=True)
-    product_uom_id = fields.Many2one(related='product_id.uom_id')
+    uom_id = fields.Many2one(related='product_id.uom_id')
     company_id = fields.Many2one('res.company', 'Company', related="storage_category_id.company_id")
 
     _sql_constraints = [

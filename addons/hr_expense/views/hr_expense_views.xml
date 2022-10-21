@@ -153,7 +153,7 @@
                             <label for="quantity" attrs="{'invisible': [('product_has_cost', '=', False)]}"/>
                             <div attrs="{'invisible': [('product_has_cost', '=', False)]}">
                                 <field name="quantity" class="d-inline-block" attrs="{'readonly': [('sheet_is_editable', '=', False)]}" style="width: unset !important;"/>
-                                <field name="product_uom_id" required="1" force_save="1" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" style="width: unset !important;"/>
+                                <field name="uom_id" required="1" force_save="1" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" style="width: unset !important;"/>
 
                                 <field name="total_amount_company" widget='monetary' options="{'currency_field': 'company_currency_id'}"/>
                             </div>

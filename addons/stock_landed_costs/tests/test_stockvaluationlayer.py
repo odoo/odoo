@@ -124,7 +124,7 @@ class TestStockValuationLCCommon(TestStockLandedCostsCommon):
             self.env['stock.move.line'].create({
                 'move_id': out_move.id,
                 'product_id': out_move.product_id.id,
-                'product_uom_id': out_move.uom_id.id,
+                'uom_id': out_move.uom_id.id,
                 'location_id': out_move.location_id.id,
                 'location_dest_id': out_move.location_dest_id.id,
             })

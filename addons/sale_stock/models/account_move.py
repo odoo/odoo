@@ -49,7 +49,7 @@ class AccountMove(models.Model):
                 continue
             product = sml.product_id
             product_uom = product.uom_id
-            qty_done = sml.product_uom_id._compute_quantity(sml.qty_done, product_uom)
+            qty_done = sml.uom_id._compute_quantity(sml.qty_done, product_uom)
 
             if sml.location_id.usage == 'customer':
                 returned_qty = min(qties_per_lot[sml.lot_id], qty_done)
@@ -73,15 +73,15 @@ class AccountMove(models.Model):
             # access the lot as a superuser in order to avoid an error
             # when a user prints an invoice without having the stock access
             lot = lot.sudo()
-            if float_is_zero(invoiced_qties[lot.product_id], precision_rounding=lot.product_uom_id.rounding) \
-                    or float_compare(qty, 0, precision_rounding=lot.product_uom_id.rounding) <= 0:
+            if float_is_zero(invoiced_qties[lot.product_id], precision_rounding=lot.uom_id.rounding) \
+                    or float_compare(qty, 0, precision_rounding=lot.uom_id.rounding) <= 0:
                 continue
             invoiced_lot_qty = min(qty, invoiced_qties[lot.product_id])
             invoiced_qties[lot.product_id] -= invoiced_lot_qty
             res.append({
                 'product_name': lot.product_id.display_name,
                 'quantity': formatLang(self.env, invoiced_lot_qty, dp='Product Unit of Measure'),
-                'uom_name': lot.product_uom_id.name,
+                'uom_name': lot.uom_id.name,
                 'lot_name': lot.name,
                 # The lot id is needed by localizations to inherit the method and add custom fields on the invoice's report.
                 'lot_id': lot.id,
@@ -104,11 +104,11 @@ class AccountMoveLine(models.Model):
         so_line = self.sale_line_ids and self.sale_line_ids[-1] or False
         if so_line:
             is_line_reversing = bool(self.move_id.reversed_entry_id)
-            qty_to_invoice = self.product_uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
+            qty_to_invoice = self.uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
             posted_invoice_lines = so_line.invoice_lines.filtered(lambda l: l.move_id.state == 'posted' and bool(l.move_id.reversed_entry_id) == is_line_reversing)
-            qty_invoiced = sum([x.product_uom_id._compute_quantity(x.quantity, x.product_id.uom_id) for x in posted_invoice_lines])
+            qty_invoiced = sum([x.uom_id._compute_quantity(x.quantity, x.product_id.uom_id) for x in posted_invoice_lines])
 
             product = self.product_id.with_company(self.company_id)
             average_price_unit = product._compute_average_price(qty_invoiced, qty_to_invoice, so_line.move_ids, is_returned=is_line_reversing)
-            price_unit = self.product_id.uom_id.with_company(self.company_id)._compute_price(average_price_unit, self.product_uom_id)
+            price_unit = self.product_id.uom_id.with_company(self.company_id)._compute_price(average_price_unit, self.uom_id)
         return price_unit

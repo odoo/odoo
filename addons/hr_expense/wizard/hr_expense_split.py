@@ -73,7 +73,7 @@ class HrExpenseSplit(models.TransientModel):
             'tax_ids': self.tax_ids.ids,
             'analytic_distribution': self.analytic_distribution,
             'employee_id': self.employee_id.id,
-            'product_uom_id': self.product_id.uom_id.id,
+            'uom_id': self.product_id.uom_id.id,
             'unit_amount': self.product_id.price_compute('standard_price', currency=self.currency_id)[self.product_id.id]
         }
 

@@ -15,7 +15,7 @@
                     </CodiceArticolo>
                     <Descrizione t-esc="format_alphanumeric(line_dict['description'])"/>
                     <Quantita t-esc="format_numbers(abs(line.quantity))"/>
-                    <UnitaMisura t-if="line.product_uom_id.category_id != env.ref('uom.product_uom_categ_unit')"  t-esc="format_alphanumeric(line.product_uom_id.name)"/>
+                    <UnitaMisura t-if="line.uom_id.category_id != env.ref('uom.product_uom_categ_unit')"  t-esc="format_alphanumeric(line.uom_id.name)"/>
                     <PrezzoUnitario t-esc="'%.06f' % (line_dict['unit_price'])"/>
                     <ScontoMaggiorazione t-if="line.discount != 0">
                         <Tipo t-esc="discount_type(line.discount)"/>

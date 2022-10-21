@@ -49,7 +49,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         self.assertEqual(purchase1.order_line.price_unit, 50, 'The price on the purchase order is not the supplierinfo one')
 
         # Blanket order creation
-        line1 = (0, 0, {'product_id': product_test.id, 'product_qty': 18, 'product_uom_id': product_test.uom_po_id.id, 'price_unit': 50})
+        line1 = (0, 0, {'product_id': product_test.id, 'product_qty': 18, 'uom_id': product_test.uom_po_id.id, 'price_unit': 50})
         requisition_type = self.env['purchase.requisition.type'].create({
             'name': 'Blanket test',
             'quantity_copy': 'none',
@@ -138,8 +138,8 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
             'name': 'Blanket test',
             'quantity_copy': 'none',
         })
-        line1 = (0, 0, {'product_id': product_1.id, 'product_qty': 18, 'product_uom_id': product_1.uom_po_id.id, 'price_unit': 41})
-        line2 = (0, 0, {'product_id': product_2.id, 'product_qty': 18, 'product_uom_id': product_2.uom_po_id.id, 'price_unit': 42})
+        line1 = (0, 0, {'product_id': product_1.id, 'product_qty': 18, 'uom_id': product_1.uom_po_id.id, 'price_unit': 41})
+        line2 = (0, 0, {'product_id': product_2.id, 'product_qty': 18, 'uom_id': product_2.uom_po_id.id, 'price_unit': 42})
         requisition_1 = self.env['purchase.requisition'].create({
             'line_ids': [line1],
             'type_id': requisition_type.id,

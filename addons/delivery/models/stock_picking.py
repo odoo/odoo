@@ -23,7 +23,7 @@ class StockQuantPackage(models.Model):
                     ('picking_id', '=', self.env.context['picking_id'])
                 ])
                 for ml in current_picking_move_line_ids:
-                    weight += ml.product_uom_id._compute_quantity(
+                    weight += ml.uom_id._compute_quantity(
                         ml.qty_done, ml.product_id.uom_id) * ml.product_id.weight
             else:
                 for quant in package.quant_ids:
@@ -64,13 +64,13 @@ class StockPicking(models.Model):
                     packs.add(move_line.result_package_id.id)
             package.package_ids = list(packs)
 
-    @api.depends('move_line_ids', 'move_line_ids.result_package_id', 'move_line_ids.product_uom_id', 'move_line_ids.qty_done')
+    @api.depends('move_line_ids', 'move_line_ids.result_package_id', 'move_line_ids.uom_id', 'move_line_ids.qty_done')
     def _compute_bulk_weight(self):
         for picking in self:
             weight = 0.0
             for move_line in picking.move_line_ids:
                 if move_line.product_id and not move_line.result_package_id:
-                    weight += move_line.product_uom_id._compute_quantity(move_line.qty_done, move_line.product_id.uom_id) * move_line.product_id.weight
+                    weight += move_line.uom_id._compute_quantity(move_line.qty_done, move_line.product_id.uom_id) * move_line.product_id.weight
             picking.weight_bulk = weight
 
     @api.depends('move_line_ids.result_package_id', 'move_line_ids.result_package_id.shipping_weight', 'weight_bulk')

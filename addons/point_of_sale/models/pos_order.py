@@ -197,7 +197,7 @@ class PosOrder(models.Model):
             'price_unit': order_line.price_unit,
             'name': order_line.full_product_name or order_line.product_id.display_name,
             'tax_ids': [(6, 0, order_line.tax_ids_after_fiscal_position.ids)],
-            'product_uom_id': order_line.product_uom_id.id,
+            'uom_id': order_line.uom_id.id,
         }
 
     def _prepare_invoice_lines(self):
@@ -1090,7 +1090,7 @@ class PosOrderLine(models.Model):
     tax_ids = fields.Many2many('account.tax', string='Taxes', readonly=True)
     tax_ids_after_fiscal_position = fields.Many2many('account.tax', compute='_get_tax_ids_after_fiscal_position', string='Taxes to Apply')
     pack_lot_ids = fields.One2many('pos.pack.operation.lot', 'pos_order_line_id', string='Lot/serial Number')
-    product_uom_id = fields.Many2one('uom.uom', string='Product UoM', related='product_id.uom_id')
+    uom_id = fields.Many2one('uom.uom', string='Product UoM', related='product_id.uom_id')
     currency_id = fields.Many2one('res.currency', related='order_id.currency_id')
     full_product_name = fields.Char('Full Product Name')
     customer_note = fields.Char('Customer Note')

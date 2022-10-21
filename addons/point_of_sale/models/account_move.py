@@ -37,7 +37,7 @@ class AccountMove(models.Model):
                         lot_values.append({
                             'product_name': lot.product_id.name,
                             'quantity': line.qty if lot.product_id.tracking == 'lot' else 1.0,
-                            'uom_name': line.product_uom_id.name,
+                            'uom_name': line.uom_id.name,
                             'lot_name': lot.lot_name,
                         })
 

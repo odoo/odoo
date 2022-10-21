@@ -71,7 +71,7 @@ class StockPackageLevel(models.Model):
                                 'picking_id': package_level.picking_id.id,
                                 'product_id': quant.product_id.id,
                                 'qty_done': quant.quantity,
-                                'product_uom_id': quant.product_id.uom_id.id,
+                                'uom_id': quant.product_id.uom_id.id,
                                 'lot_id': quant.lot_id.id,
                                 'package_id': package_level.package_id.id,
                                 'result_package_id': package_level.package_id.id,

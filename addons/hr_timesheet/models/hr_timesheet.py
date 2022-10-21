@@ -294,9 +294,9 @@ class AccountAnalyticLine(models.Model):
             if partner_id:
                 vals['partner_id'] = partner_id
         # set timesheet UoM from the AA company (AA implies uom)
-        if not vals.get('product_uom_id') and all(v in vals for v in ['account_id', 'project_id']):  # project_id required to check this is timesheet flow
+        if not vals.get('uom_id') and all(v in vals for v in ['account_id', 'project_id']):  # project_id required to check this is timesheet flow
             analytic_account = self.env['account.analytic.account'].sudo().browse(vals['account_id'])
-            vals['product_uom_id'] = analytic_account.company_id.project_time_mode_id.id
+            vals['uom_id'] = analytic_account.company_id.project_time_mode_id.id
         return vals
 
     def _timesheet_postprocess(self, values):

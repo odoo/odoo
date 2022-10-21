@@ -117,7 +117,7 @@
                                             <td name="account_invoice_line_name"><span t-field="line.name" t-options="{'widget': 'text'}"/></td>
                                             <td class="text-end">
                                                 <span t-field="line.quantity"/>
-                                                <span t-field="line.product_uom_id"  groups="uom.group_uom"/>
+                                                <span t-field="line.uom_id"  groups="uom.group_uom"/>
                                             </td>
                                             <td t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                                                 <span class="text-nowrap" t-field="line.price_unit"/>

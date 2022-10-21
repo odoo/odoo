@@ -24,7 +24,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'product_id': cls.product_a.id,
             'account_id': cls.product_a.property_account_expense_id.id,
             'partner_id': cls.partner_a.id,
-            'product_uom_id': cls.product_a.uom_id.id,
+            'uom_id': cls.product_a.uom_id.id,
             'quantity': 1.0,
             'discount': 0.0,
             'price_unit': 800.0,
@@ -43,7 +43,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'product_id': cls.product_b.id,
             'account_id': cls.product_b.property_account_expense_id.id,
             'partner_id': cls.partner_a.id,
-            'product_uom_id': cls.product_b.uom_id.id,
+            'uom_id': cls.product_b.uom_id.id,
             'quantity': 1.0,
             'discount': 0.0,
             'price_unit': 160.0,
@@ -62,7 +62,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'product_id': False,
             'account_id': cls.company_data['default_account_tax_purchase'].id,
             'partner_id': cls.partner_a.id,
-            'product_uom_id': False,
+            'uom_id': False,
             'quantity': False,
             'discount': 0.0,
             'price_unit': 0.0,
@@ -81,7 +81,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'product_id': False,
             'account_id': cls.company_data['default_account_tax_purchase'].id,
             'partner_id': cls.partner_a.id,
-            'product_uom_id': False,
+            'uom_id': False,
             'quantity': False,
             'discount': 0.0,
             'price_unit': 0.0,
@@ -100,7 +100,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'product_id': False,
             'account_id': cls.company_data['default_account_payable'].id,
             'partner_id': cls.partner_a.id,
-            'product_uom_id': False,
+            'uom_id': False,
             'quantity': False,
             'discount': 0.0,
             'price_unit': 0.0,
@@ -176,7 +176,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 **self.product_line_vals_1,
                 'name': self.product_b.name,
                 'product_id': self.product_b.id,
-                'product_uom_id': self.product_b.uom_id.id,
+                'uom_id': self.product_b.uom_id.id,
                 'account_id': self.product_b.property_account_expense_id.id,
                 'price_unit': 160.0,
                 'price_subtotal': 160.0,
@@ -301,12 +301,12 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         uom_dozen = self.env.ref('uom.product_uom_dozen')
         with Form(invoice) as move_form:
             with move_form.invoice_line_ids.edit(0) as line_form:
-                line_form.product_uom_id = uom_dozen
+                line_form.uom_id = uom_dozen
 
         self.assertInvoiceValues(invoice, [
             {
                 'product_id': product.id,
-                'product_uom_id': uom_dozen.id,
+                'uom_id': uom_dozen.id,
                 'price_unit': 2400.0,
                 'price_subtotal': 2400.0,
                 'price_total': 2760.0,
@@ -319,7 +319,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 'product_id': False,
-                'product_uom_id': False,
+                'uom_id': False,
                 'price_unit': 0.0,
                 'price_subtotal': 0.0,
                 'price_total': 0.0,
@@ -332,7 +332,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 'product_id': False,
-                'product_uom_id': False,
+                'uom_id': False,
                 'price_unit': 0.0,
                 'price_subtotal': 0.0,
                 'price_total': 0.0,
@@ -446,12 +446,12 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         uom_dozen = self.env.ref('uom.product_uom_dozen')
         with Form(invoice) as move_form:
             with move_form.invoice_line_ids.edit(0) as line_form:
-                line_form.product_uom_id = uom_dozen
+                line_form.uom_id = uom_dozen
 
         self.assertInvoiceValues(invoice, [
             {
                 'product_id': product.id,
-                'product_uom_id': uom_dozen.id,
+                'uom_id': uom_dozen.id,
                 'price_unit': 2880.0,
                 'price_subtotal': 2400.0,
                 'price_total': 2880.0,
@@ -464,7 +464,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 'product_id': False,
-                'product_uom_id': False,
+                'uom_id': False,
                 'price_unit': 0.0,
                 'price_subtotal': 0.0,
                 'price_total': 0.0,
@@ -477,7 +477,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 'product_id': False,
-                'product_uom_id': False,
+                'uom_id': False,
                 'price_unit': 0.0,
                 'price_subtotal': 0.0,
                 'price_total': 0.0,
@@ -690,7 +690,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 'product_id': False,
                 'account_id': self.company_data['default_account_tax_sale'].id,
                 'partner_id': self.partner_a.id,
-                'product_uom_id': False,
+                'uom_id': False,
                 'quantity': False,
                 'discount': 0.0,
                 'price_unit': 0.0,
@@ -709,7 +709,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 'product_id': False,
                 'account_id': self.company_data['default_account_expense'].id,
                 'partner_id': self.partner_a.id,
-                'product_uom_id': False,
+                'uom_id': False,
                 'quantity': False,
                 'discount': 0.0,
                 'price_unit': 0.0,
@@ -728,7 +728,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 'product_id': False,
                 'account_id': child_tax_2.cash_basis_transition_account_id.id,
                 'partner_id': self.partner_a.id,
-                'product_uom_id': False,
+                'uom_id': False,
                 'quantity': False,
                 'discount': 0.0,
                 'price_unit': 0.0,
@@ -797,7 +797,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 'product_id': False,
                 'account_id': self.cash_rounding_a.loss_account_id.id,
                 'partner_id': self.partner_a.id,
-                'product_uom_id': False,
+                'uom_id': False,
                 'quantity': False,
                 'discount': 0.0,
                 'price_unit': 0.0,
@@ -841,14 +841,14 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                     'product_id': self.product_a.id,
                     'price_unit': 799.99,
                     'tax_ids': [(6, 0, self.product_a.supplier_taxes_id.ids)],
-                    'product_uom_id':  self.product_a.uom_id.id,
+                    'uom_id':  self.product_a.uom_id.id,
                 }),
 
                 (0, 0, {
                     'product_id': self.product_b.id,
                     'price_unit': self.product_b.standard_price,
                     'tax_ids': [(6, 0, self.product_b.supplier_taxes_id.ids)],
-                    'product_uom_id':  self.product_b.uom_id.id,
+                    'uom_id':  self.product_b.uom_id.id,
                 }),
             ],
         })
@@ -884,7 +884,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 'product_id': False,
                 'account_id': self.company_data['default_account_tax_purchase'].id,
                 'partner_id': self.partner_a.id,
-                'product_uom_id': False,
+                'uom_id': False,
                 'quantity': False,
                 'discount': 0.0,
                 'price_unit': 0.0,
@@ -1355,13 +1355,13 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'invoice_line_ids': [
                 Command.create({
                     'product_id': self.product_line_vals_1['product_id'],
-                    'product_uom_id': self.product_line_vals_1['product_uom_id'],
+                    'uom_id': self.product_line_vals_1['uom_id'],
                     'price_unit': self.product_line_vals_1['price_unit'],
                     'tax_ids': [Command.set(self.product_line_vals_1['tax_ids'])],
                 }),
                 Command.create({
                     'product_id': self.product_line_vals_2['product_id'],
-                    'product_uom_id': self.product_line_vals_2['product_uom_id'],
+                    'uom_id': self.product_line_vals_2['uom_id'],
                     'price_unit': self.product_line_vals_2['price_unit'],
                     'tax_ids': [Command.set(self.product_line_vals_2['tax_ids'])],
                 }),
@@ -1416,7 +1416,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'invoice_line_ids': [
                 Command.create({
                     'product_id': self.product_line_vals_1['product_id'],
-                    'product_uom_id': self.product_line_vals_1['product_uom_id'],
+                    'uom_id': self.product_line_vals_1['uom_id'],
                     'price_unit': self.product_line_vals_1['price_unit'],
                     'tax_ids': [Command.set(self.product_line_vals_1['tax_ids'])],
                 }),
@@ -1426,7 +1426,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'invoice_line_ids': [
                 Command.create({
                     'product_id': self.product_line_vals_2['product_id'],
-                    'product_uom_id': self.product_line_vals_2['product_uom_id'],
+                    'uom_id': self.product_line_vals_2['uom_id'],
                     'price_unit': self.product_line_vals_2['price_unit'],
                     'tax_ids': [Command.set(self.product_line_vals_2['tax_ids'])],
                 }),
@@ -1545,13 +1545,13 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'invoice_line_ids': [
                 Command.create({
                     'product_id': self.product_line_vals_1['product_id'],
-                    'product_uom_id': self.product_line_vals_1['product_uom_id'],
+                    'uom_id': self.product_line_vals_1['uom_id'],
                     'price_unit': self.product_line_vals_1['price_unit'],
                     'tax_ids': [Command.set(self.product_line_vals_1['tax_ids'])],
                 }),
                 Command.create({
                     'product_id': self.product_line_vals_2['product_id'],
-                    'product_uom_id': self.product_line_vals_2['product_uom_id'],
+                    'uom_id': self.product_line_vals_2['uom_id'],
                     'price_unit': self.product_line_vals_2['price_unit'],
                     'tax_ids': [Command.set(self.product_line_vals_2['tax_ids'])],
                 }),
@@ -1613,14 +1613,14 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'invoice_line_ids': [
                 Command.create({
                     'product_id': self.product_line_vals_1['product_id'],
-                    'product_uom_id': self.product_line_vals_1['product_uom_id'],
+                    'uom_id': self.product_line_vals_1['uom_id'],
                     'price_unit': self.product_line_vals_1['price_unit'],
                     'quantity': -self.product_line_vals_1['quantity'],
                     'tax_ids': [Command.set(self.product_line_vals_1['tax_ids'])],
                 }),
                 Command.create({
                     'product_id': self.product_line_vals_2['product_id'],
-                    'product_uom_id': self.product_line_vals_2['product_uom_id'],
+                    'uom_id': self.product_line_vals_2['uom_id'],
                     'price_unit': self.product_line_vals_2['price_unit'],
                     'quantity': -self.product_line_vals_2['quantity'],
                     'tax_ids': [Command.set(self.product_line_vals_2['tax_ids'])],
@@ -1738,7 +1738,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 (0, None, {
                     'name': self.product_line_vals_1['name'],
                     'product_id': self.product_line_vals_1['product_id'],
-                    'product_uom_id': self.product_line_vals_1['product_uom_id'],
+                    'uom_id': self.product_line_vals_1['uom_id'],
                     'quantity': self.product_line_vals_1['quantity'],
                     'price_unit': self.product_line_vals_1['price_unit'],
                     'tax_ids': self.product_line_vals_1['tax_ids'],
@@ -1746,7 +1746,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 (0, None, {
                     'name': self.product_line_vals_2['name'],
                     'product_id': self.product_line_vals_2['product_id'],
-                    'product_uom_id': self.product_line_vals_2['product_uom_id'],
+                    'uom_id': self.product_line_vals_2['uom_id'],
                     'quantity': self.product_line_vals_2['quantity'],
                     'price_unit': self.product_line_vals_2['price_unit'],
                     'tax_ids': self.product_line_vals_2['tax_ids'],

@@ -603,7 +603,7 @@ class TestSaleToInvoice(TestSaleCommon):
                 Command.create({
                     'name': serv_cost.name,
                     'product_id': serv_cost.id,
-                    'product_uom_id': serv_cost.uom_id.id,
+                    'uom_id': serv_cost.uom_id.id,
                     'quantity': 2,
                     'price_unit': serv_cost.standard_price,
                     'analytic_distribution': {so.analytic_account_id.id: 100},

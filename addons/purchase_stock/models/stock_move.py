@@ -49,7 +49,7 @@ class StockMove(models.Model):
                         invoice_line.price_unit, currency=invoice_line.account_id.currency_id, quantity=invoice_line.quantity)['total_void']
                 else:
                     invoiced_value += invoice_line.price_unit * invoice_line.quantity
-                invoiced_qty += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_id.uom_id)
+                invoiced_qty += invoice_line.uom_id._compute_quantity(invoice_line.quantity, line.product_id.uom_id)
             # TODO currency check
             remaining_value = invoiced_value - receipt_value
             # TODO qty_received in product uom
@@ -107,7 +107,7 @@ class StockMove(models.Model):
                 'name': _("Currency exchange rate difference"),
                 'product_id': self.product_id.id,
                 'quantity': 0,
-                'product_uom_id': self.product_id.uom_id.id,
+                'uom_id': self.product_id.uom_id.id,
                 'partner_id': partner_id,
                 'balance': 0,
                 'account_id': debit_account_id,
@@ -118,7 +118,7 @@ class StockMove(models.Model):
                 'name': _("Currency exchange rate difference"),
                 'product_id': self.product_id.id,
                 'quantity': 0,
-                'product_uom_id': self.product_id.uom_id.id,
+                'uom_id': self.product_id.uom_id.id,
                 'partner_id': partner_id,
                 'balance': 0,
                 'account_id': credit_account_id,
@@ -183,7 +183,7 @@ class StockMove(models.Model):
                 layers_values, to_curr, related_aml.company_id, valuation_date, round=False,
             )
             valuation_total_qty += layers_qty
-        if float_is_zero(valuation_total_qty, precision_rounding=related_aml.product_uom_id.rounding or related_aml.product_id.uom_id.rounding):
+        if float_is_zero(valuation_total_qty, precision_rounding=related_aml.uom_id.rounding or related_aml.product_id.uom_id.rounding):
             raise UserError(
                 _('Odoo is not able to generate the anglo saxon entries. The total valuation of %s is zero.') % related_aml.product_id.display_name)
         return valuation_price_unit_total, valuation_total_qty

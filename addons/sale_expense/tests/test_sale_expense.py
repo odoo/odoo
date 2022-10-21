@@ -79,7 +79,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
             'name': 'Car Travel',
             'product_id': prod_exp_2.id,
             'analytic_distribution': {so.analytic_account_id.id: 100},
-            'product_uom_id': self.env.ref('uom.product_uom_km').id,
+            'uom_id': self.env.ref('uom.product_uom_km').id,
             'unit_amount': 0.15,
             'quantity': 100,
             'employee_id': self.expense_employee.id,

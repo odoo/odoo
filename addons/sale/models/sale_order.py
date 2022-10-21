@@ -1402,7 +1402,7 @@ class SaleOrder(models.Model):
             'display_type': 'line_section',
             'name': _('Down Payments'),
             'product_id': False,
-            'product_uom_id': False,
+            'uom_id': False,
             'quantity': 0,
             'discount': 0,
             'price_unit': 0,

@@ -979,7 +979,7 @@ class Picking(models.Model):
 
         def get_line_with_done_qty_ids(move_lines):
             # Get only move_lines that has some qty_done set.
-            return move_lines.filtered(lambda ml: ml.product_id and ml.product_id.tracking != 'none' and float_compare(ml.qty_done, 0, precision_rounding=ml.product_uom_id.rounding)).ids
+            return move_lines.filtered(lambda ml: ml.product_id and ml.product_id.tracking != 'none' and float_compare(ml.qty_done, 0, precision_rounding=ml.uom_id.rounding)).ids
 
         if separate_pickings:
             # If pickings are checked independently, get full/partial move_lines depending if each picking has no qty_done set.
@@ -1007,7 +1007,7 @@ class Picking(models.Model):
         for picking in self:
             if all(float_is_zero(move_line.qty_done, precision_digits=precision_digits) for move_line in picking.move_line_ids.filtered(lambda m: m.state not in ('done', 'cancel'))):
                 no_quantities_done_ids.add(picking.id)
-            if all(float_is_zero(move_line.reserved_qty, precision_rounding=move_line.product_uom_id.rounding) for move_line in picking.move_line_ids):
+            if all(float_is_zero(move_line.reserved_qty, precision_rounding=move_line.uom_id.rounding) for move_line in picking.move_line_ids):
                 no_reserved_quantities_ids.add(picking.id)
         pickings_without_quantities = self.filtered(lambda p: p.id in no_quantities_done_ids and p.id in no_reserved_quantities_ids)
 
@@ -1175,7 +1175,7 @@ class Picking(models.Model):
                     quantity_done[quant.product_id.id] += quant.qty
             for pack in picking.mapped('move_line_ids').filtered(lambda x: x.product_id and not x.move_id):
                 quantity_done.setdefault(pack.product_id.id, 0)
-                quantity_done[pack.product_id.id] += pack.product_uom_id._compute_quantity(pack.qty_done, pack.product_id.uom_id)
+                quantity_done[pack.product_id.id] += pack.uom_id._compute_quantity(pack.qty_done, pack.product_id.uom_id)
             if any(
                 float_compare(quantity_done[x], quantity_todo.get(x, 0), precision_digits=prec,) == -1
                 for x in quantity_done
@@ -1431,12 +1431,12 @@ class Picking(models.Model):
 
             for ml in move_line_ids:
                 if float_compare(ml.qty_done, ml.reserved_uom_qty,
-                                 precision_rounding=ml.product_uom_id.rounding) >= 0:
+                                 precision_rounding=ml.uom_id.rounding) >= 0:
                     move_lines_to_pack |= ml
                 else:
                     quantity_left_todo = float_round(
                         ml.reserved_uom_qty - ml.qty_done,
-                        precision_rounding=ml.product_uom_id.rounding,
+                        precision_rounding=ml.uom_id.rounding,
                         rounding_method='HALF-UP')
                     done_to_keep = ml.qty_done
                     new_move_line = ml.copy(
@@ -1486,13 +1486,13 @@ class Picking(models.Model):
                 picking_move_lines = self.move_line_nosuggest_ids
 
             move_line_ids = picking_move_lines.filtered(lambda ml:
-                float_compare(ml.qty_done, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0
+                float_compare(ml.qty_done, 0.0, precision_rounding=ml.uom_id.rounding) > 0
                 and not ml.result_package_id
             )
             if not move_line_ids:
                 move_line_ids = picking_move_lines.filtered(lambda ml: float_compare(ml.reserved_uom_qty, 0.0,
-                                     precision_rounding=ml.product_uom_id.rounding) > 0 and float_compare(ml.qty_done, 0.0,
-                                     precision_rounding=ml.product_uom_id.rounding) == 0)
+                                     precision_rounding=ml.uom_id.rounding) > 0 and float_compare(ml.qty_done, 0.0,
+                                     precision_rounding=ml.uom_id.rounding) == 0)
             if move_line_ids:
                 res = self._pre_put_in_pack_hook(move_line_ids)
                 if not res:

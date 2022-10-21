@@ -205,7 +205,7 @@ class TestRobustness(TransactionCase):
         with self.assertRaises(ValidationError):
             move1.write({'move_line_ids': [(0, 0, {
                 'product_id': product1.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'qty_done': 1,
                 'lot_id': lot2.id,
                 'location_id': move1.location_id.id,
@@ -215,7 +215,7 @@ class TestRobustness(TransactionCase):
         with self.assertRaises(ValidationError):
             move2.write({'move_line_ids': [(0, 0, {
                 'product_id': product2.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'qty_done': 1,
                 'lot_id': lot1.id,
                 'location_id': move2.location_id.id,

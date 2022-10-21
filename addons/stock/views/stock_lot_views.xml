@@ -36,7 +36,7 @@
                         <label for="product_qty" attrs="{'invisible': [('display_complete', '=', False)]}"/>
                         <div class="o_row" attrs="{'invisible': [('display_complete', '=', False)]}">
                             <field name="product_qty"/>
-                            <field name="product_uom_id" groups="uom.group_uom"/>
+                            <field name="uom_id" groups="uom.group_uom"/>
                         </div>
                         <field name="ref"/>
                         <field name="company_id" groups="base.group_multi_company"/>

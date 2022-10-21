@@ -69,9 +69,9 @@ class SaleOrderLine(models.Model):
                         'incoming_moves': lambda m: m.location_dest_id.usage == 'customer' and (not m.origin_returned_move_id or (m.origin_returned_move_id and m.to_refund)),
                         'outgoing_moves': lambda m: m.location_dest_id.usage != 'customer' and m.to_refund
                     }
-                    order_qty = order_line.uom_id._compute_quantity(order_line.product_uom_qty, relevant_bom.product_uom_id)
+                    order_qty = order_line.uom_id._compute_quantity(order_line.product_uom_qty, relevant_bom.uom_id)
                     qty_delivered = moves._compute_kit_quantities(order_line.product_id, order_qty, relevant_bom, filters)
-                    order_line.qty_delivered = relevant_bom.product_uom_id._compute_quantity(qty_delivered, order_line.uom_id)
+                    order_line.qty_delivered = relevant_bom.uom_id._compute_quantity(qty_delivered, order_line.uom_id)
 
                 # If no relevant BOM is found, fall back on the all-or-nothing policy. This happens
                 # when the product sold is made only of kits. In this case, the BOM of the stock moves
@@ -84,12 +84,12 @@ class SaleOrderLine(models.Model):
                         order_line.qty_delivered = 0.0
 
     def _get_bom_component_qty(self, bom):
-        bom_quantity = self.product_id.uom_id._compute_quantity(1, bom.product_uom_id, rounding_method='HALF-UP')
+        bom_quantity = self.product_id.uom_id._compute_quantity(1, bom.uom_id, rounding_method='HALF-UP')
         boms, lines = bom.explode(self.product_id, bom_quantity)
         components = {}
         for line, line_data in lines:
             product = line.product_id.id
-            uom = line.product_uom_id
+            uom = line.uom_id
             qty = line_data['qty']
             if components.get(product, False):
                 if uom.id != components[product]['uom']:
@@ -118,7 +118,7 @@ class SaleOrderLine(models.Model):
                 'incoming_moves': lambda m: m.location_dest_id.usage == 'customer' and (not m.origin_returned_move_id or (m.origin_returned_move_id and m.to_refund)),
                 'outgoing_moves': lambda m: m.location_dest_id.usage != 'customer' and m.to_refund
             }
-            order_qty = self.uom_id._compute_quantity(self.product_uom_qty, bom.product_uom_id)
+            order_qty = self.uom_id._compute_quantity(self.product_uom_qty, bom.uom_id)
             qty = moves._compute_kit_quantities(self.product_id, order_qty, bom, filters)
-            return bom.product_uom_id._compute_quantity(qty, self.uom_id)
+            return bom.uom_id._compute_quantity(qty, self.uom_id)
         return super(SaleOrderLine, self)._get_qty_procurement(previous_product_uom_qty=previous_product_uom_qty)

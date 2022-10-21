@@ -305,7 +305,7 @@ class TestBatchPicking(TransactionCase):
         dozen_move._action_confirm()
         dozen_move._action_assign()
         self.assertEqual(len(dozen_move.move_line_ids), 12)
-        self.assertEqual(dozen_move.move_line_ids.product_uom_id, self.env.ref('uom.product_uom_unit'))
+        self.assertEqual(dozen_move.move_line_ids.uom_id, self.env.ref('uom.product_uom_unit'))
 
         lines = dozen_move.move_line_ids[0:5]
         res_dict = lines.action_open_add_to_wave()
@@ -338,7 +338,7 @@ class TestBatchPicking(TransactionCase):
         ml1 = self.env['stock.move.line'].create({
             'product_id': self.productA.id,
             'qty_done': 5,
-            'product_uom_id': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': picking.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -346,7 +346,7 @@ class TestBatchPicking(TransactionCase):
         self.env['stock.move.line'].create({
             'product_id': self.productA.id,
             'qty_done': 5,
-            'product_uom_id': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': picking.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -355,7 +355,7 @@ class TestBatchPicking(TransactionCase):
         ml2 = self.env['stock.move.line'].create({
             'product_id': self.productA.id,
             'qty_done': 5,
-            'product_uom_id': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': picking.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,

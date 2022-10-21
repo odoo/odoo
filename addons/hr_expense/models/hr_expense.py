@@ -57,7 +57,7 @@ class HrExpense(models.Model):
     # product_id not required to allow create an expense without product via mail alias, but should be required on the view.
     product_id = fields.Many2one('product.product', string='Category', tracking=True, states={'done': [('readonly', True)]}, domain="[('can_be_expensed', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", ondelete='restrict')
     product_description = fields.Html(compute='_compute_product_description')
-    product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', compute='_compute_from_product_id_company_id',
+    uom_id = fields.Many2one('uom.uom', string='Unit of Measure', compute='_compute_from_product_id_company_id',
         store=True, precompute=True, copy=True, readonly=True,
         domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', readonly=True, string="UoM Category")
@@ -265,7 +265,7 @@ class HrExpense(models.Model):
                 expense.unit_amount = expense.product_id.price_compute('standard_price', currency=expense.currency_id)[expense.product_id.id]
             expense = expense.with_company(expense.company_id)
             expense.name = expense.name or expense.product_id.display_name
-            expense.product_uom_id = expense.product_id.uom_id
+            expense.uom_id = expense.product_id.uom_id
             expense.tax_ids = expense.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == expense.company_id)  # taxes only from the same company
             account = expense.product_id.product_tmpl_id._get_product_accounts()['expense']
             if account:
@@ -321,10 +321,10 @@ class HrExpense(models.Model):
     def _check_payment_mode(self):
         self.sheet_id._check_payment_mode()
 
-    @api.constrains('product_id', 'product_uom_id')
+    @api.constrains('product_id', 'uom_id')
     def _check_product_uom_category(self):
         for expense in self:
-            if expense.product_id and expense.product_uom_id.category_id != expense.product_id.uom_id.category_id:
+            if expense.product_id and expense.uom_id.category_id != expense.product_id.uom_id.category_id:
                 raise UserError(_(
                     'Selected Unit of Measure for expense %(expense)s does not belong to the same category as the Unit of Measure of product %(product)s.',
                     expense=expense.name, product=expense.product_id.name,
@@ -605,7 +605,7 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
                         'quantity': expense.quantity or 1,
                         'price_unit': expense.unit_amount if expense.unit_amount != 0 else expense.total_amount,
                         'product_id': expense.product_id.id,
-                        'product_uom_id': expense.product_uom_id.id,
+                        'uom_id': expense.uom_id.id,
                         'analytic_distribution': expense.analytic_distribution,
                         'expense_id': expense.id,
                         'partner_id': expense.employee_id.sudo().address_home_id.commercial_partner_id.id,
@@ -703,7 +703,7 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             'name': expense_description,
             'unit_amount': price,
             'product_id': product.id if product else None,
-            'product_uom_id': product.uom_id.id,
+            'uom_id': product.uom_id.id,
             'tax_ids': [(4, tax.id, False) for tax in product.supplier_taxes_id.filtered(lambda r: r.company_id == company)],
             'quantity': 1,
             'company_id': company.id,

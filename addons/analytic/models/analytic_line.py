@@ -30,13 +30,13 @@ class AccountAnalyticLine(models.Model):
         'Quantity',
         default=0.0,
     )
-    product_uom_id = fields.Many2one(
+    uom_id = fields.Many2one(
         'uom.uom',
         string='Unit of Measure',
         domain="[('category_id', '=', product_uom_category_id)]",
     )
     product_uom_category_id = fields.Many2one(
-        related='product_uom_id.category_id',
+        related='uom_id.category_id',
         string='UoM Category',
         readonly=True,
     )

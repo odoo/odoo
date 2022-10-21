@@ -120,7 +120,7 @@ class StockRule(models.Model):
             'product_id': product_id.id,
             'product_description_variants': values.get('product_description_variants'),
             'product_qty': product_qty,
-            'product_uom_id': product_uom.id,
+            'uom_id': product_uom.id,
             'location_src_id': self.location_src_id.id or self.picking_type_id.default_location_src_id.id or location_dest_id.id,
             'location_dest_id': location_dest_id.id,
             'bom_id': bom.id,
@@ -203,11 +203,11 @@ class ProcurementGroup(models.Model):
         for procurement in procurements:
             bom_kit = kits_by_company[procurement.company_id].get(procurement.product_id)
             if bom_kit:
-                order_qty = procurement.uom_id._compute_quantity(procurement.product_qty, bom_kit.product_uom_id, round=False)
+                order_qty = procurement.uom_id._compute_quantity(procurement.product_qty, bom_kit.uom_id, round=False)
                 qty_to_produce = (order_qty / bom_kit.product_qty)
                 boms, bom_sub_lines = bom_kit.explode(procurement.product_id, qty_to_produce)
                 for bom_line, bom_line_data in bom_sub_lines:
-                    bom_line_uom = bom_line.product_uom_id
+                    bom_line_uom = bom_line.uom_id
                     quant_uom = bom_line.product_id.uom_id
                     # recreate dict of values since each child has its own bom_line_id
                     values = dict(procurement.values, bom_line_id=bom_line.id)

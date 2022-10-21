@@ -60,7 +60,7 @@ class AccountTax(models.Model):
                 and record._name == 'account.move.line'\
                 and record.company_id.account_fiscal_country_id.code == 'IN':
             res['product_id'] = record.product_id.id
-            res['product_uom_id'] = record.product_uom_id.id
+            res['uom_id'] = record.uom_id.id
         return res
 
     @api.model
@@ -73,5 +73,5 @@ class AccountTax(models.Model):
                 and record._name == 'account.move.line'\
                 and record.company_id.account_fiscal_country_id.code == 'IN':
             res['product_id'] = record.product_id.id
-            res['product_uom_id'] = record.product_uom_id.id
+            res['uom_id'] = record.uom_id.id
         return res

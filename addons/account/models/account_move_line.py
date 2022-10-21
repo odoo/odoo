@@ -294,7 +294,7 @@ class AccountMoveLine(models.Model):
         inverse='_inverse_product_id',
         ondelete='restrict',
     )
-    product_uom_id = fields.Many2one(
+    uom_id = fields.Many2one(
         comodel_name='uom.uom',
         string='Unit of Measure',
         compute='_compute_product_uom_id', store=True, readonly=False, precompute=True,
@@ -788,7 +788,7 @@ class AccountMoveLine(models.Model):
     @api.depends('product_id')
     def _compute_product_uom_id(self):
         for line in self:
-            line.product_uom_id = line.product_id.uom_id
+            line.uom_id = line.product_id.uom_id
 
     @api.depends('display_type')
     def _compute_quantity(self):
@@ -829,7 +829,7 @@ class AccountMoveLine(models.Model):
             else:
                 line.price_total = line.price_subtotal = subtotal
 
-    @api.depends('product_id', 'product_uom_id')
+    @api.depends('product_id', 'uom_id')
     def _compute_price_unit(self):
         for line in self:
             if not line.product_id or line.display_type in ('line_section', 'line_note'):
@@ -846,10 +846,10 @@ class AccountMoveLine(models.Model):
                 line.move_id.date,
                 document_type,
                 fiscal_position=line.move_id.fiscal_position_id,
-                product_uom=line.product_uom_id,
+                product_uom=line.uom_id,
             )
 
-    @api.depends('product_id', 'product_uom_id')
+    @api.depends('product_id', 'uom_id')
     def _compute_tax_ids(self):
         for line in self:
             if line.display_type in ('line_section', 'line_note'):
@@ -2402,7 +2402,7 @@ class AccountMoveLine(models.Model):
             'partner_id': self.partner_id.id,
             'unit_amount': self.quantity,
             'product_id': self.product_id and self.product_id.id or False,
-            'product_uom_id': self.product_uom_id and self.product_uom_id.id or False,
+            'uom_id': self.uom_id and self.uom_id.id or False,
             'amount': amount,
             'general_account_id': self.account_id.id,
             'ref': self.ref,
@@ -2510,7 +2510,7 @@ class AccountMoveLine(models.Model):
     def _get_invoiced_qty_per_product(self):
         qties = defaultdict(float)
         for aml in self:
-            qty = aml.product_uom_id._compute_quantity(aml.quantity, aml.product_id.uom_id)
+            qty = aml.uom_id._compute_quantity(aml.quantity, aml.product_id.uom_id)
             if aml.move_id.move_type == 'out_invoice':
                 qties[aml.product_id] += qty
             elif aml.move_id.move_type == 'out_refund':
