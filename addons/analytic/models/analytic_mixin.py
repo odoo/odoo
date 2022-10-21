@@ -26,7 +26,7 @@ class AnalyticMixin(models.AbstractModel):
         self.env.cr.execute(query, [self._table])
         if self.env.cr.dictfetchone():
             query = f"""
-                CREATE INDEX IF NOT EXISTS {self._table}_analytic_distribution_index
+                CREATE INDEX IF NOT EXISTS {self._table}_analytic_distribution_gin_index
                                         ON {self._table} USING gin(analytic_distribution);
             """
             self.env.cr.execute(query)
