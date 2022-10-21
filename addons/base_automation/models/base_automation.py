@@ -451,7 +451,7 @@ class BaseAutomation(models.Model):
             elif action_rule.trigger == 'on_create_or_write':
                 patch(Model, 'create', make_create())
                 patch(Model, 'write', make_write())
-                patch(Model, '_compute_field_value', make_compute_field_value())
+                # patch(Model, '_compute_field_value', make_compute_field_value())
 
             elif action_rule.trigger == 'on_write':
                 patch(Model, 'write', make_write())
