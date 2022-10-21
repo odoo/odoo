@@ -42,12 +42,6 @@ try:
 except Exception:
     pass
 
-datamatrix_available = True
-try:
-    from pylibdmtx import pylibdmtx
-except Exception:
-    _logger.info('A package may be missing to print Data Matrix barcodes: pylibdmtx or libdmtx.')
-    datamatrix_available = False
 
 def _get_wkhtmltopdf_bin():
     return find_in_path('wkhtmltopdf')
@@ -221,7 +215,7 @@ class IrActionsReport(models.Model):
 
         :return: Boolean
         '''
-        return datamatrix_available
+        return True
 
     def get_paperformat(self):
         return self.paperformat_id or self.env.company.paperformat_id
@@ -542,9 +536,9 @@ class IrActionsReport(models.Model):
         elif barcode_type == 'auto':
             symbology_guess = {8: 'EAN8', 13: 'EAN13'}
             barcode_type = symbology_guess.get(len(value), 'Code128')
-        elif barcode_type == 'DataMatrix' and not self.datamatrix_available():
-            # fallback to avoid stacktrack because reportlab won't recognize the type and error message isn't useful/will be blocking
-            barcode_type = 'Code128'
+        elif barcode_type == 'DataMatrix':
+            # Prevent a crash due to a lib change from pylibdmtx to reportlab
+            barcode_type = 'ECC200DataMatrix'
         elif barcode_type == 'QR':
             # for `QR` type, `quiet` is not supported. And is simply ignored.
             # But we can use `barBorder` to get a similar behaviour.
