@@ -2175,6 +2175,12 @@ msgid ""
 "Closet location: products/lots closest to the target location will be moved out first.\n"
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
+"Définit la méthode par défaut utilisée pour suggérer l'emplacement exact (étagère) où prendre les produits, quel lot, etc. pour cet emplacement. Cette méthode peut être appliquée au niveau de la catégorie de produits, et un repli est effectué sur les emplacements parents si aucun n'est défini ici.\n"
+"\n"
+"FIFO : les produits/lots stockés en premier seront sortis en premier.\n"
+"LIFO : les produits/lots stockés en dernier seront sortis en premier.\n"
+"Emplacement du placard : les produits/lots les plus proches de l'emplacement cible seront déplacés en premier.\n"
+"FEFO : les produits/lots dont la date de retrait est la plus proche seront retirés en premier (la disponibilité de cette méthode dépend du paramètre \"Dates d'expiration\")."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert_date
@@ -5486,6 +5492,9 @@ msgid ""
 "Press the CREATE button to define quantity for each product in your stock or"
 " import them from a spreadsheet throughout Favorites"
 msgstr ""
+"Appuyez sur le bouton CRÉER pour définir la quantité de chaque produit de "
+"votre stock ou importez-les à partir d'une feuille de calcul dans les "
+"Favoris"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -6957,6 +6966,12 @@ msgid ""
 "Closet location: products/lots closest to the target location will be moved out first.\n"
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
+"Définissez une stratégie de sortie spécifique qui sera utilisée quel que soit l'emplacement d'origine pour cette catégorie de produits.\n"
+"\n"
+"FIFO : les produits/lots stockés en premier seront sortis en premier.\n"
+"LIFO : les produits/lots stockés en dernier seront sortis en premier.\n"
+"Emplacement du placard : les produits/lots les plus proches de l'emplacement cible seront déplacés en premier.\n"
+"FEFO : les produits/lots dont la date de retrait est la plus proche seront retirés en premier (la disponibilité de cette méthode dépend du paramètre \"Dates d'expiration\")."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form

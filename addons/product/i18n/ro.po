@@ -41,6 +41,8 @@ msgid ""
 "%(base)s with a %(discount)s %% discount and %(surcharge)s extra fee\n"
 "Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
 msgstr ""
+"%(base)s cu %(discount)s %% reducere și %(surcharge)s extra \n"
+"Exemplu: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -1672,6 +1674,14 @@ msgid "Next Activity Type"
 msgstr "Tip de activitate urmatoare"
 
 #. module: product
+#: code:addons/product/wizard/product_label_layout.py:0
+#, python-format
+msgid ""
+"No product to print, if the product is archived please unarchive it before "
+"printing its label."
+msgstr ""
+
+#. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid "No vendor pricelist found"
 msgstr "Nu a fost găsită nicio listă de prețuri pentru furnizori"
@@ -3246,6 +3256,12 @@ msgid ""
 msgstr ""
 "Nu puteți defini precizia zecimală a \"contului\" ca fiind mai mare decât "
 "factorul de rotunjire a monedei principale a companiei"
+
+#. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "You cannot delete the %s product category."
+msgstr ""
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0

@@ -362,7 +362,7 @@ class Task(models.Model):
         # Use of sudo as the portal user doesn't have access to uom
         result['arch'] = self.env['account.analytic.line'].sudo()._apply_timesheet_label(result['arch'])
 
-        if view_type in ['tree', 'pivot', 'graph'] and self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day'):
+        if view_type in ['tree', 'pivot', 'graph', 'form'] and self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day'):
             result['arch'] = self.env['account.analytic.line']._apply_time_label(result['arch'], related_model=self._name)
 
         return result

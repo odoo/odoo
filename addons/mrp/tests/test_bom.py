@@ -360,7 +360,7 @@ class TestBoM(TestMrpCommon):
         # ending the recurse call to not call the compute method and just left the Falsy value `0.0`
         # for the components available qty.
         kit_product_qty, _, _ = (self.product_7_3 + self.product_2 + self.product_3).mapped("qty_available")
-        self.assertEqual(kit_product_qty, 2)
+        self.assertEqual(kit_product_qty, 8)
 
     def test_14_bom_kit_qty_multi_uom(self):
         uom_dozens = self.env.ref('uom.product_uom_dozen')
