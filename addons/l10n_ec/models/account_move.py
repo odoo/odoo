@@ -134,8 +134,6 @@ class AccountMove(models.Model):
         string="Payment Method (SRI)",
     )
 
-    _get_l10n_ec_identification_type = _get_l10n_ec_ats_identification_type #For backward compatibility, remove in master
-
     def _get_l10n_ec_ats_identification_type(self):
         # Helps filter out document types based on subset of Table 2 of SRI's ATS specification
         self.ensure_one()
@@ -167,6 +165,8 @@ class AccountMove(models.Model):
             elif is_final_consumer:
                 identification_code = "07"
         return identification_code
+
+    _get_l10n_ec_identification_type = _get_l10n_ec_ats_identification_type #For backward compatibility, remove in master
 
     @api.model
     def _get_l10n_ec_documents_allowed(self, identification_code):
