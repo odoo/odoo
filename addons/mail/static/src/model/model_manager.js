@@ -62,6 +62,11 @@ export class ModelManager {
              * a first time.
              */
             newOnChange: new Set(),
+            /**
+             * Map of listeners that should be notified as part of the current
+             * update cycle. Value contains list of info to help for debug.
+             */
+            notifyNow: new Map(),
         };
         /**
          * Set of active listeners. Useful to be able to register which records
@@ -78,11 +83,6 @@ export class ModelManager {
          * update cycle. Value contains list of info to help for debug.
          */
         this._listenersToNotifyAfterUpdateCycle = new Map();
-        /**
-         * Map of listeners that should be notified as part of the current
-         * update cycle. Value contains list of info to help for debug.
-         */
-        this._listenersToNotifyInUpdateCycle = new Map();
         /**
          * All generated models. Keys are model name, values are model class.
          */
@@ -299,7 +299,7 @@ export class ModelManager {
      */
     removeListener(listener) {
         this._listeners.delete(listener);
-        this._listenersToNotifyInUpdateCycle.delete(listener);
+        this.cycle.notifyNow.delete(listener);
         this._listenersToNotifyAfterUpdateCycle.delete(listener);
         for (const record of listener.lastObservedRecords) {
             if (!record.exists()) {
@@ -1047,11 +1047,11 @@ export class ModelManager {
             throw new Error(`Listener is not a listener ${listener}`);
         }
         if (listener.isPartOfUpdateCycle) {
-            const entry = this._listenersToNotifyInUpdateCycle.get(listener);
+            const entry = this.cycle.notifyNow.get(listener);
             if (entry) {
                 entry.push(info);
             } else {
-                this._listenersToNotifyInUpdateCycle.set(listener, [info]);
+                this.cycle.notifyNow.set(listener, [info]);
             }
         }
         if (!listener.isPartOfUpdateCycle) {
@@ -1110,9 +1110,9 @@ export class ModelManager {
      * @returns {boolean} whether any change happened
      */
     _notifyListenersInUpdateCycle() {
-        const hasChanged = this._listenersToNotifyInUpdateCycle.size > 0;
-        for (const [listener, infoList] of this._listenersToNotifyInUpdateCycle) {
-            this._listenersToNotifyInUpdateCycle.delete(listener);
+        const hasChanged = this.cycle.notifyNow.size > 0;
+        for (const [listener, infoList] of this.cycle.notifyNow) {
+            this.cycle.notifyNow.delete(listener);
             listener.onChange(infoList);
         }
         if (hasChanged) {
