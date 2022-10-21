@@ -3,10 +3,11 @@
 
 from odoo import fields
 
-from odoo.tests.common import Form
+from odoo.tests import Form, tagged
 from odoo.addons.stock_account.tests.test_stockvaluationlayer import TestStockValuationCommon
 
 
+@tagged('post_install', '-at_install')
 class TestSaleStockMargin(TestStockValuationCommon):
 
     @classmethod
@@ -295,3 +296,21 @@ class TestSaleStockMargin(TestStockValuationCommon):
 
         self.assertEqual(sol.purchase_price, 100)
         self.assertEqual(sol.margin, 100)
+
+    def test_purchase_price_changes(self):
+        so = self._create_sale_order()
+        product = self._create_product()
+        product.categ_id.property_cost_method = 'standard'
+        product.standard_price = 20
+        self._create_sale_order_line(so, product, 1, product.list_price)
+
+        so_form = Form(so)
+        with so_form.order_line.edit(0) as line:
+            line.purchase_price = 15
+        so = so_form.save()
+        email_act = so.action_quotation_send()
+        email_ctx = email_act.get('context', {})
+        so.with_context(**email_ctx).message_post_with_template(email_ctx.get('default_template_id'))
+
+        self.assertEqual(so.state, 'sent')
+        self.assertEqual(so.order_line[0].purchase_price, 15)
