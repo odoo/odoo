@@ -67,6 +67,11 @@ export class ModelManager {
              * update cycle. Value contains list of info to help for debug.
              */
             notifyNow: new Map(),
+            /**
+             * Map of listeners that should be notified at the end of the current
+             * update cycle. Value contains list of info to help for debug.
+             */
+            notifyAfter: new Map(),
         };
         /**
          * Set of active listeners. Useful to be able to register which records
@@ -78,11 +83,6 @@ export class ModelManager {
          * model.
          */
         this._listenersObservingAllByModel = new Map();
-        /**
-         * Map of listeners that should be notified at the end of the current
-         * update cycle. Value contains list of info to help for debug.
-         */
-        this._listenersToNotifyAfterUpdateCycle = new Map();
         /**
          * All generated models. Keys are model name, values are model class.
          */
@@ -300,7 +300,7 @@ export class ModelManager {
     removeListener(listener) {
         this._listeners.delete(listener);
         this.cycle.notifyNow.delete(listener);
-        this._listenersToNotifyAfterUpdateCycle.delete(listener);
+        this.cycle.notifyAfter.delete(listener);
         for (const record of listener.lastObservedRecords) {
             if (!record.exists()) {
                 continue;
@@ -1055,11 +1055,11 @@ export class ModelManager {
             }
         }
         if (!listener.isPartOfUpdateCycle) {
-            const entry = this._listenersToNotifyAfterUpdateCycle.get(listener);
+            const entry = this.cycle.notifyAfter.get(listener);
             if (entry) {
                 entry.push(info);
             } else {
-                this._listenersToNotifyAfterUpdateCycle.set(listener, [info]);
+                this.cycle.notifyAfter.set(listener, [info]);
             }
         }
     }
@@ -1091,8 +1091,8 @@ export class ModelManager {
      * @returns {boolean} whether any change happened
      */
     _notifyListenersAfterUpdateCycle() {
-        for (const [listener, infoList] of this._listenersToNotifyAfterUpdateCycle) {
-            this._listenersToNotifyAfterUpdateCycle.delete(listener);
+        for (const [listener, infoList] of this.cycle.notifyAfter) {
+            this.cycle.notifyAfter.delete(listener);
             listener.onChange(infoList);
         }
     }
