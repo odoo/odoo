@@ -306,9 +306,9 @@ export class ModelManager {
                 continue;
             }
             record.__listenersOnRecord.delete(listener);
-            const listenersObservingFieldOfRecord = record.__listenersOnField;
+            const listenersOnField = record.__listenersOnField;
             for (const field of listener.fields.get(record) || []) {
-                listenersObservingFieldOfRecord.get(field).delete(listener);
+                listenersOnField.get(field).delete(listener);
             }
         }
         for (const model of listener.alls) {
