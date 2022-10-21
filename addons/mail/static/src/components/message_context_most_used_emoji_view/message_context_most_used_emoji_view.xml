@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.MessageContextMostUsedImojiView" owl="1">
+        <div class="o_MessageContextMostUsedImojiView d-flex justify-content-center">
+            <t t-foreach="messaging.emojiRegistry.allEmojis" t-as="emoji" t-key="emoji">
+                <span t-if="emoji_index &lt; 9" t-att-title="emoji.name" t-att-data-source="emoji.sources[0]" t-att-data-codepoints="emoji.codepoints" t-attf-class="{{ className }}" t-ref="root">
+                    <t t-esc="emoji.codepoints" />
+                </span>
+                
+            </t>
+        </div>
+    </t>
+</templates>

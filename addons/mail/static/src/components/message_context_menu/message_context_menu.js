@@ -18,7 +18,7 @@ export class MessageContextMenu extends Component {
     /**
      * @returns {MessageContextMenu}
      */
-    get MessageContextMenuView() {
+    get messageContextMenu() {
         return this.props.record;
     }
 

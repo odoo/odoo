@@ -63,6 +63,15 @@ registerModel({
         emojiOrEmojiInCategory: many('EmojiOrEmojiInCategory', {
             inverse: 'emoji',
         }),
+        emojiMostUsed: one('MessageContextMostUsedImojiView', {
+            compute() {
+                if (!this.messaging) {
+                    return clear();
+                }
+                return this.messaging.emojiRegistry;
+            },
+            inverse: 'allEmojis',
+        }),
         emojiRegistry: one('EmojiRegistry', {
             compute() {
                 if (!this.messaging) {
