@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 import logging
 
 from ast import literal_eval
+from operator import itemgetter
 from psycopg2 import Error
 
 from odoo import _, api, fields, models
@@ -542,26 +544,24 @@ class StockQuant(models.Model):
             return 'location_id ASC, id DESC'
         raise UserError(_('Removal strategy %s not implemented.') % (removal_strategy,))
 
-    def _gather(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False):
-        removal_strategy = self._get_removal_strategy(product_id, location_id)
-        removal_strategy_order = self._get_removal_strategy_order(removal_strategy)
+    def _gather(self, product_ids, location_ids, lot_ids=None, package_ids=None, owner_ids=None, strict=False):
 
-        domain = [('product_id', '=', product_id.id)]
+        domain = [('product_id', 'in', product_ids.ids)]
         if not strict:
-            if lot_id:
-                domain = expression.AND([['|', ('lot_id', '=', lot_id.id), ('lot_id', '=', False)], domain])
-            if package_id:
-                domain = expression.AND([[('package_id', '=', package_id.id)], domain])
-            if owner_id:
-                domain = expression.AND([[('owner_id', '=', owner_id.id)], domain])
-            domain = expression.AND([[('location_id', 'child_of', location_id.id)], domain])
+            if lot_ids:
+                domain = expression.AND([['|', ('lot_id', 'in', lot_ids.ids), ('lot_id', '=', False)], domain])
+            if package_ids:
+                domain = expression.AND([[('package_id', 'in', package_ids.ids)], domain])
+            if owner_ids:
+                domain = expression.AND([[('owner_id', 'in', owner_ids.ids)], domain])
+            domain = expression.AND([[('location_id', 'child_of', location_ids.ids)], domain])
         else:
-            domain = expression.AND([['|', ('lot_id', '=', lot_id.id), ('lot_id', '=', False)] if lot_id else [('lot_id', '=', False)], domain])
-            domain = expression.AND([[('package_id', '=', package_id and package_id.id or False)], domain])
-            domain = expression.AND([[('owner_id', '=', owner_id and owner_id.id or False)], domain])
-            domain = expression.AND([[('location_id', '=', location_id.id)], domain])
+            domain = expression.AND([['|', ('lot_id', 'in', lot_ids.ids), ('lot_id', '=', False)] if lot_ids else [('lot_id', '=', False)], domain])
+            domain = expression.AND([[('package_id', 'in', package_ids.ids)] if package_ids else [('package_id', '=', False)], domain])
+            domain = expression.AND([[('owner_id', 'in', owner_ids.ids)] if owner_ids else [('owner_id', '=', False)], domain])
+            domain = expression.AND([[('location_id', 'in', location_ids.ids)], domain])
 
-        return self.search(domain, order=removal_strategy_order).sorted(lambda q: not q.lot_id)
+        return self.search(domain).sorted(lambda q: not q.lot_id)
 
     @api.model
     def _get_available_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, allow_negative=False):
@@ -602,6 +602,66 @@ class StockQuant(models.Model):
                 return sum(availaible_quantities.values())
             else:
                 return sum([available_quantity for available_quantity in availaible_quantities.values() if float_compare(available_quantity, 0, precision_rounding=rounding) > 0])
+
+    @api.model
+    def _get_removal_strategy_sort(self, removal_strategy):
+        if removal_strategy == 'fifo':
+            return 'in_date', False
+        elif removal_strategy == 'lifo':
+            return 'in_date', True
+        elif removal_strategy == 'closest':
+            return 'location_id', False
+        raise UserError(_('Removal strategy %s not implemented.') % (removal_strategy,))
+
+    @api.model
+    def _get_available_quants(self, product_ids, location_ids, lot_ids=None, package_ids=None, owner_ids=None, strict=False, allow_negative=False):
+        """Gets the available quants that fit the criteria passed as arguments, the quants are grouped by the combination of `product_id,
+        location_id` if `strict` is set to False or sharing the *exact same characteristics*
+        otherwise.
+        This method is called in the following usecases:
+            - when a stock move checks its availability
+            - when a stock move actually assign
+            - when editing a move line, to check if the new value is forced or not
+            - when validating a move line with some forced values and have to potentially unlink an
+              equivalent move line in another picking
+        In the two first usecases, `strict` should be set to `False`, as we don't know what exact
+        quants we'll reserve, and the characteristics are meaningless in this context.
+        In the last ones, `strict` should be set to `True`, as we work on a specific set of
+        characteristics.
+
+        :return: a dict with key (product, location) and value quant recordset 
+        """
+        self = self.sudo()
+        quants = self._gather(product_ids, location_ids, lot_ids=lot_ids, package_ids=package_ids, owner_ids=owner_ids, strict=strict)
+        grouped_quants = defaultdict(self)
+        # group quants by product and location or exact characteristics if strict
+        key_fields = ['product_id', 'location_id']
+        if strict:
+            if lot_ids:
+                key_fields.append('lot_id')
+            if package_ids:
+                key_fields.append('package_id')
+            if owner_ids:
+                key_fields.append('owner_id')
+
+        def key_func(quant):
+            return itemgetter(key_fields)(quant)
+        for quant in quants:
+            key = tuple(quant.read(key_fields, load=None))
+            rounding = quant.product_id.uom_id.rounding
+            available_quantity = quant.quantity - quant.reserved_quantity
+            if not allow_negative:
+                available_quantity = available_quantity if float_compare(available_quantity, 0.0, precision_rounding=rounding) >= 0.0 else 0.0
+            if not float_is_zero(available_quantity, precision_rounding=rounding):
+                grouped_quants[key_func(quant)] |= quant
+
+        # sort quants in res dict by removal strategy
+        for key, quants in grouped_quants.items():
+            removal_strategy = self._get_removal_strategy(quants.product_id, quants.location_id)
+            sort_key, reverse = self._get_removal_strategy_sort(removal_strategy)
+            grouped_quants[key] = quants.sorted(sort_key, reverse)
+
+        return grouped_quants
 
     @api.onchange('location_id', 'product_id', 'lot_id', 'package_id', 'owner_id')
     def _onchange_location_or_product_id(self):
@@ -802,6 +862,60 @@ class StockQuant(models.Model):
             if float_is_zero(quantity, precision_rounding=rounding) or float_is_zero(available_quantity, precision_rounding=rounding):
                 break
         return reserved_quants
+
+    def _update_reserved_quantity_multi(self, quantity):
+        """ Increase the reserved quantity, i.e. increase `reserved_quantity` for the set of quants
+        in `self` until quantity argument is reserved. Typically, this method is called when reserving
+        a move or updating a reserved move line, it should be called on the set of quants relevant to the
+        move being reserved i.e they should have the same `product_id` and `location_id` or share same exact
+        characteristics.
+
+        :return: a list of tuples (quant, quantity_reserved) showing on which quant the reservation
+            was done and how much the system was able to reserve on it
+        """
+        quants = self.sudo()
+        product_id = quants.product_id
+        rounding = product_id.uom_id.rounding
+        # quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
+        reserved_quants = []
+
+        if not quants:
+            return reserved_quants
+
+        if float_compare(quantity, 0, precision_rounding=rounding) > 0:
+            # if we want to reserve
+            available_quantity = sum(quants.filtered(lambda q: float_compare(q.quantity, 0, precision_rounding=rounding) > 0).mapped('quantity')) - sum(quants.mapped('reserved_quantity'))
+            if float_compare(quantity, available_quantity, precision_rounding=rounding) > 0:
+                raise UserError(_('It is not possible to reserve more products of %s than you have in stock.', product_id.display_name))
+        elif float_compare(quantity, 0, precision_rounding=rounding) < 0:
+            # if we want to unreserve
+            available_quantity = sum(quants.mapped('reserved_quantity'))
+            if float_compare(abs(quantity), available_quantity, precision_rounding=rounding) > 0:
+                raise UserError(_('It is not possible to unreserve more products of %s than you have in stock.', product_id.display_name))
+        else:
+            return reserved_quants
+
+        for quant in quants:
+            if float_compare(quantity, 0, precision_rounding=rounding) > 0:
+                max_quantity_on_quant = quant.quantity - quant.reserved_quantity
+                if float_compare(max_quantity_on_quant, 0, precision_rounding=rounding) <= 0:
+                    continue
+                max_quantity_on_quant = min(max_quantity_on_quant, quantity)
+                quant.reserved_quantity += max_quantity_on_quant
+                reserved_quants.append((quant, max_quantity_on_quant))
+                quantity -= max_quantity_on_quant
+                available_quantity -= max_quantity_on_quant
+            else:
+                max_quantity_on_quant = min(quant.reserved_quantity, abs(quantity))
+                quant.reserved_quantity -= max_quantity_on_quant
+                reserved_quants.append((quant, -max_quantity_on_quant))
+                quantity += max_quantity_on_quant
+                available_quantity += max_quantity_on_quant
+
+            if float_is_zero(quantity, precision_rounding=rounding) or float_is_zero(available_quantity, precision_rounding=rounding):
+                break
+        return reserved_quants
+
 
     @api.model
     def _unlink_zero_quants(self):
