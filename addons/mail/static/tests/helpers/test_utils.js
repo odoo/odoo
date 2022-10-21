@@ -253,12 +253,12 @@ async function start(param0 = {}) {
         }
         if (waitUntilMessagingCondition === 'initialized') {
             await webClient.env.services.messaging.modelManager.created;
-            await webClient.env.services.messaging.modelManager.messagingInitializedPromise;
+            await webClient.env.services.messaging.modelManager.initialized;
         }
     });
 
     registerCleanup(async () => {
-        await webClient.env.services.messaging.modelManager.messagingInitializedPromise;
+        await webClient.env.services.messaging.modelManager.initialized;
         webClient.env.services.messaging.modelManager.destroy();
         delete webClient.env.services.messaging;
         delete owl.Component.env.services.messaging;

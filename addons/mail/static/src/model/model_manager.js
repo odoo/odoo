@@ -35,7 +35,7 @@ export class ModelManager {
          * Promise which becomes resolved when messaging is initialized. Useful
          * for waiting before accessing `this.messaging`.
          */
-        this.messagingInitializedPromise = makeDeferred();
+        this.initialized = makeDeferred();
 
         //----------------------------------------------------------------------
         // Various variables that are necessary to handle an update cycle. The
@@ -113,7 +113,7 @@ export class ModelManager {
         this.models['Messaging'].insert(values);
         this.created.resolve();
         await this.messaging.start();
-        this.messagingInitializedPromise.resolve();
+        this.initialized.resolve();
     }
 
     //--------------------------------------------------------------------------
@@ -227,7 +227,7 @@ export class ModelManager {
      **/
     async getMessaging() {
         await this.created;
-        await this.messagingInitializedPromise;
+        await this.initialized;
         return this.messaging;
     }
 
