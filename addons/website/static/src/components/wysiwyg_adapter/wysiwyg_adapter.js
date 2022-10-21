@@ -516,100 +516,100 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         };
         const commands = [
             {
-                category: 'Website',
-                name: 'Alert',
+                category: this.env._t('Website'),
+                name: this.env._t('Alert'),
                 priority: 100,
-                description: 'Insert an alert snippet.',
+                description: this.env._t('Insert an alert snippet.'),
                 fontawesome: 'fa-info',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_alert"]');
                 },
             },
             {
-                category: 'Website',
-                name: 'Rating',
+                category: this.env._t('Website'),
+                name: this.env._t('Rating'),
                 priority: 90,
-                description: 'Insert a rating snippet.',
+                description: this.env._t('Insert a rating snippet.'),
                 fontawesome: 'fa-star-half-o',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_rating"]');
                 },
             },
             {
-                category: 'Website',
-                name: 'Card',
+                category: this.env._t('Website'),
+                name: this.env._t('Card'),
                 priority: 80,
-                description: 'Insert a card snippet.',
+                description: this.env._t('Insert a card snippet.'),
                 fontawesome: 'fa-sticky-note',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_card"]');
                 },
             },
             {
-                category: 'Website',
-                name: 'Share',
+                category: this.env._t('Website'),
+                name: this.env._t('Share'),
                 priority: 70,
-                description: 'Insert a share snippet.',
+                description: this.env._t('Insert a share snippet.'),
                 fontawesome: 'fa-share-square-o',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_share"]');
                 },
             },
             {
-                category: 'Website',
-                name: 'Text Highlight',
+                category: this.env._t('Website'),
+                name: this.env._t('Text Highlight'),
                 priority: 60,
-                description: 'Insert a text Highlight snippet.',
+                description: this.env._t('Insert a text Highlight snippet.'),
                 fontawesome: 'fa-sticky-note',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_text_highlight"]');
                 },
             },
             {
-                category: 'Website',
-                name: 'Chart',
+                category: this.env._t('Website'),
+                name: this.env._t('Chart'),
                 priority: 50,
-                description: 'Insert a chart snippet.',
+                description: this.env._t('Insert a chart snippet.'),
                 fontawesome: 'fa-bar-chart',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_chart"]');
                 },
             },
             {
-                category: 'Website',
-                name: 'Progress Bar',
+                category: this.env._t('Website'),
+                name: this.env._t('Progress Bar'),
                 priority: 40,
-                description: 'Insert a progress bar snippet.',
+                description: this.env._t('Insert a progress bar snippet.'),
                 fontawesome: 'fa-spinner',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_progress_bar"]');
                 },
             },
             {
-                category: 'Website',
-                name: 'Badge',
+                category: this.env._t('Website'),
+                name: this.env._t('Badge'),
                 priority: 30,
-                description: 'Insert a badge snippet.',
+                description: this.env._t('Insert a badge snippet.'),
                 fontawesome: 'fa-tags',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_badge"]');
                 },
             },
             {
-                category: 'Website',
-                name: 'Blockquote',
+                category: this.env._t('Website'),
+                name: this.env._t('Blockquote'),
                 priority: 20,
-                description: 'Insert a blockquote snippet.',
+                description: this.env._t('Insert a blockquote snippet.'),
                 fontawesome: 'fa-quote-left',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_blockquote"]');
                 },
             },
             {
-                category: 'Website',
-                name: 'Separator',
+                category: this.env._t('Website'),
+                name: this.env._t('Separator'),
                 priority: 10,
-                description: 'Insert an horizontal separator sippet.',
+                description: this.env._t('Insert an horizontal separator sippet.'),
                 fontawesome: 'fa-minus',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_hr"]');
