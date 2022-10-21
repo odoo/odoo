@@ -40,22 +40,3 @@ class AutoVacuum(models.AbstractModel):
                 except Exception:
                     _logger.exception("Failed %s.%s()", model, attr)
                     self.env.cr.rollback()
-
-        # Ensure backward compatibility with the previous autovacuum API
-        try:
-            self.power_on()
-            self.env.cr.commit()
-        except Exception:
-            _logger.exception("Failed power_on")
-            self.env.cr.rollback()
-
-    # Deprecated API
-    @api.model
-    def power_on(self, *args, **kwargs):
-        tb = traceback.extract_stack(limit=2)
-        if tb[-2].name == 'power_on':
-            warnings.warn(
-                "You are extending the 'power_on' ir.autovacuum method"
-                f"in {tb[-2].filename} around line {tb[-2].lineno}. "
-                "You should instead use the @api.autovacuum decorator "
-                "on your garbage collecting method.", DeprecationWarning, stacklevel=2)
