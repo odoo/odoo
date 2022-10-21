@@ -1069,7 +1069,7 @@ class AccountBankStatementLine(models.Model):
         reconciliation_overview = []
 
         total_balance = liquidity_lines.balance
-        total_amount_currency = liquidity_lines.amount_currency
+        total_amount_currency = -self._prepare_move_line_default_vals()[1]['amount_currency']
 
         # Step 1: Split 'lines_vals_list' into two batches:
         # - The existing account.move.lines that need to be reconciled with the statement line.
