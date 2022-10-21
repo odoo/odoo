@@ -41,8 +41,11 @@
             this.parentEl = parent;
             this.child.mount(parent, afterNode);
         }
-        moveBefore(other, afterNode) {
-            this.child.moveBefore(other ? other.child : null, afterNode);
+        moveBeforeDOMNode(node, parent) {
+            this.child.moveBeforeDOMNode(node, parent);
+        }
+        moveBeforeVNode(other, afterNode) {
+            this.moveBeforeDOMNode((other && other.firstNode()) || afterNode);
         }
         patch(other, withBeforeRemove) {
             if (this === other) {
@@ -418,7 +421,22 @@
             this.anchors = anchors;
             this.parentEl = parent;
         }
-        moveBefore(other, afterNode) {
+        moveBeforeDOMNode(node, parent = this.parentEl) {
+            this.parentEl = parent;
+            const children = this.children;
+            const anchors = this.anchors;
+            for (let i = 0, l = children.length; i < l; i++) {
+                let child = children[i];
+                if (child) {
+                    child.moveBeforeDOMNode(node, parent);
+                }
+                else {
+                    const anchor = anchors[i];
+                    nodeInsertBefore$3.call(parent, anchor, node);
+                }
+            }
+        }
+        moveBeforeVNode(other, afterNode) {
             if (other) {
                 const next = other.children[0];
                 afterNode = (next ? next.firstNode() : other.anchors[0]) || null;
@@ -429,7 +447,7 @@
             for (let i = 0, l = children.length; i < l; i++) {
                 let child = children[i];
                 if (child) {
-                    child.moveBefore(null, afterNode);
+                    child.moveBeforeVNode(null, afterNode);
                 }
                 else {
                     const anchor = anchors[i];
@@ -527,9 +545,12 @@
             nodeInsertBefore$2.call(parent, node, afterNode);
             this.el = node;
         }
-        moveBefore(other, afterNode) {
-            const target = other ? other.el : afterNode;
-            nodeInsertBefore$2.call(this.parentEl, this.el, target);
+        moveBeforeDOMNode(node, parent = this.parentEl) {
+            this.parentEl = parent;
+            nodeInsertBefore$2.call(parent, this.el, node);
+        }
+        moveBeforeVNode(other, afterNode) {
+            nodeInsertBefore$2.call(this.parentEl, this.el, other ? other.el : afterNode);
         }
         beforeRemove() { }
         remove() {
@@ -971,9 +992,12 @@
             firstNode() {
                 return this.el;
             }
-            moveBefore(other, afterNode) {
-                const target = other ? other.el : afterNode;
-                nodeInsertBefore.call(this.parentEl, this.el, target);
+            moveBeforeDOMNode(node, parent = this.parentEl) {
+                this.parentEl = parent;
+                nodeInsertBefore.call(parent, this.el, node);
+            }
+            moveBeforeVNode(other, afterNode) {
+                nodeInsertBefore.call(this.parentEl, this.el, other ? other.el : afterNode);
             }
             toString() {
                 const div = document.createElement("div");
@@ -1110,14 +1134,22 @@
             }
             this.parentEl = parent;
         }
-        moveBefore(other, afterNode) {
+        moveBeforeDOMNode(node, parent = this.parentEl) {
+            this.parentEl = parent;
+            const children = this.children;
+            for (let i = 0, l = children.length; i < l; i++) {
+                children[i].moveBeforeDOMNode(node, parent);
+            }
+            parent.insertBefore(this.anchor, node);
+        }
+        moveBeforeVNode(other, afterNode) {
             if (other) {
                 const next = other.children[0];
                 afterNode = (next ? next.firstNode() : other.anchor) || null;
             }
             const children = this.children;
             for (let i = 0, l = children.length; i < l; i++) {
-                children[i].moveBefore(null, afterNode);
+                children[i].moveBeforeVNode(null, afterNode);
             }
             this.parentEl.insertBefore(this.anchor, afterNode);
         }
@@ -1132,7 +1164,7 @@
             }
             this.children = ch2;
             const proto = ch2[0] || ch1[0];
-            const { mount: cMount, patch: cPatch, remove: cRemove, beforeRemove, moveBefore: cMoveBefore, firstNode: cFirstNode, } = proto;
+            const { mount: cMount, patch: cPatch, remove: cRemove, beforeRemove, moveBeforeVNode: cMoveBefore, firstNode: cFirstNode, } = proto;
             const _anchor = this.anchor;
             const isOnlyChild = this.isOnlyChild;
             const parent = this.parentEl;
@@ -1314,12 +1346,15 @@
                 nodeInsertBefore.call(parent, textNode, afterNode);
             }
         }
-        moveBefore(other, afterNode) {
-            const target = other ? other.content[0] : afterNode;
-            const parent = this.parentEl;
+        moveBeforeDOMNode(node, parent = this.parentEl) {
+            this.parentEl = parent;
             for (let elem of this.content) {
-                nodeInsertBefore.call(parent, elem, target);
+                nodeInsertBefore.call(parent, elem, node);
             }
+        }
+        moveBeforeVNode(other, afterNode) {
+            const target = other ? other.content[0] : afterNode;
+            this.moveBeforeDOMNode(target);
         }
         patch(other) {
             if (this === other) {
@@ -1398,7 +1433,7 @@
                         const target = ev.target;
                         let currentNode = self.child.firstNode();
                         const afterNode = self.afterNode;
-                        while (currentNode !== afterNode) {
+                        while (currentNode && currentNode !== afterNode) {
                             if (currentNode.contains(target)) {
                                 return origFn.call(this, ev);
                             }
@@ -1407,8 +1442,17 @@
                     };
                 }
             }
-            moveBefore(other, afterNode) {
-                this.child.moveBefore(other ? other.child : null, afterNode);
+            moveBeforeDOMNode(node, parent = this.parentEl) {
+                this.parentEl = parent;
+                this.child.moveBeforeDOMNode(node, parent);
+                parent.insertBefore(this.afterNode, node);
+            }
+            moveBeforeVNode(other, afterNode) {
+                if (other) {
+                    // check this with @ged-odoo for use in foreach
+                    afterNode = other.firstNode() || afterNode;
+                }
+                this.child.moveBeforeVNode(other ? other.child : null, afterNode);
                 this.parentEl.insertBefore(this.afterNode, afterNode);
             }
             patch(other, withBeforeRemove) {
@@ -2444,8 +2488,11 @@
             this.children = this.fiber.childrenMap;
             this.fiber = null;
         }
-        moveBefore(other, afterNode) {
-            this.bdom.moveBefore(other ? other.bdom : null, afterNode);
+        moveBeforeDOMNode(node, parent) {
+            this.bdom.moveBeforeDOMNode(node, parent);
+        }
+        moveBeforeVNode(other, afterNode) {
+            this.bdom.moveBeforeVNode(other ? other.bdom : null, afterNode);
         }
         patch() {
             if (this.fiber && this.fiber.parent) {
@@ -2662,7 +2709,7 @@
                 if (!portal.target) {
                     const target = document.querySelector(this.props.target);
                     if (target) {
-                        portal.content.moveBefore(target, null);
+                        portal.content.moveBeforeDOMNode(target.firstChild, target);
                     }
                     else {
                         throw new OwlError("invalid portal target");
@@ -3069,7 +3116,7 @@
                         if (line[columnIndex]) {
                             msg +=
                                 `\nThe error might be located at xml line ${lineNumber} column ${columnIndex}\n` +
-                                    `${line}\n${"-".repeat(columnIndex - 1)}^`;
+                                `${line}\n${"-".repeat(columnIndex - 1)}^`;
                         }
                     }
                 }
@@ -3776,16 +3823,16 @@
             const mapping = new Map();
             return tokens
                 .map((tok) => {
-                if (tok.varName && !tok.isLocal) {
-                    if (!mapping.has(tok.varName)) {
-                        const varId = generateId("v");
-                        mapping.set(tok.varName, varId);
-                        this.define(varId, tok.value);
+                    if (tok.varName && !tok.isLocal) {
+                        if (!mapping.has(tok.varName)) {
+                            const varId = generateId("v");
+                            mapping.set(tok.varName, varId);
+                            this.define(varId, tok.value);
+                        }
+                        tok.value = mapping.get(tok.varName);
                     }
-                    tok.value = mapping.get(tok.varName);
-                }
-                return tok.value;
-            })
+                    return tok.value;
+                })
                 .join("");
         }
         /**
@@ -3886,11 +3933,11 @@
                 .split(".")
                 .slice(1)
                 .map((m) => {
-                if (!MODS.has(m)) {
-                    throw new OwlError(`Unknown event modifier: '${m}'`);
-                }
-                return `"${m}"`;
-            });
+                    if (!MODS.has(m)) {
+                        throw new OwlError(`Unknown event modifier: '${m}'`);
+                    }
+                    return `"${m}"`;
+                });
             let modifiersCode = "";
             if (modifiers.length) {
                 modifiersCode = `${modifiers.join(",")}, `;
@@ -4218,8 +4265,8 @@
             if (this.dev) {
                 // Throw error on duplicate keys in dev mode
                 this.helpers.add("OwlError");
-                this.addLine(`if (keys${block.id}.has(key${this.target.loopLevel})) { throw new OwlError(\`Got duplicate key in t-foreach: \${key${this.target.loopLevel}}\`)}`);
-                this.addLine(`keys${block.id}.add(key${this.target.loopLevel});`);
+                this.addLine(`if (keys${block.id}.has(String(key${this.target.loopLevel}))) { throw new OwlError(\`Got duplicate key in t-foreach: \${key${this.target.loopLevel}}\`)}`);
+                this.addLine(`keys${block.id}.add(String(key${this.target.loopLevel}));`);
             }
             let id;
             if (ast.memo) {
@@ -5167,8 +5214,9 @@
             }
             // default slot
             const defaultContent = parseChildNodes(clone, ctx);
-            if (defaultContent) {
-                slots = slots || {};
+            slots = slots || {};
+            // t-set-slot="default" has priority over content
+            if (defaultContent && !slots.default) {
                 slots.default = { content: defaultContent, on, attrs: null, scope: defaultSlotScope };
             }
         }
@@ -5370,7 +5418,7 @@
                         if (line[columnIndex]) {
                             msg +=
                                 `\nThe error might be located at xml line ${lineNumber} column ${columnIndex}\n` +
-                                    `${line}\n${"-".repeat(columnIndex - 1)}^`;
+                                `${line}\n${"-".repeat(columnIndex - 1)}^`;
                         }
                     }
                 }
@@ -5810,9 +5858,9 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '2.0.0-beta-22';
-    __info__.date = '2022-09-29T07:17:44.146Z';
-    __info__.hash = '64bad25';
+    __info__.version = '2.0.1';
+    __info__.date = '2022-10-21T08:41:11.269Z';
+    __info__.hash = '9fe8e93';
     __info__.url = 'https://github.com/odoo/owl';
 
 
