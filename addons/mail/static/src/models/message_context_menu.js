@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { one } from '@mail/model/model_field';
+import { one, attr } from '@mail/model/model_field';
 
 registerModel({
     name: 'MessageContextMenu',
@@ -11,7 +11,7 @@ registerModel({
             inverse: 'messageContextMenuView',
         }),
         messageView: one('MessageView', {
-            related: 'messageContextPopoverView.messageViewOwnerAsNotificationContent',
+            related: 'messageContextPopoverView.messageViewOwnerAsContextMenu',
         }),
         component: attr(),
     }

@@ -22,6 +22,7 @@ export class Message extends Component {
         super.setup();
         useComponentToModel({ fieldName: 'component' });
         useRefToModel({ fieldName: 'notificationIconRef', refName: 'notificationIcon' });
+        useRefToModel({ fieldName: 'contextMenuRef', refName: 'contextMenu' });
         useUpdateToModel({ methodName: 'onComponentUpdate' });
         useUpdate({ func: () => this._update() });
         /**

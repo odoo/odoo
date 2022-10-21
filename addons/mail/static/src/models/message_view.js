@@ -119,6 +119,27 @@ registerModel({
                 this.threadViewOwnerAsLastMessageView.handleVisibleMessage(this.message);
             }
         },
+        /**
+         * This listens to the right click event, and used to redirect the event
+         * as a click on the popover.
+         *
+         * @param {Event} ev
+         */
+         async onContextMenu(ev) {
+            ev.stopPropagation();
+            ev.preventDefault();
+            /**
+             * To display popover view under cursour
+             */ 
+            let rect = this.contextMenuRef.el.parentElement.getBoundingClientRect();
+            this.contextMenuRef.el.style.top = (ev.clientY - rect.top) + 'px';
+            this.contextMenuRef.el.style.left = (ev.clientX - rect.left) + 'px';
+            if (!this.messageContextPopoverView) {
+                this.update({ messageContextPopoverView: {} });
+            } else {
+                this.update({ messageContextPopoverView: clear() });
+            }      
+        },
         onHighlightTimerTimeout() {
             this.update({
                 highlightTimer: clear(),
@@ -139,17 +160,6 @@ registerModel({
                 isHovered: false,
                 messagingAsClickedMessageView: clear(),
             });
-        },
-        /**
-         * This listens to the right click event, and used to redirect the event
-         * as a click on the popover.
-         *
-         * @param {Event} ev
-         */
-         async onContextMenu(ev) {
-            ev.stopPropagation();
-            return this.messageContextMenu.update({ messageContextPopoverView: {} });
-      
         },
         /**
          * Action to initiate reply to current messageView.
@@ -245,6 +255,7 @@ registerModel({
         composerViewInEditing: one('ComposerView', {
             inverse: 'messageViewInEditing',
         }),
+        contextMenuRef: attr(),
         /**
          * States the time elapsed since date up to now.
          */
@@ -567,5 +578,8 @@ registerModel({
             inverse: 'lastMessageView',
             readonly: true,
         }),
+        messageContextPopoverView: one('PopoverView', {
+            inverse: 'messageViewOwnerAsContextMenu',
+         }),
     },
 });

@@ -10,9 +10,11 @@ registerModel({
     lifecycleHooks: {
         _created() {
             document.addEventListener('click', this._onClickCaptureGlobal, true);
+            document.addEventListener('contextmenu', this._onClickCaptureGlobal, true);
         },
         _willDelete() {
             document.removeEventListener('click', this._onClickCaptureGlobal, true);
+            document.removeEventListener('contextmenu', this._onClickCaptureGlobal, true);
         },
     },
     recordMethods: {
@@ -88,6 +90,9 @@ registerModel({
                 }
                 if (this.composerViewOwnerAsEmoji) {
                     return this.composerViewOwnerAsEmoji.buttonEmojisRef;
+                }
+                if (this.messageViewOwnerAsContextMenu) {
+                    return this.messageViewOwnerAsContextMenu.contextMenuRef;
                 }
                 if (this.activityButtonViewOwnerAsActivityList) {
                     return this.activityButtonViewOwnerAsActivityList.buttonRef;
@@ -263,10 +268,17 @@ registerModel({
         }),
         messageContextMenuView: one('MessageContextMenu', {
             compute() {
+                if (this.messageViewOwnerAsContextMenu) {
                     return {};
+                }
+                return clear();
             },
             inverse: 'messageContextPopoverView',
         }),
+        messageViewOwnerAsContextMenu: one('MessageView', {
+            identifying: true,
+            inverse: 'messageContextPopoverView',
+         }),
 
         /**
          * If set, this popover view is owned by a message action view.
@@ -314,6 +326,9 @@ registerModel({
                 }
                 if (this.messageActionViewOwnerAsReaction) {
                     return 'top';
+                }
+                if (this.messageContextMenuView) {
+                    return 'bottom';
                 }
                 return clear();
             },

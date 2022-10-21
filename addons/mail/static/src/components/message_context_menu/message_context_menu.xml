@@ -2,17 +2,10 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.MessageContextMenu" owl="1">
-        <t t-if="MessageContextMenu">
-            <div class="o_EmojiPickerView d-flex flex-column" t-attf-class="{{ className }}" t-ref="root">
-                <EmojiPickerHeaderView record="emojiPickerView.headerView"/>
+            <div class="o_MessageContextMenu d-flex flex-column" t-attf-class="{{ className }}" t-ref="root">
                 <div>
-                    <div>
-                        <h1>Tell Something</h1>
-                    </div>
                 </div>
             </div>
-
-        </t>
     </t>
 
 </templates>
