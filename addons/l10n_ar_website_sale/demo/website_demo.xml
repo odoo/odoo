@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="default_website_ri" model="website">
+        <field name="name">(AR) Responsable Inscripto Website</field>
+        <field name="company_id" ref="l10n_ar.company_ri"/>
+        <field name="logo" type="base64" file="l10n_ar_website_sale/static/description/icon.png"/>
+        <field name="domain" model="ir.config_parameter" eval="obj().env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+    </record>
+    <function model="payment.acquirer" name="copy">
+        <value eval="[ref('payment.payment_acquirer_transfer')]"/>
+        <value eval="{'company_id': ref('l10n_ar.company_ri'), 'state': 'enabled'}"/>
+    </function>
+    <function model="product.pricelist" name="write">
+        <value model="product.pricelist" eval="obj().search([('currency_id', '=', ref('base.ARS'))]).id"/>
+        <value model="website" eval="{'sequence': 1, 'website_id': ref('l10n_ar_website_sale.default_website_ri')}"/>
+    </function>
+    <function model="product.product" name="write">
+        <value model="product.product" eval="obj().search([('taxes_id', '=', False)]).ids"/>
+        <value model="account.tax" eval="{'taxes_id': (4, obj().search([('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 21%')]).id )}"/>
+    </function>
+
+</odoo>
