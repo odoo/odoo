@@ -53,7 +53,7 @@ export class Listener {
          * having to verify the presence of this listener on each possible field
          * one by one.
          */
-        this.lastObservedFieldsByRecord = new Map();
+        this.fields = new Map();
         /**
          * Set of model that have been accessed with `all()` on model manager
          * between the last call to `startListening` and `stopListening` with

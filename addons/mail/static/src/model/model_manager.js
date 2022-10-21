@@ -307,7 +307,7 @@ export class ModelManager {
             }
             record.__listenersOnRecord.delete(listener);
             const listenersObservingFieldOfRecord = record.__listenersOnField;
-            for (const field of listener.lastObservedFieldsByRecord.get(record) || []) {
+            for (const field of listener.fields.get(record) || []) {
                 listenersObservingFieldOfRecord.get(field).delete(listener);
             }
         }
@@ -315,7 +315,7 @@ export class ModelManager {
             this._listenersObservingAllByModel.get(model).delete(listener);
         }
         listener.records.clear();
-        listener.lastObservedFieldsByRecord.clear();
+        listener.fields.clear();
         listener.lastObservedAllByModel.clear();
     }
 
@@ -1278,10 +1278,10 @@ export class ModelManager {
                                 } else {
                                     entryRecord.set(listener, [info]);
                                 }
-                                if (!listener.lastObservedFieldsByRecord.has(record)) {
-                                    listener.lastObservedFieldsByRecord.set(record, new Set());
+                                if (!listener.fields.has(record)) {
+                                    listener.fields.set(record, new Set());
                                 }
-                                listener.lastObservedFieldsByRecord.get(record).add(field);
+                                listener.fields.get(record).add(field);
                                 if (entryField.has(listener)) {
                                     entryField.get(listener).push(info);
                                 } else {
