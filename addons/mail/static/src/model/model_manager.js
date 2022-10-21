@@ -453,7 +453,7 @@ export class ModelManager {
         this.cycle.newCreated.add(record);
         this.cycle.newOnChange.add(record);
         for (const [listener, infoList] of this.listenersAll.get(model)) {
-            this._markListenerToNotify(listener, {
+            this.markToNotify(listener, {
                 listener,
                 reason: this.isDebug && `_create: allByModel - ${record}`,
                 infoList,
@@ -496,14 +496,14 @@ export class ModelManager {
         this.cycle.newOnChange.delete(record);
         this.cycle.check.delete(record);
         for (const [listener, infoList] of record.__listenersOnRecord) {
-            this._markListenerToNotify(listener, {
+            this.markToNotify(listener, {
                 listener,
                 reason: this.isDebug && `_delete: record - ${record}`,
                 infoList,
             });
         }
         for (const [listener, infoList] of this.listenersAll.get(model)) {
-            this._markListenerToNotify(listener, {
+            this.markToNotify(listener, {
                 listener,
                 reason: this.isDebug && `_delete: allByModel - ${record}`,
                 infoList,
@@ -705,7 +705,7 @@ export class ModelManager {
      * @private
      * @param {Object} listener
      */
-    _markListenerToNotify(listener, info) {
+    markToNotify(listener, info) {
         if (!(listener instanceof Listener)) {
             throw new Error(`Listener is not a listener ${listener}`);
         }
@@ -735,7 +735,7 @@ export class ModelManager {
      */
     markAsChanged(record, field) {
         for (const [listener, infoList] of record.__listenersOnField.get(field) || []) {
-            this._markListenerToNotify(listener, {
+            this.markToNotify(listener, {
                 listener,
                 reason: this.isDebug && `_update: ${field} of ${record}`,
                 infoList,
