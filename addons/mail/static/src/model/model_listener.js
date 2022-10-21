@@ -41,7 +41,7 @@ export class Listener {
          * having to verify the presence of this listener on each possible
          * record one by one.
          */
-        this.lastObservedRecords = new Set();
+        this.records = new Set();
         /**
          * Map between records and a set of fields on those records that have
          * been accessed on model manager between the last call to

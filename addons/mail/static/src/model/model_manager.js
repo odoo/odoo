@@ -205,7 +205,7 @@ export class ModelManager {
             return;
         }
         for (const listener of this._listeners) {
-            listener.lastObservedRecords.add(record);
+            listener.records.add(record);
             const entry = record.__listenersOnRecord;
             const info = {
                 listener,
@@ -301,7 +301,7 @@ export class ModelManager {
         this._listeners.delete(listener);
         this.cycle.notifyNow.delete(listener);
         this.cycle.notifyAfter.delete(listener);
-        for (const record of listener.lastObservedRecords) {
+        for (const record of listener.records) {
             if (!record.exists()) {
                 continue;
             }
@@ -314,7 +314,7 @@ export class ModelManager {
         for (const model of listener.lastObservedAllByModel) {
             this._listenersObservingAllByModel.get(model).delete(listener);
         }
-        listener.lastObservedRecords.clear();
+        listener.records.clear();
         listener.lastObservedFieldsByRecord.clear();
         listener.lastObservedAllByModel.clear();
     }
@@ -1271,7 +1271,7 @@ export class ModelManager {
                                 record.__listenersOnField.set(field, entryField);
                             }
                             for (const listener of record.modelManager._listeners) {
-                                listener.lastObservedRecords.add(record);
+                                listener.records.add(record);
                                 const info = { listener, reason };
                                 if (entryRecord.has(listener)) {
                                     entryRecord.get(listener).push(info);
