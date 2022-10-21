@@ -131,7 +131,7 @@ export class ModelManager {
      */
     all(model, filterFunc) {
         for (const listener of this._listeners) {
-            listener.lastObservedAllByModel.add(model);
+            listener.alls.add(model);
             const entry = this._listenersObservingAllByModel.get(model);
             const info = {
                 listener,
@@ -311,12 +311,12 @@ export class ModelManager {
                 listenersObservingFieldOfRecord.get(field).delete(listener);
             }
         }
-        for (const model of listener.lastObservedAllByModel) {
+        for (const model of listener.alls) {
             this._listenersObservingAllByModel.get(model).delete(listener);
         }
         listener.records.clear();
         listener.fields.clear();
-        listener.lastObservedAllByModel.clear();
+        listener.alls.clear();
     }
 
     /**

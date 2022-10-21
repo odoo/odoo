@@ -65,7 +65,7 @@ export class Listener {
          * to verify the presence of this listener on each possible model one by
          * one.
          */
-        this.lastObservedAllByModel = new Set();
+        this.alls = new Set();
     }
 
     /**
