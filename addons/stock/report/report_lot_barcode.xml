@@ -23,13 +23,13 @@
                                     <div class="o_label_4x12" name="lot_name">
                                         LN/SN: <span t-field="o.name"/>
                                     </div>
-                                    <t t-if="env.user.has_group('stock.group_stock_lot_print_gs1') and env['ir.actions.report'].datamatrix_available()">
+                                    <t t-if="env.user.has_group('stock.group_stock_lot_print_gs1')">
                                         <!-- ensure we clear barcode string when multi-record print -->
                                         <t t-set="final_barcode" t-value="''"/>
                                         <t t-if="o.product_id.valid_ean" t-set="final_barcode" t-value="'01' + '0' * (14 - len(o.product_id.barcode)) + o.product_id.barcode"/>
                                         <t name="gs1_datamatrix_lot" t-if="o.product_id.tracking == 'lot'" t-set="final_barcode" t-value="(final_barcode or '') + '10' + o.name"/>
                                         <t t-elif="o.product_id.tracking == 'serial'" t-set="final_barcode" t-value="(final_barcode or '') + '21' + o.name"/>
-                                        <div t-if="final_barcode" t-att-style="'position:absolute; right:.5px; bottom:.5px'" t-out="final_barcode" t-options="{'widget': 'barcode', 'symbology': 'DataMatrix', 'width': 45, 'height': 45}"/>
+                                        <div t-if="final_barcode" t-att-style="'position:absolute; right:.5px; bottom:.5px'" t-out="final_barcode" t-options="{'widget': 'barcode', 'symbology': 'ECC200DataMatrix', 'img_style': 'width:17mm; height:17mm'}"/>
                                     </t>
                                     <t t-else="">
                                         <div t-field="o.name" t-options="{'widget': 'barcode', 'img_style': 'width:100%; height:35%'}"/>
