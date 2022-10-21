@@ -604,7 +604,7 @@ class IrFieldsConverter(models.AbstractModel):
         def log(f, exception):
             if not isinstance(exception, Warning):
                 current_field_name = self.env[field.comodel_name]._fields[f].string
-                arg0 = exception.args[0] % {'field': '%(field)s/' + current_field_name}
+                arg0 = exception.args[0].replace('%(field)s', '%(field)s/' + current_field_name)
                 exception.args = (arg0, *exception.args[1:])
                 raise exception
             warnings.append(exception)
