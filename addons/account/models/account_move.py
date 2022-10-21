@@ -3372,7 +3372,7 @@ class AccountMoveLine(models.Model):
                         else:
                             date = partial_line.credit_move_id.date if partial_line.debit_move_id == line else partial_line.debit_move_id.date
                             rate = line.currency_id.with_context(date=date).rate
-                        amount_residual_currency += sign_partial_line * line.currency_id.round(partial_line.amount * rate)
+                        amount_residual_currency += sign_partial_line * partial_line.amount * rate
 
             #computing the `reconciled` field.
             reconciled = False
