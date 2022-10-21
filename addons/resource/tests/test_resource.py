@@ -1220,3 +1220,70 @@ class TestTimezones(TestResourceCommon):
             (datetime(2022, 9, 21, 10, 0, tzinfo=utc), datetime(2022, 9, 21, 11, 0, tzinfo=utc)),
             (datetime(2022, 9, 21, 15, 0, tzinfo=utc), datetime(2022, 9, 22, 0, 0, tzinfo=utc)),
         ])
+
+    def test_unavailable_intervals_gantt(self):
+        """
+            this test ensure that when an employee change from one calendar to another, all the personal time-off taken from the
+            previous calendar are correctly displayed on the gantt view. Note: we create multiple time-off of the same type to ensure lists are correctly handled
+            1. Set time-offs in calendar A for employee A.
+            2. Set a global leave on calendar A
+            3. Set global leaves on calendar B.
+            4. Create global leaves with no resource_id and no calendar_id
+            5. Add a resource with no global leaves and no personal leaves to ensure void cases are handled
+            6. Check that the return value contains the time-off of employee A from calendar A, the global time-off from
+            calendar B, the global time-off with no calendar_id, and not the global time-off from calendar A.
+        """
+        jean_resource = self.jean.resource_id
+        calendar_A = self.calendar_jean
+        calendar_B = self._define_calendar('40 Hours', [(8, 16, i) for i in range(5)], 'Europe/Brussels')
+        self.env['resource.calendar.leaves'].create([{
+            'name': 'personal time-off 1',
+            'resource_id': jean_resource.id,
+            'calendar_id': calendar_A.id,
+            'date_from': datetime_str(2018, 4, 16, 0, 0, 0, tzinfo=self.jean.tz),
+            'date_to': datetime_str(2018, 4, 23, 23, 59, 59, tzinfo=self.jean.tz),
+        }, {
+            'name': 'personal time-off 2',
+            'resource_id': jean_resource.id,
+            'calendar_id': calendar_A.id,
+            'date_from': datetime_str(2018, 4, 24, 0, 0, 0, tzinfo=self.jean.tz),
+            'date_to': datetime_str(2018, 4, 30, 23, 59, 59, tzinfo=self.jean.tz),
+        }, {
+            'name': 'Global Leave',
+            'resource_id': False,
+            'calendar_id': calendar_A.id,
+            'date_from': datetime_str(2018, 3, 1, 0, 0, 0, tzinfo=self.jean.tz),
+            'date_to': datetime_str(2018, 4, 2, 23, 59, 59, tzinfo=self.jean.tz),
+        }, {
+            'name': 'Global Leave',
+            'resource_id': False,
+            'calendar_id': calendar_B.id,
+            'date_from': datetime_str(2018, 4, 3, 0, 0, 0, tzinfo=self.jean.tz),
+            'date_to': datetime_str(2018, 4, 5, 23, 59, 59, tzinfo=self.jean.tz),
+        }, {
+            'name': 'Global Leave 2',
+            'resource_id': False,
+            'calendar_id': calendar_B.id,
+            'date_from': datetime_str(2018, 4, 6, 0, 0, 0, tzinfo=self.jean.tz),
+            'date_to': datetime_str(2018, 4, 8, 23, 59, 59, tzinfo=self.jean.tz),
+        }, {
+            'name': 'Global Leave empty calendar',
+            'resource_id': False,
+            'calendar_id': False,
+            'date_from': datetime_str(2018, 4, 9, 0, 0, 0, tzinfo=self.jean.tz),
+            'date_to': datetime_str(2018, 4, 12, 23, 59, 59, tzinfo=self.jean.tz),
+        }, {
+            'name': 'Global Leave empty calendar 2',
+            'resource_id': False,
+            'calendar_id': False,
+            'date_from': datetime_str(2018, 4, 13, 0, 0, 0, tzinfo=self.jean.tz),
+            'date_to': datetime_str(2018, 4, 15, 23, 59, 59, tzinfo=self.jean.tz),
+        }])
+        jean_resource.calendar_id = calendar_B
+        date_start = datetime(2018, 3, 31, 22, 0, 0, tzinfo=utc)
+        date_stop = datetime(2018, 4, 30, 22, 0, 0, tzinfo=utc)
+        resources = jean_resource | self.john.resource_id
+        jean_total_leaves = resources._get_unavailable_intervals_gantt(date_start, date_stop).get(jean_resource.id)
+        self.assertEqual(jean_total_leaves, [(datetime(2018, 3, 31, 22, 0, tzinfo=utc), datetime(2018, 4, 2, 6, 0, tzinfo=utc)),
+                                            (datetime(2018, 4, 2, 14, 0, tzinfo=utc), datetime(2018, 4, 30, 22, 0, tzinfo=utc))],
+                        "the total leaves must be the global leaves of calendar_B + the personnal leaves of jean. The global leaves of calendar_A must be excluded")

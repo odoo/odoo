@@ -987,6 +987,112 @@ class ResourceResource(models.Model):
             resource_mapping.update(resources_unavailable_intervals)
         return resource_mapping
 
+    def _leaves_interval_gantt_view(self, start, end, personal_leaves, global_leaves, attendances):
+        self.ensure_one()
+
+        result = []
+        tz = timezone(self.user_id.tz or self.calendar_id.tz)
+        empty_leave = self.env['resource.calendar.leaves']
+        if personal_leaves:
+            for leave in personal_leaves:
+                dt0 = string_to_datetime(leave[0]).astimezone(tz)
+                dt1 = string_to_datetime(leave[1]).astimezone(tz)
+                result.append((max(start, dt0), min(end, dt1), empty_leave))
+        if global_leaves:
+            for leave in global_leaves:
+                dt0 = string_to_datetime(leave[0]).astimezone(tz)
+                dt1 = string_to_datetime(leave[1]).astimezone(tz)
+                result.append((max(start, dt0), min(end, dt1), empty_leave))
+        return attendances - Intervals(result)
+
+    def _get_unavailable_intervals_gantt(self, start_datetime, end_datetime):
+        """
+        This method is used in project_enterprise and planning in the gantt view. The goal is to correctly compute the time-offs of an employee.
+        The generic method does not handle the case when an employee has future leaves planned in a calendar that is different than the current calendar linked to the employee.
+        e.a.
+        employee A with calendar C
+        1 personal leave W for the employee A in calendar B
+        1 global leave X in calendar B
+        1 global leave Y in calendar C
+        1 global leave Z with no calendar_id
+        We have to compute the work_intervals for the employee A while taking into account only the relevant leaves (W, Y, Z)
+        :param start_datetime: first day displayed in the gantt view
+        :param end_datetime: last day displayed in the gantt view
+        :return: a dict { res.id : work_intervals } where res.id is the id of the resource, and the work_intervals are all the available working intervals for the resource.
+        """
+        leaves_mapping = defaultdict(dict)
+
+        start_dt = utc.localize(start_datetime) if not start_datetime.tzinfo else start_datetime
+        end_dt = utc.localize(end_datetime) if not end_datetime.tzinfo else end_datetime
+        # fetch the leaves for the current resources
+        personal_leaves_per_resource_id, global_leave_per_calendar_id = self._fetch_all_leaves(start_dt, end_dt)
+        dict_attendance_per_calendar = {
+            calendar: calendar._attendance_intervals_batch(start_dt, end_dt, resources=self)
+            for calendar in self.calendar_id
+        }
+        # since the astimezone is a costly operation, we stock the result in a dict in order to avoid the computation in case multiple resources have the same timezone
+        tz_dates = {}
+        for res in self:
+            tz = timezone(res.user_id.tz or res.calendar_id.tz)
+            if (tz, start_dt) in tz_dates:
+                start = tz_dates[(tz, start_dt)]
+            else:
+                start = start_dt.astimezone(tz)
+                tz_dates[(tz, start_dt)] = start
+            if (tz, end_dt) in tz_dates:
+                end = tz_dates[(tz, end_dt)]
+            else:
+                end = end_dt.astimezone(tz)
+                tz_dates[(tz, end_dt)] = end
+
+            personal_leaves = personal_leaves_per_resource_id.get(res.id, False)
+            global_leaves = global_leave_per_calendar_id.get(res.calendar_id.id, False)
+            resource_work_intervals = res._leaves_interval_gantt_view(start, end, personal_leaves, global_leaves, dict_attendance_per_calendar[res.calendar_id][res.id])
+
+            work_intervals = [(start, stop) for start, stop, meta in resource_work_intervals]
+            # start + flatten(intervals) + end
+            work_intervals = [start_datetime] + list(chain.from_iterable(work_intervals)) + [end_datetime]
+            # put it back to UTC
+            work_intervals = list(map(lambda dt: dt.astimezone(utc), work_intervals))
+            # pick groups of two
+            work_intervals = list(zip(work_intervals[0::2], work_intervals[1::2]))
+            leaves_mapping[res.id] = work_intervals
+        return leaves_mapping
+
+    def _fetch_all_leaves(self, start_dt, end_dt):
+        """
+        :return: a tuple with (leave_per_resource_id, leave_per_calendar_id) where
+        leave_per_resource_id is a dict { res.id : list[(date_start, date_stop)] } with the personal leaves of each resource
+        leave_per_calendar_id is a dict { calendar.id : list[(date_start, date_stop)] } with the global leaves of each calendar. Each dict entry also contains the global leaves
+        that have no calendar_id
+        """
+        leaves = self.env['resource.calendar.leaves'].search_read(
+            domain=[
+                ('time_type', '=', 'leave'),
+                ('date_from', '<=', end_dt),
+                ('date_to', '>=', start_dt),
+                '|',
+                    ('resource_id', 'in', self.ids),
+                    '&',
+                        ('resource_id', '=', False),
+                        ('calendar_id', 'in', [False] + self.calendar_id.ids)
+            ], fields=['date_from', 'date_to', 'resource_id', 'calendar_id'])
+
+        dict_personal_leaves_per_resource_id = defaultdict(list)
+        dict_global_leaves_per_calendar_id = defaultdict(list)
+        for leave in leaves:
+            if leave['resource_id']:
+                dict_personal_leaves_per_resource_id[leave['resource_id'][0]].append((leave['date_from'], leave['date_to']))
+            else:
+                dict_global_leaves_per_calendar_id[leave['calendar_id'] and leave['calendar_id'][0]].append((leave['date_from'], leave['date_to']))
+
+        common_leaves = dict_global_leaves_per_calendar_id.get(False, False)
+        if not common_leaves:
+            return (dict_personal_leaves_per_resource_id, dict_global_leaves_per_calendar_id)
+        for key in dict_global_leaves_per_calendar_id:
+            if key:
+                dict_global_leaves_per_calendar_id[key] += common_leaves
+        return (dict_personal_leaves_per_resource_id, dict_global_leaves_per_calendar_id)
 
 class ResourceCalendarLeaves(models.Model):
     _name = "resource.calendar.leaves"
