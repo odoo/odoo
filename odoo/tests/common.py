@@ -868,16 +868,6 @@ class TransactionCase(BaseCase):
         self.patch(self.registry['res.partner'], '_get_gravatar_image', lambda *a: False)
 
 
-class SavepointCase(TransactionCase):
-    @classmethod
-    def __init_subclass__(cls):
-        super().__init_subclass__()
-        warnings.warn(
-            "Deprecated class SavepointCase has been merged into TransactionCase",
-            DeprecationWarning, stacklevel=2,
-        )
-
-
 class SingleTransactionCase(BaseCase):
     """ TestCase in which all test methods are run in the same transaction,
     the transaction is started with the first test method and rolled back at
@@ -1899,17 +1889,6 @@ class HttpCase(TransactionCase):
         def route_profiler(request):
             return sup.profile(description=request.httprequest.full_path)
         return profiler.Nested(_profiler, patch('odoo.http.Request._get_profiler_context_manager', route_profiler))
-
-
-# kept for backward compatibility
-class HttpSavepointCase(HttpCase):
-    @classmethod
-    def __init_subclass__(cls):
-        super().__init_subclass__()
-        warnings.warn(
-            "Deprecated class HttpSavepointCase has been merged into HttpCase",
-            DeprecationWarning, stacklevel=2,
-        )
 
 
 def no_retry(arg):
