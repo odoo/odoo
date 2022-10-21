@@ -272,6 +272,22 @@ odoo.define('website.tour.form_editor', function (require) {
             content: "Remove Germany Option",
             trigger: '.o_we_select_remove_option:eq(0)',
         }, {
+            content: "Click on Add new Checkbox",
+            trigger: 'we-list we-button.o_we_list_add_optional',
+        }, {
+            content: "Change last option label with a number",
+            trigger: 'we-list table input:eq(3)',
+            run: 'text 44 - UK',
+        }, {
+            content: "Check that the input value is the full option value",
+            trigger: 'we-list table input:eq(3)',
+            run: () => {
+                const addedOptionEl = document.querySelector('iframe.o_iframe').contentDocument.querySelector('.s_website_form_field select option[value="44 - UK"]');
+                if (!addedOptionEl) {
+                    console.error('The number option was not correctly added');
+                }
+            },
+        }, {
             content: "Check the resulting snippet",
             trigger: "iframe .s_website_form_field.s_website_form_custom.s_website_form_required" +
                         ":has(label:contains('State'))" +
@@ -279,6 +295,7 @@ odoo.define('website.tour.form_editor', function (require) {
                         ":has(.s_website_form_select_item:contains('Belgium'))" +
                         ":has(.s_website_form_select_item:contains('France'))" +
                         ":has(.s_website_form_select_item:contains('Canada'))" +
+                        ":has(.s_website_form_select_item:contains('44 - UK'))" +
                         ":not(:has(.s_website_form_select_item:contains('Germany')))",
             run: function () {},
         },

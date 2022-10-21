@@ -1303,8 +1303,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
 
         list.dataset.hasDefault = ['one2many', 'many2many'].includes(type) ? 'multiple' : 'unique';
         const defaults = [...this.$target[0].querySelectorAll('[checked], [selected]')].map(el => {
-            const idInt = parseInt(el.value);
-            return isNaN(idInt) ? el.value : idInt;
+            return /^-?[0-9]{1,15}$/.test(el.value) ? parseInt(el.value) : el.value;
         });
         list.dataset.defaults = JSON.stringify(defaults);
 
@@ -1391,10 +1390,9 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             options = [...multipleInputs.querySelectorAll('.checkbox input, .radio input')];
         }
         return options.map(opt => {
-            const id = parseInt(opt.value);
             const name = select ? opt : opt.nextElementSibling;
             return {
-                id: isNaN(id) ? opt.value : id,
+                id: /^-?[0-9]{1,15}$/.test(opt.value) ? parseInt(opt.value) : opt.value,
                 display_name: name.textContent.trim(),
                 selected: select ? opt.selected : opt.checked,
             };
