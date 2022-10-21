@@ -206,7 +206,7 @@ export class ModelManager {
         }
         for (const listener of this._listeners) {
             listener.lastObservedRecords.add(record);
-            const entry = record.__listenersObservingRecord;
+            const entry = record.__listenersOnRecord;
             const info = {
                 listener,
                 reason: this.isDebug && `findFromIdentifyingData record - ${record}`,
@@ -305,7 +305,7 @@ export class ModelManager {
             if (!record.exists()) {
                 continue;
             }
-            record.__listenersObservingRecord.delete(listener);
+            record.__listenersOnRecord.delete(listener);
             const listenersObservingFieldOfRecord = record.__listenersObservingFieldsOfRecord;
             for (const field of listener.lastObservedFieldsByRecord.get(record) || []) {
                 listenersObservingFieldOfRecord.get(field).delete(listener);
@@ -682,7 +682,7 @@ export class ModelManager {
              * Map between listeners that are observing this record and array of
              * information about how the record is observed.
              */
-            __listenersObservingRecord: new Map(),
+            __listenersOnRecord: new Map(),
             /**
              * Map between fields and a Map between listeners that are observing
              * the field and array of information about how the field is observed.
@@ -777,7 +777,7 @@ export class ModelManager {
         this.cycle.newCreated.delete(record);
         this.cycle.newOnChange.delete(record);
         this.cycle.check.delete(record);
-        for (const [listener, infoList] of record.__listenersObservingRecord) {
+        for (const [listener, infoList] of record.__listenersOnRecord) {
             this._markListenerToNotify(listener, {
                 listener,
                 reason: this.isDebug && `_delete: record - ${record}`,
@@ -793,7 +793,7 @@ export class ModelManager {
         }
         delete record.__values;
         delete record.__listeners;
-        delete record.__listenersObservingRecord;
+        delete record.__listenersOnRecord;
         delete record.__listenersObservingFieldsOfRecord;
         model.__records.delete(record);
         delete record.localId;
@@ -1263,7 +1263,7 @@ export class ModelManager {
                     get: function getFieldValue() { // this is bound to record
                         const record = this.modelManager.isDebug ? this.__proxifiedRecord : this;
                         if (this.modelManager._listeners.size) {
-                            let entryRecord = record.__listenersObservingRecord;
+                            let entryRecord = record.__listenersOnRecord;
                             const reason = record.modelManager.isDebug && `getField - ${field} of ${record}`;
                             let entryField = record.__listenersObservingFieldsOfRecord.get(field);
                             if (!entryField) {
