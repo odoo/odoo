@@ -2115,9 +2115,8 @@ const ListUserValueWidget = UserValueWidget.extend({
     _notifyCurrentState() {
         const values = [...this.listTable.querySelectorAll('.o_we_list_record_name input')].map(el => {
             const id = this.isCustom ? el.value : el.name;
-            const idInt = parseInt(id);
             return Object.assign({
-                id: isNaN(idInt) ? id : idInt,
+                id: /^-?[0-9]{1,15}$/.test(id) ? parseInt(id) : id,
                 name: el.value,
                 display_name: el.value,
             }, el.dataset);
@@ -2127,8 +2126,7 @@ const ListUserValueWidget = UserValueWidget.extend({
             this.selected = checkboxes.map(el => {
                 const input = el.parentElement.previousSibling.firstChild;
                 const id = input.name || input.value;
-                const idInt = parseInt(id);
-                return isNaN(idInt) ? id : idInt;
+                return /^-?[0-9]{1,15}$/.test(id) ? parseInt(id) : id;
             });
             values.forEach(v => {
                 v.selected = this.selected.includes(v.id);
