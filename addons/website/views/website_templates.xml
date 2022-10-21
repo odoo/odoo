@@ -1433,6 +1433,13 @@
     </xpath>
 </template>
 
+<!-- Area for blocks shared by all pages (e.g. all pages popups) -->
+<template id="shared_blocks" inherit_id="website.layout" name="Shared blocks">
+    <xpath expr="//main" position="inside">
+        <div id="o_shared_blocks" class="oe_unremovable"/>
+    </xpath>
+</template>
+
 <!-- Footer templates -->
 <template id="footer_custom" inherit_id="website.layout" name="Default" active="True">
     <xpath expr="//div[@id='footer']" position="replace">
