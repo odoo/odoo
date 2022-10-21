@@ -12,9 +12,10 @@ export class ProjectTaskKanbanGroup extends KanbanModel.Group {
 
     async delete() {
         if (this.isPersonalStageGroup) {
+            this.deleted = true;
             return await this.model.orm.call(this.resModel, 'remove_personal_stage', [this.resId]);
         } else {
-            return super.delete();
+            return await super.delete();
         }
     }
 }
