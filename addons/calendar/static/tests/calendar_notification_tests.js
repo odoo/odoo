@@ -3,7 +3,7 @@
 import { busService } from "@bus/services/bus_service";
 import { presenceService } from "@bus/services/presence_service";
 import { multiTabService } from "@bus/multi_tab_service";
-import { getPyEnv } from '@bus/../tests/helpers/mock_python_environment';
+import { startServer } from '@bus/../tests/helpers/mock_python_environment';
 
 import { createWebClient } from "@web/../tests/webclient/helpers";
 import { calendarNotificationService } from "@calendar/js/services/calendar_notification_service";
@@ -44,8 +44,8 @@ QUnit.module("Calendar Notification", (hooks) => {
                     return Promise.resolve(true);
                 }
             };
+            const pyEnv = await startServer();
             await createWebClient({ mockRPC });
-            const pyEnv = await getPyEnv();
             await afterNextRender(() => {
                 pyEnv['bus.bus']._sendone(pyEnv.currentPartner, "calendar.alarm", [{
                     "alarm_id": 1,
@@ -97,8 +97,8 @@ QUnit.module("Calendar Notification", (hooks) => {
             };
             serviceRegistry.add("action", fakeActionService, { force: true });
 
+            const pyEnv = await startServer();
             await createWebClient({ mockRPC });
-            const pyEnv = await getPyEnv();
             await afterNextRender(() => {
                 pyEnv['bus.bus']._sendone(pyEnv.currentPartner, "calendar.alarm", [{
                     "alarm_id": 1,
@@ -138,8 +138,8 @@ QUnit.module("Calendar Notification", (hooks) => {
                 }
             };
 
+            const pyEnv = await startServer();
             await createWebClient({ mockRPC });
-            const pyEnv = await getPyEnv();
             await afterNextRender(() => {
                 pyEnv['bus.bus']._sendone(pyEnv.currentPartner, "calendar.alarm", [{
                     "alarm_id": 1,

@@ -6,6 +6,7 @@ const modelDefinitionsRegistry = registry.category('bus.model.definitions');
 const customModelFieldsRegistry = modelDefinitionsRegistry.category('fieldsToInsert');
 const recordsToInsertRegistry = modelDefinitionsRegistry.category('recordsToInsert');
 const fakeModelsRegistry = modelDefinitionsRegistry.category('fakeModels');
+
 /**
  * Add models whose definitions need to be fetched on the server.
  *
@@ -13,9 +14,22 @@ const fakeModelsRegistry = modelDefinitionsRegistry.category('fakeModels');
  */
 export function addModelNamesToFetch(modelNames) {
     if (!modelDefinitionsRegistry.contains('modelNamesToFetch')) {
-        modelDefinitionsRegistry.add('modelNamesToFetch', []);
+        modelDefinitionsRegistry.add('modelNamesToFetch', new Set());
     }
-    modelDefinitionsRegistry.get('modelNamesToFetch').push(...modelNames);
+    modelNames.forEach(modelName => modelDefinitionsRegistry.get('modelNamesToFetch').add(modelName));
+}
+
+/**
+ * Add records to fetch by their xml ids. Those records will be
+ * accessible from `pyEnv.ref`.
+ *
+ * @param {string[]} xmlIds Xml ids of the records to be fetched.
+ */
+export function addRefsToFetch(xmlIds) {
+    if (!modelDefinitionsRegistry.contains('refsToFetch')) {
+        modelDefinitionsRegistry.add('refsToFetch', new Set());
+    }
+    xmlIds.forEach(xmlId => modelDefinitionsRegistry.get('refsToFetch').add(xmlId));
 }
 
 /**

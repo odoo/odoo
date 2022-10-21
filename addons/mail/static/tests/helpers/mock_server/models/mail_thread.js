@@ -48,9 +48,9 @@ patch(MockServer.prototype, 'mail/models/mail_thread', {
                 // can be falsy to simulate not being logged in
                 user_id = context.mockedUserId
                     ? context.mockedUserId
-                    : this.publicUserId;
+                    : this.pyEnv.ref('base.public_user').id;
             } else {
-                user_id = this.currentUserId;
+                user_id = this.pyEnv.currentUserId;
             }
             const user = this.getRecords(
                 'res.users',
@@ -345,7 +345,7 @@ patch(MockServer.prototype, 'mail/models/mail_thread', {
             ['notification_status', 'in', ['bounce', 'exception']],
         ]).filter(notification => {
             const message = this.getRecords('mail.message', [['id', '=', notification.mail_message_id]])[0];
-            return message.model === model && message.author_id === this.currentPartnerId;
+            return message.model === model && message.author_id === this.pyEnv.currentPartnerId;
         });
         // Update notification status
         this.pyEnv['mail.notification'].write(

@@ -27,7 +27,7 @@ QUnit.test('rendering of visitor banner', async function (assert) {
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+            [0, 0, { partner_id: pyEnv.ref('base.public_partner').id }],
         ],
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
@@ -126,7 +126,7 @@ QUnit.test('livechat with non-logged visitor should show visitor banner', async 
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+            [0, 0, { partner_id: pyEnv.ref('base.public_partner').id }],
         ],
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,

@@ -110,7 +110,7 @@ patch(MockServer.prototype, 'mail/controllers/discuss', {
      * @returns {Object}
      */
     _mockRouteMailInitMessaging() {
-        return this._mockResUsers_InitMessaging([this.currentUserId]);
+        return this._mockResUsers_InitMessaging([this.pyEnv.currentUserId]);
     },
     /**
      * Simulates the `/mail/attachment/delete` route.
@@ -119,7 +119,7 @@ patch(MockServer.prototype, 'mail/controllers/discuss', {
      * @param {integer} attachment_id
      */
     async _mockRouteMailAttachmentRemove(attachment_id) {
-        this.pyEnv['bus.bus']._sendone(this.currentPartnerId, 'ir.attachment/delete', { id: attachment_id });
+        this.pyEnv['bus.bus']._sendone(this.pyEnv.currentPartnerId, 'ir.attachment/delete', { id: attachment_id });
         return this.pyEnv['ir.attachment'].unlink([attachment_id]);
     },
     /**
@@ -151,7 +151,7 @@ patch(MockServer.prototype, 'mail/controllers/discuss', {
      * @param {Object} [context={}]
      */
     async _mockRouteMailChannelNotifyTyping(channel_id, is_typing, context = {}) {
-        const partnerId = context.mockedPartnerId || this.currentPartnerId;
+        const partnerId = context.mockedPartnerId || this.pyEnv.currentPartnerId;
         const [memberOfCurrentUser] = this.getRecords('mail.channel.member', [['channel_id', '=', channel_id], ['partner_id', '=', partnerId]]);
         this._mockMailChannelMember_NotifyTyping([memberOfCurrentUser.id], is_typing);
     },
@@ -162,7 +162,7 @@ patch(MockServer.prototype, 'mail/controllers/discuss', {
      * @returns {Object[]}
      */
     _mockRouteMailLoadMessageFailures() {
-        return this._mockResPartner_MessageFetchFailed(this.currentPartnerId);
+        return this._mockResPartner_MessageFetchFailed(this.pyEnv.currentPartnerId);
     },
     /**
      * Simulates `/mail/link_preview` route.
@@ -219,7 +219,7 @@ patch(MockServer.prototype, 'mail/controllers/discuss', {
      * @returns {Object}
      */
     _mockRouteMailMessageStarredMessages(min_id = false, max_id = false, limit = 30) {
-        const domain = [['starred_partner_ids', 'in', [this.currentPartnerId]]];
+        const domain = [['starred_partner_ids', 'in', [this.pyEnv.currentPartnerId]]];
         const messages = this._mockMailMessage_MessageFetch(domain, max_id, min_id, limit);
         return this._mockMailMessageMessageFormat(messages.map(message => message.id));
     },
@@ -267,7 +267,7 @@ patch(MockServer.prototype, 'mail/controllers/discuss', {
     async _mockRouteMailRtcChannelJoinCall(channel_id, check_rtc_session_ids = []) {
         const [currentChannelMember] = this.getRecords('mail.channel.member', [
             ['channel_id', '=', channel_id],
-            ['partner_id', '=', this.currentPartnerId],
+            ['partner_id', '=', this.pyEnv.currentPartnerId],
         ]);
         const sessionId = this.pyEnv['mail.channel.rtc.session'].create({
             channel_member_id: currentChannelMember.id,

@@ -1,6 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import models
+from odoo.exceptions import AccessError
 
 
 class IrModel(models.Model):
@@ -30,3 +33,20 @@ class IrModel(models.Model):
                         field_data['model_name_ref_fname'] = model._fields[fname].model_field
             fields_by_model_names[model_name] = fields_data_by_fname
         return fields_by_model_names
+
+    def _get_records_by_model_name(self, model_definitions, refs_to_fetch):
+        records_by_model_name = defaultdict(list)
+        fnames_to_read_by_model_name = {}
+        unreachable_refs = []
+        for xml_id in refs_to_fetch:
+            try:
+                record = self.env.ref(xml_id)
+                if record._name not in fnames_to_read_by_model_name:
+                    fnames_to_read_by_model_name[record._name] = [
+                        fname for fname, field in model_definitions[record._name].items()
+                        if field['type'] != 'binary'
+                    ]
+                records_by_model_name[record._name].append((xml_id, record.read(fnames_to_read_by_model_name[record._name], load=None)[0]))
+            except (AccessError, ValueError):
+                unreachable_refs.append(xml_id)
+        return records_by_model_name, unreachable_refs

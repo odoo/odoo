@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
-import { TEST_GROUP_IDS, TEST_USER_IDS } from '@bus/../tests/helpers/test_constants';
 import {
     addModelNamesToFetch,
+    addRefsToFetch,
     insertModelFields,
-    insertRecords
 } from '@bus/../tests/helpers/model_definitions_helpers';
 
 //--------------------------------------------------------------------------
@@ -25,19 +24,10 @@ insertModelFields('res.partner', {
 });
 
 //--------------------------------------------------------------------------
-// Insertion of records
+// Records to fetch
 //--------------------------------------------------------------------------
 
-insertRecords('res.company', [{ id: 1 }]);
-insertRecords('res.groups', [
-    { id: TEST_GROUP_IDS.groupUserId, name: "Internal User" },
-]);
-insertRecords('res.users', [
-    { display_name: "Your Company, Mitchell Admin", id: TEST_USER_IDS.currentUserId, name: "Mitchell Admin", partner_id: TEST_USER_IDS.currentPartnerId, },
-    { active: false, display_name: "Public user", id: TEST_USER_IDS.publicUserId, name: "Public user", partner_id: TEST_USER_IDS.publicPartnerId, },
-]);
-insertRecords('res.partner', [
-    { active: false, display_name: "Public user", id: TEST_USER_IDS.publicPartnerId, is_public: true },
-    { display_name: "Your Company, Mitchell Admin", id: TEST_USER_IDS.currentPartnerId, name: "Mitchell Admin", },
-    { active: false, display_name: "OdooBot", id: TEST_USER_IDS.partnerRootId, name: "OdooBot" },
+addRefsToFetch([
+    'base.group_public', 'base.group_user', 'base.main_company',
+    'base.partner_root', 'base.public_partner', 'base.public_user',
 ]);

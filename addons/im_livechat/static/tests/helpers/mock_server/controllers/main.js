@@ -40,7 +40,7 @@ patch(MockServer.prototype, 'im_livechat/controllers/main', {
             // can be falsy to simulate not being logged in
             user_id = context.mockedUserId;
         } else {
-            user_id = this.currentUserId;
+            user_id = this.pyEnv.currentUserId;
         }
         // don't use the anonymous name if the user is logged in
         if (user_id) {
@@ -67,7 +67,7 @@ patch(MockServer.prototype, 'im_livechat/controllers/main', {
      */
     _mockRouteImLivechatNotifyTyping(uuid, is_typing, context = {}) {
         const [mailChannel] = this.getRecords('mail.channel', [['uuid', '=', uuid]]);
-        const partnerId = context.mockedPartnerId || this.currentPartnerId;
+        const partnerId = context.mockedPartnerId || this.pyEnv.currentPartnerId;
         const [memberOfCurrentUser] = this.getRecords('mail.channel.member', [['channel_id', '=', mailChannel.id], ['partner_id', '=', partnerId]]);
         this._mockMailChannelMember_NotifyTyping([memberOfCurrentUser.id], is_typing);
     },

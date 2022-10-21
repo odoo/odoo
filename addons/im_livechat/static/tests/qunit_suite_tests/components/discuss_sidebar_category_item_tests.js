@@ -17,7 +17,7 @@ QUnit.test('livechat - avatar: should have a smiley face avatar for an anonymous
         anonymous_name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+            [0, 0, { partner_id: pyEnv.ref('base.public_partner').id }],
         ],
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,

@@ -35,7 +35,7 @@ patch(MockServer.prototype, 'mail/models/mail_message', {
      */
     _mockMailMessageMarkAllAsRead(domain) {
         const notifDomain = [
-            ['res_partner_id', '=', this.currentPartnerId],
+            ['res_partner_id', '=', this.pyEnv.currentPartnerId],
             ['is_read', '=', false],
         ];
         if (domain) {
@@ -63,14 +63,14 @@ patch(MockServer.prototype, 'mail/models/mail_message', {
                 {
                     needaction: false,
                     needaction_partner_ids: message.needaction_partner_ids.filter(
-                        partnerId => partnerId !== this.currentPartnerId
+                        partnerId => partnerId !== this.pyEnv.currentPartnerId
                     ),
                 },
             );
         }
         this.pyEnv['bus.bus']._sendone(this.pyEnv.currentPartner, 'mail.message/mark_as_read', {
             'message_ids': messageIds,
-            'needaction_inbox_counter': this._mockResPartner_GetNeedactionCount(this.currentPartnerId),
+            'needaction_inbox_counter': this._mockResPartner_GetNeedactionCount(this.pyEnv.currentPartnerId),
         });
         return messageIds;
     },
@@ -228,7 +228,7 @@ patch(MockServer.prototype, 'mail/models/mail_message', {
         const messages = this.getRecords('mail.message', [['id', 'in', ids]]);
 
         const notifications = this.getRecords('mail.notification', [
-            ['res_partner_id', '=', this.currentPartnerId],
+            ['res_partner_id', '=', this.pyEnv.currentPartnerId],
             ['is_read', '=', false],
             ['mail_message_id', 'in', messages.map(messages => messages.id)]
         ]);
@@ -243,13 +243,13 @@ patch(MockServer.prototype, 'mail/models/mail_message', {
                 {
                     needaction: false,
                     needaction_partner_ids: message.needaction_partner_ids.filter(
-                        partnerId => partnerId !== this.currentPartnerId
+                        partnerId => partnerId !== this.pyEnv.currentPartnerId
                     ),
                 },
             );
             this.pyEnv['bus.bus']._sendone(this.pyEnv.currentPartner, 'mail.message/mark_as_read', {
                 'message_ids': [message.id],
-                'needaction_inbox_counter': this._mockResPartner_GetNeedactionCount(this.currentPartnerId),
+                'needaction_inbox_counter': this._mockResPartner_GetNeedactionCount(this.pyEnv.currentPartnerId),
             });
         }
     },
@@ -262,10 +262,10 @@ patch(MockServer.prototype, 'mail/models/mail_message', {
     _mockMailMessageToggleMessageStarred(ids) {
         const messages = this.getRecords('mail.message', [['id', 'in', ids]]);
         for (const message of messages) {
-            const wasStared = message.starred_partner_ids.includes(this.currentPartnerId);
+            const wasStared = message.starred_partner_ids.includes(this.pyEnv.currentPartnerId);
             this.pyEnv['mail.message'].write(
                 [message.id],
-                { starred_partner_ids: [[wasStared ? 3 : 4, this.currentPartnerId]] }
+                { starred_partner_ids: [[wasStared ? 3 : 4, this.pyEnv.currentPartnerId]] }
             );
             this.pyEnv['bus.bus']._sendone(this.pyEnv.currentPartner, 'mail.message/toggle_star', {
                 'message_ids': [message.id],
@@ -280,11 +280,11 @@ patch(MockServer.prototype, 'mail/models/mail_message', {
      */
     _mockMailMessageUnstarAll() {
         const messages = this.getRecords('mail.message', [
-            ['starred_partner_ids', 'in', this.currentPartnerId],
+            ['starred_partner_ids', 'in', this.pyEnv.currentPartnerId],
         ]);
         this.pyEnv['mail.message'].write(
             messages.map(message => message.id),
-            { starred_partner_ids: [[3, this.currentPartnerId]] }
+            { starred_partner_ids: [[3, this.pyEnv.currentPartnerId]] }
         );
         this.pyEnv['bus.bus']._sendone(this.pyEnv.currentPartner, 'mail.message/toggle_star', {
             'message_ids': messages.map(message => message.id),

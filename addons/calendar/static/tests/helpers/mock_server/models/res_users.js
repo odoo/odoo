@@ -19,7 +19,7 @@ patch(MockServer.prototype, 'calendar/models/res_users', {
         startDate.setUTCHours(0, 0, 0, 0);
         const endDate = new Date();
         endDate.setUTCHours(23, 59, 59, 999);
-        const currentPartnerAttendeeIds = this.pyEnv['calendar.attendee'].search([['partner_id', '=', this.currentPartnerId]]);
+        const currentPartnerAttendeeIds = this.pyEnv['calendar.attendee'].search([['partner_id', '=', this.pyEnv.currentPartnerId]]);
         return [
             '&',
                 '|',

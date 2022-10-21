@@ -80,7 +80,7 @@ QUnit.module('mail', {}, function () {
         await click([...target.querySelectorAll(".o_command")][idx])
         await nextTick();
         assert.deepEqual([...target.querySelectorAll(".o_command")].map(el => el.textContent), [
-            "Your Company, Mitchell Admin",
+            "Mitchell Admin",
             "Public user",
             "Mario",
             "Luigi",
@@ -168,7 +168,7 @@ QUnit.module('mail', {}, function () {
         await click([...target.querySelectorAll(".o_command")][idx])
         await nextTick();
         assert.deepEqual([...target.querySelectorAll(".o_command")].map(el => el.textContent), [
-            "Your Company, Mitchell Admin",
+            "Mitchell Admin",
             "Public user",
             "Luigi"
           ]);

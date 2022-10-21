@@ -37,7 +37,7 @@ patch(MockServer.prototype, 'mail/controllers/bus', {
             // can be falsy to simulate not being logged in
             user_id = context.mockedUserId;
         } else {
-            user_id = this.currentUserId;
+            user_id = this.pyEnv.currentUserId;
         }
         let author_id;
         let email_from;

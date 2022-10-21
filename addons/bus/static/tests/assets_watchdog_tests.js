@@ -3,7 +3,7 @@
 import { busService } from "@bus/services/bus_service";
 import { presenceService } from "@bus/services/presence_service";
 import { multiTabService } from "@bus/multi_tab_service";
-import { getPyEnv } from '@bus/../tests/helpers/mock_python_environment';
+import { startServer } from '@bus/../tests/helpers/mock_python_environment';
 
 import { createWebClient } from "@web/../tests/webclient/helpers";
 import { assetsWatchdogService } from "@bus/services/assets_watchdog_service";
@@ -35,8 +35,8 @@ QUnit.module("Bus Assets WatchDog", (hooks) => {
     QUnit.test("can listen on bus and displays notifications in DOM", async (assert) => {
         assert.expect(4);
 
+        const pyEnv = await startServer();
         await createWebClient({});
-        const pyEnv = await getPyEnv();
         const { afterNextRender } = owl.App;
         await afterNextRender(() => {
             pyEnv['bus.bus']._sendone("broadcast", "bundle_changed", {

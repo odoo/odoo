@@ -18,7 +18,7 @@ QUnit.test('livechat - counter: should not have a counter if the category is unf
         anonymous_name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+            [0, 0, { partner_id: pyEnv.ref('base.public_partner').id }],
         ],
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
@@ -43,7 +43,7 @@ QUnit.test('livechat - counter: should not have a counter if the category is unf
                 message_unread_counter: 10,
                 partner_id: pyEnv.currentPartnerId,
             }],
-            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+            [0, 0, { partner_id: pyEnv.ref('base.public_partner').id }],
         ],
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
@@ -65,7 +65,7 @@ QUnit.test('livechat - counter: should not have a counter if category is folded 
         anonymous_name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+            [0, 0, { partner_id: pyEnv.ref('base.public_partner').id }],
         ],
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
@@ -95,7 +95,7 @@ QUnit.test('livechat - counter: should have correct value of unread threads if c
                 message_unread_counter: 10,
                 partner_id: pyEnv.currentPartnerId,
             }],
-            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+            [0, 0, { partner_id: pyEnv.ref('base.public_partner').id }],
         ],
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
@@ -122,7 +122,7 @@ QUnit.test('livechat - states: close manually by clicking the title', async func
         anonymous_name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+            [0, 0, { partner_id: pyEnv.ref('base.public_partner').id }],
         ],
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
@@ -161,7 +161,7 @@ QUnit.test('livechat - states: open manually by clicking the title', async funct
         anonymous_name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+            [0, 0, { partner_id: pyEnv.ref('base.public_partner').id }],
         ],
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
@@ -200,7 +200,7 @@ QUnit.test('livechat - states: close should update the value on the server', asy
         anonymous_name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+            [0, 0, { partner_id: pyEnv.ref('base.public_partner').id }],
         ],
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
@@ -250,7 +250,7 @@ QUnit.test('livechat - states: open should update the value on the server', asyn
         anonymous_name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+            [0, 0, { partner_id: pyEnv.ref('base.public_partner').id }],
         ],
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
@@ -300,7 +300,7 @@ QUnit.test('livechat - states: close from the bus', async function (assert) {
         anonymous_name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+            [0, 0, { partner_id: pyEnv.ref('base.public_partner').id }],
         ],
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
@@ -340,7 +340,7 @@ QUnit.test('livechat - states: open from the bus', async function (assert) {
         anonymous_name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+            [0, 0, { partner_id: pyEnv.ref('base.public_partner').id }],
         ],
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
@@ -381,7 +381,7 @@ QUnit.test('livechat - states: category item should be invisible if the category
         anonymous_name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+            [0, 0, { partner_id: pyEnv.ref('base.public_partner').id }],
         ],
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
@@ -416,7 +416,7 @@ QUnit.test('livechat - states: the active category item should be visble even if
         anonymous_name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+            [0, 0, { partner_id: pyEnv.ref('base.public_partner').id }],
         ],
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,

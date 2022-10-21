@@ -25,11 +25,11 @@ patch(MockServer.prototype, 'mail/models/res_users', {
         return {
             channels: this._mockMailChannelChannelInfo(this._mockResPartner_GetChannelsAsMember(user.partner_id).map(channel => channel.id)),
             current_partner: this._mockResPartnerMailPartnerFormat(user.partner_id).get(user.partner_id),
-            current_user_id: this.currentUserId,
+            current_user_id: this.pyEnv.currentUserId,
             current_user_settings: this._mockResUsersSettings_ResUsersSettingsFormat(userSettings.id),
             menu_id: false, // not useful in QUnit tests
             needaction_inbox_counter: this._mockResPartner_GetNeedactionCount(user.partner_id),
-            partner_root: this._mockResPartnerMailPartnerFormat(this.partnerRootId).get(this.partnerRootId),
+            partner_root: this._mockResPartnerMailPartnerFormat(this.pyEnv.ref('base.partner_root').id).get(this.pyEnv.ref('base.partner_root').id),
             shortcodes: this.pyEnv['mail.shortcode'].searchRead([], { fields: ['source', 'substitution'] }),
             starred_counter: this.getRecords('mail.message', [['starred_partner_ids', 'in', user.partner_id]]).length,
         };

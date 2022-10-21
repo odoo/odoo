@@ -18,7 +18,7 @@ QUnit.test('livechat: public website visitor is typing', async function (assert)
         anonymous_name: "Visitor 20",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+            [0, 0, { partner_id: pyEnv.ref('base.public_partner').id }],
         ],
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
@@ -46,7 +46,7 @@ QUnit.test('livechat: public website visitor is typing', async function (assert)
         route: '/im_livechat/notify_typing',
         params: {
             context: {
-                mockedPartnerId: pyEnv.publicPartnerId,
+                mockedPartnerId: pyEnv.ref('base.public_partner').id,
             },
             is_typing: true,
             uuid: mailChannel1.uuid,

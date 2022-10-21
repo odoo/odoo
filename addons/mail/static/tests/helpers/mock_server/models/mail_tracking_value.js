@@ -9,9 +9,6 @@ patch(MockServer.prototype, 'mail/models/mail_tracking_value', {
      */
     init(data, options) {
         this._super(data, options);
-        if (this.currentPartnerId && this.models && 'res.partner' in this.models) {
-            this.currentPartner = this.getRecords('res.partner', [['id', '=', this.currentPartnerId]])[0];
-        }
         // creation of the ir.model.fields records, required for tracked fields
         for (const modelName in this.models) {
           const fieldNamesToFields = this.models[modelName].fields;

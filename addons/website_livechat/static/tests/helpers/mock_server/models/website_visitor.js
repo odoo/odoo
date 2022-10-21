@@ -15,17 +15,17 @@ patch(MockServer.prototype, 'website_livechat/models/website_visitor', {
                 ? this.getRecords('res.country', [['id', '=', visitor.country_id]])
                 : undefined;
             const visitor_name = `${visitor.display_name}${country ? `(${country.name})` : ''}`;
-            const membersToAdd = [[0, 0, { partner_id: this.currentPartnerId }]];
+            const membersToAdd = [[0, 0, { partner_id: this.pyEnv.currentPartnerId }]];
             if (visitor.partner_id) {
                 membersToAdd.push([0, 0, { partner_id: visitor.partner_id }]);
             } else {
-                membersToAdd.push([0, 0, { partner_id: this.publicPartnerId }]);
+                membersToAdd.push([0, 0, { partner_id: this.pyEnv.ref('base.public_partner').id }]);
             }
             const livechatId = this.pyEnv['mail.channel'].create({
                 anonymous_name: visitor_name,
                 channel_member_ids: membersToAdd,
                 channel_type: 'livechat',
-                livechat_operator_id: this.currentPartnerId,
+                livechat_operator_id: this.pyEnv.currentPartnerId,
             });
             // notify operator
             this.pyEnv['bus.bus']._sendone(this.pyEnv.currentPartner, 'website_livechat.send_chat_request',

@@ -38,7 +38,7 @@ patch(MockServer.prototype, 'im_livechat/models/im_livechat_channel', {
                 membersToAdd.push([0, 0, { partner_id: visitor_user.partner_id.id }]);
             }
         } else {
-            membersToAdd.push([0, 0, { partner_id: this.publicPartnerId }]);
+            membersToAdd.push([0, 0, { partner_id: this.pyEnv.ref('base.public_partner').id }]);
         }
         const membersName = [
             visitor_user ? visitor_user.display_name : anonymous_name,

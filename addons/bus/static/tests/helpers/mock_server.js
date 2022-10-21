@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { TEST_USER_IDS } from "@bus/../tests/helpers/test_constants";
 import { patchWebsocketWorkerWithCleanup } from '@bus/../tests/helpers/mock_websocket';
 
 import { patch } from "@web/core/utils/patch";
@@ -9,7 +8,6 @@ import { MockServer } from "@web/../tests/helpers/mock_server";
 patch(MockServer.prototype, 'bus', {
     init() {
         this._super(...arguments);
-        Object.assign(this, TEST_USER_IDS);
         const self = this;
         this.websocketWorker = patchWebsocketWorkerWithCleanup({
             _sendToServer(message) {

@@ -130,7 +130,7 @@ patch(MockServer.prototype, 'mail/models/res_partner', {
                     return false;
                 }
                 // not current partner
-                if (partner.id === this.currentPartnerId) {
+                if (partner.id === this.pyEnv.currentPartnerId) {
                     return false;
                 }
                 // no name is considered as return all
@@ -208,7 +208,7 @@ patch(MockServer.prototype, 'mail/models/res_partner', {
                     return false;
                 }
                 // not current partner
-                if (partner.id === this.currentPartnerId) {
+                if (partner.id === this.pyEnv.currentPartnerId) {
                     return false;
                 }
                 // no name is considered as return all

@@ -14,7 +14,7 @@ patch(MockServer.prototype, 'note/models/res_users', {
      */
     _mockResUsersSystrayGetActivities() {
         const activities = this._super(...arguments);
-        const noteCount = this.pyEnv['note.note'].searchCount([['user_id', '=', this.currentUserId]]);
+        const noteCount = this.pyEnv['note.note'].searchCount([['user_id', '=', this.pyEnv.currentUserId]]);
         if (noteCount) {
             const noteIndex = activities.findIndex(act => act['model'] === 'note.note');
             if (noteIndex) {

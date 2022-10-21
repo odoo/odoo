@@ -1,11 +1,10 @@
 /** @odoo-module **/
 
-import { TEST_GROUP_IDS, TEST_USER_IDS } from '@bus/../tests/helpers/test_constants';
 import {
     addFakeModel,
     addModelNamesToFetch,
+    addRefsToFetch,
     insertModelFields,
-    insertRecords
 } from '@bus/../tests/helpers/model_definitions_helpers';
 
 //--------------------------------------------------------------------------
@@ -41,20 +40,20 @@ insertModelFields('mail.activity', {
 insertModelFields('mail.channel', {
     author_id: {
         default() {
-            return this.currentPartnerId;
+            return this.pyEnv.currentPartnerId;
         },
     },
     avatarCacheKey: { string: "Avatar Cache Key", type: "datetime" },
     channel_member_ids: {
         default() {
-            return [[0, 0, { partner_id: this.currentPartnerId }]];
+            return [[0, 0, { partner_id: this.pyEnv.currentPartnerId }]];
         },
     },
     channel_type: { default: 'channel' },
     group_based_subscription: { string: "Group based subscription", type: "boolean" },
     group_public_id: {
         default() {
-            return TEST_GROUP_IDS.groupUserId;
+            return this.pyEnv.ref('base.group_public').id;
         },
     },
     uuid: { default: () => _.uniqueId('mail.channel_uuid-') },
@@ -65,16 +64,17 @@ insertModelFields('mail.channel.member', {
     message_unread_counter: { default: 0 },
 });
 insertModelFields('mail.message', {
-    author_id: { default: TEST_USER_IDS.currentPartnerId },
+    author_id: {
+        default() {
+            return this.pyEnv.currentPartnerId;
+        },
+    },
     history_partner_ids: { relation: 'res.partner', string: "Partners with History", type: 'many2many' },
     is_discussion: { string: 'Discussion', type: 'boolean' },
     is_note: { string: "Discussion", type: 'boolean' },
     is_notification: { string: "Note", type: 'boolean' },
     needaction_partner_ids: { relation: 'res.partner', string: "Partners with Need Action", type: 'many2many' },
     res_model_name: { string: "Res Model Name", type: 'char' },
-});
-insertModelFields('mail.message.subtype', {
-    subtype_xmlid: { type: 'char' },
 });
 insertModelFields('mail.tracking.value', {
     changed_field: { string: 'Changed field', type: 'char' },
@@ -87,18 +87,10 @@ insertModelFields('res.users.settings', {
 });
 
 //--------------------------------------------------------------------------
-// Insertion of records
+// Records to fetch
 //--------------------------------------------------------------------------
 
-insertRecords('mail.activity.type', [
-    { icon: 'fa-envelope', id: 1, name: "Email" },
-    { icon: 'fa-upload', id: 28, name: "Upload Document" },
-]);
-insertRecords('mail.message.subtype', [
-    { default: false, internal: true, name: "Activities", sequence: 90, subtype_xmlid: 'mail.mt_activities' },
-    {
-        default: false, internal: true, name: "Note", sequence: 100, subtype_xmlid: 'mail.mt_note',
-        track_recipients: true
-    },
-    { name: "Discussions", sequence: 0, subtype_xmlid: 'mail.mt_comment', track_recipients: true },
+addRefsToFetch([
+    'mail.mail_activity_data_email', 'mail.mail_activity_data_upload_document',
+    'mail.mt_comment', 'mail.mt_note', 'mail.mt_activities',
 ]);

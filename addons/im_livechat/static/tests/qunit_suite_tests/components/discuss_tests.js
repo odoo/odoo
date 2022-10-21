@@ -21,7 +21,7 @@ QUnit.test('livechat in the sidebar: basic rendering', async function (assert) {
         anonymous_name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+            [0, 0, { partner_id: pyEnv.ref('base.public_partner').id }],
         ],
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
@@ -145,7 +145,7 @@ QUnit.test('do not add livechat in the sidebar on visitor typing', async functio
                 is_pinned: false,
                 partner_id: pyEnv.currentPartnerId,
             }],
-            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+            [0, 0, { partner_id: pyEnv.ref('base.public_partner').id }],
         ],
         channel_type: 'livechat',
         livechat_channel_id: imLivechatChannelId1,
@@ -166,7 +166,7 @@ QUnit.test('do not add livechat in the sidebar on visitor typing', async functio
         route: '/im_livechat/notify_typing',
         params: {
             context: {
-                mockedPartnerId: pyEnv.publicPartnerId,
+                mockedPartnerId: pyEnv.ref('base.public_partner').id,
             },
             is_typing: true,
             uuid: channel.uuid,
@@ -199,7 +199,7 @@ QUnit.test('add livechat in the sidebar on visitor sending first message', async
                 is_pinned: false,
                 partner_id: pyEnv.currentPartnerId,
             }],
-            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+            [0, 0, { partner_id: pyEnv.ref('base.public_partner').id }],
         ],
         channel_type: 'livechat',
         country_id: resCountryId1,
@@ -255,7 +255,7 @@ QUnit.test('livechats are sorted by last activity time in the sidebar: most rece
                     last_interest_dt: datetime_to_str(new Date(2021, 0, 1)),
                     partner_id: pyEnv.currentPartnerId,
                 }],
-                [0, 0, { partner_id: pyEnv.publicPartnerId }],
+                [0, 0, { partner_id: pyEnv.ref('base.public_partner').id }],
             ],
             channel_type: 'livechat',
             livechat_operator_id: pyEnv.currentPartnerId,
@@ -267,7 +267,7 @@ QUnit.test('livechats are sorted by last activity time in the sidebar: most rece
                     last_interest_dt: datetime_to_str(new Date(2021, 0, 2)),
                     partner_id: pyEnv.currentPartnerId,
                 }],
-                [0, 0, { partner_id: pyEnv.publicPartnerId }],
+                [0, 0, { partner_id: pyEnv.ref('base.public_partner').id }],
             ],
             channel_type: 'livechat',
             livechat_operator_id: pyEnv.currentPartnerId,
@@ -324,7 +324,7 @@ QUnit.test('invite button should be present on livechat', async function (assert
             anonymous_name: "Visitor 11",
             channel_member_ids: [
                 [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: pyEnv.publicPartnerId }],
+                [0, 0, { partner_id: pyEnv.ref('base.public_partner').id }],
             ],
             channel_type: 'livechat',
             livechat_operator_id: pyEnv.currentPartnerId,
@@ -354,7 +354,7 @@ QUnit.test('call buttons should not be present on livechat', async function (ass
             anonymous_name: "Visitor 11",
             channel_member_ids: [
                 [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: pyEnv.publicPartnerId }],
+                [0, 0, { partner_id: pyEnv.ref('base.public_partner').id }],
             ],
             channel_type: 'livechat',
             livechat_operator_id: pyEnv.currentPartnerId,
@@ -383,7 +383,7 @@ QUnit.test('reaction button should not be present on livechat', async function (
         anonymous_name: "Visitor 11",
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
-        channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.publicPartnerId],
+        channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.ref('base.public_partner').id],
     });
     const { click, insertText, openDiscuss } = await start({
         discuss: {
@@ -411,7 +411,7 @@ QUnit.test('reply button should not be present on livechat', async function (ass
         anonymous_name: "Visitor 11",
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
-        channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.publicPartnerId],
+        channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.ref('base.public_partner').id],
     });
     const { click, insertText, openDiscuss } = await start({
         discuss: {

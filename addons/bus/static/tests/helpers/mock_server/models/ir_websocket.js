@@ -13,7 +13,7 @@ patch(MockServer.prototype, 'bus/models/ir_websocket', {
      _mockIrWebsocket__updatePresence(inactivityPeriod, imStatusIdsByModel) {
         const imStatusNotifications = this._mockIrWebsocket__getImStatus(imStatusIdsByModel);
         if (Object.keys(imStatusNotifications).length > 0) {
-            this._mockBusBus__sendone(this.currentPartnerId, 'mail.record/insert', imStatusNotifications);
+            this._mockBusBus__sendone(this.pyEnv.currentPartnerId, 'mail.record/insert', imStatusNotifications);
         }
     },
     /**
