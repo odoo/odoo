@@ -300,7 +300,7 @@ class AccountMove(models.Model):
         string='Delivery Address',
         compute='_compute_partner_shipping_id', store=True, readonly=False, precompute=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        help="Delivery address for current invoice.",
+        help="The delivery address will be used in the computation of the fiscal position.",
     )
     partner_bank_id = fields.Many2one(
         'res.partner.bank',
