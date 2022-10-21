@@ -1020,6 +1020,7 @@ class Channel(models.Model):
     def channel_fetched(self):
         """ Broadcast the channel_fetched notification to channel members
         """
+        notifications = []
         for channel in self:
             if not channel.message_ids.ids:
                 return
@@ -1033,12 +1034,19 @@ class Channel(models.Model):
             member.write({
                 'fetched_message_id': last_message_id,
             })
-            self.env['bus.bus']._sendone(channel, 'mail.channel.member/fetched', {
-                'channel_id': channel.id,
-                'id': member.id,
-                'last_message_id': last_message_id,
-                'partner_id': self.env.user.partner_id.id,
-            })
+            payload = {
+                'ThreadPartnerSeenInfo': {
+                    'lastFetchedMessage': [('insert-and-replace', {'id': last_message_id})],
+                    'partner': [('insert-and-replace', self.env.user.partner_id.mail_partner_format().get(self.env.user.partner_id))],
+                    'thread': [('insert-and-replace', {'id': self.id, 'model': 'mail.channel'})],
+                },
+                'MessageSeenIndicator': {
+                    'message': [('insert-and-replace', {'id': last_message_id})],
+                    'thread': [('insert-and-replace', {'id': self.id, 'model': 'mail.channel'})],
+                }
+            }
+            notifications.append((channel, 'mail.record/insert', payload))
+        self.env['bus.bus']._sendmany(notifications)
 
     def channel_set_custom_name(self, name):
         self.ensure_one()

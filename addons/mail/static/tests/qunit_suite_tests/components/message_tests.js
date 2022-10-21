@@ -277,11 +277,21 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
     const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId]])[0];
     // Simulate received channel fetched notification
     await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/fetched', {
-            'channel_id': mailChannelId,
-            'last_message_id': 100,
-            'partner_id': resPartnerId,
-        });
+        pyEnv['bus.bus']._sendone(
+            mailChannel1,
+            'mail.record/insert',
+            {
+                'ThreadPartnerSeenInfo': {
+                    'lastFetchedMessage': [['insert-and-replace', { 'id': 100 }]],
+                    'partner': [['insert-and-replace', { id: resPartnerId }]],
+                    'thread': [['insert-and-replace', { 'id': mailChannelId, 'model': 'mail.channel' }]],
+                },
+                'MessageSeenIndicator': {
+                    'message': [['insert-and-replace', { 'id': 100 }]],
+                    'thread': [['insert-and-replace', { 'id': mailChannelId, 'model': 'mail.channel' }]],
+                },
+            }
+        );
     });
 
     assert.containsOnce(
@@ -338,7 +348,7 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
             {
                 'ThreadPartnerSeenInfo': {
                     'lastSeenMessage': [['insert-and-replace', { 'id': 100 }]],
-                    'partner': [['insert-and-replace', { id: resPartnerId }]],
+                    'partner': [['insert-and-replace', { 'id': resPartnerId }]],
                     'thread': [['insert-and-replace', { 'id': mailChannelId, 'model': 'mail.channel' }]],
                 },
                 'MessageSeenIndicator': {
@@ -397,11 +407,21 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received are correc
     const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId]])[0];
     // Simulate received channel fetched notification
     await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/fetched', {
-            'channel_id': mailChannelId,
-            'last_message_id': 100,
-            'partner_id': resPartnerId,
-        });
+        pyEnv['bus.bus']._sendone(
+            mailChannel1,
+            'mail.record/insert',
+            {
+                'ThreadPartnerSeenInfo': {
+                    'lastFetchedMessage': [['insert-and-replace', { 'id': 100 }]],
+                    'partner': [['insert-and-replace', { 'id': resPartnerId }]],
+                    'thread': [['insert-and-replace', { 'id': mailChannelId, 'model': 'mail.channel' }]],
+                },
+                'MessageSeenIndicator': {
+                    'message': [['insert-and-replace', { 'id': 100 }]],
+                    'thread': [['insert-and-replace', { 'id': mailChannelId, 'model': 'mail.channel' }]],
+                },
+            }
+        );
     });
     assert.containsOnce(
         document.body,

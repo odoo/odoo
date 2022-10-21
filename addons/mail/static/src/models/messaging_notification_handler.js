@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { decrement, increment, insert } from '@mail/model/model_field_command';
+import { decrement, increment } from '@mail/model/model_field_command';
 import { htmlToTextContentInline } from '@mail/js/utils';
 
 import { escape, sprintf } from '@web/core/utils/strings';
@@ -52,8 +52,6 @@ registerModel({
                             break;
                         case 'ir.attachment/delete':
                             return this._handleNotificationAttachmentDelete(message.payload);
-                        case 'mail.channel.member/fetched':
-                            return this._handleNotificationChannelMemberFetched(message.payload);
                         case 'mail.channel.member/typing_status':
                             return this._handleNotificationChannelMemberTypingStatus(message.payload);
                         case 'mail.channel/new_message':
@@ -149,38 +147,6 @@ registerModel({
                 this.messaging.messagingBus.trigger('o-attachment-deleted', { attachment });
                 attachment.delete();
             }
-        },
-        /**
-         * @private
-         * @param {Object} param1
-         * @param {integer} param1.channel_id
-         * @param {integer} param1.last_message_id
-         * @param {integer} param1.partner_id
-         */
-        async _handleNotificationChannelMemberFetched({
-            channel_id: channelId,
-            last_message_id,
-            partner_id,
-        }) {
-            const channel = this.messaging.models['Channel'].findFromIdentifyingData({ id: channelId });
-            if (!channel) {
-                // for example seen from another browser, the current one has no
-                // knowledge of the channel
-                return;
-            }
-            if (channel.channel_type === 'channel') {
-                // disabled on `channel` channels for performance reasons
-                return;
-            }
-            this.messaging.models['ThreadPartnerSeenInfo'].insert({
-                lastFetchedMessage: insert({ id: last_message_id }),
-                partner: { id: partner_id },
-                thread: channel.thread,
-            });
-            this.messaging.models['MessageSeenIndicator'].insert({
-                message: { id: last_message_id },
-                thread: channel.thread,
-            });
         },
         /**
          * @private

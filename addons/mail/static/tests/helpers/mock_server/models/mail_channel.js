@@ -238,6 +238,7 @@ patch(MockServer.prototype, 'mail/models/mail_channel', {
      */
     _mockMailChannelChannelFetched(ids) {
         const channels = this.getRecords('mail.channel', [['id', 'in', ids]]);
+        const notifications = [];
         for (const channel of channels) {
             const channelMessages = this.getRecords('mail.message', [
                 ['model', '=', 'mail.channel'],
@@ -257,13 +258,20 @@ patch(MockServer.prototype, 'mail/models/mail_channel', {
                 [memberOfCurrentUser.id],
                 { fetched_message_id: lastMessage.id },
             );
-            this.pyEnv['bus.bus']._sendone(channel, 'mail.channel.member/fetched', {
-                'channel_id': channel.id,
-                'id': memberOfCurrentUser.id,
-                'last_message_id': lastMessage.id,
-                'partner_id': this.currentPartnerId,
-            });
+            const payload = {
+                'ThreadPartnerSeenInfo': {
+                    'lastFetchedMessage': [['insert-and-replace', { 'id': lastMessage.id }]],
+                    'partner': [['insert-and-replace', this._mockResPartnerMailPartnerFormat([this.pyEnv.currentPartner.id]).get(this.pyEnv.currentPartner.id)]],
+                    'thread': [['insert-and-replace', { 'id': channel.id, 'model': 'mail.channel' }]],
+                },
+                'MessageSeenIndicator': {
+                    'message': [['insert-and-replace', { 'id': lastMessage.id }]],
+                    'thread': [['insert-and-replace', { 'id': channel.id, 'model': 'mail.channel' }]],
+                },
+            };
+            notifications.push([channel, 'mail.record/insert', payload]);
         }
+        this.pyEnv['bus.bus']._sendmany(notifications);
     },
     /**
      * Simulates `channel_fetch_preview` on `mail.channel`.
