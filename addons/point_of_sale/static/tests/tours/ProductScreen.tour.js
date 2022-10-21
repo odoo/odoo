@@ -66,6 +66,26 @@ odoo.define('point_of_sale.tour.ProductScreen', function (require) {
     ProductScreen.do.clickSubcategory('Chairs');
     ProductScreen.check.productIsDisplayed('Letter Tray');
     ProductScreen.do.clickHomeCategory();
+    
+    // Add two orderlines and update quantity
+    ProductScreen.do.clickDisplayedProduct('Whiteboard Pen');
+    ProductScreen.do.clickDisplayedProduct('Wall Shelf Unit');
+    ProductScreen.do.clickOrderline('Whiteboard Pen', '1.0');
+    ProductScreen.check.selectedOrderlineHas('Whiteboard Pen', '1.0');
+    ProductScreen.do.pressNumpad('2');
+    ProductScreen.check.selectedOrderlineHas('Whiteboard Pen', '2.0');
+    ProductScreen.do.clickOrderline('Wall Shelf Unit', '1.0');
+    ProductScreen.check.selectedOrderlineHas('Wall Shelf Unit', '1.0');
+    ProductScreen.do.pressNumpad('2');
+    ProductScreen.check.selectedOrderlineHas('Wall Shelf Unit', '2.0');
+    ProductScreen.do.pressNumpad('Backspace');
+    ProductScreen.check.selectedOrderlineHas('Wall Shelf Unit', '0.0');
+    ProductScreen.do.pressNumpad('Backspace');
+    ProductScreen.check.selectedOrderlineHas('Whiteboard Pen', '2.0');
+    ProductScreen.do.pressNumpad('Backspace');
+    ProductScreen.check.selectedOrderlineHas('Whiteboard Pen', '0.0');
+    ProductScreen.do.pressNumpad('Backspace');
+    ProductScreen.check.orderIsEmpty();
 
     // Add multiple orderlines then delete each of them until empty
     ProductScreen.do.clickDisplayedProduct('Whiteboard Pen');
