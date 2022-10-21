@@ -30,7 +30,7 @@ export class ModelManager {
          * Promise which becomes resolved when messaging is created. Useful for
          * waiting before accessing `this.messaging`.
          */
-        this.messagingCreatedPromise = makeDeferred();
+        this.created = makeDeferred();
         /**
          * Promise which becomes resolved when messaging is initialized. Useful
          * for waiting before accessing `this.messaging`.
@@ -111,7 +111,7 @@ export class ModelManager {
          * Create the messaging singleton record.
          */
         this.models['Messaging'].insert(values);
-        this.messagingCreatedPromise.resolve();
+        this.created.resolve();
         await this.messaging.start();
         this.messagingInitializedPromise.resolve();
     }
@@ -226,7 +226,7 @@ export class ModelManager {
      * @returns {Messaging}
      **/
     async getMessaging() {
-        await this.messagingCreatedPromise;
+        await this.created;
         await this.messagingInitializedPromise;
         return this.messaging;
     }

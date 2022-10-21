@@ -249,10 +249,10 @@ async function start(param0 = {}) {
     await afterNextRender(async () => {
         webClient = await getWebClientReady({ ...param0, messagingBus });
         if (waitUntilMessagingCondition === 'created') {
-            await webClient.env.services.messaging.modelManager.messagingCreatedPromise;
+            await webClient.env.services.messaging.modelManager.created;
         }
         if (waitUntilMessagingCondition === 'initialized') {
-            await webClient.env.services.messaging.modelManager.messagingCreatedPromise;
+            await webClient.env.services.messaging.modelManager.created;
             await webClient.env.services.messaging.modelManager.messagingInitializedPromise;
         }
     });

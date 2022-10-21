@@ -16,7 +16,7 @@ export class DiscussContainer extends Component {
         useModels();
         super.setup();
         onWillDestroy(() => this._willDestroy());
-        this.env.services.messaging.modelManager.messagingCreatedPromise.then(async () => {
+        this.env.services.messaging.modelManager.created.then(async () => {
             const { action } = this.props;
             const initActiveId =
                 (action.context && action.context.active_id) ||

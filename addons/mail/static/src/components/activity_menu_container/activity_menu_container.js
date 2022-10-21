@@ -13,7 +13,7 @@ export class ActivityMenuContainer extends Component {
      */
     setup() {
         super.setup();
-        this.env.services.messaging.modelManager.messagingCreatedPromise.then(() => {
+        this.env.services.messaging.modelManager.created.then(() => {
             this.activityMenuView = this.env.services.messaging.modelManager.messaging.models['ActivityMenuView'].insert();
             this.render();
         });

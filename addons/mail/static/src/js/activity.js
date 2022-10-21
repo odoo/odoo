@@ -48,7 +48,7 @@ const KanbanActivity = AbstractField.extend({
     },
     async willStart() {
         await this._super();
-        await owl.Component.env.services.messaging.modelManager.messagingCreatedPromise;
+        await owl.Component.env.services.messaging.modelManager.created;
         this.messaging = owl.Component.env.services.messaging.modelManager.messaging;
     },
 

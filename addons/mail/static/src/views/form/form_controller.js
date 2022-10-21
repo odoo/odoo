@@ -26,7 +26,7 @@ patch(FormController.prototype, "mail", {
 
         if (this.env.services.messaging) {
             useModels();
-            this.env.services.messaging.modelManager.messagingCreatedPromise.then(() => {
+            this.env.services.messaging.modelManager.created.then(() => {
                 if (owl.status(this) === "destroyed") {
                     return;
                 }

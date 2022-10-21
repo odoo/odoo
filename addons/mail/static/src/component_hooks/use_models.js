@@ -29,7 +29,7 @@ export function useModels() {
     onWillDestroy(() => {
         component.env.services.messaging.modelManager.removeListener(listener);
     });
-    component.env.services.messaging.modelManager.messagingCreatedPromise.then(() => {
+    component.env.services.messaging.modelManager.created.then(() => {
         component.render();
     });
 }
