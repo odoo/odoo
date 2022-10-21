@@ -16,7 +16,6 @@ import { onRendered, onWillDestroy, onWillRender, useComponent } from '@odoo/owl
 export function useModels() {
     const component = useComponent();
     const listener = new Listener({
-        isLocking: false, // unfortunately __render has side effects such as children components updating their reference to their corresponding model
         name: `useModels() of ${component}`,
         type: 'useModels',
         onChange: () => component.render(),

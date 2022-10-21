@@ -12,9 +12,6 @@ export class Listener {
      *  listener is notified of change, which is when records or fields that are
      *  listened to are created/updated/deleted. This function is called with
      *  1 param that contains info
-     * @param {boolean} [param.isLocking=true] whether the model manager should
-     *  be locked while this listener is observing, which means no change of
-     *  state in any model is allowed (preventing to call insert/update/delete).
      * @param {boolean} [param.isPartOfUpdateCycle=false] determines at which
      *  point during the update cycle of the models this `onChange` function
      *  will be called.
@@ -26,9 +23,25 @@ export class Listener {
      *  could otherwise be called multiple times in quick succession).
      * @param {string} param.type
      */
-    constructor({ name, onChange, isLocking = true, isPartOfUpdateCycle = false, type }) {
+    constructor({ name, onChange, isPartOfUpdateCycle = false, type }) {
         this.type = type;
-        this.isLocking = isLocking;
+        /**
+         * Whether the model manager should be locked while this listener is observing,
+         * which means no change of state in any model is allowed
+         * (preventing to call insert/update/delete).
+         */
+        this.isLocking = (() => {
+            switch (this.type) {
+                case 'useModels':
+                    // unfortunately __render has side effects such as children components updating their reference to their corresponding model
+                    return false;
+                case 'useUpdate':
+                    // unfortunately onUpdate methods often have side effect
+                    return false;
+                default:
+                    return true;
+            }
+        })();
         this.isPartOfUpdateCycle = isPartOfUpdateCycle;
         this.name = name;
         this.onChange = onChange;

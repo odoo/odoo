@@ -13,7 +13,6 @@ import { onMounted, onPatched, onWillDestroy, useComponent } from '@odoo/owl';
 export function useUpdate({ func }) {
     const component = useComponent();
     const listener = new Listener({
-        isLocking: false, // unfortunately onUpdate methods often have side effect
         name: `useUpdate() of ${component}`,
         type: 'useUpdate',
         onChange: () => component.render(),
