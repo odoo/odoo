@@ -1034,6 +1034,43 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["onchange", "create", "read"]);
     });
 
+    QUnit.test("multi_edit: edit a required field with an invalid value", async function (assert) {
+        serverData.models.foo.fields.foo.required = true;
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree multi_edit="1">
+                    <field name="foo"/>
+                    <field name="int_field"/>
+                </tree>`,
+            mockRPC(route, args) {
+                assert.step(args.method);
+            },
+        });
+        assert.containsN(target, ".o_data_row", 4);
+        assert.verifySteps(["get_views", "web_search_read"]);
+
+        const rows = target.querySelectorAll(".o_data_row");
+        await click(rows[0], ".o_list_record_selector input");
+        await click(rows[0].querySelector(".o_data_cell"));
+        await editInput(target, "[name='foo'] input", "");
+        await click(target, ".o_list_view");
+        assert.containsOnce(target, ".modal");
+        assert.strictEqual(target.querySelector(".modal .btn").textContent, "Ok");
+
+        await click(target.querySelector(".modal .btn"));
+        assert.strictEqual(
+            target.querySelector(".o_data_row .o_data_cell[name='foo']").textContent,
+            "yop"
+        );
+        assert.hasClass(target.querySelector(".o_data_row"), "o_data_row_selected");
+
+        assert.verifySteps([]);
+    });
+
     QUnit.test("save a record with an required field computed by another", async function (assert) {
         serverData.models.foo.onchanges = {
             foo(record) {
