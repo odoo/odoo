@@ -1024,31 +1024,29 @@ actual arch.
         return arch, models
 
     def _postprocess_access_rights(self, tree):
+        """ Apply restrictions based on groups and model access rights. """
+        tree = self._postprocess_access_rights_groups(tree)
+        tree = self._postprocess_access_rights_models(tree)
+        return tree
+
+    def _postprocess_access_rights_groups(self, tree):
         """
         Apply group restrictions: elements with a 'groups' attribute should
         be removed from the view to people who are not members.
+        """
+        for node in tree.xpath('//*[@groups]'):
+            if not self.user_has_groups(node.attrib.pop('groups')):
+                node.getparent().remove(node)
+            else:
+                self._postprocess_empty_template(node)
+        return tree
 
+    def _postprocess_access_rights_models(self, tree):
+        """
         Compute and set on node access rights based on view type. Specific
         views can add additional specific rights like creating columns for
         many2one-based grouping views.
         """
-
-        for node in tree.xpath('//*[@groups]'):
-            if not self.user_has_groups(node.attrib.pop('groups')):
-                node.getparent().remove(node)
-            elif node.tag == 't' and not node.attrib:
-                # Move content of <t> blocks with no other instructions than just "groups=" to the parent
-                # and remove the <t> node.
-                # This is to keep the structure
-                # <group>
-                #   <field name="foo"/>
-                #   <field name="bar"/>
-                # <group>
-                # so the web client adds the label as expected.
-                for child in reversed(node):
-                    node.addnext(child)
-                node.getparent().remove(node)
-
         base_model = tree.get('model_access_rights')
         for node in tree.xpath('//*[@model_access_rights]'):
             model = self.env[node.attrib.pop('model_access_rights')]
@@ -1074,8 +1072,26 @@ actual arch.
                                     not group_by_model.check_access_rights(operation, raise_exception=False) or
                                     not self._context.get(action, True) and is_base_model):
                                 node.set(action, 'false')
-
         return tree
+
+    @staticmethod
+    def _postprocess_empty_template(node):
+        """
+        Move content of <t> blocks with no other instructions than just "groups=" to the parent
+        and remove the <t> node.
+
+        This is to keep the structure
+        <group>
+          <field name="foo"/>
+          <field name="bar"/>
+        <group>
+        so the web client adds the label as expected.
+        """
+        if node.tag == 't' and not node.attrib:
+            for child in reversed(node):
+                node.addnext(child)
+            node.getparent().remove(node)
+        return node
 
     def _postprocess_context_dependent(self, tree):
         """
