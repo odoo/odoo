@@ -733,7 +733,7 @@ export class ModelManager {
      * @param {Record} record
      * @param {ModelField} field
      */
-    _markRecordFieldAsChanged(record, field) {
+    markAsChanged(record, field) {
         for (const [listener, infoList] of record.__listenersOnField.get(field) || []) {
             this._markListenerToNotify(listener, {
                 listener,
@@ -861,7 +861,7 @@ export class ModelManager {
                 console.warn(`read-only ${field} on ${record} was updated`);
             }
             hasChanged = true;
-            this._markRecordFieldAsChanged(record, field);
+            this.markAsChanged(record, field);
         }
         if (hasChanged) {
             this.cycle.check.add(record);

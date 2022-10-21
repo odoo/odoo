@@ -140,7 +140,7 @@ export class RelationSet {
                     this.sortArray.sort(compareFunction);
                     // Similarly naive approach: the field is marked as changed even if sort didn't
                     // actually move any record.
-                    this.manager._markRecordFieldAsChanged(this.record, this.field);
+                    this.manager.markAsChanged(this.record, this.field);
                 },
             });
             this.sortListenerByValue.set(value, listener);
