@@ -588,7 +588,7 @@ export class ModelManager {
     /**
      * Executes the _created method of the created records.
      */
-    _executeCreatedRecordsCreated() {
+    doNewCreated() {
         for (const record of this.cycle.newCreated) {
             // Delete at every step to avoid recursion, indeed _created might
             // trigger an update cycle itself.
@@ -661,7 +661,7 @@ export class ModelManager {
         this.doNewCompute();
         this.doNotifyNow();
         this.doCheck();
-        this._executeCreatedRecordsCreated();
+        this.doNewCreated();
         this._executeCreatedRecordsOnChange();
         this._notifyListenersAfterUpdateCycle();
     }
