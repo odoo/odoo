@@ -1174,4 +1174,6 @@ odoo.define('pos_coupon.pos', function (require) {
             return result;
         },
     });
+
+    return {CouponCode, RewardsContainer, Reward};
 });

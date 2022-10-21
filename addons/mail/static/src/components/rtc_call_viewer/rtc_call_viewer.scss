@@ -8,12 +8,10 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    height: 50%;
     min-height: 50%;
 
     &.o-isMinimized {
-        height: 20%;
-        min-height: 20%;
+        min-height: #{"max(20%, 130px)"};
     }
 
     &.o-fullScreen {

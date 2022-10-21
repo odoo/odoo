@@ -58,7 +58,7 @@
                                         </td>
                                     </t>
                                     <td t-if="o.type_id == env.ref('purchase_requisition.type_single')">
-                                        <span t-field="line_ids.price_unit" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                        <span t-field="line_ids.price_unit" t-options='{"widget": "monetary", "display_currency": line_ids.requisition_id.currency_id}'/>
                                     </td>
                                     <td class="text-right">
                                         <span t-field="line_ids.schedule_date"/>

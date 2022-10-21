@@ -21,9 +21,9 @@
 # Marek Pontus, 2022
 # Andre Roomet <andreroomet@gmail.com>, 2022
 # Piia Paurson <piia@avalah.ee>, 2022
-# Eneli Õigus <enelioigus@gmail.com>, 2022
 # Egon Raamat <egon@avalah.ee>, 2022
 # Rivo Zängov <eraser@eraser.ee>, 2022
+# Eneli Õigus <enelioigus@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -31,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Rivo Zängov <eraser@eraser.ee>, 2022\n"
+"Last-Translator: Eneli Õigus <enelioigus@gmail.com>, 2022\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -687,6 +687,11 @@ msgid "<span class=\"o_stat_text\">Invoiced</span>"
 msgstr "<span class=\"o_stat_text\">Arveldatud</span>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
+msgid "<span class=\"o_stat_text\">Journal Entry</span>"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 "<span class=\"oe_inline o_form_label mr-3 ml-5 oe_edit_only\" "
@@ -829,6 +834,12 @@ msgstr "<span>Summa</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "<span>Amount In Currency</span>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Description</span>"
 msgstr "<span>Kirjeldus</span>"
@@ -962,6 +973,11 @@ msgstr "<strong>Ettevõte:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Credit Note Date:</strong>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code:</strong>"
 msgstr "<strong>Kliendikood:</strong>"
 
@@ -972,6 +988,11 @@ msgstr "<strong>Klient </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Date:</strong>"
+msgstr "<strong>Kuupäev:</strong>"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Due Date:</strong>"
 msgstr "<strong>Maksetähtaeg:</strong>"
@@ -1006,6 +1027,11 @@ msgstr "<strong>Andmik:</strong>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
 msgid "<strong>Product</strong>"
 msgstr "<strong>Toode</strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Receipt Date:</strong>"
+msgstr "<strong>Kättesaamise kuupäev:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -5367,6 +5393,11 @@ msgid "Documentation"
 msgstr "Dokumentatsioon"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Domestic country of your accounting"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_dashboard_onboarding_state__done
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_invoice_onboarding_state__done
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_onboarding_create_invoice_state__done
@@ -7539,7 +7570,6 @@ msgstr "Registri kanded kuupäevaliselt"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
-#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #, python-format
 msgid "Journal Entry"
 msgstr "Andmiku kanne"
@@ -10674,6 +10704,12 @@ msgstr "Sobitamise mudelid"
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__partial_reconcile_ids
 msgid "Reconciliation Parts"
 msgstr "Sobitamise  osad"
+
+#. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Record cannot be deleted. Partner used in Accounting"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -14249,6 +14285,15 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
+"This entry contains one or more taxes that are incompatible with your fiscal"
+" country. Check company fiscal country in the settings and tax country in "
+"taxes configuration."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
 "This entry contains some tax from an unallowed country. Please check its "
 "fiscal position and your tax configuration."
 msgstr ""
@@ -14259,6 +14304,14 @@ msgstr ""
 msgid ""
 "This entry has been duplicated from <a href=# data-oe-model=account.move "
 "data-oe-id=%(id)d>%(title)s</a>"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"This entry contains taxes that are not compatible with your fiscal position."
+" Check the country set in fiscal position and in your tax configuration."
 msgstr ""
 
 #. module: account

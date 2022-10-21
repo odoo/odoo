@@ -128,7 +128,7 @@ odoo.define("pos_gift_card.GiftCardPopup", function (require) {
 
       for (let line of order.orderlines.models) {
         if (line.product.id === giftProduct.id && line.price < 0) {
-          if (line.gift_card_id === await this.getGiftCard().id) return line;
+          if (line.gift_card_id === (await this.getGiftCard()).id) return line;
         }
       }
       return false;
@@ -151,7 +151,7 @@ odoo.define("pos_gift_card.GiftCardPopup", function (require) {
         ];
 
       let currentOrder = this.env.pos.get_order();
-      let lineUsed = this.isGiftCardAlreadyUsed()
+      let lineUsed = await this.isGiftCardAlreadyUsed()
       if (lineUsed) currentOrder.remove_orderline(lineUsed);
 
       currentOrder.add_product(gift, {

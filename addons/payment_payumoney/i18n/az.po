@@ -1,13 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_payumoney
+# 	* payment_payumoney
+# 
+# Translators:
+# Jumshud Sultanov <cumshud@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:22+0000\n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Jumshud Sultanov <cumshud@gmail.com>, 2022\n"
 "Language-Team: Azerbaijani (https://www.transifex.com/odoo/teams/41243/az/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,23 +20,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_payumoney
-#: selection:payment.acquirer,provider:0
-msgid "Adyen"
-msgstr ""
-
-#. module: payment_payumoney
-#: selection:payment.acquirer,provider:0
-msgid "Authorize.Net"
-msgstr ""
-
-#. module: payment_payumoney
-#: selection:payment.acquirer,provider:0
-msgid "Buckaroo"
-msgstr ""
-
-#. module: payment_payumoney
-#: selection:payment.acquirer,provider:0
-msgid "Manual Configuration"
+#: code:addons/payment_payumoney/models/payment_transaction.py:0
+#, python-format
+msgid "Invalid shasign: received %(sign)s, computed %(computed)s."
 msgstr ""
 
 #. module: payment_payumoney
@@ -46,54 +36,30 @@ msgid "Merchant Salt"
 msgstr ""
 
 #. module: payment_payumoney
-#: selection:payment.acquirer,provider:0
-msgid "Ogone"
+#: code:addons/payment_payumoney/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
 msgstr ""
 
 #. module: payment_payumoney
-#: selection:payment.acquirer,provider:0
+#: model:account.payment.method,name:payment_payumoney.payment_method_payumoney
+#: model:ir.model.fields.selection,name:payment_payumoney.selection__payment_acquirer__provider__payumoney
 msgid "PayUmoney"
-msgstr ""
-
-#. module: payment_payumoney
-#: code:addons/payment_payumoney/models/payment.py:108
-#, python-format
-msgid "PayUmoney: invalid shasign, received %s, computed %s, for data %s"
-msgstr ""
-
-#. module: payment_payumoney
-#: code:addons/payment_payumoney/models/payment.py:102
-#, python-format
-msgid "PayUmoney: received data for reference %s; multiple orders found"
-msgstr ""
-
-#. module: payment_payumoney
-#: code:addons/payment_payumoney/models/payment.py:99
-#, python-format
-msgid "PayUmoney: received data for reference %s; no order found"
-msgstr ""
-
-#. module: payment_payumoney
-#: code:addons/payment_payumoney/models/payment.py:94
-#, python-format
-msgid ""
-"PayUmoney: received data with missing reference (%s) or pay_id (%s) or "
-"shashign (%s)"
 msgstr ""
 
 #. module: payment_payumoney
 #: model:ir.model,name:payment_payumoney.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "Ödəniş Ekvayeri"
+
+#. module: payment_payumoney
+#: model:ir.model,name:payment_payumoney.model_account_payment_method
+msgid "Payment Methods"
+msgstr "Ödəniş Üsulları"
 
 #. module: payment_payumoney
 #: model:ir.model,name:payment_payumoney.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
-
-#. module: payment_payumoney
-#: selection:payment.acquirer,provider:0
-msgid "Paypal"
 msgstr ""
 
 #. module: payment_payumoney
@@ -102,16 +68,23 @@ msgid "Provider"
 msgstr ""
 
 #. module: payment_payumoney
-#: selection:payment.acquirer,provider:0
-msgid "Sips"
+#: code:addons/payment_payumoney/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing reference (%(ref)s) or shasign (%(sign)s)"
 msgstr ""
 
 #. module: payment_payumoney
-#: selection:payment.acquirer,provider:0
-msgid "Stripe"
+#: model:ir.model.fields,help:payment_payumoney.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
 msgstr ""
 
 #. module: payment_payumoney
-#: selection:payment.acquirer,provider:0
-msgid "Wire Transfer"
+#: model:ir.model.fields,help:payment_payumoney.field_payment_acquirer__payumoney_merchant_key
+msgid "The key solely used to identify the account with PayU money"
+msgstr ""
+
+#. module: payment_payumoney
+#: code:addons/payment_payumoney/models/payment_transaction.py:0
+#, python-format
+msgid "The payment encountered an error with code %s"
 msgstr ""

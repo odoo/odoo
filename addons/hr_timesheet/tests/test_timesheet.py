@@ -467,3 +467,35 @@ class TestTimesheet(TestCommonTimesheet):
             'unit_amount': 2,
         })
         self.assertEqual(self.project_customer.remaining_hours, 0.0, 'Remaining hours should be 0.0 after adding timesheet to child task')
+
+    def test_check_timesheet_user(self):
+        """ Test Check whether the timesheet user is correct or not.
+
+            Part 1: Test Case:
+            ----------
+                1) Create employee without user
+                2) Create timesheet
+                3) Check the user of the timesheet
+
+            Part 2:  Test Case:
+            ----------
+                3) Create a timesheet of the employee linked to the user
+                4) Check the user of the timesheet
+        """
+
+        Timesheet = self.env['account.analytic.line']
+
+        emp_without_user = self.env['hr.employee'].create({
+            'name': 'Empl Employee',
+        })
+        without_user_timesheet = Timesheet.with_context(default_employee_id=emp_without_user.id).create({
+            'project_id': self.project_customer.id,
+            'unit_amount': 8.0,
+        })
+        self.assertFalse(without_user_timesheet.user_id, 'User is not set in timesheet.')
+
+        with_user_timesheet = Timesheet.with_context(default_employee_id=self.empl_employee.id).create({
+            'project_id': self.project_customer.id,
+            'unit_amount': 8.0,
+        })
+        self.assertEqual(with_user_timesheet.user_id, self.user_employee, 'User Employee is set in timesheet.')

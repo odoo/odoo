@@ -10,7 +10,7 @@ from random import randint
 from odoo import api, Command, fields, models, tools, SUPERUSER_ID, _, _lt
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools import format_amount
-from odoo.osv.expression import OR
+from odoo.osv.expression import OR, TRUE_LEAF, FALSE_LEAF
 
 from .project_task_recurrence import DAYS, WEEKS
 from .project_update import STATUS_COLOR
@@ -1639,13 +1639,13 @@ class Task(models.Model):
             # only take field name when having ':' e.g 'date_deadline:week' => 'date_deadline'
             fields_list += [f.split(':')[0] for f in fields_groupby]
         if domain:
-            fields_list += [term[0].split('.')[0] for term in domain if isinstance(term, (tuple, list))]
+            fields_list += [term[0].split('.')[0] for term in domain if isinstance(term, (tuple, list)) and term not in [TRUE_LEAF, FALSE_LEAF]]
         self._ensure_fields_are_accessible(fields_list)
         return super(Task, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
-        fields_list = {term[0] for term in args if isinstance(term, (tuple, list))}
+        fields_list = {term[0] for term in args if isinstance(term, (tuple, list)) and term not in [TRUE_LEAF, FALSE_LEAF]}
         self._ensure_fields_are_accessible(fields_list)
         return super(Task, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
 
@@ -1657,7 +1657,7 @@ class Task(models.Model):
         return super(Task, self).mapped(func)
 
     def filtered_domain(self, domain):
-        fields_list = [term[0] for term in domain if isinstance(term, (tuple, list))]
+        fields_list = [term[0] for term in domain if isinstance(term, (tuple, list)) and term not in [TRUE_LEAF, FALSE_LEAF]]
         self._ensure_fields_are_accessible(fields_list)
         return super(Task, self).filtered_domain(domain)
 
@@ -1683,7 +1683,16 @@ class Task(models.Model):
                 else:
                     for field_name in self._get_recurrence_fields() + ['recurring_task']:
                         vals.pop(field_name, None)
-        return super()._load_records_create(vals_list)
+        tasks = super()._load_records_create(vals_list)
+        stage_ids_per_project = defaultdict(list)
+        for task in tasks:
+            if task.stage_id and task.stage_id not in task.project_id.type_ids and task.stage_id.id not in stage_ids_per_project[task.project_id]:
+                stage_ids_per_project[task.project_id].append(task.stage_id.id)
+
+        for project, stage_ids in stage_ids_per_project.items():
+            project.write({'type_ids': [Command.link(stage_id) for stage_id in stage_ids]})
+
+        return tasks
 
     @api.model_create_multi
     def create(self, vals_list):

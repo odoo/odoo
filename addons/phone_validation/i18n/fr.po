@@ -6,6 +6,7 @@
 # Martin Trigaux, 2021
 # Cécile Collart <cco@odoo.com>, 2021
 # Rémi CAZENAVE, 2021
+# Jolien De Paepe, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,13 +14,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Rémi CAZENAVE, 2021\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: phone_validation
 #: code:addons/phone_validation/models/phone_blacklist.py:0
@@ -85,6 +86,8 @@ msgstr "Le téléphone sur la liste noire est mobile"
 #: model_terms:ir.actions.act_window,help:phone_validation.phone_blacklist_action
 msgid "Blacklisted phone numbers won't receive SMS Mailings anymore."
 msgstr ""
+"Les numéros de téléphone sur liste noire ne recevront plus de campagnes "
+"marketing par SMS."
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
@@ -339,6 +342,8 @@ msgstr "Téléphone/Mobile"
 msgid ""
 "Please enter at least 3 characters when searching a Phone/Mobile number."
 msgstr ""
+"Veuillez saisir au moins 3 caractères pour chercher par numéro de "
+"téléphone/mobile."
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__reason

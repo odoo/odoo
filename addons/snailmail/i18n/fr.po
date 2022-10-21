@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_cover
@@ -45,6 +45,8 @@ msgstr "Une erreur est survenue lors de l'envoi de la lettre par la poste."
 #, python-format
 msgid "An error occurred when sending the document by post.<br>Error: %s"
 msgstr ""
+"Une erreur est survenue lors de l'envoi du document par la poste. <br> "
+"Erreur: %s"
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0

@@ -8,8 +8,9 @@
 # Caroline Renson <car@odoo.com>, 2022
 # SAKodoo <sak@odoo.com>, 2022
 # Martin Trigaux, 2022
-# Cécile Collart <cco@odoo.com>, 2022
 # Claude Perrin <claude@perrin.it>, 2022
+# Cécile Collart <cco@odoo.com>, 2022
+# Jolien De Paepe, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:55+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Claude Perrin <claude@perrin.it>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,6 +82,10 @@ msgid ""
 " not allowed once document(s) have been issued for your account. <br/>Please"
 " contact us directly for this operation.</small>"
 msgstr ""
+"<small class=\"form-text text-muted\">La modification du nom de l'entreprise"
+" ou du numéro de TVA n'est plus autorisée une fois que des documents ont été"
+" émis pour votre compte. <br/>Veuillez nous contacter directement pour "
+"effectuer cette opération.</small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -268,7 +273,7 @@ msgstr ""
 #: code:addons/portal/static/src/js/portal.js:0
 #, python-format
 msgid "API Key Ready"
-msgstr ""
+msgstr "Clé API prête"
 
 #. module: portal
 #. openerp-web
@@ -494,7 +499,7 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_res_config_settings__portal_allow_api_keys
 msgid "Customer API Keys"
-msgstr ""
+msgstr "Clés API client"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
@@ -623,6 +628,8 @@ msgid ""
 "Here is your new API key, use it instead of a password for RPC access.\n"
 "                Your login is still necessary for interactive usage."
 msgstr ""
+"Voici votre nouvelle clé API, utilisez-le au lieu d'un mot de passe pour l'accès RPC.\n"
+"                Vous devez toujours vous connecter pour une utilisation interactive."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -641,7 +648,7 @@ msgstr "ID"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Important:"
-msgstr ""
+msgstr "Important :"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -661,6 +668,7 @@ msgstr "Note interne"
 #, python-format
 msgid "Internal notes are only displayed to internal users."
 msgstr ""
+"Les notes internes sont uniquement affichées aux utilisateurs internes."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -682,12 +690,12 @@ msgstr "Message d'invitation"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_internal
 msgid "Is Internal"
-msgstr ""
+msgstr "Est interne"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_portal
 msgid "Is Portal"
-msgstr ""
+msgstr "Est portail"
 
 #. module: portal
 #. openerp-web
@@ -697,6 +705,8 @@ msgid ""
 "It is very important that this description be clear\n"
 "                and complete,"
 msgstr ""
+"Il est extrêmement important que cette description soit claire\n"
+"                et complète,"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share____last_update
@@ -722,7 +732,7 @@ msgstr "Dernière mise à jour le"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__login_date
 msgid "Latest Authentication"
-msgstr ""
+msgstr "Dernière authentification"
 
 #. module: portal
 #. openerp-web
@@ -734,7 +744,7 @@ msgstr "Laisser un commentaire"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.res_config_settings_view_form
 msgid "Let your customers create developer API keys"
-msgstr ""
+msgstr "Permettez à vos clients de créer des clés API développeur"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__share_link
@@ -814,7 +824,7 @@ msgstr "Logo Odoo"
 #: code:addons/portal/models/res_users_apikeys_description.py:0
 #, python-format
 msgid "Only internal and portal users can create API keys"
-msgstr ""
+msgstr "Seuls les utilisateurs internes et portail peuvent créer des clés API"
 
 #. module: portal
 #. openerp-web
@@ -851,6 +861,8 @@ msgstr "Téléphone"
 #, python-format
 msgid "Please enter your password to confirm you own this account"
 msgstr ""
+"Veuillez entrer votre mot de passe pour confirmer que ceci est bien votre "
+"compte"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
@@ -882,7 +894,7 @@ msgstr "Paramétrage du portail utilisateur"
 #. module: portal
 #: model:mail.template,name:portal.mail_template_data_portal_welcome
 msgid "Portal: User Invite"
-msgstr ""
+msgstr "Portail : invitation d'utilisateur"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
@@ -912,7 +924,7 @@ msgstr "Publié sur %s"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Re-Invite"
-msgstr ""
+msgstr "Réinviter"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__partner_ids
@@ -937,7 +949,7 @@ msgstr "Modèle de document concerné"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Revoke Access"
-msgstr ""
+msgstr "Révoquer l'accès"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1009,6 +1021,8 @@ msgid ""
 "Some fields are required. Please make sure to write a message or attach a "
 "document"
 msgstr ""
+"Certains champs sont obligatoires. Veuillez écrire un message ou joindre un "
+"document"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -1068,7 +1082,7 @@ msgstr "La pièce jointe n'existe pas ou vous n'avez pas les droits d'accès."
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The contact \"%s\" does not have a valid email."
-msgstr ""
+msgstr "Le contact \"%s\" n'a pas d'adresse email valide."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
@@ -1088,7 +1102,7 @@ msgstr "Le document n'existe pas ou vous n'avez pas les droits d'accès."
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "The key cannot be retrieved later and provides"
-msgstr ""
+msgstr "La clé ne peut pas être récupérée ultérieurement et fournit"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -1109,7 +1123,7 @@ msgstr ""
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The partner \"%s\" already has the portal access."
-msgstr ""
+msgstr "Le partenaire \"%s\" a déjà accès au portail."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
@@ -1124,6 +1138,8 @@ msgid ""
 "The template \"Portal: new user\" not found for sending email to the portal "
 "user."
 msgstr ""
+"Le modèle \"Portail : nouvel utilisateur\" introuvable pour l'envoi d'un "
+"email à l'utilisateur du portail."
 
 #. module: portal
 #. openerp-web
@@ -1149,12 +1165,16 @@ msgid ""
 "This partner is linked to an internal User and already has access to the "
 "Portal."
 msgstr ""
+"Ce partenaire est déjà lié à un utilisateur interne et a déjà accès au "
+"portail."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid ""
 "This text is included at the end of the email sent to new portal users."
 msgstr ""
+"Ce texte figure à la fin de l'email envoyé aux nouveaux utilisateurs du "
+"portail."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
@@ -1325,12 +1345,12 @@ msgstr "Vous devez être"
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "You should first grant the portal access to the partner \"%s\"."
-msgstr ""
+msgstr "Vous devriez d'abord accorder accès au portail au partenaire \"%s\"."
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
 msgid "Your account at {{ object.user_id.company_id.name }}"
-msgstr ""
+msgstr "Votre compte sur {{ object.user_id.company_id.name }}"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_contact
@@ -1368,7 +1388,7 @@ msgstr "commentaires"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "full access"
-msgstr ""
+msgstr "accès complet"
 
 #. module: portal
 #. openerp-web
@@ -1378,6 +1398,8 @@ msgid ""
 "it will be the only way to\n"
 "                identify the key once created"
 msgstr ""
+"ce sera le seul moyen\n"
+"                d'identifier la clé une fois qu'elle a été créée"
 
 #. module: portal
 #. openerp-web
@@ -1419,3 +1441,4 @@ msgstr "pour poster un commentaire."
 #, python-format
 msgid "to your user account, it is very important to store it securely."
 msgstr ""
+"à votre compte utilisateur, il est essentiel de le conserver en lieu sûr."
