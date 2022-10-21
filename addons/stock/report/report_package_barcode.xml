@@ -16,11 +16,11 @@
                               <h1 t-field="o.name" class="mt0 float-start"/>
                             </th>
                             <th name="td_pk_barcode" style="text-align: center">
-                                <t t-if="o.valid_sscc and env['ir.actions.report'].datamatrix_available()">
+                                <t t-if="o.valid_sscc">
                                     <div class="row text-start">
                                         <t t-set="barcode" t-value="'00' + o.name"/>
                                         <t t-if="o.pack_date" t-set="barcode" t-value="barcode + '13' + o.pack_date.strftime('%y%m%d')"/>
-                                        <div class="col-3" name="datamatrix_barcode" style="margin: 0px 20px 40px 60px" t-out="barcode" t-options="{'widget': 'barcode', 'symbology': 'DataMatrix', 'width': 100, 'height': 100}"/>
+                                        <div class="col-3" name="datamatrix_barcode" style="margin: 0px 20px 40px 60px" t-out="barcode" t-options="{'widget': 'barcode', 'symbology': 'ECC200DataMatrix', 'width': 100, 'height': 100}"/>
                                     </div>
                                 </t>
                                 <t t-else="">
@@ -42,7 +42,7 @@
                     </div>
                     <table class="table table-sm table-striped" style="border-bottom: 0px solid white !important;">
                         <t t-set="has_serial_number" t-value="o.quant_ids.mapped('lot_id')" />
-                        <t t-set="has_ean_barcode" t-value="env['ir.actions.report'].datamatrix_available() and any(valid_ean for valid_ean in o.quant_ids.product_id.mapped('valid_ean'))" />
+                        <t t-set="has_ean_barcode" t-value="any(valid_ean for valid_ean in o.quant_ids.product_id.mapped('valid_ean'))" />
                         <thead>
                             <tr>
                                 <th>Product</th>
@@ -84,7 +84,7 @@
                                         <!-- TODO: lot/sn ALWAYS has to be last part of barcode since left padding '0's = different sn/lot name match when scanning => fix when FNC1 can be used,  -->
                                         <t name="product_barcode_lot_datamatrix" t-if="l.product_id.tracking == 'lot' and l.lot_id" t-set="product_barcode" t-value="product_barcode + '10' + l.lot_id.name"/>
                                         <t t-elif="l.product_id.tracking == 'serial' and l.lot_id" t-set="product_barcode" t-value="product_barcode + '21' +  l.lot_id.name"/>
-                                        <span t-out="product_barcode" t-options="{'widget': 'barcode', 'symbology': 'DataMatrix', 'width': 45, 'height': 45}"/>
+                                        <span t-out="product_barcode" t-options="{'widget': 'barcode', 'symbology': 'ECC200DataMatrix', 'img_style': 'width:17mm;height:17mm'}"/>
                                     </t>
                                 </td>
                             </tr>
@@ -102,11 +102,11 @@
             <t>
                 <div class="page">
                     <div class="oe_structure"/>
-                    <t t-if="o.valid_sscc and env['ir.actions.report'].datamatrix_available()">
+                    <t t-if="o.valid_sscc">
                         <div class="row">
                             <t t-set="barcode" t-value="'00' + o.name"/>
                             <t t-if="o.pack_date" t-set="barcode" t-value="barcode + '13' + o.pack_date.strftime('%y%m%d')"/>
-                            <div class="col-5 text-end" name="datamatrix_barcode" style="margin: 0px 20px 40px 60px" t-out="barcode" t-options="{'widget': 'barcode', 'symbology': 'DataMatrix', 'width': 200, 'height': 200}"/>
+                            <div class="col-5 text-end" name="datamatrix_barcode" style="margin: 0px 20px 40px 60px" t-out="barcode" t-options="{'widget': 'barcode', 'symbology': 'ECC200DataMatrix', 'width': 200, 'height': 200}"/>
                             <div class="col-7 text-start" style="font-size:20px;">
                                 <div class="row">SSCC: <span t-field="o.name"/></div>
                                 <div t-if="o.pack_date" class="row">Pack Date: <span t-field="o.pack_date"/></div>
