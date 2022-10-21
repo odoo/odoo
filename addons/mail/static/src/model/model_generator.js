@@ -18,30 +18,30 @@ export class ModelGenerator {
         // Create the model through a class to give it a meaningful name to be
         // displayed in stack traces and stuff.
         const model = { 'Record': class {} }['Record'];
-        this._applyModelDefinition(model);
+        this._apply(model);
         // Record is generated separately and before the other models since
         // it is the dependency of all of them.
         const allModelNamesButRecord = [...registry.keys()].filter(name => name !== 'Record');
         for (const modelName of allModelNamesButRecord) {
             const model = { [modelName]: class extends this.manager.models['Record'] {} }[modelName];
-            this._applyModelDefinition(model);
+            this._apply(model);
         }
         /**
          * Check that fields on the generated models are correct.
          */
-        this._checkDeclaredFieldsOnModels();
+        this._checkDeclared();
         /**
          * Process declared model fields definitions, so that these field
          * definitions are much easier to use in the system. For instance, all
          * relational field definitions have an inverse.
          */
-        this._processDeclaredFieldsOnModels();
+        this._process();
         /**
          * Check that all model fields are correct, notably one relation
          * should have matching reversed relation.
          */
-        this._checkProcessedFieldsOnModels();
-        this._checkOnChangesOnModels();
+        this._checkProcessed();
+        this._checkOnChanges();
     }
 
     /**
@@ -51,7 +51,7 @@ export class ModelGenerator {
      * @private
      * @param {Object} model
      */
-    _applyModelDefinition(model) {
+    _apply(model) {
         const definition = registry.get(model.name);
         Object.assign(model, Object.fromEntries(definition.get('modelMethods')));
         Object.assign(model.prototype, Object.fromEntries(definition.get('recordMethods')));
@@ -83,7 +83,7 @@ export class ModelGenerator {
      * @private
      * @throws {Error} in case some declared fields are not correct.
      */
-     _checkDeclaredFieldsOnModels() {
+     _checkDeclared() {
         for (const model of Object.values(this.manager.models)) {
             for (const [fieldName, field] of registry.get(model.name).get('fields')) {
                 // 0. Forbidden name.
@@ -221,7 +221,7 @@ export class ModelGenerator {
      * @private
      * @throws {Error}
      */
-    _checkOnChangesOnModels() {
+    _checkOnChanges() {
         for (const model of Object.values(this.manager.models)) {
             for (const { dependencies, methodName } of registry.get(model.name).get('onChanges')) {
                 for (const dependency of dependencies) {
@@ -250,7 +250,7 @@ export class ModelGenerator {
      * @private
      * @throws {Error} in case some fields are not correct.
      */
-    _checkProcessedFieldsOnModels() {
+    _checkProcessed() {
         for (const model of Object.values(this.manager.models)) {
             if (!['and', 'xor'].includes(model.identifyingMode)) {
                 throw new Error(`Unsupported identifying mode "${model.identifyingMode}" on ${model}. Must be one of 'and' or 'xor'.`);
@@ -332,7 +332,7 @@ export class ModelGenerator {
      * @param {ModelField} field
      * @returns {ModelField}
      */
-    _makeInverseRelationField(model, field) {
+    _makeInverse(model, field) {
         const inverseField = new ModelField(Object.assign(
             {},
             ModelField.many(model.name, { inverse: field.fieldName }),
@@ -357,7 +357,7 @@ export class ModelGenerator {
      *
      * @private
      */
-     _processDeclaredFieldsOnModels() {
+    _process() {
         /**
          * 1. Prepare fields.
          */
@@ -400,7 +400,7 @@ export class ModelGenerator {
                     continue;
                 }
                 const relatedModel = this.manager.models[field.to];
-                const inverseField = this._makeInverseRelationField(model, field);
+                const inverseField = this._makeInverse(model, field);
                 field.inverse = inverseField.fieldName;
                 relatedModel.fields[inverseField.fieldName] = inverseField;
             }
