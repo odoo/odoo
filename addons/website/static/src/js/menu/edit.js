@@ -459,90 +459,90 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         };
         return [
             {
-                groupName: 'Website',
-                title: 'Alert',
-                description: 'Insert an alert snippet.',
+                groupName: _t('Website'),
+                title: _t('Alert'),
+                description: _t('Insert an alert snippet.'),
                 fontawesome: 'fa-info',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_alert"]');
                 },
             },
             {
-                groupName: 'Website',
-                title: 'Rating',
-                description: 'Insert a rating snippet.',
+                groupName: _t('Website'),
+                title: _t('Rating'),
+                description: _t('Insert a rating snippet.'),
                 fontawesome: 'fa-star-half-o',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_rating"]');
                 },
             },
             {
-                groupName: 'Website',
-                title: 'Card',
-                description: 'Insert a card snippet.',
+                groupName: _t('Website'),
+                title: _t('Card'),
+                description: _t('Insert a card snippet.'),
                 fontawesome: 'fa-sticky-note',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_card"]');
                 },
             },
             {
-                groupName: 'Website',
-                title: 'Share',
-                description: 'Insert a share snippet.',
+                groupName: _t('Website'),
+                title: _t('Share'),
+                description: _t('Insert a share snippet.'),
                 fontawesome: 'fa-share-square-o',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_share"]');
                 },
             },
             {
-                groupName: 'Website',
-                title: 'Text Highlight',
-                description: 'Insert a text Highlight snippet.',
+                groupName: _t('Website'),
+                title: _t('Text Highlight'),
+                description: _t('Insert a text Highlight snippet.'),
                 fontawesome: 'fa-sticky-note',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_text_highlight"]');
                 },
             },
             {
-                groupName: 'Website',
-                title: 'Chart',
-                description: 'Insert a chart snippet.',
+                groupName: _t('Website'),
+                title: _t('Chart'),
+                description: _t('Insert a chart snippet.'),
                 fontawesome: 'fa-bar-chart',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_chart"]');
                 },
             },
             {
-                groupName: 'Website',
-                title: 'Progress Bar',
-                description: 'Insert a progress bar snippet.',
+                groupName: _t('Website'),
+                title: _t('Progress Bar'),
+                description: _t('Insert a progress bar snippet.'),
                 fontawesome: 'fa-spinner',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_progress_bar"]');
                 },
             },
             {
-                groupName: 'Website',
-                title: 'Badge',
-                description: 'Insert a badge snippet.',
+                groupName: _t('Website'),
+                title: _t('Badge'),
+                description: _t('Insert a badge snippet.'),
                 fontawesome: 'fa-tags',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_badge"]');
                 },
             },
             {
-                groupName: 'Website',
-                title: 'Blockquote',
-                description: 'Insert a blockquote snippet.',
+                groupName: _t('Website'),
+                title: _t('Blockquote'),
+                description: _t('Insert a blockquote snippet.'),
                 fontawesome: 'fa-quote-left',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_blockquote"]');
                 },
             },
             {
-                groupName: 'Website',
-                title: 'Separator',
-                description: 'Insert an horizontal separator sippet.',
+                groupName: _t('Website'),
+                title: _t('Separator'),
+                description: _t('Insert an horizontal separator sippet.'),
                 fontawesome: 'fa-minus',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_hr"]');
