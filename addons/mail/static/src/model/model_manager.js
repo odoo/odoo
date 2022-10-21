@@ -44,6 +44,7 @@ export class ModelManager {
         // moment, for performance reasons.
         //----------------------------------------------------------------------
 
+        this.cycle = {};
         /**
          * Set of records that have been created during the current update
          * cycle and for which the compute/related methods still have to be
