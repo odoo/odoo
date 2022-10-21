@@ -663,7 +663,7 @@ export class ModelManager {
         this.doCheck();
         this.doNewCreated();
         this.doNewOnChange();
-        this._notifyListenersAfterUpdateCycle();
+        this.doNotifyAfter();
     }
 
     /**
@@ -751,7 +751,7 @@ export class ModelManager {
      *
      * @returns {boolean} whether any change happened
      */
-    _notifyListenersAfterUpdateCycle() {
+    doNotifyAfter() {
         for (const [listener, infoList] of this.cycle.notifyAfter) {
             this.cycle.notifyAfter.delete(listener);
             listener.onChange(infoList);
