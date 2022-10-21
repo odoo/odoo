@@ -307,9 +307,6 @@ class configmanager(object):
                          help="Time limit (decimal value in hours) records created with a "
                               "TransientModel (mostly wizard) are kept in the database. Default to 1 hour.",
                          type="float")
-        group.add_option("--osv-memory-age-limit", dest="osv_memory_age_limit", my_default=False,
-                         help="Deprecated alias to the transient-age-limit option",
-                         type="float")
         group.add_option("--max-cron-threads", dest="max_cron_threads", my_default=2,
                          help="Maximum number of threads processing concurrently cron jobs (default 2).",
                          type="int")
@@ -408,10 +405,6 @@ class configmanager(object):
             "The config file '%s' selected with -c/--config doesn't exist or is not readable, "\
             "use -s/--save if you want to generate it"% opt.config)
 
-        die(bool(opt.osv_memory_age_limit) and bool(opt.transient_memory_age_limit),
-            "the osv-memory-count-limit option cannot be used with the "
-            "transient-age-limit option, please only use the latter.")
-
         # place/search the config file on Win32 near the server installation
         # (../etc from the server)
         # if the server is run by an unprivileged user, he has to specify location of a config file where he has the rights to write,
@@ -479,7 +472,7 @@ class configmanager(object):
             'stop_after_init', 'without_demo', 'http_enable', 'syslog',
             'list_db', 'proxy_mode',
             'test_file', 'test_tags',
-            'osv_memory_count_limit', 'osv_memory_age_limit', 'transient_age_limit', 'max_cron_threads', 'unaccent',
+            'osv_memory_count_limit', 'transient_age_limit', 'max_cron_threads', 'unaccent',
             'data_dir',
             'server_wide_modules',
         ]
@@ -555,12 +548,6 @@ class configmanager(object):
         return opt
 
     def _warn_deprecated_options(self):
-        if self.options['osv_memory_age_limit']:
-            warnings.warn(
-                "The osv-memory-age-limit is a deprecated alias to "
-                "the transient-age-limit option, please use the latter.",
-                DeprecationWarning)
-            self.options['transient_age_limit'] = self.options.pop('osv_memory_age_limit')
         if self.options['longpolling_port']:
             warnings.warn(
                 "The longpolling-port is a deprecated alias to "
