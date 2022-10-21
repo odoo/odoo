@@ -452,15 +452,6 @@ class expression(object):
         return lambda x: x
 
     # ----------------------------------------
-    # Leafs management
-    # ----------------------------------------
-
-    def get_tables(self):
-        warnings.warn("deprecated expression.get_tables(), use expression.query instead",
-                      DeprecationWarning)
-        return self.query.tables
-
-    # ----------------------------------------
     # Parsing
     # ----------------------------------------
 
@@ -1146,8 +1137,3 @@ class expression(object):
                 params = [field.convert_to_column(right, model, validate=False)]
 
         return query, params
-
-    def to_sql(self):
-        warnings.warn("deprecated expression.to_sql(), use expression.query instead",
-                      DeprecationWarning)
-        return self.result
