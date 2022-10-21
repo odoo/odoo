@@ -2136,9 +2136,8 @@ const ListUserValueWidget = UserValueWidget.extend({
             if (this.el.dataset.idMode && this.el.dataset.idMode === "name") {
                 id = el.name;
             }
-            const idInt = parseInt(id);
             return Object.assign({
-                id: isNaN(idInt) ? id : idInt,
+                id: /^-?[0-9]{1,15}$/.test(id) ? parseInt(id) : id,
                 name: el.value,
                 display_name: el.value,
             }, el.dataset);
@@ -2148,8 +2147,7 @@ const ListUserValueWidget = UserValueWidget.extend({
             this.selected = checkboxes.map(el => {
                 const input = el.parentElement.previousSibling.firstChild;
                 const id = input.name || input.value;
-                const idInt = parseInt(id);
-                return isNaN(idInt) ? id : idInt;
+                return /^-?[0-9]{1,15}$/.test(id) ? parseInt(id) : id;
             });
             values.forEach(v => {
                 // Elements not toggleable are considered as always selected.

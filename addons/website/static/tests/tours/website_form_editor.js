@@ -274,6 +274,22 @@ odoo.define('website.tour.form_editor', function (require) {
             content: "Remove Germany Option",
             trigger: '.o_we_select_remove_option:eq(0)',
         }, {
+            content: "Click on Add new Checkbox",
+            trigger: 'we-list we-button.o_we_list_add_optional',
+        }, {
+            content: "Change last option label with a number",
+            trigger: 'we-list table input:eq(3)',
+            run: 'text 44 - UK',
+        }, {
+            content: "Check that the input value is the full option value",
+            trigger: 'we-list table input:eq(3)',
+            run: () => {
+                const addedOptionEl = document.querySelector('.s_website_form_field select option[value="44 - UK"]');
+                if (!addedOptionEl) {
+                    console.error('The number option was not correctly added');
+                }
+            },
+        }, {
             content: "Check the resulting snippet",
             trigger: ".s_website_form_field.s_website_form_custom.s_website_form_required" +
                         ":has(label:contains('State'))" +
@@ -281,6 +297,7 @@ odoo.define('website.tour.form_editor', function (require) {
                         ":has(.s_website_form_select_item:contains('Belgium'))" +
                         ":has(.s_website_form_select_item:contains('France'))" +
                         ":has(.s_website_form_select_item:contains('Canada'))" +
+                        ":has(.s_website_form_select_item:contains('44 - UK'))" +
                         ":not(:has(.s_website_form_select_item:contains('Germany')))",
             run: function () {},
         },
@@ -530,6 +547,11 @@ odoo.define('website.tour.form_editor', function (require) {
             trigger: "input[name='email_cc']",
         },
         {
+            content: "Open state option",
+            trigger: "select[name='State']",
+            run: 'text 44 - UK',
+        },
+        {
             content:  "Send the form",
             trigger:  ".s_website_form_send"
         },
@@ -553,7 +575,7 @@ odoo.define('website.tour.form_editor', function (require) {
                             ['email_to', '=', 'test@test.test'],
                             ['body_html', 'like', 'A useless message'],
                             ['body_html', 'like', 'Service : Development Service'],
-                            ['body_html', 'like', 'State : Belgium'],
+                            ['body_html', 'like', 'State : 44 - UK'],
                             ['body_html', 'like', 'Products : Xperia,Wiko Stairway']
                         ]],
                     });
