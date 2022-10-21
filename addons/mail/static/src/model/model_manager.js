@@ -642,7 +642,7 @@ export class ModelManager {
     /**
      * Executes the check of the required field of updated records.
      */
-    _executeUpdatedRecordsCheckRequired() {
+    doCheck() {
         for (const record of this.cycle.check) {
             for (const required of record.constructor.__requiredFieldsList) {
                 if (record[required.fieldName] === undefined) {
@@ -660,7 +660,7 @@ export class ModelManager {
     flush() {
         this.doNewCompute();
         this.doNotifyNow();
-        this._executeUpdatedRecordsCheckRequired();
+        this.doCheck();
         this._executeCreatedRecordsCreated();
         this._executeCreatedRecordsOnChange();
         this._notifyListenersAfterUpdateCycle();
