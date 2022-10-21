@@ -382,7 +382,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             line.product_uom_readonly = line.state in ['sale', 'done', 'cancel']
 
-    @api.depends('state', 'is_expense')
+    @api.depends('is_expense')
     def _compute_qty_delivered_method(self):
         """ Sale module compute delivered qty for product [('type', 'in', ['consu']), ('service_type', '=', 'manual')]
                 - consu + expense_policy : analytic (sum of analytic unit_amount)
