@@ -306,7 +306,7 @@ export class ModelManager {
                 continue;
             }
             record.__listenersOnRecord.delete(listener);
-            const listenersObservingFieldOfRecord = record.__listenersObservingFieldsOfRecord;
+            const listenersObservingFieldOfRecord = record.__listenersOnField;
             for (const field of listener.lastObservedFieldsByRecord.get(record) || []) {
                 listenersObservingFieldOfRecord.get(field).delete(listener);
             }
@@ -687,7 +687,7 @@ export class ModelManager {
              * Map between fields and a Map between listeners that are observing
              * the field and array of information about how the field is observed.
              */
-            __listenersObservingFieldsOfRecord: new Map(),
+            __listenersOnField: new Map(),
             // Field values of record.
             __values: new Map(),
             [IS_RECORD]: true,
@@ -794,7 +794,7 @@ export class ModelManager {
         delete record.__values;
         delete record.__listeners;
         delete record.__listenersOnRecord;
-        delete record.__listenersObservingFieldsOfRecord;
+        delete record.__listenersOnField;
         model.__records.delete(record);
         delete record.localId;
     }
@@ -1071,7 +1071,7 @@ export class ModelManager {
      * @param {ModelField} field
      */
     _markRecordFieldAsChanged(record, field) {
-        for (const [listener, infoList] of record.__listenersObservingFieldsOfRecord.get(field) || []) {
+        for (const [listener, infoList] of record.__listenersOnField.get(field) || []) {
             this._markListenerToNotify(listener, {
                 listener,
                 reason: this.isDebug && `_update: ${field} of ${record}`,
@@ -1265,10 +1265,10 @@ export class ModelManager {
                         if (this.modelManager._listeners.size) {
                             let entryRecord = record.__listenersOnRecord;
                             const reason = record.modelManager.isDebug && `getField - ${field} of ${record}`;
-                            let entryField = record.__listenersObservingFieldsOfRecord.get(field);
+                            let entryField = record.__listenersOnField.get(field);
                             if (!entryField) {
                                 entryField = new Map();
-                                record.__listenersObservingFieldsOfRecord.set(field, entryField);
+                                record.__listenersOnField.set(field, entryField);
                             }
                             for (const listener of record.modelManager._listeners) {
                                 listener.lastObservedRecords.add(record);
