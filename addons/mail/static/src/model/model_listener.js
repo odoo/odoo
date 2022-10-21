@@ -12,18 +12,9 @@ export class Listener {
      *  listener is notified of change, which is when records or fields that are
      *  listened to are created/updated/deleted. This function is called with
      *  1 param that contains info
-     * @param {boolean} [param.isPartOfUpdateCycle=false] determines at which
-     *  point during the update cycle of the models this `onChange` function
-     *  will be called.
-     *  Note: a function called as part of the update cycle cannot have any side
-     *  effect (such as updating a record), so it is usually necessary to keep
-     *  this value to false. Keeping it to false also improves performance by
-     *  making sure all side effects of update cycle (such as the update of
-     *  computed fields) have been processed before `onChange` is called (it
-     *  could otherwise be called multiple times in quick succession).
      * @param {string} param.type
      */
-    constructor({ name, onChange, isPartOfUpdateCycle = false, type }) {
+    constructor({ name, onChange, type }) {
         this.type = type;
         /**
          * Whether the model manager should be locked while this listener is observing,
@@ -42,7 +33,30 @@ export class Listener {
                     return true;
             }
         })();
-        this.isPartOfUpdateCycle = isPartOfUpdateCycle;
+        /**
+         * Determines at which point during the update cycle of the models this
+         * `onChange` function will be called.
+         * Note: a function called as part of the update cycle cannot have any side
+         * effect (such as updating a record), so it is usually necessary to keep
+         * this value to false. Keeping it to false also improves performance by
+         * making sure all side effects of update cycle (such as the update of
+         * computed fields) have been processed before `onChange` is called (it
+         * could otherwise be called multiple times in quick succession).
+         */
+        this.isPartOfUpdateCycle = (() => {
+            switch (this.type) {
+                case 'sort':
+                    return true;
+                case 'sum':
+                    return true;
+                case 'compute':
+                    return true;
+                case 'related':
+                    return true;
+                default:
+                    return false;
+            }
+        })();
         this.name = name;
         this.onChange = onChange;
         /**

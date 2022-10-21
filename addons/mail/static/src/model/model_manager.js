@@ -546,7 +546,6 @@ export class ModelManager {
             for (const field of record.constructor.__fieldList) {
                 if (field.compute) {
                     const listener = new Listener({
-                        isPartOfUpdateCycle: true,
                         name: `compute ${field} of ${record}`,
                         type: 'compute',
                         onChange: (info) => {
@@ -560,7 +559,6 @@ export class ModelManager {
                 }
                 if (field.related) {
                     const listener = new Listener({
-                        isPartOfUpdateCycle: true,
                         name: `related ${field} of ${record}`,
                         type: 'related',
                         onChange: (info) => {

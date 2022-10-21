@@ -52,7 +52,6 @@ export class RelationSet {
         if (this.field.sort) {
             this.sortArray.push(value);
             const listener = new Listener({
-                isPartOfUpdateCycle: true,
                 name: `sort of ${value} in ${this.field} of ${this.record}`,
                 type: 'sort',
                 onChange: info => {
@@ -149,7 +148,6 @@ export class RelationSet {
         for (const { from: contributionFieldName, to: sumFieldName } of this.field.sumContributions) {
             this.sumByValueByField.get(sumFieldName).set(value, 0);
             const listener = new Listener({
-                isPartOfUpdateCycle: true,
                 name: `sum of field(${sumFieldName}) of ${this.record} from field(${contributionFieldName}) of ${value} through relation ${this.field}`,
                 type: 'sum',
                 onChange: info => {
