@@ -548,6 +548,7 @@ export class ModelManager {
                     const listener = new Listener({
                         isPartOfUpdateCycle: true,
                         name: `compute ${field} of ${record}`,
+                        type: 'compute',
                         onChange: (info) => {
                             this.startListening(listener);
                             const res = field.compute.call(record);
@@ -561,6 +562,7 @@ export class ModelManager {
                     const listener = new Listener({
                         isPartOfUpdateCycle: true,
                         name: `related ${field} of ${record}`,
+                        type: 'related',
                         onChange: (info) => {
                             this.startListening(listener);
                             const res = field.computeRelated(record);
@@ -616,6 +618,7 @@ export class ModelManager {
             for (const onChange of registry.get(record.constructor.name).get('onChanges')) {
                 const listener = new Listener({
                     name: `${onChange} of ${record}`,
+                    type: 'onChange',
                     onChange: (info) => {
                         this.startListening(listener);
                         for (const dependency of onChange.dependencies) {

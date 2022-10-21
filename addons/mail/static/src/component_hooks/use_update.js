@@ -15,6 +15,7 @@ export function useUpdate({ func }) {
     const listener = new Listener({
         isLocking: false, // unfortunately onUpdate methods often have side effect
         name: `useUpdate() of ${component}`,
+        type: 'useUpdate',
         onChange: () => component.render(),
     });
     function onUpdate() {

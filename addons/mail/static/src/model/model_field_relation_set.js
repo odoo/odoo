@@ -54,6 +54,7 @@ export class RelationSet {
             const listener = new Listener({
                 isPartOfUpdateCycle: true,
                 name: `sort of ${value} in ${this.field} of ${this.record}`,
+                type: 'sort',
                 onChange: info => {
                     // access all useful values of current record (and relations) to mark them as dependencies
                     this.manager.startListening(listener);
@@ -150,6 +151,7 @@ export class RelationSet {
             const listener = new Listener({
                 isPartOfUpdateCycle: true,
                 name: `sum of field(${sumFieldName}) of ${this.record} from field(${contributionFieldName}) of ${value} through relation ${this.field}`,
+                type: 'sum',
                 onChange: info => {
                     // listen to the contribution to mark it as dependency
                     this.manager.startListening(listener);

@@ -26,6 +26,7 @@ FormRenderer.include({
         this._super(...arguments);
         this.modelsListener = new Listener({
             name: 'interchangeChatter',
+            type: 'interchangeChatter',
             onChange: () => this._interchangeChatter(),
         });
         this.hasChatter = params.hasChatter && !params.isFromFormViewDialog;

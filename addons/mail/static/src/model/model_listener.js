@@ -24,8 +24,10 @@ export class Listener {
      *  making sure all side effects of update cycle (such as the update of
      *  computed fields) have been processed before `onChange` is called (it
      *  could otherwise be called multiple times in quick succession).
+     * @param {string} param.type
      */
-    constructor({ name, onChange, isLocking = true, isPartOfUpdateCycle = false }) {
+    constructor({ name, onChange, isLocking = true, isPartOfUpdateCycle = false, type }) {
+        this.type = type;
         this.isLocking = isLocking;
         this.isPartOfUpdateCycle = isPartOfUpdateCycle;
         this.name = name;
