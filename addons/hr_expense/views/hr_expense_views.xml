@@ -45,6 +45,7 @@
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
                 <tree string="Expenses" multi_edit="1" sample="1" js_class="hr_expense_tree" decoration-info="state == 'draft'">
+                    <field name="company_id" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="attachment_number" invisible="True"/>
                     <field name="date" optional="show"/>
@@ -613,6 +614,7 @@
             <field name="model">hr.expense.sheet</field>
             <field name="arch" type="xml">
                 <tree string="Expense Reports" multi_edit="1" js_class="hr_expense_tree" sample="1" decoration-info="state == 'draft'">
+                    <field name="company_id" invisible="1"/>
                     <field name="product_ids" invisible="1"/>
                     <field name="employee_id" widget="many2one_avatar_employee"/>
                     <field name="accounting_date" optional="hide" groups="account.group_account_manager"/>

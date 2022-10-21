@@ -33,6 +33,7 @@
             <field name="model">mrp.workcenter</field>
             <field name="arch" type="xml">
                 <tree string="Work Center" multi_edit="1">
+                    <field name="company_id" invisible="1"/>
                     <field name="sequence" widget="handle"/>
                     <field name="name" optional="show"/>
                     <field name="code" optional="show"/>
