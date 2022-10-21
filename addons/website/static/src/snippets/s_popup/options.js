@@ -95,14 +95,15 @@ options.registry.SnippetPopup = options.Class.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Moves the snippet in footer to be common to all pages
-     * or inside wrap to be on one page only
+     * Moves the snippet in #o_shared_blocks to be common to all pages or inside
+     * the first editable oe_structure in the main to be on current page only.
      *
      * @see this.selectClass for parameters
      */
     moveBlock: function (previewMode, widgetValue, params) {
-        const containerEl = this.$target[0].ownerDocument.querySelector(widgetValue === 'moveToFooter' ? 'footer' : 'main');
-        const whereEl = $(containerEl).find('.oe_structure:o_editable')[0];
+        const selector = widgetValue === 'allPages' ?
+            '#o_shared_blocks' : 'main .oe_structure:o_editable';
+        const whereEl = $(this.$target[0].ownerDocument).find(selector)[0];
         const popupEl = this.$target[0].closest('.s_popup');
         whereEl.prepend(popupEl);
     },
@@ -132,7 +133,7 @@ options.registry.SnippetPopup = options.Class.extend({
     _computeWidgetState: function (methodName, params) {
         switch (methodName) {
             case 'moveBlock':
-                return this.$target.closest('footer').length ? 'moveToFooter' : 'moveToBody';
+                return this.$target[0].closest('#o_shared_blocks') ? 'allPages' : 'currentPage';
         }
         return this._super(...arguments);
     },
