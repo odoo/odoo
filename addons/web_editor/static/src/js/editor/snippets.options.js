@@ -5000,7 +5000,6 @@ registry.layout_column = SnippetOptionWidget.extend({
         if (elementType === 'image') {
             // Set the columns properties.
             newColumnEl.classList.add('col-lg-6', 'g-col-lg-6', 'g-height-6', 'o_grid_item_image');
-            newColumnEl.contentEditable = false;
             numberColumns = 6;
             numberRows = 6;
 
@@ -5141,13 +5140,9 @@ registry.layout_column = SnippetOptionWidget.extend({
             gridUtils._reloadLazyImages(columnEl);
 
             // Removing the grid properties.
-            columnEl.classList.remove('o_grid_item');
+            columnEl.classList.remove('o_grid_item', 'o_grid_item_image');
             columnEl.style.removeProperty('grid-area');
             columnEl.style.removeProperty('z-index');
-            if (columnEl.classList.contains('o_grid_item_image')) {
-                columnEl.classList.remove('o_grid_item_image');
-                columnEl.removeAttribute('contentEditable');
-            }
         }
         // Removing the grid properties.
         delete rowEl.dataset.rowCount;
