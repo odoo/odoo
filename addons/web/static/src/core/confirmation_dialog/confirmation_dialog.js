@@ -84,5 +84,6 @@ AlertDialog.props = {
     contentClass: { type: String, optional: true },
 };
 AlertDialog.defaultProps = {
+    ...ConfirmationDialog.defaultProps,
     title: _lt("Alert"),
 };
