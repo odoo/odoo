@@ -41,8 +41,32 @@ def deprecate_old_withhold_group(env):
     if deprecated_withhold_profit_group:
         deprecated_withhold_profit_group += ' (Deprecated)'
 
+def update_vat_withhold_base_percent(env):
+    # For vat withhold taxes, replace factor_percent=12% with factor_percent=100%
+    all_companies = env['res.company'].search([])
+    ecuadorian_companies = all_companies.filtered(lambda r: r.country_code == 'EC')
+    ecuadorian_taxes = env['account.tax'].search([('company_id', 'in', ecuadorian_companies.ids)])
+    taxes_to_fix = ecuadorian_taxes.filtered(lambda x: x.tax_group_id.l10n_ec_type in ['withhold_vat_sale', 'withhold_vat_purchase'])
+    env.cr.execute('''
+        --for invoice_tax_id
+        update account_tax_repartition_line
+        set factor_percent=100 
+        where factor_percent=12 
+        and repartition_type='tax'
+        and invoice_tax_id in %s
+        ''', [tuple(taxes_to_fix.ids)])
+    env.cr.execute('''
+        --for refund_tax_id
+        update account_tax_repartition_line
+        set factor_percent=100 
+        where factor_percent=12 
+        and repartition_type='tax'
+        and refund_tax_id in %s
+        ''', [tuple(taxes_to_fix.ids)])
+
 def migrate(cr, version):
     env = api.Environment(cr, SUPERUSER_ID, {})
     update_withhold_type(env)
     update_type_tax_use(env)
     deprecate_old_withhold_group(env)
+    update_vat_withhold_base_percent(env)
