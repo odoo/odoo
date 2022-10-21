@@ -44,13 +44,14 @@ export class ModelManager {
         // moment, for performance reasons.
         //----------------------------------------------------------------------
 
-        this.cycle = {};
-        /**
-         * Set of records that have been created during the current update
-         * cycle and for which the compute/related methods still have to be
-         * executed a first time.
-         */
-        this._createdRecordsComputes = new Set();
+        this.cycle = {
+            /**
+             * Set of records that have been created during the current update
+             * cycle and for which the compute/related methods still have to be
+             * executed a first time.
+             */
+            newCompute: new Set(),
+        };
         /**
          * Set of records that have been created during the current update
          * cycle and for which the _created method still has to be executed.
@@ -730,7 +731,7 @@ export class ModelManager {
          * Register post processing operation that are to be delayed at
          * the end of the update cycle.
          */
-        this._createdRecordsComputes.add(record);
+        this.cycle.newCompute.add(record);
         this._createdRecordsCreated.add(record);
         this._createdRecordsOnChange.add(record);
         for (const [listener, infoList] of this._listenersObservingAllByModel.get(model)) {
@@ -772,7 +773,7 @@ export class ModelManager {
             }
         }
         model.__recordsIndex.removeRecord(record);
-        this._createdRecordsComputes.delete(record);
+        this.cycle.newCompute.delete(record);
         this._createdRecordsCreated.delete(record);
         this._createdRecordsOnChange.delete(record);
         this._updatedRecordsCheckRequired.delete(record);
@@ -816,11 +817,11 @@ export class ModelManager {
      * Executes the compute methods of the created records.
      */
     _executeCreatedRecordsComputes() {
-        const hasChanged = this._createdRecordsComputes.size > 0;
-        for (const record of this._createdRecordsComputes) {
+        const hasChanged = this.cycle.newCompute.size > 0;
+        for (const record of this.cycle.newCompute) {
             // Delete at every step to avoid recursion, indeed compute/related
             // method might trigger an update cycle itself.
-            this._createdRecordsComputes.delete(record);
+            this.cycle.newCompute.delete(record);
             if (!record.exists()) {
                 throw Error(`Cannot start compute/related for already deleted ${record}.`);
             }
