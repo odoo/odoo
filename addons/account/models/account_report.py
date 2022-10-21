@@ -357,7 +357,7 @@ class AccountReportLine(models.Model):
                 'report_line_id': report_line.id,
                 'label': 'balance',
                 'engine': engine,
-                'formula': formula,
+                'formula': formula.lstrip(' \t\n'),  # Avoid IndentationError in evals
                 'subformula': subformula
             }
             vals_list.append(vals)
