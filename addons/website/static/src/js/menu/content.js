@@ -1114,7 +1114,7 @@ function _clonePage(pageId) {
             title: _t("Duplicate Page"),
             $content: $(qweb.render('website.duplicate_page_action_dialog')),
             confirm_callback: function () {
-                var new_page_name =  this.$('#page_name').val();
+                var new_page_name =  this.$content.find('#page_name').val();
                 return self._rpc({
                     model: 'website.page',
                     method: 'clone_page',
