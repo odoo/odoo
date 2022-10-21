@@ -5,7 +5,6 @@ import { ModelGenerator } from '@mail/model/model_generator';
 import { FieldCommand, unlinkAll } from '@mail/model/model_field_command';
 import { RelationSet } from '@mail/model/model_field_relation_set';
 import { Listener } from '@mail/model/model_listener';
-import { followRelations } from '@mail/model/model_utils';
 import { makeDeferred } from '@mail/utils/deferred';
 /**
  * Object that manage models and records, notably their update cycle: whenever
@@ -620,7 +619,7 @@ export class ModelManager {
                     onChange: (info) => {
                         this.startListening(listener);
                         for (const dependency of onChange.dependencies) {
-                            followRelations(record, dependency);
+                            this.followRelations(record, dependency);
                         }
                         this.stopListening(listener);
                         record[onChange.methodName]();
@@ -664,6 +663,26 @@ export class ModelManager {
         this.doNewCreated();
         this.doNewOnChange();
         this.doNotifyAfter();
+    }
+
+    /**
+     * Follows the given related path starting from the given record, and returns
+     * the resulting value, or undefined if a relation can't be followed because it
+     * is undefined.
+     *
+     * @param {Record} record
+     * @param {string[]} relatedPath Array of field names.
+     * @returns {any}
+     */
+    followRelations(record, relatedPath) {
+        let target = record;
+        for (const field of relatedPath) {
+            target = target[field];
+            if (!target) {
+                break;
+            }
+        }
+        return target;
     }
 
     /**

@@ -2,7 +2,6 @@
 
 import { decrement, increment } from '@mail/model/model_field_command';
 import { Listener } from '@mail/model/model_listener';
-import { followRelations } from '@mail/model/model_utils';
 import { cleanSearchTerm } from '@mail/utils/utils';
 
 /**
@@ -60,14 +59,14 @@ export class RelationSet {
                     this.manager.startListening(listener);
                     const compareDefinition = this.field.sort;
                     for (const relatedPath of this.field.sortedFieldSplittedPaths) {
-                        followRelations(value, relatedPath);
+                        this.manager.followRelations(value, relatedPath);
                     }
                     this.manager.stopListening(listener);
                     // sort outside of listening to avoid registering listeners for all other items (they already added their own listeners)
                     const compareFunction = (a, b) => {
                         for (const [compareMethod, relatedPath] of compareDefinition) {
-                            const valA = followRelations(a, relatedPath);
-                            const valB = followRelations(b, relatedPath);
+                            const valA = this.manager.followRelations(a, relatedPath);
+                            const valB = this.manager.followRelations(b, relatedPath);
                             switch (compareMethod) {
                                 case 'truthy-first': {
                                     if (valA === valB) {
