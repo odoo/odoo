@@ -376,3 +376,31 @@ class TestExpenses(TestExpenseCommon):
 
         move = self.env['account.payment'].browse(action['res_id']).move_id
         self.assertEqual(move.amount_total_signed, 10.0, 'The total amount of the payment move is not correct')
+
+    def test_expense_sheet_payment_state_after_payment_cancel(self):
+        sheet = self.env['hr.expense.sheet'].create({
+            'company_id': self.env.company.id,
+            'employee_id': self.expense_employee.id,
+            'name': 'test sheet',
+            'expense_line_ids': [
+                (0, 0, {
+                    'name': 'expense_1',
+                    'date': '2016-01-01',
+                    'product_id': self.product_a.id,
+                    'unit_amount': 10.0,
+                    'employee_id': self.expense_employee.id
+                }),
+            ],
+        })
+
+
+        #actions
+        sheet.action_submit_sheet()
+        sheet.approve_expense_sheets()
+        sheet.action_sheet_move_create()
+        action_data = sheet.action_register_payment()
+        wizard = Form(self.env['account.payment.register'].with_context(action_data['context'])).save()
+        wizard.action_create_payments()
+
+        sheet.account_move_id.button_cancel()
+        self.assertEqual(sheet.state, 'cancel', 'The payment state of the expense sheet is not correct')

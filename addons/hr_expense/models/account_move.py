@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields
+from odoo import models, fields, _
 
 
 class AccountMove(models.Model):
@@ -25,3 +25,7 @@ class AccountMove(models.Model):
         if self.line_ids.expense_id:
             return True
         return super()._payment_state_matters()
+
+    def button_cancel(self):
+        super(AccountMove, self).button_cancel()
+        self.line_ids.expense_id.refuse_expense(_('Payment Refused'))
