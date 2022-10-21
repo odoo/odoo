@@ -366,6 +366,7 @@ class ReportBomStructure(models.AbstractModel):
             operation_index += 1
         return operations
 
+<<<<<<< HEAD
     @api.model
     def _get_pdf_line(self, bom_id, product_id=False, qty=1, unfolded_ids=None, unfolded=False):
         if unfolded_ids is None:
@@ -391,6 +392,73 @@ class ReportBomStructure(models.AbstractModel):
 
     @api.model
     def _get_bom_array_lines(self, data, level, unfolded_ids, unfolded, parent_unfolded=True):
+||||||| parent of 52f7790a43e2... temp
+    def _get_price(self, bom, factor, product):
+        price = 0
+        if bom.operation_ids:
+            # routing are defined on a BoM and don't have a concept of quantity.
+            # It means that the operation time are defined for the quantity on
+            # the BoM (the user produces a batch of products). E.g the user
+            # product a batch of 10 units with a 5 minutes operation, the time
+            # will be the 5 for a quantity between 1-10, then doubled for
+            # 11-20,...
+            operation_cycle = float_round(factor, precision_rounding=1, rounding_method='UP')
+            operations = self._get_operation_line(product, bom, operation_cycle, 0)
+            price += sum([op['total'] for op in operations])
+
+        for line in bom.bom_line_ids:
+            if line._skip_bom_line(product):
+                continue
+            if line.child_bom_id:
+                qty = line.product_uom_id._compute_quantity(line.product_qty * (factor / bom.product_qty), line.child_bom_id.product_uom_id) / line.child_bom_id.product_qty
+                sub_price = self._get_price(line.child_bom_id, qty, line.product_id)
+                byproduct_cost_share = sum(line.child_bom_id.byproduct_ids.mapped('cost_share'))
+                if byproduct_cost_share:
+                    sub_price *= float_round(1 - byproduct_cost_share / 100, precision_rounding=0.0001)
+                price += sub_price
+            else:
+                prod_qty = line.product_qty * factor / bom.product_qty
+                company = bom.company_id or self.env.company
+                not_rounded_price = line.product_id.uom_id._compute_price(line.product_id.with_company(company).standard_price, line.product_uom_id) * prod_qty
+                price += company.currency_id.round(not_rounded_price)
+        return price
+
+    def _get_sub_lines(self, bom, product_id, line_qty, line_id, level, child_bom_ids, unfolded):
+        data = self._get_bom(bom_id=bom.id, product_id=product_id, line_qty=line_qty, line_id=line_id, level=level)
+=======
+    def _get_price(self, bom, factor, product):
+        price = 0
+        if bom.operation_ids:
+            # routing are defined on a BoM and don't have a concept of quantity.
+            # It means that the operation time are defined for the quantity on
+            # the BoM (the user produces a batch of products). E.g the user
+            # product a batch of 10 units with a 5 minutes operation, the time
+            # will be the 5 for a quantity between 1-10, then doubled for
+            # 11-20,...
+            operation_cycle = float_round(factor, precision_rounding=1, rounding_method='UP')
+            operations = self._get_operation_line(product, bom, operation_cycle, 0)
+            price += sum([op['total'] for op in operations])
+
+        for line in bom.bom_line_ids:
+            if line._skip_bom_line(product):
+                continue
+            if line.child_bom_id:
+                qty = line.product_uom_id._compute_quantity(line.product_qty * (factor / bom.product_qty), line.child_bom_id.product_uom_id)
+                sub_price = self._get_price(line.child_bom_id, qty, line.product_id)
+                byproduct_cost_share = sum(line.child_bom_id.byproduct_ids.mapped('cost_share'))
+                if byproduct_cost_share:
+                    sub_price *= float_round(1 - byproduct_cost_share / 100, precision_rounding=0.0001)
+                price += sub_price
+            else:
+                prod_qty = line.product_qty * factor / bom.product_qty
+                company = bom.company_id or self.env.company
+                not_rounded_price = line.product_id.uom_id._compute_price(line.product_id.with_company(company).standard_price, line.product_uom_id) * prod_qty
+                price += company.currency_id.round(not_rounded_price)
+        return price
+
+    def _get_sub_lines(self, bom, product_id, line_qty, line_id, level, child_bom_ids, unfolded):
+        data = self._get_bom(bom_id=bom.id, product_id=product_id, line_qty=line_qty, line_id=line_id, level=level)
+>>>>>>> 52f7790a43e2... temp
         bom_lines = data['components']
         lines = []
         for bom_line in bom_lines:

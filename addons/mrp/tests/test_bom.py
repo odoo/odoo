@@ -978,7 +978,13 @@ class TestBoM(TestMrpCommon):
 
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_finished.id, searchQty=80)
 
+<<<<<<< HEAD
         self.assertAlmostEqual(report_values['lines']['bom_cost'], 2.92)
+||||||| parent of 52f7790a43e2... temp
+        self.assertAlmostEqual(report_values['lines']['total'], 0.58)
+=======
+        self.assertAlmostEqual(report_values['lines']['total'], 2.92)
+>>>>>>> 52f7790a43e2... temp
 
     def test_validate_no_bom_line_with_same_product(self):
         """
