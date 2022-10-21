@@ -659,7 +659,7 @@ export class ModelManager {
      */
     flush() {
         this.doNewCompute();
-        this._notifyListenersInUpdateCycle();
+        this.doNotifyNow();
         this._executeUpdatedRecordsCheckRequired();
         this._executeCreatedRecordsCreated();
         this._executeCreatedRecordsOnChange();
@@ -770,7 +770,7 @@ export class ModelManager {
      *
      * @returns {boolean} whether any change happened
      */
-    _notifyListenersInUpdateCycle() {
+    doNotifyNow() {
         const hasChanged = this.cycle.notifyNow.size > 0;
         for (const [listener, infoList] of this.cycle.notifyNow) {
             this.cycle.notifyNow.delete(listener);
