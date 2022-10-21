@@ -134,6 +134,8 @@ class AccountMove(models.Model):
         string="Payment Method (SRI)",
     )
 
+    _get_l10n_ec_identification_type = _get_l10n_ec_ats_identification_type #For backward compatibility, remove in master
+
     def _get_l10n_ec_ats_identification_type(self):
         # Helps filter out document types based on subset of Table 2 of SRI's ATS specification
         self.ensure_one()
@@ -151,7 +153,9 @@ class AccountMove(models.Model):
                 identification_code = "01"
             elif is_dni:
                 identification_code = "02"
-            else: #passport or foreign ID
+            elif is_final_consumer:
+                identification_code = "07"
+            else: #passport or foreign ID l10n_latam_base.it_vat, 
                 identification_code = "03"
         elif move.move_type in ("out_invoice", "out_refund"):
             if is_ruc:
