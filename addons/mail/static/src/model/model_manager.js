@@ -534,7 +534,7 @@ export class ModelManager {
     /**
      * Executes the compute methods of the created records.
      */
-    _executeCreatedRecordsComputes() {
+    doNewCompute() {
         const hasChanged = this.cycle.newCompute.size > 0;
         for (const record of this.cycle.newCompute) {
             // Delete at every step to avoid recursion, indeed compute/related
@@ -658,7 +658,7 @@ export class ModelManager {
      * computed fields, execute life-cycle hooks, update rev numbers.
      */
     flush() {
-        this._executeCreatedRecordsComputes();
+        this.doNewCompute();
         this._notifyListenersInUpdateCycle();
         this._executeUpdatedRecordsCheckRequired();
         this._executeCreatedRecordsCreated();
