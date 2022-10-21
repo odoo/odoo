@@ -1,13 +1,24 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from ..exceptions import except_orm
-from ..models import Model, TransientModel, AbstractModel
+def __getattr__(name):
+    # pylint: disable=import-outside-toplevel
+    if name not in ('osv', 'osv_memory', 'osv_abstract', 'except_osv'):
+        raise AttributeError(name)
 
-# Deprecated, kept for backward compatibility.
-except_osv = except_orm
+    from ..exceptions import UserError
+    from ..models import Model, TransientModel, AbstractModel
 
-# Deprecated, kept for backward compatibility.
-osv = Model
-osv_memory = TransientModel
-osv_abstract = AbstractModel # ;-)
+    import warnings
+
+    target = Model if name == 'osv'\
+        else UserError if name == 'except_osv'\
+        else TransientModel if name == 'osv_memory'\
+        else AbstractModel
+
+    warnings.warn(
+        f"Since 17.0: odoo.osv.osv.{name} is deprecated, use {target.__module__}.{target.__name__}",
+        category=DeprecationWarning,
+        stacklevel=2
+    )
+    return target
