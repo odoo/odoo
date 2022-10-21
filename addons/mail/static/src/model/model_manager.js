@@ -72,6 +72,11 @@ export class ModelManager {
              * update cycle. Value contains list of info to help for debug.
              */
             notifyAfter: new Map(),
+            /**
+             * Set of records that have been updated during the current update cycle
+             * and for which required fields check still has to be executed.
+             */
+            check: new Set(),
         };
         /**
          * Set of active listeners. Useful to be able to register which records
@@ -87,11 +92,6 @@ export class ModelManager {
          * All generated models. Keys are model name, values are model class.
          */
         this.models = {};
-        /**
-         * Set of records that have been updated during the current update cycle
-         * and for which required fields check still has to be executed.
-         */
-        this._updatedRecordsCheckRequired = new Set();
         /**
          * Determines whether this model manager should run in debug mode. Debug
          * mode adds more integrity checks and more verbose error messages, at
@@ -776,7 +776,7 @@ export class ModelManager {
         this.cycle.newCompute.delete(record);
         this.cycle.newCreated.delete(record);
         this.cycle.newOnChange.delete(record);
-        this._updatedRecordsCheckRequired.delete(record);
+        this.cycle.check.delete(record);
         for (const [listener, infoList] of record.__listenersObservingRecord) {
             this._markListenerToNotify(listener, {
                 listener,
@@ -925,14 +925,14 @@ export class ModelManager {
      * Executes the check of the required field of updated records.
      */
     _executeUpdatedRecordsCheckRequired() {
-        for (const record of this._updatedRecordsCheckRequired) {
+        for (const record of this.cycle.check) {
             for (const required of record.constructor.__requiredFieldsList) {
                 if (record[required.fieldName] === undefined) {
                     throw Error(`required ${required} of ${record} is missing`);
                 }
             }
         }
-        this._updatedRecordsCheckRequired.clear();
+        this.cycle.check.clear();
     }
 
     /**
@@ -1336,7 +1336,7 @@ export class ModelManager {
             this._markRecordFieldAsChanged(record, field);
         }
         if (hasChanged) {
-            this._updatedRecordsCheckRequired.add(record);
+            this.cycle.check.add(record);
         }
         return hasChanged;
     }
