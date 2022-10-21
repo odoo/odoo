@@ -7,7 +7,7 @@
             <input type="hidden" name="address1" t-att-value="address1"/>
             <input type="hidden" name="amount" t-att-value="amount"/>
             <input type="hidden" name="business" t-att-value="business"/>
-            <input type="hidden" name="cancel_return" t-att-value="return_url"/>
+            <input type="hidden" name="cancel_return" t-att-value="cancel_url"/>
             <input type="hidden" name="city" t-att-value="city"/>
             <input type="hidden" name="cmd" value="_xclick"/>
             <input type="hidden" name="country" t-att-value="country"/>
@@ -20,8 +20,7 @@
             <input type="hidden" name="item_number" t-att-value="item_number"/>
             <input type="hidden" name="last_name" t-att-value="last_name"/>
             <input type="hidden" name="lc" t-att-value="lc"/>
-            <input t-if="notify_url"
-                   type="hidden" name="notify_url" t-att-value="notify_url"/>
+            <input type="hidden" name="notify_url" t-att-value="notify_url"/>
             <input type="hidden" name="return" t-att-value="return_url"/>
             <input type="hidden" name="rm" value="2"/>
             <input t-if="state"
