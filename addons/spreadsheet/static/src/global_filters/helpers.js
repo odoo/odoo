@@ -21,7 +21,7 @@ export function checkFiltersTypeValueCombination(type, value) {
             case "date":
                 if (typeof value === "string") {
                     const expectedValues = RELATIVE_DATE_RANGE_TYPES.map((val) => val.type);
-                    if (!expectedValues.includes(value)) {
+                    if (value && !expectedValues.includes(value)) {
                         return CommandResult.InvalidValueTypeCombination;
                     }
                 } else if (typeof value !== "object" || Array.isArray(value)) {
