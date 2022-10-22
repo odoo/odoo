@@ -12,6 +12,7 @@ import {
     undo,
     unformat,
     triggerEvent,
+    nextTickFrame,
 } from '../utils.js';
 
 async function twoDeleteForward(editor) {
@@ -4868,6 +4869,98 @@ X[]
                                                 '</tr>' +
                                             '</tbody></table>',
                         });
+                    });
+                });
+            });
+        });
+        describe('table ui', () => {
+            describe('contenteditable', () => {
+                const tableUiMenuTest = async (editor) => {
+                    const column = editor.editable.querySelector('td');
+                    triggerEvent(column, 'mousemove', {});
+                    await nextTickFrame();
+                    if (editor._rowUi.style.visibility === 'visible') {
+                        const paragraph = editor.editable.querySelector('p');
+                        const text = document.createTextNode('table ui');
+                        paragraph.replaceChildren(text);
+                    }
+                };
+                it('should display the table ui menu if the table element isContentEditable=true', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `
+                        <p>no table ui</p>
+                        <table><tbody><tr>
+                            <td>11[]</td>
+                        </tr></tbody></table>
+                        `,
+                        stepFunction: tableUiMenuTest,
+                        contentAfter: `
+                        <p>table ui</p>
+                        <table><tbody><tr>
+                            <td>11[]</td>
+                        </tr></tbody></table>
+                        `,
+                    });
+                });
+                it('should not display the table ui menu if the table element isContentEditable=false', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `
+                        <p>no table ui</p>
+                        <table contenteditable="false"><tbody><tr>
+                            <td>11[]</td>
+                        </tr></tbody></table>
+                        `,
+                        stepFunction: tableUiMenuTest,
+                        contentAfter: `
+                        <p>no table ui</p>
+                        <table contenteditable="false"><tbody><tr>
+                            <td>11[]</td>
+                        </tr></tbody></table>
+                        `,
+                    });
+                });
+                const resizeTest = async (editor) => {
+                    const column = editor.editable.querySelector('td');
+                    triggerEvent(column, 'mousemove', {});
+                    await nextTickFrame();
+                    if (['o_row_resize', 'o_col_resize'].filter(resize => editor.editable.classList.contains(resize)).length) {
+                        const paragraph = editor.editable.querySelector('p');
+                        const text = document.createTextNode('resizeCursor');
+                        paragraph.replaceChildren(text);
+                    }
+                };
+                it('should display the resizeCursor if the table element isContentEditable=true', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `
+                        <p>no resizeCursor</p>
+                        <table><tbody><tr>
+                            <td>11[]</td>
+                        </tr></tbody></table>
+                        `,
+                        stepFunction: resizeTest,
+                        contentAfter: `
+                        <p>resizeCursor</p>
+                        <table><tbody><tr>
+                            <td>11[]</td>
+                        </tr></tbody></table>
+                        `,
+                    });
+                });
+                it('should not display the resizeCursor if the table element isContentEditable=false', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `
+                        <p>no resizeCursor</p>
+                        <table contenteditable="false"><tbody><tr>
+                            <td>11[]</td>
+                        </tr></tbody></table>
+                        `,
+                        stepFunction: resizeTest,
+                        contentAfter: `
+                        <p>no resizeCursor</p>
+                        <table contenteditable="false"><tbody><tr>
+                            <td>11[]</td>
+                        </tr></tbody></table>
+                        `,
                     });
                 });
             });

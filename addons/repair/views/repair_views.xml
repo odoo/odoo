@@ -7,6 +7,7 @@
         <field name="model">repair.order</field>
         <field name="arch" type="xml">
             <tree string="Repairs order" multi_edit="1" sample="1" decoration-info="state == 'draft'">
+                <field name="company_id" invisible="1"/>
                 <field name="priority" optional="show" widget="priority" nolabel="1"/>
                 <field name="name"/>
                 <field name="schedule_date" optional="show" widget="remaining_days"/>

@@ -893,7 +893,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             # Virtual remaining leave is equal to 1 because there is only one day remaining in the allocation based on its validity
             self._check_holidays_count(
                 self.holidays_type_2.get_employees_days([self.employee_emp_id], date=date(2021, 12, 31))[self.employee_emp_id][self.holidays_type_2.id],
-                ml=10, lt=5, rl=5, vrl=1, vlt=5, closest_allocation=allocation_2021,
+                ml=10, lt=5, rl=5, vrl=1, vlt=5, closest_allocation=allocation_2022,
             )
 
             leave_2022 = self.env['hr.leave'].with_user(self.user_employee_id).create({
@@ -922,9 +922,10 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
             # If the allocation is archived, the leaves taken are still counted on this allocation
             # but the max leaves and remaining leaves are not counted anymore
+            # If there are no virtual_remaining_leaves, then there is no upcoming allocation (closest_allocation_to_expire) to expire
             self._check_holidays_count(
                 self.holidays_type_2.get_employees_days([self.employee_emp_id], date=date(2021, 12, 1))[self.employee_emp_id][self.holidays_type_2.id],
-                ml=0, lt=5, rl=0, vrl=0, vlt=5, closest_allocation=allocation_2021,
+                ml=0, lt=5, rl=0, vrl=0, vlt=5, closest_allocation=False,
             )
 
             # The holidays count in 2022 is not affected by the archived allocation in 2021
