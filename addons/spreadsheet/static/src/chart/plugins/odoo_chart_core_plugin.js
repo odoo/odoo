@@ -4,6 +4,8 @@ import ChartDataSource from "../data_source/chart_data_source";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 import { sprintf } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
+import { checkFilterFieldMatching } from "@spreadsheet/global_filters/helpers";
+import CommandResult from "../../o_spreadsheet/cancelled_reason";
 
 const { CorePlugin } = spreadsheet;
 
@@ -37,6 +39,17 @@ export default class OdooChartCorePlugin extends CorePlugin {
                 this.getters.getChart(chartId).getDefinitionForDataSource().metaData.resModel,
             getFields: (chartId) => this.getChartDataSource(chartId).getFields(),
         };
+    }
+
+    allowDispatch(cmd) {
+        switch (cmd.type) {
+            case "ADD_GLOBAL_FILTER":
+            case "EDIT_GLOBAL_FILTER":
+                if (cmd.chart) {
+                    return checkFilterFieldMatching(cmd.chart);
+                }
+        }
+        return CommandResult.Success;
     }
 
     /**

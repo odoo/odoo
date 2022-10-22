@@ -1752,6 +1752,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             await addGlobalFilter(model, {
                 filter: {
                     id: "42",
+                    label: "fake",
                     type: "relation",
                     defaultValue: [],
                 },
@@ -1760,4 +1761,46 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             assert.deepEqual(filters, []);
         }
     );
+
+    QUnit.test("Reject date filters with invalid field Matchings", async (assert) => {
+        const { model } = await createSpreadsheetWithPivotAndList();
+        insertChartInSpreadsheet(model);
+        const chartId = model.getters.getOdooChartIds()[0];
+
+        const filter = (label) => ({
+            filter: {
+                id: "42",
+                label,
+                type: "date",
+                defaultValue: {},
+            },
+        });
+        const resultPivot = await addGlobalFilter(model, filter("fake1"), {
+            pivot: { 1: { offset: -2 } },
+        });
+        assert.deepEqual(resultPivot.reasons, [CommandResult.InvalidFieldMatch]);
+        const resultList = await addGlobalFilter(model, filter("fake2"), {
+            list: { 1: { offset: -2 } },
+        });
+        assert.deepEqual(resultList.reasons, [CommandResult.InvalidFieldMatch]);
+        const resultChart = await addGlobalFilter(model, filter("fake3"), {
+            chart: { [chartId]: { offset: -2 } },
+        });
+        assert.deepEqual(resultChart.reasons, [CommandResult.InvalidFieldMatch]);
+    });
+
+    QUnit.test("Can create a relative date filter with an empty default value", async (assert) => {
+        const { model } = await createSpreadsheetWithPivot();
+        const filter = {
+            filter: {
+                id: "42",
+                label: "test",
+                type: "date",
+                defaultValue: {},
+                rangeType: "relative",
+            },
+        };
+        const result = await addGlobalFilter(model, filter);
+        assert.ok(result.isSuccessful);
+    });
 });

@@ -8,6 +8,7 @@ import { TOP_LEVEL_STYLE } from "../../helpers/constants";
 import { _t } from "@web/core/l10n/translation";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 import { sprintf } from "@web/core/utils/strings";
+import { checkFilterFieldMatching } from "@spreadsheet/global_filters/helpers";
 
 /**
  * @typedef {Object} ListDefinition
@@ -68,6 +69,11 @@ export default class ListCorePlugin extends CorePlugin {
                     return CommandResult.EmptyName;
                 }
                 break;
+            case "ADD_GLOBAL_FILTER":
+            case "EDIT_GLOBAL_FILTER":
+                if (cmd.list) {
+                    return checkFilterFieldMatching(cmd.list);
+                }
         }
         return CommandResult.Success;
     }
