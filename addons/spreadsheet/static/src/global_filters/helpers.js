@@ -10,6 +10,10 @@ import { RELATIVE_DATE_RANGE_TYPES } from "@spreadsheet/helpers/constants";
 
 const { DateTime } = luxon;
 
+/**
+ * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").FieldMatching} FieldMatching
+ */
+
 export function checkFiltersTypeValueCombination(type, value) {
     if (value !== undefined) {
         switch (type) {
@@ -36,6 +40,20 @@ export function checkFiltersTypeValueCombination(type, value) {
                 break;
         }
     }
+    return CommandResult.Success;
+}
+
+/**
+ *
+ * @param {Record<string, FieldMatching>} fieldMatchings
+ */
+export function checkFilterFieldMatching(fieldMatchings) {
+    for (const fieldMatch of Object.values(fieldMatchings)) {
+        if (fieldMatch.offset && (!fieldMatch.chain || !fieldMatch.type)) {
+            return CommandResult.InvalidFieldMatch;
+        }
+    }
+
     return CommandResult.Success;
 }
 
@@ -109,11 +127,14 @@ export function getRelativeDateDomain(now, offset, rangeType, fieldName, fieldTy
     return new Domain(["&", [fieldName, ">=", leftBound], [fieldName, "<=", rightBound]]);
 }
 
-/*
- * Return a list of time options to choose from according to the requested
+/**
+ * Returns a list of time options to choose from according to the requested
  * type. Each option contains its (translated) description.
- * @see getPeriodOptions
+ * see getPeriodOptions
+ *
+ *
  * @param {string} type "month" | "quarter" | "year"
+ *
  * @returns {Array<Object>}
  */
 export function dateOptions(type) {
