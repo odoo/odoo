@@ -54,7 +54,7 @@ msgstr "<i class=\"fa fa-fw fa-times\"/> No estoy interesado"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "<i class=\"fa fa-pencil me-1\"/>Edit"
-msgstr ""
+msgstr "<i class=\"fa fa-pencil me-1\"/>Editar"
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
@@ -65,7 +65,7 @@ msgstr "<p>Estoy interesado en este lead.</p>"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "<small class=\"me-2 mt-1 float-start\"><b>Stage:</b></small>"
-msgstr ""
+msgstr "<small class=\"me-2 mt-1 float-start\"><b>Etapa:</b></small>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -146,6 +146,9 @@ msgid ""
 "                                                                <span class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\"/>\n"
 "                                                            </span>"
 msgstr ""
+"<span class=\"input-group-text\" data-target=\"#exp_closing_div\" data-toggle=\"datetimepicker\">\n"
+"                                                                <span class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendario\"/>\n"
+"                                                            </span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -154,6 +157,9 @@ msgid ""
 "                                                                <span class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>\n"
 "                                                            </span>"
 msgstr ""
+"<span class=\"input-group-text\" data-target=\"#next_activity_div\" data-toggle=\"datetimepicker\">\n"
+"                                                                <span class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendario\" title=\"Calendario\"/>\n"
+"                                                            </span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_opportunity_geo_assign_form
@@ -172,7 +178,7 @@ msgid ""
 "                                <span class=\"oe_grey\">) </span>"
 msgstr ""
 "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&lt;=',0)]}\">E </span>\n"
-"                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&gt;=',0)]}\">W </span>\n"
+"                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&gt;=',0)]}\">O </span>\n"
 "                                <span class=\"oe_grey\">) </span>"
 
 #. module: website_crm_partner_assign
@@ -364,7 +370,7 @@ msgstr ""
 "                                <li t-foreach=\"ctx['partner_leads']\" t-as=\"lead\"><a t-att-href=\"lead['lead_link']\" t-out=\"lead['lead_id'].name or 'Subject Undefined'\">Asunto indefinido</a>, <t t-out=\"lead['lead_id'].partner_name or lead['lead_id'].contact_name or 'Contact Name Undefined'\">Nombre de contacto indefinido</t>, <t t-out=\"lead['lead_id'].country_id and lead['lead_id'].country_id.name or 'Country Undefined'\">País indefinido</t>, <t t-out=\"lead['lead_id'].email_from or 'Email Undefined' or ''\">Correo electrónico indefinido</t>, <t t-out=\"lead['lead_id'].phone or ''\">+1 650-123-4567</t> </li><br/>\n"
 "                            </ol>\n"
 "                            <t t-if=\"ctx.get('partner_in_portal')\">\n"
-"                                Conéctese a su <a href=\"{{ '%s?db=%s' % (record.get_base_url(), record.env.cr.dbname) }}\">Portal de partner</a> para obtener los detalles. En cada lead hay dos botones en la esquina superior izquierda que debe presionar después de contactar al lead: \"Me interesa\" y \"No me interesa\".<br/>\n"
+"                                Conéctese a su <a href=\"{{ '%s?db=%s' % (record.get_base_url(), record.env.cr.dbname) }}\">Portal de partner</a> para obtener los detalles. Cada lead cuenta con dos botones en la esquina superior izquierda que debe presionar después de contactar al lead: \"Me interesa\" y \"No me interesa\".<br/>\n"
 "                            </t>\n"
 "                            <t t-else=\"\">\n"
 "                                Todavía no tiene un portal de acceso a nuestra base de datos, por favor,\n"
@@ -920,7 +926,7 @@ msgstr "Lead enviado a partner"
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr "Lead/Oportunidad"
+msgstr "Lead/oportunidad"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
@@ -1104,7 +1110,7 @@ msgstr "Fecha de asignación de partners:"
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_res_partner_grade
 msgid "Partner Grade"
-msgstr "Grado del partner"
+msgstr "Nivel del partner"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__grade_id
@@ -1161,7 +1167,7 @@ msgstr "Partners"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.snippet_options
 msgid "Partners Page"
-msgstr ""
+msgstr "Página de partners"
 
 #. module: website_crm_partner_assign
 #: model:ir.actions.act_window,name:website_crm_partner_assign.action_report_crm_partner_assign
@@ -1272,7 +1278,7 @@ msgstr "Búsqueda"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.res_partner_grade_view_search
 msgid "Search Partner Grade"
-msgstr "Buscar el grado del partner"
+msgstr "Buscar el nivel del partner"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_forward_to_partner_form
@@ -1292,7 +1298,7 @@ msgstr "Enviar correo"
 #. module: website_crm_partner_assign
 #: model:mail.template,description:website_crm_partner_assign.email_template_lead_forward_mail
 msgid "Sent to partner when a lead has been assigned to him"
-msgstr ""
+msgstr "Se envía al partner cuando se le asigna un lead"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__grade_sequence
@@ -1317,7 +1323,7 @@ msgstr "Establecer una dirección de correo electrónico para el partner : %s"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.snippet_options
 msgid "Show Leads / Opps"
-msgstr ""
+msgstr "Mostrar leads/oportunidades"
 
 #. module: website_crm_partner_assign
 #: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_data_silver
@@ -1492,7 +1498,7 @@ msgstr "en"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_partner_grade_form
 msgid "e.g. Gold Partner"
-msgstr "por ejemplo, Gold Partner"
+msgstr "p. ej. Gold Partner"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_merge_summary_inherit_partner_assign
@@ -1520,5 +1526,5 @@ msgid ""
 "several partners: automatic assignment, using GPS coordinates and partner's "
 "grades"
 msgstr ""
-"varios partners: asignación automática, utilizando las coordenadas GPS y las"
-" valoraciones de los partners"
+"varios partners: asignación automática, utilizando las coordenadas GPS y los"
+" niveles de los partners"

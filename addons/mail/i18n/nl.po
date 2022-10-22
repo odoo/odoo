@@ -3,8 +3,9 @@
 # 	* mail
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Martin Trigaux, 2022
+# Jolien De Paepe, 2022
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1942,6 +1943,8 @@ msgid ""
 "Content that will automatically replace the shortcut of your choosing. This "
 "content can still be adapted before sending your message."
 msgstr ""
+"Inhoud die automatisch de sneltoets van je keuze vervangt. Deze inhoud kan "
+"steeds worden aangepast voordat je je bericht verzendt."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__body
@@ -6418,6 +6421,13 @@ msgid "Remove email from blacklist wizard"
 msgstr "Verwijder email van blacklist wizard"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/message_action_view.js:0
+#, python-format
+msgid "Remove from Todo"
+msgstr "Verwijderen uit Te doen"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Remove the contextual action to use this template on related documents"
 msgstr ""
@@ -7024,6 +7034,9 @@ msgid ""
 "messages. Type ':' followed by the name of your shortcut (e.g. :hello) to "
 "use in your messages."
 msgstr ""
+"Sneltoest die automatisch wordt vervangen met een langere inhoud in je "
+"berichten. Schrijf ':' gevolgd door de naam van je sneltoets (bijv.: hello) "
+"om deze in je berichten te gebruiken."
 
 #. module: mail
 #. openerp-web
@@ -7380,7 +7393,7 @@ msgstr "Sjabloon"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__template_category
 msgid "Template Category"
-msgstr ""
+msgstr "Sjablooncategorie"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__template_fs
@@ -7406,7 +7419,7 @@ msgstr "Sjabloon Reset Mixin"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__description
 msgid "Template description"
-msgstr ""
+msgstr "Sjabloonbeschrijving"
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
@@ -7700,6 +7713,8 @@ msgstr "Dit veld is hoofdlettergevoelig."
 #: model:ir.model.fields,help:mail.field_mail_template__description
 msgid "This field is used for internal description of the template's usage."
 msgstr ""
+"Dit veld is gebruikt voor de interne beschrijving van het gebruik van het "
+"sjabloon."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__email_normalized
@@ -7723,7 +7738,7 @@ msgstr "Dit is hun eerste verbinding. Wens ze succes."
 #: code:addons/mail/models/res_config_settings.py:0
 #, python-format
 msgid "This layout seems to no longer exist."
-msgstr ""
+msgstr "Deze lay-out lijkt niet meer te bestaan."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__auto_delete
@@ -8124,7 +8139,7 @@ msgstr "Niet ondersteunde rapport soort %s gevonden."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Update Mail Layout"
-msgstr ""
+msgstr "Lay-out update mail"
 
 #. module: mail
 #. openerp-web
@@ -8134,6 +8149,13 @@ msgstr ""
 #, python-format
 msgid "Upload Document"
 msgstr "Document uploaden"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/backend_components/activity_list_view_item/activity_list_view_item.xml:0
+#, python-format
+msgid "Upload File"
+msgstr "Upload bestand"
 
 #. module: mail
 #. openerp-web
@@ -8904,6 +8926,8 @@ msgstr "bijv. \"Welkom e-mail\""
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "e.g. \"Welcome to MyCompany\" or \"Nice to meet you, {{ object.name }}\""
 msgstr ""
+"bijv. \"Welkom bij MyCompany\" or \"Aangenaam kennis te maken, {{ "
+"object.name }}\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form

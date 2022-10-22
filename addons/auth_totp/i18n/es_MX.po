@@ -29,13 +29,13 @@ msgstr "%(browser)s en %(platform)s"
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_auth_totp_wizard
 msgid "2-Factor Setup Wizard"
-msgstr "Asistente de la configuración de la autenticación de 2 pasos"
+msgstr "Asistente de la configuración de la autenticación de 2 factores"
 
 #. module: auth_totp
 #: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
 #, python-format
 msgid "2-Factor authentication is now enabled."
-msgstr "Ya se habilitó la autenticación de 2 pasos"
+msgstr "Ya se habilitó la autenticación de 2 factores"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -177,12 +177,12 @@ msgstr "Dispositivo"
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Disable 2FA"
-msgstr "Deshabilitar la A2P"
+msgstr "Deshabilitar la A2F"
 
 #. module: auth_totp
 #: model:ir.actions.server,name:auth_totp.action_disable_totp
 msgid "Disable two-factor authentication"
-msgstr "Deshabilitar la autenticación de 2 pasos"
+msgstr "Deshabilitar la autenticación de 2 factores"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__display_name
@@ -324,14 +324,14 @@ msgstr "Dispositivos de confianza"
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-Factor Authentication Activation"
-msgstr "Activación de la autenticación de dos pasos"
+msgstr "Activación de la autenticación de dos factores"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Two-factor Authentication"
-msgstr "Autenticación de dos pasos"
+msgstr "Autenticación de dos factores"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -340,7 +340,7 @@ msgid ""
 "                                The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
 "                                Popular ones include Authy, Google Authenticator or the Microsoft Authenticator."
 msgstr ""
-"La autenticación de dos pasos (A2P) es un sistema de autentificación doble.\n"
+"La autenticación de dos factores (A2F) es un sistema de autenticación doble.\n"
 "La primera autentificación se hace con su contraseña, la segunda con un código que obtendrás de una aplicación móvil especializada.\n"
 "Entre las aplicaciones populares se encuentran Authy, Google Authenticator o Microsoft Authenticator."
 
@@ -351,40 +351,43 @@ msgid ""
 "                        The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
 "                        Popular ones include Authy, Google Authenticator or the Microsoft Authenticator."
 msgstr ""
+"La autenticación de dos factores (A2F) es un sistema de autenticación doble.\n"
+"La primera autentificación se hace con su contraseña, la segunda con un código que obtendrá de una aplicación móvil especializada.\n"
+"Entre las aplicaciones populares se encuentran Authy, Google Authenticator o Microsoft Authenticator."
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_enabled
 msgid "Two-factor authentication"
-msgstr "Autenticación de dos pasos"
+msgstr "Autenticación de dos factores"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.res_users_view_search
 msgid "Two-factor authentication Disabled"
-msgstr "Se deshabilitó la autenticación de dos pasos"
+msgstr "Se deshabilitó la autenticación de dos factores"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.res_users_view_search
 msgid "Two-factor authentication Enabled"
-msgstr "Se habilitó la autenticación de dos pasos"
+msgstr "Se habilitó la autenticación de dos factores"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication already enabled"
-msgstr "La autenticación en dos pasos ya está activa "
+msgstr "La autenticación de dos factores ya está habilitada"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication can only be enabled for yourself"
-msgstr "Solo usted puede activar la autenticación de dos pasos "
+msgstr "Solo usted puede activar la autenticación de dos factores"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication disabled for the following user(s): %s"
 msgstr ""
-"Se deshabilitó la autenticación de dos pasos para estos usuario(s): %s"
+"Se deshabilitó la autenticación de dos factores para estos usuario(s): %s"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__url

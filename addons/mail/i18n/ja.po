@@ -413,7 +413,7 @@ msgstr "<span class=\"o_form_label\">活動</span>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Custom ICE server list</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">カスタムICEサーバーリスト</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -827,7 +827,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Add your twilio credentials for ICE servers"
-msgstr ""
+msgstr "ICEサーバ用のtwilioの認証情報を追加します。"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -1752,7 +1752,7 @@ msgstr "設定"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Configure your ICE server list for webRTC"
-msgstr ""
+msgstr "webRTC用のICEサーバーリストを設定する"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -2720,7 +2720,7 @@ msgstr ""
 msgid ""
 "Email address to which replies will be redirected when sending emails in "
 "mass"
-msgstr ""
+msgstr "一括でメールを送信する際に、返信先となるメールアドレス"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__reply_to
@@ -2728,7 +2728,7 @@ msgid ""
 "Email address to which replies will be redirected when sending emails in "
 "mass; only used when the reply is not logged in the original discussion "
 "thread."
-msgstr ""
+msgstr "一括でメールを送信する際に、返信先となるメールアドレス；返信が元のスレッドに記録されていない場合にのみ使用されます。"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_blacklist_action
@@ -3419,7 +3419,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "ICE Servers"
-msgstr ""
+msgstr "ICEサーバー"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_ice_server
@@ -3431,7 +3431,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mail.action_ice_servers
 #: model:ir.ui.menu,name:mail.mail_channel_ice_servers_menu
 msgid "ICE servers"
-msgstr ""
+msgstr "ICEサーバー"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__id
@@ -5130,7 +5130,7 @@ msgstr "通知"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__is_notification
 msgid "Notification Email"
-msgstr ""
+msgstr "通知メール"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_schedule__notification_parameters
@@ -6193,6 +6193,13 @@ msgstr "削除"
 #: model:ir.model,name:mail.model_mail_blacklist_remove
 msgid "Remove email from blacklist wizard"
 msgstr "ブラックリストウィザードからメールを削除する"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/message_action_view.js:0
+#, python-format
+msgid "Remove from Todo"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -7848,6 +7855,13 @@ msgstr "ドキュメントをアップロード"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/backend_components/activity_list_view_item/activity_list_view_item.xml:0
+#, python-format
+msgid "Upload File"
+msgstr "ファイルをアップロード"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/backend_components/activity_list_view_item/activity_list_view_item.xml:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
 msgid "Upload file"
@@ -7882,7 +7896,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__use_twilio_rtc_servers
 msgid "Use Twilio ICE servers"
-msgstr ""
+msgstr "Twilio ICEサーバを使用する"
 
 #. module: mail
 #: code:addons/mail/models/fetchmail.py:0

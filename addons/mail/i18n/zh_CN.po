@@ -5,11 +5,11 @@
 # Translators:
 # guohuadeng <guohuadeng@hotmail.com>, 2022
 # keecome <7017511@qq.com>, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
-# Raymond Yu <cl_yu@hotmail.com>, 2022
-# Martin Trigaux, 2022
 # 深圳 JM <3440895@qq.com>, 2022
 # 稀饭~~ <wangwhai@qq.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Raymond Yu <cl_yu@hotmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: 稀饭~~ <wangwhai@qq.com>, 2022\n"
+"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -112,14 +112,14 @@ msgstr "%s (副本)"
 #: code:addons/mail/static/src/models/messaging_notification_handler.js:0
 #, python-format
 msgid "%s Message"
-msgstr ""
+msgstr "%s 消息"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/models/messaging_notification_handler.js:0
 #, python-format
 msgid "%s Messages"
-msgstr ""
+msgstr "%s 消息"
 
 #. module: mail
 #. openerp-web
@@ -734,7 +734,7 @@ msgstr "活动类型"
 #: code:addons/mail/models/mail_activity.py:0
 #, python-format
 msgid "Activity: %s"
-msgstr ""
+msgstr "活动: %s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
@@ -1070,7 +1070,7 @@ msgstr "添加附件"
 #: code:addons/mail/static/src/components/attachment_box/attachment_box.xml:0
 #, python-format
 msgid "Attach files"
-msgstr ""
+msgstr "附加文件"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_attachment
@@ -1616,6 +1616,10 @@ msgid ""
 "Post as Message: post on document and notify followers\n"
 "Post as Note: log a note on document"
 msgstr ""
+"选择发送电子邮件的方法：\n"
+"电子邮件：直接发送电子邮件\n"
+"作为信息发布：在文档上发布并通知关注者\n"
+"发布为注释：在文档上记录注释"
 
 #. module: mail
 #. openerp-web
@@ -2132,7 +2136,7 @@ msgstr "截止日期:"
 #: code:addons/mail/models/mail_activity.py:0
 #, python-format
 msgid "Deadline: %s"
-msgstr ""
+msgstr "截止日期：%s"
 
 #. module: mail
 #. openerp-web
@@ -6204,6 +6208,13 @@ msgid "Remove email from blacklist wizard"
 msgstr "从黑名单向导中删除电子邮件"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/message_action_view.js:0
+#, python-format
+msgid "Remove from Todo"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Remove the contextual action to use this template on related documents"
 msgstr "移除上下文动作，使用相关单据的模板"
@@ -6653,7 +6664,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__mail_post_method
 #: model:ir.model.fields,field_description:mail.field_ir_cron__mail_post_method
 msgid "Send as"
-msgstr ""
+msgstr "发送为"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_partner_mass_mail
@@ -7048,7 +7059,7 @@ msgstr "主题:"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__mail_post_autofollow
 #: model:ir.model.fields,field_description:mail.field_ir_cron__mail_post_autofollow
 msgid "Subscribe Recipients"
-msgstr ""
+msgstr "订阅收件人"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__substitution
@@ -7866,6 +7877,13 @@ msgstr ""
 #, python-format
 msgid "Upload Document"
 msgstr "上传单据"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/backend_components/activity_list_view_item/activity_list_view_item.xml:0
+#, python-format
+msgid "Upload File"
+msgstr "上传文件"
 
 #. module: mail
 #. openerp-web

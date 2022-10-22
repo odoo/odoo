@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
+# Raymond Yu <cl_yu@hotmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:02+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
+"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,11 +27,12 @@ msgid ""
 "<span attrs=\"{'invisible': [('show_availability', '=', "
 "False)]}\">Units</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('show_availability', '=', False)]}\">单位</span>"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__stock_notification_partner_ids
 msgid "Back in stock Notifications"
-msgstr ""
+msgstr "补充库存通知"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_res_config_settings
@@ -72,30 +74,30 @@ msgstr "自定义消息的默认可见性。"
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "Get notified when back in stock"
-msgstr ""
+msgstr "补充库存时得到通知"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "How to display products having low quantities (on hand - reserved)"
-msgstr ""
+msgstr "如何显示数量少的产品（在手-已预留）？"
 
 #. module: website_sale_stock
 #: code:addons/website_sale_stock/controllers/main.py:0
 #, python-format
 msgid "Invalid Email"
-msgstr ""
+msgstr "无效电子邮件"
 
 #. module: website_sale_stock
 #. openerp-web
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "Invalid email"
-msgstr ""
+msgstr "无效电子邮件"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Inventory Defaults"
-msgstr ""
+msgstr "默认库存"
 
 #. module: website_sale_stock
 #. openerp-web
@@ -145,7 +147,7 @@ msgstr "产品变体"
 #: model:ir.cron,cron_name:website_sale_stock.ir_cron_send_availability_email
 #: model:ir.cron,name:website_sale_stock.ir_cron_send_availability_email
 msgid "Product: send email regarding products availability"
-msgstr ""
+msgstr "产品：发送有关产品可用性的电子邮件"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
@@ -206,7 +208,7 @@ msgstr "产品“%(product_name)s”现已上市"
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #, python-format
 msgid "This product is out of stock."
-msgstr ""
+msgstr "这产品已无库存"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking
@@ -230,7 +232,7 @@ msgstr "仓库"
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "We'll notify you once the product is back in stock."
-msgstr ""
+msgstr "一旦产品补充库存，我们将会通知您"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_website
@@ -241,7 +243,7 @@ msgstr "网站"
 #. module: website_sale_stock
 #: model:ir.model.fields,help:website_sale_stock.field_stock_picking__website_id
 msgid "Website where this order has been placed, for eCommerce orders."
-msgstr ""
+msgstr "此订单已下达的网站，用于电子商务订单"
 
 #. module: website_sale_stock
 #. openerp-web
@@ -262,14 +264,14 @@ msgstr "您已经在购物车中添加了所有可用的产品。"
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #, python-format
 msgid "You already have %s Units in your cart."
-msgstr ""
+msgstr "您已经有%s件在您的购物车"
 
 #. module: website_sale_stock
 #: code:addons/website_sale_stock/models/sale_order.py:0
 #: code:addons/website_sale_stock/models/sale_order_line.py:0
 #, python-format
 msgid "You ask for %(desired_qty)s products but only %(new_qty)s is available"
-msgstr ""
+msgstr "您想要%(desired_qty)s件产品，但是只有%(new_qty)s是可用的"
 
 #. module: website_sale_stock
 #. openerp-web
@@ -277,7 +279,7 @@ msgstr ""
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #, python-format
 msgid "You ask for %s Units but only %s are available."
-msgstr ""
+msgstr "您想要%s件但是只有%s是可用的"
 
 #. module: website_sale_stock
 #. openerp-web
@@ -304,4 +306,4 @@ msgstr "仅当低于"
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "youremail@gmail.com"
-msgstr ""
+msgstr "youremail@gmail.com"
