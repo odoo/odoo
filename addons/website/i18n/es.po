@@ -50,6 +50,7 @@
 # Martin Trigaux, 2022
 # Yolann Sabaux, 2022
 # jabelchi, 2022
+# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -57,7 +58,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-07 14:40+0000\n"
 "PO-Revision-Date: 2020-09-07 08:20+0000\n"
-"Last-Translator: jabelchi, 2022\n"
+"Last-Translator: Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -193,6 +194,8 @@ msgid ""
 "* provided that your analytics is anonymized, which is not the\n"
 "            case by default with Google Analytics."
 msgstr ""
+"* siempre que su análisis sea anónimo, lo cual no es el \n"
+"            caso con Google Analytics de forma predeterminada."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
@@ -704,6 +707,8 @@ msgid ""
 "<i class=\"fa fa-plus-circle\"/>\n"
 "                The Google map option is enabled but"
 msgstr ""
+"<i class=\"fa fa-plus-circle\"/>\n"
+"                La opción de mapa de Google está habilitada pero"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.language_selector_add_language
@@ -3617,7 +3622,7 @@ msgstr "Pie de página visible"
 #: code:addons/website/static/src/xml/website.res_config_settings.xml:0
 #, python-format
 msgid "For session cookies, authentification and analytics*,"
-msgstr ""
+msgstr "Para cookies de la sesión, autenticación, y análisis*,"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -3873,6 +3878,11 @@ msgid ""
 "will be possible only up to mid 2023. After that, those services won't work "
 "anymore, at all."
 msgstr ""
+"Google hizo obsoletos tanto a su \"Universal Analytics\" como su API "
+"\"Inicio de sesión en Google\". Esto significa que solo las cuentas y claves"
+" creadas antes de 2020 podrán integrar su tablero de Analytics en Odoo (o "
+"cualquier otro sitio web). Esto será posible solo hasta mediados de 2023. "
+"Después de eso, esos servicios ya no funcionarán, en absoluto."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__google_search_console
@@ -5055,7 +5065,7 @@ msgstr "Logotipo de MyCompany"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Logo type"
-msgstr ""
+msgstr "Tipo de logo"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -5213,6 +5223,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 msgid "Middle"
 msgstr "Medio"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "Min-Height"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote_options
@@ -5412,6 +5429,8 @@ msgid ""
 "New Google Analytics accounts and keys are now using Google Analytics 4 "
 "which, for now, can't be integrated/embed in external websites."
 msgstr ""
+"Las nuevas cuentas y claves de Google Analytics utilizan Google Analytics 4 "
+"que, por ahora, no se puede integrar/insertar en sitios web externos."
 
 #. module: website
 #. openerp-web
@@ -6134,7 +6153,7 @@ msgstr "Publicado"
 #: code:addons/website/static/src/js/content/website_root.js:0
 #, python-format
 msgid "Published with success."
-msgstr ""
+msgstr "Publicado con éxito."
 
 #. module: website
 #. openerp-web
@@ -6760,7 +6779,7 @@ msgstr "Mostrar en"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Shown On Mobile"
-msgstr ""
+msgstr "Mostrar en celular"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -7076,7 +7095,7 @@ msgstr "Cambiar tema"
 #: code:addons/website/static/src/xml/theme_preview.xml:0
 #, python-format
 msgid "TIP: Follow the"
-msgstr ""
+msgstr "CONSEJO: Siga la"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -7540,6 +7559,8 @@ msgid ""
 "Those accounts should now check their Analytics dashboard in the Google "
 "platform directly."
 msgstr ""
+"Esas cuentas ahora deben revisar su tablero de Analytics directamente en la "
+"plataforma de Google."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -8873,7 +8894,7 @@ msgstr ""
 #: code:addons/website/static/src/js/content/website_root.js:0
 #, python-format
 msgid "You've published your %s."
-msgstr ""
+msgstr "Ha publicado su %s."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -9254,7 +9275,7 @@ msgstr "una vez la cuenta regresiva finalice."
 #: code:addons/website/static/src/snippets/s_countdown/000.xml:0
 #, python-format
 msgid "only"
-msgstr ""
+msgstr "solamente"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -9303,6 +9324,8 @@ msgid ""
 "session_id (Odoo)<br/>\n"
 "                                            fileToken (Odoo)"
 msgstr ""
+"session_id (Odoo)<br/>\n"
+"                                            fileToken (Odoo)"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -9409,7 +9432,7 @@ msgstr "Altura"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "⌙ Height (Scrolled)"
-msgstr ""
+msgstr "⌙ Altura (Desplazada)"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
@@ -9434,7 +9457,7 @@ msgstr "Grande"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options_template
 msgid "⌙ Normal devices"
-msgstr ""
+msgstr "⌙ Dispositivos normales"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9464,7 +9487,7 @@ msgstr "Pequeño"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options_template
 msgid "⌙ Small devices"
-msgstr ""
+msgstr "⌙ Dispositivos pequeños"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9490,3 +9513,10 @@ msgstr "Vídeo"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "⌙ Width"
 msgstr "Ancho"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "└ Height"
+msgstr ""
