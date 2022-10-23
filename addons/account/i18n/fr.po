@@ -107,7 +107,6 @@
 # vur1, 2022
 # Camille Dantinne <cmd@odoo.com>, 2022
 # jb78180 <jblum66@gmail.com>, 2022
-# Christophe Klopfert, 2022
 # Benjamin Stienon <tsb@odoo.com>, 2022
 # Thomas Charpentier, 2022
 # laje_odoo, 2022
@@ -115,8 +114,9 @@
 # Loïc De Greef, 2022
 # Pierre Verkest <pierreverkest84@gmail.com>, 2022
 # Martin Trigaux, 2022
-# Jolien De Paepe, 2022
 # Cécile Collart <cco@odoo.com>, 2022
+# Christophe Klopfert, 2022
+# Jolien De Paepe, 2022
 # 
 msgid ""
 msgstr ""
@@ -124,7 +124,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-02 08:11+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2043,7 +2043,7 @@ msgstr "Compte régularisé"
 #. module: account
 #: model:ir.model,name:account.model_account_accrued_orders_wizard
 msgid "Accrued Orders Wizard"
-msgstr ""
+msgstr "Assistant des commandes à recevoir"
 
 #. module: account
 #: code:addons/account/wizard/accrued_orders.py:0
@@ -14693,6 +14693,8 @@ msgid ""
 "The register payment wizard should only be called on account.move or "
 "account.move.line records."
 msgstr ""
+"L'assistant de comptabilisation de paiement ne devrait être utilisé que sur "
+"des enregistrements d'account.move ou account.move.line."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_tax_adjustments_wizard__tax_report_line_id
@@ -16401,6 +16403,9 @@ msgid ""
 "account set either on the company or the %s payment method in the %s "
 "journal."
 msgstr ""
+"Vous ne pouvez pas créer un nouveau paiement sans un compte d'attente de "
+"paiement/reçu défini soit sur l'entreprise soit sur la méthode de paiement "
+"%s du journal %s."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -16409,6 +16414,8 @@ msgid ""
 "You can't create a new statement line without a suspense account set on the "
 "%s journal."
 msgstr ""
+"Vous ne pouvez pas créer une nouvelle ligne d'extrait sans un compte "
+"d'attente défini sur le journal %s."
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0

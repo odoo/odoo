@@ -3,22 +3,25 @@
 # 	* website_event_sale
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2019
-# liAnGjiA <liangjia@qq.com>, 2019
-# v2exerer <9010446@qq.com>, 2019
-# SHOM <shanmuxin@yeah.net>, 2019
-# fausthuang, 2019
+# waveyeung <waveyeung@qq.com>, 2016
+# fausthuang, 2016
+# v2exerer <9010446@qq.com>, 2018
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
-# John An <johnxan@163.com>, 2019
 # Martin Trigaux, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# as co02 <asco02@163.com>, 2020
+# Jeffery CHEN <jeffery9@gmail.com>, 2020
+# guohuadeng <guohuadeng@hotmail.com>, 2020
+# Raymond Yu <cl_yu@hotmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-30 09:42+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"POT-Creation-Date: 2022-04-19 13:58+0000\n"
+"PO-Revision-Date: 2016-08-05 13:12+0000\n"
+"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,22 +30,12 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "<i class=\"fa fa-ban mr-2\"/>Sold Out"
-msgstr ""
-
-#. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "<i class=\"fa fa-check mr-2\"/>Registered"
-msgstr ""
-
-#. module: website_event_sale
 #: code:addons/website_event_sale/models/product_pricelist.py:0
 #, python-format
 msgid ""
 "A pricelist item with a positive min. quantity cannot be applied to this "
 "event tickets product."
-msgstr ""
+msgstr "最小数量为正的价格表项不能应用于此事件通知单产品。"
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/product_pricelist.py:0
@@ -50,7 +43,7 @@ msgstr ""
 msgid ""
 "A pricelist item with a positive min. quantity will not be applied to the "
 "event tickets products."
-msgstr ""
+msgstr "最小数量为正的价格表项目将不应用于活动门票产品。"
 
 #. module: website_event_sale
 #: model:ir.model.fields,field_description:website_event_sale.field_product_product__event_ticket_ids
@@ -63,19 +56,14 @@ msgid "Free"
 msgstr "空闲"
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_complete_inherit_website_event_sale
-msgid "N/A"
-msgstr "N/A"
-
-#. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.index
-msgid "Only"
-msgstr "仅"
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "From"
+msgstr "从"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_pricelist_item
 msgid "Pricelist Rule"
-msgstr ""
+msgstr "价目表规则"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_product
@@ -83,20 +71,10 @@ msgid "Product"
 msgstr "产品"
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "Register"
-msgstr "注册"
-
-#. module: website_event_sale
 #: code:addons/website_event_sale/controllers/main.py:0
 #, python-format
 msgid "Registration"
-msgstr "登记"
-
-#. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.index
-msgid "Remaining"
-msgstr "剩余"
+msgstr "登记记录"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_sale_order
@@ -109,20 +87,10 @@ msgid "Sales Order Line"
 msgstr "销售订单分录"
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "Sales end on"
-msgstr ""
-
-#. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.index
-msgid "Sold Out"
-msgstr "已售完"
-
-#. module: website_event_sale
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "Sorry, The %(ticket)s tickets for the %(event)s event are sold out."
-msgstr "很抱歉，%(ticket)s门票%(event)s事件都售完了。"
+msgstr "很抱歉，%(ticket)s门票%(event)s事件都卖完了。"
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/sale_order.py:0
@@ -135,20 +103,14 @@ msgstr "对不起，只有%(remaining_seats)d席位仍然可用于%(ticket)s的�
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
+msgid "The provided ticket doesn't exist"
+msgstr "提供的门票不存在"
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/models/sale_order.py:0
+#, python-format
 msgid "The ticket doesn't match with this product."
 msgstr "这张票不符合这个产品。"
-
-#. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_complete_inherit_website_event_sale
-msgid "Ticket"
-msgstr "门票"
-
-#. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid ""
-"Tickets\n"
-"                    <span class=\"close\">×</span>"
-msgstr ""
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/product_pricelist.py:0
@@ -160,3 +122,14 @@ msgstr "警告"
 #: model:ir.model,name:website_event_sale.model_website
 msgid "Website"
 msgstr "网站"
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/models/sale_order.py:0
+#, python-format
+msgid "You cannot raise manually the event ticket quantity in your cart"
+msgstr "您不能手动提高您购物车中的活动门票数量"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "to"
+msgstr "按"

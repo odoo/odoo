@@ -11,6 +11,7 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
 # Martin Trigaux, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Jolien De Paepe, 2022
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-19 13:58+0000\n"
 "PO-Revision-Date: 2016-08-05 13:08+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -199,7 +200,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_packaging_barcode_uniq
 msgid "A barcode can only be assigned to one packaging."
-msgstr ""
+msgstr "Een barcode kan slechts aan één verpakking worden toegekend."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__description_sale
@@ -217,7 +218,7 @@ msgstr ""
 #: code:addons/product/models/product_product.py:0
 #, python-format
 msgid "A packaging already uses the barcode"
-msgstr ""
+msgstr "Een verpakking gebruikt reeds de barcode"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -225,12 +226,14 @@ msgid ""
 "A price is a set of sales prices or rules to compute the price of sales order lines based on products, product categories, dates and ordered quantities.\n"
 "            This is the perfect tool to handle several pricings, seasonal discounts, etc."
 msgstr ""
+"Een prijs is een verzameling verkoopprijzen of regels om de prijs van verkooporderregels te berekenen op basis van producten, productcategorieën, datums en bestelde hoeveelheden.\n"
+"Dit is de perfecte tool om verschillende prijzen, seizoenskortingen, etc. te verwerken."
 
 #. module: product
 #: code:addons/product/models/product_packaging.py:0
 #, python-format
 msgid "A product already uses the barcode"
-msgstr ""
+msgstr "Een product gebruikt reeds de barcode"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__detailed_type
@@ -296,7 +299,7 @@ msgstr "Voeg hoeveelheid toe"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__additional_product_tag_ids
 msgid "Additional Product Tag"
-msgstr ""
+msgstr "Bijkomende producttag"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_sale_pricelist
@@ -312,12 +315,12 @@ msgstr "Geavanceerde prijsstelling (kortingen, formules)"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__all_product_tag_ids
 msgid "All Product Tag"
-msgstr ""
+msgstr "Alle producttags"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__product_ids
 msgid "All Product Variants using this Tag"
-msgstr ""
+msgstr "Alle productvarianten die deze tag gebruiken"
 
 #. module: product
 #: code:addons/product/models/product_pricelist_item.py:0
@@ -795,7 +798,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
 msgid "Define a new tag"
-msgstr ""
+msgstr "Bepaal een nieuw label"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__seller_ids
@@ -1900,7 +1903,7 @@ msgstr "Productverpakkingen"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__product_product_ids
 msgid "Product Product"
-msgstr ""
+msgstr "Product Product"
 
 #. module: product
 #: model:ir.model,name:product.model_product_tag
@@ -1946,7 +1949,7 @@ msgstr "Productsjabloon attribuut waarde"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Product Template Tags"
-msgstr ""
+msgstr "Productsjabloonlabels"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__product_tmpl_ids
@@ -2341,6 +2344,7 @@ msgstr "Labels"
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
 msgid "Tags are used to search product for a given theme."
 msgstr ""
+"Labels worden gebruikt om een product te zoeken voor een bepaald thema."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__valid_product_template_attribute_line_ids
