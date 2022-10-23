@@ -122,6 +122,7 @@ class AccountMoveLine(models.Model):
                         ('order_id', '=', sale_order.id),
                         ('price_unit', '=', price),
                         ('product_id', '=', move_line.product_id.id),
+                        ('name', 'like', move_line.name),
                         ('is_expense', '=', True),
                     ], limit=1)
                     if sale_line:  # found existing one, so keep the browse record

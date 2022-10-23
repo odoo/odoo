@@ -115,3 +115,94 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
             {'qty_delivered_method': 'analytic'},
             {'qty_delivered_method': 'analytic'},
         ])
+
+    def test_distinguish_expense_lines_distinct_employees(self):
+        """
+            Test: same expense product by different employees to re-invoice
+                is represented in different sale order lines
+        """
+
+        sale_order = self.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+        })
+
+        sale_order._compute_tax_id()
+        sale_order.action_confirm()
+
+        expense_sheet1 = self.env['hr.expense.sheet'].create({
+            'name': 'First Expense for employee',
+            'employee_id': self.expense_employee.id,
+            'journal_id': self.company_data['default_journal_purchase'].id,
+            'accounting_date': '2017-01-01',
+            'expense_line_ids': [
+                (0, 0, {
+                    'name': 'test_expense',
+                    'date': '2016-01-01',
+                    'product_id': self.company_data['product_delivery_sales_price'].id,
+                    'unit_amount': self.company_data['product_delivery_sales_price'].list_price,
+                    'analytic_account_id': self.analytic_account_1.id,
+                    'employee_id': self.expense_employee.id,
+                    'sale_order_id': sale_order.id,
+                })
+            ]
+        })
+        expense_sheet1.approve_expense_sheets()
+        expense_sheet1.action_sheet_move_create()
+
+        expense_sheet2 = self.env['hr.expense.sheet'].create({
+            'name': 'First Expense for employee',
+            'employee_id': self.expense_employee_a.id,
+            'journal_id': self.company_data['default_journal_purchase'].id,
+            'accounting_date': '2017-01-01',
+            'expense_line_ids': [
+                (0, 0, {
+                    'name': 'test_expense',
+                    'date': '2016-01-01',
+                    'product_id': self.company_data['product_delivery_sales_price'].id,
+                    'unit_amount': self.company_data['product_delivery_sales_price'].list_price,
+                    'analytic_account_id': self.analytic_account_1.id,
+                    'employee_id': self.expense_employee_a.id,
+                    'sale_order_id': sale_order.id,
+                })
+            ]
+        })
+        expense_sheet2.approve_expense_sheets()
+        expense_sheet2.action_sheet_move_create()
+
+        expense_sheet3 = self.env['hr.expense.sheet'].create({
+            'name': 'First Expense for employee',
+            'employee_id': self.expense_employee_a.id,
+            'journal_id': self.company_data['default_journal_purchase'].id,
+            'accounting_date': '2017-01-01',
+            'expense_line_ids': [
+                (0, 0, {
+                    'name': 'test_expense',
+                    'date': '2016-01-01',
+                    'product_id': self.company_data['product_delivery_sales_price'].id,
+                    'unit_amount': self.company_data['product_delivery_sales_price'].list_price,
+                    'analytic_account_id': self.analytic_account_1.id,
+                    'employee_id': self.expense_employee_a.id,
+                    'sale_order_id': sale_order.id,
+                })
+            ]
+        })
+        expense_sheet3.approve_expense_sheets()
+        expense_sheet3.action_sheet_move_create()
+
+        sales_order_lines = self.env['sale.order'].browse(sale_order.id).order_line
+
+        # verify 2 distinct sale order lines were created for same product
+        # first has 1 qty to invoice ( expense sheet 1 )
+        # second has 2 qty to invoice ( expense sheet 2, 3 )
+
+        self.assertEqual(len(sales_order_lines), 2)
+
+        self.assertTrue(sales_order_lines[0]['qty_to_invoice'], sales_order_lines[0]['qty_delivered'])
+        self.assertTrue(int(sales_order_lines[0]['qty_to_invoice']), 1)
+        self.assertTrue(sales_order_lines[0]['name'], f'{self.expense_employee.name}: test_expense')
+
+        self.assertTrue(sales_order_lines[-1]['qty_to_invoice'], sales_order_lines[-1]['qty_delivered'])
+        self.assertTrue(int(sales_order_lines[-1]['qty_to_invoice']), 2)
+        self.assertTrue(sales_order_lines[-1]['name'], f'{self.expense_employee_a.name}: test_expense')

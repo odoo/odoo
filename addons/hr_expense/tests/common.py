@@ -22,6 +22,17 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
             groups='base.group_user',
             company_ids=[(6, 0, cls.env.companies.ids)],
         )
+
+        cls.expense_user_employee_a = mail_new_test_user(
+            cls.env,
+            name='expense_user_employee_a',
+            login='expense_user_employee_a',
+            email='expense_user_employee_a@example.com',
+            notification_type='email',
+            groups='base.group_user',
+            company_ids=[(6, 0, cls.env.companies.ids)],
+        )
+
         cls.expense_user_manager = mail_new_test_user(
             cls.env,
             name='Expense manager',
@@ -37,6 +48,13 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
             'user_id': cls.expense_user_employee.id,
             'address_home_id': cls.expense_user_employee.partner_id.id,
             'address_id': cls.expense_user_employee.partner_id.id,
+        })
+
+        cls.expense_employee_a = cls.env['hr.employee'].create({
+            'name': 'expense_employee_a',
+            'user_id': cls.expense_user_employee_a.id,
+            'address_home_id': cls.expense_user_employee_a.partner_id.id,
+            'address_id': cls.expense_user_employee_a.partner_id.id,
         })
 
         # Allow the current accounting user to access the expenses.
