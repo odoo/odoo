@@ -7,8 +7,8 @@
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2020
 # Martin Trigaux, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2021
-# Friederike Fasterling-Nesselbosch, 2021
+# Friederike Fasterling-Nesselbosch, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -16,13 +16,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:13+0000\n"
 "PO-Revision-Date: 2020-09-07 08:21+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/website.py:0
@@ -159,7 +159,7 @@ msgstr "<span id=\"search_number\" class=\"mr-1\">0</span>risultati"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "<span>&amp;nbsp;at&amp;nbsp;</span>"
-msgstr ""
+msgstr "<span>&amp;nbsp;at&amp;nbsp;</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
@@ -409,7 +409,7 @@ msgstr "Biografia"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
 msgid "Book your seats to the best talks"
-msgstr ""
+msgstr "Prenota i tuoi posti per le migliori conferenze"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
@@ -440,12 +440,12 @@ msgstr "Titolo pulsante"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_delay
 msgid "Button appears"
-msgstr ""
+msgstr "Il pulsante appare"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__is_website_cta_live
 msgid "CTA button is available"
-msgstr ""
+msgstr "Pulsante CTA è disponibile"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -475,7 +475,7 @@ msgstr "Categoria"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_12
 msgid "Climate positive"
-msgstr ""
+msgstr "Clima positivo"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__color
@@ -544,6 +544,9 @@ msgid ""
 "information about a construction process and final result. Step by step "
 "simple explanation! Interested?"
 msgstr ""
+"Stai pensando di costruire una casa in legno? Guarda questo video per "
+"saperne di più sul processo di costruzione e sul risultato finale. "
+"Spiegazione semplice passo dopo passo! Sei interessato?"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_sponsor_action_from_event
@@ -605,7 +608,7 @@ msgstr "Riepilogo del giorno 2"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_8
 msgid "Dealing with OpenWood Furniture"
-msgstr ""
+msgstr "Come trattare i mobili OpenWood"
 
 #. module: website_event_track
 #: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_1
@@ -637,6 +640,10 @@ msgid ""
 "            You will use these stages in order to track the progress in\n"
 "            solving an event track."
 msgstr ""
+"Definisci i passi che saranno utilizzati nell'evento dalla\n"
+"creazione della traccia, fino alla chiusura della traccia.\n"
+"Si useranno queste fasi per tracciare il progresso delle\n"
+"traccie di un evento."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -905,19 +912,19 @@ msgstr "Minimizzata nel kanban"
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_follower_ids
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_follower_ids
 msgid "Followers"
-msgstr "Chi sta seguendo"
+msgstr "Seguito da"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_channel_ids
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Chi sta seguendo (canali)"
+msgstr "Seguito da (canali)"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_partner_ids
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Chi sta seguendo (partner)"
+msgstr "Seguito da (partner)"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_sponsor__activity_type_icon
@@ -938,7 +945,7 @@ msgstr "Attività future"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
 msgid "Get prepared and"
-msgstr ""
+msgstr "Preparati e"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
@@ -983,7 +990,7 @@ msgstr "Lieti di essere sponsor"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_l3_11
 msgid "Happy with OpenWood"
-msgstr ""
+msgstr "Soddisfatti con OpenWood"
 
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__2
@@ -1188,7 +1195,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_done
 msgid "Is Done"
-msgstr ""
+msgstr "È completata"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_is_follower
@@ -1204,7 +1211,7 @@ msgstr "È pubblicata"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_reminder_on
 msgid "Is Reminder On"
-msgstr ""
+msgstr "Il promemoria è attivato"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_done
@@ -1343,12 +1350,12 @@ msgstr "Ultime tendenze"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_26
 msgid "Less Furniture is More Furniture"
-msgstr ""
+msgstr "Meno è più, anche quando si tratta di mobili"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_kanban
 msgid "Level:"
-msgstr ""
+msgstr "Livello:"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_4
@@ -1394,7 +1401,7 @@ msgstr "Luogo"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_13
 msgid "Log House Building"
-msgstr ""
+msgstr "Costruzione di case in tronchi"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__image_512
@@ -1470,12 +1477,12 @@ msgstr "Design minimale ma efficiente"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_start_remaining
 msgid "Minutes before CTA starts"
-msgstr ""
+msgstr "Minuti prima dell'inizio del CTA"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__track_start_remaining
 msgid "Minutes before track starts"
-msgstr ""
+msgstr "Minuti prima dell'inizio della traccia"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__track_start_relative
@@ -1583,7 +1590,7 @@ msgstr "Non accettata"
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_tag__color
 msgid "Note that colorless tags won't be available on the website."
-msgstr "Le etichette non colorate non saranno disponibili nel sito web."
+msgstr "Nota: le etichette non colorate non saranno disponibili nel sito web."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_needaction_counter
@@ -1618,7 +1625,7 @@ msgstr "Numero di messaggi non letti"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_24
 msgid "Old is New"
-msgstr ""
+msgstr "Vecchio è Nuovo"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_20
@@ -1674,7 +1681,7 @@ msgstr ""
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track3
 msgid "Portfolio presentation"
-msgstr ""
+msgstr "Presentazione portafoglio"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_16
@@ -1698,6 +1705,9 @@ msgid ""
 "woodworking! In this video I share with you how/why I started building "
 "furniture!"
 msgstr ""
+"Probabilmente una delle domande più frequenti che ho ricevuto è come ho "
+"iniziato a lavorare il legno! In questo video condivido con voi come/perché "
+"ho iniziato a costruire mobili!"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage0
@@ -1732,7 +1742,7 @@ msgstr "Rosso"
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage4
 msgid "Refused"
-msgstr "Non accettata"
+msgstr "Respinta"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__track_start_relative
@@ -1742,7 +1752,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_cta_start_remaining
 msgid "Remaining time before CTA starts (seconds)"
-msgstr ""
+msgstr "Tempo rimanente prima dell'inizio del Call to Action (secondi)"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__track_start_remaining
@@ -2173,6 +2183,8 @@ msgid ""
 "This page hasn't been saved for offline reading yet.<br/>Please check your "
 "network connection."
 msgstr ""
+"Questa pagina non è stata ancora salvata per la lettura "
+"offline.<br/>Controlla la tua connessione di rete."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_stage__fold
@@ -2316,7 +2328,7 @@ msgstr "Tracciare visitatori"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_list
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
 msgid "Track Visitors"
-msgstr ""
+msgstr "Tracciare visitatori"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
@@ -2330,12 +2342,12 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__is_track_soon
 msgid "Track begins soon"
-msgstr ""
+msgstr "Traccia comincia fra poco"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__is_track_today
 msgid "Track begins today"
-msgstr ""
+msgstr "Traccia comincia oggi"
 
 #. module: website_event_track
 #: model:mail.message.subtype,description:website_event_track.mt_track_blocked
@@ -2432,6 +2444,8 @@ msgid ""
 "Using a unique wrapping method for a tie down strap (NOT Bungee cords!!!) allows lumber to be\n"
 "    cinched securely WITHOUT the need to tie and untie tricky or complicated knots."
 msgstr ""
+"L'uso di un metodo di avvolgimento unico per una cinghia di fissaggio (NON corde Bungee!!!) permette al legname di essere\n"
+"stretto saldamente SENZA la necessità di fare e disfare nodi difficili o complicati."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -2587,7 +2601,7 @@ msgstr "Di cosa tratta questo evento"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_l3_2
 msgid "Who's OpenWood anyway ?"
-msgstr ""
+msgstr "Chi è OpenWood comunque?"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
@@ -2604,12 +2618,12 @@ msgstr "Sessioni nella lista dei desideri"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_7
 msgid "Woodworking: How I got started!"
-msgstr ""
+msgstr "Lavorazione del legno: come ho iniziato!"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
 msgid "You're offline!"
-msgstr ""
+msgstr "Sei offline!"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_cards_track
@@ -2619,22 +2633,22 @@ msgstr "fa"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_form
 msgid "e.g. : OpenWood Decoration"
-msgstr "es. : OpenWood Decoration"
+msgstr "es. : Decorazione OpenWood"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_form
 msgid "e.g. : open.wood.decoration@example.com"
-msgstr "es.: open.wood.decoration@example.com"
+msgstr "es.: decorazione.open.wood@example.com"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. Get Yours Now !"
-msgstr ""
+msgstr "es. Ottieni il tuo ora!"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. Inspiring Business Talk"
-msgstr ""
+msgstr "ad esempio, Inspiring Business Talk"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
@@ -2654,7 +2668,7 @@ msgstr "minuti dopo l'inizio della presentazione"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
 msgid "register to your favorites talks now."
-msgstr ""
+msgstr "registrati ai tuoi colloqui preferiti ora."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
