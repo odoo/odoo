@@ -27,6 +27,8 @@ msgid ""
 "A pricelist item with a positive min. quantity cannot be applied to this "
 "event tickets product."
 msgstr ""
+"Müsbət minimum miqdarı olan qiymət siyahısı vasitəsi bu tədbir bilet "
+"məhsullarına tətbiq edilə bilməz."
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/product_pricelist.py:0
@@ -35,11 +37,13 @@ msgid ""
 "A pricelist item with a positive min. quantity will not be applied to the "
 "event tickets products."
 msgstr ""
+"Müsbət minimum miqdarı olan qiymət siyahısı vasitəsi tədbir bilet məhsuluna "
+"tətbiq edilməyəcək."
 
 #. module: website_event_sale
 #: model:ir.model.fields,field_description:website_event_sale.field_product_product__event_ticket_ids
 msgid "Event Tickets"
-msgstr ""
+msgstr "Tədbir Biletləri"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
@@ -49,12 +53,12 @@ msgstr "Azad"
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
 msgid "From"
-msgstr "Kimdən"
+msgstr "Başlama Tarixi"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_pricelist_item
 msgid "Pricelist Rule"
-msgstr ""
+msgstr "Qiymət Siyahısı üzrə Qayda"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_product
@@ -65,23 +69,23 @@ msgstr "Məhsul"
 #: code:addons/website_event_sale/controllers/main.py:0
 #, python-format
 msgid "Registration"
-msgstr ""
+msgstr "Qeydiyyat"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Satış Sifarişi"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Satış Sifarişi Sətri"
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "Sorry, The %(ticket)s tickets for the %(event)s event are sold out."
-msgstr ""
+msgstr "Bağışlayın, %(event)s hadisəsi üzrə %(ticket)s biletlər tükəndi."
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/sale_order.py:0
@@ -90,12 +94,14 @@ msgid ""
 "Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s"
 " ticket for the %(event)s event."
 msgstr ""
+"Bağışlayın, %(event)s hadisəsi üzrə %(ticket)s biletinin yalnız "
+"%(remaining_seats)d oturacaqları hələ də mövcuddur."
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "The ticket doesn't match with this product."
-msgstr ""
+msgstr "Bilet bu məhsulla uyğun deyil."
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/product_pricelist.py:0
@@ -111,4 +117,4 @@ msgstr "Veb sayt"
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
 msgid "to"
-msgstr "etmək"
+msgstr "Bitmə Tarixi"
