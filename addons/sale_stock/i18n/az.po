@@ -56,7 +56,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Sales</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Satışlar</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
@@ -66,7 +66,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_report_invoice_document
 msgid "<span>Product</span>"
-msgstr ""
+msgstr "<span>Məhsul</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_report_invoice_document
@@ -105,6 +105,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Saxlanması mümkün olan məhsul ethiyatlarını idarə etdiyiniz məhsuldur. Anbar tətbiqi quraşdırılmalıdır.\n"
+"Sərfiyyat məhsulu ehtiyatları idarə olunmayan məhsuldur.\n"
+"Xidmət təqdim etdiyiniz qeyri- maddi məhsuldur."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
@@ -136,7 +139,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__picking_policy__direct
 msgid "As soon as possible"
-msgstr ""
+msgstr "Mümkün qədər tez"
 
 #. module: sale_stock
 #. openerp-web
@@ -150,7 +153,7 @@ msgstr "Əlçatanlıq"
 #: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
 #, python-format
 msgid "Available"
-msgstr ""
+msgstr "Mövcud"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -185,7 +188,7 @@ msgstr "Təslimat"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
 msgid "Delivery Orders"
-msgstr ""
+msgstr "Çatdırılma Sifarişləri"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__expected_date
@@ -231,7 +234,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
 msgid "Effective Date"
-msgstr ""
+msgstr "Qüvvəyə minmə Tarixi"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -247,7 +250,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s):"
-msgstr ""
+msgstr "İstisna(lar)"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__expected_date
@@ -284,7 +287,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Impacted Transfer(s):"
-msgstr ""
+msgstr "Təsir görmüş Köçürmə (Köçürmələrlər)"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm
@@ -334,7 +337,7 @@ msgstr "Jurnal Sətirləri"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_production_lot
 msgid "Lot/Serial"
-msgstr ""
+msgstr "Partiya/ Seriya"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -407,7 +410,7 @@ msgstr ""
 #: model:ir.model,name:sale_stock.model_procurement_group
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__procurement_group_id
 msgid "Procurement Group"
-msgstr ""
+msgstr "Satınalma qrupu"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_template
@@ -417,7 +420,7 @@ msgstr "Məhsul Şablonu"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__product_type
 msgid "Product Type"
-msgstr ""
+msgstr "Məhsulun Növü"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_available_today
@@ -441,7 +444,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__route_id
 msgid "Route"
-msgstr ""
+msgstr "Marşrut"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move__sale_line_id
@@ -451,7 +454,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_procurement_group__sale_id
 msgid "Sale Order"
-msgstr ""
+msgstr "satış sifarişi"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
@@ -472,12 +475,12 @@ msgstr ""
 #: model:ir.model,name:sale_stock.model_sale_order
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking__sale_id
 msgid "Sales Order"
-msgstr ""
+msgstr "Satış Sifarişi"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Satış Sifarişi Sətri"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_location_route_view_form_inherit_sale_stock
@@ -502,12 +505,12 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__scheduled_date
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Planlaşdırılmış Tarix"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__security_lead
 msgid "Security Lead Time"
-msgstr ""
+msgstr "Tədarük Müddətinin Təhlükəsizliyi"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__use_security_lead
@@ -542,18 +545,18 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Stokun Hərəkəti"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__move_ids
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order_line__qty_delivered_method__stock_move
 msgid "Stock Moves"
-msgstr ""
+msgstr "Stok Hərəkətləri"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rule
 msgid "Stock Rule"
-msgstr ""
+msgstr "Stok Qaydaları"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rules_report
@@ -563,7 +566,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr ""
+msgstr "Stok qaydaları üzrə hesabat"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -614,7 +617,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__warehouse_id
 #: model:ir.model.fields,field_description:sale_stock.field_sale_report__warehouse_id
 msgid "Warehouse"
-msgstr ""
+msgstr "Anbar"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -662,7 +665,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "cancelled"
-msgstr ""
+msgstr "Ləğv olundu"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -678,7 +681,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "ordered instead of"
-msgstr ""
+msgstr "əvəzinə sifariş verildi"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
