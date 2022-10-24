@@ -37,6 +37,7 @@
     <template id="template_header_hamburger" inherit_id="website.template_header_hamburger">
         <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
             <t t-call="website_sale.header_cart_link">
+                <t t-set="_icon" t-value="True"/>
                 <t t-set="_text" t-value="True"/>
                 <t t-set="_item_class" t-value="'nav-item'"/>
                 <t t-set="_link_class" t-value="'nav-link'"/>
@@ -78,6 +79,7 @@
     <template id="template_header_contact" inherit_id="website.template_header_contact">
         <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
             <t t-call="website_sale.header_cart_link">
+                <t t-set="_icon" t-value="True"/>
                 <t t-set="_text" t-value="True"/>
                 <t t-set="_item_class" t-value="'nav-item ms-lg-3'"/>
                 <t t-set="_link_class" t-value="'nav-link'"/>
@@ -88,6 +90,7 @@
     <template id="template_header_boxed" inherit_id="website.template_header_boxed">
         <xpath expr="//t[@t-call='portal.placeholder_user_sign_in']" position="before">
             <t t-call="website_sale.header_cart_link">
+                <t t-set="_icon" t-value="True"/>
                 <t t-set="_text" t-value="True"/>
                 <t t-set="_item_class" t-value="'nav-item'"/>
                 <t t-set="_link_class" t-value="'nav-link'"/>
@@ -128,6 +131,7 @@
     <template id="template_header_magazine" inherit_id="website.template_header_magazine">
         <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
             <t t-call="website_sale.header_cart_link">
+                <t t-set="_icon" t-value="True"/>
                 <t t-set="_text" t-value="True"/>
                 <t t-set="_item_class" t-value="'nav-item ms-md-auto'"/>
                 <t t-set="_link_class" t-value="'nav-link'"/>
