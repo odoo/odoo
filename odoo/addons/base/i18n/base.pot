@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 13:34+0000\n"
-"PO-Revision-Date: 2022-10-10 13:34+0000\n"
+"POT-Creation-Date: 2022-10-24 17:54+0000\n"
+"PO-Revision-Date: 2022-10-24 17:54+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -429,6 +429,14 @@ msgstr ""
 msgid ""
 "\n"
 "        Accounting reports for Pakistan\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_rs_reports
+msgid ""
+"\n"
+"        Accounting reports for Serbia\n"
 "    "
 msgstr ""
 
@@ -944,6 +952,14 @@ msgstr ""
 msgid ""
 "\n"
 "        This bridge module is auto-installed when the modules stock_barcode and quality_control are installed.\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_rs
+msgid ""
+"\n"
+"        This is the base module of the Serbian localization. It manages chart of accounts and taxes.\n"
 "    "
 msgstr ""
 
@@ -5727,14 +5743,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_payment_demo
-msgid ""
-"\n"
-"This module adds a simple payment provider allowing to make demo payments.\n"
-"It should never be used in production environment. Make sure to disable it before going live.\n"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,description:base.module_hr_appraisal_survey
 msgid ""
 "\n"
@@ -6052,6 +6060,15 @@ msgstr ""
 msgid ""
 "\n"
 "This module allows you to sell rental products with optional products in your eCommerce with\n"
+"appropriate views and selling choices.\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_website_sale_subscription
+msgid ""
+"\n"
+"This module allows you to sell subscription products in your eCommerce with\n"
 "appropriate views and selling choices.\n"
 "    "
 msgstr ""
@@ -6636,17 +6653,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_payment_sips
-msgid ""
-"\n"
-"Worldline SIPS Payment Provider for online payments\n"
-"\n"
-"Implements the Worldline SIPS API for payment providers.\n"
-"Other SIPS providers may be compatible, though this is\n"
-"not guaranteed."
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,description:base.module_website_crm_livechat
 msgid ""
 " Adds a stat button on lead form view to access their livechat sessions."
@@ -7114,6 +7120,11 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "), are you sure to create a new one?"
+msgstr ""
+
+#. module: base
+#: model_terms:res.company,report_footer:base.main_company
+msgid "+1 (650) 555-0111  info@yourcompany.com http://www.example.com"
 msgstr ""
 
 #. module: base
@@ -7812,15 +7823,28 @@ msgid "A <graph> can only contains <field> nodes, found a <%s>"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,summary:base.module_payment_razorpay
-msgid "A Indian online payment provider covering 100+ payment methods."
+#: model:ir.module.module,summary:base.module_payment_adyen
+msgid "A Dutch payment provider covering Europe and the US."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_payment_mollie
+msgid "A Dutch payment provider covering several European countries."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_payment_buckaroo
+msgid "A Dutch payment provider covering several countries in Europe."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_payment_sips
+msgid "A French payment provider for online payments all over the world."
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_flutterwave
-msgid ""
-"A Nigerian online payments provider covering several African countries and "
-"payment methods."
+msgid "A Nigerian payment provider covering several African countries."
 msgstr ""
 
 #. module: base
@@ -7929,6 +7953,23 @@ msgid "A module with dummy methods."
 msgstr ""
 
 #. module: base
+#: model_terms:res.partner,website_description:base.res_partner_3
+msgid ""
+"A non-profit international educational and scientific\n"
+"                    organisation, hosting three departments (aeronautics and\n"
+"                    aerospace, environmental and applied fluid dynamics, and\n"
+"                    turbomachinery and propulsion)."
+msgstr ""
+
+#. module: base
+#: model:res.partner,website_short_description:base.res_partner_3
+msgid ""
+"A non-profit international educational and scientific organisation, hosting "
+"three departments (aeronautics and aerospace, environmental and applied "
+"fluid dynamics, and turbomachinery and propulsion)."
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid ""
 "A partner with the same <span><span class=\"o_vat_label\">Company "
@@ -7940,6 +7981,31 @@ msgstr ""
 msgid ""
 "A partner with the same <span><span class=\"o_vat_label\">Tax "
 "ID</span></span> already exists ("
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_payment_razorpay
+msgid "A payment provider covering India."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_payment_mercado_pago
+msgid "A payment provider covering several countries in Latin America."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_payment_custom
+msgid "A payment provider for custom flows like wire transfers."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_payment_sepa_direct_debit
+msgid "A payment provider for enabling Sepa Direct Debit in the EU."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_payment_demo
+msgid "A payment provider for running fake payment flows for demo purposes."
 msgstr ""
 
 #. module: base
@@ -8138,6 +8204,11 @@ msgstr ""
 #: code:addons/api.py:0 code:addons/api.py:0
 #, python-format
 msgid "Access to unauthorized or invalid companies."
+msgstr ""
+
+#. module: base
+#: model:ir.module.category,name:base.module_category_account
+msgid "Account"
 msgstr ""
 
 #. module: base
@@ -8929,14 +9000,13 @@ msgid "Advanced views to manage landed cost for subcontracting orders"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_payment_adyen
-#: model:ir.module.module,shortdesc:base.module_payment_adyen
-msgid "Adyen Payment Provider"
+#: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__agpl-3
+msgid "Affero GPL-3"
 msgstr ""
 
 #. module: base
-#: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__agpl-3
-msgid "Affero GPL-3"
+#: model:res.country,demonym:base.af
+msgid "Afghan"
 msgstr ""
 
 #. module: base
@@ -8975,6 +9045,11 @@ msgid "Albania"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.al
+msgid "Albanian"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.dz
 msgid "Algeria"
 msgstr ""
@@ -8985,8 +9060,8 @@ msgid "Algeria - Accounting"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_payment_alipay
-msgid "Alipay Payment Provider"
+#: model:res.country,demonym:base.dz
+msgid "Algerian"
 msgstr ""
 
 #. module: base
@@ -9139,12 +9214,6 @@ msgid "Amazon Connector"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,summary:base.module_payment_aps
-msgid ""
-"Amazon Payment Services' online payment provider covering the MENA region."
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_amazon_taxcloud
 msgid "Amazon/TaxCloud Bridge"
 msgstr ""
@@ -9158,8 +9227,19 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.mp model:res.country,demonym:base.um
+#: model:res.country,demonym:base.us
+msgid "American"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.as
 msgid "American Samoa"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.as
+msgid "American Samoan"
 msgstr ""
 
 #. module: base
@@ -9167,6 +9247,21 @@ msgstr ""
 msgid ""
 "Amounts in this currency are rounded off to the nearest multiple of the "
 "rounding factor."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_payment_aps
+msgid "An Amazon payment provider covering the MENA region."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_payment_paypal
+msgid "An American payment provider for online payments all over the world."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_payment_stripe
+msgid "An Irish-American payment provider covering the US and many others."
 msgstr ""
 
 #. module: base
@@ -9207,25 +9302,21 @@ msgid "An email is required for find_or_create to work"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,summary:base.module_payment_asiapay
-msgid ""
-"An online payments provider based in Hong Kong covering most Asian countries"
-" and many different payment methods."
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,summary:base.module_payment_mercado_pago
-msgid ""
-"An online payments provider covering several countries, currencies and "
-"payment methods from Latin America."
-msgstr ""
-
-#. module: base
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid ""
 "An option is not supported by the server:\n"
 " %s"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_payment_asiapay
+msgid "An payment provider based in Hong Kong covering most Asian countries."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_payment_authorize
+msgid "An payment provider covering the US, Australia, and Canada."
 msgstr ""
 
 #. module: base
@@ -9255,13 +9346,28 @@ msgid "Andorra"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.ad
+msgid "Andorran"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.ao
 msgid "Angola"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.ao
+msgid "Angolan"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.ai
 msgid "Anguilla"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.ai
+msgid "Anguillian"
 msgstr ""
 
 #. module: base
@@ -9272,6 +9378,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ag
 msgid "Antigua and Barbuda"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.ag
+msgid "Antiguan, Barbudan"
 msgstr ""
 
 #. module: base
@@ -9502,6 +9613,11 @@ msgid "Argentina - Accounting"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.ar
+msgid "Argentinean"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ar_reports
 msgid "Argentinean Accounting Reports"
 msgstr ""
@@ -9527,17 +9643,24 @@ msgid "Armenia"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.am
+msgid "Armenian"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.aw
 msgid "Aruba"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.aw
+msgid "Aruban"
 msgstr ""
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_1
 #: model_terms:res.partner,website_description:base.res_partner_10
 #: model_terms:res.partner,website_description:base.res_partner_12
-#: model_terms:res.partner,website_description:base.res_partner_2
-#: model_terms:res.partner,website_description:base.res_partner_3
-#: model_terms:res.partner,website_description:base.res_partner_4
 msgid "As a team, we are happy to contribute to this event."
 msgstr ""
 
@@ -9668,6 +9791,11 @@ msgid "Australia"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.au
+msgid "Australian"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au
 msgid "Australian - Accounting"
 msgstr ""
@@ -9695,6 +9823,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_at_reports
 msgid "Austria - Accounting Reports"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.at
+msgid "Austrian"
 msgstr ""
 
 #. module: base
@@ -9739,12 +9872,6 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "Author Name"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_payment_authorize
-#: model:ir.module.module,shortdesc:base.module_payment_authorize
-msgid "Authorize.Net Payment Provider"
 msgstr ""
 
 #. module: base
@@ -9877,6 +10004,11 @@ msgid "Azerbaijan"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.az
+msgid "Azerbaijani"
+msgstr ""
+
+#. module: base
 #: model:res.partner,website_short_description:base.res_partner_12
 msgid ""
 "Azure Interior brings honesty and seriousness to wood industry while helping"
@@ -9965,13 +10097,28 @@ msgid "Bahamas"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.bs
+msgid "Bahamian"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.bh
 msgid "Bahrain"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.bh
+msgid "Bahraini"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.bd
 msgid "Bangladesh"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.bd
+msgid "Bangladeshi"
 msgstr ""
 
 #. module: base
@@ -10031,6 +10178,11 @@ msgstr ""
 msgid ""
 "Banks are the financial institutions at which you and your contacts have "
 "their accounts."
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.bb
+msgid "Barbadian"
 msgstr ""
 
 #. module: base
@@ -10126,11 +10278,6 @@ msgstr ""
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid "Base Language 'en_US' can not be deleted."
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,summary:base.module_payment
-msgid "Base Module for Payment Providers"
 msgstr ""
 
 #. module: base
@@ -10248,6 +10395,16 @@ msgid "Belarus"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.by
+msgid "Belarusian"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.be
+msgid "Belgian"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat
 msgid "Belgian Intrastat Declaration"
 msgstr ""
@@ -10333,6 +10490,11 @@ msgid "Belize"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.bz
+msgid "Belizean"
+msgstr ""
+
+#. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
 msgid ""
 "Below text serves as a suggestion and doesn’t engage Odoo S.A. "
@@ -10345,13 +10507,28 @@ msgid "Benin"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.bj
+msgid "Beninese"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.bm
 msgid "Bermuda"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.bm
+msgid "Bermudian"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.bt
 msgid "Bhutan"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.bt
+msgid "Bhutanese"
 msgstr ""
 
 #. module: base
@@ -10421,6 +10598,11 @@ msgid "Bolivia - Accounting"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.bo
+msgid "Bolivian"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.bq
 msgid "Bonaire, Sint Eustatius and Saba"
 msgstr ""
@@ -10443,6 +10625,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ba
 msgid "Bosnia and Herzegovina"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.ba
+msgid "Bosnian, Herzegovinian"
 msgstr ""
 
 #. module: base
@@ -10476,6 +10663,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br_reports
 msgid "Brazil - Accounting Reports"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.br
+msgid "Brazilian"
 msgstr ""
 
 #. module: base
@@ -10641,6 +10833,11 @@ msgid "Bridge module to support quiz features during \"live\" tracks. "
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.uk
+msgid "British"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.io
 msgid "British Indian Ocean Territory"
 msgstr ""
@@ -10651,9 +10848,8 @@ msgid "Brunei Darussalam"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_payment_buckaroo
-#: model:ir.module.module,shortdesc:base.module_payment_buckaroo
-msgid "Buckaroo Payment Provider"
+#: model:res.country,demonym:base.bn
+msgid "Bruneian"
 msgstr ""
 
 #. module: base
@@ -10692,6 +10888,11 @@ msgid "Bulgaria - Accounting Reports"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.bg
+msgid "Bulgarian"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_asset__bundle
 msgid "Bundle name"
 msgstr ""
@@ -10702,8 +10903,23 @@ msgid "Burkina Faso"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.bf
+msgid "Burkinabe"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.mm
+msgid "Burmese"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.bi
 msgid "Burundi"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.bi
+msgid "Burundian"
 msgstr ""
 
 #. module: base
@@ -10718,6 +10934,7 @@ msgid "By"
 msgstr ""
 
 #. module: base
+#: code:addons/base/models/ir_qweb_fields.py:0
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "By default the widget uses the field information"
@@ -10810,8 +11027,18 @@ msgid "Cambodia"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.kh
+msgid "Cambodian"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.cm
 msgid "Cameroon"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.cm
+msgid "Cameroonian"
 msgstr ""
 
 #. module: base
@@ -10847,6 +11074,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ca
 msgid "Canada - Accounting"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.ca
+msgid "Canadian"
 msgstr ""
 
 #. module: base
@@ -10943,6 +11175,11 @@ msgid "Cape Verde"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.cv
+msgid "Cape Verdian"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__on_delete__cascade
 msgid "Cascade"
 msgstr ""
@@ -10966,6 +11203,16 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ky
 msgid "Cayman Islands"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.ky
+msgid "Caymanian"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.cf
+msgid "Central African"
 msgstr ""
 
 #. module: base
@@ -11004,6 +11251,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.td
 msgid "Chad"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.td
+msgid "Chadian"
 msgstr ""
 
 #. module: base
@@ -11055,6 +11307,11 @@ msgstr ""
 msgid ""
 "Changing the type of a field is not yet supported. Please drop it and create"
 " it again!"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.gg model:res.country,demonym:base.je
+msgid "Channel Islander"
 msgstr ""
 
 #. module: base
@@ -11175,6 +11432,11 @@ msgid "Chile - Electronic Receipt"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.cl
+msgid "Chilean"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.cn
 msgid "China"
 msgstr ""
@@ -11187,6 +11449,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cn_city
 msgid "China - City Data"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.cn model:res.country,demonym:base.hk
+#: model:res.country,demonym:base.mo
+msgid "Chinese"
 msgstr ""
 
 #. module: base
@@ -11206,7 +11474,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:res.country,name:base.cx
+#: model:res.country,demonym:base.cx model:res.country,name:base.cx
 msgid "Christmas Island"
 msgstr ""
 
@@ -11258,6 +11526,11 @@ msgid "Cocos (Keeling) Islands"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.cc
+msgid "Cocos Islander"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
 msgid "Code"
 msgstr ""
@@ -11300,6 +11573,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_co
 msgid "Colombia - Accounting"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.co
+msgid "Colombian"
 msgstr ""
 
 #. module: base
@@ -11359,9 +11637,6 @@ msgstr ""
 #: model_terms:res.partner,website_description:base.res_partner_1
 #: model_terms:res.partner,website_description:base.res_partner_10
 #: model_terms:res.partner,website_description:base.res_partner_12
-#: model_terms:res.partner,website_description:base.res_partner_2
-#: model_terms:res.partner,website_description:base.res_partner_3
-#: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Come see us live, we hope to meet you !"
 msgstr ""
 
@@ -11397,6 +11672,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_commissions
 msgid "Commissions"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.km
+msgid "Comoran"
 msgstr ""
 
 #. module: base
@@ -11678,6 +11958,11 @@ msgid "Congo"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.cd model:res.country,demonym:base.cg
+msgid "Congolese"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant_iot
 msgid "Connect kitchen printers to your PoS"
 msgstr ""
@@ -11902,6 +12187,11 @@ msgid "Converts the Mexican EDI CFDI documents to version 4.0"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.ck
+msgid "Cook Islander"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.ck
 msgid "Cook Islands"
 msgstr ""
@@ -11919,6 +12209,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cr
 msgid "Costa Rica - Accounting"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.cr
+msgid "Costa Rican"
 msgstr ""
 
 #. module: base
@@ -12066,8 +12361,8 @@ msgid "Create Reports for Field service workers"
 msgstr ""
 
 #. module: base
-#: model_terms:ir.ui.view,arch_db:base.view_model_menu_create
-msgid "Create _Menu"
+#: model:ir.model.fields,field_description:base.field_res_users_log__create_uid
+msgid "Create Uid"
 msgstr ""
 
 #. module: base
@@ -12294,7 +12589,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys_description__create_uid
 #: model:ir.model.fields,field_description:base.field_res_users_deletion__create_uid
 #: model:ir.model.fields,field_description:base.field_res_users_identitycheck__create_uid
-#: model:ir.model.fields,field_description:base.field_res_users_log__create_uid
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__create_uid
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__create_uid
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
@@ -12416,6 +12710,11 @@ msgid "Croatia - Accounting (RRIF 2012)"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.hr
+msgid "Croatian"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_trigger__cron_id
 msgid "Cron"
 msgstr ""
@@ -12434,6 +12733,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.cu
 msgid "Cuba"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.cu
+msgid "Cuban"
 msgstr ""
 
 #. module: base
@@ -12533,11 +12837,6 @@ msgid "Custom Object"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_payment_custom
-msgid "Custom Payment Modes"
-msgstr ""
-
-#. module: base
 #: model:ir.ui.menu,name:base.menu_administration_shortcut
 msgid "Custom Shortcuts"
 msgstr ""
@@ -12575,6 +12874,12 @@ msgid "Customer References"
 msgstr ""
 
 #. module: base
+#: model_terms:res.partner,website_description:base.res_partner_2
+#: model_terms:res.partner,website_description:base.res_partner_4
+msgid "Customer Relationship Management"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_partner_customer_form
 #: model:ir.actions.act_window,name:base.action_partner_form
 msgid "Customers"
@@ -12602,8 +12907,18 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.cy
+msgid "Cypriot"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.cy
 msgid "Cyprus"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.cz
+msgid "Czech"
 msgstr ""
 
 #. module: base
@@ -12659,6 +12974,11 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__dle
 msgid "DLE 26 110 x 220 mm"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.dk
+msgid "Danish"
 msgstr ""
 
 #. module: base
@@ -12850,10 +13170,30 @@ msgid "Decimalized number"
 msgstr ""
 
 #. module: base
-#: model:res.partner,website_short_description:base.res_partner_2
+#: model_terms:res.partner,website_description:base.res_partner_2
+#: model_terms:res.partner,website_description:base.res_partner_4
 msgid ""
-"Deco Addict brings honesty and seriousness to wood industry while helping "
-"customers deal with trees, flowers and fungi."
+"Deco Addict designs, develops, integrates and supports HR and Supply\n"
+"                Chain processes in order to make our customers more productive,\n"
+"                responsive and profitable."
+msgstr ""
+
+#. module: base
+#: model:res.partner,website_short_description:base.res_partner_2
+#: model:res.partner,website_short_description:base.res_partner_4
+msgid ""
+"Deco Addict designs, develops, integrates and supports HR and Supply Chain "
+"processes in order to make our customers more productive, responsive and "
+"profitable."
+msgstr ""
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_2
+#: model_terms:res.partner,website_description:base.res_partner_4
+msgid ""
+"Deco Addict integrates ERP for Global Companies and supports PME\n"
+"                with Open Sources software to manage their businesses. Our\n"
+"                consultants are experts in the following areas:"
 msgstr ""
 
 #. module: base
@@ -12987,11 +13327,6 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_demo_failure_wizard__failure_ids
 msgid "Demo Installation Failures"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_payment_demo
-msgid "Demo Payment Provider"
 msgstr ""
 
 #. module: base
@@ -13187,9 +13522,6 @@ msgstr ""
 #: model_terms:res.partner,website_description:base.res_partner_1
 #: model_terms:res.partner,website_description:base.res_partner_10
 #: model_terms:res.partner,website_description:base.res_partner_12
-#: model_terms:res.partner,website_description:base.res_partner_2
-#: model_terms:res.partner,website_description:base.res_partner_3
-#: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Discover more"
 msgstr ""
 
@@ -13372,7 +13704,7 @@ msgid "Displayed fields"
 msgstr ""
 
 #. module: base
-#: model:res.country,name:base.dj
+#: model:res.country,demonym:base.dj model:res.country,name:base.dj
 msgid "Djibouti"
 msgstr ""
 
@@ -13517,6 +13849,11 @@ msgid "Dominica"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.dm model:res.country,demonym:base.do
+msgid "Dominican"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.do
 msgid "Dominican Republic"
 msgstr ""
@@ -13623,6 +13960,12 @@ msgid "Duration"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.bq model:res.country,demonym:base.cw
+#: model:res.country,demonym:base.nl model:res.country,demonym:base.sx
+msgid "Dutch"
+msgstr ""
+
+#. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_E
 msgid ""
 "E - WATER SUPPLY; SEWERAGE, WASTE MANAGEMENT AND REMEDIATION ACTIVITIES"
@@ -13713,6 +14056,11 @@ msgid "Ecuador"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.ec
+msgid "Ecuadorean"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ec
 msgid "Ecuadorian Accounting"
 msgstr ""
@@ -13736,6 +14084,11 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_hw_l10n_eg_eta
 #: model:ir.module.module,summary:base.module_hw_l10n_eg_eta
 msgid "Egypt ETA Hardware Driver"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.eg
+msgid "Egyptian"
 msgstr ""
 
 #. module: base
@@ -13856,6 +14209,11 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__signature
 msgid "Email Signature"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.ae
+msgid "Emirati"
 msgstr ""
 
 #. module: base
@@ -14079,6 +14437,11 @@ msgid "Equatorial Guinea"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.gq
+msgid "Equatorial Guinean"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_hr_maintenance
 msgid "Equipments, Assets, Internal Hardware, Allocation Tracking"
 msgstr ""
@@ -14086,6 +14449,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.er
 msgid "Eritrea"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.er
+msgid "Eritrean"
 msgstr ""
 
 #. module: base
@@ -14129,6 +14497,11 @@ msgid "Estonia"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.ee
+msgid "Estonian"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.et
 msgid "Ethiopia"
 msgstr ""
@@ -14136,6 +14509,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_et
 msgid "Ethiopia - Accounting"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.et
+msgid "Ethiopian"
 msgstr ""
 
 #. module: base
@@ -14570,6 +14948,11 @@ msgid "Fake module to test data module installation without __init__.py"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.fk
+msgid "Falkland Islander"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.fk
 msgid "Falkland Islands"
 msgstr ""
@@ -14577,6 +14960,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.fo
 msgid "Faroe Islands"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.fo
+msgid "Faroese"
 msgstr ""
 
 #. module: base
@@ -14853,6 +15241,11 @@ msgid "Fiji"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.fj
+msgid "Fijian"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export__data
 #: model:ir.model.fields,field_description:base.field_base_language_import__data
 #: model:ir.model.fields.selection,name:base.selection__ir_attachment__type__binary
@@ -14923,6 +15316,11 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_binary
 msgid "File streaming helper model for controllers"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.ph
+msgid "Filipino"
 msgstr ""
 
 #. module: base
@@ -15019,6 +15417,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fi_sale
 msgid "Finland Sale"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.fi
+msgid "Finnish"
 msgstr ""
 
 #. module: base
@@ -15235,6 +15638,13 @@ msgid "Free Delivery with Coupon & Loyalty on eCommerce"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.fr model:res.country,demonym:base.mq
+#: model:res.country,demonym:base.pm model:res.country,demonym:base.re
+#: model:res.country,demonym:base.tf model:res.country,demonym:base.yt
+msgid "French"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.gf
 msgid "French Guiana"
 msgstr ""
@@ -15247,6 +15657,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.pf
 msgid "French Polynesia"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.pf
+msgid "French Polynesian"
 msgstr ""
 
 #. module: base
@@ -15379,8 +15794,18 @@ msgid "Gabon"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.ga
+msgid "Gabonese"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.gm
 msgid "Gambia"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.gm
+msgid "Gambian"
 msgstr ""
 
 #. module: base
@@ -15402,13 +15827,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_kanban_gauge
 msgid "Gauge Widget for Kanban"
-msgstr ""
-
-#. module: base
-#: model:res.partner,website_short_description:base.res_partner_3
-msgid ""
-"Gemini Furniture brings honesty and seriousness to wood industry while "
-"helping customers deal with trees, flowers and fungi."
 msgstr ""
 
 #. module: base
@@ -15505,6 +15923,16 @@ msgid "Georgia"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.ge
+msgid "Georgian"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.de
+msgid "German"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.de
 msgid "Germany"
 msgstr ""
@@ -15572,7 +16000,12 @@ msgid "Ghana"
 msgstr ""
 
 #. module: base
-#: model:res.country,name:base.gi
+#: model:res.country,demonym:base.gh
+msgid "Ghanaian"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.gi model:res.country,name:base.gi
 msgid "Gibraltar"
 msgstr ""
 
@@ -15672,13 +16105,28 @@ msgid "Greece - Accounting"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.gr
+msgid "Greek"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.gl
 msgid "Greenland"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.gl
+msgid "Greenlandic"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.gd
 msgid "Grenada"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.gd
+msgid "Grenadian"
 msgstr ""
 
 #. module: base
@@ -15765,8 +16213,18 @@ msgid "Guadeloupe"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.gp
+msgid "Guadeloupian"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.gu
 msgid "Guam"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.gu
+msgid "Guamanian"
 msgstr ""
 
 #. module: base
@@ -15777,6 +16235,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gt
 msgid "Guatemala - Accounting"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.gt
+msgid "Guatemalan"
 msgstr ""
 
 #. module: base
@@ -15792,6 +16255,16 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.gw
 msgid "Guinea-Bissau"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.gw
+msgid "Guinea-Bissauan"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.gn
+msgid "Guinean"
 msgstr ""
 
 #. module: base
@@ -15812,6 +16285,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.gy
 msgid "Guyana"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.gy
+msgid "Guyanese"
 msgstr ""
 
 #. module: base
@@ -15855,6 +16333,11 @@ msgid "Haiti"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.ht
+msgid "Haitian"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_lunch
 msgid "Handle lunch orders of your employees"
 msgstr ""
@@ -15863,9 +16346,6 @@ msgstr ""
 #: model_terms:res.partner,website_description:base.res_partner_1
 #: model_terms:res.partner,website_description:base.res_partner_10
 #: model_terms:res.partner,website_description:base.res_partner_12
-#: model_terms:res.partner,website_description:base.res_partner_2
-#: model_terms:res.partner,website_description:base.res_partner_3
-#: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Happy to be Sponsor"
 msgstr ""
 
@@ -15907,6 +16387,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.hm
 msgid "Heard Island and McDonald Islands"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.hm
+msgid "Heard and McDonald Islander"
 msgstr ""
 
 #. module: base
@@ -16177,6 +16662,11 @@ msgid "Home Menu"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.hn
+msgid "Honduran"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.hn
 msgid "Honduras"
 msgstr ""
@@ -16257,6 +16747,11 @@ msgid "Human Resources"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.hu
+msgid "Hungarian"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.hu
 msgid "Hungary"
 msgstr ""
@@ -16274,6 +16769,11 @@ msgstr ""
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_I
 msgid "I - ACCOMMODATION AND FOOD SERVICE ACTIVITIES"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.ki
+msgid "I-Kiribati"
 msgstr ""
 
 #. module: base
@@ -16433,6 +16933,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.is
 msgid "Iceland"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.is
+msgid "Icelander"
 msgstr ""
 
 #. module: base
@@ -16701,6 +17206,11 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_base_import_language
+msgid "Import"
+msgstr ""
+
+#. module: base
 #: model:ir.ui.menu,name:base.menu_translation_export
 msgid "Import / Export"
 msgstr ""
@@ -16855,6 +17365,11 @@ msgid "India Sales and Warehouse Management"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.in model:res.country,demonym:base.io
+msgid "Indian"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in
 msgid "Indian - Accounting"
 msgstr ""
@@ -16912,6 +17427,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_id_efaktur
 msgid "Indonesia E-faktur"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.id
+msgid "Indonesian"
 msgstr ""
 
 #. module: base
@@ -17357,6 +17877,12 @@ msgid "Inventory"
 msgstr ""
 
 #. module: base
+#: model_terms:res.partner,website_description:base.res_partner_2
+#: model_terms:res.partner,website_description:base.res_partner_4
+msgid "Inventory and Warehouse management"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_stock_account
 msgid "Inventory, Logistic, Valuation, Accounting"
 msgstr ""
@@ -17427,8 +17953,18 @@ msgid "Iran"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.ir
+msgid "Iranian"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.iq
 msgid "Iraq"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.iq
+msgid "Iraqi"
 msgstr ""
 
 #. module: base
@@ -17439,6 +17975,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ie
 msgid "Ireland - Accounting"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.ie
+msgid "Irish"
 msgstr ""
 
 #. module: base
@@ -17489,11 +18030,45 @@ msgid "Israel - Accounting"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.il
+msgid "Israeli"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
 msgid ""
 "It is very important that this description be clear\n"
 "                        and complete, <strong>it will be the only way to\n"
 "                        identify the key once created</strong>."
+msgstr ""
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_3
+msgid ""
+"It provides post-graduate education in fluid dynamics\n"
+"                    (research master in fluid dynamics, former \"Diploma\n"
+"                    Course\", doctoral program, stagiaire program and lecture\n"
+"                    series) and encourages \"training in research through\n"
+"                    research\"."
+msgstr ""
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_3
+msgid ""
+"It undertakes and promotes research in the field of fluid\n"
+"                    dynamics. It possesses about fifty different wind tunnels,\n"
+"                    turbomachinery and other specialized test facilities, some\n"
+"                    of which are unique or the largest in the world. Extensive\n"
+"                    research on experimental, computational and theoretical\n"
+"                    aspects of gas and liquid flows is carried out under the\n"
+"                    direction of the faculty and research engineers, sponsored\n"
+"                    mainly by governmental and international agencies as well\n"
+"                    as industries."
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.it
+msgid "Italian"
 msgstr ""
 
 #. module: base
@@ -17517,6 +18092,11 @@ msgid "Italy - E-invoicing"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.ci
+msgid "Ivorian"
+msgstr ""
+
+#. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_J
 msgid "J - INFORMATION AND COMMUNICATION"
 msgstr ""
@@ -17527,6 +18107,11 @@ msgid "Jamaica"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.jm
+msgid "Jamaican"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.jp
 msgid "Japan"
 msgstr ""
@@ -17534,6 +18119,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_jp
 msgid "Japan - Accounting"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.jp
+msgid "Japanese"
 msgstr ""
 
 #. module: base
@@ -17553,8 +18143,19 @@ msgid "Jordan"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.jo
+msgid "Jordanian"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_journal_item
 msgid "Journal Items associated to the contact"
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_qweb_fields.py:0
+#, python-format
+msgid "Json"
 msgstr ""
 
 #. module: base
@@ -17600,6 +18201,11 @@ msgid "Kazakhstan"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.kz
+msgid "Kazakhstani"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_users__password
 msgid ""
 "Keep empty if you don't want the user to be able to connect on the system."
@@ -17631,6 +18237,11 @@ msgid "Kenya - Payroll with Accounting"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.ke
+msgid "Kenyan"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_config_parameter__key
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__key
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys_show__key
@@ -17649,8 +18260,18 @@ msgid "Keypay Australian Payroll"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.kg
+msgid "Kirghiz"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.ki
 msgid "Kiribati"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.kn
+msgid "Kittian and Nevisian"
 msgstr ""
 
 #. module: base
@@ -17672,6 +18293,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.kw
 msgid "Kuwait"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.kw
+msgid "Kuwaiti"
 msgstr ""
 
 #. module: base
@@ -17790,6 +18416,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.la
 msgid "Laos"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.la
+msgid "Laotian"
 msgstr ""
 
 #. module: base
@@ -18081,6 +18712,11 @@ msgid "Latvia"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.lv
+msgid "Latvian"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_form
 #: model_terms:ir.ui.view,arch_db:base.ir_actions_todo_tree
 msgid "Launch"
@@ -18130,6 +18766,11 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Learn More"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.lb
+msgid "Lebanese"
 msgstr ""
 
 #. module: base
@@ -18212,8 +18853,18 @@ msgid "Liberia"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.lr
+msgid "Liberian"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.ly
 msgid "Libya"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.ly
+msgid "Libyan"
 msgstr ""
 
 #. module: base
@@ -18224,6 +18875,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.li
 msgid "Liechtenstein"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.li
+msgid "Liechtensteiner"
 msgstr ""
 
 #. module: base
@@ -18336,6 +18992,11 @@ msgid "Lithuania - Accounting"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.lt
+msgid "Lithuanian"
+msgstr ""
+
+#. module: base
 #: model:ir.module.category,name:base.module_category_website_live_chat
 #: model:ir.module.module,shortdesc:base.module_im_livechat
 msgid "Live Chat"
@@ -18445,6 +19106,11 @@ msgid "Luxembourg - Payroll with Accounting"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.lu
+msgid "Luxembourger"
+msgstr ""
+
+#. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_M
 msgid "M - PROFESSIONAL, SCIENTIFIC AND TECHNICAL ACTIVITIES"
 msgstr ""
@@ -18513,6 +19179,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.mo
 msgid "Macau"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.mk
+msgid "Macedonian"
 msgstr ""
 
 #. module: base
@@ -18629,13 +19300,33 @@ msgid "Maintenance - MRP"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.mg
+msgid "Malagasy"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.mw
 msgid "Malawi"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.mw
+msgid "Malawian"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.my
 msgid "Malaysia"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.my
+msgid "Malaysian"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.mv
+msgid "Maldivan"
 msgstr ""
 
 #. module: base
@@ -18649,8 +19340,18 @@ msgid "Mali"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.ml
+msgid "Malian"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.mt
 msgid "Malta"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.mt
+msgid "Maltese"
 msgstr ""
 
 #. module: base
@@ -18943,6 +19644,11 @@ msgid "Manufacturing Orders & BOMs"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.im
+msgid "Manx"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__many2one
 msgid "Many2One"
 msgstr ""
@@ -19001,6 +19707,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.mh
 msgid "Marshall Islands"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.mh
+msgid "Marshallese"
 msgstr ""
 
 #. module: base
@@ -19073,8 +19784,24 @@ msgid "Master Production Schedule"
 msgstr ""
 
 #. module: base
+#: model_terms:res.partner,website_description:base.res_partner_2
+#: model_terms:res.partner,website_description:base.res_partner_4
+msgid "Materials Management"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.mr
 msgid "Mauritania"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.mr
+msgid "Mauritanian"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.mu
+msgid "Mauritian"
 msgstr ""
 
 #. module: base
@@ -19175,6 +19902,11 @@ msgid "Message"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.mx
+msgid "Mexican"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_edi
 msgid "Mexican Localization for EDI documents"
 msgstr ""
@@ -19207,6 +19939,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.fm
 msgid "Micronesia"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.fm
+msgid "Micronesian"
 msgstr ""
 
 #. module: base
@@ -19605,9 +20342,8 @@ msgid "Moldova"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_payment_mollie
-#: model:ir.module.module,shortdesc:base.module_payment_mollie
-msgid "Mollie Payment Provider"
+#: model:res.country,demonym:base.md
+msgid "Moldovan"
 msgstr ""
 
 #. module: base
@@ -19618,6 +20354,11 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__1
 msgid "Monday"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.mc
+msgid "Monegasque"
 msgstr ""
 
 #. module: base
@@ -19636,6 +20377,11 @@ msgid "Mongolia - Accounting Reports"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.mn
+msgid "Mongolian"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_project_mrp
 msgid "Monitor MRP using project"
 msgstr ""
@@ -19643,6 +20389,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_project_purchase
 msgid "Monitor purchase in project"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.me
+msgid "Montenegrin"
 msgstr ""
 
 #. module: base
@@ -19662,8 +20413,33 @@ msgid "Montserrat"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.ms
+msgid "Montserratian"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.ma
+msgid "Moroccan"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.ma
 msgid "Morocco"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.ls
+msgid "Mosotho"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.bw
+msgid "Motswana"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.mz
+msgid "Mozambican"
 msgstr ""
 
 #. module: base
@@ -19808,6 +20584,11 @@ msgid "Namibia"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.na
+msgid "Namibian"
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Narrow"
@@ -19819,8 +20600,18 @@ msgid "Nauru"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.nr
+msgid "Nauruan"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.np
 msgid "Nepal"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.np
+msgid "Nepalese"
 msgstr ""
 
 #. module: base
@@ -19851,6 +20642,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.nc
 msgid "New Caledonia"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.nc
+msgid "New Caledonian"
 msgstr ""
 
 #. module: base
@@ -19885,6 +20681,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nz
 msgid "New Zealand - Accounting"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.nz
+msgid "New Zealander"
 msgstr ""
 
 #. module: base
@@ -19930,8 +20731,18 @@ msgid "Next planned execution date for this job."
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.vu
+msgid "Ni-Vanuatu"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.ni
 msgid "Nicaragua"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.ni
+msgid "Nicaraguan"
 msgstr ""
 
 #. module: base
@@ -19967,8 +20778,23 @@ msgid "Nigeria"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.ng
+msgid "Nigerian"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.ne
+msgid "Nigerien"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.nu
 msgid "Niue"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.nu
+msgid "Niuean"
 msgstr ""
 
 #. module: base
@@ -20084,6 +20910,11 @@ msgid "Norfolk Island"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.nf
+msgid "Norfolk Islander"
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_bank.py:0
 #, python-format
 msgid "Normal"
@@ -20092,6 +20923,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.kp
 msgid "North Korea"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.kp
+msgid "North Korean"
 msgstr ""
 
 #. module: base
@@ -20117,6 +20953,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_no_reports
 msgid "Norway - Accounting Reports"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.no model:res.country,demonym:base.sj
+msgid "Norwegian"
 msgstr ""
 
 #. module: base
@@ -21312,11 +22153,6 @@ msgid "Office Supplies"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_payment_ogone
-msgid "Ogone Payment Provider"
-msgstr ""
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
 msgid "Ok"
 msgstr ""
@@ -21324,6 +22160,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.om
 msgid "Oman"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.om
+msgid "Omani"
 msgstr ""
 
 #. module: base
@@ -21842,6 +22683,17 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model_terms:res.partner,website_description:base.res_partner_2
+#: model_terms:res.partner,website_description:base.res_partner_4
+msgid ""
+"Our experts invent, imagine and develop solutions which meet\n"
+"                your business requirements. They build a new technical\n"
+"                environment for your company, but they always take the already\n"
+"                installed IT software into account. That is why Idealis\n"
+"                Consulting delivers excellence in HR and SC Management."
+msgstr ""
+
+#. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
 msgid ""
 "Our invoices are payable within 21 working days, unless another payment "
@@ -22001,8 +22853,23 @@ msgid "Pakistan - Accounting Reports"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.pk
+msgid "Pakistani"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.pw
 msgid "Palau"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.pw
+msgid "Palauan"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.ps
+msgid "Palestinian"
 msgstr ""
 
 #. module: base
@@ -22013,6 +22880,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pa
 msgid "Panama - Accounting"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.pa
+msgid "Panamanian"
 msgstr ""
 
 #. module: base
@@ -22053,8 +22925,18 @@ msgid "Papua New Guinea"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.pg
+msgid "Papua New Guinean"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.py
 msgid "Paraguay"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.py
+msgid "Paraguayan"
 msgstr ""
 
 #. module: base
@@ -22251,23 +23133,23 @@ msgid "Payment - Account"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_payment
+msgid "Payment Engine"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_followup
 msgid "Payment Follow-up Management"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_payment
-msgid "Payment Provider"
+#: model:ir.module.module,shortdesc:base.module_payment_adyen
+msgid "Payment Provider: Adyen"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_payment
-msgid "Payment Provider Base Module"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,summary:base.module_payment_adyen
-msgid "Payment Provider: Adyen Implementation"
+#: model:ir.module.module,shortdesc:base.module_payment_alipay
+msgid "Payment Provider: Alipay"
 msgstr ""
 
 #. module: base
@@ -22281,18 +23163,23 @@ msgid "Payment Provider: AsiaPay"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,summary:base.module_payment_authorize
-msgid "Payment Provider: Authorize.net Implementation"
+#: model:ir.module.module,shortdesc:base.module_payment_authorize
+msgid "Payment Provider: Authorize.Net"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,summary:base.module_payment_buckaroo
-msgid "Payment Provider: Buckaroo Implementation"
+#: model:ir.module.module,shortdesc:base.module_payment_buckaroo
+msgid "Payment Provider: Buckaroo"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,summary:base.module_payment_custom
-msgid "Payment Provider: Custom payment modes"
+#: model:ir.module.module,shortdesc:base.module_payment_custom
+msgid "Payment Provider: Custom Payment Modes"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_payment_demo
+msgid "Payment Provider: Demo"
 msgstr ""
 
 #. module: base
@@ -22306,13 +23193,28 @@ msgid "Payment Provider: Mercado Pago"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,summary:base.module_payment_mollie
-msgid "Payment Provider: Mollie Implementation"
+#: model:ir.module.module,shortdesc:base.module_payment_mollie
+msgid "Payment Provider: Mollie"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,summary:base.module_payment_paypal
-msgid "Payment Provider: Paypal Implementation"
+#: model:ir.module.module,shortdesc:base.module_payment_ogone
+msgid "Payment Provider: Ogone"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_payment_payulatam
+msgid "Payment Provider: PayU Latam"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_payment_payumoney
+msgid "Payment Provider: PayUmoney"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_payment_paypal
+msgid "Payment Provider: Paypal"
 msgstr ""
 
 #. module: base
@@ -22321,13 +23223,18 @@ msgid "Payment Provider: Razorpay"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,summary:base.module_payment_sepa_direct_debit
+#: model:ir.module.module,shortdesc:base.module_payment_sepa_direct_debit
 msgid "Payment Provider: Sepa Direct Debit"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,summary:base.module_payment_stripe
-msgid "Payment Provider: Stripe Implementation"
+#: model:ir.module.module,shortdesc:base.module_payment_stripe
+msgid "Payment Provider: Stripe"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_payment_sips
+msgid "Payment Provider: Worldline SIPS"
 msgstr ""
 
 #. module: base
@@ -22338,12 +23245,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_payment
 msgid "Payment integration with website"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_payment_paypal
-#: model:ir.module.module,shortdesc:base.module_payment_paypal
-msgid "Paypal Payment Provider"
 msgstr ""
 
 #. module: base
@@ -22378,13 +23279,9 @@ msgid "Payroll Localization"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_payment_payulatam
-msgid "PayuLatam Payment Provider"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_payment_payumoney
-msgid "PayuMoney Payment Provider"
+#: model_terms:res.partner,website_description:base.res_partner_2
+#: model_terms:res.partner,website_description:base.res_partner_4
+msgid "Personnel Administration"
 msgstr ""
 
 #. module: base
@@ -22395,6 +23292,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pe
 msgid "Peru - Accounting"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.pe
+msgid "Peruvian"
 msgstr ""
 
 #. module: base
@@ -22426,6 +23328,11 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Phone:"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.pn
+msgid "Pitcairn Islander"
 msgstr ""
 
 #. module: base
@@ -22578,6 +23485,11 @@ msgid "Poland - Accounting"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.pl
+msgid "Polish"
+msgstr ""
+
+#. module: base
 #: model:res.groups,name:base.group_portal
 msgid "Portal"
 msgstr ""
@@ -22617,6 +23529,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pt_reports
 msgid "Portugal - Accounting Reports"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.pt
+msgid "Portuguese"
 msgstr ""
 
 #. module: base
@@ -23214,6 +24131,11 @@ msgid "Published Version"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.pr
+msgid "Puerto Rican"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.pr
 msgid "Puerto Rico"
 msgstr ""
@@ -23318,6 +24240,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.qa
 msgid "Qatar"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.qa
+msgid "Qatari"
 msgstr ""
 
 #. module: base
@@ -23568,13 +24495,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__readonly
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
 msgid "Readonly"
-msgstr ""
-
-#. module: base
-#: model:res.partner,website_short_description:base.res_partner_4
-msgid ""
-"Ready Mat brings honesty and seriousness to wood industry while helping "
-"customers deal with trees, flowers and fungi."
 msgstr ""
 
 #. module: base
@@ -23919,6 +24839,8 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_reporting
 #: model:ir.ui.menu,name:base.reporting_menuitem
+#: model_terms:res.partner,website_description:base.res_partner_2
+#: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Reporting"
 msgstr ""
 
@@ -24066,6 +24988,11 @@ msgid "Romania - Accounting"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.ro
+msgid "Romanian"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__rounding
 msgid "Rounding Factor"
 msgstr ""
@@ -24124,6 +25051,11 @@ msgid "Run this action manually."
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.ru
+msgid "Russian"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.ru
 msgid "Russian Federation"
 msgstr ""
@@ -24131,6 +25063,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.rw
 msgid "Rwanda"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.rw
+msgid "Rwandan"
 msgstr ""
 
 #. module: base
@@ -24274,6 +25211,16 @@ msgid "STANDARD TERMS AND CONDITIONS OF SALE"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.eh
+msgid "Sahrawi"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.bl
+msgid "Saint Barthélemy Islander"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.bl
 msgid "Saint Barthélémy"
 msgstr ""
@@ -24281,6 +25228,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.sh
 msgid "Saint Helena, Ascension and Tristan da Cunha"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.sh
+msgid "Saint Helenian"
 msgstr ""
 
 #. module: base
@@ -24294,8 +25246,18 @@ msgid "Saint Lucia"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.lc
+msgid "Saint Lucian"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.mf
 msgid "Saint Martin (French part)"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.mf
+msgid "Saint Martin Islander"
 msgstr ""
 
 #. module: base
@@ -24306,6 +25268,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.vc
 msgid "Saint Vincent and the Grenadines"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.vc
+msgid "Saint Vincentian"
 msgstr ""
 
 #. module: base
@@ -24475,6 +25442,12 @@ msgid "Sales Timesheet: Invoicing"
 msgstr ""
 
 #. module: base
+#: model_terms:res.partner,website_description:base.res_partner_2
+#: model_terms:res.partner,website_description:base.res_partner_4
+msgid "Sales and Distribution"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_mrp
 msgid "Sales and MRP Management"
 msgstr ""
@@ -24497,8 +25470,23 @@ msgid "Salesperson"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.sv
+msgid "Salvadoran"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.sm
+msgid "Sammarinese"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.ws
 msgid "Samoa"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.ws
+msgid "Samoan"
 msgstr ""
 
 #. module: base
@@ -24509,6 +25497,11 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__sanitized_acc_number
 msgid "Sanitized Account Number"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.st
+msgid "Sao Tomean"
 msgstr ""
 
 #. module: base
@@ -24524,6 +25517,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa
 msgid "Saudi Arabia - Accounting"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.sa
+msgid "Saudi Arabian"
 msgstr ""
 
 #. module: base
@@ -24816,6 +25814,11 @@ msgid "Sell rental products on your eCommerce from Wishlist"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_website_sale_subscription
+msgid "Sell subscription products on your eCommerce"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_website_sale_slides
 msgid "Sell your courses online"
 msgstr ""
@@ -24933,9 +25936,8 @@ msgid "Senegal"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_payment_sepa_direct_debit
-#: model:ir.module.module,shortdesc:base.module_payment_sepa_direct_debit
-msgid "Sepa Direct Debit Payment Provider"
+#: model:res.country,demonym:base.sn
+msgid "Senegalese"
 msgstr ""
 
 #. module: base
@@ -25002,6 +26004,21 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.rs
 msgid "Serbia"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_rs
+msgid "Serbia - Accounting"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_rs_reports
+msgid "Serbia - Accounting Reports"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.rs
+msgid "Serbian"
 msgstr ""
 
 #. module: base
@@ -25126,6 +26143,11 @@ msgid "Seychelles"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.sc
+msgid "Seychellois"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__share
 msgid "Share Group"
 msgstr ""
@@ -25194,6 +26216,11 @@ msgid "Sierra Leone"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.sl
+msgid "Sierra Leonean"
+msgstr ""
+
+#. module: base
 #: model:ir.module.category,name:base.module_category_sales_sign
 #: model:ir.module.module,shortdesc:base.module_sign
 msgid "Sign"
@@ -25258,6 +26285,11 @@ msgid "Singapore - Accounting Reports"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.sg
+msgid "Singaporean"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.sx
 msgid "Sint Maarten (Dutch part)"
 msgstr ""
@@ -25304,6 +26336,11 @@ msgid "Slash"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.sk
+msgid "Slovak"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sk
 msgid "Slovak - Accounting"
 msgstr ""
@@ -25311,6 +26348,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.sk
 msgid "Slovakia"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.si
+msgid "Slovene"
 msgstr ""
 
 #. module: base
@@ -25406,8 +26448,18 @@ msgid "Social media connectors for company settings."
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.sb
+msgid "Solomon Islander"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.sb
 msgid "Solomon Islands"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.so
+msgid "Somali"
 msgstr ""
 
 #. module: base
@@ -25470,8 +26522,18 @@ msgid "South Africa - Accounting"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.za
+msgid "South African"
+msgstr ""
+
+#. module: base
 #: model:res.country.group,name:base.south_america
 msgid "South America"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.gs
+msgid "South Georgia and the South Sandwich Islander"
 msgstr ""
 
 #. module: base
@@ -25485,8 +26547,18 @@ msgid "South Korea"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.kr
+msgid "South Korean"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.ss
 msgid "South Sudan"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.ss
+msgid "South Sudanese"
 msgstr ""
 
 #. module: base
@@ -25518,6 +26590,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_edi_sii
 msgid "Spain - SII EDI Suministro de Libros"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.es
+msgid "Spanish"
 msgstr ""
 
 #. module: base
@@ -25757,6 +26834,11 @@ msgid "Sri Lanka"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.lk
+msgid "Sri Lankan"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_sequence__implementation__standard
 msgid "Standard"
 msgstr ""
@@ -25936,15 +27018,14 @@ msgid "Street2"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_payment_stripe
-#: model:ir.module.module,shortdesc:base.module_payment_stripe
-msgid "Stripe Payment Provider"
-msgstr ""
-
-#. module: base
 #: model:ir.module.category,name:base.module_category_customizations_studio
 #: model:ir.module.module,shortdesc:base.module_web_studio
 msgid "Studio"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_studio_customization
+msgid "Studio customizations"
 msgstr ""
 
 #. module: base
@@ -25987,6 +27068,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.sd
 msgid "Sudan"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.sd
+msgid "Sudanese"
 msgstr ""
 
 #. module: base
@@ -26035,6 +27121,11 @@ msgid "Suriname"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.sr
+msgid "Surinamer"
+msgstr ""
+
+#. module: base
 #: model:ir.module.category,name:base.module_category_marketing_surveys
 #: model:ir.module.module,shortdesc:base.module_survey
 #: model:ir.module.module,summary:base.module_hr_recruitment_survey
@@ -26044,6 +27135,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.sj
 msgid "Svalbard and Jan Mayen"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.sz
+msgid "Swazi"
 msgstr ""
 
 #. module: base
@@ -26069,6 +27165,16 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_l10n_se
 msgid "Sweden Registered Cash Register"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.se
+msgid "Swedish"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.ch
+msgid "Swiss"
 msgstr ""
 
 #. module: base
@@ -26114,6 +27220,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.sy
 msgid "Syria"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.sy
+msgid "Syrian"
 msgstr ""
 
 #. module: base
@@ -26177,6 +27288,11 @@ msgid "Tabloid 29 279.4 x 431.8 mm"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.tj
+msgid "Tadzhik"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Tag"
 msgstr ""
@@ -26203,6 +27319,11 @@ msgid "Taiwan - Accounting"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.tw
+msgid "Taiwanese"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__font__tajawal
 msgid "Tajawal"
 msgstr ""
@@ -26213,8 +27334,19 @@ msgid "Tajikistan"
 msgstr ""
 
 #. module: base
+#: model_terms:res.partner,website_description:base.res_partner_2
+#: model_terms:res.partner,website_description:base.res_partner_4
+msgid "Talent Management"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.tz
 msgid "Tanzania"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.tz
+msgid "Tanzanian"
 msgstr ""
 
 #. module: base
@@ -26509,6 +27641,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_report__report_type__qweb-text
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__text
 msgid "Text"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.th
+msgid "Thai"
 msgstr ""
 
 #. module: base
@@ -26924,6 +28061,11 @@ msgstr ""
 msgid ""
 "The path to the main report file (depending on Report Type) or empty if the "
 "content is in another field"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_payment
+msgid "The payment engine used by payment provider modules."
 msgstr ""
 
 #. module: base
@@ -27413,6 +28555,13 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_studio_customization
+msgid ""
+"This module has been generated by Odoo Studio.\n"
+"It contains the apps created with Studio and the customizations of existing apps."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_website_event_track_gantt
 msgid ""
 "This module helps analyzing and organizing event tracks.\n"
@@ -27656,13 +28805,28 @@ msgid "Togo"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.tg
+msgid "Togolese"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.tk
 msgid "Tokelau"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.tk
+msgid "Tokelauan"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.to
 msgid "Tonga"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.to
+msgid "Tongan"
 msgstr ""
 
 #. module: base
@@ -27821,6 +28985,11 @@ msgid "Trinidad and Tobago"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.tt
+msgid "Trinidadian"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__2
 msgid "Tuesday"
 msgstr ""
@@ -27828,6 +28997,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.tn
 msgid "Tunisia"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.tn
+msgid "Tunisian"
 msgstr ""
 
 #. module: base
@@ -27846,8 +29020,23 @@ msgid "Turkey - Accounting Reports"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.tr
+msgid "Turkish"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.tm
+msgid "Turkmen"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.tm
 msgid "Turkmenistan"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.tc
+msgid "Turks and Caicos Islander"
 msgstr ""
 
 #. module: base
@@ -27873,6 +29062,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.tv
 msgid "Tuvalu"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.tv
+msgid "Tuvaluan"
 msgstr ""
 
 #. module: base
@@ -27940,11 +29134,6 @@ msgid "U - ACTIVITIES OF EXTRATERRITORIAL ORGANISATIONS AND BODIES"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_ae
-msgid "U.A.E. - Accounting"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_hr_payroll
 msgid "U.A.E. - Payroll"
 msgstr ""
@@ -27952,11 +29141,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_hr_payroll_account
 msgid "U.A.E. - Payroll with Accounting"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_ae_pos
-msgid "U.A.E. - Point of Sale"
 msgstr ""
 
 #. module: base
@@ -28053,6 +29237,11 @@ msgid "Uganda"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.ug
+msgid "Ugandan"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.ua
 msgid "Ukraine"
 msgstr ""
@@ -28060,6 +29249,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ua
 msgid "Ukraine - Accounting"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.ua
+msgid "Ukrainian"
 msgstr ""
 
 #. module: base
@@ -28151,6 +29345,16 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ae
 msgid "United Arab Emirates"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ae
+msgid "United Arab Emirates - Accounting"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ae_pos
+msgid "United Arab Emirates - Point of Sale"
 msgstr ""
 
 #. module: base
@@ -28330,6 +29534,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uy
 msgid "Uruguay - Accounting"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.uy
+msgid "Uruguayan"
 msgstr ""
 
 #. module: base
@@ -28632,6 +29841,11 @@ msgid "Uzbekistan"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.uz
+msgid "Uzbekistani"
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #: code:addons/base/models/ir_qweb_fields.py:0
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__group_by_vat
@@ -28785,6 +29999,11 @@ msgid "Venezuela - Accounting"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.ve
+msgid "Venezuelan"
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Vertical bar"
@@ -28798,6 +30017,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_vn
 msgid "Vietnam - Accounting"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.vn
+msgid "Vietnamese"
 msgstr ""
 
 #. module: base
@@ -28901,6 +30125,11 @@ msgid "Views which inherit from this one"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.vg model:res.country,demonym:base.vi
+msgid "Virgin Islander"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.vg
 msgid "Virgin Islands (British)"
 msgstr ""
@@ -28928,6 +30157,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.wf
 msgid "Wallis and Futuna"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.wf
+msgid "Wallis and Futuna Islander"
 msgstr ""
 
 #. module: base
@@ -29394,11 +30628,6 @@ msgid "Worksheet template when planning an intervention"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_payment_sips
-msgid "Worldline SIPS"
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access__perm_write
 #: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
 msgid "Write Access"
@@ -29431,6 +30660,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ye
 msgid "Yemen"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.ye
+msgid "Yemeni"
 msgstr ""
 
 #. module: base
@@ -29726,6 +30960,13 @@ msgid "Your conditions..."
 msgstr ""
 
 #. module: base
+#: model_terms:res.company,lunch_notify_message:base.main_company
+msgid ""
+"Your lunch has been delivered.\n"
+"Enjoy your meal!"
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -29748,8 +30989,18 @@ msgid "Zambia"
 msgstr ""
 
 #. module: base
+#: model:res.country,demonym:base.zm
+msgid "Zambian"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.zw
 msgid "Zimbabwe"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.zw
+msgid "Zimbabwean"
 msgstr ""
 
 #. module: base
@@ -29766,12 +31017,6 @@ msgid "Zip Required"
 msgstr ""
 
 #. module: base
-#: model_terms:ir.ui.view,arch_db:base.view_base_import_language
-msgid "_Import"
-msgstr ""
-
-#. module: base
-#: model:ir.module.category,name:base.module_category_account
 #: model:ir.module.category,name:base.module_category_services_payroll_account
 msgid "account"
 msgstr ""
@@ -30025,6 +31270,11 @@ msgid "eCommerce Rental with Wishlist"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_website_sale_subscription
+msgid "eCommerce Subscription"
+msgstr ""
+
+#. module: base
 #: model:ir.module.category,name:base.module_category_website_elearning
 #: model:ir.module.module,shortdesc:base.module_website_slides
 msgid "eLearning"
@@ -30128,6 +31378,11 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_menu__action__ir_actions_server
 msgid "ir.actions.server"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__json
+msgid "json"
 msgstr ""
 
 #. module: base
@@ -30483,4 +31738,9 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
+msgstr ""
+
+#. module: base
+#: model:res.country,demonym:base.ax
+msgid "Ålandish"
 msgstr ""
