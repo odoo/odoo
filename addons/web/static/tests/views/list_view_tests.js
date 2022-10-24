@@ -1071,6 +1071,41 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([]);
     });
 
+    QUnit.test(
+        "multi_edit: clicking on a readonly field switches the focus to the next editable field",
+        async function (assert) {
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: `
+                <tree multi_edit="1">
+                    <field name="int_field" readonly="1"/>
+                    <field name="foo" />
+                </tree>`,
+            });
+
+            const firstRow = target.querySelector(".o_data_row");
+            await click(firstRow, ".o_list_record_selector input");
+
+            let intField = firstRow.querySelector("[name='int_field']");
+            intField.focus();
+            await click(intField);
+            assert.strictEqual(
+                document.activeElement.closest(".o_field_widget").getAttribute("name"),
+                "foo"
+            );
+
+            intField = firstRow.querySelector("[name='int_field']");
+            intField.focus();
+            await click(intField);
+            assert.strictEqual(
+                document.activeElement.closest(".o_field_widget").getAttribute("name"),
+                "foo"
+            );
+        }
+    );
+
     QUnit.test("save a record with an required field computed by another", async function (assert) {
         serverData.models.foo.onchanges = {
             foo(record) {
