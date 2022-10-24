@@ -169,7 +169,7 @@ registerModel({
             if (!prevMessage.date && message.date) {
                 return false;
             }
-            if (message.date && prevMessage.date && Math.abs(message.date.diff(prevMessage.date)) > 60000) {
+            if (message.momentDate && prevMessage.momentDate && Math.abs(message.momentDate.diff(prevMessage.momentDate)) > 60000) {
                 // more than 1 min. elasped
                 return false;
             }
