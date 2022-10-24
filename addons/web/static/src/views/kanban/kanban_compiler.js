@@ -88,7 +88,7 @@ export class KanbanCompiler extends ViewCompiler {
             return this.renderDropdown(part);
         }
         dropdown.parts.push(part);
-        if (part !== "menu") {
+        if (part !== "menu" || dropdown.parts.includes("dropdown")) {
             dropdown.shouldInsert = !dropdown.inserted;
             dropdown.inserted = true;
         }
