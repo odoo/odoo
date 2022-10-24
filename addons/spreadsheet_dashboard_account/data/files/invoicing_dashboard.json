@@ -839,8 +839,7 @@
                     "border": 2
                 },
                 "F21": {
-                    "style": 14,
-                    "format": 1,
+                    "style": 15,
                     "content": "=ODOO.LIST(1,1,\"invoice_date\")"
                 },
                 "F22": {
@@ -1235,7 +1234,6 @@
                     "tag": "chart",
                     "data": {
                         "title": "",
-                        "id": "5ea5dd7f-9f83-4482-a2bb-2ec72ab35912",
                         "background": "#FFFFFF",
                         "legendPosition": "none",
                         "metaData": {
@@ -1401,7 +1399,7 @@
                 },
                 "B2": {
                     "format": 4,
-                    "content": "=ODOO.PIVOT(6,\"price_subtotal\")/B3"
+                    "content": "=IFERROR(ODOO.PIVOT(6,\"price_subtotal\")/B3)"
                 },
                 "B3": {
                     "format": 1,
@@ -1952,7 +1950,7 @@
             "id": "757a1b4b-e339-4879-beb6-9851050387cf",
             "type": "date",
             "label": "Period",
-            "defaultValue": "last_year",
+            "defaultValue": "last_three_months",
             "rangeType": "relative",
             "defaultsToCurrentPeriod": true,
             "pivotFields": {
@@ -2048,7 +2046,7 @@
             },
             "listFields": {
                 "1": {
-                    "field": "partner_id",
+                    "field": "partner_id.country_id",
                     "type": "many2one"
                 }
             },
@@ -2100,8 +2098,8 @@
             },
             "listFields": {
                 "1": {
-                    "field": "invoice_line_ids",
-                    "type": "one2many"
+                    "field": "invoice_line_ids.product_id.categ_id",
+                    "type": "many2one"
                 }
             },
             "graphFields": {
@@ -2152,8 +2150,8 @@
             },
             "listFields": {
                 "1": {
-                    "field": "invoice_line_ids",
-                    "type": "one2many"
+                    "field": "invoice_line_ids.product_id",
+                    "type": "many2one"
                 }
             },
             "graphFields": {
