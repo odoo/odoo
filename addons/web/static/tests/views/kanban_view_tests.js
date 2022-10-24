@@ -361,6 +361,25 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_kanban_record:contains(gnap)");
     });
 
+    QUnit.test("display full is supported on fields", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban class="o_kanban_test">
+                    <templates><t t-name="kanban-box">
+                        <div>
+                            <field name="foo" display="full"/>
+                        </div>
+                    </t></templates>
+                </kanban>`,
+        });
+
+        assert.containsOnce(target.querySelector(".o_kanban_record"), "span.o_text_block");
+        assert.strictEqual(target.querySelector("span.o_text_block").textContent, "yop");
+    });
+
     QUnit.test("basic grouped rendering", async (assert) => {
         assert.expect(13);
 
