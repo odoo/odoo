@@ -8,12 +8,14 @@
 
                 <t t-set="address">
                     <div name="div_outgoing_address">
-                        <div t-if="o.move_ids_without_package and o.move_ids_without_package[0].partner_id and o.move_ids_without_package[0].partner_id != partner">
+                        <div name="outgoing_delivery_address"
+                             t-if="o.move_ids_without_package and o.move_ids_without_package[0].partner_id and o.move_ids_without_package[0].partner_id != partner">
                             <span><strong>Delivery Address:</strong></span>
                             <div t-field="o.move_ids_without_package[0].partner_id"
                                 t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
                         </div>
-                        <div t-if="o.picking_type_id.code != 'internal' and (not o.move_ids_without_package or not o.move_ids_without_package[0].partner_id or o.move_ids_without_package[0].partner_id == partner) and o.picking_type_id.warehouse_id.partner_id">
+                        <div name="outgoing_warehouse_address"
+                             t-if="o.picking_type_id.code != 'internal' and (not o.move_ids_without_package or not o.move_ids_without_package[0].partner_id or o.move_ids_without_package[0].partner_id == partner) and o.picking_type_id.warehouse_id.partner_id">
                             <span><strong>Warehouse Address:</strong></span>
                             <div t-field="o.picking_type_id.warehouse_id.partner_id"
                                 t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
@@ -23,13 +25,13 @@
                 <t t-set="information_block">
                     <div class="row">
                         <div class="col-7" name="div_incoming_address">
-                            <div t-if="o.picking_type_id.code=='incoming' and partner">
+                            <div name="vendor_address" t-if="o.picking_type_id.code=='incoming' and partner">
                                 <span><strong>Vendor Address:</strong></span>
                             </div>
-                            <div t-if="o.picking_type_id.code=='internal' and partner">
+                            <div name="warehouse_address" t-if="o.picking_type_id.code=='internal' and partner">
                                 <span><strong>Warehouse Address:</strong></span>
                             </div>
-                            <div t-if="o.picking_type_id.code=='outgoing' and partner">
+                            <div name="customer_address" t-if="o.picking_type_id.code=='outgoing' and partner">
                                 <span><strong>Customer Address:</strong></span>
                             </div>
                             <div t-if="partner" name="partner_header">
