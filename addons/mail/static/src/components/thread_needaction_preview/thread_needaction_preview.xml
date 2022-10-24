@@ -42,7 +42,7 @@
                         <span class="flex-grow-1"/>
                         <t t-if="threadNeedactionPreviewView.thread.lastNeedactionMessageAsOriginThread and threadNeedactionPreviewView.thread.lastNeedactionMessageAsOriginThread.date">
                             <small class="o_NotificationListItem_date o_ThreadNeedactionPreview_date flex-shrink-0 text-500">
-                                <t t-esc="threadNeedactionPreviewView.thread.lastNeedactionMessageAsOriginThread.date.fromNow()"/>
+                                <t t-esc="threadNeedactionPreviewView.thread.lastNeedactionMessageAsOriginThread.momentDate.fromNow()"/>
                             </small>
                         </t>
                     </div>

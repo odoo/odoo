@@ -380,10 +380,10 @@ registerModel({
                     return clear();
                 }
                 const now = moment(this.clockWatcher.clock.date.getTime());
-                if (now.diff(this.message.date, 'seconds') < 45) {
+                if (now.diff(this.message.momentDate, 'seconds') < 45) {
                     return this.env._t("now");
                 }
-                return this.message.date.fromNow();
+                return this.message.momentDate.fromNow();
             },
         }),
         /**

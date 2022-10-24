@@ -28,7 +28,7 @@ registerModel({
                 data2.body = data.body;
             }
             if ('date' in data && data.date) {
-                data2.date = moment(str_to_datetime(data.date));
+                data2.date = data.date;
             }
             if ('email_from' in data) {
                 data2.email_from = data.email_from;
@@ -345,10 +345,21 @@ registerModel({
                 return !this.messaging.isCurrentUserGuest && !this.isTemporary && !this.isTransient;
             },
         }),
+        date: attr(),
         /**
          * Determines the date of the message as a moment object.
          */
-        date: attr(),
+        momentDate: attr({
+            compute() {
+                if (!this.date) {
+                    return clear();
+                }
+                if (!moment.isMoment(this.date)) {
+                    return moment(str_to_datetime(this.date));
+                }
+                return this.date;
+            }
+        }),
         /**
          * States the date of this message as a string (either a relative period
          * in the near past or an actual date for older dates).
@@ -360,7 +371,7 @@ registerModel({
                     // mainly done to avoid flicker inside the UI.
                     return this.env._t("Today");
                 }
-                const date = this.date.format('YYYY-MM-DD');
+                const date = this.momentDate.format('YYYY-MM-DD');
                 if (date === moment().format('YYYY-MM-DD')) {
                     return this.env._t("Today");
                 } else if (
@@ -370,7 +381,7 @@ registerModel({
                 ) {
                     return this.env._t("Yesterday");
                 }
-                return this.date.format('LL');
+                return this.momentDate.format('LL');
             },
         }),
         /**
@@ -378,10 +389,10 @@ registerModel({
          */
         datetime: attr({
             compute() {
-                if (!this.date) {
+                if (!this.momentDate) {
                     return clear();
                 }
-                return this.date.format(getLangDatetimeFormat());
+                return this.momentDate.format(getLangDatetimeFormat());
             },
         }),
         email_from: attr(),
@@ -705,10 +716,10 @@ registerModel({
         recipients: many('Partner'),
         shortTime: attr({
             compute() {
-                if (!this.date) {
+                if (!this.momentDate) {
                     return clear();
                 }
-                return this.date.format('hh:mm');
+                return this.momentDate.format('hh:mm');
             },
         }),
         subject: attr(),
