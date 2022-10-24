@@ -109,6 +109,10 @@ class Sanitize {
 
     _parse(node) {
         while (node) {
+            const closestProtected = closestElement(node, '[data-oe-protected="true"]');
+            if (closestProtected && node !== closestProtected) {
+                return;
+            }
             // Merge identical elements together.
             while (
                 areSimilarElements(node, node.previousSibling) &&
