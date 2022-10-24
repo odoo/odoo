@@ -53,6 +53,9 @@
         $-btn-primary: map-get($colors, 'o-cc#{$index}-btn-primary');
         @if not $-btn-primary {
             @include print-variable('o-cc#{$index}-btn-primary', map-get($theme-colors, 'primary'));
+            @include print-variable('o-cc#{$index}-btn-primary-text', color-contrast(map-get($theme-colors, 'primary')));
+        } @else {
+            @include print-variable('o-cc#{$index}-btn-primary-text', color-contrast($-btn-primary));
         }
         @if not map-get($colors, 'o-cc#{$index}-btn-primary-border') {
             @include print-variable('o-cc#{$index}-btn-primary-border', $-btn-primary or map-get($theme-colors, 'primary'));
@@ -61,6 +64,9 @@
         $-btn-secondary: map-get($colors, 'o-cc#{$index}-btn-secondary');
         @if not $-btn-secondary {
             @include print-variable('o-cc#{$index}-btn-secondary', map-get($theme-colors, 'secondary'));
+            @include print-variable('o-cc#{$index}-btn-secondary-text', color-contrast(map-get($theme-colors, 'secondary')));
+        } @else {
+            @include print-variable('o-cc#{$index}-btn-secondary-text', color-contrast($-btn-secondary));
         }
         @if not map-get($colors, 'o-cc#{$index}-btn-secondary-border') {
             @include print-variable('o-cc#{$index}-btn-secondary-border', $-btn-secondary or map-get($theme-colors, 'secondary'));

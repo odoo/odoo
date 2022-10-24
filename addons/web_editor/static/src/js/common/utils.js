@@ -22,10 +22,12 @@ const EDITOR_COLOR_CSS_VARIABLES = [...COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES];
 for (let i = 1; i <= 5; i++) {
     EDITOR_COLOR_CSS_VARIABLES.push(`o-color-${i}`);
     EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-bg`);
-    EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-h1`);
+    EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-headings`);
     EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-text`);
     EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-btn-primary`);
+    EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-btn-primary-text`);
     EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-btn-secondary`);
+    EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-btn-secondary-text`);
     EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-btn-primary-border`);
     EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-btn-secondary-border`);
 }
