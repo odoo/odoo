@@ -298,15 +298,6 @@ const ColorPaletteWidget = Widget.extend({
             });
             await this.colorPicker.appendTo(this.sections['custom-colors']);
         }
-        // When the color palette is created outside its editing
-        // element, the theme preview might not reflect the styles
-        // of the editable. The parent widgets will update the styles
-        // accordingly.
-        if (!this.options.excluded.includes('theme')) {
-            this.trigger_up('update_color_previews', {
-                ccPreviewEls: this.el.querySelectorAll('.o_we_cc_preview_wrapper'),
-            });
-        }
         return res;
     },
     /**
