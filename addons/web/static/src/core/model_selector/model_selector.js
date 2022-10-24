@@ -85,6 +85,7 @@ ModelSelector.template = "web.ModelSelector";
 ModelSelector.components = { AutoComplete };
 ModelSelector.props = {
     onModelSelected: Function,
+    id: { type: String, optional: true },
     value: { type: String, optional: true },
     // list of models technical name, if not set
     // we will fetch all models we have access to
