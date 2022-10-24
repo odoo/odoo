@@ -5,6 +5,7 @@ import { ModelGenerator } from '@mail/model/model_generator';
 import { FieldCommand, unlinkAll } from '@mail/model/model_field_command';
 import { RelationSet } from '@mail/model/model_field_relation_set';
 import { Listener } from '@mail/model/model_listener';
+import { RecordInfo } from '@mail/model/record_info';
 import { makeDeferred } from '@mail/utils/deferred';
 /**
  * Object that manage models and records, notably their update cycle: whenever
@@ -77,6 +78,7 @@ export class ModelManager {
              */
             check: new Set(),
         };
+        this.recordInfos = {};
         /**
          * Set of active listeners. Useful to be able to register which records
          * or fields they accessed to be able to notify them when those change.
@@ -422,6 +424,7 @@ export class ModelManager {
                 return record[prop];
             },
         }));
+        this.recordInfos[localId] = new RecordInfo({ record });
         if (this.isDebug) {
             record.__proxifiedRecord = record;
         }
@@ -513,6 +516,7 @@ export class ModelManager {
         delete record.__listenersOnRecord;
         delete record.__listenersOnField;
         model.__records.delete(record);
+        delete this.recordInfos[record.localId];
         delete record.localId;
     }
 
