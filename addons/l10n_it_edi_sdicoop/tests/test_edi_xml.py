@@ -554,7 +554,8 @@ class TestItEdi(AccountEdiTestCommon):
               </DettaglioLinee>
               <DatiRiepilogo>
                 <AliquotaIVA>22.00</AliquotaIVA>
-                <ImponibileImporto>2401.20</ImponibileImporto>
+                <Arrotondamento>0.02727273</Arrotondamento>
+                <ImponibileImporto>2401.23</ImponibileImporto>
                 <Imposta>528.27</Imposta>
                 <EsigibilitaIVA>I</EsigibilitaIVA>
               </DatiRiepilogo>

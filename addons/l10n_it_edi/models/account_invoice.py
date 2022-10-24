@@ -136,16 +136,14 @@ class AccountMove(models.Model):
             tax_rate = tax_dict['tax'].amount
             expected_base_amount_currency = tax_amount_currency * 100 / tax_rate if tax_rate else False
             expected_base_amount = tax_amount * 100 / tax_rate if tax_rate else False
-            # Constraints within the edi make local rounding on price included taxes a problem.
+            # Constraints within the edi make local rounding on taxes a problem. There is a 0.01 € tolerance.
             # To solve this there is a <Arrotondamento> or 'rounding' field, such that:
             #   taxable base = sum(taxable base for each unit) + Arrotondamento
-            if tax_dict['tax'].price_include and tax_dict['tax'].amount_type == 'percent':
-                if expected_base_amount_currency and float_compare(base_amount_currency, expected_base_amount_currency, 2):
-                    tax_dict['rounding'] = base_amount_currency - (tax_amount_currency * 100 / tax_rate)
-                    tax_dict['base_amount_currency'] = base_amount_currency - tax_dict['rounding']
-                if expected_base_amount and float_compare(base_amount, expected_base_amount, 2):
-                    tax_dict['rounding_euros'] = base_amount - (tax_amount * 100 / tax_rate)
-                    tax_dict['base_amount'] = base_amount - tax_dict['rounding_euros']
+            if tax_dict['tax'].amount_type == 'percent' and tax_rate and abs(base_amount - expected_base_amount) > 0.01:
+                tax_dict['rounding'] = base_amount_currency - expected_base_amount_currency
+                tax_dict['base_amount_currency'] = base_amount_currency - tax_dict['rounding']
+                tax_dict['rounding_euros'] = base_amount - expected_base_amount
+                tax_dict['base_amount'] = base_amount - tax_dict['rounding_euros']
 
             if not reverse_charge_refund:
                 tax_dict['base_amount'] = abs(tax_dict['base_amount'])
