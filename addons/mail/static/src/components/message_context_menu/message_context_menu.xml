@@ -2,9 +2,9 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.MessageContextMenu" owl="1">
-            <div class="o_MessageContextMenu d-flex flex-column" t-attf-class="{{ className }}" t-ref="root">
-                <MessageContextHeaderView record="messageContextMenu.headerView"/>
-            </div>
+        <div class="o_MessageContextMenu d-flex flex-column" t-attf-class="{{ className }}" t-ref="root">
+            <MessageContextReactionSummery record="messageContextMenu.reactionSummeryView" />
+        </div>
     </t>
 
 </templates>

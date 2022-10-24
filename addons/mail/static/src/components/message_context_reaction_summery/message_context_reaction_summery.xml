@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.MessageContextReactionSummery" owl="1">
+        <div class="o_MessageContextReactionSummery d-flex bg-100 border-bottom" t-attf-class="{{ className }}" t-ref="root">
+            <div t-if="messageContextReactionSummery.messageContextViewOwner.messageView.message.messageReactionGroups.length > 0" class="position-relative d-flex flex-wrap" t-att-class="{ 'flex-row-reverse me-3': messageContextReactionSummery.messageContextViewOwner.messageView.isInChatWindowAndIsAlignedRight,}">
+                <t t-foreach="messageContextReactionSummery.messageContextViewOwner.messageView.message.messageReactionGroups" t-as="messageReactionGroup" t-key="messageReactionGroup.localId">
+                    <div class="row">
+                        <div class="col-2">
+                            <button class="btn d-flex p-1 rounded-1" t-att-title="messageReactionGroup.summary" t-on-click="messageReactionGroup.onClick">
+                                <span class="o_MessageReactionGroup_content mx-1">
+                                    <t t-esc="messageReactionGroup.content"/>
+                                </span>
+                                <span class="o_MessageReactionGroup_count mx-1">
+                                    <t t-esc="messageReactionGroup.count"/>
+                                </span>
+                            </button>
+                        </div>
+                        <div class="col-10"></div>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

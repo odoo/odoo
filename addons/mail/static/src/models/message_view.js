@@ -134,7 +134,7 @@ registerModel({
             let rect = this.contextMenuRef.el.parentElement.getBoundingClientRect();
             this.contextMenuRef.el.style.top = (ev.clientY - rect.top) + 'px';
             this.contextMenuRef.el.style.left = (ev.clientX - rect.left) + 'px';
-            if (!this.messageContextPopoverView) {
+            if (this.message.messageReactionGroups.length > 0 && !this.messageContextPopoverView)  {
                 this.update({ messageContextPopoverView: {} });
             } else {
                 this.update({ messageContextPopoverView: clear() });
